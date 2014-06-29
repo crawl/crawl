@@ -333,7 +333,7 @@ static void _gift_armour_to_orc(monster* orc, bool shield = false)
 /**
  * Attempt to bless a follower's armour.
  *
- * @param[in] follower      The follower whose armour should be blessed.
+ * @param[in] mon           The follower whose armour should be blessed.
  * @return                  The type of blessing; may be empty.
  */
 static string _beogh_bless_armour(monster* mon)
@@ -505,11 +505,11 @@ static string _tso_bless_weapon(monster* mon)
  * @param[in] follower      The follower whose armour should be blessed.
  * @return                  The type of blessing; may be empty.
  */
-static string _tso_bless_armour(monster* mon)
+static string _tso_bless_armour(monster* follower)
 {
     // Pick either a monster's armour or its shield.
-    const int armour = mon->inv[MSLOT_ARMOUR];
-    const int shield = mon->inv[MSLOT_SHIELD];
+    const int armour = follower->inv[MSLOT_ARMOUR];
+    const int shield = follower->inv[MSLOT_SHIELD];
     if (armour == NON_ITEM && shield == NON_ITEM)
     {
         dprf("Can't bless the armour of a naked follower!");
@@ -673,7 +673,7 @@ static string _bless_with_healing(monster* follower)
  *
  * @param[in] follower  The follower being blessed.
  * @param god           The god doing the blessing.
- * @param message       The blessing being delivered.
+ * @param blessing      The blessing being delivered.
  */
 static void _display_god_blessing(monster* follower, god_type god,
                                   string blessing)
