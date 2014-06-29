@@ -8,6 +8,7 @@
 #include <queue>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -1509,25 +1510,14 @@ static bool _given_gift(const monster* mon)
 }
 
 /**
- * Checks whether the target square holds a valid target for beogh item-gifts.
+ * Checks whether the target monster is a valid target for beogh item-gifts.
  *
- * @param pos       The position to check for orcs in.
+ * @param mons[in]  The monster to consider giving an item to.
  * @param quiet     Whether to print messages if the target is invalid.
- * @return          Whether the player can give an item to an orc in the target
- * square.
+ * @return          Whether the player can give an item to the monster.
  */
-static bool _can_gift_to(const coord_def &pos, bool quiet)
+bool beogh_can_gift_items_to(const monster* mons, bool quiet)
 {
-    if (pos == you.pos())
-    {
-        // I think this should never happen?
-        if (!quiet)
-            mpr("You can't give yourself an item!");
-        return false;
-    }
-
-    const monster* mons = monster_at(pos);
-
     if (!mons || !mons->visible_to(&you))
     {
         if (!quiet)
@@ -1561,10 +1551,15 @@ static bool _can_gift_to(const coord_def &pos, bool quiet)
     return true;
 }
 
-// used for the targeter.
-static bool _can_gift_to(const coord_def &pos)
+/**
+ * Checks whether there are any valid targets for beogh gifts in LOS.
+ */
+bool _valid_beogh_gift_targets_in_sight()
 {
-    return _can_gift_to(pos, true);
+    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
+        if (beogh_can_gift_items_to(*rad))
+            return true;
+    return false;
 }
 
 /**
@@ -1575,19 +1570,33 @@ static bool _can_gift_to(const coord_def &pos)
  */
 bool beogh_gift_item()
 {
-    bolt beam;
+    if (!_valid_beogh_gift_targets_in_sight())
+    {
+        mpr("No worthy followers in sight.");
+        return false;
+    }
+
     dist spd;
 
-    targetter_smite tgt(&you, LOS_RADIUS, 0, 0, false, &_can_gift_to);
-    spd.isValid = spell_direction(spd, beam, DIR_TARGET, TARG_FRIEND,
-                                  LOS_RADIUS, false, true, false, NULL,
-                                  "Gift an item:", true, &tgt);
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_BEOGH_GIFTABLE;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = true;
+    args.cancel_at_self = true;
+    args.show_floor_desc = true;
+    args.top_prompt = "Select a follower to give a gift to.";
 
-    if (!spd.isValid || !_can_gift_to(spd.target, false))
+    direction(spd, args);
+
+    if (!spd.isValid)
         return false;
 
     monster* mons = monster_at(spd.target);
-    ASSERT(mons);
+    if (!beogh_can_gift_items_to(mons, false))
+        return false;
+
     const char* monsname = mons->name(DESC_THE, false).c_str();
 
     int item_slot = prompt_invent_item("Give which item?",
