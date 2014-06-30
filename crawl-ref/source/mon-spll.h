@@ -2423,9 +2423,9 @@
 
     {  MST_OCTOPODE_CRUSHER,
       {
-       SPELL_THROW_ICICLE,
-       SPELL_THROW_ICICLE,
-       SPELL_NO_SPELL,
+       SPELL_IRON_SHOT,
+       SPELL_IRON_SHOT,
+       SPELL_MELEE,
        SPELL_MELEE,
        SPELL_MELEE,
        SPELL_NO_SPELL,
