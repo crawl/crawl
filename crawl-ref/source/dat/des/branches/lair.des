@@ -1729,7 +1729,7 @@ ORIENT: float
 TAGS:   patrolling no_monster_gen
 MONS:   black bear / polar bear
 KFEAT:  " = W
-KMONS:  " = big fish / shark / electric eel
+KMONS:  " = electric eel w:40 / nothing
 KITEM:  % = fruit w:80 / w:1 meat ration
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
 CLEAR:  E
@@ -1758,7 +1758,7 @@ NSUBST: 0 = 2:9 / *:0
 MONS:   plant / bush / toadstool
 KMONS:  2 = plant / toadstool
 KMONS:  3 = w:2 shark / plant / toadstool
-KMONS:  4 = w:5 big fish / shark / electric eel
+KMONS:  4 = electric eel w:40 / nothing
 KFEAT:  23 = W
 KFEAT:  4 = w
 KMONS:  5 =  lindwurm / dire elephant / catoblepas
@@ -1916,8 +1916,6 @@ KMONS: Y = yak
 KMONS: D = death yak
 KMONS: C = catoblepas
 KMONS: P = plant
-KMONS: k = big fish
-KFEAT: k = w
 MAP
         .@@@.
       .........
@@ -1927,8 +1925,8 @@ MAP
  .PPttP..P.P.PP.ftP...
  .P....PPP...PPP.PP..@
 ..PP..PPPwwwC.P..PPP.@
-......Y.wkwwww.Y.ttP.@
-.@.PP..Pwwwwkw...fttt.
+......Y.wwwwww.Y.ttP.@
+.@.PP..Pwwwwww...fttt.
  @..P..PP.wwwPP.ttttt
   @.PP.PPP..PP..PPttt
   ...Ptt.P.PPPPPP....

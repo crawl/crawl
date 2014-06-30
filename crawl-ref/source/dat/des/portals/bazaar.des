@@ -301,13 +301,12 @@ default-depth: Bazaar
 ##########################################################################
 
 ##########################################
-# bazaar lakeside with fish (jpeg)
+# bazaar lakeside (jpeg)
 # 5 shops
 NAME:    bazaar_lake
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  20
-MONS:    big fish / shark
 SUBST:   a = W.
 SHUFFLE: ABCDEF
 SUBST:   A = Y
@@ -345,7 +344,7 @@ xxxxxxxx..............aaaaa..............xxxxxxxxx
 xxxxxxxx.....E.......awwwwwaa......A.....xxxxxxxxx
 xxxxxxx............aawwwwwwwww............xxxxxxxx
 xxxxxxx...........awwwwwWwwwwa............xxxxxxxx
-xxxxxxx..........awwwww1WWwwwa............xxxxxxxx
+xxxxxxx..........awwwwwWWWwwwa............xxxxxxxx
 xxxxxxxY.T........awwwwwwWWwwwa........T.Yxxxxxxxx
 xxxxxxx............awwwwwwwwaX............xxxxxxxx
 xxxxxxx.............aawwwwwwwwa...........xxxxxxxx

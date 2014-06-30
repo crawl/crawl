@@ -154,6 +154,7 @@ cccccccccccc
 ENDMAP
 
 # 23.2k/19.9k/13k
+# Not really a fish farm now that fish are gone...
 NAME:   hangedman_fish_farm
 DEPTH:  D:9-14
 : food_weight(_G, 7)
@@ -161,16 +162,14 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
         patrolling
 KMONS:  A = merfolk ; spear
-KMONS:  B = big fish / nothing
-KMONS:  C = big fish
-KFEAT:  gBC = shallow_water
+KFEAT:  g = shallow_water
 ITEM:   meat ration q:2 no_mimic, bread ration q:3 no_mimic, throwing net
-:       dgn.delayed_decay(_G, 'g', 'big fish corpse')
+:       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
 MAP
 xxxxxx
 xgxedx
 +..fAx
-xCBBBx
+xWWWWx
 xxxxxx
 ENDMAP
 

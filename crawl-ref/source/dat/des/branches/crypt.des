@@ -481,7 +481,7 @@ TAGS: no_pool_fixup extra
 SUBST: . : .W
 SUBST: 1 = w:50 1
 KFEAT: 1 = w
-KMONS: 1 = big fish zombie / shark zombie
+KMONS: 1 = swamp worm zombie
 MAP
 @..wwwww..@
 ..ww111ww..
@@ -962,7 +962,7 @@ TAGS: no_pool_fixup extra
 DEPTH: Crypt
 SUBST: w = Ww, . = ...W
 NSUBST: A = + / c
-KMONS: 1 = big fish zombie / swamp worm zombie
+KMONS: 1 = swamp worm zombie
 KMONS: 2 = bog body
 KFEAT: 1 = w
 KFEAT: 2 = W / . w:20

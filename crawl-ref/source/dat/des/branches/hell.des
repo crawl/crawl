@@ -546,7 +546,7 @@ WEIGHT: 5
 COLOUR: . = magenta
 FTILE:  .O = floor_infernal_blank
 NSUBST: w = 5=F / *:w
-KMONS:  F = spectral shark / spectral big fish
+KMONS:  F = spectral swamp worm
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : hell_entry_feature(_G, 'O')

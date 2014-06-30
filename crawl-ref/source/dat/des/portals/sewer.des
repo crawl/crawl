@@ -113,10 +113,10 @@ ENDMAP
 
 NAME:   portal_sewer_entry_d
 : sewer_portal(_G)
-KMONS:  1 = big fish
+KMONS:  1 = giant mite
 MAP
 xxxxxxxxxx
-xWOW1WWWWW@
+x.O.1.....@
 xxxxxxxxxx
 ENDMAP
 
@@ -285,9 +285,6 @@ SUBST:    ? = .x
 KFEAT:    Y = deep_water
 KFEAT:    y = shallow_water
 KFEAT:    E = altar_zin / altar_elyvilon w:30
-KMONS:    q = big fish
-KFEAT:    q = w
-COLOUR:   q = green
 MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
 SHUFFLE:  de
 ITEM:     potion of curing / potion of heal wounds
@@ -318,7 +315,7 @@ MAP
       c.'WwW''c
       c.WWwWW'c
       c'WwwwW'c
-      c'WwqwW'c
+      c'WwwwW'c
       c'WwwwW'c
       c.'WWW''c
       c..''''.c
@@ -396,7 +393,6 @@ MONS:    kobold / big kobold w:2
 MONS:    bat / rat / ooze w:5 / ball python / giant newt w:5 / \
          giant cockroach w:5 / giant mite w:5 / adder w:1
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
-KMONS:   3 = big fish
 KMONS:   p = plant
 SUBST:   p = ppW
 ITEM:    potion of curing / potion of heal wounds / potion of might w:4 /\
@@ -409,9 +405,8 @@ NSUBST:  F = 5:1 / 4:d / *:!
 NSUBST:  E = 2:1 / 3:d / *:!
 NSUBST:  H = 2:1 / 3:d / *:!
 NSUBST:  . = 10:2 / *:.
-NSUBST:  W = 3:3 / *:W
-KFEAT:   p3 = shallow_water
-COLOUR:  p3 = lightgreen
+KFEAT:   p = shallow_water
+COLOUR:  p = lightgreen
 KFEAT:   ! = floor
 : sewer_setup(_G)
 MAP
@@ -719,7 +714,7 @@ KFEAT:   1 = w
 COLOUR:  1 = green
 KMONS:   1 = giant newt / ball python w:5 / \
          generate_awake giant newt / generate_awake ball python w:5 / \
-         adder w:4 / big fish w:3 / nothing w:6
+         adder w:4 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
 KITEM:   ? = potion of flight q:2 w:15 / potion of curing /\
@@ -828,10 +823,10 @@ SUBST:    Q = 4, E = 5, D : fgh, S = $
 NSUBST:   f = 1:f / *:'
 NSUBST:   g = 2:g / *:'
 NSUBST:   h = 3:h / *:'
-#       some random monsters I: flying or big fish
+#       some random monsters I: bat or nothing
 NSUBST:   w = 4:" / *:w
 KFEAT:    " = w
-KMONS:    " = big fish w:2 / bat / nothing
+KMONS:    " = bat / nothing
 COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
@@ -1127,7 +1122,7 @@ ORIENT:  encompass
 MONS:    giant newt / ball python w:5 / \
          generate_awake giant newt / generate_awake ball python w:5 / \
          adder w:2 / nothing w:4
-KMONS:   2 = adder / big fish
+KMONS:   2 = adder
 KFEAT:   2 = W
 COLOUR:  2 = lightgreen
 #      generate first path.
@@ -1202,7 +1197,7 @@ KMONS:   P = plant / nothing
 KFEAT:   1 = W
 COLOUR:  1 = lightgreen
 KMONS:   1 = giant newt / ball python w:5 /  generate_awake ball python w:5 / \
-         adder w:7 / big fish w:5
+         adder w:7
 SUBST:   1 = 1111W
 #      other monsters
 KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 green rat, rat
@@ -1401,10 +1396,9 @@ KMONS:   6 = kobold demonologist name:apprentice n_adj n_noc \
              spells:summon_minor_demon;cantrip;summon_minor_demon;\
              cantrip;cantrip;cantrip
 SHUFFLE: 456
-KMONS:   - = big fish / big fish zombie w:5 / nothing w:90
+KITEM:   456 = star_item
 KFEAT:   - = deep_water
 KPROP:   W- = no_tele_into
-KITEM:   456 = star_item
 SUBST:   W = WWWw.
 COLOUR:  - = lightgreen
 SUBST:   - = wwwW-
