@@ -8,6 +8,7 @@
 #include "player.h"
 #include "random.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-util.h"
 
 // Returns true if a "good" weapon is given.
@@ -661,7 +662,8 @@ static void _give_wanderer_spell(skill_type skill)
         break;
     }
 
-    add_spell_to_memory(spell);
+    if (!you_cannot_memorise(spell))
+        add_spell_to_memory(spell);
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
