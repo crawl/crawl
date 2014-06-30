@@ -315,7 +315,6 @@ static const pop_entry pop_shoals[] =
   {  1,  5,  385, FLAT, MONS_SNAPPING_TURTLE },
   {  1,  7,  170, SEMI, MONS_SIREN },
   {  1,  7,  110, SEMI, MONS_CYCLOPS },
-  {  1,  7,  375, FLAT, MONS_SHARK },
   {  1,  7,   73, SEMI, MONS_KRAKEN },
   {  2,  8,   85, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  1,  8,  265, SEMI, MONS_MERFOLK_IMPALER },
@@ -327,7 +326,7 @@ static const pop_entry pop_shoals[] =
   {  1,  5,  195, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  7,  300, SEMI, MONS_WATER_NYMPH },
   { -1,  3,  100, DOWN, MONS_NO_MONSTER }, // Old bat weight
-  {  3,  7,  365, SEMI, MONS_NO_MONSTER },
+  {  3,  7,  740, SEMI, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1300,8 +1299,7 @@ static const pop_entry pop_water_depths[] =
 static const pop_entry pop_water_swamp[] =
 { // Swamp water monsters
   {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
-  {  1,  5,   150, FLAT, MONS_BIG_FISH },
-  {  1,  5,   900, FLAT, MONS_NO_MONSTER },
+  {  1,  5,  1050, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
