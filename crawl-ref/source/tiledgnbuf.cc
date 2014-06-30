@@ -84,7 +84,10 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
     else if (tileidx < TILE_WALL_MAX)
         m_buf_wall.add(tileidx, x, y);
     else if (in_water)
+    {
+        m_buf_floor.add(TILE_DNGN_SHALLOW_WATER, x, y);
         m_buf_feat_trans.add(tileidx, x, y, 0, true, false);
+    }
     else
         m_buf_feat.add(tileidx, x, y);
 }
@@ -200,9 +203,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 {
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
-
-    if (cell.mangrove_water && bg_idx > TILE_DNGN_UNSEEN)
-        m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
 
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         add_dngn_tile(cell.flv.floor, x, y);
