@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 123
 SUBST:  ' = '......
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, baby alligator, crocodile, big fish, kraken, shark
+MONS:   Menkaure, baby alligator, crocodile, kraken, shark
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -38,7 +38,8 @@ MARKER: d = lua:fog_machine { \
              pow_min = 3, pow_max = 6, delay = 3, \
              size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
-KFEAT:  d = shallow_water
+KFEAT:  dV = shallow_water
+KMONS:  V = crocodile
 KMONS:  b = orange rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
@@ -84,17 +85,17 @@ cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBB+WAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBBmWAAAAAAAAAAAAA....III''GGGooooooo+ooOOOOO'XPPPPPPPP
 cooooooommmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
-ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmmWccc.w5wXUUUUUUUcc
-ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWW4ccwwwXUUUUUUcc
-ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmW4wwccccXXXXXWcc
-ccLLLLLmmKccbcWWAAAAAWWWlllaWWWWmCCCCCCCCmWWW4wccTTTTTXWc
-ccLLLLmmKKKccccWWWWWWWWWWllllWWWmCCCCCCCCmWW4wwwTTTTTTXWc
-ccLLLLmKKKKKc|c+++m+++cWlllllllWmCCCCCCCCmWWdW4wTTTTTTXWc
-ccLLLLmKKKKKcccEEEEEEEcclllcccllmCCCCCCCCmW4WWw4TTTTTTXWc
-ccLLLLmKKKKKccEEEEEEEEEccllc|cllmCCCCCCCCmWWww4wXTTTTTXWc
+ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmm+ccc.w4wXUUUUUUUcc
+ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWWWccwwwXUUUUUUcc
+ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmWWwwccccXXXXXWcc
+ccLLLLLmmKccbcWWAAAAAWWWlllaWWWWmCCCCCCCCmWWWWwccTTTTTXWc
+ccLLLLmmKKKccccWWWWWWWWWWllllWWWmCCCCCCCCmWWVwwwTTTTTTXWc
+ccLLLLmKKKKKc|c+++m+++cWlllllllWmCCCCCCCCmWWdWWwTTTTTTXWc
+ccLLLLmKKKKKcccEEEEEEEcclllcccllmCCCCCCCCmWVWWwVTTTTTTXWc
+ccLLLLmKKKKKccEEEEEEEEEccllc|cllmCCCCCCCCmWWwwwwXTTTTTXWc
 ccLLLL+KKKKK+EEEEEEEEEEE+llc+cllmCCCCCCCCmWwwwXXXXXXXXXWc
-ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo666wwwwWWc
-ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo666wwwwWWc
+ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo555wwwwWWc
+ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo555wwwwWWc
 ccLLLLcKKKKKcNcccc+ccccFFFFFFFmmmWccccccccwXXXXXXXXXwwWWc
 ccLLLLccKKKccNNNNmmmccFFFFFFFFFmmWcNNNNNNcXXSSSSSSSXXwWWc
 ccLLLLcccKccNNNNNNNN+FFFFFFFFFFF+WcNNNNNNcXSSSSSSSSSXXWWc

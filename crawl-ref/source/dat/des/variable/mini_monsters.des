@@ -1067,11 +1067,10 @@ ENDMAP
 NAME:  guppyfry_early_lair_pool
 TAGS:  patrolling no_monster_gen transparent
 DEPTH: D:2-5
-KMONS: 1 = big fish
 KMONS: 2 = adder
 KMONS: 3 = plant
 ITEM:  fruit
-SUBST: - = wwwwwwWWW1
+SUBST: - = wwwwwwWWW
 SUBST: . = ........33
 SUBST: ? = .wwt3%dd22
 : if you.absdepth() < 4 then

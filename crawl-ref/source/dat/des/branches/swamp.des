@@ -173,7 +173,7 @@ MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
 NSUBST: A = ttttw / w, B = ttttw / w, C = ttttw / w, D = ttttw / w
 NSUBST: E = T / ., F = T / ., G = T / ., H = T / ., I = T / ., J = T / .
 SUBST: T = tt.
-KMONS: 1 = swamp worm / big fish
+KMONS: 1 = swamp worm
 KMONS: 2 = electric eel
 KFEAT: 12 = w
 MAP
@@ -1285,10 +1285,10 @@ NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
 # Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
 MONS: necromancer actual_spells spells:bolt_of_cold;agony;.;animate_dead;simulacrum;.
-KMONS: z = big fish zombie / swamp drake zombie / swamp worm zombie / \
+KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / red wasp zombie / alligator zombie / \
-        crocodile zombie / hydra zombie / giant leech zombie / hydra zombie / \
+        hydra zombie / giant leech zombie / hydra zombie / \
         alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
         swamp dragon simulacrum w:1 / hydra simulacrum w:1
 KFEAT: z = shallow_water

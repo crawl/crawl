@@ -462,25 +462,6 @@ xxxxx xx.xx xxxxx
       xx@xx
 ENDMAP
 
-NAME:   elyvilon_altar_2
-TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
-TAGS:   no_pool_fixup no_monster_gen transparent decor
-DEPTH:  D:2-
-KFEAT:  C = altar_elyvilon
-NSUBST: W = 1:Z / *:W
-KMONS:  Z = big fish att:good_neutral
-KFEAT:  Z = W
-: interest_check(_G)
-MAP
-   @
-  wWw
- wwWww
-@WWCWW@
- wwWww
-  wWw
-   @
-ENDMAP
-
 NAME:   elyvilon_altar_3
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
 TAGS:   no_pool_fixup decor
@@ -618,7 +599,6 @@ xxxxxxxtttttttx
 xxxxxxxxxxxxxxx
 ENDMAP
 
-# Threat: two big fish. Loot: some fruits.
 # The oklob plant may be abusable (if so, remove it).
 NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
@@ -626,23 +606,22 @@ TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_rtele_into
-MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
+MONS:    plant, fungus, oklob plant, bush, toadstool col:random
 KITEM:   d = fruit / nothing
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
 : if you.absdepth() > 5 then
 SHUFFLE: PQR
-SUBST:   Q = 115, R = 11125
+SUBST:   Q = 114, R = 11124
 : end
 SUBST:   P = 112
 SUBST:   z = .
 SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
-SUBST:   " = .....6
+SUBST:   " = .....5
 COLOUR:  . = green / none
 COLOUR:  ' = green
-NSUBST:  w = 2:4 / *:w
 
 MAP
 ccccccccccccccccccccccc
@@ -651,10 +630,10 @@ cxxxxxxxxxxxxxxPxxd3xxc
 cxxxxxxxxxxxxxxPddddxxc
 cxxxxxxxxxxxxxxPPPxzdxc
 cxxxxxxx.......xxPPxxxc
-cxxxxxx..wwdww..xxPPxxc
-cxxxxx..wwwdwww..xxxPxc
-cxxxx..wwwwdwwww..xxxxc
-cxxxx.wwwwwdwwwww.xxxxc
+cxxxxxx..ww.ww..xxPPxxc
+cxxxxx..www.www..xxxPxc
+cxxxx..wwww.wwww..xxxxc
+cxxxx.wwwww.wwwww.xxxxc
 cxxxx.wwww'''wwww.xxxxc
 cxxxx.wwww'_'wwww.xxxxc
 cxxxx.wwww'''wwww.xxxxc
@@ -903,8 +882,6 @@ TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / bat zombie / nothing w:90
-MONS:   big fish zombie
-NSUBST: w = 1 : 22w / *:w
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxx
@@ -2133,17 +2110,15 @@ DEPTH:  D:2-, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_yredelemnul
 KFEAT:  _ = altar_yredelemnul
-SUBST:  1 : 1Ww
-SUBST:  1 = WWw
-NSUBST: w = 2:1 / *:w
-KMONS:  1 = big fish zombie
+MONS:   patrolling gnoll zombie
+NSUBST: A = 2:1 / *:.
 MAP
 xxxxxxxxxxxxxxxx
-xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
+xxxxAAAAAAAAxxxx
+xxxx........xxxx
 @............._x
-xxxx11111111xxxx
-xxxxwwwwwwwwxxxx
+xxxx........xxxx
+xxxxAAAAAAAAxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
 

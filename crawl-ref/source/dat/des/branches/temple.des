@@ -764,14 +764,7 @@ NAME:   minmay_temple_entry_water_ring
 TAGS:   temple_entry no_pool_fixup
 ORIENT: float
 WEIGHT: 3
-KMONS:  1 = big fish
-KFEAT:  1 = W
 KMASK:  W = no_monster_gen
-NSUBST: W = 1:1
-: if crawl.one_chance_in(5) then
-SUBST:  W = w
-KPROP:  ' = no_rtele_into
-: end
 SUBST:  ' = .
 SUBST:  x : xxcccvvbt
 KFEAT:  O = enter_temple
@@ -1008,7 +1001,7 @@ SUBST:   W : mvbG
 SUBST:   W = w
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
-KMONS:   1 = shark / electric eel / big fish
+KMONS:   1 = electric eel
 : else
 SUBST:   W = w
 :end
@@ -1069,7 +1062,7 @@ SUBST:   W : mvbG
 SUBST:   W = w
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
-KMONS:   1 = shark / electric eel / big fish
+KMONS:   1 = electric eel
 : else
 SUBST:   W = w
 :end
