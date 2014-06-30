@@ -334,69 +334,6 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     return contam;
 }
 
-int count_corpses_in_pack(bool blood_only)
-{
-    int num = 0;
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def &obj(you.inv[i]);
-
-        if (!obj.defined())
-            continue;
-
-        // Only actually count corpses, not skeletons.
-        if (obj.base_type != OBJ_CORPSES || obj.sub_type != CORPSE_BODY)
-            continue;
-
-        // Only saprovorous characters care about rotten food.
-        if (food_is_rotten(obj) && (blood_only
-                                    || !player_mutation_level(MUT_SAPROVOROUS)))
-        {
-            continue;
-        }
-
-        if (!blood_only || mons_has_blood(obj.mon_type))
-            num++;
-    }
-
-    return num;
-}
-
-static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
-{
-    const int num = count_corpses_in_pack(bottle_blood);
-
-    if (num == 0)
-        return false;
-
-    string verb = (bottle_blood ? "bottle" : "butcher");
-
-    string noun, pronoun;
-    if (num == 1)
-    {
-        noun    = "corpse";
-        pronoun = "it";
-    }
-    else
-    {
-        noun    = "corpses";
-        pronoun = "them";
-    }
-
-    if (remind)
-    {
-        mprf("You might want to also %s the %s in your pack.", verb.c_str(),
-             noun.c_str());
-    }
-    else
-    {
-        mprf("If you dropped the %s in your pack you could %s %s.",
-             noun.c_str(), verb.c_str(), pronoun.c_str());
-    }
-
-    return true;
-}
-
 #ifdef TOUCH_UI
 static string _butcher_menu_title(const Menu *menu, const string &oldt)
 {
@@ -408,8 +345,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
-        if (!_have_corpses_in_pack(false, bottle_blood))
-            mpr("There isn't anything here!");
+        mpr("There isn't anything here!");
         return false;
     }
 
@@ -455,11 +391,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (num_corpses == 0)
     {
-        if (!_have_corpses_in_pack(false, bottle_blood))
-        {
-            mprf("There isn't anything to %s here.",
-                 bottle_blood ? "bottle" : "butcher");
-        }
+        mprf("There isn't anything to %s here.",
+             bottle_blood ? "bottle" : "butcher");
         return false;
     }
 
@@ -477,12 +410,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             return false;
         }
 
-        success = _corpse_butchery(corpse_id, true, bottle_blood);
-
-        // Remind player of corpses in pack that could be butchered or
-        // bottled.
-        _have_corpses_in_pack(true, bottle_blood);
-        return success;
+        return _corpse_butchery(corpse_id, true, bottle_blood);
     }
 
     // Now pick what you want to butcher. This is only a problem
@@ -604,13 +532,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         mprf("There isn't anything %s to %s here.",
              Options.confirm_butcher == CONFIRM_NEVER ? "suitable" : "else",
              bottle_blood ? "bottle" : "butcher");
-    }
-
-    if (success)
-    {
-        // Remind player of corpses in pack that could be butchered or
-        // bottled.
-        _have_corpses_in_pack(true, bottle_blood);
     }
 
     return success;

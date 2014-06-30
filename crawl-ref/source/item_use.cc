@@ -1980,7 +1980,7 @@ static void _vampire_corpse_help()
     if (you.species != SP_VAMPIRE)
         return;
 
-    if (check_blood_corpses_on_ground() || count_corpses_in_pack(true) > 0)
+    if (check_blood_corpses_on_ground())
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
