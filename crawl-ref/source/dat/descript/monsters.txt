@@ -2869,6 +2869,11 @@ Just as demons are shaped in a mockery of living beings, this thing is a
 mockery of a plant, with mysterious appendages and tentacles writhing around.
 Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
+dimme
+
+A terrible demon, or perhaps a demigodess, with powers over death, disease,
+and suffering. Its presence is horrifying, but supernaturally compelling.
+%%%%
 drunken dwarf
 
 This short fellow seems to be working as an ale quality tester, and is enjoying
@@ -3049,10 +3054,6 @@ A spriggan that has mastered the culinary arts.
 strange machine
 
 A glistening silver machine.
-%%%%
-succubus
-
-A female demon who uses her charms to seduce humanoid males.
 %%%%
 water elementalist statue
 
