@@ -861,7 +861,9 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         z_tile = TILEP_MONS_ZOMBIE_NAGA;
         break;
     case MON_SHAPE_QUADRUPED_WINGED:
-        if (mons_genus(subtype) != MONS_DRAGON && mons_genus(subtype) != MONS_WYVERN)
+        if (mons_genus(subtype) != MONS_DRAGON
+            && mons_genus(subtype) != MONS_WYVERN
+            && mons_genus(subtype) != MONS_DRAKE)
         {
             if (mons_genus(subtype) == MONS_GRIFFON)
                 z_tile = TILEP_MONS_ZOMBIE_GRIFFON;
