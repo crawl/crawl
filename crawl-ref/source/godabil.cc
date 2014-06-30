@@ -1554,7 +1554,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
 /**
  * Checks whether there are any valid targets for beogh gifts in LOS.
  */
-bool _valid_beogh_gift_targets_in_sight()
+static bool _valid_beogh_gift_targets_in_sight()
 {
     for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
         if (beogh_can_gift_items_to(*rad))
