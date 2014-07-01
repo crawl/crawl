@@ -1754,16 +1754,10 @@ static void _rot_inventory_food(int time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory. {should be moved elsewhere - dlb}
-    bool burden_changed_by_rot = false;
     vector<char> rotten_items;
 
     int num_chunks         = 0;
     int num_chunks_gone    = 0;
-    int num_bones          = 0;
-    int num_bones_gone     = 0;
-    int num_corpses        = 0;
-    int num_corpses_rotted = 0;
-    int num_corpses_gone   = 0;
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -1781,56 +1775,27 @@ static void _rot_inventory_food(int time_delta)
             continue;
         }
 
-        if (item.base_type == OBJ_FOOD)
-            num_chunks++;
-        else if (item.sub_type == CORPSE_SKELETON)
-            num_bones++;
-        else
-            num_corpses++;
+#if TAG_MAJOR_VERSION == 34
+        if (item.base_type != OBJ_FOOD)
+            continue; // old corpses & skeletons
+
+        ASSERT(item.sub_type == FOOD_CHUNK);
+#else
+        ASSERT(item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK);
+#endif
+
+        num_chunks++;
 
         // Food item timed out -> make it disappear.
         if ((time_delta / 20) >= item.special)
         {
-            if (item.base_type == OBJ_FOOD)
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                // In case time_delta >= 220
-                if (!item.props.exists(ROTTING_WARNED_KEY))
-                    num_chunks_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-
-                continue;
-            }
-
-            // The item is of type carrion.
-            if (item.sub_type == CORPSE_SKELETON
-                || !mons_skeleton(item.mon_type))
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                if (item.sub_type == CORPSE_SKELETON)
-                    num_bones_gone++;
-                else
-                    num_corpses_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-                continue;
-            }
-
-            turn_corpse_into_skeleton(item);
             if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-            burden_changed_by_rot = true;
+                unwield_item();
 
-            num_corpses_rotted++;
+            item_was_destroyed(item);
+            destroy_item(item);
+            num_chunks_gone++;
+
             continue;
         }
 
@@ -1902,45 +1867,11 @@ static void _rot_inventory_food(int time_delta)
         learned_something_new(HINT_ROTTEN_FOOD);
     }
 
-    if (burden_changed_by_rot)
+    if (num_chunks_gone > 0)
     {
-        if ((num_chunks_gone + num_bones_gone + num_corpses_gone
-             + num_corpses_rotted) > 0)
-        {
-            string msg;
-            if (num_chunks_gone == num_chunks
-                && num_bones_gone == num_bones
-                && (num_corpses_gone + num_corpses_rotted) == num_corpses)
-            {
-                msg = "All of the ";
-            }
-            else
-                msg = "Some of the ";
-
-            vector<string> strs;
-            if (num_chunks_gone > 0)
-                strs.push_back("chunks of flesh");
-            if (num_bones_gone > 0)
-                strs.push_back("skeletons");
-            if ((num_corpses_gone + num_corpses_rotted) > 0)
-                strs.push_back("corpses");
-
-            msg += comma_separated_line(strs.begin(), strs.end());
-            msg += " in your inventory have ";
-
-            if (num_corpses_rotted == 0)
-                msg += "completely ";
-            else if ((num_chunks_gone + num_bones_gone
-                      + num_corpses_gone) == 0)
-            {
-                msg += "partially ";
-            }
-            else
-                msg += "completely or partially ";
-
-            msg += "rotted away.";
-            mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
-        }
+        mprf(MSGCH_ROTTEN_MEAT,
+             "%s of the chunks of flesh in your inventory have rotted away.",
+             num_chunks_gone == num_chunks ? "All" : "Some");
     }
 }
 
