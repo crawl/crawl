@@ -247,6 +247,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_FIREFLY)
     AXED_MON(MONS_BROWN_OOZE)
     AXED_MON(MONS_PULSATING_LUMP)
+    AXED_MON(MONS_BIG_FISH)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -4518,18 +4519,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 // water monsters
-{
-    MONS_BIG_FISH, ';', LIGHTGREEN, "big fish",
-    M_COLD_BLOOD | M_SUBMERGES,
-    MR_NO_FLAGS,
-    300, 7, MONS_BIG_FISH, MONS_BIG_FISH, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
-    1, 12, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
-    I_REPTILE, HT_WATER, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_FISH
-},
-
 {
     MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
     M_NO_GEN_DERIVED | M_COLD_BLOOD | M_SUBMERGES,

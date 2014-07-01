@@ -4192,7 +4192,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (foe && !feat_is_water(grd(foe->pos())))
             {
                 coord_def spot;
-                if (find_habitable_spot_near(foe->pos(), MONS_BIG_FISH, 3, false, spot)
+                if (find_habitable_spot_near(foe->pos(), MONS_ELECTRIC_EEL, 3, false, spot)
                     && foe->pos().distance_from(spot)
                      < foe->pos().distance_from(mons->pos()))
                 {
