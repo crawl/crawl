@@ -433,26 +433,26 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
     return item;
 }
 
+// Portal Projectile requires MP per shot.
+static bool _is_pproj_active()
+{
+    return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
+           && enough_mp(1, true, false);
+}
+
 // If item == -1, prompt the user.
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
     dist target;
-    // Portal Projectile, requires MP per shot.
-    bool teleport = !you.confused()
-                    && you.duration[DUR_PORTAL_PROJECTILE]
-                    && enough_mp(1, true, false);
-    int acc_bonus = 0;
-    item = get_ammo_to_shoot(item, target, teleport);
+    item = get_ammo_to_shoot(item, target, _is_pproj_active());
     if (item == -1)
         return;
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
         bolt beam;
-        if (teleport)
-            acc_bonus = random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4);
-        throw_it(beam, item, teleport, acc_bonus, &target);
+        throw_it(beam, item, &target);
     }
 }
 
@@ -487,7 +487,6 @@ void throw_item_no_quiver()
         return;
     }
 
-    // Okay, item is valid.
     bolt beam;
     throw_it(beam, slot);
 }
@@ -660,12 +659,12 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 //
 // Return value is only relevant if dummy_target is non-NULL, and returns
 // true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
-              dist *target)
+bool throw_it(bolt &pbolt, int throw_2, dist *target)
 {
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
+    const bool teleport = _is_pproj_active();
 
     if (you.confused())
     {
@@ -768,9 +767,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
-            monster *m = monster_at(target->target);
+            monster *m = monster_at(thr.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, target->target, false);
+                cancelled = stop_attack_prompt(m, false, thr.target, false);
         }
         else
         {
@@ -899,7 +898,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
 
-    pbolt.hit = acc_bonus;
+    pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
+                         : 0;
 
     bool hit = false;
     if (teleport)
@@ -908,7 +908,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.use_target_as_pos = true;
         pbolt.affect_cell();
         pbolt.affect_endpoint();
-        if (!did_return && acc_bonus != DEBUG_COOKIE)
+        if (!did_return && pbolt.hit != DEBUG_COOKIE)
             pbolt.drop_object();
         // Costs 1 MP per shot.
         dec_mp(1);
@@ -984,7 +984,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         && you_worship(GOD_DITHMENOS)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE
-        && acc_bonus != DEBUG_COOKIE)
+        && pbolt.hit != DEBUG_COOKIE)
     {
         dithmenos_shadow_throw(thr.target, item);
     }
