@@ -382,7 +382,7 @@ static bool _altar_prayer()
  *
  * @return Whether anything happened that took time.
  */
-bool _altar_pray_or_convert()
+static bool _altar_pray_or_convert()
 {
     const god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god == GOD_NO_GOD)
@@ -411,7 +411,7 @@ bool _altar_pray_or_convert()
 /**
  * Zazen.
  */
-void _zen_meditation()
+static void _zen_meditation()
 {
     const mon_holy_type holi = you.holiness();
     mprf(MSGCH_PRAY,
@@ -419,6 +419,10 @@ void _zen_meditation()
          holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
 }
 
+/**
+ * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
+ * you're an orc being preached at.)
+ */
 void pray()
 {
     // only successful prayer takes time
