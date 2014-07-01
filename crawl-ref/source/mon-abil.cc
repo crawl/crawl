@@ -5044,8 +5044,12 @@ static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
             score += open_site_score;
 
         monster *mons = monster_at(*ai);
-        if (mons && !mons->friendly() && mons != tmons)
+        if (mons && !mons->friendly()
+            && mons != tmons
+            && !mons_is_firewood(mons))
+        {
             score += sqr(mons_threat_level(mons) + 2);
+        }
     }
     return score;
 }
