@@ -29,6 +29,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "state.h"

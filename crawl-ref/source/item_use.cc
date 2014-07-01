@@ -2147,7 +2147,7 @@ void drink(int slot)
     if (is_blood_potion(potion))
     {
         // Always drink oldest potion.
-        remove_oldest_blood_potion(potion);
+        remove_oldest_perishable_item(potion);
     }
 
     dec_inv_item_quantity(slot, 1);

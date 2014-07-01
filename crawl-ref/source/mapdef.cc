@@ -44,6 +44,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "spl-util.h"
 #include "spl-book.h"

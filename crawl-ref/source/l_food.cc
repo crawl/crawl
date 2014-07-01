@@ -9,6 +9,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "player.h"
+#include "rot.h"
 
 /////////////////////////////////////////////////////////////////////
 // Food information.

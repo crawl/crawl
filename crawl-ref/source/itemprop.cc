@@ -1995,15 +1995,6 @@ bool is_fruit(const item_def & item)
     return item.base_type == OBJ_FOOD && item.sub_type == FOOD_FRUIT;
 }
 
-bool food_is_rotten(const item_def &item)
-{
-    return item.special <= ROTTING_CORPSE
-                                    && (item.base_type == OBJ_CORPSES
-                                       && item.sub_type == CORPSE_BODY
-                                    || item.base_type == OBJ_FOOD
-                                       && item.sub_type == FOOD_CHUNK);
-}
-
 //
 // Generic item functions:
 //

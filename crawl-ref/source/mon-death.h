@@ -6,9 +6,6 @@
 #ifndef MONDEATH_H
 #define MONDEATH_H
 
-#define FRESHEST_CORPSE 210
-#define ROTTING_CORPSE   99
-
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
 #define ELVEN_IS_ENERGIZED_KEY "elven_twin_is_energized"

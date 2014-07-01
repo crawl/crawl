@@ -838,13 +838,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Now start real firing!
     origin_set_unknown(item);
 
-    if (is_blood_potion(item) && thrown.quantity > 1)
+    // bloodpots & chunks need special handling.
+    if (is_perishable_stack(item) && thrown.quantity > 1)
     {
-        // Initialise thrown potion with oldest potion in stack.
-        int val = remove_oldest_blood_potion(thrown);
+        // Initialise thrown item with oldest item in stack.
+        int val = remove_oldest_perishable_item(thrown);
         val -= you.num_turns;
         item.props.clear();
-        init_stack_blood_potions(item, val);
+        init_perishable_stack(item, val);
     }
 
     // Even though direction is allowed, we're throwing so we
