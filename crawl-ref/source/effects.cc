@@ -1748,8 +1748,6 @@ static bool _food_item_needs_time_check(item_def &item)
     return true;
 }
 
-#define ROTTING_WARNED_KEY "rotting_warned"
-
 static void _rot_inventory_food(int time_delta)
 {
     // Update all of the corpses and food chunks in the player's
