@@ -2770,8 +2770,8 @@ enum monster_type                      // menv[].type
 #endif
 
     // Water monsters:
-    MONS_BIG_FISH,
 #if TAG_MAJOR_VERSION == 34
+    MONS_BIG_FISH,
     MONS_GIANT_GOLDFISH,
 #endif
     MONS_ELECTRIC_EEL,

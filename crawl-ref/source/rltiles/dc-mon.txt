@@ -166,7 +166,6 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 
 ## Aquatics (';')
 %sdir mon/aquatic
-big_fish MONS_BIG_FISH
 electric_eel MONS_ELECTRIC_EEL
 shark MONS_SHARK
 %rim 1

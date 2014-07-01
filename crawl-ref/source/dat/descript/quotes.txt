@@ -757,11 +757,6 @@ battlesphere
 Rule 4: Close air support covereth a multitude of sins.
     -The Seven Habits of Highly Effective Pirates
 %%%%
-big fish
-
-“And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
-%%%%
 blowgun
 
 “Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety

@@ -606,10 +606,6 @@ A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, yet it will provide fire support, assaulting whatever its conjurer
 casts at with magical missiles that never miss.
 %%%%
-big fish
-
-A stout fish with a wide, toothy mouth.
-%%%%
 big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
