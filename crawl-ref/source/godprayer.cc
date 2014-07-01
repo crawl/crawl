@@ -377,66 +377,93 @@ static bool _altar_prayer()
     return false;
 }
 
+/**
+ * Pray at, or convert to, an altar at the current position.
+ *
+ * @return Whether anything happened that took time.
+ */
+bool _altar_pray_or_convert()
+{
+    const god_type altar_god = feat_altar_god(grd(you.pos()));
+    if (altar_god == GOD_NO_GOD)
+        return false;
+
+    if (you.species == SP_DEMIGOD)
+    {
+        mpr("A being of your status worships no god.");
+        return false;
+    }
+
+    if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
+    {
+        // consider conversion
+        you.turn_is_over = true;
+        // But if we don't convert then god_pitch
+        // makes it not take a turn after all.
+        god_pitch(feat_altar_god(grd(you.pos())));
+        return you.turn_is_over;
+    }
+
+    // pray to your own god's altar
+    return _altar_prayer();
+}
+
+/**
+ * Zazen.
+ */
+void _zen_meditation()
+{
+    const mon_holy_type holi = you.holiness();
+    mprf(MSGCH_PRAY,
+         "You spend a moment contemplating the meaning of %s.",
+         holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
+}
+
 void pray()
 {
     // only successful prayer takes time
     you.turn_is_over = false;
 
-    bool something_happened = false;
-    const god_type altar_god = feat_altar_god(grd(you.pos()));
-    if (altar_god != GOD_NO_GOD)
+    // try to pray to an altar (if any is present)
+    if (_altar_pray_or_convert())
     {
-        if (!you_worship(GOD_NO_GOD) && altar_god == you.religion)
-            something_happened = _altar_prayer();
-        else if (altar_god != GOD_NO_GOD)
-        {
-            if (you.species == SP_DEMIGOD)
-            {
-                mpr("A being of your status worships no god.");
-                return;
-            }
-
-            you.turn_is_over = true;
-            // But if we don't convert then god_pitch
-            // makes it not take a turn after all.
-            god_pitch(feat_altar_god(grd(you.pos())));
-            return;
-        }
-    }
-
-    if (you_worship(GOD_NO_GOD))
-    {
-        if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
-        {
-            you.turn_is_over = true;
-            // But if we don't convert then god_pitch
-            // makes it not take a turn after all.
-            god_pitch(GOD_BEOGH);
-            if (you_worship(GOD_BEOGH))
-                spare_beogh_convert();
-            return;
-        }
-
-        const mon_holy_type holi = you.holiness();
-
-        mprf(MSGCH_PRAY,
-             "You spend a moment contemplating the meaning of %s.",
-             holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
-
-        // Zen meditation is timeless.
+        you.turn_is_over = true;
         return;
     }
 
-    if (!something_happened) // If something happened, there already was a prayer
-        mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
-            you.cannot_speak() ? "silent " : "",
-            god_name(you.religion).c_str());
+    // convert to beogh via priest.
+    if (you_worship(GOD_NO_GOD) && env.level_state & LSTATE_BEOGH
+        && can_convert_to_beogh())
+    {
+        // TODO: deduplicate this with the code in _altar_pray_or_convert.
+        you.turn_is_over = true;
+        // But if we don't convert then god_pitch
+        // makes it not take a turn after all.
+        god_pitch(GOD_BEOGH);
+        if (you_worship(GOD_BEOGH))
+        {
+            spare_beogh_convert();
+            return;
+        }
+    }
 
-    if (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom())
-        something_happened = true;
+    ASSERT(!you.turn_is_over);
 
-    // All sacrifices affect items you're standing on.
-    something_happened |= _offer_items();
+    // didn't convert to anyone.
+    if (you_worship(GOD_NO_GOD))
+    {
+        // wasn't considering following a god; just meditating.
+        if (feat_altar_god(grd(you.pos())) == GOD_NO_GOD)
+            _zen_meditation();
+        return;
+    }
+
+    mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
+         you.cannot_speak() ? "silent " : "",
+         god_name(you.religion).c_str());
+
+    you.turn_is_over = _offer_items()
+                      || (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom());
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
@@ -447,8 +474,6 @@ void pray()
     else
         mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
 
-    if (something_happened)
-        you.turn_is_over = true;
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
