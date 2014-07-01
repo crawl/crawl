@@ -39,8 +39,7 @@ void throw_item_no_quiver();
 bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                            string &dmg_msg);
 
-bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
-              int acc_bonus = 0, dist *target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, dist *target = NULL);
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
 int launcher_final_speed(const item_def &launcher,
