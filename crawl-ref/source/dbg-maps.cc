@@ -39,6 +39,8 @@ static string last_error;
 
 static int levels_tried = 0, levels_failed = 0;
 static int build_attempts = 0, level_vetoes = 0;
+// Map from message to counts.
+static map<string, int> veto_messages;
 
 void mapstat_report_map_build_start()
 {
@@ -46,9 +48,10 @@ void mapstat_report_map_build_start()
     map_builds[level_id::current()].first++;
 }
 
-void mapstat_report_map_veto()
+void mapstat_report_map_veto(const string &message)
 {
     level_vetoes++;
+    ++veto_messages[message];
     map_builds[level_id::current()].second++;
 }
 
@@ -360,6 +363,20 @@ static void _write_map_stats()
             fprintf(outf, "%3d) %s (%d of %d vetoed, %.2f%%)\n",
                     ++count, i->second.describe().c_str(),
                     vetoes, tries, vetoes * 100.0 / tries);
+        }
+
+        fprintf(outf, "\n\nVeto reasons:\n");
+        multimap<int, string> sortedreasons;
+        for (map<string, int>::const_iterator i = veto_messages.begin();
+             i != veto_messages.end(); ++i)
+        {
+            sortedreasons.insert(pair<int, string>(i->second, i->first));
+        }
+
+        for (multimap<int, string>::reverse_iterator
+                 i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
+        {
+            fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
         }
     }
 
