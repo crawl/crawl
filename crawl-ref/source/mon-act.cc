@@ -847,7 +847,7 @@ static bool _handle_potion(monster* mons, bolt & beem)
 
         // Remove the oldest blood timer.
         if (is_blood_potion(potion))
-            remove_oldest_blood_potion(potion);
+            remove_oldest_perishable_item(potion);
 
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion_idx, 1))
@@ -3019,12 +3019,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (quant >= si->quantity)
             item_was_destroyed(*si, mons->mindex());
-
-        if (is_blood_potion(*si))
-        {
+        else if (is_perishable_stack(*si))
             for (int i = 0; i < quant; ++i)
-                remove_oldest_blood_potion(*si);
-        }
+                remove_oldest_perishable_item(*si);
         dec_mitm_item_quantity(si.link(), quant);
     }
 

@@ -37,8 +37,9 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
-#include "religion.h"
 #include "quiver.h"
+#include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
 #include "skills2.h"
@@ -1717,18 +1718,17 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            if (!basename && !dbname)
-            {
-                if (food_is_rotten(*this))
-                    buff << "rotting ";
-
-                buff << "chunk of "
-                     << mons_type_name(static_cast<monster_type>(it_plus),
-                                       DESC_PLAIN)
-                     << " flesh";
-            }
-            else
-                buff << "chunk of flesh";
+            if (is_forbidden_food(*this))
+                buff << "anathema ";
+            else if (food_is_rotten(*this))
+                buff << "rotting ";
+            else if (is_poisonous(*this))
+                buff << "poisonous ";
+            else if (is_mutagenic(*this))
+                buff << "mutagenic ";
+            else if (causes_rot(*this))
+                buff << "putrefying ";
+            buff << "chunk of flesh";
             break;
 #if TAG_MAJOR_VERSION == 34
         default: buff << "removed food"; break;

@@ -18,8 +18,6 @@ class dist;
 struct activity_interrupt_data;
 
 void trackers_init_new_level(bool transit);
-string get_desc_quantity(const int quant, const int total,
-                         string whose = "your");
 
 string weird_glowing_colour();
 

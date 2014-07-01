@@ -57,6 +57,7 @@
 #include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
+#include "rot.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-summoning.h"

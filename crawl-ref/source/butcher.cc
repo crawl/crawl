@@ -423,6 +423,9 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     else if (you.species != SP_VAMPIRE)
         clear_item_pickup_flags(item);
 
+    // Initialise timer depending on corpse age
+    init_perishable_stack(item, item.special * ROT_TIME_FACTOR);
+
     // Happens after the corpse has been butchered.
     if (make_hide)
         maybe_drop_monster_hide(corpse);
@@ -528,10 +531,9 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 
-    // Initialise timer depending on corpse age:
-    // almost rotting: age = 100 --> potion timer =  500 --> will coagulate soon
-    // freshly killed: age = 200 --> potion timer = 2500 --> fresh !blood
-    init_stack_blood_potions(item, (item.special - 100) * 20 + 500);
+    // Initialise timer depending on corpse age
+    init_perishable_stack(item, (item.special - ROTTING_CORPSE) * ROT_TIME_FACTOR
+                               + ROTTING_BLOOD);
 
     // Happens after the blood has been bottled.
     maybe_drop_monster_hide(corpse);

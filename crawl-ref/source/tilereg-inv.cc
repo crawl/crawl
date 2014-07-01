@@ -21,6 +21,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
+#include "rot.h"
 #include "spl-book.h"
 
 #include "tiledef-dngn.h"

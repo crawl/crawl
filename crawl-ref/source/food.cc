@@ -25,6 +25,8 @@
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
+#include "godabil.h"
+#include "godconduct.h"
 #include "hints.h"
 #include "invent.h"
 #include "items.h"
@@ -48,8 +50,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
-#include "godabil.h"
+#include "rot.h"
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
@@ -474,6 +475,8 @@ bool eat_item(item_def &food)
     you.turn_is_over = true;
 
     count_action(CACT_EAT, food.sub_type);
+    if (is_perishable_stack(food))
+        remove_oldest_perishable_item(food);
     if (in_inventory(food))
         dec_inv_item_quantity(link, 1);
     else

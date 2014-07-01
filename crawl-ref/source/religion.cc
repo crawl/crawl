@@ -69,6 +69,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "rot.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"

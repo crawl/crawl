@@ -52,6 +52,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "godconduct.h"
 #include "spl-other.h"
 #include "spl-util.h"
