@@ -231,19 +231,6 @@ dice_def calc_dice(int num_dice, int max_damage)
     return ret;
 }
 
-// Attempts to make missile weapons nicer to the player by reducing the
-// extreme variance in damage done.
-void scale_dice(dice_def &dice, int threshold)
-{
-    while (dice.size > threshold)
-    {
-        dice.num *= 2;
-        // If it's an odd number, lose one; this is more than
-        // compensated by the increase in number of dice.
-        dice.size /= 2;
-    }
-}
-
 // Calculates num/den and randomly adds one based on the remainder.
 // [floor(num/den), ceil(num/den)]
 int div_rand_round(int num, int den)
