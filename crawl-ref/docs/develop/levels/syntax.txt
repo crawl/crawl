@@ -451,7 +451,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              purposes of level connectivity. By default, vaults are considered
              non-passable regardless of their contents. With this tag, the
              actual terrain of the vault affects its passability as seen by the
-             dungeon builder.
+             dungeon builder. A disconnected region inside a transparent vault
+             will cause a veto of the level (but see the "opaque" KMASK below).
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
           should only be used for vaults with ORIENT encompass or with PLACE.
@@ -1378,15 +1379,19 @@ KMASK:    Z = no_monster_gen
           symbols, rather than for the entire vault like if you did it
           with TAGS. Valid masks are
 
-          * "no_item_gen":   Prevents random item on that symbol. Items
+          * "no_item_gen": Prevents random item on that symbol. Items
              explicitly placed on that symbol aren't affected.
           * "no_monster_gen": Prevents random monster generation on that
              symbol.
           * "no_trap_gen": Prevents random trap generation on that symbol.
-          * "no_pool_fixup": prevents a water square next to land from being
+          * "no_pool_fixup": Prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
-          * "no_wall_fixup": prevents (rock) walls from being converted to
+          * "no_wall_fixup": Prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
+          * "opaque": Overrides the "transparent" tag for this particular
+             symbol. The symbol is considered impassible for level-building
+             purposes. A "transparent" vault with a deliberately disconnected
+             region must use this mask on the disconnected part.
 
           For example
 
