@@ -908,7 +908,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         pbolt.use_target_as_pos = true;
         pbolt.affect_cell();
         pbolt.affect_endpoint();
-        if (!did_return && pbolt.hit != DEBUG_COOKIE)
+        if (!did_return)
             pbolt.drop_object();
         // Costs 1 MP per shot.
         dec_mp(1);
@@ -983,8 +983,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         && projected
         && you_worship(GOD_DITHMENOS)
         && thrown.base_type == OBJ_MISSILES
-        && thrown.sub_type != MI_NEEDLE
-        && pbolt.hit != DEBUG_COOKIE)
+        && thrown.sub_type != MI_NEEDLE)
     {
         dithmenos_shadow_throw(thr.target, item);
     }
