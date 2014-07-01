@@ -44,6 +44,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_b
 TAGS:    zig_entry transparent
+KMASK:   O = opaque
 KFEAT:   O = enter_ziggurat
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
@@ -73,7 +74,9 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 KPROP:   1Om = no_rtele_into
 SHUFFLE: 123x
-SUBST:   1=1..., 2=2., x=.
+SUBST:   1=1___, 2=2_, x=_
+KMASK:   O123_ = opaque
+KFEAT:   _ = floor
 KFEAT:   m = iron_grate
 MAP
     ...
@@ -96,9 +99,11 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 KPROP:   1On; = no_rtele_into
 SHUFFLE: 123x
-SUBST:   1=1..., 2=2., x=.
-SUBST:   ;=.
+SUBST:   1=1___, 2=2_, x=_
+SUBST:   ;=_
 KFEAT:   n = iron_grate
+KMASK:   O123_ = opaque
+KFEAT:   _ = floor
 MAP
     ...
    ..n..
@@ -134,7 +139,8 @@ TAGS:   zig_entry no_trap_gen transparent
 KFEAT:  O = enter_ziggurat
 MONS:   angel / nothing w:20
 KPROP:  1Om; = no_rtele_into
-SUBST:  ;=.
+KFEAT:  ; = floor
+KMASK:  1O; = opaque
 MAP
     ...
    ..m..
@@ -182,6 +188,7 @@ COLOUR:  ' = cyan
 FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
 KFEAT:   O = enter_ziggurat
+KMASK:   O = opaque
 MAP
    ..'..
   ..'W'..
@@ -202,9 +209,11 @@ MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 SHUFFLE: 123
-SUBST:   1=1, 2=22.
+SUBST:   1=1, 2=22_
 KFEAT:   m = iron_grate
 KFEAT:   O = enter_ziggurat
+KFEAT:   _ = floor
+KMASK:   123O_ = opaque
 MAP
     ...
    ..m..
@@ -225,9 +234,10 @@ MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 SHUFFLE: 123
-SUBST:   1=1.., 2=2., 3=33.
+SUBST:   1=1__, 2=2_, 3=33_
 KFEAT:   n = iron_grate
 KFEAT:   O = enter_ziggurat
+KMASK:   123O_ = opaque
 MAP
     ...
    ..n..
