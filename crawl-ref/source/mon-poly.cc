@@ -662,6 +662,14 @@ void seen_monster(monster* mons)
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
 
+    // mark items as seen.
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
+    {
+        int item_id = mons->inv[slot];
+        if (item_id != NON_ITEM)
+            mitm[item_id].flags |= ISFLAG_SEEN;
+    }
+
     if (!mons_is_mimic(mons->type))
     {
         if (crawl_state.game_is_hints())
