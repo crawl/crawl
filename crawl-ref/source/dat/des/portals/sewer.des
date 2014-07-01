@@ -111,15 +111,6 @@ MAP
 .........
 ENDMAP
 
-NAME:   portal_sewer_entry_d
-: sewer_portal(_G)
-KMONS:  1 = giant mite
-MAP
-xxxxxxxxxx
-x.O.1.....@
-xxxxxxxxxx
-ENDMAP
-
 NAME:   portal_sewer_entry_e
 : sewer_portal(_G)
 ORIENT: northwest
