@@ -406,7 +406,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-        mapstat_report_map_veto();
+        mapstat_report_map_veto(e.what());
 #endif
         return false;
     }
