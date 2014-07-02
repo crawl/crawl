@@ -2313,7 +2313,7 @@ unique_books get_unique_spells(const monster_info &mi)
     unique_books result;
     for (size_t i = 0; i < num_books; ++i)
     {
-        mon_spellbook_type book = books[i];
+        const mon_spellbook_type book = books[i];
         vector<spell_type> spells;
 
         for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
@@ -2343,7 +2343,7 @@ unique_books get_unique_spells(const monster_info &mi)
 static void _mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
-    mon_spellbook_type book = books[random2(books.size())];
+    const mon_spellbook_type book = books[random2(books.size())];
 
     if (book == MST_GHOST)
         return mon->load_ghost_spells();

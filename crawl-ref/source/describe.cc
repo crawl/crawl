@@ -3192,7 +3192,7 @@ static string _monster_spells_description(const monster_info& mi)
 
     unique_books books = get_unique_spells(mi);
     const size_t num_books = books.size();
-    
+
     const bool caster  = mi.is_actual_spellcaster();
     const bool priest  = mi.is_priest();
     const bool natural = mi.is_natural_caster();
@@ -3219,7 +3219,7 @@ static string _monster_spells_description(const monster_info& mi)
     // Loop through books and display spells/abilities for each of them
     for (size_t i = 0; i < num_books; ++i)
     {
-        vector<spell_type> book_spells = books[i];
+        vector<spell_type> &book_spells = books[i];
 
         // Display spells for this book
         if (num_books > 1)
