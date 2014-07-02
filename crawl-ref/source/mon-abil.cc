@@ -4765,7 +4765,9 @@ void torpor_snail_slow(monster* mons)
 {
     // XXX: might be nice to refactor together with ancient_zyme_sicken().
 
-    if (is_sanctuary(mons->pos()))
+    if (is_sanctuary(mons->pos())
+        || mons->attitude != ATT_HOSTILE
+        || mons->has_ench(ENCH_CHARM))
         return;
 
     if (!is_sanctuary(you.pos())
