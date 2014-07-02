@@ -169,17 +169,17 @@ SUBST: Y = X x
 KFEAT: X = known teleport trap
 KMASK: _C = opaque
 MAP
-.............
-.xxxxxXxxxxx.
-.x_________x.
-.x_________x.
-.x_________x.
-.Y____C____Y.
-.x_________x.
-.x_________x.
-.x_________x.
-.xxxxxYxxxxx.
-.............
+...........
+.xxxxXxxxx.
+.x_______x.
+.x_______x.
+.x_______x.
+.Y___C___Y.
+.x_______x.
+.x_______x.
+.x_______x.
+.xxxxYxxxx.
+...........
 ENDMAP
 
 NAME:  amethyst_srp_altar
@@ -206,17 +206,17 @@ end
 }}
 KMASK: _Cp = opaque
 MAP
-......o......
-.xxxxxPxxxxx.
-.x_________x.
-.x_________x.
-.x_________x.
-nO____C___pM.
-.x_________x.
-.x_________x.
-.x_________x.
-.xxxxxNxxxxx.
-......m......
+.....o.....
+.xxxxPxxxx.
+.x_______x.
+.x_______x.
+.x_______x.
+nO___C__pM.
+.x_______x.
+.x_______x.
+.x_______x.
+.xxxxNxxxx.
+.....m.....
 ENDMAP
 
 NAME:  lemuel_statue_altar
