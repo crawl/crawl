@@ -3143,6 +3143,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     }
                 }
 
+                // Don't knockback something we're trying to constrict.
+                const actor *victim = actor_at(beem.target);
+                if (victim &&
+                    beem.can_knockback(victim)
+                    && mons->is_constricting()
+                    && mons->constricting->count(victim->mid))
+                {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {

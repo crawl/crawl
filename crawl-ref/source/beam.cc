@@ -4109,13 +4109,9 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit();
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-         || origin_spell == SPELL_COLD_BREATH && you.airborne()
-         || origin_spell == SPELL_FORCE_LANCE && hurted > 0
-         || name == "flood of elemental water")
-    {
+    if (can_knockback(&you, hurted))
         beam_hits_actor(&you);
-    }
+
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze"
@@ -4625,13 +4621,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg)
         beogh_follower_convert(mon, true);
 
-    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        || (name == "freezing breath" && mon->flight_mode())
-        || (name == "lance of force" && dmg > 0)
-        || name == "flood of elemental water")
-    {
+    if (can_knockback(mon, dmg))
         beam_hits_actor(mon);
-    }
+
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, mon->pos());
 
@@ -6642,6 +6634,26 @@ string bolt::get_source_name() const
     if (a)
         return a->name(DESC_A, true);
     return "";
+}
+
+/**
+ * Can this bolt knock back an actor?
+ *
+ * The bolts that knockback flying actors or actors only when damage
+ * is dealt will return when.
+ *
+ * @param act The target actor. If not-NULL, check if the actor is flying for
+ *            bolts that knockback flying actors.
+ * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
+ *             like force bolt that only push back upon damage.
+ * @return True if the bolt could knockback the actor, false otherwise.
+*/
+bool bolt::can_knockback(const actor *act, int dam) const
+{
+    return((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+           || (name == "freezing breath" && (!act || act->flight_mode()))
+           || (name == "lance of force" && (dam < 0 || dam > 0))
+           || name == "flood of elemental water");
 }
 
 void clear_zap_info_on_exit()
