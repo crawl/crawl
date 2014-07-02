@@ -1751,12 +1751,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
             prob = 1.0;
 
         int goldify = 0;
-        for (int i = 0; i < it.quantity; i++)
+        for (int i = 0; i < quant_got; i++)
             if (bernoulli(1.0, prob))
                 goldify++;
 
         if (goldify > 0)
         {
+            // XXX: Gives the wrong message when only picking up part of a stack.
             string msg = get_desc_quantity(goldify, quant_got, "the")
                          + " " + it.name(DESC_PLAIN);
             if (goldify > 1)
@@ -1776,7 +1777,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
             if (dec_mitm_item_quantity(obj, goldify))
                 return goldify;
 
-            quant_got -= goldify;
+            if ((quant_got -= goldify) == 0)
+                return 1;
         }
     }
 
