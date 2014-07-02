@@ -59,7 +59,7 @@ KFEAT:  A = armour shop
 KMONS:  a = deep elf master archer
 KFEAT:  m = iron_grate
 KFEAT:  Y = any shop
-KITEM:  P = any good_item
+KITEM:  Q = any good_item
 KITEM:  Z = Orb of Zot
 SUBVAULT: B : red_sonja_temple
 SUBVAULT: C : red_sonja_temple_small
