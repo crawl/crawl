@@ -2167,9 +2167,9 @@ static void _rebrand_weapon(item_def& wpn)
             new_brand = random_choose_weighted(
                                     30, SPWPN_FLAMING,
                                     30, SPWPN_FREEZING,
+                                    25, SPWPN_VORPAL,
                                     20, SPWPN_VENOM,
                                     15, SPWPN_DRAINING,
-                                    15, SPWPN_VORPAL,
                                     15, SPWPN_ELECTROCUTION,
                                     12, SPWPN_PROTECTION,
                                     8, SPWPN_VAMPIRISM,
