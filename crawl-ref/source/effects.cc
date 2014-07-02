@@ -65,6 +65,7 @@
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"

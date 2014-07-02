@@ -31,15 +31,6 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
 void butcher_corpse(item_def &item, maybe_bool skeleton = MB_MAYBE,
                     bool chunks = true);
 
-void init_stack_blood_potions(item_def &stack, int age = -1);
-string get_desc_quantity(const int quant, const int total,
-                         string whose = "your");
-void maybe_coagulate_blood_potions_floor(int obj);
-void maybe_coagulate_blood_potions_inv(item_def &blood);
-int remove_oldest_blood_potion(item_def &stack);
-void remove_newest_blood_potion(item_def &stack, int quant = -1);
-void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
-
 bool check_blood_corpses_on_ground();
 bool can_bottle_blood_from_corpse(monster_type mons_class);
 int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type = -1);

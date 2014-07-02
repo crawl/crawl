@@ -68,6 +68,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "rot.h"
 #include "show.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
