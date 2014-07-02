@@ -1026,8 +1026,14 @@ bool eat_from_inventory()
     return false;
 }
 
-// Returns -1 for cancel, 1 for eaten, 0 for not eaten,
-//         -2 for skip to inventory.
+
+/** Make the prompt for chunk eating/corpse draining.
+ *
+ *  @param only_auto Don't actually make a prompt: if there are
+ *                   things to auto_eat, eat them, and exit otherwise.
+ *  @returns -1 for cancel, 1 for eaten, 0 for not eaten,
+ *           -2 for skip to inventory.
+ */
 int prompt_eat_chunks(bool only_auto)
 {
     // Full herbivores cannot eat chunks.
@@ -1045,57 +1051,43 @@ int prompt_eat_chunks(bool only_auto)
     bool found_valid = false;
     vector<item_def *> chunks;
 
-    for (stack_iterator si(you.pos(), true); si; ++si)
+    // Vampires only want stuff on the floor.
+    if (you.species == SP_VAMPIRE)
     {
-        if (you.species == SP_VAMPIRE)
+        for (stack_iterator si(you.pos(), true); si; ++si)
         {
             if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
 
             if (!mons_has_blood(si->mon_type))
                 continue;
+
+            found_valid = true;
+            chunks.push_back(&(*si));
         }
-        else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
-            continue;
-
-        if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
-            continue;
-
-        // Don't prompt for bad food types.
-        if (is_bad_food(*si))
-            continue;
-
-        found_valid = true;
-        chunks.push_back(&(*si));
     }
-
-    // Then search through the inventory.
-    for (int i = 0; i < ENDOFPACK; ++i)
+    // Others only search through the inventory.
+    else
     {
-        if (!you.inv[i].defined())
-            continue;
-
-        item_def *item = &you.inv[i];
-        if (you.species == SP_VAMPIRE)
+        for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
+            if (!you.inv[i].defined())
+            continue;
+
+            item_def *item = &you.inv[i];
+            if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
                 continue;
 
-            if (!mons_has_blood(item->mon_type))
+            if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
                 continue;
-        }
-        else if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
-            continue;
 
-        if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
-            continue;
-
-        // Don't prompt for bad food types.
-        if (is_bad_food(*item))
-            continue;
+            // Don't prompt for bad food types.
+            if (is_bad_food(*item))
+                continue;
 
         found_valid = true;
         chunks.push_back(item);
+        }
     }
 
     const bool easy_eat = Options.easy_eat_chunks || only_auto;
