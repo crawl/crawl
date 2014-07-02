@@ -23,6 +23,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "butcher.h"
 #include "cloud.h"

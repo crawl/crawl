@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "butcher.h"
 #include "cluautil.h"
 #include "cloud.h"

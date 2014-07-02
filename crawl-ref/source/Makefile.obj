@@ -16,6 +16,7 @@ behold.o \
 bitary.o \
 branch.o \
 butcher.o \
+bloodspatter.o \
 chardump.o \
 cio.o \
 cloud.o \

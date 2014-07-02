@@ -13,6 +13,7 @@
 
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
 #include "clua.h"

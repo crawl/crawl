@@ -21,6 +21,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
+#include "bloodspatter.h"
 #ifdef DGL_WHEREIS
  #include "chardump.h"
 #endif

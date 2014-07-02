@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "arena.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "colour.h"
 #include "coordit.h"
 #include "delay.h"
