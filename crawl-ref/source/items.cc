@@ -1280,11 +1280,10 @@ void pickup(bool partial_quantity)
             o = mitm[o].link;
         pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
     }
-    else if (Options.pickup_menu
-             || Options.pickup_menu_limit
-             && num_items >= (Options.pickup_menu_limit < 0
-                              ? Options.item_stack_summary_minimum
-                              : Options.pickup_menu_limit))
+    else if (Options.pickup_menu_limit
+             && num_items > (Options.pickup_menu_limit > 0
+                             ? Options.pickup_menu_limit
+                             : Options.item_stack_summary_minimum - 1))
     {
         pickup_menu(o);
     }
