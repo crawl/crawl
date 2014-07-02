@@ -17,6 +17,7 @@
 #include "options.h"
 
 #include "artefact.h"
+#include "butcher.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"

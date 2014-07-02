@@ -13,6 +13,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "misc.h"
 #include "player.h"
 #include "stuff.h"
 

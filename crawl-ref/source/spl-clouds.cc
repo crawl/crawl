@@ -12,6 +12,7 @@
 
 #include "act-iter.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"

@@ -15,6 +15,7 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
+butcher.o \
 chardump.o \
 cio.o \
 cloud.o \

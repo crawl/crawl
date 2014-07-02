@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "artefact.h"
+#include "butcher.h"
 #include "coordit.h"
 #include "database.h"
 #include "effects.h"
