@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "artefact.h"
+#include "bloodspatter.h"
 #include "butcher.h"
 #include "coordit.h"
 #include "database.h"
@@ -22,7 +23,6 @@
 #include "player.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "monster.h"
 #include "notes.h"
 #include "options.h"

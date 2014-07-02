@@ -7,13 +7,13 @@
 
 #include "butcher.h"
 
+#include "bloodspatter.h"
 #include "env.h"
 #include "food.h"
 #include "itemprop.h"
 #include "itemprop-enum.h"
 #include "items.h"
 #include "makeitem.h"
-#include "misc.h"
 #include "mon-death.h"
 #include "random.h"
 #include "rot.h"

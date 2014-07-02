@@ -18,6 +18,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"

@@ -38,6 +38,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
