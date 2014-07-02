@@ -13,13 +13,13 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "los.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"
 #include "shout.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 
 static bool _airtight(coord_def c)
 {

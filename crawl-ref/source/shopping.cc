@@ -2871,3 +2871,44 @@ string ShoppingList::item_name_simple(const item_def& item, bool ident)
     return item.name(DESC_PLAIN, false, ident, false, false,
                      ISFLAG_KNOW_CURSE);
 }
+
+static const char *shop_types[] =
+{
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "gadget",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general",
+};
+
+int str_to_shoptype(const string &s)
+{
+    if (s == "random" || s == "any")
+        return SHOP_RANDOM;
+
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+    {
+        if (s == shop_types[i])
+            return i;
+    }
+    return -1;
+}
+
+const char *shoptype_to_str(shop_type type)
+{
+    return shop_types[type];
+}
+
+void list_shop_types()
+{
+    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+        mprf_nocap("%s", shop_types[i]);
+}
