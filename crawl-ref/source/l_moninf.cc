@@ -98,7 +98,7 @@ LUAFN(moninf_get_is)
     return 1;
 }
 
-// returns multiple arrays based on number of spellbooks. 
+// returns multiple arrays based on number of spellbooks.
 LUAFN(moninf_get_spells)
 {
     MONINF(ls, 1, mi);
@@ -111,17 +111,14 @@ LUAFN(moninf_get_spells)
     unique_books books = get_unique_spells(*mi);
     const size_t num_books = books.size();
 
-
-    for (unsigned int i = 0; i < num_books;++i)
+    for (size_t i = 0; i < num_books; ++i)
     {
-        vector<spell_type> unique_spells = books[i];
-
+        const vector<spell_type> &unique_spells = books[i];
         vector<string> spell_titles;
 
-        for (unsigned int j = 0; j < unique_spells.size();j++)
+        for (size_t j = 0; j < unique_spells.size(); ++j)
         {
-            spell_type spell = unique_spells[j];
-
+            const spell_type spell = unique_spells[j];
             spell_titles.push_back(spell_title(spell));
         }
 
