@@ -6450,8 +6450,11 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis(bool calc_unid, bool items) const
 {
-    if (mons_genus(type) == MONS_FORMICID)
+    if (mons_genus(type) == MONS_FORMICID
+        || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
+    {
         return true;
+    }
 
     return actor::stasis(calc_unid, items);
 }
