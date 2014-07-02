@@ -9,8 +9,6 @@
 {{
  -- Since abyssal stairs don't spawn at the bottom of the Abyss,
  -- replace a vault's empty guarded floor with a floor item at the bottom.
- -- FIXME: regardless of the abyss exit vault's code, sometimes vaults don't place
- -- the exit or stair at all? Only with proper level generation, though, not &L.
 function init_abyss_exit(e, glyph)
   if you.depth() == dgn.br_depth(you.branch()) then
     if crawl.random2(10) > 3 then
