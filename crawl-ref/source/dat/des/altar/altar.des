@@ -157,16 +157,17 @@ TAGS:  transparent decor
 DEPTH: D:2-, Vaults
 SUBST: Y = X x
 KFEAT: X = known teleport trap
+KMASK: _C = opaque
 MAP
 .............
 .xxxxxXxxxxx.
-.x.........x.
-.x.........x.
-.x.........x.
-.Y....C....Y.
-.x.........x.
-.x.........x.
-.x.........x.
+.x_________x.
+.x_________x.
+.x_________x.
+.Y____C____Y.
+.x_________x.
+.x_________x.
+.x_________x.
 .xxxxxYxxxxx.
 .............
 ENDMAP
@@ -180,10 +181,11 @@ SUBST: F = G
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 : interest_check(_G)
+KMASK: _>C = opaque
 MAP
 .........
 .ccccccc.
-.F...>Cc.
+.F___>Cc.
 .ccccccc.
 .........
 ENDMAP
