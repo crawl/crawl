@@ -1485,15 +1485,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and can also be sacrificed to some gods. ";
 
-        if (!Options.show_gold_turns)
-        {
-            text << "Whenever you pick up some gold, your current amount will "
-                    "be mentioned. If you'd like to check your wealth at other "
-                    "times, you can press <w>%</w>. It will also be "
-                    "listed on the <w>%</w> screen.";
-            cmd.push_back(CMD_LIST_GOLD);
-            cmd.push_back(CMD_RESISTS_SCREEN);
-        }
+        text << "Whenever you pick up some gold, your current amount will "
+                "be mentioned. If you'd like to check your wealth at other "
+                "times, you can press <w>$</w>. It will also be "
+                "listed on the <w>%</w> screen.";
+        cmd.push_back(CMD_LIST_GOLD);
+        cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
     case HINT_SEEN_STAIRS:

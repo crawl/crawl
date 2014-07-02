@@ -17,7 +17,7 @@
 // define VIEW_MIN_WIDTH defined elsewhere
 // define VIEW_MAX_WIDTH use Options.view_max_width
 #define HUD_WIDTH  42
-#define HUD_HEIGHT 12
+#define HUD_HEIGHT 13
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  // non-inline layout only
@@ -376,8 +376,7 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0)
-                                  + crawl_state.game_is_zotdef()
+                       HUD_HEIGHT + crawl_state.game_is_zotdef()
 #if TAG_MAJOR_VERSION == 34
                                   + ((you.species == SP_LAVA_ORC) ? 1 : 0)
 #endif
