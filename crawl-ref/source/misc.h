@@ -17,11 +17,6 @@ struct bolt;
 class dist;
 struct activity_interrupt_data;
 
-void search_around();
-
-void emergency_untransform();
-void merfolk_start_swimming(bool step = false);
-void merfolk_stop_swimming();
 void trackers_init_new_level(bool transit);
 string get_desc_quantity(const int quant, const int total,
                          string whose = "your");
@@ -66,10 +61,6 @@ void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
 void run_environment_effects();
-
-int str_to_shoptype(const string &s);
-const char *shoptype_to_str(shop_type type);
-void list_shop_types();
 
 bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();

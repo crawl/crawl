@@ -1457,3 +1457,47 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
 
     deflate_hp(you.hp_max, false);
 }
+
+void emergency_untransform()
+{
+    mpr("You quickly transform back into your natural form.");
+    untransform(false, true); // We're already entering the water.
+
+    if (you.species == SP_MERFOLK)
+        merfolk_start_swimming(false);
+}
+
+void merfolk_start_swimming(bool stepped)
+{
+    if (you.fishtail)
+        return;
+
+    if (stepped)
+        mpr("Your legs become a tail as you enter the water.");
+    else
+        mpr("Your legs become a tail as you dive into the water.");
+
+    if (you.invisible())
+        mpr("...but don't expect to remain undetected.");
+
+    you.fishtail = true;
+    remove_one_equip(EQ_BOOTS);
+    you.redraw_evasion = true;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+}
+
+void merfolk_stop_swimming()
+{
+    if (!you.fishtail)
+        return;
+    you.fishtail = false;
+    unmeld_one_equip(EQ_BOOTS);
+    you.redraw_evasion = true;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+}
