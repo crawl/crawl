@@ -208,7 +208,6 @@
 # small_more                   = true
 # show_more                    = false
 # show_newturn_mark            = false
-# show_gold_turns              = false
 # show_game_turns              = false
 # item_stack_summary_minimum   = 4
 # mlist_min_height             = 4

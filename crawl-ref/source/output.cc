@@ -511,8 +511,7 @@ void update_turn_count()
 {
     // Don't update turn counter when running/resting/traveling to
     // prevent pointless screen updates.
-    if (!Options.show_gold_turns
-        || you.running > 0
+    if (you.running > 0
         || you.running < 0 && Options.travel_delay == -1)
     {
         return;
@@ -1332,11 +1331,9 @@ void print_stats()
     int yhack = crawl_state.game_is_zotdef();
 #endif
 
-    // If Options.show_gold_turns, line 9 is Gold and Turns
+    // Line 9 is Gold and Turns
 #ifdef USE_TILE_LOCAL
-    if (Options.show_gold_turns && !tiles.is_using_small_layout())
-#else
-    if (Options.show_gold_turns)
+    if (!tiles.is_using_small_layout())
 #endif
     {
         // Increase y-value for all following lines.
@@ -1464,17 +1461,14 @@ void draw_border()
     CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
-    if (Options.show_gold_turns)
-    {
 #if TAG_MAJOR_VERSION == 34
-        int yhack = crawl_state.game_is_zotdef() + temp;
+    int yhack = crawl_state.game_is_zotdef() + temp;
 #else
-        int yhack = crawl_state.game_is_zotdef();
+    int yhack = crawl_state.game_is_zotdef();
 #endif
-        CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
-        CGOTOXY(19, 9 + yhack, GOTO_STAT);
-        CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
-    }
+    CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
+    CGOTOXY(19, 9 + yhack, GOTO_STAT);
+    CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
 }
 

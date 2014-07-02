@@ -1267,7 +1267,6 @@ void TilesFramework::place_gold_turns()
     if (m_statcol_bottom - m_statcol_top < m_region_stat->dy)
         return;
 
-    Options.show_gold_turns = true;
     ++crawl_view.hudsz.y;
     m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
     if (m_region_map)
@@ -1293,7 +1292,6 @@ void TilesFramework::layout_statcol()
         m_region_map = NULL;
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
-    Options.show_gold_turns = false;
 
     if (use_small_layout)
     {
