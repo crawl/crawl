@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"

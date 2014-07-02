@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"

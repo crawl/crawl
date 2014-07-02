@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "dbg-scan.h"

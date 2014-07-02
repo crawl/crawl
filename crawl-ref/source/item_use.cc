@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
