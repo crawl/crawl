@@ -6851,7 +6851,7 @@ void vault_placement::apply_grid()
             _vault_grid_mons(*this, feat, *ri, mapsp);
         }
 
-        map.map.apply_overlays(pos);
+        map.map.apply_overlays(pos, map.is_overwritable_layout());
     }
 }
 

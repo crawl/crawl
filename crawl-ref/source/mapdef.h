@@ -392,8 +392,8 @@ public:
     string add_lua_marker(const string &key, const lua_datum &fn);
 
     void apply_markers(const coord_def &pos);
-    void apply_grid_overlay(const coord_def &pos);
-    void apply_overlays(const coord_def &pos);
+    void apply_grid_overlay(const coord_def &pos, bool is_layout);
+    void apply_overlays(const coord_def &pos, bool is_layout);
 
     const vector<string> &get_lines() const;
     vector<string> &get_lines();
