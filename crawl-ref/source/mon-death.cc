@@ -54,6 +54,7 @@
 #include "notes.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "spl-damage.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"

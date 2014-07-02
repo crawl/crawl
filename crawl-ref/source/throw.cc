@@ -35,6 +35,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skills2.h"
 #include "spl-summoning.h"

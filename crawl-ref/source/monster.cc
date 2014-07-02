@@ -49,6 +49,7 @@
 #include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "spl-damage.h"
 #include "spl-monench.h"

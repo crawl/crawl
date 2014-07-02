@@ -45,6 +45,7 @@
 #include "potion.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skills.h"
 #include "skills2.h"

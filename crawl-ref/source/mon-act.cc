@@ -48,6 +48,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h" // for item values
 #include "shout.h"
 #include "spl-book.h"

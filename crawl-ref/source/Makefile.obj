@@ -182,6 +182,7 @@ random.o \
 random-var.o \
 ranged_attack.o \
 ray.o \
+rot.o \
 religion.o \
 shopping.o \
 shout.o \

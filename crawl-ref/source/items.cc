@@ -56,6 +56,7 @@
 #include "player-equip.h"
 #include "quiver.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
 #include "spl-book.h"
