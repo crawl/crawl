@@ -891,6 +891,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     // Move player's knowledge.
     env.map_knowledge(dst) = env.map_knowledge(src);
+    env.map_seen.set(dst, env.map_seen(src));
     StashTrack.move_stash(src, dst);
 }
 
