@@ -272,7 +272,8 @@ static void _sdump_transform(dump_params &par)
             else
             {
                 text += make_stringf("You %s grown temporary %s.",
-                                     par.se ? "had" : "have", appendage_name());
+                                     par.se ? "had" : "have",
+                                     mutation_name((mutation_type) you.attribute[ATTR_APPENDAGE]));
             }
             break;
         case TRAN_FUNGUS:

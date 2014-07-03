@@ -677,13 +677,6 @@ static mutation_type _beastly_appendage()
     return chosen;
 }
 
-const char* appendage_name(int app)
-{
-    ASSERT(beastly_slot(app) != EQ_NONE);
-    const mutation_def& mdef = get_mutation_def((mutation_type) app);
-    return mdef.short_desc;
-}
-
 static bool _transformation_is_safe(transformation_type which_trans,
                                     dungeon_feature_type feat, bool quiet)
 {
@@ -1354,7 +1347,7 @@ void untransform(bool skip_wielding, bool skip_move)
             // way is one line:
             you.mutation[app] = you.innate_mutation[app];
             you.attribute[ATTR_APPENDAGE] = 0;
-            mprf(MSGCH_DURATION, "Your %s disappear%s.", appendage_name(app),
+            mprf(MSGCH_DURATION, "Your %s disappear%s.", mutation_name((mutation_type) app),
                  (app == MUT_TENTACLE_SPIKE) ? "s" : "");
         }
         break;
