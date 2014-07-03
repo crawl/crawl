@@ -490,7 +490,7 @@ pickup_menu_limit = 1
         displayed when picking up multiple items instead of prompting for each
         item. If zero, never use the menu. If negative, use the value of
         item_stack_summary_minimum - 1, instead.
- 
+
         Note that no matter the vaulue of the option, picking up will always
         take one turn.
 
