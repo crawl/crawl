@@ -1788,8 +1788,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // water monsters
     case MONS_ELECTRIC_EEL:
         return TILEP_MONS_ELECTRIC_EEL;
-    case MONS_SHARK:
-        return TILEP_MONS_SHARK;
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
 
@@ -3911,8 +3909,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // water monsters
     case MONS_ELECTRIC_EEL:
         return TILE_CORPSE_ELECTRIC_EEL;
-    case MONS_SHARK:
-        return TILE_CORPSE_SHARK;
 
     // humans ('@')
     case MONS_HUMAN:

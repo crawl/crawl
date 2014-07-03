@@ -328,7 +328,7 @@ bool monster::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 bool monster::can_drown() const
 {
-    // Presumably a shark in lava or a lavafish in deep water could
+    // Presumably a electric eel in lava or a lavafish in deep water could
     // drown, but that should never happen, so this simple check should
     // be enough.
     switch (mons_primary_habitat(this))

@@ -109,7 +109,6 @@ moth_of_wrath CORPSE_MOTH_OF_WRATH
 %sdir mon/aquatic
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 electric_eel CORPSE_ELECTRIC_EEL
-shark CORPSE_SHARK
 kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 
