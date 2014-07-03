@@ -17,6 +17,7 @@
 #include "player.h"
 #include "stuff.h"
 
+#define TIMER_KEY "timer"
 
 // Initialise blood potions with a vector of timers.
 void init_stack_blood_potions(item_def &stack, int age)
@@ -25,8 +26,8 @@ void init_stack_blood_potions(item_def &stack, int age)
 
     CrawlHashTable &props = stack.props;
     props.clear(); // sanity measure
-    props["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
-    CrawlVector &timer = props["timer"].get_vector();
+    props[TIMER_KEY].new_vector(SV_INT, SFLAG_CONST_TYPE);
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
 
     if (age == -1)
     {
@@ -97,8 +98,8 @@ static void _init_coagulated_blood(item_def &stack, int count, item_def &old,
     item_colour(stack);
 
     CrawlHashTable &props_new = stack.props;
-    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
-    CrawlVector &timer_new = props_new["timer"].get_vector();
+    props_new[TIMER_KEY].new_vector(SV_INT, SFLAG_CONST_TYPE);
+    CrawlVector &timer_new = props_new[TIMER_KEY].get_vector();
 
     int val;
     while (!age_timer.empty())
@@ -118,11 +119,11 @@ void maybe_coagulate_blood_potions_floor(int obj)
     ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
-    if (!props.exists("timer"))
+    if (!props.exists(TIMER_KEY))
         init_stack_blood_potions(blood, blood.special);
 
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(props.exists(TIMER_KEY));
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
     _compare_blood_quantity(blood, timer.size());
 
@@ -193,11 +194,11 @@ void maybe_coagulate_blood_potions_floor(int obj)
             {
                 // Merge with existing stack.
                 CrawlHashTable &props2 = si->props;
-                if (!props2.exists("timer"))
+                if (!props2.exists(TIMER_KEY))
                     init_stack_blood_potions(*si, si->special);
 
-                ASSERT(props2.exists("timer"));
-                CrawlVector &timer2 = props2["timer"].get_vector();
+                ASSERT(props2.exists(TIMER_KEY));
+                CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
                 ASSERT(timer2.size() == si->quantity);
 
                 // Update timer -> push(pop).
@@ -282,11 +283,11 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
     ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
-    if (!props.exists("timer"))
+    if (!props.exists(TIMER_KEY))
         init_stack_blood_potions(blood, blood.special);
 
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(props.exists(TIMER_KEY));
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
     _compare_blood_quantity(blood, timer.size());
     ASSERT(!timer.empty());
 
@@ -366,11 +367,11 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
             && you.inv[m].sub_type == POT_BLOOD_COAGULATED)
         {
             CrawlHashTable &props2 = you.inv[m].props;
-            if (!props2.exists("timer"))
+            if (!props2.exists(TIMER_KEY))
                 init_stack_blood_potions(you.inv[m], you.inv[m].special);
 
-            ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"].get_vector();
+            ASSERT(props2.exists(TIMER_KEY));
+            CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
             if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
                 _compare_blood_quantity(blood, timer.size());
 
@@ -441,11 +442,11 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
         {
             // Merge with existing stack.
             CrawlHashTable &props2 = mitm[o].props;
-            if (!props2.exists("timer"))
+            if (!props2.exists(TIMER_KEY))
                 init_stack_blood_potions(mitm[o], mitm[o].special);
 
-            ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"].get_vector();
+            ASSERT(props2.exists(TIMER_KEY));
+            CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
             ASSERT(timer2.size() == mitm[o].quantity);
 
             // Update timer -> push(pop).
@@ -489,10 +490,10 @@ int remove_oldest_blood_potion(item_def &stack)
     ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
-    if (!props.exists("timer"))
+    if (!props.exists(TIMER_KEY))
         init_stack_blood_potions(stack, stack.special);
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(props.exists(TIMER_KEY));
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
 
     // Assuming already sorted, and first (oldest) potion valid.
@@ -510,10 +511,10 @@ void remove_newest_blood_potion(item_def &stack, int quant)
     ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
-    if (!props.exists("timer"))
+    if (!props.exists(TIMER_KEY))
         init_stack_blood_potions(stack, stack.special);
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(props.exists(TIMER_KEY));
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
 
     if (quant == -1)
@@ -549,17 +550,17 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     ASSERT(is_blood_potion(dest));
 
     CrawlHashTable &props = source.props;
-    if (!props.exists("timer"))
+    if (!props.exists(TIMER_KEY))
         init_stack_blood_potions(source, source.special);
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
+    ASSERT(props.exists(TIMER_KEY));
+    CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
 
     CrawlHashTable &props2 = dest.props;
-    if (!props2.exists("timer"))
+    if (!props2.exists(TIMER_KEY))
         init_stack_blood_potions(dest, dest.special);
-    ASSERT(props2.exists("timer"));
-    CrawlVector &timer2 = props2["timer"].get_vector();
+    ASSERT(props2.exists(TIMER_KEY));
+    CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
 
     // Update timer -> push(pop).
     for (int i = 0; i < quant; i++)
