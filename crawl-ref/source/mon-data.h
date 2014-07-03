@@ -249,6 +249,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_PULSATING_LUMP)
     AXED_MON(MONS_BIG_FISH)
     AXED_MON(MONS_LAVA_WORM)
+    AXED_MON(MONS_SHARK)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -4530,21 +4531,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     1, 15, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
     I_REPTILE, HT_WATER, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
-},
-
-// A shark goes into a battle frenzy when it smells blood.
-// Technically they have skeletons, but Crawl needs skeletons made
-// of bone or similar materials (e.g. chitin)
-{
-    MONS_SHARK, ';', WHITE, "shark",
-    M_NO_SKELETON | M_COLD_BLOOD | M_BLOOD_SCENT | M_SUBMERGES,
-    MR_NO_FLAGS,
-    2000, 9, MONS_SHARK, MONS_SHARK, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 18}, {AT_BITE, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    9, 5, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT,
-    I_REPTILE, HT_WATER, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG, MON_SHAPE_FISH
 },
 
 // A kraken and its tentacles get a random colour from ETC_KRAKEN.
