@@ -1956,7 +1956,7 @@ const char* mutation_name(mutation_type mut)
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return get_mutation_def(mut).wizname;
+    return get_mutation_def(mut).short_desc;
 }
 
 // Return a string describing the mutation.
@@ -2338,7 +2338,7 @@ _schedule_ds_mutations(vector<mutation_type> muts)
             dt.mutation     = muts_left.front();
 
             dprf("Demonspawn will gain %s at level %d",
-                    get_mutation_def(dt.mutation).wizname, dt.level_gained);
+                    get_mutation_def(dt.mutation).short_desc, dt.level_gained);
 
             out.push_back(dt);
 
