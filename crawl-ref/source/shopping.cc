@@ -635,7 +635,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         mprf("I'll put %s outside for you.",
                               num_items == 1             ? "it" :
                               num_items == outside_items ? "them"
-                                                         : "part of them");
+                                                         : "some of them");
                     }
                     bought_something = true;
                 }
