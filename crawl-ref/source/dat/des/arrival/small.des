@@ -2384,7 +2384,7 @@ NAME:    arrival_aquarium_a
 TAGS:    arrival
 ORIENT:  float
 KMASK:   w = no_monster_gen
-KMONS:   Z = shark
+KMONS:   Z = electric eel
 KFEAT:   Z = w
 KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
@@ -2410,7 +2410,7 @@ NAME:   arrival_aquarium_b
 TAGS:   arrival
 ORIENT: float
 KMASK:  w = no_monster_gen
-KMONS:  Z = shark
+KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge

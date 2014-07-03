@@ -1757,7 +1757,7 @@ SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
 NSUBST: 0 = 2:9 / *:0
 MONS:   plant / bush / toadstool
 KMONS:  2 = plant / toadstool
-KMONS:  3 = w:2 shark / plant / toadstool
+KMONS:  3 = plant / toadstool
 KMONS:  4 = electric eel w:40 / nothing
 KFEAT:  23 = W
 KFEAT:  4 = w
