@@ -3186,6 +3186,10 @@ static string _monster_attacks_description(const monster_info& mi)
 
 static string _monster_spells_description(const monster_info& mi)
 {
+    // Show a generic message for pan lords, since they're secret.
+    if (mi.type == MONS_PANDEMONIUM_LORD)
+        return "It may possess any of a vast number of diabolical powers.";
+
     // Show monster spells and spell-like abilities.
     if (!mi.is_spellcaster() || !mi.has_spells())
         return "";
