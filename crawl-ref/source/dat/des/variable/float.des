@@ -2211,7 +2211,7 @@ FTILE: >.12t = floor_grass
 COLOUR: .12 = green
 FTILE: ; = floor_grass_dirt_mix
 COLOUR: ; = brown
-MONS:   plant, bat, shark
+MONS:   plant, bat, snapping turtle
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx>xxxxxwwwwwwxxxwxwxxxxxxxwxxwxxxwwwxxxxxx
@@ -2921,8 +2921,8 @@ ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
 KMONS:    f = plant / fungus
-KMONS:    R = electric eel / shark / water elemental
-KMONS:    S = electric eel / shark / water elemental
+KMONS:    R = electric eel / water elemental
+KMONS:    S = electric eel / water elemental
 ## Main monster sets
 KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight

@@ -678,11 +678,11 @@ MONS: snapping turtle, alligator snapping turtle
 MONS: plant, fungus
 KMONS: ! = kraken
 KFEAT: ! = deep_water
-KMONS: ? = shark
+KMONS: ? = snapping turtle
 KFEAT: ? = deep_water
 SUBST: 1 = 12
 SUBST: p = 34.
-NSUBST: w = 3:? / *:w
+NSUBST: w = 2:? / *:w
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / gadget shop

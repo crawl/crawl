@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 123
 SUBST:  ' = '......
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, baby alligator, crocodile, kraken, shark
+MONS:   Menkaure, baby alligator, crocodile, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
