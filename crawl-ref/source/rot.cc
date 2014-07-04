@@ -41,9 +41,9 @@ void init_stack_blood_potions(item_def &stack, int age = -1)
     if (age == -1)
     {
         if (stack.sub_type == POT_BLOOD)
-            age = 2500;
+            age = FRESHEST_BLOOD;
         else // coagulated blood
-            age = 500;
+            age = ROTTING_BLOOD;
     }
     // For a newly created stack, all potions use the same timer.
     const int max_age = you.num_turns + age;
