@@ -3030,8 +3030,8 @@ static void tag_read_you(reader &th)
         if (you.props.exists("napalm_aux"))
             you.props["sticky_flame_aux"] = you.props["napalm_aux"];
     }
-    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists("orig brand"))
-        you.props["orig brand"] = SPWPN_NORMAL;
+    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists(ORIGINAL_BRAND_KEY))
+        you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
 #endif
 }
 

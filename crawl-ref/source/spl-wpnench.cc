@@ -108,9 +108,9 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     ASSERT(you.duration[DUR_WEAPON_BRAND]);
 
     const int temp_effect = get_weapon_brand(weapon);
-    set_item_ego_type(weapon, OBJ_WEAPONS, you.props["orig brand"]);
+    set_item_ego_type(weapon, OBJ_WEAPONS, you.props[ORIGINAL_BRAND_KEY]);
     you.wield_change = true;
-    you.props.erase("orig brand");
+    you.props.erase(ORIGINAL_BRAND_KEY);
     you.duration[DUR_WEAPON_BRAND] = 0;
     if (verbose)
     {
@@ -269,7 +269,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     {
         if (has_temp_brand)
             end_weapon_brand(weapon);
-        you.props["orig brand"] = get_weapon_brand(weapon);
+        you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
     }
