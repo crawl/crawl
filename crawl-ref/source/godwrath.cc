@@ -22,6 +22,7 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -1814,4 +1815,51 @@ void gozag_incite(monster *mon)
 
     if (success)
         view_update_at(mon->pos());
+}
+
+/**
+ * Invoke the CURSE OF GOZAG by goldifying some part of a stack that the player
+ * is trying to pick up.
+ * @param it            The item being picked up.
+ * @param quant_got     The number of items being picked up. (May be only part
+ * of the stack.)
+ * @param quiet         Whether to suppress messages.
+ * @return              How much of the stack was goldified.
+ */
+bool gozag_goldify(item_def &it, int quant_got, bool quiet)
+{
+    if (it.base_type != OBJ_POTIONS
+        && it.base_type != OBJ_SCROLLS
+        && it.base_type != OBJ_FOOD)
+        return 0;
+
+
+    const int val = item_value(it, true) / it.quantity;
+    double prob = (double)(val - 20) / 100.0;
+    if (prob > 1.0)
+        prob = 1.0;
+
+    int goldified_count = 0;
+    for (int i = 0; i < quant_got; i++)
+        if (decimal_chance(prob))
+            goldified_count++;
+
+    if (!goldified_count)
+        return goldified_count;
+
+    if (!quiet)
+    {
+        string msg = get_desc_quantity(goldified_count, quant_got, "the")
+                     + " " + it.name(DESC_PLAIN);
+        msg += goldified_count > 1 ? " turn" : " turns";
+        msg += " to gold as you touch ";
+        msg += goldified_count > 1 ? "them." : "it.";
+
+        mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+    }
+
+    get_gold(it, goldified_count, quiet);
+    dec_penance(GOD_GOZAG, goldified_count);
+
+    return goldified_count;
 }
