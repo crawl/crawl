@@ -626,7 +626,7 @@ bool eat_food(int slot)
         {
             if (you.visible_igrd(you.pos()) != NON_ITEM)
             {
-                result = eat_from_floor(true);
+                result = eat_from_floor();
                 if (result == 1)
                     return true;
                 if (result == -1)
@@ -634,6 +634,9 @@ bool eat_food(int slot)
             }
         }
     }
+
+    if (you.species == SP_VAMPIRE)
+        mpr("There's nothing here to drain!");
 
     return prompt_eat_inventory_item(slot);
 }
@@ -897,13 +900,13 @@ static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
 #endif
 
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
-int eat_from_floor(bool skip_chunks)
+int eat_from_floor()
 {
     if (!_eat_check())
         return false;
 
     // Corpses should have been handled before.
-    if (you.species == SP_VAMPIRE && skip_chunks)
+    if (you.species == SP_VAMPIRE)
         return 0;
 
     bool need_more = false;
@@ -915,37 +918,13 @@ int eat_from_floor(bool skip_chunks)
     vector<item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (you.species == SP_VAMPIRE)
-        {
-            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                continue;
-
-            if (!mons_has_blood(si->mon_type))
-            {
-                unusable_corpse++;
-                continue;
-            }
-        }
-        else
-        {
-            if (si->base_type != OBJ_FOOD)
-                continue;
-
-            // Chunks should have been handled before.
-            if (skip_chunks && si->sub_type == FOOD_CHUNK)
-                continue;
-
-            if (is_bad_food(*si))
-                continue;
-        }
-
-        if (!skip_chunks && food_is_rotten(*si)
-            && !_player_can_eat_rotten_meat())
-        {
-            unusable_corpse++;
+        if (si->base_type != OBJ_FOOD)
             continue;
-        }
-        else if (!can_ingest(*si, true))
+
+        if (is_bad_food(*si))
+            continue;
+
+        if (!can_ingest(*si, true))
         {
             if (!inedible_food)
             {
@@ -974,8 +953,7 @@ int eat_from_floor(bool skip_chunks)
 #ifdef TOUCH_UI
         vector<SelItem> selected =
             select_items(food_items,
-                         you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
-                         false, MT_SELONE, _floor_eat_menu_title);
+                         "Eat", false, MT_SELONE, _floor_eat_menu_title);
         redraw_screen();
         for (int i = 0, count = selected.size(); i < count; ++i)
         {
@@ -994,7 +972,7 @@ int eat_from_floor(bool skip_chunks)
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
-                 (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
+                 "Eat",
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
@@ -1030,14 +1008,7 @@ int eat_from_floor(bool skip_chunks)
         // Give a message about why these food items can not actually be eaten.
         if (unusable_corpse)
         {
-            if (you.species == SP_VAMPIRE)
-            {
-                mprf("%s devoid of blood.",
-                     unusable_corpse == 1 ? "This corpse is"
-                                          : "These corpses are");
-            }
-            else
-                _player_can_eat_rotten_meat(true);
+            _player_can_eat_rotten_meat(true);
             need_more = true;
         }
         else if (inedible_food)
@@ -1085,23 +1056,10 @@ bool eat_from_inventory()
             continue;
 
         item_def *item = &you.inv[i];
-        if (you.species == SP_VAMPIRE)
-        {
-            if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
-                continue;
 
-            if (!mons_has_blood(item->mon_type))
-            {
-                unusable_corpse++;
-                continue;
-            }
-        }
-        else
-        {
-            // Chunks should have been handled before.
-            if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
-                continue;
-        }
+        // Chunks should have been handled before.
+        if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
+            continue;
 
         if (is_bad_food(*item))
             continue;
@@ -1143,7 +1101,7 @@ bool eat_from_inventory()
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
-                 (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
+                 "Eat",
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
@@ -1169,16 +1127,7 @@ bool eat_from_inventory()
     {
         // Give a message about why these food items can not actually be eaten.
         if (unusable_corpse)
-        {
-            if (you.species == SP_VAMPIRE)
-            {
-                mprf("%s devoid of blood.",
-                     unusable_corpse == 1 ? "The corpse you are carrying is"
-                                          : "The corpses you are carrying are");
-            }
-            else
-                _player_can_eat_rotten_meat(true);
-        }
+            _player_can_eat_rotten_meat(true);
         else if (inedible_food)
         {
             if (inedible_food == 1)
@@ -1255,14 +1204,11 @@ int prompt_eat_chunks(bool only_auto)
             continue;
 
         item_def *item = &you.inv[i];
-        if (you.species == SP_VAMPIRE)
-        {
-            if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
-                continue;
 
-            if (!mons_has_blood(item->mon_type))
-                continue;
-        }
+        // Vampires can't eat anything in their inventory.
+        if (you.species == SP_VAMPIRE)
+           continue;
+
         else if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
             continue;
 
