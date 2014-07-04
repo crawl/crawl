@@ -331,7 +331,7 @@ bool bernoulli(double n_trials, double trial_prob)
 {
     if (n_trials <= 0 || trial_prob <= 0)
         return false;
-    return random_real() >= pow(1 - trial_prob, n_trials);
+    return !decimal_chance(pow(1 - trial_prob, n_trials));
 }
 
 bool one_chance_in(int a_million)
