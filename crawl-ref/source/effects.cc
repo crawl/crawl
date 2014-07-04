@@ -2253,6 +2253,31 @@ void handle_time()
     }
 }
 
+/**
+ * Return the number of turns it takes for monsters to forget about the player
+ * 50% of the time.
+ *
+ * @param   The intelligence of the monster.
+ * @return  An average number of turns before the monster forgets.
+ */
+static int _mon_forgetfulness_time(mon_intel_type intelligence)
+{
+    switch (intelligence)
+    {
+        case I_HIGH:
+            return 1000;
+        case I_NORMAL:
+        default:
+            return 500;
+        case I_ANIMAL:
+        case I_REPTILE:
+        case I_INSECT:
+            return 250;
+        case I_PLANT:
+            return 125;
+    }
+}
+
 // Move monsters around to fake them walking around while player was
 // off-level.
 static void _catchup_monster_moves(monster* mon, int turns)
@@ -2314,27 +2339,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // After x turns, half of the monsters will have forgotten about the
     // player. A given monster has a 95% chance of forgetting the player after
     // 4*x turns.
-    int x = 0; // Quiet unitialized variable compiler warning.
-    switch (mons_intel(mon))
-    {
-    case I_HIGH:
-        x = 1000;
-        break;
-    case I_NORMAL:
-        x = 500;
-        break;
-    case I_ANIMAL:
-    case I_REPTILE:
-    case I_INSECT:
-        x = 250;
-        break;
-    case I_PLANT:
-        x = 125;
-        break;
-    }
+    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
 
     bool changed = false;
-    for (int i = 0; i < range/x; i++)
+    for (int i = 0; i < range/forgetfulness_time; i++)
     {
         if (mon->behaviour == BEH_SLEEP)
             break;
