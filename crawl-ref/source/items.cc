@@ -37,6 +37,7 @@
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -1549,7 +1550,7 @@ static void _got_item(item_def& item, int quant)
         item.props.erase("needs_autopickup");
 }
 
-static void _got_gold(item_def& item, int quant, bool quiet)
+void get_gold(item_def& item, int quant, bool quiet)
 {
     if (item.special > 0) // Gozag
     {
@@ -1653,7 +1654,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
     // Gold has no mass, so we handle it first.
     if (it.base_type == OBJ_GOLD)
     {
-        _got_gold(it, quant_got, quiet);
+        get_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
@@ -1740,45 +1741,15 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    if (player_under_penance(GOD_GOZAG)
-        && (it.base_type == OBJ_POTIONS
-            || it.base_type == OBJ_SCROLLS
-            || it.base_type == OBJ_FOOD))
+    if (player_under_penance(GOD_GOZAG))
     {
-        int val = item_value(it, true) / it.quantity;
-        double prob = (double)(val - 20) / 100.0;
-        if (prob > 1.0)
-            prob = 1.0;
-
-        int goldify = 0;
-        for (int i = 0; i < quant_got; i++)
-            if (decimal_chance(prob))
-                goldify++;
-
-        if (goldify > 0)
+        const int goldified_count = gozag_goldify(it, quant_got, quiet);
+        dec_mitm_item_quantity(obj, goldified_count);
+        quant_got -= goldified_count;
+        if (quant_got <= 0)
         {
-            // XXX: Gives the wrong message when only picking up part of a stack.
-            string msg = get_desc_quantity(goldify, quant_got, "the")
-                         + " " + it.name(DESC_PLAIN);
-            if (goldify > 1)
-                msg += " turn";
-            else
-                msg += " turns";
-            msg += " to gold as you touch ";
-            if (quant_got > 1)
-                msg += "them.";
-            else
-                msg += "it.";
-
-            mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            _got_gold(it, goldify, quiet);
-            dec_penance(GOD_GOZAG, goldify);
-
-            if (dec_mitm_item_quantity(obj, goldify))
-                return goldify;
-
-            if ((quant_got -= goldify) == 0)
-                return 1;
+            you.turn_is_over = true;
+            return 1;
         }
     }
 
