@@ -8,6 +8,7 @@
 
 #include "artefact.h"
 #include "attitude-change.h"
+#include "butcher.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -356,7 +357,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Don't allow polymorphing monsters for hides.
-    mons->props["no_hide"] = true;
+    mons->props[NEVER_HIDE_KEY] = true;
 
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed

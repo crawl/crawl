@@ -19,6 +19,7 @@
 #include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "butcher.h"
 #include "cio.h"
 #include "coordit.h"
 #include "delay.h"
@@ -2594,7 +2595,7 @@ int handle_pbd_corpses()
             if (j->base_type == OBJ_CORPSES
                 && j->sub_type == CORPSE_BODY
                 && j->special > 50
-                && !j->props.exists("never_hide"))
+                && !j->props.exists(NEVER_HIDE_KEY))
             {
                 ++corpse_count;
                 if (corpse_count == 7)
