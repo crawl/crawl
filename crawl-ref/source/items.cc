@@ -3743,7 +3743,7 @@ bool get_item_by_name(item_def *item, char* specs,
             if (age <= 0)
                 age = -1;
             else if (item->sub_type == POT_BLOOD)
-                age += 500;
+                age += ROTTING_BLOOD;
 
             init_stack_blood_potions(*item, age);
         }

@@ -8,6 +8,9 @@
 
 #include "externs.h"
 
+#define ROTTING_BLOOD  500
+#define FRESHEST_BLOOD (2000+ROTTING_BLOOD)
+
 void init_stack_blood_potions(item_def &stack, int age);
 void maybe_coagulate_blood_potions_floor(int obj);
 void maybe_coagulate_blood_potions_inv(item_def &blood);
