@@ -5226,33 +5226,33 @@ static void tag_read_level_monsters(reader &th)
         }
 
         // place monster
-        if (m.alive())
-        {
-            env.mid_cache[m.mid] = i;
+        if (!m.alive())
+            continue;
+
+        env.mid_cache[m.mid] = i;
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
-            if (invalid_monster_type(m.type))
-            {
-                mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
-                     i, m.name(DESC_PLAIN, true).c_str());
-            }
-            if (!in_bounds(m.pos()))
-            {
-                mprf(MSGCH_ERROR,
-                     "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
-                     i, m.name(DESC_PLAIN, true).c_str(),
-                     m.pos().x, m.pos().y);
-            }
-            int midx = mgrd(m.pos());
-            if (midx != NON_MONSTER)
-            {
-                mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
-                     m.pos().x, m.pos().y,
-                     m.name(DESC_PLAIN, true).c_str(),
-                     menv[midx].name(DESC_PLAIN, true).c_str());
-            }
-#endif
-            mgrd(m.pos()) = i;
+        if (invalid_monster_type(m.type))
+        {
+            mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
+                 i, m.name(DESC_PLAIN, true).c_str());
         }
+        if (!in_bounds(m.pos()))
+        {
+            mprf(MSGCH_ERROR,
+                 "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
+                 i, m.name(DESC_PLAIN, true).c_str(),
+                 m.pos().x, m.pos().y);
+        }
+        int midx = mgrd(m.pos());
+        if (midx != NON_MONSTER)
+        {
+            mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
+                 m.pos().x, m.pos().y,
+                 m.name(DESC_PLAIN, true).c_str(),
+                 menv[midx].name(DESC_PLAIN, true).c_str());
+        }
+#endif
+        mgrd(m.pos()) = i;
     }
 #if TAG_MAJOR_VERSION == 34
     // This relies on TAG_YOU (including lost monsters) being unmarshalled
