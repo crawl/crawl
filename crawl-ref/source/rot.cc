@@ -50,23 +50,19 @@ void init_stack_blood_potions(item_def &stack, int age)
     props.assert_validity();
 }
 
-// Sort a CrawlVector<int>, should probably be done properly with templates.
-static void _int_sort(CrawlVector &vec)
+// Compare two CrawlStoreValues storing type T.
+template<class T>
+static bool _storeval_greater(const CrawlStoreValue &a,
+                              const CrawlStoreValue &b)
 {
-    vector<int> help;
-    while (!vec.empty())
-    {
-        help.push_back(vec[vec.size()-1].get_int());
-        vec.pop_back();
-    }
+    return T(a) > T(b);
+}
 
-    sort(help.begin(), help.end());
-
-    while (!help.empty())
-    {
-        vec.push_back(help[help.size()-1]);
-        help.pop_back();
-    }
+// Sort a CrawlVector containing only Ts.
+template<class T>
+static void _sort_cvec(CrawlVector &vec)
+{
+    sort(vec.begin(), vec.end(), _storeval_greater<T>);
 }
 
 static void _compare_blood_quantity(item_def &stack, int timer_size)
@@ -208,7 +204,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
                     age_timer.pop_back();
                     timer2.push_back(val);
                 }
-                _int_sort(timer2);
+                _sort_cvec<int>(timer2);
                 inc_mitm_item_quantity(si.link(), coag_count);
                 ASSERT(timer2.size() == si->quantity);
                 dec_mitm_item_quantity(obj, rot_count + coag_count);
@@ -388,7 +384,7 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(timer2.size() == you.inv[m].quantity);
 
             // re-sort timer
-            _int_sort(timer2);
+            _sort_cvec<int>(timer2);
             return;
         }
     }
@@ -457,7 +453,7 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
                 age_timer.pop_back();
                 timer2.push_back(val);
             }
-            _int_sort(timer2);
+            _sort_cvec<int>(timer2);
 
             inc_mitm_item_quantity(o, coag_count);
             ASSERT(timer2.size() == mitm[o].quantity);
@@ -537,7 +533,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
         timer.pop_back();
 
     // ... and re-sort.
-    _int_sort(timer);
+    _sort_cvec<int>(timer);
 }
 
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
@@ -570,5 +566,5 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     }
 
     // Re-sort timer.
-    _int_sort(timer2);
+    _sort_cvec<int>(timer2);
 }
