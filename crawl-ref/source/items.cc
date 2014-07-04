@@ -1752,7 +1752,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
         int goldify = 0;
         for (int i = 0; i < quant_got; i++)
-            if (bernoulli(1.0, prob))
+            if (decimal_chance(prob))
                 goldify++;
 
         if (goldify > 0)
