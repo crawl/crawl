@@ -18,4 +18,8 @@ int remove_oldest_blood_potion(item_def &stack);
 void remove_newest_blood_potion(item_def &stack, int quant = -1);
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
 
+void rot_inventory_food(int time_delta);
+void rot_floor_items(int elapsedTime);
+
+
 #endif

@@ -86,8 +86,6 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static void _update_corpses(int elapsedTime);
-
 static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
 {
     if (!you.undead_or_demonic())
@@ -1720,162 +1718,6 @@ void change_labyrinth(bool msg)
     }
 }
 
-static bool _food_item_needs_time_check(item_def &item)
-{
-    if (!item.defined())
-        return false;
-
-    if (item.base_type != OBJ_CORPSES
-        && item.base_type != OBJ_FOOD
-        && item.base_type != OBJ_POTIONS)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_CORPSES
-        && item.sub_type > CORPSE_SKELETON)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-        return false;
-
-    if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
-        return false;
-
-    // The object specifically asks not to be checked:
-    if (item.props.exists(CORPSE_NEVER_DECAYS))
-        return false;
-
-    return true;
-}
-
-static void _rot_inventory_food(int time_delta)
-{
-    // Update all of the corpses and food chunks in the player's
-    // inventory. {should be moved elsewhere - dlb}
-    vector<char> rotten_items;
-
-    int num_chunks         = 0;
-    int num_chunks_gone    = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (item.quantity < 1)
-            continue;
-
-        if (!_food_item_needs_time_check(item))
-            continue;
-
-        if (item.base_type == OBJ_POTIONS)
-        {
-            maybe_coagulate_blood_potions_inv(item);
-            continue;
-        }
-
-#if TAG_MAJOR_VERSION == 34
-        if (item.base_type != OBJ_FOOD)
-            continue; // old corpses & skeletons
-
-        ASSERT(item.sub_type == FOOD_CHUNK);
-#else
-        ASSERT(item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK);
-#endif
-
-        num_chunks++;
-
-        // Food item timed out -> make it disappear.
-        if ((time_delta / 20) >= item.special)
-        {
-            if (you.equip[EQ_WEAPON] == i)
-                unwield_item();
-
-            item_was_destroyed(item);
-            destroy_item(item);
-            num_chunks_gone++;
-
-            continue;
-        }
-
-        // If it hasn't disappeared, reduce the rotting timer.
-        item.special -= (time_delta / 20);
-
-        if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
-        {
-            rotten_items.push_back(index_to_letter(i));
-            if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-        }
-    }
-
-    //mv: messages when chunks/corpses become rotten
-    if (!rotten_items.empty())
-    {
-        string msg = "";
-
-        // Races that can't smell don't care, and trolls are stupid and
-        // don't care.
-        if (you.can_smell() && you.species != SP_TROLL)
-        {
-            int temp_rand = 0; // Grr.
-            int level = player_mutation_level(MUT_SAPROVOROUS);
-            if (!level && you.species == SP_VAMPIRE)
-                level = 1;
-
-            switch (level)
-            {
-            // level 1 and level 2 saprovores, as well as vampires, aren't so touchy
-            case 1:
-            case 2:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "You smell rotting flesh." :
-                      (temp_rand == 6) ? "You smell decay."
-                                       : "There is something rotten in your inventory.";
-                break;
-
-            // level 3 saprovores like it
-            case 3:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                      (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                       : "Wow! There is something tasty in your inventory.";
-                break;
-
-            default:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                      (temp_rand == 6) ? "You smell decay. Yuck!"
-                                       : "Ugh! There is something really disgusting in your inventory.";
-                break;
-            }
-        }
-        else
-            msg = "Something in your inventory has become rotten.";
-
-        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
-             msg.c_str(),
-             rotten_items.size() > 1 ? "s" : "",
-             comma_separated_line(rotten_items.begin(),
-                                  rotten_items.end()).c_str());
-
-        learned_something_new(HINT_ROTTEN_FOOD);
-    }
-
-    if (num_chunks_gone > 0)
-    {
-        mprf(MSGCH_ROTTEN_MEAT,
-             "%s of the chunks of flesh in your inventory have rotted away.",
-             num_chunks_gone == num_chunks ? "All" : "Some");
-    }
-}
-
 static void _handle_magic_contamination()
 {
     int added_contamination = 0;
@@ -2180,7 +2022,7 @@ struct timed_effect
 
 static struct timed_effect timed_effects[] =
 {
-    { TIMER_CORPSES,       _update_corpses,               200,   200, true  },
+    { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
     { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
     { TIMER_STAT_RECOVERY, _recover_stats,                100,   300, false },
     { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
@@ -2189,7 +2031,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { TIMER_SCREAM, NULL,                                   0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      _rot_inventory_food,           100,   300, false },
+    { TIMER_FOOD_ROT,      rot_inventory_food,           100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
@@ -2477,7 +2319,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    _update_corpses(elapsedTime);
+    rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
@@ -2936,69 +2778,6 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
          what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
 
     return true;
-}
-
-//---------------------------------------------------------------
-//
-// update_corpses
-//
-// Update all of the corpses and food chunks on the floor.
-//
-//---------------------------------------------------------------
-static void _update_corpses(int elapsedTime)
-{
-    if (elapsedTime <= 0)
-        return;
-
-    const int rot_time = elapsedTime / 20;
-
-    for (int c = 0; c < MAX_ITEMS; ++c)
-    {
-        item_def &it = mitm[c];
-
-        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
-        {
-            bool old_aura = it.special > 0;
-            it.special = max(0, it.special - rot_time);
-            if (old_aura && !it.special)
-            {
-                invalidate_agrid(true);
-                you.redraw_armour_class = true;
-                you.redraw_evasion = true;
-            }
-            continue;
-        }
-
-        if (!_food_item_needs_time_check(it))
-            continue;
-
-        if (it.base_type == OBJ_POTIONS)
-        {
-            if (is_shop_item(it))
-                continue;
-            maybe_coagulate_blood_potions_floor(c);
-            continue;
-        }
-
-        if (rot_time >= it.special && !is_being_butchered(it))
-        {
-            if (it.base_type == OBJ_FOOD)
-                destroy_item(c);
-            else
-            {
-                if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton(it.mon_type))
-                {
-                    item_was_destroyed(it);
-                    destroy_item(c);
-                }
-                else
-                    turn_corpse_into_skeleton(it);
-            }
-        }
-        else
-            it.special -= rot_time;
-    }
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)

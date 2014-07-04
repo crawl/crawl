@@ -1,23 +1,271 @@
 /**
  * @file
- * @brief Functions for blood & chunk rot.
+ * @brief Functions for blood, chunk, & corpse rot.
  **/
 
 #include "AppHdr.h"
 
 #include "rot.h"
 
+#include "areas.h"
+#include "butcher.h"
+#include "delay.h"
 #include "enum.h"
 #include "env.h"
+#include "hints.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "player.h"
+#include "player-equip.h"
+#include "religion.h"
+#include "shopping.h"
 #include "stuff.h"
 
 #define TIMER_KEY "timer"
+
+
+/**
+ * Check whether a food item changes over time. (Corpses, chunks, and blood.)
+ *
+ * @param item      The item to check.
+ * @return          Whether the item changes (rots) over time.
+ */
+static bool _food_item_needs_time_check(item_def &item)
+{
+    if (!item.defined())
+        return false;
+
+    if (item.base_type != OBJ_CORPSES
+        && item.base_type != OBJ_FOOD
+        && item.base_type != OBJ_POTIONS)
+    {
+        return false;
+    }
+
+    if (item.base_type == OBJ_CORPSES
+        && item.sub_type > CORPSE_SKELETON)
+    {
+        return false;
+    }
+
+    if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
+        return false;
+
+    if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
+        return false;
+
+    // The object specifically asks not to be checked:
+    if (item.props.exists(CORPSE_NEVER_DECAYS))
+        return false;
+
+    return true;
+}
+
+/**
+ * Decay Gozag-created gold auras.
+ *
+ * @param it        The stack of gold to decay the aura of.
+ * @param rot_time  The length of time to decay the aura for.
+ */
+static void _rot_floor_gold(item_def &it, int rot_time)
+{
+    const bool old_aura = it.special > 0;
+    it.special = max(0, it.special - rot_time);
+    if (old_aura && !it.special)
+    {
+        invalidate_agrid(true);
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+    }
+}
+
+/**
+ * Decay items on the floor: corpses, chunks, and Gozag gold auras.
+ *
+ * @param elapsedTime   The amount of time to rot the corpses for.
+ */
+void rot_floor_items(int elapsedTime)
+{
+    if (elapsedTime <= 0)
+        return;
+
+    const int rot_time = elapsedTime / 20;
+
+    for (int c = 0; c < MAX_ITEMS; ++c)
+    {
+        item_def &it = mitm[c];
+
+        if (is_shop_item(it))
+            continue;
+
+        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
+        {
+            _rot_floor_gold(it, rot_time);
+            continue;
+        }
+
+        if (!_food_item_needs_time_check(it))
+            continue;
+
+        if (it.base_type == OBJ_POTIONS)
+        {
+            maybe_coagulate_blood_potions_floor(c);
+            continue;
+        }
+
+        if (rot_time >= it.special && !is_being_butchered(it))
+        {
+            if (it.base_type == OBJ_FOOD)
+                destroy_item(c);
+            else
+            {
+                if (it.sub_type == CORPSE_SKELETON
+                    || !mons_skeleton(it.mon_type))
+                {
+                    item_was_destroyed(it);
+                    destroy_item(c);
+                }
+                else
+                    turn_corpse_into_skeleton(it);
+            }
+        }
+        else
+            it.special -= rot_time;
+    }
+}
+
+/**
+ * Rot chunks & blood in the player's inventory.
+ *
+ * @param time_delta    The amount of time to rot for.
+ */
+void rot_inventory_food(int time_delta)
+{
+    vector<char> rotten_items;
+
+    int num_chunks         = 0;
+    int num_chunks_gone    = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (item.quantity < 1)
+            continue;
+
+        if (!_food_item_needs_time_check(item))
+            continue;
+
+        if (item.base_type == OBJ_POTIONS)
+        {
+            maybe_coagulate_blood_potions_inv(item);
+            continue;
+        }
+
+#if TAG_MAJOR_VERSION == 34
+        if (item.base_type != OBJ_FOOD)
+            continue; // old corpses & skeletons
+
+        ASSERT(item.sub_type == FOOD_CHUNK);
+#else
+        ASSERT(item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK);
+#endif
+
+        num_chunks++;
+
+        // Food item timed out -> make it disappear.
+        if ((time_delta / 20) >= item.special)
+        {
+            if (you.equip[EQ_WEAPON] == i)
+                unwield_item();
+
+            item_was_destroyed(item);
+            destroy_item(item);
+            num_chunks_gone++;
+
+            continue;
+        }
+
+        // If it hasn't disappeared, reduce the rotting timer.
+        item.special -= (time_delta / 20);
+
+        if (food_is_rotten(item)
+            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
+        {
+            rotten_items.push_back(index_to_letter(i));
+            if (you.equip[EQ_WEAPON] == i)
+                you.wield_change = true;
+        }
+    }
+
+    //mv: messages when chunks/corpses become rotten
+    if (!rotten_items.empty())
+    {
+        string msg = "";
+
+        // Races that can't smell don't care, and trolls are stupid and
+        // don't care.
+        if (you.can_smell() && you.species != SP_TROLL)
+        {
+            int temp_rand = 0; // Grr.
+            int level = player_mutation_level(MUT_SAPROVOROUS);
+            if (!level && you.species == SP_VAMPIRE)
+                level = 1;
+
+            switch (level)
+            {
+                    // level 1 and level 2 saprovores, as well as vampires, aren't so touchy
+                case 1:
+                case 2:
+                    temp_rand = random2(8);
+                    msg = (temp_rand  < 5) ? "You smell something rotten." :
+                    (temp_rand == 5) ? "You smell rotting flesh." :
+                    (temp_rand == 6) ? "You smell decay."
+                    : "There is something rotten in your inventory.";
+                    break;
+
+                    // level 3 saprovores like it
+                case 3:
+                    temp_rand = random2(8);
+                    msg = (temp_rand  < 5) ? "You smell something rotten." :
+                    (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
+                    (temp_rand == 6) ? "You smell decay. Yum-yum."
+                    : "Wow! There is something tasty in your inventory.";
+                    break;
+
+                default:
+                    temp_rand = random2(8);
+                    msg = (temp_rand  < 5) ? "You smell something rotten." :
+                    (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
+                    (temp_rand == 6) ? "You smell decay. Yuck!"
+                    : "Ugh! There is something really disgusting in your inventory.";
+                    break;
+            }
+        }
+        else
+            msg = "Something in your inventory has become rotten.";
+
+        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
+             msg.c_str(),
+             rotten_items.size() > 1 ? "s" : "",
+             comma_separated_line(rotten_items.begin(),
+                                  rotten_items.end()).c_str());
+
+        learned_something_new(HINT_ROTTEN_FOOD);
+    }
+
+    if (num_chunks_gone > 0)
+    {
+        mprf(MSGCH_ROTTEN_MEAT,
+             "%s of the chunks of flesh in your inventory have rotted away.",
+             num_chunks_gone == num_chunks ? "All" : "Some");
+    }
+}
+
 
 
 
