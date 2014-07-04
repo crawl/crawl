@@ -5217,6 +5217,12 @@ static void tag_read_level_monsters(reader &th)
         monster& m = menv[i];
         unmarshallMonster(th, m);
 
+        // place monster
+        if (!m.alive())
+            continue;
+
+        // companion_is_elsewhere checks the mid cache
+        env.mid_cache[m.mid] = i;
         if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
         {
             dprf("Killed elsewhere companion %s(%d) on %s",
@@ -5225,11 +5231,6 @@ static void tag_read_level_monsters(reader &th)
             monster_die(&m, KILL_RESET, -1, true, false);
         }
 
-        // place monster
-        if (!m.alive())
-            continue;
-
-        env.mid_cache[m.mid] = i;
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (invalid_monster_type(m.type))
         {
