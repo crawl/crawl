@@ -69,7 +69,6 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
-#include "rot.h"
 #include "show.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
@@ -4517,11 +4516,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (!spec.corpselike())
         origin_reset(item);
     if (is_stackable_item(item) && spec.qty > 0)
-    {
         item.quantity = spec.qty;
-        if (is_blood_potion(item))
-            init_stack_blood_potions(item);
-    }
 
     if (spec.item_special)
         item.special = spec.item_special;

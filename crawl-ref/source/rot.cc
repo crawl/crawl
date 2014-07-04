@@ -19,8 +19,17 @@
 
 #define TIMER_KEY "timer"
 
-// Initialise blood potions with a vector of timers.
-void init_stack_blood_potions(item_def &stack, int age)
+
+
+/**
+ * Initialise a stack of blood potions with a vector of timers, representing
+ * the time at which each potion will rot.
+ *
+ * @param stack     The stack of blood potions to be initialized.
+ * @param age       The age for which the stack will last before rotting.
+ * (If -1, will be initialized to a default value.)
+ */
+void init_stack_blood_potions(item_def &stack, int age = -1)
 {
     ASSERT(is_blood_potion(stack));
 
@@ -116,7 +125,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
 
     CrawlHashTable &props = blood.props;
     if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(blood, blood.special);
+        init_stack_blood_potions(blood);
 
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
@@ -191,7 +200,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
                 // Merge with existing stack.
                 CrawlHashTable &props2 = si->props;
                 if (!props2.exists(TIMER_KEY))
-                    init_stack_blood_potions(*si, si->special);
+                    init_stack_blood_potions(*si);
 
                 ASSERT(props2.exists(TIMER_KEY));
                 CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
@@ -280,7 +289,7 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
 
     CrawlHashTable &props = blood.props;
     if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(blood, blood.special);
+        init_stack_blood_potions(blood);
 
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
@@ -364,7 +373,7 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
         {
             CrawlHashTable &props2 = you.inv[m].props;
             if (!props2.exists(TIMER_KEY))
-                init_stack_blood_potions(you.inv[m], you.inv[m].special);
+                init_stack_blood_potions(you.inv[m]);
 
             ASSERT(props2.exists(TIMER_KEY));
             CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
@@ -439,7 +448,7 @@ void maybe_coagulate_blood_potions_inv(item_def &blood)
             // Merge with existing stack.
             CrawlHashTable &props2 = mitm[o].props;
             if (!props2.exists(TIMER_KEY))
-                init_stack_blood_potions(mitm[o], mitm[o].special);
+                init_stack_blood_potions(mitm[o]);
 
             ASSERT(props2.exists(TIMER_KEY));
             CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
@@ -487,7 +496,7 @@ int remove_oldest_blood_potion(item_def &stack)
 
     CrawlHashTable &props = stack.props;
     if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(stack, stack.special);
+        init_stack_blood_potions(stack);
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
@@ -508,7 +517,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
 
     CrawlHashTable &props = stack.props;
     if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(stack, stack.special);
+        init_stack_blood_potions(stack);
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
@@ -547,14 +556,14 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
 
     CrawlHashTable &props = source.props;
     if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(source, source.special);
+        init_stack_blood_potions(source);
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
     ASSERT(!timer.empty());
 
     CrawlHashTable &props2 = dest.props;
     if (!props2.exists(TIMER_KEY))
-        init_stack_blood_potions(dest, dest.special);
+        init_stack_blood_potions(dest);
     ASSERT(props2.exists(TIMER_KEY));
     CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
 

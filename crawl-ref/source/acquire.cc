@@ -1320,9 +1320,6 @@ int acquirement_create_item(object_class_type class_wanted,
         else if (quant > 1)
             acq_item.quantity = quant;
 
-        if (is_blood_potion(acq_item))
-            init_stack_blood_potions(acq_item);
-
         // Remove curse flag from item, unless worshipping Ashenzari.
         if (you_worship(GOD_ASHENZARI))
             do_curse_item(acq_item, true);

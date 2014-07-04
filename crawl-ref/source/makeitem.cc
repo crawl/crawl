@@ -28,7 +28,6 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
-#include "rot.h"
 #include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
@@ -2244,9 +2243,6 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         item.quantity = 1;
     }
-
-    if (is_blood_potion(item))
-        init_stack_blood_potions(item);
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
