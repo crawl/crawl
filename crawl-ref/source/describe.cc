@@ -60,6 +60,7 @@
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "stash.h"
 #include "terrain.h"
 #include "transform.h"
@@ -1008,12 +1009,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
     if (you.duration[DUR_WEAPON_BRAND] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually a";
-        if ((int) you.props["orig brand"] == SPWPN_NORMAL)
+        if ((int) you.props[ORIGINAL_BRAND_KEY] == SPWPN_NORMAL)
             description += "n unbranded weapon.";
         else
         {
             description += " weapon of "
-                        + ego_type_string(item, false, you.props["orig brand"])
+                        + ego_type_string(item, false, you.props[ORIGINAL_BRAND_KEY])
                         + ".";
         }
     }
