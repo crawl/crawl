@@ -1029,7 +1029,6 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type  = POT_BLOOD;
-        init_stack_blood_potions(item);
     }
     else
     {

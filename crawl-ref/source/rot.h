@@ -8,7 +8,7 @@
 
 #include "externs.h"
 
-void init_stack_blood_potions(item_def &stack, int age = -1);
+void init_stack_blood_potions(item_def &stack, int age);
 void maybe_coagulate_blood_potions_floor(int obj);
 void maybe_coagulate_blood_potions_inv(item_def &blood);
 int remove_oldest_blood_potion(item_def &stack);
