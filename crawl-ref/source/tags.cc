@@ -32,6 +32,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -67,6 +68,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "spl-wpnench.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"
@@ -5172,6 +5174,9 @@ void unmarshallMonster(reader &th, monster& m)
         if (m.type == MONS_WAR_DOG)
             m.type = MONS_WOLF;
     }
+
+    if (m.props.exists("no_hide"))
+        m.props[NEVER_HIDE_KEY] = true;
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

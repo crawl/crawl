@@ -1881,7 +1881,7 @@ bool kiku_receive_corpses(int pow)
             continue;
         }
 
-        mitm[index_of_corpse_created].props["never_hide"] = true;
+        mitm[index_of_corpse_created].props[NEVER_HIDE_KEY] = true;
 
         ASSERT(valid_corpse >= 0);
 

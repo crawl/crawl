@@ -24,7 +24,7 @@ static void _create_monster_hide(const item_def corpse)
     // kiku_receive_corpses() creates corpses that are easily scummed
     // for hides.  We prevent this by setting "never_hide" as an item
     // property of corpses it creates.
-    if (corpse.props.exists("never_hide"))
+    if (corpse.props.exists(NEVER_HIDE_KEY))
         return;
 
     monster_type mons_class = corpse.mon_type;
