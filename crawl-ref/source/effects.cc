@@ -2254,7 +2254,7 @@ void handle_time()
 }
 
 // Move monsters around to fake them walking around while player was
-// off-level. Also let them go back to sleep eventually.
+// off-level.
 static void _catchup_monster_moves(monster* mon, int turns)
 {
     // Summoned monsters might have disappeared.
