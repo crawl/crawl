@@ -817,12 +817,8 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
-    const int quant = item.quantity;
-    // Note that item will be invalidated if num == item.quantity.
-    const int num = move_item_to_player(item_got, item.quantity, false);
-
     // Shopkeepers will now place goods you can't carry outside the shop.
-    if (num < quant)
+    if (!move_item_to_inv(item_got, item.quantity, false))
     {
         move_item_to_grid(&item_got, env.shop[shop].pos);
         return false;
