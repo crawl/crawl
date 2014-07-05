@@ -620,6 +620,7 @@ enum caction_type    // Primary categorization of counted actions.
                      //   or unrand index
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
+    CACT_EAT,        // food_type, or -1 for corpse
     NUM_CACTIONS,
 };
 

@@ -831,6 +831,7 @@ bool eat_item(item_def &food)
 
         if (_vampire_consume_corpse(link, in_inventory(food)))
         {
+            count_action(CACT_EAT, -1);
             you.turn_is_over = true;
             return true;
         }
@@ -849,6 +850,7 @@ bool eat_item(item_def &food)
 
     you.turn_is_over = true;
 
+    count_action(CACT_EAT, food.sub_type);
     if (in_inventory(food))
         dec_inv_item_quantity(link, 1);
     else
