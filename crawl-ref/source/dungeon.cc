@@ -4755,6 +4755,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             item_level = spec.level;
         else
         {
+            // TODO: merge this with the equivalent switch in dgn_place_item,
+            // and maybe even handle ISPEC_ACQUIREMENT.
             switch (spec.level)
             {
             case ISPEC_GOOD:
@@ -4763,8 +4765,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             case ISPEC_SUPERB:
                 item_level = MAKE_GOOD_ITEM;
                 break;
+            case ISPEC_DAMAGED:
+            case ISPEC_BAD:
             case ISPEC_RANDART:
-                item_level = ISPEC_RANDART;
+                item_level = spec.level;
                 break;
             }
         }
