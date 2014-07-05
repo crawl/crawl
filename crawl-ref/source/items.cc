@@ -1452,6 +1452,15 @@ bool items_stack(const item_def &item1, const item_def &item2)
     return items_similar(item1, item2);
 }
 
+/**
+ * Merge a specified number of items from one stack into another.
+ * DOES NOT modify the original stack - the caller must handle any cleanup!
+ *
+ * @param source    The source from which items are being drawn.
+ * @param dest      The stack into which items are being placed.
+ * @param quant     The number of items to be added to the destination stack.
+ * Defaults to the entirety of the source stack.
+ */
 void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 {
     if (quant == -1)
@@ -1855,6 +1864,7 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
 
 /**
  * Move the given item and quantity to the player's inventory.
+ * DOES NOT change the original item; the caller must handle any cleanup!
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
