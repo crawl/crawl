@@ -897,13 +897,13 @@ static const mutation_def mut_data[] =
    "Your spells are easier to cast, but less powerful.",
    "Your spells are much easier to cast, but much less powerful."},
 
-  {"You feel more in control of your magic.",
-   "You feel more in control of your magic.",
-   "You feel more in control of your magic."},
+  {"Your connection to magic feels subdued.",
+   "Your connection to magic feels more subdued.",
+   "Your connection to magic feels nearly dormant."},
 
-  {"You feel less in control of your magic.",
-   "You feel less in control of your magic.",
-   "You feel less in control of your magic."},
+  {"Your magic regains its normal vibrancy.",
+   "Your connection to magic feels less subdued.",
+   "Your connection to magic feels less subdued."},
 },
 
 { MUT_FORLORN,                      3,  1,  MUTFLAG_BAD, false,
