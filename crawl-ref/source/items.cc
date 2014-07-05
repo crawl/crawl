@@ -365,10 +365,20 @@ bool dec_inv_item_quantity(int obj, int amount)
 // Returns true if stack of items no longer exists.
 bool dec_mitm_item_quantity(int obj, int amount)
 {
-    if (mitm[obj].quantity <= amount)
-        amount = mitm[obj].quantity;
+    item_def &item = mitm[obj];
+    if (amount > item.quantity)
+        amount = item.quantity; // can't use min due to type mismatch
 
-    if (mitm[obj].quantity == amount)
+    // when removing gold from a stack, make it lose its gozag-aura
+    if (item.base_type == OBJ_GOLD && item.special > 0 && amount)
+    {
+        item.special = 0;
+        invalidate_agrid(true);
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+    }
+
+    if (item.quantity == amount)
     {
         destroy_item(obj);
         // If we're repeating a command, the repetitions used up the
@@ -379,8 +389,7 @@ bool dec_mitm_item_quantity(int obj, int amount)
         return true;
     }
 
-    mitm[obj].quantity -= amount;
-
+    item.quantity -= amount;
     return false;
 }
 
@@ -1443,7 +1452,7 @@ bool items_stack(const item_def &item1, const item_def &item2)
     return items_similar(item1, item2);
 }
 
-void merge_item_stacks(item_def &source, item_def &dest, int quant)
+void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 {
     if (quant == -1)
         quant = source.quantity;
@@ -1540,7 +1549,7 @@ int find_free_slot(const item_def &i)
 #undef slotisfree
 }
 
-static void _got_item(item_def& item, int quant)
+static void _got_item(item_def& item)
 {
     seen_item(item);
     shopping_list.cull_identical_items(item);
@@ -1549,16 +1558,8 @@ static void _got_item(item_def& item, int quant)
         item.props.erase("needs_autopickup");
 }
 
-void get_gold(item_def& item, int quant, bool quiet)
+void get_gold(const item_def& item, int quant, bool quiet)
 {
-    if (item.special > 0) // Gozag
-    {
-        item.special = 0;
-        invalidate_agrid(true);
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-    }
-
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
     if (player_under_penance(GOD_GOZAG)
@@ -1650,11 +1651,23 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    int inv_slot; // unused
     const coord_def old_item_pos = it.pos;
+    // attempt to put the item into your inventory.
+    int inv_slot;
     if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
+        // if you succeeded, actually reduce the number in the original stack
+        if (is_blood_potion(it) && quant_got != it.quantity)
+            for (int i = 0; i < quant_got; i++)
+                remove_oldest_blood_potion(it);
         dec_mitm_item_quantity(obj, quant_got);
+
+        // cleanup items that ended up in an inventory slot (not gold, etc)
+        if (inv_slot != -1)
+        {
+            _got_item(you.inv[inv_slot]);
+            _check_note_item(you.inv[inv_slot]);
+        }
 
         if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
         {
@@ -1677,13 +1690,10 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
  * @param it      The item (rune) to pick up.
  * @param quiet   Whether to suppress (most?) messages.
  */
-static void _get_rune(item_def& it, bool quiet)
+static void _get_rune(const item_def& it, bool quiet)
 {
     if (!you.runes[it.plus])
-    {
         you.runes.set(it.plus);
-        _check_note_item(it);
-    }
 
     if (!quiet)
     {
@@ -1722,11 +1732,8 @@ static void _get_rune(item_def& it, bool quiet)
  * @param it      The ORB!
  * @param quiet   Unused.
  */
-static void _get_orb(item_def &it, bool quiet)
+static void _get_orb(const item_def &it, bool quiet)
 {
-    // Take a note!
-    _check_note_item(it);
-
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
     you.char_direction = GDT_ASCENDING;
 
@@ -1750,19 +1757,17 @@ static void _get_orb(item_def &it, bool quiet)
  *
  * @param it[in]            The stack to merge.
  * @param quant_got         The quantity of this item to place.
- * @param inv_slot[out]    The inventory slot the item was placed into.
+ * @param inv_slot[out]     The inventory slot the item was placed in. -1 if
+ * not placed.
  * @param quiet             Whether to suppress pickup messages.
  */
-static bool _merge_stackable_item_into_inv(item_def &it, int quant_got,
+static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
                                            int &inv_slot, bool quiet)
 {
     for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
     {
         if (!items_stack(you.inv[inv_slot], it))
             continue;
-
-        // take a note when picking up... uh... stackable artefacts?
-        _check_note_item(it);
 
         // If the object on the ground is inscribed, but not
         // the one in inventory, then the inventory object
@@ -1775,7 +1780,6 @@ static bool _merge_stackable_item_into_inv(item_def &it, int quant_got,
 
         merge_item_stacks(it, you.inv[inv_slot], quant_got);
         inc_inv_item_quantity(inv_slot, quant_got);
-        _got_item(it, quant_got);
         you.last_pickup[inv_slot] = quant_got;
 
         if (!quiet)
@@ -1799,9 +1803,10 @@ static bool _merge_stackable_item_into_inv(item_def &it, int quant_got,
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
  * @param quiet           Suppresses pickup messages.
- * @return The inventory slot the item was placed in.
+ * @return                The inventory slot the item was placed in.
  */
-static int _place_item_in_free_slot(item_def &it, int quant_got, bool quiet)
+static int _place_item_in_free_slot(const item_def &it, int quant_got,
+                                    bool quiet)
 {
     int freeslot = find_free_slot(it);
     ASSERT_RANGE(freeslot, 0, ENDOFPACK);
@@ -1825,15 +1830,9 @@ static int _place_item_in_free_slot(item_def &it, int quant_got, bool quiet)
 
     note_inscribe_item(item);
 
+    // avoid blood potion timer/stack size mismatch
     if (is_blood_potion(it) && quant_got != it.quantity)
-    {
-        // Remove oldest timers from original stack.
-        for (int i = 0; i < quant_got; i++)
-            remove_oldest_blood_potion(it);
-
-        // ... and newest ones from picked up stack
         remove_newest_blood_potion(item);
-    }
 
     if (!quiet)
     {
@@ -1847,7 +1846,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got, bool quiet)
             learned_something_new(HINT_SEEN_RANDART);
     }
 
-    _got_item(item, item.quantity);
     you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
     you.last_pickup[item.link] = quant_got;
     item_skills(item, you.start_train);
@@ -1860,15 +1858,16 @@ static int _place_item_in_free_slot(item_def &it, int quant_got, bool quiet)
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
- * @param item_slot[out]  The inventory slot the item was placed in; may be -1.
+ * @param inv_slot[out]   The inventory slot the item was placed in. -1 if
+ * not placed.
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
-bool merge_items_into_inv(item_def &it, int quant_got, int &item_slot,
+bool merge_items_into_inv(const item_def &it, int quant_got, int &inv_slot,
                           bool quiet)
 {
-    item_slot = -1;
+    inv_slot = -1;
 
     // sanity
     if (quant_got > it.quantity || quant_got <= 0)
@@ -1905,7 +1904,7 @@ bool merge_items_into_inv(item_def &it, int quant_got, int &item_slot,
 
     // attempt to merge into an existing stack, if possible
     if (is_stackable_item(it)
-        && _merge_stackable_item_into_inv(it, quant_got, item_slot, quiet))
+        && _merge_stackable_item_into_inv(it, quant_got, inv_slot, quiet))
     {
         return true;
     }
@@ -1914,7 +1913,7 @@ bool merge_items_into_inv(item_def &it, int quant_got, int &item_slot,
     if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
         return false;
 
-    item_slot = _place_item_in_free_slot(it, quant_got, quiet);
+    inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
     return true;
 }
 

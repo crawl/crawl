@@ -793,7 +793,8 @@ void remove_newest_blood_potion(item_def &stack, int quant)
     _sort_cvec<int>(timer);
 }
 
-void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
+void merge_blood_potion_stacks(const item_def &source, item_def &dest,
+                               int quant)
 {
     if (!source.defined() || !dest.defined())
         return;
@@ -802,12 +803,7 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     ASSERT(is_blood_potion(source));
     ASSERT(is_blood_potion(dest));
 
-    CrawlHashTable &props = source.props;
-    if (!props.exists(TIMER_KEY))
-        init_stack_blood_potions(source);
-    ASSERT(props.exists(TIMER_KEY));
-    CrawlVector &timer = props[TIMER_KEY].get_vector();
-    ASSERT(!timer.empty());
+    const CrawlHashTable &props = source.props;
 
     CrawlHashTable &props2 = dest.props;
     if (!props2.exists(TIMER_KEY))
@@ -815,11 +811,14 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     ASSERT(props2.exists(TIMER_KEY));
     CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
 
-    // Update timer -> push(pop).
+    // Update timer2
     for (int i = 0; i < quant; i++)
     {
-        timer2.push_back(timer[timer.size() - 1].get_int());
-        timer.pop_back();
+        const int timer_index = source.quantity - 1 - i;
+        const int timer_value = props.exists(TIMER_KEY) ?
+                                props[TIMER_KEY].get_vector()[timer_index].get_int()
+                            : FRESHEST_BLOOD;
+        timer2.push_back(timer_value);
     }
 
     // Re-sort timer.
