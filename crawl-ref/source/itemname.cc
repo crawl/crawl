@@ -665,7 +665,7 @@ const char* potion_type_name(int potiontype)
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
-    case POT_PARALYSIS:         return "paralysis";
+    case POT_CANCELLATION:      return "cancellation";
     case POT_CONFUSION:         return "confusion";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_PORRIDGE:          return "porridge";
@@ -3052,7 +3052,6 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_SLOWING:
-        case POT_PARALYSIS:
             if (you.species == SP_FORMICID)
                 return false;
         case POT_CONFUSION:
@@ -3348,7 +3347,6 @@ bool is_useless_item(const item_def &item, bool temp)
             // possible player confusion.
             return player_res_poison(false, temp) > 0;
         case POT_SLOWING:
-        case POT_PARALYSIS:
             return you.species == SP_FORMICID;
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();

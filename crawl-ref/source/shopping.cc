@@ -1432,6 +1432,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_MAGIC:
             case POT_INVISIBILITY:
+            case POT_CANCELLATION:
                 valued += 55;
                 break;
 
@@ -1462,7 +1463,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_BLOOD:
             case POT_PORRIDGE:
             case POT_CONFUSION:
-            case POT_PARALYSIS:
             case POT_POISON:
             case POT_SLOWING:
                 valued += 10;
@@ -1811,7 +1811,6 @@ bool is_worthless_consumable(const item_def &item)
         case POT_CONFUSION:
         case POT_DECAY:
         case POT_DEGENERATION:
-        case POT_PARALYSIS:
         case POT_POISON:
         case POT_SLOWING:
             return true;

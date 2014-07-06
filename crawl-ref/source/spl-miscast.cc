@@ -609,9 +609,6 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
         case POT_SLOWING:
             target->slow_down(act_source, pot_pow);
             break;
-        case POT_PARALYSIS:
-            target->paralyse(act_source, pot_pow, cause);
-            break;
         case POT_CONFUSION:
             target->confuse(act_source, pot_pow);
             break;

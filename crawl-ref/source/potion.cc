@@ -29,6 +29,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "skill_menu.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
@@ -296,9 +297,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             xom_is_stimulated(50 / xom_factor);
         break;
 
-    case POT_PARALYSIS:
-        paralyse_player("a potion of paralysis");
-        xom_is_stimulated(50 / xom_factor);
+    case POT_CANCELLATION:
+        antimagic();
         break;
 
     case POT_CONFUSION:
