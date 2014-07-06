@@ -280,6 +280,7 @@ void rot_inventory_food(int time_delta)
 void init_stack_blood_potions(item_def &stack, int age = -1)
 {
     ASSERT(is_blood_potion(stack));
+    ASSERT(stack.quantity);
 
     CrawlHashTable &props = stack.props;
     props.clear(); // sanity measure
@@ -810,6 +811,10 @@ void merge_blood_potion_stacks(const item_def &source, item_def &dest,
     ASSERT(props2.exists(TIMER_KEY));
     CrawlVector &timer2 = props2[TIMER_KEY].get_vector();
 
+    dprf("origin qt: %d, taking %d, putting into stack of size %d with initial timer count %d", source.quantity, quant, dest.quantity, timer2.size());
+
+    ASSERT(timer2.size() == dest.quantity);
+
     // Update timer2
     for (int i = 0; i < quant; i++)
     {
@@ -819,6 +824,10 @@ void merge_blood_potion_stacks(const item_def &source, item_def &dest,
                             : FRESHEST_BLOOD;
         timer2.push_back(timer_value);
     }
+
+    dprf("Eventual timer size: %d", timer2.size());
+
+    ASSERT(timer2.size() == dest.quantity + quant);
 
     // Re-sort timer.
     _sort_cvec<int>(timer2);

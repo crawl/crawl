@@ -1456,7 +1456,10 @@ bool items_stack(const item_def &item1, const item_def &item2)
 }
 
 /**
- * Merge a specified number of items from one stack into another.
+ * Handles special cases involved in merging a specified number of items from
+ * one stack into another.
+ * Assumes that it's being called before the destination stack is incremented -
+ * bugginess will occur if this order is reversed.
  * DOES NOT modify the original stack - the caller must handle any cleanup!
  *
  * @param source    The source from which items are being drawn.
@@ -1472,7 +1475,7 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
     ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
 
     if (is_blood_potion(source) && is_blood_potion(dest))
-       merge_blood_potion_stacks(source, dest, quant);
+        merge_blood_potion_stacks(source, dest, quant);
     if (source.base_type == OBJ_GOLD) // Gozag
         dest.special = max(source.special, dest.special);
 }
@@ -2025,8 +2028,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
             {
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
-                inc_mitm_item_quantity(si->index(), item.quantity);
                 merge_item_stacks(item, *si);
+                inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
                 _gozag_move_gold_to_top(p);
@@ -2138,9 +2141,9 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
         {
             if (items_stack(item, *si))
             {
-                inc_mitm_item_quantity(si->index(), quant_drop);
                 item_def copy = item;
                 merge_item_stacks(copy, *si, quant_drop);
+                inc_mitm_item_quantity(si->index(), quant_drop);
 
                 if (mark_dropped)
                 {
