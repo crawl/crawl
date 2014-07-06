@@ -580,9 +580,6 @@ string full_trap_name(trap_type trap)
     case TRAP_PLATE:
     case TRAP_WEB:
     case TRAP_SHAFT:
-#if TAG_MAJOR_VERSION == 34
-    case TRAP_GAS:
-#endif
         return basename;
     default:
         return basename + " trap";
