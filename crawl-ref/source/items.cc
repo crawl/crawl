@@ -1299,7 +1299,10 @@ void pickup(bool partial_quantity)
     else
     {
         int next;
-        mpr("There are several objects here.");
+        if (num_items == 0)
+            mpr("There are no objects that can be picked up here.");
+        else
+            mpr("There are several objects here.");
         string pickup_warning;
         bool any_selectable = false;
         while (o != NON_ITEM)
