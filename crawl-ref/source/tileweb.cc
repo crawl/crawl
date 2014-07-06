@@ -206,33 +206,29 @@ void TilesFramework::finish_message()
                 ssize_t retval = sendto(m_sock, fragment_start + sent,
                     fragment_size - sent, 0, (sockaddr*) &m_dest_addrs[i],
                     sizeof(sockaddr_un));
-                if (retval == -1)
+                if (retval <= 0)
                 {
+                    const char *errmsg = retval == 0 ? "No bytes sent"
+                                                     : strerror(errno);
                     if (--retries <= 0)
-                        die("Socket write error: %s", strerror(errno));
+                        die("Socket write error: %s", errmsg);
 
-                    if (errno == ECONNREFUSED || errno == ENOENT)
+                    if (retval == 0 || errno == ENOBUFS || errno == EWOULDBLOCK
+                        || errno == EINTR || errno == EAGAIN)
+                    {
+                        // Wait for half a second at first (up to five), then
+                        // try again.
+                        usleep(retries <= 10 ? 5000 * 1000 : 500 * 1000);
+                    }
+                    else if (errno == ECONNREFUSED || errno == ENOENT)
                     {
                         // the other side is dead
                         m_dest_addrs.erase(m_dest_addrs.begin() + i);
                         i--;
                         break;
                     }
-                    else if (errno == ENOBUFS || errno == EAGAIN
-                        || errno == EWOULDBLOCK || errno == EINTR)
-                    {
-                        // Wait for up to half a second, then try again
-                        usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
-                    }
                     else
-                        die("Socket write error: %s", strerror(errno));
-                }
-                else if (retval <= 0)
-                {
-                    if (--retries <= 0)
-                        die("Socket write error: retval <= 0");
-
-                    usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
+                        die("Socket write error: %s", errmsg);
                 }
                 else
                     sent += retval;
