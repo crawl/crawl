@@ -3155,7 +3155,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
 static bool _invisibility_is_useless(const bool temp)
 {
     // If you're Corona'd or a TSO-ite, this is always useless.
-    return temp ? you.backlit(true)
+    return temp ? you.backlit()
                 : you.haloed() && you_worship(GOD_SHINING_ONE);
 }
 

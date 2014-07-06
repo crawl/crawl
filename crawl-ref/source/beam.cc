@@ -3348,11 +3348,11 @@ bool bolt::misses_player()
             real_tohit /= 2;
 
         // Backlit is easier to hit:
-        if (you.backlit(true, false))
+        if (you.backlit(false))
             real_tohit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && you.umbra(true, true))
+        if (!nightvision && you.umbra())
             real_tohit -= 2 + random2(4);
     }
 
@@ -4908,11 +4908,11 @@ void bolt::affect_monster(monster* mon)
             beam_hit /= 2;
 
         // Backlit is easier to hit:
-        if (mon->backlit(true, false))
+        if (mon->backlit(false))
             beam_hit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && mon->umbra(true, true))
+        if (!nightvision && mon->umbra())
             beam_hit -= 2 + random2(4);
     }
 

@@ -7562,32 +7562,20 @@ bool player::visible_to(const actor *looker) const
             && (!invisible() || mon->can_see_invisible()));
 }
 
-bool player::backlit(bool check_haloed, bool self_halo) const
+bool player::backlit(bool self_halo) const
 {
     if (get_contamination_level() > 1 || duration[DUR_CORONA]
         || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return true;
     }
-    if (check_haloed)
-    {
-        return !umbraed() && haloed()
-               && (self_halo || halo_radius2() == -1);
-    }
-    return false;
+
+    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
 }
 
-bool player::umbra(bool check_haloed, bool self_halo) const
+bool player::umbra() const
 {
-    if (backlit())
-        return false;
-
-    if (check_haloed)
-    {
-        return umbraed() && !haloed()
-               && (self_halo || umbra_radius2() == -1);
-    }
-    return false;
+    return !backlit() && umbraed() && !haloed();
 }
 
 bool player::glows_naturally() const
