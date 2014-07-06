@@ -107,17 +107,11 @@ bool targetter_beam::set_aim(coord_def a)
         for (vector<coord_def>::const_iterator i = path_taken.begin();
              i != path_taken.end(); ++i)
         {
-            if (cell_is_solid(*i)
-                && tempbeam.affects_wall(grd(*i)) != MB_TRUE)
-            {
+            if (cell_is_solid(*i) && tempbeam.affects_wall(grd(*i)) != MB_TRUE)
                 break;
-            }
             tempbeam2.target = *i;
-            if (anyone_there(*i)
-                && !tempbeam.ignores_monster(monster_at(*i)))
-            {
+            if (anyone_there(*i) && !tempbeam.ignores_monster(monster_at(*i)))
                 break;
-            }
         }
         tempbeam2.use_target_as_pos = true;
         exp_map_min.init(INT_MAX);

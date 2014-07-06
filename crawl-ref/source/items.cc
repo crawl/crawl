@@ -4002,11 +4002,12 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
+            if (item.sub_type >= MISC_DECK_OF_ESCAPE
+                 && item.sub_type <= MISC_DECK_OF_DEFENCE)
             {
-                ii.sub_type = NUM_MISCELLANY; // Needs to be changed if we add other
-                                              // miscellaneous items that can be
-                                              // non-identified
+                // Needs to be changed if we add other miscellaneous items
+                // that can be non-identified.
+                ii.sub_type = NUM_MISCELLANY;
             }
             else
                 ii.sub_type = item.sub_type;

@@ -1530,8 +1530,7 @@ LUAFN(dgn_with_map_anchors)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {
-                map_anchor_points.push_back(
-                                            coord_def(lua_tointeger(ls, i),
+                map_anchor_points.push_back(coord_def(lua_tointeger(ls, i),
                                                       lua_tointeger(ls, i + 1)));
             }
         }

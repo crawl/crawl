@@ -1039,11 +1039,7 @@ void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
 {
     const int intensity = min(25, cells(p).noise_intensity_millis / 1000);
     if (intensity)
-    {
-        fprintf(outf,
-                "<span class='i%d'>&#%d;</span>",
-                intensity, ch);
-    }
+        fprintf(outf, "<span class='i%d'>&#%d;</span>", intensity, ch);
     else
         fprintf(outf, "<span>&#%d;</span>", ch);
 }
