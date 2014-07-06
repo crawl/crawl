@@ -2630,9 +2630,6 @@ static void _handle_read_book(int item_slot)
 
 static void _vulnerability_scroll()
 {
-    // First cast antimagic on yourself.
-    antimagic();
-
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
 
     // Go over all creatures in LOS.
@@ -2640,8 +2637,6 @@ static void _vulnerability_scroll()
     {
         if (monster* mon = monster_at(*ri))
         {
-            debuff_monster(mon);
-
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(mon))
                 mon->add_ench(lowered_mr);
@@ -2652,8 +2647,7 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_MR, 40, 0,
-                     "Magic dampens, then quickly surges around you.");
+    you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
