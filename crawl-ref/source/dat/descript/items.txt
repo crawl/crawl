@@ -905,10 +905,6 @@ potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
 %%%%
-potion of strong poison
-
-A terribly venomous potion.
-%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the

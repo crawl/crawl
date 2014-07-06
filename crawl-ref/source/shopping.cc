@@ -1452,7 +1452,9 @@ unsigned int item_value(item_def item, bool ident)
             case POT_CURING:
             case POT_DECAY:
             case POT_DEGENERATION:
+#if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
+#endif
             case POT_LIGNIFY:
                 valued += 20;
                 break;
@@ -1812,7 +1814,6 @@ bool is_worthless_consumable(const item_def &item)
         case POT_PARALYSIS:
         case POT_POISON:
         case POT_SLOWING:
-        case POT_STRONG_POISON:
             return true;
         default:
             return false;

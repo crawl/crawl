@@ -660,6 +660,7 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
+    case POT_STRONG_POISON:     return "strong poison";
 #endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
@@ -673,7 +674,6 @@ const char* potion_type_name(int potiontype)
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_RESTORE_ABILITIES: return "restore abilities";
-    case POT_STRONG_POISON:     return "strong poison";
     case POT_BERSERK_RAGE:      return "berserk rage";
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
@@ -3059,8 +3059,6 @@ bool is_bad_item(const item_def &item, bool temp)
             return true;
         case POT_DECAY:
             return !you.res_rotting(false);
-        case POT_STRONG_POISON:
-            return player_res_poison(false, temp) < 3;
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
@@ -3348,8 +3346,6 @@ bool is_useless_item(const item_def &item, bool temp)
             // Spriggans could argue, but it's too small of a gain for
             // possible player confusion.
             return player_res_poison(false, temp) > 0;
-        case POT_STRONG_POISON:
-            return player_res_poison(false, temp) >= 3;
         case POT_SLOWING:
         case POT_PARALYSIS:
             return you.species == SP_FORMICID;

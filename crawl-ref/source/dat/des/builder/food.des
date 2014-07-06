@@ -131,8 +131,8 @@ SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p = potion of restore abilities w:1 / potion of poison w:3 / \
-              potion of strong poison w:1 / potion of confusion w:1 / nothing
+KITEM:    p = potion of restore abilities w:2 / potion of poison w:3 / \
+              potion of confusion w:1 / nothing
 MONS:     kobold ; wand of magic darts ident:type . short sword
 MAP
 ZZZZZ..YYYYY
