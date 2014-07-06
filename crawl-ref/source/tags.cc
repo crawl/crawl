@@ -3091,11 +3091,8 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
             uint8_t x;
 
-            if (th.getMinorVersion() < TAG_MINOR_BOOK_ID
-                && i == OBJ_BOOKS)
-            {
+            if (th.getMinorVersion() < TAG_MINOR_BOOK_ID && i == OBJ_BOOKS)
                 x = ID_UNKNOWN_TYPE;
-            }
             else
                 x = unmarshallUByte(th);
 
