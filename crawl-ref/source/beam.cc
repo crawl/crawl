@@ -4511,7 +4511,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
         return false;
     }
 
-    if (x_chance_in_y(85 - mons->hit_dice * 3 , 100))
+    if (x_chance_in_y(95 - mons->hit_dice * 5 , 100))
     {
         simple_monster_message(mons, " is dazzled.");
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
