@@ -383,8 +383,8 @@ public:
     bool confused_by_you() const;
     bool caught() const;
     bool asleep() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
-    bool umbra(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool self_halo = true) const;
+    bool umbra() const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2() const;

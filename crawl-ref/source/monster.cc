@@ -3191,26 +3191,20 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
-bool monster::backlit(bool check_haloed, bool self_halo) const
+bool monster::backlit(bool self_halo) const
 {
-    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
-        return true;
-    if (check_haloed)
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
+        || has_ench(ENCH_SILVER_CORONA))
     {
-        return !umbraed() && haloed() &&
-               (self_halo || halo_radius2() == -1);
+        return true;
     }
-    return false;
+
+    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
 }
 
-bool monster::umbra(bool check_haloed, bool self_halo) const
+bool monster::umbra() const
 {
-    if (check_haloed)
-    {
-        return umbraed() && !haloed() &&
-               (self_halo || umbra_radius2() == -1);
-    }
-    return false;
+    return umbraed() && !haloed();
 }
 
 bool monster::glows_naturally() const

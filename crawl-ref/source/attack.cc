@@ -301,10 +301,10 @@ int attack::calc_to_hit(bool random)
             mhit -= 5;
         }
 
-        if (defender->backlit(true, false))
+        if (defender->backlit(false))
             mhit += 2 + random2(8);
         else if (!attacker->nightvision()
-                 && defender->umbra(true, true))
+                 && defender->umbra())
             mhit -= 2 + random2(4);
     }
     // Don't delay doing this roll until test_hit().
