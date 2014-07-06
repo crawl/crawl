@@ -1039,8 +1039,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
-    if (mons->friendly())
-        item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
     // FIXME we should actually determine a sensible range here
     beam.range         = you.current_vision;

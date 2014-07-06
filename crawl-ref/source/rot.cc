@@ -345,8 +345,7 @@ static void _init_coagulated_blood(item_def &stack, int count, item_def &old,
     stack.plus2     = 0;
     stack.special   = 0;
     stack.flags     = old.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
-                                   | ISFLAG_NO_PICKUP | ISFLAG_SUMMONED
-                                   | ISFLAG_DROPPED_BY_ALLY);
+                                   | ISFLAG_NO_PICKUP | ISFLAG_SUMMONED);
     stack.inscription = old.inscription;
     item_colour(stack);
 

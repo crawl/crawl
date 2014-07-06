@@ -1490,8 +1490,6 @@ static int _xom_swap_weapons(bool debug = false)
     myitem        = mitm[monwpn];
     myitem.link   = freeslot;
     myitem.pos.set(-1, -1);
-    // Remove "dropped by ally" flag.
-    myitem.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
 
     if (!myitem.slot)
         myitem.slot = index_to_letter(myitem.link);

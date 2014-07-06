@@ -2079,7 +2079,9 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_SEEN              = 0x20000000,  // has it been seen
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
-    ISFLAG_DROPPED_BY_ALLY   = 0x80000000,  // Item was dropped by an ally
+#if TAG_MAJOR_VERSION == 34
+    ISFLAG_UNUSED4           = 0x80000000,  // was ISFLAG_DROPPED_BY_ALLY
+#endif
 };
 
 enum item_type_id_state_type

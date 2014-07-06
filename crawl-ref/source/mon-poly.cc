@@ -87,9 +87,6 @@ void monster_drop_things(monster* mons,
             }
             else
             {
-                if (mons->friendly() && mitm[item].defined())
-                    mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
-
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
