@@ -1462,9 +1462,6 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
         // Burn poisonous potions.
         switch (item.sub_type)
         {
-        case POT_STRONG_POISON:
-            strength = 20 * item.quantity;
-            break;
         case POT_DEGENERATION:
         case POT_POISON:
             strength = 10 * item.quantity;
@@ -1759,7 +1756,6 @@ static bool maybe_abort_ignite()
         {
             switch (item.sub_type)
             {
-            case POT_STRONG_POISON:
             case POT_DEGENERATION:
             case POT_POISON:
                 prompt += "over ";

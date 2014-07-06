@@ -139,7 +139,6 @@ MONS:    sea snake / redback, red wasp / yellow wasp
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
 KITEM:   E = potion of poison ident:type / \
-             potion of strong poison ident:type / \
              potion of confusion ident:type / \
              potion of paralysis ident:type
 COLOUR:  .012345DE = lightgreen

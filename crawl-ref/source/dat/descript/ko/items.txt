@@ -546,10 +546,6 @@ potion of slowing
 
 짧은 시간동안 모든 동작을 느리게 만드는 물약이다.
 %%%%
-potion of strong poison
-
-끔찍한 맹독이 든 물약.
-%%%%
 quad damage
 
 룬을 닮은 신비로운 도구. 사용하면 사용자가 파랗게 빛나며, 주변의 모든 소리가

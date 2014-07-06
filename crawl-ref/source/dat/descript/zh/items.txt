@@ -437,10 +437,6 @@ potion of slowing
 
 饮用这瓶药水会使你的动作速度变慢。
 %%%%
-potion of strong poison
-
-一瓶剧毒药水。
-%%%%
 quad damage
 
 一个看上去像是某种符文的神秘物品。
