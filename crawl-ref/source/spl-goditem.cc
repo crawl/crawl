@@ -335,12 +335,12 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
                           divine_ability, where, not_self, mode);
 }
 
-// Antimagic is sort of an anti-extension... it sets a lot of magical
+// Dispelling is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
 // that's why we reduce flight to 2, so that the player has a chance
 // to stop insta-death... sure the others could lead to death, but that's
 // not as direct as falling into deep water) -- bwr
-void antimagic()
+void debuff_player()
 {
     duration_type dur_list[] =
     {
