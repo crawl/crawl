@@ -3994,6 +3994,11 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         feature = DNGN_CLOSED_DOOR;
     if (feature == DNGN_BADLY_SEALED_DOOR)
         feature = DNGN_SEALED_DOOR;
+    if (feature == DNGN_ESCAPE_HATCH_UP
+        && you.where_are_you == BRANCH_LABYRINTH)
+    {
+        feature = DNGN_EXIT_LABYRINTH;
+    }
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -4625,6 +4630,11 @@ static void tag_read_level(reader &th)
                 grd[i][j] = DNGN_CLOSED_DOOR;
             if (feat == DNGN_BADLY_SEALED_DOOR)
                 grd[i][j] = DNGN_SEALED_DOOR;
+            if (feat == DNGN_ESCAPE_HATCH_UP
+                && you.where_are_you == BRANCH_LABYRINTH)
+            {
+                grd[i][j] = DNGN_EXIT_LABYRINTH;
+            }
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
