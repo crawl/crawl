@@ -1244,10 +1244,8 @@ although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-This scroll cancels all magical enchantments from the reader and from beings in
-the vicinity. It also briefly halves the resistance to hostile enchantments of
-the reader and nearby beings. The latter effect does not apply to beings fully
-immune to magic.
+This briefly halves the resistance to hostile enchantments of the reader and
+nearby beings. The scroll cannot affect beings fully immune to magic.
 %%%%
 scythe
 
