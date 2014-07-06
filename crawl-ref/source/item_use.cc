@@ -2347,9 +2347,10 @@ bool enchant_weapon(item_def &wpn, bool quiet)
         {
             if (!success)
                 mprf("%s glows silver for a moment.", iname.c_str());
-            do_uncurse_item(wpn, true, true);
             success = true;
         }
+        // Mark the item as uncursed, whether or not it was cursed initially.
+        do_uncurse_item(wpn, true, true);
     }
 
     if (!success && !quiet)
