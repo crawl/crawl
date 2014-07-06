@@ -356,7 +356,7 @@ vector<coord_def> monster_pathfind::backtrack()
 #endif
         path.insert(path.begin(), pos);
 
-        if (pos.x == 0 && pos.y == 0)
+        if (pos.origin())
             break;
     }
     while (pos != start);
