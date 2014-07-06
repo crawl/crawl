@@ -1370,15 +1370,6 @@ bool monster::drop_item(int eslot, int near)
 
             return false;
         }
-
-        if (friendly() && item_index != NON_ITEM)
-        {
-            // move_item_to_grid could change item_index, so
-            // update pitem.
-            pitem = &mitm[item_index];
-
-            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
-        }
     }
 
     if (props.exists("wand_known") && near && pitem->base_type == OBJ_WANDS)

@@ -1828,9 +1828,8 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     item.quantity = quant_got;
     item.slot     = index_to_letter(item.link);
     item.pos.set(-1, -1);
-    // Remove "dropped by ally" flag.
-    // Also, remove "unobtainable" as it was just proven false.
-    item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
+    // Remove "unobtainable" as it was just proven false.
+    item.flags &= ~ISFLAG_UNOBTAINABLE;
 
     god_id_item(item);
     maybe_identify_base_type(item);
