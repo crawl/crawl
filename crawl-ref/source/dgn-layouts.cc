@@ -329,7 +329,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         else
             dir.y = _trail_random_dir(pos.y, GYM, 15);
 
-        if (dir.x == 0 && dir.y == 0 || map_masked(pos + dir, MMT_VAULT))
+        if (dir.origin() || map_masked(pos + dir, MMT_VAULT))
             continue;
 
         // Corridor length... change only when going vertical?
