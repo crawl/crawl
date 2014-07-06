@@ -248,7 +248,9 @@ static bool _valid_weapon_swap(const item_def &item)
     }
 
     if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+        && (item.sub_type == MI_STONE
+            || item.sub_type == MI_LARGE_ROCK
+               && you.could_wield(item, true, true)))
     {
         return you.has_spell(SPELL_SANDBLAST);
     }
