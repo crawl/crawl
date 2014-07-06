@@ -10,7 +10,8 @@ sub articled($)
     return $_ if /^[A-Z]/ && !/ trap$/;
     return "\u$_" if /^(?:the |an |a |some )/i;
     return "A $_" if /^one-/i;
-    return "The $_" if $_ eq "floor";
+    # Handle "rough-hewn floor" but not "escape hatch in the floor"
+    return "The $_" if $_ =~ /^(\S+\s+)?floor$/;
     return /^[aeiou]/i ? "An $_" : "A $_";
 }
 
