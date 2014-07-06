@@ -32,6 +32,22 @@ for (/"([^"\n]*)"/g)
     $features{articled($_)} = 1;
 }
 
+open IN, "util/cpp_version describe.cc|" or die "Can't read directn.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+
+s/.*trap_names\[\] =(.*?)\n};\n.*/$1/s
+    or die "Can't find trap_names in describe.cc\n";
+s|//.*$||mg;
+
+for (/"([^"\n]*)"/g)
+{
+    $_ .= " trap" unless /^(web|shaft|passage|pressure plate)$/;
+    $_ .= " of Golubria" if /^passage$/;
+
+    $features{articled($_)} = 1;
+}
+
 for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 {
     chomp;
