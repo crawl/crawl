@@ -2995,12 +2995,8 @@ void hogs_to_humans()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!(mi->type == MONS_HOG
-              || mi->type == MONS_HELL_HOG
-              || mi->type == MONS_HOLY_SWINE))
-        {
+        if (mons_genus(mi->type) != MONS_HOG)
             continue;
-        }
 
         if (!mi->props.exists("kirke_band")
             && !mi->props.exists(ORIG_MONSTER_KEY))
