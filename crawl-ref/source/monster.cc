@@ -1284,8 +1284,8 @@ bool monster::pickup(item_def &item, int slot, int near)
                 pos());
 
             pickup_message(item, near);
-            inc_mitm_item_quantity(inv[slot], item.quantity);
             merge_item_stacks(item, dest);
+            inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
             equip(item, slot, near);
             lose_pickup_energy();
