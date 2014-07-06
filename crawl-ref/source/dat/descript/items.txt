@@ -809,6 +809,10 @@ potion of brilliance
 A magic potion which greatly increases the intelligence and magical power of
 one who drinks it.
 %%%%
+potion of cancellation
+
+A potion which ends most magical effects, good or bad, affecting you.
+%%%%
 potion of coagulated blood
 
 A potion containing the essence of life. It is vital for all living creatures,
@@ -875,10 +879,6 @@ who drinks it.
 potion of mutation
 
 A potion which does very strange things to you.
-%%%%
-potion of paralysis
-
-A potion which causes paralysis.
 %%%%
 potion of poison
 
