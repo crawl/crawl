@@ -298,7 +298,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_CANCELLATION:
-        antimagic();
+        debuff_player();
         break;
 
     case POT_CONFUSION:

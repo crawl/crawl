@@ -928,7 +928,7 @@ static bool _sif_muna_retribution()
         // This will set all the extendable duration spells to
         // a duration of one round, thus potentially exposing
         // the player to real danger.
-        antimagic();
+        debuff_player();
         break;
     }
 

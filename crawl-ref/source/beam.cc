@@ -4073,7 +4073,7 @@ void bolt::affect_player()
 
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
-        antimagic();
+        debuff_player();
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
 
