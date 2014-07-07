@@ -50,12 +50,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return NUM_MB_FLAGS;
     }
 
-    if (ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
-        return NUM_MB_FLAGS;
-
-    if (ench == ENCH_SLOW && mons.has_ench(ENCH_HASTE))
-        return NUM_MB_FLAGS;
-
     if (ench == ENCH_PETRIFIED && mons.has_ench(ENCH_PETRIFYING))
         return NUM_MB_FLAGS;
 
@@ -1467,6 +1461,21 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
+
+    if (is(MB_BERSERK))
+        v.push_back("berserk");
+    if (is(MB_HASTED) || is(MB_BERSERK))
+    {
+        if (!is(MB_SLOWED))
+            v.push_back("fast");
+        else
+            v.push_back("fast+slow");
+    }
+    else if (is(MB_SLOWED))
+        v.push_back("slow");
+    if (is(MB_STRONG) || is(MB_BERSERK))
+        v.push_back("unusually strong");
+
     if (is(MB_POISONED))
         v.push_back("poisoned");
     if (is(MB_SICK))
@@ -1475,20 +1484,12 @@ vector<string> monster_info::attributes() const
         v.push_back("rotting away"); //jmf: "covered in sores"?
     if (is(MB_GLOWING))
         v.push_back("softly glowing");
-    if (is(MB_SLOWED))
-        v.push_back("slow");
     if (is(MB_INSANE))
         v.push_back("frenzied and insane");
-    if (is(MB_BERSERK))
-        v.push_back("berserk");
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
     if (is(MB_ROUSED))
         v.push_back("inspired to greatness");
-    if (is(MB_HASTED))
-        v.push_back("fast");
-    if (is(MB_STRONG))
-        v.push_back("unusually strong");
     if (is(MB_CONFUSED))
         v.push_back("bewildered and confused");
     if (is(MB_INVISIBLE))
