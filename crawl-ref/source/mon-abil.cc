@@ -1934,42 +1934,38 @@ bool lost_soul_revive(monster* mons)
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
-            if (mons->holiness() == MH_UNDEAD)
-            {
-                if (you.can_see(*mi))
-                {
-                     mprf("%s sacrifices itself to reknit %s!",
-                          mi->name(DESC_THE).c_str(),
-                          mons->name(DESC_THE).c_str());
-                }
-                else if (you.can_see(mons))
-                {
-                    mprf("Necromantic energies suffuse and reknit %s!",
-                         mons->name(DESC_THE).c_str());
-                }
-            }
-            else
-            {
-                if (you.can_see(mons))
-                {
-                    mprf("%s lost soul assumes the form of %s%s!",
-                         you.can_see(*mi) ? "The" : "A",
-                         mons->name(DESC_THE).c_str(),
-                         (mi->is_summoned() ? " and becomes anchored to this"
-                                              " world" : ""));
-                }
-
-                mons->flags |= MF_SPECTRALISED;
-            }
-
             mons->heal(mons->max_hit_points);
             mons->del_ench(ENCH_CONFUSION, true);
             mons->timeout_enchantments(10);
 
             coord_def newpos = mi->pos();
-            monster_die(*mi, KILL_MISC, -1, true);
             if (mons->holiness() == MH_NATURAL)
+            {
                 mons->move_to_pos(newpos);
+                mons->flags |= MF_SPECTRALISED;
+            }
+
+            // check if you can see the monster *after* it maybe moved
+            if (you.can_see(mons))
+            {
+                if (mons->holiness() == MH_UNDEAD)
+                {
+                    mprf("%s sacrifices itself to reknit %s!",
+                         mi->name(DESC_THE).c_str(),
+                         mons->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s assumes the form of %s%s!",
+                         mi->name(DESC_THE).c_str(),
+                         mons->name(DESC_THE).c_str(),
+                         (mi->is_summoned() ? " and becomes anchored to this"
+                          " world" : ""));
+                }
+            }
+
+            monster_die(*mi, KILL_MISC, -1, true);
+
             return true;
         }
     }
