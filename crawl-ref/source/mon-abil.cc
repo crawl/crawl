@@ -1948,12 +1948,16 @@ bool lost_soul_revive(monster* mons)
                          mons->name(DESC_THE).c_str());
                 }
             }
-            else if (you.can_see(*mi))
+            else
             {
-                mprf("The lost soul assumes the form of %s%s!",
-                     mons->name(DESC_THE).c_str(),
-                    (mi->is_summoned() ? " and becomes anchored to this world"
-                                       : ""));
+                if (you.can_see(mons))
+                {
+                    mprf("%s lost soul assumes the form of %s%s!",
+                         you.can_see(*mi) ? "The" : "A",
+                         mons->name(DESC_THE).c_str(),
+                         (mi->is_summoned() ? " and becomes anchored to this"
+                                              " world" : ""));
+                }
 
                 mons->flags |= MF_SPECTRALISED;
             }
