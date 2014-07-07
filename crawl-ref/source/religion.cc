@@ -3388,15 +3388,17 @@ void god_pitch(god_type which_god)
         mprf("You %s the altar of %s.",
          you.form == TRAN_WISP   ? "swirl around" :
          you.form == TRAN_BAT    ? "perch on" :
+         you.form == TRAN_DRAGON ? "bow your head before" :
          you.flight_mode()       ? "hover solemnly before" :
          you.form == TRAN_STATUE ? "place yourself before" :
          you.form == TRAN_ICE_BEAST
-             || you.form == TRAN_DRAGON
              || you.form == TRAN_PIG    ? "bow your head before" :
+         you.form == TRAN_SPIDER ? "crawl onto" :
          you.form == TRAN_TREE   ? "sway towards" :
          you.form == TRAN_FUNGUS ? "release spores on" :
          you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
          you.species == SP_NAGA  ? "coil in front of" :
+         you.species == SP_OCTOPODE  ? "curl up in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before" :
                                    "kneel at",
