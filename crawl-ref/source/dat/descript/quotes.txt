@@ -1602,13 +1602,6 @@ lasher statue
  Which slashes the flesh, lacerates the back”
     -Samael, “Flagellation”
 %%%%
-lava worm
-
-“Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos
-(Greek, =worm), masculine, ‘lava-worm’ for the locality, springs in the lava
-beds of Shasta County, Calif., from which topotypes were taken.”
-    -_Proceedings of the United States National Musem_. 1968.
-%%%%
 leather armour
 
 “Nought can Deform the Human race

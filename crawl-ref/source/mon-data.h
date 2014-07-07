@@ -248,6 +248,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BROWN_OOZE)
     AXED_MON(MONS_PULSATING_LUMP)
     AXED_MON(MONS_BIG_FISH)
+    AXED_MON(MONS_LAVA_WORM)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -4612,18 +4613,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 // lava monsters
-{
-    MONS_LAVA_WORM, 'w', YELLOW, "lava worm",
-    M_NO_SKELETON | M_SUBMERGES,
-    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
-    0, 6, MONS_LAVA_WORM, MONS_LAVA_WORM, MH_NATURAL, -3,
-    { {AT_BITE, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
-    1, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT,
-    I_INSECT, HT_LAVA, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
-},
-
 {
     MONS_LAVA_SNAKE, 'S', LIGHTRED, "lava snake",
     M_WARM_BLOOD | M_SUBMERGES,
