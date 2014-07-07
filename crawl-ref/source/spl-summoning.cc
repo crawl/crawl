@@ -1750,8 +1750,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         ASSERT(mons_skeleton(zombie_type));
         if (as == &you)
+        {
             mpr("The flesh is too rotten for a proper zombie; "
                 "only a skeleton remains.");
+        }
         mon = MONS_SKELETON;
     }
 
