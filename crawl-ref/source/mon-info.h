@@ -46,7 +46,9 @@ enum monster_info_flags
     MB_SUBMERGED,
     MB_BLEEDING,
     MB_DEFLECT_MSL,
+#if TAG_MAJOR_VERSION == 34
     MB_PREP_RESURRECT,
+#endif
     MB_REGENERATION,
     MB_RAISED_MR,
     MB_MIRROR_DAMAGE,
@@ -63,7 +65,9 @@ enum monster_info_flags
 #endif
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
+#if TAG_MAJOR_VERSION == 34
     MB_ATTACHED,
+#endif
     MB_DAZED,
     MB_MUTE,
     MB_BLIND,

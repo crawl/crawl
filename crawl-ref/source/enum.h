@@ -1804,7 +1804,9 @@ enum enchant_type
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_ATTACHED,
+#endif
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
