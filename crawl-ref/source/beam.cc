@@ -2020,6 +2020,10 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (mons->alive())
     {
+        if (!mons->cannot_move())
+            simple_monster_message(mons, mons->has_ench(ENCH_SLOW)
+                                         ? " seems to be slow for longer."
+                                         : " seems to slow down.");
         // FIXME: calculate the slow duration more cleanly
         mon_enchant me(ENCH_SLOW, 0, agent);
         levels -= 2;
@@ -2030,8 +2034,6 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
             levels -= 2;
         }
         mons->add_ench(me);
-        if (!mons->paralysed() && !mons->petrified())
-            simple_monster_message(mons, " seems to slow down.");
     }
 
     // Deities take notice.
