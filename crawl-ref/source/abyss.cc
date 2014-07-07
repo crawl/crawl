@@ -437,6 +437,8 @@ static bool _abyss_check_place_feat(coord_def p,
             // Link the vault-placed items.
             _abyss_postvault_fixup();
         }
+        else if (!abyss_genlevel_mask(p))
+            return false;
         else
             grd(p) = which_feat;
 
