@@ -126,8 +126,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
         return MB_WITHDRAWN;
-    case ENCH_ATTACHED:
-        return MB_ATTACHED;
     case ENCH_BLEED:
         return MB_BLEEDING;
     case ENCH_DAZED:
@@ -1519,8 +1517,6 @@ vector<string> monster_info::attributes() const
         v.push_back("bleeding");
     if (is(MB_DEFLECT_MSL))
         v.push_back("deflecting missiles");
-    if (is(MB_PREP_RESURRECT))
-        v.push_back("quietly preparing");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
     if (is(MB_BREATH_WEAPON))
@@ -1534,8 +1530,6 @@ vector<string> monster_info::attributes() const
         v.push_back(string("protected by ")
                     + pronoun(PRONOUN_POSSESSIVE) + " shell");
     }
-    if (is(MB_ATTACHED))
-        v.push_back("attached and sucking blood");
     if (is(MB_DAZED))
         v.push_back("dazed");
     if (is(MB_MUTE))
@@ -1793,7 +1787,7 @@ size_type monster_info::body_size() const
 
 bool monster_info::cannot_move() const
 {
-    return is(MB_PARALYSED) || is(MB_PETRIFIED) || is(MB_PREP_RESURRECT);
+    return is(MB_PARALYSED) || is(MB_PETRIFIED);
 }
 
 bool monster_info::airborne() const
