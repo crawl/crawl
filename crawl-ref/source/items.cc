@@ -1678,9 +1678,12 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
+        {
             _got_item(you.inv[inv_slot]);
-
-        _check_note_item(it);
+            _check_note_item(you.inv[inv_slot]);
+        }
+        else
+            _check_note_item(it);
 
         if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
         {
