@@ -186,9 +186,14 @@ void ash_check_bondage(bool msg)
         // Octopodes don't count these slots:
         else if (you.species == SP_OCTOPODE &&
                  (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+        {
             continue;
+        }
         // *Only* octopodes count these slots:
         else if (you.species != SP_OCTOPODE && i > EQ_AMULET)
+            continue;
+        // Never count the macabre finger necklace's extra ring slot.
+        else if (i == EQ_RING_AMULET)
             continue;
         else
             s = ET_JEWELS;
@@ -242,7 +247,7 @@ void ash_check_bondage(bool msg)
     // kittehs don't obey hoomie rules!
     if (you.species == SP_FELID)
     {
-        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+        for (int i = EQ_LEFT_RING; i <= EQ_AMULET; ++i)
             if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
                 ++you.bondage_level;
 
