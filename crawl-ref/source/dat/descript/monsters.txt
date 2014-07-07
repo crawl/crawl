@@ -1602,10 +1602,6 @@ lava snake
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
 at passers-by.
 %%%%
-lava worm
-
-A vicious red worm which swims through molten rock.
-%%%%
 lich
 
 A powerful wizard who has learned to cheat death itself, a lich is a skeletal,

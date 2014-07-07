@@ -2763,8 +2763,8 @@ enum monster_type                      // menv[].type
     MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
 
     // Lava monsters:
-    MONS_LAVA_WORM,
 #if TAG_MAJOR_VERSION == 34
+    MONS_LAVA_WORM,
     MONS_LAVA_FISH,
 #endif
     MONS_LAVA_SNAKE,

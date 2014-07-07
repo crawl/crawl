@@ -15,7 +15,7 @@
 #   -> D:16-18 ice, polar bear, yak, death yak, wolf
 #   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
 #   -> D:22-24 lava, fire vortex, lava snake, salamander
-#   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
+#   -> D:25-27 lava, fire vortex, fire bat, fire elemental
 #   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
 #
 # Most of these vaults come in three sizes/shapes depending on
@@ -175,7 +175,6 @@ function init_aquarium(e)
     e.kprop('l = no_cloud_gen')
     e.kmons('l = w:' .. nothing_weight .. [[ nothing /
                  w:30 generate_awake fire vortex /
-                 w:8  generate_awake lava worm /
                  w:2  generate_awake salamander /
                  w:5  generate_awake fire elemental]] )
     e.kfeat('! = l')

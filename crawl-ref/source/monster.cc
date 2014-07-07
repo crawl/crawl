@@ -5257,7 +5257,6 @@ static bool _mons_is_fiery(int mc)
            || mc == MONS_FIRE_ELEMENTAL
            || mc == MONS_EFREET
            || mc == MONS_AZRAEL
-           || mc == MONS_LAVA_WORM
            || mc == MONS_LAVA_SNAKE
            || mc == MONS_SALAMANDER
            || mc == MONS_SALAMANDER_FIREBRAND
