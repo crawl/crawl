@@ -140,6 +140,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     // The orb sometimes degrades controlled blinks to completely uncontrolled.
     else if (orb_haloed(you.pos()) && !wizard_blink)
     {
+        if (safely_cancellable && !high_level_controlled_blink
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return -1;
+        }
+
         if (pre_msg)
             mpr(pre_msg->c_str());
         mprf(MSGCH_ORB, "The orb interferes with your control of the blink!");
@@ -150,6 +158,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
+        if (safely_cancellable && !high_level_controlled_blink
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return -1;
+        }
+
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
