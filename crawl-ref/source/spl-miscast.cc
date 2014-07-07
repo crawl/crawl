@@ -648,7 +648,7 @@ bool MiscastEffect::_malign_gateway()
 
     if (success)
     {
-        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(3) + 2);
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 false,
