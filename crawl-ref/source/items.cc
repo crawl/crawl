@@ -1675,14 +1675,12 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         if (is_blood_potion(it) && quant_got != it.quantity)
             for (int i = 0; i < quant_got; i++)
                 remove_oldest_blood_potion(it);
-        dec_mitm_item_quantity(obj, quant_got);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
-        {
             _got_item(you.inv[inv_slot]);
-            _check_note_item(you.inv[inv_slot]);
-        }
+
+        _check_note_item(it);
 
         if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
         {
@@ -1691,6 +1689,12 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
                                                          -1),
                                                you.pos());
         }
+
+        // XXX: Waiting until now to decrement the quantity gives plenty of
+        // opportunity for the player to send a HUP and duplicate the item.
+        // However, we can't decrement the quantity before firing the position
+        // event, because the latter needs the object's index.
+        dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
         return true;
