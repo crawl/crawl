@@ -2849,17 +2849,9 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        // XXX Because some checks in blink() are made before players get to
-        // choose target location it is possible to "abuse" scrolls' free
-        // cancelling to get some normally hidden information (i.e. presence
-        // of (unidentified) -Tele gear).
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg.c_str());
-            blink(1000, false);
-        }
-        else
-            cancel_scroll = (blink(1000, false, false, &pre_succ_msg) == -1);
+        cancel_scroll = (blink(1000, false, false,
+                               &pre_succ_msg, alreadyknown) == -1
+                        && alreadyknown);
         break;
 
     case SCR_TELEPORTATION:

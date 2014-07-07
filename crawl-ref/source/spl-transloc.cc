@@ -110,7 +110,7 @@ void disjunction()
 // a monster being at the target spot), and the player gains no
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
-          string *pre_msg)
+          string *pre_msg, bool safely_cancellable)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -178,7 +178,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
             if (!beam.isValid || beam.target == you.pos())
             {
-                if (!wizard_blink
+                if (!wizard_blink && !safely_cancellable
                     && !yesno("Are you sure you want to cancel this blink?",
                               false, 'n'))
                 {
