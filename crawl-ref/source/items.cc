@@ -1693,10 +1693,11 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
                                                you.pos());
         }
 
-        // XXX: Waiting until now to decrement the quantity gives plenty of
-        // opportunity for the player to send a HUP and duplicate the item.
-        // However, we can't decrement the quantity before firing the position
-        // event, because the latter needs the object's index.
+        // XXX: Waiting until now to decrement the quantity may give Windows
+        // tiles players the opportunity to close the window and duplicate the
+        // item (a variant of bug #6486). However, we can't decrement the
+        // quantity before firing the position event, because the latter needs
+        // the object's index.
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
