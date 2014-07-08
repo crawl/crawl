@@ -565,7 +565,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.ex_size      = 1;
         beam.flavour      = BEAM_HELLFIRE;
         beam.is_explosion = true;
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.aux_source.clear();
         beam.is_tracer    = false;
         beam.hit          = 20;

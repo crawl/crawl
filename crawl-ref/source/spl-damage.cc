@@ -162,7 +162,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.flavour           = BEAM_HELLFIRE;
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour            = RED;
+    beam.colour            = LIGHTRED;
     beam.beam_source       = MHITYOU;
     beam.thrower           = KILL_YOU;
     beam.obvious_effect    = false;
