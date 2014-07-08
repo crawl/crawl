@@ -365,6 +365,8 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     {
         for (int i = 0; i < iter_limit; i++)
         {
+            // Don't reset the monster while it is constricted.
+            you.stop_constricting(mon.mid, false, true);
             // This sets mgrid(mons.pos()) to NON_MONSTER
             mon = orig;
             // Re-place the monster if it e.g. blinked away.
