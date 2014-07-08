@@ -360,7 +360,7 @@ int ranged_attack::calc_base_unarmed_damage()
     if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
         return 0;
 
-    // Darts and stones get half bonus; everything else gets full bonus.
+    // Stones get half bonus; everything else gets full bonus.
     return div_rand_round(attack::calc_base_unarmed_damage()
                           * min(4, property(*projectile, PWPN_DAMAGE)), 4);
 }
