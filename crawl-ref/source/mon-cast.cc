@@ -91,8 +91,11 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        if (setup_mons_cast(&fake_mon, pbolt, spell, true))
+        if (spell == SPELL_MELEE
+            || setup_mons_cast(&fake_mon, pbolt, spell, true))
+        {
             _valid_mon_spells[i] = true;
+        }
     }
 }
 
