@@ -260,7 +260,7 @@ use
 Place braces as per the conventions above.
 
 Else, whenever if-conditional nesting can't be avoided, always use braces. I
-could't find an example where that isn't already necessary for logical reasons,
+couldn't find an example where that isn't already necessary for logical reasons,
 so these should be really rare.
 
 In a row of if-else if-statements or in a switch-case loop, the optional braces

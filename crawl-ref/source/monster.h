@@ -460,6 +460,7 @@ public:
     int stat_maxhp() const { return max_hit_points; }
     int stealth() const;
 
+    bool    shielded() const;
     int     shield_bonus() const;
     int     shield_block_penalty() const;
     void    shield_block_succeeded(actor *foe);

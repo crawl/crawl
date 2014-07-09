@@ -689,6 +689,7 @@ public:
     int stat_maxhp() const  { return hp_max; }
     int stealth() const     { return check_stealth(); }
 
+    bool shielded() const;
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;

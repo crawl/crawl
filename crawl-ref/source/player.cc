@@ -2741,11 +2741,8 @@ int player_shield_class()
         if (you.duration[DUR_MAGIC_SHIELD])
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
-        if (!you.duration[DUR_FIRE_SHIELD]
-            && you.duration[DUR_CONDENSATION_SHIELD])
-        {
+        if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.skill(SK_ICE_MAGIC, 60);
-        }
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
@@ -6196,6 +6193,19 @@ bool player::liquefied_ground() const
 {
     return liquefied(pos())
            && ground_level() && !is_insubstantial();
+}
+
+/**
+ * Returns whether the player currently has any kind of shield.
+ */
+bool player::shielded() const
+{
+    return shield()
+           || duration[DUR_CONDENSATION_SHIELD]
+           || duration[DUR_MAGIC_SHIELD]
+           || duration[DUR_DIVINE_SHIELD]
+           || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+           || qazlal_sh_boost() > 0;
 }
 
 int player::shield_block_penalty() const

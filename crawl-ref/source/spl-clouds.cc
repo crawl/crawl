@@ -241,6 +241,9 @@ void manage_fire_shield(int delay)
     if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
+    // Melt ice armour and condensation shield entirely.
+    maybe_melt_player_enchantments(BEAM_FIRE, 100);
+
     // Remove fire clouds on top of you
     if (env.cgrid(you.pos()) != EMPTY_CLOUD
         && env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)

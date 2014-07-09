@@ -3279,14 +3279,21 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
 }
 
+/**
+ * Returns whether the monster currently has any kind of shield.
+ */
+bool monster::shielded() const
+{
+    return shield();
+}
+
 int monster::shield_bonus() const
 {
     const item_def *shld = const_cast<monster* >(this)->shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
-        // Note that 0 is not quite no-blocking.
         if (incapacitated())
-            return 0;
+            return -100;
 
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)

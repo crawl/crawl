@@ -2440,7 +2440,8 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->base_type = misc_list[i];
                 ptmp->sub_type  = misc_ST_list[i];
                 ptmp->colour    = 2;
-                ptmp->quantity  = 18;  //show a good amount of gold
+                //show a good amount of gold
+                ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 
                 // Make chunks fresh, non-poisonous, etc.
                 if (ptmp->base_type == OBJ_FOOD

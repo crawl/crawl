@@ -3363,7 +3363,7 @@ bool bolt::misses_player()
     bool train_shields_more = false;
 
     if (is_blockable()
-        && (you.shield() || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0)
+        && you.shielded()
         && !aimed_at_feet
         && player_shield_class() > 0)
     {
@@ -3382,7 +3382,6 @@ bool bolt::misses_player()
                 mprf("Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
                       name.c_str());
-                ident_reflector(you.shield());
                 reflect();
             }
             else if (_shield_piercing(this))
