@@ -91,7 +91,8 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
 
         if (you.mutation[MUT_ICEMAIL])
         {
-            mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+            if (!you.duration[DUR_ICEMAIL_DEPLETED])
+                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
