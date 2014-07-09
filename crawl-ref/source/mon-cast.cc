@@ -2990,7 +2990,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         bool ignore_good_idea = false;
-        if (does_iashol_wanna_redirect(mons)
+        if (does_ru_wanna_redirect(mons)
             && random2(100) < div_rand_round(you.piety, 40))
         {
             mprf("You redirect %s's attack!",

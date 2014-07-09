@@ -46,10 +46,10 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
-bool iashol_retribution_fineff::mergeable(const final_effect &fe) const
+bool ru_retribution_fineff::mergeable(const final_effect &fe) const
 {
-    const iashol_retribution_fineff *o =
-        dynamic_cast<const iashol_retribution_fineff *>(&fe);
+    const ru_retribution_fineff *o =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
     return o && att == o->att && def == o->def;
 }
 
@@ -125,10 +125,10 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
-void iashol_retribution_fineff::merge(const final_effect &fe)
+void ru_retribution_fineff::merge(const final_effect &fe)
 {
-    const iashol_retribution_fineff *mdfe =
-        dynamic_cast<const iashol_retribution_fineff *>(&fe);
+    const ru_retribution_fineff *mdfe =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
     ASSERT(mdfe);
     ASSERT(mergeable(*mdfe));
 }
@@ -201,13 +201,13 @@ void mirror_damage_fineff::fire()
     }
 }
 
-void iashol_retribution_fineff::fire()
+void ru_retribution_fineff::fire()
 {
     actor *attack = attacker();
     if (!attack || attack == defender() || !attack->alive())
         return;
     if (def == MID_PLAYER)
-        iashol_do_retribution(monster_by_mid(att), damage);
+        ru_do_retribution(monster_by_mid(att), damage);
 }
 
 void trample_follow_fineff::fire()

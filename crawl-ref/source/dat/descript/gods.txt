@@ -179,14 +179,19 @@ will find themselves the eye in a storm of elemental destruction, from which
 only their God can protect them. Pious worshippers of Qazlal will gain the
 ability to direct and control the destructive might of the storm.
 %%%%
-Iashol
+Ru
 
-Iashol the Incorporeal is a god of sacrifice and the balance of power. Those who
-understand that to gain great power they must give a great sacrifice can follow
-Iashol's teachings to gain immense power. Sacrificiants will cause foes to
-falter and become striken with maladies if they harm you. With greater sacrifice
-can restore health and magic, and perform lightning-fast leaps. Truly great
-sacrificiants can unleash their power in a massive strike against their foes.
+Of all the gods, only Ru opposed creation. Not as folly, but as distraction. A
+hand, a voice, a skill - these are the traps of mortal existence. Initiates of
+Ru can open channels to the great powers underlying this illusory world by
+renouncing the meager fetters that bind them here. These sacrifices are not
+made to Ru, but rather given up freely and permanently. As the initiate's
+mortal attachments fade, Ru gradually fills the initiate with the greater power
+underneath existence. Initiates will be able to stun and misdirect would-be
+attackers, punish those who harm them, replentish their mortal health and
+magic, and defy the laws of nature with a mighty leap. Advanced initiates will
+gain the ability to tear away the veil that separates false existence and true
+nonexistence from all who oppose them.
 %%%%
 Zin powers
 
@@ -361,16 +366,16 @@ pious followers of Dithmenos will find their own shadow will begin to attack on
 its own, and eventually gain the ability to assume the form of a shadow
 themself.
 %%%%
-Iashol powers
+Ru powers
 
-Iashol leads you to gain immense power which initially will cause foes to
+Ru leads you to gain immense power which initially will cause foes to
 falter and become striken with maladies if they harm you. As you make further
 sacrifices, you will be able to draw on this power to restore your health and
 magic and make a lightning-fast explosive leap. Exceptional sacrificiants can
 unleash their power in a massive strike against all their foes.
 
-Once you begin worship, Iashol will monitor your progress and you explore the
-dungeon and defeat its inhabitants. When Iashol judges you ready, it will offer
+Once you begin worship, Ru will monitor your progress and you explore the
+dungeon and defeat its inhabitants. When Ru judges you ready, it will offer
 you three sacrifices you can make in order to achieve greater power.
 %%%%
 Gozag powers

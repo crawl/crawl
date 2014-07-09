@@ -47,10 +47,10 @@ protected:
     int damage;
 };
 
-class iashol_retribution_fineff : public final_effect
+class ru_retribution_fineff : public final_effect
 {
 public:
-    iashol_retribution_fineff(const actor *attack, const actor *defend, int dam)
+    ru_retribution_fineff(const actor *attack, const actor *defend, int dam)
         : final_effect(attack, defend, coord_def()), damage(dam)
     {
     }

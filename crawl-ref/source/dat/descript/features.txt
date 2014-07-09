@@ -253,10 +253,10 @@ A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes and open
 it like any other door (i.e., by walking into it or pressing ‘O’).
 %%%%
-A sacrificial altar of Iashol
+A sacrificial altar of Ru
 
-This altar to Iashol the Incorporeal is a crude stone table engraved with an
-image of a sacrificial knife.
+This altar to Ru the Awakened is engraved with an open eye and a sacrificial
+knife.
 %%%%
 A sealed door
 

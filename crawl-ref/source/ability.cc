@@ -201,9 +201,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Qazlal
     { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
-    // Iashol
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_IASHOL_DRAW_OUT_POWER,
-      ABIL_IASHOL_POWER_LEAP, ABIL_IASHOL_CATACLYSM }
+    // Ru
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
+      ABIL_RU_POWER_LEAP, ABIL_RU_CATACLYSM }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -418,39 +418,39 @@ static const ability_def Ability_List[] =
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
       9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
 
-    // Iashol
-    { ABIL_IASHOL_DRAW_OUT_POWER, "Draw Out Power",
+    // Ru
+    { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
       0, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
-    { ABIL_IASHOL_POWER_LEAP, "Power Leap",
+    { ABIL_RU_POWER_LEAP, "Power Leap",
       5, 0, 0, 0, 0, ABFLAG_EXHAUSTION },
-    { ABIL_IASHOL_CATACLYSM, "Cataclysm",
+    { ABIL_RU_CATACLYSM, "Cataclysm",
       8, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
 
-    { ABIL_IASHOL_SACRIFICE_PURITY, "Sacrifice Purity",
+    { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_WORDS, "Sacrifice Words",
+    { ABIL_RU_SACRIFICE_WORDS, "Sacrifice Words",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_DRINK, "Sacrifice Drink",
+    { ABIL_RU_SACRIFICE_DRINK, "Sacrifice Drink",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_ESSENCE, "Sacrifice Essence",
+    { ABIL_RU_SACRIFICE_ESSENCE, "Sacrifice Essence",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_HEALTH, "Sacrifice Health",
+    { ABIL_RU_SACRIFICE_HEALTH, "Sacrifice Health",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_STEALTH, "Sacrifice Stealth",
+    { ABIL_RU_SACRIFICE_STEALTH, "Sacrifice Stealth",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
+    { ABIL_RU_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_LOVE, "Sacrifice Love",
+    { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_SANITY, "Sacrifice Sanity",
+    { ABIL_RU_SACRIFICE_SANITY, "Sacrifice Sanity",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_ARCANA, "Sacrifice Arcana",
+    { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
+    { ABIL_RU_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_DURABILITY, "Sacrifice Durability",
+    { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_IASHOL_SACRIFICE_HAND, "Sacrifice a Hand",
+    { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
       0, 0, 0, 0, 0, ABFLAG_NONE },
 
     // Gozag
@@ -1143,22 +1143,22 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_GOZAG_POTION_PETITION:
     case ABIL_GOZAG_CALL_MERCHANT:
     case ABIL_GOZAG_BRIBE_BRANCH:
-    case ABIL_IASHOL_DRAW_OUT_POWER:
-    case ABIL_IASHOL_POWER_LEAP:
-    case ABIL_IASHOL_CATACLYSM:
-    case ABIL_IASHOL_SACRIFICE_PURITY:
-    case ABIL_IASHOL_SACRIFICE_WORDS:
-    case ABIL_IASHOL_SACRIFICE_DRINK:
-    case ABIL_IASHOL_SACRIFICE_ESSENCE:
-    case ABIL_IASHOL_SACRIFICE_HEALTH:
-    case ABIL_IASHOL_SACRIFICE_STEALTH:
-    case ABIL_IASHOL_SACRIFICE_ARTIFICE:
-    case ABIL_IASHOL_SACRIFICE_LOVE:
-    case ABIL_IASHOL_SACRIFICE_SANITY:
-    case ABIL_IASHOL_SACRIFICE_ARCANA:
-    case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
-    case ABIL_IASHOL_SACRIFICE_DURABILITY:
-    case ABIL_IASHOL_SACRIFICE_HAND:
+    case ABIL_RU_DRAW_OUT_POWER:
+    case ABIL_RU_POWER_LEAP:
+    case ABIL_RU_CATACLYSM:
+    case ABIL_RU_SACRIFICE_PURITY:
+    case ABIL_RU_SACRIFICE_WORDS:
+    case ABIL_RU_SACRIFICE_DRINK:
+    case ABIL_RU_SACRIFICE_ESSENCE:
+    case ABIL_RU_SACRIFICE_HEALTH:
+    case ABIL_RU_SACRIFICE_STEALTH:
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+    case ABIL_RU_SACRIFICE_LOVE:
+    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_ARCANA:
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+    case ABIL_RU_SACRIFICE_DURABILITY:
+    case ABIL_RU_SACRIFICE_HAND:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -3149,24 +3149,24 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
-    case ABIL_IASHOL_SACRIFICE_PURITY:
-    case ABIL_IASHOL_SACRIFICE_WORDS:
-    case ABIL_IASHOL_SACRIFICE_DRINK:
-    case ABIL_IASHOL_SACRIFICE_ESSENCE:
-    case ABIL_IASHOL_SACRIFICE_HEALTH:
-    case ABIL_IASHOL_SACRIFICE_STEALTH:
-    case ABIL_IASHOL_SACRIFICE_ARTIFICE:
-    case ABIL_IASHOL_SACRIFICE_LOVE:
-    case ABIL_IASHOL_SACRIFICE_SANITY:
-    case ABIL_IASHOL_SACRIFICE_ARCANA:
-    case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
-    case ABIL_IASHOL_SACRIFICE_DURABILITY:
-    case ABIL_IASHOL_SACRIFICE_HAND:
+    case ABIL_RU_SACRIFICE_PURITY:
+    case ABIL_RU_SACRIFICE_WORDS:
+    case ABIL_RU_SACRIFICE_DRINK:
+    case ABIL_RU_SACRIFICE_ESSENCE:
+    case ABIL_RU_SACRIFICE_HEALTH:
+    case ABIL_RU_SACRIFICE_STEALTH:
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+    case ABIL_RU_SACRIFICE_LOVE:
+    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_ARCANA:
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+    case ABIL_RU_SACRIFICE_DURABILITY:
+    case ABIL_RU_SACRIFICE_HAND:
         fail_check();
-        iashol_do_sacrifice(abil.ability);
+        ru_do_sacrifice(abil.ability);
         break;
 
-    case ABIL_IASHOL_DRAW_OUT_POWER:
+    case ABIL_RU_DRAW_OUT_POWER:
         fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
@@ -3175,18 +3175,18 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         if (you.hp == you.hp_max && you.magic_points == you.max_magic_points)
             return SPRET_ABORT;
-        iashol_draw_out_power();
+        ru_draw_out_power();
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-    case ABIL_IASHOL_POWER_LEAP:
+    case ABIL_RU_POWER_LEAP:
         fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to power leap.");
             return SPRET_ABORT;
         }
-        if (!iashol_power_leap())
+        if (!ru_power_leap())
         {
             canned_msg(MSG_OK);
             return SPRET_ABORT;
@@ -3194,14 +3194,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-    case ABIL_IASHOL_CATACLYSM:
+    case ABIL_RU_CATACLYSM:
         fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to unleash your cataclysmic power.");
             return SPRET_ABORT;
         }
-        if (!iashol_cataclysm())
+        if (!ru_cataclysm())
             return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
@@ -3947,19 +3947,19 @@ static int _find_ability_slot(const ability_def &abil)
         first_slot = letter_to_index('W');
     if (abil.ability == ABIL_CONVERT_TO_BEOGH)
         first_slot = letter_to_index('Y');
-    if (abil.ability == ABIL_IASHOL_SACRIFICE_PURITY
-      || abil.ability == ABIL_IASHOL_SACRIFICE_WORDS
-      || abil.ability == ABIL_IASHOL_SACRIFICE_DRINK
-      || abil.ability == ABIL_IASHOL_SACRIFICE_ESSENCE
-      || abil.ability == ABIL_IASHOL_SACRIFICE_HEALTH
-      || abil.ability == ABIL_IASHOL_SACRIFICE_STEALTH
-      || abil.ability == ABIL_IASHOL_SACRIFICE_ARTIFICE
-      || abil.ability == ABIL_IASHOL_SACRIFICE_LOVE
-      || abil.ability == ABIL_IASHOL_SACRIFICE_SANITY
-      || abil.ability == ABIL_IASHOL_SACRIFICE_ARCANA
-      || abil.ability == ABIL_IASHOL_SACRIFICE_NIMBLENESS
-      || abil.ability == ABIL_IASHOL_SACRIFICE_DURABILITY
-      || abil.ability == ABIL_IASHOL_SACRIFICE_HAND)
+    if (abil.ability == ABIL_RU_SACRIFICE_PURITY
+      || abil.ability == ABIL_RU_SACRIFICE_WORDS
+      || abil.ability == ABIL_RU_SACRIFICE_DRINK
+      || abil.ability == ABIL_RU_SACRIFICE_ESSENCE
+      || abil.ability == ABIL_RU_SACRIFICE_HEALTH
+      || abil.ability == ABIL_RU_SACRIFICE_STEALTH
+      || abil.ability == ABIL_RU_SACRIFICE_ARTIFICE
+      || abil.ability == ABIL_RU_SACRIFICE_LOVE
+      || abil.ability == ABIL_RU_SACRIFICE_SANITY
+      || abil.ability == ABIL_RU_SACRIFICE_ARCANA
+      || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
+      || abil.ability == ABIL_RU_SACRIFICE_DURABILITY
+      || abil.ability == ABIL_RU_SACRIFICE_HAND)
     {
         first_slot = letter_to_index('P');
     }
@@ -4001,7 +4001,7 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     {
         abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
     }
-    else if (you_worship(GOD_IASHOL))
+    else if (you_worship(GOD_RU))
     {
 
         ASSERT(you.props.exists("available_sacrifices"));

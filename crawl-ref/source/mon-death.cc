@@ -1982,14 +1982,14 @@ int monster_die(monster* mons, killer_type killer,
                 }
             }
 
-            if (good_kill && you_worship(GOD_IASHOL) && you.piety < 200
+            if (good_kill && you_worship(GOD_RU) && you.piety < 200
                     && one_chance_in(2))
             {
-                ASSERT(you.props.exists("iashol_progress_to_next_sacrifice"));
+                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
                 int current_progress =
-                        you.props["iashol_progress_to_next_sacrifice"]
+                        you.props["ru_progress_to_next_sacrifice"]
                             .get_int();
-                    you.props["iashol_progress_to_next_sacrifice"] =
+                    you.props["ru_progress_to_next_sacrifice"] =
                         current_progress + 1;
             }
 

@@ -4841,9 +4841,9 @@ vector<ability_type> get_possible_sacrifices()
 {
     vector<ability_type> possible_sacrifices;
 
-    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_HEALTH);
-    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ESSENCE);
-    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_PURITY);
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HEALTH);
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ESSENCE);
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_PURITY);
 
     if (player_mutation_level(MUT_NO_AIR_MAGIC)
         + player_mutation_level(MUT_NO_CHARM_MAGIC)
@@ -4859,26 +4859,26 @@ vector<ability_type> get_possible_sacrifices()
         + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
         < 6)
     {
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ARCANA);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARCANA);
     }
     if (!player_mutation_level(MUT_NO_READ))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_WORDS);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_WORDS);
     if (!player_mutation_level(MUT_NO_DRINK))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_DRINK);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DRINK);
     if (!player_mutation_level(MUT_NO_STEALTH))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_STEALTH);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_STEALTH);
     if (!player_mutation_level(MUT_NO_ARTIFICE))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ARTIFICE);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARTIFICE);
     if (!player_mutation_level(MUT_NO_LOVE))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_LOVE);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_LOVE);
     if (!player_mutation_level(MUT_FEAR_BLOOD))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_SANITY);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
     if (!player_mutation_level(MUT_NO_DODGING))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_NIMBLENESS);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
     if (!player_mutation_level(MUT_NO_ARMOUR))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_DURABILITY);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
     if (!player_mutation_level(MUT_MISSING_HAND))
-        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_HAND);
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
 
     return possible_sacrifices;
 }
@@ -4955,9 +4955,9 @@ const skill_type arcane_mutation_to_skill(mutation_type mutation)
 // Since these sacrifices will be abilities, we also need to set up those
 // abilities and the descriptions of them, so players know what they're
 // getting into.
-void iashol_offer_new_sacrifices()
+void ru_offer_new_sacrifices()
 {
-    iashol_expire_sacrifices();
+    ru_expire_sacrifices();
 
     vector<ability_type> possible_sacrifices = get_possible_sacrifices();
 
@@ -4994,9 +4994,9 @@ void iashol_offer_new_sacrifices()
     CrawlVector &current_health_sacrifice
         = you.props["current_health_sacrifice"].get_vector();
 
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
-        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
-        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH)
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_HEALTH
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_HEALTH
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_HEALTH)
     {
         switch (random2(3))
         {
@@ -5019,9 +5019,9 @@ void iashol_offer_new_sacrifices()
     CrawlVector &current_essence_sacrifice
         = you.props["current_essence_sacrifice"].get_vector();
 
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
-        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
-        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE)
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE)
     {
         switch (random2(3))
         {
@@ -5044,9 +5044,9 @@ void iashol_offer_new_sacrifices()
     CrawlVector &current_purity_sacrifice
         = you.props["current_purity_sacrifice"].get_vector();
 
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
-        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
-        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY)
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_PURITY
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_PURITY
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_PURITY)
     {
         switch (random2(7))
         {
@@ -5085,9 +5085,9 @@ void iashol_offer_new_sacrifices()
     CrawlVector &current_arcane_sacrifices
         = you.props["current_arcane_sacrifices"].get_vector();
 
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
-        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
-        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA)
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ARCANA
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ARCANA
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ARCANA)
     {
         vector<mutation_type> possible_minor_mutations;
         vector<mutation_type> possible_medium_mutations;
@@ -5153,7 +5153,7 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
-void iashol_do_sacrifice(ability_type sacrifice)
+void ru_do_sacrifice(ability_type sacrifice)
 {
     skill_type mutation_skill;
     int arcane_mutations_size;
@@ -5195,10 +5195,10 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
     switch (sacrifice)
     {
-        case ABIL_IASHOL_SACRIFICE_WORDS:
+        case ABIL_RU_SACRIFICE_WORDS:
             piety_gain = 35;
 
-            mprf("Iashol asks you to sacrifice your ability to read while threatened.");
+            mprf("Ru asks you to sacrifice your ability to read while threatened.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5208,11 +5208,11 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_READ, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_READ, 1, "Ru sacrifice");
             break;
-        case ABIL_IASHOL_SACRIFICE_DRINK:
+        case ABIL_RU_SACRIFICE_DRINK:
             piety_gain = 35;
-            mprf("Iashol asks you to sacrifice your ability to drink while threatened.");
+            mprf("Ru asks you to sacrifice your ability to drink while threatened.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5222,13 +5222,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_DRINK, 1, "Ru sacrifice");
             break;
-        case ABIL_IASHOL_SACRIFICE_HEALTH:
+        case ABIL_RU_SACRIFICE_HEALTH:
             piety_gain = 30;
             health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
-            mprf("Iashol asks you to corrupt yourself with %s.",
+            mprf("Ru asks you to corrupt yourself with %s.",
                 mutation_name(health_sacrifice));
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
@@ -5239,9 +5239,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(health_sacrifice, 1, "Iashol sacrifice");
+                perma_mutate(health_sacrifice, 1, "Ru sacrifice");
             break;
-        case ABIL_IASHOL_SACRIFICE_ESSENCE:
+        case ABIL_RU_SACRIFICE_ESSENCE:
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
 
             if (essence_sacrifice == MUT_LOW_MAGIC)
@@ -5251,7 +5251,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             else
                 piety_gain = 20;
 
-            mprf("Iashol asks you to corrupt yourself with %s.",
+            mprf("Ru asks you to corrupt yourself with %s.",
                 mutation_name(essence_sacrifice));
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
@@ -5262,9 +5262,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(essence_sacrifice, 1, "Iashol sacrifice");
+                perma_mutate(essence_sacrifice, 1, "Ru sacrifice");
             break;
-        case ABIL_IASHOL_SACRIFICE_PURITY:
+        case ABIL_RU_SACRIFICE_PURITY:
             purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
 
             if (purity_sacrifice == MUT_WEAK
@@ -5276,7 +5276,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             else
                 piety_gain = 25;
 
-            mprf("Iashol asks you to corrupt yourself with %s.",
+            mprf("Ru asks you to corrupt yourself with %s.",
                 mutation_name(purity_sacrifice));
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
@@ -5287,14 +5287,14 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(purity_sacrifice, 1, "Iashol sacrifice");
+                perma_mutate(purity_sacrifice, 1, "Ru sacrifice");
 
             break;
-        case ABIL_IASHOL_SACRIFICE_STEALTH:
+        case ABIL_RU_SACRIFICE_STEALTH:
             piety_gain = 25 + div_rand_round(skill_exp_needed(
                 you.skills[SK_STEALTH], SK_STEALTH, you.species), divisor);
 
-            mprf("Iashol asks you to sacrifice your ability to go unnoticed.");
+            mprf("Ru asks you to sacrifice your ability to go unnoticed.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5304,7 +5304,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_STEALTH, 1, "Ru sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_STEALTH,
@@ -5312,12 +5312,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
             you.stop_train.insert(SK_STEALTH);
 
             break;
-        case ABIL_IASHOL_SACRIFICE_ARTIFICE:
+        case ABIL_RU_SACRIFICE_ARTIFICE:
             piety_gain = 40 + div_rand_round(skill_exp_needed(
                 you.skills[SK_EVOCATIONS], SK_EVOCATIONS, you.species),
                 divisor);
 
-            mprf("Iashol asks you to sacrifice all use of magical tools.");
+            mprf("Ru asks you to sacrifice all use of magical tools.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5327,7 +5327,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_ARTIFICE, 1, "Ru sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_EVOCATIONS,
@@ -5335,13 +5335,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
             you.stop_train.insert(SK_EVOCATIONS);
 
             break;
-        case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
+        case ABIL_RU_SACRIFICE_NIMBLENESS:
             piety_gain = 25 + div_rand_round(skill_exp_needed(
                 you.skills[SK_DODGING], SK_DODGING, you.species), divisor);
             if (player_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 35;
 
-            mprf("Iashol asks you to sacrifice your ability to dodge.");
+            mprf("Ru asks you to sacrifice your ability to dodge.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5351,7 +5351,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_DODGING, 1, "Ru sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_DODGING,
@@ -5359,13 +5359,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
             you.stop_train.insert(SK_DODGING);
 
             break;
-        case ABIL_IASHOL_SACRIFICE_DURABILITY:
+        case ABIL_RU_SACRIFICE_DURABILITY:
             piety_gain = 25 + div_rand_round(skill_exp_needed(
                 you.skills[SK_ARMOUR], SK_ARMOUR, you.species), divisor);
             if (player_mutation_level(MUT_NO_DODGING))
                 piety_gain += 35;
 
-            mprf("Iashol asks you to sacrifice your ability to wear armour well.");
+            mprf("Ru asks you to sacrifice your ability to wear armour well.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5375,7 +5375,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_ARMOUR, 1, "Ru sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_ARMOUR,
@@ -5383,10 +5383,10 @@ void iashol_do_sacrifice(ability_type sacrifice)
             you.stop_train.insert(SK_ARMOUR);
 
             break;
-        case ABIL_IASHOL_SACRIFICE_SANITY:
+        case ABIL_RU_SACRIFICE_SANITY:
             piety_gain = 25;
 
-            mprf("Iashol asks you to sacrifice your sanity.");
+            mprf("Ru asks you to sacrifice your sanity.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5396,9 +5396,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_FEAR_BLOOD, 1, "Iashol sacrifice");
+                perma_mutate(MUT_FEAR_BLOOD, 1, "Ru sacrifice");
             break;
-        case ABIL_IASHOL_SACRIFICE_LOVE:
+        case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
                 piety_gain = 3;
             else
@@ -5406,7 +5406,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
                     divisor);
 
-            mprf("Iashol asks you to sacrifice your ability to be loved.");
+            mprf("Ru asks you to sacrifice your ability to be loved.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5417,12 +5417,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
             else
             {
-                perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
+                perma_mutate(MUT_NO_LOVE, 1, "Ru sacrifice");
                 add_daction(DACT_ALLY_SACRIFICE_LOVE);
             }
 
             break;
-        case ABIL_IASHOL_SACRIFICE_ARCANA:
+        case ABIL_RU_SACRIFICE_ARCANA:
             piety_gain = 25;
             arcane_mutations_size = current_arcane_sacrifices.size();
             for (int i = 0; i < arcane_mutations_size; ++i)
@@ -5440,7 +5440,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                         divisor);
             }
 
-            mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
+            mprf("Ru asks you to sacrifice all use of %s, %s, and %s.",
                 arcane_mutation_to_school_name(
                     static_cast<mutation_type>(
                         current_arcane_sacrifices[0].get_int())),
@@ -5465,7 +5465,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 mutation_type arcane_sacrifice =
                     AS_MUT(current_arcane_sacrifices[i]);
-                perma_mutate(arcane_sacrifice, 1, "Iashol sacrifice");
+                perma_mutate(arcane_sacrifice, 1, "Ru sacrifice");
 
                 // gain one piety for every 50 skill points
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
@@ -5490,11 +5490,11 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
             num_sacrifices = 3;
             break;
-        case ABIL_IASHOL_SACRIFICE_HAND:
+        case ABIL_RU_SACRIFICE_HAND:
             piety_gain = 80 + div_rand_round(skill_exp_needed(
                     you.skills[SK_SHIELDS], SK_SHIELDS, you.species), divisor);
 
-            mprf("Iashol asks you to sacrifice your one of your %s.",
+            mprf("Ru asks you to sacrifice your one of your %s.",
                 you.hand_name(true).c_str());
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
@@ -5505,7 +5505,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_MISSING_HAND, 1, "Iashol sacrifice");
+                perma_mutate(MUT_MISSING_HAND, 1, "Ru sacrifice");
 
             // Drop your shield if there is one
             if (shield != NULL)
@@ -5549,12 +5549,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     gain_piety(piety_gain - 2 + random2(7)); // randomize it a bit.
-    iashol_expire_sacrifices();
+    ru_expire_sacrifices();
 }
 
 // Remove the offer of sacrifices after they've been offered for sufficient
 // time or it's time to offer something new.
-void iashol_expire_sacrifices()
+void ru_expire_sacrifices()
 {
     ASSERT(you.props.exists("available_sacrifices"));
     ASSERT(you.props.exists("current_health_sacrifice"));
@@ -5583,17 +5583,17 @@ void iashol_expire_sacrifices()
 
 // Check to see if you're eligible to retaliate.
 //Your chance of eligiblity scales with piety.
-bool will_iashol_retaliate()
+bool will_ru_retaliate()
 {
     // Scales up to a 33% chance of retribution
-    return you_worship(GOD_IASHOL)
+    return you_worship(GOD_RU)
            && you.piety >= piety_breakpoint(2)
-           && crawl_state.which_god_acting() != GOD_IASHOL
+           && crawl_state.which_god_acting() != GOD_RU
            && one_chance_in(div_rand_round(600, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
-void iashol_do_retribution(monster* mons, int damage)
+void ru_do_retribution(monster* mons, int damage)
 {
     int power = max(0, random2(div_rand_round(you.piety, 4))
         + damage - (2 * mons->hit_dice));
@@ -5626,7 +5626,7 @@ void iashol_do_retribution(monster* mons, int damage)
     }
 }
 
-void iashol_draw_out_power()
+void ru_draw_out_power()
 {
     mpr("You are restored by drawing out deep reserves of power within.");
     inc_hp(div_rand_round(you.piety, 20)
@@ -5636,7 +5636,7 @@ void iashol_draw_out_power()
     drain_exp(false, 20, true);
 }
 
-bool iashol_power_leap()
+bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5830,7 +5830,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     return 1;
 }
 
-bool iashol_cataclysm()
+bool ru_cataclysm()
 {
     int count = apply_area_visible(_cataclysmable, you.piety, &you);
     if (!count)

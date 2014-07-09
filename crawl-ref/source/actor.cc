@@ -300,7 +300,7 @@ int actor::faith(bool calc_unid, bool items) const
 
         // Ignore gods which don't use piety.
         if (!you_worship(GOD_XOM) && !you_worship(GOD_GOZAG)
-            && !you_worship(GOD_IASHOL))
+            && !you_worship(GOD_RU))
         {
             // 133 means 1/6 piety gain at max piety.
             net_faith -= div_rand_round(you.piety, 133);

@@ -642,9 +642,9 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
-static void _maybe_iashol_retribution(int dam, int death_source)
+static void _maybe_ru_retribution(int dam, int death_source)
 {
-    if (will_iashol_retaliate())
+    if (will_ru_retaliate())
     {
         // Cap damage to what was enough to kill you.  Can matter if
         // you have an extra kitty.
@@ -653,7 +653,7 @@ static void _maybe_iashol_retribution(int dam, int death_source)
 
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
-        (new iashol_retribution_fineff(
+        (new ru_retribution_fineff(
             &menv[death_source], &you, dam))->schedule();
     }
 }
@@ -983,7 +983,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                            damage_desc.c_str()));
 
             _yred_mirrors_injury(dam, death_source);
-            _maybe_iashol_retribution(dam, death_source);
+            _maybe_ru_retribution(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
