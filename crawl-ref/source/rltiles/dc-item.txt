@@ -810,7 +810,7 @@ i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
-i-paralysis POT_PARALYSIS
+i-cancel POT_CANCELLATION
 i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
