@@ -1314,7 +1314,7 @@ int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_RODS)
         return weapon->special;
-    if (weapon->sub_type == WPN_BLOWGUN)
+    if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
         return 0;
     return weapon->plus;
 }
