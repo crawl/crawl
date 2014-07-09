@@ -1314,7 +1314,7 @@ int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_RODS)
         return weapon->special;
-    if (weapon->sub_type == WPN_BLOWGUN)
+    if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
         return 0;
     return weapon->plus;
 }
@@ -1341,6 +1341,10 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
 int attack::player_apply_final_multipliers(int damage)
 {
+    // Can't affect much of anything as a shadow.
+    if (you.form == TRAN_SHADOW)
+        damage = div_rand_round(damage, 2);
+
     return damage;
 }
 
@@ -1360,8 +1364,7 @@ int attack::calc_base_unarmed_damage()
 
     // Should only get here if we're not wielding something that's a weapon.
     // If there's a non-weapon in hand, it has no base damage.
-    // Throwing things with a weapon in hand is okay, however.
-    if (weapon && wpn_skill != SK_THROWING)
+    if (weapon)
         return 0;
 
     if (attacker->is_player())
@@ -1404,7 +1407,7 @@ int attack::calc_base_unarmed_damage()
             break;
         }
 
-        if (you.has_usable_claws() && wpn_skill == SK_UNARMED_COMBAT)
+        if (you.has_usable_claws())
         {
             // Claw damage only applies for bare hands.
             damage += you.has_claws(false) * 2;
