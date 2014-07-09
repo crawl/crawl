@@ -68,6 +68,7 @@ enum kill_method_type
     NUM_KILLBY
 };
 
+void maybe_melt_player_enchantments(beam_type flavour, int damage);
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
 void splash_with_acid(int acid_strength, int death_source,
