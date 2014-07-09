@@ -55,12 +55,12 @@ dagger WPN_DAGGER
 dagger2
 dagger3
 
+%rim 0
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
 
 long_sword1 WPN_LONG_SWORD
-%rim 0
 long_sword2
 long_sword3
 %rim 1
