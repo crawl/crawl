@@ -112,6 +112,7 @@ enum tag_minor_version
     TAG_MINOR_RU_DATA,             // Restructuring persistent Ru data to allow saving.
     TAG_MINOR_MERGE_EW,            // Combine enchant weapons scrolls.
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
+    TAG_MINOR_RU_RENAME,           // Fix up a property by changing the name.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
