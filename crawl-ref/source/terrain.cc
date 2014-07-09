@@ -396,8 +396,8 @@ god_type feat_altar_god(dungeon_feature_type feat)
         return GOD_GOZAG;
     if (feat == DNGN_ALTAR_QAZLAL)
         return GOD_QAZLAL;
-    if (feat == DNGN_ALTAR_IASHOL)
-        return GOD_IASHOL;
+    if (feat == DNGN_ALTAR_RU)
+        return GOD_RU;
 #endif
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
         return static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1);
@@ -417,8 +417,8 @@ dungeon_feature_type altar_for_god(god_type god)
         return DNGN_ALTAR_GOZAG;
     if (god == GOD_QAZLAL)
         return DNGN_ALTAR_QAZLAL;
-    if (god == GOD_IASHOL)
-        return DNGN_ALTAR_IASHOL;
+    if (god == GOD_RU)
+        return DNGN_ALTAR_RU;
 #endif
 
     return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
@@ -1595,7 +1595,7 @@ static const char *dngn_feature_names[] =
 "altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados",
 "altar_ashenzari", "altar_dithmenos",
 #if TAG_MAJOR_VERSION > 34
-"altar_gozag", "altar_qazlal", "altar_iashol", "", "", "", "", "",
+"altar_gozag", "altar_qazlal", "altar_ru", "", "", "", "", "",
 #endif
 
 "fountain_blue", "fountain_sparkling", "fountain_blood",
@@ -1644,7 +1644,7 @@ static const char *dngn_feature_names[] =
 #if TAG_MAJOR_VERSION == 34
 "altar_gozag",
 "altar_qazlal",
-"altar_iashol",
+"altar_ru",
 #endif
 };
 

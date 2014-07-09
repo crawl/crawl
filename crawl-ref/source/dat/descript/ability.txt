@@ -660,7 +660,7 @@ Disaster Area ability
 
 Blasts the entire area around you with powerful natural forces.
 %%%%
-# Iashol
+# Ru
 Draw Out Power ability
 
 Restores health and magic points to you. The amount restored increases with
@@ -680,7 +680,7 @@ Cataclysm ability
 
 You unleash your hard-won power in a terrifying cataclysm. All enemies in your
 line of sight are dealt severe damage and may be rendered permanently mute or
-affected by antimagic or paralyzed or be attacked by summoned allies.
+paralyzed or slowed. The damage dealt by this power increases with your piety.
 
 Using this ability exhausts and severely drains you.
 %%%%
@@ -689,7 +689,7 @@ Sacrifice Purity ability
 Adherents who choose to sacrifice their purity of body become twisted by
 mutation, and may begin to rot, have their body deformed, shout uncontrollably,
 heal slowly, or lose dexterity, strength, or intelligence. If you make this
-sacrifice, your powers granted by Iashol will become stronger in proportion to
+sacrifice, your powers granted by Ru will become stronger in proportion to
 the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -698,7 +698,7 @@ Sacrifice Words ability
 
 Adherents who choose to sacrifice their words lose the ability to use magical
 scrolls while threatened. If you make this sacrifice, your powers granted by
-Iashol will become stronger in proportion to the value of the sacrifice, and you
+Ru will become stronger in proportion to the value of the sacrifice, and you
 may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -706,7 +706,7 @@ Sacrifices cannot be taken back.
 Sacrifice Drink ability
 
 Adherents who choose to sacrifice drink lose the ability to drink potions while
-threatened. If you make this sacrifice, your powers granted by Iashol will
+threatened. If you make this sacrifice, your powers granted by Ru will
 become stronger in proportion to the value of the sacrifice, and you may gain
 new powers as well.
 
@@ -717,7 +717,7 @@ Sacrifice Essence ability
 Adherents who choose to sacrifice their essence give up a part of their magical
 essence, which may lessen their magic pool, reduce their ability to resist
 hostile magic, or make it more difficult to successfully cast spells. If you
-make this sacrifice, your powers granted by Iashol will become stronger in
+make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -726,7 +726,7 @@ Sacrifice Health ability
 
 Adherents who choose to sacrifice their health may have their health pool
 decreased, suffer penalties to Evasion, or suffer penalties to AC. If you make
-this sacrifice, your powers granted by Iashol will become stronger in
+this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new  powers as well.
 
 Sacrifices cannot be taken back.
@@ -735,7 +735,7 @@ Sacrifice Stealth ability
 
 Adherents who choose to sacrifice their stealth will always be noticed by foes
 and cannot have ranks in the Stealth skill. If you make this sacrifice, your
-powers granted by Iashol will become stronger in proportion to the value of the
+powers granted by Ru will become stronger in proportion to the value of the
 sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -744,7 +744,7 @@ Sacrifice Artifice ability
 
 Adherents who choose to sacrifice artifice may not evoke the latent power of
 magical objects and their Evocations skill is set to 0. If you make this
-sacrifice, your powers granted by Iashol will become stronger in proportion
+sacrifice, your powers granted by Ru will become stronger in proportion
 to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -753,7 +753,7 @@ Sacrifice Love ability
 
 Adherents who choose to sacrifice love are despised by all. All creatures,
 even those summoned by the adherent, become hostile If you make this sacrifice,
-your powers granted by Iashol will become stronger in proportion to the value
+your powers granted by Ru will become stronger in proportion to the value
 of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -762,7 +762,7 @@ Sacrifice Sanity ability
 
 Adherents who choose to sacrifice their sanity become terrified of blood. The
 sight of blood fills them with horror, which interferes with their combat and
-spellcasting abilties. If you make this sacrifice, your powers granted by Iashol
+spellcasting abilties. If you make this sacrifice, your powers granted by Ru
 will become stronger in proportion to the value of the sacrifice, and you may
 gain new powers as well.
 
@@ -773,7 +773,7 @@ Sacrifice Arcana ability
 Adherents who choose to sacrifice their arcana lose the ability to use certain
 schools of magic. Any magic that includes a sacrificed school cannot be cast.
 Those magic skills cannot be trained. If you make this sacrifice, your powers
-granted by Iashol will become stronger in proportion to the value of the
+granted by Ru will become stronger in proportion to the value of the
 sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -783,7 +783,7 @@ Sacrifice Nimbleness ability
 Adherents who choose to sacrifice their nimbleness lose the ability to train
 the Dodging skill and have that skill set to 0. This sacrifice is worth more
 if you cannot train Armour. If you make this sacrifice, your powers granted
-by Iashol will become stronger in proportion to the  value of the sacrifice,
+by Ru will become stronger in proportion to the  value of the sacrifice,
 and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -793,7 +793,7 @@ Sacrifice Durability ability
 Adherents who choose to sacrifice their durability lose the ability to train
 the Armour skill and have that skill set to 0. This sacrifice is worth more
 if you cannot train Dodging. If you make this sacrifice, your powers granted
-by Iashol will become stronger in proportion to the value of the sacrifice,
+by Ru will become stronger in proportion to the value of the sacrifice,
 and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -802,7 +802,7 @@ Sacrifice a Hand ability
 
 Adherents who choose to sacrifice a hand lose the ability to use two-handed
 weapons and shields, and also may only wear one ring. If you make this
-sacrifice, your powers granted by Iashol will become stronger in proportion
+sacrifice, your powers granted by Ru will become stronger in proportion
 to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.

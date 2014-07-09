@@ -2244,7 +2244,7 @@ void handle_monster_move(monster* mons)
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG))
         {
-            if (does_iashol_wanna_redirect(mons))
+            if (does_ru_wanna_redirect(mons))
             {
                 if (random2(100) < div_rand_round(you.piety, 20))
                 {
@@ -2327,7 +2327,7 @@ void handle_monster_move(monster* mons)
                     mons->target = you.pos();
 
                     // Check to see if your religion redirects the attack
-                    if (does_iashol_wanna_redirect(mons))
+                    if (does_ru_wanna_redirect(mons))
                     {
                         int r = random2(100);
                         int chance = div_rand_round(you.piety, 20);

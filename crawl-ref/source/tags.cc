@@ -3032,14 +3032,14 @@ static void tag_read_you(reader &th)
     }
     if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists("orig brand"))
         you.props["orig brand"] = SPWPN_NORMAL;
-    if (you_worship(GOD_IASHOL) && th.getMinorVersion() < TAG_MINOR_IASHOL_DATA)
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_DATA)
     {
         you.props["available_sacrifices"].new_vector(SV_INT);
         you.props["current_health_sacrifice"].new_vector(SV_INT);
         you.props["current_essence_sacrifice"].new_vector(SV_INT);
         you.props["current_purity_sacrifice"].new_vector(SV_INT);
         you.props["current_arcane_sacrifices"].new_vector(SV_INT);
-        you.props["iashol_progress_to_next_sacrifice"] = 0;
+        you.props["ru_progress_to_next_sacrifice"] = 0;
     }
 #endif
 }

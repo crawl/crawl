@@ -51,7 +51,7 @@ enum mut_use_type // Which gods/effects use these mutations?
     MU_USE_QAZLAL,   // qazlal wrath
     MU_USE_XOM,      // xom being xom
     MU_USE_CORRUPT,  // wretched stars
-    MU_USE_IASHOL,   // Iashol sacrifice muts
+    MU_USE_RU,   // Ru sacrifice muts
     NUM_MU_USE
 };
 
@@ -63,7 +63,7 @@ enum mut_use_type // Which gods/effects use these mutations?
 #define MUTFLAG_QAZLAL  MFLAG(MU_USE_QAZLAL)
 #define MUTFLAG_XOM     MFLAG(MU_USE_XOM)
 #define MUTFLAG_CORRUPT MFLAG(MU_USE_CORRUPT)
-#define MUTFLAG_IASHOL  MFLAG(MU_USE_IASHOL)
+#define MUTFLAG_RU  MFLAG(MU_USE_RU)
 
 struct mutation_def
 {

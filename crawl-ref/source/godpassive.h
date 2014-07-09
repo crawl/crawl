@@ -36,5 +36,5 @@ int gozag_gold_in_los(actor* who);
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-bool does_iashol_wanna_redirect(monster* mon);
+bool does_ru_wanna_redirect(monster* mon);
 #endif

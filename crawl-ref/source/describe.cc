@@ -4405,9 +4405,9 @@ static const char *divine_title[NUM_GODS][8] =
     {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
      "Eye of the Storm",   "%s Catastrophe",        "%s Cataclysm",             "End of an Era"},
 
-    // Iashol -- sacrifice theme
-    {"Shirker",           "Volunteer",              "Sufferer",                 "Afflicted",
-     "Agonized",          "Tortured",               "Martyr",                   "Saint"},
+    // Ru -- enlightenment theme
+    {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
+     "Walker of the Path","Lifter of the Veil",     "Drinker of Unreality",     "Transcendent"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)

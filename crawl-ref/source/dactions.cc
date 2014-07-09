@@ -211,7 +211,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
                 mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
-            // No global message for Trog or Iashol
+            // No global message for Trog or Ru
             if ((act == DACT_ALLY_TROG || act == DACT_ALLY_SACRIFICE_LOVE)
                     && local)
             {
