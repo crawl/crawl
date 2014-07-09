@@ -2962,11 +2962,11 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return false;
 
-    if (visibly_branded || is_artefact(item))
+    if (visibly_branded || is_artefact(item) || item.plus > 0)
         return true;
 
-    if (item.plus > 0)
-        return true;
+    if (item.is_mundane())
+        return false;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
@@ -2982,20 +2982,18 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return false;
 
-    if (visibly_branded || is_artefact(item))
+    if (visibly_branded || is_artefact(item) || item.plus > 0)
         return true;
 
     if (item.is_mundane())
         return false;
-
-    if (item.plus > 0)
-        return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
 }
+
 
 jewellery_type get_random_amulet_type()
 {
