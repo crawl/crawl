@@ -6198,6 +6198,19 @@ bool player::liquefied_ground() const
            && ground_level() && !is_insubstantial();
 }
 
+/**
+ * Returns whether the player currently has any kind of shield.
+ */
+bool player::shielded() const
+{
+    return shield()
+           || duration[DUR_CONDENSATION_SHIELD]
+           || duration[DUR_MAGIC_SHIELD]
+           || duration[DUR_DIVINE_SHIELD]
+           || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+           || qazlal_sh_boost() > 0;
+}
+
 int player::shield_block_penalty() const
 {
     return 5 * shield_blocks * shield_blocks;

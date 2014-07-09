@@ -3279,6 +3279,14 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
 }
 
+/**
+ * Returns whether the monster currently has any kind of shield.
+ */
+bool monster::shielded() const
+{
+    return shield();
+}
+
 int monster::shield_bonus() const
 {
     const item_def *shld = const_cast<monster* >(this)->shield();
