@@ -3382,7 +3382,6 @@ bool bolt::misses_player()
                 mprf("Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
                       name.c_str());
-                ident_reflector(you.shield());
                 reflect();
             }
             else if (_shield_piercing(this))
