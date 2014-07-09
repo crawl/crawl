@@ -1408,6 +1408,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             if (random2(425) > 35 + chance)
                 break;
         }
+
+        // squash boring items.
+        if (!force_good && item.special == SPWPN_NORMAL && item.plus < 3)
+            item.plus = 0;
     }
     else
     {
@@ -1932,6 +1936,29 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     return true;
 }
 
+/**
+ * Return the number of plusses required for a type of armour to be noteable.
+ * (From plus alone.)
+ *
+ * @param armour_type   The type of armour being considered.
+ * @return              The armour plus value required to be interesting.
+ */
+static int _armour_plus_threshold(equipment_type armour_type)
+{
+    switch (armour_type)
+    {
+            // body armour is very common; squelch most of it
+        case EQ_BODY_ARMOUR:
+            return 3;
+            // shields are fairly common
+        case EQ_SHIELD:
+            return 2;
+            // aux armour is relatively uncommon
+        default:
+            return 1;
+    }
+}
+
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level)
 {
@@ -2045,6 +2072,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
+
+    // squash boring items.
+    if (!force_good && item.special == SPARM_NORMAL && item.plus > 0
+        && item.plus < _armour_plus_threshold(get_armour_slot(item)))
+    {
+        item.plus = 0;
+    }
 
     if (armour_is_hide(item))
     {
@@ -2824,13 +2858,6 @@ int items(bool allow_uniques,
     // Set brand appearance.
     item_set_appearance(item);
 
-    // Squash plusses on boring equipment.
-    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
-        && item.plus > 0 && !get_equip_desc(item) && !is_artefact(item))
-    {
-        item.plus = 0;
-    }
-
     if (dont_place)
     {
         item.pos.reset();
@@ -2938,36 +2965,13 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (item.plus >= 3)
+    if (item.plus > 0)
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
-}
-
-/**
- * Return the number of plusses required for a type of armour to glow.
- * (From plus alone.)
- *
- * @param armour_type   The type of armour being considered.
- * @return              The armour plus value required to be interesting.
- */
-static int _armour_plus_threshold(equipment_type armour_type)
-{
-    switch (armour_type)
-    {
-        // body armour is very common; squelch most of it
-        case EQ_BODY_ARMOUR:
-            return 3;
-        // shields are fairly common
-        case EQ_SHIELD:
-            return 2;
-        // aux armour is relatively uncommon
-        default:
-            return 1;
-    }
 }
 
 static bool _armour_is_visibly_special(const item_def &item)
@@ -2984,7 +2988,7 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    if (item.plus >= _armour_plus_threshold(get_armour_slot(item)))
+    if (item.plus > 0)
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
