@@ -3942,10 +3942,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
 
 bool melee_attack::using_weapon()
 {
-    return weapon && ((weapon->base_type == OBJ_WEAPONS
-                      && !is_range_weapon(*weapon))
-                      || weapon->base_type == OBJ_RODS
-                      || weapon->base_type == OBJ_STAVES);
+    return weapon && is_melee_weapon(*weapon);
 }
 
 int melee_attack::weapon_damage()
