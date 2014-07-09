@@ -4586,7 +4586,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Sticky flame.
     if (name == "sticky flame" || name == "splash of liquid fire")
     {
-        const int levels = min(4, 1 + random2(mon->hit_dice) / 2);
+        const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
 
         if (name == "splash of liquid fire")
