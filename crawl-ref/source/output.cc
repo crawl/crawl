@@ -489,6 +489,39 @@ colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
 // Status display
 // ----------------------------------------------------------------------
 
+static bool _boosted_hp()
+{
+    return you.duration[DUR_DIVINE_VIGOUR]
+           || you.berserk();
+}
+
+static bool _boosted_mp()
+{
+    return you.duration[DUR_DIVINE_VIGOUR];
+}
+
+static bool _boosted_ac()
+{
+    return you.duration[DUR_ICY_ARMOUR]
+           || player_stoneskin()
+           || player_icemail_armour_class()
+           || you.duration[DUR_QAZLAL_AC];
+}
+
+static bool _boosted_ev()
+{
+    return you.duration[DUR_PHASE_SHIFT]
+           || you.duration[DUR_AGILITY];
+}
+
+static bool _boosted_sh()
+{
+    return you.duration[DUR_CONDENSATION_SHIELD]
+           || you.duration[DUR_MAGIC_SHIELD]
+           || you.duration[DUR_DIVINE_SHIELD]
+           || qazlal_sh_boost() > 0;
+}
+
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status()
 {
@@ -570,7 +603,7 @@ static void _print_stats_mp(int x, int y)
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
 
-    const bool boosted = you.duration[DUR_DIVINE_VIGOUR];
+    const bool boosted = _boosted_mp();
 
     if (boosted)
         mp_colour = LIGHTBLUE;
@@ -666,8 +699,7 @@ static void _print_stats_hp(int x, int y)
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOUR;
 
-    const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
-                         || you.berserk();
+    const bool boosted = _boosted_hp();
 
     if (boosted)
         hp_colour = LIGHTBLUE;
@@ -772,13 +804,8 @@ static void _print_stats_ac(int x, int y)
 {
     // AC:
     CGOTOXY(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_ICY_ARMOUR]
-        || player_stoneskin()
-        || player_icemail_armour_class()
-        || you.duration[DUR_QAZLAL_AC])
-    {
+    if (_boosted_ac())
         textcolor(LIGHTBLUE);
-    }
     else if (you.duration[DUR_CORROSION])
         textcolor(RED);
     else
@@ -794,13 +821,8 @@ static void _print_stats_ac(int x, int y)
     CGOTOXY(x+4, y+2, GOTO_STAT);
     if (you.incapacitated() && you.shielded())
         textcolor(RED);
-    else if (you.duration[DUR_CONDENSATION_SHIELD]
-             || you.duration[DUR_MAGIC_SHIELD]
-             || you.duration[DUR_DIVINE_SHIELD]
-             || qazlal_sh_boost() > 0)
-    {
+    else if (_boosted_sh())
         textcolor(LIGHTBLUE);
-    }
     else
         textcolor(HUD_VALUE_COLOUR);
     CPRINTF("%2d ", player_displayed_shield_class());
@@ -811,7 +833,7 @@ static void _print_stats_ev(int x, int y)
     CGOTOXY(x+4, y, GOTO_STAT);
     textcolor(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
               || you.cannot_move() ? RED :
-              you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
+              _boosted_ev()
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", player_evasion());
 }
@@ -2053,23 +2075,9 @@ static vector<formatted_string> _get_overview_stats()
     // 4 columns
     column_composer cols1(4, 18, 28, 40);
 
-    const bool boosted_hp  = you.duration[DUR_DIVINE_VIGOUR]
-                                || you.berserk();
-    const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
-    const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
-                                || player_stoneskin()
-                                || player_icemail_armour_class()
-                                || you.duration[DUR_QAZLAL_AC];
-    const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
-                                || you.duration[DUR_AGILITY];
-    const bool boosted_sh  = you.duration[DUR_CONDENSATION_SHIELD]
-                                || you.duration[DUR_MAGIC_SHIELD]
-                                || you.duration[DUR_DIVINE_SHIELD]
-                                || qazlal_sh_boost() > 0;
-
     if (!player_rotted())
     {
-        if (boosted_hp)
+        if (_boosted_hp())
         {
             snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d</lightblue>",
                      you.hp, you.hp_max);
@@ -2079,7 +2087,7 @@ static vector<formatted_string> _get_overview_stats()
     }
     else
     {
-        if (boosted_hp)
+        if (_boosted_hp())
         {
             snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d (%d)</lightblue>",
                      you.hp, you.hp_max, get_real_hp(true, true));
@@ -2092,7 +2100,7 @@ static vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(0, buf, false);
 
-    if (boosted_mp)
+    if (_boosted_mp())
     {
         snprintf(buf, sizeof buf, "MP <lightblue>%3d/%d</lightblue>",
                  you.magic_points, you.max_magic_points);
@@ -2107,7 +2115,7 @@ static vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
-    if (boosted_ac)
+    if (_boosted_ac())
     {
         snprintf(buf, sizeof buf, "AC <lightblue>%2d</lightblue>",
                  you.armour_class());
@@ -2116,7 +2124,7 @@ static vector<formatted_string> _get_overview_stats()
         snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
     cols1.add_formatted(1, buf, false);
 
-    if (boosted_ev)
+    if (_boosted_ev())
     {
         snprintf(buf, sizeof buf, "EV <lightblue>%2d</lightblue>",
                  player_evasion());
@@ -2126,7 +2134,7 @@ static vector<formatted_string> _get_overview_stats()
     cols1.add_formatted(1, buf, false);
 
 
-    if (boosted_sh)
+    if (_boosted_sh())
     {
         snprintf(buf, sizeof buf, "SH <lightblue>%2d</lightblue>",
                  player_displayed_shield_class());
