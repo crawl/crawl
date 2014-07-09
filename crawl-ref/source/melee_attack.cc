@@ -3944,7 +3944,8 @@ bool melee_attack::using_weapon()
 {
     return weapon && ((weapon->base_type == OBJ_WEAPONS
                       && !is_range_weapon(*weapon))
-                      || weapon->base_type == OBJ_RODS);
+                      || weapon->base_type == OBJ_RODS
+                      || weapon->base_type == OBJ_STAVES);
 }
 
 int melee_attack::weapon_damage()
