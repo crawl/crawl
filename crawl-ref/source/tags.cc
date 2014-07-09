@@ -3041,6 +3041,11 @@ static void tag_read_you(reader &th)
         you.props["current_arcane_sacrifices"].new_vector(SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
     }
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_RENAME)
+    {
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props["ru_sacrifice_delay"] = 70;
+    }
 #endif
 }
 
