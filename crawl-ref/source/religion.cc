@@ -2346,52 +2346,6 @@ void set_piety(int piety)
     while (diff != 0);
 }
 
-static void _gain_piety_point();
-/**
- * Gain an amount of piety.
- *
- * @param original_gain The numerator of the nominal piety gain.
- * @param denominator The denominator of the nominal piety gain.
- * @param should_scale_piety Should the piety gain be scaled by faith,
- *   forlorn, and Sprint?
- * @return True if something happened, or if another call with the same
- *   arguments might cause something to happen (because of random number
- *   rolls).
- */
-bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
-{
-    if (original_gain <= 0)
-        return false;
-
-    // Xom uses piety differently; Gozag doesn't at all.
-    if (you_worship(GOD_NO_GOD)
-        || you_worship(GOD_XOM)
-        || you_worship(GOD_GOZAG))
-    {
-        return false;
-    }
-
-    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
-
-    if (crawl_state.game_is_sprint() && should_scale_piety)
-        pgn = sprint_modify_piety(pgn);
-
-    pgn = div_rand_round(pgn, denominator);
-    while (pgn-- > 0)
-        _gain_piety_point();
-    if (you.piety > you.piety_max[you.religion])
-    {
-        if (you.piety >= piety_breakpoint(5)
-            && you.piety_max[you.religion] < piety_breakpoint(5))
-        {
-            mark_milestone("god.maxpiety", "became the Champion of "
-                           + god_name(you.religion) + ".");
-        }
-        you.piety_max[you.religion] = you.piety;
-    }
-    return true;
-}
-
 static void _gain_piety_point()
 {
     // check to see if we owe anything first
@@ -2571,6 +2525,51 @@ static void _gain_piety_point()
     }
 
     do_god_gift();
+}
+
+/**
+ * Gain an amount of piety.
+ *
+ * @param original_gain The numerator of the nominal piety gain.
+ * @param denominator The denominator of the nominal piety gain.
+ * @param should_scale_piety Should the piety gain be scaled by faith,
+ *   forlorn, and Sprint?
+ * @return True if something happened, or if another call with the same
+ *   arguments might cause something to happen (because of random number
+ *   rolls).
+ */
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
+{
+    if (original_gain <= 0)
+        return false;
+
+    // Xom uses piety differently; Gozag doesn't at all.
+    if (you_worship(GOD_NO_GOD)
+        || you_worship(GOD_XOM)
+        || you_worship(GOD_GOZAG))
+    {
+        return false;
+    }
+
+    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
+
+    if (crawl_state.game_is_sprint() && should_scale_piety)
+        pgn = sprint_modify_piety(pgn);
+
+    pgn = div_rand_round(pgn, denominator);
+    while (pgn-- > 0)
+        _gain_piety_point();
+    if (you.piety > you.piety_max[you.religion])
+    {
+        if (you.piety >= piety_breakpoint(5)
+            && you.piety_max[you.religion] < piety_breakpoint(5))
+        {
+            mark_milestone("god.maxpiety", "became the Champion of "
+                           + god_name(you.religion) + ".");
+        }
+        you.piety_max[you.religion] = you.piety;
+    }
+    return true;
 }
 
 void lose_piety(int pgn)
