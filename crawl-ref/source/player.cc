@@ -2741,11 +2741,8 @@ int player_shield_class()
         if (you.duration[DUR_MAGIC_SHIELD])
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
-        if (!you.duration[DUR_FIRE_SHIELD]
-            && you.duration[DUR_CONDENSATION_SHIELD])
-        {
+        if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.skill(SK_ICE_MAGIC, 60);
-        }
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
