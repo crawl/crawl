@@ -5548,7 +5548,11 @@ void ru_do_sacrifice(ability_type sacrifice)
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
-    gain_piety(piety_gain - 2 + random2(7)); // randomize it a bit.
+    gain_piety(piety_gain + random2(6)); // randomize it a bit.
+
+    // reset delay to 70.
+    you.props["ru_sacrifice_delay"] = div_rand_round(70 * (3 + you.faith()), 3);
+
     ru_expire_sacrifices();
 }
 

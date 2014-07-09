@@ -1079,9 +1079,14 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
 static void _remove_amulet_of_faith(item_def &item)
 {
-    if (!you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM)
-        && !you_worship(GOD_RU))
+    if (you_worship(GOD_RU))
+    {
+        // next sacrifice is going to be delaaaayed.
+        you.props["ru_sacrifice_delay"] =
+            you.props["ru_sacrifice_delay"].get_int() * 3;
+    }
+    else if (!you_worship(GOD_NO_GOD)
+        && !you_worship(GOD_XOM))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1175,7 +1180,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_FAITH:
         mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-             (you_worship(GOD_NO_GOD) || you_worship(GOD_RU))
+             (you_worship(GOD_NO_GOD))
                 ? "strange " : "");
         if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");

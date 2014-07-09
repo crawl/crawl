@@ -3536,7 +3536,7 @@ void god_pitch(god_type which_god)
     }
     else if (you_worship(GOD_RU))
     {
-        you.piety = 1; // you don't start w/ anything.
+        you.piety = 10; // one moderate sacrifice should get you to *.
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         you.props["available_sacrifices"].new_vector(SV_INT);
@@ -3545,6 +3545,7 @@ void god_pitch(god_type which_god)
         you.props["current_purity_sacrifice"].new_vector(SV_INT);
         you.props["current_arcane_sacrifices"].new_vector(SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props["ru_sacrifice_delay"] = 50; // offer the first sacrifice fast
     }
     else
     {
@@ -4061,6 +4062,8 @@ void handle_god_time(int time_delta)
     // Update the god's opinion of the player.
     if (!you_worship(GOD_NO_GOD))
     {
+        int added_delay;
+        int delay;
         switch (you.religion)
         {
         case GOD_XOM:
@@ -4134,7 +4137,10 @@ void handle_god_time(int time_delta)
 
         case GOD_RU:
             ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-            if (you.props["ru_progress_to_next_sacrifice"].get_int() >= 70)
+            ASSERT(you.props.exists("ru_sacrifice_delay"));
+
+            delay = you.props["ru_sacrifice_delay"].get_int();
+            if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
             {
                 if (you.piety < 200)
                 {
@@ -4142,8 +4148,17 @@ void handle_god_time(int time_delta)
 
                     simple_god_message(" believes you are ready to make a new sacrifice.");
                     more();
+
+                    // raise the delay if there's an active sacrifice, and more
+                    // so the more often you pass on a sacrifice and the more
+                    // piety you have.
+                    added_delay = div_rand_round((90 + max(100,
+                        static_cast<int>(you.piety))
+                        - 100) * (3 + you.faith()), 9);
+                    you.props["ru_sacrifice_delay"] = delay + added_delay;
+
                 }
-                you.props["ru_progress_to_next_sacrifice"].get_int() = 0;
+                you.props["ru_progress_to_next_sacrifice"] = 0;
             }
             break;
             return;

@@ -1724,7 +1724,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
         && item.sub_type == AMU_FAITH
-        && !you_worship(GOD_RU)
         && !you_worship(GOD_NO_GOD))
     {
         return true;
