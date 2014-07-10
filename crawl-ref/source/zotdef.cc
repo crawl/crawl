@@ -928,8 +928,9 @@ bool zotdef_create_altar(bool wizmode)
 
     string spec = lowercase_string(specs);
 
+    // Find the god with the earliest match for this string.
     god_type god = GOD_NO_GOD;
-
+    size_t bestpos = string::npos;
     for (int i = 1; i < NUM_GODS; ++i)
     {
         const god_type gi = static_cast<god_type>(i);
@@ -937,10 +938,15 @@ bool zotdef_create_altar(bool wizmode)
         if (!wizmode && is_unavailable_god(gi))
             continue;
 
-        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
+        const string name = lowercase_string(god_name(gi));
+        const size_t pos = name.find(spec);
+
+        // Note that npos is never less than bestpos, so a failure to
+        // find skips it.
+        if (pos < bestpos)
         {
+            bestpos = pos;
             god = gi;
-            break;
         }
     }
 
