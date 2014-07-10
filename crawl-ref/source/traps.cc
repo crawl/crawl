@@ -364,12 +364,6 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         return false;
     }
 
-    if (mon->flight_mode() && !mons_is_confused(mon) && one_chance_in(3))
-    {
-        simple_monster_message(mon, " darts out from under the net!");
-        return false;
-    }
-
     if (mon->type == MONS_OOZE)
     {
         simple_monster_message(mon, " oozes right through the net!");
@@ -392,12 +386,6 @@ bool player_caught_in_net()
 {
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return false;
-
-    if (you.flight_mode() && !you.confused() && one_chance_in(3))
-    {
-        mpr("You dart out from under the net!");
-        return false;
-    }
 
     if (!you.attribute[ATTR_HELD])
     {
