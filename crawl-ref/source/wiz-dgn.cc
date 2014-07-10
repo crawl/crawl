@@ -613,9 +613,7 @@ static void debug_load_map_by_name(string name, bool primary)
 
     if (primary)
     {
-        // FIXME: somehow minivaults get MAP_FLOAT here -- WTF?
-        dprf("map's orient = %d", toplace->orient);
-        if (toplace->orient == MAP_NONE)
+        if (toplace->has_tag("minivault"))
         {
             mpr("This is a mini-vault, can't base a layout on it.");
             return;
