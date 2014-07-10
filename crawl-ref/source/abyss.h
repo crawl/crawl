@@ -26,7 +26,7 @@ struct abyss_state
 
 extern abyss_state abyssal_state;
 
-void abyss_morph(double duration);
+void abyss_morph();
 void push_features_to_abyss();
 
 void generate_abyss();
