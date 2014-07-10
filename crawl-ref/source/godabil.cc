@@ -4871,7 +4871,7 @@ vector<ability_type> get_possible_sacrifices()
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARTIFICE);
     if (!player_mutation_level(MUT_NO_LOVE))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_LOVE);
-    if (!player_mutation_level(MUT_FEAR_BLOOD))
+    if (!player_mutation_level(MUT_NO_SANITY))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
     if (!player_mutation_level(MUT_NO_DODGING))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
@@ -5396,7 +5396,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
-                perma_mutate(MUT_FEAR_BLOOD, 1, "Ru sacrifice");
+                perma_mutate(MUT_NO_SANITY, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))

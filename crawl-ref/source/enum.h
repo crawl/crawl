@@ -3493,7 +3493,7 @@ enum mutation_type
     MUT_NO_STEALTH,
     MUT_NO_ARTIFICE,
     MUT_NO_LOVE,
-    MUT_FEAR_BLOOD,
+    MUT_NO_SANITY,
     MUT_NO_DODGING,
     MUT_NO_ARMOUR,
     MUT_NO_AIR_MAGIC,

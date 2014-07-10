@@ -2276,54 +2276,6 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
-    // If the player fears blood, horrify them in proportion to the blood
-    if (player_mutation_level(MUT_FEAR_BLOOD))
-    {
-        const coord_def& center = you.pos();
-        const int radius = 8;
-        int blood_count = 0;
-        int old_blood_count = 0;
-        if (you.duration[DUR_HORROR])
-            old_blood_count = you.props["horror_penalty"].get_int();
-
-        for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
-        {
-            const coord_def pos = *ri;
-
-            if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
-                blood_count++;
-        }
-
-        if (blood_count > 0)
-        {
-            if (blood_count != old_blood_count)
-            {
-                // only show a message on change
-                you.props["horror_penalty"] = blood_count;
-                if (blood_count > 5)
-                    mpr("Blood! Blood everywhere! You have to get out of here!");
-                else if (blood_count > 3)
-                    mpr("You reel with horror. There's so much blood!");
-                else
-                    mpr("You are horrified by the sight of blood!");
-            }
-            // as long as there's still blood, keep the horror going
-            you.set_duration(DUR_HORROR, 1);
-        }
-        else if (you.duration[DUR_HORROR])
-        {
-            you.props["horror_penalty"] = 0;
-            you.set_duration(DUR_HORROR, 0);
-        }
-    }
-    else if (you.duration[DUR_HORROR])
-    {
-        // If the player somehow stops fearing blood, we need to handle that too
-        you.props["horror_penalty"] = 0;
-        you.set_duration(DUR_HORROR, 0);
-        mpr("The sight of blood no longer horrifies you.");
-    }
-
     fire_final_effects();
 
     if (crawl_state.viewport_monster_hp || crawl_state.viewport_weapons)
