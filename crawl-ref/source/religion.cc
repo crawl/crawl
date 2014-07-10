@@ -3403,6 +3403,25 @@ static void _god_welcome_handle_gear()
     }
 }
 
+/* Make a CrawlStoreValue an empty vector with the requested item type.
+ * It is an error if the value already had a different type.
+ */
+static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
+{
+    const store_val_type currtype = v.get_type();
+    ASSERT(currtype == SV_NONE || currtype == SV_VEC);
+
+    if (currtype == SV_NONE)
+        v.new_vector(vectype);
+    else
+    {
+        CrawlVector &vec = v.get_vector();
+        const store_val_type old_vectype = vec.get_type();
+        ASSERT(old_vectype == SV_NONE || old_vectype == vectype);
+        vec.clear();
+    }
+}
+
 void god_pitch(god_type which_god)
 {
     if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
@@ -3540,11 +3559,11 @@ void god_pitch(god_type which_god)
         you.piety = 10; // one moderate sacrifice should get you to *.
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
-        you.props["available_sacrifices"].new_vector(SV_INT);
-        you.props["current_health_sacrifice"].new_vector(SV_INT);
-        you.props["current_essence_sacrifice"].new_vector(SV_INT);
-        you.props["current_purity_sacrifice"].new_vector(SV_INT);
-        you.props["current_arcane_sacrifices"].new_vector(SV_INT);
+        _make_empty_vec(you.props["available_sacrifices"], SV_INT);
+        _make_empty_vec(you.props["current_health_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_essence_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_purity_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_arcane_sacrifices"], SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
         you.props["ru_sacrifice_delay"] = 50; // offer the first sacrifice fast
     }
