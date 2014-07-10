@@ -11,8 +11,10 @@
 #include <algorithm>
 #include <math.h>
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
 #include "clua.h"
@@ -22,13 +24,15 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "env.h"
 #include "exercise.h"
-#include "map_knowledge.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -37,6 +41,8 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
@@ -44,13 +50,9 @@
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
-#include "env.h"
-#include "areas.h"
 #include "terrain.h"
 #include "transform.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 bool trap_def::active() const
@@ -335,7 +337,13 @@ static void _mark_net_trapping(const coord_def& where)
 bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
+    {
+        if (mons_near(mon) && !mon->visible_to(&you))
+            mpr("The net bounces off something gigantic!");
+        else
+            simple_monster_message(mon, " is too large for the net to hold!");
         return false;
+    }
 
     if (mons_class_is_stationary(mon->type))
     {
@@ -362,12 +370,6 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         return false;
     }
 
-    if (mon->flight_mode() && !mons_is_confused(mon) && one_chance_in(3))
-    {
-        simple_monster_message(mon, " darts out from under the net!");
-        return false;
-    }
-
     if (mon->type == MONS_OOZE)
     {
         simple_monster_message(mon, " oozes right through the net!");
@@ -390,12 +392,6 @@ bool player_caught_in_net()
 {
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return false;
-
-    if (you.flight_mode() && !you.confused() && one_chance_in(3))
-    {
-        mpr("You dart out from under the net!");
-        return false;
-    }
 
     if (!you.attribute[ATTR_HELD])
     {
@@ -1147,6 +1143,55 @@ static bool _disarm_is_deadly(trap_def& trap)
         dam += 15; // arbitrary
 
     return you.hp <= dam;
+}
+
+void search_around()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    int base_skill = you.experience_level * 100 / 3;
+    int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
+    + (base_skill/200.0) + 15;
+
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+        skill += you.piety * 2;
+
+    int max_dist = div_rand_round(skill, 32);
+    if (max_dist > 5)
+        max_dist = 5;
+    if (max_dist < 1)
+        max_dist = 1;
+
+    for (radius_iterator ri(you.pos(), max_dist, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grd(*ri) != DNGN_UNDISCOVERED_TRAP)
+            continue;
+
+        int dist = ri->range(you.pos());
+
+        // Own square is not excluded; may be flying.
+        // XXX: Currently, flying over a trap will always detect it.
+
+        int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
+
+        trap_def* ptrap = find_trap(*ri);
+        if (!ptrap)
+        {
+            // Maybe we shouldn't kill the trap for debugging
+            // purposes - oh well.
+            grd(*ri) = DNGN_FLOOR;
+            dprf("You found a buggy trap! It vanishes!");
+            continue;
+        }
+
+        if (effective > ptrap->skill_rnd)
+        {
+            ptrap->reveal();
+            mprf("You found %s!",
+                 ptrap->name(DESC_A).c_str());
+            learned_something_new(HINT_SEEN_TRAP, *ri);
+        }
+    }
 }
 
 // where *must* point to a valid, discovered trap.

@@ -20,7 +20,7 @@ enum object_selector
     OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
     OSEL_ENCH_ARM                =  -6,
-    OSEL_VAMP_EAT                =  -7,
+//  OSEL_VAMP_EAT                =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
     OSEL_EVOKABLE                = -10,

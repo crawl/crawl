@@ -13,7 +13,8 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
-#include "bless.h"
+#include "bloodspatter.h"
+#include "butcher.h"
 #include "cluautil.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -29,6 +30,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godblessing.h"
 #include "godconduct.h"
 #include "godcompanions.h"
 #include "hints.h"
@@ -54,6 +56,7 @@
 #include "notes.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "spl-damage.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
@@ -138,8 +141,8 @@ monster_type fill_out_corpse(const monster* mons,
         corpse.props[MONSTER_NUMBER]   = short(mons->number);
         // XXX: Appears to be a safe conversion?
         corpse.props[MONSTER_MID]      = int(mons->mid);
-        if (mons->props.exists("no_hide"))
-            corpse.props["never_hide"] = true;
+        if (mons->props.exists(NEVER_HIDE_KEY))
+            corpse.props[NEVER_HIDE_KEY] = true;
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -3003,12 +3006,8 @@ void hogs_to_humans()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!(mi->type == MONS_HOG
-              || mi->type == MONS_HELL_HOG
-              || mi->type == MONS_HOLY_SWINE))
-        {
+        if (mons_genus(mi->type) != MONS_HOG)
             continue;
-        }
 
         if (!mi->props.exists("kirke_band")
             && !mi->props.exists(ORIG_MONSTER_KEY))

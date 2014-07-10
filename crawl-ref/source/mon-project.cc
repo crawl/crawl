@@ -199,7 +199,7 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 // Alas, too much differs to reuse beam shield blocks :(
 static bool _iood_shielded(monster& mon, actor &victim)
 {
-    if (!victim.shield() || victim.incapacitated())
+    if (!victim.shielded() || victim.incapacitated())
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
@@ -507,7 +507,7 @@ move_again:
         if (victim && _iood_shielded(mon, *victim))
         {
             item_def *shield = victim->shield();
-            if (!shield_reflects(*shield))
+            if (!shield || !shield_reflects(*shield))
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());

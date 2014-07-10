@@ -21,6 +21,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
+#include "bloodspatter.h"
 #ifdef DGL_WHEREIS
  #include "chardump.h"
 #endif
@@ -329,7 +330,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
     loc = you.pos();
 
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
         return false;
 
     // Don't move onto dangerous terrain.
@@ -2766,11 +2767,8 @@ int player_shield_class()
         if (you.duration[DUR_MAGIC_SHIELD])
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
-        if (!you.duration[DUR_FIRE_SHIELD]
-            && you.duration[DUR_CONDENSATION_SHIELD])
-        {
+        if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.skill(SK_ICE_MAGIC, 60);
-        }
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
@@ -6229,6 +6227,19 @@ bool player::liquefied_ground() const
            && ground_level() && !is_insubstantial();
 }
 
+/**
+ * Returns whether the player currently has any kind of shield.
+ */
+bool player::shielded() const
+{
+    return shield()
+           || duration[DUR_CONDENSATION_SHIELD]
+           || duration[DUR_MAGIC_SHIELD]
+           || duration[DUR_DIVINE_SHIELD]
+           || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+           || qazlal_sh_boost() > 0;
+}
+
 int player::shield_block_penalty() const
 {
     return 5 * shield_blocks * shield_blocks;
@@ -7599,32 +7610,20 @@ bool player::visible_to(const actor *looker) const
             && (!invisible() || mon->can_see_invisible()));
 }
 
-bool player::backlit(bool check_haloed, bool self_halo) const
+bool player::backlit(bool self_halo) const
 {
     if (get_contamination_level() > 1 || duration[DUR_CORONA]
         || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return true;
     }
-    if (check_haloed)
-    {
-        return !umbraed() && haloed()
-               && (self_halo || halo_radius2() == -1);
-    }
-    return false;
+
+    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
 }
 
-bool player::umbra(bool check_haloed, bool self_halo) const
+bool player::umbra() const
 {
-    if (backlit())
-        return false;
-
-    if (check_haloed)
-    {
-        return umbraed() && !haloed()
-               && (self_halo || umbra_radius2() == -1);
-    }
-    return false;
+    return !backlit() && umbraed() && !haloed();
 }
 
 bool player::glows_naturally() const

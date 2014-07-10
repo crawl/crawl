@@ -70,6 +70,8 @@
 
 //#define DEBUG_PANE_BOUNDS
 
+static bool _show_terrain = false;
+
 crawl_view_geometry crawl_view;
 
 bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
@@ -724,7 +726,9 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    if (you.attribute[ATTR_SHADOWS])
+    if (_show_terrain)
+        return BLACK;
+    else if (you.attribute[ATTR_SHADOWS])
         return LIGHTGREY;
     else if (you.berserk())
         return RED;
@@ -1024,8 +1028,6 @@ static void _draw_los(screen_cell_t *cell,
     UNUSED(anim_updates);
 #endif
 }
-
-static bool _show_terrain = false;
 
 //---------------------------------------------------------------
 //

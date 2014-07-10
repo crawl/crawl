@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -406,7 +407,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-        mapstat_report_map_veto();
+        mapstat_report_map_veto(e.what());
 #endif
         return false;
     }
@@ -3224,8 +3225,14 @@ static void _place_chance_vaults()
 
 static void _place_minivaults()
 {
-    // Always try to place PLACE:X minivaults.
     const map_def *vault = NULL;
+    // First place the vault requested with &P
+    if (you.props.exists("force_minivault")
+        && (vault = find_map_by_name(you.props["force_minivault"])))
+    {
+        _dgn_ensure_vault_placed(_build_secondary_vault(vault), false);
+    }
+    // Always try to place PLACE:X minivaults.
     if ((vault = random_map_for_place(level_id::current(), true)))
         _build_secondary_vault(vault);
 
@@ -4000,10 +4007,7 @@ static void _builder_items()
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
 
     for (i = 0; i < items_wanted; i++)
-    {
-        items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-              MMT_NO_ITEM);
-    }
+        items(1, specif_type, OBJ_RANDOM, false, items_levels, MMT_NO_ITEM);
 }
 
 static bool _connect_vault_exit(const coord_def& exit)
@@ -4518,11 +4522,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (!spec.corpselike())
         origin_reset(item);
     if (is_stackable_item(item) && spec.qty > 0)
-    {
         item.quantity = spec.qty;
-        if (is_blood_potion(item))
-            init_stack_blood_potions(item);
-    }
 
     if (spec.item_special)
         item.special = spec.item_special;
@@ -4663,7 +4663,7 @@ int dgn_place_item(const item_spec &spec,
                                      true, where)
              : spec.corpselike() ? _dgn_item_corpse(spec, where)
              : items(spec.allow_uniques, base_type,
-                     spec.sub_type, true, level, 0, 0, spec.ego, -1,
+                     spec.sub_type, true, level, 0, spec.ego, -1,
                      spec.level == ISPEC_MUNDANE));
 
         if (item_made == NON_ITEM || item_made == -1)
@@ -4761,6 +4761,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             item_level = spec.level;
         else
         {
+            // TODO: merge this with the equivalent switch in dgn_place_item,
+            // and maybe even handle ISPEC_ACQUIREMENT.
             switch (spec.level)
             {
             case ISPEC_GOOD:
@@ -4769,8 +4771,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             case ISPEC_SUPERB:
                 item_level = MAKE_GOOD_ITEM;
                 break;
+            case ISPEC_DAMAGED:
+            case ISPEC_BAD:
             case ISPEC_RANDART:
-                item_level = ISPEC_RANDART;
+                item_level = spec.level;
                 break;
             }
         }
@@ -4784,11 +4788,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, true, item_level,
-                                  0, 0, spec.ego, -1,
-                                  spec.level == ISPEC_MUNDANE);
+                                  spec.sub_type, true, item_level, 0, spec.ego,
+                                  -1, spec.level == ISPEC_MUNDANE);
             }
-
 
             if (!(item_made == NON_ITEM || item_made == -1))
             {
@@ -5196,7 +5198,6 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         object_class_type which_class = OBJ_RANDOM;
         uint8_t which_type = OBJ_RANDOM;
         int which_depth = env.absdepth0;
-        int spec = 250;
 
         if (vgrid == '$')
             which_class = OBJ_GOLD;
@@ -5208,9 +5209,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '*')
             which_depth = 5 + which_depth * 2;
 
-        item_made = items(1, which_class, which_type, true,
-                           which_depth, spec);
-
+        item_made = items(1, which_class, which_type, true, which_depth);
         if (item_made != NON_ITEM)
             mitm[item_made].pos = where;
     }
@@ -6799,7 +6798,7 @@ void vault_placement::apply_grid()
 {
     if (!size.zero())
     {
-        bool clear = !map.has_tag("can_overwrite");
+        bool clear = !map.has_tag("overwrite_floor_cell");
 
         // NOTE: assumes *no* previous item (I think) or monster (definitely)
         // placement.
@@ -6857,7 +6856,7 @@ void vault_placement::apply_grid()
             _vault_grid_mons(*this, feat, *ri, mapsp);
         }
 
-        map.map.apply_overlays(pos);
+        map.map.apply_overlays(pos, map.is_overwritable_layout());
     }
 }
 

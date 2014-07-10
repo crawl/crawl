@@ -476,10 +476,6 @@ potion of slowing
 
 Eliksir który spowalnia szybkość ruchów.
 %%%%
-potion of strong poison
-
-Wyjątkowo groźna trucizna.
-%%%%
 quad damage
 
 Zadziwiający magiczny przedmiot w kształcie runy, jednorazowego użytku. Użyty,

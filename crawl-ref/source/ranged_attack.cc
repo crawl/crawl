@@ -341,7 +341,10 @@ int ranged_attack::weapon_damage()
     if (projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) == SPMSL_STEEL)
     {
-        dam = div_rand_round(dam * 13, 10);
+        if (dam)
+            dam = div_rand_round(dam * 13, 10);
+        else
+            dam += 2;
     }
     if (using_weapon())
         dam += property(*weapon, PWPN_DAMAGE);
@@ -360,8 +363,10 @@ int ranged_attack::calc_base_unarmed_damage()
     if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
         return 0;
 
-    // Darts and stones get half bonus; everything else gets full bonus.
-    return div_rand_round(attack::calc_base_unarmed_damage()
+    int damage = you.skill_rdiv(wpn_skill);
+
+    // Stones get half bonus; everything else gets full bonus.
+    return div_rand_round(damage
                           * min(4, property(*projectile, PWPN_DAMAGE)), 4);
 }
 

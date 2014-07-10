@@ -34,10 +34,11 @@
 #include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "arena.h"
 #include "art-enum.h"
 #include "artefact.h"
-#include "arena.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
@@ -61,23 +62,24 @@
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
+#include "evoke.h"
 #include "exercise.h"
-#include "goditem.h"
-#include "map_knowledge.h"
-#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
 #include "food.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godconduct.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "evoke.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -85,13 +87,14 @@
 #include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-transit.h"
@@ -99,17 +102,16 @@
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
-#include "ouch.h"
 #include "output.h"
-#include "player.h"
 #include "player-equip.h"
 #include "player-reacts.h"
 #include "player-stats.h"
+#include "player.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
@@ -119,15 +121,14 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
-#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
+#include "startup.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "startup.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
@@ -135,9 +136,6 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "shout.h"
-#include "stash.h"
 #include "uncancel.h"
 #include "version.h"
 #include "view.h"
@@ -674,6 +672,7 @@ static void _set_removed_types_as_identified()
     you.type_ids[OBJ_POTIONS][POT_GAIN_DEXTERITY] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_GAIN_INTELLIGENCE] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_WATER] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_STRONG_POISON] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = ID_KNOWN_TYPE;
 #endif
@@ -787,11 +786,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case '$':
         you.add_gold(1000);
-        if (!Options.show_gold_turns)
-        {
-            mprf("You now have %d gold piece%s.",
-                 you.gold, you.gold != 1 ? "s" : "");
-        }
         break;
 
     case 'B':
@@ -1427,7 +1421,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
     // Immobile
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
@@ -3130,7 +3124,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             dangerous = DNGN_FLOOR; // still warn about allies
 
         if (dangerous != DNGN_FLOOR || bad_mons)
@@ -3164,6 +3158,16 @@ static void _move_player(coord_def move)
                 canned_msg(MSG_OK);
                 return;
             }
+        }
+
+        if (you.is_stationary())
+        {
+            // Don't choose a random location to try to attack into - allows
+            // abuse, since trying to move (not attack) takes no time, and
+            // shouldn't. Just force confused trees to use ctrl.
+            mpr("You cannot move. (Use ctrl+direction to attack without "
+                "moving)");
+            return;
         }
 
         if (!one_chance_in(3))
@@ -3242,7 +3246,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
+    bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
 
     if (you.digging)
     {
@@ -3488,7 +3492,7 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");

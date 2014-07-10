@@ -160,7 +160,6 @@ public:
     bool        default_manual_training;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
-    bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
@@ -328,7 +327,6 @@ public:
     // Order of sections in the character dump.
     vector<string> dump_order;
 
-    bool        pickup_menu;        // false for single, true for menu
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
     bool        easy_exit_menu;     // Menus are easier to get out of

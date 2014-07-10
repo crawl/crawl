@@ -107,10 +107,6 @@ potion of poison
 
 Nejauki indīgs šķidrums.
 %%%%
-potion of strong poison
-
-Trakoti indīga dzira.
-%%%%
 quarterstaff
 
 Izturīga koka nūja, kas paredzēta cīņai.

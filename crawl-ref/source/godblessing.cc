@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "bless.h"
+#include "godblessing.h"
 
 #include "artefact.h"   // if_artefact()
 #include "env.h"        // mitm
@@ -110,16 +110,17 @@ static int _orc_weapon_gift_type(monster_type mon_type)
  * Give a weapon to an orc that doesn't have one.
  *
  * @param[in] orc    The orc to give a weapon to.
+ * @param weapon_type  What weapon type to give the orc.
  */
-static void _gift_weapon_to_orc(monster* orc, int force_type = NUM_WEAPONS)
+static void _gift_weapon_to_orc(monster* orc, int weapon_type)
 {
+    ASSERT(weapon_type != NUM_WEAPONS);
+
     item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
-    if (force_type == NUM_WEAPONS)
-        weapon.sub_type = _orc_weapon_gift_type(orc->type);
-    else
-        weapon.sub_type = force_type;
+    weapon.sub_type = weapon_type;
     weapon.quantity = 1;
+    set_ident_flags(weapon, ISFLAG_IDENT_MASK);
     give_specific_item(orc, weapon);
 }
 
@@ -139,8 +140,8 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
 
     if (!launcher)
         ammo.sub_type = MI_TOMAHAWK;
-    else if (launcher->sub_type == WPN_SLING)
-        ammo.sub_type = MI_SLING_BULLET;
+    else if (weapon_skill(*launcher) == SK_SLINGS)
+        ammo.sub_type = MI_SLING_BULLET; // ugly special case to avoid stones
     else
         ammo.sub_type = fires_ammo_type(*launcher);
 
@@ -161,6 +162,8 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     {
         return; // can't force them to drop the ammo, for some reason?
     }
+
+    set_ident_flags(ammo, ISFLAG_IDENT_MASK);
 
     give_specific_item(orc, ammo);
 }
@@ -193,7 +196,9 @@ static string _beogh_bless_melee_weapon(monster* mon)
 
     // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
     const bool enchanted = !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
-    && enchant_weapon(wpn, true);
+                           && enchant_weapon(wpn, true);
+    if (enchanted)
+        set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
 
     if (!enchanted && wpn.sub_type == old_weapon_type)
     {
@@ -207,7 +212,6 @@ static string _beogh_bless_melee_weapon(monster* mon)
         return "";
     }
 
-    give_monster_proper_name(mon);
     item_set_appearance(wpn);
     return "superior armament";
 }
@@ -258,7 +262,7 @@ static string _beogh_bless_weapon(monster* mon)
     const item_def* wpn_ptr = mon->melee_weapon();
     if (wpn_ptr == NULL)
     {
-        _gift_weapon_to_orc(mon);
+        _gift_weapon_to_orc(mon, _orc_weapon_gift_type(mon->type));
         if (mon->weapon() != NULL)
             return "armament";
 
@@ -322,13 +326,14 @@ static void _gift_armour_to_orc(monster* orc, bool shield = false)
     else
         armour.sub_type = highlevel ? ARM_SCALE_MAIL : ARM_RING_MAIL;
     armour.quantity = 1;
+    set_ident_flags(armour, ISFLAG_IDENT_MASK);
     give_specific_item(orc, armour);
 }
 
 /**
  * Attempt to bless a follower's armour.
  *
- * @param[in] follower      The follower whose armour should be blessed.
+ * @param[in] mon           The follower whose armour should be blessed.
  * @return                  The type of blessing; may be empty.
  */
 static string _beogh_bless_armour(monster* mon)
@@ -380,7 +385,10 @@ static string _beogh_bless_armour(monster* mon)
     // And enchant or uncurse it. (Lower chance for higher enchantment.)
     int ac_change;
     const bool enchanted = !x_chance_in_y(arm.plus, armour_max_enchant(arm))
-    && enchant_armour(ac_change, true, arm);
+                           && enchant_armour(ac_change, true, arm);
+
+    if (enchanted)
+        set_ident_flags(arm, ISFLAG_KNOW_PLUSES);
 
     if (!enchanted && old_subtype == arm.sub_type)
     {
@@ -388,7 +396,6 @@ static string _beogh_bless_armour(monster* mon)
         return "";
     }
 
-    give_monster_proper_name(mon);
     item_set_appearance(arm);
     return "improved armour";
 }
@@ -488,6 +495,7 @@ static string _tso_bless_weapon(monster* mon)
     }
 
     item_set_appearance(wpn);
+    set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
     return "superior armament";
 }
 
@@ -497,11 +505,11 @@ static string _tso_bless_weapon(monster* mon)
  * @param[in] follower      The follower whose armour should be blessed.
  * @return                  The type of blessing; may be empty.
  */
-static string _tso_bless_armour(monster* mon)
+static string _tso_bless_armour(monster* follower)
 {
     // Pick either a monster's armour or its shield.
-    const int armour = mon->inv[MSLOT_ARMOUR];
-    const int shield = mon->inv[MSLOT_SHIELD];
+    const int armour = follower->inv[MSLOT_ARMOUR];
+    const int shield = follower->inv[MSLOT_SHIELD];
     if (armour == NON_ITEM && shield == NON_ITEM)
     {
         dprf("Can't bless the armour of a naked follower!");
@@ -521,6 +529,7 @@ static string _tso_bless_armour(monster* mon)
     }
 
     item_set_appearance(arm);
+    set_ident_flags(arm, ISFLAG_KNOW_PLUSES);
     return "improved armour";
 }
 
@@ -609,22 +618,11 @@ static void _beogh_blessing_reinforcements()
 
 static bool _beogh_blessing_priesthood(monster* mon)
 {
-    monster_type priest_type = MONS_PROGRAM_BUG;
+    if (mon->type != MONS_ORC)
+        return false;
 
-    // Possible promotions.
-    if (mon->type == MONS_ORC)
-        priest_type = MONS_ORC_PRIEST;
-
-    if (priest_type != MONS_PROGRAM_BUG)
-    {
-        // Turn an ordinary monster into a priestly monster.
-        mon->upgrade_type(priest_type, true, true);
-        give_monster_proper_name(mon);
-
-        return true;
-    }
-
-    return false;
+    mon->upgrade_type(MONS_ORC_PRIEST, true, true);
+    return true;
 }
 
 /**
@@ -675,7 +673,7 @@ static string _bless_with_healing(monster* follower)
  *
  * @param[in] follower  The follower being blessed.
  * @param god           The god doing the blessing.
- * @param message       The blessing being delivered.
+ * @param blessing      The blessing being delivered.
  */
 static void _display_god_blessing(monster* follower, god_type god,
                                   string blessing)
@@ -763,6 +761,11 @@ static bool _beogh_bless_follower(monster* follower, bool force)
         blessing = coinflip() ? _beogh_bless_weapon(follower)
                               : _beogh_bless_armour(follower);
     }
+
+    // If they got a good blessing (priesthood or equipment), maybe give them
+    // a name.
+    if (!blessing.empty())
+        give_monster_proper_name(follower);
 
     // ~85% chance of trying to heal.
     if (blessing.empty())

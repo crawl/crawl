@@ -13,7 +13,6 @@ name = Fireworks
 species = mu
 background = ar
 restart_after_game = false
-show_gold_turns = true
 show_more = false
 #message_colour = mute:.*
 

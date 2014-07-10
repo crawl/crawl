@@ -51,7 +51,7 @@ struct mgen_data
     // merfolk in the Shoals will force them to appear on land.
     // preferred_grid_feature will be ignored if it is incompatible with
     // the monster's native habitat (for instance, if trying to place
-    // a big fish with preferred_grid_feature DNGN_FLOOR).
+    // a electric eel with preferred_grid_feature DNGN_FLOOR).
     dungeon_feature_type preferred_grid_feature;
 
     // The monster's foe, i.e. which monster it will want to attack. foe

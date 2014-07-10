@@ -14,8 +14,9 @@ attitude-change.o \
 beam.o \
 behold.o \
 bitary.o \
-bless.o \
 branch.o \
+butcher.o \
+bloodspatter.o \
 chardump.o \
 cio.o \
 cloud.o \
@@ -67,6 +68,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godblessing.o \
 godcompanions.o \
 godconduct.o \
 goditem.o \
@@ -182,6 +184,7 @@ random.o \
 random-var.o \
 ranged_attack.o \
 ray.o \
+rot.o \
 religion.o \
 shopping.o \
 shout.o \

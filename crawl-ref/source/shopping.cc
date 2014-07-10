@@ -28,7 +28,6 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
-#include "misc.h"
 #include "notes.h"
 #include "place.h"
 #include "player.h"
@@ -635,7 +634,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         mprf("I'll put %s outside for you.",
                               num_items == 1             ? "it" :
                               num_items == outside_items ? "them"
-                                                         : "part of them");
+                                                         : "some of them");
                     }
                     bought_something = true;
                 }
@@ -818,15 +817,8 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
-    if (is_blood_potion(item))
-        init_stack_blood_potions(item, -1);
-
-    const int quant = item.quantity;
-    // Note that item will be invalidated if num == item.quantity.
-    const int num = move_item_to_player(item_got, item.quantity, false);
-
     // Shopkeepers will now place goods you can't carry outside the shop.
-    if (num < quant)
+    if (!move_item_to_inv(item_got, item.quantity, false))
     {
         move_item_to_grid(&item_got, env.shop[shop].pos);
         return false;
@@ -959,7 +951,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 10;
             break;
 
-        case WPN_SLING:
+        case WPN_HUNTING_SLING:
         case WPN_STAFF:
             valued += 15;
             break;
@@ -1044,6 +1036,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_EVENINGSTAR:
         case WPN_LAJATANG:
         case WPN_QUICK_BLADE:
+        case WPN_GREATSLING:
             valued += 150;
             break;
 
@@ -1440,6 +1433,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_MAGIC:
             case POT_INVISIBILITY:
+            case POT_CANCELLATION:
                 valued += 55;
                 break;
 
@@ -1460,7 +1454,9 @@ unsigned int item_value(item_def item, bool ident)
             case POT_CURING:
             case POT_DECAY:
             case POT_DEGENERATION:
+#if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
+#endif
             case POT_LIGNIFY:
                 valued += 20;
                 break;
@@ -1468,7 +1464,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_BLOOD:
             case POT_PORRIDGE:
             case POT_CONFUSION:
-            case POT_PARALYSIS:
             case POT_POISON:
             case POT_SLOWING:
                 valued += 10;
@@ -1817,10 +1812,8 @@ bool is_worthless_consumable(const item_def &item)
         case POT_CONFUSION:
         case POT_DECAY:
         case POT_DEGENERATION:
-        case POT_PARALYSIS:
         case POT_POISON:
         case POT_SLOWING:
-        case POT_STRONG_POISON:
             return true;
         default:
             return false;
@@ -2870,4 +2863,45 @@ string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false,
                      ISFLAG_KNOW_CURSE);
+}
+
+static const char *shop_types[] =
+{
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "gadget",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general",
+};
+
+int str_to_shoptype(const string &s)
+{
+    if (s == "random" || s == "any")
+        return SHOP_RANDOM;
+
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+    {
+        if (s == shop_types[i])
+            return i;
+    }
+    return -1;
+}
+
+const char *shoptype_to_str(shop_type type)
+{
+    return shop_types[type];
+}
+
+void list_shop_types()
+{
+    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+        mprf_nocap("%s", shop_types[i]);
 }

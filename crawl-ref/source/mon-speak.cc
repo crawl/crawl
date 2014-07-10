@@ -554,7 +554,7 @@ bool mons_speaks(monster* mons)
             prefix += prefixes[i];
             prefix += " ";
         }
-        mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s: prefix = %s",
+        dprf(DIAG_SPEECH, "monster speech lookup for %s: prefix = %s",
              mons->name(DESC_PLAIN).c_str(), prefix.c_str());
     }
 #endif
@@ -657,7 +657,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "result: \"__NONE\"!");
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -686,7 +686,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "result: \"__NONE\"!");
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -742,7 +742,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "result: \"__NONE\"!");
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -773,7 +773,7 @@ bool mons_speaks(monster* mons)
                 if (msg == "__NONE" && msg2 == "__NONE")
                 {
 #ifdef DEBUG_MONSPEAK
-                    mprf(MSGCH_DIAGNOSTICS, "result: \"__NONE\"!");
+                    dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
                     return false;
                 }
@@ -795,7 +795,7 @@ bool mons_speaks(monster* mons)
     if (msg.empty() || msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
+        dprf(DIAG_SPEECH, "final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
         return false;

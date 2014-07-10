@@ -236,7 +236,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\beam.cc" />
     <ClCompile Include="..\behold.cc" />
     <ClCompile Include="..\bitary.cc" />
+    <ClCompile Include="..\bloodspatter.cc" />
     <ClCompile Include="..\branch.cc" />
+    <ClCompile Include="..\butcher.cc" />
     <ClCompile Include="..\chardump.cc" />
     <ClCompile Include="..\cio.cc" />
     <ClCompile Include="..\cloud.cc" />
@@ -300,6 +302,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\glwrapper-ogl.cc" />
     <ClCompile Include="..\glwrapper.cc" />
     <ClCompile Include="..\godabil.cc" />
+    <ClCompile Include="..\godblessing.cc" />
     <ClCompile Include="..\godcompanions.cc" />
     <ClCompile Include="..\godconduct.cc" />
     <ClCompile Include="..\goditem.cc" />
@@ -453,6 +456,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\rltiles\tiledef-floor.cc" />
     <ClCompile Include="..\rltiles\tiledef-icons.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
+    <ClCompile Include="..\rot.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
     <ClCompile Include="..\show.cc" />
@@ -616,10 +620,12 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\attitude-change.h" />
     <ClInclude Include="..\beam.h" />
     <ClInclude Include="..\bitary.h" />
+    <ClInclude Include="..\bloodspatter.h" />
     <ClInclude Include="..\book-data.h" />
     <ClInclude Include="..\branch-data.h" />
     <ClInclude Include="..\branch.h" />
     <ClInclude Include="..\build.h" />
+    <ClInclude Include="..\butcher.h" />
     <ClInclude Include="..\chardump.h" />
     <ClInclude Include="..\cio.h" />
     <ClInclude Include="..\cloud.h" />
@@ -686,6 +692,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\glwrapper-ogl.h" />
     <ClInclude Include="..\glwrapper.h" />
     <ClInclude Include="..\godabil.h" />
+    <ClInclude Include="..\godblessing.h" />
     <ClInclude Include="..\godcompanions.h" />
     <ClInclude Include="..\godconduct.h" />
     <ClInclude Include="..\goditem.h" />
@@ -808,6 +815,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\rltiles\tiledef-icons.h" />
     <ClInclude Include="..\rltiles\tiledef-wall.h" />
     <ClInclude Include="..\rltiles\tiledef_defines.h" />
+    <ClInclude Include="..\rot.h" />
     <ClInclude Include="..\SDLMain.h" />
     <ClInclude Include="..\shopping.h" />
     <ClInclude Include="..\shout.h" />

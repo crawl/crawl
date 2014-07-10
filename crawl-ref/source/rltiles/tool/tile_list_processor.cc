@@ -1533,10 +1533,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         {
             fprintf(fp, "define([");
             if (m_start_value_module.size() > 0)
-            {
-                fprintf(fp, "\"./tileinfo-%s\"",
-                        m_start_value_module.c_str());
-            }
+                fprintf(fp, "\"./tileinfo-%s\"", m_start_value_module.c_str());
             fprintf(fp, "], function(m) {\n");
         }
         else

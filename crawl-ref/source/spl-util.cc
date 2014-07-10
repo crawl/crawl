@@ -282,8 +282,6 @@ bool add_spell_to_memory(spell_type spell)
                 you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
             {
                 j = letter_to_index(Options.auto_spell_letters[k].second[l]);
-                mprf("Spell assigned to '%c'.",
-                     Options.auto_spell_letters[k].second[l]);
                 break;
             }
         if (j != -1)
@@ -297,6 +295,7 @@ bool add_spell_to_memory(spell_type spell)
                 break;
         }
 
+    mprf("Spell assigned to '%c'.", index_to_letter(j));
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
@@ -1141,7 +1140,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
-        if (transient && you.form == TRAN_TREE)
+        if (transient && you.is_stationary())
             return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)

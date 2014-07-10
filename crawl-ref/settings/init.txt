@@ -88,8 +88,7 @@
 # chunks_autopickup = false
 # assign_item_slot = (forward | backward)
 #
-# pickup_menu = false
-# pickup_menu_limit = 4
+# pickup_menu_limit = 1
 # drop_filter += skeleton, corpse, useless_item
 
 ##### 3-b       Targeting ############################
@@ -208,7 +207,6 @@
 # small_more                   = true
 # show_more                    = false
 # show_newturn_mark            = false
-# show_gold_turns              = false
 # show_game_turns              = false
 # item_stack_summary_minimum   = 4
 # mlist_min_height             = 4

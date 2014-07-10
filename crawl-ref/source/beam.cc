@@ -22,6 +22,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "cio.h"
 #include "cloud.h"
@@ -2022,6 +2023,12 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (mons->alive())
     {
+        if (!mons->cannot_move())
+        {
+            simple_monster_message(mons, mons->has_ench(ENCH_SLOW)
+                                         ? " seems to be slow for longer."
+                                         : " seems to slow down.");
+        }
         // FIXME: calculate the slow duration more cleanly
         mon_enchant me(ENCH_SLOW, 0, agent);
         levels -= 2;
@@ -2032,8 +2039,6 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
             levels -= 2;
         }
         mons->add_ench(me);
-        if (!mons->paralysed() && !mons->petrified())
-            simple_monster_message(mons, " seems to slow down.");
     }
 
     // Deities take notice.
@@ -3350,18 +3355,18 @@ bool bolt::misses_player()
             real_tohit /= 2;
 
         // Backlit is easier to hit:
-        if (you.backlit(true, false))
+        if (you.backlit(false))
             real_tohit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && you.umbra(true, true))
+        if (!nightvision && you.umbra())
             real_tohit -= 2 + random2(4);
     }
 
     bool train_shields_more = false;
 
     if (is_blockable()
-        && (you.shield() || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0)
+        && you.shielded()
         && !aimed_at_feet
         && player_shield_class() > 0)
     {
@@ -3380,7 +3385,6 @@ bool bolt::misses_player()
                 mprf("Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
                       name.c_str());
-                ident_reflector(you.shield());
                 reflect();
             }
             else if (_shield_piercing(this))
@@ -3905,8 +3909,6 @@ void bolt::affect_player()
     if (flavour == BEAM_MISSILE && item)
     {
         ranged_attack attk(agent(), &you, item, use_target_as_pos);
-        if (hit == DEBUG_COOKIE)
-            attk.simu = true;
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -4077,7 +4079,7 @@ void bolt::affect_player()
 
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
-        antimagic();
+        debuff_player();
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
 
@@ -4114,13 +4116,9 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit();
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-         || origin_spell == SPELL_COLD_BREATH && you.airborne()
-         || origin_spell == SPELL_FORCE_LANCE && hurted > 0
-         || name == "flood of elemental water")
-    {
+    if (can_knockback(&you, hurted))
         beam_hits_actor(&you);
-    }
+
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze"
@@ -4519,7 +4517,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
         return false;
     }
 
-    if (x_chance_in_y(85 - mons->hit_dice * 3 , 100))
+    if (x_chance_in_y(95 - mons->hit_dice * 5 , 100))
     {
         simple_monster_message(mons, " is dazzled.");
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
@@ -4590,7 +4588,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Sticky flame.
     if (name == "sticky flame" || name == "splash of liquid fire")
     {
-        const int levels = min(4, 1 + random2(mon->hit_dice) / 2);
+        const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
 
         if (name == "splash of liquid fire")
@@ -4630,13 +4628,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg)
         beogh_follower_convert(mon, true);
 
-    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        || (name == "freezing breath" && mon->flight_mode())
-        || (name == "lance of force" && dmg > 0)
-        || name == "flood of elemental water")
-    {
+    if (can_knockback(mon, dmg))
         beam_hits_actor(mon);
-    }
+
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, mon->pos());
 
@@ -4823,8 +4817,6 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_MISSILE && item)
     {
         ranged_attack attk(agent(), mon, item, use_target_as_pos);
-        if (hit == DEBUG_COOKIE)
-            attk.simu = true;
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -4922,11 +4914,11 @@ void bolt::affect_monster(monster* mon)
             beam_hit /= 2;
 
         // Backlit is easier to hit:
-        if (mon->backlit(true, false))
+        if (mon->backlit(false))
             beam_hit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && mon->umbra(true, true))
+        if (!nightvision && mon->umbra())
             beam_hit -= 2 + random2(4);
     }
 
@@ -6649,6 +6641,26 @@ string bolt::get_source_name() const
     if (a)
         return a->name(DESC_A, true);
     return "";
+}
+
+/**
+ * Can this bolt knock back an actor?
+ *
+ * The bolts that knockback flying actors or actors only when damage
+ * is dealt will return when.
+ *
+ * @param act The target actor. If not-NULL, check if the actor is flying for
+ *            bolts that knockback flying actors.
+ * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
+ *             like force bolt that only push back upon damage.
+ * @return True if the bolt could knockback the actor, false otherwise.
+*/
+bool bolt::can_knockback(const actor *act, int dam) const
+{
+    return((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+           || (name == "freezing breath" && (!act || act->flight_mode()))
+           || (name == "lance of force" && (dam < 0 || dam > 0))
+           || name == "flood of elemental water");
 }
 
 void clear_zap_info_on_exit()

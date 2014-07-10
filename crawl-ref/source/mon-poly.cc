@@ -8,6 +8,7 @@
 
 #include "artefact.h"
 #include "attitude-change.h"
+#include "butcher.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -86,9 +87,6 @@ void monster_drop_things(monster* mons,
             }
             else
             {
-                if (mons->friendly() && mitm[item].defined())
-                    mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
-
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
@@ -356,7 +354,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Don't allow polymorphing monsters for hides.
-    mons->props["no_hide"] = true;
+    mons->props[NEVER_HIDE_KEY] = true;
 
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
@@ -661,6 +659,14 @@ void seen_monster(monster* mons)
 
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
+
+    // mark items as seen.
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
+    {
+        int item_id = mons->inv[slot];
+        if (item_id != NON_ITEM)
+            mitm[item_id].flags |= ISFLAG_SEEN;
+    }
 
     if (!mons_is_mimic(mons->type))
     {

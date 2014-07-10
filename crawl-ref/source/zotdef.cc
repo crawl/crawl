@@ -106,11 +106,9 @@ static branch_type _zotdef_random_branch()
          pb = static_cast<branch_type>(random2(NUM_BRANCHES));
     while (!_is_branch_fitting(pb, wavenum));
 
+    // strong bias to main dungeon and depths
     if (one_chance_in(4))
-    {
         return wavenum < 15 ? BRANCH_DUNGEON : BRANCH_DEPTHS;
-        // strong bias to main dungeon and depths
-    }
 
     return pb;
 }
@@ -1024,13 +1022,11 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                const rune_type which_rune = _get_rune();
-                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
-                               which_rune, which_rune);
+                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    mitm[ip].plus = which_rune;
+                    mitm[ip].plus = _get_rune();
                     move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }

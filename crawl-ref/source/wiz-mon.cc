@@ -12,7 +12,6 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
-#include "bless.h"
 #include "cio.h"
 #include "colour.h"
 #include "dbg-util.h"
@@ -22,6 +21,7 @@
 #include "env.h"
 #include "files.h"
 #include "ghost.h"
+#include "godblessing.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1063,7 +1063,7 @@ void wizard_give_monster_item(monster* mon)
         }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
-        move_item_to_player(old_eq, mitm[old_eq].quantity);
+        move_item_to_inv(old_eq, mitm[old_eq].quantity);
     }
 }
 

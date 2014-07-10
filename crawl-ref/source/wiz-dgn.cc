@@ -613,16 +613,12 @@ static void debug_load_map_by_name(string name, bool primary)
 
     if (primary)
     {
-        // FIXME: somehow minivaults get MAP_FLOAT here -- WTF?
-        dprf("map's orient = %d", toplace->orient);
-        if (toplace->orient == MAP_NONE)
-        {
-            mpr("This is a mini-vault, can't base a layout on it.");
-            return;
-        }
-
-        you.props["force_map"] = toplace->name;
+        if (toplace->is_minivault())
+            you.props["force_minivault"] = toplace->name;
+        else
+            you.props["force_map"] = toplace->name;
         wizard_recreate_level();
+        you.props.erase("force_minivault");
         you.props.erase("force_map");
 
         // We just saved with you.props["force_map"] set; save again in

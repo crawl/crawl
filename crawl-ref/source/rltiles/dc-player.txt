@@ -717,7 +717,7 @@ axe_blood AXE_BLOOD
 axe_short AXE_SHORT
 
 ## launchers
-sling SLING
+sling HUNTING_SLING
 bow BOW
 bow_two BOW2
 bow_three BOW3

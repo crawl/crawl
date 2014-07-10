@@ -19,6 +19,7 @@
 #include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "butcher.h"
 #include "cio.h"
 #include "coordit.h"
 #include "delay.h"
@@ -1957,7 +1958,7 @@ const char* mutation_name(mutation_type mut)
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return get_mutation_def(mut).wizname;
+    return get_mutation_def(mut).short_desc;
 }
 
 // Return a string describing the mutation.
@@ -2339,7 +2340,7 @@ _schedule_ds_mutations(vector<mutation_type> muts)
             dt.mutation     = muts_left.front();
 
             dprf("Demonspawn will gain %s at level %d",
-                    get_mutation_def(dt.mutation).wizname, dt.level_gained);
+                    get_mutation_def(dt.mutation).short_desc, dt.level_gained);
 
             out.push_back(dt);
 
@@ -2608,7 +2609,7 @@ int handle_pbd_corpses()
             if (j->base_type == OBJ_CORPSES
                 && j->sub_type == CORPSE_BODY
                 && j->special > 50
-                && !j->props.exists("never_hide"))
+                && !j->props.exists(NEVER_HIDE_KEY))
             {
                 ++corpse_count;
                 if (corpse_count == 7)

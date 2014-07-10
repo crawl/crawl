@@ -80,12 +80,13 @@ Monsters
 * Cherub's hymns can buff any allies, not just those with higher HDs.
 * Killing holy monsters no longer invokes cleansing flame on the perpetrator.
 * Ghouls and necrophages can no longer equip weapons or armour.
+* Mimics no longer mimic doors, statues, fountains or hatches.
 * Each unique now has a special title, shown when you first see them or in the
   description screen.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes, shedu,
   plague shamblers, giant slugs, elephant slugs, giant fireflies, brown oozes,
-  pulsating lumps.
+  pulsating lumps, big fish, sharks, lava worms.
 
 Spells
 ------
@@ -162,7 +163,12 @@ Items
   - Potions of blood cure a point of ghoul rotting.
   - All types of fruit have been merged together into one gooey, messy item
     type.
+  - Brown (contaminated) chunks are gone, replaced with normal ones.
   - Cheese, sausages, and ambrosia are no more.
+* New item: potion of cancellation, which removes enchantments & contamination
+  on the player.
+* Scrolls of vulnerability have been simplified; they now just halve MR for all
+  creatures in LOS.
 * Identify scrolls now always identify a single item.
 * Jewellery automatically identifies once equipped.
 * Amulets of inaccuracy are always cursed.
@@ -181,7 +187,7 @@ Items
   higher than +0.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
 * Other removed items: darts, rings of hunger and sustenance, amulet of
-  conservation, cloak of preservation.
+  conservation, cloak of preservation, potions of strong poison and paralysis.
 
 Cards
 -----

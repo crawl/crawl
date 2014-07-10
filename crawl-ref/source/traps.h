@@ -15,6 +15,7 @@ struct bolt;
 class monster;
 struct trap_def;
 
+void search_around();
 void disarm_trap(const coord_def& where);
 void free_self_from_net();
 void mons_clear_trapping_net(monster* mon);

@@ -1061,7 +1061,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_UNRESTRICTED;
         }
 
-    case WPN_SLING:
+    case WPN_HUNTING_SLING:
         switch (ng.species)
         {
         case SP_DEEP_ELF:

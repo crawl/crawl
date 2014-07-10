@@ -158,7 +158,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: Z = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = big fish w:5 / shark w:5 / merfolk w:5 / mermaid w:5
+KMONS:  1 = merfolk / mermaid
 MAP
 ..xxx
 xZ..x
@@ -735,8 +735,8 @@ NAME: nicolae_shoals_siren_and_animal_friends
 DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
-KMONS: f = bat w:5 / big fish w:5 / griffon / harpy / hippogriff / \
-       kraken w:1 / raven w:5 / sea snake / shark / sky beast w:1 / \
+KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
+       kraken w:1 / raven w:5 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1
@@ -757,7 +757,7 @@ DEPTH: Shoals:2-
 TAGS: no_item_gen no_monster_gen
 KMONS: i = merfolk impaler band / merfolk javelineer band
 SUBST: : = .:3 h:1, W = .W
-: dgn.delayed_decay(_G, 'h', 'big fish corpse / snapping turtle corpse / shark corpse')
+: dgn.delayed_decay(_G, 'h', 'snapping turtle corpse')
 MAP
 WWWWWWW
 WW:::WW
