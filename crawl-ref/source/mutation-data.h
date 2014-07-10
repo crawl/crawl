@@ -1785,14 +1785,14 @@ static const mutation_def mut_data[] =
   "inspire hatred"
 },
 
-{ MUT_FEAR_BLOOD,                0,  1, MUTFLAG_RU, false,
-  "fear blood",
+{ MUT_NO_SANITY,                0,  1, MUTFLAG_RU, false,
+  "insane",
 
-  {"You are terrified of blood.", "", ""},
-  {"You have become terrified of blood.", "", ""},
-  {"You are no longer terrified of blood.", "", ""},
+  {"You have lost your grip on sanity.", "", ""},
+  {"You have lost your grip on sanity.", "", ""},
+  {"You have regained your grip on sanity.", "", ""},
 
-  "fear blood"
+  "insane"
 },
 
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
