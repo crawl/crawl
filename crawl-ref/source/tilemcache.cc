@@ -620,6 +620,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_SAINT_ROKA:
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_MINOTAUR:
+    case TILEP_MONS_NORRIS:
         *ofs_x = 3;
         *ofs_y = 0;
         break;
@@ -635,6 +636,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
     case TILEP_MONS_VAULT_WARDEN:
+    case TILEP_MONS_DEEP_ELF_FIGHTER:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -651,6 +653,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_OCTOPODE_CRUSHER:
+    case TILEP_MONS_CHERUB:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -658,6 +661,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_DONALD:
         *ofs_x = -1;
         *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_WIGLAF:
+        *ofs_x = -1;
+        *ofs_y = 1;
         break;
 
     case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
