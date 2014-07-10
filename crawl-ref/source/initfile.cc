@@ -1311,6 +1311,7 @@ void game_options::add_feature_override(const string &text)
         if (feats[i] >= NUM_FEATURES)
             continue; // TODO: handle other object types.
         feature_def &fov(feature_overrides[feats[i]]);
+        init_fd(fov);
 #define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
                           fov.field = s;
 #define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
