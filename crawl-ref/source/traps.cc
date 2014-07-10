@@ -337,7 +337,13 @@ static void _mark_net_trapping(const coord_def& where)
 bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
+    {
+        if (mons_near(mon) && !mon->visible_to(&you))
+            mpr("The net bounces off something gigantic!");
+        else
+            simple_monster_message(mon, " is too large for the net to hold!");
         return false;
+    }
 
     if (mons_class_is_stationary(mon->type))
     {
