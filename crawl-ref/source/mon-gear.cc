@@ -886,8 +886,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
         {
-            item.sub_type = (mon->type == MONS_SATYR ? WPN_GREATSLING
-                                                     : WPN_HUNTING_SLING);
+            item.sub_type = (mon->type == MONS_FAUN ? WPN_HUNTING_SLING :
+                                   one_chance_in(3) ? WPN_GREATSLING:
+                                                      WPN_LONGBOW);
         }
         else
         {
