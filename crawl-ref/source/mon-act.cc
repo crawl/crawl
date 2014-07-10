@@ -2244,16 +2244,6 @@ void handle_monster_move(monster* mons)
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG))
         {
-            if (does_ru_wanna_redirect(mons))
-            {
-                if (random2(100) < div_rand_round(you.piety, 20))
-                {
-                    simple_monster_message(mons,
-                        " is stunned by your will and fails to attack.");
-                    mons->speed_increment -= non_move_energy;
-                    return;
-                }
-            }
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both.  This aims
             // to give them both roughly the same weight.

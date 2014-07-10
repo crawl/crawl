@@ -2832,6 +2832,18 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
 //---------------------------------------------------------------
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
+    bool redirected = does_ru_wanna_redirect(mons);
+    if (redirected)
+    {
+        if (random2(100) < div_rand_round(you.piety, 20))
+        {
+            simple_monster_message(mons,
+                " begins to cast a spell, but is stunned by your will!");
+            mons->lose_energy(EUT_SPELL);
+            return true;
+        }
+    }
+
     bool monsterNearby = mons_near(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(mons);
@@ -2990,8 +3002,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         bool ignore_good_idea = false;
-        if (does_ru_wanna_redirect(mons)
-            && random2(100) < div_rand_round(you.piety, 40))
+        if (redirected && random2(100) < div_rand_round(you.piety, 40))
         {
             mprf("You redirect %s's attack!",
                     mons->name(DESC_THE, true).c_str());
