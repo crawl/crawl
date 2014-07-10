@@ -1406,54 +1406,87 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
     return ac->hands_reqd(item);
 }
 
+/**
+ * Is the provided type a kind of giant club?
+ *
+ * @param wpn_type  The type of weapon under consideration.
+ * @return          Whether it's a kind of giant club.
+ */
 bool is_giant_club_type(int wpn_type)
 {
     return wpn_type == WPN_GIANT_CLUB
            || wpn_type == WPN_GIANT_SPIKED_CLUB;
 }
 
-bool is_demonic(const item_def &item)
+/**
+ * Is the provided type a kind of ranged weapon?
+ *
+ * @param wpn_type  The type of weapon under consideration.
+ * @return          Whether it's a kind of launcher.
+ */
+bool is_ranged_weapon_type(int wpn_type)
 {
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        switch (item.sub_type)
-        {
-        case WPN_DEMON_BLADE:
-        case WPN_DEMON_WHIP:
-        case WPN_DEMON_TRIDENT:
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
+    return Weapon_prop[wpn_type].dam_type == DAMV_NON_MELEE;
 }
 
+/**
+ * Is the provided type a kind of demon weapon?
+ *
+ * @param wpn_type  The type of weapon under consideration.
+ * @return          Whether it's a kind of demon weapon.
+ */
+bool is_demonic_weapon_type(int wpn_type)
+{
+    return wpn_type == WPN_DEMON_BLADE
+           || wpn_type == WPN_DEMON_WHIP
+           || wpn_type == WPN_DEMON_TRIDENT;
+}
+
+/**
+ * Is the provided type a kind of blessed weapon?
+ *
+ * @param wpn_type  The type of weapon under consideration.
+ * @return          Whether it's a kind of blessed weapon.
+ */
+bool is_blessed_weapon_type(int wpn_type)
+{
+    return wpn_type >= WPN_BLESSED_FALCHION && wpn_type <= WPN_TRISHULA;
+}
+
+/**
+ * Is the weapon type provided magic (& can't be generated in a usual way?)
+ * (I.e., magic staffs & rods.)
+ *
+ * @param wpn_type  The type of weapon under consideration.
+ * @return          Whether it's a magic staff or rod.
+ */
+bool is_magic_weapon_type(int wpn_type)
+{
+    return wpn_type == WPN_STAFF || wpn_type == WPN_ROD;
+}
+
+/**
+ * Is the provided item a demon weapon?
+ *
+ * @param wpn_type  The item under consideration.
+ * @return          Whether the given item is a demon weapon.
+ */
+bool is_demonic(const item_def &item)
+{
+    return item.base_type == OBJ_WEAPONS
+           && is_demonic_weapon_type(item.sub_type);
+}
+
+/**
+ * Is the provided item a blessed weapon? (Not just holy wrath.)
+ *
+ * @param wpn_type  The item under consideration.
+ * @return          Whether the given item is a blessed weapon.
+ */
 bool is_blessed(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        switch (item.sub_type)
-        {
-        case WPN_BLESSED_FALCHION:
-        case WPN_BLESSED_LONG_SWORD:
-        case WPN_BLESSED_SCIMITAR:
-        case WPN_EUDEMON_BLADE:
-        case WPN_BLESSED_BASTARD_SWORD:
-        case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_CLAYMORE:
-        case WPN_SACRED_SCOURGE:
-        case WPN_TRISHULA:
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
+    return item.base_type == OBJ_WEAPONS
+            && is_blessed_weapon_type(item.sub_type);
 }
 
 bool is_blessed_convertible(const item_def &item)
