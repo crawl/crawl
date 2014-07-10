@@ -1420,16 +1420,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         do
             item.sub_type = random2(NUM_WEAPONS);
-        while ((melee_only && (item.sub_type == WPN_BLOWGUN
-                               || item.sub_type == WPN_CROSSBOW
-                               || item.sub_type == WPN_SHORTBOW
-                               || item.sub_type == WPN_LONGBOW))
-               || item.sub_type == WPN_STAFF
-               || item.sub_type == WPN_ROD
-               || item.sub_type == WPN_HAMMER
+        while (melee_only && is_ranged_weapon_type(item.sub_type)
+               || is_blessed_weapon_type(item.sub_type)
+               || is_magic_weapon_type(item.sub_type)
                || is_giant_club_type(item.sub_type)
-               || item.sub_type > WPN_SLING); // the last of these checks for
-                                              // blessed base weapon types
+               || item.sub_type == WPN_HAMMER);
+
         if (one_chance_in(100))
         {
             force_item = true;
