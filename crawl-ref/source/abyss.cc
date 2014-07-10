@@ -1560,7 +1560,7 @@ static void _increase_depth()
         abyssal_state.phase -= M_PI;
 }
 
-void abyss_morph(double duration)
+void abyss_morph()
 {
     if (abyssal_state.destroy_all_terrain)
     {
