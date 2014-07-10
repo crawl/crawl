@@ -2512,12 +2512,21 @@ slime creature
  Upon the slimy sea.”
     -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
-sling
+hunting sling
 
 “And David put his hand in his bag, and took thence a stone, and slang it, and
 smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
+%%%%
+greatsling
+
+“Thrice whirling round his head
+ The whistling thong, Mezentius took his aim.
+ Clean through his temples hissed the molten lead,
+ And prostrate in the dust, the gallant youth lay dead.”
+    -Virgil, Aeneid 9
+     trans. E. Fairfax Taylor
 %%%%
 sling bullet
 
