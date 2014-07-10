@@ -34,6 +34,7 @@
  #include "tileweb.h"
 #endif
 #include "invent.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
@@ -245,40 +246,15 @@ weapon_type str_to_weapon(const string &str)
     return WPN_UNKNOWN;
 }
 
-static string _weapon_to_str(int wpn_type)
+static string _weapon_to_str(weapon_type wpn_type)
 {
+    if (wpn_type >= 0 && wpn_type < NUM_WEAPONS)
+        return weapon_base_name(wpn_type);
+
     switch (wpn_type)
     {
-    case WPN_SHORT_SWORD:
-        return "short sword";
-    case WPN_CUTLASS:
-        return "cutlass";
-    case WPN_FALCHION:
-        return "falchion";
-    case WPN_LONG_SWORD:
-        return "long sword";
-    case WPN_QUARTERSTAFF:
-        return "quarterstaff";
-    case WPN_MACE:
-        return "mace";
-    case WPN_FLAIL:
-        return "flail";
-    case WPN_SPEAR:
-        return "spear";
-    case WPN_TRIDENT:
-        return "trident";
-    case WPN_HAND_AXE:
-        return "hand axe";
-    case WPN_WAR_AXE:
-        return "war axe";
     case WPN_UNARMED:
         return "claws";
-    case WPN_HUNTING_SLING:
-        return "hunting sling";
-    case WPN_SHORTBOW:
-        return "shortbow";
-    case WPN_CROSSBOW:
-        return "crossbow";
     case WPN_THROWN:
         return "thrown";
     case WPN_VIABLE:
