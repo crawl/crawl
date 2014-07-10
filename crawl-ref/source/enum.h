@@ -1311,8 +1311,8 @@ enum dungeon_char_type
 
 // When adding:
 //
-// * New stairs/portals: update grid_stair_direction.
-// * Any: edit view.cc and add a glyph and colour for the feature.
+// * New stairs/portals: update feat_stair_direction.
+// * Any: Add an entry in feature-data.h for the feature.
 // * Any: edit directn.cc and add a description for the feature.
 // * Any: edit dat/descript/features.txt and add a
 //        long description if appropriate.
