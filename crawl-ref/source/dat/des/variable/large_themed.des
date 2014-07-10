@@ -18,7 +18,8 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; sling . stone / hobgoblin w:2; sling . sling bullet / nothing
+MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
+         bullet / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
 MONS:    kobold; club / big kobold w:1; club | short sword w:2 / nothing
@@ -1614,7 +1615,7 @@ TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
 DEPTH:  D:2-4
 KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
-MONS:   goblin, goblin ; sling . stone, jackal
+MONS:   goblin, goblin ; hunting sling . stone, jackal
 NSUBST: . = 1:6 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx

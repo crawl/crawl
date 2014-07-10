@@ -751,6 +751,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         && x_chance_in_y(10 + item_level, 100))
     {
         return random_choose(WPN_LAJATANG,
+                             WPN_GREATSLING,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
                              WPN_DEMON_TRIDENT,
@@ -785,7 +786,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
     else
     {
-        return random_choose(WPN_SLING,
+        return random_choose(WPN_HUNTING_SLING,
                              WPN_SPEAR,
                              WPN_HAND_AXE,
                              WPN_MACE,
@@ -1097,10 +1098,10 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_SLING:
+        case WPN_HUNTING_SLING:
             if (coinflip())
                 break;
-            // **** possible intentional fall through here ****
+            // intentionally fallthrough to bow/xbow brands
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_CROSSBOW:
@@ -1110,6 +1111,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                                         11, SPWPN_VORPAL,
                                          1, SPWPN_NORMAL,
                                          0);
+            break;
+
+        case WPN_GREATSLING:
+            // totally arbitrary, first draft for "rare ranged weapon" brands
+            rc = random_choose(SPWPN_SPEED,
+                               SPWPN_FREEZING,
+                               SPWPN_FLAMING,
+                               SPWPN_EVASION,
+                               SPWPN_VORPAL,
+                               -1);
             break;
 
         case WPN_BLOWGUN:
@@ -1359,13 +1370,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (no_brand)
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
-    // If it's forced to be a good item, reroll the worst weapons.
-    while (force_good
-           && force_type == OBJ_RANDOM
-           && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING))
-    {
+    // If it's forced to be a good item, reroll clubs.
+    while (force_good && force_type == OBJ_RANDOM && item.sub_type == WPN_CLUB)
         _roll_weapon_type(item, item_level);
-    }
 
     item.plus = 0;
 

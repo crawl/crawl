@@ -140,8 +140,8 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
 
     if (!launcher)
         ammo.sub_type = MI_TOMAHAWK;
-    else if (launcher->sub_type == WPN_SLING)
-        ammo.sub_type = MI_SLING_BULLET;
+    else if (weapon_skill(*launcher) == SK_SLINGS)
+        ammo.sub_type = MI_SLING_BULLET; // ugly special case to avoid stones
     else
         ammo.sub_type = fires_ammo_type(*launcher);
 

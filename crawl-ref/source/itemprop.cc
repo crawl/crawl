@@ -341,12 +341,19 @@ static const weapon_def Weapon_prop[] =
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
         SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 0 },
-    { WPN_SLING,             "sling",               2,  2, 11,  20,  1,
+
+    { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
+    { WPN_GREATSLING,        "greatsling",          8, -1, 14,  20,  1,
+        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
+        DAMV_NON_MELEE, 2 },
+
+
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
         DAMV_NON_MELEE, 10 },
+
     { WPN_SHORTBOW,          "shortbow",            3,  1, 11,  90,  2,
         SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
         DAMV_NON_MELEE, 10 },
@@ -375,7 +382,7 @@ static const missile_def Missile_prop[] =
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
-    { MI_SLING_BULLET,  "sling bullet",  4,    4, false },
+    { MI_SLING_BULLET,  "sling bullet",  5,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
     { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
@@ -1236,7 +1243,7 @@ int weapon_rarity(int w_type)
     case WPN_FLAIL:
     case WPN_CUTLASS:
     case WPN_SHORT_SWORD:
-    case WPN_SLING:
+    case WPN_HUNTING_SLING:
     case WPN_SPEAR:
     case WPN_QUARTERSTAFF:
         return 8;
@@ -1270,6 +1277,7 @@ int weapon_rarity(int w_type)
     case WPN_SCYTHE:
     case WPN_LONGBOW:
     case WPN_LAJATANG:
+    case WPN_GREATSLING:
         return 2;
 
     case WPN_GIANT_CLUB:

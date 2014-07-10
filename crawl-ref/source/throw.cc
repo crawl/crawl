@@ -625,9 +625,13 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     case WPN_BLOWGUN:
         return;
 
-    case WPN_SLING:
+    case WPN_HUNTING_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
+        break;
+    case WPN_GREATSLING:
+        level = 3;
+        msg   = "You hear a loud whirring sound.";
         break;
      case WPN_SHORTBOW:
         level = 5;

@@ -1101,7 +1101,7 @@ ENDMAP
 NAME:    minmay_goblin_outpost
 TAGS:    no_pool_fixup
 DEPTH:   D:2-4
-MONS:    goblin / hobgoblin w:5, goblin ; sling . stone q:20
+MONS:    goblin / hobgoblin w:5, goblin ; hunting sling . stone q:20
 SUBST:   y = .WWw, Y = ...W, . = .....1
 SHUFFLE: >X/_"
 SUBST:   X = x, _ = +, " = @
@@ -1143,7 +1143,7 @@ TAGS:   patrolling
 DEPTH:  D:8-
 WEIGHT: 5
 KMONS:  1 = Joseph / cyclops, \
-            yaktaur ; quarterstaff . sling . stone / cyclops
+            yaktaur ; quarterstaff . hunting sling . stone / cyclops
 ITEM:   stone / club w:5 / large rock w:3 / quarterstaff w:1
 NSUBST: . = 4:d / 4:. / * = d:30 .:150
 MAP
@@ -1278,7 +1278,8 @@ ENDMAP
 NAME:   minmay_ruffians
 DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
-MONS:   human; sling . stone | sling bullet w:3 . animal skin | leather armour
+MONS:   human; hunting sling . stone | sling bullet w:3 . animal skin | \
+        leather armour
 SUBST:  1 = 112.
 KMONS:  3 = human; flail . ring mail | scale mail
 KITEM:  3 = %

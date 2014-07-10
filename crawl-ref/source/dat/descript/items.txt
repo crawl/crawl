@@ -578,6 +578,12 @@ great mace
 
 An enormous metal war club, of great cumbrousness.
 %%%%
+greatsling
+
+A large piece of cloth and reinforced leather, meant for launching stones. Does
+more damage when launching purpose-made projectiles, rather than rocks found on
+the floor.
+%%%%
 great sword
 
 A sword with a very long, heavy blade and a long handle.
@@ -608,6 +614,12 @@ horn of Geryon
 The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
 this unholy item has the power to call forth the aid of demonic beasts. It is
 also said, however, that the alliances of these monsters are not certain.
+%%%%
+hunting sling
+
+A piece of cloth and leather for launching stones. Does more damage when
+launching purpose-made projectiles, rather than rocks found on the floor.
+Adequate for hunting small game, like rabbits or goblins.
 %%%%
 ice dragon armour
 
@@ -1270,12 +1282,6 @@ slice of pizza
 
 A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
 basil.
-%%%%
-sling
-
-A piece of cloth and leather for launching stones, which do a small amount of
-damage on impact. Unlike with other launchers, wearing a shield does not slow
-down its rate of fire.
 %%%%
 sling bullet
 
