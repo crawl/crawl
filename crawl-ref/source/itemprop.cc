@@ -1417,7 +1417,7 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
 /**
  * Is the provided type a kind of giant club?
  *
- * @param wpn_type  The type of weapon under consideration.
+ * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a kind of giant club.
  */
 bool is_giant_club_type(int wpn_type)
@@ -1429,7 +1429,7 @@ bool is_giant_club_type(int wpn_type)
 /**
  * Is the provided type a kind of ranged weapon?
  *
- * @param wpn_type  The type of weapon under consideration.
+ * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a kind of launcher.
  */
 bool is_ranged_weapon_type(int wpn_type)
@@ -1440,7 +1440,7 @@ bool is_ranged_weapon_type(int wpn_type)
 /**
  * Is the provided type a kind of demon weapon?
  *
- * @param wpn_type  The type of weapon under consideration.
+ * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a kind of demon weapon.
  */
 bool is_demonic_weapon_type(int wpn_type)
@@ -1453,7 +1453,7 @@ bool is_demonic_weapon_type(int wpn_type)
 /**
  * Is the provided type a kind of blessed weapon?
  *
- * @param wpn_type  The type of weapon under consideration.
+ * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a kind of blessed weapon.
  */
 bool is_blessed_weapon_type(int wpn_type)
@@ -1462,10 +1462,10 @@ bool is_blessed_weapon_type(int wpn_type)
 }
 
 /**
- * Is the weapon type provided magic (& can't be generated in a usual way?)
+ * Is the weapon type provided magical (& can't be generated in a usual way)?
  * (I.e., magic staffs & rods.)
  *
- * @param wpn_type  The type of weapon under consideration.
+ * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a magic staff or rod.
  */
 bool is_magic_weapon_type(int wpn_type)
@@ -1476,8 +1476,8 @@ bool is_magic_weapon_type(int wpn_type)
 /**
  * Is the provided item a demon weapon?
  *
- * @param wpn_type  The item under consideration.
- * @return          Whether the given item is a demon weapon.
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a demon weapon.
  */
 bool is_demonic(const item_def &item)
 {
@@ -1488,8 +1488,8 @@ bool is_demonic(const item_def &item)
 /**
  * Is the provided item a blessed weapon? (Not just holy wrath.)
  *
- * @param wpn_type  The item under consideration.
- * @return          Whether the given item is a blessed weapon.
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a blessed weapon.
  */
 bool is_blessed(const item_def &item)
 {
