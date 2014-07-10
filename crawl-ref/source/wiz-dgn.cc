@@ -613,7 +613,7 @@ static void debug_load_map_by_name(string name, bool primary)
 
     if (primary)
     {
-        if (toplace->has_tag("minivault"))
+        if (toplace->is_minivault())
         {
             mpr("This is a mini-vault, can't base a layout on it.");
             return;
