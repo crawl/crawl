@@ -3225,8 +3225,14 @@ static void _place_chance_vaults()
 
 static void _place_minivaults()
 {
-    // Always try to place PLACE:X minivaults.
     const map_def *vault = NULL;
+    // First place the vault requested with &P
+    if (you.props.exists("force_minivault")
+        && (vault = find_map_by_name(you.props["force_minivault"])))
+    {
+        _dgn_ensure_vault_placed(_build_secondary_vault(vault), false);
+    }
+    // Always try to place PLACE:X minivaults.
     if ((vault = random_map_for_place(level_id::current(), true)))
         _build_secondary_vault(vault);
 
