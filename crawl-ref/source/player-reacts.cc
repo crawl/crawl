@@ -329,7 +329,9 @@ void player_reacts_to_monsters()
             monster* mon = monster_at(*ri);
             if (mon == NULL || mons_is_projectile(mon->type)
                 || mon->friendly() || mons_is_firewood(mon))
+            {
                 continue;
+            }
             ASSERT(mon);
 
             mon_threat_level_type threat_level = mons_threat_level(mon);
