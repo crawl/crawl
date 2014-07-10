@@ -884,7 +884,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             // chance of status increases with low hp
             // guaranteed at under 15% hp
-            if (random2(100) < min(0, 115 -
+            if (random2(100) < max(0, 115 -
                 div_rand_round(you.hp * 100, you.hp_max)))
             {
                 you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
@@ -896,7 +896,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             // chance of status increases with low hp
             // guaranteed at under 15% hp
-            if (random2(100) < min(0, 115 -
+            if (random2(100) < max(0, 115 -
                 div_rand_round(you.hp * 100, you.hp_max)))
             {
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
