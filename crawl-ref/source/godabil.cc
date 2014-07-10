@@ -5475,14 +5475,13 @@ void ru_do_sacrifice(ability_type sacrifice)
                     -you.skill_points[mutation_skill], true);
                 you.stop_train.insert(mutation_skill);
 
-                for (int j = 0; j < 52; ++j)
+                for (int j = 0; j < MAX_KNOWN_SPELLS; ++j)
                 {
-                    const char letter = index_to_letter(j);
-                    const spell_type spell = get_spell_by_letter(letter);
+                    const spell_type spell = you.spells[j];
                     if (!is_valid_spell(spell))
                         continue;
                     if (spell_typematch(spell,
-                        skill2spell_type(mutation_skill)))
+                                        skill2spell_type(mutation_skill)))
                     {
                         del_spell_from_memory_by_slot(j);
                     }
