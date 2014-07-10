@@ -713,8 +713,7 @@ A sword with a long, slashing blade.
 %%%%
 longbow
 
-A long, strong bow made of yew. It does excellent damage in combat and a
-skilled archer can use it to great effect.
+A long, strong bow made of yew.
 %%%%
 mace
 
@@ -1271,8 +1270,7 @@ attacks.
 %%%%
 shortbow
 
-A curved piece of wood and string, for shooting arrows. It does good damage in
-combat, and a skilled user can use it to great effect.
+A curved piece of wood and string, for shooting arrows.
 %%%%
 short sword
 
