@@ -354,10 +354,10 @@ static const weapon_def Weapon_prop[] =
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
         DAMV_NON_MELEE, 10 },
 
-    { WPN_SHORTBOW,          "shortbow",            3,  1, 11,  90,  2,
+    { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
         SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
         DAMV_NON_MELEE, 10 },
-    { WPN_LONGBOW,           "longbow",             6,  0, 12, 120,  3,
+    { WPN_LONGBOW,           "longbow",            15,  0, 18, 120,  3,
         SK_BOWS,         HANDS_TWO,    SIZE_LARGE,  MI_ARROW,
         DAMV_NON_MELEE, 10 },
 };
@@ -379,7 +379,7 @@ static const missile_def Missile_prop[] =
 #endif
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         2,    6, true  },
-    { MI_ARROW,         "arrow",         7,    5, false },
+    { MI_ARROW,         "arrow",         0,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
     { MI_SLING_BULLET,  "sling bullet",  5,    4, false },
