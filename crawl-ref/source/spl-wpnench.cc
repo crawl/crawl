@@ -214,7 +214,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         // XXX: To deal with the fact that is_missile_brand_ok will be
         // unhappy if we attempt to brand stones, tell it we're using
         // sling bullets instead.
-        if (weapon.sub_type == WPN_SLING)
+        if (weapon_skill(weapon) == SK_SLINGS)
             missile = MI_SLING_BULLET;
 
         if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))

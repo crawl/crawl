@@ -951,7 +951,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 10;
             break;
 
-        case WPN_SLING:
+        case WPN_HUNTING_SLING:
         case WPN_STAFF:
             valued += 15;
             break;
@@ -1036,6 +1036,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_EVENINGSTAR:
         case WPN_LAJATANG:
         case WPN_QUICK_BLADE:
+        case WPN_GREATSLING:
             valued += 150;
             break;
 

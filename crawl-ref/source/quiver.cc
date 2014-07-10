@@ -593,7 +593,8 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
     {
         case WPN_BLOWGUN:
             return AMMO_BLOWGUN;
-        case WPN_SLING:
+        case WPN_HUNTING_SLING:
+        case WPN_GREATSLING:
             return AMMO_SLING;
         case WPN_SHORTBOW:
         case WPN_LONGBOW:

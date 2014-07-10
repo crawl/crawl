@@ -502,8 +502,9 @@ static void _update_weapon(const newgame_def& ng)
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
-    case WPN_SLING:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus);
+    case WPN_HUNTING_SLING:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HUNTING_SLING, -1, 1,
+                          plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
         autopickup_starting_ammo(MI_SLING_BULLET);
 

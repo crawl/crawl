@@ -160,7 +160,7 @@ lajatang3
 %sdir item/weapon/ranged
 blowgun1 WPN_BLOWGUN
 blowgun2
-sling1 WPN_SLING
+sling1 WPN_HUNTING_SLING
 sling2
 
 %rim 0

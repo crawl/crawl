@@ -285,7 +285,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_SLING;
+            item.sub_type  = WPN_HUNTING_SLING;
             break;
         }
         // deliberate fall through {dlb}
@@ -443,7 +443,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only)
         {
             item.base_type  = OBJ_WEAPONS;
-            item.sub_type   = WPN_SLING;
+            item.sub_type   = WPN_HUNTING_SLING;
             break;
         }
         item.base_type      = OBJ_WEAPONS;
@@ -885,7 +885,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_FAUN:
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
-            item.sub_type = (mon->type == MONS_SATYR ? WPN_LONGBOW : WPN_SLING);
+        {
+            item.sub_type = (mon->type == MONS_SATYR ? WPN_GREATSLING
+                                                     : WPN_HUNTING_SLING);
+        }
         else
         {
             item.sub_type = random_choose_weighted(2, WPN_SPEAR,
@@ -938,7 +941,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only)
         {
             item.base_type  = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_SLING,
+            item.sub_type  = random_choose(WPN_HUNTING_SLING,
+                                           WPN_GREATSLING,
                                            WPN_SHORTBOW,
                                            WPN_LONGBOW,
                                            -1);
@@ -1808,7 +1812,7 @@ static void _give_shield(monster* mon, int level)
 
     case MONS_CHERUB:
         if (main_weap && main_weap->base_type == OBJ_WEAPONS
-            && main_weap->sub_type == WPN_SLING)
+            && weapon_skill(*main_weap) == SK_SLINGS)
         {
             // Big shields interfere with ranged combat, at least theme-wise.
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
