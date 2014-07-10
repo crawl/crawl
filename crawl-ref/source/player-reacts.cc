@@ -350,8 +350,6 @@ void player_reacts_to_monsters()
 
         for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
         {
-            const coord_def pos = *ri;
-
             monster* mon = monster_at(*ri);
             if (mon == NULL || mons_is_projectile(mon->type)
                 || mon->friendly() || mons_is_firewood(mon))
