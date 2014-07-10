@@ -125,6 +125,12 @@ scythe "Finisher"
 
 A long and sharp scythe, specially modified to be quickly swung in combat.
 %%%%
+# TAG_MAJOR_VERSION == 34
+sling "Punk"
+
+A sling made of weird blue leather. Originally the weapon of a notorious
+mischief-maker and general scamp, it's since fallen into less savoury hands.
+%%%%
 greatsling "Punk"
 
 A sling made of weird blue leather. Originally the weapon of a notorious
