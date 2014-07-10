@@ -179,11 +179,8 @@ monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
             if (depth < pop->minr || depth > pop->maxr)
                 continue;
 
-            if (veto && (*veto)(pop->value)
-                || !veto && picker.veto(pop->value))
-            {
+            if (veto ? (*veto)(pop->value) : picker.veto(pop->value))
                 continue;
-            }
 
             int rar = picker.rarity_at(pop, depth);
             ASSERT(rar > 0);

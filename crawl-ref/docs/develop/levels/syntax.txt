@@ -405,9 +405,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
           * "overwritable": Lets the dungeon builder overwrite this vault with
              other ones. Don't use this casually.
-          * "can_overwrite": Tells the dungeon builder that this vault can be
-             placed on top of other vaults, even those without the
-             "overwritable" tag. Don't use this casually.
+          * "overwrite_floor_cell": Tells the dungeon builder that this vault
+             intends to overwrite a single floor cell, possibly inside another
+             vault, even if that vault does not have the "overwritable" tag.
+             This tag can only be applied to 1x1 vaults.  Don't use it casually.
           * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
@@ -450,7 +451,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              purposes of level connectivity. By default, vaults are considered
              non-passable regardless of their contents. With this tag, the
              actual terrain of the vault affects its passability as seen by the
-             dungeon builder.
+             dungeon builder. A disconnected region inside a transparent vault
+             will cause a veto of the level (but see the "opaque" KMASK below).
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
           should only be used for vaults with ORIENT encompass or with PLACE.
@@ -545,14 +547,6 @@ ITEM:     (list of items, separated by comma)
             carrion.
             All of these are usable in map definitions, apart from "orb" and
             "carrion".
-          * "race:race_name", where "race_name" is "elven", "dwarven" or
-            "orcish"; it can also be "none" or "no_race" to prevent the item
-            from being randomly being made racial. Has no effect if the item
-            can't take that kind of racial setting.
-            NOTE: Can result in a non-racial item if used with "any" and the
-            chosen item isn't compatible with the desired race. If race is not
-            explicitly set, this can result in boots being replaced by a
-            barding.
           * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
@@ -813,9 +807,6 @@ MONS:     (list of monsters)
           with will be removed and destroyed. This can be used to force
           a monster to have no items whatsoever:
               MONS: orc; nothing
-
-          Items given to an orc, dwarf or elf will be made orcish, dwarven
-          or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters derived from that monster
@@ -1377,15 +1368,19 @@ KMASK:    Z = no_monster_gen
           symbols, rather than for the entire vault like if you did it
           with TAGS. Valid masks are
 
-          * "no_item_gen":   Prevents random item on that symbol. Items
+          * "no_item_gen": Prevents random item on that symbol. Items
              explicitly placed on that symbol aren't affected.
           * "no_monster_gen": Prevents random monster generation on that
              symbol.
           * "no_trap_gen": Prevents random trap generation on that symbol.
-          * "no_pool_fixup": prevents a water square next to land from being
+          * "no_pool_fixup": Prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
-          * "no_wall_fixup": prevents (rock) walls from being converted to
+          * "no_wall_fixup": Prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
+          * "opaque": Overrides the "transparent" tag for this particular
+             symbol. The symbol is considered impassible for level-building
+             purposes. A "transparent" vault with a deliberately disconnected
+             region must use this mask on the disconnected part.
 
           For example
 

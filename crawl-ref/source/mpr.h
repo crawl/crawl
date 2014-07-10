@@ -83,6 +83,9 @@ enum diag_type
     DIAG_BEAM,
     DIAG_ABYSS,
     DIAG_MONPLACE,
+#ifdef DEBUG_MONSPEAK
+    DIAG_SPEECH,
+#endif
     NUM_DIAGNOSTICS
 };
 

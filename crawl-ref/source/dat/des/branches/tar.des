@@ -872,7 +872,7 @@ NSUBST: ! = 2:. / *:c
 NSUBST: ? = 2:. / *:c
 NSUBST: ^ = 2:. / *:c
 KMONS:  E = spectral kraken
-KMONS:  F = spectral shark / spectral big fish
+KMONS:  F = spectral swamp worm
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)

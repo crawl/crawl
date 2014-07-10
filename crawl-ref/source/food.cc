@@ -17,6 +17,7 @@
 #include "options.h"
 
 #include "artefact.h"
+#include "butcher.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -334,69 +335,6 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     return contam;
 }
 
-int count_corpses_in_pack(bool blood_only)
-{
-    int num = 0;
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def &obj(you.inv[i]);
-
-        if (!obj.defined())
-            continue;
-
-        // Only actually count corpses, not skeletons.
-        if (obj.base_type != OBJ_CORPSES || obj.sub_type != CORPSE_BODY)
-            continue;
-
-        // Only saprovorous characters care about rotten food.
-        if (food_is_rotten(obj) && (blood_only
-                                    || !player_mutation_level(MUT_SAPROVOROUS)))
-        {
-            continue;
-        }
-
-        if (!blood_only || mons_has_blood(obj.mon_type))
-            num++;
-    }
-
-    return num;
-}
-
-static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
-{
-    const int num = count_corpses_in_pack(bottle_blood);
-
-    if (num == 0)
-        return false;
-
-    string verb = (bottle_blood ? "bottle" : "butcher");
-
-    string noun, pronoun;
-    if (num == 1)
-    {
-        noun    = "corpse";
-        pronoun = "it";
-    }
-    else
-    {
-        noun    = "corpses";
-        pronoun = "them";
-    }
-
-    if (remind)
-    {
-        mprf("You might want to also %s the %s in your pack.", verb.c_str(),
-             noun.c_str());
-    }
-    else
-    {
-        mprf("If you dropped the %s in your pack you could %s %s.",
-             noun.c_str(), verb.c_str(), pronoun.c_str());
-    }
-
-    return true;
-}
-
 #ifdef TOUCH_UI
 static string _butcher_menu_title(const Menu *menu, const string &oldt)
 {
@@ -408,8 +346,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
-        if (!_have_corpses_in_pack(false, bottle_blood))
-            mpr("There isn't anything here!");
+        mpr("There isn't anything here!");
         return false;
     }
 
@@ -455,11 +392,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (num_corpses == 0)
     {
-        if (!_have_corpses_in_pack(false, bottle_blood))
-        {
-            mprf("There isn't anything to %s here.",
-                 bottle_blood ? "bottle" : "butcher");
-        }
+        mprf("There isn't anything to %s here.",
+             bottle_blood ? "bottle" : "butcher");
         return false;
     }
 
@@ -477,12 +411,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             return false;
         }
 
-        success = _corpse_butchery(corpse_id, true, bottle_blood);
-
-        // Remind player of corpses in pack that could be butchered or
-        // bottled.
-        _have_corpses_in_pack(true, bottle_blood);
-        return success;
+        return _corpse_butchery(corpse_id, true, bottle_blood);
     }
 
     // Now pick what you want to butcher. This is only a problem
@@ -573,7 +502,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return false;
+                    return success;
 
                 case '?':
                     show_butchering_help();
@@ -606,18 +535,15 @@ bool butchery(int which_corpse, bool bottle_blood)
              bottle_blood ? "bottle" : "butcher");
     }
 
-    if (success)
-    {
-        // Remind player of corpses in pack that could be butchered or
-        // bottled.
-        _have_corpses_in_pack(true, bottle_blood);
-    }
-
     return success;
 }
 
 bool prompt_eat_inventory_item(int slot)
 {
+    // There's nothing in inventory that a vampire can 'e'.
+    if (you.species == SP_VAMPIRE)
+        return false;
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -628,14 +554,10 @@ bool prompt_eat_inventory_item(int slot)
 
     if (slot == -1)
     {
-        which_inventory_slot =
-                prompt_invent_item(you.species == SP_VAMPIRE ? "Drain what?"
-                                                             : "Eat which item?",
-                                   MT_INVLIST,
-                                   you.species == SP_VAMPIRE ? (int)OSEL_VAMP_EAT
-                                                             : OBJ_FOOD,
-                                   true, true, true, 0, -1, NULL,
-                                   OPER_EAT);
+        which_inventory_slot = prompt_invent_item("Eat which item?",
+                                                  MT_INVLIST, OBJ_FOOD,
+                                                  true, true, true, 0, -1,
+                                                  NULL, OPER_EAT);
 
         if (prompt_failed(which_inventory_slot))
             return false;
@@ -644,21 +566,10 @@ bool prompt_eat_inventory_item(int slot)
     // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
     item_def &item(you.inv[which_inventory_slot]);
-    if (you.species != SP_VAMPIRE)
+    if (item.base_type != OBJ_FOOD)
     {
-        if (item.base_type != OBJ_FOOD)
-        {
-            mpr("You can't eat that!");
-            return false;
-        }
-    }
-    else
-    {
-        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        {
-            mpr("You crave blood!");
-            return false;
-        }
+        mpr("You can't eat that!");
+        return false;
     }
 
     if (!can_ingest(item, false))
@@ -715,7 +626,7 @@ bool eat_food(int slot)
         {
             if (you.visible_igrd(you.pos()) != NON_ITEM)
             {
-                result = eat_from_floor(true);
+                result = eat_from_floor();
                 if (result == 1)
                     return true;
                 if (result == -1)
@@ -723,6 +634,9 @@ bool eat_food(int slot)
             }
         }
     }
+
+    if (you.species == SP_VAMPIRE)
+        mpr("There's nothing here to drain!");
 
     return prompt_eat_inventory_item(slot);
 }
@@ -917,6 +831,7 @@ bool eat_item(item_def &food)
 
         if (_vampire_consume_corpse(link, in_inventory(food)))
         {
+            count_action(CACT_EAT, -1);
             you.turn_is_over = true;
             return true;
         }
@@ -935,6 +850,7 @@ bool eat_item(item_def &food)
 
     you.turn_is_over = true;
 
+    count_action(CACT_EAT, food.sub_type);
     if (in_inventory(food))
         dec_inv_item_quantity(link, 1);
     else
@@ -984,14 +900,15 @@ static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
     return oldt;
 }
 #endif
+
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
-int eat_from_floor(bool skip_chunks)
+int eat_from_floor()
 {
     if (!_eat_check())
         return false;
 
     // Corpses should have been handled before.
-    if (you.species == SP_VAMPIRE && skip_chunks)
+    if (you.species == SP_VAMPIRE)
         return 0;
 
     bool need_more = false;
@@ -1003,37 +920,13 @@ int eat_from_floor(bool skip_chunks)
     vector<item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (you.species == SP_VAMPIRE)
-        {
-            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                continue;
-
-            if (!mons_has_blood(si->mon_type))
-            {
-                unusable_corpse++;
-                continue;
-            }
-        }
-        else
-        {
-            if (si->base_type != OBJ_FOOD)
-                continue;
-
-            // Chunks should have been handled before.
-            if (skip_chunks && si->sub_type == FOOD_CHUNK)
-                continue;
-
-            if (is_bad_food(*si))
-                continue;
-        }
-
-        if (!skip_chunks && food_is_rotten(*si)
-            && !_player_can_eat_rotten_meat())
-        {
-            unusable_corpse++;
+        if (si->base_type != OBJ_FOOD)
             continue;
-        }
-        else if (!can_ingest(*si, true))
+
+        if (is_bad_food(*si))
+            continue;
+
+        if (!can_ingest(*si, true))
         {
             if (!inedible_food)
             {
@@ -1062,8 +955,7 @@ int eat_from_floor(bool skip_chunks)
 #ifdef TOUCH_UI
         vector<SelItem> selected =
             select_items(food_items,
-                         you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
-                         false, MT_SELONE, _floor_eat_menu_title);
+                         "Eat", false, MT_SELONE, _floor_eat_menu_title);
         redraw_screen();
         for (int i = 0, count = selected.size(); i < count; ++i)
         {
@@ -1082,7 +974,7 @@ int eat_from_floor(bool skip_chunks)
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
-                 (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
+                 "Eat",
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
@@ -1118,14 +1010,7 @@ int eat_from_floor(bool skip_chunks)
         // Give a message about why these food items can not actually be eaten.
         if (unusable_corpse)
         {
-            if (you.species == SP_VAMPIRE)
-            {
-                mprf("%s devoid of blood.",
-                     unusable_corpse == 1 ? "This corpse is"
-                                          : "These corpses are");
-            }
-            else
-                _player_can_eat_rotten_meat(true);
+            _player_can_eat_rotten_meat(true);
             need_more = true;
         }
         else if (inedible_food)
@@ -1173,23 +1058,10 @@ bool eat_from_inventory()
             continue;
 
         item_def *item = &you.inv[i];
-        if (you.species == SP_VAMPIRE)
-        {
-            if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
-                continue;
 
-            if (!mons_has_blood(item->mon_type))
-            {
-                unusable_corpse++;
-                continue;
-            }
-        }
-        else
-        {
-            // Chunks should have been handled before.
-            if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
-                continue;
-        }
+        // Chunks should have been handled before.
+        if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
+            continue;
 
         if (is_bad_food(*item))
             continue;
@@ -1231,7 +1103,7 @@ bool eat_from_inventory()
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
-                 (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
+                 "Eat",
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
@@ -1257,16 +1129,7 @@ bool eat_from_inventory()
     {
         // Give a message about why these food items can not actually be eaten.
         if (unusable_corpse)
-        {
-            if (you.species == SP_VAMPIRE)
-            {
-                mprf("%s devoid of blood.",
-                     unusable_corpse == 1 ? "The corpse you are carrying is"
-                                          : "The corpses you are carrying are");
-            }
-            else
-                _player_can_eat_rotten_meat(true);
-        }
+            _player_can_eat_rotten_meat(true);
         else if (inedible_food)
         {
             if (inedible_food == 1)
@@ -1287,8 +1150,14 @@ bool eat_from_inventory()
     return false;
 }
 
-// Returns -1 for cancel, 1 for eaten, 0 for not eaten,
-//         -2 for skip to inventory.
+
+/** Make the prompt for chunk eating/corpse draining.
+ *
+ *  @param only_auto Don't actually make a prompt: if there are
+ *                   things to auto_eat, eat them, and exit otherwise.
+ *  @returns -1 for cancel, 1 for eaten, 0 for not eaten,
+ *           -2 for skip to inventory.
+ */
 int prompt_eat_chunks(bool only_auto)
 {
     // Full herbivores cannot eat chunks.
@@ -1337,14 +1206,11 @@ int prompt_eat_chunks(bool only_auto)
             continue;
 
         item_def *item = &you.inv[i];
-        if (you.species == SP_VAMPIRE)
-        {
-            if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
-                continue;
 
-            if (!mons_has_blood(item->mon_type))
-                continue;
-        }
+        // Vampires can't eat anything in their inventory.
+        if (you.species == SP_VAMPIRE)
+           continue;
+
         else if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
             continue;
 

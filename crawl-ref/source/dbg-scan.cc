@@ -12,6 +12,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "coord.h"
 #include "coordit.h"
@@ -29,7 +30,6 @@
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "ng-init.h"
 #include "shopping.h"

@@ -29,6 +29,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "skill_menu.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
@@ -271,30 +272,19 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_POISON:
+#if TAG_MAJOR_VERSION == 34
     case POT_STRONG_POISON:
-        if (player_res_poison() >= (pot_eff == POT_POISON ? 1 : 3))
-        {
-            mprf("You feel %s nauseous.",
-                 (pot_eff == POT_POISON) ? "slightly" : "quite");
-        }
+#endif
+        if (player_res_poison() >= 1)
+            mpr("You feel slightly nauseous.");
         else
         {
             mprf(MSGCH_WARN,
-                 "That liquid tasted %s nasty...",
-                 (pot_eff == POT_POISON) ? "very" : "extremely");
+                 "That liquid tasted very nasty...");
 
-            int amount;
-            string msg;
-            if (pot_eff == POT_POISON)
-            {
-                amount = 10 + random2avg(15, 2);
-                msg = "a potion of poison";
-            }
-            else
-            {
-                amount = 30 + random2avg(55, 2);
-                msg = "a potion of strong poison";
-            }
+            int amount = 10 + random2avg(15, 2);
+            string msg = "a potion of poison";
+
             poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
@@ -307,9 +297,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             xom_is_stimulated(50 / xom_factor);
         break;
 
-    case POT_PARALYSIS:
-        paralyse_player("a potion of paralysis");
-        xom_is_stimulated(50 / xom_factor);
+    case POT_CANCELLATION:
+        debuff_player();
         break;
 
     case POT_CONFUSION:

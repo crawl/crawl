@@ -192,9 +192,14 @@ void ash_check_bondage(bool msg)
                  ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
                     || (i == EQ_RING_EIGHT
                         && player_mutation_level(MUT_MISSING_HAND))))
+        {
             continue;
+        }
         // *Only* octopodes count these slots:
         else if (you.species != SP_OCTOPODE && i > EQ_AMULET)
+            continue;
+        // Never count the macabre finger necklace's extra ring slot.
+        else if (i == EQ_RING_AMULET)
             continue;
         else
             s = ET_JEWELS;
@@ -249,9 +254,13 @@ void ash_check_bondage(bool msg)
     // kittehs don't obey hoomie rules!
     if (you.species == SP_FELID)
     {
-        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+        for (int i = EQ_LEFT_RING; i <= EQ_AMULET; ++i)
             if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
                 ++you.bondage_level;
+
+        // Allow full bondage when all available slots are cursed.
+        if (you.bondage_level == 3)
+            ++you.bondage_level;
     }
     else
         for (int i = ET_WEAPON; i < NUM_ET; ++i)

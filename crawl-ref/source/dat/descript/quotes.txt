@@ -757,11 +757,6 @@ battlesphere
 Rule 4: Close air support covereth a multitude of sins.
     -The Seven Habits of Highly Effective Pirates
 %%%%
-big fish
-
-“And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
-%%%%
 blowgun
 
 “Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
@@ -1607,13 +1602,6 @@ lasher statue
  Which slashes the flesh, lacerates the back”
     -Samael, “Flagellation”
 %%%%
-lava worm
-
-“Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos
-(Greek, =worm), masculine, ‘lava-worm’ for the locality, springs in the lava
-beds of Shasta County, Calif., from which topotypes were taken.”
-    -_Proceedings of the United States National Musem_. 1968.
-%%%%
 leather armour
 
 “Nought can Deform the Human race
@@ -1957,7 +1945,7 @@ potion of poison
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of strong poison
+potion of curing
 
 “But if when you say "whiskey" you mean the oil of conversation,
  the philosophic wine, the ale that is consumed when good fellows
@@ -2524,12 +2512,21 @@ slime creature
  Upon the slimy sea.”
     -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
-sling
+hunting sling
 
 “And David put his hand in his bag, and took thence a stone, and slang it, and
 smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
+%%%%
+greatsling
+
+“Thrice whirling round his head
+ The whistling thong, Mezentius took his aim.
+ Clean through his temples hissed the molten lead,
+ And prostrate in the dust, the gallant youth lay dead.”
+    -Virgil, Aeneid 9
+     trans. E. Fairfax Taylor
 %%%%
 sling bullet
 

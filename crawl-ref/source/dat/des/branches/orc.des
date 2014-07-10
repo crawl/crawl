@@ -190,7 +190,6 @@ MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = beef jerky / nothing / animal skin / potion of confusion /\
-             potion of paralysis /\
              potion of degeneration / w:2 potion of haste / w:2 potion of might
 KFEAT:   1 = 1
 ITEM:    club, potion of confusion, slice of pizza, beef jerky / weight:40 nothing
@@ -915,7 +914,7 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
-MONS:   orc ; sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling . stone q:30, boulder beetle
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
 NSUBST: b = 1:2 / 5:1 / *:d

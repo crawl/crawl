@@ -186,7 +186,7 @@ spret_type cast_revivification(int pow, bool fail)
 
 spret_type cast_swiftness(int power, bool fail)
 {
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return SPRET_ABORT;

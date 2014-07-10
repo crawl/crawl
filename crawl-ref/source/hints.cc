@@ -1485,15 +1485,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and can also be sacrificed to some gods. ";
 
-        if (!Options.show_gold_turns)
-        {
-            text << "Whenever you pick up some gold, your current amount will "
-                    "be mentioned. If you'd like to check your wealth at other "
-                    "times, you can press <w>%</w>. It will also be "
-                    "listed on the <w>%</w> screen.";
-            cmd.push_back(CMD_LIST_GOLD);
-            cmd.push_back(CMD_RESISTS_SCREEN);
-        }
+        text << "Whenever you pick up some gold, your current amount will "
+                "be mentioned. If you'd like to check your wealth at other "
+                "times, you can press <w>$</w>. It will also be "
+                "listed on the <w>%</w> screen.";
+        cmd.push_back(CMD_LIST_GOLD);
+        cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
     case HINT_SEEN_STAIRS:
@@ -2039,14 +2036,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_ROTTEN_FOOD:
         if (!crawl_state.game_is_hints())
         {
-            text << "One or more of the chunks or corpses you carry has "
-                    "started to rot. While some species can eat rotten "
-                    "meat, you can't.";
+            text << "One or more of the chunks you carry has started to rot. "
+                    "While some species can eat rotten meat, you can't.";
             break;
         }
-        text << "One or more of the chunks or corpses you carry has started "
-                "to rot. Few species can digest these, so you might just as "
-                "well <w>%</w>rop them now. "
+        text << "One or more of the chunks you carry has started to rot. Few "
+                "species can digest these, so you might just as well "
+                "<w>%</w>rop them now. "
                 "When selecting items from a menu, there's a shortcut "
                 "(<w>,</w>) to select all items in your inventory at once "
                 "that are useless to you.";
@@ -3456,8 +3452,7 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "skeletons, corpses and rotten chunks in your "
-                            "inventory. ";
+                            "rotten chunks in your inventory. ";
                     cmd.push_back(CMD_DROP);
                     cmd.push_back(CMD_DROP);
                 }
@@ -3656,9 +3651,9 @@ void hints_describe_item(const item_def &item)
 
                 if (in_inventory(item))
                 {
-                    ostr << " In the drop menu you can select all skeletons, "
-                            "corpses, and rotten chunks in your inventory "
-                            "at once with <w>%&</w>.";
+                    ostr << " In the drop menu you can select all rotten "
+                            " chunks in your inventory at once with "
+                            "<w>%&</w>.";
                     cmd.push_back(CMD_DROP);
                 }
                 break;
@@ -3686,22 +3681,11 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "skeletons and rotten chunks or corpses in your "
-                            "inventory. ";
+                            "rotten chunks in your inventory. ";
                     cmd.push_back(CMD_DROP);
                     cmd.push_back(CMD_DROP);
                 }
                 ostr << "No god will accept such rotten sacrifice, either.";
-            }
-            else
-            {
-#ifdef USE_TILE
-                ostr << " For an individual corpse in your inventory, the most "
-                        "practical way to chop it up is to drop it by clicking "
-                        "on it with your <w>left mouse button</w> while "
-                        "<w>Shift</w> is pressed, and then repeat that command "
-                        "for the corpse tile now lying on the floor.";
-#endif
             }
             if (!in_inventory(item))
                 break;

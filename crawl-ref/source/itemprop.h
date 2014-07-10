@@ -86,6 +86,10 @@ hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);
 
 bool is_giant_club_type(int wpn_type) IMMUTABLE;
+bool is_ranged_weapon_type(int wpn_type) IMMUTABLE;
+bool is_blessed_weapon_type(int wpn_type) IMMUTABLE;
+bool is_demonic_weapon_type(int wpn_type) IMMUTABLE;
+bool is_magic_weapon_type(int wpn_type) IMMUTABLE;
 
 bool is_demonic(const item_def &item) PURE;
 bool is_blessed(const item_def &item) PURE;

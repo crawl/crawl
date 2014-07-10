@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -34,7 +35,6 @@
 #include "kills.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -49,6 +49,7 @@
 #include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
@@ -1283,8 +1284,8 @@ bool monster::pickup(item_def &item, int slot, int near)
                 pos());
 
             pickup_message(item, near);
-            inc_mitm_item_quantity(inv[slot], item.quantity);
             merge_item_stacks(item, dest);
+            inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
             equip(item, slot, near);
             lose_pickup_energy();
@@ -1368,15 +1369,6 @@ bool monster::drop_item(int eslot, int near)
                 equip(*pitem, eslot, near);
 
             return false;
-        }
-
-        if (friendly() && item_index != NON_ITEM)
-        {
-            // move_item_to_grid could change item_index, so
-            // update pitem.
-            pitem = &mitm[item_index];
-
-            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
         }
     }
 
@@ -3190,26 +3182,20 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
-bool monster::backlit(bool check_haloed, bool self_halo) const
+bool monster::backlit(bool self_halo) const
 {
-    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
-        return true;
-    if (check_haloed)
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
+        || has_ench(ENCH_SILVER_CORONA))
     {
-        return !umbraed() && haloed() &&
-               (self_halo || halo_radius2() == -1);
+        return true;
     }
-    return false;
+
+    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
 }
 
-bool monster::umbra(bool check_haloed, bool self_halo) const
+bool monster::umbra() const
 {
-    if (check_haloed)
-    {
-        return umbraed() && !haloed() &&
-               (self_halo || umbra_radius2() == -1);
-    }
-    return false;
+    return umbraed() && !haloed();
 }
 
 bool monster::glows_naturally() const
@@ -3293,14 +3279,21 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
 }
 
+/**
+ * Returns whether the monster currently has any kind of shield.
+ */
+bool monster::shielded() const
+{
+    return shield();
+}
+
 int monster::shield_bonus() const
 {
     const item_def *shld = const_cast<monster* >(this)->shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
-        // Note that 0 is not quite no-blocking.
         if (incapacitated())
-            return 0;
+            return -100;
 
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
@@ -5271,7 +5264,6 @@ static bool _mons_is_fiery(int mc)
            || mc == MONS_FIRE_ELEMENTAL
            || mc == MONS_EFREET
            || mc == MONS_AZRAEL
-           || mc == MONS_LAVA_WORM
            || mc == MONS_LAVA_SNAKE
            || mc == MONS_SALAMANDER
            || mc == MONS_SALAMANDER_FIREBRAND
@@ -6221,7 +6213,7 @@ void monster::steal_item_from_player()
         else
         {
             // Else create a new item for this pile of gold.
-            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0);
             if (idx == NON_ITEM)
                 return;
 
@@ -6450,8 +6442,11 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis(bool calc_unid, bool items) const
 {
-    if (mons_genus(type) == MONS_FORMICID)
+    if (mons_genus(type) == MONS_FORMICID
+        || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
+    {
         return true;
+    }
 
     return actor::stasis(calc_unid, items);
 }

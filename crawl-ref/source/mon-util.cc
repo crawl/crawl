@@ -2303,10 +2303,47 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
     return books;
 }
 
+// get a list of unique spells from a monster's preset spellbooks
+// or in the case of ghosts their actual spells.
+unique_books get_unique_spells(const monster_info &mi)
+{
+    const vector<mon_spellbook_type> books = get_spellbooks(mi);
+    const size_t num_books = books.size();
+
+    unique_books result;
+    for (size_t i = 0; i < num_books; ++i)
+    {
+        const mon_spellbook_type book = books[i];
+        vector<spell_type> spells;
+
+        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        {
+            spell_type spell;
+            if (book == MST_GHOST)
+                spell = mi.spells[j];
+            else
+                spell = mspell_list[book].spells[j];
+
+            bool match = false;
+
+            for (size_t k = 0; k < spells.size(); ++k)
+                if (spell == spells[k])
+                    match = true;
+
+            if (!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE)
+                spells.push_back(spell);
+        }
+
+        result.push_back(spells);
+    }
+
+    return result;
+}
+
 static void _mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
-    mon_spellbook_type book = books[random2(books.size())];
+    const mon_spellbook_type book = books[random2(books.size())];
 
     if (book == MST_GHOST)
         return mon->load_ghost_spells();

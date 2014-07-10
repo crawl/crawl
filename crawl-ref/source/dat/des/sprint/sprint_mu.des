@@ -172,7 +172,7 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
- potion of mutation / potion of decay / potion of strong poison
+ potion of mutation / potion of decay
 SUBST: T = t.
 
 MAP
@@ -205,7 +205,7 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
- potion of mutation / potion of decay / potion of strong poison
+ potion of mutation / potion of decay
 
 MAP
 {..x%..xxxxxxxxx.

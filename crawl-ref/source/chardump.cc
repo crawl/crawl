@@ -272,7 +272,8 @@ static void _sdump_transform(dump_params &par)
             else
             {
                 text += make_stringf("You %s grown temporary %s.",
-                                     par.se ? "had" : "have", appendage_name());
+                                     par.se ? "had" : "have",
+                                     mutation_name((mutation_type) you.attribute[ATTR_APPENDAGE]));
             }
             break;
         case TRAN_FUNGUS:
@@ -1140,6 +1141,8 @@ static string _describe_action(caction_type type)
         return "  Use";
     case CACT_STAB:
         return " Stab";
+    case CACT_EAT:
+        return "  Eat";
     default:
         return "Error";
     }
@@ -1229,6 +1232,9 @@ static string _describe_action_subtype(caction_type type, int subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STAB);
         ASSERT_RANGE(subtype, 1, NUM_STAB);
         return _stab_names[subtype];
+    case CACT_EAT:
+        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
+                            : "Corpse";
     default:
         return "Error";
     }

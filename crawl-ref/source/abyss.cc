@@ -14,6 +14,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -281,15 +282,14 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
     if (places_found)
     {
         dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
-        int thing_created = items(1, OBJ_MISCELLANY,
-                                  MISC_RUNE_OF_ZOT, true, 0, 0);
-        if (thing_created != NON_ITEM)
+        int item_ind  = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
+        if (item_ind != NON_ITEM)
         {
-            mitm[thing_created].plus = RUNE_ABYSSAL;
-            item_colour(mitm[thing_created]);
+            mitm[item_ind].plus = RUNE_ABYSSAL;
+            item_colour(mitm[item_ind]);
         }
-        move_item_to_grid(&thing_created, chosen_spot);
-        return thing_created != NON_ITEM;
+        move_item_to_grid(&item_ind, chosen_spot);
+        return item_ind != NON_ITEM;
     }
 
     return false;

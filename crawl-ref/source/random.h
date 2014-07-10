@@ -103,7 +103,6 @@ struct dice_def
 };
 
 dice_def calc_dice(int num_dice, int max_damage);
-void scale_dice(dice_def &dice, int threshold = 24);
 
 template <typename T>
 void shuffle_array(T* arr, int n)

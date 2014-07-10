@@ -475,8 +475,7 @@ static string _no_selectables_message(int item_selector)
     case OSEL_ENCH_ARM:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
-    case OSEL_VAMP_EAT:
-        return "You don't have any corpses which you can drain.";
+        return "You don't have any corpses.";
     case OSEL_DRAW_DECK:
         return "You aren't carrying any decks from which to draw.";
     case OBJ_FOOD:
@@ -1181,10 +1180,6 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_FOOD:
         return itype == OBJ_FOOD && !is_inedible(i);
 
-    case OSEL_VAMP_EAT:
-        return itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-               && !food_is_rotten(i) && mons_has_blood(i.mon_type);
-
     case OSEL_DRAW_DECK:
         return is_deck(i);
 
@@ -1724,7 +1719,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
         && item.sub_type == AMU_FAITH
-        && !you_worship(GOD_NO_GOD))
+        && !you_worship(GOD_NO_GOD)
+        && !you_worship(GOD_XOM))
     {
         return true;
     }

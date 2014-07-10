@@ -32,6 +32,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -67,6 +68,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "spl-wpnench.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"
@@ -3030,8 +3032,10 @@ static void tag_read_you(reader &th)
         if (you.props.exists("napalm_aux"))
             you.props["sticky_flame_aux"] = you.props["napalm_aux"];
     }
-    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists("orig brand"))
-        you.props["orig brand"] = SPWPN_NORMAL;
+
+    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists(ORIGINAL_BRAND_KEY))
+        you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
+
     if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_DATA)
     {
         you.props["available_sacrifices"].new_vector(SV_INT);
@@ -3041,6 +3045,7 @@ static void tag_read_you(reader &th)
         you.props["current_arcane_sacrifices"].new_vector(SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
     }
+
     if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_RENAME)
     {
         you.props["ru_progress_to_next_sacrifice"] = 0;
@@ -3103,11 +3108,8 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
             uint8_t x;
 
-            if (th.getMinorVersion() < TAG_MINOR_BOOK_ID
-                && i == OBJ_BOOKS)
-            {
+            if (th.getMinorVersion() < TAG_MINOR_BOOK_ID && i == OBJ_BOOKS)
                 x = ID_UNKNOWN_TYPE;
-            }
             else
                 x = unmarshallUByte(th);
 
@@ -4009,6 +4011,11 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         feature = DNGN_CLOSED_DOOR;
     if (feature == DNGN_BADLY_SEALED_DOOR)
         feature = DNGN_SEALED_DOOR;
+    if (feature == DNGN_ESCAPE_HATCH_UP
+        && you.where_are_you == BRANCH_LABYRINTH)
+    {
+        feature = DNGN_EXIT_LABYRINTH;
+    }
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -4640,6 +4647,11 @@ static void tag_read_level(reader &th)
                 grd[i][j] = DNGN_CLOSED_DOOR;
             if (feat == DNGN_BADLY_SEALED_DOOR)
                 grd[i][j] = DNGN_SEALED_DOOR;
+            if (feat == DNGN_ESCAPE_HATCH_UP
+                && you.where_are_you == BRANCH_LABYRINTH)
+            {
+                grd[i][j] = DNGN_EXIT_LABYRINTH;
+            }
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
@@ -5186,6 +5198,9 @@ void unmarshallMonster(reader &th, monster& m)
         if (m.type == MONS_WAR_DOG)
             m.type = MONS_WOLF;
     }
+
+    if (m.props.exists("no_hide"))
+        m.props[NEVER_HIDE_KEY] = true;
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -5226,42 +5241,44 @@ static void tag_read_level_monsters(reader &th)
         monster& m = menv[i];
         unmarshallMonster(th, m);
 
+        // place monster
+        if (!m.alive())
+            continue;
+
+        // companion_is_elsewhere checks the mid cache
+        env.mid_cache[m.mid] = i;
         if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
         {
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
             monster_die(&m, KILL_RESET, -1, true, false);
+            continue;
         }
 
-        // place monster
-        if (m.alive())
-        {
-            env.mid_cache[m.mid] = i;
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
-            if (invalid_monster_type(m.type))
-            {
-                mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
-                     i, m.name(DESC_PLAIN, true).c_str());
-            }
-            if (!in_bounds(m.pos()))
-            {
-                mprf(MSGCH_ERROR,
-                     "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
-                     i, m.name(DESC_PLAIN, true).c_str(),
-                     m.pos().x, m.pos().y);
-            }
-            int midx = mgrd(m.pos());
-            if (midx != NON_MONSTER)
-            {
-                mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
-                     m.pos().x, m.pos().y,
-                     m.name(DESC_PLAIN, true).c_str(),
-                     menv[midx].name(DESC_PLAIN, true).c_str());
-            }
-#endif
-            mgrd(m.pos()) = i;
+        if (invalid_monster_type(m.type))
+        {
+            mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
+                 i, m.name(DESC_PLAIN, true).c_str());
         }
+        if (!in_bounds(m.pos()))
+        {
+            mprf(MSGCH_ERROR,
+                 "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
+                 i, m.name(DESC_PLAIN, true).c_str(),
+                 m.pos().x, m.pos().y);
+        }
+        int midx = mgrd(m.pos());
+        if (midx != NON_MONSTER)
+        {
+            mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
+                 m.pos().x, m.pos().y,
+                 m.name(DESC_PLAIN, true).c_str(),
+                 menv[midx].name(DESC_PLAIN, true).c_str());
+        }
+#endif
+        mgrd(m.pos()) = i;
     }
 #if TAG_MAJOR_VERSION == 34
     // This relies on TAG_YOU (including lost monsters) being unmarshalled

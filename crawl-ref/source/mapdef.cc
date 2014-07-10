@@ -33,7 +33,6 @@
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "misc.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -42,6 +41,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-util.h"
 #include "spl-book.h"
 #include "stuff.h"
@@ -579,7 +579,7 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
-void map_lines::apply_grid_overlay(const coord_def &c)
+void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
 {
     if (!overlay.get())
         return;
@@ -588,6 +588,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
         for (int x = width() - 1; x >= 0; --x)
         {
             coord_def gc(c.x + x, c.y + y);
+            if (is_layout && map_masked(gc, MMT_VAULT))
+                continue;
 
             const int colour = (*overlay)(x, y).colour;
             if (colour)
@@ -671,10 +673,10 @@ void map_lines::apply_grid_overlay(const coord_def &c)
         }
 }
 
-void map_lines::apply_overlays(const coord_def &c)
+void map_lines::apply_overlays(const coord_def &c, bool is_layout)
 {
     apply_markers(c);
-    apply_grid_overlay(c);
+    apply_grid_overlay(c, is_layout);
 }
 
 const vector<string> &map_lines::get_lines() const
@@ -2844,6 +2846,9 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         if (!err.empty())
             return err;
     }
+
+    if (has_tag("overwrite_floor_cell") && (map.width() != 1 || map.height() != 1))
+        return "Map tagged 'overwrite_floor_cell' must be 1x1";
 
     // Abyssal vaults have additional size and orientation restrictions.
     if (has_tag("abyss") || has_tag("abyss_rune"))

@@ -578,6 +578,12 @@ great mace
 
 An enormous metal war club, of great cumbrousness.
 %%%%
+greatsling
+
+A large piece of cloth and reinforced leather, meant for launching stones. Does
+more damage when launching purpose-made projectiles, rather than rocks found on
+the floor.
+%%%%
 great sword
 
 A sword with a very long, heavy blade and a long handle.
@@ -608,6 +614,12 @@ horn of Geryon
 The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
 this unholy item has the power to call forth the aid of demonic beasts. It is
 also said, however, that the alliances of these monsters are not certain.
+%%%%
+hunting sling
+
+A piece of cloth and leather for launching stones. Does more damage when
+launching purpose-made projectiles, rather than rocks found on the floor.
+Adequate for hunting small game, like rabbits or goblins.
 %%%%
 ice dragon armour
 
@@ -701,8 +713,7 @@ A sword with a long, slashing blade.
 %%%%
 longbow
 
-A long, strong bow made of yew. It does excellent damage in combat and a
-skilled archer can use it to great effect.
+A long, strong bow made of yew.
 %%%%
 mace
 
@@ -809,6 +820,10 @@ potion of brilliance
 A magic potion which greatly increases the intelligence and magical power of
 one who drinks it.
 %%%%
+potion of cancellation
+
+A potion which ends most magical effects, good or bad, affecting you.
+%%%%
 potion of coagulated blood
 
 A potion containing the essence of life. It is vital for all living creatures,
@@ -876,10 +891,6 @@ potion of mutation
 
 A potion which does very strange things to you.
 %%%%
-potion of paralysis
-
-A potion which causes paralysis.
-%%%%
 potion of poison
 
 A nasty poisonous liquid.
@@ -904,10 +915,6 @@ A potion which slows your actions.
 potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
-%%%%
-potion of strong poison
-
-A terribly venomous potion.
 %%%%
 quad damage
 
@@ -1248,10 +1255,8 @@ although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-This scroll cancels all magical enchantments from the reader and from beings in
-the vicinity. It also briefly halves the resistance to hostile enchantments of
-the reader and nearby beings. The latter effect does not apply to beings fully
-immune to magic.
+This briefly halves the resistance to hostile enchantments of the reader and
+nearby beings. The scroll cannot affect beings fully immune to magic.
 %%%%
 scythe
 
@@ -1265,8 +1270,7 @@ attacks.
 %%%%
 shortbow
 
-A curved piece of wood and string, for shooting arrows. It does good damage in
-combat, and a skilled user can use it to great effect.
+A curved piece of wood and string, for shooting arrows.
 %%%%
 short sword
 
@@ -1276,12 +1280,6 @@ slice of pizza
 
 A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
 basil.
-%%%%
-sling
-
-A piece of cloth and leather for launching stones, which do a small amount of
-damage on impact. Unlike with other launchers, wearing a shield does not slow
-down its rate of fire.
 %%%%
 sling bullet
 

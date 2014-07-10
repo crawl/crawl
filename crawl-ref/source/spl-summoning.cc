@@ -13,6 +13,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -1317,7 +1318,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
     {
         fail_check();
 
-        const int malign_gateway_duration = BASELINE_DELAY * (random2(4) + 4);
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(3) + 2);
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
@@ -1748,8 +1749,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
-        mpr("The flesh is too rotten for a proper zombie; "
-            "only a skeleton remains.");
+        if (as == &you)
+        {
+            mpr("The flesh is too rotten for a proper zombie; "
+                "only a skeleton remains.");
+        }
         mon = MONS_SKELETON;
     }
 

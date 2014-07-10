@@ -494,8 +494,6 @@ namespace arena
         for (int i = 0; i < NUM_STATS; ++i)
             you.base_stats[i] = 20;
 
-        Options.show_gold_turns = false;
-
         show_fight_banner();
     }
 

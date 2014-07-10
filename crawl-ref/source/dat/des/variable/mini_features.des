@@ -2627,6 +2627,32 @@ x.....wccccccw......
      ....xtx...
 ENDMAP
 
+NAME: nicolae_two_hexagons
+DEPTH: D:8-, Depths
+TAGS: transparent extra decor
+SHUFFLE: ABCDEF, GHIJK, LMNOPQ, RSTUVW
+SUBST: AGMNOPQSTUVW = ., BCDEFHIJKLR = x
+MAP
+      ......      ......
+    ..........  ..........
+  ......cc..........cc......
+......BBccCC......KKccJJ......
+....BBBBMMCCCC..KKKKSSJJJJ....
+..ccBB..MM..CCccKK..SS..JJcc..
+..ccLL..MM..NNccRR..SS..TTcc..
+..AALLLLMMNNNNDDRRRRSSTTTTII..
+..AA..LLccNN..DD..RRccTT..II..
+..AA..QQccOO..DD..WWccUU..II..
+..AAQQQQPPOOOODDWWWWVVUUUUII..
+..ccQQ..PP..OOccWW..VV..UUcc..
+..ccFF..PP..EEccGG..VV..HHcc..
+....FFFFPPEEEE..GGGGVVHHHH....
+......FFccEE......GGccHH......
+  ......cc..........cc......
+    ..........  ..........
+      ......      ......
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2901,7 +2927,7 @@ TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
-       potion of strong poison / potion of poison
+       potion of poison
 : else
 ITEM:  scroll of random uselessness / potion of degeneration / potion of poison
 : end
@@ -3082,6 +3108,27 @@ MAP
 :.ww..
 .ww...
 :...::
+ENDMAP
+
+# Wand duel gone wrong.
+NAME:   nicolae_wand_duel
+DEPTH:  D:6-
+WEIGHT: 1
+KITEM:  d = wand of disintegration charges:0 ident:all
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
+SUBST:  a = a A:4, b = b B:4
+KPROP:  ABd = bloody
+SUBST:  A = a, B = b
+NSUBST: a = 5:c / *:. , b = 5:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
+MAP
+  aaa.....bbb
+ aaaaa...bbbbb
+aaaaaaa.bbbbbbb
+aaadaaa.bbbdbbb
+aaaaaaa.bbbbbbb
+ aaaaa...bbbbb
+  aaa.....bbb
 ENDMAP
 
 NAME:  mrwooster_statue_mirror

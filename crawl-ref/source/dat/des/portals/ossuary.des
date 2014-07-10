@@ -493,7 +493,7 @@ ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
-         potion of paralysis / potion of degeneration / \
+         potion of poison / potion of degeneration / \
          potion of confusion w:20
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing

@@ -29,11 +29,11 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "rot.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -1159,7 +1159,7 @@ int acquirement_create_item(object_class_type class_wanted,
             want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted, true,
-                              ITEM_LEVEL, 0, 0, 0, agent);
+                              ITEM_LEVEL, 0, 0, agent);
 
         if (thing_created == NON_ITEM)
             continue;
@@ -1223,7 +1223,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 {
                     destroy_item(thing_created, true);
                     thing_created = items(true, OBJ_ARMOUR, at, true,
-                                          ITEM_LEVEL, 0, 0, 0, agent);
+                                          ITEM_LEVEL, 0, 0, agent);
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
                 {
@@ -1322,9 +1322,6 @@ int acquirement_create_item(object_class_type class_wanted,
             acq_item.quantity *= 5;
         else if (quant > 1)
             acq_item.quantity = quant;
-
-        if (is_blood_potion(acq_item))
-            init_stack_blood_potions(acq_item);
 
         // Remove curse flag from item, unless worshipping Ashenzari.
         if (you_worship(GOD_ASHENZARI))

@@ -7,6 +7,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "colour.h"

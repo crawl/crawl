@@ -1055,6 +1055,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
             && mons_is_evolvable(mons_target)
             || mode == TARG_HOSTILE_UNDEAD && !mons_target->friendly()
             && mons_target->holiness() == MH_UNDEAD
+            || mode == TARG_BEOGH_GIFTABLE
+            && !beogh_can_gift_items_to(mons_target)
             || mode == TARG_INJURED_FRIEND
             && (mons_target->friendly() && mons_get_damage_level(mons_target) > MDAM_OKAY
                 || (!mons_target->wont_attack()
@@ -1128,6 +1130,7 @@ coord_def direction_chooser::find_default_target() const
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
              || mode == TARG_EVOLVABLE_PLANTS
+             || mode == TARG_BEOGH_GIFTABLE
              || mode == TARG_HOSTILE_UNDEAD
              || mode == TARG_INJURED_FRIEND
              || (mode == TARG_ANY || mode == TARG_FRIEND) && cancel_at_self)
@@ -2409,6 +2412,9 @@ static bool _want_target_monster(const monster *mon, int mode)
 
     if (mode == TARG_HOSTILE_UNDEAD)
         return !mon->friendly() && mon->holiness() == MH_UNDEAD;
+
+    if (mode == TARG_BEOGH_GIFTABLE)
+        return beogh_can_gift_items_to(mon);
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())

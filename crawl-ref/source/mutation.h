@@ -78,7 +78,6 @@ struct mutation_def
     const char* have[3];    // What appears on the 'A' screen.
     const char* gain[3];    // Message when you gain the mutation.
     const char* lose[3];    // Message when you lose the mutation.
-    const char* wizname;    // For gaining it in wizmode.
 };
 
 void init_mut_index();

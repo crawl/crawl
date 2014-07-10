@@ -660,11 +660,12 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
+    case POT_STRONG_POISON:     return "strong poison";
 #endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
-    case POT_PARALYSIS:         return "paralysis";
+    case POT_CANCELLATION:      return "cancellation";
     case POT_CONFUSION:         return "confusion";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_PORRIDGE:          return "porridge";
@@ -673,7 +674,6 @@ const char* potion_type_name(int potiontype)
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_RESTORE_ABILITIES: return "restore abilities";
-    case POT_STRONG_POISON:     return "strong poison";
     case POT_BERSERK_RAGE:      return "berserk rage";
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
@@ -2321,7 +2321,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_GAIN_STRENGTH
                  || j == POT_GAIN_DEXTERITY
                  || j == POT_GAIN_INTELLIGENCE
-                 || j == POT_SLOWING))
+                 || j == POT_SLOWING
+                 || j == POT_STRONG_POISON))
             {
                 continue;
             }
@@ -2439,7 +2440,8 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->base_type = misc_list[i];
                 ptmp->sub_type  = misc_ST_list[i];
                 ptmp->colour    = 2;
-                ptmp->quantity  = 18;  //show a good amount of gold
+                //show a good amount of gold
+                ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 
                 // Make chunks fresh, non-poisonous, etc.
                 if (ptmp->base_type == OBJ_FOOD
@@ -3051,7 +3053,6 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_SLOWING:
-        case POT_PARALYSIS:
             if (you.species == SP_FORMICID)
                 return false;
         case POT_CONFUSION:
@@ -3059,8 +3060,6 @@ bool is_bad_item(const item_def &item, bool temp)
             return true;
         case POT_DECAY:
             return !you.res_rotting(false);
-        case POT_STRONG_POISON:
-            return player_res_poison(false, temp) < 3;
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
@@ -3155,7 +3154,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
 static bool _invisibility_is_useless(const bool temp)
 {
     // If you're Corona'd or a TSO-ite, this is always useless.
-    return temp ? you.backlit(true)
+    return temp ? you.backlit()
                 : you.haloed() && you_worship(GOD_SHINING_ONE);
 }
 
@@ -3221,7 +3220,8 @@ bool is_useless_item(const item_def &item, bool temp)
             && item_is_snakable(item)
             || you.has_spell(SPELL_SANDBLAST)
                && (item.sub_type == MI_STONE
-                || item.sub_type == MI_LARGE_ROCK))
+                || item.sub_type == MI_LARGE_ROCK
+                   && you.could_wield(item, true, true)))
         {
             return false;
         }
@@ -3355,10 +3355,7 @@ bool is_useless_item(const item_def &item, bool temp)
             // Spriggans could argue, but it's too small of a gain for
             // possible player confusion.
             return player_res_poison(false, temp) > 0;
-        case POT_STRONG_POISON:
-            return player_res_poison(false, temp) >= 3;
         case POT_SLOWING:
-        case POT_PARALYSIS:
             return you.species == SP_FORMICID;
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();

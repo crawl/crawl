@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -161,7 +162,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.flavour           = BEAM_HELLFIRE;
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour            = RED;
+    beam.colour            = LIGHTRED;
     beam.beam_source       = MHITYOU;
     beam.thrower           = KILL_YOU;
     beam.obvious_effect    = false;
@@ -1461,9 +1462,6 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
         // Burn poisonous potions.
         switch (item.sub_type)
         {
-        case POT_STRONG_POISON:
-            strength = 20 * item.quantity;
-            break;
         case POT_DEGENERATION:
         case POT_POISON:
             strength = 10 * item.quantity;
@@ -1758,7 +1756,6 @@ static bool maybe_abort_ignite()
         {
             switch (item.sub_type)
             {
-            case POT_STRONG_POISON:
             case POT_DEGENERATION:
             case POT_POISON:
                 prompt += "over ";

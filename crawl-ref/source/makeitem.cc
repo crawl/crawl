@@ -25,7 +25,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
@@ -752,6 +751,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         && x_chance_in_y(10 + item_level, 100))
     {
         return random_choose(WPN_LAJATANG,
+                             WPN_GREATSLING,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
                              WPN_DEMON_TRIDENT,
@@ -786,7 +786,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
     else
     {
-        return random_choose(WPN_SLING,
+        return random_choose(WPN_HUNTING_SLING,
                              WPN_SPEAR,
                              WPN_HAND_AXE,
                              WPN_MACE,
@@ -1098,10 +1098,10 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_SLING:
+        case WPN_HUNTING_SLING:
             if (coinflip())
                 break;
-            // **** possible intentional fall through here ****
+            // intentionally fallthrough to bow/xbow brands
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_CROSSBOW:
@@ -1111,6 +1111,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                                         11, SPWPN_VORPAL,
                                          1, SPWPN_NORMAL,
                                          0);
+            break;
+
+        case WPN_GREATSLING:
+            // totally arbitrary, first draft for "rare ranged weapon" brands
+            rc = random_choose(SPWPN_SPEED,
+                               SPWPN_FREEZING,
+                               SPWPN_FLAMING,
+                               SPWPN_EVASION,
+                               SPWPN_VORPAL,
+                               -1);
             break;
 
         case WPN_BLOWGUN:
@@ -1360,13 +1370,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (no_brand)
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
-    // If it's forced to be a good item, reroll the worst weapons.
-    while (force_good
-           && force_type == OBJ_RANDOM
-           && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING))
-    {
+    // If it's forced to be a good item, reroll clubs.
+    while (force_good && force_type == OBJ_RANDOM && item.sub_type == WPN_CLUB)
         _roll_weapon_type(item, item_level);
-    }
 
     item.plus = 0;
 
@@ -1409,6 +1415,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             if (random2(425) > 35 + chance)
                 break;
         }
+
+        // squash boring items.
+        if (!force_good && item.special == SPWPN_NORMAL && item.plus < 3)
+            item.plus = 0;
     }
     else
     {
@@ -1933,6 +1943,29 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     return true;
 }
 
+/**
+ * Return the number of plusses required for a type of armour to be noteable.
+ * (From plus alone.)
+ *
+ * @param armour_type   The type of armour being considered.
+ * @return              The armour plus value required to be interesting.
+ */
+static int _armour_plus_threshold(equipment_type armour_type)
+{
+    switch (armour_type)
+    {
+            // body armour is very common; squelch most of it
+        case EQ_BODY_ARMOUR:
+            return 3;
+            // shields are fairly common
+        case EQ_SHIELD:
+            return 2;
+            // aux armour is relatively uncommon
+        default:
+            return 1;
+    }
+}
+
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level)
 {
@@ -2046,6 +2079,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
+
+    // squash boring items.
+    if (!force_good && item.special == SPARM_NORMAL && item.plus > 0
+        && item.plus < _armour_plus_threshold(get_armour_slot(item)))
+    {
+        item.plus = 0;
+    }
 
     if (armour_is_hide(item))
     {
@@ -2197,36 +2237,34 @@ static void _generate_potion_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight is 1000
-            stype = random_choose_weighted(235, POT_CURING,
-                                           116, POT_HEAL_WOUNDS,
-                                            66, POT_RESTORE_ABILITIES,
-                                            53, POT_POISON,
-                                            53, POT_MIGHT,
-                                            53, POT_AGILITY,
-                                            53, POT_BRILLIANCE,
-                                            50, POT_HASTE,
-                                            28, POT_INVISIBILITY,
-                                            28, POT_FLIGHT,
-                                            28, POT_RESISTANCE,
-                                            28, POT_MAGIC,
-                                            28, POT_BERSERK_RAGE,
-                                            28, POT_MUTATION,
-                                            28, POT_LIGNIFY,
-                                            27, POT_PARALYSIS,
-                                            27, POT_CONFUSION,
-                                            23, POT_DEGENERATION,
-                                            18, POT_CURE_MUTATION,
-                                            13, POT_STRONG_POISON,
-                                             9, POT_BENEFICIAL_MUTATION,
-                                             6, POT_PORRIDGE,
-                                             1, POT_EXPERIENCE,
-                                             1, POT_DECAY,
+            // total weight is 1075
+            stype = random_choose_weighted(191, POT_CURING,
+                                            95, POT_HEAL_WOUNDS,
+                                            75, POT_RESTORE_ABILITIES,
+                                            66, POT_POISON,
+                                            66, POT_MIGHT,
+                                            66, POT_AGILITY,
+                                            66, POT_BRILLIANCE,
+                                            63, POT_HASTE,
+                                            35, POT_INVISIBILITY,
+                                            35, POT_FLIGHT,
+                                            35, POT_RESISTANCE,
+                                            35, POT_MAGIC,
+                                            35, POT_BERSERK_RAGE,
+                                            35, POT_MUTATION,
+                                            35, POT_LIGNIFY,
+                                            34, POT_CANCELLATION,
+                                            34, POT_CONFUSION,
+                                            25, POT_DEGENERATION,
+                                            23, POT_CURE_MUTATION,
+                                            12, POT_BENEFICIAL_MUTATION,
+                                            10, POT_PORRIDGE,
+                                             2, POT_EXPERIENCE,
+                                             2, POT_DECAY,
                                              0);
         }
         while (stype == POT_POISON && item_level < 1
                || stype == POT_BERSERK_RAGE && item_level < 2
-               || stype == POT_STRONG_POISON && item_level < 11
                || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
                    && --tries > 0));
 
@@ -2244,9 +2282,6 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         item.quantity = 1;
     }
-
-    if (is_blood_potion(item))
-        init_stack_blood_potions(item);
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
@@ -2261,37 +2296,34 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight:    735  if depth_mod <4
-            //                  846  otherwise
-            //                  -103 in sprint
+            // total weight:    784  if depth_mod < 4
+            //                  913  otherwise
+            //                 -112  in sprint
             item.sub_type = random_choose_weighted(
-                180, SCR_IDENTIFY,
+                200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
                  80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
-                 33, SCR_FEAR,
-                 33, SCR_MAGIC_MAPPING,
-                 33, SCR_FOG,
-                 33, SCR_RANDOM_USELESSNESS,
-                 33, SCR_RECHARGING,
-                 33, SCR_BLINKING,
-                 33, SCR_ENCHANT_ARMOUR,
-                 33, SCR_ENCHANT_WEAPON,
-                 33, SCR_AMNESIA,
+                 40, SCR_ENCHANT_ARMOUR,
+                 40, SCR_ENCHANT_WEAPON,
+                 40, SCR_RECHARGING,
+                 40, SCR_MAGIC_MAPPING,
+                 40, SCR_AMNESIA,
+                 32, SCR_FEAR,
+                 32, SCR_FOG,
+                 32, SCR_RANDOM_USELESSNESS,
+                 32, SCR_BLINKING,
                  // [Cha] don't generate noise scrolls if in sprint
-                 33, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-
-                 33, SCR_IMMOLATION,
-
+                 32, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
+                 32, SCR_IMMOLATION,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
-
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
                  0);
         }
         while (item.sub_type == NUM_SCROLLS
@@ -2637,7 +2669,6 @@ int items(bool allow_uniques,
           int force_type,          // desired SUBTYPE - enum varies by OBJ
           bool dont_place,         // don't randomly place item on level
           int item_level,          // level of the item, can differ from global
-          int rune_type,           // type of rune
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
           int agent,               // acquirement agent, if not -1
@@ -2678,6 +2709,7 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
+        // Total weight: 1960
         item.base_type = random_choose_weighted(
                                      1, OBJ_RODS,
                                      9, OBJ_STAVES,
@@ -2685,12 +2717,12 @@ int items(bool allow_uniques,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
                                    140, OBJ_FOOD,
-                                   200, OBJ_ARMOUR,
-                                   200, OBJ_WEAPONS,
-                                   200, OBJ_POTIONS,
+                                   212, OBJ_ARMOUR,
+                                   212, OBJ_WEAPONS,
+                                   176, OBJ_POTIONS,
                                    300, OBJ_MISSILES,
-                                   360, OBJ_SCROLLS,
-                                   400, OBJ_GOLD,
+                                   320, OBJ_SCROLLS,
+                                   440, OBJ_GOLD,
                                      0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
@@ -2833,13 +2865,6 @@ int items(bool allow_uniques,
     // Set brand appearance.
     item_set_appearance(item);
 
-    // Squash plusses on boring equipment.
-    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
-        && item.plus > 0 && !get_equip_desc(item) && !is_artefact(item))
-    {
-        item.plus = 0;
-    }
-
     if (dont_place)
     {
         item.pos.reset();
@@ -2944,39 +2969,16 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return false;
 
-    if (visibly_branded || is_artefact(item))
+    if (visibly_branded || is_artefact(item) || item.plus > 0)
         return true;
 
-    if (item.plus >= 3)
-        return true;
+    if (item.is_mundane())
+        return false;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
-}
-
-/**
- * Return the number of plusses required for a type of armour to glow.
- * (From plus alone.)
- *
- * @param armour_type   The type of armour being considered.
- * @return              The armour plus value required to be interesting.
- */
-static int _armour_plus_threshold(equipment_type armour_type)
-{
-    switch (armour_type)
-    {
-        // body armour is very common; squelch most of it
-        case EQ_BODY_ARMOUR:
-            return 3;
-        // shields are fairly common
-        case EQ_SHIELD:
-            return 2;
-        // aux armour is relatively uncommon
-        default:
-            return 1;
-    }
 }
 
 static bool _armour_is_visibly_special(const item_def &item)
@@ -2987,20 +2989,18 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return false;
 
-    if (visibly_branded || is_artefact(item))
+    if (visibly_branded || is_artefact(item) || item.plus > 0)
         return true;
 
     if (item.is_mundane())
         return false;
-
-    if (item.plus >= _armour_plus_threshold(get_armour_slot(item)))
-        return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
 }
+
 
 jewellery_type get_random_amulet_type()
 {

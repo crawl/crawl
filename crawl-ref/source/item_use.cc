@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -45,6 +46,7 @@
 #include "potion.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skills.h"
 #include "skills2.h"
@@ -252,7 +254,9 @@ static bool _valid_weapon_swap(const item_def &item)
     }
 
     if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+        && (item.sub_type == MI_STONE
+            || item.sub_type == MI_LARGE_ROCK
+               && you.could_wield(item, true, true)))
     {
         return you.has_spell(SPELL_SANDBLAST);
     }
@@ -2007,7 +2011,7 @@ static void _vampire_corpse_help()
     if (you.species != SP_VAMPIRE)
         return;
 
-    if (check_blood_corpses_on_ground() || count_corpses_in_pack(true) > 0)
+    if (check_blood_corpses_on_ground())
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
@@ -2192,9 +2196,9 @@ static void _rebrand_weapon(item_def& wpn)
             new_brand = random_choose_weighted(
                                     30, SPWPN_FLAMING,
                                     30, SPWPN_FREEZING,
+                                    25, SPWPN_VORPAL,
                                     20, SPWPN_VENOM,
                                     15, SPWPN_DRAINING,
-                                    15, SPWPN_VORPAL,
                                     15, SPWPN_ELECTROCUTION,
                                     12, SPWPN_PROTECTION,
                                     8, SPWPN_VAMPIRISM,
@@ -2370,9 +2374,10 @@ bool enchant_weapon(item_def &wpn, bool quiet)
         {
             if (!success)
                 mprf("%s glows silver for a moment.", iname.c_str());
-            do_uncurse_item(wpn, true, true);
             success = true;
         }
+        // Mark the item as uncursed, whether or not it was cursed initially.
+        do_uncurse_item(wpn, true, true);
     }
 
     if (!success && !quiet)
@@ -2652,9 +2657,6 @@ static void _handle_read_book(int item_slot)
 
 static void _vulnerability_scroll()
 {
-    // First cast antimagic on yourself.
-    antimagic();
-
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
 
     // Go over all creatures in LOS.
@@ -2662,8 +2664,6 @@ static void _vulnerability_scroll()
     {
         if (monster* mon = monster_at(*ri))
         {
-            debuff_monster(mon);
-
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(mon))
                 mon->add_ench(lowered_mr);
@@ -2674,8 +2674,7 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_MR, 40, 0,
-                     "Magic dampens, then quickly surges around you.");
+    you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -2883,17 +2882,9 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        // XXX Because some checks in blink() are made before players get to
-        // choose target location it is possible to "abuse" scrolls' free
-        // cancelling to get some normally hidden information (i.e. presence
-        // of (unidentified) -Tele gear).
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg.c_str());
-            blink(1000, false);
-        }
-        else
-            cancel_scroll = (blink(1000, false, false, &pre_succ_msg) == -1);
+        cancel_scroll = (blink(1000, false, false,
+                               &pre_succ_msg, alreadyknown) == -1
+                        && alreadyknown);
         break;
 
     case SCR_TELEPORTATION:

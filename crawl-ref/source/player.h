@@ -652,8 +652,8 @@ public:
     bool cannot_act() const;
     bool confused() const;
     bool caught() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
-    bool umbra(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool self_halo = true) const;
+    bool umbra() const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2() const;
@@ -689,6 +689,7 @@ public:
     int stat_maxhp() const  { return hp_max; }
     int stealth() const     { return check_stealth(); }
 
+    bool shielded() const;
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;

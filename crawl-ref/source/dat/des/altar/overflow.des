@@ -356,6 +356,81 @@ c...c
 cc+cc
 ENDMAP
 
+NAME: nicolae_dithmenos_the_darkroom
+TAGS: temple_overflow_dithmenos temple_overflow_1 uniq_altar_dithmenos
+TAGS: decor transparent
+DEPTH: D:4-
+KFEAT: _ = altar_dithmenos
+MARKER: ' = lua:fog_machine { cloud_type = "black smoke", pow_min = 30, \
+   pow_max = 50, delay_min = 50, delay_max = 90, size = 1, walk_dist = 1, \
+   spread_rate = 10 }
+: interest_check(_G)
+MAP
+xxxx@@@xxxx
+xxx.....xxx
+xx'.....'xx
+x.........x
+@.........@
+@...._....@
+@.........@
+x.........x
+xx'.....'xx
+xxx.....xxx
+xxxx@@@xxxx
+ENDMAP
+
+NAME: nicolae_dithmenos_shadow_blocks
+TAGS: temple_overflow_dithmenos temple_overflow_1 uniq_altar_dithmenos
+TAGS: decor transparent
+DEPTH: D:2-
+COLOUR: s' = magenta, c = white
+TILE: c = dngn_stone_wall_white
+TILE: s = dngn_stone_dark
+FTILE: 's_ = floor_pebble_darkgray
+KFEAT: cs = stone_wall
+KFEAT: _ = altar_dithmenos
+: interest_check(_G)
+MAP
+      .....
+      ..c..
+  .....ccc.....
+  .cc..scs..cc.
+  .ccs''s''scc.
+  ..ss'''''ss..
+....'''''''''....
+..cs'''''''''sc..
+.cccs'''_'''sccc.
+..cs'''''''''sc..
+....'''''''''....
+  ..ss'''''ss..
+  .ccs''s''scc.
+  .cc..scs..cc.
+  .....ccc.....
+      ..c..
+      .....
+ENDMAP
+
+NAME: nicolae_dithmenos_through_a_glass_darkly
+TAGS: temple_overflow_dithmenos uniq_altar_dithmenos temple_overflow_1
+TAGS: decor transparent
+DEPTH: D:2-
+COLOUR: x = magenta, m = lightmagenta
+TILE: m = dngn_transparent_wall_darkgray
+TILE: x = wall_brick_darkgray
+KFEAT: _ = altar_dithmenos
+: interest_check(_G)
+MAP
+  ..xxx
+ .....xx
+...mm..xx
+..mm....x
+@.m._...x
+..mm....x
+...mm..xx
+ .....xx
+  ..xxx
+ENDMAP
+
 ### Elyvilon overflow altars ##################################################
 
 NAME:   elyvilon_altar_1
@@ -385,25 +460,6 @@ xxxxx xx.xx xxxxx
       x.X.x
       x...x
       xx@xx
-ENDMAP
-
-NAME:   elyvilon_altar_2
-TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
-TAGS:   no_pool_fixup no_monster_gen transparent decor
-DEPTH:  D:2-
-KFEAT:  C = altar_elyvilon
-NSUBST: W = 1:Z / *:W
-KMONS:  Z = big fish att:good_neutral
-KFEAT:  Z = W
-: interest_check(_G)
-MAP
-   @
-  wWw
- wwWww
-@WWCWW@
- wwWww
-  wWw
-   @
 ENDMAP
 
 NAME:   elyvilon_altar_3
@@ -543,7 +599,6 @@ xxxxxxxtttttttx
 xxxxxxxxxxxxxxx
 ENDMAP
 
-# Threat: two big fish. Loot: some fruits.
 # The oklob plant may be abusable (if so, remove it).
 NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
@@ -551,23 +606,22 @@ TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_rtele_into
-MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
+MONS:    plant, fungus, oklob plant, bush, toadstool col:random
 KITEM:   d = fruit / nothing
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
 : if you.absdepth() > 5 then
 SHUFFLE: PQR
-SUBST:   Q = 115, R = 11125
+SUBST:   Q = 114, R = 11124
 : end
 SUBST:   P = 112
 SUBST:   z = .
 SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
-SUBST:   " = .....6
+SUBST:   " = .....5
 COLOUR:  . = green / none
 COLOUR:  ' = green
-NSUBST:  w = 2:4 / *:w
 
 MAP
 ccccccccccccccccccccccc
@@ -576,10 +630,10 @@ cxxxxxxxxxxxxxxPxxd3xxc
 cxxxxxxxxxxxxxxPddddxxc
 cxxxxxxxxxxxxxxPPPxzdxc
 cxxxxxxx.......xxPPxxxc
-cxxxxxx..wwdww..xxPPxxc
-cxxxxx..wwwdwww..xxxPxc
-cxxxx..wwwwdwwww..xxxxc
-cxxxx.wwwwwdwwwww.xxxxc
+cxxxxxx..ww.ww..xxPPxxc
+cxxxxx..www.www..xxxPxc
+cxxxx..wwww.wwww..xxxxc
+cxxxx.wwwww.wwwww.xxxxc
 cxxxx.wwww'''wwww.xxxxc
 cxxxx.wwww'_'wwww.xxxxc
 cxxxx.wwww'''wwww.xxxxc
@@ -828,8 +882,6 @@ TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / bat zombie / nothing w:90
-MONS:   big fish zombie
-NSUBST: w = 1 : 22w / *:w
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxx
@@ -1460,7 +1512,7 @@ NAME:  nicolae_qazlal_eye_of_the_storm
 TAGS:  temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:  no_trap_gen no_item_gen no_monster_gen
 DEPTH: D:2-
-KPROP: ' = no_rtele_into
+KPROP: 'd = no_rtele_into
 KMONS: d = diamond obelisk
 KFEAT: _ = altar_qazlal
 : interest_check(_G)
@@ -2058,17 +2110,15 @@ DEPTH:  D:2-, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_yredelemnul
 KFEAT:  _ = altar_yredelemnul
-SUBST:  1 : 1Ww
-SUBST:  1 = WWw
-NSUBST: w = 2:1 / *:w
-KMONS:  1 = big fish zombie
+MONS:   patrolling gnoll zombie
+NSUBST: A = 2:1 / *:.
 MAP
 xxxxxxxxxxxxxxxx
-xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
+xxxxAAAAAAAAxxxx
+xxxx........xxxx
 @............._x
-xxxx11111111xxxx
-xxxxwwwwwwwwxxxx
+xxxx........xxxx
+xxxxAAAAAAAAxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -2336,6 +2386,97 @@ MAP
  .....ccc..
    ....c..
      ....
+ENDMAP
+
+NAME: nicolae_tso_swordbearing_angel
+TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
+TAGS: temple_overflow_1 decor transparent
+DEPTH: D:2-
+COLOUR: . = yellow
+COLOUR: c = white
+FTILE: @._+ = floor_limestone
+TILE: c = wall_church
+KFEAT: _ = altar_the_shining_one
+: interest_check(_G)
+MAP
+     xxxxx
+    xxcccxx
+    xcc.ccx
+xxxxxc._.cxxxxx
+xcccccc.ccccccx
+xc...........cx
+xcc....v....ccx
+xxcc..vvv..ccxx
+ xxcc..v..ccxx
+  xxcc.v.ccxx
+   xxc.v.cxx
+    xc.v.cx
+    xc.v.cx
+    xc...cx
+    xcc+ccx
+ENDMAP
+
+
+NAME: nicolae_tso_carved_into_rock
+TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
+TAGS: temple_overflow_1 transparent decor
+DEPTH: D:2-
+SUBST: X = xxx.
+COLOUR: ' = yellow
+COLOUR: c = white
+TILE: G = dngn_golden_statue
+TILE: c = wall_church
+FTILE: G'_ = floor_limestone
+KFEAT: _ = altar_the_shining_one
+: interest_check(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxXXXXxxxxxxxxxxxxx
+xxxxxxxXXXXXX....XXXXXXxxxxxxx
+xxxxXXX................XXXxxxx
+xxXX......................XXxx
+xX......XxX........XxX......Xx
+X.....XXxxxxcG'''GcxxxXX.....X
+.....Xxxxxxxccc'cccxxxxxX.....
+@...Xxxxxxxxxc'''cxxxxxxxX...@
+..Xxxxxxxxxxxc'_'cxxxxxxxxXX..
+XXxxxxxxxxxxxc'''cxxxxxxxxxxXX
+xxxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_tso_besieged_by_evil
+TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
+TAGS: temple_overflow_1 patrolling transparent no_monster_gen
+DEPTH: D:4-9
+SUBST: c = ccc' s:2 z:2, + = ++'
+NSUBST: ' = 2:s / 2:z / 2:sz'' / *:'
+COLOUR: 'sz = yellow / none w:5
+COLOUR: c = white
+TILE: c = wall_sandstone
+FTILE: +'_sz = floor_sandstone / none w:5
+KMONS: s = orc skeleton / kobold skeleton / goblin skeleton / hobgoblin zombie
+KMONS: z = orc zombie / kobold zombie / goblin zombie / hobgoblin zombie
+: if you.absdepth() <= 4 then
+KMONS: _ = crimson imp / white imp w:5
+: else
+KMONS: _ = crimson imp / white imp / shadow imp / iron imp / quasit
+: end
+KFEAT: _ = altar_the_shining_one
+MAP
+.............
+.............
+..cccc.cccc..
+..cccc+cccc..
+..cc'''''cc..
+..cc'''''cc..
+...+''_''+...
+..cc'''''cc..
+..cc'''''cc..
+..cccc+cccc..
+..cccc.cccc..
+.............
+.............
 ENDMAP
 
 ### Multiple god overflow altars ###############################################
