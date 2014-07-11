@@ -1170,8 +1170,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
-    string name = item->name(DESC_PLAIN, false, true, false);
-
     if (item->base_type != OBJ_MISSILES)
         return false;
 
