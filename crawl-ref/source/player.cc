@@ -426,14 +426,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     // Terrain effects.
     if (is_feat_dangerous(new_grid))
-    {
-        // Lava and dangerous deep water (ie not merfolk).
-        const coord_def& entry = (stepped) ? old_pos : you.pos();
-
-        // If true, we were shifted and so we're done.
-        if (fall_into_a_pool(entry, new_grid))
-            return;
-    }
+        fall_into_a_pool(new_grid);
 
     if (you.ground_level())
     {
