@@ -1084,7 +1084,6 @@ static string _describe_ammo(const item_def &item)
     if (item.special && item_type_known(item))
     {
         description += "\n\n";
-        string bolt_name;
 
         string threw_or_fired;
         if (can_throw)
@@ -1106,9 +1105,6 @@ static string _describe_ammo(const item_def &item)
             break;
             break;
         case SPMSL_CHAOS:
-            if (bolt_name.empty())
-                bolt_name = "a random type";
-
             description += "When ";
 
             if (can_throw)
@@ -1121,9 +1117,7 @@ static string _describe_ammo(const item_def &item)
             if (can_launch)
                 description += "fired from an appropriate launcher, ";
 
-            description += "it turns into a bolt of ";
-            description += bolt_name;
-            description += ".";
+            description += "it turns into a bolt of a random type.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
