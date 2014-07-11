@@ -2943,6 +2943,8 @@ static void _close_door(coord_def move)
 
         update_exclusion_los(excludes);
         you.turn_is_over = true;
+        // make closing doors take longer than opening them, to end doordancing
+        you.time_taken *= 1.3;
     }
     else if (you.confused())
         _open_door(door_move.delta);
