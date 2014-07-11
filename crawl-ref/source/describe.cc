@@ -785,8 +785,12 @@ void append_weapon_stats(string &description, const item_def &item)
     _append_value(description, property(item, PWPN_HIT), true);
     description += "  ";
 
+    const int base_dam = property(item, PWPN_DAMAGE);
+    const int ammo_type = fires_ammo_type(item);
+    const int ammo_dam = ammo_type == MI_NONE ? 0 :
+                                                ammo_type_damage(ammo_type);
     description += "Base damage: ";
-    _append_value(description, property(item, PWPN_DAMAGE), false);
+    _append_value(description, base_dam + ammo_dam, false);
     description += "  ";
 
     description += "Base attack delay: ";
@@ -795,6 +799,13 @@ void append_weapon_stats(string &description, const item_def &item)
 
     description += "Minimum delay: ";
     _append_value(description, weapon_min_delay(item) / 10.0f, false);
+
+    if (range_skill(item) == SK_SLINGS)
+    {
+        description += make_stringf("\nFiring bullets:    Base damage: %d",
+                                    base_dam +
+                                    ammo_type_damage(MI_SLING_BULLET));
+    }
 }
 
 static string _handedness_string(const item_def &item)

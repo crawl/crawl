@@ -1890,6 +1890,17 @@ int ammo_type_destroy_chance(int missile_type)
     }
 }
 
+/**
+ * Returns the base damage of a given item type.
+ *
+ * @param missile_type      The missile type to get the damage for.
+ * @return                  The base damage of the given missile type.
+ */
+int ammo_type_damage(int missile_type)
+{
+    return Missile_prop[ Missile_index[missile_type] ].dam;
+}
+
 
 
 //
