@@ -148,21 +148,27 @@ spell_type spell_by_name(string name, bool partial_match)
         return SPELL_NO_SPELL;
     }
 
+    // Find the spell with the earliest match for the string.
     spell_type spellmatch = SPELL_NO_SPELL;
+    size_t bestpos = string::npos;
     for (int i = 0; i < NUM_SPELLS; i++)
     {
-        spell_type type = static_cast<spell_type>(i);
+        const spell_type type = static_cast<spell_type>(i);
+
         if (!is_valid_spell(type))
             continue;
 
-        const char *sptitle = spell_title(type);
-        const string spell_name = lowercase_string(sptitle);
+        const string spell_name = lowercase_string(spell_title(type));
+        const size_t pos = spell_name.find(name);
 
-        if (spell_name.find(name) != string::npos)
+        if (pos < bestpos)
         {
+            // Exact match is better than prefix match.
             if (spell_name == name)
                 return type;
 
+            // npos is never less than bestpos, so the spec was found.
+            bestpos = pos;
             spellmatch = type;
         }
     }
