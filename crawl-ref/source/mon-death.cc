@@ -2705,6 +2705,14 @@ int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     return monster_die(&mon, killer, killer_index, false, false, true);
 }
 
+/**
+ * Applies harmful environmental effects from the current tile to monsters.
+ *
+ * @param mons      The monster to maybe drown/incinerate.
+ * @param oldpos    Their previous tile, before landing up here.
+ * @param killer    Who's responsible for killing them, if they die here.
+ * @param killnum   Not sure; *probably* the mindex of the killer, if any?
+ */
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
@@ -2713,64 +2721,54 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
         return;
 
     dungeon_feature_type grid = grd(mons->pos());
-    if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
-        && !monster_habitable_grid(mons, grid))
+    if (grid != DNGN_LAVA && grid != DNGN_DEEP_WATER
+        || monster_habitable_grid(mons, grid))
     {
-        const bool message = mons_near(mons);
-
-        // Don't worry about invisibility.  You should be able to see if
-        // something has fallen into the lava.
-        if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
-        {
-            mprf("%s falls into the %s!",
-                 mons->name(DESC_THE).c_str(),
-                 grid == DNGN_LAVA ? "lava" : "water");
-        }
-
-        if (grid == DNGN_LAVA && mons->res_fire() >= 2)
-            grid = DNGN_DEEP_WATER;
-
-        // Even fire resistant monsters perish in lava, but inanimate
-        // monsters can survive deep water.
-        if (grid == DNGN_LAVA || mons->can_drown())
-        {
-            if (message)
-            {
-                if (grid == DNGN_LAVA)
-                {
-                    simple_monster_message(mons, " is incinerated.",
-                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                }
-                else if (mons_genus(mons->type) == MONS_MUMMY)
-                {
-                    simple_monster_message(mons, " falls apart.",
-                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                }
-                else
-                {
-                    simple_monster_message(mons, " drowns.",
-                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                }
-            }
-
-            if (killer == KILL_NONE)
-            {
-                // Self-kill.
-                killer  = KILL_MON;
-                killnum = mons->mindex();
-            }
-
-            // Yredelemnul special, redux: It's the only one that can
-            // work on drowned monsters.
-            if (!_yred_enslave_soul(mons, killer))
-                monster_die(mons, killer, killnum, true);
-        }
-        else
-        {
-            dprf("undrownable in Davy Jones' locker");
-            mons->add_ench(ENCH_SUBMERGED);
-        }
+        return;
     }
+
+
+    // Don't worry about invisibility.  You should be able to see if
+    // something has fallen into the lava.
+    if (mons_near(mons) && (oldpos == mons->pos() || grd(oldpos) != grid))
+    {
+         mprf("%s falls into the %s!",
+             mons->name(DESC_THE).c_str(),
+             grid == DNGN_LAVA ? "lava" : "water");
+    }
+
+
+    /*    if (grid == DNGN_LAVA && mons->res_fire() >= 2)
+            grid = DNGN_DEEP_WATER;*/
+
+    // Even fire resistant monsters perish in lava.
+    if (grid == DNGN_LAVA && mons->res_fire() < 2)
+    {
+        simple_monster_message(mons, " is incinerated.",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+    }
+    else if (mons->can_drown())
+    {
+        simple_monster_message(mons, " drowns.",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+    }
+    else
+    {
+        simple_monster_message(mons, " falls apart.",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+    }
+
+    if (killer == KILL_NONE)
+    {
+        // Self-kill.
+        killer  = KILL_MON;
+        killnum = mons->mindex();
+    }
+
+    // Yredelemnul special, redux: It's the only one that can
+    // work on drowned monsters.
+    if (!_yred_enslave_soul(mons, killer))
+        monster_die(mons, killer, killnum, true);
 }
 
 // Make all of the monster's original equipment disappear, unless it's a fixed
