@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "bitary.h"
+#include <functional>
 
 #include "branch.h"
 #include "coordit.h"
@@ -910,6 +911,11 @@ bool create_trap(trap_type spec_type)
     return result;
 }
 
+static bool _can_make_altar(god_type g, bool wizmode)
+{
+    return wizmode || !is_unavailable_god(g);
+}
+
 /**
  * Create an altar to the god of the player's choice.
  * @param wizmode if true, bypass some checks.
@@ -928,28 +934,13 @@ bool zotdef_create_altar(bool wizmode)
 
     string spec = lowercase_string(specs);
 
-    // Find the god with the earliest match for this string.
-    god_type god = GOD_NO_GOD;
-    size_t bestpos = string::npos;
-    for (int i = 1; i < NUM_GODS; ++i)
-    {
-        const god_type gi = static_cast<god_type>(i);
+    // Skip GOD_NO_GOD
+    god_type god = find_earliest_match(
+                       spec, (god_type) 1, NUM_GODS,
+                       bind2nd(ptr_fun(_can_make_altar), wizmode),
+                       bind2nd(ptr_fun(god_name), false));
 
-        if (!wizmode && is_unavailable_god(gi))
-            continue;
-
-        const string name = lowercase_string(god_name(gi));
-        const size_t pos = name.find(spec);
-
-        if (pos < bestpos)
-        {
-            // npos is never less than bestpos, so the spec was found.
-            bestpos = pos;
-            god = gi;
-        }
-    }
-
-    if (god == GOD_NO_GOD)
+    if (god == NUM_GODS)
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
