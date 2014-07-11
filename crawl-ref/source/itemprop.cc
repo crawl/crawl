@@ -1827,6 +1827,70 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 }
 
 
+/**
+ * Returns whether a given missile will always destroyed on impact.
+ *
+ * @param missile      The missile in question.
+ * @return             Whether the missile should always be destroyed on
+ *                     impact.
+ */
+bool ammo_always_destroyed(const item_def &missile)
+{
+    const int brand = get_ammo_brand(missile);
+    return brand == SPMSL_CHAOS
+           || brand == SPMSL_DISPERSAL
+           || brand == SPMSL_EXPLODING;
+}
+
+/**
+ * Returns whether a given missile will never destroyed on impact.
+ *
+ * @param missile      The missile in question.
+ * @return             Whether the missile should never be destroyed on impact.
+ */
+bool ammo_never_destroyed(const item_def &missile)
+{
+    return missile.sub_type == MI_THROWING_NET;
+}
+
+/**
+ * Returns the one_chance_in for a missile type for be destroyed on impact.
+ *
+ * @param missile_type      The missile type to get the mulch chance for.
+ * @return                  The inverse of the missile type's mulch chance.
+ */
+int ammo_type_destroy_chance(int missile_type)
+{
+    switch (missile_type)
+    {
+
+#if TAG_MAJOR_VERSION == 34
+        case MI_DART:
+            return 6;
+#endif
+
+        case MI_SLING_BULLET:
+        case MI_STONE:
+        case MI_ARROW:
+        case MI_BOLT:
+            return 8;
+
+        case MI_NEEDLE:
+            return 12;
+
+        case MI_TOMAHAWK:
+        case MI_JAVELIN:
+            return 20;
+
+        case MI_LARGE_ROCK:
+            return 30;
+
+        default:
+            die("Unknown missile type");
+    }
+}
+
+
 
 //
 // Reaching functions:
