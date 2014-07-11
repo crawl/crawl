@@ -3309,7 +3309,10 @@ static void _move_player(coord_def move)
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
             else
+            {
+                stop_running();
                 moving = false;
+            }
         }
         else if (!can_swap_places) // attack!
         {
