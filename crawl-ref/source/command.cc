@@ -1197,10 +1197,9 @@ static int _do_description(string key, string type, const string &suffix,
                     append_armour_stats(desc, mitm[thing_created]);
                     desc += "\n";
                 }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES)
-                         && mitm[thing_created].sub_type != MI_THROWING_NET)
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
                 {
-                    append_missile_info(desc);
+                    append_missile_info(desc, mitm[thing_created]);
                     desc += "\n";
                 }
                 else if (type == "spell"
