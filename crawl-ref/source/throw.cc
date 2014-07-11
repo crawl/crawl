@@ -1173,63 +1173,30 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     if (item->base_type != OBJ_MISSILES)
         return false;
 
-    int brand = get_ammo_brand(*item);
-    if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL || brand == SPMSL_EXPLODING)
+    if (ammo_always_destroyed(*item))
         return true;
 
-    // Nets don't get destroyed by throwing.
-    if (item->sub_type == MI_THROWING_NET)
+    if (ammo_never_destroyed(*item))
         return false;
 
-    int chance;
+    const int base_chance = ammo_type_destroy_chance(item->sub_type);
+    const int brand = get_ammo_brand(*item);
 
-    // [dshaligram] Removed influence of Throwing on ammo preservation.
-    // The effect is nigh impossible to perceive.
-    switch (item->sub_type)
+    // Inflate by 2 to avoid rounding errors.
+    const int mult = 2;
+    int chance = base_chance * mult;
+
+    switch (brand)
     {
-    case MI_NEEDLE:
-        chance = (brand == SPMSL_CURARE ? 6 : 12);
-        break;
-
-    case MI_SLING_BULLET:
-    case MI_STONE:
-    case MI_ARROW:
-    case MI_BOLT:
-        chance = 8;
-        break;
-
-#if TAG_MAJOR_VERSION == 34
-    case MI_DART:
-        chance = 6;
-        break;
-#endif
-
-    case MI_TOMAHAWK:
-        chance = 20;
-        break;
-
-    case MI_JAVELIN:
-        chance = 20;
-        break;
-
-    case MI_LARGE_ROCK:
-        chance = 30;
-        break;
-
-    default:
-        die("Unknown missile type");
+        case SPMSL_STEEL:
+            chance *= 10;
+            break;
+        case SPMSL_FLAME:
+        case SPMSL_FROST:
+        case SPMSL_CURARE:
+            chance /= 2;
+            break;
     }
-
-    // Inflate by 4 to avoid rounding errors.
-    const int mult = 4;
-    chance *= mult;
-
-    if (brand == SPMSL_STEEL)
-        chance *= 10;
-    if (brand == SPMSL_FLAME)
-        chance /= 2;
-    if (brand == SPMSL_FROST)
-        chance /= 2;
 
     return x_chance_in_y(mult, chance);
 }
