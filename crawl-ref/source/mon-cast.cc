@@ -2835,18 +2835,6 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
 //---------------------------------------------------------------
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
-    bool redirected = does_ru_wanna_redirect(mons);
-    if (redirected)
-    {
-        if (random2(100) < div_rand_round(you.piety, 20))
-        {
-            simple_monster_message(mons,
-                " begins to cast a spell, but is stunned by your will!");
-            mons->lose_energy(EUT_SPELL);
-            return true;
-        }
-    }
-
     bool monsterNearby = mons_near(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(mons);
@@ -3005,31 +2993,43 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         bool ignore_good_idea = false;
-        if (redirected && random2(100) < div_rand_round(you.piety, 40))
+        if (does_ru_wanna_redirect(mons))
         {
-            mprf("You redirect %s's attack!",
-                    mons->name(DESC_THE, true).c_str());
-            int pfound = 0;
-            for (radius_iterator ri(you.pos(),
-                LOS_DEFAULT); ri; ++ri)
+            int r = random2(100);
+            int chance = div_rand_round(you.piety, 20);
+            if (r < chance)
             {
-                monster* new_target = monster_at(*ri);
-
-                if (new_target == NULL
-                    || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(new_target))
+                simple_monster_message(mons,
+                    " begins to cast a spell, but is stunned by your will!");
+                mons->lose_energy(EUT_SPELL);
+                return true;
+            }
+            else if (r < chance + div_rand_round(chance, 2))
+            {
+                mprf("You redirect %s's attack!",
+                        mons->name(DESC_THE, true).c_str());
+                int pfound = 0;
+                for (radius_iterator ri(you.pos(),
+                    LOS_DEFAULT); ri; ++ri)
                 {
-                    continue;
-                }
+                    monster* new_target = monster_at(*ri);
 
-                ASSERT(new_target);
+                    if (new_target == NULL
+                        || mons_is_projectile(new_target->type)
+                        || mons_is_firewood(new_target))
+                    {
+                        continue;
+                    }
 
-                if (one_chance_in(++pfound))
-                {
-                    mons->target = new_target->pos();
-                    mons->foe = new_target->mindex();
-                    beem.target = mons->target;
-                    ignore_good_idea = true;
+                    ASSERT(new_target);
+
+                    if (one_chance_in(++pfound))
+                    {
+                        mons->target = new_target->pos();
+                        mons->foe = new_target->mindex();
+                        beem.target = mons->target;
+                        ignore_good_idea = true;
+                    }
                 }
             }
         }

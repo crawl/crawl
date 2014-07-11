@@ -2339,19 +2339,17 @@ void handle_monster_move(monster* mons)
                             int pfound = 0;
                             for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
                             {
-                                new_target = monster_at(*ai);
-                                if (new_target == NULL
-                                    || mons_is_projectile(new_target->type)
-                                    || mons_is_firewood(new_target))
+                                monster* candidate = monster_at(*ai);
+                                if (candidate == NULL
+                                    || mons_is_projectile(candidate->type)
+                                    || mons_is_firewood(candidate))
                                 {
                                     continue;
                                 }
-                                ASSERT(new_target);
-
+                                ASSERT(candidate);
                                 if (one_chance_in(++pfound))
                                 {
-                                    mons->target = new_target->pos();
-                                    mons->foe = new_target->mindex();
+                                    new_target = candidate;
                                     attack_redirected = true;
                                 }
                             }
@@ -2362,6 +2360,8 @@ void handle_monster_move(monster* mons)
                 if (attack_redirected && new_target)
                 {
                     // attack that target
+                    mons->target = new_target->pos();
+                    mons->foe = new_target->mindex();
                     mprf("You redirect %s's attack!",
                     mons->name(DESC_THE, true).c_str());
                     fight_melee(mons, new_target);
