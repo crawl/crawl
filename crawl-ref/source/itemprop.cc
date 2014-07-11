@@ -1434,7 +1434,7 @@ bool is_giant_club_type(int wpn_type)
  */
 bool is_ranged_weapon_type(int wpn_type)
 {
-    return Weapon_prop[wpn_type].dam_type == DAMV_NON_MELEE;
+    return Weapon_prop[Weapon_index[wpn_type]].ammo != MI_NONE;
 }
 
 /**
@@ -1471,6 +1471,12 @@ bool is_blessed_weapon_type(int wpn_type)
 bool is_magic_weapon_type(int wpn_type)
 {
     return wpn_type == WPN_STAFF || wpn_type == WPN_ROD;
+}
+
+
+bool is_melee_weapon(const item_def &weapon)
+{
+    return is_weapon(weapon) && !is_range_weapon(weapon);
 }
 
 /**
@@ -1756,7 +1762,7 @@ missile_type fires_ammo_type(const item_def &item)
 
 bool is_range_weapon(const item_def &item)
 {
-    return fires_ammo_type(item) != MI_NONE;
+    return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
 }
 
 const char *ammo_name(missile_type ammo)
@@ -1820,10 +1826,7 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
-bool is_melee_weapon(const item_def &weapon)
-{
-    return is_weapon(weapon) && !is_range_weapon(weapon);
-}
+
 
 //
 // Reaching functions:
