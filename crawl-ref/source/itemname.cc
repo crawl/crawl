@@ -3445,6 +3445,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.permanent_flight()
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
+        case RING_STEALTH:
+            return player_mutation_level(MUT_NO_STEALTH);
+
         default:
             return false;
         }
