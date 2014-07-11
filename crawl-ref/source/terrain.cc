@@ -1391,8 +1391,6 @@ void fall_into_a_pool(dungeon_feature_type terrain)
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
     }
-
-    return;
 }
 
 typedef map<string, dungeon_feature_type> feat_desc_map;
