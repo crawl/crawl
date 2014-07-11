@@ -941,10 +941,9 @@ bool zotdef_create_altar(bool wizmode)
         const string name = lowercase_string(god_name(gi));
         const size_t pos = name.find(spec);
 
-        // Note that npos is never less than bestpos, so a failure to
-        // find skips it.
         if (pos < bestpos)
         {
+            // npos is never less than bestpos, so the spec was found.
             bestpos = pos;
             god = gi;
         }
