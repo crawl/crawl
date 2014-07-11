@@ -1114,7 +1114,6 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_FROST:
             description += "It turns into a bolt of frost.";
             break;
-            break;
         case SPMSL_CHAOS:
             description += "When ";
 
