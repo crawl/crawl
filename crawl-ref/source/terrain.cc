@@ -1370,20 +1370,18 @@ bool fall_into_a_pool(const coord_def& entry,
     clear_messages();
     if (terrain == DNGN_LAVA)
     {
-        mpr("The lava burns you to a cinder!");
+        if (you.species == SP_MUMMY)
+            mpr("You burn to ash...");
+        else
+            mpr("The lava burns you to a cinder!");
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
         mpr("You sink like a stone!");
 
-        if (you.species == SP_MUMMY)
-        {
-            if (terrain == DNGN_LAVA)
-                mpr("You burn to ash...");
-            else if (terrain == DNGN_DEEP_WATER)
-                 mpr("You fall apart...");
-        }
+        if (you.is_unbreathing()) // XXX: this is weird for fungi drowning
+            mpr("You fall apart...");
         else
             mpr("You drown...");
 
