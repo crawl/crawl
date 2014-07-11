@@ -732,12 +732,12 @@ ifdef EUCLIDEAN
 DEFINES_L += -DEUCLIDEAN
 endif
 
-
+ifdef USE_DGAMELAUNCH
 SRC_BRANCH    := $(shell git rev-parse --abbrev-ref HEAD || echo release)
 ifneq ($(SRC_BRANCH),$(filter master release stone_soup-%, $(SRC_BRANCH)))
   DEFINES_L += -DEXPERIMENTAL_BRANCH="\"$(SRC_BRANCH)\""
 endif
-
+endif
 
 #
 # Figure out the build settings for this type of build
