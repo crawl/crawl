@@ -2944,7 +2944,7 @@ static void _close_door(coord_def move)
         update_exclusion_los(excludes);
         you.turn_is_over = true;
         // make closing doors take longer than opening them, to end doordancing
-        you.time_taken *= 1.3;
+        you.time_taken = div_rand_round(you.time_taken * 13, 10);
     }
     else if (you.confused())
         _open_door(door_move.delta);
