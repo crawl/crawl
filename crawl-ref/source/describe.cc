@@ -1080,7 +1080,6 @@ static string _describe_ammo(const item_def &item)
 
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
-    bool always_destroyed = false;
 
     if (item.special && item_type_known(item))
     {
@@ -1125,7 +1124,6 @@ static string _describe_ammo(const item_def &item)
             description += "it turns into a bolt of ";
             description += bolt_name;
             description += ".";
-            always_destroyed = true;
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
@@ -1167,13 +1165,11 @@ static string _describe_ammo(const item_def &item)
             description += "Any target it hits will blink, with a "
                 "tendency towards blinking further away from the one "
                 "who " + threw_or_fired + " it.";
-            always_destroyed = true;
             break;
         case SPMSL_EXPLODING:
             description += "It will explode into fragments upon "
                 "hitting a target, hitting an obstruction, or reaching "
                 "the end of its range.";
-            always_destroyed = true;
             break;
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 30% more "
@@ -1191,10 +1187,7 @@ static string _describe_ammo(const item_def &item)
         }
     }
 
-    if (always_destroyed)
-        description += "\nIt will always be destroyed upon impact.";
-    else if (item.sub_type != MI_THROWING_NET)
-        append_missile_info(description);
+    append_missile_info(description, item);
 
     return description;
 }
@@ -1209,9 +1202,16 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, -property(item, PARM_EVASION), false);
 }
 
-void append_missile_info(string &description)
+void append_missile_info(string &description, const item_def &item)
 {
-    description += "\nAll pieces of ammunition may get destroyed upon impact.";
+    if (ammo_always_destroyed(item))
+        description += "\nIt will always be destroyed on impact.";
+    else if (!ammo_never_destroyed(item))
+        description += "\nIt may be destroyed on impact.";
+
+    const int dam = property(item, PWPN_DAMAGE);
+    if (dam)
+        description += make_stringf("\nBase damage: %d", dam);
 }
 
 //---------------------------------------------------------------
