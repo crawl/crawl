@@ -148,32 +148,8 @@ spell_type spell_by_name(string name, bool partial_match)
         return SPELL_NO_SPELL;
     }
 
-    // Find the spell with the earliest match for the string.
-    spell_type spellmatch = SPELL_NO_SPELL;
-    size_t bestpos = string::npos;
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        const spell_type type = static_cast<spell_type>(i);
-
-        if (!is_valid_spell(type))
-            continue;
-
-        const string spell_name = lowercase_string(spell_title(type));
-        const size_t pos = spell_name.find(name);
-
-        if (pos < bestpos)
-        {
-            // Exact match is better than prefix match.
-            if (spell_name == name)
-                return type;
-
-            // npos is never less than bestpos, so the spec was found.
-            bestpos = pos;
-            spellmatch = type;
-        }
-    }
-
-    return spellmatch;
+    return find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                               is_valid_spell, spell_title);
 }
 
 spschool_flag_type school_by_name(string name)

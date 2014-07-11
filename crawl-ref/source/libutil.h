@@ -178,6 +178,54 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 
 string unwrap_desc(string desc);
 
+/**
+ * Find the enumerator e between begin and end that satisfies pred(e) and
+ * whose name, as given by namefunc(e), has the earliest occurrence of the
+ * substring spec.
+ *
+ * @param spec      The substring to search for.
+ * @param begin     The beginning of the enumerator range to search in.
+ * @param end       One past the end of the enum range to search in.
+ * @param pred      A function from Enum to bool. Enumerators that do not
+ *                  satisfy the predicate are ignored.
+ * @param namefunc  A function from Enum to string or const char * giving
+ *                  the name of the enumerator.
+ * @return The enumerator that satisfies pred and whose name contains the
+ *         spec substring beginning at the earliest position. If no such
+ *         enumerator exists, returns end. Exact matches are preferred to
+ *         prefix matches but otherwise ties are broken in an unspecified
+ *         manner.
+ */
+template<class Enum, class Pred, class NameFunc>
+Enum find_earliest_match(string spec, Enum begin, Enum end,
+                         Pred pred, NameFunc namefunc)
+{
+    Enum selected = end;
+    size_t bestpos = string::npos;
+    for (size_t i = begin; i < end; ++i)
+    {
+        const Enum curr = static_cast<Enum>(i);
+
+        if (!pred(curr))
+            continue;
+
+        const string name = lowercase_string(namefunc(curr));
+        const size_t pos = name.find(spec);
+
+        if (pos < bestpos)
+        {
+            // Exact match is better than prefix match.
+            if (name == spec)
+                return curr;
+
+            // npos is never less than bestpos, so the spec was found.
+            bestpos = pos;
+            selected = curr;
+        }
+    }
+    return selected;
+}
+
 template <typename Z>
 void erase_any(vector<Z> &vec, unsigned long which)
 {
