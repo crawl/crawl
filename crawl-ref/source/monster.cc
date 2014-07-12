@@ -561,14 +561,8 @@ item_def *monster::melee_weapon() const
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
     if (mons_genus(type) == MONS_FORMICID)
-    {
-        if (weapon_size(item) >= SIZE_BIG)
-            return HANDS_TWO;
-        else
-            return HANDS_ONE;
-    }
-    else
-        return actor::hands_reqd(item);
+        return HANDS_ONE;
+    return actor::hands_reqd(item);
 }
 
 bool monster::can_wield(const item_def& item, bool ignore_curse,
