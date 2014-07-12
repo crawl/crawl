@@ -148,8 +148,9 @@ spell_type spell_by_name(string name, bool partial_match)
         return SPELL_NO_SPELL;
     }
 
-    return find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
-                               is_valid_spell, spell_title);
+    const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                              is_valid_spell, spell_title);
+    return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 
 spschool_flag_type school_by_name(string name)
