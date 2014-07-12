@@ -207,7 +207,7 @@ Enum find_earliest_match(string spec, Enum begin, Enum end,
     const size_t speclen = spec.length();
     size_t bestpos = string::npos;
     size_t bestlen = string::npos;
-    for (size_t i = begin; i < end; ++i)
+    for (size_t i = begin; i < (size_t) end; ++i)
     {
         const Enum curr = static_cast<Enum>(i);
 
