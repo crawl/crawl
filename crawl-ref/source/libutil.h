@@ -192,16 +192,19 @@ string unwrap_desc(string desc);
  *                  the name of the enumerator.
  * @return The enumerator that satisfies pred and whose name contains the
  *         spec substring beginning at the earliest position. If no such
- *         enumerator exists, returns end. Exact matches are preferred to
- *         prefix matches but otherwise ties are broken in an unspecified
- *         manner.
+ *         enumerator exists, returns end. If there are multiple strings
+ *         containing the spec as a prefix, returns the shortest such string
+ *         (so exact matches are preferred); otherwise ties are broken in
+ *         an unspecified manner.
  */
 template<class Enum, class Pred, class NameFunc>
 Enum find_earliest_match(string spec, Enum begin, Enum end,
                          Pred pred, NameFunc namefunc)
 {
     Enum selected = end;
+    const size_t speclen = spec.length();
     size_t bestpos = string::npos;
+    size_t bestlen = string::npos;
     for (size_t i = begin; i < end; ++i)
     {
         const Enum curr = static_cast<Enum>(i);
@@ -211,15 +214,18 @@ Enum find_earliest_match(string spec, Enum begin, Enum end,
 
         const string name = lowercase_string(namefunc(curr));
         const size_t pos = name.find(spec);
+        const size_t len = name.length();
 
-        if (pos < bestpos)
+        if (pos < bestpos || pos == 0 && len < bestlen)
         {
-            // Exact match is better than prefix match.
-            if (name == spec)
+            // Exit early if we found an exact match.
+            if (pos == 0 && len == speclen)
                 return curr;
 
             // npos is never less than bestpos, so the spec was found.
             bestpos = pos;
+            if (pos == 0)
+                bestlen = len;
             selected = curr;
         }
     }
