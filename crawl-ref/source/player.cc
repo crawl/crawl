@@ -3216,17 +3216,18 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 {
                     if (you.hunger_state > HS_SATIATED)
                     {
-                        mprf(MSGCH_INTRINSIC_GAIN, "If you weren't so full you "
-                             "could now transform into a vampire bat.");
+                        mprf(MSGCH_INTRINSIC_GAIN, "If you weren't so full, "
+                             "you could now transform into a vampire bat.");
                     }
                     else
                     {
-                        mprf(MSGCH_INTRINSIC_GAIN, "You can now transform into "
-                             "a vampire bat.");
+                        mprf(MSGCH_INTRINSIC_GAIN,
+                             "You can now transform into a vampire bat.");
                     }
                 }
                 else if (you.experience_level == 6)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now bottle potions of blood from corpses.");
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You can now bottle potions of blood from corpses.");
                 break;
 
             case SP_NAGA:
@@ -3242,7 +3243,8 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 if (you.experience_level == 13)
                 {
                     mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your tail grows strong enough to constrict your enemies.");
+                         "Your tail grows strong enough to constrict your "
+                         "enemies.");
                 }
                 break;
 
