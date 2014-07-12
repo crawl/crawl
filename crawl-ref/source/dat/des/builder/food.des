@@ -54,14 +54,14 @@ ENDMAP
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup unrand
 MONS:   plant
-ITEM:   fruit q:7 no_mimic
+ITEM:   fruit q:4 no_mimic
 SUBST:  . = G:20 B:15 .
 COLOUR: G = green
 FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-SUBST:  . = d .:50, " = d .:33
+NSUBST: . = 1:d / *:., " = 2:d / *:.
 MAP
 .""".
 ."1".
@@ -127,20 +127,12 @@ DEPTH:    D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:     uniq_second_food extra chance_second_food
-SUBVAULT: Z : fruiting_plant
-SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of restore abilities w:2 / potion of poison w:3 / \
               potion of confusion w:1 / nothing
 MONS:     kobold ; wand of magic darts ident:type . short sword
 MAP
-ZZZZZ..YYYYY
-ZZZZZ..YYYYY
-ZZZZZ..YYYYY
-ZZZZZ..YYYYY
-............
-............
 XXXXX..WWWWW
 XXXXX..WWWWW
 XXXXX..WWWWW
