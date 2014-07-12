@@ -713,6 +713,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('T'): debug_terp_dlua(); break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
+    case CONTROL('W'): wizard_offer_new_ru_sacrifices(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
     case CONTROL('C'): die("Intentional crash");

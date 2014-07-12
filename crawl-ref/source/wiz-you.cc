@@ -13,6 +13,7 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "food.h"
+#include "godabil.h"
 #include "godprayer.h"
 #include "godwrath.h"
 #include "libutil.h"
@@ -1105,4 +1106,18 @@ void wizard_load_dump_file()
     {
         canned_msg(MSG_NOTHING_THERE);
     }
+}
+
+void wizard_offer_new_ru_sacrifices()
+{
+    if (you_worship(GOD_RU))
+    {
+        ru_offer_new_sacrifices();
+        simple_god_message(" believes you are ready to make a new sacrifice.");
+        more();
+        you.props["ru_sacrifice_delay"] = 70;
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+    }
+    else
+        mpr("You don't worship Ru, so no sacrifices for you.");
 }
