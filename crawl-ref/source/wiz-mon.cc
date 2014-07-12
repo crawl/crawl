@@ -177,11 +177,11 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
-        string newerr;
+        string newerr = "yes";
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs, true);
-        if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
+        if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
             newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
