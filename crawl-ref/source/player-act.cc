@@ -512,7 +512,9 @@ string player::hand_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_BAT || form == TRAN_DRAGON)
         str = "foreclaw";
-    else if (form == TRAN_PIG || form == TRAN_SPIDER || form == TRAN_PORCUPINE)
+    else if (form == TRAN_PIG)
+        str = "front trotter";
+    else if (form == TRAN_SPIDER || form == TRAN_PORCUPINE)
         str = "front leg";
     else if (form == TRAN_ICE_BEAST)
         str = "paw";
@@ -554,6 +556,8 @@ string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
+    else if (form == TRAN_PIG)
+        str = "trotter";
     else if (form == TRAN_TREE)
         str = "root";
     else if (form == TRAN_WISP)

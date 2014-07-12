@@ -4294,7 +4294,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@Foot@", uppercase_first(part_str));
 
     if (!can_plural)
-        part_str = "NO PLURAL FOOT";
+        part_str = "NO PLURAL FEET";
     else
         part_str = mons->foot_name(true);
 
