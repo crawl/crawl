@@ -178,6 +178,8 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 
 string unwrap_desc(string desc);
 
+template<class T> bool _always_true(T) { return true; }
+
 /**
  * Find the enumerator e between begin and end that satisfies pred(e) and
  * whose name, as given by namefunc(e), has the earliest occurrence of the
