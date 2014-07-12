@@ -44,7 +44,6 @@
 #include "coordit.h"
 #include "crash.h"
 #include "database.h"
-#include "dbg-scan.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "describe.h"
