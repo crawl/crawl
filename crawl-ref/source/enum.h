@@ -341,10 +341,12 @@ enum attribute_type
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
+#if TAG_MAJOR_VERSION == 34
     ATTR_DIVINE_FIRE_RES,      // Divine fire resistance (Qazlal).
     ATTR_DIVINE_COLD_RES,      // Divine cold resistance (Qazlal).
     ATTR_DIVINE_ELEC_RES,      // Divine electricity resistance (Qazlal).
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
+#endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     NUM_ATTRIBUTES
 };

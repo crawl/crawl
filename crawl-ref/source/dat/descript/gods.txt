@@ -372,6 +372,5 @@ or, for particularly devout followers, a more widespread disaster.
 Followers of Qazlal can give life to elemental clouds, turning them into
 elementals whose loyalty depends on the origin of the cloud. Followers can
 gain temporary resistances against the elements on taking damage from that
-element. Qazlal will eventually offer more permanent protection against an
-element of the devotee's choosing.
+element.
 %%%%

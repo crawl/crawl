@@ -1112,34 +1112,11 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL)
+            else if (god == GOD_QAZLAL
+                     && you.piety >= piety_breakpoint(0))
             {
-                if (you.piety >= piety_breakpoint(0))
-                {
-                    mprf(MSGCH_GOD, "A storm instantly forms around you!");
-                    you.redraw_armour_class = true; // also handles shields
-                }
-                if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from fire.");
-                }
-                if (you.attribute[ATTR_DIVINE_COLD_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from cold.");
-                }
-                if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from electricity.");
-                }
-                if (you.attribute[ATTR_DIVINE_AC])
-                {
-                    simple_god_message(
-                        " reinstates your protection from physical attacks.");
-                    you.redraw_armour_class = true;
-                }
+                mprf(MSGCH_GOD, "A storm instantly forms around you!");
+                you.redraw_armour_class = true; // also handles shields
             }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
@@ -1307,21 +1284,6 @@ static void _inc_penance(god_type god, int val)
                 mprf(MSGCH_DURATION,
                      "Your resistance to physical damage fades away.");
                 you.duration[DUR_QAZLAL_AC] = 0;
-                you.redraw_armour_class = true;
-            }
-            if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                simple_god_message(" revokes your protection from fire.", god);
-            if (you.attribute[ATTR_DIVINE_COLD_RES])
-                simple_god_message(" revokes your protection from cold.", god);
-            if (you.attribute[ATTR_DIVINE_ELEC_RES])
-            {
-                simple_god_message(
-                    " revokes your protection from electricity.", god);
-            }
-            if (you.attribute[ATTR_DIVINE_AC])
-            {
-                simple_god_message(
-                    " revokes your protection from physical attacks.", god);
                 you.redraw_armour_class = true;
             }
         }
@@ -2514,10 +2476,6 @@ static void _gain_piety_point()
 
                     you.one_time_ability_used.set(you.religion);
                     break;
-                case GOD_QAZLAL:
-                    simple_god_message(" will now grant you protection from "
-                                       "an element of your choosing.");
-                    break;
                 default:
                     break;
             }
@@ -2629,11 +2587,6 @@ void lose_piety(int pgn)
                 {
                     simple_god_message(
                         " is no longer ready to corrupt your weapon.");
-                }
-                else if (you_worship(GOD_QAZLAL))
-                {
-                    simple_god_message(
-                        " is no longer ready to protect you from an element.");
                 }
             }
         }
@@ -3009,29 +2962,6 @@ void excommunication(god_type new_god)
             mprf(MSGCH_DURATION,
                  "Your resistance to physical damage fades away.");
             you.duration[DUR_QAZLAL_AC] = 0;
-            you.redraw_armour_class = true;
-        }
-        if (you.attribute[ATTR_DIVINE_FIRE_RES])
-        {
-            you.attribute[ATTR_DIVINE_FIRE_RES] = 0;
-            simple_god_message(" revokes your protection from fire.", old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_COLD_RES])
-        {
-            you.attribute[ATTR_DIVINE_COLD_RES] = 0;
-            simple_god_message(" revokes your protection from cold.", old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_ELEC_RES])
-        {
-            you.attribute[ATTR_DIVINE_ELEC_RES] = 0;
-            simple_god_message(" revokes your protection from electricity.",
-                               old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_AC])
-        {
-            you.attribute[ATTR_DIVINE_AC] = 0;
-            simple_god_message(
-                " revokes your protection from physical attacks.", old_god);
             you.redraw_armour_class = true;
         }
         _set_penance(old_god, 25);

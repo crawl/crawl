@@ -4958,39 +4958,6 @@ void describe_god(god_type which_god, bool give_title)
                 {
                     have_any = true;
                 }
-
-            // Print divine resistances at the end of the list.
-            if (which_god == GOD_QAZLAL)
-            {
-                if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from fire (rF+).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_COLD_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from cold (rC+).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from electricity (rElec).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_AC])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from physical attacks (AC+3).",
-                        ABIL_NON_ABILITY);
-                }
-            }
         }
 
         string extra = get_linebreak_string(_religion_help(which_god),
