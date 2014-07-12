@@ -1396,10 +1396,6 @@ hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
         }
         break;
 
-    case OBJ_CORPSES:   // unwieldy
-        ret = HANDS_TWO;
-        break;
-
     default:
         break;
     }
