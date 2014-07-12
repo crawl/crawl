@@ -3785,7 +3785,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_19
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3841,7 +3841,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_23
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 x.x.x.x.x.x.
@@ -3859,7 +3859,7 @@ x.x.x.x.x.x.
 ENDMAP
 
 NAME:  minivault_24
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3877,7 +3877,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25
-TAGS:    transparent allow_dup extra ruin_abyss decor
+TAGS:    transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH:   D, Elf, Crypt, Lair, Abyss
 SHUFFLE: XY
 SUBST:   X=x, Y=+
@@ -3897,7 +3897,7 @@ MAP
 ENDMAP
 
 NAME: minivault_26
-TAGS: transparent allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 c..........c
@@ -3915,7 +3915,7 @@ c..........c
 ENDMAP
 
 NAME: minivault_27
-TAGS: transparent allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
