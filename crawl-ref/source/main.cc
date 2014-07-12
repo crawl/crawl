@@ -539,7 +539,7 @@ static void _show_commandline_options_help()
     puts("  -mapstat [<levels>] run map stats on the given range of levels");
     puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
          "syntax.");
-    puts("      Examples: Lair:2- and '!Pan,!Abyss'");
+    puts("      Examples: '-mapstat D,Depths' and '-mapstat Snake:1-4,Spider:1-4,Orc'");
     puts("  -objstat [<levels>] run monster and item stats on the given range "
          "of levels");
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
