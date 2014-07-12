@@ -443,7 +443,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return true;
 
     // Small species wielding large weapons...
-    if (bsize < SIZE_MEDIUM && !check_weapon_wieldable_size(item, bsize))
+    if (bsize < SIZE_MEDIUM && !is_weapon_wieldable(item, bsize))
         return false;
 
     if (!ignore_brand)

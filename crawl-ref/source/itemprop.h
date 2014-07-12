@@ -78,9 +78,7 @@ void ident_reflector(item_def *item);
 int weapon_rarity(int w_type) IMMUTABLE;
 
 int   cmp_weapon_size(const item_def &item, size_type size) PURE;
-bool  check_weapon_wieldable_size(const item_def &item, size_type size) PURE;
-
-size_type weapon_size(const item_def &item) PURE;
+bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);

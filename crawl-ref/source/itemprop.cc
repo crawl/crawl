@@ -165,8 +165,8 @@ struct weapon_def
     int                 str_weight;
 
     skill_type          skill;
-    hands_reqd_type     hands;
-    size_type           fit_size;
+    size_type           min_2h_size; // min size to wield the weapon 2h
+    size_type           min_1h_size; // min size to wield the weapon 1h
     missile_type        ammo;         // MI_NONE for non-launchers
 
     int                 dam_type;
@@ -178,159 +178,159 @@ static const weapon_def Weapon_prop[] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_ROD,               "rod",                 5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 0 },
     { WPN_HAMMER,            "hammer",              7,  3, 13,  90,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_MACE,              "mace",                8,  3, 14, 120,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_FLAIL,             "flail",              10,  0, 14, 130,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_MORNINGSTAR,       "morningstar",        13, -2, 15, 140,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 2 },
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 0 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15, 180,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 2 },
     { WPN_GREAT_MACE,        "great mace",         17, -4, 17, 270,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
+        SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
+        SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_STABBING | DAM_SLICE, 10 },
     { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_STABBING | DAM_SLICE, 2 },
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
     { WPN_CUTLASS,           "cutlass",             7,  4, 12,  90,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_BLESSED_FALCHION,      "blessed falchion",       9,  2, 12, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_BASTARD_SWORD,          "bastard sword",        15, -1, 15, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_BASTARD_SWORD, "blessed bastard sword", 16, -2, 14, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 16, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_CLAYMORE,              "claymore",              19, -4, 19, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_CLAYMORE,      "blessed claymore",      20, -5, 18, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0 },
 
     // Axes
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
-        SK_AXES,         HANDS_ONE,    SIZE_LITTLE, MI_NONE,
+        SK_AXES,       SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_WAR_AXE,           "war axe",            11,  0, 15, 180,  7,
-        SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_AXES,       SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BROAD_AXE,         "broad axe",          13, -2, 16, 230,  8,
-        SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_AXES,       SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17, 250,  8,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20, 280,  9,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 2 },
 
     // Polearms
     { WPN_SPEAR,             "spear",               6,  4, 11,  50,  3,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_SMALL,  MI_NONE,
+        SK_POLEARMS,     SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_PIERCING, 10 },
     { WPN_TRIDENT,           "trident",             9,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_POLEARMS,     SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 10 },
     { WPN_HALBERD,           "halberd",            13, -3, 15, 200,  5,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_POLEARMS,     SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_POLEARMS,     SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_POLEARMS,     SIZE_LITTLE,    SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 2 },
     { WPN_TRISHULA,          "trishula",           13,  0, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_POLEARMS,     SIZE_LITTLE,    SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 17, 200,  6,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_POLEARMS,     SIZE_MEDIUM,    NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_POLEARMS,     SIZE_MEDIUM,    NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING, 2 },
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  3,
-        SK_STAVES,       HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
+        SK_STAVES,       SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
+        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -339,26 +339,26 @@ static const weapon_def Weapon_prop[] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE,
+        SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 0 },
 
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,  20,  1,
-        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
+        SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
     { WPN_GREATSLING,        "greatsling",          8, -1, 14,  20,  1,
-        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
+        SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 2 },
 
 
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
-        SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
+        SK_CROSSBOWS,    SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 10 },
 
     { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
-        SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
+        SK_BOWS,         SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 10 },
     { WPN_LONGBOW,           "longbow",            15,  0, 18, 120,  3,
-        SK_BOWS,         HANDS_TWO,    SIZE_LARGE,  MI_ARROW,
+        SK_BOWS,         SIZE_MEDIUM,  NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 10 },
 };
 
@@ -1363,43 +1363,21 @@ int single_damage_type(const item_def &item)
     return ret;
 }
 
-size_type weapon_size(const item_def &item)
-{
-    return Weapon_prop[Weapon_index[item.sub_type]].fit_size;
-}
-
 // Give hands required to wield weapon for a torso of "size".
 // Not adjusted by species or anything, which is why it's "basic".
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
-    hands_reqd_type ret = HANDS_ONE;
+    ASSERT(is_weapon(item));
 
-    switch (item.base_type)
-    {
-    case OBJ_STAVES:
-        if (size < SIZE_MEDIUM)
-            ret = HANDS_TWO;
-        else
-            ret = HANDS_ONE;
-        break;
+    const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type :
+                         OBJ_RODS == item.base_type    ? WPN_ROD :
+                         OBJ_STAVES == item.base_type  ? WPN_STAFF :
+                                                         WPN_UNKNOWN;
 
-    case OBJ_WEAPONS:
-        ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
-
-        // Adjust handedness only for small races using melee weapons
-        // that are larger than they are.
-        if (!is_range_weapon(item)
-            && size < SIZE_MEDIUM
-            && weapon_size(item) > size)
-        {
-            ret = HANDS_TWO;
-        }
-        break;
-
-    default:
-        break;
-    }
-    return ret;
+    if (wpn_type == WPN_UNKNOWN)
+        return HANDS_ONE; // ???
+    return size >= Weapon_prop[Weapon_index[wpn_type]].min_1h_size ? HANDS_ONE
+                                                                   : HANDS_TWO;
 }
 
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type)
@@ -1713,17 +1691,14 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     return !skills.empty();
 }
 
-// Returns number of sizes away from being a usable weapon.
-static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
-{
-    const int fit = Weapon_prop[Weapon_index[item.sub_type]].fit_size - size;
-
-    return (fit < -2) ? fit + 2 :
-           (fit >  1) ? fit - 1 : 0;
-}
-
-// Returns true if weapon is usable as a weapon.
-bool check_weapon_wieldable_size(const item_def &item, size_type size)
+/**
+ * Checks if the provided weapon is wieldable by a creature of the given size.
+ *
+ * @param item      The weapon in question.
+ * @param size      The size of the creature trying to wield the weapon.
+ * @return          Whether a creature of the given size can wield the weapon.
+ */
+bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
@@ -1734,15 +1709,7 @@ bool check_weapon_wieldable_size(const item_def &item, size_type size)
         return true;
     }
 
-    int fit = _fit_weapon_wieldable_size(item, size);
-
-    // Adjust fit for size.
-    if (size < SIZE_SMALL && fit > 0)
-        fit--;
-    else if (size > SIZE_LARGE && fit < 0)
-        fit++;
-
-    return fit == 0;
+    return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
 }
 
 //
