@@ -450,8 +450,7 @@ public:
     bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp = -1);
 
-    void hibernate(int power = 0);
-    void put_to_sleep(actor *attacker, int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false);
     void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");

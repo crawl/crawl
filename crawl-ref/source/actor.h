@@ -223,7 +223,8 @@ public:
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength,
+                              bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
@@ -231,7 +232,6 @@ public:
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;

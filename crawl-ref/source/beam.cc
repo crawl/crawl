@@ -3516,11 +3516,8 @@ void bolt::affect_player_enchantment(bool resistible)
     switch (flavour)
     {
     case BEAM_HIBERNATION:
-        you.hibernate(ench_power);
-        break;
-
     case BEAM_SLEEP:
-        you.put_to_sleep(NULL, ench_power);
+        you.put_to_sleep(NULL, ench_power, flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -5408,7 +5405,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (simple_monster_message(mon, " looks drowsy..."))
                 obvious_effect = true;
-            mon->hibernate();
+            mon->put_to_sleep(agent(), ench_power, true);
             return MON_AFFECTED;
         }
         return MON_UNAFFECTED;

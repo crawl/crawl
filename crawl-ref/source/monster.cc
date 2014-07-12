@@ -5512,25 +5512,17 @@ bool monster::do_shaft()
     return reveal;
 }
 
-void monster::hibernate(int)
+void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
 {
-    if (!can_hibernate())
+    const bool valid_target = hibernate ? can_hibernate() : can_sleep();
+    if (!valid_target)
         return;
 
     stop_constricting_all();
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
-    add_ench(ENCH_SLEEP_WARY);
-}
-
-void monster::put_to_sleep(actor *attacker, int strength)
-{
-    if (!can_sleep())
-        return;
-
-    stop_constricting_all();
-    behaviour = BEH_SLEEP;
-    flags |= MF_JUST_SLEPT;
+    if (hibernate)
+        add_ench(ENCH_SLEEP_WARY);
 }
 
 void monster::weaken(actor *attacker, int pow)
