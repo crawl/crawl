@@ -74,7 +74,7 @@ static inline ucs_t toalower(ucs_t c)
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(string a, string b);
 
-#ifdef HAVE_STRLCPY
+#ifdef CRAWL_HAVE_STRLCPY
 #include <cstring>
 #else
 size_t strlcpy(char *dst, const char *src, size_t n);

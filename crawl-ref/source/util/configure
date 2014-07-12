@@ -1,8 +1,7 @@
 #!/bin/sh
 
 CXX="$1"
-if [ -z "$CXX" ]
-  then
+if [ -z "$CXX" ]; then
     echo >&2 "CXX not specified"
     exit 1
 fi
@@ -17,8 +16,11 @@ int main()
 }
 END
 
-$CXX "$@" -c conftest.cc >/dev/null 2>/dev/null &&
-  FDATASYNC="#define HAVE_FDATASYNC" || FDATASYNC="#undef HAVE_FDATASYNC"
+if $CXX "$@" -c conftest.cc >/dev/null 2>/dev/null; then
+    FDATASYNC="#define CRAWL_HAVE_FDATASYNC"
+else
+    FDATASYNC="#undef CRAWL_HAVE_FDATASYNC"
+fi
 rm -f conftest.cc conftest.o
 
 cat <<END >conftest.cc
@@ -32,8 +34,11 @@ int main()
 }
 END
 
-$CXX "$@" -c conftest.cc >/dev/null 2>/dev/null &&
-  STRLCPY="#define HAVE_STRLCPY" || STRLCPY="#undef HAVE_STRLCPY"
+if $CXX "$@" -c conftest.cc >/dev/null 2>/dev/null; then
+    STRLCPY="#define CRAWL_HAVE_STRLCPY"
+else
+    STRLCPY="#undef CRAWL_HAVE_STRLCPY"
+fi
 rm -f conftest.cc conftest.o
 
 cat <<END >config.h
