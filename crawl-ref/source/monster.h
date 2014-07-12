@@ -253,7 +253,8 @@ public:
                         bool ignore_transform = false) const;
     bool      could_wield(const item_def &item,
                           bool ignore_brand = false,
-                          bool ignore_transform = false) const;
+                          bool ignore_transform = false,
+                          bool quiet = true) const;
 
     int       missile_count();
     void      wield_melee_weapon(int near = -1);

@@ -415,41 +415,70 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     return could_wield(item, ignore_brand, ignore_transform);
 }
 
+/**
+ * Checks whether the player could ever wield the given weapon, regardless of
+ * what they're currently wielding, transformed into, or any other state.
+ *
+ * @param item              The item to wield.
+ * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @return                  Whether the player could potentially wield the
+ *                          item.
+ */
 bool player::could_wield(const item_def &item, bool ignore_brand,
-                         bool ignore_transform) const
+                         bool ignore_transform, bool quiet) const
 {
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
     if (species == SP_FELID)
-        return false;
-
-    // Only ogres and trolls can wield giant clubs or large rocks (for
-    // sandblast).
-    if (bsize < SIZE_LARGE
-        && ((item.base_type == OBJ_WEAPONS
-             && is_giant_club_type(item.sub_type))
-            || (item.base_type == OBJ_MISSILES &&
-                item.sub_type == MI_LARGE_ROCK)))
     {
+        if (!quiet)
+            mpr("You can't use weapons.");
         return false;
     }
 
-    // Anybody can wield missiles to enchant, item_mass permitting
-    if (item.base_type == OBJ_MISSILES)
-        return true;
+    // Only ogres and trolls can wield large rocks (for sandblast).
+    if (bsize < SIZE_LARGE
+        && item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
+    {
+        if (!quiet)
+            mpr("That's too large and heavy for you to wield.");
+        return false;
+    }
 
-    // Or any other object, although there's no point here.
+    // Most non-weapon objects can be wielded, though there's rarely a point
     if (!is_weapon(item))
+    {
+        if (item.base_type == OBJ_ARMOUR)
+        {
+            if (!quiet)
+                mpr("You can't wield armour.");
+            return false;
+        }
+
+        if (item.base_type == OBJ_JEWELLERY)
+        {
+            if (!quiet)
+                mpr("You can't wield jewellery.");
+            return false;
+        }
+
         return true;
+    }
 
     // Small species wielding large weapons...
-    if (bsize < SIZE_MEDIUM && !is_weapon_wieldable(item, bsize))
-        return false;
-
-    if (!ignore_brand)
+    if (!is_weapon_wieldable(item, bsize))
     {
-        if (undead_or_demonic() && is_holy_item(item))
-            return false;
+        if (!quiet)
+            mpr("That's too large for you to wield.");
+        return false;
+    }
+
+    // don't let undead/demonspawn wield holy weapons/scrolls (out of spite)
+    if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
+    {
+        if (!quiet)
+            mpr("This weapon is holy and will not allow you to wield it.");
+        return false;
     }
 
     return true;
