@@ -4916,7 +4916,7 @@ vector<ability_type> get_possible_sacrifices()
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
     if (!player_mutation_level(MUT_NO_DODGING))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
-    if (!player_mutation_level(MUT_NO_ARMOUR))
+    if (!player_mutation_level(MUT_NO_ARMOUR) || !you_can_wear(EQ_BODY_ARMOUR))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
     if (!player_mutation_level(MUT_MISSING_HAND))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
@@ -5380,7 +5380,22 @@ void ru_do_sacrifice(ability_type sacrifice)
             piety_gain = 25 + div_rand_round(skill_exp_needed(
                 you.skills[SK_DODGING], SK_DODGING, you.species), divisor);
             if (player_mutation_level(MUT_NO_ARMOUR))
-                piety_gain += 35;
+                piety_gain += 25;
+            else if (you.species == SP_OCTOPODE
+                    || you.species == SP_FELID
+                    || you.species == SP_RED_DRACONIAN
+                    || you.species == SP_WHITE_DRACONIAN
+                    || you.species == SP_GREEN_DRACONIAN
+                    || you.species == SP_YELLOW_DRACONIAN
+                    || you.species == SP_GREY_DRACONIAN
+                    || you.species == SP_BLACK_DRACONIAN
+                    || you.species == SP_PURPLE_DRACONIAN
+                    || you.species == SP_MOTTLED_DRACONIAN
+                    || you.species == SP_PALE_DRACONIAN
+                    || you.species == SP_BASE_DRACONIAN)
+            {
+                piety_gain += 35; // this sacrifice is worse for these races
+            }
 
             mprf("Ru asks you to sacrifice your ability to dodge.");
             mprf("This is %s sacrifice.",
@@ -5404,7 +5419,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             piety_gain = 25 + div_rand_round(skill_exp_needed(
                 you.skills[SK_ARMOUR], SK_ARMOUR, you.species), divisor);
             if (player_mutation_level(MUT_NO_DODGING))
-                piety_gain += 35;
+                piety_gain += 25;
 
             mprf("Ru asks you to sacrifice your ability to wear armour well.");
             mprf("This is %s sacrifice.",
