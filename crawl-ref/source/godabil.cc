@@ -5837,14 +5837,16 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     if (!_cataclysmable(where, pow, dummy, agent))
         return 0;
     monster* mons = monster_at(where);
-
     ASSERT(mons);
 
     int dmg;
-
     // divisor should be a multiple of 81 to match to max of 54 + XL
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 810);
     int effect = random2(6);
+
+    if (mons_is_firewood(mons))
+        effect = 99; // > 2 is just damage -- no slowed toadstools
+
     switch (effect)
     {
         case 0:
