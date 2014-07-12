@@ -507,11 +507,19 @@ monster_type transform_mons()
 
 string blade_parts(bool terse)
 {
+    string str;
+
     if (you.species == SP_FELID)
-        return terse ? "paws" : "front paws";
-    if (you.species == SP_OCTOPODE)
-        return "tentacles";
-    return "hands";
+        str = terse ? "paw" : "front paw";
+    else if (you.species == SP_OCTOPODE)
+        str = "tentacle";
+    else
+        str = "hand";
+
+    if (!player_mutation_level(MUT_MISSING_HAND))
+        str = pluralise(str);
+
+    return str;
 }
 
 monster_type dragon_form_dragon_type()
@@ -885,8 +893,15 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     case TRAN_BLADE_HANDS:
         tran_name = ("Blade " + uppercase_first(blade_parts(true))).c_str();
-        msg       = "Your " + blade_parts()
-                    + " turn into razor-sharp scythe blades.";
+        if (player_mutation_level(MUT_MISSING_HAND)
+            && you.species != SP_OCTOPODE)
+        {
+            msg       = "Your " + blade_parts()
+                        + " turns into a razor-sharp scythe blade.";
+        } else {
+            msg       = "Your " + blade_parts()
+                        + " turn into razor-sharp scythe blades.";
+        }
         break;
 
     case TRAN_STATUE:
@@ -1267,8 +1282,12 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_BLADE_HANDS:
-        mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
-             blade_parts().c_str());
+        if (player_mutation_level(MUT_MISSING_HAND))
+            mprf(MSGCH_DURATION, "Your %s reverts to its normal proportions.",
+                blade_parts().c_str());
+        else
+            mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
+                blade_parts().c_str());
         you.wield_change = true;
         break;
 

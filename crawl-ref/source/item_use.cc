@@ -599,6 +599,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             {
                 // No strange race can wear this.
                 const char* parts[] = { "head", "hands", "feet" };
+                if (player_mutation_level(MUT_MISSING_HAND))
+                    parts[1] = "hand";
+
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
                 {
@@ -660,7 +663,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.has_claws(false) == 3)
         {
             if (verbose)
-                mpr("You can't wear gloves with your huge claws!");
+            {
+                if (player_mutation_level(MUT_MISSING_HAND))
+                    mpr("You can't wear gloves with your huge claws!");
+                else
+                    mpr("You can't wear a glove with your huge claw!");
+            }
             return false;
         }
     }

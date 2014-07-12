@@ -547,6 +547,9 @@ string player::hand_name(bool plural, bool *can_plural) const
     if (str.empty())
         return plural ? "hands" : "hand";
 
+    if (player_mutation_level(MUT_MISSING_HAND))
+        *can_plural = false;
+
     if (plural && *can_plural)
         str = pluralise(str);
 
@@ -659,14 +662,22 @@ string player::unarmed_attack_name() const
         break;
     case TRAN_STATUE:
         if (has_usable_claws(true))
-            text = "Stone claws";
+            text = "Stone claw";
         else if (has_usable_tentacles(true))
+        {
             text = "Stone tentacles";
+            break;
+        }
         else
-            text = "Stone fists";
+            text = "Stone fist";
+        if (!player_mutation_level(MUT_MISSING_HAND))
+            text = pluralise(text);
         break;
     case TRAN_ICE_BEAST:
-        text = "Ice fists (freeze)";
+        if (player_mutation_level(MUT_MISSING_HAND))
+            text = "Ice fist (freeze)";
+        else
+            text = "Ice fists (freeze)";
         break;
     case TRAN_DRAGON:
         text = "Teeth and claws";
