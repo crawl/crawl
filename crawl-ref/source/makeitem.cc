@@ -15,7 +15,6 @@
 #include "artefact.h"
 #include "colour.h"
 #include "coord.h"
-#include "dbg-scan.h"
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -2758,10 +2757,6 @@ int items(bool allow_uniques,
         {
             make_item_unrandart(mitm[p], force_ego);
             ASSERT(mitm[p].is_valid());
-#ifdef DEBUG_DIAGNOSTICS
-            if (crawl_state.obj_stat_gen)
-                objstat_record_item(mitm[p]);
-#endif
             return p;
         }
         // the base item otherwise
@@ -2894,10 +2889,6 @@ int items(bool allow_uniques,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
-#ifdef DEBUG_DIAGNOSTICS
-    if (crawl_state.obj_stat_gen)
-        objstat_record_item(mitm[p]);
-#endif
     return p;
 }
 
