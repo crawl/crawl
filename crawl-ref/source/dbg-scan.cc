@@ -1093,25 +1093,30 @@ item_type::item_type(item_def &item)
 
 static void _init_fields()
 {
-    ITEM_FIELDS(SCROLLS,    "Num", "NumPiles", "PileQuant");
-    ITEM_FIELDS(POTIONS,    "Num", "NumPiles", "PileQuant");
+    ITEM_FIELDS(SCROLLS,    "Num", "NumHeldMons", "NumPiles", "PileQuant");
+    ITEM_FIELDS(POTIONS,    "Num", "NumHeldMons", "NumPiles", "PileQuant");
     ITEM_FIELDS(FOOD,       "Num", "NumPiles", "PileQuant", "TotalNormNutr",
                             "TotalCarnNutr", "TotalHerbNutr");
-    ITEM_FIELDS(GOLD,       "Num", "NumPiles", "PileQuant");
-    ITEM_FIELDS(WANDS,      "Num", "WandCharges");
+    ITEM_FIELDS(GOLD,       "Num", "NumHeldMons", "NumPiles", "PileQuant");
+    ITEM_FIELDS(WANDS,      "Num", "NumHeldMons", "WandCharges");
     ITEM_FIELDS(WEAPONS,    "OrdNum", "ArteNum", "AllNum", "OrdEnch",
                             "ArteEnch", "AllEnch", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed", "OrdNumBranded");
-    ITEM_FIELDS(STAVES,     "Num", "NumCursed");
+                            "ArteNumCursed", "AllNumCursed", "OrdNumBranded",
+                            "OrdNumHeldMons", "ArteNumHeldMons",
+                            "AllNumHeldMons");
+    ITEM_FIELDS(STAVES,     "Num", "NumCursed", "NumHeldMons");
     ITEM_FIELDS(ARMOUR,     "OrdNum", "ArteNum", "AllNum", "OrdEnch",
                             "ArteEnch", "AllEnch", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed",
-                            "OrdNumBranded");
+                            "ArteNumCursed", "AllNumCursed", "OrdNumBranded",
+                            "OrdNumHeldMons", "ArteNumHeldMons",
+                            "AllNumHeldMons");
     ITEM_FIELDS(JEWELLERY,  "OrdNum", "ArteNum", "AllNum", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed", "OrdEnch",
+                            "ArteNumCursed", "AllNumCursed", "OrdNumHeldMons",
+                            "ArteNumHeldMons", "AllNumHeldMons", "OrdEnch",
                             "ArteEnch", "AllEnch");
     ITEM_FIELDS(RODS,       "Num", "RodMana", "RodRecharge", "NumCursed");
-    ITEM_FIELDS(MISSILES,   "Num", "NumBranded", "NumPiles", "PileQuant");
+    ITEM_FIELDS(MISSILES,   "Num", "NumHeldMons", "NumBranded", "NumPiles",
+                            "PileQuant");
     ITEM_FIELDS(MISCELLANY, "Num", "MiscPlus");
     ITEM_FIELDS(DECKS,      "PlainNum", "OrnateNum", "LegendaryNum",
                             "AllNum", "AllDeckCards");
@@ -1256,14 +1261,15 @@ void objstat_record_item(item_def &item)
     int brand = -1;
     string num_f = is_arte ? "ArteNum" : "OrdNum";
     string cursed_f = is_arte ? "ArteNumCursed" : "OrdNumCursed";
+    string num_hm_f = is_arte ? "ArteNumHeldMons" : "OrdNumHeldMons";
     string ench_f = is_arte ? "ArteEnch" : "OrdEnch";
 
-    // Don't count mimics as items; these are converted explicitely in
-    // mg_do_build_level().
+    // Just in case, don't count mimics as items; these are converted
+    // explicitely in mg_do_build_level().
     if (item.flags & ISFLAG_MIMIC)
         return;
 
-    // The Some averages are calculated after all items are tallied.
+    // Some averages are calculated after all items are tallied.
     switch (itype.base_type)
     {
     case ITEM_MISSILES:
@@ -1275,6 +1281,8 @@ void objstat_record_item(item_def &item)
     case ITEM_SCROLLS:
     case ITEM_POTIONS:
     case ITEM_GOLD:
+        if (item.holding_monster())
+            _record_item_stat(cur_lev, itype, "NumHeldMons", item.quantity);
         _record_item_stat(cur_lev, itype, "Num", item.quantity);
         _record_item_stat(cur_lev, itype, "NumPiles", 1);
         break;
@@ -1295,6 +1303,8 @@ void objstat_record_item(item_def &item)
     case ITEM_WANDS:
         _record_item_stat(cur_lev, itype, "Num", 1);
         _record_item_stat(cur_lev, itype, "WandCharges", item.plus);
+        if (item.holding_monster())
+            _record_item_stat(cur_lev, itype, "NumHeldMons", item.quantity);
         break;
     case ITEM_WEAPONS:
     case ITEM_ARMOUR:
@@ -1304,7 +1314,11 @@ void objstat_record_item(item_def &item)
             brand = get_armour_ego_type(item);
         _record_item_stat(cur_lev, itype, num_f, 1);
         _record_item_stat(cur_lev, itype, "AllNum", 1);
-
+        if (item.holding_monster())
+        {
+            _record_item_stat(cur_lev, itype, num_hm_f, item.quantity);
+            _record_item_stat(cur_lev, itype, "AllNumHeldMons", item.quantity);
+        }
         if (item.cursed())
         {
             _record_item_stat(cur_lev, itype, cursed_f, item.cursed());
@@ -1319,6 +1333,8 @@ void objstat_record_item(item_def &item)
     case ITEM_STAVES:
         _record_item_stat(cur_lev, itype, "Num", 1);
         _record_item_stat(cur_lev, itype, "NumCursed", item.cursed());
+        if (item.holding_monster())
+            _record_item_stat(cur_lev, itype, "NumHeldMons", item.quantity);
         break;
     case ITEM_JEWELLERY:
         _record_item_stat(cur_lev, itype, num_f, 1);
@@ -1327,6 +1343,11 @@ void objstat_record_item(item_def &item)
         {
             _record_item_stat(cur_lev, itype, cursed_f, 1);
             _record_item_stat(cur_lev, itype, "AllNumCursed", 1);
+        }
+        if (item.holding_monster())
+        {
+            _record_item_stat(cur_lev, itype, num_hm_f, item.quantity);
+            _record_item_stat(cur_lev, itype, "AllNumHeldMons", item.quantity);
         }
         _record_item_stat(cur_lev, itype, ench_f, item.plus);
         _record_item_stat(cur_lev, itype, "AllEnch", item.plus);
