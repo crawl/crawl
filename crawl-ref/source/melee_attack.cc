@@ -1017,7 +1017,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         aux_attack = aux_verb = "kick";
         aux_damage = 5;
 
-        if (player_mutation_level(MUT_HOOVES))
+        if (you.has_usable_hooves())
         {
             // Max hoof damage: 10.
             aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
@@ -1327,10 +1327,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         case UNAT_KICK:
         {
-            const int hooves = player_mutation_level(MUT_HOOVES);
-
-            if (hooves && pre_ac_dmg > post_ac_dmg)
+            if (you.has_usable_hooves() && pre_ac_dmg > post_ac_dmg)
             {
+                const int hooves = player_mutation_level(MUT_HOOVES);
                 const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
                 // do some of the previously ignored damage in extra-damage
                 damage_done += inflict_damage(dmg, BEAM_MISSILE);
@@ -3854,7 +3853,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
     {
     case UNAT_KICK:
         return is_uc
-                || player_mutation_level(MUT_HOOVES)
+                || you.has_usable_hooves()
                 || you.has_usable_talons()
                 || player_mutation_level(MUT_TENTACLE_SPIKE);
 

@@ -3821,7 +3821,7 @@ int check_stealth()
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
 
-        else if (player_mutation_level(MUT_HOOVES) > 0)
+        else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
 
         else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
@@ -7352,6 +7352,22 @@ int player::has_talons(bool allow_tran) const
 bool player::has_usable_talons(bool allow_tran) const
 {
     return !player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran);
+}
+
+int player::has_hooves(bool allow_tran) const
+{
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (fishtail)
+        return 0;
+
+    return player_mutation_level(MUT_HOOVES, allow_tran);
+}
+
+bool player::has_usable_hooves(bool allow_tran) const
+{
+    return has_hooves(allow_tran)
+           && (!player_wearing_slot(EQ_BOOTS)
+               || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
 }
 
 int player::has_fangs(bool allow_tran) const
