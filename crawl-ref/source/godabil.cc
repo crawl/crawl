@@ -5609,6 +5609,7 @@ void ru_do_sacrifice(ability_type sacrifice)
     you.props["ru_sacrifice_delay"] = div_rand_round(70 * (3 + you.faith()), 3);
 
     ru_expire_sacrifices();
+    redraw_screen(); // pretty much everything could have changed
 }
 
 // Remove the offer of sacrifices after they've been offered for sufficient
