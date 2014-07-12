@@ -671,8 +671,7 @@ public:
     }
 
     bool asleep() const;
-    void hibernate(int power = 0);
-    void put_to_sleep(actor *, int power = 0);
+    void put_to_sleep(actor *, int power = 0, bool hibernate = false);
     void awake();
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source);

@@ -7777,34 +7777,28 @@ bool player::can_smell() const
     return species != SP_MUMMY;
 }
 
-void player::hibernate(int)
+/**
+ * Attempts to put the player to sleep.
+ *
+ * @param power     The power of the effect putting the player to sleep.
+ * @param hibernate Whether the player is being put to sleep by 'ensorcelled
+ *                  hibernation' (doesn't affect characters with rC, ignores
+ *                  power), or by a normal sleep effect.
+ */
+void player::put_to_sleep(actor*, int power, bool hibernate)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_hibernate() || duration[DUR_SLEEP_IMMUNITY])
+    const bool valid_target = hibernate ? can_hibernate() : can_sleep();
+    if (!valid_target)
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
     }
 
-    stop_constricting_all();
-    end_searing_ray();
-    mpr("You fall asleep.");
-
-    stop_delay();
-    flash_view(DARKGREY);
-
-    // Do this *after* redrawing the view, or viewwindow() will no-op.
-    set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
-}
-
-void player::put_to_sleep(actor*, int power)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!can_sleep() || duration[DUR_SLEEP_IMMUNITY])
+    if (duration[DUR_SLEEP_IMMUNITY])
     {
-        canned_msg(MSG_YOU_UNAFFECTED);
+        mpr("You can't fall asleep again this soon!");
         return;
     }
 
@@ -7816,7 +7810,9 @@ void player::put_to_sleep(actor*, int power)
     flash_view(DARKGREY);
 
     // As above, do this after redraw.
-    set_duration(DUR_SLEEP, 5 + random2avg(power/10, 5));
+    const int dur = hibernate ? 3 + random2avg(5, 2) :
+                                5 + random2avg(power/10, 5);
+    set_duration(DUR_SLEEP, dur);
 }
 
 void player::awake()
