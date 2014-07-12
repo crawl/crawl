@@ -1616,13 +1616,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_FIRE_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        rf++;
-    }
-
     // spells:
     if (temp)
     {
@@ -1788,13 +1781,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_COLD_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        rc++;
-    }
-
     if (rc < -3)
         rc = -3;
     else if (rc > 3)
@@ -1881,13 +1867,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
     re += player_mutation_level(MUT_SHOCK_RESISTANCE, temp);
     re -= player_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
-
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_ELEC_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        re++;
-    }
 
     if (temp)
     {
@@ -6491,9 +6470,6 @@ int player::armour_class() const
         AC += 100 * player_icemail_armour_class();
 
     if (duration[DUR_QAZLAL_AC])
-        AC += 300;
-
-    if (you.attribute[ATTR_DIVINE_AC] && !player_under_penance(GOD_QAZLAL))
         AC += 300;
 
     if (you.duration[DUR_CORROSION])
