@@ -3769,9 +3769,13 @@ conduct_type player_will_anger_monster(monster_type type)
 
 conduct_type player_will_anger_monster(monster* mon)
 {
-    if (player_mutation_level(MUT_NO_LOVE))
+    if (player_mutation_level(MUT_NO_LOVE)
+        && mon->type != MONS_BALL_LIGHTNING
+        && mon->type != MONS_BATTLESPHERE
+        && mon->type != MONS_SPECTRAL_WEAPON
+        && mon->type != MONS_FULMINANT_PRISM)
     {
-        // Player angers all monsters
+        // Player angers all real monsters
         return DID_SACRIFICE_LOVE;
     }
     if (is_good_god(you.religion) && mon->is_unholy())
