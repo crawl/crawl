@@ -213,6 +213,11 @@ void init_mon_name_cache()
     }
 }
 
+static const char *_mon_entry_name(size_t idx)
+{
+    return mondata[idx].name;
+}
+
 monster_type get_monster_by_name(string name, bool substring)
 {
     if (name.empty())
@@ -230,29 +235,10 @@ monster_type get_monster_by_name(string name, bool substring)
         return MONS_PROGRAM_BUG;
     }
 
-    int best = 0x7fffffff;
-
-    monster_type mon = MONS_PROGRAM_BUG;
-    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
-    {
-        string candidate = mondata[i].name;
-        lowercase(candidate);
-
-        const int mtype = mondata[i].mc;
-
-        const string::size_type match = candidate.find(name);
-        if (match == string::npos)
-            continue;
-
-        int qual = 0x7ffffffe;
-        // We prefer prefixes over partial matches.
-        if (match == 0)
-            qual = candidate.length();;
-
-        if (qual < best)
-            best = qual, mon = monster_type(mtype);
-    }
-    return mon;
+    size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
+                                     _always_true<size_t>, _mon_entry_name);
+    return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
+                                   : (monster_type) mondata[idx].mc;
 }
 
 void init_monsters()
