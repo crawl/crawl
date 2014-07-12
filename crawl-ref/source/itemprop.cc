@@ -346,7 +346,7 @@ static const weapon_def Weapon_prop[] =
         SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
     { WPN_GREATSLING,        "greatsling",          8, -1, 14,  20,  1,
-        SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
+        SK_SLINGS,       SIZE_LITTLE,  SIZE_SMALL, MI_STONE,
         DAMV_NON_MELEE, 2 },
 
 
