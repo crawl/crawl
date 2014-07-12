@@ -544,7 +544,8 @@ public:
                         bool ignore_transform = false) const;
     bool      could_wield(const item_def &item,
                           bool ignore_brand = false,
-                          bool ignore_transform = false) const;
+                          bool ignore_transform = false,
+                          bool quiet = true) const;
 
     string name(description_level_type type, bool force_visible = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;

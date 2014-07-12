@@ -121,35 +121,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_FELID && is_weapon(*weapon))
-    {
-        SAY(mpr("You can't use weapons."));
+    if (!you.could_wield(*weapon, true, true, !say_reason))
         return false;
-    }
-
-    if (weapon->base_type == OBJ_ARMOUR)
-    {
-        SAY(mpr("You can't wield armour."));
-        return false;
-    }
-
-    if (weapon->base_type == OBJ_JEWELLERY)
-    {
-        SAY(mpr("You can't wield jewellery."));
-        return false;
-    }
-
-    // Only ogres and trolls can wield giant clubs and large rocks (for
-    // sandblast).
-    if (you.body_size(PSIZE_TORSO, true) < SIZE_LARGE
-        && ((weapon->base_type == OBJ_WEAPONS
-             && (is_giant_club_type(weapon->sub_type)))
-             || (weapon->base_type == OBJ_MISSILES &&
-                 weapon->sub_type == MI_LARGE_ROCK)))
-    {
-        SAY(mpr("That's too large and heavy for you to wield."));
-        return false;
-    }
 
     // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
@@ -161,14 +134,6 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
         else
             return true;
-    }
-
-    // Small species wielding large weapons...
-    if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
-        && !is_weapon_wieldable(*weapon, you.body_size(PSIZE_BODY)))
-    {
-        SAY(mpr("That's too large for you to wield."));
-        return false;
     }
 
     bool id_brand = false;

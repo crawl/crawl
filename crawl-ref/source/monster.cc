@@ -641,8 +641,17 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     return could_wield(item, ignore_brand, ignore_transform);
 }
 
+/**
+ * Checks whether the monster could ever wield the given weapon, regardless of
+ * what they're currently wielding or any other state.
+ *
+ * @param item              The item to wield.
+ * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @return                  Whether the monster could potentially wield the
+ *                          item.
+ */
 bool monster::could_wield(const item_def &item, bool ignore_brand,
-                           bool /* ignore_transform */) const
+                           bool /* ignore_transform */, bool /* quiet */) const
 {
     ASSERT(item.defined());
 

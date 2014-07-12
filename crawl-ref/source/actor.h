@@ -138,7 +138,8 @@ public:
                            bool ignore_transform = false) const = 0;
     virtual bool could_wield(const item_def &item,
                              bool ignore_brand = false,
-                             bool ignore_transform = false) const = 0;
+                             bool ignore_transform = false,
+                             bool quiet = true) const = 0;
 
     virtual void make_hungry(int nutrition, bool silent = true)
     {
