@@ -2670,6 +2670,15 @@ static void tag_read_you(reader &th)
             you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_METABOLISM)
+    {
+        you.mutation[MUT_FAST_METABOLISM] =
+        you.innate_mutation[MUT_FAST_METABOLISM];
+
+        you.mutation[MUT_SLOW_METABOLISM] =
+        you.innate_mutation[MUT_SLOW_METABOLISM];
+    }
 #endif
 
     count = unmarshallUByte(th);

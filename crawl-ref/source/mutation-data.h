@@ -214,7 +214,7 @@ static const mutation_def mut_data[] =
    "Your natural healing is strengthened."},
 },
 
-{ MUT_FAST_METABOLISM,               10,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
+{ MUT_FAST_METABOLISM,                0,  3,  MUTFLAG_BAD, false,
   "fast metabolism",
 
   {"You have a fast metabolism.",
@@ -230,7 +230,7 @@ static const mutation_def mut_data[] =
    "Your metabolism slows."},
 },
 
-{ MUT_SLOW_METABOLISM,                7,  2, MUTFLAG_GOOD, false,
+{ MUT_SLOW_METABOLISM,                0,  2, MUTFLAG_GOOD, false,
   "slow metabolism",
 
   {"You have a slow metabolism.",
