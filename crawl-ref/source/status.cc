@@ -330,7 +330,7 @@ bool fill_status_info(int status, status_info* inf)
     case DUR_SURE_BLADE:
     {
         inf->light_colour = BLUE;
-        inf->light_text   = "Blade";
+        inf->light_text   = "SBlade";
         inf->short_text   = "bonded with blade";
         string desc;
         if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
@@ -845,7 +845,7 @@ static void _describe_transform(status_info* inf)
         inf->long_text     += "bat-form.";
         break;
     case TRAN_BLADE_HANDS:
-        inf->light_text = "Blades";
+        inf->light_text = "Blade";
         inf->short_text = "blade " + blade_parts(true);
         inf->long_text  = "You have blades for " + blade_parts() + ".";
         break;
