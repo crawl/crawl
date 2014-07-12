@@ -2704,6 +2704,8 @@ string monster::foot_name(bool plural, bool *can_plural) const
             const char* feet[] = {"paw", "talon", "hoof"};
             str = RANDOM_ELEMENT(feet);
         }
+        else if (mons_genus(type) == MONS_HOG)
+            str = "trotter";
         else if (ch == 'h')
             str = "paw";
         else if (ch == 'l' || ch == 'D')
