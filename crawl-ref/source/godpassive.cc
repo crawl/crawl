@@ -591,9 +591,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
         // Boost weapon skill.
         if (wpn->base_type == OBJ_WEAPONS)
-        {
             boost[item_attack_skill(*wpn)] = bondage;
-        }
 
         // Those staves don't benefit from evocation.
         // Boost spellcasting instead.
