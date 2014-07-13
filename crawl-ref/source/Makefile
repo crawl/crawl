@@ -973,12 +973,12 @@ endif
 endif
 
 ifdef BUILD_PCRE
-USE_PCRE = YesPlease
-endif
-
-ifdef USE_PCRE
 DEFINES += -DREGEX_PCRE
-LIBS += -lpcre
+else 
+  ifdef USE_PCRE
+  DEFINES += -DREGEX_PCRE
+  LIBS += -lpcre
+  endif
 endif
 
 ifdef USE_ICC
