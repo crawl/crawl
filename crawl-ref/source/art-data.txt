@@ -523,11 +523,11 @@ BOOL:     elec
 
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
-PLUS:     +10
+PLUS:     +15
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
-BASE_DELAY: +5
+BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
 

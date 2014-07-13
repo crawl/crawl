@@ -356,7 +356,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_ARBALEST,          "arbalest",           20,  2, 19, 150,  8,
         SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10 },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    24,  0, 22, 250,  9,
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    25,  0, 23, 250,  9,
         SK_CROSSBOWS,    SIZE_SMALL,  NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2 },
 
