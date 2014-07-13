@@ -358,7 +358,9 @@ DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance | buckler | nothing w:30
-KMONS:   3 = mermaid
+KMONS:   3 = mermaid ; trident ego:flaming | spear ego:flaming . \
+             robe ego:fire_resistance | robe w:5 . \
+             buckler ego:fire_resistance w:20 | buckler | nothing w:70
 KMONS:   4 = siren
 KMONS:   67 = fire bat
 KMONS:   8 = fire crab
