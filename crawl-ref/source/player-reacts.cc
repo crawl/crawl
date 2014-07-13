@@ -327,11 +327,17 @@ void player_reacts_to_monsters()
         for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
         {
             monster* mon = monster_at(*ri);
-            if (mon == NULL || mons_is_projectile(mon->type)
-                || mon->friendly() || mons_is_firewood(mon))
+
+            if (mon == NULL
+                || mons_is_projectile(mon->type)
+                || mon->friendly()
+                || mons_is_firewood(mon)
+                || !you.see_cell(mon->pos())
+                || (mon->invisible() && !you.can_see_invisible()))
             {
                 continue;
             }
+
             ASSERT(mon);
 
             mon_threat_level_type threat_level = mons_threat_level(mon);
@@ -343,10 +349,11 @@ void player_reacts_to_monsters()
 
         if (horror_level > 0)
         {
-            if (horror_level != old_horror_level)
+            if (horror_level > old_horror_level)
             {
+                if (horror_level > old_horror_level)
                 // only show a message on change
-                you.props["horror_penalty"] = horror_level;
+
                 if (horror_level > 4)
                     mpr("Monsters! Monsters everywhere! You have to get out of here!");
                 else if (horror_level > 2)
@@ -355,6 +362,7 @@ void player_reacts_to_monsters()
                     mpr("You feel a twist of horror at the sight of this foe.");
             }
             // as long as there's still scary enemies, keep the horror going
+            you.props["horror_penalty"] = horror_level;
             you.set_duration(DUR_HORROR, 1);
         }
         else if (you.duration[DUR_HORROR])
