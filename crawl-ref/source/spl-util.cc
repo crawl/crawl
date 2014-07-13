@@ -1234,6 +1234,9 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_HOLY_BREATH:
     {
         targetter_cloud tgt(&you, range);
+        // Accept monsters that are in clouds for the hostiles-in-range check
+        // (not for actual targetting).
+        tgt.avoid_clouds = false;
         for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
              ri; ++ri)
         {
