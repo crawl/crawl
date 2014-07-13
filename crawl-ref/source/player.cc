@@ -1266,7 +1266,7 @@ bool player_can_hit_monster(const monster* mon)
         return false;
 
     const item_def *weapon = you.weapon();
-    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
+    return weapon && melee_skill(*weapon) == SK_POLEARMS;
 }
 
 bool player_can_hear(const coord_def& p, int hear_distance)

@@ -77,7 +77,6 @@ static int _exciting_colour()
 
 static int _weapon_colour(const item_def &item)
 {
-    int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
     string itname = item.name(DESC_PLAIN);
@@ -89,58 +88,32 @@ static int _weapon_colour(const item_def &item)
     if (is_demonic(item))
         return LIGHTRED;
 
-    if (is_range_weapon(item))
+    switch (item_attack_skill(item))
     {
-        switch (range_skill(item))
-        {
-        case SK_BOWS:
-            item_colour = BLUE;
-            break;
-        case SK_CROSSBOWS:
-            item_colour = LIGHTBLUE;
-            break;
-        case SK_THROWING:
-            item_colour = WHITE;
-            break;
-        case SK_SLINGS:
-            item_colour = BROWN;
-            break;
-        default:
-            // huh?
-            item_colour = LIGHTGREEN;
-            break;
-        }
+    case SK_BOWS:
+        return BLUE;
+    case SK_CROSSBOWS:
+        return LIGHTBLUE;
+    case SK_THROWING:
+        return WHITE;
+    case SK_SLINGS:
+        return BROWN;
+    case SK_SHORT_BLADES:
+        return CYAN;
+    case SK_LONG_BLADES:
+        return LIGHTCYAN;
+    case SK_AXES:
+        return MAGENTA;
+    case SK_MACES_FLAILS:
+        return LIGHTGREY;
+    case SK_POLEARMS:
+        return RED;
+    case SK_STAVES:
+        return GREEN;
+    default:
+        // huh?
+        return LIGHTGREEN;
     }
-    else
-    {
-        switch (weapon_skill(item))
-        {
-        case SK_SHORT_BLADES:
-            item_colour = CYAN;
-            break;
-        case SK_LONG_BLADES:
-            item_colour = LIGHTCYAN;
-            break;
-        case SK_AXES:
-            item_colour = MAGENTA;
-            break;
-        case SK_MACES_FLAILS:
-            item_colour = LIGHTGREY;
-            break;
-        case SK_POLEARMS:
-            item_colour = RED;
-            break;
-        case SK_STAVES:
-            item_colour = GREEN;
-            break;
-        default:
-            // huh?
-            item_colour = LIGHTGREEN;
-            break;
-        }
-    }
-
-    return item_colour;
 }
 
 static int _missile_colour(const item_def &item)

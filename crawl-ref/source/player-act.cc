@@ -320,9 +320,7 @@ random_var player::attack_delay(item_def *weap, item_def *projectile,
                 || projectile
                    && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
         {
-            const skill_type wpn_skill = is_range_weapon(*weap)
-                                         ? range_skill(*weap)
-                                         : weapon_skill(*weap);
+            const skill_type wpn_skill = item_attack_skill(*weap);
             attk_delay = constant(property(*weap, PWPN_SPEED));
             attk_delay -=
                 div_rand_round(constant(you.skill(wpn_skill, 10)), 20);

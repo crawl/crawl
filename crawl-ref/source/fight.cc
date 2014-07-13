@@ -591,7 +591,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
         const item_def &wpn = you.inv[weap];
         if (is_melee_weapon(wpn)
-            && you.skill(weapon_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
+            && you.skill(melee_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
         {
             unarmed_warning = true;
         }
@@ -705,7 +705,7 @@ int weapon_min_delay(const item_def &weapon)
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
-    if (weapon_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
+    if (melee_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
         min_delay = 5;
 
     // All weapons have min delay 7 or better

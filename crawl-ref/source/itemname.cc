@@ -86,7 +86,7 @@ static const char* _interesting_origin(const item_def &item)
     switch (item.orig_monnum)
     {
     case MONS_SONJA:
-        if (weapon_skill(item) == SK_SHORT_BLADES)
+        if (melee_skill(item) == SK_SHORT_BLADES)
             return "Sonja";
     case MONS_PSYCHE:
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_DAGGER)
@@ -1327,9 +1327,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             // need a separate flag for this, so they can still have
             // their holy weapons.
             buff << "Blessed ";
-            if (weapon_skill(*this) == SK_MACES_FLAILS)
+            if (melee_skill(*this) == SK_MACES_FLAILS)
                 buff << "Scourge";
-            else if (weapon_skill(*this) == SK_POLEARMS)
+            else if (melee_skill(*this) == SK_POLEARMS)
                 buff << "Trishula";
             else
                 buff << "Blade";

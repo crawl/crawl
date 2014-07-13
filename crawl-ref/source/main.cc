@@ -2580,7 +2580,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             else
             {
                 list<actor*> cleave_targets;
-                if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
+                if (you.weapon() && melee_skill(*you.weapon()) == SK_AXES
                     && !you.confused())
                 {
                     get_all_cleave_targets(&you, target, cleave_targets);

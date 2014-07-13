@@ -853,7 +853,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (verbose)
     {
-        switch (weapon_skill(item))
+        switch (item_attack_skill(item))
         {
         case SK_POLEARMS:
             description += "\n\nIt can be evoked to extend its reach.";
@@ -897,8 +897,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "particularly susceptible opponents.";
                 if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
                 {
-                    description += " Big, fiery blades are also staple armaments "
-                        "of hydra-hunters.";
+                    description += " Big, fiery blades are also staple "
+                        "armaments of hydra-hunters.";
                 }
             }
             break;
@@ -1045,8 +1045,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     {
         description += "\n\nThis weapon falls into the";
 
-        const skill_type skill =
-            is_range_weapon(item)? range_skill(item) : weapon_skill(item);
+        const skill_type skill = item_attack_skill(item);
 
         description +=
             make_stringf(" '%s' category. ",
