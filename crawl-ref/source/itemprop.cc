@@ -374,6 +374,7 @@ struct missile_def
     const char *name;
     int         dam;
     int         mass;
+    int         mulch_rate;
     bool        throwable;
 };
 
@@ -381,17 +382,17 @@ static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
 #if TAG_MAJOR_VERSION == 34
-    { MI_DART,          "dart",          2,    3, true  },
+    { MI_DART,          "dart",          2,    3, 1,  true  },
 #endif
-    { MI_NEEDLE,        "needle",        0,    1, false },
-    { MI_STONE,         "stone",         2,    6, true  },
-    { MI_ARROW,         "arrow",         0,    5, false },
-    { MI_BOLT,          "bolt",          0,    5, false },
-    { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
-    { MI_SLING_BULLET,  "sling bullet",  5,    4, false },
-    { MI_JAVELIN,       "javelin",      10,   80, true  },
-    { MI_THROWING_NET,  "throwing net",  0,   30, true  },
-    { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
+    { MI_NEEDLE,        "needle",        0,    1, 12, false },
+    { MI_STONE,         "stone",         2,    6, 8,  true  },
+    { MI_ARROW,         "arrow",         0,    5, 8,  false },
+    { MI_BOLT,          "bolt",          0,    5, 8,  false },
+    { MI_LARGE_ROCK,    "large rock",   20,  600, 30, true  },
+    { MI_SLING_BULLET,  "sling bullet",  5,    4, 8,  false },
+    { MI_JAVELIN,       "javelin",      10,   80, 20, true  },
+    { MI_THROWING_NET,  "throwing net",  0,   30, 0,  true  },
+    { MI_TOMAHAWK,      "tomahawk",      6,   30, 20, true  },
 };
 
 struct food_def
@@ -1793,33 +1794,7 @@ bool ammo_never_destroyed(const item_def &missile)
  */
 int ammo_type_destroy_chance(int missile_type)
 {
-    switch (missile_type)
-    {
-
-#if TAG_MAJOR_VERSION == 34
-        case MI_DART:
-            return 6;
-#endif
-
-        case MI_SLING_BULLET:
-        case MI_STONE:
-        case MI_ARROW:
-        case MI_BOLT:
-            return 8;
-
-        case MI_NEEDLE:
-            return 12;
-
-        case MI_TOMAHAWK:
-        case MI_JAVELIN:
-            return 20;
-
-        case MI_LARGE_ROCK:
-            return 30;
-
-        default:
-            die("Unknown missile type");
-    }
+    return Missile_prop[ Missile_index[missile_type] ].mulch_rate;
 }
 
 /**
