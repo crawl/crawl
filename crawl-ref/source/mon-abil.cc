@@ -1838,31 +1838,23 @@ static bool _lost_soul_affectable(const monster* mons)
            && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 }
 
-struct hd_sorter
-{
-    bool operator()(const pair<monster* ,int> &a, const pair<monster* ,int> &b)
-    {
-        return a.second > b.second;
-    }
-};
-
 static bool _lost_soul_teleport(monster* mons)
 {
     bool seen = you.can_see(mons);
 
-   vector<pair<monster*, int> > candidates;
+    typedef pair<monster*, int> mon_quality;
+    vector<mon_quality> candidates;
 
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
         {
-            pair<monster* , int> m = make_pair(*mi, min(mi->hit_dice, 18)
-                                                    + random2(8));
+            mon_quality m(*mi, min(mi->hit_dice, 18) + random2(8));
             candidates.push_back(m);
         }
     }
-    sort(candidates.begin(), candidates.end(), hd_sorter());
+    sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
 
     for (unsigned int i = 0; i < candidates.size(); ++i)
     {
