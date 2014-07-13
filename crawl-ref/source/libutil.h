@@ -250,6 +250,17 @@ static inline void swapv(Z &a, Z &b)
     b = tmp;
 }
 
+// A comparator for pairs.
+template<typename T>
+struct greater_second
+{
+    bool operator()(const T & left, const T & right)
+    {
+        return left.second > right.second;
+    }
+};
+
+
 static inline int sqr(int x)
 {
     return x * x;

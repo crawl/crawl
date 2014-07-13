@@ -19,6 +19,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -181,14 +182,6 @@ spret_type cast_recall(bool fail)
     return SPRET_SUCCESS;
 }
 
-struct recall_sorter
-{
-    bool operator()(const pair<mid_t,int> &a, const pair<mid_t,int> &b)
-    {
-        return a.second > b.second;
-    }
-};
-
 // Type recalled:
 // 0 = anything
 // 1 = undead only (Yred religion ability)
@@ -196,7 +189,8 @@ struct recall_sorter
 void start_recall(int type)
 {
     // Assemble the recall list.
-    vector<pair<mid_t, int> > rlist;
+    typedef pair<mid_t, int> mid_hd;
+    vector<mid_hd> rlist;
 
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
@@ -215,7 +209,7 @@ void start_recall(int type)
                 continue;
         }
 
-        pair<mid_t, int> m = make_pair(mi->mid, mi->hit_dice);
+        mid_hd m(mi->mid, mi->hit_dice);
         rlist.push_back(m);
     }
 
@@ -227,7 +221,7 @@ void start_recall(int type)
         // Sort the recall list roughly by HD, randomizing a little
         for (unsigned int i = 0; i < rlist.size(); ++i)
             rlist[i].second += random2(10);
-        sort(rlist.begin(), rlist.end(), recall_sorter());
+        sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
 
         you.recall_list.clear();
         for (unsigned int i = 0; i < rlist.size(); ++i)

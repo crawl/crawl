@@ -2373,19 +2373,6 @@ void update_level(int elapsedTime)
         delete_cloud(i);
 }
 
-// A comparison struct for use in an stl priority queue.
-template<typename T>
-struct greater_second
-{
-    // The stl priority queue is a max queue and uses < as the default
-    // comparison.  We want a min queue so we have to use a > operation
-    // here.
-    bool operator()(const T & left, const T & right)
-    {
-        return left.second > right.second;
-    }
-};
-
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
 static int _arc_decomposition(const coord_def & pos, int n_arcs)
@@ -2459,7 +2446,8 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
 
     // Using a priority queue because squares don't make very good circles at
     // larger radii.  We will visit points in order of increasing euclidean
-    // distance from the origin (not path distance).
+    // distance from the origin (not path distance).  We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
     priority_queue<coord_dist, vector<coord_dist>,
                    greater_second<coord_dist> > fringe;
 
