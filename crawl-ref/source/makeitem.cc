@@ -1076,7 +1076,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             // intentionally fallthrough to bow/xbow brands
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
-        case WPN_CROSSBOW:
+        case WPN_HAND_CROSSBOW:
+        case WPN_ARBALEST:
             rc = random_choose_weighted(48, SPWPN_FLAMING,
                                         25, SPWPN_FREEZING,
                                         15, SPWPN_EVASION,
@@ -1086,6 +1087,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_GREATSLING:
+        case WPN_TRIPLE_CROSSBOW:
             // totally arbitrary, first draft for "rare ranged weapon" brands
             rc = random_choose(SPWPN_SPEED,
                                SPWPN_FREEZING,

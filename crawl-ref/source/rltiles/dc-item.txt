@@ -167,9 +167,9 @@ sling2
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
-crossbow1 WPN_CROSSBOW
-crossbow2
-crossbow3
+arbalest1 WPN_ARBALEST
+arbalest2
+arbalest3
 longbow1 WPN_LONGBOW
 longbow2
 longbow3

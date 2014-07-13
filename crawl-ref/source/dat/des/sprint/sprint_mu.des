@@ -920,7 +920,7 @@ KMONS: f = butterfly
 KMONS: U = Norris ; morningstar ego:vorpal . large shield ego:reflection / \
            Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
-KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt
+KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
 KMONS: b = bush
 KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
@@ -1176,7 +1176,7 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
-           hp:100 tile:mons_statue_crossbow ; crossbow . bolt q:50 ego:silver
+           hp:100 tile:mons_statue_crossbow ; arbalest . bolt q:50 ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant

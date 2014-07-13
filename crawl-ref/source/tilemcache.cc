@@ -925,7 +925,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         break;
 
     case SK_CROSSBOWS:
-        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_CROSSBOW;
+        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_ARBALEST;
         break;
 
     case SK_SLINGS:

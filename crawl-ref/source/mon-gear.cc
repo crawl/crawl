@@ -268,7 +268,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         else if (one_chance_in(30) && level > 2)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_HAND_CROSSBOW;
             break;
         }
         break;
@@ -357,7 +357,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_ARBALEST;
             break;
         }
 
@@ -573,10 +573,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         {
             item.base_type = OBJ_WEAPONS;
             if (type == MONS_VASHNIA)
-                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_CROSSBOW;
+                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_ARBALEST;
             else
             {
-                item.sub_type = random_choose_weighted(3, WPN_CROSSBOW,
+                item.sub_type = random_choose_weighted(3, WPN_ARBALEST,
                                                        2, WPN_SHORTBOW,
                                                        1, WPN_LONGBOW,
                                                        0);
@@ -711,7 +711,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                || mon->type == MONS_MINOTAUR)
                               && coinflip())
                              ? WPN_LONGBOW
-                             : WPN_CROSSBOW;
+                             : WPN_ARBALEST;
             break;
         }
         // deliberate fall-through
@@ -741,7 +741,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only && one_chance_in(3))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_ARBALEST;
             break;
         }
 
@@ -911,7 +911,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_CROSSBOW;
+        item.sub_type  = WPN_ARBALEST;
         break;
 
     case MONS_EFREET:
@@ -1445,7 +1445,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = MAKE_GOOD_ITEM;
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
-            item.sub_type = coinflip() ? WPN_CROSSBOW : WPN_LONGBOW;
+        {
+            item.sub_type = random_choose_weighted(10, WPN_LONGBOW,
+                                                   9, WPN_ARBALEST,
+                                                   1, WPN_TRIPLE_CROSSBOW,
+                                                   0);
+        }
         else
         {
             item.sub_type = random_choose_weighted(10, WPN_DEMON_BLADE,

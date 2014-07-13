@@ -345,14 +345,19 @@ static const weapon_def Weapon_prop[] =
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,  20,  1,
         SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
-    { WPN_GREATSLING,        "greatsling",          8, -1, 14,  20,  1,
+    { WPN_GREATSLING,        "greatsling",          8, -1, 14,  30,  1,
         SK_SLINGS,       SIZE_LITTLE,  SIZE_SMALL, MI_STONE,
         DAMV_NON_MELEE, 2 },
 
-
-    { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
-        SK_CROSSBOWS,    SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_BOLT,
+    { WPN_HAND_CROSSBOW,     "hand crossbow",      11,  5, 15,  50,  5,
+        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 10 },
+    { WPN_ARBALEST,          "arbalest",           20,  2, 19, 150,  8,
+        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 10 },
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    24,  0, 22, 250,  9,
+        SK_CROSSBOWS,    SIZE_SMALL,  NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 2 },
 
     { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
         SK_BOWS,         SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_ARROW,
@@ -380,7 +385,7 @@ static const missile_def Missile_prop[] =
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         2,    6, true  },
     { MI_ARROW,         "arrow",         0,    5, false },
-    { MI_BOLT,          "bolt",          9,    5, false },
+    { MI_BOLT,          "bolt",          0,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
     { MI_SLING_BULLET,  "sling bullet",  5,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
@@ -1252,10 +1257,10 @@ int weapon_rarity(int w_type)
     case WPN_LONG_SWORD:
     case WPN_MORNINGSTAR:
     case WPN_WAR_AXE:
+    case WPN_HAND_CROSSBOW:
         return 7;
 
     case WPN_BATTLEAXE:
-    case WPN_CROSSBOW:
     case WPN_GREAT_SWORD:
     case WPN_SCIMITAR:
     case WPN_TRIDENT:
@@ -1264,6 +1269,7 @@ int weapon_rarity(int w_type)
     case WPN_GLAIVE:
     case WPN_HALBERD:
     case WPN_BLOWGUN:
+    case WPN_ARBALEST:
         return 5;
 
     case WPN_BROAD_AXE:
@@ -1290,6 +1296,7 @@ int weapon_rarity(int w_type)
     case WPN_EXECUTIONERS_AXE:
     case WPN_QUICK_BLADE:
     case WPN_CLAYMORE:
+    case WPN_TRIPLE_CROSSBOW:
     case WPN_DEMON_WHIP:
     case WPN_DEMON_BLADE:
     case WPN_DEMON_TRIDENT:

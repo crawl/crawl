@@ -759,8 +759,8 @@ ENDMAP
 NAME:   bailey_polearm_2
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
-MONS:   orc warrior w:5 ; crossbow . bolt . ring mail | scale mail / \
-        orc ; crossbow . bolt . ring mail | scale mail
+MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
+        orc ; arbalest . bolt . ring mail | scale mail
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
@@ -877,7 +877,7 @@ NAME:   bailey_polearm_4
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen no_pool_fixup
 ITEM:   any good_item
-MONS:   orc warrior ; crossbow . bolt . ring mail | scale mail | chain mail / \
+MONS:   orc warrior ; arbalest . bolt . ring mail | scale mail | chain mail / \
         orc warrior ; halberd . ring mail | scale mail | chain mail
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
