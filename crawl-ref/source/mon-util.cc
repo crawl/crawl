@@ -1022,8 +1022,10 @@ void discover_mimic(const coord_def& pos, bool wake)
         set_terrain_changed(pos);
         remove_markers_and_listeners_at(pos);
 
+#if TAG_MAJOR_VERSION == 34
         if (feat_is_door(feat))
             env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
+#endif
     }
 
     // Generate and place the monster.
