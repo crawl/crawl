@@ -136,6 +136,7 @@ public:
     int cnt_min, cnt_max;
     map<coord_def, aff_type> seen;
     vector<vector<coord_def> > queue;
+    bool avoid_clouds;
 };
 
 class targetter_splash : public targetter
