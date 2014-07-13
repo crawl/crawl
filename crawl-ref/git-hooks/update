@@ -15,5 +15,7 @@ branchname=${1#refs/heads/}
 oldhead=$2
 newhead=$3
 for merged in $(git-rev-parse --symbolic-full-name --not --branches | egrep -v "^\^$1$" | git-rev-list --stdin $oldhead..$newhead | tac); do
-  $GIT_DIR/hooks/crawl-ref-cia $merged $branchname
+  # Call your favorite announcement bot here
+  # $GIT_DIR/hooks/announce $merged $branchname
+  :
 done
