@@ -6,6 +6,7 @@
 struct feature_def
 {
     dungeon_feature_type feat;
+    const char*          name;
     dungeon_char_type    dchar;           // used for creating symbol
     ucs_t                symbol;          // symbol used for seen terrain
     ucs_t                magic_symbol;    // symbol used for magic-mapped terrain
@@ -25,6 +26,7 @@ void init_show_table();
 
 const feature_def &get_feature_def(show_type object);
 const feature_def &get_feature_def(dungeon_feature_type feat);
+bool is_valid_feature_type(dungeon_feature_type feat);
 
 static inline bool is_notable_terrain(dungeon_feature_type ftype)
 {

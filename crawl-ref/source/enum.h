@@ -1313,16 +1313,14 @@ enum dungeon_char_type
 //
 // * New stairs/portals: update feat_stair_direction.
 // * Any: Add an entry in feature-data.h for the feature.
-// * Any: edit directn.cc and add a description for the feature.
 // * Any: edit dat/descript/features.txt and add a
 //        long description if appropriate.
-// * Any: check the grid_* functions in misc.cc and make sure
+// * Any: check the feat_* functions in terrain.cc and make sure
 //        they return sane values for your new feature.
-// * Any: edit dungeon.cc and add a symbol to map_feature() and
-//        vault_grid() for the feature, if you want vault maps to
-//        be able to use it.  If you do, also update
+// * Any: edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
+//        if you want vault maps to be able to use it. If you do, also update
 //        docs/develop/levels/syntax.txt with the new symbol.
-// * Any: edit l_dgngrd.cc and add the feature's name to the dngn_feature_names
+// * Any: edit terrain.cc and add the feature's name to the dngn_feature_names
 //        array, if you want vault map Lua code to be able to use the
 //        feature, and/or you want to be able to create the feature
 //        using the "create feature by name" wizard command.
