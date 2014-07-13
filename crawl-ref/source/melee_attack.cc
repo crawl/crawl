@@ -889,8 +889,10 @@ void melee_attack::adjust_noise()
         case AT_KICK:
         case AT_CLAW:
         case AT_GORE:
+#if TAG_MAJOR_VERSION == 34
         case AT_SNAP:
         case AT_SPLASH:
+#endif
         case AT_CHERUB:
             noise_factor = 125;
             break;
