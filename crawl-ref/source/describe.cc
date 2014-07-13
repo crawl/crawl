@@ -4236,16 +4236,6 @@ static string _religion_help(god_type god)
         }
         break;
 
-    case GOD_QAZLAL:
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
-        {
-            result += "You can pray at an altar to gain a choice of elemental "
-                      "resistances.";
-        }
-        break;
-
     case GOD_GOZAG:
         if (!player_under_penance()
             && !you.one_time_ability_used[god])
