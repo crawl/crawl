@@ -1447,7 +1447,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     // Don't pick up items that would interfere with our special ability
     if (mons->type == MONS_RED_DEVIL)
-        return weapon_skill(weapon) == SK_POLEARMS;
+        return melee_skill(weapon) == SK_POLEARMS;
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1502,15 +1502,15 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return get_vorpal_type(weapon) == DVORP_SLASHING;
 
         if (mons->type == MONS_WIGLAF)
-            return weapon_skill(weapon) == SK_AXES;
+            return melee_skill(weapon) == SK_AXES;
 
         if (mons->type == MONS_NIKOLA)
             return get_weapon_brand(weapon) == SPWPN_ELECTROCUTION;
 
         if (mons->type == MONS_DUVESSA)
         {
-            return weapon_skill(weapon) == SK_SHORT_BLADES
-                   || weapon_skill(weapon) == SK_LONG_BLADES;
+            return melee_skill(weapon) == SK_SHORT_BLADES
+                   || melee_skill(weapon) == SK_LONG_BLADES;
         }
 
         if (mons->type == MONS_IGNACIO)
@@ -4153,7 +4153,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     case SK_STAVES:
         ret = hd;
         if (weapon()
-            && sk == weapon_skill(*weapon())
+            && sk == melee_skill(*weapon())
             && _is_signature_weapon(this, *weapon()))
         {
             // generally slightly skilled if it's a signature weapon

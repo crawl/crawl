@@ -104,8 +104,11 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = f
 
 int weapon_str_weight(const item_def &wpn) PURE;
 
-skill_type weapon_skill(const item_def &item) PURE;
-skill_type weapon_skill(object_class_type wclass, int wtype) IMMUTABLE;
+skill_type item_attack_skill(const item_def &item) PURE;
+skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
+
+skill_type melee_skill(const item_def &item) PURE;
+skill_type melee_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 skill_type range_skill(const item_def &item) PURE;
 skill_type range_skill(object_class_type wclass, int wtype) IMMUTABLE;

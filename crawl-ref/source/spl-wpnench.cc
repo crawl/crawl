@@ -306,7 +306,7 @@ spret_type cast_sure_blade(int power, bool fail)
 {
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
-    else if (weapon_skill(you.weapon()->base_type,
+    else if (melee_skill(you.weapon()->base_type,
                           you.weapon()->sub_type) != SK_SHORT_BLADES)
     {
         mpr("You cannot bond with this weapon.");

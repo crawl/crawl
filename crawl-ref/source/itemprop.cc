@@ -1484,7 +1484,7 @@ bool is_blessed_convertible(const item_def &item)
                && (is_demonic(item)
                    || item.sub_type == WPN_SACRED_SCOURGE
                    || item.sub_type == WPN_TRISHULA
-                   || weapon_skill(item) == SK_LONG_BLADES));
+                   || melee_skill(item) == SK_LONG_BLADES));
 }
 
 bool convert2good(item_def &item)
@@ -1566,8 +1566,46 @@ int weapon_str_weight(const item_def &wpn)
     return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
 
-// Returns melee skill of item.
-skill_type weapon_skill(const item_def &item)
+/**
+ * Returns the skill used by the given item to attack.
+ *
+ * @param item  The item under consideration.
+ * @return      The skill used to attack with the given item; defaults to
+ *              SK_FIGHTING if no melee or ranged skill applies.
+ */
+skill_type item_attack_skill(const item_def &item)
+{
+    return is_range_weapon(item) ? range_skill(item) : melee_skill(item);
+}
+
+/**
+ * Returns the skill used by the given item type to attack.
+ *
+ * @param wclass  The item base type under consideration.
+ * @param wtype   The item subtype under consideration.
+ * @return      The skill used to attack with the given item type; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type item_attack_skill(object_class_type wclass, int wtype)
+{
+    item_def    wpn;
+
+    wpn.base_type = wclass;
+    wpn.sub_type = wtype;
+
+    return item_attack_skill(wpn);
+}
+
+
+
+/**
+ * Returns the skill used by the given item to attack in melee.
+ *
+ * @param item  The item under consideration.
+ * @return      The skill used to attack with the given item; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type melee_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
@@ -1580,15 +1618,22 @@ skill_type weapon_skill(const item_def &item)
     return SK_FIGHTING;
 }
 
-// Front function for the above when we don't have a physical item to check.
-skill_type weapon_skill(object_class_type wclass, int wtype)
+/**
+ * Returns the skill used by the given item type to attack in melee.
+ *
+ * @param wclass  The item base type under consideration.
+ * @param wtype   The item subtype under consideration.
+ * @return      The skill used to attack with the given item type; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type melee_skill(object_class_type wclass, int wtype)
 {
     item_def    wpn;
 
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return weapon_skill(wpn);
+    return melee_skill(wpn);
 }
 
 // Returns range skill of the item.
@@ -1680,7 +1725,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
-    skill_type sk = weapon_skill(item);
+    skill_type sk = melee_skill(item);
     if (sk != SK_FIGHTING)
         skills.insert(sk);
 
@@ -1704,7 +1749,7 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 
     // Staves and rods are currently wieldable for everyone just to be nice.
     if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
-        || weapon_skill(item) == SK_STAVES)
+        || melee_skill(item) == SK_STAVES)
     {
         return true;
     }
@@ -1871,7 +1916,7 @@ int ammo_type_damage(int missile_type)
 //
 reach_type weapon_reach(const item_def &item)
 {
-    if (weapon_skill(item) == SK_POLEARMS)
+    if (melee_skill(item) == SK_POLEARMS)
         return REACH_TWO;
     return REACH_NONE;
 }

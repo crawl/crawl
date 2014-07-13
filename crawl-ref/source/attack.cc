@@ -393,10 +393,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
 
-    wpn_skill       = weapon
-                      ?  (is_range_weapon(*weapon) ? range_skill(*weapon)
-                                                   : weapon_skill(*weapon))
-                      : unarmed_skill;
+    wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 

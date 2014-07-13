@@ -3673,7 +3673,7 @@ monster* shadow_monster(bool equip)
     mon->hit_points = you.hp;
     mon->hit_dice   = min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? weapon_skill(mitm[wpn_index])
+                                                 ? melee_skill(mitm[wpn_index])
                                                  : SK_UNARMED_COMBAT, 10, 20)
                                   + you.skill_rdiv(SK_FIGHTING, 10, 20)));
     mon->set_position(you.pos());

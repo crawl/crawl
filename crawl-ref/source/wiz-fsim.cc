@@ -70,11 +70,7 @@ static skill_type _equipped_skill()
     const int missile = you.m_quiver->get_fire_item();
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
-    {
-        if (is_range_weapon(*iweap))
-            return range_skill(*iweap);
-        return weapon_skill(*iweap);
-    }
+        return item_attack_skill(*iweap);
 
     if (missile != -1)
         return range_skill(you.inv[missile]);

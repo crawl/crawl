@@ -990,7 +990,7 @@ static void _give_items_skills(const newgame_def& ng)
         if (!you.weapon())
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-            you.skills[weapon_skill(*you.weapon())] = weap_skill;
+            you.skills[melee_skill(*you.weapon())] = weap_skill;
     }
 
     if (you.species == SP_FELID)
