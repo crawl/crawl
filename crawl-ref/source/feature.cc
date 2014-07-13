@@ -18,7 +18,7 @@ static feature_def invis_fd, cloud_fd;
  *  we add C++11 support we can't have aggregate initialisation (in feature-data.h)
  *  and a constructor.
  *
- *  @param[out] The new feature_def to be given values.
+ *  @param[out] fd The new feature_def to be given values.
  */
 void init_fd(feature_def &fd)
 {
@@ -31,35 +31,10 @@ void init_fd(feature_def &fd)
     fd.minimap = MF_UNSEEN;
 }
 
-const feature_def &get_feature_def(show_type object)
-{
-    switch (object.cls)
-    {
-    case SH_INVIS_EXPOSED:
-        return invis_fd;
-    case SH_CLOUD:
-        return cloud_fd;
-    case SH_ITEM:
-        return item_defs[object.item];
-    case SH_MONSTER:
-        // If this is a monster that is hidden explicitly, show items if
-        // any instead, or the base feature if there are no items.
-        if (object.item != SHOW_ITEM_NONE)
-            return item_defs[object.item];
-    case SH_FEATURE:
-        return get_feature_def(object.feat);
-    default:
-        die("invalid show object: class %d", object.cls);
-    }
-}
-
-const feature_def &get_feature_def(dungeon_feature_type feat)
-{
-    ASSERT_RANGE(feat, 0, NUM_FEATURES);
-    ASSERT(feat_index[feat] != -1);
-    return feat_defs[feat_index[feat]];
-}
-
+/** Do the default colour relations on a feature_def.
+ *
+ *  @param[out] f The feature_def to be filled out.
+ */
 static void _create_colours(feature_def &f)
 {
     if (f.seen_colour == BLACK)
@@ -72,6 +47,10 @@ static void _create_colours(feature_def &f)
         f.em_colour = f.colour;
 }
 
+/** Create the symbol/magic_symbol based on the dchar.
+ *
+ *  @param[out] f The feature_def to be filled out.
+ */
 static void _create_symbols(feature_def &f)
 {
     if (!f.symbol && f.dchar != NUM_DCHAR_TYPES)
@@ -81,6 +60,9 @@ static void _create_symbols(feature_def &f)
         f.magic_symbol = f.symbol;
 }
 
+/** Put the feature overrides from the 'feature' option, stored in
+ *  Options.feature_overrides, into feat_defs.
+ */
 static void _apply_feature_overrides()
 {
     for (map<dungeon_feature_type, feature_def>::const_iterator fo
@@ -124,6 +106,9 @@ static void _init_feature_index()
     }
 }
 
+/** Called at startup to perform fixups on feat_defs and fill in item_defs
+ *  and {invis,cloud}_fd.
+ */
 void init_show_table()
 {
     _init_feature_index();
@@ -157,6 +142,51 @@ void init_show_table()
     _create_colours(cloud_fd);
 }
 
+/** Get the feature_def (not necessarily in feat_defs) for this show_type.
+ *
+ *  @param object The show_type for which a corresponding feature_def needs
+ *                to be found.
+ *  @returns a feature_def corresponding to it.
+ */
+const feature_def &get_feature_def(show_type object)
+{
+    switch (object.cls)
+    {
+    case SH_INVIS_EXPOSED:
+        return invis_fd;
+    case SH_CLOUD:
+        return cloud_fd;
+    case SH_ITEM:
+        return item_defs[object.item];
+    case SH_MONSTER:
+        // If this is a monster that is hidden explicitly, show items if
+        // any instead, or the base feature if there are no items.
+        if (object.item != SHOW_ITEM_NONE)
+            return item_defs[object.item];
+    case SH_FEATURE:
+        return get_feature_def(object.feat);
+    default:
+        die("invalid show object: class %d", object.cls);
+    }
+}
+
+/** Get the feature_def in feat_defs for this dungeon_feature_type.
+ *
+ *  @param feat The dungeon_feature_type for which the feature_def needs to be found.
+ *  @returns a feature_def with the data in feature-data.h.
+ */
+const feature_def &get_feature_def(dungeon_feature_type feat)
+{
+    ASSERT_RANGE(feat, 0, NUM_FEATURES);
+    ASSERT(feat_index[feat] != -1);
+    return feat_defs[feat_index[feat]];
+}
+
+/** What should be showed for this feat on magic mapping?
+ *
+ *  @param feat The feat to be hidden by magic mapping.
+ *  @returns the converted type.
+ */
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
 {
     const feature_def& fdef = get_feature_def(feat);
