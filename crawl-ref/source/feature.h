@@ -21,6 +21,7 @@ struct feature_def
 };
 
 void init_fd(feature_def& fd);
+void init_show_table();
 
 const feature_def &get_feature_def(show_type object);
 const feature_def &get_feature_def(dungeon_feature_type feat);
@@ -29,8 +30,6 @@ static inline bool is_notable_terrain(dungeon_feature_type ftype)
 {
     return get_feature_def(ftype).is_notable();
 }
-
-void init_show_table();
 
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat);
 
