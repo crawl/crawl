@@ -30,7 +30,6 @@
 */
 
 
-
 /* Worley()
 
    An implementation of the key cellular texturing basis
