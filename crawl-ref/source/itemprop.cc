@@ -1520,8 +1520,6 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
     return item_attack_skill(wpn);
 }
 
-
-
 /**
  * Returns the skill used by the given item to attack in melee.
  *
@@ -1806,7 +1804,6 @@ int ammo_type_damage(int missile_type)
 {
     return Missile_prop[ Missile_index[missile_type] ].dam;
 }
-
 
 
 //

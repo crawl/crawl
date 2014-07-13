@@ -267,8 +267,6 @@ void rot_inventory_food(int time_delta)
 }
 
 
-
-
 /**
  * Initialise a stack of blood potions with a vector of timers, representing
  * the time at which each potion will rot.
