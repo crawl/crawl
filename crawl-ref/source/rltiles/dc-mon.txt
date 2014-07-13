@@ -960,6 +960,7 @@ vault/deformed_orc MONS_DEFORMED_ORC
 %rim 0
 shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
+missing_ghost MONS_GHOST
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
