@@ -1679,7 +1679,7 @@ static void _write_monster_stats(branch_type br, monster_type mons_type,
 
 static void _write_branch_stats(branch_type br)
 {
-    fprintf(stat_outf, "Item Generation Stats\n");
+    fprintf(stat_outf, "\n\nItem Generation Stats:");
     for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
     {
         item_base_type base_type = static_cast<item_base_type>(i);
@@ -1703,7 +1703,7 @@ static void _write_branch_stats(branch_type br)
             _write_item_stats(br, item);
         }
     }
-    fprintf(stat_outf, "\n\nMonster Generation Stats\n");
+    fprintf(stat_outf, "\n\nMonster Generation Stats:\n");
     _write_level_headers(br, monster_fields.size());
     _write_stat_headers(br, monster_fields);
     map<monster_type, int>::const_iterator mi;
@@ -1713,6 +1713,7 @@ static void _write_branch_stats(branch_type br)
 
 static void _write_object_stats()
 {
+    string all_desc = "";
     map<branch_type, vector<level_id> >::const_iterator bi;
 
     for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
@@ -1723,6 +1724,11 @@ static void _write_object_stats()
             if (num_branches == 1)
                 continue;
             branch_name = "AllLevels";
+            if (SysEnv.map_gen_range.get())
+                all_desc = SysEnv.map_gen_range.get()->describe();
+            else
+                all_desc = "All Branches";
+            all_desc = "Levels included in AllLevels: " + all_desc + "\n";
         }
         else
             branch_name = branches[bi->first].abbrevname;
@@ -1738,9 +1744,10 @@ static void _write_object_stats()
         fprintf(stat_outf, "Object Generation Stats\n"
                 "Number of iterations: %d\n"
                 "Number of branches: %d\n"
+                "%s"
                 "Number of levels: %d\n"
                 "Version: %s\n", SysEnv.map_gen_iters, num_branches,
-                num_levels, Version::Long);
+                all_desc.c_str(), num_levels, Version::Long);
         _write_branch_stats(bi->first);
         fclose(stat_outf);
         fprintf(stdout, "Wrote statistics for branch %s to %s.\n",
@@ -1796,7 +1803,7 @@ void objstat_generate_stats()
     stat_branches[NUM_BRANCHES] = vector<level_id>();
     stat_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
     fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
-            "level(s) over %d branche(s).\n", SysEnv.map_gen_iters,
+            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
             num_levels, num_branches);
     _init_fields();
     _init_foods();
