@@ -15,14 +15,15 @@ static feature_def invis_fd, cloud_fd;
 /** Give a feature_def some reasonable defaults.
  *
  *  XXX: This is kind of what a default constructor is for, but until
- *  we add C++11 support we can't have aggregate initialisation (in feature-data.h)
- *  and a constructor.
+ *  we allow C++11-only features we can't have aggregate initialisation
+ *  (in feature-data.h) as well as a constructor.
  *
  *  @param[out] fd The new feature_def to be given values.
  */
 void init_fd(feature_def &fd)
 {
     fd.feat = DNGN_UNSEEN;
+    fd.name = "";
     fd.dchar = NUM_DCHAR_TYPES;
     fd.symbol = fd.magic_symbol = 0;
     fd.colour = fd.seen_colour = fd.em_colour = fd.seen_em_colour = BLACK;
@@ -170,6 +171,21 @@ const feature_def &get_feature_def(show_type object)
     }
 }
 
+/** Does an entry matching this type exist in feat_defs?
+ *
+ *  Since there is a gap in the dungeon_feature_type enum, a loop that iterates
+ *  over all its entries will run into values that don't correspond to any real
+ *  feature type. get_feature_def can't return a good value for this, so anything
+ *  that might reference an invalid type should check this function first.
+ *
+ *  @param feat The dungeon_feature_type that might be invalid.
+ *  @returns true if feat exists in feature-data, false otherwise.
+ */
+bool is_valid_feature_type(dungeon_feature_type feat)
+{
+    return feat_index[feat] != -1;
+}
+
 /** Get the feature_def in feat_defs for this dungeon_feature_type.
  *
  *  @param feat The dungeon_feature_type for which the feature_def needs to be found.
@@ -178,7 +194,7 @@ const feature_def &get_feature_def(show_type object)
 const feature_def &get_feature_def(dungeon_feature_type feat)
 {
     ASSERT_RANGE(feat, 0, NUM_FEATURES);
-    ASSERT(feat_index[feat] != -1);
+    ASSERT(is_valid_feature_type(feat));
     return feat_defs[feat_index[feat]];
 }
 
