@@ -198,7 +198,7 @@ function setup_loot (e)
                                  "broad axe w:20", "battleaxe", "executioner's axe w:1",
                                  "spear w:20", "trident w:20", "demon trident w:1",
                                  "glaive w:1", "halberd", "lajatang",
-                                 "longbow w:5", "crossbow w:5"}))
+                                 "longbow w:5", "arbalest w:5"}))
     e.item("any")
 end
 
@@ -280,7 +280,7 @@ function fiery_guardians (e, intelligent, village)
                     .. ", ogre mage ; " .. magestuff)
         elseif set_weight < 9 then
             e.mons(centaur
-                   .. " / yaktaur w:5 ; crossbow . bolt ego:flame ident:type")
+                   .. " / yaktaur w:5 ; arbalest . bolt ego:flame ident:type")
             e.kmons("2 = Nessos / centaur warrior w:40 ; " .. centaurstuff
                     .. ", centaur warrior ; " .. centaurstuff)
         elseif set_weight < 10 then

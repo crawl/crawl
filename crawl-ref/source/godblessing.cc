@@ -239,7 +239,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
     }
 
     // no launcher, no shield: give them a crossbow & some ammo.
-    _gift_weapon_to_orc(mon, WPN_CROSSBOW);
+    _gift_weapon_to_orc(mon, WPN_ARBALEST);
     if (mon->launcher() == NULL)
     {
         dprf("Couldn't give crossbow to follower!");

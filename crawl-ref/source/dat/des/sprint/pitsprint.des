@@ -225,7 +225,7 @@ function general_item_setup(e)
     lajatang plus:9 good_item not_cursed ident:all /\
     lajatang plus:7 randart not_cursed ident:all /\
     longbow plus:7 ego:vorpal not_cursed ident:all w:15 /\
-    crossbow plus:7 ego:vorpal not_cursed ident:all w:15")
+    triple crossbow plus:7 good_item not_cursed ident:all w:15")
   e.kitem("] = plate armour plus:12 not_cursed ident:all /\
     plate armour plus:8 good_item not_cursed ident:all /\
     chain mail plus:8 not_cursed ident:all /\
@@ -286,7 +286,7 @@ function general_item_setup(e)
     lajatang plus:6 ego:none not_cursed ident:all /\
     lajatang plus:3 good_item not_cursed ident:all /\
     longbow plus:5 good_item not_cursed ident:all w:15 /\
-    crossbow plus:5 good_item not_cursed ident:all w:15")
+    triple crossbow plus:0 good_item not_cursed ident:all w:15")
   e.kitem("[ = plate armour plus:7 not_cursed ident:all /\
     plate armour plus:4 good_item not_cursed ident:all /\
     chain mail plus:7 not_cursed ident:all w:20 /\
@@ -431,7 +431,7 @@ function armoury_setup(e)
           claymore plus:1 not_cursed ident:all w:3 /\
           lajatang plus:3 not_cursed ident:all /\
           longbow plus:3 not_cursed ident:all /\
-          crossbow plus:3 not_cursed ident:all /\
+          arbalest plus:3 not_cursed ident:all /\
           any weapon good_item ident:all w:30")
   e.kitem("b = any armour level:27 ident:all /\
           pair of gloves plus:1 ident:all not_cursed /\

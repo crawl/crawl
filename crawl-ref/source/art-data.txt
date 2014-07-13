@@ -444,9 +444,9 @@ ANGRY:    3
 STEALTH:  -1
 BOOL:     life
 
-NAME:    crossbow "Hellfire"
+NAME:    arbalest "Hellfire"
 INSCRIP: hellfire,
-OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
+OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_hellfire
@@ -521,9 +521,9 @@ MAGIC:    2
 AC:       5
 BOOL:     elec
 
-NAME:     crossbow "Sniper"
-OBJ:      OBJ_WEAPONS/WPN_CROSSBOW
-PLUS:     +15
+NAME:     heavy crossbow "Sniper"
+OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
+PLUS:     +10
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper

@@ -229,8 +229,8 @@ weapon_type str_to_weapon(const string &str)
         return WPN_GREATSLING;
     else if (str == "shortbow" || str == "short bow")
         return WPN_SHORTBOW;
-    else if (str == "crossbow")
-        return WPN_CROSSBOW;
+    else if (str == "crossbow" || str == "hand crossbow")
+        return WPN_HAND_CROSSBOW;
     else if (str == "thrown"
              || str == "rocks"
              || str == "javelins"

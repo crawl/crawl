@@ -599,7 +599,9 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
             return AMMO_BOW;
-        case WPN_CROSSBOW:
+        case WPN_HAND_CROSSBOW:
+        case WPN_ARBALEST:
+        case WPN_TRIPLE_CROSSBOW:
             return AMMO_CROSSBOW;
         default:
             return AMMO_THROW;

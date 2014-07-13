@@ -712,7 +712,11 @@ int weapon_min_delay(const item_def &weapon)
     if (min_delay > 7)
         min_delay = 7;
 
-    // ... unless it would take more than skill 27 to get there (dark maul).
+    // ...except crossbows...
+    if (range_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+        min_delay = 10;
+
+    // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 

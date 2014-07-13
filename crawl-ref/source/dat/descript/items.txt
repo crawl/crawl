@@ -62,6 +62,11 @@ A large piece of thick skin covered in fur, cut from the corpse of an animal
 and worn as a primitive garment. It offers rudimentary protection against harm,
 but, having never been tanned, it carries a light stench of rotting flesh.
 %%%%
+arbalest
+
+A large piece of machinery used for firing bolts, braced with steel and cranked
+with a windlass. It takes some time to load and fire.
+%%%%
 arrow
 
 A long shafted projectile intended to be shot with a short- or longbow, fletched
@@ -404,11 +409,6 @@ corpse
 
 A corpse. You can butcher it to produce edible meat chunks.
 %%%%
-crossbow
-
-A piece of machinery used for firing bolts, which takes some time to load and
-fire. It does very good damage in combat.
-%%%%
 crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy,
@@ -600,6 +600,11 @@ A large hammer with a spiked head.
 hand axe
 
 A small axe.
+%%%%
+hand crossbow
+
+A compact piece of machinery, used for firing bolts. It takes some time to load
+and fire.
 %%%%
 hat
 
@@ -1426,6 +1431,12 @@ effects regardless.
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
+%%%%
+triple crossbow
+
+Initially designed as a siege weapon and then scaled down, this crossbow uses
+three strings arranged in series to provide exceptional power. It takes a
+considerable amount of time to load and fire.
 %%%%
 trishula
 

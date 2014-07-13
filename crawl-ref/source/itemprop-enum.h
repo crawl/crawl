@@ -469,7 +469,15 @@ enum weapon_type
     WPN_BARDICHE,
 
     WPN_BLOWGUN,
-    WPN_CROSSBOW,
+
+#if TAG_MAJOR_VERSION > 34
+    WPN_HAND_CROSSBOW,
+#endif
+    WPN_ARBALEST,
+#if TAG_MAJOR_VERSION > 34
+    WPN_TRIPLE_CROSSBOW,
+#endif
+
     WPN_SHORTBOW,
     WPN_LONGBOW,
 
@@ -509,6 +517,8 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 34
     WPN_GREATSLING,
+    WPN_HAND_CROSSBOW,
+    WPN_TRIPLE_CROSSBOW,
 #endif
 
     NUM_WEAPONS,

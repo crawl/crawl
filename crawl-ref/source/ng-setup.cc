@@ -494,8 +494,9 @@ static void _update_weapon(const newgame_def& ng)
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
-    case WPN_CROSSBOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus);
+    case WPN_HAND_CROSSBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW, -1, 1,
+                          plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
         autopickup_starting_ammo(MI_BOLT);
 

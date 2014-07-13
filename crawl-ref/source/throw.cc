@@ -641,9 +641,17 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
-     case WPN_CROSSBOW:
+    case WPN_HAND_CROSSBOW:
+        level = 2;
+        msg   = "You hear a quiet thunk.";
+        break;
+     case WPN_ARBALEST:
         level = 7;
         msg   = "You hear a thunk.";
+        break;
+    case WPN_TRIPLE_CROSSBOW:
+        level = 9;
+        msg   = "You hear a triplet of thunks.";
         break;
 
     default:
