@@ -373,9 +373,6 @@ SAVEDIR := ~/.crawl
 endif
 
 
-INCLUDES_L += -isystem contrib/install/$(ARCH)/include
-LIBS += -Lcontrib/install/$(ARCH)/lib
-
 INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
@@ -1005,15 +1002,6 @@ ifdef REPORT
 CFOTHERS += -ftime-report
 endif
 
-ifdef ANDROID
-CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
-else
-CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
-endif
-CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
-ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
-YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
-
 UTIL = util/
 
 EXTRA_OBJECTS += $(YACC_OBJECTS)
@@ -1111,7 +1099,23 @@ endif
 
 EXTRA_OBJECTS += version.o
 
+ifdef CONTRIBS
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include
+LIBS += -Lcontrib/install/$(ARCH)/lib
+endif
+
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
+
+
+ifdef ANDROID
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
+else
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+endif
+CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
+ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
+YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
+
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
