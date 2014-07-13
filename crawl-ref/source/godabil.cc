@@ -4916,7 +4916,7 @@ vector<ability_type> get_possible_sacrifices()
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
     if (!player_mutation_level(MUT_NO_DODGING))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
-    if (!player_mutation_level(MUT_NO_ARMOUR) || !you_can_wear(EQ_BODY_ARMOUR))
+    if (!player_mutation_level(MUT_NO_ARMOUR) && you_can_wear(EQ_BODY_ARMOUR))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
     if (!player_mutation_level(MUT_MISSING_HAND))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
