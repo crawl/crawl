@@ -2562,15 +2562,6 @@ string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return RANDOM_ELEMENT(klown_attack);
 
-    if (mons_is_feat_mimic(attacker->type))
-    {
-        const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
-        if (feat_is_door(feat))
-            attk_type = AT_SNAP;
-        else if (feat_is_fountain(feat))
-            attk_type = AT_SPLASH;
-    }
-
     if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
