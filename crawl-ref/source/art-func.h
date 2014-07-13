@@ -687,7 +687,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
     // Since the target will become a DEAD MONSTER if it dies due to the extra
     // damage to dragons, we need to grab this information now.
-    int hd = min(defender->as_monster()->hit_dice, 18);
+    int hd = min(defender->as_monster()->get_experience_level(), 18);
     string name = defender->name(DESC_THE);
 
     if (!mondied)
@@ -1131,7 +1131,7 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_hit_dice())/2));
         }
     }
 }

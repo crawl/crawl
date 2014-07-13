@@ -29,7 +29,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int hit_dice;
     int ac;
     int ev;
     int speed;
@@ -82,6 +81,8 @@ public:
     uint32_t get_client_id() const;
     void reset_client_id();
     void ensure_has_client_id();
+
+    void set_hit_dice(int new_hd);
 
     mon_attitude_type temp_attitude() const;
 
@@ -206,6 +207,7 @@ public:
 
     // actor interface
     int mindex() const;
+    int       get_hit_dice() const;
     int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;
@@ -518,6 +520,9 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void align_avatars(bool force_friendly = false);
     void remove_avatars();
+
+private:
+    int hit_dice;
 
 private:
     void init_with(const monster& mons);

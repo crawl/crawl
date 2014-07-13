@@ -88,6 +88,7 @@ public:
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
 
+    virtual int       get_hit_dice() const = 0;
     virtual int       get_experience_level() const = 0;
 
     virtual bool shove(const char* feat_name = "") = 0;

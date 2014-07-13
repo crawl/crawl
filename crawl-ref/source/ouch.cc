@@ -595,7 +595,7 @@ static void _xom_checks_damage(kill_method_type death_type,
             return;
         }
 
-        int leveldif = mons->hit_dice - you.experience_level;
+        int leveldif = mons->get_experience_level() - you.experience_level;
         if (leveldif == 0)
             leveldif = 1;
 

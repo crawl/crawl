@@ -1113,7 +1113,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         {
             //Change formula to fangs_level*2 + 2*XL/3
             aux_damage -= str_bite_damage;
-            aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
+            aux_damage += div_rand_round(2 * you.get_hit_dice(), 3);
             damage_brand = SPWPN_ANTIMAGIC;
         }
 
@@ -1923,7 +1923,7 @@ bool melee_attack::player_monattk_hit_effects()
 
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
-        && damage_done + special_damage > random2(defender->get_experience_level())
+        && damage_done + special_damage > random2(defender->get_hit_dice())
         && defender->alive()
         && !defender->as_monster()->has_ench(ENCH_CONFUSION)
         && mons_class_is_confusable(defender->type))
@@ -2662,8 +2662,8 @@ bool melee_attack::mons_do_poison()
 
     if (attk_flavour == AF_POISON_STRONG)
     {
-        amount = random_range(attacker->get_experience_level() * 11 / 3,
-                              attacker->get_experience_level() * 13 / 2);
+        amount = random_range(attacker->get_hit_dice() * 11 / 3,
+                              attacker->get_hit_dice() * 13 / 2);
 
         if (defender->res_poison() > 0 && defender->has_lifeforce())
         {
@@ -2673,8 +2673,8 @@ bool melee_attack::mons_do_poison()
     }
     else
     {
-        amount = random_range(attacker->get_experience_level() * 2,
-                              attacker->get_experience_level() * 4);
+        amount = random_range(attacker->get_hit_dice() * 2,
+                              attacker->get_hit_dice() * 4);
     }
 
     if (!defender->poison(attacker, amount, force))
@@ -2718,7 +2718,7 @@ void melee_attack::mons_do_napalm()
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_hit_dice())/2));
         }
     }
 }
@@ -2914,8 +2914,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -2937,8 +2937,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_COLD:
-        base_damage = attacker->get_experience_level()
-                      + random2(2 * attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(2 * attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
@@ -2961,8 +2961,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ELEC:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level() / 2);
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice() / 2);
 
         special_damage =
             resist_adjust_damage(defender,
@@ -3045,7 +3045,9 @@ void melee_attack::mons_apply_attack_flavour()
             if (defender->is_unbreathing())
                 break;
 
-            if (--(attacker->as_monster()->hit_dice) <= 0)
+            monster *attkmon = attacker->as_monster();
+            attkmon->set_hit_dice(attkmon->get_experience_level() - 1);
+            if (attkmon->get_hit_dice() <= 0)
                 attacker->as_monster()->suicide();
 
             if (defender_visible)
@@ -3060,7 +3062,7 @@ void melee_attack::mons_apply_attack_flavour()
             || (damage_done > 2 && one_chance_in(3)))
         {
             defender->confuse(attacker,
-                              1 + random2(3+attacker->get_experience_level()));
+                              1 + random2(3+attacker->get_hit_dice()));
         }
         break;
 
@@ -3085,8 +3087,8 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (attacker->type == MONS_RED_WASP || one_chance_in(3))
         {
-            int dmg = random_range(attacker->get_experience_level() * 3 / 2,
-                                   attacker->get_experience_level() * 5 / 2);
+            int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
+                                   attacker->get_hit_dice() * 5 / 2);
             defender->poison(attacker, dmg);
         }
 
@@ -3160,7 +3162,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender(attacker->get_experience_level() * 12);
+        antimagic_affects_defender(attacker->get_hit_dice() * 12);
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
@@ -3250,8 +3252,8 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
-        special_damage = (attacker->get_experience_level() * 3 / 2
-                          + random2(attacker->get_experience_level()));
+        special_damage = (attacker->get_hit_dice() * 3 / 2
+                          + random2(attacker->get_hit_dice()));
         special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
@@ -3329,8 +3331,8 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (defender->res_water_drowning() <= 0)
         {
-            special_damage = attacker->get_experience_level() * 3 / 4
-                            + random2(attacker->get_experience_level() * 3 / 4);
+            special_damage = attacker->get_hit_dice() * 3 / 4
+                            + random2(attacker->get_hit_dice() * 3 / 4);
             special_damage_flavour = BEAM_WATER;
 
             if (needs_message)
@@ -3345,8 +3347,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIREBRAND:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -3514,8 +3516,8 @@ void melee_attack::tendril_disarm()
         && adjacent(you.pos(), mon->pos())
         && you.can_see(mon)
         && one_chance_in(5)
-        && (random2(you.dex()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice
-            || random2(you.strength()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice)
+        && (random2(you.dex()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->get_hit_dice() * 1.5 : mon->get_hit_dice()
+            || random2(you.strength()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->get_hit_dice() * 1.5 : mon->get_hit_dice())
         && !mons_wpn->cursed())
     {
         mprf("Your tendrils lash around %s %s and pull it to the ground!",
@@ -3950,7 +3952,7 @@ int melee_attack::calc_mon_to_hit_base()
     const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
     const int hd_mult = fighter ? 25 : 15;
-    return 18 + attacker->get_experience_level() * hd_mult / 10;
+    return 18 + attacker->get_hit_dice() * hd_mult / 10;
 }
 
 /**

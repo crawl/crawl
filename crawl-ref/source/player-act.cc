@@ -150,6 +150,11 @@ bool player::extra_balanced() const
                       || !form_changed_physiology());
 }
 
+int player::get_hit_dice() const
+{
+    return experience_level;
+}
+
 int player::get_experience_level() const
 {
     return experience_level;

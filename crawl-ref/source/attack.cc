@@ -782,7 +782,7 @@ void attack::chaos_affects_defender()
     }
     case CHAOS_MISCAST:
     {
-        int level = defender->get_experience_level();
+        int level = defender->get_hit_dice();
 
         // At level == 27 there's a 13.9% chance of a level 3 miscast.
         int level0_chance = level;
@@ -1814,7 +1814,7 @@ bool attack::apply_damage_brand(const char *what)
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_experience_level()
+            && hdcheck >= defender->get_hit_dice()
             && !one_chance_in(5)
             && !defender->as_monster()->check_clarity(false))
         {

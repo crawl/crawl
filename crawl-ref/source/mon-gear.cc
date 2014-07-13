@@ -146,8 +146,9 @@ static void _give_wand(monster* mon, int level)
 
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
     const bool no_high_tier =
-            (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
-             && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
+            (mon->get_experience_level() < 5
+            || mons_class_flag(mon->type, M_NO_HT_WAND))
+                && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
     while (1)
     {
@@ -1519,7 +1520,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     if (!force_item && mons_is_unique(mon->type))
     {
-        if (x_chance_in_y(10 + mon->hit_dice, 100))
+        if (x_chance_in_y(10 + mon->get_experience_level(), 100))
             level = MAKE_GOOD_ITEM;
         else if (level != MAKE_GOOD_ITEM)
             level += 5;
@@ -2449,7 +2450,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     if (!force_item && mons_is_unique(mon->type) && level != MAKE_GOOD_ITEM)
     {
-        if (x_chance_in_y(9 + mon->hit_dice, 100))
+        if (x_chance_in_y(9 + mon->get_experience_level(), 100))
             level = MAKE_GOOD_ITEM;
         else
             level = level * 2 + 5;

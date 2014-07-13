@@ -145,7 +145,7 @@ LUANAMEFN(mbase_name, mons->base_name(dtype, true))
 
 MDEF(hd)
 {
-    PLUARET(number, mons->hit_dice);
+    PLUARET(number, mons->get_hit_dice());
 }
 
 MDEF(targetx)

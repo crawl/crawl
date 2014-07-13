@@ -4511,7 +4511,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
         return false;
     }
 
-    if (x_chance_in_y(95 - mons->hit_dice * 5 , 100))
+    if (x_chance_in_y(95 - mons->get_hit_dice() * 5 , 100))
     {
         simple_monster_message(mons, " is dazzled.");
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
@@ -5372,7 +5372,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->hit_dice, ench_power);
+        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->get_hit_dice(), ench_power);
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
             return MON_UNAFFECTED;
@@ -5733,7 +5733,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             break;
 
         const int dur =
-            random2(div_rand_round(ench_power, mon->hit_dice) + 1)
+            random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1)
                     * BASELINE_DELAY;
         mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                   agent(), // doesn't matter

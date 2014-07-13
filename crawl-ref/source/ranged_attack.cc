@@ -70,7 +70,7 @@ int ranged_attack::calc_to_hit(bool random)
         orig_to_hit +=
             (attacker->is_player())
             ? maybe_random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4, random)
-            : 3 * attacker->as_monster()->hit_dice;
+            : 3 * attacker->as_monster()->get_hit_dice();
     }
 
     int hit = orig_to_hit;
@@ -374,7 +374,7 @@ int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
     const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_experience_level() * hd_mult / 6;
+    return 18 + attacker->get_hit_dice() * hd_mult / 6;
 }
 
 int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
@@ -383,7 +383,7 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
     {
-        const int bonus = attacker->get_experience_level() * 4 / 3;
+        const int bonus = attacker->get_hit_dice() * 4 / 3;
         damage += random2avg(bonus, 2);
     }
     half_ac = false;
@@ -565,8 +565,8 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     if (attacker->is_monster())
     {
-        int chance = 85 - ((defender->get_experience_level()
-                            - attacker->get_experience_level()) * 5 / 2);
+        int chance = 85 - ((defender->get_hit_dice()
+                            - attacker->get_hit_dice()) * 5 / 2);
         chance += enchantment * 4;
         chance = min(95, chance);
 
@@ -582,15 +582,15 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
-    if (defender->get_experience_level() < 15 && random2(100) <= 2)
+    if (defender->get_hit_dice() < 15 && random2(100) <= 2)
         return true;
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
     dprf("Brand rolled %d against defender HD: %d.",
-         resist_roll, defender->get_experience_level());
+         resist_roll, defender->get_hit_dice());
 
-    if (resist_roll < defender->get_experience_level())
+    if (resist_roll < defender->get_hit_dice())
     {
         if (needs_message)
         {
@@ -615,7 +615,7 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
         return 2;
 
     const int base_power = (attacker->is_monster())
-                           ? attacker->get_experience_level()
+                           ? attacker->get_hit_dice()
                            : attacker->skill_rdiv(SK_THROWING);
 
     const int plus = using_weapon() ? weapon->plus : 0;

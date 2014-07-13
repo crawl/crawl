@@ -137,7 +137,7 @@ monster_type fill_out_corpse(const monster* mons,
 
     if (mons)
     {
-        corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
+        corpse.props[MONSTER_HIT_DICE] = short(mons->get_experience_level());
         corpse.props[MONSTER_NUMBER]   = short(mons->number);
         // XXX: Appears to be a safe conversion?
         corpse.props[MONSTER_MID]      = int(mons->mid);
@@ -315,20 +315,18 @@ static void _beogh_spread_experience(int exp)
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
         if (is_orcish_follower(*mi))
-            total_hd += mi->hit_dice;
+            total_hd += mi->get_experience_level();
     }
 
-    if (total_hd > 0)
-    {
-        for (monster_near_iterator mi(&you); mi; ++mi)
+    if (total_hd <= 0)
+        return;
+
+    for (monster_near_iterator mi(&you); mi; ++mi)
+        if (is_orcish_follower(*mi))
         {
-            if (is_orcish_follower(*mi))
-            {
-                _give_monster_experience(exp * mi->hit_dice / total_hd,
+            _give_monster_experience(exp * mi->get_experience_level() / total_hd,
                                          mi->mindex());
-            }
         }
-    }
 }
 
 static int _calc_player_experience(const monster* mons)
@@ -747,13 +745,14 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
             mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
                  "your xl: %d",
                  mons->name(DESC_PLAIN).c_str(),
-                 mons->hit_dice,
+                 mons->get_hit_dice(),
                  you.experience_level);
 #endif
             if (random2(you.piety) >= piety_breakpoint(0)
-                && random2(you.experience_level) >= random2(mons->hit_dice)
+                && random2(you.experience_level) >=
+                   random2(mons->get_hit_dice())
                 // Bias beaten-up-conversion towards the stronger orcs.
-                && random2(mons->hit_dice) > 2)
+                && random2(mons->get_experience_level()) > 2)
             {
                 beogh_convert_orc(mons, true, MON_KILL(killer));
                 return true;
@@ -775,7 +774,7 @@ static bool _lost_soul_nearby(const coord_def pos)
 
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
-    if (mons->max_hit_points <= 0 || mons->hit_dice < 1)
+    if (mons->max_hit_points <= 0 || mons->get_hit_dice() < 1)
         return false;
 
     // Before the hp check since this should not care about the power of the
@@ -987,11 +986,11 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour   = BEAM_ELECTRICITY;
-    beam.damage    = dice_def(3, 5 + origin.hit_dice * 5 / 4);
+    beam.damage    = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
     beam.name      = "blast of lightning";
     beam.noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
-    beam.ex_size   = x_chance_in_y(origin.hit_dice, 24) ? 3 : 2;
+    beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     // Don't credit the player for ally-summoned ball lightning explosions.
     if (origin.summoner && origin.summoner != MID_PLAYER)
         beam.thrower = KILL_MON;
@@ -1001,8 +1000,9 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_MMISSILE;
-    beam.damage  = (origin.number == 2 ? dice_def(3, 6 + origin.hit_dice * 7 / 4)
-                    : dice_def(2, 6 + origin.hit_dice * 7 / 4));
+    beam.damage  = (origin.number == 2 ?
+                        dice_def(3, 6 + origin.get_hit_dice() * 7 / 4)
+                        : dice_def(2, 6 + origin.get_hit_dice() * 7 / 4));
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.number;
@@ -1317,12 +1317,12 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             if (!quiet)
                 mpr("A glowing mist starts to gather...");
 
-            // If the original monster has been drained or levelled up,
-            // its HD might be different from its class HD, in which
-            // case its HP should be rerolled to match.
-            if (spectre->hit_dice != mons->hit_dice)
+            // If the original monster has been levelled up, its HD might be
+            // different from its class HD, in which case its HP should be
+            // rerolled to match.
+            if (spectre->get_experience_level() != mons->get_experience_level())
             {
-                spectre->hit_dice = max(mons->hit_dice, 1);
+                spectre->set_hit_dice(max(mons->get_experience_level(), 1));
                 roll_zombie_hp(spectre);
             }
 
@@ -1355,13 +1355,15 @@ static void _druid_final_boon(const monster* mons)
     }
 
     shuffle_array(beasts);
-    int num = min((int)beasts.size(), random_range(mons->hit_dice / 3,
-                                                   mons->hit_dice / 2 + 1));
+    int num = min((int)beasts.size(),
+                  random_range(mons->get_hit_dice() / 3,
+                               mons->get_hit_dice() / 2 + 1));
 
     // Healing and empowering done in two separate loops for tidier messages
     for (int i = 0; i < num; ++i)
     {
-        if (beasts[i]->heal(roll_dice(3, mons->hit_dice)) && you.can_see(beasts[i]))
+        if (beasts[i]->heal(roll_dice(3, mons->get_hit_dice()))
+            && you.can_see(beasts[i]))
         {
             mprf("%s %s healed.", beasts[i]->name(DESC_THE).c_str(),
                                   beasts[i]->conj_verb("are").c_str());
@@ -1836,68 +1838,68 @@ int monster_die(monster* mons, killer_type killer,
                 if (targ_holy == MH_DEMONIC || mons_is_demonspawn(mons->type))
                 {
                     did_god_conduct(DID_KILL_DEMON,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
                 else if (targ_holy == MH_NATURAL)
                 {
                     did_god_conduct(DID_KILL_LIVING,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
 
                     // TSO hates natural evil and unholy beings.
                     if (mons->is_unholy())
                     {
                         did_god_conduct(DID_KILL_NATURAL_UNHOLY,
-                                        mons->hit_dice, true, mons);
+                                        mons->get_experience_level(), true, mons);
                     }
                     else if (mons->is_evil())
                     {
                         did_god_conduct(DID_KILL_NATURAL_EVIL,
-                                        mons->hit_dice, true, mons);
+                                        mons->get_experience_level(), true, mons);
                     }
                 }
                 else if (targ_holy == MH_UNDEAD)
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
 
                 // Zin hates unclean and chaotic beings.
                 if (mons->how_unclean())
                 {
                     did_god_conduct(DID_KILL_UNCLEAN,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
                 else if (mons->how_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
 
                 // jmf: Trog hates wizards.
                 if (mons->is_actual_spellcaster())
                 {
                     did_god_conduct(DID_KILL_WIZARD,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
 
                 // Beogh hates priests of other gods.
                 if (mons->is_priest())
                 {
                     did_god_conduct(DID_KILL_PRIEST,
-                                    mons->hit_dice, true, mons);
+                                    mons->get_experience_level(), true, mons);
                 }
 
                 // Jiyva hates you killing slimes, but eyeballs
                 // mutation can confuse without you meaning it.
                 if (mons_is_slime(mons) && killer != KILL_YOU_CONF && bad_kill)
                 {
-                    did_god_conduct(DID_KILL_SLIME, mons->hit_dice,
+                    did_god_conduct(DID_KILL_SLIME, mons->get_experience_level(),
                                     true, mons);
                 }
 
                 if (fedhas_protects(mons))
                 {
-                    did_god_conduct(DID_KILL_PLANT, mons->hit_dice,
+                    did_god_conduct(DID_KILL_PLANT, mons->get_experience_level(),
                                     true, mons);
                 }
 
@@ -1905,21 +1907,21 @@ int monster_die(monster* mons, killer_type killer,
                 if (cheibriados_thinks_mons_is_fast(mons)
                     && !mons->cannot_move())
                 {
-                    did_god_conduct(DID_KILL_FAST, mons->hit_dice,
+                    did_god_conduct(DID_KILL_FAST, mons->get_experience_level(),
                                     true, mons);
                 }
 
                 // Yredelemnul hates artificial beings.
                 if (mons->is_artificial())
                 {
-                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->hit_dice,
+                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->get_experience_level(),
                                     true, mons);
                 }
 
                 // Holy kills are always noticed.
                 if (mons->is_holy())
                 {
-                    did_god_conduct(DID_KILL_HOLY, mons->hit_dice,
+                    did_god_conduct(DID_KILL_HOLY, mons->get_experience_level(),
                                     true, mons);
                 }
 
@@ -1928,12 +1930,12 @@ int monster_die(monster* mons, killer_type killer,
                 //  messages appears.)
                 if (mons_is_illuminating(mons))
                 {
-                    did_god_conduct(DID_KILL_ILLUMINATING, mons->hit_dice,
-                                    true, mons);
+                    did_god_conduct(DID_KILL_ILLUMINATING,
+                                    mons->get_experience_level(), true, mons);
                 }
                 else if (mons_is_fiery(mons))
                 {
-                    did_god_conduct(DID_KILL_FIERY, mons->hit_dice,
+                    did_god_conduct(DID_KILL_FIERY, mons->get_experience_level(),
                                     true, mons);
                 }
             }
@@ -1954,14 +1956,15 @@ int monster_die(monster* mons, killer_type killer,
                 switch (you.religion)
                 {
                 case GOD_MAKHLEB:
-                    hp_heal = mons->hit_dice + random2(mons->hit_dice);
+                    hp_heal = mons->get_experience_level()
+                              + random2(mons->get_experience_level());
                     break;
                 case GOD_SHINING_ONE:
-                    hp_heal = random2(1 + 2 * mons->hit_dice);
-                    mp_heal = random2(2 + mons->hit_dice / 3);
+                    hp_heal = random2(1 + 2 * mons->get_experience_level());
+                    mp_heal = random2(2 + mons->get_experience_level() / 3);
                     break;
                 case GOD_VEHUMET:
-                    mp_heal = 1 + random2(mons->hit_dice / 2);
+                    mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;
                 default:
                     die("bad kill-on-healing god!");
@@ -2024,13 +2027,14 @@ int monster_die(monster* mons, killer_type killer,
 
                 did_god_conduct(mon_intel > 0 ? DID_SOULED_FRIEND_DIED
                                               : DID_FRIEND_DIED,
-                                1 + (mons->hit_dice / 2),
+                                1 + (mons->get_experience_level() / 2),
                                 true, mons);
             }
 
             if (pet_kill && fedhas_protects(mons))
             {
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1 + (mons->hit_dice / 2),
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT,
+                                1 + (mons->get_experience_level() / 2),
                                 true, mons);
             }
 
@@ -2080,33 +2084,33 @@ int monster_die(monster* mons, killer_type killer,
                             did_god_conduct(
                                 !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
                                             DID_DEMON_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
                         else if (targ_holy == MH_NATURAL)
                         {
                             did_god_conduct(
                                 !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
                                             DID_LIVING_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
                         else if (targ_holy == MH_UNDEAD)
                         {
                             did_god_conduct(
                                 !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
                                             DID_UNDEAD_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
 
                         if (mons->how_unclean())
                         {
                             did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                            mons->hit_dice);
+                                            mons->get_experience_level());
                         }
 
                         if (mons->how_chaotic())
                         {
                             did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                            mons->hit_dice);
+                                            mons->get_experience_level());
                         }
 
                         if (mons->is_artificial())
@@ -2114,7 +2118,7 @@ int monster_die(monster* mons, killer_type killer,
                             did_god_conduct(
                                 !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
                                             DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
                     }
                     // Yes, we are splitting undead pets from the others
@@ -2130,48 +2134,48 @@ int monster_die(monster* mons, killer_type killer,
                              || mons_is_demonspawn(mons->type))
                     {
                         did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
                     }
                     else if (targ_holy == MH_NATURAL)
                     {
                         did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
 
                         // TSO hates natural evil and unholy beings.
                         if (mons->is_unholy())
                         {
                             did_god_conduct(
                                 DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
                         else if (mons->is_evil())
                         {
                             did_god_conduct(DID_NATURAL_EVIL_KILLED_BY_SERVANT,
-                                mons->hit_dice);
+                                mons->get_experience_level());
                         }
                     }
                     else if (targ_holy == MH_UNDEAD)
                     {
                         did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
                     }
 
                     if (mons->how_unclean())
                     {
                         did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
                     }
 
                     if (mons->how_chaotic())
                     {
                         did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
                     }
 
                     if (mons->is_artificial())
                     {
                         did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                        mons->hit_dice);
+                                        mons->get_experience_level());
                     }
                 }
 
@@ -2192,12 +2196,13 @@ int monster_die(monster* mons, killer_type killer,
                         did_god_conduct(
                             !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
                                         DID_HOLY_KILLED_BY_SERVANT,
-                            mons->hit_dice, true, mons);
+                            mons->get_experience_level(), true, mons);
                     }
                     else
                     {
                         did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                        mons->hit_dice, true, mons);
+                                        mons->get_experience_level(),
+                                        true, mons);
                     }
                 }
 
@@ -2219,7 +2224,7 @@ int monster_die(monster* mons, killer_type killer,
                     {
                         simple_monster_message(killer_mon,
                                                " looks invigorated.");
-                        killer_mon->heal(1 + random2(mons->hit_dice / 4));
+                        killer_mon->heal(1 + random2(mons->get_experience_level() / 4));
                     }
                 }
 

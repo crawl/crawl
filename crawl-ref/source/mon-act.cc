@@ -79,6 +79,29 @@ static spell_type _map_wand_to_mspell(wand_type kind);
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
+/**
+ * Get the monster's "hit dice".
+ *
+ * @return          The monster's HD.
+ */
+int monster::get_hit_dice() const
+{
+    const int base_hd = get_experience_level();
+    //TODO: add the ench!
+    return base_hd;
+}
+
+/**
+ * Get the monster's "experience level" - their hit dice, unmodified by
+ * temporary enchantments (draining).
+ *
+ * @return          The monster's XL.
+ */
+int monster::get_experience_level() const
+{
+    return hit_dice;
+}
+
 static const coord_def mon_compass[8] =
 {
     coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
@@ -1098,7 +1121,7 @@ static bool _setup_wand_beam(bolt& beem, monster* mons)
         return false;
 
     // set up the beam
-    int power         = 30 + mons->hit_dice;
+    int power         = 30 + mons->get_hit_dice();
     bolt theBeam      = mons_spell_beam(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
@@ -2727,7 +2750,7 @@ static bool _jelly_divide(monster* parent)
     if (!mons_class_flag(parent->type, M_SPLITS))
         return false;
 
-    const int reqd = max(parent->hit_dice * 8, 50);
+    const int reqd = max(parent->get_experience_level() * 8, 50);
     if (parent->hit_points < reqd)
         return false;
 
