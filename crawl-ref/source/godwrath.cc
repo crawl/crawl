@@ -466,7 +466,7 @@ static bool _makhleb_retribution()
         avatar->mname = "the fury of Makhleb";
         avatar->flags |= MF_NAME_REPLACE;
         avatar->attitude = ATT_HOSTILE;
-        avatar->hit_dice = you.experience_level;
+        avatar->set_hit_dice(you.experience_level);
 
         spell_type spell = SPELL_NO_SPELL;
         const int severity = min(random_range(you.experience_level / 14,
@@ -1020,7 +1020,7 @@ static bool _vehumet_retribution()
     avatar->mname = "the wrath of Vehumet";
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
-    avatar->hit_dice = you.experience_level;
+    avatar->set_hit_dice(you.experience_level);
 
     spell_type spell = SPELL_NO_SPELL;
     const int severity = min(random_range(1 + you.experience_level / 5,

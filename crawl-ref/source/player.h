@@ -484,6 +484,7 @@ public:
 
     // actor
     int mindex() const;
+    int get_hit_dice() const;
     int get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
     monster* as_monster() { return NULL; }

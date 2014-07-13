@@ -209,7 +209,7 @@ void start_recall(int type)
                 continue;
         }
 
-        mid_hd m(mi->mid, mi->hit_dice);
+        mid_hd m(mi->mid, mi->get_experience_level());
         rlist.push_back(m);
     }
 

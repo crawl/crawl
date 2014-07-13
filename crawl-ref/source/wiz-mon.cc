@@ -584,7 +584,7 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
-         mons.hit_dice,
+         mons.get_experience_level(),
          mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.ac, mons.armour_class(),

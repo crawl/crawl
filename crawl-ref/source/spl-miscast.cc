@@ -1606,7 +1606,7 @@ void MiscastEffect::_divination_mon(int severity)
             mon_msg_seen = "@The_monster@ looks disoriented.";
             target->confuse(
                 act_source,
-                1 + random2(3 + act_source->get_experience_level()));
+                1 + random2(3 + act_source->get_hit_dice()));
             break;
         }
         break;
@@ -1615,7 +1615,7 @@ void MiscastEffect::_divination_mon(int severity)
         mon_msg_seen = "@The_monster@ shudders.";
         target->confuse(
             act_source,
-            5 + random2(3 + act_source->get_experience_level()));
+            5 + random2(3 + act_source->get_hit_dice()));
         break;
 
     case 3:         // nasty
@@ -1624,7 +1624,7 @@ void MiscastEffect::_divination_mon(int severity)
             target_as_monster()->forget_random_spell();
         target->confuse(
             act_source,
-            8 + random2(3 + act_source->get_experience_level()));
+            8 + random2(3 + act_source->get_hit_dice()));
         break;
     }
     do_msg();
@@ -2209,7 +2209,7 @@ void MiscastEffect::_fire(int severity)
             {
                 monster* mon_target = target_as_monster();
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
-                    min(4, 1 + random2(mon_target->hit_dice) / 2),
+                    min(4, 1 + random2(mon_target->get_hit_dice()) / 2),
                     guilty));
             }
             break;

@@ -198,7 +198,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_STONESKIN:
         {
             // player gets 2+earth/5
-            const int ac_bonus = hit_dice / 2;
+            const int ac_bonus = get_hit_dice() / 2;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -209,7 +209,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_OZOCUBUS_ARMOUR:
         {
             // player gets 4+ice/3
-            const int ac_bonus = 4 + hit_dice / 3;
+            const int ac_bonus = 4 + get_hit_dice() / 3;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -1700,7 +1700,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!(flags & MF_TAKING_STAIRS)
             && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
-                || x_chance_in_y(1000 / (15 * max(1, hit_dice) / 5), 1000)))
+                || x_chance_in_y(1000 / (15 * max(1, get_hit_dice()) / 5),
+                                 1000)))
         {
             monster_polymorph(this, RANDOM_MONSTER);
         }
@@ -2191,7 +2192,7 @@ actor* mon_enchant::agent() const
 
 int mon_enchant::modded_speed(const monster* mons, int hdplus) const
 {
-    return _mod_speed(mons->hit_dice + hdplus, mons->speed);
+    return _mod_speed(mons->get_hit_dice() + hdplus, mons->speed);
 }
 
 int mon_enchant::calc_duration(const monster* mons,

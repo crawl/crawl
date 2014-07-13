@@ -73,13 +73,14 @@
 #define smc get_monster_data(mc)
 
 monster::monster()
-    : hit_points(0), max_hit_points(0), hit_dice(0),
+    : hit_points(0), max_hit_points(0),
       ac(0), ev(0), speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0),
-      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
+      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0),
+      hit_dice(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -2138,7 +2139,7 @@ bool monster::pickup_wand(item_def &item, int near)
         return false;
 
     // Only low-HD monsters bother with wands.
-    if (hit_dice >= 14)
+    if (get_hit_dice() >= 14)
         return false;
 
     // Holy monsters and worshippers of good gods won't pick up evil
@@ -2834,9 +2835,14 @@ int monster::mindex() const
     return this - menv.buffer();
 }
 
-int monster::get_experience_level() const
+/**
+ * Sets the monster's "hit dice". Doesn't currently handle adjusting HP, etc.
+ *
+ * @param new_hit_dice      The new value to set HD to.
+ */
+void monster::set_hit_dice(int new_hit_dice)
 {
-    return hit_dice;
+    hit_dice = new_hit_dice;
 }
 
 void monster::moveto(const coord_def& c, bool clear_net)
@@ -3029,7 +3035,10 @@ void monster::banish(actor *agent, const string &)
         // distinguishable from others of the same kind in the Abyss.
 
         if (agent->is_player())
-            did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+        {
+            did_god_conduct(DID_BANISH, get_experience_level(),
+                            true /*possibly wrong*/, this);
+        }
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
@@ -3229,9 +3238,9 @@ bool monster::liquefied_ground() const
 int monster::natural_regen_rate() const
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
-    int divider = max(div_rand_round(15 - hit_dice, 4), 1);
+    int divider = max(div_rand_round(15 - get_hit_dice(), 4), 1);
 
-    return max(div_rand_round(hit_dice, divider), 1);
+    return max(div_rand_round(get_hit_dice(), divider), 1);
 }
 
 // in units of 1/100 hp/turn
@@ -3297,7 +3306,7 @@ int monster::shield_bonus() const
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
-        return random2avg(shld_c + hit_dice * 4 / 3, 2) / 2;
+        return random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
     return -100;
 }
@@ -3316,7 +3325,7 @@ void monster::shield_block_succeeded(actor *attacker)
 
 int monster::shield_bypass_ability(int) const
 {
-    return 15 + hit_dice * 2 / 3;
+    return 15 + get_hit_dice() * 2 / 3;
 }
 
 int monster::missile_deflection() const
@@ -4036,7 +4045,7 @@ int monster::res_magic() const
 
     // Negative values get multiplied with monster hit dice.
     if (u < 0)
-        u = hit_dice * -u * 4 / 3;
+        u = get_hit_dice() * -u * 4 / 3;
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC);
@@ -4126,7 +4135,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     if (mons_intel(this) < I_NORMAL && !mons_is_avatar(this->type))
         return 0;
 
-    int hd = scale * hit_dice;
+    const int hd = scale * get_hit_dice();
     int ret;
     switch (sk)
     {
@@ -4332,7 +4341,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && mons_species(true) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
+            int shave = 1 + random2(2 + random2(1 + get_hit_dice() / 3));
             dprf("(mon) HP shaved: %d.", shave);
             amount -= shave;
             if (amount <= 0)
@@ -4364,7 +4373,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
-        else if (hit_dice <= 0)
+        else if (get_hit_dice() <= 0)
             amount = hit_points;
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
@@ -4412,7 +4421,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         behaviour_event(this, ME_HURT);
     }
 
-    if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != MONS_NO_MONSTER)
+    if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
+        && type != MONS_NO_MONSTER)
     {
         if (agent == NULL)
             monster_die(this, KILL_MISC, NON_MONSTER);
@@ -4806,7 +4816,7 @@ bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
                || (flags & MF_BANISHED)
-               || hit_dice > 8 + random2(25)
+               || get_experience_level() > 8 + random2(25)
                   && mons_can_use_stairs(this))
            && !has_ench(ENCH_ABJ)
            && type != MONS_BATTLESPHERE; // can use stairs otherwise
@@ -4994,7 +5004,7 @@ void monster::check_speed()
     {
         dprf("Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
              name(DESC_PLAIN).c_str(),
-             speed, speed_increment, hit_dice,
+             speed, speed_increment, get_hit_dice(),
              describe_enchantments().c_str());
 
         calc_speed();
@@ -6360,7 +6370,7 @@ bool monster::attempt_escape(int attempts)
         randfact = roll_dice(1,5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
-        randfact += roll_dice(1, themonst->hit_dice);
+        randfact += roll_dice(1, themonst->get_hit_dice());
     }
     else
         randfact = roll_dice(1, you.strength());
@@ -6536,7 +6546,7 @@ int monster::aug_amount() const
 // for Archmagi, etc. to have an impact in some cases.
 int monster::spell_hd(spell_type spell) const
 {
-    return hit_dice + 2 * aug_amount();
+    return get_hit_dice() + 2 * aug_amount();
 }
 
 void monster::align_avatars(bool force_friendly)

@@ -916,8 +916,8 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 static bool _mephitic_cloud_roll(const monster* mons)
 {
     const int meph_hd_cap = 21;
-    return mons->hit_dice >= meph_hd_cap? one_chance_in(50)
-           : !x_chance_in_y(mons->hit_dice, meph_hd_cap);
+    return mons->get_hit_dice() >= meph_hd_cap? one_chance_in(50)
+           : !x_chance_in_y(mons->get_hit_dice(), meph_hd_cap);
 }
 
 // Applies cloud messages and side-effects and returns true if the
@@ -1349,7 +1349,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return true;
 
-        if (x_chance_in_y(mons->hit_dice - 1, 5))
+        if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
             return false;
 
         if (mons->hit_points >= random2avg(19, 2))

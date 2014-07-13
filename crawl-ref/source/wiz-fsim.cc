@@ -154,7 +154,7 @@ static void _write_mon(FILE * o, monster &mon)
 {
     fprintf(o, "%s: HD %d   AC %d   EV %d\n",
             mon.name(DESC_PLAIN, true).c_str(),
-            mon.hit_dice,
+            mon.get_experience_level(),
             mon.ac,
             mon.ev);
 }

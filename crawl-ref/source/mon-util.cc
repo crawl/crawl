@@ -1960,7 +1960,7 @@ int exper_value(const monster* mon, bool real)
 
     // These four are the original arguments.
     const monster_type mc = mon->type;
-    int hd                = mon->hit_dice;
+    int hd                = mon->get_experience_level();
     int maxhp             = mon->max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
@@ -2382,7 +2382,7 @@ bool init_abomination(monster* mon, int hd)
     if (mon->type == MONS_CRAWLING_CORPSE
         || mon->type == MONS_MACABRE_MASS)
     {
-        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
+        mon->set_hit_dice(mon->hit_points = mon->max_hit_points = hd);
         return true;
     }
     else if (mon->type != MONS_ABOMINATION_LARGE
@@ -2394,7 +2394,7 @@ bool init_abomination(monster* mon, int hd)
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
     const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
-    mon->hit_dice = min(max_hd, hd);
+    mon->set_hit_dice(min(max_hd, hd));
 
     const monsterentry *m = get_monster_data(mon->type);
     int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
@@ -2556,7 +2556,7 @@ void define_monster(monster* mons)
     hp_max = hp;
 
     // So let it be written, so let it be done.
-    mons->hit_dice        = hd;
+    mons->set_hit_dice(hd);
     mons->hit_points      = hp;
     mons->max_hit_points  = hp_max;
     mons->ac              = ac;
@@ -3841,7 +3841,7 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     // &s are the evillest demons of all, well apart from Geryon, who really
     // profits from *not* pushing past beasts.
     if (mchar1 == '&' && isadigit(mchar2) && m1->type != MONS_GERYON)
-        return fleeing || m1->hit_dice > m2->hit_dice;
+        return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
 
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
@@ -3877,7 +3877,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return true;
     }
 
-    return mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice);
+    return mchar1 == mchar2 && (fleeing ||
+                                m1->get_hit_dice() > m2->get_hit_dice());
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
