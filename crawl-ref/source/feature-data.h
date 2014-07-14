@@ -228,7 +228,7 @@ static feature_def feat_defs[] =
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_TELEPORT, "teleport trap", "trap_teleport", LIGHTBLUE),
 TRAP(DNGN_TRAP_ALARM, "alarm trap", "trap_alarm", LIGHTRED),
-TRAP(DNGN_TRAP_ZOT, "zot trap", "trap_zot", LIGHTMAGENTA),
+TRAP(DNGN_TRAP_ZOT, "Zot trap", "trap_zot", LIGHTMAGENTA),
 TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GREEN),
 TRAP(DNGN_TRAP_SHAFT, "shaft", "shaft", BROWN),
 TRAP(DNGN_TRAP_WEB, "web", "trap_web", LIGHTGREY),
@@ -435,7 +435,7 @@ BRANCH_EXIT(DNGN_RETURN_FROM_BLADE, "staircase back to the Vaults", "return_from
 BRANCH_ENTRANCE(DNGN_ENTER_LAIR, "staircase to the Lair", "enter_lair"),
 BRANCH_EXIT(DNGN_RETURN_FROM_LAIR, "staircase back to the Dungeon", "return_from_lair"),
 
-BRANCH_ENTRANCE(DNGN_ENTER_CRYPT, "staircase to the Crpyt", "enter_crypt"),
+BRANCH_ENTRANCE(DNGN_ENTER_CRYPT, "staircase to the Crypt", "enter_crypt"),
 BRANCH_EXIT(DNGN_RETURN_FROM_CRYPT, "staircase back to the Vaults", "return_from_crypt"),
 
 BRANCH_ENTRANCE(DNGN_ENTER_TEMPLE, "staircase to the Ecumenical Temple", "enter_temple"),
