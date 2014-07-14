@@ -1311,8 +1311,8 @@ enum dungeon_char_type
 
 // When adding:
 //
-// * New stairs/portals: update feat_stair_direction.
 // * Any: Add an entry in feature-data.h for the feature.
+// * New stairs/portals: update feat_stair_direction.
 // * Any: edit dat/descript/features.txt and add a
 //        long description if appropriate.
 // * Any: check the feat_* functions in terrain.cc and make sure
@@ -1320,10 +1320,6 @@ enum dungeon_char_type
 // * Any: edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
 //        if you want vault maps to be able to use it. If you do, also update
 //        docs/develop/levels/syntax.txt with the new symbol.
-// * Any: edit terrain.cc and add the feature's name to the dngn_feature_names
-//        array, if you want vault map Lua code to be able to use the
-//        feature, and/or you want to be able to create the feature
-//        using the "create feature by name" wizard command.
 // * Any: if its enumerator comes late in the list (as is likely for new
 //        feature types),_cell_feat_show_colour may need a special case to
 //        allow it to be recoloured.
