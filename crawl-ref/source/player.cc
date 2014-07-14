@@ -6166,7 +6166,8 @@ bool player::petrified() const
 bool player::liquefied_ground() const
 {
     return liquefied(pos())
-           && ground_level() && !is_insubstantial();
+           && ground_level() && !is_insubstantial()
+           && !is_stationary();
 }
 
 /**
