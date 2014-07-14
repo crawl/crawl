@@ -136,7 +136,7 @@ void init_show_table()
     _create_symbols(invis_fd);
     _create_colours(invis_fd);
 
-    init_fd(invis_fd);
+    init_fd(cloud_fd);
     cloud_fd.dchar = DCHAR_CLOUD;
     cloud_fd.minimap = MF_SKIP;
     _create_symbols(cloud_fd);
