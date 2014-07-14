@@ -2916,6 +2916,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_DEATHS_DOOR;
     if (mons.is(MB_WORD_OF_RECALL))
         ch |= TILE_FLAG_RECALL;
+    if (mons.is(MB_LIGHTLY_DRAINED) || mons.is(MB_HEAVILY_DRAINED))
+        ch |= TILE_FLAG_DRAIN;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
