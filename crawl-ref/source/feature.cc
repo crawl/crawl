@@ -183,7 +183,8 @@ const feature_def &get_feature_def(show_type object)
  */
 bool is_valid_feature_type(dungeon_feature_type feat)
 {
-    return feat_index[feat] != -1;
+    return feat >= 0 && (size_t) feat < ARRAYSZ(feat_index)
+           && feat_index[feat] != -1;
 }
 
 /** Get the feature_def in feat_defs for this dungeon_feature_type.
