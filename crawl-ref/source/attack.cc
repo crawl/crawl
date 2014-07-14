@@ -427,7 +427,9 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
-        attk_damage     = mon_attk.damage;
+        attk_damage     = div_rand_round(mon_attk.damage
+                                         * attacker->get_hit_dice(),
+                                         attacker->get_experience_level());
 
         if (attk_type == AT_WEAP_ONLY)
         {
