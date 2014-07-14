@@ -23,7 +23,7 @@ static feature_def invis_fd, cloud_fd;
 void init_fd(feature_def &fd)
 {
     fd.feat = DNGN_UNSEEN;
-    fd.name = "";
+    fd.name = fd.vaultname = "";
     fd.dchar = NUM_DCHAR_TYPES;
     fd.symbol = fd.magic_symbol = 0;
     fd.colour = fd.seen_colour = fd.em_colour = fd.seen_em_colour = BLACK;

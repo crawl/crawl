@@ -7,6 +7,7 @@ struct feature_def
 {
     dungeon_feature_type feat;
     const char*          name;
+    const char*          vaultname;       // used for KFEAT and &(
     dungeon_char_type    dchar;           // used for creating symbol
     ucs_t                symbol;          // symbol used for seen terrain
     ucs_t                magic_symbol;    // symbol used for magic-mapped terrain
