@@ -3067,12 +3067,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30)
-            || (damage_done > 5 && coinflip())
-            || (attk_damage == 0 && !one_chance_in(3)))
-        {
+        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
             drain_defender();
-        }
         break;
 
     case AF_PARALYSE:
