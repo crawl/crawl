@@ -191,6 +191,7 @@ string item_base_name(const item_def &item);
 string item_base_name(object_class_type type, int sub_type);
 string food_type_name(int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
+weapon_type name_nospace_to_weapon(string name_nospace);
 
 void seen_item(const item_def &item);
 
@@ -199,5 +200,11 @@ static inline bool is_weapon(const item_def &item)
     return item.base_type == OBJ_WEAPONS
            || item.base_type == OBJ_STAVES
            || item.base_type == OBJ_RODS;
+}
+
+inline void remove_whitespace(string &str)
+{
+    str.erase(remove_if(str.begin(), str.end(),
+        static_cast<int(*)(int)>(isspace)), str.end());
 }
 #endif
