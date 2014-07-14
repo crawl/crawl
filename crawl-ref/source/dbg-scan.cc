@@ -1125,8 +1125,7 @@ static void _init_fields()
     ITEM_FIELDS(MANUALS,    "Num");
 
     INIT_VEC(monster_fields, "Num", "MonsHD", "MonsHP", "MonsXP", "TotalXP",
-                             "MonsNumChunks", "TotalNormNutr",
-                             "TotalGourmNutr");
+                             "MonsNumChunks", "TotalNutr");
 }
 
 static void _init_stats()
@@ -1429,9 +1428,7 @@ void objstat_record_monster(monster *mons)
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
         if (is_clean)
         {
-            _record_monster_stat(lev, mons_ind, "TotalNormNutr",
-                                    chunks * CHUNK_BASE_NUTRITION);
-            _record_monster_stat(lev, mons_ind, "TotalGourmNutr",
+            _record_monster_stat(lev, mons_ind, "TotalNutr",
                                     chunks * CHUNK_BASE_NUTRITION);
         }
     }
