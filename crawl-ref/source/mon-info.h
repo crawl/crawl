@@ -126,6 +126,8 @@ enum monster_info_flags
     MB_CORROSION,
     MB_SPECTRALISED,
     MB_SLOW_MOVEMENT,
+    MB_LIGHTLY_DRAINED,
+    MB_HEAVILY_DRAINED,
     NUM_MB_FLAGS
 };
 

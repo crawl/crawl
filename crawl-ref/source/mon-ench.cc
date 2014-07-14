@@ -1001,6 +1001,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
            simple_monster_message(this, " is no longer distracted by gold.");
         break;
 
+    case ENCH_DRAINED:
+        if (!quiet)
+            simple_monster_message(this, " seems less drained.");
+        break;
+
     default:
         break;
     }
@@ -1272,7 +1277,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        // Deliberate fall through.
+        decay_enchantment(en);
+        break;
 
     case ENCH_SLOW:
     case ENCH_HASTE:
@@ -1319,7 +1325,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
-    // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
 
@@ -1341,6 +1346,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_BATTLE_FRENZY:
     case ENCH_ROUSED:
+    case ENCH_DRAINED:
         decay_enchantment(en, false);
         break;
 
@@ -2077,7 +2083,7 @@ static const char *enchant_names[] =
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
-    "corrosion", "gold_lust", "buggy",
+    "corrosion", "gold_lust", "drained", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2141,8 +2147,8 @@ void mon_enchant::merge_killer(kill_category k, mid_t m)
 
 void mon_enchant::cap_degree()
 {
-    // Sickness is not capped.
-    if (ench == ENCH_SICK)
+    // Sickness & draining are not capped.
+    if (ench == ENCH_SICK || ench == ENCH_DRAINED)
         return;
 
     // Hard cap to simulate old enum behaviour, we should really throw this

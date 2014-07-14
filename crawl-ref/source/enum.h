@@ -1870,6 +1870,7 @@ enum enchant_type
     ENCH_PERMA_BRIBED,
     ENCH_CORROSION,
     ENCH_GOLD_LUST,
+    ENCH_DRAINED,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
