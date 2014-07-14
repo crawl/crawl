@@ -819,6 +819,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.MIGHT, x, y, -status_shift, 0);
                 status_shift += 6;
             }
+            if (fg.DRAIN)
+            {
+                this.draw_icon(icons.DRAIN, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
             if (fg.PAIN_MIRROR)
             {
                 this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0);
