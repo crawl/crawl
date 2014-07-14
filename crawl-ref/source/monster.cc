@@ -4247,15 +4247,12 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        if (one_chance_in(5))
-        {
-            if (hit_dice > 1)
-                hit_dice--;
-            experience = 0;
-        }
-
-        max_hit_points -= 2 + random2(3);
-        hit_points = min(max_hit_points, hit_points);
+        const int dur = min(200 + random2(100),
+                            300 - get_ench(ENCH_DRAINED).duration
+                                - random2(50));
+        const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
+                                                   dur);
+        add_ench(drain_ench);
     }
 
     return true;

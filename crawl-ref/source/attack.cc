@@ -1055,7 +1055,7 @@ void attack::do_miscast()
 
 void attack::drain_defender()
 {
-    if (defender->is_monster() && one_chance_in(3))
+    if (defender->is_monster() && coinflip())
         return;
 
     if (defender->holiness() != MH_NATURAL)

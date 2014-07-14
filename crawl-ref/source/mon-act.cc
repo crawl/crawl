@@ -87,8 +87,8 @@ static coord_def mmov;
 int monster::get_hit_dice() const
 {
     const int base_hd = get_experience_level();
-    //TODO: add the ench!
-    return base_hd;
+    const mon_enchant drain_ench = get_ench(ENCH_DRAINED);
+    return max(base_hd - drain_ench.degree, 1);
 }
 
 /**
