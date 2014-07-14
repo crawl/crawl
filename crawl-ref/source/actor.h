@@ -138,7 +138,8 @@ public:
                            bool ignore_transform = false) const = 0;
     virtual bool could_wield(const item_def &item,
                              bool ignore_brand = false,
-                             bool ignore_transform = false) const = 0;
+                             bool ignore_transform = false,
+                             bool quiet = true) const = 0;
 
     virtual void make_hungry(int nutrition, bool silent = true)
     {
@@ -223,7 +224,8 @@ public:
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength,
+                              bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
@@ -231,7 +233,6 @@ public:
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
@@ -253,6 +254,7 @@ public:
                  int stab_bypass = 0) const;
     virtual int melee_evasion(const actor *attacker,
                               ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
+    virtual bool shielded() const = 0;
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
@@ -342,15 +344,12 @@ public:
     virtual bool caught() const = 0;
     virtual bool asleep() const { return false; }
 
-    // check_haloed: include halo
     // self_halo: include own halo (actually if self_halo = false
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
-    virtual bool umbra(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
+    virtual bool backlit(bool self_halo = true) const = 0;
+    virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
     // Within an umbra?

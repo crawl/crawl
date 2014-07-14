@@ -366,10 +366,7 @@ void assert_read_safe_path(const string &path) throw (string)
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-    {
-        throw make_stringf("\"%s\" contains bad characters.",
-                           path.c_str());
-    }
+        throw make_stringf("\"%s\" contains bad characters.", path.c_str());
 #endif
 
 #ifdef DATA_DIR_PATH
@@ -377,10 +374,7 @@ void assert_read_safe_path(const string &path) throw (string)
         throw make_stringf("\"%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != string::npos)
-    {
-        throw make_stringf("\"%s\" contains \"..\" sequences.",
-                           path.c_str());
-    }
+        throw make_stringf("\"%s\" contains \"..\" sequences.", path.c_str());
 #endif
 
     // Path is okay.

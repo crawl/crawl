@@ -14,6 +14,8 @@
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bloodspatter.h"
+#include "butcher.h"
 #include "clua.h"
 #include "command.h"
 #include "coord.h"

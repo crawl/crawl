@@ -8,6 +8,7 @@
 #include "player.h"
 #include "random.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-util.h"
 
 // Returns true if a "good" weapon is given.
@@ -75,7 +76,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_CROSSBOWS:
-        sub_type = WPN_CROSSBOW;
+        sub_type = WPN_HAND_CROSSBOW;
         break;
     }
 
@@ -661,7 +662,8 @@ static void _give_wanderer_spell(skill_type skill)
         break;
     }
 
-    add_spell_to_memory(spell);
+    if (!you_cannot_memorise(spell))
+        add_spell_to_memory(spell);
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
@@ -818,7 +820,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_CROSSBOW)
+            && range_skill(you.inv[i]) == SK_CROSSBOWS)
         {
             need_bolts = true;
             break;
@@ -839,7 +841,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_SHORTBOW)
+            && range_skill(you.inv[i]) == SK_BOWS)
         {
             needs_arrows = true;
             break;

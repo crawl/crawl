@@ -5,6 +5,7 @@
 #include "tilereg-inv.h"
 #include "process_desc.h"
 
+#include "butcher.h"
 #include "cio.h"
 #include "describe.h"
 #include "env.h"

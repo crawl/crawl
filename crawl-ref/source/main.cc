@@ -38,6 +38,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
@@ -538,7 +539,7 @@ static void _show_commandline_options_help()
     puts("  -mapstat [<levels>] run map stats on the given range of levels");
     puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
          "syntax.");
-    puts("      Examples: Lair:2- and '!Pan,!Abyss'");
+    puts("      Examples: '-mapstat D,Depths' and '-mapstat Snake:1-4,Spider:1-4,Orc'");
     puts("  -objstat [<levels>] run monster and item stats on the given range "
          "of levels");
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
@@ -671,6 +672,7 @@ static void _set_removed_types_as_identified()
     you.type_ids[OBJ_POTIONS][POT_GAIN_DEXTERITY] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_GAIN_INTELLIGENCE] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_WATER] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_STRONG_POISON] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = ID_KNOWN_TYPE;
 #endif
@@ -784,11 +786,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case '$':
         you.add_gold(1000);
-        if (!Options.show_gold_turns)
-        {
-            mprf("You now have %d gold piece%s.",
-                 you.gold, you.gold != 1 ? "s" : "");
-        }
         break;
 
     case 'B':
@@ -1424,7 +1421,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
     // Immobile
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
@@ -2329,7 +2326,7 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts();
 
-    abyss_morph(you.time_taken);
+    abyss_morph();
     apply_noises();
     handle_monsters(true);
 
@@ -2600,7 +2597,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             else
             {
                 list<actor*> cleave_targets;
-                if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
+                if (you.weapon() && melee_skill(*you.weapon()) == SK_AXES
                     && !you.confused())
                 {
                     get_all_cleave_targets(&you, target, cleave_targets);
@@ -3144,7 +3141,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             dangerous = DNGN_FLOOR; // still warn about allies
 
         if (dangerous != DNGN_FLOOR || bad_mons)
@@ -3180,7 +3177,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
         {
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
@@ -3266,7 +3263,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
+    bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
 
     if (you.digging)
     {
@@ -3327,7 +3324,10 @@ static void _move_player(coord_def move)
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
             else
+            {
+                stop_running();
                 moving = false;
+            }
         }
         else if (!can_swap_places) // attack!
         {
@@ -3512,7 +3512,7 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");

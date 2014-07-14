@@ -111,7 +111,7 @@ static void _give_scroll(monster* mon, int level)
         int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
                                            : BOOK_EARTH);
 
-        thing_created = items(0, OBJ_BOOKS, which_book, true, level, 0);
+        thing_created = items(0, OBJ_BOOKS, which_book, true, level);
 
         if (thing_created != NON_ITEM && coinflip())
         {
@@ -124,7 +124,7 @@ static void _give_scroll(monster* mon, int level)
     }
     else if (mons_is_unique(mon->type) && one_chance_in(3)
                 && _should_give_unique_item(mon))
-        thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level, 0);
+        thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level);
 
     if (thing_created == NON_ITEM)
         return;
@@ -151,7 +151,7 @@ static void _give_wand(monster* mon, int level)
 
     while (1)
     {
-        const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
+        const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level);
 
         if (idx == NON_ITEM)
             return;
@@ -182,7 +182,7 @@ static void _give_potion(monster* mon, int level)
     {
         // This handles initialization of stack timer.
         const int thing_created =
-            items(0, OBJ_POTIONS, POT_BLOOD, true, level, 0);
+            items(0, OBJ_POTIONS, POT_BLOOD, true, level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -193,8 +193,8 @@ static void _give_potion(monster* mon, int level)
     else if (mon->type == MONS_GNOLL_SERGEANT && one_chance_in(3))
     {
         const int thing_created =
-            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
-                                             : POT_CURING, true, level, 0);
+            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS : POT_CURING,
+                  true, level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -205,8 +205,8 @@ static void _give_potion(monster* mon, int level)
     else if (mons_is_unique(mon->type) && one_chance_in(3)
                 && _should_give_unique_item(mon))
     {
-        const int thing_created =
-            items(0, OBJ_POTIONS, OBJ_RANDOM, true, level, 0);
+        const int thing_created = items(0, OBJ_POTIONS, OBJ_RANDOM, true,
+                                        level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -268,7 +268,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         else if (one_chance_in(30) && level > 2)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_HAND_CROSSBOW;
             break;
         }
         break;
@@ -285,7 +285,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_SLING;
+            item.sub_type  = WPN_HUNTING_SLING;
             break;
         }
         // deliberate fall through {dlb}
@@ -357,7 +357,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_ARBALEST;
             break;
         }
 
@@ -443,7 +443,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only)
         {
             item.base_type  = OBJ_WEAPONS;
-            item.sub_type   = WPN_SLING;
+            item.sub_type   = WPN_HUNTING_SLING;
             break;
         }
         item.base_type      = OBJ_WEAPONS;
@@ -573,10 +573,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         {
             item.base_type = OBJ_WEAPONS;
             if (type == MONS_VASHNIA)
-                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_CROSSBOW;
+                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_ARBALEST;
             else
             {
-                item.sub_type = random_choose_weighted(3, WPN_CROSSBOW,
+                item.sub_type = random_choose_weighted(3, WPN_ARBALEST,
                                                        2, WPN_SHORTBOW,
                                                        1, WPN_LONGBOW,
                                                        0);
@@ -711,7 +711,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                || mon->type == MONS_MINOTAUR)
                               && coinflip())
                              ? WPN_LONGBOW
-                             : WPN_CROSSBOW;
+                             : WPN_ARBALEST;
             break;
         }
         // deliberate fall-through
@@ -741,7 +741,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only && one_chance_in(3))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = WPN_ARBALEST;
             break;
         }
 
@@ -885,7 +885,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_FAUN:
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
-            item.sub_type = (mon->type == MONS_SATYR ? WPN_LONGBOW : WPN_SLING);
+        {
+            item.sub_type = (mon->type == MONS_FAUN ? WPN_HUNTING_SLING :
+                                   one_chance_in(3) ? WPN_GREATSLING:
+                                                      WPN_LONGBOW);
+        }
         else
         {
             item.sub_type = random_choose_weighted(2, WPN_SPEAR,
@@ -907,7 +911,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_CROSSBOW;
+        item.sub_type  = WPN_ARBALEST;
         break;
 
     case MONS_EFREET:
@@ -938,7 +942,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (!melee_only)
         {
             item.base_type  = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_SLING,
+            item.sub_type  = random_choose(WPN_HUNTING_SLING,
+                                           WPN_GREATSLING,
                                            WPN_SHORTBOW,
                                            WPN_LONGBOW,
                                            -1);
@@ -1420,16 +1425,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         do
             item.sub_type = random2(NUM_WEAPONS);
-        while ((melee_only && (item.sub_type == WPN_BLOWGUN
-                               || item.sub_type == WPN_CROSSBOW
-                               || item.sub_type == WPN_SHORTBOW
-                               || item.sub_type == WPN_LONGBOW))
-               || item.sub_type == WPN_STAFF
-               || item.sub_type == WPN_ROD
-               || item.sub_type == WPN_HAMMER
+        while (melee_only && is_ranged_weapon_type(item.sub_type)
+               || is_blessed_weapon_type(item.sub_type)
+               || is_magic_weapon_type(item.sub_type)
                || is_giant_club_type(item.sub_type)
-               || item.sub_type > WPN_SLING); // the last of these checks for
-                                              // blessed base weapon types
+               || item.sub_type == WPN_HAMMER);
+
         if (one_chance_in(100))
         {
             force_item = true;
@@ -1444,7 +1445,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = MAKE_GOOD_ITEM;
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
-            item.sub_type = coinflip() ? WPN_CROSSBOW : WPN_LONGBOW;
+        {
+            item.sub_type = random_choose_weighted(10, WPN_LONGBOW,
+                                                   9, WPN_ARBALEST,
+                                                   1, WPN_TRIPLE_CROSSBOW,
+                                                   0);
+        }
         else
         {
             item.sub_type = random_choose_weighted(10, WPN_DEMON_BLADE,
@@ -1526,8 +1532,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     // force_item is set... otherwise we're just going to take the base
     // and subtype and create a new item. - bwr
     const int thing_created =
-        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true,
-                                                level, 0, 0, item.special));
+        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true, level, 0,
+                                                item.special));
 
     if (thing_created == NON_ITEM)
         return;
@@ -1773,9 +1779,7 @@ static item_def* make_item_for_monster(
     if (bp == NON_ITEM)
         return 0;
 
-    const int thing_created =
-        items(allow_uniques, base, subtype, true, level);
-
+    const int thing_created = items(allow_uniques, base, subtype, true, level);
     if (thing_created == NON_ITEM)
         return 0;
 
@@ -1813,8 +1817,8 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_CHERUB:
-        if (main_weap && main_weap->base_type == OBJ_WEAPONS
-            && main_weap->sub_type == WPN_SLING)
+        if ((!main_weap || mon->hands_reqd(*main_weap) == HANDS_ONE)
+            && (!alt_weap || mon->hands_reqd(*alt_weap) == HANDS_ONE))
         {
             // Big shields interfere with ranged combat, at least theme-wise.
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
@@ -2475,7 +2479,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int it = items(0, OBJ_GOLD, 0, true, level, 0);
+    const int it = items(0, OBJ_GOLD, 0, true, level);
     _give_monster_item(mon, it);
 }
 

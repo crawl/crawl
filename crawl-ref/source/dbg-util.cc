@@ -433,6 +433,9 @@ static const char* diag_names[] =
     "beam",
     "abyss",
     "monplace",
+#ifdef DEBUG_MONSPEAK
+    "speech",
+#endif
 };
 
 void wizard_toggle_dprf()

@@ -250,7 +250,7 @@ MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
-            any potion / potion of paralysis, any potion
+            any potion / potion of poison, any potion
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
 MAP
 vvvvvvvvvvvvv....
@@ -1694,7 +1694,7 @@ NAME: nicolae_vaults_yaktaur_gun_rack
 TAGS: vaults_room no_monster_gen no_item_gen
 MONS: yaktaur w:8 / yaktaur band w:4 / yaktaur captain w:2 / yaktaur captain band w:1
 KITEM: b = bolt w:3 / bolt good_item w:2
-KITEM: c = crossbow w:4 / crossbow good_item w:1
+KITEM: c = arbalest w:8 / arbalest good_item w:1 / triple crossbow w:1
 MAP
 xxxxxxx
 xcccccx

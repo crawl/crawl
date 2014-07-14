@@ -7,13 +7,13 @@
 
 #include "dgn-labyrinth.h"
 
+#include "bloodspatter.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "items.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "mgen_data.h"
-#include "misc.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "terrain.h"

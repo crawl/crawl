@@ -2384,7 +2384,7 @@ NAME:    arrival_aquarium_a
 TAGS:    arrival
 ORIENT:  float
 KMASK:   w = no_monster_gen
-KMONS:   Z = shark
+KMONS:   Z = electric eel
 KFEAT:   Z = w
 KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
@@ -2410,7 +2410,7 @@ NAME:   arrival_aquarium_b
 TAGS:   arrival
 ORIENT: float
 KMASK:  w = no_monster_gen
-KMONS:  Z = shark
+KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge
@@ -3125,35 +3125,4 @@ c...........c
 c.....(.....c
 c...........c
 ccccccccccccc
-ENDMAP
-
-##############################################################################
-
-NAME: wheals_arrival_demonology
-ORIENT: float
-TAGS: arrival no_monster_gen no_item_gen
-KMASK: 12345&a = no_trap_gen
-KPROP: 12345&a = no_rtele_into
-SUBST: a=.
-SHUFFLE: 1234
-SHUFFLE: [{(
-SUBST: [=., (=.
-# Don't worry, they can't hurt you
-MONS: Executioner, hell beast / reaper, sun demon / ice devil / chaos spawn
-MONS: iron devil / blue devil / orange demon / red devil
-MONS: iron imp / white imp
-KMONS: & = pandemonium lord spells:.
-MAP
-xxxxxxxxxxxxxxxxx
-x[......{......(x
-x...............x
-x.ccc.ccccc.ccc.x
-x.c1c.n5&5n.c4c.x
-x.cnc.na5an.cnc.x
-x.....naaan.....x
-x.cnc.naaan.cnc.x
-x.c2c.naaan.c3c.x
-x.ccc.ccccc.ccc.x
-x...............x
-xxxxxxxx+xxxxxxxx
 ENDMAP

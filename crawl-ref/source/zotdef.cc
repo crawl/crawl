@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "bitary.h"
+#include <functional>
 
 #include "branch.h"
 #include "coordit.h"
@@ -106,11 +107,9 @@ static branch_type _zotdef_random_branch()
          pb = static_cast<branch_type>(random2(NUM_BRANCHES));
     while (!_is_branch_fitting(pb, wavenum));
 
+    // strong bias to main dungeon and depths
     if (one_chance_in(4))
-    {
         return wavenum < 15 ? BRANCH_DUNGEON : BRANCH_DEPTHS;
-        // strong bias to main dungeon and depths
-    }
 
     return pb;
 }
@@ -912,6 +911,11 @@ bool create_trap(trap_type spec_type)
     return result;
 }
 
+static bool _can_make_altar(god_type g, bool wizmode)
+{
+    return wizmode || !is_unavailable_god(g);
+}
+
 /**
  * Create an altar to the god of the player's choice.
  * @param wizmode if true, bypass some checks.
@@ -930,23 +934,13 @@ bool zotdef_create_altar(bool wizmode)
 
     string spec = lowercase_string(specs);
 
-    god_type god = GOD_NO_GOD;
+    // Skip GOD_NO_GOD
+    god_type god = find_earliest_match(
+                       spec, (god_type) 1, NUM_GODS,
+                       bind2nd(ptr_fun(_can_make_altar), wizmode),
+                       bind2nd(ptr_fun(god_name), false));
 
-    for (int i = 1; i < NUM_GODS; ++i)
-    {
-        const god_type gi = static_cast<god_type>(i);
-
-        if (!wizmode && is_unavailable_god(gi))
-            continue;
-
-        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
-        {
-            god = gi;
-            break;
-        }
-    }
-
-    if (god == GOD_NO_GOD)
+    if (god == NUM_GODS)
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
@@ -1024,13 +1018,11 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                const rune_type which_rune = _get_rune();
-                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
-                               which_rune, which_rune);
+                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    mitm[ip].plus = which_rune;
+                    mitm[ip].plus = _get_rune();
                     move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }

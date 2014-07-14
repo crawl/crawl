@@ -11,6 +11,7 @@
 #include "actor.h"
 #include "areas.h"
 #include "attitude-change.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"

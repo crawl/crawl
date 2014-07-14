@@ -172,7 +172,7 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
- potion of mutation / potion of decay / potion of strong poison
+ potion of mutation / potion of decay
 SUBST: T = t.
 
 MAP
@@ -205,7 +205,7 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
- potion of mutation / potion of decay / potion of strong poison
+ potion of mutation / potion of decay
 
 MAP
 {..x%..xxxxxxxxx.
@@ -678,11 +678,11 @@ MONS: snapping turtle, alligator snapping turtle
 MONS: plant, fungus
 KMONS: ! = kraken
 KFEAT: ! = deep_water
-KMONS: ? = shark
+KMONS: ? = snapping turtle
 KFEAT: ? = deep_water
 SUBST: 1 = 12
 SUBST: p = 34.
-NSUBST: w = 3:? / *:w
+NSUBST: w = 2:? / *:w
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / gadget shop
@@ -920,7 +920,7 @@ KMONS: f = butterfly
 KMONS: U = Norris ; morningstar ego:vorpal . large shield ego:reflection / \
            Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
-KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt
+KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
 KMONS: b = bush
 KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
@@ -1176,7 +1176,7 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
-           hp:100 tile:mons_statue_crossbow ; crossbow . bolt q:50 ego:silver
+           hp:100 tile:mons_statue_crossbow ; arbalest . bolt q:50 ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant

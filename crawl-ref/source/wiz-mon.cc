@@ -12,7 +12,6 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
-#include "bless.h"
 #include "cio.h"
 #include "colour.h"
 #include "dbg-util.h"
@@ -22,6 +21,7 @@
 #include "env.h"
 #include "files.h"
 #include "ghost.h"
+#include "godblessing.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -177,11 +177,11 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
-        string newerr;
+        string newerr = "yes";
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs, true);
-        if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
+        if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
             newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
@@ -1063,7 +1063,7 @@ void wizard_give_monster_item(monster* mon)
         }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
-        move_item_to_player(old_eq, mitm[old_eq].quantity);
+        move_item_to_inv(old_eq, mitm[old_eq].quantity);
     }
 }
 

@@ -34,6 +34,7 @@
  #include "tileweb.h"
 #endif
 #include "invent.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
@@ -222,12 +223,14 @@ weapon_type str_to_weapon(const string &str)
         return WPN_WAR_AXE;
     else if (str == "unarmed" || str == "claws")
         return WPN_UNARMED;
-    else if (str == "sling")
-        return WPN_SLING;
+    else if (str == "sling" || str == "hunting sling")
+        return WPN_HUNTING_SLING;
+    else if (str == "greatsling")
+        return WPN_GREATSLING;
     else if (str == "shortbow" || str == "short bow")
         return WPN_SHORTBOW;
-    else if (str == "crossbow")
-        return WPN_CROSSBOW;
+    else if (str == "crossbow" || str == "hand crossbow")
+        return WPN_HAND_CROSSBOW;
     else if (str == "thrown"
              || str == "rocks"
              || str == "javelins"
@@ -243,40 +246,15 @@ weapon_type str_to_weapon(const string &str)
     return WPN_UNKNOWN;
 }
 
-static string _weapon_to_str(int weapon)
+static string _weapon_to_str(weapon_type wpn_type)
 {
-    switch (weapon)
+    if (wpn_type >= 0 && wpn_type < NUM_WEAPONS)
+        return weapon_base_name(wpn_type);
+
+    switch (wpn_type)
     {
-    case WPN_SHORT_SWORD:
-        return "short sword";
-    case WPN_CUTLASS:
-        return "cutlass";
-    case WPN_FALCHION:
-        return "falchion";
-    case WPN_LONG_SWORD:
-        return "long sword";
-    case WPN_QUARTERSTAFF:
-        return "quarterstaff";
-    case WPN_MACE:
-        return "mace";
-    case WPN_FLAIL:
-        return "flail";
-    case WPN_SPEAR:
-        return "spear";
-    case WPN_TRIDENT:
-        return "trident";
-    case WPN_HAND_AXE:
-        return "hand axe";
-    case WPN_WAR_AXE:
-        return "war axe";
     case WPN_UNARMED:
         return "claws";
-    case WPN_SLING:
-        return "sling";
-    case WPN_SHORTBOW:
-        return "shortbow";
-    case WPN_CROSSBOW:
-        return "crossbow";
     case WPN_THROWN:
         return "thrown";
     case WPN_VIABLE:
@@ -775,7 +753,6 @@ void game_options::reset_options()
     default_manual_training = false;
 
     show_newturn_mark = true;
-    show_gold_turns = true;
     show_game_turns = true;
 
     game = newgame_def();
@@ -917,8 +894,7 @@ void game_options::reset_options()
     dump_item_origin_price = -1;
     dump_book_spells       = true;
 
-    pickup_menu            = true;
-    pickup_menu_limit      = 4;
+    pickup_menu_limit      = 1;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -2614,7 +2590,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         morgue_dir = field;
 #endif
     else BOOL_OPTION(show_newturn_mark);
-    else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
@@ -3400,7 +3375,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(dump_book_spells);
     else if (key == "darken_beyond_range")
         darken_beyond_range = _read_bool(field, darken_beyond_range);
-    else BOOL_OPTION(pickup_menu);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {

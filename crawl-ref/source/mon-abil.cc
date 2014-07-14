@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "arena.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "colour.h"
 #include "coordit.h"
 #include "delay.h"
@@ -1837,31 +1838,23 @@ static bool _lost_soul_affectable(const monster* mons)
            && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 }
 
-struct hd_sorter
-{
-    bool operator()(const pair<monster* ,int> &a, const pair<monster* ,int> &b)
-    {
-        return a.second > b.second;
-    }
-};
-
 static bool _lost_soul_teleport(monster* mons)
 {
     bool seen = you.can_see(mons);
 
-   vector<pair<monster*, int> > candidates;
+    typedef pair<monster*, int> mon_quality;
+    vector<mon_quality> candidates;
 
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
         {
-            pair<monster* , int> m = make_pair(*mi, min(mi->hit_dice, 18)
-                                                    + random2(8));
+            mon_quality m(*mi, min(mi->hit_dice, 18) + random2(8));
             candidates.push_back(m);
         }
     }
-    sort(candidates.begin(), candidates.end(), hd_sorter());
+    sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
 
     for (unsigned int i = 0; i < candidates.size(); ++i)
     {
@@ -1933,38 +1926,38 @@ bool lost_soul_revive(monster* mons)
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
-            if (mons->holiness() == MH_UNDEAD)
-            {
-                if (you.can_see(*mi))
-                {
-                     mprf("%s sacrifices itself to reknit %s!",
-                          mi->name(DESC_THE).c_str(),
-                          mons->name(DESC_THE).c_str());
-                }
-                else if (you.can_see(mons))
-                {
-                    mprf("Necromantic energies suffuse and reknit %s!",
-                         mons->name(DESC_THE).c_str());
-                }
-            }
-            else if (you.can_see(*mi))
-            {
-                mprf("The lost soul assumes the form of %s%s!",
-                     mons->name(DESC_THE).c_str(),
-                    (mi->is_summoned() ? " and becomes anchored to this world"
-                                       : ""));
-
-                mons->flags |= MF_SPECTRALISED;
-            }
-
             mons->heal(mons->max_hit_points);
             mons->del_ench(ENCH_CONFUSION, true);
             mons->timeout_enchantments(10);
 
             coord_def newpos = mi->pos();
-            monster_die(*mi, KILL_MISC, -1, true);
             if (mons->holiness() == MH_NATURAL)
+            {
                 mons->move_to_pos(newpos);
+                mons->flags |= MF_SPECTRALISED;
+            }
+
+            // check if you can see the monster *after* it maybe moved
+            if (you.can_see(mons))
+            {
+                if (mons->holiness() == MH_UNDEAD)
+                {
+                    mprf("%s sacrifices itself to reknit %s!",
+                         mi->name(DESC_THE).c_str(),
+                         mons->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s assumes the form of %s%s!",
+                         mi->name(DESC_THE).c_str(),
+                         mons->name(DESC_THE).c_str(),
+                         (mi->is_summoned() ? " and becomes anchored to this"
+                          " world" : ""));
+                }
+            }
+
+            monster_die(*mi, KILL_MISC, -1, true);
+
             return true;
         }
     }
@@ -4192,7 +4185,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (foe && !feat_is_water(grd(foe->pos())))
             {
                 coord_def spot;
-                if (find_habitable_spot_near(foe->pos(), MONS_BIG_FISH, 3, false, spot)
+                if (find_habitable_spot_near(foe->pos(), MONS_ELECTRIC_EEL, 3, false, spot)
                     && foe->pos().distance_from(spot)
                      < foe->pos().distance_from(mons->pos()))
                 {
@@ -4765,8 +4758,12 @@ void torpor_snail_slow(monster* mons)
 {
     // XXX: might be nice to refactor together with ancient_zyme_sicken().
 
-    if (is_sanctuary(mons->pos()))
+    if (is_sanctuary(mons->pos())
+        || mons->attitude != ATT_HOSTILE
+        || mons->has_ench(ENCH_CHARM))
+    {
         return;
+    }
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
@@ -5040,8 +5037,12 @@ static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
             score += open_site_score;
 
         monster *mons = monster_at(*ai);
-        if (mons && !mons->friendly() && mons != tmons)
+        if (mons && !mons->friendly()
+            && mons != tmons
+            && !mons_is_firewood(mons))
+        {
             score += sqr(mons_threat_level(mons) + 2);
+        }
     }
     return score;
 }

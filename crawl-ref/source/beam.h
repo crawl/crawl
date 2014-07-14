@@ -309,6 +309,7 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
+    bool can_knockback(const actor *act = NULL, int dam = -1) const;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,

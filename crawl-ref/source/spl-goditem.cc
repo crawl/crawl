@@ -335,18 +335,21 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
                           divine_ability, where, not_self, mode);
 }
 
-// Antimagic is sort of an anti-extension... it sets a lot of magical
-// durations to 1 so it's very nasty at times (and potentially lethal,
-// that's why we reduce flight to 2, so that the player has a chance
-// to stop insta-death... sure the others could lead to death, but that's
-// not as direct as falling into deep water) -- bwr
-void antimagic()
+/**
+ * Remove magical effects from the player.
+ *
+ * Forms, buffs, debuffs, contamination, probably a few other things.
+ * Flight gets an extra 11 aut before going away to minimize instadeaths.
+ * Flying/floating forms currently don't; XXX standardize this & make it less
+ * hacky?
+ */
+void debuff_player()
 {
     duration_type dur_list[] =
     {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
-        DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
-        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_SLOW,
+        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_CONFUSING_TOUCH,
+        DUR_SURE_BLADE, DUR_CORONA, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
         DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL,
         DUR_PHASE_SHIFT, DUR_WEAPON_BRAND, DUR_SILENCE,
@@ -394,10 +397,6 @@ void antimagic()
 
     if (you.attribute[ATTR_SWIFTNESS] > 0)
         you.attribute[ATTR_SWIFTNESS] = 0;
-
-    // Post-berserk slowing isn't magic, so don't remove that.
-    if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
-        you.duration[DUR_SLOW] = max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
     {
@@ -985,8 +984,7 @@ bool cast_smiting(int pow, monster* mons)
     if (mons == NULL || mons->submerged())
     {
         canned_msg(MSG_NOTHING_THERE);
-        // Counts as a real cast, due to victory-dancing and
-        // invisible/submerged monsters.
+        // Counts as a real cast, due to invisible/submerged monsters.
         return true;
     }
 

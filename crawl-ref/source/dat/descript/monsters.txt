@@ -405,7 +405,7 @@ after a catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
 
-A man of very bad manners whose roars can make an ogre envious.
+A human whose savage roars bring terror to all those who hear them.
 %%%%
 Saint Roka
 
@@ -605,10 +605,6 @@ battlesphere
 A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, yet it will provide fire support, assaulting whatever its conjurer
 casts at with magical missiles that never miss.
-%%%%
-big fish
-
-A stout fish with a wide, toothy mouth.
 %%%%
 big kobold
 
@@ -943,8 +939,7 @@ itself through a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
-This obelisk appears to be indestructible. You'd better find a way around... it
-might even provide one.
+A towering obelisk surrounded by a powerful storm.
 %%%%
 dire elephant
 
@@ -1447,11 +1442,8 @@ claws may be enough to rip hydra heads.
 %%%%
 hyperactive ballistomycete
 
-This ballistomycete is in a state of all-out reproduction. It is constantly
-ravaged by explosions of spores, damaging everything around, and it is
-ultimately going to die to its own spores.
-
-Be sure to keep your distance!
+A ballistomycete in a state of all-out reproduction. It is constantly ravaged
+by explosions of spores, damaging everything nearby.
 %%%%
 ice beast
 
@@ -1486,8 +1478,7 @@ infernal demonspawn
 %%%%
 inept feature mimic
 
-A predator masquerading as an ordinary dungeon feature. This one is less
-dangerous than most mimics, but can still devour the likes of you.
+A predator masquerading as an ordinary dungeon feature.
 %%%%
 inept item mimic
 
@@ -1610,10 +1601,6 @@ lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
 at passers-by.
-%%%%
-lava worm
-
-A vicious red worm which swims through molten rock.
 %%%%
 lich
 
@@ -1785,9 +1772,9 @@ beneath the waves and serve their King.
 %%%%
 octopode crusher
 
-This warrior is much stronger than its lesser octopode brethren and no less
-clever. Its tentacles move with uncanny grace and seem capable of sending you
-hurtling through the air.
+This unusually strong warrior has achieved mastery over the rocks as well as
+the waves. Its tentacles move with uncanny grace and seem capable of sending
+you hurtling through the air.
 %%%%
 ogre
 
@@ -2155,11 +2142,6 @@ shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely
 observed alive in its natural state.
-%%%%
-shark
-
-A sharp-toothed predatory denizen of the waters, the shark evolved over
-millions of years into an almost perfect killing machine.
 %%%%
 sheep
 
@@ -2768,8 +2750,8 @@ somewhat dangerous.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that you
-should be afraid. Very afraid.
+By the power of Ashenzari, you know there is some creature here, and that it is
+very dangerous.
 %%%%
 friendly sensed monster
 
@@ -2873,6 +2855,11 @@ demonic plant
 Just as demons are shaped in a mockery of living beings, this thing is a
 mockery of a plant, with mysterious appendages and tentacles writhing around.
 Fortunately it appears to be harmless, but with demons you can never be sure.
+%%%%
+dimme
+
+A terrible demon, or perhaps a demigodess, with powers over death, disease,
+and suffering. Its presence is horrifying, but supernaturally compelling.
 %%%%
 drunken dwarf
 
@@ -3054,12 +3041,6 @@ A spriggan that has mastered the culinary arts.
 strange machine
 
 A glistening silver machine.
-%%%%
-succubus
-
-A female demon who uses her charms to seduce humanoid males. If you wish to
-take advantage of her, however, you will fail: she seems very angry right now
-and has blood more on her mind than fun.
 %%%%
 water elementalist statue
 

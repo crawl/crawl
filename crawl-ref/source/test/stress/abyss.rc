@@ -8,7 +8,6 @@ species = mu
 background = ck
 weapon = mace
 restart_after_game = false
-show_gold_turns = true
 show_more = false
 autofight_stop = 0
 

@@ -10,6 +10,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "crash.h"
+#include "dbg-scan.h"
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
@@ -39,6 +40,8 @@ static string last_error;
 
 static int levels_tried = 0, levels_failed = 0;
 static int build_attempts = 0, level_vetoes = 0;
+// Map from message to counts.
+static map<string, int> veto_messages;
 
 void mapstat_report_map_build_start()
 {
@@ -46,9 +49,10 @@ void mapstat_report_map_build_start()
     map_builds[level_id::current()].first++;
 }
 
-void mapstat_report_map_veto()
+void mapstat_report_map_veto(const string &message)
 {
     level_vetoes++;
+    ++veto_messages[message];
     map_builds[level_id::current()].second++;
 }
 
@@ -110,10 +114,28 @@ static bool _do_build_level()
             default:
                 break;
             }
-            // Turn any mimics into actual monsters so they'll be recorded
-            // by objstat.
-            discover_mimic(coord_def(x, y), false);
+            if (crawl_state.obj_stat_gen)
+            {
+                coord_def pos(x, y);
+                // Turn any mimics into actual monsters so they'll be recorded.
+                discover_mimic(pos, false);
+                monster *mons = monster_at(pos);
+                if (mons)
+                    objstat_record_monster(mons);
+
+            }
         }
+
+    // Record items for objstat
+    if (crawl_state.obj_stat_gen)
+    {
+        for (int i = 0; i < MAX_ITEMS; ++i)
+        {
+            if (!mitm[i].defined())
+                continue;
+            objstat_record_item(mitm[i]);
+        }
+    }
 
     {
         unwind_bool wiz(you.wizard, true);
@@ -360,6 +382,20 @@ static void _write_map_stats()
             fprintf(outf, "%3d) %s (%d of %d vetoed, %.2f%%)\n",
                     ++count, i->second.describe().c_str(),
                     vetoes, tries, vetoes * 100.0 / tries);
+        }
+
+        fprintf(outf, "\n\nVeto reasons:\n");
+        multimap<int, string> sortedreasons;
+        for (map<string, int>::const_iterator i = veto_messages.begin();
+             i != veto_messages.end(); ++i)
+        {
+            sortedreasons.insert(pair<int, string>(i->second, i->first));
+        }
+
+        for (multimap<int, string>::reverse_iterator
+                 i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
+        {
+            fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
         }
     }
 

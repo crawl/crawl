@@ -37,6 +37,15 @@ function interest_check(e)
     e.tags('extra')
   end
 end
+
+function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
+  local pos = dgn.point(marker:pos())
+  slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                             data.teleport_spot)
+  you.teleport_to(slaves[1].x, slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different.")
+end
+
 }}
 
 default-depth: D, Depths
@@ -155,20 +164,57 @@ ENDMAP
 NAME:  lemuel_tele_altar
 TAGS:  transparent decor
 DEPTH: D:2-, Vaults
+WEIGHT: 5
 SUBST: Y = X x
 KFEAT: X = known teleport trap
+KMASK: _C = opaque
 MAP
-.............
-.xxxxxXxxxxx.
-.x.........x.
-.x.........x.
-.x.........x.
-.Y....C....Y.
-.x.........x.
-.x.........x.
-.x.........x.
-.xxxxxYxxxxx.
-.............
+...........
+.xxxxXxxxx.
+.x_______x.
+.x_______x.
+.x_______x.
+.Y___C___Y.
+.x_______x.
+.x_______x.
+.x_______x.
+.xxxxYxxxx.
+...........
+ENDMAP
+
+NAME:  amethyst_srp_altar
+TAGS:  transparent decor
+DEPTH: D:2-, Vaults
+WEIGHT: 5
+KFEAT: MNOP = teleporter
+KFEAT: mnop = floor
+{{
+for i, char in ipairs({ 'm', 'n', 'o', 'p' }) do
+  local markerval = "altar_" .. char
+  local tele_marker = TriggerableFunction:new {
+    func="callback.amethyst_srp_altar",
+    data = { teleport_spot = markerval },
+    repeated = true
+  }
+  tele_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
+
+  lua_marker(char:upper(), tele_marker)
+  lua_marker(char, portal_desc { teleport_spot = markerval })
+end
+}}
+KMASK: _Cp = opaque
+MAP
+.....o.....
+.xxxxPxxxx.
+.x_______x.
+.x_______x.
+.x_______x.
+nO___C__pM.
+.x_______x.
+.x_______x.
+.x_______x.
+.xxxxNxxxx.
+.....m.....
 ENDMAP
 
 NAME:  lemuel_statue_altar
@@ -180,10 +226,11 @@ SUBST: F = G
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 : interest_check(_G)
+KMASK: _>C = opaque
 MAP
 .........
 .ccccccc.
-.F...>Cc.
+.F___>Cc.
 .ccccccc.
 .........
 ENDMAP

@@ -17,45 +17,9 @@ struct bolt;
 class dist;
 struct activity_interrupt_data;
 
-void search_around();
-
-void emergency_untransform();
-void merfolk_start_swimming(bool step = false);
-void merfolk_stop_swimming();
 void trackers_init_new_level(bool transit);
-void maybe_drop_monster_hide(const item_def corpse);
-int get_max_corpse_chunks(monster_type mons_class);
-bool turn_corpse_into_skeleton(item_def &item);
-void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
-                             bool make_hide = true);
-void butcher_corpse(item_def &item, maybe_bool skeleton = MB_MAYBE,
-                    bool chunks = true);
-
-void init_stack_blood_potions(item_def &stack, int age = -1);
 string get_desc_quantity(const int quant, const int total,
                          string whose = "your");
-void maybe_coagulate_blood_potions_floor(int obj);
-void maybe_coagulate_blood_potions_inv(item_def &blood);
-int remove_oldest_blood_potion(item_def &stack);
-void remove_newest_blood_potion(item_def &stack, int quant = -1);
-void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
-
-bool check_blood_corpses_on_ground();
-bool can_bottle_blood_from_corpse(monster_type mons_class);
-int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type = -1);
-void turn_corpse_into_blood_potions(item_def &item);
-void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
-
-void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
-                      bool spatter = false, bool smell_alert = true,
-                      const coord_def& from = INVALID_COORD,
-                      const bool old_blood = false);
-void blood_spray(const coord_def& where, monster_type mon, int level);
-void generate_random_blood_spatter_on_level(
-    const map_bitmask *susceptible_area = NULL);
-
-// Set FPROP_BLOODY after checking bleedability.
-bool maybe_bloodify_square(const coord_def& where);
 
 string weird_glowing_colour();
 
@@ -97,10 +61,6 @@ void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
 void run_environment_effects();
-
-int str_to_shoptype(const string &s);
-const char *shoptype_to_str(shop_type type);
-void list_shop_types();
 
 bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();

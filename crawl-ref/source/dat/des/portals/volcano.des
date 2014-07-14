@@ -198,7 +198,7 @@ function setup_loot (e)
                                  "broad axe w:20", "battleaxe", "executioner's axe w:1",
                                  "spear w:20", "trident w:20", "demon trident w:1",
                                  "glaive w:1", "halberd", "lajatang",
-                                 "longbow w:5", "crossbow w:5"}))
+                                 "longbow w:5", "arbalest w:5"}))
     e.item("any")
 end
 
@@ -280,7 +280,7 @@ function fiery_guardians (e, intelligent, village)
                     .. ", ogre mage ; " .. magestuff)
         elseif set_weight < 9 then
             e.mons(centaur
-                   .. " / yaktaur w:5 ; crossbow . bolt ego:flame ident:type")
+                   .. " / yaktaur w:5 ; arbalest . bolt ego:flame ident:type")
             e.kmons("2 = Nessos / centaur warrior w:40 ; " .. centaurstuff
                     .. ", centaur warrior ; " .. centaurstuff)
         elseif set_weight < 10 then
@@ -583,12 +583,9 @@ ENDMAP
 
 NAME: nicolae_volcano_entry_vermiform
 NSUBST: A = l / ., B = l / ., C = l / ., D = l / .
-NSUBST: l = 3:2 / *:l
 SHUFFLE: 1V'/Ov-
 SUBST: Y = xxxx., y = ....x, v = X, V = x, - = S, ' = ., _ = xxxx_
 KMONS: 1 = patrolling lindwurm
-KMONS: 2 = lava worm
-KFEAT: 2 = l
 CLEAR: _
 : volcano_portal(_G)
 MAP
@@ -635,7 +632,7 @@ WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen
 SUBVAULT:   B : volcano_grotto_subvault
-KMONS:      l = lava snake w:2 / lava worm w:5 / fire bat w:1 / nothing w:119
+KMONS:      l = lava snake w:2 / fire bat w:1 / nothing w:117
 KFEAT:      l = l
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
@@ -730,7 +727,7 @@ NSUBST: X = 1:+ / 1:G / *:x
 NSUBST: Y = 1:+ / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-KMONS:  3 = lava snake / lava worm w:30
+KMONS:  3 = lava snake / nothing
 KFEAT:  3 = l
 NSUBST: l = 3:3 / 2 = 3l / *:l
 #       Loot: 8 items.
@@ -834,7 +831,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  F = statue name:lasher name_adjective tile:mons_statue_whip \
         generate_awake ; whip ego:flaming ident:type
-KMONS:  4 = lava snake / lava worm w:30
+KMONS:  4 = lava snake / nothing
 KFEAT:  4 = l
 NSUBST: l = 3:4 / 2 = 4. / *:l
 #       Loot: 10 items.
@@ -867,7 +864,7 @@ WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
-KMONS:      l = lava snake w:2 / lava worm w:5 / fire bat w:1 / nothing w:899
+KMONS:      l = lava snake w:2 / fire bat w:1 / nothing w:897
 KFEAT:      l = l
 #           Let's choose a path from m, u, z, i, r, n
 SHUFFLE:    muzirn

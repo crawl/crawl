@@ -253,7 +253,8 @@ public:
                         bool ignore_transform = false) const;
     bool      could_wield(const item_def &item,
                           bool ignore_brand = false,
-                          bool ignore_transform = false) const;
+                          bool ignore_transform = false,
+                          bool quiet = true) const;
 
     int       missile_count();
     void      wield_melee_weapon(int near = -1);
@@ -383,8 +384,8 @@ public:
     bool confused_by_you() const;
     bool caught() const;
     bool asleep() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
-    bool umbra(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool self_halo = true) const;
+    bool umbra() const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2() const;
@@ -450,8 +451,7 @@ public:
     bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp = -1);
 
-    void hibernate(int power = 0);
-    void put_to_sleep(actor *attacker, int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false);
     void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
@@ -460,6 +460,7 @@ public:
     int stat_maxhp() const { return max_hit_points; }
     int stealth() const;
 
+    bool    shielded() const;
     int     shield_bonus() const;
     int     shield_block_penalty() const;
     void    shield_block_succeeded(actor *foe);

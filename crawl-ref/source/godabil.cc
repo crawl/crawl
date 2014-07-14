@@ -8,12 +8,13 @@
 #include <queue>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
-#include "bless.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -30,6 +31,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
 #include "invent.h"
@@ -1505,11 +1507,64 @@ bool beogh_water_walk()
  * @param mon the orc in question.
  * @returns whether you have given the monster a Beogh gift before now.
  */
-static bool _given_gift(monster* mon)
+static bool _given_gift(const monster* mon)
 {
     return mon->props.exists(BEOGH_WPN_GIFT_KEY)
             || mon->props.exists(BEOGH_ARM_GIFT_KEY)
             || mon->props.exists(BEOGH_SH_GIFT_KEY);
+}
+
+/**
+ * Checks whether the target monster is a valid target for beogh item-gifts.
+ *
+ * @param mons[in]  The monster to consider giving an item to.
+ * @param quiet     Whether to print messages if the target is invalid.
+ * @return          Whether the player can give an item to the monster.
+ */
+bool beogh_can_gift_items_to(const monster* mons, bool quiet)
+{
+    if (!mons || !mons->visible_to(&you))
+    {
+        if (!quiet)
+            canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (!is_orcish_follower(mons))
+    {
+        if (!quiet)
+            mpr("That's not an orcish ally!");
+        return false;
+    }
+
+    if (!mons->is_named())
+    {
+        if (!quiet)
+            mpr("That orc has not proved itself worthy of your gift.");
+        return false;
+    }
+
+    const char* monsname = mons->name(DESC_THE, false).c_str();
+
+    if (_given_gift(mons))
+    {
+        if (!quiet)
+            mprf("%s has already been given a gift.", monsname);
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Checks whether there are any valid targets for beogh gifts in LOS.
+ */
+static bool _valid_beogh_gift_targets_in_sight()
+{
+    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
+        if (beogh_can_gift_items_to(*rad))
+            return true;
+    return false;
 }
 
 /**
@@ -1520,48 +1575,34 @@ static bool _given_gift(monster* mon)
  */
 bool beogh_gift_item()
 {
-    bolt beam;
+    if (!_valid_beogh_gift_targets_in_sight())
+    {
+        mpr("No worthy followers in sight.");
+        return false;
+    }
+
     dist spd;
 
-    spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                  TARG_FRIEND, LOS_RADIUS);
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_BEOGH_GIFTABLE;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = true;
+    args.cancel_at_self = true;
+    args.show_floor_desc = true;
+    args.top_prompt = "Select a follower to give a gift to.";
+
+    direction(spd, args);
 
     if (!spd.isValid)
         return false;
 
-    if (spd.target == you.pos())
-    {
-       mpr("You can't give yourself an item!");
-       return false;
-    }
-
     monster* mons = monster_at(spd.target);
-
-    if (!mons || !mons->visible_to(&you))
-    {
-        canned_msg(MSG_NOTHING_THERE);
+    if (!beogh_can_gift_items_to(mons, false))
         return false;
-    }
-
-    if (!is_orcish_follower(mons))
-    {
-        mpr("That's not an orcish ally!");
-        return false;
-    }
-
-    if (!mons->is_named())
-    {
-        mpr("That orc has not proved itself worthy of your gift.");
-        return false;
-    }
 
     const char* monsname = mons->name(DESC_THE, false).c_str();
-
-    if (_given_gift(mons))
-    {
-        mprf("%s has already been given a gift.", monsname);
-        return false;
-    }
 
     int item_slot = prompt_invent_item("Give which item?",
                                        MT_INVLIST, OSEL_ANY, true);
@@ -1844,7 +1885,7 @@ bool kiku_receive_corpses(int pow)
             continue;
         }
 
-        mitm[index_of_corpse_created].props["never_hide"] = true;
+        mitm[index_of_corpse_created].props[NEVER_HIDE_KEY] = true;
 
         ASSERT(valid_corpse >= 0);
 
@@ -3636,7 +3677,7 @@ monster* shadow_monster(bool equip)
     mon->hit_points = you.hp;
     mon->hit_dice   = min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? weapon_skill(mitm[wpn_index])
+                                                 ? melee_skill(mitm[wpn_index])
                                                  : SK_UNARMED_COMBAT, 10, 20)
                                   + you.skill_rdiv(SK_FIGHTING, 10, 20)));
     mon->set_position(you.pos());
@@ -3807,7 +3848,7 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
                                                     10, POT_DECAY,
                                                     10, POT_LIGNIFY,
                                                      5, POT_DEGENERATION,
-                                                     2, POT_STRONG_POISON,
+                                                     2, POT_POISON,
                                                      0);
     vec.push_back(what);
 }

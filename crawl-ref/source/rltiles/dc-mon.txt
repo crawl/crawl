@@ -146,7 +146,6 @@ fire_crab MONS_FIRE_CRAB
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
-lava_worm MONS_LAVA_WORM
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
@@ -166,9 +165,7 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 
 ## Aquatics (';')
 %sdir mon/aquatic
-big_fish MONS_BIG_FISH
 electric_eel MONS_ELECTRIC_EEL
-shark MONS_SHARK
 %rim 1
 
 %include dc-tentacles.txt
@@ -963,6 +960,7 @@ vault/deformed_orc MONS_DEFORMED_ORC
 %rim 0
 shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
+missing_ghost MONS_GHOST
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
@@ -1003,7 +1001,7 @@ murray MONS_MURRAY
 
 ## Sprint specials
 %sdir mon/sprint
-succubus MONS_SUCCUBUS
+dimme MONS_DIMME
 %rim 0
 orb_of_ice MONS_ORB_OF_ICE
 orb_of_electricity MONS_ORB_OF_ELECTRICITY

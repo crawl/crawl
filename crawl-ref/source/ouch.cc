@@ -74,7 +74,7 @@
 
 static NORETURN void _end_game(scorefile_entry &se);
 
-static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
+void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
@@ -92,7 +92,8 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
         if (you.mutation[MUT_ICEMAIL]
             && you.duration[DUR_ICEMAIL_DEPLETED] < ICEMAIL_TIME)
         {
-            mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+            if (!you.duration[DUR_ICEMAIL_DEPLETED])
+                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
@@ -125,7 +126,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     }
 
     if (doEffects)
-        _maybe_melt_player_enchantments(flavour, hurted);
+        maybe_melt_player_enchantments(flavour, hurted);
 
     switch (flavour)
     {
@@ -432,7 +433,7 @@ void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded

@@ -48,6 +48,8 @@ Character
     saprovore.
   - Facets which gave potion/scroll item conservation now give freezing/fire
     cloud immunity earlier and separately.
+* The hoof mutation no longer gives extra damage or a stealth penalty for
+  players wearing boots.
 
 Monsters
 --------
@@ -74,18 +76,21 @@ Monsters
   but have less health and AC and have their abilities converted to spells
   such that they spam less; this implies OCS confusion can be resisted.
 * Bog bodies no longer randomly rot.
+* Undead monsters will now fall to pieces in deep water, instead of hiding
+  invisibly.
 * Curse skulls are now immobile, again.
 * Lost souls now make enemies into ghosts instead of specters.
 * Spriggan riders now ride wasps.
 * Cherub's hymns can buff any allies, not just those with higher HDs.
 * Killing holy monsters no longer invokes cleansing flame on the perpetrator.
 * Ghouls and necrophages can no longer equip weapons or armour.
+* Mimics no longer mimic doors, statues, fountains or hatches.
 * Each unique now has a special title, shown when you first see them or in the
   description screen.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes, shedu,
   plague shamblers, giant slugs, elephant slugs, giant fireflies, brown oozes,
-  pulsating lumps.
+  pulsating lumps, big fish, sharks, lava worms.
 
 Spells
 ------
@@ -118,6 +123,11 @@ Items
   has more of an impact, attack delay is more predictable, and Throwing
   should be more viable as a ranged option as compared to bows and crossbows,
   among other changes.
+  - Slings have been split into two weapon types; the basic type has been
+    renamed to 'hunting sling', and a new, rare 'greatsling' has been added.
+  - Crossbows have been split into three types. The hand crossbow returns as
+    a starting weapon; the basic crossbow has been renamed to an 'arbalest';
+    and a new, rare 'triple crossbow' type has been added.
 * Weapon enchantment & slaying bonsues have been merged into a single number,
   giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
   have all been merged into a new "enchant weapon" scroll. The scrolls are
@@ -143,6 +153,8 @@ Items
   - The Trident of the Octopus King now starts at +8 and gets an additional +
     for each Ring of the Octopus King worn. If anyone reads this & gets it to
     +10 or higher in an actual game, send screenshots!
+  - Punk is now a +7 greatsling {Freeze, rC+}.
+  - Sniper is now a "heavy crossbow", a triple crossbow with 27 base delay.
   - Many other weapon artefacts have had their enchantments tweaked.
   - Maxwell's Patent Armour now gives rF+ rC+ instead of Conservation.
   - The Shield of Resistance, Shield of the Gong, and Large Shield of Ignorance
@@ -162,7 +174,12 @@ Items
   - Potions of blood cure a point of ghoul rotting.
   - All types of fruit have been merged together into one gooey, messy item
     type.
+  - Brown (contaminated) chunks are gone, replaced with normal ones.
   - Cheese, sausages, and ambrosia are no more.
+* New item: potion of cancellation, which removes enchantments & contamination
+  on the player.
+* Scrolls of vulnerability have been simplified; they now just halve MR for all
+  creatures in LOS.
 * Identify scrolls now always identify a single item.
 * Jewellery automatically identifies once equipped.
 * Amulets of inaccuracy are always cursed.
@@ -177,11 +194,12 @@ Items
 * (Plain) bows have been renamed to shortbows.
 * Sustain abilities effects no longer stack.
 * Staves of air now activate extra melee damage as often as other elemental staves.
+* Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
   higher than +0.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
 * Other removed items: darts, rings of hunger and sustenance, amulet of
-  conservation, cloak of preservation.
+  conservation, cloak of preservation, potions of strong poison and paralysis.
 
 Cards
 -----
@@ -231,8 +249,6 @@ Gods
           temporarily grants you resistance against that element.
     - 5*: Disaster Area: blast the entire area around you with elemental
           forces.
-    - 6*: at an altar, gain a permanent elemental resistance of your choice
-          for as long as you worship Qazlal.
 * Nemelex has been revamped.
   - Nemelex only gives piety for exploration rather than item sacrifices or
     deck usage.
@@ -247,6 +263,8 @@ Gods
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
 * Zin's Recite no longer prompts for a book, instead affecting all monsters
   in sight with the strongest effects that would impact them.
+* Ashenzari now counts Felids as fully bound when all of their jewellery slots
+  are cursed.
 * Sif Muna wrath can no longer cause amnesia.
 * Gods that give missile gifts can do so sooner.
 

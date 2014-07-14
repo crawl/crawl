@@ -264,6 +264,23 @@ a son of Earth.”
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 %%%%
+arbalest
+
+“(Tell enters with his crossbow)
+ W. TELL:
+ My precious jewel now, —my chiefest treasure—
+ A mark I'll set thee, which the cry of grief
+ Could never penetrate,—but thou shalt pierce it,—
+ And thou, my trusty bowstring, that so oft
+ For sport has served me faithfully and well,
+ Desert me not in this dread hour of need,—
+ Only be true this once, my own good cord,
+ That hast so often wing'd the biting shaft:—
+ For shouldst thou fly successless from my hand,
+ I have no second to send after thee.”
+    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
+     trans. Sir Theodore Martin, 1898.
+%%%%
 Asmodeus
 
 “For myself, I have other occupations:  I make absurd matches; I marry
@@ -757,11 +774,6 @@ battlesphere
 Rule 4: Close air support covereth a multitude of sins.
     -The Seven Habits of Highly Effective Pirates
 %%%%
-big fish
-
-“And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
-%%%%
 blowgun
 
 “Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
@@ -969,23 +981,6 @@ crocodile
  And welcomes little fishes in
   With gently smiling jaws!”
     -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
-%%%%
-crossbow
-
-“(Tell enters with his crossbow)
- W. TELL:
- My precious jewel now, —my chiefest treasure—
- A mark I'll set thee, which the cry of grief
- Could never penetrate,—but thou shalt pierce it,—
- And thou, my trusty bowstring, that so oft
- For sport has served me faithfully and well,
- Desert me not in this dread hour of need,—
- Only be true this once, my own good cord,
- That hast so often wing'd the biting shaft:—
- For shouldst thou fly successless from my hand,
- I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
-     trans. Sir Theodore Martin, 1898.
 %%%%
 cutlass
 
@@ -1412,6 +1407,10 @@ hand axe
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
 %%%%
+hand crossbow
+
+<arbalest>
+%%%%
 harpy
 
 “Bird-bodied, girl-faced things they are; abominable their droppings, their
@@ -1606,13 +1605,6 @@ lasher statue
  To the lash which whips on the skin
  Which slashes the flesh, lacerates the back”
     -Samael, “Flagellation”
-%%%%
-lava worm
-
-“Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos
-(Greek, =worm), masculine, ‘lava-worm’ for the locality, springs in the lava
-beds of Shasta County, Calif., from which topotypes were taken.”
-    -_Proceedings of the United States National Musem_. 1968.
 %%%%
 leather armour
 
@@ -1957,7 +1949,7 @@ potion of poison
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of strong poison
+potion of curing
 
 “But if when you say "whiskey" you mean the oil of conversation,
  the philosophic wine, the ale that is consumed when good fellows
@@ -2524,12 +2516,21 @@ slime creature
  Upon the slimy sea.”
     -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
-sling
+hunting sling
 
 “And David put his hand in his bag, and took thence a stone, and slang it, and
 smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
+%%%%
+greatsling
+
+“Thrice whirling round his head
+ The whistling thong, Mezentius took his aim.
+ Clean through his temples hissed the molten lead,
+ And prostrate in the dust, the gallant youth lay dead.”
+    -Virgil, Aeneid 9
+     trans. E. Fairfax Taylor
 %%%%
 sling bullet
 
@@ -2862,6 +2863,10 @@ chase, in which the fish is pursued and struck with barbed spears, or a sort of
 long shafted trident, called a waster, is much practised at the mouth of the
 Esk, and in the other salmon rivers of Scotland.”
     -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
+%%%%
+triple crossbow
+
+<arbalest>
 %%%%
 troll hide
 

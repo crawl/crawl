@@ -128,8 +128,6 @@ skill_type spell_type2skill(unsigned int which_spelltype);
 spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_useless(spell_type spell, bool transient = false);
-bool spell_is_useful(spell_type spell);
-bool spell_is_risky(spell_type spell);
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,

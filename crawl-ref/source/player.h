@@ -517,6 +517,8 @@ public:
     bool      has_usable_claws(bool allow_tran = true) const;
     int       has_talons(bool allow_tran = true) const;
     bool      has_usable_talons(bool allow_tran = true) const;
+    int       has_hooves(bool allow_tran = true) const;
+    bool      has_usable_hooves(bool allow_tran = true) const;
     int       has_fangs(bool allow_tran = true) const;
     int       has_usable_fangs(bool allow_tran = true) const;
     int       has_tail(bool allow_tran = true) const;
@@ -544,7 +546,8 @@ public:
                         bool ignore_transform = false) const;
     bool      could_wield(const item_def &item,
                           bool ignore_brand = false,
-                          bool ignore_transform = false) const;
+                          bool ignore_transform = false,
+                          bool quiet = true) const;
 
     string name(description_level_type type, bool force_visible = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
@@ -654,8 +657,8 @@ public:
     bool cannot_act() const;
     bool confused() const;
     bool caught() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
-    bool umbra(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool self_halo = true) const;
+    bool umbra() const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2() const;
@@ -673,8 +676,7 @@ public:
     }
 
     bool asleep() const;
-    void hibernate(int power = 0);
-    void put_to_sleep(actor *, int power = 0);
+    void put_to_sleep(actor *, int power = 0, bool hibernate = false);
     void awake();
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source);
@@ -691,6 +693,7 @@ public:
     int stat_maxhp() const  { return hp_max; }
     int stealth() const     { return check_stealth(); }
 
+    bool shielded() const;
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;

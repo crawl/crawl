@@ -55,12 +55,12 @@ dagger WPN_DAGGER
 dagger2
 dagger3
 
+%rim 0
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
 
 long_sword1 WPN_LONG_SWORD
-%rim 0
 long_sword2
 long_sword3
 %rim 1
@@ -160,16 +160,16 @@ lajatang3
 %sdir item/weapon/ranged
 blowgun1 WPN_BLOWGUN
 blowgun2
-sling1 WPN_SLING
+sling1 WPN_HUNTING_SLING
 sling2
 
 %rim 0
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
-crossbow1 WPN_CROSSBOW
-crossbow2
-crossbow3
+arbalest1 WPN_ARBALEST
+arbalest2
+arbalest3
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
@@ -810,7 +810,7 @@ i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
-i-paralysis POT_PARALYSIS
+i-cancel POT_CANCELLATION
 i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
@@ -821,6 +821,7 @@ i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
+# please remove when TAG_MAJOR_VERSION is bumped
 i-strong-poison POT_STRONG_POISON
 i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_CURE_MUTATION

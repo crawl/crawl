@@ -442,10 +442,6 @@ potion of slowing
 
 Una poción que vuelve más lentas tus acciones.
 %%%%
-potion of strong poison
-
-Una poción muy venenosa.
-%%%%
 quad damage
 
 Un objeto misterioso semejante a una runa de algún tipo. Una vez se evoque,

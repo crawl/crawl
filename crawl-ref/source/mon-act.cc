@@ -12,6 +12,8 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "dbg-scan.h"
@@ -48,6 +50,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h" // for item values
 #include "shout.h"
 #include "spl-book.h"

@@ -125,7 +125,13 @@ scythe "Finisher"
 
 A long and sharp scythe, specially modified to be quickly swung in combat.
 %%%%
+# TAG_MAJOR_VERSION == 34
 sling "Punk"
+
+A sling made of weird blue leather. Originally the weapon of a notorious
+mischief-maker and general scamp, it's since fallen into less savoury hands.
+%%%%
+greatsling "Punk"
 
 A sling made of weird blue leather. Originally the weapon of a notorious
 mischief-maker and general scamp, it's since fallen into less savoury hands.
@@ -157,9 +163,16 @@ A long sword made of one huge piece of crystal. Legend says it was the Shining
 One's gift to a worshipper. This blade is notorious for inducing bloodthirsty
 rage in both the wielder and all of his or her mortal followers.
 %%%%
+# TAG_MAJOR_VERSION == 34
 crossbow "Hellfire"
 
 A flaming crossbow, forged in the fires of the Hells; it imbues bolts it fires
+with the raw power of its namesake, irresistible by any mortal armour or
+fireproofing.
+%%%%
+arbalest "Hellfire"
+
+A flaming crossbow, forged in the fires of the Hells. It imbues bolts it fires
 with the raw power of its namesake, irresistible by any mortal armour or
 fireproofing.
 %%%%
@@ -194,10 +207,16 @@ This powerful staff used to belong to the leader of the Guild of Five Elements.
 In addition to the protection it provides, those skilled in Evocations may
 use it to discharge powerful blasts of elemental energy with their strikes.
 %%%%
+# TAG_MAJOR_VERSION == 34
 crossbow "Sniper"
 
 A crossbow made of some black material. It is highly damaging but extremely
 cumbersome to load.
+%%%%
+heavy crossbow "Sniper"
+
+A huge crossbow made of some black material. It is highly damaging, but
+extremely cumbersome to load.
 %%%%
 longbow "Piercer"
 

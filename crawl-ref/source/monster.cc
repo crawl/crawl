@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -34,7 +35,6 @@
 #include "kills.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -49,6 +49,7 @@
 #include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
@@ -327,7 +328,7 @@ bool monster::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 bool monster::can_drown() const
 {
-    // Presumably a shark in lava or a lavafish in deep water could
+    // Presumably a electric eel in lava or a lavafish in deep water could
     // drown, but that should never happen, so this simple check should
     // be enough.
     switch (mons_primary_habitat(this))
@@ -340,13 +341,7 @@ bool monster::can_drown() const
         break;
     }
 
-    // Mummies can fall apart in water or be incinerated in lava.
-    // Ghouls and vampires can drown in water or lava.  Others just
-    // "sink like a rock", to never be seen again.
-    return !is_unbreathing()
-           || mons_genus(type) == MONS_MUMMY
-           || mons_genus(type) == MONS_GHOUL
-           || mons_genus(type) == MONS_VAMPIRE;
+    return !is_unbreathing();
 }
 
 size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
@@ -566,14 +561,8 @@ item_def *monster::melee_weapon() const
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
     if (mons_genus(type) == MONS_FORMICID)
-    {
-        if (weapon_size(item) >= SIZE_BIG)
-            return HANDS_TWO;
-        else
-            return HANDS_ONE;
-    }
-    else
-        return actor::hands_reqd(item);
+        return HANDS_ONE;
+    return actor::hands_reqd(item);
 }
 
 bool monster::can_wield(const item_def& item, bool ignore_curse,
@@ -652,8 +641,17 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     return could_wield(item, ignore_brand, ignore_transform);
 }
 
+/**
+ * Checks whether the monster could ever wield the given weapon, regardless of
+ * what they're currently wielding or any other state.
+ *
+ * @param item              The item to wield.
+ * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @return                  Whether the monster could potentially wield the
+ *                          item.
+ */
 bool monster::could_wield(const item_def &item, bool ignore_brand,
-                           bool /* ignore_transform */) const
+                           bool /* ignore_transform */, bool /* quiet */) const
 {
     ASSERT(item.defined());
 
@@ -666,7 +664,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         return false;
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
-    if (!check_weapon_wieldable_size(item, body_size()))
+    if (!is_weapon_wieldable(item, body_size()))
         return false;
 
     if (!ignore_brand)
@@ -1283,8 +1281,8 @@ bool monster::pickup(item_def &item, int slot, int near)
                 pos());
 
             pickup_message(item, near);
-            inc_mitm_item_quantity(inv[slot], item.quantity);
             merge_item_stacks(item, dest);
+            inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
             equip(item, slot, near);
             lose_pickup_energy();
@@ -1369,15 +1367,6 @@ bool monster::drop_item(int eslot, int near)
 
             return false;
         }
-
-        if (friendly() && item_index != NON_ITEM)
-        {
-            // move_item_to_grid could change item_index, so
-            // update pitem.
-            pitem = &mitm[item_index];
-
-            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
-        }
     }
 
     if (props.exists("wand_known") && near && pitem->base_type == OBJ_WANDS)
@@ -1458,7 +1447,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     // Don't pick up items that would interfere with our special ability
     if (mons->type == MONS_RED_DEVIL)
-        return weapon_skill(weapon) == SK_POLEARMS;
+        return melee_skill(weapon) == SK_POLEARMS;
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1513,15 +1502,15 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return get_vorpal_type(weapon) == DVORP_SLASHING;
 
         if (mons->type == MONS_WIGLAF)
-            return weapon_skill(weapon) == SK_AXES;
+            return melee_skill(weapon) == SK_AXES;
 
         if (mons->type == MONS_NIKOLA)
             return get_weapon_brand(weapon) == SPWPN_ELECTROCUTION;
 
         if (mons->type == MONS_DUVESSA)
         {
-            return weapon_skill(weapon) == SK_SHORT_BLADES
-                   || weapon_skill(weapon) == SK_LONG_BLADES;
+            return melee_skill(weapon) == SK_SHORT_BLADES
+                   || melee_skill(weapon) == SK_LONG_BLADES;
         }
 
         if (mons->type == MONS_IGNACIO)
@@ -2727,6 +2716,8 @@ string monster::foot_name(bool plural, bool *can_plural) const
             const char* feet[] = {"paw", "talon", "hoof"};
             str = RANDOM_ELEMENT(feet);
         }
+        else if (mons_genus(type) == MONS_HOG)
+            str = "trotter";
         else if (ch == 'h')
             str = "paw";
         else if (ch == 'l' || ch == 'D')
@@ -3199,26 +3190,20 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
-bool monster::backlit(bool check_haloed, bool self_halo) const
+bool monster::backlit(bool self_halo) const
 {
-    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
-        return true;
-    if (check_haloed)
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
+        || has_ench(ENCH_SILVER_CORONA))
     {
-        return !umbraed() && haloed() &&
-               (self_halo || halo_radius2() == -1);
+        return true;
     }
-    return false;
+
+    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
 }
 
-bool monster::umbra(bool check_haloed, bool self_halo) const
+bool monster::umbra() const
 {
-    if (check_haloed)
-    {
-        return umbraed() && !haloed() &&
-               (self_halo || umbra_radius2() == -1);
-    }
-    return false;
+    return umbraed() && !haloed();
 }
 
 bool monster::glows_naturally() const
@@ -3302,14 +3287,21 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
 }
 
+/**
+ * Returns whether the monster currently has any kind of shield.
+ */
+bool monster::shielded() const
+{
+    return shield();
+}
+
 int monster::shield_bonus() const
 {
     const item_def *shld = const_cast<monster* >(this)->shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
-        // Note that 0 is not quite no-blocking.
         if (incapacitated())
-            return 0;
+            return -100;
 
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
@@ -4170,7 +4162,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     case SK_STAVES:
         ret = hd;
         if (weapon()
-            && sk == weapon_skill(*weapon())
+            && sk == melee_skill(*weapon())
             && _is_signature_weapon(this, *weapon()))
         {
             // generally slightly skilled if it's a signature weapon
@@ -5280,7 +5272,6 @@ static bool _mons_is_fiery(int mc)
            || mc == MONS_FIRE_ELEMENTAL
            || mc == MONS_EFREET
            || mc == MONS_AZRAEL
-           || mc == MONS_LAVA_WORM
            || mc == MONS_LAVA_SNAKE
            || mc == MONS_SALAMANDER
            || mc == MONS_SALAMANDER_FIREBRAND
@@ -5535,25 +5526,17 @@ bool monster::do_shaft()
     return reveal;
 }
 
-void monster::hibernate(int)
+void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
 {
-    if (!can_hibernate())
+    const bool valid_target = hibernate ? can_hibernate() : can_sleep();
+    if (!valid_target)
         return;
 
     stop_constricting_all();
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
-    add_ench(ENCH_SLEEP_WARY);
-}
-
-void monster::put_to_sleep(actor *attacker, int strength)
-{
-    if (!can_sleep())
-        return;
-
-    stop_constricting_all();
-    behaviour = BEH_SLEEP;
-    flags |= MF_JUST_SLEPT;
+    if (hibernate)
+        add_ench(ENCH_SLEEP_WARY);
 }
 
 void monster::weaken(actor *attacker, int pow)
@@ -6230,7 +6213,7 @@ void monster::steal_item_from_player()
         else
         {
             // Else create a new item for this pile of gold.
-            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0);
             if (idx == NON_ITEM)
                 return;
 
@@ -6459,8 +6442,11 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis(bool calc_unid, bool items) const
 {
-    if (mons_genus(type) == MONS_FORMICID)
+    if (mons_genus(type) == MONS_FORMICID
+        || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
+    {
         return true;
+    }
 
     return actor::stasis(calc_unid, items);
 }

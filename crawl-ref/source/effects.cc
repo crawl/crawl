@@ -23,7 +23,9 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -65,6 +67,7 @@
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
@@ -82,8 +85,6 @@
 #include "travel.h"
 #include "viewchar.h"
 #include "xom.h"
-
-static void _update_corpses(int elapsedTime);
 
 static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
 {
@@ -787,12 +788,8 @@ static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
            && mon->type != MONS_GIANT_SPORE
-           && mon->type != MONS_BALL_LIGHTNING
-           && mon->type != MONS_BATTLESPHERE
-           && mon->type != MONS_SPECTRAL_WEAPON
-           && mon->type != MONS_GRAND_AVATAR
            && !mon->berserk_or_insane()
-           && !mon->is_projectile()
+           && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);
 }
 
@@ -1717,233 +1714,6 @@ void change_labyrinth(bool msg)
     }
 }
 
-static bool _food_item_needs_time_check(item_def &item)
-{
-    if (!item.defined())
-        return false;
-
-    if (item.base_type != OBJ_CORPSES
-        && item.base_type != OBJ_FOOD
-        && item.base_type != OBJ_POTIONS)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_CORPSES
-        && item.sub_type > CORPSE_SKELETON)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-        return false;
-
-    if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
-        return false;
-
-    // The object specifically asks not to be checked:
-    if (item.props.exists(CORPSE_NEVER_DECAYS))
-        return false;
-
-    return true;
-}
-
-#define ROTTING_WARNED_KEY "rotting_warned"
-
-static void _rot_inventory_food(int time_delta)
-{
-    // Update all of the corpses and food chunks in the player's
-    // inventory. {should be moved elsewhere - dlb}
-    bool burden_changed_by_rot = false;
-    vector<char> rotten_items;
-
-    int num_chunks         = 0;
-    int num_chunks_gone    = 0;
-    int num_bones          = 0;
-    int num_bones_gone     = 0;
-    int num_corpses        = 0;
-    int num_corpses_rotted = 0;
-    int num_corpses_gone   = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (item.quantity < 1)
-            continue;
-
-        if (!_food_item_needs_time_check(item))
-            continue;
-
-        if (item.base_type == OBJ_POTIONS)
-        {
-            maybe_coagulate_blood_potions_inv(item);
-            continue;
-        }
-
-        if (item.base_type == OBJ_FOOD)
-            num_chunks++;
-        else if (item.sub_type == CORPSE_SKELETON)
-            num_bones++;
-        else
-            num_corpses++;
-
-        // Food item timed out -> make it disappear.
-        if ((time_delta / 20) >= item.special)
-        {
-            if (item.base_type == OBJ_FOOD)
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                // In case time_delta >= 220
-                if (!item.props.exists(ROTTING_WARNED_KEY))
-                    num_chunks_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-
-                continue;
-            }
-
-            // The item is of type carrion.
-            if (item.sub_type == CORPSE_SKELETON
-                || !mons_skeleton(item.mon_type))
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                if (item.sub_type == CORPSE_SKELETON)
-                    num_bones_gone++;
-                else
-                    num_corpses_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-                continue;
-            }
-
-            turn_corpse_into_skeleton(item);
-            if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-            burden_changed_by_rot = true;
-
-            num_corpses_rotted++;
-            continue;
-        }
-
-        // If it hasn't disappeared, reduce the rotting timer.
-        item.special -= (time_delta / 20);
-
-        if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
-        {
-            rotten_items.push_back(index_to_letter(i));
-            if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-        }
-    }
-
-    //mv: messages when chunks/corpses become rotten
-    if (!rotten_items.empty())
-    {
-        string msg = "";
-
-        // Races that can't smell don't care, and trolls are stupid and
-        // don't care.
-        if (you.can_smell() && you.species != SP_TROLL)
-        {
-            int temp_rand = 0; // Grr.
-            int level = player_mutation_level(MUT_SAPROVOROUS);
-            if (!level && you.species == SP_VAMPIRE)
-                level = 1;
-
-            switch (level)
-            {
-            // level 1 and level 2 saprovores, as well as vampires, aren't so touchy
-            case 1:
-            case 2:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "You smell rotting flesh." :
-                      (temp_rand == 6) ? "You smell decay."
-                                       : "There is something rotten in your inventory.";
-                break;
-
-            // level 3 saprovores like it
-            case 3:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                      (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                       : "Wow! There is something tasty in your inventory.";
-                break;
-
-            default:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                      (temp_rand == 6) ? "You smell decay. Yuck!"
-                                       : "Ugh! There is something really disgusting in your inventory.";
-                break;
-            }
-        }
-        else
-            msg = "Something in your inventory has become rotten.";
-
-        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
-             msg.c_str(),
-             rotten_items.size() > 1 ? "s" : "",
-             comma_separated_line(rotten_items.begin(),
-                                  rotten_items.end()).c_str());
-
-        learned_something_new(HINT_ROTTEN_FOOD);
-    }
-
-    if (burden_changed_by_rot)
-    {
-        if ((num_chunks_gone + num_bones_gone + num_corpses_gone
-             + num_corpses_rotted) > 0)
-        {
-            string msg;
-            if (num_chunks_gone == num_chunks
-                && num_bones_gone == num_bones
-                && (num_corpses_gone + num_corpses_rotted) == num_corpses)
-            {
-                msg = "All of the ";
-            }
-            else
-                msg = "Some of the ";
-
-            vector<string> strs;
-            if (num_chunks_gone > 0)
-                strs.push_back("chunks of flesh");
-            if (num_bones_gone > 0)
-                strs.push_back("skeletons");
-            if ((num_corpses_gone + num_corpses_rotted) > 0)
-                strs.push_back("corpses");
-
-            msg += comma_separated_line(strs.begin(), strs.end());
-            msg += " in your inventory have ";
-
-            if (num_corpses_rotted == 0)
-                msg += "completely ";
-            else if ((num_chunks_gone + num_bones_gone
-                      + num_corpses_gone) == 0)
-            {
-                msg += "partially ";
-            }
-            else
-                msg += "completely or partially ";
-
-            msg += "rotted away.";
-            mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
-        }
-    }
-}
-
 static void _handle_magic_contamination()
 {
     int added_contamination = 0;
@@ -2248,7 +2018,7 @@ struct timed_effect
 
 static struct timed_effect timed_effects[] =
 {
-    { TIMER_CORPSES,       _update_corpses,               200,   200, true  },
+    { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
     { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
     { TIMER_STAT_RECOVERY, _recover_stats,                100,   300, false },
     { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
@@ -2257,7 +2027,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { TIMER_SCREAM, NULL,                                   0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      _rot_inventory_food,           100,   300, false },
+    { TIMER_FOOD_ROT,      rot_inventory_food,           100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
@@ -2321,8 +2091,33 @@ void handle_time()
     }
 }
 
+/**
+ * Return the number of turns it takes for monsters to forget about the player
+ * 50% of the time.
+ *
+ * @param   The intelligence of the monster.
+ * @return  An average number of turns before the monster forgets.
+ */
+static int _mon_forgetfulness_time(mon_intel_type intelligence)
+{
+    switch (intelligence)
+    {
+        case I_HIGH:
+            return 1000;
+        case I_NORMAL:
+        default:
+            return 500;
+        case I_ANIMAL:
+        case I_REPTILE:
+        case I_INSECT:
+            return 250;
+        case I_PLANT:
+            return 125;
+    }
+}
+
 // Move monsters around to fake them walking around while player was
-// off-level. Also let them go back to sleep eventually.
+// off-level.
 static void _catchup_monster_moves(monster* mon, int turns)
 {
     // Summoned monsters might have disappeared.
@@ -2382,27 +2177,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // After x turns, half of the monsters will have forgotten about the
     // player. A given monster has a 95% chance of forgetting the player after
     // 4*x turns.
-    int x = 0; // Quiet unitialized variable compiler warning.
-    switch (mons_intel(mon))
-    {
-    case I_HIGH:
-        x = 1000;
-        break;
-    case I_NORMAL:
-        x = 500;
-        break;
-    case I_ANIMAL:
-    case I_REPTILE:
-    case I_INSECT:
-        x = 250;
-        break;
-    case I_PLANT:
-        x = 125;
-        break;
-    }
+    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
 
     bool changed = false;
-    for (int i = 0; i < range/x; i++)
+    for (int i = 0; i < range/forgetfulness_time; i++)
     {
         if (mon->behaviour == BEH_SLEEP)
             break;
@@ -2537,7 +2315,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    _update_corpses(elapsedTime);
+    rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
@@ -2594,19 +2372,6 @@ void update_level(int elapsedTime)
     for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud(i);
 }
-
-// A comparison struct for use in an stl priority queue.
-template<typename T>
-struct greater_second
-{
-    // The stl priority queue is a max queue and uses < as the default
-    // comparison.  We want a min queue so we have to use a > operation
-    // here.
-    bool operator()(const T & left, const T & right)
-    {
-        return left.second > right.second;
-    }
-};
 
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
@@ -2681,7 +2446,8 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
 
     // Using a priority queue because squares don't make very good circles at
     // larger radii.  We will visit points in order of increasing euclidean
-    // distance from the origin (not path distance).
+    // distance from the origin (not path distance).  We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
     priority_queue<coord_dist, vector<coord_dist>,
                    greater_second<coord_dist> > fringe;
 
@@ -2996,69 +2762,6 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
          what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
 
     return true;
-}
-
-//---------------------------------------------------------------
-//
-// update_corpses
-//
-// Update all of the corpses and food chunks on the floor.
-//
-//---------------------------------------------------------------
-static void _update_corpses(int elapsedTime)
-{
-    if (elapsedTime <= 0)
-        return;
-
-    const int rot_time = elapsedTime / 20;
-
-    for (int c = 0; c < MAX_ITEMS; ++c)
-    {
-        item_def &it = mitm[c];
-
-        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
-        {
-            bool old_aura = it.special > 0;
-            it.special = max(0, it.special - rot_time);
-            if (old_aura && !it.special)
-            {
-                invalidate_agrid(true);
-                you.redraw_armour_class = true;
-                you.redraw_evasion = true;
-            }
-            continue;
-        }
-
-        if (!_food_item_needs_time_check(it))
-            continue;
-
-        if (it.base_type == OBJ_POTIONS)
-        {
-            if (is_shop_item(it))
-                continue;
-            maybe_coagulate_blood_potions_floor(c);
-            continue;
-        }
-
-        if (rot_time >= it.special && !is_being_butchered(it))
-        {
-            if (it.base_type == OBJ_FOOD)
-                destroy_item(c);
-            else
-            {
-                if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton(it.mon_type))
-                {
-                    item_was_destroyed(it);
-                    destroy_item(c);
-                }
-                else
-                    turn_corpse_into_skeleton(it);
-            }
-        }
-        else
-            it.special -= rot_time;
-    }
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)

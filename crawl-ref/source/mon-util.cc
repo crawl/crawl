@@ -213,6 +213,11 @@ void init_mon_name_cache()
     }
 }
 
+static const char *_mon_entry_name(size_t idx)
+{
+    return mondata[idx].name;
+}
+
 monster_type get_monster_by_name(string name, bool substring)
 {
     if (name.empty())
@@ -230,29 +235,10 @@ monster_type get_monster_by_name(string name, bool substring)
         return MONS_PROGRAM_BUG;
     }
 
-    int best = 0x7fffffff;
-
-    monster_type mon = MONS_PROGRAM_BUG;
-    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
-    {
-        string candidate = mondata[i].name;
-        lowercase(candidate);
-
-        const int mtype = mondata[i].mc;
-
-        const string::size_type match = candidate.find(name);
-        if (match == string::npos)
-            continue;
-
-        int qual = 0x7ffffffe;
-        // We prefer prefixes over partial matches.
-        if (match == 0)
-            qual = candidate.length();;
-
-        if (qual < best)
-            best = qual, mon = monster_type(mtype);
-    }
-    return mon;
+    size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
+                                     _always_true<size_t>, _mon_entry_name);
+    return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
+                                   : (monster_type) mondata[idx].mc;
 }
 
 void init_monsters()
@@ -1036,8 +1022,10 @@ void discover_mimic(const coord_def& pos, bool wake)
         set_terrain_changed(pos);
         remove_markers_and_listeners_at(pos);
 
+#if TAG_MAJOR_VERSION == 34
         if (feat_is_door(feat))
             env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
+#endif
     }
 
     // Generate and place the monster.
@@ -2303,10 +2291,47 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
     return books;
 }
 
+// get a list of unique spells from a monster's preset spellbooks
+// or in the case of ghosts their actual spells.
+unique_books get_unique_spells(const monster_info &mi)
+{
+    const vector<mon_spellbook_type> books = get_spellbooks(mi);
+    const size_t num_books = books.size();
+
+    unique_books result;
+    for (size_t i = 0; i < num_books; ++i)
+    {
+        const mon_spellbook_type book = books[i];
+        vector<spell_type> spells;
+
+        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        {
+            spell_type spell;
+            if (book == MST_GHOST)
+                spell = mi.spells[j];
+            else
+                spell = mspell_list[book].spells[j];
+
+            bool match = false;
+
+            for (size_t k = 0; k < spells.size(); ++k)
+                if (spell == spells[k])
+                    match = true;
+
+            if (!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE)
+                spells.push_back(spell);
+        }
+
+        result.push_back(spells);
+    }
+
+    return result;
+}
+
 static void _mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
-    mon_spellbook_type book = books[random2(books.size())];
+    const mon_spellbook_type book = books[random2(books.size())];
 
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
@@ -4271,7 +4296,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@Foot@", uppercase_first(part_str));
 
     if (!can_plural)
-        part_str = "NO PLURAL FOOT";
+        part_str = "NO PLURAL FEET";
     else
         part_str = mons->foot_name(true);
 

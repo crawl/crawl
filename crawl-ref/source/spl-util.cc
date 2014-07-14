@@ -148,26 +148,9 @@ spell_type spell_by_name(string name, bool partial_match)
         return SPELL_NO_SPELL;
     }
 
-    spell_type spellmatch = SPELL_NO_SPELL;
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        spell_type type = static_cast<spell_type>(i);
-        if (!is_valid_spell(type))
-            continue;
-
-        const char *sptitle = spell_title(type);
-        const string spell_name = lowercase_string(sptitle);
-
-        if (spell_name.find(name) != string::npos)
-        {
-            if (spell_name == name)
-                return type;
-
-            spellmatch = type;
-        }
-    }
-
-    return spellmatch;
+    const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                              is_valid_spell, spell_title);
+    return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 
 spschool_flag_type school_by_name(string name)
@@ -282,8 +265,6 @@ bool add_spell_to_memory(spell_type spell)
                 you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
             {
                 j = letter_to_index(Options.auto_spell_letters[k].second[l]);
-                mprf("Spell assigned to '%c'.",
-                     Options.auto_spell_letters[k].second[l]);
                 break;
             }
         if (j != -1)
@@ -297,6 +278,7 @@ bool add_spell_to_memory(spell_type spell)
                 break;
         }
 
+    mprf("Spell assigned to '%c'.", index_to_letter(j));
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
@@ -1119,7 +1101,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
-        if (transient && you.form == TRAN_TREE)
+        if (transient && you.is_stationary())
             return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
@@ -1252,6 +1234,9 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_HOLY_BREATH:
     {
         targetter_cloud tgt(&you, range);
+        // Accept monsters that are in clouds for the hostiles-in-range check
+        // (not for actual targetting).
+        tgt.avoid_clouds = false;
         for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
              ri; ++ri)
         {

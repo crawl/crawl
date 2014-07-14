@@ -7,7 +7,6 @@ if [ -z "$GIT_DIR" ]; then
 fi
 
 $GIT_DIR/hooks/crawl-ref-email "$@"
-#$GIT_DIR/hooks/crawl-ref-cia "$@"
 
 # BuildBot
 #$GIT_DIR/hooks/git_buildbot.py "$@"

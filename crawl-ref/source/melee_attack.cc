@@ -18,6 +18,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -888,8 +889,10 @@ void melee_attack::adjust_noise()
         case AT_KICK:
         case AT_CLAW:
         case AT_GORE:
+#if TAG_MAJOR_VERSION == 34
         case AT_SNAP:
         case AT_SPLASH:
+#endif
         case AT_CHERUB:
             noise_factor = 125;
             break;
@@ -1016,7 +1019,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         aux_attack = aux_verb = "kick";
         aux_damage = 5;
 
-        if (player_mutation_level(MUT_HOOVES))
+        if (you.has_usable_hooves())
         {
             // Max hoof damage: 10.
             aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
@@ -1326,10 +1329,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         case UNAT_KICK:
         {
-            const int hooves = player_mutation_level(MUT_HOOVES);
-
-            if (hooves && pre_ac_dmg > post_ac_dmg)
+            if (you.has_usable_hooves() && pre_ac_dmg > post_ac_dmg)
             {
+                const int hooves = player_mutation_level(MUT_HOOVES);
                 const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
                 // do some of the previously ignored damage in extra-damage
                 damage_done += inflict_damage(dmg, BEAM_MISSILE);
@@ -2588,15 +2590,6 @@ string melee_attack::mons_attack_verb()
 
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return RANDOM_ELEMENT(klown_attack);
-
-    if (mons_is_feat_mimic(attacker->type))
-    {
-        const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
-        if (feat_is_door(feat))
-            attk_type = AT_SNAP;
-        else if (feat_is_fountain(feat))
-            attk_type = AT_SPLASH;
-    }
 
     if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
@@ -3880,7 +3873,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
     {
     case UNAT_KICK:
         return is_uc
-                || player_mutation_level(MUT_HOOVES)
+                || you.has_usable_hooves()
                 || you.has_usable_talons()
                 || player_mutation_level(MUT_TENTACLE_SPIKE);
 
@@ -3968,9 +3961,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
 
 bool melee_attack::using_weapon()
 {
-    return weapon && ((weapon->base_type == OBJ_WEAPONS
-                      && !is_range_weapon(*weapon))
-                      || weapon->base_type == OBJ_RODS);
+    return weapon && is_melee_weapon(*weapon);
 }
 
 int melee_attack::weapon_damage()

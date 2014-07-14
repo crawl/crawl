@@ -758,10 +758,6 @@ potion of haste
 
 Un breuvage enchanté qui accélère les actions de celui qui le boit.
 %%%%
-potion of strong poison
-
-Une épouvantable potion empoisonnée.
-%%%%
 quad damage
 
 Un mystérieux objet qui ressemble à une rune. Une fois évoqué, l'utilisateur

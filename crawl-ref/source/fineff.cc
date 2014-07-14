@@ -5,6 +5,7 @@
 **/
 
 #include "AppHdr.h"
+#include "bloodspatter.h"
 #include "coord.h"
 #include "dactions.h"
 #include "effects.h"
@@ -12,7 +13,6 @@
 #include "fineff.h"
 #include "libutil.h"
 #include "mgen_data.h"
-#include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"

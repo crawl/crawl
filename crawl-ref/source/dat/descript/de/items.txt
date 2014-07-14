@@ -525,10 +525,6 @@ potion of slowing
 
 Ein Trank, der Ihre Taten verlangsamt.
 %%%%
-potion of strong poison
-
-Ein schrecklich giftiger Trank.
-%%%%
 quad damage
 
 Eine mysteriöse Sache, die einer Rune von irgendeiner Art ähnelt. Sobald

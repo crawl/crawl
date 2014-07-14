@@ -15,7 +15,6 @@
 #include "item_use.h"
 #include "jobs.h"
 #include "maps.h"
-#include "misc.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "ng-init.h"
@@ -23,6 +22,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "rot.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -499,16 +499,18 @@ static void _update_weapon(const newgame_def& ng)
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
-    case WPN_CROSSBOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus);
+    case WPN_HAND_CROSSBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW, -1, 1,
+                          plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
         autopickup_starting_ammo(MI_BOLT);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
-    case WPN_SLING:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus);
+    case WPN_HUNTING_SLING:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HUNTING_SLING, -1, 1,
+                          plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
         autopickup_starting_ammo(MI_SLING_BULLET);
 
@@ -994,7 +996,7 @@ static void _give_items_skills(const newgame_def& ng)
         if (!you.weapon())
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-            you.skills[weapon_skill(*you.weapon())] = weap_skill;
+            you.skills[melee_skill(*you.weapon())] = weap_skill;
     }
 
     if (you.species == SP_FELID)
@@ -1034,7 +1036,6 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type  = POT_BLOOD;
-        init_stack_blood_potions(item);
     }
     else
     {

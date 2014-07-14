@@ -731,7 +731,7 @@ static void _get_randart_properties(const item_def &item,
 
             if (atype == WPN_BLOWGUN)
                 proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-            else if (atype == WPN_CROSSBOW)
+            else if (range_skill(item) == SK_CROSSBOWS)
             {
                 // Penetration and electrocution are only allowed on
                 // crossbows.  This may change in future.
@@ -1577,8 +1577,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             || atype != OBJ_RANDOM && entry->sub_type != atype
                // Acquirement.
                && (aclass != OBJ_WEAPONS
-                   || weapon_skill(entry->base_type, atype) !=
-                      weapon_skill(entry->base_type, entry->sub_type)
+                   || item_attack_skill(entry->base_type, atype) !=
+                      item_attack_skill(entry->base_type, entry->sub_type)
                    || hands_reqd(&you, entry->base_type,
                                  atype) !=
                       hands_reqd(&you, entry->base_type,

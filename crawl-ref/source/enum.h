@@ -351,10 +351,12 @@ enum attribute_type
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
+#if TAG_MAJOR_VERSION == 34
     ATTR_DIVINE_FIRE_RES,      // Divine fire resistance (Qazlal).
     ATTR_DIVINE_COLD_RES,      // Divine cold resistance (Qazlal).
     ATTR_DIVINE_ELEC_RES,      // Divine electricity resistance (Qazlal).
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
+#endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     ATTR_ERUPT_DAMAGE,         // Amount of damage taken in magma form
     ATTR_IGNI_ARTEFACTS_MADE,  // Bit flags of which artefacts were made.
@@ -633,6 +635,7 @@ enum caction_type    // Primary categorization of counted actions.
                      //   or unrand index
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
+    CACT_EAT,        // food_type, or -1 for corpse
     NUM_CACTIONS,
 };
 
@@ -1820,7 +1823,9 @@ enum enchant_type
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_ATTACHED,
+#endif
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
@@ -2096,7 +2101,9 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_SEEN              = 0x20000000,  // has it been seen
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
-    ISFLAG_DROPPED_BY_ALLY   = 0x80000000,  // Item was dropped by an ally
+#if TAG_MAJOR_VERSION == 34
+    ISFLAG_UNUSED4           = 0x80000000,  // was ISFLAG_DROPPED_BY_ALLY
+#endif
 };
 
 enum item_type_id_state_type
@@ -2300,6 +2307,7 @@ enum targ_mode_type
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
     TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_HOSTILE_UNDEAD,    // For dispel undead
+    TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_NUM_MODES
 };
 
@@ -2775,8 +2783,8 @@ enum monster_type                      // menv[].type
     MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
 
     // Lava monsters:
-    MONS_LAVA_WORM,
 #if TAG_MAJOR_VERSION == 34
+    MONS_LAVA_WORM,
     MONS_LAVA_FISH,
 #endif
     MONS_LAVA_SNAKE,
@@ -2787,8 +2795,8 @@ enum monster_type                      // menv[].type
 #endif
 
     // Water monsters:
-    MONS_BIG_FISH,
 #if TAG_MAJOR_VERSION == 34
+    MONS_BIG_FISH,
     MONS_GIANT_GOLDFISH,
 #endif
     MONS_ELECTRIC_EEL,
@@ -2797,7 +2805,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_SHARK,
+#endif
     MONS_KRAKEN,
     MONS_KRAKEN_TENTACLE,
     MONS_KRAKEN_TENTACLE_SEGMENT,
@@ -3576,7 +3586,7 @@ enum potion_type
     POT_FLIGHT,
     POT_POISON,
     POT_SLOWING,
-    POT_PARALYSIS,
+    POT_CANCELLATION,
     POT_CONFUSION,
     POT_INVISIBILITY,
     POT_PORRIDGE,
@@ -3588,7 +3598,9 @@ enum potion_type
     POT_EXPERIENCE,
     POT_MAGIC,
     POT_RESTORE_ABILITIES,
+#if TAG_MAJOR_VERSION == 34
     POT_STRONG_POISON,
+#endif
     POT_BERSERK_RAGE,
     POT_CURE_MUTATION,
     POT_MUTATION,

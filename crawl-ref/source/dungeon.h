@@ -45,7 +45,9 @@ enum map_mask_type
     MMT_NO_TRAP         = 0x80,  // No trap generation
     MMT_MIMIC           = 0x100, // Feature mimics
     MMT_NO_MIMIC        = 0x200, // Feature shouldn't be turned into a mimic.
+#if TAG_MAJOR_VERSION == 34
     MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
+#endif
     MMT_TURNED_TO_FLOOR = 0x800, // This feature was dug, deconstructed or such.
 };
 

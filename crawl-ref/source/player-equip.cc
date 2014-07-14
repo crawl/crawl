@@ -394,7 +394,7 @@ static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
         if (origin_is_god_gift(item, &god) && god == GOD_XOM)
             amusement *= 2;
     }
-    const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
+    const int wpn_skill = item_attack_skill(item.base_type, item.sub_type);
     if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
         amusement *= 2;
 

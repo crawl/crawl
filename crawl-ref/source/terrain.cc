@@ -895,6 +895,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     // Move player's knowledge.
     env.map_knowledge(dst) = env.map_knowledge(src);
+    env.map_seen.set(dst, env.map_seen(src));
     StashTrack.move_stash(src, dst);
 }
 
@@ -1348,19 +1349,23 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
     return swap_features(src, preferred_dest, false, announce);
 }
 
-// Returns true if we manage to scramble free.
-bool fall_into_a_pool(const coord_def& entry,
-                      dungeon_feature_type terrain)
+/**
+ * Apply harmful environmental effects from the current tile terrain to the
+ * player.
+ *
+ * @param entry     The terrain type in question.
+ */
+void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER)
     {
         if (beogh_water_walk() || form_likes_water())
-            return false;
+            return;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)
         {
             emergency_untransform();
-            return false;
+            return;
         }
     }
 
@@ -1373,27 +1378,23 @@ bool fall_into_a_pool(const coord_def& entry,
     clear_messages();
     if (terrain == DNGN_LAVA)
     {
-        mpr("The lava burns you to a cinder!");
+        if (you.species == SP_MUMMY)
+            mpr("You burn to ash...");
+        else
+            mpr("The lava burns you to a cinder!");
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
         mpr("You sink like a stone!");
 
-        if (you.species == SP_MUMMY)
-        {
-            if (terrain == DNGN_LAVA)
-                mpr("You burn to ash...");
-            else if (terrain == DNGN_DEEP_WATER)
-                 mpr("You fall apart...");
-        }
+        if (you.is_unbreathing()) // XXX: this is weird for fungi drowning
+            mpr("You fall apart...");
         else
             mpr("You drown...");
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
     }
-
-    return false;
 }
 
 typedef map<string, dungeon_feature_type> feat_desc_map;

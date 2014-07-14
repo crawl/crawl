@@ -190,10 +190,6 @@ potion of slowing
 
 Lektvar, který zpomaluje vaše akce.
 %%%%
-potion of strong poison
-
-Nesmírně jedovatý lektvar.
-%%%%
 quarterstaff
 
 Robustni dreveni kul určenej k boji.

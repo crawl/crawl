@@ -37,6 +37,7 @@
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -56,6 +57,7 @@
 #include "player-equip.h"
 #include "quiver.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
 #include "spl-book.h"
@@ -363,10 +365,20 @@ bool dec_inv_item_quantity(int obj, int amount)
 // Returns true if stack of items no longer exists.
 bool dec_mitm_item_quantity(int obj, int amount)
 {
-    if (mitm[obj].quantity <= amount)
-        amount = mitm[obj].quantity;
+    item_def &item = mitm[obj];
+    if (amount > item.quantity)
+        amount = item.quantity; // can't use min due to type mismatch
 
-    if (mitm[obj].quantity == amount)
+    // when removing gold from a stack, make it lose its gozag-aura
+    if (item.base_type == OBJ_GOLD && item.special > 0 && amount)
+    {
+        item.special = 0;
+        invalidate_agrid(true);
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+    }
+
+    if (item.quantity == amount)
     {
         destroy_item(obj);
         // If we're repeating a command, the repetitions used up the
@@ -377,8 +389,7 @@ bool dec_mitm_item_quantity(int obj, int amount)
         return true;
     }
 
-    mitm[obj].quantity -= amount;
-
+    item.quantity -= amount;
     return false;
 }
 
@@ -889,12 +900,11 @@ void pickup_menu(int item_link)
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
                 clear_item_pickup_flags(mitm[j]);
-                int result = move_item_to_player(j, num_to_take);
 
                 // If we cleared any flags on the items, but the pickup was
                 // partial, reset the flags for the items that remain on the
                 // floor.
-                if (result == -1)
+                if (!move_item_to_inv(j, num_to_take))
                 {
                     n_tried_pickup++;
                     pickup_warning = "You can't carry that many items.";
@@ -1227,11 +1237,11 @@ bool pickup_single_item(int link, int qty)
 
     iflags_t oldflags = item->flags;
     clear_item_pickup_flags(*item);
-    int num = move_item_to_player(link, qty);
+    const bool pickup_succ = move_item_to_inv(link, qty);
     if (item->defined())
         item->flags = oldflags;
 
-    if (num == -1)
+    if (!pickup_succ)
     {
         mpr("You can't carry that many items.");
         learned_something_new(HINT_FULL_INVENTORY);
@@ -1279,18 +1289,20 @@ void pickup(bool partial_quantity)
             o = mitm[o].link;
         pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
     }
-    else if (Options.pickup_menu
-             || Options.pickup_menu_limit
-             && num_items >= (Options.pickup_menu_limit < 0
-                              ? Options.item_stack_summary_minimum
-                              : Options.pickup_menu_limit))
+    else if (Options.pickup_menu_limit
+             && num_items > (Options.pickup_menu_limit > 0
+                             ? Options.pickup_menu_limit
+                             : Options.item_stack_summary_minimum - 1))
     {
         pickup_menu(o);
     }
     else
     {
         int next;
-        mpr("There are several objects here.");
+        if (num_items == 0)
+            mpr("There are no objects that can be picked up here.");
+        else
+            mpr("There are several objects here.");
         string pickup_warning;
         bool any_selectable = false;
         while (o != NON_ITEM)
@@ -1335,9 +1347,9 @@ void pickup(bool partial_quantity)
                 int num_to_take = mitm[o].quantity;
                 const iflags_t old_flags(mitm[o].flags);
                 clear_item_pickup_flags(mitm[o]);
-                int result = move_item_to_player(o, num_to_take);
 
-                if (result == -1)
+                // attempt to actually pick up the object.
+                if (!move_item_to_inv(o, num_to_take))
                 {
                     pickup_warning = "You can't carry that many items.";
                     mitm[o].flags = old_flags;
@@ -1443,7 +1455,19 @@ bool items_stack(const item_def &item1, const item_def &item2)
     return items_similar(item1, item2);
 }
 
-void merge_item_stacks(item_def &source, item_def &dest, int quant)
+/**
+ * Handles special cases involved in merging a specified number of items from
+ * one stack into another.
+ * Assumes that it's being called before the destination stack is incremented -
+ * bugginess will occur if this order is reversed.
+ * DOES NOT modify the original stack - the caller must handle any cleanup!
+ *
+ * @param source    The source from which items are being drawn.
+ * @param dest      The stack into which items are being placed.
+ * @param quant     The number of items to be added to the destination stack.
+ * Defaults to the entirety of the source stack.
+ */
+void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 {
     if (quant == -1)
         quant = source.quantity;
@@ -1451,7 +1475,7 @@ void merge_item_stacks(item_def &source, item_def &dest, int quant)
     ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
 
     if (is_blood_potion(source) && is_blood_potion(dest))
-       merge_blood_potion_stacks(source, dest, quant);
+        merge_blood_potion_stacks(source, dest, quant);
     if (source.base_type == OBJ_GOLD) // Gozag
         dest.special = max(source.special, dest.special);
 }
@@ -1540,7 +1564,7 @@ int find_free_slot(const item_def &i)
 #undef slotisfree
 }
 
-static void _got_item(item_def& item, int quant)
+static void _got_item(item_def& item)
 {
     seen_item(item);
     shopping_list.cull_identical_items(item);
@@ -1549,16 +1573,8 @@ static void _got_item(item_def& item, int quant)
         item.props.erase("needs_autopickup");
 }
 
-static void _got_gold(item_def& item, int quant, bool quiet)
+void get_gold(const item_def& item, int quant, bool quiet)
 {
-    if (item.special > 0) // Gozag
-    {
-        item.special = 0;
-        invalidate_agrid(true);
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-    }
-
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
     if (player_under_penance(GOD_GOZAG)
@@ -1618,16 +1634,16 @@ void note_inscribe_item(item_def &item)
 /**
  * Move the given item and quantity to the player's inventory.
  *
- * Returns 1 so pickup can continue if the pickup fails due to the item being
- * stationary or not having enough runes to pick up the orb in zotdef.
  * @param obj The item index in mitm.
  * @param quant_got The quantity of this item to move.
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
- * @return  The quantity of items moved or -1 if the player's inventory is
- *          full.
+ * @return  Whether items were successfully picked up. May return true even on
+ * failure in cases where pickup can continue; e.g. when trying to pickup
+ * stationary objects, or the orb in zot defense. (I.e., when the cause of
+ * failure was not a full inventory.)
 */
-int move_item_to_player(int obj, int quant_got, bool quiet)
+bool move_item_to_inv(int obj, int quant_got, bool quiet)
 {
     item_def &it = mitm[obj];
 
@@ -1636,215 +1652,198 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
         mpr("You can't pick that up.");
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
-        return 1;
+        return true;
     }
 
-    if (it.base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
+    if (it.base_type == OBJ_ORBS && crawl_state.game_is_zotdef()
+        && runes_in_pack() < 15)
     {
-        if (runes_in_pack() < 15)
-        {
-            mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
-            return 1;
-        }
+        mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
+        return true;
     }
 
-    int retval = quant_got;
-
-    // Gold has no mass, so we handle it first.
-    if (it.base_type == OBJ_GOLD)
-    {
-        _got_gold(it, quant_got, quiet);
-        dec_mitm_item_quantity(obj, quant_got);
-
-        you.turn_is_over = true;
-        return retval;
-    }
-    // So do runes.
-    if (item_is_rune(it))
-    {
-        if (!you.runes[it.plus])
-        {
-            you.runes.set(it.plus);
-            _check_note_item(it);
-        }
-
-        if (!quiet)
-        {
-            flash_view_delay(rune_colour(it.plus), 300);
-            mprf("You pick up the %s rune and feel its power.",
-                 rune_type_name(it.plus));
-            int nrunes = runes_in_pack();
-            if (nrunes >= you.obtainable_runes)
-                mpr("You have collected all the runes! Now go and win!");
-            else if (nrunes == NUMBER_OF_RUNES_NEEDED
-                     && !crawl_state.game_is_zotdef())
-            {
-                // might be inappropriate in new Sprints, please change it then
-                mprf("%d runes! That's enough to enter the realm of Zot.",
-                     nrunes);
-            }
-            else if (nrunes > 1)
-                mprf("You now have %d runes.", nrunes);
-
-            mpr("Press } to see all the runes you have collected.");
-        }
-
-        if (it.plus == RUNE_ABYSSAL)
-            mpr("You feel the abyssal rune guiding you out of this place.");
-
-        if (it.plus == RUNE_TOMB)
-            add_daction(DACT_TOMB_CTELE);
-
-        if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
-            unset_level_flags(LFLAG_NO_TELE_CONTROL);
-
-        dungeon_events.fire_position_event(
-            dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
-
-        dec_mitm_item_quantity(obj, quant_got);
-        you.turn_is_over = true;
-
-        return retval;
-    }
-    // The Orb is also handled specially.
-    if (item_is_orb(it))
-    {
-        // Take a note!
-        _check_note_item(it);
-
-        mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
-        you.char_direction = GDT_ASCENDING;
-
-        env.orb_pos = you.pos(); // can be wrong in wizmode
-        orb_pickup_noise(you.pos(), 30);
-
-        mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
-
-        if (you_worship(GOD_CHEIBRIADOS))
-            simple_god_message(" tells them not to hurry.");
-
-        mprf(MSGCH_ORB, "Now all you have to do is get back out of the dungeon!");
-
-        xom_is_stimulated(200, XM_INTRIGUED);
-        invalidate_agrid(true);
-
-        dungeon_events.fire_position_event(
-            dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
-
-        dec_mitm_item_quantity(obj, quant_got);
-        you.turn_is_over = true;
-
-        return retval;
-    }
-
+    // sanity
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    if (player_under_penance(GOD_GOZAG)
-        && (it.base_type == OBJ_POTIONS
-            || it.base_type == OBJ_SCROLLS
-            || it.base_type == OBJ_FOOD))
+    const coord_def old_item_pos = it.pos;
+    // attempt to put the item into your inventory.
+    int inv_slot;
+    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
-        int val = item_value(it, true) / it.quantity;
-        double prob = (double)(val - 20) / 100.0;
-        if (prob > 1.0)
-            prob = 1.0;
+        // if you succeeded, actually reduce the number in the original stack
+        if (is_blood_potion(it) && quant_got != it.quantity)
+            for (int i = 0; i < quant_got; i++)
+                remove_oldest_blood_potion(it);
 
-        int goldify = 0;
-        for (int i = 0; i < it.quantity; i++)
-            if (bernoulli(1.0, prob))
-                goldify++;
-
-        if (goldify > 0)
+        // cleanup items that ended up in an inventory slot (not gold, etc)
+        if (inv_slot != -1)
         {
-            string msg = get_desc_quantity(goldify, quant_got, "the")
-                         + " " + it.name(DESC_PLAIN);
-            if (goldify > 1)
-                msg += " turn";
-            else
-                msg += " turns";
-            msg += " to gold as you touch ";
-            if (quant_got > 1)
-                msg += "them.";
-            else
-                msg += "it.";
-
-            mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            _got_gold(it, goldify, quiet);
-            dec_penance(GOD_GOZAG, goldify);
-
-            if (dec_mitm_item_quantity(obj, goldify))
-                return goldify;
-
-            quant_got -= goldify;
+            _got_item(you.inv[inv_slot]);
+            _check_note_item(you.inv[inv_slot]);
         }
+        else
+            _check_note_item(it);
+
+        if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
+        {
+            dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
+                                                         you.pos(), 0, obj,
+                                                         -1),
+                                               you.pos());
+        }
+
+        // XXX: Waiting until now to decrement the quantity may give Windows
+        // tiles players the opportunity to close the window and duplicate the
+        // item (a variant of bug #6486). However, we can't decrement the
+        // quantity before firing the position event, because the latter needs
+        // the object's index.
+        dec_mitm_item_quantity(obj, quant_got);
+
+        you.turn_is_over = true;
+        return true;
     }
 
-    if (is_stackable_item(it))
+    return false;
+}
+
+/**
+ * Place a rune into the player's inventory.
+ *
+ * @param it      The item (rune) to pick up.
+ * @param quiet   Whether to suppress (most?) messages.
+ */
+static void _get_rune(const item_def& it, bool quiet)
+{
+    if (!you.runes[it.plus])
+        you.runes.set(it.plus);
+
+    if (!quiet)
     {
-        for (int m = 0; m < ENDOFPACK; m++)
+        flash_view_delay(rune_colour(it.plus), 300);
+        mprf("You pick up the %s rune and feel its power.",
+             rune_type_name(it.plus));
+        int nrunes = runes_in_pack();
+        if (nrunes >= you.obtainable_runes)
+            mpr("You have collected all the runes! Now go and win!");
+        else if (nrunes == NUMBER_OF_RUNES_NEEDED
+                 && !crawl_state.game_is_zotdef())
         {
-            if (items_stack(you.inv[m], it))
-            {
-                _check_note_item(it);
-
-                // If the object on the ground is inscribed, but not
-                // the one in inventory, then the inventory object
-                // picks up the other's inscription.
-                if (!(it.inscription).empty()
-                    && you.inv[m].inscription.empty())
-                {
-                    you.inv[m].inscription = it.inscription;
-                }
-
-                merge_item_stacks(it, you.inv[m], quant_got);
-
-                inc_inv_item_quantity(m, quant_got);
-                dec_mitm_item_quantity(obj, quant_got);
-
-                _got_item(it, quant_got);
-
-                if (!quiet)
-                {
-                    mprf_nocap("%s (gained %d)",
-                               get_menu_colour_prefix_tags(you.inv[m],
-                                   DESC_INVENTORY).c_str(),
-                               quant_got);
-                }
-                you.turn_is_over = true;
-
-                you.last_pickup[m] = quant_got;
-                return retval;
-            }
+            // might be inappropriate in new Sprints, please change it then
+            mprf("%d runes! That's enough to enter the realm of Zot.",
+                 nrunes);
         }
+        else if (nrunes > 1)
+            mprf("You now have %d runes.", nrunes);
+
+        mpr("Press } to see all the runes you have collected.");
     }
 
-    // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
-        return -1;
+    if (it.plus == RUNE_ABYSSAL)
+        mpr("You feel the abyssal rune guiding you out of this place.");
 
+    if (it.plus == RUNE_TOMB)
+        add_daction(DACT_TOMB_CTELE);
+
+    if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
+        unset_level_flags(LFLAG_NO_TELE_CONTROL);
+}
+
+/**
+ * Place the Orb of Zot into the player's inventory.
+ *
+ * @param it      The ORB!
+ * @param quiet   Unused.
+ */
+static void _get_orb(const item_def &it, bool quiet)
+{
+    mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
+    you.char_direction = GDT_ASCENDING;
+
+    env.orb_pos = you.pos(); // can be wrong in wizmode
+    orb_pickup_noise(you.pos(), 30);
+
+    mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
+
+    if (you_worship(GOD_CHEIBRIADOS))
+        simple_god_message(" tells them not to hurry.");
+
+    mprf(MSGCH_ORB, "Now all you have to do is get back out of the dungeon!");
+
+    xom_is_stimulated(200, XM_INTRIGUED);
+    invalidate_agrid(true);
+}
+
+/**
+ * Attempt to merge a stackable item into an existing stack in the player's
+ * inventory.
+ *
+ * @param it[in]            The stack to merge.
+ * @param quant_got         The quantity of this item to place.
+ * @param inv_slot[out]     The inventory slot the item was placed in. -1 if
+ * not placed.
+ * @param quiet             Whether to suppress pickup messages.
+ */
+static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
+                                           int &inv_slot, bool quiet)
+{
+    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    {
+        if (!items_stack(you.inv[inv_slot], it))
+            continue;
+
+        // If the object on the ground is inscribed, but not
+        // the one in inventory, then the inventory object
+        // picks up the other's inscription.
+        if (!(it.inscription).empty()
+            && you.inv[inv_slot].inscription.empty())
+        {
+            you.inv[inv_slot].inscription = it.inscription;
+        }
+
+        merge_item_stacks(it, you.inv[inv_slot], quant_got);
+        inc_inv_item_quantity(inv_slot, quant_got);
+        you.last_pickup[inv_slot] = quant_got;
+
+        if (!quiet)
+        {
+            mprf_nocap("%s (gained %d)",
+                        get_menu_colour_prefix_tags(you.inv[inv_slot],
+                                                    DESC_INVENTORY).c_str(),
+                        quant_got);
+        }
+
+        return true;
+    }
+
+    inv_slot = -1;
+    return false;
+}
+
+/**
+ * Move the given item and quantity to a free slot in the player's inventory.
+ *
+ * @param it[in]          The item to be placed into the player's inventory.
+ * @param quant_got       The quantity of this item to place.
+ * @param quiet           Suppresses pickup messages.
+ * @return                The inventory slot the item was placed in.
+ */
+static int _place_item_in_free_slot(const item_def &it, int quant_got,
+                                    bool quiet)
+{
     int freeslot = find_free_slot(it);
     ASSERT_RANGE(freeslot, 0, ENDOFPACK);
     ASSERT(!you.inv[freeslot].defined());
 
-    coord_def p = it.pos;
-    // If moving an item directly from a monster to the player without the
-    // item having been on the grid, then it really isn't a position event.
-    if (in_bounds(p))
-    {
-        dungeon_events.fire_position_event(
-            dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
-    }
-
     item_def &item = you.inv[freeslot];
     // Copy item.
-    item        = it;
-    item.link   = freeslot;
-    item.slot   = index_to_letter(item.link);
+    item          = it;
+    item.link     = freeslot;
+    item.quantity = quant_got;
+    item.slot     = index_to_letter(item.link);
     item.pos.set(-1, -1);
-    // Remove "dropped by ally" flag.
-    // Also, remove "unobtainable" as it was just proven false.
-    item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
+    // Remove "unobtainable" as it was just proven false.
+    item.flags &= ~ISFLAG_UNOBTAINABLE;
 
     god_id_item(item);
     maybe_identify_base_type(item);
@@ -1853,26 +1852,14 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
     note_inscribe_item(item);
 
-    item.quantity = quant_got;
-    if (is_blood_potion(it))
-    {
-        if (quant_got != it.quantity)
-        {
-            // Remove oldest timers from original stack.
-            for (int i = 0; i < quant_got; i++)
-                remove_oldest_blood_potion(it);
-
-            // ... and newest ones from picked up stack
-            remove_newest_blood_potion(item);
-        }
-    }
-    dec_mitm_item_quantity(obj, quant_got);
-    you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
+    // avoid blood potion timer/stack size mismatch
+    if (is_blood_potion(it) && quant_got != it.quantity)
+        remove_newest_blood_potion(item);
 
     if (!quiet)
     {
         mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
-                   DESC_INVENTORY).c_str());
+                                                     DESC_INVENTORY).c_str());
     }
     if (crawl_state.game_is_hints())
     {
@@ -1881,15 +1868,76 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
             learned_something_new(HINT_SEEN_RANDART);
     }
 
-    _got_item(item, item.quantity);
-
-    you.turn_is_over = true;
-
-    you.last_pickup[item.link] = retval;
-
+    you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
+    you.last_pickup[item.link] = quant_got;
     item_skills(item, you.start_train);
 
-    return retval;
+    return freeslot;
+}
+
+/**
+ * Move the given item and quantity to the player's inventory.
+ * DOES NOT change the original item; the caller must handle any cleanup!
+ *
+ * @param it[in]          The item to be placed into the player's inventory.
+ * @param quant_got       The quantity of this item to place.
+ * @param inv_slot[out]   The inventory slot the item was placed in. -1 if
+ * not placed.
+ * @param quiet If true, most messages notifying the player of item pickup (or
+ *              item pickup failure) aren't printed.
+ * @return Whether something was successfully picked up.
+ */
+bool merge_items_into_inv(const item_def &it, int quant_got, int &inv_slot,
+                          bool quiet)
+{
+    inv_slot = -1;
+
+    // sanity
+    if (quant_got > it.quantity || quant_got <= 0)
+        quant_got = it.quantity;
+
+    // Gold has no mass, so we handle it first.
+    if (it.base_type == OBJ_GOLD)
+    {
+        get_gold(it, quant_got, quiet);
+        return true;
+    }
+
+    // Runes are also massless.
+    if (item_is_rune(it))
+    {
+        _get_rune(it, quiet);
+        return true;
+    }
+    // The Orb is also handled specially.
+    if (item_is_orb(it))
+    {
+        _get_orb(it, quiet);
+        return true;
+    }
+
+    // BEWARE... THE CURSE OF GOZAG!
+    if (player_under_penance(GOD_GOZAG))
+    {
+        const int goldified_count = gozag_goldify(it, quant_got, quiet);
+        quant_got -= goldified_count;
+        if (quant_got <= 0)
+            return true;
+    }
+
+    // attempt to merge into an existing stack, if possible
+    if (is_stackable_item(it)
+        && _merge_stackable_item_into_inv(it, quant_got, inv_slot, quiet))
+    {
+        return true;
+    }
+
+    // Can't combine, check for slot space.
+    if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
+        return false;
+
+    inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
+    return true;
 }
 
 void mark_items_non_pickup_at(const coord_def &pos)
@@ -1988,8 +2036,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
             {
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
-                inc_mitm_item_quantity(si->index(), item.quantity);
                 merge_item_stacks(item, *si);
+                inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
                 _gozag_move_gold_to_top(p);
@@ -2101,9 +2149,9 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
         {
             if (items_stack(item, *si))
             {
-                inc_mitm_item_quantity(si->index(), quant_drop);
                 item_def copy = item;
                 merge_item_stacks(copy, *si, quant_drop);
+                inc_mitm_item_quantity(si->index(), quant_drop);
 
                 if (mark_dropped)
                 {
@@ -2734,14 +2782,10 @@ static bool _similar_equip(const item_def& pickup_item,
         return true;
 
     // Launchers of the same type are similar.
-    if ((pickup_item.sub_type >= WPN_BLOWGUN
-         && pickup_item.sub_type <= WPN_LONGBOW)
-             || pickup_item.sub_type == WPN_SLING)
-    {
+    if (is_ranged_weapon_type(pickup_item.sub_type))
         return pickup_item.sub_type != inv_item.sub_type;
-    }
 
-    return (weapon_skill(pickup_item) == weapon_skill(inv_item))
+    return (melee_skill(pickup_item) == melee_skill(inv_item))
            && (get_damage_type(pickup_item) == get_damage_type(inv_item));
 }
 
@@ -2947,21 +2991,24 @@ static void _do_autopickup()
 
             clear_item_pickup_flags(mitm[o]);
 
-            const int result = move_item_to_player(o, mitm[o].quantity);
-            if (mitm[o].base_type == OBJ_FOOD && mitm[o].sub_type == FOOD_CHUNK)
-                mitm[o].flags |= ISFLAG_DROPPED;
-
-            if (result == -1)
+            const bool pickup_result = move_item_to_inv(o, mitm[o].quantity);
+            if (mitm[o].base_type == OBJ_FOOD
+                && mitm[o].sub_type == FOOD_CHUNK)
             {
-                n_tried_pickup++;
-                pickup_warning = "Your pack is full.";
-                mitm[o].flags = iflags;
+                mitm[o].flags |= ISFLAG_DROPPED;
             }
-            else
+
+            if (pickup_result)
             {
                 did_pickup = true;
                 if (interesting_pickup)
                     n_did_pickup++;
+            }
+            else
+            {
+                n_tried_pickup++;
+                pickup_warning = "Your pack is full.";
+                mitm[o].flags = iflags;
             }
         }
 
@@ -3741,7 +3788,7 @@ bool get_item_by_name(item_def *item, char* specs,
             if (age <= 0)
                 age = -1;
             else if (item->sub_type == POT_BLOOD)
-                age += 500;
+                age += ROTTING_BLOOD;
 
             init_stack_blood_potions(*item, age);
         }
@@ -3964,11 +4011,12 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
+            if (item.sub_type >= MISC_DECK_OF_ESCAPE
+                 && item.sub_type <= MISC_DECK_OF_DEFENCE)
             {
-                ii.sub_type = NUM_MISCELLANY; // Needs to be changed if we add other
-                                              // miscellaneous items that can be
-                                              // non-identified
+                // Needs to be changed if we add other miscellaneous items
+                // that can be non-identified.
+                ii.sub_type = NUM_MISCELLANY;
             }
             else
                 ii.sub_type = item.sub_type;

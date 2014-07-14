@@ -199,7 +199,7 @@ MONS:   the Enchantress patrolling, thorn hunter / spriggan defender
 MONS:   tengu reaver / glowing shapeshifter hd:13
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
-        tengu conjurer ; quarterstaff . robe . crossbow . bolt / \
+        tengu conjurer ; quarterstaff . robe . arbalest . bolt / \
         centaur warrior / rakshasa / ogre mage ; giant club . \
         robe . potion of berserk rage q:1 ident:type
 KMONS:  L = water nymph

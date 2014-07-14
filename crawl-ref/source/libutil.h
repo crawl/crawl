@@ -74,7 +74,7 @@ static inline ucs_t toalower(ucs_t c)
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(string a, string b);
 
-#ifdef HAVE_STRLCPY
+#ifdef CRAWL_HAVE_STRLCPY
 #include <cstring>
 #else
 size_t strlcpy(char *dst, const char *src, size_t n);
@@ -178,6 +178,62 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 
 string unwrap_desc(string desc);
 
+template<class T> bool _always_true(T) { return true; }
+
+/**
+ * Find the enumerator e between begin and end that satisfies pred(e) and
+ * whose name, as given by namefunc(e), has the earliest occurrence of the
+ * substring spec.
+ *
+ * @param spec      The substring to search for.
+ * @param begin     The beginning of the enumerator range to search in.
+ * @param end       One past the end of the enum range to search in.
+ * @param pred      A function from Enum to bool. Enumerators that do not
+ *                  satisfy the predicate are ignored.
+ * @param namefunc  A function from Enum to string or const char * giving
+ *                  the name of the enumerator.
+ * @return The enumerator that satisfies pred and whose name contains the
+ *         spec substring beginning at the earliest position. If no such
+ *         enumerator exists, returns end. If there are multiple strings
+ *         containing the spec as a prefix, returns the shortest such string
+ *         (so exact matches are preferred); otherwise ties are broken in
+ *         an unspecified manner.
+ */
+template<class Enum, class Pred, class NameFunc>
+Enum find_earliest_match(string spec, Enum begin, Enum end,
+                         Pred pred, NameFunc namefunc)
+{
+    Enum selected = end;
+    const size_t speclen = spec.length();
+    size_t bestpos = string::npos;
+    size_t bestlen = string::npos;
+    for (size_t i = begin; i < (size_t) end; ++i)
+    {
+        const Enum curr = static_cast<Enum>(i);
+
+        if (!pred(curr))
+            continue;
+
+        const string name = lowercase_string(namefunc(curr));
+        const size_t pos = name.find(spec);
+        const size_t len = name.length();
+
+        if (pos < bestpos || pos == 0 && len < bestlen)
+        {
+            // Exit early if we found an exact match.
+            if (pos == 0 && len == speclen)
+                return curr;
+
+            // npos is never less than bestpos, so the spec was found.
+            bestpos = pos;
+            if (pos == 0)
+                bestlen = len;
+            selected = curr;
+        }
+    }
+    return selected;
+}
+
 template <typename Z>
 void erase_any(vector<Z> &vec, unsigned long which)
 {
@@ -193,6 +249,17 @@ static inline void swapv(Z &a, Z &b)
     a = b;
     b = tmp;
 }
+
+// A comparator for pairs.
+template<typename T>
+struct greater_second
+{
+    bool operator()(const T & left, const T & right)
+    {
+        return left.second > right.second;
+    }
+};
+
 
 static inline int sqr(int x)
 {

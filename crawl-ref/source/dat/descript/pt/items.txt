@@ -251,10 +251,6 @@ potion of slowing
 
 Uma poção que retarda as suas ações.
 %%%%
-potion of strong poison
-
-Uma poção terrivelmente venenosa.
-%%%%
 quarterstaff
 
 Uma haste de madeira robusta feita para combate.

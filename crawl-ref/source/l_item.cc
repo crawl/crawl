@@ -501,9 +501,7 @@ IDEF(weap_skill)
     if (!item || !item->defined())
         return 0;
 
-    skill_type skill = range_skill(*item);
-    if (skill == SK_THROWING)
-        skill = weapon_skill(*item);
+    const skill_type skill = item_attack_skill(*item);
     if (skill == SK_FIGHTING)
         return 0;
 

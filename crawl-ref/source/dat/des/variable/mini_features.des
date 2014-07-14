@@ -2927,7 +2927,7 @@ TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
-       potion of strong poison / potion of poison
+       potion of poison
 : else
 ITEM:  scroll of random uselessness / potion of degeneration / potion of poison
 : end
@@ -3108,6 +3108,27 @@ MAP
 :.ww..
 .ww...
 :...::
+ENDMAP
+
+# Wand duel gone wrong.
+NAME:   nicolae_wand_duel
+DEPTH:  D:6-
+WEIGHT: 1
+KITEM:  d = wand of disintegration charges:0 ident:all
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
+SUBST:  a = a A:4, b = b B:4
+KPROP:  ABd = bloody
+SUBST:  A = a, B = b
+NSUBST: a = 5:c / *:. , b = 5:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
+MAP
+  aaa.....bbb
+ aaaaa...bbbbb
+aaaaaaa.bbbbbbb
+aaadaaa.bbbdbbb
+aaaaaaa.bbbbbbb
+ aaaaa...bbbbb
+  aaa.....bbb
 ENDMAP
 
 NAME:  mrwooster_statue_mirror
@@ -3764,7 +3785,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_19
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3820,7 +3841,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_23
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 x.x.x.x.x.x.
@@ -3838,7 +3859,7 @@ x.x.x.x.x.x.
 ENDMAP
 
 NAME:  minivault_24
-TAGS:  transparent allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3856,7 +3877,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25
-TAGS:    transparent allow_dup extra ruin_abyss decor
+TAGS:    transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH:   D, Elf, Crypt, Lair, Abyss
 SHUFFLE: XY
 SUBST:   X=x, Y=+
@@ -3876,7 +3897,7 @@ MAP
 ENDMAP
 
 NAME: minivault_26
-TAGS: transparent allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 c..........c
@@ -3894,7 +3915,7 @@ c..........c
 ENDMAP
 
 NAME: minivault_27
-TAGS: transparent allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............

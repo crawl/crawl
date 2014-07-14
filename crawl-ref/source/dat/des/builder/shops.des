@@ -283,7 +283,7 @@ TAGS:    no_monster_gen
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:25 potion of poison | w:5 potion of strong poison | \
+         w:30 potion of poison | \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
          w:14 arrow ego:poisoned | w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
@@ -311,11 +311,12 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 sling | w:8 sling bullet | \
-         w:4 sling bullet ego:steel | w:14 stone of tremors | \
-         w:7 crystal ball of energy | w:4 wand of digging | \
-         w:5 randbook disc:earth | w:2 book of the earth | w:2 book of geomancy | \
-         w:4 staff of earth | w:4 wand of disintegration | w:1 crystal plate armour
+         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
+         w:8 sling bullet | w:4 sling bullet ego:steel | \
+         w:14 stone of tremors | w:7 crystal ball of energy | \
+         w:4 wand of digging | w:5 randbook disc:earth | \
+         w:2 book of the earth | w:2 book of geomancy | w:4 staff of earth | \
+         w:4 wand of disintegration | w:1 crystal plate armour
 SUBST:   ? = 2d.
 : if you.absdepth() < 16 then
 SUBST:   2 = 1

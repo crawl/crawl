@@ -345,7 +345,6 @@ static bool _wall_is_empty(map_lines &lines,
 }
 
 
-
 LUAFN(dgn_count_feature_in_box)
 {
     LINES(ls, 1, lines);

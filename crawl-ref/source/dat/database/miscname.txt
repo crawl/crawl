@@ -392,7 +392,7 @@ Mmm... @_cheese_kind_@ pizza.
 _carni_mmm_
 
 {{
-if you.mutation("herbivorous") > 0 then
+if you.mutation("herbivore") > 0 then
     return "Yeuchh!"
 else
     return "Mmm..."
@@ -402,7 +402,7 @@ end
 _herbi_mmm_
 
 {{
-if you.mutation("carnivorous") > 0 then
+if you.mutation("carnivore") > 0 then
     return "Yeuchh!"
 else
     return "Mmm..."

@@ -24,8 +24,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, pickup_menu, pickup_menu_limit,
-                drop_filter
+                assign_item_slot, pickup_menu_limit, drop_filter
 3-b     Targeting.
                 darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
@@ -62,7 +61,7 @@ The contents of this text are:
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
-                show_more, small_more, show_newturn_mark, show_gold_turns,
+                show_more, small_more, show_newturn_mark,
                 show_game_turns, item_stack_summary_minimum,
                 mlist_min_height, mlist_allow_alternate_layout,
                 mlist_targeting, msg_min_height, msg_max_height,
@@ -486,20 +485,14 @@ assign_item_slot = (forward | backward)
         With "backward", items dropped/fired and picked up later are
         more likely to get their old slot back.
 
-pickup_menu = true
-        When true (the default), displays a menu when picking up multiple
-        items. Note that no matter how many items you choose, picking up will
-        always take one turn.
-        When false, you will be prompted one by one when picking up multiple
-        items, unless there are at least 4 items on your square in which case
-        the menu will be used. This number can be adjusted with the
-        pickup_menu_limit option.
+pickup_menu_limit = 1
+        If there are more items than this on your square, a menu will be
+        displayed when picking up multiple items instead of prompting for each
+        item. If zero, never use the menu. If negative, use the value of
+        item_stack_summary_minimum - 1, instead.
 
-pickup_menu_limit = 4
-        If pickup_menu is false and there are at least this many items on your
-        square, a menu will be displayed when picking up multiple items instead
-        of prompting for each item. If zero, never use the menu. If negative,
-        use the value of item_stack_summary_minimum instead.
+        Note that no matter the vaulue of the option, picking up will always
+        take one turn.
 
 drop_filter += <regex>, <regex>, ...
         (List option)
@@ -910,10 +903,10 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         overrides any previous setting.
 
         All the existing trap types can be used, but in practice only
-        the mechanical traps (dart, bolt, arrow, needle, spear, blade)
+        the mechanical traps (bolt, arrow, needle, spear, blade)
         make sense. Note that travel tries to avoid traps if this is
         easily possible. Defaults to none. For example,
-              trapwalk_safe_hp = dart:15, needle:25, spear:50
+              trapwalk_safe_hp = needle:25, spear:50
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
@@ -1277,11 +1270,6 @@ show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in
         front of the first line of a turn.
 
-show_gold_turns = true
-        If set to false, this option hides the extra line in the stat area
-        which displays the current gold and turn counters. In Tiles, this
-        option is ignored. Use the tile_layout_priority option instead.
-
 show_game_turns = true
         By default, the turn counter in the stat area displays game turns, which
         means absolute turns of constant duration. Most actions take one turn,
@@ -1512,7 +1500,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / tomahawk / dart / stone / rock / net
+fire_order += javelin / tomahawk / stone / rock / net
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items

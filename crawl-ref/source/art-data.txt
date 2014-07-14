@@ -393,9 +393,9 @@ TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
 STR:     3
 
-NAME:    sling "Punk"
-OBJ:     OBJ_WEAPONS/WPN_SLING
-PLUS:    +11
+NAME:    greatsling "Punk"
+OBJ:     OBJ_WEAPONS/WPN_GREATSLING
+PLUS:    +7
 COLOUR:  ETC_ICE
 TILE:    urand_punk
 TILE_EQ: punk
@@ -444,9 +444,9 @@ ANGRY:    3
 STEALTH:  -1
 BOOL:     life
 
-NAME:    crossbow "Hellfire"
+NAME:    arbalest "Hellfire"
 INSCRIP: hellfire,
-OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
+OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_hellfire
@@ -521,13 +521,13 @@ MAGIC:    2
 AC:       5
 BOOL:     elec
 
-NAME:     crossbow "Sniper"
-OBJ:      OBJ_WEAPONS/WPN_CROSSBOW
+NAME:     heavy crossbow "Sniper"
+OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 PLUS:     +15
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
-BASE_DELAY: +5
+BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
 

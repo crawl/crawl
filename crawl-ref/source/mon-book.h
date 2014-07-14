@@ -19,5 +19,8 @@ struct mon_spellbook
 
 extern const mon_spellbook mspell_list[];
 
+typedef vector<vector<spell_type> > unique_books;
+
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon);
+unique_books get_unique_spells(const monster_info &mon);
 #endif

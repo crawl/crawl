@@ -70,11 +70,7 @@ static skill_type _equipped_skill()
     const int missile = you.m_quiver->get_fire_item();
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
-    {
-        if (is_range_weapon(*iweap))
-            return range_skill(*iweap);
-        return weapon_skill(*iweap);
-    }
+        return item_attack_skill(*iweap);
 
     if (missile != -1)
         return range_skill(you.inv[missile]);
@@ -209,7 +205,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
                                          you.pos(), &error);
             if (item == NON_ITEM)
                 return false;
-            if (move_item_to_player(item, 1, true) <= 0)
+            if (!move_item_to_inv(item, 1, true))
                 return false;
             _equip_weapon(weapon, abort);
         }
@@ -365,6 +361,8 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     {
         for (int i = 0; i < iter_limit; i++)
         {
+            // Don't reset the monster while it is constricted.
+            you.stop_constricting(mon.mid, false, true);
             // This sets mgrid(mons.pos()) to NON_MONSTER
             mon = orig;
             // Re-place the monster if it e.g. blinked away.

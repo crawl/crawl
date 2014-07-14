@@ -303,16 +303,11 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    if (newpos.origin())
-        _monster_random_space(mons, newpos, !mons->wont_attack());
-
-    // XXX: If the above function didn't find a good spot, return now
-    // rather than continue by slotting the monster (presumably)
-    // back into its old location (previous behaviour). This seems
-    // to be much cleaner and safer than relying on what appears to
-    // have been a mistake.
-    if (newpos.origin())
+    if (!_monster_random_space(mons, newpos, !mons->wont_attack()))
+    {
+        simple_monster_message(mons, " flickers for a moment.");
         return;
+    }
 
     if (!silent)
         simple_monster_message(mons, " disappears!");

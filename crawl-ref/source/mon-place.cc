@@ -18,7 +18,6 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
-#include "dbg-scan.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "fprop.h"
@@ -1812,10 +1811,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         gozag_set_bribe(mon);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    if (crawl_state.obj_stat_gen)
-        objstat_record_monster(mon);
-#endif
     return mon;
 }
 

@@ -244,14 +244,14 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         break;
 
     // Ranged
-    case WPN_SLING:
-        tile = TILEP_HAND1_SLING;
+    case WPN_HUNTING_SLING:
+        tile = TILEP_HAND1_HUNTING_SLING;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;
         break;
-    case WPN_CROSSBOW:
-        tile = TILEP_HAND1_CROSSBOW;
+    case WPN_ARBALEST:
+        tile = TILEP_HAND1_ARBALEST;
         break;
     case WPN_BLOWGUN:
         tile = TILEP_HAND1_BLOWGUN;

@@ -91,8 +91,11 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        if (setup_mons_cast(&fake_mon, pbolt, spell, true))
+        if (spell == SPELL_MELEE
+            || setup_mons_cast(&fake_mon, pbolt, spell, true))
+        {
             _valid_mon_spells[i] = true;
+        }
     }
 }
 
@@ -565,7 +568,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.ex_size      = 1;
         beam.flavour      = BEAM_HELLFIRE;
         beam.is_explosion = true;
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.aux_source.clear();
         beam.is_tracer    = false;
         beam.hit          = 20;
@@ -3141,6 +3144,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spell_cast = SPELL_NO_SPELL;
                         continue;
                     }
+                }
+
+                // Don't knockback something we're trying to constrict.
+                const actor *victim = actor_at(beem.target);
+                if (victim &&
+                    beem.can_knockback(victim)
+                    && mons->is_constricting()
+                    && mons->constricting->count(victim->mid))
+                {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
                 }
 
                 // beam-type spells requiring tracers
@@ -6141,8 +6155,8 @@ static string _noise_message(const vector<string>& key_list,
         const string key = key_list[i];
 
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "monster casting lookup: %s%s", prefix.c_str(),
-                                                                key.c_str());
+        dprf(DIAG_SPEECH, "monster casting lookup: %s%s",
+             prefix.c_str(), key.c_str());
 #endif
 
         msg = getSpeakString(prefix + key);

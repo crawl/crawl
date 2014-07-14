@@ -576,10 +576,6 @@ potion of slowing
 
 En drik, som forsinker dine handlinger.
 %%%%
-potion of strong poison
-
-En forfærdeligt giftig drik.
-%%%%
 quad damage
 
 En mystisk genstand, som ligner en form for rune. Når den aktiveres, får den

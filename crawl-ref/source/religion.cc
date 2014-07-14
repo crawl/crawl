@@ -1138,34 +1138,11 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL)
+            else if (god == GOD_QAZLAL
+                     && you.piety >= piety_breakpoint(0))
             {
-                if (you.piety >= piety_breakpoint(0))
-                {
-                    mprf(MSGCH_GOD, "A storm instantly forms around you!");
-                    you.redraw_armour_class = true; // also handles shields
-                }
-                if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from fire.");
-                }
-                if (you.attribute[ATTR_DIVINE_COLD_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from cold.");
-                }
-                if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                {
-                    simple_god_message(
-                        " reinstates your protection from electricity.");
-                }
-                if (you.attribute[ATTR_DIVINE_AC])
-                {
-                    simple_god_message(
-                        " reinstates your protection from physical attacks.");
-                    you.redraw_armour_class = true;
-                }
+                mprf(MSGCH_GOD, "A storm instantly forms around you!");
+                you.redraw_armour_class = true; // also handles shields
             }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
@@ -1255,7 +1232,7 @@ static void _inc_penance(god_type god, int val)
             you.redraw_armour_class = true;
 
             if (_need_water_walking() && !beogh_water_walk())
-                fall_into_a_pool(you.pos(), grd(you.pos()));
+                fall_into_a_pool(grd(you.pos()));
         }
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
@@ -1333,21 +1310,6 @@ static void _inc_penance(god_type god, int val)
                 mprf(MSGCH_DURATION,
                      "Your resistance to physical damage fades away.");
                 you.duration[DUR_QAZLAL_AC] = 0;
-                you.redraw_armour_class = true;
-            }
-            if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                simple_god_message(" revokes your protection from fire.", god);
-            if (you.attribute[ATTR_DIVINE_COLD_RES])
-                simple_god_message(" revokes your protection from cold.", god);
-            if (you.attribute[ATTR_DIVINE_ELEC_RES])
-            {
-                simple_god_message(
-                    " revokes your protection from electricity.", god);
-            }
-            if (you.attribute[ATTR_DIVINE_AC])
-            {
-                simple_god_message(
-                    " revokes your protection from physical attacks.", god);
                 you.redraw_armour_class = true;
             }
         }
@@ -1517,8 +1479,8 @@ static bool _give_nemelex_gift(bool forced = false)
                                         2, MISC_DECK_OF_ESCAPE,
                                         0);
 
-        int thing_created = items(1, OBJ_MISCELLANY, gift_type,
-                                  true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
+        int thing_created = items(1, OBJ_MISCELLANY, gift_type, true, 1, 0, 0,
+                                  GOD_NEMELEX_XOBEH);
 
         move_item_to_grid(&thing_created, you.pos(), true);
 
@@ -1967,8 +1929,8 @@ bool do_god_gift(bool forced)
                 }
                 else
                 {
-                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
-                                              0, 0, 0, you.religion);
+                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 0, 0,
+                                              you.religion);
                     // Replace a Kiku gift by a custom-random book.
                     if (you_worship(GOD_KIKUBAAQUDGHA))
                     {
@@ -2375,52 +2337,6 @@ void set_piety(int piety)
     while (diff != 0);
 }
 
-static void _gain_piety_point();
-/**
- * Gain an amount of piety.
- *
- * @param original_gain The numerator of the nominal piety gain.
- * @param denominator The denominator of the nominal piety gain.
- * @param should_scale_piety Should the piety gain be scaled by faith,
- *   forlorn, and Sprint?
- * @return True if something happened, or if another call with the same
- *   arguments might cause something to happen (because of random number
- *   rolls).
- */
-bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
-{
-    if (original_gain <= 0)
-        return false;
-
-    // Xom uses piety differently; Gozag doesn't at all.
-    if (you_worship(GOD_NO_GOD)
-        || you_worship(GOD_XOM)
-        || you_worship(GOD_GOZAG))
-    {
-        return false;
-    }
-
-    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
-
-    if (crawl_state.game_is_sprint() && should_scale_piety)
-        pgn = sprint_modify_piety(pgn);
-
-    pgn = div_rand_round(pgn, denominator);
-    while (pgn-- > 0)
-        _gain_piety_point();
-    if (you.piety > you.piety_max[you.religion])
-    {
-        if (you.piety >= piety_breakpoint(5)
-            && you.piety_max[you.religion] < piety_breakpoint(5))
-        {
-            mark_milestone("god.maxpiety", "became the Champion of "
-                           + god_name(you.religion) + ".");
-        }
-        you.piety_max[you.religion] = you.piety;
-    }
-    return true;
-}
-
 static void _gain_piety_point()
 {
     // check to see if we owe anything first
@@ -2596,10 +2512,6 @@ static void _gain_piety_point()
 
                     you.one_time_ability_used.set(you.religion);
                     break;
-                case GOD_QAZLAL:
-                    simple_god_message(" will now grant you protection from "
-                                       "an element of your choosing.");
-                    break;
                 default:
                     break;
             }
@@ -2607,6 +2519,51 @@ static void _gain_piety_point()
     }
 
     do_god_gift();
+}
+
+/**
+ * Gain an amount of piety.
+ *
+ * @param original_gain The numerator of the nominal piety gain.
+ * @param denominator The denominator of the nominal piety gain.
+ * @param should_scale_piety Should the piety gain be scaled by faith,
+ *   forlorn, and Sprint?
+ * @return True if something happened, or if another call with the same
+ *   arguments might cause something to happen (because of random number
+ *   rolls).
+ */
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
+{
+    if (original_gain <= 0)
+        return false;
+
+    // Xom uses piety differently; Gozag doesn't at all.
+    if (you_worship(GOD_NO_GOD)
+        || you_worship(GOD_XOM)
+        || you_worship(GOD_GOZAG))
+    {
+        return false;
+    }
+
+    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
+
+    if (crawl_state.game_is_sprint() && should_scale_piety)
+        pgn = sprint_modify_piety(pgn);
+
+    pgn = div_rand_round(pgn, denominator);
+    while (pgn-- > 0)
+        _gain_piety_point();
+    if (you.piety > you.piety_max[you.religion])
+    {
+        if (you.piety >= piety_breakpoint(5)
+            && you.piety_max[you.religion] < piety_breakpoint(5))
+        {
+            mark_milestone("god.maxpiety", "became the Champion of "
+                           + god_name(you.religion) + ".");
+        }
+        you.piety_max[you.religion] = you.piety;
+    }
+    return true;
 }
 
 void lose_piety(int pgn)
@@ -2667,11 +2624,6 @@ void lose_piety(int pgn)
                     simple_god_message(
                         " is no longer ready to corrupt your weapon.");
                 }
-                else if (you_worship(GOD_QAZLAL))
-                {
-                    simple_god_message(
-                        " is no longer ready to protect you from an element.");
-                }
             }
         }
 
@@ -2688,7 +2640,7 @@ void lose_piety(int pgn)
                                   "You can no longer %s.", i);
 
                 if (_need_water_walking() && !beogh_water_walk())
-                    fall_into_a_pool(you.pos(), grd(you.pos()));
+                    fall_into_a_pool(grd(you.pos()));
 
                 if (you_worship(GOD_QAZLAL) && i == 3)
                 {
@@ -2897,7 +2849,7 @@ void excommunication(god_type new_god)
     case GOD_BEOGH:
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
-            fall_into_a_pool(you.pos(), grd(you.pos()));
+            fall_into_a_pool(grd(you.pos()));
 
         if (query_da_counter(DACT_ALLY_BEOGH))
         {
@@ -3058,29 +3010,6 @@ void excommunication(god_type new_god)
             mprf(MSGCH_DURATION,
                  "Your resistance to physical damage fades away.");
             you.duration[DUR_QAZLAL_AC] = 0;
-            you.redraw_armour_class = true;
-        }
-        if (you.attribute[ATTR_DIVINE_FIRE_RES])
-        {
-            you.attribute[ATTR_DIVINE_FIRE_RES] = 0;
-            simple_god_message(" revokes your protection from fire.", old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_COLD_RES])
-        {
-            you.attribute[ATTR_DIVINE_COLD_RES] = 0;
-            simple_god_message(" revokes your protection from cold.", old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_ELEC_RES])
-        {
-            you.attribute[ATTR_DIVINE_ELEC_RES] = 0;
-            simple_god_message(" revokes your protection from electricity.",
-                               old_god);
-        }
-        if (you.attribute[ATTR_DIVINE_AC])
-        {
-            you.attribute[ATTR_DIVINE_AC] = 0;
-            simple_god_message(
-                " revokes your protection from physical attacks.", old_god);
             you.redraw_armour_class = true;
         }
         _set_penance(old_god, 25);
@@ -3449,15 +3378,17 @@ void god_pitch(god_type which_god)
         mprf("You %s the altar of %s.",
          you.form == TRAN_WISP   ? "swirl around" :
          you.form == TRAN_BAT    ? "perch on" :
+         you.form == TRAN_DRAGON ? "bow your head before" :
          you.flight_mode()       ? "hover solemnly before" :
          you.form == TRAN_STATUE ? "place yourself before" :
          you.form == TRAN_ICE_BEAST
-             || you.form == TRAN_DRAGON
              || you.form == TRAN_PIG    ? "bow your head before" :
+         you.form == TRAN_SPIDER ? "crawl onto" :
          you.form == TRAN_TREE   ? "sway towards" :
          you.form == TRAN_FUNGUS ? "release spores on" :
          you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
          you.species == SP_NAGA  ? "coil in front of" :
+         you.species == SP_OCTOPODE  ? "curl up in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before" :
                                    "kneel at",

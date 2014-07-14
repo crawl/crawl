@@ -429,10 +429,6 @@ crab cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-drake cast targeted
-
-@The_monster@ breathes @beam@ @at@ @target@.
-%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
