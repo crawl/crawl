@@ -2729,6 +2729,27 @@ const char* weapon_base_name(weapon_type subtype)
     return Weapon_prop[Weapon_index[subtype]].name;
 }
 
+/**
+ * Try to find a weapon, given the weapon's name without whitespace.
+ *
+ * @param name_nospace  The weapon's base name, with all whitespace removed.
+ * @return              The id of the weapon, or WPN_UNKNOWN if nothing matches.
+ */
+weapon_type name_nospace_to_weapon(string name_nospace)
+{
+    for (size_t ii = 0; ii < ARRAYSZ(Weapon_prop); ii++)
+    {
+        string weap_nospace = Weapon_prop[ii].name;
+        remove_whitespace(weap_nospace);
+
+        if (name_nospace == weap_nospace)
+            return (weapon_type) Weapon_prop[ii].id;
+    }
+
+    // No match found
+    return WPN_UNKNOWN;
+}
+
 void seen_item(const item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
