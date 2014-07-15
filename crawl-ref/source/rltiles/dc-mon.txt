@@ -140,6 +140,7 @@ alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
 fire_crab MONS_FIRE_CRAB
+ghost_crab MONS_GHOST_CRAB
 %rim 1
 
 ## Worms ('w')
@@ -960,6 +961,7 @@ vault/deformed_orc MONS_DEFORMED_ORC
 %rim 0
 shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
+## Ghosts of AXED_MONs
 missing_ghost MONS_GHOST
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST

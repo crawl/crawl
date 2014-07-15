@@ -1346,6 +1346,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ALLIGATOR;
     case MONS_FIRE_CRAB:
         return TILEP_MONS_FIRE_CRAB;
+    case MONS_GHOST_CRAB:
+        return TILEP_MONS_GHOST_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -3090,7 +3092,9 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
     case WPN_HUNTING_SLING:         return TILE_WPN_HUNTING_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
+    case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
+    case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
     case WPN_HALBERD:               return TILE_WPN_HALBERD;
@@ -3677,6 +3681,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_FIRE_CRAB;
     case MONS_APOCALYPSE_CRAB:
         return TILE_CORPSE_APOCALYPSE_CRAB;
+    case MONS_GHOST_CRAB:
+        return TILE_CORPSE_GHOST_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
