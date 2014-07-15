@@ -4538,12 +4538,10 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
-        else if (bolt.name == "burst of hellfire")
-            return TILE_BOLT_HELLFIRE;
         break;
 
     case LIGHTRED:
-        if (bolt.name == "hellfire")
+        if (bolt.name.find("hellfire") != string::npos)
             return TILE_BOLT_HELLFIRE;
         break;
 
