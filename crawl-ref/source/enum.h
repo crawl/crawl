@@ -3590,6 +3590,7 @@ enum pronoun_type
     PRONOUN_POSSESSIVE,
     PRONOUN_REFLEXIVE,
     PRONOUN_OBJECTIVE,
+    NUM_PRONOUN_CASES
 };
 
 // Be sure to update _prop_name[] in wiz-item.cc to match.  Also

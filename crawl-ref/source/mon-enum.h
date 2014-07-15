@@ -26,6 +26,7 @@ enum gender_type
     GENDER_NEUTER,
     GENDER_MALE,
     GENDER_FEMALE,
+    NUM_GENDERS
 };
 
 // TODO: Unify this and a player_equivalent (if applicable)
