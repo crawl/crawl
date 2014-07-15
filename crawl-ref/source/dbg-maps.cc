@@ -202,6 +202,7 @@ static void _dungeon_places()
             generated_levels.push_back(l);
             if (new_branch)
                 ++branch_count;
+            new_branch = false;
         }
     }
 }
