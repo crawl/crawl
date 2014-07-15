@@ -1708,6 +1708,7 @@ static void _write_brand_stats(vector<int> &brand_stats, item_type &item)
     bool first_brand = true;
     ostringstream brand_summary;
 
+    brand_summary.setf(ios_base::fixed);
     brand_summary.precision(STAT_PRECISION);
     for (unsigned int i = 0; i < num_brands; i++)
     {
