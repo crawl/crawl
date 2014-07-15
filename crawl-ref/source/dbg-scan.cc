@@ -1954,7 +1954,7 @@ void objstat_generate_stats()
             ++num_branches;
         }
     }
-    // We won't ouput AllLevels if only one branch is tallied.
+    // This represents the AllLevels summary.
     stat_branches[NUM_BRANCHES] = vector<level_id>();
     stat_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
     fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
@@ -1964,8 +1964,7 @@ void objstat_generate_stats()
     _init_foods();
     _init_monsters();
     _init_stats();
-    mapstat_build_levels(SysEnv.map_gen_iters);
-    _write_object_stats();
+    if (mapstat_build_levels())
+        _write_object_stats();
 }
-
 #endif // DEBUG_DIAGNOSTICS
