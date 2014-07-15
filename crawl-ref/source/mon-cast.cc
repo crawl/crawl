@@ -788,7 +788,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_HELLFIRE:           // fiend's hellfire
         beam.name         = "blast of hellfire";
         beam.aux_source   = "blast of hellfire";
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.damage       = dice_def(3, 20);
         beam.hit          = 24;
         beam.flavour      = BEAM_HELLFIRE;
