@@ -7,6 +7,7 @@
 
 #include "itemname.h"
 
+#include <algorithm>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -2727,6 +2728,12 @@ string food_type_name(int sub_type)
 const char* weapon_base_name(weapon_type subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
+}
+
+void remove_whitespace(string &str)
+{
+    str.erase(remove_if(str.begin(), str.end(),
+        static_cast<int(*)(int)>(isspace)), str.end());
 }
 
 /**
