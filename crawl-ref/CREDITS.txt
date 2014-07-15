@@ -214,6 +214,7 @@
     Ben Striegel
     Derrick Sund
     Pavel 'Curio' Svinarchuk
+    Tanner Swett
     Matthew Tadd
     William Tanksley, Jr.
     Tedronai
