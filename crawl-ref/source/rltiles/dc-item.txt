@@ -167,9 +167,12 @@ sling2
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+hand_crossbow WPN_HAND_CROSSBOW
+hand_crossbow2
 arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3
+triple_crossbow WPN_TRIPLE_CROSSBOW
 longbow1 WPN_LONGBOW
 longbow2
 longbow3

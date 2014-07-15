@@ -1545,24 +1545,27 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     const bool liquefied = mons->liquefied_ground();
 
-    // Highly-specialised archers are more likely to shoot than talk. (?)
-    // If we're standing on liquefied ground, try to stand and fire!
-    // (Particularly archers.)
-    if (!teleport
-        && ((liquefied && !archer && one_chance_in(9))
-            || (!liquefied && one_chance_in(archer ? 9 : 5))))
-    {
-        return false;
-    }
-
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !mons_near(mons))
         return false;
 
     // Monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule.
-    if (!archer && adjacent(beem.target, mons->pos()))
+    if (adjacent(beem.target, mons->pos()))
+    {
+        if (!archer)
+            return false;
+        // If adjacent, archers should always shoot (otherwise they would
+        // try to melee). Hence the else if below.
+    }
+    else if (!teleport && ((liquefied && !archer && one_chance_in(9))
+                           || (!liquefied && one_chance_in(archer ? 9 : 5))))
+    {
+        // Highly-specialised archers are more likely to shoot than talk.
+        // If we're standing on liquefied ground, try to stand and fire!
+        // (Particularly archers.)
         return false;
+    }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
     if (mons_is_fleeing(mons) || mons->pacified())

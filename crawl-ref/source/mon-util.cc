@@ -3702,38 +3702,26 @@ static gender_type _mons_class_gender(monster_type mc)
     return gender;
 }
 
+static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
+{
+    // subj  poss   refl       obj
+    { "it",  "its", "itself",  "it"  }, // neuter
+    { "he",  "his", "himself", "him" }, // masculine
+    { "she", "her", "herself", "her" }, // feminine
+};
+
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
-// PRONOUN_POSSESSIVE : _Her_ sword explodes!
+// PRONOUN_POSSESSIVE : _Its_ sword explodes!
 // PRONOUN_REFLEXIVE  : The wizard mumbles to _herself_.
-// PRONOUN_OBJECTIVE  : You miss _her_.
-
+// PRONOUN_OBJECTIVE  : You miss _him_.
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
-    gender_type gender = !visible ? GENDER_NEUTER
-                                  : _mons_class_gender(mon_type);
-
-    switch (variant)
-    {
-    case PRONOUN_SUBJECTIVE:
-        return gender == GENDER_NEUTER ? "it" :
-               gender == GENDER_MALE   ? "he" : "she";
-
-    case PRONOUN_POSSESSIVE:
-        return gender == GENDER_NEUTER ? "its" :
-               gender == GENDER_MALE   ? "his" : "her";
-
-    case PRONOUN_REFLEXIVE:
-        return gender == GENDER_NEUTER ? "itself"  :
-               gender == GENDER_MALE   ? "himself" : "herself";
-
-    case PRONOUN_OBJECTIVE:
-        return gender == GENDER_NEUTER ? "it"  :
-               gender == GENDER_MALE   ? "him" : "her";
-    }
-
-    return "";
+    COMPILE_CHECK(ARRAYSZ(_pronoun_declension) == NUM_GENDERS);
+    const gender_type gender = !visible ? GENDER_NEUTER
+                                        : _mons_class_gender(mon_type);
+    return _pronoun_declension[gender][variant];
 }
 
 // Checks if the monster can use smiting/torment to attack without

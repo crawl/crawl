@@ -2054,8 +2054,8 @@ level_excursion::~level_excursion()
         // markers will still not be activated.
         go_to(original);
 
-        // Reactivate markers.
-        env.markers.activate_all();
+        // Quietly reactivate markers.
+        env.markers.activate_all(false);
     }
 }
 

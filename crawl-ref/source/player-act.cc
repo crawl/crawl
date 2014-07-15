@@ -142,6 +142,7 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
+              || form == TRAN_TREE
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
@@ -432,13 +433,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 {
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
-    if (species == SP_FELID)
-    {
-        if (!quiet)
-            mpr("You can't use weapons.");
-        return false;
-    }
-
     // Only ogres and trolls can wield large rocks (for sandblast).
     if (bsize < SIZE_LARGE
         && item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
@@ -466,6 +460,12 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         }
 
         return true;
+    }
+    else if (species == SP_FELID)
+    {
+        if (!quiet)
+            mpr("You can't use weapons.");
+        return false;
     }
 
     // Small species wielding large weapons...
