@@ -202,9 +202,5 @@ static inline bool is_weapon(const item_def &item)
            || item.base_type == OBJ_RODS;
 }
 
-inline void remove_whitespace(string &str)
-{
-    str.erase(remove_if(str.begin(), str.end(),
-        static_cast<int(*)(int)>(isspace)), str.end());
-}
+void remove_whitespace(string &str);
 #endif
