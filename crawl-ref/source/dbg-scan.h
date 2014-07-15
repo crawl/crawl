@@ -14,6 +14,7 @@ void check_map_validity();
 void objstat_record_item(item_def &item);
 void objstat_generate_stats();
 void objstat_record_monster(monster *mons);
+void objstat_iteration_stats();
 #endif
 
 #endif

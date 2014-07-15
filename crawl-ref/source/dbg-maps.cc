@@ -252,6 +252,8 @@ void mapstat_build_levels(int niters)
         init_level_connectivity();
         if (!_build_dungeon())
             break;
+        if (crawl_state.obj_stat_gen)
+            objstat_iteration_stats();
     }
 }
 
