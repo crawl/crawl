@@ -1384,7 +1384,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     {
         mpr("You sink like a stone!");
 
-        if (you.is_unbreathing()) // XXX: this is weird for fungi drowning
+        if (you.is_artificial() || you.is_undead)
             mpr("You fall apart...");
         else
             mpr("You drown...");
