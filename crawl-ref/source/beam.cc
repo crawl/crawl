@@ -926,9 +926,9 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
         if (hear)
         {
             if (see)
-                msg = "You hear a hideous screaming!";
-            else
                 msg = "The idol screams as its substance crumbles away!";
+            else
+                msg = "You hear a hideous screaming!";
             chan = MSGCH_SOUND;
         }
         else if (see)
