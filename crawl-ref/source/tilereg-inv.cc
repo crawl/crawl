@@ -47,7 +47,8 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if ((y==my-1 && x==mx-1 && item.tile) || (y==0 && x==0 && m_grid_page>0))
+            if ((y==my-1 && x==mx-1 && item.tile)
+                || (y==0 && x==0 && m_grid_page>0))
             {
                 // draw a background for paging tiles
                 m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
@@ -730,11 +731,6 @@ void InventoryRegion::update()
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
-/* *** use paging instead
-    // If the inventory is full, show at least one row of the ground.
-    int min_ground = min(num_ground, mx);
-*/
-
     ucs_t c;
     const char *tp = Options.tile_show_items.c_str();
     int s;
@@ -786,7 +782,8 @@ void InventoryRegion::update()
     int empty_on_this_row = mx - m_items.size() % mx;
 
     // If we're not on the last row...
-    if ((int)m_items.size() < mx * (my-1)) // * (m_grid_page+1)) // let's deliberately not do this on page 2
+    if ((int)m_items.size() < mx * (my-1))
+        // let's deliberately not do this on page 2
     {
         if (num_ground > remaining - empty_on_this_row)
         {
@@ -861,7 +858,8 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    while ((int)m_items.size() < mx * my) // * (m_grid_page+1)) // let's not do this for p2 either
+    while ((int)m_items.size() < mx * my)
+        // let's not do this for p2 either
     {
         InventoryTile desc;
         desc.flag = TILEI_FLAG_FLOOR;
