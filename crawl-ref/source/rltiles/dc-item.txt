@@ -173,6 +173,7 @@ arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3
 triple_crossbow WPN_TRIPLE_CROSSBOW
+triple_crossbow2
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
