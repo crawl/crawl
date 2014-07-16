@@ -721,8 +721,7 @@ void InventoryRegion::update()
     if (mx * my == 0)
         return;
 
-    int max_pack_row = (ENDOFPACK-1) / mx + 1;
-    int max_pack_items = max_pack_row * mx;
+    const int max_pack_items = ENDOFPACK;
 
     bool inv_shown[ENDOFPACK];
     memset(inv_shown, 0, sizeof(inv_shown));
@@ -734,8 +733,6 @@ void InventoryRegion::update()
 /* *** use paging instead
     // If the inventory is full, show at least one row of the ground.
     int min_ground = min(num_ground, mx);
-    max_pack_items = min(max_pack_items, mx * my * (m_grid_page+1) - min_ground);
-    max_pack_items = min(ENDOFPACK, max_pack_items);
 */
 
     ucs_t c;
