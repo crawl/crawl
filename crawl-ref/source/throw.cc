@@ -788,7 +788,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         {
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
-            pbolt.hit    = 100;
+            pbolt.hit    = AUTOMATIC_HIT;
             pbolt.damage = dice_def(1, 100);
 
             // Init tracer variables.
