@@ -1157,7 +1157,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_SHADOW:
-        drain_exp(true, 25, true);
+        drain_player(25, you.mindex(), "entering shadow form", true, true);
         if (you.invisible())
             mpr("You fade into the shadows.");
         else
