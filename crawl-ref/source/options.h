@@ -453,6 +453,7 @@ public:
     bool        tile_show_demon_tier;
     bool        tile_water_anim;
     bool        tile_misc_anim;
+    bool        tile_show_player_species;
     vector<string> tile_layout_priority;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
