@@ -413,6 +413,16 @@ function volcano_overflow_convert_lava(data, triggerable,
     crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
               "over!", "warning")
     convert_slaves_to_lava(my_slaves, true)
+  elseif lp == 8 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
+              "over!", "warning")
+    convert_slaves_to_lava(my_slaves, true)
+  elseif lp == 9 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
+              "over!", "warning")
+    convert_slaves_to_lava(my_slaves, true)
   end
 end
 
@@ -1340,21 +1350,18 @@ ENDMAP
 # like there's no tomorrow! Of course, if you can fly, you've got a good chance
 # of getting everything. If you get stuck, you can just wait it out.
 #
-# No monsters, only lava and loot. Original idea by dpeg.
-#
-# TODO: Come up with a better way to indicate to the player that the lava does
-#       eventually recede. Possibly use at least a few weak enemies after
-#       the overflow ends?
+# Original idea by dpeg.
 NAME:       volcano_overflow
 WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
-MONS:       nothing, nothing, nothing
+MONS:       gargoyle / fire elemental / fire vortex w:5
+MONS:       efreet / molten gargoyle
 {{
 -- So we know what to convert.
-lua_marker("1", portal_desc { lava_phase=2 })
-lua_marker("2", portal_desc { lava_phase=4 })
-lua_marker("3", portal_desc { lava_phase=6 })
+lua_marker("A", portal_desc { lava_phase=2 })
+lua_marker("B", portal_desc { lava_phase=4 })
+lua_marker("C", portal_desc { lava_phase=6 })
 
 -- And finally, let's convert it
 local sink_marker = TriggerableFunction:new {
@@ -1365,32 +1372,33 @@ local sink_marker = TriggerableFunction:new {
 
 sink_marker:add_triggerer(DgnTriggerer:new {
   type="turn",
-  delay_min=50,
-  delay_max=200, })
+  delay_min=200,
+  delay_max=400, })
 
 lua_marker("M", sink_marker)
 }}
 SUBST:      M = c
-NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
+NSUBST:     ABC = 6:d / 6:e / 6:f / 6:g / 6:h / *:.
+NSUBST:     1 = 1:2 / *:1
 :           volcano_setup(_G)
 MAP
                 xxxx         xxx xxx                   xxx
-        xxxxx  xx33xxx     xxx3xxx3xxxx xxxxx xxx     xx3xx
-       xx333xxxx32233xxx xxx3323332333xxxx33xxx3xxx xxx323xx
-     xxx321133332112233xxx332211221121333322333233xxx332123xx
-   xxx3321l122221ll11133333311ll111l111222212211223332211123xx
- xxx3321llll1111llllll111111lllllllllll11111111111222111123xx
-xx3321llllllllllllllllllllllllllllllllllll11233321111ll123xx
- xx3321lllllllllllllllllllllllllllllllllll123xxx3321lll123xx
-  xxx321lllllllllllllllllllllllllllllllll123xxAxxx321lll123xx
-    xx321lllllllllllllllll111lllllllllll123xx<...xx3211ll123xx
-     xx321lll11llllllll122333221lllllllll123xxx...xx321lll123x
-      x321ll1221llllll1223xxx3211llllllll11233x....3321llll13xx
-    xxx321l133321llll1233xx xx3221llllllll123xx...xx321ll1123xx
-   xx3321133xxx33211123xxx   xx3321llll11233333.xxx322111233xx
-   x332233xxx xxx33233xx      xxx332111233xxxxxxx xx332233xxx
-   xxx33xxx     xxx3xxx    M    xxx33233xxx        xxx33xxx
-     xxxx         xxx             xxx3xxx            xxxx
+        xxxxx  xx..xxx     xxx.xxx.xxxx xxxxx xxx     xx.xx
+       xx...xxxx.CC..xxx xxx..C.1.C...xxxx..xxx.xxx xxx.C.xx
+     xxx.CBB....CBBCC..xxx..CCBBCCBBCB....CC...C..xxx..CBC.xx
+   xxx..CBABCCCCBAABBB......BBAABBBABBBCCCCBCCBBCC...CCBBBC.xx
+ xxx..CBAAlABBBBAllAAABBBBBBAAllAAAlAAABBBBBBBBBBBCCCBAABC.xx
+xx.1CBAAllllAAAAllllllAAAAAAlllllllllllAAABBC...CBBAAlABC.xx
+ xx..CBAlllllllllllllllllllllllllllllllllABC.xxx..CBAllBC.xx
+  xxx.CBAlllllllllllllllllAAAlllllllllllABC.xxAxxx.CBlllBC.xx
+    xx.CBAlllAAllllllllAAABBBAAAlllllllABC.xx<...xx.CBAllBC.xx
+     xx.CBAlABBAllllllABCC...CCBAlllllllABC.xxx...xx.CAllABC.x
+      x.CBAABCCBAllllABCC.xxx.CBBAllllllABBC..x......CBllAAB.xx
+    xxx.CBAB...CBAAAABC..xx xx.CCBAllllAAABC.xx...xx.CBAAABC.xx
+   xx..CBB..xxx..CBBBC1xxx   xx..CBAAAABBC......xxx.CCBBBC.1xx
+   x..CC..xxx xxx..C..xx      xxx..CBBBC..xxxxxxx xx..CC..xxx
+   xxx..xxx     xxx.xxx    M    xxx..C..xxx        xxx..xxx
+     xxxx         xxx             xxx.xxx            xxxx
                                     xxx
 ENDMAP
 
