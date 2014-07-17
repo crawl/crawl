@@ -1,4 +1,4 @@
-﻿Guide to Crawl's options
+Guide to Crawl's options
 ========================
 
 This document explains all of the options in the latest version of
