@@ -681,10 +681,13 @@ void bolt::apply_beam_conducts()
 
 void bolt::choose_ray()
 {
-    if (!chose_ray || reflections > 0)
+    if ((!chose_ray || reflections > 0)
+        && !find_ray(source, target, ray, opc_solid_see)
+        // If fire is blocked, at least try a visible path so the
+        // error message is better.
+        && !find_ray(source, target, ray, opc_default))
     {
-        if (!find_ray(source, target, ray, opc_solid_see))
-            fallback_ray(source, target, ray);
+        fallback_ray(source, target, ray);
     }
 }
 
