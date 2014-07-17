@@ -44,25 +44,25 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-attack::attack(actor *attk, actor *defn)
-    : attacker(attk), defender(defn), attack_occurred(false),
-    cancel_attack(false), did_hit(false), needs_message(false),
-    attacker_visible(false), defender_visible(false),
-    perceived_attack(false), obvious_effect(false), to_hit(0),
-    damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
-    final_attack_delay(0), special_damage_flavour(BEAM_NONE),
-    stab_attempt(false), stab_bonus(0), apply_bleeding(false), noise_factor(0),
-    ev_margin(0), weapon(NULL),
-    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-    shield(NULL), art_props(0), unrand_entry(NULL), attacker_to_hit_penalty(0),
-    attack_verb("bug"), verb_degree(), no_damage_message(),
-    special_damage_message(), aux_attack(), aux_verb(),
-    defender_body_armour_penalty(0), defender_shield_penalty(0),
-    attacker_body_armour_penalty(0), attacker_shield_penalty(0),
-    attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-    defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL), fake_chaos_attack(false), simu(false),
-    aux_source(""), kill_type(KILLED_BY_MONSTER)
+attack::attack(actor *attk, actor *defn, actor *blame)
+    : attacker(attk), defender(defn), responsible(blame ? blame : attk),
+      attack_occurred(false), cancel_attack(false), did_hit(false),
+      needs_message(false), attacker_visible(false), defender_visible(false),
+      perceived_attack(false), obvious_effect(false), to_hit(0),
+      damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
+      final_attack_delay(0), special_damage_flavour(BEAM_NONE),
+      stab_attempt(false), stab_bonus(0), apply_bleeding(false),
+      noise_factor(0), ev_margin(0), weapon(NULL),
+      damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
+      shield(NULL), art_props(0), unrand_entry(NULL),
+      attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
+      no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
+      defender_body_armour_penalty(0), defender_shield_penalty(0),
+      attacker_body_armour_penalty(0), attacker_shield_penalty(0),
+      attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
+      defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
+      miscast_target(NULL), fake_chaos_attack(false), simu(false),
+      aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
     // the child class, since initializing an attack will vary based the within
@@ -1107,11 +1107,11 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     }
     if (defender->is_player())
     {
-        ouch(dam, attacker->mindex(), kill_type, aux_source.c_str(),
+        ouch(dam, responsible->mindex(), kill_type, aux_source.c_str(),
              you.can_see(attacker));
         return dam;
     }
-    return defender->hurt(attacker, dam, flavour, clean);
+    return defender->hurt(responsible, dam, flavour, clean);
 }
 
 /* If debug, return formatted damage done
@@ -1879,7 +1879,7 @@ bool attack::apply_damage_brand(const char *what)
         miscast_target = coinflip() ? attacker : defender;
     }
 
-    if (attacker->is_player() && damage_brand == SPWPN_CHAOS)
+    if (responsible->is_player() && damage_brand == SPWPN_CHAOS)
     {
         // If your god objects to using chaos, then it makes the
         // brand obvious.
