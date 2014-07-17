@@ -1897,11 +1897,6 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     return place;
 }
 
-static bool _species_is_undead(int sp)
-{
-    return sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE;
-}
-
 /**
  * Describes the cause of the player's death.
  *
@@ -2113,7 +2108,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN || race == SP_GARGOYLE)
+        else if (species_is_unbreathing(race))
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
@@ -2146,7 +2141,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (_species_is_undead(race))
+            else if (species_is_undead(race))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";

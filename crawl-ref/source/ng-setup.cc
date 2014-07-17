@@ -259,7 +259,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING]    = 3;
@@ -273,13 +272,11 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
-        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
         you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
-        you.mutation[MUT_UNBREATHING]                = 1;
         you.mutation[MUT_ROT_IMMUNITY]               = 1;
         break;
     case SP_TENGU:
@@ -300,7 +297,6 @@ void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
-        you.mutation[MUT_UNBREATHING]  = 1;
         break;
     case SP_FELID:
         you.mutation[MUT_FANGS]           = 3;
@@ -338,6 +334,7 @@ void give_basic_mutations(species_type speci)
     // Some mutations out-sourced because they're
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
+    you.mutation[MUT_UNBREATHING] = species_is_unbreathing(speci);
 
     // Necessary mostly for wizmode race changing.
     you.mutation[MUT_COLD_BLOODED] = species_genus(speci) == GENPC_DRACONIAN;
