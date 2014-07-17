@@ -47,9 +47,7 @@ function volcano_portal (e)
 
     -- If you make one of these not start with a vowel, fix "an" below.
     local adj = "oppressive"
-    if you.race() == "Lava Orc" then
-        adj = "invigorating"
-    elseif you.res_fire() > 3 then
+    if you.res_fire() > 3 then
         adj = "agreeable"
     end
 
