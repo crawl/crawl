@@ -3064,6 +3064,11 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
     }
 }
 
+tileidx_t tileidx_player_mons()
+{
+    return _tileidx_monster_base(player_mons(false));
+}
+
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {
     const tileidx_t tile = unrandart_to_tile(idx);
