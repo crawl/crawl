@@ -26,10 +26,10 @@
 #include "traps.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
-                             bool tele) :
-                             ::attack(attk, defn), range_used(0),
-                             reflected(false), projectile(proj), teleport(tele),
-                             orig_to_hit(0), should_alert_defender(true)
+                             bool tele, actor *blame)
+    : ::attack(attk, defn, blame), range_used(0), reflected(false),
+      projectile(proj), teleport(tele), orig_to_hit(0),
+      should_alert_defender(true)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
