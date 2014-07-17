@@ -544,6 +544,18 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     moveto_location_effects(old_grid, stepped, old_pos);
 }
 
+
+/**
+ * Check if the given terrain feature is safe for the player to move into.
+ * (Or, at least, not instantly lethal.)
+ *
+ * @param grid          The type of terrain feature under consideration.
+ * @param permanently   Whether to disregard temporary effects (non-permanent
+ *                      flight, forms, etc)
+ * @param ignore_flight Whether to ignore all forms of flight (including
+ *                      permanent flight)
+ * @return              Whether the terrain is safe.
+ */
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_flight)
 {
