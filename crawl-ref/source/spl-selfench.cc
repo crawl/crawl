@@ -374,13 +374,6 @@ spret_type cast_liquefaction(int pow, bool fail)
             mpr("You need to be on clear, solid ground to cast this spell.");
         return SPRET_ABORT;
     }
-    else if (you.is_stationary())
-    {
-        string foot = you.foot_name(true);
-        mprf("You can't cast this spell with your %s attached to the ground.",
-             foot.c_str());
-        return SPRET_ABORT;
-    }
 
     if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
     {
