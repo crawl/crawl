@@ -25,6 +25,11 @@ amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
+amulet of regeneration
+
+This amulet greatly increases the recuperative powers of its wearer, but also
+considerably speeds their metabolism while doing so.
+%%%%
 amulet of resist corrosion
 
 This amulet protects the wearer from acid damage and from corrosion caused by
@@ -993,6 +998,10 @@ ring of magical power
 
 This ring increases its wearer's reserves of magical power.
 %%%%
+ring of obsoleteness
+
+Sadly, this item seems to have been removed!
+%%%%
 ring of poison resistance
 
 This ring provides protection from the effects of poisons and venom.
@@ -1018,11 +1027,6 @@ This ring provides protection from fire.
 ring of protection from magic
 
 This ring increases its wearer's resistance to hostile enchantments.
-%%%%
-ring of regeneration
-
-This ring greatly increases the recuperative powers of its wearer, but also
-considerably speeds their metabolism while doing so.
 %%%%
 ring of see invisible
 

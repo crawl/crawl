@@ -577,7 +577,7 @@ ENDMAP
 NAME:     items_5
 TAGS:     items_5
 KITEM:    a = ring of slaying plus:2 ident:all not_cursed /\
-          ring of regeneration ident:all not_cursed /\
+          amulet of regeneration ident:all not_cursed /\
           ring of invisibility ident:all not_cursed /\
           ring of protection plus:4 ident:all not_cursed /\
           ring of evasion plus:4 ident:all not_cursed /\
@@ -786,6 +786,7 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of stasis randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
     amulet of warding randart not_cursed ident:all /\
+    amulet of regeneration randart ident:all not_cursed /\
     ring of slaying plus:3 randart ident:all not_cursed /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
     ring of protection from fire randart ident:all not_cursed /\
@@ -796,7 +797,6 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     ring of see invisible randart ident:all not_cursed /\
     ring of poison resistance randart ident:all not_cursed /\
     ring of slaying plus:3 ident:all not_cursed /\
-    ring of regeneration randart ident:all not_cursed /\
     ring of invisibility randart ident:all not_cursed /\
     ring of protection plus:3 randart ident:all not_cursed /\
     ring of evasion plus:3 randart ident:all not_cursed /\

@@ -2856,7 +2856,7 @@ NAME:   ragdoll_tomb_raider
 TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  D:14-, Depths, Crypt:1-4
 ORIENT: float
-KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any
+KITEM:  $ = amulet of regeneration unrand:amulet_of_vitality / acquire any
 KITEM:  1234 = gold / any / nothing
 KITEM:  M4 = superb_item / any
 KFEAT:  ~ = known zot trap

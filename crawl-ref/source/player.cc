@@ -1263,8 +1263,8 @@ static int _player_bonus_regen()
         rr += 100;
     }
 
-    // Rings.
-    rr += 40 * you.wearing(EQ_RINGS, RING_REGENERATION);
+    // Jewellery.
+    rr += 40 * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
     // Artefacts
     rr += you.scan_artefacts(ARTP_REGENERATION);
@@ -1431,8 +1431,8 @@ int player_hunger_rate(bool temp)
     if (you.hp < you.hp_max
         && player_mutation_level(MUT_SLOW_HEALING) < 3)
     {
-        // rings
-        hunger += 3 * you.wearing(EQ_RINGS, RING_REGENERATION);
+        // jewellery
+        hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
         // troll leather
         if (you.species != SP_TROLL

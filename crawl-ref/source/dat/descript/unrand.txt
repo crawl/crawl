@@ -508,9 +508,9 @@ with massive plates of black diamond. The weight of metal and stone slows the
 steed it protects. It offers more than protection against blows; the adamant
 bears an enchantment that makes its wearer partially undead.
 %%%%
-ring of Vitality
+amulet of Vitality
 
-This famed ring greatly improves its wearer's health.
+This famed amulet greatly improves its wearer's health.
 %%%%
 autumn katana
 
