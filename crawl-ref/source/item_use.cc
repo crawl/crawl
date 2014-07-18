@@ -462,18 +462,15 @@ void wear_armour(int slot) // slot is for tiles
     do_wear_armour(armour_wear_2, false);
 }
 
+/**
+ * The number of turns it takes to put on or take off a given piece of armour.
+ *
+ * @param item      The armour in question.
+ * @return          The number of turns it takes to don or doff the item.
+ */
 static int armour_equip_delay(const item_def &item)
 {
-    int delay = property(item, PARM_AC);
-
-    // Shields are comparatively easy to wear.
-    if (is_shield(item))
-        delay = delay / 2 + 1;
-
-    if (delay < 1)
-        delay = 1;
-
-    return delay;
+    return 5;
 }
 
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
