@@ -544,10 +544,6 @@ void artefact_desc_properties(const item_def &item,
         fake_rap = ARTP_STEALTH;
         break;
 
-    case RING_REGENERATION:
-        fake_rap = ARTP_REGENERATION;
-        break;
-
     case RING_EVASION:
         fake_rap  = ARTP_EVASION;
         fake_plus = item.plus;
@@ -1714,6 +1710,10 @@ static bool _randart_is_redundant(const item_def &item,
     case AMU_STASIS:
         provides = ARTP_PREVENT_TELEPORTATION;
         break;
+
+    case AMU_REGENERATION:
+        provides = ARTP_REGENERATION;
+        break;
     }
 
     if (provides == ARTP_NUM_PROPERTIES)
@@ -1955,7 +1955,7 @@ static void _make_faerie_armour(item_def &item)
 
 static jewellery_type octoring_types[8] =
 {
-    RING_REGENERATION, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
+    RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
     RING_SUSTAIN_ABILITIES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };

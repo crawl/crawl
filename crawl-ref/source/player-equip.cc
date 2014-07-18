@@ -1292,13 +1292,13 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_PROTECTION_FROM_COLD:
     case RING_PROTECTION_FROM_FIRE:
     case RING_PROTECTION_FROM_MAGIC:
-    case RING_REGENERATION:
     case RING_SLAYING:
     case RING_SUSTAIN_ABILITIES:
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
     case RING_TELEPORT_CONTROL:
+    case AMU_REGENERATION:
         break;
 
     case RING_SEE_INVISIBLE:

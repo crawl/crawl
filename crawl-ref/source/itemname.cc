@@ -788,8 +788,10 @@ static const char* scroll_type_name(int scrolltype)
 const char* jewellery_effect_name(int jeweltype)
  {
     switch (static_cast<jewellery_type>(jeweltype))
-    {
-    case RING_REGENERATION:          return "regeneration";
+     {
+#if TAG_MAJOR_VERSION == 34
+    case RING_REGENERATION:          return "obsoleteness";
+#endif
     case RING_PROTECTION:            return "protection";
     case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
     case RING_POISON_RESISTANCE:     return "poison resistance";
@@ -827,6 +829,7 @@ const char* jewellery_effect_name(int jeweltype)
     case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
     case AMU_FAITH:             return "faith";
     case AMU_STASIS:            return "stasis";
+    case AMU_REGENERATION:      return "regeneration";
     default: return "buggy jewellery";
     }
 }
@@ -849,6 +852,11 @@ static const char* _jewellery_effect_prefix(int jeweltype)
  */
 static const char* _jewellery_class_name(int jeweltype)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (jeweltype == RING_REGENERATION)
+        return "ring of";
+#endif
+
     if (jeweltype < RING_FIRST_RING || jeweltype >= NUM_JEWELLERY
         || jeweltype >= NUM_RINGS && jeweltype < AMU_FIRST_AMULET)
     {
@@ -3551,7 +3559,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
 
-        case RING_REGENERATION:
+        case AMU_REGENERATION:
             return (player_mutation_level(MUT_SLOW_HEALING) == 3)
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state == HS_STARVING;

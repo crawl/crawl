@@ -699,6 +699,10 @@ amulet of rage
 
 <amulet>
 %%%%
+amulet of regeneration
+
+<amulet>
+%%%%
 amulet of resist corrosion
 
 <amulet>
@@ -2209,10 +2213,6 @@ ring of protection from fire
 <ring>
 %%%%
 ring of protection from magic
-
-<ring>
-%%%%
-ring of regeneration
 
 <ring>
 %%%%
