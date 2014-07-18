@@ -870,7 +870,8 @@ void ranged_attack::announce_hit()
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
-         defender_name().c_str(),
+         // Not defender_name because reflexive is bad here.
+         def_name(DESC_THE).c_str(),
          damage_done > 0 && stab_attempt && stab_bonus > 0
              ? " in a vulnerable spot"
              : "",
