@@ -505,6 +505,8 @@ static void _update_weapon(const newgame_def& ng)
                           plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
         autopickup_starting_ammo(MI_SLING_BULLET);
+        autopickup_starting_ammo(MI_STONE);
+
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
