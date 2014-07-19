@@ -255,7 +255,7 @@ function fiery_guardians (e, intelligent, village)
             e.mons("fire bat / fire drake / hog / hell hound w:3")
             return
         end
-        local set_weight = crawl.random2(11)
+        local set_weight = crawl.random2(12)
         if set_weight < 3 then
             e.mons("orc warrior ; " .. warriorstuff)
             e.kmons("2 = Urug ; javelin . " .. knightstuff
