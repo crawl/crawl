@@ -1414,7 +1414,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     }
 #endif
 
-    // Putting on jewellery is as fast as wielding weapons.
+    // Putting on jewellery is fast.
     you.time_taken /= 2;
     you.turn_is_over = true;
 
