@@ -1238,6 +1238,12 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
 
 bool monster::clear_far_engulf(void)
 {
+    if (you.duration[DUR_WATER_HOLD]
+        && (mid_t) you.props["water_holder"].get_int() == mid)
+    {
+        you.clear_far_engulf();
+    }
+
     const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
     if (me.ench == ENCH_NONE)
         return false;
