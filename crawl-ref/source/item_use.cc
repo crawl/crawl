@@ -2049,6 +2049,16 @@ void drink(int slot)
                             && you.experience_level > 1);
     potion_type pot_type = (potion_type)potion.sub_type;
 
+    if (!you_worship(GOD_GOZAG)
+        && you.penance[GOD_GOZAG] && one_chance_in(5))
+    {
+        simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
+
+        you.turn_is_over = true;
+
+        return;
+    }
+
     if (!potion_effect(static_cast<potion_type>(potion.sub_type),
                        40, &potion, alreadyknown))
     {
