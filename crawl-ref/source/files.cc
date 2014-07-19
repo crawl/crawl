@@ -1746,15 +1746,15 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-
-    bool do_diagnostics = false;
-#ifdef WIZARD
-    do_diagnostics = !creating_level;
-#endif
-#if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
-    do_diagnostics = true;
-#endif
-
+    const bool do_diagnostics = 
+#  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
+        true
+#  elif defined(WIZARD)
+        !creating_level
+#  else // Can't happen currently
+        false
+#  endif
+        ;
 #endif // BONES_DIAGNOSTICS
 
     const string ghost_filename = _find_ghost_file();
