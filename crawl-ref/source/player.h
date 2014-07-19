@@ -755,14 +755,14 @@ public:
 
     bool form_uses_xl() const;
 
+    bool clear_far_engulf();
+
 protected:
     void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;
 
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
-
-    bool clear_far_engulf();
 };
 
 #ifdef DEBUG_GLOBALS

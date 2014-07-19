@@ -521,6 +521,8 @@ public:
     void align_avatars(bool force_friendly = false);
     void remove_avatars();
 
+    bool clear_far_engulf();
+
 private:
     int hit_dice;
 
@@ -551,9 +553,6 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-
-protected:
-    bool clear_far_engulf();
 };
 
 #endif
