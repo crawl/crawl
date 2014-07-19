@@ -785,6 +785,7 @@ bool do_wear_armour(int item, bool quiet)
     }
 
     you.turn_is_over = true;
+    you.time_taken = 0; // will be handled by equip delay
 
     if (!_safe_to_remove_or_wear(invitem, false))
         return false;
@@ -862,6 +863,7 @@ bool takeoff_armour(int item)
     }
 
     you.turn_is_over = true;
+    you.time_taken = 0; // will be handled by unequip delay
 
     const int delay = armour_equip_delay(invitem);
     start_delay(DELAY_ARMOUR_OFF, delay, item);
