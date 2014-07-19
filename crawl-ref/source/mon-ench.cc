@@ -1236,6 +1236,17 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
+bool monster::clear_far_engulf(void)
+{
+    const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
+    if (me.ench == ENCH_NONE)
+        return false;
+    const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
+    if (nonadj)
+        del_ench(ENCH_WATER_HOLD);
+    return nonadj;
+}
+
 void monster::apply_enchantment(const mon_enchant &me)
 {
     enchant_type en = me.ench;
@@ -1815,12 +1826,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WATER_HOLD:
-        if (!me.agent()
-            || (me.agent() && !adjacent(me.agent()->as_monster()->pos(), pos())))
-        {
-            del_ench(ENCH_WATER_HOLD);
-        }
-        else
+        if (!clear_far_engulf())
         {
             if (res_water_drowning() <= 0)
             {
