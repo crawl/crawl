@@ -442,6 +442,7 @@ public:
 protected:
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);
+    virtual bool clear_far_engulf() = 0;
 };
 
 bool actor_slime_wall_immune(const actor *actor);

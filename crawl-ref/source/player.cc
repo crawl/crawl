@@ -5518,6 +5518,25 @@ static void _end_water_hold()
     you.props.erase("water_holder");
 }
 
+bool player::clear_far_engulf()
+{
+    if (!you.duration[DUR_WATER_HOLD])
+        return false;
+
+    monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
+    if (!mons || !adjacent(mons->pos(), you.pos()))
+    {
+        if (you.res_water_drowning())
+            mpr("The water engulfing you falls away.");
+        else
+            mpr("You gasp with relief as air once again reaches your lungs.");
+
+        _end_water_hold();
+        return true;
+    }
+    return false;
+}
+
 void handle_player_drowning(int delay)
 {
     if (you.duration[DUR_WATER_HOLD] == 1)
