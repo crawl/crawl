@@ -3392,8 +3392,7 @@ bool is_useless_item(const item_def &item, bool temp)
                                                 // contaminated
                    || player_mutation_level(MUT_GOURMAND) > 0
                    || player_mutation_level(MUT_HERBIVOROUS) == 3
-                   || you.is_undead && you.species != SP_GHOUL
-                   || you_worship(GOD_GOZAG);
+                   || you.is_undead && you.species != SP_GHOUL;
 
         case AMU_FAITH:
             return you.species == SP_DEMIGOD && !you.religion;
