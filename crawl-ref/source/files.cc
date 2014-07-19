@@ -1746,7 +1746,7 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-    const bool do_diagnostics = 
+    const bool do_diagnostics =
 #  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
         true
 #  elif defined(WIZARD)
@@ -2288,7 +2288,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 void save_ghost(bool force)
 {
 #ifdef BONES_DIAGNOSTICS
-    const bool do_diagnostics = 
+    const bool do_diagnostics =
 #  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
         true
 #  elif defined(WIZARD)
