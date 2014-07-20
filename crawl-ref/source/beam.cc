@@ -649,6 +649,13 @@ void bolt::initialise_fire()
 #endif
 }
 
+// Catch the bolt part of explosive bolt.
+static bool _is_explosive_bolt(const bolt *beam)
+{
+    return beam->origin_spell == SPELL_EXPLOSIVE_BOLT
+           && !beam->in_explosion_phase;
+}
+
 void bolt::apply_beam_conducts()
 {
     if (!is_tracer && YOU_KILL(thrower))
@@ -672,7 +679,7 @@ void bolt::apply_beam_conducts()
             break;
         default:
             // Fire comes from a side-effect of the beam, not the beam itself.
-            if (name == "explosive bolt")
+            if (_is_explosive_bolt(this))
                 did_god_conduct(DID_FIRE, 6 + random2(3), god_cares());
             break;
         }
@@ -3318,7 +3325,7 @@ void bolt::tracer_affect_player()
     apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
 
-    if (name == "explosive bolt")
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
 }
 
@@ -4116,7 +4123,7 @@ void bolt::affect_player()
     if (can_knockback(&you, hurted))
         beam_hits_actor(&you);
 
-    else if (name == "explosive bolt")
+    else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze"
              || name == "blast of ice"
@@ -4393,7 +4400,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
 
-    if (name == "explosive bolt")
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 }
 
@@ -4627,8 +4634,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (can_knockback(mon, dmg))
         beam_hits_actor(mon);
-
-    else if (name == "explosive bolt")
+    else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 
     if (name == "spray of energy")
