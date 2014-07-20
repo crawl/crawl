@@ -36,7 +36,7 @@ bool learn_spell();
 bool learn_spell(spell_type spell);
 bool forget_spell_from_book(spell_type spell, const item_def* book);
 
-string desc_cannot_memorise_reason(bool form);
+string desc_cannot_memorise_reason(spell_type spell, bool form);
 bool player_can_memorise_from_spellbook(const item_def &book);
 
 spell_type which_spell_in_book(const item_def &book, int spl);
@@ -48,6 +48,7 @@ bool is_memorised(spell_type spell);
 
 bool you_cannot_memorise(spell_type spell);
 bool you_cannot_memorise(spell_type spell, bool &form);
+bool cannot_use_spell_school(spell_type spell);
 bool has_spells_to_memorise(bool silent = true,
                             int current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
