@@ -656,13 +656,15 @@ static coord_def _dgn_find_nearest_square(
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
-    list<coord_def> points[2];
+    vector<coord_def> points[2];
     int iter = 0;
     points[iter].push_back(pos);
 
     while (!points[iter].empty())
     {
-        for (list<coord_def>::iterator i = points[iter].begin();
+        // Iterate each layer of BFS in random order to avoid bias.
+        shuffle_array(points[iter]);
+        for (vector<coord_def>::iterator i = points[iter].begin();
              i != points[iter].end(); ++i)
         {
             const coord_def &p = *i;
