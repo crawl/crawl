@@ -2354,6 +2354,10 @@ void set_piety(int piety)
     ASSERT(piety >= 0);
     ASSERT(piety <= MAX_PIETY);
 
+    // Ru max piety is 6*
+    if (you_worship(GOD_RU) && piety > piety_breakpoint(5))
+        piety = piety_breakpoint(5);
+
     // We have to set the exact piety value this way, because diff may
     // be decreased to account for things like penance and gift timeout.
     int diff;
@@ -2398,7 +2402,7 @@ static void _gain_piety_point()
     }
 
     // slow down gain at upper levels of piety
-    if (!you_worship(GOD_SIF_MUNA))
+    if (!you_worship(GOD_SIF_MUNA) && !you_worship(GOD_RU))
     {
         if (you.piety >= MAX_PIETY
             || you.piety >= piety_breakpoint(5) && one_chance_in(3)
@@ -2408,7 +2412,7 @@ static void _gain_piety_point()
             return;
         }
     }
-    else
+    else if (you_worship(GOD_SIF_MUNA))
     {
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
@@ -2418,6 +2422,13 @@ static void _gain_piety_point()
             do_god_gift();
             return;
         }
+    }
+    else
+    {
+      // Ru piety doesn't modulate or taper and Ru doesn't give gifts.
+      // Ru max piety is 160 (6*)
+      if (you.piety >= piety_breakpoint(5))
+          return;
     }
 
     int old_piety = you.piety;
@@ -4162,7 +4173,7 @@ void handle_god_time(int time_delta)
             delay = you.props["ru_sacrifice_delay"].get_int();
             if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
             {
-                if (you.piety < 200)
+                if (you.piety < piety_breakpoint(5)) // 6* is max piety for Ru
                 {
                     ru_offer_new_sacrifices();
 

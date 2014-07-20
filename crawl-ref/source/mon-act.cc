@@ -2323,7 +2323,7 @@ void handle_monster_move(monster* mons)
                     if (does_ru_wanna_redirect(mons))
                     {
                         int r = random2(100);
-                        int chance = div_rand_round(you.piety, 20);
+                        int chance = div_rand_round(you.piety, 16);
                         // stun chance maxes at 10%
                         if (r < chance)
                         {
