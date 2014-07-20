@@ -277,6 +277,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     // Special cases so that tracers behave properly.
     if (pbolt.name != "orb of energy"
+        && pbolt.name != "orb of electricity"
         && pbolt.affects_wall(DNGN_TREE) == MB_FALSE)
     {
         pbolt.name = "unimportant";
@@ -2630,8 +2631,7 @@ void bolt::affect_endpoint()
         return;
     }
 
-    // FIXME: why don't these just have is_explosion set?
-    // They don't explode in tracers: why not?
+    // FIXME: why doesn't this just have is_explosion set?
     if (name == "orb of electricity")
     {
         target = pos();
