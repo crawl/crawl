@@ -5230,14 +5230,14 @@ void ru_do_sacrifice(ability_type sacrifice)
     item_def* const ring = you.slot_item(ring_slot, true);
 
     int piety_gain;
-    int divisor = 700;
+    int divisor = 600;
     // by the time we apply this, we'll have either 1 or 3 (arcane).
     int num_sacrifices = 1;
 
     switch (sacrifice)
     {
         case ABIL_RU_SACRIFICE_WORDS:
-            piety_gain = 35;
+            piety_gain = 28;
 
             mprf("Ru asks you to sacrifice your ability to read while threatened.");
             mprf("This is %s sacrifice.",
@@ -5252,7 +5252,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_READ, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_DRINK:
-            piety_gain = 35;
+            piety_gain = 28;
             mprf("Ru asks you to sacrifice your ability to drink while threatened.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
@@ -5266,7 +5266,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_DRINK, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
-            piety_gain = 30;
+            piety_gain = 24;
             health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
             mprf("Ru asks you to corrupt yourself with %s.",
@@ -5286,11 +5286,11 @@ void ru_do_sacrifice(ability_type sacrifice)
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
 
             if (essence_sacrifice == MUT_LOW_MAGIC)
-                piety_gain = 15;
+                piety_gain = 12;
             else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
-                piety_gain = 35;
+                piety_gain = 28;
             else
-                piety_gain = 20;
+                piety_gain = 16;
 
             mprf("Ru asks you to corrupt yourself with %s.",
                 mutation_name(essence_sacrifice));
@@ -5312,10 +5312,10 @@ void ru_do_sacrifice(ability_type sacrifice)
                 || purity_sacrifice == MUT_CLUMSY
                 || purity_sacrifice == MUT_DOPEY)
             {
-                piety_gain = 10;
+                piety_gain = 8;
             }
             else
-                piety_gain = 25;
+                piety_gain = 20;
 
             mprf("Ru asks you to corrupt yourself with %s.",
                 mutation_name(purity_sacrifice));
@@ -5332,7 +5332,7 @@ void ru_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_RU_SACRIFICE_STEALTH:
-            piety_gain = 25 + div_rand_round(skill_exp_needed(
+            piety_gain = 20 + div_rand_round(skill_exp_needed(
                 you.skills[SK_STEALTH], SK_STEALTH, you.species), divisor);
 
             mprf("Ru asks you to sacrifice your ability to go unnoticed.");
@@ -5354,7 +5354,7 @@ void ru_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = 40 + div_rand_round(skill_exp_needed(
+            piety_gain = 35 + div_rand_round(skill_exp_needed(
                 you.skills[SK_EVOCATIONS], SK_EVOCATIONS, you.species),
                 divisor);
 
@@ -5377,10 +5377,10 @@ void ru_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            piety_gain = 25 + div_rand_round(skill_exp_needed(
+            piety_gain = 20 + div_rand_round(skill_exp_needed(
                 you.skills[SK_DODGING], SK_DODGING, you.species), divisor);
             if (player_mutation_level(MUT_NO_ARMOUR))
-                piety_gain += 25;
+                piety_gain += 20;
             else if (you.species == SP_OCTOPODE
                     || you.species == SP_FELID
                     || you.species == SP_RED_DRACONIAN
@@ -5394,7 +5394,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                     || you.species == SP_PALE_DRACONIAN
                     || you.species == SP_BASE_DRACONIAN)
             {
-                piety_gain += 35; // this sacrifice is worse for these races
+                piety_gain += 28; // this sacrifice is worse for these races
             }
 
             mprf("Ru asks you to sacrifice your ability to dodge.");
@@ -5416,10 +5416,10 @@ void ru_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            piety_gain = 25 + div_rand_round(skill_exp_needed(
+            piety_gain = 20 + div_rand_round(skill_exp_needed(
                 you.skills[SK_ARMOUR], SK_ARMOUR, you.species), divisor);
             if (player_mutation_level(MUT_NO_DODGING))
-                piety_gain += 25;
+                piety_gain += 20;
 
             mprf("Ru asks you to sacrifice your ability to wear armour well.");
             mprf("This is %s sacrifice.",
@@ -5458,7 +5458,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
                 piety_gain = 3;
             else
-                piety_gain = 25 + div_rand_round(skill_exp_needed(
+                piety_gain = 20 + div_rand_round(skill_exp_needed(
                     you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
                     divisor);
 
@@ -5546,7 +5546,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             num_sacrifices = 3;
             break;
         case ABIL_RU_SACRIFICE_HAND:
-            piety_gain = 80 + div_rand_round(skill_exp_needed(
+            piety_gain = 70 + div_rand_round(skill_exp_needed(
                     you.skills[SK_SHIELDS], SK_SHIELDS, you.species), divisor);
 
             mprf("Ru asks you to sacrifice your one of your %s.",
@@ -5603,7 +5603,10 @@ void ru_do_sacrifice(ability_type sacrifice)
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
-    gain_piety(piety_gain + random2(6)); // randomize it a bit.
+    int new_piety = you.piety + piety_gain + random2(5);
+    if (new_piety > piety_breakpoint(5))
+        new_piety = piety_breakpoint(5);
+    set_piety(new_piety); // randomize it a bit.
 
     // reset delay to 70.
     you.props["ru_sacrifice_delay"] = div_rand_round(70 * (3 + you.faith()), 3);
@@ -5649,13 +5652,13 @@ bool will_ru_retaliate()
     return you_worship(GOD_RU)
            && you.piety >= piety_breakpoint(2)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(600, you.piety));
+           && one_chance_in(div_rand_round(480, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
 void ru_do_retribution(monster* mons, int damage)
 {
-    int power = max(0, random2(div_rand_round(you.piety, 4))
+    int power = max(0, random2(div_rand_round(you.piety * 10, 32))
         + damage - (2 * mons->hit_dice));
     const actor* act = &you;
 
@@ -5689,10 +5692,10 @@ void ru_do_retribution(monster* mons, int damage)
 void ru_draw_out_power()
 {
     mpr("You are restored by drawing out deep reserves of power within.");
-    inc_hp(div_rand_round(you.piety, 20)
-        + roll_dice(div_rand_round(you.piety, 25), 5));
-    inc_mp(div_rand_round(you.piety, 60)
-        + roll_dice(div_rand_round(you.piety, 50), 3));
+    inc_hp(div_rand_round(you.piety, 16)
+        + roll_dice(div_rand_round(you.piety, 20), 5));
+    inc_mp(div_rand_round(you.piety, 48)
+        + roll_dice(div_rand_round(you.piety, 40), 3));
     drain_exp(false, 20, true);
 }
 
@@ -5819,7 +5822,6 @@ bool ru_power_leap()
     wave.source = you.pos();
     wave.target = you.pos();
     wave.hit = AUTOMATIC_HIT;
-    //wave.damage = dice_def(3, div_rand_round(you.piety, 3));
     wave.loudness = 4;
     wave.explode();
 
@@ -5831,9 +5833,9 @@ bool ru_power_leap()
             continue;
         ASSERT(mon);
 
-        //damage scales with XL amd piety -- divisor should be a multiple of 81
+        //damage scales with XL amd piety
         mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
-            (54 + you.experience_level), 972), 3),
+            (54 + you.experience_level), 777), 3),
             BEAM_ENERGY, true);
     }
 
@@ -5856,8 +5858,8 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     ASSERT(mons);
 
     int dmg;
-    // divisor should be a multiple of 81 to match to max of 54 + XL
-    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 810);
+    //damage scales with XL amd piety
+    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(6);
 
     if (mons_is_firewood(mons))
