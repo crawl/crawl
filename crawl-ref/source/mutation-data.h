@@ -1501,7 +1501,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_DRINK,                0,  1, MUTFLAG_RU, false,
-  "cannot drink while threatened",
+  "inability to drink while threatened",
 
   {"You cannot drink potions while threatened.", "", ""},
   {"You no longer can drink potions while threatened.", "", ""},
@@ -1509,7 +1509,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_READ,                0,  1, MUTFLAG_RU, false,
-  "cannot read while threatened",
+  "inability to read while threatened",
 
   {"You cannot read scrolls while threatened.", "", ""},
   {"You can no longer read scrolls while threatened.", "", ""},
@@ -1533,7 +1533,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_ARTIFICE,                0,  1, MUTFLAG_RU, false,
-  "cannot use devices",
+  "inability to use devices",
 
   {"You cannot study or use magical devices.", "", ""},
   {"You can no longer study or use magical devices.", "", ""},
@@ -1541,7 +1541,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_LOVE,                0,  1, MUTFLAG_RU, false,
-  "inspire hatred in others",
+  "hated by all",
 
   {"You are hated by all.", "", ""},
   {"You are now hated by all.", "", ""},
@@ -1549,7 +1549,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_SANITY,                0,  1, MUTFLAG_RU, false,
-  "insane",
+  "insanity",
 
   {"You have lost your grip on sanity.", "", ""},
   {"You have lost your grip on sanity.", "", ""},
@@ -1557,7 +1557,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
-  "cannot train Dodging",
+  "inability to dodging",
 
   {"You cannot train Dodging.", "", ""},
   {"You can no longer train Dodging.", "", ""},
@@ -1565,7 +1565,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_ARMOUR,                0,  1, MUTFLAG_RU, false,
-  "cannot train Armour",
+  "inability to train armour",
 
   {"You cannot train your Armour skill.", "", ""},
   {"You can no longer train your Armour skill.", "", ""},
@@ -1573,7 +1573,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_AIR_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Air magic",
+  "no air magic",
 
   {"You cannot study or cast Air magic.", "", ""},
   {"You can no longer study or cast Air magic.", "", ""},
@@ -1581,7 +1581,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_CHARM_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Charms magic",
+  "no charms magic",
 
   {"You cannot study or cast Charms magic.", "", ""},
   {"You can no longer study or cast Charms magic.", "", ""},
@@ -1589,7 +1589,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_CONJURATION_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Conjurations magic",
+  "no conjurations magic",
 
   {"You cannot study or cast Conjurations magic.", "", ""},
   {"You can no longer study or cast Conjurations magic.", "", ""},
@@ -1597,7 +1597,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_EARTH_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Earth magic",
+  "no earth magic",
 
   {"You cannot study or cast Earth magic.", "", ""},
   {"You can no longer study or cast Earth magic.", "", ""},
@@ -1605,7 +1605,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_FIRE_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Fire magic",
+  "no fire magic",
 
   {"You cannot study or cast Fire magic.", "", ""},
   {"You can no longer study or cast Fire magic.", "", ""},
@@ -1613,7 +1613,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_HEXES_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Hexes magic",
+  "no hexes magic",
 
   {"You cannot study or cast Hexes magic.", "", ""},
   {"You can no longer study or cast Hexes magic.", "", ""},
@@ -1621,7 +1621,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_ICE_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Ice magic",
+  "no ice magic",
 
   {"You cannot study or cast Ice magic.", "", ""},
   {"You can no longer study or cast Ice magic.", "", ""},
@@ -1629,7 +1629,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_NECROMANCY_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Necromancy magic",
+  "no necromancy magic",
 
   {"You cannot study or cast Necromancy magic.", "", ""},
   {"You can no longer study or cast Necromancy magic.", "", ""},
@@ -1637,7 +1637,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_POISON_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Poison magic",
+  "no poison magic",
 
   {"You cannot study or cast Poison magic.", "", ""},
   {"You can no longer study or cast Poison magic.", "", ""},
@@ -1645,7 +1645,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_SUMMONING_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Summoning magic",
+  "cannot use pummoning magic",
 
   {"You cannot study or cast Summoning magic.", "", ""},
   {"You can no longer study or cast Summoning magic.", "", ""},
@@ -1653,7 +1653,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_TRANSLOCATION_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Translocations magic",
+  "no translocations magic",
 
   {"You cannot study or cast Translocations magic.", "", ""},
   {"You can no longer study or cast Translocations magic.", "", ""},
@@ -1661,7 +1661,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_TRANSMUTATION_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use Transmutations magic",
+  "no transmutations magic",
 
   {"You cannot study or cast Transmutations magic.", "", ""},
   {"You can no longer study or cast Transmutations magic.", "", ""},
@@ -1669,7 +1669,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_PHYSICAL_VULNERABILITY,                0,  3, MUTFLAG_RU, false,
-  "take more damage",
+  "vulnerability to harm",
 
   {"You take slightly more damage. (-3 AC)",
     "You take more damage. (-6 AC)",
@@ -1683,7 +1683,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_SLOW_REFLEXES,                0,  3, MUTFLAG_RU, false,
-  "have slow reflexes",
+  "slow reflexes",
 
   {"You have somewhat slow reflexes. (-3 EV)",
     "You have slow reflexes. (-6 EV)",
@@ -1697,7 +1697,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_MAGICAL_VULNERABILITY,                0,  3, MUTFLAG_RU, false,
-  "magic vulnerable",
+  "magic vulnerability",
 
   {"You are slightly vulnerable to magic.",
     "You are vulnerable to magic.",
