@@ -590,8 +590,18 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     }
 
     // Check for banned schools.
+    if (cannot_use_spell_school(spell))
+    {
+        return true;
+    }
+
+    return rc;
+}
+
+bool cannot_use_spell_school(spell_type spell)
+{
     if (
-        (spell_typematch(spell, SPTYP_AIR)
+           (spell_typematch(spell, SPTYP_AIR)
             && player_mutation_level(MUT_NO_AIR_MAGIC))
         || (spell_typematch(spell, SPTYP_CHARMS)
             && player_mutation_level(MUT_NO_CHARM_MAGIC))
@@ -615,12 +625,11 @@ bool you_cannot_memorise(spell_type spell, bool &form)
             && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
         || (spell_typematch(spell, SPTYP_TRANSMUTATION)
             && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-    )
+        )
     {
         return true;
     }
-
-    return rc;
+    return false;
 }
 
 bool player_can_memorise(const item_def &book)
@@ -1150,19 +1159,27 @@ bool learn_spell()
 }
 
 // Returns a string about why a character can't memorise a spell.
-string desc_cannot_memorise_reason(bool form)
+string desc_cannot_memorise_reason(spell_type spell, bool form)
 {
-    string desc = "You cannot ";
-    if (form)
-        desc += "currently ";
-    desc += "memorise or cast this spell because you are ";
-
-    if (form)
-        desc += "in " + uppercase_first(transform_name()) + " form";
+    string desc;
+    if (cannot_use_spell_school(spell))
+    {
+        desc = "You cannot memorise or cast this type of magic.";
+    }
     else
-        desc += "a " + lowercase_string(species_name(you.species));
+    {
+        desc = "You cannot ";
+        if (form)
+            desc += "currently ";
+        desc += "memorise or cast this spell because you are ";
 
-    desc += ".";
+        if (form)
+            desc += "in " + uppercase_first(transform_name()) + " form";
+        else
+            desc += "a " + lowercase_string(species_name(you.species));
+
+        desc += ".";
+    }
 
     return desc;
 }
@@ -1185,7 +1202,7 @@ static bool _learn_spell_checks(spell_type specspell)
     bool form = false;
     if (you_cannot_memorise(specspell, form))
     {
-        mpr(desc_cannot_memorise_reason(form).c_str());
+        mpr(desc_cannot_memorise_reason(specspell, form).c_str());
         return false;
     }
 

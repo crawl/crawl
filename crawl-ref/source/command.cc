@@ -1076,7 +1076,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     if (you_cannot_memorise(type, form))
     {
         desc += "\n";
-        desc += desc_cannot_memorise_reason(form);
+        desc += desc_cannot_memorise_reason(type, form);
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);

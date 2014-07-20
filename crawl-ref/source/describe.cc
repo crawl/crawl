@@ -2787,7 +2787,7 @@ static int _get_spell_description(const spell_type spell,
 
     bool form = false;
     if (you_cannot_memorise(spell, form))
-        description += "\n" + desc_cannot_memorise_reason(form) + "\n";
+        description += "\n" + desc_cannot_memorise_reason(spell, form) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
