@@ -5192,6 +5192,37 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
         return "a trivial";
 }
 
+static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
+        const char* message)
+{
+    mprf("Ru asks you to %s.", message);
+    mprf("This is %s sacrifice.",
+        _describe_sacrifice_piety_gain(piety_gain));
+    if (!yesno("Do you really want to make this sacrifice?",
+               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    return true;
+}
+
+static int _piety_for_skill(skill_type skill)
+{
+    int divisor = 500;
+    return div_rand_round(skill_exp_needed(you.skills[skill], skill,
+        you.species), divisor);
+}
+
+static void _ru_kill_skill(skill_type skill)
+{
+    change_skill_points(skill,
+        -you.skill_points[skill], true);
+    you.stop_train.insert(skill);
+}
+
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
 void ru_do_sacrifice(ability_type sacrifice)
@@ -5230,7 +5261,6 @@ void ru_do_sacrifice(ability_type sacrifice)
     item_def* const ring = you.slot_item(ring_slot, true);
 
     int piety_gain;
-    int divisor = 600;
     // by the time we apply this, we'll have either 1 or 3 (arcane).
     int num_sacrifices = 1;
 
@@ -5238,49 +5268,30 @@ void ru_do_sacrifice(ability_type sacrifice)
     {
         case ABIL_RU_SACRIFICE_WORDS:
             piety_gain = 28;
-
-            mprf("Ru asks you to sacrifice your ability to read while threatened.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                       false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_READ, piety_gain,
+                "sacrifice your ability to read while threatened"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_READ, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_DRINK:
             piety_gain = 28;
-            mprf("Ru asks you to sacrifice your ability to drink while threatened.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_DRINK, piety_gain,
+                "sacrifice your ability to drink while threatened"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_DRINK, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
             piety_gain = 24;
             health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
-            mprf("Ru asks you to corrupt yourself with %s.",
-                mutation_name(health_sacrifice));
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(health_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(health_sacrifice)).c_str()))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(health_sacrifice, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_ESSENCE:
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
@@ -5292,18 +5303,12 @@ void ru_do_sacrifice(ability_type sacrifice)
             else
                 piety_gain = 16;
 
-            mprf("Ru asks you to corrupt yourself with %s.",
-                mutation_name(essence_sacrifice));
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(essence_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(essence_sacrifice)).c_str()))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(essence_sacrifice, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
@@ -5317,68 +5322,35 @@ void ru_do_sacrifice(ability_type sacrifice)
             else
                 piety_gain = 20;
 
-            mprf("Ru asks you to corrupt yourself with %s.",
-                mutation_name(purity_sacrifice));
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(purity_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(purity_sacrifice)).c_str()))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(purity_sacrifice, 1, "Ru sacrifice");
-
             break;
         case ABIL_RU_SACRIFICE_STEALTH:
-            piety_gain = 20 + div_rand_round(skill_exp_needed(
-                you.skills[SK_STEALTH], SK_STEALTH, you.species), divisor);
+            piety_gain = 20 + _piety_for_skill(SK_STEALTH);
 
-            mprf("Ru asks you to sacrifice your ability to go unnoticed.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
+                "sacrifice your ability to go unnoticed."))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_STEALTH, 1, "Ru sacrifice");
-
-            // zero out useless skills
-            change_skill_points(SK_STEALTH,
-                -you.skill_points[SK_STEALTH], true);
-            you.stop_train.insert(SK_STEALTH);
-
+            _ru_kill_skill(SK_STEALTH);
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = 35 + div_rand_round(skill_exp_needed(
-                you.skills[SK_EVOCATIONS], SK_EVOCATIONS, you.species),
-                divisor);
+            piety_gain = 35 + _piety_for_skill(SK_EVOCATIONS);
 
-            mprf("Ru asks you to sacrifice all use of magical tools.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
+                "sacrifice all use of magical tools"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_ARTIFICE, 1, "Ru sacrifice");
-
-            // zero out useless skills
-            change_skill_points(SK_EVOCATIONS,
-                -you.skill_points[SK_EVOCATIONS], true);
-            you.stop_train.insert(SK_EVOCATIONS);
-
+            _ru_kill_skill(SK_EVOCATIONS);
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            piety_gain = 20 + div_rand_round(skill_exp_needed(
-                you.skills[SK_DODGING], SK_DODGING, you.species), divisor);
+            piety_gain = 20 + _piety_for_skill(SK_DODGING);
             if (player_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 20;
             else if (you.species == SP_OCTOPODE
@@ -5397,86 +5369,46 @@ void ru_do_sacrifice(ability_type sacrifice)
                 piety_gain += 28; // this sacrifice is worse for these races
             }
 
-            mprf("Ru asks you to sacrifice your ability to dodge.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_DODGING, piety_gain,
+                "sacrifice your ability to dodge"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_DODGING, 1, "Ru sacrifice");
-
-            // zero out useless skills
-            change_skill_points(SK_DODGING,
-                -you.skill_points[SK_DODGING], true);
-            you.stop_train.insert(SK_DODGING);
-
+            _ru_kill_skill(SK_DODGING);
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            piety_gain = 20 + div_rand_round(skill_exp_needed(
-                you.skills[SK_ARMOUR], SK_ARMOUR, you.species), divisor);
+            piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
             if (player_mutation_level(MUT_NO_DODGING))
                 piety_gain += 20;
 
-            mprf("Ru asks you to sacrifice your ability to wear armour well.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_ARMOUR, piety_gain,
+                "sacrifice your ability to wear armour well"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_ARMOUR, 1, "Ru sacrifice");
-
-            // zero out useless skills
-            change_skill_points(SK_ARMOUR,
-                -you.skill_points[SK_ARMOUR], true);
-            you.stop_train.insert(SK_ARMOUR);
-
+            _ru_kill_skill(SK_ARMOUR);
             break;
         case ABIL_RU_SACRIFICE_SANITY:
             piety_gain = 25;
 
-            mprf("Ru asks you to sacrifice your sanity.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_SANITY, piety_gain,
+                "sacrifice your sanity"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_NO_SANITY, 1, "Ru sacrifice");
             break;
         case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
                 piety_gain = 3;
             else
-                piety_gain = 20 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
-                    divisor);
+                piety_gain = 20 + _piety_for_skill(SK_SUMMONINGS);
 
-            mprf("Ru asks you to sacrifice your ability to be loved.");
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_NO_LOVE, piety_gain,
+                "sacrifice your ability to be loved"))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-            {
-                perma_mutate(MUT_NO_LOVE, 1, "Ru sacrifice");
-                add_daction(DACT_ALLY_SACRIFICE_LOVE);
-            }
-
+            add_daction(DACT_ALLY_SACRIFICE_LOVE);
             break;
         case ABIL_RU_SACRIFICE_ARCANA:
             piety_gain = 25;
@@ -5491,9 +5423,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                     // nothing in the summoning school helps so substact piety
                     piety_gain -= 8;
                 else
-                    piety_gain += div_rand_round(skill_exp_needed(
-                        you.skills[mutation_skill], mutation_skill, you.species),
-                        divisor);
+                    piety_gain += _piety_for_skill(mutation_skill);
             }
 
             mprf("Ru asks you to sacrifice all use of %s, %s, and %s.",
@@ -5509,8 +5439,8 @@ void ru_do_sacrifice(ability_type sacrifice)
                 );
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you want to accept this sacrifice? ",
-                true, 'n'))
+            if (!yesno("Do you really want to make this sacrifice?",
+                       false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
@@ -5527,9 +5457,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
 
                 // zero out useless skills
-                change_skill_points(mutation_skill,
-                    -you.skill_points[mutation_skill], true);
-                you.stop_train.insert(mutation_skill);
+                _ru_kill_skill(mutation_skill);
 
                 for (int j = 0; j < MAX_KNOWN_SPELLS; ++j)
                 {
@@ -5546,21 +5474,14 @@ void ru_do_sacrifice(ability_type sacrifice)
             num_sacrifices = 3;
             break;
         case ABIL_RU_SACRIFICE_HAND:
-            piety_gain = 70 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_SHIELDS], SK_SHIELDS, you.species), divisor);
+            piety_gain = 70 + _piety_for_skill(SK_SHIELDS);
 
-            mprf("Ru asks you to sacrifice your one of your %s.",
-                you.hand_name(true).c_str());
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+            if (!_execute_sacrifice(MUT_MISSING_HAND, piety_gain,
+                make_stringf("sacrifice one of your %s",
+                    you.hand_name(true).c_str()).c_str()))
             {
-                canned_msg(MSG_OK);
                 return;
             }
-            else
-                perma_mutate(MUT_MISSING_HAND, 1, "Ru sacrifice");
 
             // Drop your shield if there is one
             if (shield != NULL)
