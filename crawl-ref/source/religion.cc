@@ -376,9 +376,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     //Ru
     { "You exude an aura of power that intimidates your foes.",
       "Your aura of power can strike those that harm you.",
-      "use your power to heal your body and restore your magic",
+      "heal your body and restore your magic",
       "gather your power into a mighty leap",
-      "wreak a terrible wrath on all visible foes"
+      "wreak a terrible wrath on your foes"
     },
 };
 
