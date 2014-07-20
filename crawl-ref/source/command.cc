@@ -545,7 +545,12 @@ void list_jewellery()
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
+        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
+                player_mutation_level(MUT_MISSING_HAND))
+        {
+            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+        }
+        else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
             mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
