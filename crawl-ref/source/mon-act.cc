@@ -2311,7 +2311,7 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->withdrawn())
             {
-                monster* new_target;
+                monster* new_target = 0;
                 bool attack_redirected = false;
                 if (!mons->wont_attack())
                 {
