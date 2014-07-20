@@ -3051,6 +3051,15 @@ static void tag_read_you(reader &th)
         you.props["ru_progress_to_next_sacrifice"] = 0;
         you.props["ru_sacrifice_delay"] = 70;
     }
+
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_PIETY)
+    {
+        you.piety = div_rand_round(you.piety * 10, 8);
+        if (you.piety > piety_breakpoint(5))
+            you.piety = piety_breakpoint(5);
+        else if (you.piety < 10)
+            you.piety = 10;
+    }
 #endif
 }
 
