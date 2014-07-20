@@ -459,14 +459,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
 
-#if TAG_MAJOR_VERSION == 34
-    if (z_type == ZAP_ICE_STORM)
-    {
-        pbolt.ench_power = power; // used for radius
-        pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
-    }
-    else
-#endif
     if (z_type == ZAP_EXPLOSIVE_BOLT)
         pbolt.ench_power = power;
     else if (z_type == ZAP_BREATHE_FROST)
@@ -2640,8 +2632,7 @@ void bolt::affect_endpoint()
 
     // FIXME: why don't these just have is_explosion set?
     // They don't explode in tracers: why not?
-    if (name == "orb of electricity"
-       || name == "great blast of cold")
+    if (name == "orb of electricity")
     {
         target = pos();
         refine_for_explosion();
@@ -2895,9 +2886,6 @@ void bolt::affect_place_clouds()
     {
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
     }
-
-    if (name == "great blast of cold")
-        place_cloud(CLOUD_COLD, p, random2(5) + 3, agent());
 
     if (name == "ball of steam")
         place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
@@ -5914,17 +5902,6 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear a raging storm!";
 
         // Everything else is handled elsewhere...
-    }
-
-    if (name == "great blast of cold")
-    {
-        seeMsg  = "The blast explodes into a great storm of ice!";
-        hearMsg = "You hear a raging storm!";
-
-        name       = "ice storm";
-        glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
-        colour     = WHITE;
-        ex_size    = is_tracer ? 3 : (2 + (random2(ench_power) > 75));
     }
 
     if (name == "stinking cloud")
