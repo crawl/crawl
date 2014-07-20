@@ -5571,7 +5571,7 @@ bool will_ru_retaliate()
 {
     // Scales up to a 33% chance of retribution
     return you_worship(GOD_RU)
-           && you.piety >= piety_breakpoint(2)
+           && you.piety >= piety_breakpoint(1)
            && crawl_state.which_god_acting() != GOD_RU
            && one_chance_in(div_rand_round(480, you.piety));
 }
