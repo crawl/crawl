@@ -705,10 +705,21 @@ static bool _item_safe_square(const coord_def &pos, void *item)
            && !feat_destroys_item(feat, *static_cast<item_def *>(item));
 }
 
+static bool _item_traversable_square(const coord_def &pos)
+{
+    return !cell_is_solid(pos);
+}
+
 // Moves an item on the floor to the nearest adjacent floor-space.
 static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 {
-    const coord_def np = _dgn_find_nearest_square(pos, &item, _item_safe_square);
+    // First try to avoid pushing things through solid features...
+    coord_def np = _dgn_find_nearest_square(pos, &item, _item_safe_square,
+                                            _item_traversable_square);
+    // ... but if we have to, so be it.
+    if (!in_bounds(np) || np == pos)
+        np = _dgn_find_nearest_square(pos, &item, _item_safe_square);
+
     if (in_bounds(np) && np != pos)
     {
         int index = item.index();
