@@ -137,8 +137,8 @@ const char* rune_type_name(int p);
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
 const char* deck_rarity_name(deck_rarity_type rarity);
-string base_type_string(object_class_type type, bool known = true);
-string base_type_string(const item_def &item, bool known = true);
+string base_type_string(object_class_type type);
+string base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 

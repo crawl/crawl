@@ -1130,12 +1130,12 @@ static const char* rod_type_name(int type)
     }
 }
 
-string base_type_string(const item_def &item, bool known)
+string base_type_string(const item_def &item)
 {
-    return base_type_string(item.base_type, known);
+    return base_type_string(item.base_type);
 }
 
-string base_type_string(object_class_type type, bool known)
+string base_type_string(object_class_type type)
 {
     switch (type)
     {
