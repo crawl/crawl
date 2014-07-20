@@ -21,6 +21,7 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
@@ -445,17 +446,10 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     // Most non-weapon objects can be wielded, though there's rarely a point
     if (!is_weapon(item))
     {
-        if (item.base_type == OBJ_ARMOUR)
+        if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mpr("You can't wield armour.");
-            return false;
-        }
-
-        if (item.base_type == OBJ_JEWELLERY)
-        {
-            if (!quiet)
-                mpr("You can't wield jewellery.");
+                mprf("You can't wield %s.", base_type_string(item).c_str());
             return false;
         }
 
