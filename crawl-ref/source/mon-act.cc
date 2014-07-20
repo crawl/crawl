@@ -2312,7 +2312,6 @@ void handle_monster_move(monster* mons)
                 && !mons->withdrawn())
             {
                 monster* new_target = 0;
-                bool attack_redirected = false;
                 if (!mons->wont_attack())
                 {
                     // Otherwise, if it steps into you, cancel other targets.
@@ -2348,16 +2347,13 @@ void handle_monster_move(monster* mons)
                                 }
                                 ASSERT(candidate);
                                 if (one_chance_in(++pfound))
-                                {
                                     new_target = candidate;
-                                    attack_redirected = true;
-                                }
                             }
                         }
                     }
                 }
 
-                if (attack_redirected && new_target)
+                if (new_target)
                 {
                     // attack that target
                     mons->target = new_target->pos();
