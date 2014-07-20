@@ -1602,6 +1602,22 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             }
             break;
 
+        case MUT_MISSING_HAND:
+            {
+                const char *hands;
+                if (you.species == SP_FELID)
+                    hands = "front paws";
+                else if (you.species == SP_OCTOPODE)
+                    hands = "tentacles";
+                else
+                    break;
+                mprf(MSGCH_MUTATION, "%s",
+                     replace_all(mdef.gain[you.mutation[mutat]-1], "hands",
+                                 hands).c_str());
+                gain_msg = false;
+            }
+            break;
+
         case MUT_BREATHE_POISON:
             if (you.species == SP_NAGA)
             {
