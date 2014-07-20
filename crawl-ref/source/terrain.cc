@@ -694,8 +694,7 @@ static coord_def _dgn_find_nearest_square(
         iter = !iter;
     }
 
-    coord_def unfound;
-    return unfound;
+    return coord_def(0, 0); // Not found.
 }
 
 static bool _item_safe_square(const coord_def &pos, void *item)
