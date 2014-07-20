@@ -969,7 +969,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (player_mutation_level(MUT_MISSING_HAND)
             && (eq == EQ_LEFT_RING
                 || eq == EQ_SHIELD
-                || eq == EQ_RING_SEVEN))
+                || eq == EQ_RING_EIGHT))
     {
         return false;
     }

@@ -665,9 +665,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (verbose)
             {
                 if (player_mutation_level(MUT_MISSING_HAND))
-                    mpr("You can't wear gloves with your huge claws!");
-                else
                     mpr("You can't wear a glove with your huge claw!");
+                else
+                    mpr("You can't wear gloves with your huge claws!");
             }
             return false;
         }
