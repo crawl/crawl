@@ -5801,12 +5801,11 @@ bool ru_power_leap()
             mpr("Something unexpectedly blocked you, preventing you from leaping!");
         else
             move_player_to_grid(beam.target, false);
-
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return_val = true;
-
     }
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    return_val = true;
 
     bolt wave;
     wave.thrower = KILL_YOU;
