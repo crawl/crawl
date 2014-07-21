@@ -470,6 +470,9 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
 bool bolt::can_affect_actor(const actor *act) const
 {
+    // Blinkbolt doesn't hit its caster, since they are the bolt.
+    if (origin_spell == SPELL_BLINKBOLT && act->mindex() == beam_source)
+        return false;
     map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
