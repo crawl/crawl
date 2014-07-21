@@ -1716,6 +1716,27 @@ void set_terrain_changed(const coord_def p)
 
     if (grd(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;
+    else if (grd(p) == DNGN_OPEN_DOOR)
+    {
+        // Restore colour from door-change markers
+        vector<map_marker*> markers = env.markers.get_markers_at(p);
+        for (int i = 0, size = markers.size(); i < size; ++i)
+        {
+            if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+            {
+                map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+                if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+                    && marker->colour != BLACK)
+                {
+                    // Restore the unsealed colour.
+                    dgn_set_grid_colour_at(p, marker->colour);
+                    break;
+                }
+            }
+        }
+    }
 
     env.map_knowledge(p).flags |= MAP_CHANGED_FLAG;
 
