@@ -84,6 +84,7 @@ TAGS:    arrival no_monster_gen no_item_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
+KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_rtele_into
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
@@ -177,6 +178,7 @@ ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
+KPROP:   M = no_rtele_into
 NSUBST:  M = 2=E / *=M E:2
 KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
