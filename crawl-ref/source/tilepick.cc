@@ -2997,27 +2997,27 @@ tileidx_t tileidx_monster(const monster_info& mons)
     return ch;
 }
 
-tileidx_t tileidx_draco_base(const monster_info& mon)
+static tileidx_t tileidx_draco_base(monster_type draco)
 {
-    int draco = mon.draco_or_demonspawn_subspecies();
-    int colour = 0;
-
     switch (draco)
     {
     default:
-    case MONS_DRACONIAN:        colour = 0; break;
-    case MONS_BLACK_DRACONIAN:  colour = 1; break;
-    case MONS_YELLOW_DRACONIAN: colour = 2; break;
-    case MONS_GREEN_DRACONIAN:  colour = 3; break;
-    case MONS_GREY_DRACONIAN:   colour = 4; break;
-    case MONS_MOTTLED_DRACONIAN:colour = 5; break;
-    case MONS_PALE_DRACONIAN:   colour = 6; break;
-    case MONS_PURPLE_DRACONIAN: colour = 7; break;
-    case MONS_RED_DRACONIAN:    colour = 8; break;
-    case MONS_WHITE_DRACONIAN:  colour = 9; break;
+    case MONS_DRACONIAN:        return TILEP_DRACO_BASE;
+    case MONS_BLACK_DRACONIAN:  return TILEP_DRACO_BASE + 1;
+    case MONS_YELLOW_DRACONIAN: return TILEP_DRACO_BASE + 2;
+    case MONS_GREEN_DRACONIAN:  return TILEP_DRACO_BASE + 3;
+    case MONS_GREY_DRACONIAN:   return TILEP_DRACO_BASE + 4;
+    case MONS_MOTTLED_DRACONIAN:return TILEP_DRACO_BASE + 5;
+    case MONS_PALE_DRACONIAN:   return TILEP_DRACO_BASE + 6;
+    case MONS_PURPLE_DRACONIAN: return TILEP_DRACO_BASE + 7;
+    case MONS_RED_DRACONIAN:    return TILEP_DRACO_BASE + 8;
+    case MONS_WHITE_DRACONIAN:  return TILEP_DRACO_BASE + 9;
     }
+}
 
-    return TILEP_DRACO_BASE + colour;
+tileidx_t tileidx_draco_base(const monster_info& mon)
+{
+    return tileidx_draco_base(mon.draco_or_demonspawn_subspecies());
 }
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
@@ -3066,6 +3066,9 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
 
 tileidx_t tileidx_player_mons()
 {
+    const monster_type mons = player_mons(false);
+    if (mons_is_base_draconian(mons))
+        return tileidx_draco_base(mons);
     return _tileidx_monster_base(player_mons(false));
 }
 
