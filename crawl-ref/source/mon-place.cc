@@ -660,6 +660,7 @@ monster_type resolve_monster_type(monster_type mon_type,
         if (!vault_mon_types.empty())
         {
             int i = 0;
+            int tries = 0;
             int type;
             do
             {
@@ -667,6 +668,10 @@ monster_type resolve_monster_type(monster_type mon_type,
                                            vault_mon_weights.end());
                 type = vault_mon_types[i];
 
+                // Give up after enough attempts: for example, a Yred
+                // worshipper casting Shadow Creatures in holy Pan.
+                if (tries++ >= 300)
+                    type = MONS_NO_MONSTER;
                 // If the monster list says not to place, or to place
                 // by level, or to place a random monster, accept that.
                 // If it's random, we'll be recursively calling ourselves
