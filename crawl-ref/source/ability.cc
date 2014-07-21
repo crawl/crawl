@@ -3728,6 +3728,15 @@ static int _is_god_ability(ability_type abil)
     if (abil == ABIL_NON_ABILITY)
         return GOD_NO_GOD;
 
+    // Not in god_abilities because players get them at 0*
+    // TODO: Fix that and remove the following.
+    if (abil == ABIL_CHEIBRIADOS_TIME_BEND)
+        return GOD_CHEIBRIADOS;
+    if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
+        return GOD_ELYVILON;
+    if (abil == ABIL_TROG_BURN_SPELLBOOKS)
+        return GOD_TROG;
+
     for (int i = 0; i < NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
         {
