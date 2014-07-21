@@ -322,7 +322,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_connections
-TAGS:    arrival
+TAGS:    arrival no_rtele_into
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
 SUBST:   ([ = .
