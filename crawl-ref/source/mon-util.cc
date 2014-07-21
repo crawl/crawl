@@ -3710,6 +3710,13 @@ static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
     { "she", "her", "herself", "her" }, // feminine
 };
 
+const char *decline_pronoun(gender_type gender, pronoun_type variant)
+{
+    ASSERT_RANGE(gender, 0, NUM_GENDERS);
+    ASSERT_RANGE(variant, 0, NUM_PRONOUN_CASES);
+    return _pronoun_declension[gender][variant];
+}
+
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Its_ sword explodes!
@@ -3721,7 +3728,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     COMPILE_CHECK(ARRAYSZ(_pronoun_declension) == NUM_GENDERS);
     const gender_type gender = !visible ? GENDER_NEUTER
                                         : _mons_class_gender(mon_type);
-    return _pronoun_declension[gender][variant];
+    return decline_pronoun(gender, variant);
 }
 
 // Checks if the monster can use smiting/torment to attack without

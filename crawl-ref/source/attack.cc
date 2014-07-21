@@ -30,6 +30,7 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "mon-util.h" // for decline_pronoun
 #include "monster.h"
 #include "libutil.h"
 #include "player.h"
@@ -368,13 +369,7 @@ string attack::anon_name(description_level_type desc)
  */
 string attack::anon_pronoun(pronoun_type pron)
 {
-    switch (pron)
-    {
-    default:
-    case PRONOUN_SUBJECTIVE:    return "it";
-    case PRONOUN_POSSESSIVE:    return "its";
-    case PRONOUN_REFLEXIVE:     return "itself";
-    }
+    return decline_pronoun(GENDER_NEUTER, pron);
 }
 
 /* Initializes an attack, setting up base variables and values
