@@ -1436,10 +1436,10 @@ KPROP:    x = bloody
              feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from choosing to use this
-             square. Use this to prevent nasty situations like the player
-             ending up in a closet (for example, because your map randomises
-             wall/floor so much that closets may occur) or an extremely dense
-             monster array (like a hellion island).
+             square. Also prevents this square from being the destination of
+             a shaft or hatch. Use this tag to prevent nasty situations like
+             the player ending up in a closet or an extremely dense monster
+             array (like a hellion island).
           * "no_ctele_into": Prevents controlled teleportation into this square.
              Will instead generate the message "A strong magical force throws
              you back!".
