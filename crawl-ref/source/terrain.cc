@@ -1001,7 +1001,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
                              bool affect_player,
                              bool preserve_features,
-                             bool preserve_items)
+                             bool preserve_items,
+                             int colour)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1016,7 +1017,7 @@ void dungeon_terrain_changed(const coord_def &pos,
         unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
-        env.grid_colours(pos) = BLACK;
+        env.grid_colours(pos) = colour;
         // Reset feature tile
         env.tile_flv(pos).feat = 0;
         env.tile_flv(pos).feat_idx = 0;
@@ -1804,10 +1805,10 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     if (grd(pos) == newfeat && newfeat == old_feat)
         return;
 
+    int col = env.grid_colours(pos);
     map_terrain_change_marker *marker =
-        new map_terrain_change_marker(pos, old_feat, newfeat, dur, type);
-    if (mon)
-        marker->mon_num = mon->mid;
+        new map_terrain_change_marker(pos, old_feat, newfeat, dur, type,
+                                      mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
     dungeon_terrain_changed(pos, newfeat, true, false, true);
@@ -1860,6 +1861,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
     vector<map_marker*> markers = env.markers.get_markers_at(pos);
     dungeon_feature_type newfeat = DNGN_UNSEEN;
+    int colour = BLACK;
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -1870,12 +1872,20 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
             if (marker->change_type == ctype)
             {
+                if (marker->colour != BLACK)
+                    colour = marker->colour;
                 if (!newfeat)
                     newfeat = marker->old_feature;
                 env.markers.remove(marker);
             }
             else
+            {
+                // If we had an old colour, give it to the other marker.
+                if (colour != BLACK)
+                    marker->colour = colour;
+                colour = BLACK;
                 newfeat = marker->new_feature;
+            }
         }
     }
 
@@ -1885,7 +1895,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
     if (newfeat != DNGN_UNSEEN)
     {
-        dungeon_terrain_changed(pos, newfeat, true, false, true);
+        dungeon_terrain_changed(pos, newfeat, true, false, true, colour);
         return true;
     }
     else

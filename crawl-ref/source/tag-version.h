@@ -111,6 +111,7 @@ enum tag_minor_version
     TAG_MINOR_SLAYRING_PLUSES,     // Combine Acc/Dam on rings of slaying and artefacts.
     TAG_MINOR_MERGE_EW,            // Combine enchant weapons scrolls.
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
+    TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
