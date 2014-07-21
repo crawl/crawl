@@ -28,6 +28,7 @@
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "mon-util.h" // for decline_pronoun
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -510,16 +511,9 @@ string player::name(description_level_type dt, bool) const
     }
 }
 
-string player::pronoun(pronoun_type pro, bool) const
+string player::pronoun(pronoun_type pro, bool /*force_visible*/) const
 {
-    switch (pro)
-    {
-    default:
-    case PRONOUN_SUBJECTIVE:        return "you";
-    case PRONOUN_POSSESSIVE:        return "your";
-    case PRONOUN_REFLEXIVE:         return "yourself";
-    case PRONOUN_OBJECTIVE:         return "you";
-    }
+    return decline_pronoun(GENDER_YOU, pro);
 }
 
 string player::conj_verb(const string &verb) const
