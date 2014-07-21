@@ -4113,7 +4113,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
                      && (!mons_class_is_animated_weapon(type)
-                         || mspec.items.size() > 1))
+                         || mspec.items.size() > 1)
+                     && (type != MONS_ZOMBIE && type != MONS_SKELETON
+                         || invalid_monster_type(mspec.monbase)
+                         || mons_class_itemuse(mspec.monbase)
+                            < MONUSE_STARTING_EQUIPMENT))
             {
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
