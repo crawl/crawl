@@ -1760,3 +1760,218 @@ TAGS:   overwritable layout allow_dup unrand layout_type_swamp
 }}
 MAP
 ENDMAP
+
+##############################################################
+# layout_diamond_mine
+#
+# A cave-like mine based off diamond shapes.
+#
+# Places around primary vaults.
+#
+# There is a grid of potential rooms across the map.  We
+#  repeatedly select one at random (weighted towards the center)
+#  and add it.  This gives much better control over map size
+#  than just giving each room a chance of appearing.
+#
+NAME:   layout_diamond_mine
+DEPTH:  Orc
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+TAGS:   no_rotate no_hmirror no_vmirror
+{{
+  -- information for rooms of different sizes
+
+  local GLPYH_BY_RADIUS =
+    { [4] = { [0] = "c", "-", ".", ".", ":" },
+      [5] = { [0] = "c", "-", ".", ".", ":", ":" },
+      [6] = { [0] = "c", "c", "-", ".", ".", ":", ":" },
+      [7] = { [0] = "c", "c", "-", "-", ".", ".", ":", ":" },
+      [8] = { [0] = "c", "c", "-", "-", ".", ".", ":", ":", ":" },
+      [9] = { [0] = "c", "c", "-", "-", ".", ".", ".", ":", ":", ":" },
+     [10] = { [0] = "c", "c", "-", "-", "-", ".", ".", ".", ":", ":", ":" },
+     [11] = { [0] = "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":" },
+     [12] = { [0] = "c", "c", "c", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":" },
+     [13] = { [0] = "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":" },
+     [14] = { [0] = "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":", ":" },
+     [15] = { [0] = "c", "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":", ":" } }
+
+  -- these are based on where the last "." glyph is in the array above
+  local SPACING_BY_RADIUS =
+    { [4] =  6,
+      [5] =  6,
+      [6] =  8,
+      [7] =  8,
+      [8] = 10,
+      [9] = 12,
+     [10] = 12,
+     [11] = 14,
+     [12] = 16,
+     [13] = 16,
+     [14] = 16,
+     [15] = 18 }
+
+  -- these are based on how many rooms fit
+  local ROOMS_ACROSS_BY_RADIUS =
+    { [4] = 10,
+      [5] = 10,
+      [6] =  7,
+      [7] =  7,
+      [8] =  5,
+      [9] =  5,
+     [10] =  4,
+     [11] =  4,
+     [12] =  3,
+     [13] =  3,
+     [14] =  3,
+     [15] =  3 }
+
+  -- which glyphs replace which when placing rooms
+  local GLYPH_PRIORITY =
+   { ["c"] = 0, ["-"] = 1, ["."] = 2, [":"] = 3, ["x"] = 4 }
+
+  -- this function draws a diamond shape with the appropriate
+  --  glyphs at different distances from the center
+  function draw_diamond (center_x, center_y, radius)
+    for dx = -radius, radius do
+      for dy = -radius, radius do
+        local x = center_x + dx
+        local y = center_y + dy
+        local abs_sum = math.abs(dx) + math.abs(dy)
+        if (abs_sum <= radius) then
+          local new_glyph = GLPYH_BY_RADIUS[radius][abs_sum]
+          if (GLYPH_PRIORITY[new_glyph] <
+              GLYPH_PRIORITY[mapgrd[x][y]]) then
+            mapgrd[x][y] = new_glyph
+          end
+        end
+      end
+    end
+  end
+
+  -- choose parameters for layout
+
+  -- valid room sizes 4 - 15, but middle ones look better
+  local room_radius = math.floor(8.5 + you.depth_fraction() * 3
+                                     + crawl.random_real() * 4
+                                     - crawl.random_real() * 4)
+  local ROOM_SPACING = SPACING_BY_RADIUS[room_radius]
+  local ROOMS_ACROSS = ROOMS_ACROSS_BY_RADIUS[room_radius]
+
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  local CENTER_X = gxm/2
+  local CENTER_Y = gym/2
+  local ROOMS_FROM_CENTER = (ROOMS_ACROSS - 1) / 2
+
+  local MIN_ZONE_SIZE = 20  -- for connectivity
+
+  -- room frequency and distribution
+  local room_chance_center = 0.8
+  local room_chance_at_1   = 0.5
+  local room_chance_decrease = room_chance_center - room_chance_at_1
+  local rooms_placed_fraction = 0.3 + crawl.random_real() * 0.1
+  if you.at_branch_bottom() then
+    rooms_placed_fraction = 0.4 + crawl.random_real() * 0.2
+  end
+
+  -- Variables for keeping track of how many rooms we have
+  --  already added and which ones.
+  --  -> We also keep track of the number of attempts so that we
+  --     don't get an infinite loop if there is no room to place
+  --     the rooms around the primary vault.
+  local ROOM_COUNT_MAX = ROOMS_ACROSS * ROOMS_ACROSS
+  local rooms_to_place = math.floor(ROOM_COUNT_MAX * rooms_placed_fraction)
+  local rooms_placed_so_far = 0
+  local sanity = 0
+  local sanity_max = ROOM_COUNT_MAX * 10
+  local room_already_placed = {}
+  for x = 0, ROOMS_ACROSS - 1 do
+    room_already_placed[x] = {}
+    for y = 0, ROOMS_ACROSS - 1 do
+      room_already_placed[x][y] = false
+    end
+  end
+
+  -- place the rooms
+  while (rooms_placed_so_far < rooms_to_place and sanity < sanity_max) do
+    x = crawl.random_range(0, ROOMS_ACROSS - 1)
+    y = crawl.random_range(0, ROOMS_ACROSS - 1)
+    sanity = sanity + 1
+
+    if (not room_already_placed[x][y]) then
+      -- We are using a distribution with equal probability
+      --  lines that form a superellipse (n=4).  This should
+      --  yield a large map than a simple circle, but not look
+      --  as regular as a square distribution.
+      local x2 = x / ROOMS_FROM_CENTER - 1
+      local y2 = y / ROOMS_FROM_CENTER - 1
+      local distance_fraction = math.sqrt(x2*x2*x2*x2 + y2*y2*y2*y2)
+
+      -- Probabilities of room placement fall of quadratically
+      local falloff_factor = distance_fraction * distance_fraction
+      local probability = room_chance_center -
+                          room_chance_decrease * falloff_factor
+      if (crawl.random_real() < probability) then
+        -- the position will have a .5 if the number of rooms is even
+        local room_x = CENTER_X +
+                       math.floor((x - ROOMS_FROM_CENTER) * ROOM_SPACING)
+        local room_y = CENTER_Y +
+                       math.floor((y - ROOMS_FROM_CENTER) * ROOM_SPACING)
+        if (not find_in_area {x1 = room_x - room_radius,
+                              y1 = room_y - room_radius,
+                              x2 = room_x + room_radius,
+                              y2 = room_y + room_radius,
+                              find = "", find_vault = true } ) then
+          draw_diamond(room_x, room_y, room_radius)
+          rooms_placed_so_far = rooms_placed_so_far + 1
+          room_already_placed[x][y] = true
+        end
+      end
+    end
+  end
+
+  -- crazy substitutions and effects to produce randomness
+  subst("c=x")
+  subst("-=:")
+  smear_map { onto = ":", smear = "x", boxy = true,
+              iterations = crawl.random_range(300, 500) }
+  subst(":=.")
+  if (crawl.coinflip()) then
+    spotty_map { replace = "x", fill = ".", boxy = false,
+                 iterations = crawl.random_range(50, 100) }
+  end
+
+  -- clean up the map
+  --  -> the branch bottom must have only one open bubble
+  --  -> remove disconnected areas
+  --  -> ensure each bubble has a down stairs
+  --  -> largest bubble should have the branch exit
+
+  if you.at_branch_bottom() then
+    zonify.map_fill_zones(_G, 1, 'x')
+  else
+    zonify.map_fill_zones(_G, 3, 'x', MIN_ZONE_SIZE)
+    zonify.map_fill_zones(_G, 2, 'v', MIN_ZONE_SIZE)
+    zonify.map_fill_zones(_G, 1, 'b', MIN_ZONE_SIZE)
+    nsubst(". = 1:} / *:.")
+    if you.depth() == 0 then
+      nsubst(". = 1:{ / *:.")
+    end
+    nsubst("b = 1:) / *:.")
+    nsubst("v = 1:] / *:.")
+    shuffle("})]")
+  end
+}}
+# Enforce minimum floor size - this is important
+validate {{
+  return count_feature_in_box { feat="." } > 600
+}}
+MAP
+ENDMAP
