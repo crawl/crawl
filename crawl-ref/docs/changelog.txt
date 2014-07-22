@@ -56,9 +56,12 @@ Monsters
 * Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
 * Monsters will no longer pick up items that the player has seen. Allies won't
   pick up items at all.
-* Monsters no longer fall asleep after long periods of time.
 * Corrosion affects all of your equipment, but only temporarily, and the chance
   to corrode equipment does not consider item enchantment.
+* Draining effects no longer permanently reduce monsters' stats ('hit dice');
+  instead, they apply a temporary status which reduces hit dice for the
+  duration.
+* Monsters no longer fall asleep after long periods of time.
 * New monster: ghost crabs, found in Crypt. They breathe ghostly flames that
   call dangerous specters into existence.
 * New monster: torpor snails, found in Lair and Spider. Their enemies are
@@ -128,6 +131,7 @@ Items
   - Crossbows have been split into three types. The hand crossbow returns as
     a starting weapon; the basic crossbow has been renamed to an 'arbalest';
     and a new, rare 'triple crossbow' type has been added.
+  - (Plain) bows have been renamed to shortbows.
 * Weapon enchantment & slaying bonsues have been merged into a single number,
   giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
   have all been merged into a new "enchant weapon" scroll. The scrolls are
@@ -167,6 +171,8 @@ Items
   - Rebranding a distortion weapon no longer causes a distortion effect.
   - Branded non-artefact weapons can now be given a temporary re-brand.
   - Damage from the electrocution brand has been reduced slightly.
+  - Draining now triggers somewhat less often, but will cause monsters to be
+    temporarily drained whenever it does fire.
   - The dragonslaying brand is no longer generated. (Wyrmbane still has it.)
 * Food changes:
   - Honeycombs have been renamed to royal jellies; they don't restore
@@ -180,6 +186,9 @@ Items
   on the player.
 * Scrolls of vulnerability have been simplified; they now just halve MR for all
   creatures in LOS.
+* Cancellation-type effects (from the potion, quicksilver dragons, etc) now
+  reduce transformation durations to one turn, rather than cancelling them
+  immediately.
 * Identify scrolls now always identify a single item.
 * Jewellery automatically identifies once equipped.
 * Amulets of inaccuracy are always cursed.
@@ -190,8 +199,8 @@ Items
   them randomly around the area.
 * Cleaving hits the full eight squares around a player, when not blocked by
   walls.
+* Putting on or taking off armour now always takes five turns.
 * Gloves of archery no longer penalise melee.
-* (Plain) bows have been renamed to shortbows.
 * Sustain abilities effects no longer stack.
 * Staves of air now activate extra melee damage as often as other elemental staves.
 * Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
@@ -272,9 +281,11 @@ Interface
 ---------
 * Monsters with special melee attacks (e.g. poison, fire) have this noted in
   their descriptions.
-* Ctrl-T now displays the weapons that enemies are carrying, in console.
 * Unique enemies are now announced by their proper titles when first appearing.
-* Ability icons have been reworked.
+* Ctrl-T now displays the weapons that enemies are carrying, in console.
+* New tile_show_player_species option; when enabled, uses the monster tile
+  instead of the player race one.
+* Ability and spell icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.
 
 Stone Soup 0.14.1 (20140428)
