@@ -232,41 +232,6 @@ static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
 static int _num_transient = 0;
 
-// Can the player transform?  Returns true if the player is ever capable
-// of transforming (i.e. not a mummy or ghoul) and either: is transformed
-// (ignoring blade hands and appendage), is a vampire of sufficient level
-// to use bat form, or has a form-change spell (again, other than blade hands
-// and beastly appendage) memorised.
-static bool _player_can_transform()
-{
-    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
-        return false;
-
-    if (form_changed_physiology())
-        return true;
-
-    // Bat form
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
-        return true;
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        switch (you.spells[i])
-        {
-        case SPELL_SPIDER_FORM:
-        case SPELL_ICE_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_DRAGON_FORM:
-        case SPELL_NECROMUTATION:
-            return true;
-        default:
-            break;
-        }
-    }
-
-    return false;
-}
-
 static string _annotate_form_based(string desc, bool suppressed)
 {
     if (suppressed)
