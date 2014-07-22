@@ -26,6 +26,7 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
+#include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
@@ -677,6 +678,38 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, player_genus(GENPC_DRACONIAN) || you.form == TRAN_DRAGON
                             ? "You feel an overwhelming desire to commit suicide."
                             : "You feel an overwhelming desire to slay dragons!");
+}
+
+static bool is_dragonkind(const actor *act)
+{
+    if (mons_genus(act->mons_species()) == MONS_DRAGON
+        || mons_genus(act->mons_species()) == MONS_DRAKE
+        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
+    {
+        return true;
+    }
+
+    if (act->is_player())
+        return you.form == TRAN_DRAGON;
+
+    // Else the actor is a monster.
+    const monster* mon = act->as_monster();
+
+    if (mons_is_zombified(mon)
+        && (mons_genus(mon->base_monster) == MONS_DRAGON
+            || mons_genus(mon->base_monster) == MONS_DRAKE
+            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return true;
+    }
+
+    if (mons_is_ghost_demon(mon->type)
+        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
