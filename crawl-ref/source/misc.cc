@@ -1102,38 +1102,6 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
     }
 }
 
-bool is_dragonkind(const actor *act)
-{
-    if (mons_genus(act->mons_species()) == MONS_DRAGON
-        || mons_genus(act->mons_species()) == MONS_DRAKE
-        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
-    {
-        return true;
-    }
-
-    if (act->is_player())
-        return you.form == TRAN_DRAGON;
-
-    // Else the actor is a monster.
-    const monster* mon = act->as_monster();
-
-    if (mons_is_zombified(mon)
-        && (mons_genus(mon->base_monster) == MONS_DRAGON
-            || mons_genus(mon->base_monster) == MONS_DRAKE
-            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
-    {
-        return true;
-    }
-
-    if (mons_is_ghost_demon(mon->type)
-        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 // Make the player swap positions with a given monster.
 void swap_with_monster(monster* mon_to_swap)
 {
