@@ -108,8 +108,6 @@ Spells
 * Confusing Touch now has a short, non-stacking duration which discharges
   entirely when it successfully confuses an enemy. While it's in effect, your
   attacks do no damage. It's been moved to level 2.
-* Sublimation of Blood no longer uses chunks; it now only draws from the
-  caster's HP.
 * Simulacrum now works on a single corpse at the caster's feet, creating
   several simulacrula from it.
 * Monsters casting Simulacrum now affect all monsters in LOS, producing half as
