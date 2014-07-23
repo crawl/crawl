@@ -150,6 +150,14 @@ bool form_changed_physiology(transformation_type form)
            && form != TRAN_BLADE_HANDS;
 }
 
+bool form_can_bleed(transformation_type form)
+{
+    return form != TRAN_STATUE && form != TRAN_ICE_BEAST
+           && form != TRAN_SPIDER && form != TRAN_TREE
+           && form != TRAN_FUNGUS && form != TRAN_PORCUPINE
+           && form != TRAN_SHADOW && form != TRAN_LICH;
+}
+
 bool form_can_use_wand(transformation_type form)
 {
     return form_can_wield(form) || form == TRAN_DRAGON;

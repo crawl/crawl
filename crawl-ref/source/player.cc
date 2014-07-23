@@ -7670,17 +7670,9 @@ bool player::can_polymorph() const
 
 bool player::can_bleed(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // These transformations don't bleed. Lichform is handled as undead.
-        if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
-            || form == TRAN_SPIDER || form == TRAN_TREE
-            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
-            || form == TRAN_SHADOW)
-        {
-            return false;
-        }
-    }
+    // XXX: Lich and statue forms are still caught by the holiness checks below.
+    if (allow_tran && !form_can_bleed(form))
+        return false;
 
     if (is_lifeless_undead()
 #if TAG_MAJOR_VERSION == 34
