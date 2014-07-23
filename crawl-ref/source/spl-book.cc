@@ -755,6 +755,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
+    bool         form           = false;
 
     for (spells_to_books::iterator i = book_hash.begin();
          i != book_hash.end(); ++i)
@@ -763,7 +764,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         if (spell == current_spell || you.has_spell(spell))
             num_known++;
-        else if (you_cannot_memorise(spell))
+        else if (you_cannot_memorise(spell, form))
             num_race++;
         else
         {
@@ -802,12 +803,18 @@ static bool _get_mem_list(spell_list &mem_spells,
         mprf(MSGCH_PROMPT, "You already know all available spells.");
     else if (num_race == total || (num_known + num_race) == total)
     {
-        const bool lichform = (you.form == TRAN_LICH);
-        const string species = "a " + species_name(you.species);
-        mprf(MSGCH_PROMPT,
-             "You cannot memorise any of the available spells because you "
-             "are %s.", lichform ? "in Lich form"
-                                 : lowercase_string(species).c_str());
+        if (form)
+        {
+            mprf(MSGCH_PROMPT, "You cannot currently memorise any of the "
+                 "available spells because you are in %s form.",
+                 uppercase_first(transform_name()).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_PROMPT, "You cannot memorise any of the available "
+                 "spells because you are %s.",
+                 article_a(species_name(you.species)).c_str());
+        }
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
@@ -1129,7 +1136,7 @@ string desc_cannot_memorise_reason(bool form)
     if (form)
         desc += "in " + uppercase_first(transform_name()) + " form";
     else
-        desc += "a " + lowercase_string(species_name(you.species));
+        desc += article_a(species_name(you.species));
 
     desc += ".";
 
