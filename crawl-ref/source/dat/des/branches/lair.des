@@ -2808,24 +2808,31 @@ NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen patrolling
 ORIENT:  float
 PLACE:   Lair:$
+# mons are in groups of four, each ordered from least to most dangerous.
+# mythological reptiles
 MONS:    basilisk, fire drake, komodo dragon, hydra
-MONS:    manticore, hippogriff, griffon
+# mythological beasties
+MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas
+# mundane reptiles
 KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
-KMONS:   C = porcupine
-KMONS:   D = giant frog
-KMONS:   E = boring beetle
-KMONS:   F = boulder beetle
+# beetles/worms
+KMONS:   C = boring beetle
+KMONS:   D = torpor snail
+KMONS:   E = boulder beetle
+KMONS:   F = lindwurm
+# yaks & pals
 KMONS:   G = sheep
 KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
+# yaks that don't look like yaks
 KMONS:   K = crocodile
-KMONS:   L = wolf
-KMONS:   M = green rat
+KMONS:   L = green rat
+KMONS:   M = wolf
 KMONS:   N = wyvern
 KMONS:   P = plant w:12 / fungus w:8 / nothing
 KITEM:   ~ = any good_item
