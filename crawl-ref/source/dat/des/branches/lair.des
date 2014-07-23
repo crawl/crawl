@@ -2809,12 +2809,12 @@ TAGS:    no_monster_gen no_item_gen patrolling
 ORIENT:  float
 PLACE:   Lair:$
 # mons are in groups of four, each ordered from least to most dangerous.
-# mythological reptiles
+# mythological or dragon-y reptiles
 MONS:    basilisk, fire drake, komodo dragon, hydra
-# mythological beasties
+# mythological non-reptiles
 MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas
-# mundane reptiles
+# fast things
 KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
@@ -2829,7 +2829,8 @@ KMONS:   G = sheep
 KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
-# yaks that don't look like yaks
+# some non-set monsters right outside the vault to make sure you don't miss
+# that there's a vault here maybe
 KMONS:   K = crocodile
 KMONS:   L = green rat
 KMONS:   M = wolf
