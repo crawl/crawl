@@ -300,8 +300,7 @@ static bool _corpse_butchery(int corpse_id,
     return true;
 }
 
-static int _corpse_badness(corpse_effect_type ce, const item_def &item,
-                           bool wants_any)
+static int _corpse_badness(corpse_effect_type ce, const item_def &item)
 {
     // Not counting poisonous chunks as useless here, caller must do that
     // themself.
@@ -314,10 +313,6 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     // is tedious.
     if (ce == CE_POISONOUS)
         contam = contam * 3 / 2;
-
-    // Have uses that care about age but not quality?
-    if (wants_any)
-        contam /= 2;
 
     dprf("%s: to rot %d, contam %d -> badness %d",
          item.name(DESC_PLAIN).c_str(),
@@ -350,8 +345,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
-
     // First determine how many things there are to butcher.
     int num_corpses = 0;
     int corpse_id   = -1;
@@ -378,7 +371,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
                                                             si->mon_type),
                                                             food_is_rotten(*si));
-            int badness = _corpse_badness(ce, *si, wants_any);
+            int badness = _corpse_badness(ce, *si);
             if (ce == CE_POISONOUS)
                 badness += 600;
             else if (ce == CE_MUTAGEN)
@@ -2192,8 +2185,6 @@ string hunger_cost_string(const int hunger)
         return "None";
 }
 
-// Simulacrum and Sublimation of Blood are handled elsewhere, as they ignore
-// chunk edibility.
 static int _chunks_needed()
 {
     if (you.form == TRAN_LICH)
@@ -2245,7 +2236,6 @@ bool drop_spoiled_chunks()
     if (Options.auto_drop_chunks == ADC_NEVER)
         return false;
 
-    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     int nchunks = 0;
     vector<pair<int, int> > chunk_slots;
     for (int slot = 0; slot < ENDOFPACK; slot++)
@@ -2260,7 +2250,7 @@ bool drop_spoiled_chunks()
         }
 
         bool rotten = food_is_rotten(item);
-        if (rotten && !you.mutation[MUT_SAPROVOROUS] && !wants_any)
+        if (rotten && !you.mutation[MUT_SAPROVOROUS])
             return drop_item(slot, item.quantity);
 
         corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
@@ -2270,7 +2260,7 @@ bool drop_spoiled_chunks()
             continue; // no nutrition from those
 
         // We assume that carrying poisonous chunks means you can swap rPois in.
-        int badness = _corpse_badness(ce, item, wants_any);
+        int badness = _corpse_badness(ce, item);
         nchunks += item.quantity;
         chunk_slots.push_back(pair<int,int>(slot, badness));
     }

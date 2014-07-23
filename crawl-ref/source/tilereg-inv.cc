@@ -529,27 +529,14 @@ bool InventoryRegion::update_tip_text(string& tip)
             case OBJ_POTIONS:
                 tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
-                // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (item_type_known(item)
-                         && is_blood_potion(item)
-                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-                {
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
-                }
                 break;
             case OBJ_FOOD:
                 tmp += "Eat (%)";
                 cmd.push_back(CMD_EAT);
-                // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (item.sub_type == FOOD_CHUNK
-                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-                {
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
-                }
                 break;
             case OBJ_CORPSES:
                 if (you.species == SP_VAMPIRE)
