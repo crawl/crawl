@@ -757,7 +757,7 @@ const char* jewellery_effect_name(int jeweltype)
     case AMU_CLARITY:           return "clarity";
     case AMU_WARDING:           return "warding";
     case AMU_RESIST_CORROSION:  return "resist corrosion";
-    case AMU_THE_GOURMAND:      return "the gourmand";
+    case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:      return "conservation";
     case AMU_CONTROLLED_FLIGHT: return "controlled flight";
@@ -769,6 +769,14 @@ const char* jewellery_effect_name(int jeweltype)
     case AMU_STASIS:            return "stasis";
     default: return "buggy jewellery";
     }
+}
+
+// lua doesn't want "the" in gourmand, but we do, so...
+const char* _jewellery_effect_prefix(int jeweltype)
+{
+    if (jeweltype == AMU_THE_GOURMAND)
+        return "the ";
+    return "";
 }
 
 /**
@@ -798,8 +806,9 @@ static const char* _jewellery_class_name(int jeweltype)
  */
 static const char* jewellery_type_name(int jeweltype)
 {
-    return make_stringf("%s %s", _jewellery_class_name(jeweltype),
-                                  jewellery_effect_name(jeweltype)).c_str();
+    return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
+                                   _jewellery_effect_prefix(jeweltype),
+                                    jewellery_effect_name(jeweltype)).c_str();
 }
 
 
