@@ -353,9 +353,9 @@ into a state of unliving slavery as spectral things.
 Death's Door spell
 
 This spell is extremely powerful, but carries a degree of risk. It renders
-living casters nigh invulnerable to harm for a brief period, but can bring them
-dangerously close to death. So close in fact, that the body believes itself to
-be dead — healing effects will do nothing.
+living casters nigh invulnerable to harm for a brief period, but brings them
+dangerously close to death in the process. So close in fact, that the body
+believes itself to be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. Being
 more skilled at Necromancy leaves the caster more resilient. Undead cannot use

@@ -59,10 +59,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
     bool success = false;
 
     if (you.duration[DUR_DEATHS_DOOR])
-    {
-        mpr("A conflicting enchantment prevents the spell from coming into "
-            "effect.");
-    }
+        mpr("You can't draw power from your own body while in Death's door.");
     else if (!you.can_bleed())
     {
         if (you.species == SP_VAMPIRE)
