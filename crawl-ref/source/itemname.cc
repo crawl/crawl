@@ -3492,11 +3492,8 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (item.sub_type == FOOD_CHUNK
-            && !temp && you.form == TRAN_LICH)
-        {
+        if (!temp && you.form == TRAN_LICH)
             return false;
-        }
 
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
