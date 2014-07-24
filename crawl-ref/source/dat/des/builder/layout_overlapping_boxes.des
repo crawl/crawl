@@ -1,0 +1,62 @@
+##############################################################
+# layout_overlapping_boxes
+#
+# This layout places many overlapping boxes and then connects
+#  the resulting mess into a layout.  The boxes are aligned on
+#  a grid of "blocks" so that they line up nicely.  It comes
+#  out looking like a more regular form of layout_subdivisions
+#  with some of the rooms connected into open areas.
+#
+: require("dlua/layout/zonify.lua")
+NAME:   layout_overlapping_boxes
+DEPTH:  Dis:1-6
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill="x"}
+
+    -- block sizes 4-6 (top) to 6-8 (bottom)
+    local depth_frac = you.depth_fraction()
+    local block_size = math.floor(4 + depth_frac * 2 + crawl.random_real() * 3)
+
+    -- minimum sum must always be 2 for 1x1 rooms
+    local count_sum_min = math.max(2, math.floor(8 + depth_frac * 2
+                                                   - block_size))
+    local count_sum_max = math.floor(16 + depth_frac * 3 - block_size * 2)
+
+    local blocks_across_x = math.floor((gxm - 17) / block_size)
+    local blocks_across_y = math.floor((gym - 17) / block_size)
+    local start_x = gxm / 2 - math.floor((blocks_across_x * block_size) / 2)
+    local start_y = gym / 2 - math.floor((blocks_across_y * block_size) / 2)
+
+    -- add a whole bunch of overlapping rooms
+    for i = 1, 200 do
+        local count_sum = crawl.random_range(count_sum_min, count_sum_max)
+        local count_x = crawl.random_range(1, count_sum - 1)
+        local count_y = count_sum - count_x
+
+        local block_x = crawl.random_range(0, blocks_across_x - count_x)
+        local block_y = crawl.random_range(0, blocks_across_y - count_y)
+
+        local x1 = start_x + block_x * block_size
+        local y1 = start_y + block_y * block_size
+        local x2 = x1      + count_x * block_size
+        local y2 = y1      + count_y * block_size
+
+        make_box { x1 = x1, y1 = y1, x2 = x2, y2 = y2,
+                   wall = 'x', floor = '.' }
+    end
+
+    connect_adjacent_rooms { wall = "x", floor = ".", replace = '+',
+                             max = 1000, check_empty = true }
+    zonify.map_fill_zones(_G, 1, 'x')
+}}
+# Enforce minimum floor size
+validate {{
+    return count_feature_in_box { feat="." } > 1200
+}}
+MAP
+ENDMAP
