@@ -290,10 +290,10 @@ function fiery_guardians (e, intelligent, village)
                   .. " / deep elf fighter ; " .. elfstuff)
            e.kmons("2 = Harold ; throwing net . halberd " .. flame
                    .. " . ring mail " .. res
-                   .. " / red draconian " .. dracstuff
-                   .. " / mottled draconian " .. dracstuff
-                   .. ", red draconian " .. dracstuff
-                   .. " / mottled draconian " .. dracstuff)
+                   .. " / red draconian ; " .. dracstuff
+                   .. " / mottled draconian ; " .. dracstuff
+                   .. ", red draconian ; " .. dracstuff
+                   .. " / mottled draconian ; " .. dracstuff)
         end
     else
     -- Unintelligent map! We are now going to use a mixed pack.
