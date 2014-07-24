@@ -589,7 +589,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
         rc = true, form = false;
     }
 
-    // Check for banned schools.
+    // Check for banned schools (Currently just Ru sacrifices)
     if (cannot_use_spell_school(spell))
         return true;
 
