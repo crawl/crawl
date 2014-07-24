@@ -2846,15 +2846,23 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         natural_leader = true; // snails are natural-born leaders. fact.
 
         // would be nice to support more branches, generically...
-        if (player_in_branch(BRANCH_LAIR))
+        switch (you.where_are_you)
         {
-            band = random_choose_weighted(5, BAND_YAKS,
-                                          2, BAND_DEATH_YAKS,
-                                          1, BAND_SHEEP,
-                                          0);
+            case BRANCH_LAIR:
+                band = random_choose_weighted(5, BAND_YAKS,
+                                              2, BAND_DEATH_YAKS,
+                                              1, BAND_SHEEP,
+                                              0);
+                break;
+            case BRANCH_SPIDER:
+                band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
+                break;
+            case BRANCH_DEPTHS:
+                band = BAND_RANDOM_SINGLE;
+                break;
+            default:
+                break;
         }
-        else if (player_in_branch(BRANCH_SPIDER))
-            band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
 
         switch (band)
         {
