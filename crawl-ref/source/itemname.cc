@@ -804,11 +804,11 @@ static const char* _jewellery_class_name(int jeweltype)
  * @param jeweltype     The jewellery_type of the item in question.
  * @return              The full name of the jewellery type in question.
  */
-static const char* jewellery_type_name(int jeweltype)
+static string jewellery_type_name(int jeweltype)
 {
     return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
                                    _jewellery_effect_prefix(jeweltype),
-                                    jewellery_effect_name(jeweltype)).c_str();
+                                    jewellery_effect_name(jeweltype));
 }
 
 
