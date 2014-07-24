@@ -1279,7 +1279,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        int r_min = 3 + you.skill(SK_EARTH_MAGIC) / 5;
+        int r_min = 3 + min(pow / 20, 5);
         targetter_los hitfunc(&you, LOS_ARENA, r_min, min(r_min + 1, 8));
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
@@ -1296,7 +1296,7 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
-    int rad = 3 + you.skill_rdiv(SK_EARTH_MAGIC, 1, 5);
+    int rad = 3 + min(div_rand_round(pow, 20), 5);
 
     int dest = 0;
     for (distance_iterator di(you.pos(), true, true, rad); di; ++di)
