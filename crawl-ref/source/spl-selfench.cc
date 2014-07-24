@@ -27,7 +27,7 @@
 
 int allowed_deaths_door_hp()
 {
-    int hp = you.skill(SK_NECROMANCY) / 2;
+    int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
     if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
