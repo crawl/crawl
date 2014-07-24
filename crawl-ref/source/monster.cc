@@ -73,13 +73,14 @@
 #define smc get_monster_data(mc)
 
 monster::monster()
-    : hit_points(0), max_hit_points(0), hit_dice(0),
+    : hit_points(0), max_hit_points(0),
       ac(0), ev(0), speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0),
-      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
+      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0),
+      hit_dice(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -328,7 +329,7 @@ bool monster::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 bool monster::can_drown() const
 {
-    // Presumably a shark in lava or a lavafish in deep water could
+    // Presumably a electric eel in lava or a lavafish in deep water could
     // drown, but that should never happen, so this simple check should
     // be enough.
     switch (mons_primary_habitat(this))
@@ -341,13 +342,7 @@ bool monster::can_drown() const
         break;
     }
 
-    // Mummies can fall apart in water or be incinerated in lava.
-    // Ghouls and vampires can drown in water or lava.  Others just
-    // "sink like a rock", to never be seen again.
-    return !is_unbreathing()
-           || mons_genus(type) == MONS_MUMMY
-           || mons_genus(type) == MONS_GHOUL
-           || mons_genus(type) == MONS_VAMPIRE;
+    return !is_unbreathing();
 }
 
 size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
@@ -567,14 +562,8 @@ item_def *monster::melee_weapon() const
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
     if (mons_genus(type) == MONS_FORMICID)
-    {
-        if (weapon_size(item) >= SIZE_BIG)
-            return HANDS_TWO;
-        else
-            return HANDS_ONE;
-    }
-    else
-        return actor::hands_reqd(item);
+        return HANDS_ONE;
+    return actor::hands_reqd(item);
 }
 
 bool monster::can_wield(const item_def& item, bool ignore_curse,
@@ -653,8 +642,17 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     return could_wield(item, ignore_brand, ignore_transform);
 }
 
+/**
+ * Checks whether the monster could ever wield the given weapon, regardless of
+ * what they're currently wielding or any other state.
+ *
+ * @param item              The item to wield.
+ * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @return                  Whether the monster could potentially wield the
+ *                          item.
+ */
 bool monster::could_wield(const item_def &item, bool ignore_brand,
-                           bool /* ignore_transform */) const
+                           bool /* ignore_transform */, bool /* quiet */) const
 {
     ASSERT(item.defined());
 
@@ -667,7 +665,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         return false;
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
-    if (!check_weapon_wieldable_size(item, body_size()))
+    if (!is_weapon_wieldable(item, body_size()))
         return false;
 
     if (!ignore_brand)
@@ -1450,7 +1448,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     // Don't pick up items that would interfere with our special ability
     if (mons->type == MONS_RED_DEVIL)
-        return weapon_skill(weapon) == SK_POLEARMS;
+        return melee_skill(weapon) == SK_POLEARMS;
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1505,15 +1503,15 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return get_vorpal_type(weapon) == DVORP_SLASHING;
 
         if (mons->type == MONS_WIGLAF)
-            return weapon_skill(weapon) == SK_AXES;
+            return melee_skill(weapon) == SK_AXES;
 
         if (mons->type == MONS_NIKOLA)
             return get_weapon_brand(weapon) == SPWPN_ELECTROCUTION;
 
         if (mons->type == MONS_DUVESSA)
         {
-            return weapon_skill(weapon) == SK_SHORT_BLADES
-                   || weapon_skill(weapon) == SK_LONG_BLADES;
+            return melee_skill(weapon) == SK_SHORT_BLADES
+                   || melee_skill(weapon) == SK_LONG_BLADES;
         }
 
         if (mons->type == MONS_IGNACIO)
@@ -2141,7 +2139,7 @@ bool monster::pickup_wand(item_def &item, int near)
         return false;
 
     // Only low-HD monsters bother with wands.
-    if (hit_dice >= 14)
+    if (get_hit_dice() >= 14)
         return false;
 
     // Holy monsters and worshippers of good gods won't pick up evil
@@ -2710,6 +2708,8 @@ string monster::foot_name(bool plural, bool *can_plural) const
             const char* feet[] = {"paw", "talon", "hoof"};
             str = RANDOM_ELEMENT(feet);
         }
+        else if (mons_genus(type) == MONS_HOG)
+            str = "trotter";
         else if (ch == 'h')
             str = "paw";
         else if (ch == 'l' || ch == 'D')
@@ -2835,9 +2835,14 @@ int monster::mindex() const
     return this - menv.buffer();
 }
 
-int monster::get_experience_level() const
+/**
+ * Sets the monster's "hit dice". Doesn't currently handle adjusting HP, etc.
+ *
+ * @param new_hit_dice      The new value to set HD to.
+ */
+void monster::set_hit_dice(int new_hit_dice)
 {
-    return hit_dice;
+    hit_dice = new_hit_dice;
 }
 
 void monster::moveto(const coord_def& c, bool clear_net)
@@ -3030,7 +3035,10 @@ void monster::banish(actor *agent, const string &)
         // distinguishable from others of the same kind in the Abyss.
 
         if (agent->is_player())
-            did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+        {
+            did_god_conduct(DID_BANISH, get_experience_level(),
+                            true /*possibly wrong*/, this);
+        }
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
@@ -3230,9 +3238,9 @@ bool monster::liquefied_ground() const
 int monster::natural_regen_rate() const
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
-    int divider = max(div_rand_round(15 - hit_dice, 4), 1);
+    int divider = max(div_rand_round(15 - get_hit_dice(), 4), 1);
 
-    return max(div_rand_round(hit_dice, divider), 1);
+    return max(div_rand_round(get_hit_dice(), divider), 1);
 }
 
 // in units of 1/100 hp/turn
@@ -3298,7 +3306,7 @@ int monster::shield_bonus() const
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
-        return random2avg(shld_c + hit_dice * 4 / 3, 2) / 2;
+        return random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
     return -100;
 }
@@ -3317,7 +3325,7 @@ void monster::shield_block_succeeded(actor *attacker)
 
 int monster::shield_bypass_ability(int) const
 {
-    return 15 + hit_dice * 2 / 3;
+    return 15 + get_hit_dice() * 2 / 3;
 }
 
 int monster::missile_deflection() const
@@ -4037,7 +4045,7 @@ int monster::res_magic() const
 
     // Negative values get multiplied with monster hit dice.
     if (u < 0)
-        u = hit_dice * -u * 4 / 3;
+        u = get_hit_dice() * -u * 4 / 3;
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC);
@@ -4127,7 +4135,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     if (mons_intel(this) < I_NORMAL && !mons_is_avatar(this->type))
         return 0;
 
-    int hd = scale * hit_dice;
+    const int hd = scale * get_hit_dice();
     int ret;
     switch (sk)
     {
@@ -4154,7 +4162,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     case SK_STAVES:
         ret = hd;
         if (weapon()
-            && sk == weapon_skill(*weapon())
+            && sk == melee_skill(*weapon())
             && _is_signature_weapon(this, *weapon()))
         {
             // generally slightly skilled if it's a signature weapon
@@ -4239,15 +4247,12 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        if (one_chance_in(5))
-        {
-            if (hit_dice > 1)
-                hit_dice--;
-            experience = 0;
-        }
-
-        max_hit_points -= 2 + random2(3);
-        hit_points = min(max_hit_points, hit_points);
+        const int dur = min(200 + random2(100),
+                            300 - get_ench(ENCH_DRAINED).duration
+                                - random2(50));
+        const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
+                                                   dur);
+        add_ench(drain_ench);
     }
 
     return true;
@@ -4333,7 +4338,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && mons_species(true) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
+            int shave = 1 + random2(2 + random2(1 + get_hit_dice() / 3));
             dprf("(mon) HP shaved: %d.", shave);
             amount -= shave;
             if (amount <= 0)
@@ -4365,7 +4370,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
-        else if (hit_dice <= 0)
+        else if (get_hit_dice() <= 0)
             amount = hit_points;
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
@@ -4413,7 +4418,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         behaviour_event(this, ME_HURT);
     }
 
-    if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != MONS_NO_MONSTER)
+    if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
+        && type != MONS_NO_MONSTER)
     {
         if (agent == NULL)
             monster_die(this, KILL_MISC, NON_MONSTER);
@@ -4807,7 +4813,7 @@ bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
                || (flags & MF_BANISHED)
-               || hit_dice > 8 + random2(25)
+               || get_experience_level() > 8 + random2(25)
                   && mons_can_use_stairs(this))
            && !has_ench(ENCH_ABJ)
            && type != MONS_BATTLESPHERE; // can use stairs otherwise
@@ -4995,7 +5001,7 @@ void monster::check_speed()
     {
         dprf("Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
              name(DESC_PLAIN).c_str(),
-             speed, speed_increment, hit_dice,
+             speed, speed_increment, get_hit_dice(),
              describe_enchantments().c_str());
 
         calc_speed();
@@ -5518,25 +5524,17 @@ bool monster::do_shaft()
     return reveal;
 }
 
-void monster::hibernate(int)
+void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
 {
-    if (!can_hibernate())
+    const bool valid_target = hibernate ? can_hibernate() : can_sleep();
+    if (!valid_target)
         return;
 
     stop_constricting_all();
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
-    add_ench(ENCH_SLEEP_WARY);
-}
-
-void monster::put_to_sleep(actor *attacker, int strength)
-{
-    if (!can_sleep())
-        return;
-
-    stop_constricting_all();
-    behaviour = BEH_SLEEP;
-    flags |= MF_JUST_SLEPT;
+    if (hibernate)
+        add_ench(ENCH_SLEEP_WARY);
 }
 
 void monster::weaken(actor *attacker, int pow)
@@ -6369,7 +6367,7 @@ bool monster::attempt_escape(int attempts)
         randfact = roll_dice(1,5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
-        randfact += roll_dice(1, themonst->hit_dice);
+        randfact += roll_dice(1, themonst->get_hit_dice());
     }
     else
         randfact = roll_dice(1, you.strength());
@@ -6545,7 +6543,7 @@ int monster::aug_amount() const
 // for Archmagi, etc. to have an impact in some cases.
 int monster::spell_hd(spell_type spell) const
 {
-    return hit_dice + 2 * aug_amount();
+    return get_hit_dice() + 2 * aug_amount();
 }
 
 void monster::align_avatars(bool force_friendly)

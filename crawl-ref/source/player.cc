@@ -426,14 +426,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     // Terrain effects.
     if (is_feat_dangerous(new_grid))
-    {
-        // Lava and dangerous deep water (ie not merfolk).
-        const coord_def& entry = (stepped) ? old_pos : you.pos();
-
-        // If true, we were shifted and so we're done.
-        if (fall_into_a_pool(entry, new_grid))
-            return;
-    }
+        fall_into_a_pool(new_grid);
 
     if (you.ground_level())
     {
@@ -510,8 +503,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
     }
 
-    // Traps go off.
-    if (trap_def* ptrap = find_trap(you.pos()))
+    // Traps go off. (But magical traps don't go off again when losing flight
+    // - i.e., moving into the same tile)
+    trap_def* ptrap = find_trap(you.pos());
+    if (ptrap && (old_pos != you.pos() || ptrap->ground_only()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     if (stepped)
@@ -551,6 +546,18 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     moveto_location_effects(old_grid, stepped, old_pos);
 }
 
+
+/**
+ * Check if the given terrain feature is safe for the player to move into.
+ * (Or, at least, not instantly lethal.)
+ *
+ * @param grid          The type of terrain feature under consideration.
+ * @param permanently   Whether to disregard temporary effects (non-permanent
+ *                      flight, forms, etc)
+ * @param ignore_flight Whether to ignore all forms of flight (including
+ *                      permanent flight)
+ * @return              Whether the terrain is safe.
+ */
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_flight)
 {
@@ -1296,7 +1303,7 @@ bool player_can_hit_monster(const monster* mon)
         return false;
 
     const item_def *weapon = you.weapon();
-    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
+    return weapon && melee_skill(*weapon) == SK_POLEARMS;
 }
 
 bool player_can_hear(const coord_def& p, int hear_distance)
@@ -1646,13 +1653,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_FIRE_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        rf++;
-    }
-
     // spells:
     if (temp)
     {
@@ -1818,13 +1818,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_COLD_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        rc++;
-    }
-
     if (rc < -3)
         rc = -3;
     else if (rc > 3)
@@ -1911,13 +1904,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
     re += player_mutation_level(MUT_SHOCK_RESISTANCE, temp);
     re -= player_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
-
-    // divine intervention:
-    if (you.attribute[ATTR_DIVINE_ELEC_RES]
-        && !player_under_penance(GOD_QAZLAL))
-    {
-        re++;
-    }
 
     if (temp)
     {
@@ -3249,17 +3235,18 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 {
                     if (you.hunger_state > HS_SATIATED)
                     {
-                        mprf(MSGCH_INTRINSIC_GAIN, "If you weren't so full you "
-                             "could now transform into a vampire bat.");
+                        mprf(MSGCH_INTRINSIC_GAIN, "If you weren't so full, "
+                             "you could now transform into a vampire bat.");
                     }
                     else
                     {
-                        mprf(MSGCH_INTRINSIC_GAIN, "You can now transform into "
-                             "a vampire bat.");
+                        mprf(MSGCH_INTRINSIC_GAIN,
+                             "You can now transform into a vampire bat.");
                     }
                 }
                 else if (you.experience_level == 6)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now bottle potions of blood from corpses.");
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You can now bottle potions of blood from corpses.");
                 break;
 
             case SP_NAGA:
@@ -3275,7 +3262,8 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 if (you.experience_level == 13)
                 {
                     mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your tail grows strong enough to constrict your enemies.");
+                         "Your tail grows strong enough to constrict your "
+                         "enemies.");
                 }
                 break;
 
@@ -3855,7 +3843,7 @@ int check_stealth()
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
 
-        else if (player_mutation_level(MUT_HOOVES) > 0)
+        else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
 
         else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
@@ -5564,6 +5552,25 @@ static void _end_water_hold()
     you.props.erase("water_holder");
 }
 
+bool player::clear_far_engulf()
+{
+    if (!you.duration[DUR_WATER_HOLD])
+        return false;
+
+    monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
+    if (!mons || !adjacent(mons->pos(), you.pos()))
+    {
+        if (you.res_water_drowning())
+            mpr("The water engulfing you falls away.");
+        else
+            mpr("You gasp with relief as air once again reaches your lungs.");
+
+        _end_water_hold();
+        return true;
+    }
+    return false;
+}
+
 void handle_player_drowning(int delay)
 {
     if (you.duration[DUR_WATER_HOLD] == 1)
@@ -6530,9 +6537,6 @@ int player::armour_class() const
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
-    if (you.attribute[ATTR_DIVINE_AC] && !player_under_penance(GOD_QAZLAL))
-        AC += 300;
-
     if (you.duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
 
@@ -7393,6 +7397,22 @@ bool player::has_usable_talons(bool allow_tran) const
     return !player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran);
 }
 
+int player::has_hooves(bool allow_tran) const
+{
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (fishtail)
+        return 0;
+
+    return player_mutation_level(MUT_HOOVES, allow_tran);
+}
+
+bool player::has_usable_hooves(bool allow_tran) const
+{
+    return has_hooves(allow_tran)
+           && (!player_wearing_slot(EQ_BOOTS)
+               || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
+}
+
 int player::has_fangs(bool allow_tran) const
 {
     if (allow_tran)
@@ -7688,17 +7708,9 @@ bool player::can_polymorph() const
 
 bool player::can_bleed(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // These transformations don't bleed. Lichform is handled as undead.
-        if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
-            || form == TRAN_SPIDER || form == TRAN_TREE
-            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
-            || form == TRAN_SHADOW)
-        {
-            return false;
-        }
-    }
+    // XXX: Lich and statue forms are still caught by the holiness checks below.
+    if (allow_tran && !form_can_bleed(form))
+        return false;
 
     if (is_lifeless_undead()
 #if TAG_MAJOR_VERSION == 34
@@ -7822,34 +7834,28 @@ bool player::can_smell() const
     return species != SP_MUMMY;
 }
 
-void player::hibernate(int)
+/**
+ * Attempts to put the player to sleep.
+ *
+ * @param power     The power of the effect putting the player to sleep.
+ * @param hibernate Whether the player is being put to sleep by 'ensorcelled
+ *                  hibernation' (doesn't affect characters with rC, ignores
+ *                  power), or by a normal sleep effect.
+ */
+void player::put_to_sleep(actor*, int power, bool hibernate)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_hibernate() || duration[DUR_SLEEP_IMMUNITY])
+    const bool valid_target = hibernate ? can_hibernate() : can_sleep();
+    if (!valid_target)
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
     }
 
-    stop_constricting_all();
-    end_searing_ray();
-    mpr("You fall asleep.");
-
-    stop_delay();
-    flash_view(DARKGREY);
-
-    // Do this *after* redrawing the view, or viewwindow() will no-op.
-    set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
-}
-
-void player::put_to_sleep(actor*, int power)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!can_sleep() || duration[DUR_SLEEP_IMMUNITY])
+    if (duration[DUR_SLEEP_IMMUNITY])
     {
-        canned_msg(MSG_YOU_UNAFFECTED);
+        mpr("You can't fall asleep again this soon!");
         return;
     }
 
@@ -7861,7 +7867,9 @@ void player::put_to_sleep(actor*, int power)
     flash_view(DARKGREY);
 
     // As above, do this after redraw.
-    set_duration(DUR_SLEEP, 5 + random2avg(power/10, 5));
+    const int dur = hibernate ? 3 + random2avg(5, 2) :
+                                5 + random2avg(power/10, 5);
+    set_duration(DUR_SLEEP, dur);
 }
 
 void player::awake()
@@ -8091,7 +8099,7 @@ bool player::attempt_escape(int attempts)
 
     // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
     if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))
-        >= roll_dice(5, 8 + div_rand_round(themonst->hit_dice, 4)))
+        >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
         mprf("You escape %s's grasp.", themonst->name(DESC_THE, true).c_str());
 

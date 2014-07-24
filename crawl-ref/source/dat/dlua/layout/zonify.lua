@@ -66,30 +66,65 @@ function zonify.walk(x,y,zonemap,fgrid,fcell,fgroup,from,zone)
 end
 
 -- Fills all the zones except the largest num_to_keep
-function zonify.fill_smallest_zones(zonemap,num_to_keep,fgroup,ffill)
+function zonify.fill_smallest_zones(zonemap, num_to_keep, fgroup, ffill, min_zone_size)
 
   if num_to_keep == nil then num_to_keep = 1 end
+  if min_zone_size == nil then min_zone_size = 1 end
 
-  local largest = nil
-  local count = nil
+  local NO_SUCH_ZONE = -1
+
+  -- we now keep a sorted list of the largest zones so that we
+  --  can handle num_to_keep > 1 cases correctly
+  local largest = {}
+  for n = 1, num_to_keep do
+    largest[n] = {}
+    largest[n].zone = NO_SUCH_ZONE
+    largest[n].size = -999999
+  end
+
   for name,group in pairs(zonemap) do
     if type(fgroup) == "function" and fgroup(group) or name==fgroup then
       for i,zone in ipairs(group) do
-        zcount = #(zone.cells)
-        if count == nil or zcount > count then
-          count = zcount
-          largest = zone
+        zsize = #(zone.cells)
+        for n = num_to_keep, 1, -1 do
+          if zsize > min_zone_size and zsize > largest[n].size then
+            -- demote this zone to one position smaller
+            if n < num_to_keep then
+              largest[n+1].zone = largest[n].zone
+              largest[n+1].size = largest[n].size
+            end
+            -- add the new zone here
+            largest[n].zone = zone
+            largest[n].size = zsize
+          else
+            break
+          end
         end
       end
     end
   end
 
-  if largest == nil then return false end
+  -- don't try to fill more zones than we have
+  for n = 1, num_to_keep do
+    if largest[n].zone == nil then
+      num_to_keep = n
+      break
+    end
+  end
+  if num_to_keep <= 0 then
+    return false
+  end
 
   for name,group in pairs(zonemap) do
     if type(fgroup) == "function" and fgroup(group) or name==fgroup then
       for i,zone in ipairs(group) do
-        if zone ~= largest then
+        local replace = true
+        for n = 1, num_to_keep do
+          if zone == largest[n].zone then
+            replace = false
+          end
+        end
+        if replace then
           for c,cell in ipairs(zone.cells) do
             ffill(cell.x,cell.y,cell)
           end
@@ -97,7 +132,6 @@ function zonify.fill_smallest_zones(zonemap,num_to_keep,fgroup,ffill)
       end
     end
   end
-
 end
 
 -- Zonifies the current map based on solidity
@@ -122,15 +156,20 @@ function zonify.map_map(e)
 
 end
 
-function zonify.map_fill_zones(e, num_to_keep, glyph)
+function zonify.map_fill_zones(e, num_to_keep, glyph, min_zone_size)
+  if num_to_keep == nil then num_to_keep = 1 end
   if glyph == nil then glyph = 'x' end
+  if min_zone_size == nil then min_zone_size = 1 end
 
   local zonemap = zonify.map_map(e)
-  zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) e.mapgrd[x][y] = glyph end)
+  zonify.fill_smallest_zones(zonemap, num_to_keep, "floor",
+                             function(x,y,cell) e.mapgrd[x][y] = glyph end, min_zone_size)
 end
 
-function zonify.map_fill_lava_zones(e, num_to_keep, glyph)
+function zonify.map_fill_lava_zones(e, num_to_keep, glyph, min_zone_size)
+  if num_to_keep == nil then num_to_keep = 1 end
   if glyph == nil then glyph = 'x' end
+  if min_zone_size == nil then min_zone_size = 1 end
 
   local wall = "wxcvbtg"
 
@@ -145,7 +184,8 @@ function zonify.map_fill_lava_zones(e, num_to_keep, glyph)
       return string.find(wall,val.glyph,1,true) and "wall" or "floor"
     end
   )
-  zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) e.mapgrd[x][y] = glyph end)
+  zonify.fill_smallest_zones(zonemap, num_to_keep, "floor",
+                             function(x,y,cell) e.mapgrd[x][y] = glyph end, min_zone_size)
 end
 
 -- Zonifies the current dungeon grid
@@ -173,18 +213,25 @@ function zonify.grid_group_feature(val)
   return val.passable and "floor" or "wall"
 end
 
-function zonify.grid_fill_zones(num_to_keep,feature)
+function zonify.grid_fill_zones(num_to_keep, feature, min_zone_size)
+  if num_to_keep == nil then num_to_keep = 1 end
   if feature == nil then feature = 'rock_wall' end
+  if min_zone_size == nil then min_zone_size = 1 end
+
   local zonemap = zonify.grid_map()
-  zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) dgn.grid(x,y,feature) end)
+  zonify.fill_smallest_zones(zonemap, num_to_keep, "floor",
+                             function(x,y,cell) dgn.grid(x,y,feature) end, min_zone_size)
 end
 
 -- This is a little brutish but for some layouts (e.g. swamp) a different pass
 -- is needed to fill in deep water zones and stop flyers/swimmers getting trapped.
 -- TODO: Need to simplify into a single pass that understands connectivity issues
 -- between different zone groups and can handle everything more elegantly.
-function zonify.grid_fill_water_zones(num_to_keep,feature)
+function zonify.grid_fill_water_zones(num_to_keep, feature, min_zone_size)
+  if num_to_keep == nil then num_to_keep = 1 end
   if feature == nil then feature = 'rock_wall' end
+  if min_zone_size == nil then min_zone_size = 1 end
+
   local gxm,gym = dgn.max_bounds()
   local zonemap = zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
@@ -195,5 +242,6 @@ function zonify.grid_fill_water_zones(num_to_keep,feature)
       if val.vault then return "vault" end
       return (val.passable or val.feat == "deep_water") and "floor" or "wall"
     end)
-  zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) dgn.grid(x,y,feature) end)
+  zonify.fill_smallest_zones(zonemap, num_to_keep,"floor",
+                             function(x,y,cell) dgn.grid(x,y,feature) end, min_zone_size)
 end

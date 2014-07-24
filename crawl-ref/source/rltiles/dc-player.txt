@@ -723,10 +723,10 @@ bow_two BOW2
 bow_three BOW3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
-crossbow CROSSBOW
-crossbow_two CROSSBOW2
-crossbow_three CROSSBOW3
-crossbow_four CROSSBOW4
+arbalest ARBALEST
+arbalest_two ARBALEST2
+arbalest_three ARBALEST3
+arbalest_four ARBALEST4
 blowgun BLOWGUN
 
 ##missiles

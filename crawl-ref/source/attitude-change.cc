@@ -88,7 +88,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        const int hd = mons->hit_dice;
+        const int hd = mons->get_experience_level();
 
         if (you.piety >= piety_breakpoint(2) && !player_under_penance()
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
@@ -173,7 +173,7 @@ bool yred_slaves_abandon_you()
         {
             num_slaves++;
 
-            const int hd = mons->hit_dice;
+            const int hd = mons->get_experience_level();
 
             // During penance, followers get a saving throw.
             if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
@@ -231,7 +231,7 @@ bool beogh_followers_abandon_you()
                 && !mons_is_confused(mons)
                 && !mons->cannot_act())
             {
-                const int hd = mons->hit_dice;
+                const int hd = mons->get_experience_level();
 
                 // During penance, followers get a saving throw.
                 if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)

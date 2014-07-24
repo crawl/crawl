@@ -197,53 +197,62 @@ string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
+/**
+ * Populate the map used to interpret a crawlrc entry as a starting weapon
+ * type.  For most entries, we can just look up which weapon has the entry as
+ * its name; this map contains the exceptions.
+ *
+ * @return  The special starting weapon type map.
+ */
+static map<string, weapon_type> _create_special_weapon_map()
+{
+    map<string, weapon_type> weapon_map;
+
+    // "staff" normally refers to a magical staff, but here we want to
+    // interpret it as a quarterstaff.
+    weapon_map["staff"]        = WPN_QUARTERSTAFF;
+
+    // These weapons' base names have changed; we want to interpret the old
+    // names correctly.
+    weapon_map["sling"]        = WPN_HUNTING_SLING;
+    weapon_map["crossbow"]     = WPN_HAND_CROSSBOW;
+
+    // Pseudo-weapons.
+    weapon_map["unarmed"]      = WPN_UNARMED;
+    weapon_map["claws"]        = WPN_UNARMED;
+
+    weapon_map["thrown"]       = WPN_THROWN;
+    weapon_map["rocks"]        = WPN_THROWN;
+    weapon_map["javelins"]     = WPN_THROWN;
+    weapon_map["tomahawks"]    = WPN_THROWN;
+
+    weapon_map["random"]       = WPN_RANDOM;
+
+    weapon_map["viable"]       = WPN_VIABLE;
+
+    return weapon_map;
+}
+
+// This should be const, but operator[] on maps isn't const.
+static map<string, weapon_type> _special_weapon_map = _create_special_weapon_map();
+
+/**
+ * Interpret a crawlrc entry as a starting weapon type.
+ *
+ * @param str   The value of the crawlrc entry.
+ * @return      The weapon the string refers to, or WPN_UNKNOWN if invalid
+ */
 weapon_type str_to_weapon(const string &str)
 {
-    if (str == "shortsword" || str == "short sword")
-        return WPN_SHORT_SWORD;
-    else if (str == "cutlass")
-        return WPN_CUTLASS;
-    else if (str == "falchion")
-        return WPN_FALCHION;
-    else if (str == "longsword" || str == "long sword")
-        return WPN_LONG_SWORD;
-    else if (str == "quarterstaff" || str == "staff")
-        return WPN_QUARTERSTAFF;
-    else if (str == "mace")
-        return WPN_MACE;
-    else if (str == "flail")
-        return WPN_FLAIL;
-    else if (str == "spear")
-        return WPN_SPEAR;
-    else if (str == "trident")
-        return WPN_TRIDENT;
-    else if (str == "hand axe" || str == "handaxe")
-        return WPN_HAND_AXE;
-    else if (str == "war axe" || str == "waraxe")
-        return WPN_WAR_AXE;
-    else if (str == "unarmed" || str == "claws")
-        return WPN_UNARMED;
-    else if (str == "sling" || str == "hunting sling")
-        return WPN_HUNTING_SLING;
-    else if (str == "greatsling")
-        return WPN_GREATSLING;
-    else if (str == "shortbow" || str == "short bow")
-        return WPN_SHORTBOW;
-    else if (str == "crossbow")
-        return WPN_CROSSBOW;
-    else if (str == "thrown"
-             || str == "rocks"
-             || str == "javelins"
-             || str == "tomahawks")
-    {
-        return WPN_THROWN;
-    }
-    else if (str == "random")
-        return WPN_RANDOM;
-    else if (str == "viable")
-        return WPN_VIABLE;
+    string str_nospace = str;
+    remove_whitespace(str_nospace);
 
-    return WPN_UNKNOWN;
+    // Synonyms and pseudo-weapons.
+    if (_special_weapon_map.count(str_nospace))
+        return _special_weapon_map[str_nospace];
+
+    // Real weapons referred to by their standard names.
+    return name_nospace_to_weapon(str_nospace);
 }
 
 static string _weapon_to_str(weapon_type wpn_type)
@@ -1047,6 +1056,7 @@ void game_options::reset_options()
     tile_water_anim          = true;
 #endif
     tile_misc_anim           = true;
+    tile_show_player_species = false;
 #endif
 
 #ifdef USE_TILE_WEB
@@ -1311,6 +1321,7 @@ void game_options::add_feature_override(const string &text)
         if (feats[i] >= NUM_FEATURES)
             continue; // TODO: handle other object types.
         feature_def &fov(feature_overrides[feats[i]]);
+        init_fd(fov);
 #define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
                           fov.field = s;
 #define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
@@ -3500,6 +3511,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_show_demon_tier);
     else BOOL_OPTION(tile_water_anim);
     else BOOL_OPTION(tile_misc_anim);
+    else BOOL_OPTION(tile_show_player_species);
     else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());

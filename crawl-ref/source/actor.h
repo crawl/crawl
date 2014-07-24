@@ -88,6 +88,7 @@ public:
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
 
+    virtual int       get_hit_dice() const = 0;
     virtual int       get_experience_level() const = 0;
 
     virtual bool shove(const char* feat_name = "") = 0;
@@ -138,7 +139,8 @@ public:
                            bool ignore_transform = false) const = 0;
     virtual bool could_wield(const item_def &item,
                              bool ignore_brand = false,
-                             bool ignore_transform = false) const = 0;
+                             bool ignore_transform = false,
+                             bool quiet = true) const = 0;
 
     virtual void make_hungry(int nutrition, bool silent = true)
     {
@@ -223,7 +225,8 @@ public:
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength,
+                              bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
@@ -231,7 +234,6 @@ public:
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
@@ -431,6 +433,7 @@ public:
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
+    virtual bool clear_far_engulf() = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();

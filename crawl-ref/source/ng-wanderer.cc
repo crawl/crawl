@@ -76,7 +76,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_CROSSBOWS:
-        sub_type = WPN_CROSSBOW;
+        sub_type = WPN_HAND_CROSSBOW;
         break;
     }
 
@@ -820,7 +820,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_CROSSBOW)
+            && range_skill(you.inv[i]) == SK_CROSSBOWS)
         {
             need_bolts = true;
             break;
@@ -841,7 +841,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_SHORTBOW)
+            && range_skill(you.inv[i]) == SK_BOWS)
         {
             needs_arrows = true;
             break;

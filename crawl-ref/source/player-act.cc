@@ -21,12 +21,14 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "mon-util.h" // for decline_pronoun
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -142,12 +144,18 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
+              || form == TRAN_TREE
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
                   && (form == TRAN_LICH || form == TRAN_STATUE
                       || form == TRAN_SHADOW
                       || !form_changed_physiology());
+}
+
+int player::get_hit_dice() const
+{
+    return experience_level;
 }
 
 int player::get_experience_level() const
@@ -320,9 +328,7 @@ random_var player::attack_delay(item_def *weap, item_def *projectile,
                 || projectile
                    && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
         {
-            const skill_type wpn_skill = is_range_weapon(*weap)
-                                         ? range_skill(*weap)
-                                         : weapon_skill(*weap);
+            const skill_type wpn_skill = item_attack_skill(*weap);
             attk_delay = constant(property(*weap, PWPN_SPEED));
             attk_delay -=
                 div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
@@ -419,36 +425,55 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     return could_wield(item, ignore_brand, ignore_transform);
 }
 
+/**
+ * Checks whether the player could ever wield the given weapon, regardless of
+ * what they're currently wielding, transformed into, or any other state.
+ *
+ * @param item              The item to wield.
+ * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @return                  Whether the player could potentially wield the
+ *                          item.
+ */
 bool player::could_wield(const item_def &item, bool ignore_brand,
-                         bool ignore_transform) const
+                         bool ignore_transform, bool quiet) const
 {
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
-    if (species == SP_FELID)
-        return false;
-
-    // Only ogres and trolls can wield giant clubs or large rocks (for
-    // sandblast).
+    // Only ogres and trolls can wield large rocks (for sandblast).
     if (bsize < SIZE_LARGE
-        && ((item.base_type == OBJ_WEAPONS
-             && is_giant_club_type(item.sub_type))
-            || (item.base_type == OBJ_MISSILES &&
-                item.sub_type == MI_LARGE_ROCK)))
+        && item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
     {
+        if (!quiet)
+            mpr("That's too large and heavy for you to wield.");
         return false;
     }
 
-    // Anybody can wield missiles to enchant, item_mass permitting
-    if (item.base_type == OBJ_MISSILES)
-        return true;
-
-    // Or any other object, although there's no point here.
+    // Most non-weapon objects can be wielded, though there's rarely a point
     if (!is_weapon(item))
+    {
+        if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
+        {
+            if (!quiet)
+                mprf("You can't wield %s.", base_type_string(item).c_str());
+            return false;
+        }
+
         return true;
+    }
+    else if (species == SP_FELID)
+    {
+        if (!quiet)
+            mpr("You can't use weapons.");
+        return false;
+    }
 
     // Small species wielding large weapons...
-    if (bsize < SIZE_MEDIUM && !check_weapon_wieldable_size(item, bsize))
+    if (!is_weapon_wieldable(item, bsize))
+    {
+        if (!quiet)
+            mpr("That's too large for you to wield.");
         return false;
+    }
 
     if (player_mutation_level(MUT_MISSING_HAND)
         && you.hands_reqd(item) == HANDS_TWO)
@@ -456,10 +481,12 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
-    if (!ignore_brand)
+    // don't let undead/demonspawn wield holy weapons/scrolls (out of spite)
+    if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
     {
-        if (undead_or_demonic() && is_holy_item(item))
-            return false;
+        if (!quiet)
+            mpr("This weapon is holy and will not allow you to wield it.");
+        return false;
     }
 
     return true;
@@ -494,16 +521,9 @@ string player::name(description_level_type dt, bool) const
     }
 }
 
-string player::pronoun(pronoun_type pro, bool) const
+string player::pronoun(pronoun_type pro, bool /*force_visible*/) const
 {
-    switch (pro)
-    {
-    default:
-    case PRONOUN_SUBJECTIVE:        return "you";
-    case PRONOUN_POSSESSIVE:        return "your";
-    case PRONOUN_REFLEXIVE:         return "yourself";
-    case PRONOUN_OBJECTIVE:         return "you";
-    }
+    return decline_pronoun(GENDER_YOU, pro);
 }
 
 string player::conj_verb(const string &verb) const
@@ -522,7 +542,9 @@ string player::hand_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_BAT || form == TRAN_DRAGON)
         str = "foreclaw";
-    else if (form == TRAN_PIG || form == TRAN_SPIDER || form == TRAN_PORCUPINE)
+    else if (form == TRAN_PIG)
+        str = "front trotter";
+    else if (form == TRAN_SPIDER || form == TRAN_PORCUPINE)
         str = "front leg";
     else if (form == TRAN_ICE_BEAST)
         str = "paw";
@@ -567,6 +589,8 @@ string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
+    else if (form == TRAN_PIG)
+        str = "trotter";
     else if (form == TRAN_TREE)
         str = "root";
     else if (form == TRAN_WISP)

@@ -997,7 +997,7 @@ static int _bow_offset(const monster_info& mon)
     {
     case WPN_SHORTBOW:
     case WPN_LONGBOW:
-    case WPN_CROSSBOW:
+    case WPN_ARBALEST:
         return 0;
     default:
         return 1;
@@ -1300,6 +1300,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LOST_SOUL;
     case MONS_DROWNED_SOUL:
         return TILEP_MONS_DROWNED_SOUL;
+    case MONS_GHOST:
+        return TILEP_MONS_GHOST;
 
     // rodents ('r')
     case MONS_RAT:
@@ -1346,6 +1348,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ALLIGATOR;
     case MONS_FIRE_CRAB:
         return TILEP_MONS_FIRE_CRAB;
+    case MONS_GHOST_CRAB:
+        return TILEP_MONS_GHOST_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -1790,8 +1794,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // water monsters
     case MONS_ELECTRIC_EEL:
         return TILEP_MONS_ELECTRIC_EEL;
-    case MONS_SHARK:
-        return TILEP_MONS_SHARK;
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
 
@@ -2779,7 +2781,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
             // Tiles exist for each class of weapon.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
-            switch (weapon_skill(item))
+            switch (melee_skill(item))
             {
             case SK_LONG_BLADES:
                 return TILEP_MONS_SPECTRAL_LBL;
@@ -2918,6 +2920,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_DEATHS_DOOR;
     if (mons.is(MB_WORD_OF_RECALL))
         ch |= TILE_FLAG_RECALL;
+    if (mons.is(MB_LIGHTLY_DRAINED) || mons.is(MB_HEAVILY_DRAINED))
+        ch |= TILE_FLAG_DRAIN;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -2995,27 +2999,27 @@ tileidx_t tileidx_monster(const monster_info& mons)
     return ch;
 }
 
-tileidx_t tileidx_draco_base(const monster_info& mon)
+static tileidx_t tileidx_draco_base(monster_type draco)
 {
-    int draco = mon.draco_or_demonspawn_subspecies();
-    int colour = 0;
-
     switch (draco)
     {
     default:
-    case MONS_DRACONIAN:        colour = 0; break;
-    case MONS_BLACK_DRACONIAN:  colour = 1; break;
-    case MONS_YELLOW_DRACONIAN: colour = 2; break;
-    case MONS_GREEN_DRACONIAN:  colour = 3; break;
-    case MONS_GREY_DRACONIAN:   colour = 4; break;
-    case MONS_MOTTLED_DRACONIAN:colour = 5; break;
-    case MONS_PALE_DRACONIAN:   colour = 6; break;
-    case MONS_PURPLE_DRACONIAN: colour = 7; break;
-    case MONS_RED_DRACONIAN:    colour = 8; break;
-    case MONS_WHITE_DRACONIAN:  colour = 9; break;
+    case MONS_DRACONIAN:        return TILEP_DRACO_BASE;
+    case MONS_BLACK_DRACONIAN:  return TILEP_DRACO_BASE + 1;
+    case MONS_YELLOW_DRACONIAN: return TILEP_DRACO_BASE + 2;
+    case MONS_GREEN_DRACONIAN:  return TILEP_DRACO_BASE + 3;
+    case MONS_GREY_DRACONIAN:   return TILEP_DRACO_BASE + 4;
+    case MONS_MOTTLED_DRACONIAN:return TILEP_DRACO_BASE + 5;
+    case MONS_PALE_DRACONIAN:   return TILEP_DRACO_BASE + 6;
+    case MONS_PURPLE_DRACONIAN: return TILEP_DRACO_BASE + 7;
+    case MONS_RED_DRACONIAN:    return TILEP_DRACO_BASE + 8;
+    case MONS_WHITE_DRACONIAN:  return TILEP_DRACO_BASE + 9;
     }
+}
 
-    return TILEP_DRACO_BASE + colour;
+tileidx_t tileidx_draco_base(const monster_info& mon)
+{
+    return tileidx_draco_base(mon.draco_or_demonspawn_subspecies());
 }
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
@@ -3062,6 +3066,14 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
     }
 }
 
+tileidx_t tileidx_player_mons()
+{
+    const monster_type mons = player_mons(false);
+    if (mons_is_base_draconian(mons))
+        return tileidx_draco_base(mons);
+    return _tileidx_monster_base(player_mons(false));
+}
+
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {
     const tileidx_t tile = unrandart_to_tile(idx);
@@ -3090,7 +3102,9 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
     case WPN_HUNTING_SLING:         return TILE_WPN_HUNTING_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
-    case WPN_CROSSBOW:              return TILE_WPN_CROSSBOW;
+    case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
+    case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
+    case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
     case WPN_HALBERD:               return TILE_WPN_HALBERD;
@@ -3677,6 +3691,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_FIRE_CRAB;
     case MONS_APOCALYPSE_CRAB:
         return TILE_CORPSE_APOCALYPSE_CRAB;
+    case MONS_GHOST_CRAB:
+        return TILE_CORPSE_GHOST_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -3913,8 +3929,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // water monsters
     case MONS_ELECTRIC_EEL:
         return TILE_CORPSE_ELECTRIC_EEL;
-    case MONS_SHARK:
-        return TILE_CORPSE_SHARK;
 
     // humans ('@')
     case MONS_HUMAN:
@@ -4534,12 +4548,10 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
-        else if (bolt.name == "burst of hellfire")
-            return TILE_BOLT_HELLFIRE;
         break;
 
     case LIGHTRED:
-        if (bolt.name == "hellfire")
+        if (bolt.name.find("hellfire") != string::npos)
             return TILE_BOLT_HELLFIRE;
         break;
 

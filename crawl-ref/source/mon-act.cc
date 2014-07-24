@@ -79,6 +79,29 @@ static spell_type _map_wand_to_mspell(wand_type kind);
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
+/**
+ * Get the monster's "hit dice".
+ *
+ * @return          The monster's HD.
+ */
+int monster::get_hit_dice() const
+{
+    const int base_hd = get_experience_level();
+    const mon_enchant drain_ench = get_ench(ENCH_DRAINED);
+    return max(base_hd - drain_ench.degree, 1);
+}
+
+/**
+ * Get the monster's "experience level" - their hit dice, unmodified by
+ * temporary enchantments (draining).
+ *
+ * @return          The monster's XL.
+ */
+int monster::get_experience_level() const
+{
+    return hit_dice;
+}
+
 static const coord_def mon_compass[8] =
 {
     coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
@@ -1098,7 +1121,7 @@ static bool _setup_wand_beam(bolt& beem, monster* mons)
         return false;
 
     // set up the beam
-    int power         = 30 + mons->hit_dice;
+    int power         = 30 + mons->get_hit_dice();
     bolt theBeam      = mons_spell_beam(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
@@ -1522,24 +1545,27 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     const bool liquefied = mons->liquefied_ground();
 
-    // Highly-specialised archers are more likely to shoot than talk. (?)
-    // If we're standing on liquefied ground, try to stand and fire!
-    // (Particularly archers.)
-    if (!teleport
-        && ((liquefied && !archer && one_chance_in(9))
-            || (!liquefied && one_chance_in(archer ? 9 : 5))))
-    {
-        return false;
-    }
-
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !mons_near(mons))
         return false;
 
     // Monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule.
-    if (!archer && adjacent(beem.target, mons->pos()))
+    if (adjacent(beem.target, mons->pos()))
+    {
+        if (!archer)
+            return false;
+        // If adjacent, archers should always shoot (otherwise they would
+        // try to melee). Hence the else if below.
+    }
+    else if (!teleport && ((liquefied && !archer && one_chance_in(9))
+                           || (!liquefied && one_chance_in(archer ? 9 : 5))))
+    {
+        // Highly-specialised archers are more likely to shoot than talk.
+        // If we're standing on liquefied ground, try to stand and fire!
+        // (Particularly archers.)
         return false;
+    }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
     if (mons_is_fleeing(mons) || mons->pacified())
@@ -2772,7 +2798,7 @@ static bool _jelly_divide(monster* parent)
     if (!mons_class_flag(parent->type, M_SPLITS))
         return false;
 
-    const int reqd = max(parent->hit_dice * 8, 50);
+    const int reqd = max(parent->get_experience_level() * 8, 50);
     if (parent->hit_points < reqd)
         return false;
 

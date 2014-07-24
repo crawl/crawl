@@ -2785,7 +2785,7 @@ static bool _similar_equip(const item_def& pickup_item,
     if (is_ranged_weapon_type(pickup_item.sub_type))
         return pickup_item.sub_type != inv_item.sub_type;
 
-    return (weapon_skill(pickup_item) == weapon_skill(inv_item))
+    return (melee_skill(pickup_item) == melee_skill(inv_item))
            && (get_damage_type(pickup_item) == get_damage_type(inv_item));
 }
 

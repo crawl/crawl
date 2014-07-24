@@ -323,57 +323,6 @@ static bool _altar_prayer()
         return false;
     }
 
-    // Qazlal offers you an elemental resistance (rF+, rC+, rElec, AC+3).
-    else if (you_worship(GOD_QAZLAL) && !player_under_penance()
-             && you.piety >= piety_breakpoint(5)
-             && !you.one_time_ability_used[GOD_QAZLAL])
-    {
-        simple_god_message(
-            " will protect you from an element of your choice.");
-        more();
-        clear_messages();
-        mpr_nojoin(MSGCH_PLAIN, "[a] Fire  (rF+)");
-        mpr_nojoin(MSGCH_PLAIN, "[b] Ice   (rC+)");
-        mpr_nojoin(MSGCH_PLAIN, "[c] Air   (rElec)");
-        mpr_nojoin(MSGCH_PLAIN, "[d] Earth (AC+3)");
-        mprf(MSGCH_PROMPT, "Request which resistance (ESC to cancel)?");
-        int keyin = toalower(get_ch()) - 'a';
-        if (keyin < 0 || keyin > 3)
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-
-        you.one_time_ability_used.set(you.religion);
-        switch (keyin)
-        {
-            default:
-            case 0:
-                you.attribute[ATTR_DIVINE_FIRE_RES] = 1;
-                simple_god_message(" grants you protection from fire!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rF+"));
-                break;
-            case 1:
-                you.attribute[ATTR_DIVINE_COLD_RES] = 1;
-                simple_god_message(" grants you protection from cold!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rC+"));
-                break;
-            case 2:
-                you.attribute[ATTR_DIVINE_ELEC_RES] = 1;
-                simple_god_message(" grants you protection from electricity!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rElec"));
-                break;
-            case 3:
-                you.attribute[ATTR_DIVINE_AC] = 1;
-                simple_god_message(
-                    " grants you protection from physical attacks!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "AC+3"));
-                you.redraw_armour_class = true;
-                break;
-        }
-        return true;
-    }
-
     // None of above are true, nothing happens.
     return false;
 }
@@ -687,7 +636,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
             const monsterentry *m = get_monster_data(dummy.type);
             int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
 
-            dummy.hit_dice = hd;
+            dummy.set_hit_dice(hd);
             dummy.max_hit_points = hp;
         }
         int gain = get_fuzzied_monster_difficulty(&dummy);

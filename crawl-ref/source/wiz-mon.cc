@@ -177,11 +177,11 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
-        string newerr;
+        string newerr = "yes";
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs, true);
-        if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
+        if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
             newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
@@ -582,9 +582,10 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
+         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
-         mons.hit_dice,
+         mons.get_hit_dice(),
+         mons.get_experience_level(),
          mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.ac, mons.armour_class(),

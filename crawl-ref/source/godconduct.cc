@@ -1193,7 +1193,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
     }
 
     if (mon->is_holy() && !mon->is_illusion())
-        conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
+        conduct[2].set(DID_ATTACK_HOLY, mon->get_experience_level(), known, mon);
 
     _first_attack_conduct.set(midx);
 }

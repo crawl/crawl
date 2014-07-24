@@ -123,21 +123,6 @@ MAP
 765
 ENDMAP
 
-NAME:   minmay_shoals_entry_sharks
-TAGS:   shoals_entry
-KMONS:  w = shark / nothing w:50
-KFEAT:  w = w
-KFEAT:  O = enter_shoals
-MAP
- WWWWW
-WWwwwWW
-WwwwWwW
-WwwOwwW
-WwwwwwW
-WWwwwWW
- WWWWW
-ENDMAP
-
 NAME:   elwin_shoals_entry_rocks
 TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
@@ -180,7 +165,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk w:1 / mermaid w:1 / shark w:8
+KMONS:  1 = merfolk / mermaid / nothing w:40
 validate {{ return has_exit_from_glyph('O') }}
 MAP
 @...xxxxxxx....
@@ -376,9 +361,7 @@ KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
 KMONS:   3 = mermaid ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance w:20 | buckler | nothing w:70
-KMONS:   4 = siren ; trident ego:flaming | spear ego:flaming . \
-             robe ego:fire_resistance | robe w:5 . \
-             buckler ego:fire_resistance w:20 | buckler | nothing w:70
+KMONS:   4 = siren
 KMONS:   67 = fire bat
 KMONS:   8 = fire crab
 KITEM:   67 = % w:15 / *

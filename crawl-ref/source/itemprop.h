@@ -78,9 +78,7 @@ void ident_reflector(item_def *item);
 int weapon_rarity(int w_type) IMMUTABLE;
 
 int   cmp_weapon_size(const item_def &item, size_type size) PURE;
-bool  check_weapon_wieldable_size(const item_def &item, size_type size) PURE;
-
-size_type weapon_size(const item_def &item) PURE;
+bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);
@@ -91,6 +89,7 @@ bool is_blessed_weapon_type(int wpn_type) IMMUTABLE;
 bool is_demonic_weapon_type(int wpn_type) IMMUTABLE;
 bool is_magic_weapon_type(int wpn_type) IMMUTABLE;
 
+bool is_melee_weapon(const item_def &weapon) PURE;
 bool is_demonic(const item_def &item) PURE;
 bool is_blessed(const item_def &item) PURE;
 bool is_blessed_convertible(const item_def &item) PURE;
@@ -105,8 +104,11 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = f
 
 int weapon_str_weight(const item_def &wpn) PURE;
 
-skill_type weapon_skill(const item_def &item) PURE;
-skill_type weapon_skill(object_class_type wclass, int wtype) IMMUTABLE;
+skill_type item_attack_skill(const item_def &item) PURE;
+skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
+
+skill_type melee_skill(const item_def &item) PURE;
+skill_type melee_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 skill_type range_skill(const item_def &item) PURE;
 skill_type range_skill(object_class_type wclass, int wtype) IMMUTABLE;
@@ -123,7 +125,12 @@ bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile) PURE;
-bool is_melee_weapon(const item_def &weapon) PURE;
+
+bool ammo_always_destroyed(const item_def &missile) PURE;
+bool ammo_never_destroyed(const item_def &missile) PURE;
+int  ammo_type_destroy_chance(int missile_type) PURE;
+int  ammo_type_damage(int missile_type) PURE;
+
 
 reach_type weapon_reach(const item_def &item) PURE;
 
@@ -184,6 +191,7 @@ string item_base_name(const item_def &item);
 string item_base_name(object_class_type type, int sub_type);
 string food_type_name(int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
+weapon_type name_nospace_to_weapon(string name_nospace);
 
 void seen_item(const item_def &item);
 
@@ -193,4 +201,6 @@ static inline bool is_weapon(const item_def &item)
            || item.base_type == OBJ_STAVES
            || item.base_type == OBJ_RODS;
 }
+
+void remove_whitespace(string &str);
 #endif

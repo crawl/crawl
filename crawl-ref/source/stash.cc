@@ -1678,67 +1678,59 @@ protected:
 };
 
 // helper for search_stashes
-class compare_by_distance
+static bool _compare_by_distance(const stash_search_result& lhs,
+                                 const stash_search_result& rhs)
 {
-public:
-    bool operator()(const stash_search_result& lhs,
-                    const stash_search_result& rhs)
+    if (lhs.player_distance != rhs.player_distance)
     {
-        if (lhs.player_distance != rhs.player_distance)
-        {
-            // Sort by increasing distance
-            return lhs.player_distance < rhs.player_distance;
-        }
-        else if (lhs.player_distance == 0)
-        {
-            // If on the same level, sort by distance to player.
-            const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
-            const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
-            if (lhs_dist != rhs_dist)
-                return lhs_dist < rhs_dist;
-        }
-
-        if (lhs.matches != rhs.matches)
-        {
-            // Then by decreasing number of matches
-            return lhs.matches > rhs.matches;
-        }
-        else if (lhs.match != rhs.match)
-        {
-            // Then by name.
-            return lhs.match < rhs.match;
-        }
-        else
-            return false;
+        // Sort by increasing distance
+        return lhs.player_distance < rhs.player_distance;
     }
-};
+    else if (lhs.player_distance == 0)
+    {
+        // If on the same level, sort by distance to player.
+        const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
+        const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
+        if (lhs_dist != rhs_dist)
+            return lhs_dist < rhs_dist;
+    }
+
+    if (lhs.matches != rhs.matches)
+    {
+        // Then by decreasing number of matches
+        return lhs.matches > rhs.matches;
+    }
+    else if (lhs.match != rhs.match)
+    {
+        // Then by name.
+        return lhs.match < rhs.match;
+    }
+    else
+        return false;
+}
 
 // helper for search_stashes
-class compare_by_name
+static bool _compare_by_name(const stash_search_result& lhs,
+                             const stash_search_result& rhs)
 {
-public:
-    bool operator()(const stash_search_result& lhs,
-                    const stash_search_result& rhs)
+    if (lhs.match != rhs.match)
     {
-        if (lhs.match != rhs.match)
-        {
-            // Sort by name
-            return lhs.match < rhs.match;
-        }
-        else if (lhs.player_distance != rhs.player_distance)
-        {
-            // Then sort by increasing distance
-            return lhs.player_distance < rhs.player_distance;
-        }
-        else if (lhs.matches != rhs.matches)
-        {
-            // Then by decreasing number of matches
-            return lhs.matches > rhs.matches;
-        }
-        else
-            return false;
+        // Sort by name
+        return lhs.match < rhs.match;
     }
-};
+    else if (lhs.player_distance != rhs.player_distance)
+    {
+        // Then sort by increasing distance
+        return lhs.player_distance < rhs.player_distance;
+    }
+    else if (lhs.matches != rhs.matches)
+    {
+        // Then by decreasing number of matches
+        return lhs.matches > rhs.matches;
+    }
+    else
+        return false;
+}
 
 void StashTracker::search_stashes()
 {
@@ -2102,9 +2094,9 @@ bool StashTracker::display_search_results(
     }
 
     if (sort_by_dist)
-        sort(results->begin(), results->end(), compare_by_distance());
+        sort(results->begin(), results->end(), _compare_by_distance);
     else
-        sort(results->begin(), results->end(), compare_by_name());
+        sort(results->begin(), results->end(), _compare_by_name);
 
     StashSearchMenu stashmenu(show_as_stacks ? "hide" : "show",
                               sort_by_dist ? "dist" : "name",

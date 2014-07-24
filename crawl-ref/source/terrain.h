@@ -29,7 +29,7 @@ actor* actor_at(const coord_def& c);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
-bool fall_into_a_pool(const coord_def& entry, dungeon_feature_type terrain);
+void fall_into_a_pool(dungeon_feature_type terrain);
 
 bool cell_is_solid(const coord_def &c);
 
@@ -91,7 +91,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
                              bool affect_player = true,
                              bool preserve_features = false,
-                             bool preserve_items = false);
+                             bool preserve_items = false,
+                             int colour = BLACK);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,

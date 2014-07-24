@@ -332,6 +332,8 @@ bool mons_can_attack(const monster* mon);
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe);
 bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe);
 
+// FIXME: move decline_pronoun somewhere more generic.
+const char *decline_pronoun(gender_type gender, pronoun_type variant);
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
 

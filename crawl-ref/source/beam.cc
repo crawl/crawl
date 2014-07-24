@@ -277,6 +277,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     // Special cases so that tracers behave properly.
     if (pbolt.name != "orb of energy"
+        && pbolt.name != "orb of electricity"
         && pbolt.affects_wall(DNGN_TREE) == MB_FALSE)
     {
         pbolt.name = "unimportant";
@@ -459,14 +460,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
 
-#if TAG_MAJOR_VERSION == 34
-    if (z_type == ZAP_ICE_STORM)
-    {
-        pbolt.ench_power = power; // used for radius
-        pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
-    }
-    else
-#endif
     if (z_type == ZAP_EXPLOSIVE_BOLT)
         pbolt.ench_power = power;
     else if (z_type == ZAP_BREATHE_FROST)
@@ -477,6 +470,9 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
 bool bolt::can_affect_actor(const actor *act) const
 {
+    // Blinkbolt doesn't hit its caster, since they are the bolt.
+    if (origin_spell == SPELL_BLINKBOLT && act->mindex() == beam_source)
+        return false;
     map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
@@ -649,6 +645,13 @@ void bolt::initialise_fire()
 #endif
 }
 
+// Catch the bolt part of explosive bolt.
+static bool _is_explosive_bolt(const bolt *beam)
+{
+    return beam->origin_spell == SPELL_EXPLOSIVE_BOLT
+           && !beam->in_explosion_phase;
+}
+
 void bolt::apply_beam_conducts()
 {
     if (!is_tracer && YOU_KILL(thrower))
@@ -672,7 +675,7 @@ void bolt::apply_beam_conducts()
             break;
         default:
             // Fire comes from a side-effect of the beam, not the beam itself.
-            if (name == "explosive bolt")
+            if (_is_explosive_bolt(this))
                 did_god_conduct(DID_FIRE, 6 + random2(3), god_cares());
             break;
         }
@@ -681,10 +684,13 @@ void bolt::apply_beam_conducts()
 
 void bolt::choose_ray()
 {
-    if (!chose_ray || reflections > 0)
+    if ((!chose_ray || reflections > 0)
+        && !find_ray(source, target, ray, opc_solid_see)
+        // If fire is blocked, at least try a visible path so the
+        // error message is better.
+        && !find_ray(source, target, ray, opc_default))
     {
-        if (!find_ray(source, target, ray, opc_solid_see))
-            fallback_ray(source, target, ray);
+        fallback_ray(source, target, ray);
     }
 }
 
@@ -926,9 +932,9 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
         if (hear)
         {
             if (see)
-                msg = "You hear a hideous screaming!";
-            else
                 msg = "The idol screams as its substance crumbles away!";
+            else
+                msg = "You hear a hideous screaming!";
             chan = MSGCH_SOUND;
         }
         else if (see)
@@ -2631,10 +2637,8 @@ void bolt::affect_endpoint()
         return;
     }
 
-    // FIXME: why don't these just have is_explosion set?
-    // They don't explode in tracers: why not?
-    if (name == "orb of electricity"
-       || name == "great blast of cold")
+    // FIXME: why doesn't this just have is_explosion set?
+    if (name == "orb of electricity")
     {
         target = pos();
         refine_for_explosion();
@@ -2888,9 +2892,6 @@ void bolt::affect_place_clouds()
     {
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
     }
-
-    if (name == "great blast of cold")
-        place_cloud(CLOUD_COLD, p, random2(5) + 3, agent());
 
     if (name == "ball of steam")
         place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
@@ -3318,7 +3319,7 @@ void bolt::tracer_affect_player()
     apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
 
-    if (name == "explosive bolt")
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
 }
 
@@ -3519,11 +3520,8 @@ void bolt::affect_player_enchantment(bool resistible)
     switch (flavour)
     {
     case BEAM_HIBERNATION:
-        you.hibernate(ench_power);
-        break;
-
     case BEAM_SLEEP:
-        you.put_to_sleep(NULL, ench_power);
+        you.put_to_sleep(NULL, ench_power, flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -3908,7 +3906,7 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(), &you, item, use_target_as_pos);
+        ranged_attack attk(agent(true), &you, item, use_target_as_pos, agent());
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -4119,7 +4117,7 @@ void bolt::affect_player()
     if (can_knockback(&you, hurted))
         beam_hits_actor(&you);
 
-    else if (name == "explosive bolt")
+    else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze"
              || name == "blast of ice"
@@ -4396,7 +4394,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
 
-    if (name == "explosive bolt")
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 }
 
@@ -4517,7 +4515,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
         return false;
     }
 
-    if (x_chance_in_y(95 - mons->hit_dice * 5 , 100))
+    if (x_chance_in_y(95 - mons->get_hit_dice() * 5 , 100))
     {
         simple_monster_message(mons, " is dazzled.");
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
@@ -4630,8 +4628,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (can_knockback(mon, dmg))
         beam_hits_actor(mon);
-
-    else if (name == "explosive bolt")
+    else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 
     if (name == "spray of energy")
@@ -4816,7 +4813,7 @@ void bolt::affect_monster(monster* mon)
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(), mon, item, use_target_as_pos);
+        ranged_attack attk(agent(true), mon, item, use_target_as_pos, agent());
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -5378,7 +5375,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->hit_dice, ench_power);
+        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->get_hit_dice(), ench_power);
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
             return MON_UNAFFECTED;
@@ -5411,7 +5408,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (simple_monster_message(mon, " looks drowsy..."))
                 obvious_effect = true;
-            mon->hibernate();
+            mon->put_to_sleep(agent(), ench_power, true);
             return MON_AFFECTED;
         }
         return MON_UNAFFECTED;
@@ -5739,7 +5736,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             break;
 
         const int dur =
-            random2(div_rand_round(ench_power, mon->hit_dice) + 1)
+            random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1)
                     * BASELINE_DELAY;
         mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                   agent(), // doesn't matter
@@ -5911,17 +5908,6 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear a raging storm!";
 
         // Everything else is handled elsewhere...
-    }
-
-    if (name == "great blast of cold")
-    {
-        seeMsg  = "The blast explodes into a great storm of ice!";
-        hearMsg = "You hear a raging storm!";
-
-        name       = "ice storm";
-        glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
-        colour     = WHITE;
-        ex_size    = is_tracer ? 3 : (2 + (random2(ench_power) > 75));
     }
 
     if (name == "stinking cloud")

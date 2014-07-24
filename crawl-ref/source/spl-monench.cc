@@ -37,7 +37,7 @@ int englaciate(coord_def where, int pow, int, actor *agent)
     }
 
     int duration = (roll_dice(3, pow) / 6
-                    - random2(victim->get_experience_level()))
+                    - random2(victim->get_hit_dice()))
                     * BASELINE_DELAY;
 
     if (duration <= 0)

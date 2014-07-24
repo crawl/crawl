@@ -373,9 +373,6 @@ SAVEDIR := ~/.crawl
 endif
 
 
-INCLUDES_L += -isystem contrib/install/$(ARCH)/include
-LIBS += -Lcontrib/install/$(ARCH)/lib
-
 INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
@@ -732,12 +729,12 @@ ifdef EUCLIDEAN
 DEFINES_L += -DEUCLIDEAN
 endif
 
-
+ifdef USE_DGAMELAUNCH
 SRC_BRANCH    := $(shell git rev-parse --abbrev-ref HEAD || echo release)
 ifneq ($(SRC_BRANCH),$(filter master release stone_soup-%, $(SRC_BRANCH)))
   DEFINES_L += -DEXPERIMENTAL_BRANCH="\"$(SRC_BRANCH)\""
 endif
-
+endif
 
 #
 # Figure out the build settings for this type of build
@@ -976,12 +973,12 @@ endif
 endif
 
 ifdef BUILD_PCRE
-USE_PCRE = YesPlease
-endif
-
-ifdef USE_PCRE
 DEFINES += -DREGEX_PCRE
-LIBS += -lpcre
+else 
+  ifdef USE_PCRE
+  DEFINES += -DREGEX_PCRE
+  LIBS += -lpcre
+  endif
 endif
 
 ifdef USE_ICC
@@ -1004,15 +1001,6 @@ LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
 ifdef REPORT
 CFOTHERS += -ftime-report
 endif
-
-ifdef ANDROID
-CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
-else
-CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
-endif
-CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
-ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
-YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
@@ -1111,7 +1099,23 @@ endif
 
 EXTRA_OBJECTS += version.o
 
+ifdef CONTRIBS
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include
+LIBS += -Lcontrib/install/$(ARCH)/lib
+endif
+
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
+
+
+ifdef ANDROID
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
+else
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+endif
+CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
+ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
+YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
+
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template

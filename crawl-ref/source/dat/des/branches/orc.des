@@ -850,7 +850,7 @@ TAGS:    no_item_gen no_monster_gen
 DEPTH:   Orc:3-
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; crossbow . bolt . spear | hand axe | mace
+KMONS:   3 = orc warrior / orc ; arbalest . bolt . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
 KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
@@ -1401,10 +1401,10 @@ ENDMAP
 NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 PLACE:   Orc:$
-MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | morningstar /\
-         orc w:10 ; crossbow . bolt . trident | hand axe | mace
-MONS:    orc warrior ; crossbow . bolt . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; crossbow . bolt . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; arbalest . bolt . halberd | war axe | morningstar /\
+         orc w:10 ; arbalest . bolt . trident | hand axe | mace
+MONS:    orc warrior ; arbalest . bolt . glaive | broad axe | battleaxe | great mace
+MONS:    orc knight ; arbalest . bolt . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
 SUBST:   3 = 23

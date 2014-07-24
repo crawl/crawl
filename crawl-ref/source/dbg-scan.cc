@@ -8,6 +8,7 @@
 #include "dbg-scan.h"
 
 #include <errno.h>
+#include <cmath>
 #include <sstream>
 
 #include "artefact.h"
@@ -760,7 +761,7 @@ enum item_base_type {
     ITEM_ARTEBOOKS,
     ITEM_MANUALS,
     NUM_ITEM_BASE_TYPES,
-    ITEM_UNUSED = 100,
+    ITEM_IGNORE = 100,
 };
 
 enum antiquity_level {
@@ -861,7 +862,7 @@ static item_base_type _item_base_type(item_def &item)
         if (valid_foods.count(item.sub_type))
             type = ITEM_FOOD;
         else
-            type = ITEM_UNUSED;
+            type = ITEM_IGNORE;
         break;
     case OBJ_GOLD:
         type = ITEM_GOLD;
@@ -894,7 +895,7 @@ static item_base_type _item_base_type(item_def &item)
         type = ITEM_RODS;
         break;
     default:
-        type = ITEM_UNUSED;
+        type = ITEM_IGNORE;
         break;
     }
     return type;
@@ -1063,6 +1064,19 @@ static item_def _dummy_item(item_type &item)
     return dummy_item;
 }
 
+static bool _item_has_antiquity(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_WEAPONS:
+    case ITEM_ARMOUR:
+    case ITEM_JEWELLERY:
+        return true;
+    default:
+        return false;
+    }
+}
+
 item_type::item_type(item_def &item)
 {
     base_type = _item_base_type(item);
@@ -1093,35 +1107,48 @@ item_type::item_type(item_def &item)
 
 static void _init_fields()
 {
-    ITEM_FIELDS(SCROLLS,    "Num", "NumPiles", "PileQuant");
-    ITEM_FIELDS(POTIONS,    "Num", "NumPiles", "PileQuant");
-    ITEM_FIELDS(FOOD,       "Num", "NumPiles", "PileQuant", "TotalNormNutr",
-                            "TotalCarnNutr", "TotalHerbNutr");
-    ITEM_FIELDS(GOLD,       "Num", "NumPiles", "PileQuant");
-    ITEM_FIELDS(WANDS,      "Num", "WandCharges");
-    ITEM_FIELDS(WEAPONS,    "OrdNum", "ArteNum", "AllNum", "OrdEnch",
-                            "ArteEnch", "AllEnch", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed", "OrdNumBranded");
-    ITEM_FIELDS(STAVES,     "Num", "NumCursed");
-    ITEM_FIELDS(ARMOUR,     "OrdNum", "ArteNum", "AllNum", "OrdEnch",
-                            "ArteEnch", "AllEnch", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed",
-                            "OrdNumBranded");
-    ITEM_FIELDS(JEWELLERY,  "OrdNum", "ArteNum", "AllNum", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed", "OrdEnch",
+    ITEM_FIELDS(SCROLLS,    "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+                            "NumPiles", "PileQuant");
+    ITEM_FIELDS(POTIONS,    "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+                            "NumPiles", "PileQuant");
+    ITEM_FIELDS(FOOD,       "Num", "NumMin", "NumMax", "NumSD", "NumPiles",
+                            "PileQuant", "TotalNormNutr", "TotalCarnNutr",
+                            "TotalHerbNutr");
+    ITEM_FIELDS(GOLD,       "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+                            "NumPiles", "PileQuant");
+    ITEM_FIELDS(WANDS,      "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons", "WandCharges");
+    ITEM_FIELDS(WEAPONS,    "OrdNum", "ArteNum", "AllNum", "AllNumMin",
+                            "AllNumMax", "AllNumSD", "OrdEnch", "ArteEnch",
+                            "AllEnch", "OrdNumCursed", "ArteNumCursed",
+                            "AllNumCursed", "OrdNumBranded", "OrdNumHeldMons",
+                            "ArteNumHeldMons", "AllNumHeldMons");
+    ITEM_FIELDS(STAVES,     "Num", "NumMin", "NumMax", "NumSD", "NumCursed",
+                            "NumHeldMons");
+    ITEM_FIELDS(ARMOUR,     "OrdNum", "ArteNum", "AllNum", "AllNumMin",
+                            "AllNumMax", "AllNumSD", "OrdEnch", "ArteEnch",
+                            "AllEnch", "OrdNumCursed", "ArteNumCursed",
+                            "AllNumCursed", "OrdNumBranded", "OrdNumHeldMons",
+                            "ArteNumHeldMons", "AllNumHeldMons");
+    ITEM_FIELDS(JEWELLERY,  "OrdNum", "ArteNum", "AllNum", "AllNumMin",
+                            "AllNumMax", "AllNumSD", "OrdNumCursed",
+                            "ArteNumCursed", "AllNumCursed", "OrdNumHeldMons",
+                            "ArteNumHeldMons", "AllNumHeldMons", "OrdEnch",
                             "ArteEnch", "AllEnch");
-    ITEM_FIELDS(RODS,       "Num", "RodMana", "RodRecharge", "NumCursed");
-    ITEM_FIELDS(MISSILES,   "Num", "NumBranded", "NumPiles", "PileQuant");
-    ITEM_FIELDS(MISCELLANY, "Num", "MiscPlus");
-    ITEM_FIELDS(DECKS,      "PlainNum", "OrnateNum", "LegendaryNum",
-                            "AllNum", "AllDeckCards");
-    ITEM_FIELDS(BOOKS,      "Num");
-    ITEM_FIELDS(ARTEBOOKS,  "Num");
-    ITEM_FIELDS(MANUALS,    "Num");
+    ITEM_FIELDS(RODS,       "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+                            "RodMana", "RodRecharge", "NumCursed");
+    ITEM_FIELDS(MISSILES,   "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+                            "NumBranded", "NumPiles", "PileQuant");
+    ITEM_FIELDS(MISCELLANY, "Num", "NumMin", "NumMax", "NumSD", "MiscPlus");
+    ITEM_FIELDS(DECKS,      "PlainNum", "OrnateNum", "LegendaryNum", "AllNum",
+                            "AllNumMin", "AllNumMax", "AllNumSD",
+                            "AllDeckCards");
+    ITEM_FIELDS(BOOKS,      "Num", "NumMin", "NumMax", "NumSD");
+    ITEM_FIELDS(ARTEBOOKS,  "Num", "NumMin", "NumMax", "NumSD");
+    ITEM_FIELDS(MANUALS,    "Num", "NumMin", "NumMax", "NumSD");
 
-    INIT_VEC(monster_fields, "Num", "MonsHD", "MonsHP", "MonsXP", "TotalXP",
-                             "MonsNumChunks", "TotalNormNutr",
-                             "TotalGourmNutr");
+    INIT_VEC(monster_fields, "Num", "NumMin", "NumMax", "NumSD", "MonsHD",
+                             "MonsHP", "MonsXP", "TotalXP", "MonsNumChunks",
+                             "TotalNutr");
 }
 
 static void _init_stats()
@@ -1134,6 +1161,8 @@ static void _init_stats()
             level_id lev;
             if (l == bi->second.size())
             {
+                if (bi->first == NUM_BRANCHES)
+                    continue;
                 lev.branch = bi->first;
                 lev.depth = -1;
             }
@@ -1142,10 +1171,18 @@ static void _init_stats()
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
                 item_base_type base_type = static_cast<item_base_type>(i);
+                string min_field = _item_has_antiquity(base_type)
+                    ? "AllNumMin" : "NumMin";
+                string max_field = _item_has_antiquity(base_type)
+                    ? "AllNumMax" : "NumMax";
                 for (int  j = 0; j <= _item_max_sub_type(base_type); j++)
                 {
                     for (unsigned int k = 0; k < item_fields[i].size(); k++)
                         item_recs[lev][i][j][item_fields[i][k]] = 0;
+                    // For determining the NumSD, NumMin and NumMax fields.
+                    item_recs[lev][i][j]["NumForIter"] = 0;
+                    item_recs[lev][i][j][min_field] = INFINITY;
+                    item_recs[lev][i][j][max_field] = -1;
                 }
             }
             equip_brands[lev] = vector< vector< vector< vector<int> > > >();
@@ -1187,8 +1224,11 @@ static void _init_stats()
             {
                 for (unsigned int i = 0; i < monster_fields.size(); i++)
                     monster_recs[lev][mi->second][monster_fields[i]] = 0;
+                // For determining the NumMin and NumMax fields.
+                monster_recs[lev][mi->second]["NumForIter"] = 0;
+                monster_recs[lev][mi->second]["NumMin"] = INFINITY;
+                monster_recs[lev][mi->second]["NumMax"] = -1;
             }
-
         }
     }
 }
@@ -1248,39 +1288,114 @@ static void _record_brand(level_id &lev, item_type &item, int quantity,
     }
 }
 
+static bool _item_track_piles(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_GOLD:
+    case ITEM_POTIONS:
+    case ITEM_SCROLLS:
+    case ITEM_FOOD:
+    case ITEM_MISSILES:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool _item_track_curse(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_WEAPONS:
+    case ITEM_STAVES:
+    case ITEM_ARMOUR:
+    case ITEM_JEWELLERY:
+    case ITEM_RODS:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool _item_track_plus(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_WEAPONS:
+    case ITEM_ARMOUR:
+    case ITEM_JEWELLERY:
+    case ITEM_WANDS:
+    case ITEM_MISCELLANY:
+    case ITEM_DECKS:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool _item_track_brand(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_WEAPONS:
+    case ITEM_ARMOUR:
+    case ITEM_MISSILES:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool _item_track_monster(item_base_type base_type)
+{
+    switch (base_type)
+    {
+    case ITEM_GOLD:
+    case ITEM_POTIONS:
+    case ITEM_SCROLLS:
+    case ITEM_WANDS:
+    case ITEM_WEAPONS:
+    case ITEM_STAVES:
+    case ITEM_ARMOUR:
+    case ITEM_RODS:
+    case ITEM_MISSILES:
+    case ITEM_JEWELLERY:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void objstat_record_item(item_def &item)
 {
     level_id cur_lev = level_id::current();
     item_type itype(item);
     bool is_arte = is_artefact(item);
     int brand = -1;
-    string num_f = is_arte ? "ArteNum" : "OrdNum";
-    string cursed_f = is_arte ? "ArteNumCursed" : "OrdNumCursed";
-    string ench_f = is_arte ? "ArteEnch" : "OrdEnch";
+    bool has_antiq = _item_has_antiquity(itype.base_type);
+    string all_num_f = has_antiq ? "AllNum" : "Num";
+    string antiq_num_f = is_arte ? "ArteNum" : "OrdNum";
+    string all_cursed_f = has_antiq ? "AllNumCursed" : "NumCursed";
+    string antiq_cursed_f = is_arte ? "ArteNumCursed" : "OrdNumCursed";
+    string all_num_hm_f = has_antiq ? "AllNumHeldMons" : "NumHeldMons";
+    string antiq_num_hm_f = is_arte ? "ArteNumHeldMons" : "OrdNumHeldMons";
+    string all_plus_f = "AllEnch";
+    string antiq_plus_f = is_arte ? "ArteEnch" : "OrdEnch";
+    string num_brand_f = has_antiq ? "OrdNumBranded" : "NumBranded";
 
-    // Don't count mimics as items; these are converted explicitely in
-    // mg_do_build_level().
-    if (item.flags & ISFLAG_MIMIC)
+    // Just in case, don't count mimics as items; these are converted
+    // explicitely in mg_do_build_level().
+    if (item.flags & ISFLAG_MIMIC || itype.base_type == ITEM_IGNORE)
         return;
 
-    // The Some averages are calculated after all items are tallied.
+    // Some type-specific calculations.
     switch (itype.base_type)
     {
     case ITEM_MISSILES:
         brand = get_ammo_brand(item);
-        _record_brand(cur_lev, itype, item.quantity, is_arte, brand);
-        if (brand > 0)
-            _record_item_stat(cur_lev, itype, "NumBranded", item.quantity);
-        //deliberate fallthrough
-    case ITEM_SCROLLS:
-    case ITEM_POTIONS:
-    case ITEM_GOLD:
-        _record_item_stat(cur_lev, itype, "Num", item.quantity);
-        _record_item_stat(cur_lev, itype, "NumPiles", 1);
         break;
     case ITEM_FOOD:
-        _record_item_stat(cur_lev, itype, "Num", item.quantity);
-        _record_item_stat(cur_lev, itype, "NumPiles", 1);
         _record_item_stat(cur_lev, itype, "TotalNormNutr", food_value(item));
         // Set these dietary mutations so we can get accurate nutrition.
         you.mutation[MUT_CARNIVOROUS] = 3;
@@ -1292,55 +1407,22 @@ void objstat_record_item(item_def &item)
                              food_value(item) * food_is_veggie(item.sub_type));
         you.mutation[MUT_HERBIVOROUS] = 0;
         break;
-    case ITEM_WANDS:
-        _record_item_stat(cur_lev, itype, "Num", 1);
-        _record_item_stat(cur_lev, itype, "WandCharges", item.plus);
-        break;
     case ITEM_WEAPONS:
+        brand = get_weapon_brand(item);
+        break;
     case ITEM_ARMOUR:
-        if (itype.base_type == ITEM_WEAPONS)
-            brand = get_weapon_brand(item);
-        else
-            brand = get_armour_ego_type(item);
-        _record_item_stat(cur_lev, itype, num_f, 1);
-        _record_item_stat(cur_lev, itype, "AllNum", 1);
-
-        if (item.cursed())
-        {
-            _record_item_stat(cur_lev, itype, cursed_f, item.cursed());
-            _record_item_stat(cur_lev, itype, "AllNumCursed", item.cursed());
-        }
-        _record_item_stat(cur_lev, itype, ench_f, item.plus);
-        _record_item_stat(cur_lev, itype, "AllEnch", item.plus);
-        if (!is_arte && brand > 0)
-            _record_item_stat(cur_lev, itype, "OrdNumBranded", 1);
-        _record_brand(cur_lev, itype, 1, is_arte, brand);
+        brand = get_armour_ego_type(item);
         break;
-    case ITEM_STAVES:
-        _record_item_stat(cur_lev, itype, "Num", 1);
-        _record_item_stat(cur_lev, itype, "NumCursed", item.cursed());
-        break;
-    case ITEM_JEWELLERY:
-        _record_item_stat(cur_lev, itype, num_f, 1);
-        _record_item_stat(cur_lev, itype, "AllNum", 1);
-        if (item.cursed())
-        {
-            _record_item_stat(cur_lev, itype, cursed_f, 1);
-            _record_item_stat(cur_lev, itype, "AllNumCursed", 1);
-        }
-        _record_item_stat(cur_lev, itype, ench_f, item.plus);
-        _record_item_stat(cur_lev, itype, "AllEnch", item.plus);
+    case ITEM_WANDS:
+        all_plus_f = "WandCharges";
         break;
     case ITEM_RODS:
-        _record_item_stat(cur_lev, itype, "Num", 1);
         _record_item_stat(cur_lev, itype, "RodMana",
                              item.plus2 / ROD_CHARGE_MULT);
         _record_item_stat(cur_lev, itype, "RodRecharge", item.special);
-        _record_item_stat(cur_lev, itype, "NumCursed", item.cursed());
         break;
     case ITEM_MISCELLANY:
-        _record_item_stat(cur_lev, itype, "Num", 1);
-        _record_item_stat(cur_lev, itype, "MiscPlus", item.plus);
+        all_plus_f = "MiscPlus";
         break;
     case ITEM_DECKS:
         switch (deck_rarity(item))
@@ -1357,17 +1439,42 @@ void objstat_record_item(item_def &item)
         default:
             break;
         }
-        _record_item_stat(cur_lev, itype, "AllNum", 1);
-        _record_item_stat(cur_lev, itype, "AllDeckCards", item.plus);
-        break;
-    case ITEM_BOOKS:
-    case ITEM_MANUALS:
-    case ITEM_ARTEBOOKS:
-        _record_item_stat(cur_lev, itype, "Num", 1);
+        all_plus_f = "AllDeckCards";
         break;
     default:
         break;
     }
+    if (_item_track_piles(itype.base_type))
+        _record_item_stat(cur_lev, itype, "NumPiles", 1);
+    if (_item_track_curse(itype.base_type) && item.cursed())
+    {
+        if (has_antiq)
+            _record_item_stat(cur_lev, itype, antiq_cursed_f, 1);
+        _record_item_stat(cur_lev, itype, all_cursed_f, 1);
+    }
+    if (_item_track_plus(itype.base_type))
+    {
+        if (has_antiq)
+            _record_item_stat(cur_lev, itype, antiq_plus_f, item.plus);
+        _record_item_stat(cur_lev, itype, all_plus_f, item.plus);
+    }
+
+    if (_item_track_brand(itype.base_type))
+    {
+        _record_brand(cur_lev, itype, item.quantity, is_arte, brand);
+        if (!is_arte && brand > 0)
+            _record_item_stat(cur_lev, itype, num_brand_f, item.quantity);
+    }
+    if (_item_track_monster(itype.base_type) && item.holding_monster())
+    {
+        if (has_antiq)
+            _record_item_stat(cur_lev, itype, antiq_num_hm_f, item.quantity);
+        _record_item_stat(cur_lev, itype, all_num_hm_f, item.quantity);
+    }
+    if (has_antiq)
+        _record_item_stat(cur_lev, itype, antiq_num_f, item.quantity);
+    _record_item_stat(cur_lev, itype, all_num_f, item.quantity);
+    _record_item_stat(cur_lev, itype, "NumForIter", item.quantity);
 }
 
 static void _record_monster_stat(level_id &lev, int mons_ind, string field,
@@ -1395,10 +1502,11 @@ void objstat_record_monster(monster *mons)
     level_id lev = level_id::current();
 
     _record_monster_stat(lev, mons_ind, "Num", 1);
+    _record_monster_stat(lev, mons_ind, "NumForIter", 1);
     _record_monster_stat(lev, mons_ind, "MonsXP", exper_value(mons));
     _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(mons));
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
-    _record_monster_stat(lev, mons_ind, "MonsHD", mons->hit_dice);
+    _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
     // Record chunks/nutrition if monster leaves a corpse.
     if (chunk_effect != CE_NOCORPSE && mons_weight(mons->type))
     {
@@ -1408,10 +1516,61 @@ void objstat_record_monster(monster *mons)
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
         if (is_clean)
         {
-            _record_monster_stat(lev, mons_ind, "TotalNormNutr",
+            _record_monster_stat(lev, mons_ind, "TotalNutr",
                                     chunks * CHUNK_BASE_NUTRITION);
-            _record_monster_stat(lev, mons_ind, "TotalGourmNutr",
-                                    chunks * CHUNK_BASE_NUTRITION);
+        }
+    }
+}
+
+void objstat_iteration_stats()
+{
+    map<branch_type, vector<level_id> >::const_iterator bi;
+    for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
+    {
+        for (unsigned int l = 0; l <= bi->second.size(); l++)
+        {
+            level_id lev;
+            if (l == bi->second.size())
+            {
+                if (bi->first == NUM_BRANCHES)
+                    continue;
+                lev.branch = bi->first;
+                lev.depth = -1;
+            }
+            else
+                lev = (bi->second)[l];
+
+            for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
+            {
+                item_base_type base_type = static_cast<item_base_type>(i);
+                for (int  j = 0; j <= _item_max_sub_type(base_type); j++)
+                {
+                    bool use_all = _item_has_antiquity(base_type)
+                        || base_type == ITEM_DECKS;
+                    string min_f = use_all ? "AllNumMin" : "NumMin";
+                    string max_f = use_all ? "AllNumMax" : "NumMax";
+                    string sd_f = use_all ? "AllNumSD" : "NumSD";
+                    map<string, double> &stats = item_recs[lev][i][j];
+                    if (stats["NumForIter"] > stats[max_f])
+                        stats[max_f] = stats["NumForIter"];
+                    if (stats["NumForIter"] < stats[min_f])
+                        stats[min_f] = stats["NumForIter"];
+                    stats[sd_f] += stats["NumForIter"] * stats["NumForIter"];
+                    stats["NumForIter"] = 0;
+                }
+            }
+            map<monster_type, int>::const_iterator mi;
+            for (mi = valid_monsters.begin(); mi != valid_monsters.end();
+                 mi++)
+            {
+                map<string, double> &stats = monster_recs[lev][mi->second];
+                if (stats["NumForIter"] > stats["NumMax"])
+                    stats["NumMax"] = stats["NumForIter"];
+                if (stats["NumForIter"] < stats["NumMin"])
+                    stats["NumMin"] = stats["NumForIter"];
+                stats["NumSD"] += stats["NumForIter"] * stats["NumForIter"];
+                stats["NumForIter"] = 0;
+            }
         }
     }
 }
@@ -1489,6 +1648,23 @@ static void _write_stat(map<string, double> &stats, string field)
         value = stats[field] / stats["ArteNum"];
     else if (field == "OrdEnch")
         value = stats[field] / stats["OrdNum"];
+    else if (field == "NumSD" || field == "AllNumSD")
+    {
+        string num_f = field == "NumSD" ? "Num" : "AllNum";
+        if (SysEnv.map_gen_iters == 1)
+            value = 0;
+        else
+        {
+            double mean = stats[num_f] / SysEnv.map_gen_iters;
+            value = sqrt((SysEnv.map_gen_iters / (SysEnv.map_gen_iters - 1.0))
+                         * (stats[field] / SysEnv.map_gen_iters - mean * mean));
+        }
+    }
+    else if (field == "NumMin" || field == "AllNumMin" || field == "NumMax"
+             || field == "AllNumMax")
+    {
+        value = stats[field];
+    }
     else
         value = stats[field] / SysEnv.map_gen_iters;
     output << "\t" << value;
@@ -1532,6 +1708,7 @@ static void _write_brand_stats(vector<int> &brand_stats, item_type &item)
     bool first_brand = true;
     ostringstream brand_summary;
 
+    brand_summary.setf(ios_base::fixed);
     brand_summary.precision(STAT_PRECISION);
     for (unsigned int i = 0; i < num_brands; i++)
     {
@@ -1658,7 +1835,7 @@ static void _write_monster_stats(branch_type br, monster_type mons_type,
 
 static void _write_branch_stats(branch_type br)
 {
-    fprintf(stat_outf, "Item Generation Stats\n");
+    fprintf(stat_outf, "\n\nItem Generation Stats:");
     for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
     {
         item_base_type base_type = static_cast<item_base_type>(i);
@@ -1682,7 +1859,7 @@ static void _write_branch_stats(branch_type br)
             _write_item_stats(br, item);
         }
     }
-    fprintf(stat_outf, "\n\nMonster Generation Stats\n");
+    fprintf(stat_outf, "\n\nMonster Generation Stats:\n");
     _write_level_headers(br, monster_fields.size());
     _write_stat_headers(br, monster_fields);
     map<monster_type, int>::const_iterator mi;
@@ -1692,6 +1869,7 @@ static void _write_branch_stats(branch_type br)
 
 static void _write_object_stats()
 {
+    string all_desc = "";
     map<branch_type, vector<level_id> >::const_iterator bi;
 
     for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
@@ -1702,6 +1880,11 @@ static void _write_object_stats()
             if (num_branches == 1)
                 continue;
             branch_name = "AllLevels";
+            if (SysEnv.map_gen_range.get())
+                all_desc = SysEnv.map_gen_range.get()->describe();
+            else
+                all_desc = "All Branches";
+            all_desc = "Levels included in AllLevels: " + all_desc + "\n";
         }
         else
             branch_name = branches[bi->first].abbrevname;
@@ -1717,9 +1900,10 @@ static void _write_object_stats()
         fprintf(stat_outf, "Object Generation Stats\n"
                 "Number of iterations: %d\n"
                 "Number of branches: %d\n"
+                "%s"
                 "Number of levels: %d\n"
                 "Version: %s\n", SysEnv.map_gen_iters, num_branches,
-                num_levels, Version::Long);
+                all_desc.c_str(), num_levels, Version::Long);
         _write_branch_stats(bi->first);
         fclose(stat_outf);
         fprintf(stdout, "Wrote statistics for branch %s to %s.\n",
@@ -1771,18 +1955,17 @@ void objstat_generate_stats()
             ++num_branches;
         }
     }
-    // We won't display these if only one branch is tallied
+    // This represents the AllLevels summary.
     stat_branches[NUM_BRANCHES] = vector<level_id>();
     stat_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
     fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
-            "level(s) over %d branche(s).\n", SysEnv.map_gen_iters,
+            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
             num_levels, num_branches);
     _init_fields();
     _init_foods();
     _init_monsters();
     _init_stats();
-    mapstat_build_levels(SysEnv.map_gen_iters);
-    _write_object_stats();
+    if (mapstat_build_levels())
+        _write_object_stats();
 }
-
 #endif // DEBUG_DIAGNOSTICS

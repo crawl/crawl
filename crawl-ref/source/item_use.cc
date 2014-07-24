@@ -127,35 +127,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_FELID && is_weapon(*weapon))
-    {
-        SAY(mpr("You can't use weapons."));
+    if (!you.could_wield(*weapon, true, true, !say_reason))
         return false;
-    }
-
-    if (weapon->base_type == OBJ_ARMOUR)
-    {
-        SAY(mpr("You can't wield armour."));
-        return false;
-    }
-
-    if (weapon->base_type == OBJ_JEWELLERY)
-    {
-        SAY(mpr("You can't wield jewellery."));
-        return false;
-    }
-
-    // Only ogres and trolls can wield giant clubs and large rocks (for
-    // sandblast).
-    if (you.body_size(PSIZE_TORSO, true) < SIZE_LARGE
-        && ((weapon->base_type == OBJ_WEAPONS
-             && (is_giant_club_type(weapon->sub_type)))
-             || (weapon->base_type == OBJ_MISSILES &&
-                 weapon->sub_type == MI_LARGE_ROCK)))
-    {
-        SAY(mpr("That's too large and heavy for you to wield."));
-        return false;
-    }
 
     // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
@@ -167,14 +140,6 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
         else
             return true;
-    }
-
-    // Small species wielding large weapons...
-    if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
-        && !check_weapon_wieldable_size(*weapon, you.body_size(PSIZE_BODY)))
-    {
-        SAY(mpr("That's too large for you to wield."));
-        return false;
     }
 
     bool id_brand = false;
@@ -264,14 +229,6 @@ static bool _valid_weapon_swap(const item_def &item)
     // Snakable missiles; weapons were already handled above.
     if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
         return true;
-
-    if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-    {
-        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-            return true;
-        if (is_blood_potion(item))
-            return true;
-    }
 
     return false;
 }
@@ -503,18 +460,15 @@ void wear_armour(int slot) // slot is for tiles
     do_wear_armour(armour_wear_2, false);
 }
 
+/**
+ * The number of turns it takes to put on or take off a given piece of armour.
+ *
+ * @param item      The armour in question.
+ * @return          The number of turns it takes to don or doff the item.
+ */
 static int armour_equip_delay(const item_def &item)
 {
-    int delay = property(item, PARM_AC);
-
-    // Shields are comparatively easy to wear.
-    if (is_shield(item))
-        delay = delay / 2 + 1;
-
-    if (delay < 1)
-        delay = 1;
-
-    return delay;
+    return 5;
 }
 
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
@@ -849,6 +803,7 @@ bool do_wear_armour(int item, bool quiet)
     }
 
     you.turn_is_over = true;
+    you.time_taken = 0; // will be handled by equip delay
 
     if (!_safe_to_remove_or_wear(invitem, false))
         return false;
@@ -926,6 +881,7 @@ bool takeoff_armour(int item)
     }
 
     you.turn_is_over = true;
+    you.time_taken = 0; // will be handled by unequip delay
 
     const int delay = armour_equip_delay(invitem);
     start_delay(DELAY_ARMOUR_OFF, delay, item);
@@ -1481,7 +1437,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     }
 #endif
 
-    // Putting on jewellery is as fast as wielding weapons.
+    // Putting on jewellery is fast.
     you.time_taken /= 2;
     you.turn_is_over = true;
 
@@ -2119,6 +2075,16 @@ void drink(int slot)
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
     potion_type pot_type = (potion_type)potion.sub_type;
+
+    if (!you_worship(GOD_GOZAG)
+        && you.penance[GOD_GOZAG] && one_chance_in(5))
+    {
+        simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
+
+        you.turn_is_over = true;
+
+        return;
+    }
 
     if (!potion_effect(static_cast<potion_type>(potion.sub_type),
                        40, &potion, alreadyknown))

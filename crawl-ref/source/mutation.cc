@@ -230,43 +230,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 // recent call to describe_mutations.  TODO: eliminate
 static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
-static int _num_form_based = 0;
 static int _num_transient = 0;
-
-// Can the player transform?  Returns true if the player is ever capable
-// of transforming (i.e. not a mummy or ghoul) and either: is transformed
-// (ignoring blade hands and appendage), is a vampire of sufficient level
-// to use bat form, or has a form-change spell (again, other than blade hands
-// and beastly appendage) memorised.
-static bool _player_can_transform()
-{
-    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
-        return false;
-
-    if (form_changed_physiology())
-        return true;
-
-    // Bat form
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
-        return true;
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        switch (you.spells[i])
-        {
-        case SPELL_SPIDER_FORM:
-        case SPELL_ICE_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_DRAGON_FORM:
-        case SPELL_NECROMUTATION:
-            return true;
-        default:
-            break;
-        }
-    }
-
-    return false;
-}
 
 static string _annotate_form_based(string desc, bool suppressed)
 {
@@ -274,12 +238,6 @@ static string _annotate_form_based(string desc, bool suppressed)
     {
         desc = "<darkgrey>((" + desc + "))</darkgrey>";
         ++_num_full_suppressed;
-    }
-
-    if (_player_can_transform())
-    {
-        ++_num_form_based;
-        desc += "<yellow>*</yellow>";
     }
 
     return desc + "\n";
@@ -299,7 +257,6 @@ string describe_mutations(bool center_title)
     string scale_type = "plain brown";
 
     _num_full_suppressed = _num_part_suppressed = 0;
-    _num_form_based = 0;
     _num_transient = 0;
 
     if (center_title)
@@ -897,8 +854,6 @@ void display_mutations()
         extra += "<brown>()</brown>  : Partially suppressed.\n";
     if (_num_full_suppressed)
         extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
-    if (_num_form_based) // TODO: check for form spells?
-        extra += "<yellow>*</yellow>   : Suppressed by some changes of form.\n";
     if (_num_transient)
         extra += "<magenta>[]</magenta>   : Transient mutations.";
     if (you.species == SP_VAMPIRE)
@@ -2032,12 +1987,6 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         {
             result = "(" + result + ")";
             ++_num_part_suppressed;
-        }
-
-        if (mdef.form_based && _player_can_transform())
-        {
-            ++_num_form_based;
-            result += colour ? "<yellow>*</yellow>" : "*";
         }
     }
 

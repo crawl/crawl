@@ -198,7 +198,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_STONESKIN:
         {
             // player gets 2+earth/5
-            const int ac_bonus = hit_dice / 2;
+            const int ac_bonus = get_hit_dice() / 2;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -209,7 +209,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_OZOCUBUS_ARMOUR:
         {
             // player gets 4+ice/3
-            const int ac_bonus = 4 + hit_dice / 3;
+            const int ac_bonus = 4 + get_hit_dice() / 3;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -1001,6 +1001,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
            simple_monster_message(this, " is no longer distracted by gold.");
         break;
 
+    case ENCH_DRAINED:
+        if (!quiet)
+            simple_monster_message(this, " seems less drained.");
+        break;
+
     default:
         break;
     }
@@ -1231,6 +1236,23 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
+bool monster::clear_far_engulf(void)
+{
+    if (you.duration[DUR_WATER_HOLD]
+        && (mid_t) you.props["water_holder"].get_int() == mid)
+    {
+        you.clear_far_engulf();
+    }
+
+    const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
+    if (me.ench == ENCH_NONE)
+        return false;
+    const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
+    if (nonadj)
+        del_ench(ENCH_WATER_HOLD);
+    return nonadj;
+}
+
 void monster::apply_enchantment(const mon_enchant &me)
 {
     enchant_type en = me.ench;
@@ -1272,7 +1294,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        // Deliberate fall through.
+        decay_enchantment(en);
+        break;
 
     case ENCH_SLOW:
     case ENCH_HASTE:
@@ -1319,7 +1342,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
-    // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
 
@@ -1341,6 +1363,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_BATTLE_FRENZY:
     case ENCH_ROUSED:
+    case ENCH_DRAINED:
         decay_enchantment(en, false);
         break;
 
@@ -1700,7 +1723,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!(flags & MF_TAKING_STAIRS)
             && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
-                || x_chance_in_y(1000 / (15 * max(1, hit_dice) / 5), 1000)))
+                || x_chance_in_y(1000 / (15 * max(1, get_hit_dice()) / 5),
+                                 1000)))
         {
             monster_polymorph(this, RANDOM_MONSTER);
         }
@@ -1808,12 +1832,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WATER_HOLD:
-        if (!me.agent()
-            || (me.agent() && !adjacent(me.agent()->as_monster()->pos(), pos())))
-        {
-            del_ench(ENCH_WATER_HOLD);
-        }
-        else
+        if (!clear_far_engulf())
         {
             if (res_water_drowning() <= 0)
             {
@@ -2076,7 +2095,7 @@ static const char *enchant_names[] =
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
-    "corrosion", "gold_lust", "buggy",
+    "corrosion", "gold_lust", "drained", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2140,8 +2159,8 @@ void mon_enchant::merge_killer(kill_category k, mid_t m)
 
 void mon_enchant::cap_degree()
 {
-    // Sickness is not capped.
-    if (ench == ENCH_SICK)
+    // Sickness & draining are not capped.
+    if (ench == ENCH_SICK || ench == ENCH_DRAINED)
         return;
 
     // Hard cap to simulate old enum behaviour, we should really throw this
@@ -2191,7 +2210,7 @@ actor* mon_enchant::agent() const
 
 int mon_enchant::modded_speed(const monster* mons, int hdplus) const
 {
-    return _mod_speed(mons->hit_dice + hdplus, mons->speed);
+    return _mod_speed(mons->get_hit_dice() + hdplus, mons->speed);
 }
 
 int mon_enchant::calc_duration(const monster* mons,

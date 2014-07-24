@@ -414,8 +414,10 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
     const dungeon_feature_type door = grd(gc);
     return feat_is_closed_door(door) && feat == DNGN_SEALED_DOOR
            || door == DNGN_SEALED_DOOR && feat_is_closed_door(feat)
-           || door == feat
-           || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+#if TAG_MAJOR_VERSION == 34
+           || map_masked(gc, MMT_WAS_DOOR_MIMIC)
+#endif
+           || door == feat;
 }
 
 void tile_init_flavour(const coord_def &gc)

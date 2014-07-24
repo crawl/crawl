@@ -98,14 +98,11 @@ bool form_can_swim(transformation_type form)
     if (form == TRAN_ICE_BEAST)
         return true;
 
-    if ((you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+    if (species_can_swim(you.species)
         && (!form_changed_physiology(form) || form == TRAN_LICH))
     {
         return true;
     }
-
-    if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
-        return true;
 
     size_type size = you.transform_size(form, PSIZE_BODY);
     if (size == SIZE_CHARACTER)
@@ -118,8 +115,7 @@ bool form_likes_water(transformation_type form)
 {
     // Grey dracs can't swim, so can't statue form merfolk/octopodes
     // -- yet they can still survive in water.
-    if (you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
-        || you.species == SP_OCTOPODE)
+    if (species_likes_water(you.species))
     {
         if (form == TRAN_NONE
             || form == TRAN_BLADE_HANDS
@@ -152,6 +148,14 @@ bool form_changed_physiology(transformation_type form)
 {
     return form != TRAN_NONE && form != TRAN_APPENDAGE
            && form != TRAN_BLADE_HANDS;
+}
+
+bool form_can_bleed(transformation_type form)
+{
+    return form != TRAN_STATUE && form != TRAN_ICE_BEAST
+           && form != TRAN_SPIDER && form != TRAN_TREE
+           && form != TRAN_FUNGUS && form != TRAN_PORCUPINE
+           && form != TRAN_SHADOW && form != TRAN_LICH;
 }
 
 bool form_can_use_wand(transformation_type form)

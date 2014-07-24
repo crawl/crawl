@@ -193,6 +193,12 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_SHROUD;
     case ENCH_CORROSION:
         return MB_CORROSION;
+    case ENCH_DRAINED:
+        {
+            const bool heavily_drained = mons.get_ench(ench).degree
+                                         >= mons.get_experience_level() / 2;
+            return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
+        }
     default:
         return NUM_MB_FLAGS;
     }
@@ -1604,6 +1610,10 @@ vector<string> monster_info::attributes() const
         v.push_back("ghostly");
     if (is(MB_SLOW_MOVEMENT))
         v.push_back("covering ground slowly");
+    if (is(MB_LIGHTLY_DRAINED))
+        v.push_back("lightly drained");
+    if (is(MB_HEAVILY_DRAINED))
+        v.push_back("heavily drained");
     return v;
 }
 

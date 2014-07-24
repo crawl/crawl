@@ -539,7 +539,7 @@ static void _show_commandline_options_help()
     puts("  -mapstat [<levels>] run map stats on the given range of levels");
     puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
          "syntax.");
-    puts("      Examples: Lair:2- and '!Pan,!Abyss'");
+    puts("      Examples: '-mapstat D,Depths' and '-mapstat Snake:1-4,Spider:1-4,Orc'");
     puts("  -objstat [<levels>] run monster and item stats on the given range "
          "of levels");
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
@@ -2310,7 +2310,7 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts();
 
-    abyss_morph(you.time_taken);
+    abyss_morph();
     apply_noises();
     handle_monsters(true);
 
@@ -2581,7 +2581,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             else
             {
                 list<actor*> cleave_targets;
-                if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
+                if (you.weapon() && melee_skill(*you.weapon()) == SK_AXES
                     && !you.confused())
                 {
                     get_all_cleave_targets(&you, target, cleave_targets);
@@ -3308,7 +3308,10 @@ static void _move_player(coord_def move)
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
             else
+            {
+                stop_running();
                 moving = false;
+            }
         }
         else if (!can_swap_places) // attack!
         {

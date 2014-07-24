@@ -249,10 +249,26 @@ int species_has_claws(species_type species, bool mut_level)
     return 0;
 }
 
+bool species_is_undead(species_type species)
+{
+    return species == SP_MUMMY || species == SP_GHOUL
+    || species == SP_VAMPIRE;
+}
+
+bool species_is_unbreathing(species_type species)
+{
+    return species == SP_GREY_DRACONIAN || species == SP_GARGOYLE
+           || species_is_undead(species);
+}
+
+bool species_can_swim(species_type species)
+{
+    return species == SP_OCTOPODE || species == SP_MERFOLK;
+}
+
 bool species_likes_water(species_type species)
 {
-    return species == SP_MERFOLK || species == SP_GREY_DRACONIAN
-           || species == SP_OCTOPODE;
+    return species_can_swim(species) || species == SP_GREY_DRACONIAN;
 }
 
 bool species_likes_lava(species_type species)

@@ -300,8 +300,7 @@ static bool _corpse_butchery(int corpse_id,
     return true;
 }
 
-static int _corpse_badness(corpse_effect_type ce, const item_def &item,
-                           bool wants_any)
+static int _corpse_badness(corpse_effect_type ce, const item_def &item)
 {
     // Not counting poisonous chunks as useless here, caller must do that
     // themself.
@@ -314,10 +313,6 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     // is tedious.
     if (ce == CE_POISONOUS)
         contam = contam * 3 / 2;
-
-    // Have uses that care about age but not quality?
-    if (wants_any)
-        contam /= 2;
 
     dprf("%s: to rot %d, contam %d -> badness %d",
          item.name(DESC_PLAIN).c_str(),
@@ -350,8 +345,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
-
     // First determine how many things there are to butcher.
     int num_corpses = 0;
     int corpse_id   = -1;
@@ -378,7 +371,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
                                                             si->mon_type),
                                                             food_is_rotten(*si));
-            int badness = _corpse_badness(ce, *si, wants_any);
+            int badness = _corpse_badness(ce, *si);
             if (ce == CE_POISONOUS)
                 badness += 600;
             else if (ce == CE_MUTAGEN)
@@ -860,39 +853,35 @@ bool eat_item(item_def &food)
 }
 
 // Returns which of two food items is older (true for first, else false).
-class compare_by_freshness
+static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
 {
-public:
-    bool operator()(const item_def *food1, const item_def *food2)
-    {
-        ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
-        ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
-        ASSERT(food1->base_type == food2->base_type);
+    ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
+    ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
+    ASSERT(food1->base_type == food2->base_type);
 
-        if (is_inedible(*food1))
-            return false;
+    if (is_inedible(*food1))
+        return false;
 
-        if (is_inedible(*food2))
-            return true;
+    if (is_inedible(*food2))
+        return true;
 
-        // Permafood can last longest, skip it if possible.
-        if (food1->base_type == OBJ_FOOD && food1->sub_type != FOOD_CHUNK)
-            return false;
-        if (food2->base_type == OBJ_FOOD && food2->sub_type != FOOD_CHUNK)
-            return true;
+    // Permafood can last longest, skip it if possible.
+    if (food1->base_type == OBJ_FOOD && food1->sub_type != FOOD_CHUNK)
+        return false;
+    if (food2->base_type == OBJ_FOOD && food2->sub_type != FOOD_CHUNK)
+        return true;
 
-        // At this point, we know both are corpses or chunks, edible
-        // (not rotten, or player is saprovore).
+    // At this point, we know both are corpses or chunks, edible
+    // (not rotten, or player is saprovore).
 
-        // Always offer poisonous/mutagenic chunks last.
-        if (is_bad_food(*food1) && !is_bad_food(*food2))
-            return false;
-        if (is_bad_food(*food2) && !is_bad_food(*food1))
-            return true;
+    // Always offer poisonous/mutagenic chunks last.
+    if (is_bad_food(*food1) && !is_bad_food(*food2))
+        return false;
+    if (is_bad_food(*food2) && !is_bad_food(*food1))
+        return true;
 
-        return food1->special < food2->special;
-    }
-};
+    return food1->special < food2->special;
+}
 
 #ifdef TOUCH_UI
 static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
@@ -967,7 +956,7 @@ int eat_from_floor()
                 return eat_item(*item);
         }
 #else
-        sort(food_items.begin(), food_items.end(), compare_by_freshness());
+        sort(food_items.begin(), food_items.end(), _compare_by_freshness);
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
             item_def *item = food_items[i];
@@ -1096,7 +1085,7 @@ bool eat_from_inventory()
 
     if (found_valid)
     {
-        sort(food_items.begin(), food_items.end(), compare_by_freshness());
+        sort(food_items.begin(), food_items.end(), _compare_by_freshness);
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
             item_def *item = food_items[i];
@@ -1229,7 +1218,7 @@ int prompt_eat_chunks(bool only_auto)
 
     if (found_valid)
     {
-        sort(chunks.begin(), chunks.end(), compare_by_freshness());
+        sort(chunks.begin(), chunks.end(), _compare_by_freshness);
         for (unsigned int i = 0; i < chunks.size(); ++i)
         {
             bool autoeat = false;
@@ -2196,8 +2185,6 @@ string hunger_cost_string(const int hunger)
         return "None";
 }
 
-// Simulacrum and Sublimation of Blood are handled elsewhere, as they ignore
-// chunk edibility.
 static int _chunks_needed()
 {
     if (you.form == TRAN_LICH)
@@ -2249,7 +2236,6 @@ bool drop_spoiled_chunks()
     if (Options.auto_drop_chunks == ADC_NEVER)
         return false;
 
-    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     int nchunks = 0;
     vector<pair<int, int> > chunk_slots;
     for (int slot = 0; slot < ENDOFPACK; slot++)
@@ -2264,7 +2250,7 @@ bool drop_spoiled_chunks()
         }
 
         bool rotten = food_is_rotten(item);
-        if (rotten && !you.mutation[MUT_SAPROVOROUS] && !wants_any)
+        if (rotten && !you.mutation[MUT_SAPROVOROUS])
             return drop_item(slot, item.quantity);
 
         corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
@@ -2274,7 +2260,7 @@ bool drop_spoiled_chunks()
             continue; // no nutrition from those
 
         // We assume that carrying poisonous chunks means you can swap rPois in.
-        int badness = _corpse_badness(ce, item, wants_any);
+        int badness = _corpse_badness(ce, item);
         nchunks += item.quantity;
         chunk_slots.push_back(pair<int,int>(slot, badness));
     }

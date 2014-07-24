@@ -30,6 +30,7 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "mon-util.h" // for decline_pronoun
 #include "monster.h"
 #include "libutil.h"
 #include "player.h"
@@ -44,25 +45,25 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-attack::attack(actor *attk, actor *defn)
-    : attacker(attk), defender(defn), attack_occurred(false),
-    cancel_attack(false), did_hit(false), needs_message(false),
-    attacker_visible(false), defender_visible(false),
-    perceived_attack(false), obvious_effect(false), to_hit(0),
-    damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
-    final_attack_delay(0), special_damage_flavour(BEAM_NONE),
-    stab_attempt(false), stab_bonus(0), apply_bleeding(false), noise_factor(0),
-    ev_margin(0), weapon(NULL),
-    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-    shield(NULL), art_props(0), unrand_entry(NULL), attacker_to_hit_penalty(0),
-    attack_verb("bug"), verb_degree(), no_damage_message(),
-    special_damage_message(), aux_attack(), aux_verb(),
-    defender_body_armour_penalty(0), defender_shield_penalty(0),
-    attacker_body_armour_penalty(0), attacker_shield_penalty(0),
-    attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-    defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL), fake_chaos_attack(false), simu(false),
-    aux_source(""), kill_type(KILLED_BY_MONSTER)
+attack::attack(actor *attk, actor *defn, actor *blame)
+    : attacker(attk), defender(defn), responsible(blame ? blame : attk),
+      attack_occurred(false), cancel_attack(false), did_hit(false),
+      needs_message(false), attacker_visible(false), defender_visible(false),
+      perceived_attack(false), obvious_effect(false), to_hit(0),
+      damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
+      final_attack_delay(0), special_damage_flavour(BEAM_NONE),
+      stab_attempt(false), stab_bonus(0), apply_bleeding(false),
+      noise_factor(0), ev_margin(0), weapon(NULL),
+      damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
+      shield(NULL), art_props(0), unrand_entry(NULL),
+      attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
+      no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
+      defender_body_armour_penalty(0), defender_shield_penalty(0),
+      attacker_body_armour_penalty(0), attacker_shield_penalty(0),
+      attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
+      defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
+      miscast_target(NULL), fake_chaos_attack(false), simu(false),
+      aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
     // the child class, since initializing an attack will vary based the within
@@ -372,13 +373,7 @@ string attack::anon_name(description_level_type desc)
  */
 string attack::anon_pronoun(pronoun_type pron)
 {
-    switch (pron)
-    {
-    default:
-    case PRONOUN_SUBJECTIVE:    return "it";
-    case PRONOUN_POSSESSIVE:    return "its";
-    case PRONOUN_REFLEXIVE:     return "itself";
-    }
+    return decline_pronoun(GENDER_NEUTER, pron);
 }
 
 /* Initializes an attack, setting up base variables and values
@@ -397,10 +392,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
 
-    wpn_skill       = weapon
-                      ?  (is_range_weapon(*weapon) ? range_skill(*weapon)
-                                                   : weapon_skill(*weapon))
-                      : unarmed_skill;
+    wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
@@ -434,7 +426,16 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
-        attk_damage     = mon_attk.damage;
+
+        // Don't scale damage for YOU_FAULTLESS etc.
+        if (attacker->get_experience_level() == 0)
+            attk_damage = mon_attk.damage;
+        else
+        {
+            attk_damage = div_rand_round(mon_attk.damage
+                                             * attacker->get_hit_dice(),
+                                         attacker->get_experience_level());
+        }
 
         if (attk_type == AT_WEAP_ONLY)
         {
@@ -789,7 +790,7 @@ void attack::chaos_affects_defender()
     }
     case CHAOS_MISCAST:
     {
-        int level = defender->get_experience_level();
+        int level = defender->get_hit_dice();
 
         // At level == 27 there's a 13.9% chance of a level 3 miscast.
         int level0_chance = level;
@@ -1062,7 +1063,7 @@ void attack::do_miscast()
 
 void attack::drain_defender()
 {
-    if (defender->is_monster() && one_chance_in(3))
+    if (defender->is_monster() && coinflip())
         return;
 
     if (defender->holiness() != MH_NATURAL)
@@ -1105,11 +1106,11 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     }
     if (defender->is_player())
     {
-        ouch(dam, attacker->mindex(), kill_type, aux_source.c_str(),
+        ouch(dam, responsible->mindex(), kill_type, aux_source.c_str(),
              you.can_see(attacker));
         return dam;
     }
-    return defender->hurt(attacker, dam, flavour, clean);
+    return defender->hurt(responsible, dam, flavour, clean);
 }
 
 /* If debug, return formatted damage done
@@ -1821,7 +1822,7 @@ bool attack::apply_damage_brand(const char *what)
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_experience_level()
+            && hdcheck >= defender->get_hit_dice()
             && !one_chance_in(5)
             && !defender->as_monster()->check_clarity(false))
         {
@@ -1877,7 +1878,7 @@ bool attack::apply_damage_brand(const char *what)
         miscast_target = coinflip() ? attacker : defender;
     }
 
-    if (attacker->is_player() && damage_brand == SPWPN_CHAOS)
+    if (responsible->is_player() && damage_brand == SPWPN_CHAOS)
     {
         // If your god objects to using chaos, then it makes the
         // brand obvious.
