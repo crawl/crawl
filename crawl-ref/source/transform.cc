@@ -1287,8 +1287,10 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_BLADE_HANDS:
         if (player_mutation_level(MUT_MISSING_HAND))
+        {
             mprf(MSGCH_DURATION, "Your %s reverts to its normal proportions.",
                 blade_parts().c_str());
+        }
         else
             mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
                 blade_parts().c_str());

@@ -3001,8 +3001,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (r < chance)
             {
                 if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+                {
                     simple_monster_message(mons,
                         " begins to cast a spell, but is stunned by your will!");
+                }
                 else if (mons_class_flag(mons->type, M_PRIEST))
                     simple_monster_message(mons,
                         " begins to pray, but is stunned by your will!");
