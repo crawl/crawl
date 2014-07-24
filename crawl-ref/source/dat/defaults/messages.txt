@@ -7,7 +7,7 @@ msc := message_colour
 # Really important messages
 #
 msc += $danger:drains you
-msc += $danger:feel drained
+msc += $danger:feel( horribly)? drained
 msc += $danger:strangely unstable
 msc += $danger:curare-tipped.*hits you
 msc += $danger:Space warps.* around you
