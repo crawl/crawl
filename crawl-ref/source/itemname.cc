@@ -772,7 +772,7 @@ const char* jewellery_effect_name(int jeweltype)
 }
 
 // lua doesn't want "the" in gourmand, but we do, so...
-const char* _jewellery_effect_prefix(int jeweltype)
+static const char* _jewellery_effect_prefix(int jeweltype)
 {
     if (jeweltype == AMU_THE_GOURMAND)
         return "the ";
