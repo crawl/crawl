@@ -1010,24 +1010,12 @@ string item_class_name(int type, bool terse)
 {
     if (terse)
     {
-        // TODO: merge with base_type_string()
         switch (type)
         {
-        case OBJ_GOLD:       return "gold";
-        case OBJ_WEAPONS:    return "weapon";
-        case OBJ_MISSILES:   return "missile";
-        case OBJ_ARMOUR:     return "armour";
-        case OBJ_WANDS:      return "wand";
-        case OBJ_FOOD:       return "food";
-        case OBJ_SCROLLS:    return "scroll";
-        case OBJ_JEWELLERY:  return "jewellery";
-        case OBJ_POTIONS:    return "potion";
-        case OBJ_BOOKS:      return "book";
         case OBJ_STAVES:     return "magical staff";
-        case OBJ_RODS:       return "rod";
-        case OBJ_ORBS:       return "orb";
         case OBJ_MISCELLANY: return "misc";
         case OBJ_CORPSES:    return "carrion";
+        default:             return base_type_string((object_class_type) type);
         }
     }
     else

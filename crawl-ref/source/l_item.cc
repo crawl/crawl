@@ -266,105 +266,59 @@ static int l_item_do_class(lua_State *ls)
 
 IDEFN(class, do_class)
 
-// FIXME: Fold this back into itemname.cc.
-static const char *ring_types[] =
-{
-    "regeneration",
-    "protection",
-    "protection from fire",
-    "poison resistance",
-    "protection from cold",
-    "strength",
-    "slaying",
-    "see invisible",
-    "invisibility",
-    "loudness",
-    "teleportation",
-    "evasion",
-    "sustain abilities",
-    "stealth",
-    "dexterity",
-    "intelligence",
-    "wizardry",
-    "magical power",
-    "flight",
-    "life protection",
-    "protection from magic",
-    "fire",
-    "ice",
-    "teleport control"
-};
-
-static const char *amulet_types[] =
-{
-    "rage", "clarity", "warding", "resist corrosion",
-    "gourmand",
-#if TAG_MAJOR_VERSION == 34
-    "conservation", "controlled flight",
-#endif
-    "inaccuracy",
-    "resist mutation", "guardian spirit", "faith", "stasis",
-};
-
+// XXX: I really doubt most of this function needs to exist
 static int l_item_do_subtype(lua_State *ls)
 {
     UDATA_ITEM(item);
-    COMPILE_CHECK(ARRAYSZ(ring_types) == NUM_RINGS);
-    COMPILE_CHECK(ARRAYSZ(amulet_types) == NUM_JEWELLERY - AMU_FIRST_AMULET);
 
-    if (item)
+    if (!item)
     {
-        const char *s = NULL;
-        if (item->base_type == OBJ_ARMOUR)
-            s = item_slot_name(get_armour_slot(*item), true);
-        if (item_type_known(*item))
-        {
-            if (item->base_type == OBJ_JEWELLERY)
-            {
-                if (jewellery_is_amulet(*item))
-                    s = amulet_types[item->sub_type - AMU_FIRST_AMULET];
-                else
-                    s = ring_types[item->sub_type];
-            }
-            else if (item->base_type == OBJ_POTIONS)
-            {
-                if (item->sub_type == POT_BLOOD)
-                   s = "blood";
-                else if (item->sub_type == POT_BLOOD_COAGULATED)
-                   s = "coagulated blood";
-                else if (item->sub_type == POT_PORRIDGE)
-                   s = "porridge";
-                else if (item->sub_type == POT_BERSERK_RAGE)
-                   s = "berserk";
-#if TAG_MAJOR_VERSION == 34
-                else if (item->sub_type == POT_GAIN_STRENGTH
-                         || item->sub_type == POT_GAIN_DEXTERITY
-                         || item->sub_type == POT_GAIN_INTELLIGENCE)
-                {
-                    s = "gain ability";
-                }
-#endif
-                else if (item->sub_type == POT_CURE_MUTATION)
-                   s = "cure mutation";
-            }
-            else if (item->base_type == OBJ_BOOKS)
-            {
-                if (item->sub_type == BOOK_MANUAL)
-                    s = "manual";
-                else
-                    s = "spellbook";
-            }
-        }
-
-        if (s)
-            lua_pushstring(ls, s);
-        else
-            lua_pushnil(ls);
-
+        lua_pushnil(ls);
         return 1;
     }
 
-    lua_pushnil(ls);
+    const char *s = NULL;
+    if (item->base_type == OBJ_ARMOUR)
+        s = item_slot_name(get_armour_slot(*item), true);
+    if (item_type_known(*item))
+    {
+        if (item->base_type == OBJ_JEWELLERY)
+            s = jewellery_effect_name(item->sub_type);
+        else if (item->base_type == OBJ_POTIONS)
+        {
+            if (item->sub_type == POT_BLOOD)
+                s = "blood";
+            else if (item->sub_type == POT_BLOOD_COAGULATED)
+                s = "coagulated blood";
+            else if (item->sub_type == POT_PORRIDGE)
+                s = "porridge";
+            else if (item->sub_type == POT_BERSERK_RAGE)
+                s = "berserk";
+#if TAG_MAJOR_VERSION == 34
+            else if (item->sub_type == POT_GAIN_STRENGTH
+                        || item->sub_type == POT_GAIN_DEXTERITY
+                        || item->sub_type == POT_GAIN_INTELLIGENCE)
+            {
+                s = "gain ability";
+            }
+#endif
+            else if (item->sub_type == POT_CURE_MUTATION)
+                s = "cure mutation";
+        }
+        else if (item->base_type == OBJ_BOOKS)
+        {
+            if (item->sub_type == BOOK_MANUAL)
+                s = "manual";
+            else
+                s = "spellbook";
+        }
+    }
+
+    if (s)
+        lua_pushstring(ls, s);
+    else
+        lua_pushnil(ls);
+
     return 1;
 }
 
@@ -501,9 +455,7 @@ IDEF(weap_skill)
     if (!item || !item->defined())
         return 0;
 
-    skill_type skill = range_skill(*item);
-    if (skill == SK_THROWING)
-        skill = weapon_skill(*item);
+    const skill_type skill = item_attack_skill(*item);
     if (skill == SK_FIGHTING)
         return 0;
 

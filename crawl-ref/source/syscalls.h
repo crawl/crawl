@@ -22,7 +22,7 @@ int mkstemp(char *dummy);
 # endif
 #endif
 
-#ifndef HAVE_FDATASYNC
+#ifndef CRAWL_HAVE_FDATASYNC
 int fdatasync(int fd);
 #endif
 

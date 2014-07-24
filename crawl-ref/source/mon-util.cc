@@ -213,6 +213,11 @@ void init_mon_name_cache()
     }
 }
 
+static const char *_mon_entry_name(size_t idx)
+{
+    return mondata[idx].name;
+}
+
 monster_type get_monster_by_name(string name, bool substring)
 {
     if (name.empty())
@@ -230,29 +235,10 @@ monster_type get_monster_by_name(string name, bool substring)
         return MONS_PROGRAM_BUG;
     }
 
-    int best = 0x7fffffff;
-
-    monster_type mon = MONS_PROGRAM_BUG;
-    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
-    {
-        string candidate = mondata[i].name;
-        lowercase(candidate);
-
-        const int mtype = mondata[i].mc;
-
-        const string::size_type match = candidate.find(name);
-        if (match == string::npos)
-            continue;
-
-        int qual = 0x7ffffffe;
-        // We prefer prefixes over partial matches.
-        if (match == 0)
-            qual = candidate.length();;
-
-        if (qual < best)
-            best = qual, mon = monster_type(mtype);
-    }
-    return mon;
+    size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
+                                     _always_true<size_t>, _mon_entry_name);
+    return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
+                                   : (monster_type) mondata[idx].mc;
 }
 
 void init_monsters()
@@ -1036,8 +1022,10 @@ void discover_mimic(const coord_def& pos, bool wake)
         set_terrain_changed(pos);
         remove_markers_and_listeners_at(pos);
 
+#if TAG_MAJOR_VERSION == 34
         if (feat_is_door(feat))
             env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
+#endif
     }
 
     // Generate and place the monster.
@@ -1972,7 +1960,7 @@ int exper_value(const monster* mon, bool real)
 
     // These four are the original arguments.
     const monster_type mc = mon->type;
-    int hd                = mon->hit_dice;
+    int hd                = mon->get_experience_level();
     int maxhp             = mon->max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
@@ -2394,7 +2382,7 @@ bool init_abomination(monster* mon, int hd)
     if (mon->type == MONS_CRAWLING_CORPSE
         || mon->type == MONS_MACABRE_MASS)
     {
-        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
+        mon->set_hit_dice(mon->hit_points = mon->max_hit_points = hd);
         return true;
     }
     else if (mon->type != MONS_ABOMINATION_LARGE
@@ -2406,7 +2394,7 @@ bool init_abomination(monster* mon, int hd)
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
     const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
-    mon->hit_dice = min(max_hd, hd);
+    mon->set_hit_dice(min(max_hd, hd));
 
     const monsterentry *m = get_monster_data(mon->type);
     int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
@@ -2568,7 +2556,7 @@ void define_monster(monster* mons)
     hp_max = hp;
 
     // So let it be written, so let it be done.
-    mons->hit_dice        = hd;
+    mons->set_hit_dice(hd);
     mons->hit_points      = hp;
     mons->max_hit_points  = hp_max;
     mons->ac              = ac;
@@ -3719,38 +3707,34 @@ static gender_type _mons_class_gender(monster_type mc)
     return gender;
 }
 
+static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
+{
+    // subj  poss    refl        obj
+    { "it",  "its",  "itself",   "it"  }, // neuter
+    { "he",  "his",  "himself",  "him" }, // masculine
+    { "she", "her",  "herself",  "her" }, // feminine
+    { "you", "your", "yourself", "you" }, // 2nd person
+};
+
+const char *decline_pronoun(gender_type gender, pronoun_type variant)
+{
+    ASSERT_RANGE(gender, 0, NUM_GENDERS);
+    ASSERT_RANGE(variant, 0, NUM_PRONOUN_CASES);
+    return _pronoun_declension[gender][variant];
+}
+
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
-// PRONOUN_POSSESSIVE : _Her_ sword explodes!
+// PRONOUN_POSSESSIVE : _Its_ sword explodes!
 // PRONOUN_REFLEXIVE  : The wizard mumbles to _herself_.
-// PRONOUN_OBJECTIVE  : You miss _her_.
-
+// PRONOUN_OBJECTIVE  : You miss _him_.
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
-    gender_type gender = !visible ? GENDER_NEUTER
-                                  : _mons_class_gender(mon_type);
-
-    switch (variant)
-    {
-    case PRONOUN_SUBJECTIVE:
-        return gender == GENDER_NEUTER ? "it" :
-               gender == GENDER_MALE   ? "he" : "she";
-
-    case PRONOUN_POSSESSIVE:
-        return gender == GENDER_NEUTER ? "its" :
-               gender == GENDER_MALE   ? "his" : "her";
-
-    case PRONOUN_REFLEXIVE:
-        return gender == GENDER_NEUTER ? "itself"  :
-               gender == GENDER_MALE   ? "himself" : "herself";
-
-    case PRONOUN_OBJECTIVE:
-        return gender == GENDER_NEUTER ? "it"  :
-               gender == GENDER_MALE   ? "him" : "her";
-    }
-
-    return "";
+    COMPILE_CHECK(ARRAYSZ(_pronoun_declension) == NUM_GENDERS);
+    const gender_type gender = !visible ? GENDER_NEUTER
+                                        : _mons_class_gender(mon_type);
+    return decline_pronoun(gender, variant);
 }
 
 // Checks if the monster can use smiting/torment to attack without
@@ -3858,7 +3842,7 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     // &s are the evillest demons of all, well apart from Geryon, who really
     // profits from *not* pushing past beasts.
     if (mchar1 == '&' && isadigit(mchar2) && m1->type != MONS_GERYON)
-        return fleeing || m1->hit_dice > m2->hit_dice;
+        return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
 
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
@@ -3894,7 +3878,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return true;
     }
 
-    return mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice);
+    return mchar1 == mchar2 && (fleeing ||
+                                m1->get_hit_dice() > m2->get_hit_dice());
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
@@ -4313,7 +4298,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@Foot@", uppercase_first(part_str));
 
     if (!can_plural)
-        part_str = "NO PLURAL FOOT";
+        part_str = "NO PLURAL FEET";
     else
         part_str = mons->foot_name(true);
 

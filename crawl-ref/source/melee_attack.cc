@@ -889,8 +889,10 @@ void melee_attack::adjust_noise()
         case AT_KICK:
         case AT_CLAW:
         case AT_GORE:
+#if TAG_MAJOR_VERSION == 34
         case AT_SNAP:
         case AT_SPLASH:
+#endif
         case AT_CHERUB:
             noise_factor = 125;
             break;
@@ -1017,7 +1019,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         aux_attack = aux_verb = "kick";
         aux_damage = 5;
 
-        if (player_mutation_level(MUT_HOOVES))
+        if (you.has_usable_hooves())
         {
             // Max hoof damage: 10.
             aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
@@ -1111,7 +1113,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         {
             //Change formula to fangs_level*2 + 2*XL/3
             aux_damage -= str_bite_damage;
-            aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
+            aux_damage += div_rand_round(2 * you.get_hit_dice(), 3);
             damage_brand = SPWPN_ANTIMAGIC;
         }
 
@@ -1327,10 +1329,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         case UNAT_KICK:
         {
-            const int hooves = player_mutation_level(MUT_HOOVES);
-
-            if (hooves && pre_ac_dmg > post_ac_dmg)
+            if (you.has_usable_hooves() && pre_ac_dmg > post_ac_dmg)
             {
+                const int hooves = player_mutation_level(MUT_HOOVES);
                 const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
                 // do some of the previously ignored damage in extra-damage
                 damage_done += inflict_damage(dmg, BEAM_MISSILE);
@@ -1395,13 +1396,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     inc_mp(drain);
                 }
             }
-        }
-
-        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN
-            && grd(you.pos()) == DNGN_DEEP_WATER
-            && feat_is_water(grd(defender->as_monster()->pos())))
-        {
-            do_knockback(true);
         }
     }
     else // no damage was done
@@ -1922,7 +1916,7 @@ bool melee_attack::player_monattk_hit_effects()
 
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
-        && damage_done + special_damage > random2(defender->get_experience_level())
+        && damage_done + special_damage > random2(defender->get_hit_dice())
         && defender->alive()
         && !defender->as_monster()->has_ench(ENCH_CONFUSION)
         && mons_class_is_confusable(defender->type))
@@ -2566,15 +2560,6 @@ string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return RANDOM_ELEMENT(klown_attack);
 
-    if (mons_is_feat_mimic(attacker->type))
-    {
-        const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
-        if (feat_is_door(feat))
-            attk_type = AT_SNAP;
-        else if (feat_is_fountain(feat))
-            attk_type = AT_SPLASH;
-    }
-
     if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
@@ -2673,8 +2658,8 @@ bool melee_attack::mons_do_poison()
 
     if (attk_flavour == AF_POISON_STRONG)
     {
-        amount = random_range(attacker->get_experience_level() * 11 / 3,
-                              attacker->get_experience_level() * 13 / 2);
+        amount = random_range(attacker->get_hit_dice() * 11 / 3,
+                              attacker->get_hit_dice() * 13 / 2);
 
         if (defender->res_poison() > 0 && defender->has_lifeforce())
         {
@@ -2684,8 +2669,8 @@ bool melee_attack::mons_do_poison()
     }
     else
     {
-        amount = random_range(attacker->get_experience_level() * 2,
-                              attacker->get_experience_level() * 4);
+        amount = random_range(attacker->get_hit_dice() * 2,
+                              attacker->get_hit_dice() * 4);
     }
 
     if (!defender->poison(attacker, amount, force))
@@ -2729,7 +2714,7 @@ void melee_attack::mons_do_napalm()
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_hit_dice())/2));
         }
     }
 }
@@ -2925,8 +2910,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -2948,8 +2933,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_COLD:
-        base_damage = attacker->get_experience_level()
-                      + random2(2 * attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(2 * attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
@@ -2972,8 +2957,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ELEC:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level() / 2);
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice() / 2);
 
         special_damage =
             resist_adjust_damage(defender,
@@ -3056,7 +3041,9 @@ void melee_attack::mons_apply_attack_flavour()
             if (defender->is_unbreathing())
                 break;
 
-            if (--(attacker->as_monster()->hit_dice) <= 0)
+            monster *attkmon = attacker->as_monster();
+            attkmon->set_hit_dice(attkmon->get_experience_level() - 1);
+            if (attkmon->get_hit_dice() <= 0)
                 attacker->as_monster()->suicide();
 
             if (defender_visible)
@@ -3071,17 +3058,13 @@ void melee_attack::mons_apply_attack_flavour()
             || (damage_done > 2 && one_chance_in(3)))
         {
             defender->confuse(attacker,
-                              1 + random2(3+attacker->get_experience_level()));
+                              1 + random2(3+attacker->get_hit_dice()));
         }
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30)
-            || (damage_done > 5 && coinflip())
-            || (attk_damage == 0 && !one_chance_in(3)))
-        {
+        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
             drain_defender();
-        }
         break;
 
     case AF_PARALYSE:
@@ -3096,8 +3079,8 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (attacker->type == MONS_RED_WASP || one_chance_in(3))
         {
-            int dmg = random_range(attacker->get_experience_level() * 3 / 2,
-                                   attacker->get_experience_level() * 5 / 2);
+            int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
+                                   attacker->get_hit_dice() * 5 / 2);
             defender->poison(attacker, dmg);
         }
 
@@ -3171,7 +3154,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender(attacker->get_experience_level() * 12);
+        antimagic_affects_defender(attacker->get_hit_dice() * 12);
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
@@ -3261,8 +3244,8 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
-        special_damage = (attacker->get_experience_level() * 3 / 2
-                          + random2(attacker->get_experience_level()));
+        special_damage = (attacker->get_hit_dice() * 3 / 2
+                          + random2(attacker->get_hit_dice()));
         special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
@@ -3340,8 +3323,8 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (defender->res_water_drowning() <= 0)
         {
-            special_damage = attacker->get_experience_level() * 3 / 4
-                            + random2(attacker->get_experience_level() * 3 / 4);
+            special_damage = attacker->get_hit_dice() * 3 / 4
+                            + random2(attacker->get_hit_dice() * 3 / 4);
             special_damage_flavour = BEAM_WATER;
 
             if (needs_message)
@@ -3356,8 +3339,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIREBRAND:
-        base_damage = attacker->get_experience_level()
-                      + random2(attacker->get_experience_level());
+        base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -3507,33 +3490,51 @@ void melee_attack::tendril_disarm()
     monster *mon = attacker->as_monster();
     item_def *mons_wpn = mon->mslot_item(MSLOT_WEAPON);
 
-    if (!mons_wpn)
-        return;
+    // is it ok to move the weapon into your tile (w/o destroying it?)
+    const bool your_tile_ok = (grd(you.pos()) != DNGN_DEEP_WATER
+                                || species_likes_water(you.species))
+                               && grd(you.pos()) != DNGN_LAVA;
+    // what about their tile?
+    const bool mon_tile_ok = grd(mon->pos()) != DNGN_LAVA
+                             && (your_tile_ok
+                                 || grd(mon->pos()) != DNGN_DEEP_WATER
+                                 || species_likes_water(you.species));
+    // XXX: refactor the above to use player.cc functions
 
-    // assume the player would not pull weapons into terrain that would destroy them
-    if (!((feat_has_solid_floor(grd(you.pos()))
-           && feat_has_solid_floor(grd(mon->pos())))
-          || (feat_is_watery(grd(you.pos())) && species_likes_water(you.species)
-              && grd(mon->pos()) != DNGN_LAVA)))
+    if (!you.mutation[MUT_TENDRILS]
+        || !mons_wpn
+        || mons_wpn->cursed()
+        || !attacker->alive()
+        || mons_class_is_animated_weapon(mon->type)
+        || !adjacent(you.pos(), mon->pos())
+        || !you.can_see(mon)
+        || !mon_tile_ok
+        || !one_chance_in(5))
     {
         return;
     }
 
-    if (you.mutation[MUT_TENDRILS]
-        && attacker->alive()
-        && (!mons_class_is_animated_weapon(mon->type))
-        && adjacent(you.pos(), mon->pos())
-        && you.can_see(mon)
-        && one_chance_in(5)
-        && (random2(you.dex()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice
-            || random2(you.strength()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice)
-        && !mons_wpn->cursed())
-    {
-        mprf("Your tendrils lash around %s %s and pull it to the ground!",
-             apostrophise(mon->name(DESC_THE)).c_str(), mons_wpn->name(DESC_PLAIN).c_str());
+    const int mon_hd = mon->get_hit_dice();
+    const int adj_mon_hd = mons_class_flag(mon->type, M_FIGHTER) ? mon_hd * 3/2
+                                                                 : mon_hd;
+    // some rounding errors here, but not significant
 
-        mon->drop_item(MSLOT_WEAPON, false);
+    if (random2(you.dex()) <= adj_mon_hd
+        && random2(you.strength()) <= adj_mon_hd)
+    {
+        return;
+    }
+
+    mprf("Your tendrils lash around %s %s and pull it to the ground!",
+        apostrophise(mon->name(DESC_THE)).c_str(),
+         mons_wpn->name(DESC_PLAIN).c_str());
+
+    mon->drop_item(MSLOT_WEAPON, false);
+    if (your_tile_ok)
+    {
         move_top_item(mon->pos(), you.pos());
+        // assumes nothing's re-ordering items - e.g. gozag gold
+        // (but that shouldn't interact with jiyva tendrils...?)
     }
 }
 
@@ -3857,7 +3858,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
     {
     case UNAT_KICK:
         return is_uc
-                || player_mutation_level(MUT_HOOVES)
+                || you.has_usable_hooves()
                 || you.has_usable_talons()
                 || player_mutation_level(MUT_TENTACLE_SPIKE);
 
@@ -3961,7 +3962,7 @@ int melee_attack::calc_mon_to_hit_base()
     const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
     const int hd_mult = fighter ? 25 : 15;
-    return 18 + attacker->get_experience_level() * hd_mult / 10;
+    return 18 + attacker->get_hit_dice() * hd_mult / 10;
 }
 
 /**

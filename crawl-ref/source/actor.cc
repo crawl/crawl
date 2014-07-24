@@ -559,6 +559,7 @@ void actor::stop_being_constricted(bool quiet)
 
 void actor::clear_far_constrictions()
 {
+    clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
     if (!constrictor || !adjacent(pos(), constrictor->pos()))

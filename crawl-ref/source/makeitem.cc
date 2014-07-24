@@ -15,7 +15,6 @@
 #include "artefact.h"
 #include "colour.h"
 #include "coord.h"
-#include "dbg-scan.h"
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -78,7 +77,6 @@ static int _exciting_colour()
 
 static int _weapon_colour(const item_def &item)
 {
-    int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
     string itname = item.name(DESC_PLAIN);
@@ -90,58 +88,32 @@ static int _weapon_colour(const item_def &item)
     if (is_demonic(item))
         return LIGHTRED;
 
-    if (is_range_weapon(item))
+    switch (item_attack_skill(item))
     {
-        switch (range_skill(item))
-        {
-        case SK_BOWS:
-            item_colour = BLUE;
-            break;
-        case SK_CROSSBOWS:
-            item_colour = LIGHTBLUE;
-            break;
-        case SK_THROWING:
-            item_colour = WHITE;
-            break;
-        case SK_SLINGS:
-            item_colour = BROWN;
-            break;
-        default:
-            // huh?
-            item_colour = LIGHTGREEN;
-            break;
-        }
+    case SK_BOWS:
+        return BLUE;
+    case SK_CROSSBOWS:
+        return LIGHTBLUE;
+    case SK_THROWING:
+        return WHITE;
+    case SK_SLINGS:
+        return BROWN;
+    case SK_SHORT_BLADES:
+        return CYAN;
+    case SK_LONG_BLADES:
+        return LIGHTCYAN;
+    case SK_AXES:
+        return MAGENTA;
+    case SK_MACES_FLAILS:
+        return LIGHTGREY;
+    case SK_POLEARMS:
+        return RED;
+    case SK_STAVES:
+        return GREEN;
+    default:
+        // huh?
+        return LIGHTGREEN;
     }
-    else
-    {
-        switch (weapon_skill(item))
-        {
-        case SK_SHORT_BLADES:
-            item_colour = CYAN;
-            break;
-        case SK_LONG_BLADES:
-            item_colour = LIGHTCYAN;
-            break;
-        case SK_AXES:
-            item_colour = MAGENTA;
-            break;
-        case SK_MACES_FLAILS:
-            item_colour = LIGHTGREY;
-            break;
-        case SK_POLEARMS:
-            item_colour = RED;
-            break;
-        case SK_STAVES:
-            item_colour = GREEN;
-            break;
-        default:
-            // huh?
-            item_colour = LIGHTGREEN;
-            break;
-        }
-    }
-
-    return item_colour;
 }
 
 static int _missile_colour(const item_def &item)
@@ -752,6 +724,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     {
         return random_choose(WPN_LAJATANG,
                              WPN_GREATSLING,
+                             WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
                              WPN_DEMON_TRIDENT,
@@ -1104,7 +1077,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             // intentionally fallthrough to bow/xbow brands
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
-        case WPN_CROSSBOW:
+        case WPN_HAND_CROSSBOW:
+        case WPN_ARBALEST:
             rc = random_choose_weighted(48, SPWPN_FLAMING,
                                         25, SPWPN_FREEZING,
                                         15, SPWPN_EVASION,
@@ -1114,6 +1088,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_GREATSLING:
+        case WPN_TRIPLE_CROSSBOW:
             // totally arbitrary, first draft for "rare ranged weapon" brands
             rc = random_choose(SPWPN_SPEED,
                                SPWPN_FREEZING,
@@ -2758,10 +2733,6 @@ int items(bool allow_uniques,
         {
             make_item_unrandart(mitm[p], force_ego);
             ASSERT(mitm[p].is_valid());
-#ifdef DEBUG_DIAGNOSTICS
-            if (crawl_state.obj_stat_gen)
-                objstat_record_item(mitm[p]);
-#endif
             return p;
         }
         // the base item otherwise
@@ -2894,10 +2865,6 @@ int items(bool allow_uniques,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
-#ifdef DEBUG_DIAGNOSTICS
-    if (crawl_state.obj_stat_gen)
-        objstat_record_item(mitm[p]);
-#endif
     return p;
 }
 

@@ -1598,7 +1598,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
         return false;
 
     const item_def *weapon = mons->weapon();
-    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
+    return weapon && melee_skill(*weapon) == SK_POLEARMS;
 }
 
 // Friendly summons can't attack out of the player's LOS, it's too abusable.

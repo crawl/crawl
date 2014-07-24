@@ -70,11 +70,7 @@ static skill_type _equipped_skill()
     const int missile = you.m_quiver->get_fire_item();
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
-    {
-        if (is_range_weapon(*iweap))
-            return range_skill(*iweap);
-        return weapon_skill(*iweap);
-    }
+        return item_attack_skill(*iweap);
 
     if (missile != -1)
         return range_skill(you.inv[missile]);
@@ -158,7 +154,7 @@ static void _write_mon(FILE * o, monster &mon)
 {
     fprintf(o, "%s: HD %d   AC %d   EV %d\n",
             mon.name(DESC_PLAIN, true).c_str(),
-            mon.hit_dice,
+            mon.get_experience_level(),
             mon.ac,
             mon.ev);
 }

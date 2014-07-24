@@ -416,7 +416,7 @@ void ghost_demon::init_player_ghost()
         {
             damage = property(weapon, PWPN_DAMAGE);
 
-            damage *= 25 + you.skills[weapon_skill(weapon)];
+            damage *= 25 + you.skills[melee_skill(weapon)];
             damage /= 25;
 
             if (weapon.base_type == OBJ_WEAPONS)

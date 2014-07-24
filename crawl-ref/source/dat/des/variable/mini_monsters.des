@@ -830,14 +830,14 @@ NAME:   nicolae_underground_beach
 DEPTH:  D:2-
 TAGS:   no_trap_gen no_pool_fixup
 SUBST:  N = MO, M = bW, O = wW
-: if you.absdepth() > 6 then
+: if you.absdepth() > 9 then
 SUBST:  b = SBB
 KPROP:  B = bloody
 SUBST:  B = S
 NSUBST: S = 3:v / *:S
 : dgn.delayed_decay(_G, 'v', 'human corpse')
 NSUBST: w = 4:j / *:w
-KMONS:  j = shark
+KMONS:  j = water elemental
 KFEAT:  j = w
 : else
 SUBST:  b = S

@@ -26,6 +26,7 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
+#include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
@@ -679,6 +680,38 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
                             : "You feel an overwhelming desire to slay dragons!");
 }
 
+static bool is_dragonkind(const actor *act)
+{
+    if (mons_genus(act->mons_species()) == MONS_DRAGON
+        || mons_genus(act->mons_species()) == MONS_DRAKE
+        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
+    {
+        return true;
+    }
+
+    if (act->is_player())
+        return you.form == TRAN_DRAGON;
+
+    // Else the actor is a monster.
+    const monster* mon = act->as_monster();
+
+    if (mons_is_zombified(mon)
+        && (mons_genus(mon->base_monster) == MONS_DRAGON
+            || mons_genus(mon->base_monster) == MONS_DRAKE
+            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return true;
+    }
+
+    if (mons_is_ghost_demon(mon->type)
+        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
@@ -687,7 +720,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
     // Since the target will become a DEAD MONSTER if it dies due to the extra
     // damage to dragons, we need to grab this information now.
-    int hd = min(defender->as_monster()->hit_dice, 18);
+    int hd = min(defender->as_monster()->get_experience_level(), 18);
     string name = defender->name(DESC_THE);
 
     if (!mondied)
@@ -1131,7 +1164,7 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_hit_dice())/2));
         }
     }
 }

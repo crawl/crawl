@@ -709,7 +709,7 @@ LUAFN(you_init)
     setup_game(ng);
     you.save->unlink();
     you.save = NULL;
-    PLUARET(string, skill_name(weapon_skill(OBJ_WEAPONS, ng.weapon)));
+    PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_checkint(ls, 1)));

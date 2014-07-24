@@ -335,20 +335,20 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
                           divine_ability, where, not_self, mode);
 }
 
-// Dispelling is sort of an anti-extension... it sets a lot of magical
-// durations to 1 so it's very nasty at times (and potentially lethal,
-// that's why we reduce flight to 2, so that the player has a chance
-// to stop insta-death... sure the others could lead to death, but that's
-// not as direct as falling into deep water) -- bwr
+/**
+ * Remove magical effects from the player.
+ *
+ * Forms, buffs, debuffs, contamination, probably a few other things.
+ * Flight gets an extra 11 aut before going away to minimize instadeaths.
+ */
 void debuff_player()
 {
     duration_type dur_list[] =
     {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
-        DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
-        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
-        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
-        DUR_TRANSFORMATION, DUR_DEATH_CHANNEL,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_SLOW,
+        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_CONFUSING_TOUCH,
+        DUR_SURE_BLADE, DUR_CORONA, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
+        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL,
         DUR_PHASE_SHIFT, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING,
@@ -361,11 +361,21 @@ void debuff_player()
 
     bool need_msg = false;
 
-    if (!you.permanent_flight()
-        && you.duration[DUR_FLIGHT] > 11)
+    // don't instakill the player by removing flight
+    if (!you.permanent_flight())
     {
-        you.duration[DUR_FLIGHT] = 11;
-        need_msg = true;
+        if (you.duration[DUR_FLIGHT] > 11)
+        {
+            you.duration[DUR_FLIGHT] = 11;
+            need_msg = true;
+        }
+
+        // too many forms; confusing to players & devs both to special case.
+        if (you.duration[DUR_TRANSFORMATION] > 11)
+        {
+            you.duration[DUR_TRANSFORMATION] = 11;
+            need_msg = true;
+        }
     }
 
     if (you.duration[DUR_TELEPORT] > 0)
@@ -394,10 +404,6 @@ void debuff_player()
 
     if (you.attribute[ATTR_SWIFTNESS] > 0)
         you.attribute[ATTR_SWIFTNESS] = 0;
-
-    // Post-berserk slowing isn't magic, so don't remove that.
-    if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
-        you.duration[DUR_SLOW] = max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
     {

@@ -3197,7 +3197,7 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     // Compare with other melee weapons.
-                    curr_wpskill = weapon_skill(item);
+                    curr_wpskill = melee_skill(item);
                     best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
                     // Maybe unarmed is better.
                     if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])

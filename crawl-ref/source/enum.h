@@ -359,10 +359,12 @@ enum attribute_type
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
+#if TAG_MAJOR_VERSION == 34
     ATTR_DIVINE_FIRE_RES,      // Divine fire resistance (Qazlal).
     ATTR_DIVINE_COLD_RES,      // Divine cold resistance (Qazlal).
     ATTR_DIVINE_ELEC_RES,      // Divine electricity resistance (Qazlal).
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
+#endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     NUM_ATTRIBUTES
 };
@@ -1328,21 +1330,15 @@ enum dungeon_char_type
 
 // When adding:
 //
-// * New stairs/portals: update grid_stair_direction.
-// * Any: edit view.cc and add a glyph and colour for the feature.
-// * Any: edit directn.cc and add a description for the feature.
+// * Any: Add an entry in feature-data.h for the feature.
+// * New stairs/portals: update feat_stair_direction.
 // * Any: edit dat/descript/features.txt and add a
 //        long description if appropriate.
-// * Any: check the grid_* functions in misc.cc and make sure
+// * Any: check the feat_* functions in terrain.cc and make sure
 //        they return sane values for your new feature.
-// * Any: edit dungeon.cc and add a symbol to map_feature() and
-//        vault_grid() for the feature, if you want vault maps to
-//        be able to use it.  If you do, also update
+// * Any: edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
+//        if you want vault maps to be able to use it. If you do, also update
 //        docs/develop/levels/syntax.txt with the new symbol.
-// * Any: edit l_dgngrd.cc and add the feature's name to the dngn_feature_names
-//        array, if you want vault map Lua code to be able to use the
-//        feature, and/or you want to be able to create the feature
-//        using the "create feature by name" wizard command.
 // * Any: if its enumerator comes late in the list (as is likely for new
 //        feature types),_cell_feat_show_colour may need a special case to
 //        allow it to be recoloured.
@@ -1424,9 +1420,6 @@ enum dungeon_feature_type
     DNGN_ENTER_TARTARUS,
     DNGN_ENTER_ABYSS,
     DNGN_EXIT_ABYSS,
-#if TAG_MAJOR_VERSION > 34
-    DNGN_ABYSSAL_STAIR,
-#endif
     DNGN_STONE_ARCH,
     DNGN_ENTER_PANDEMONIUM,
     DNGN_EXIT_PANDEMONIUM,
@@ -1550,8 +1543,8 @@ enum dungeon_feature_type
     DNGN_UNKNOWN_ALTAR,
     DNGN_UNKNOWN_PORTAL,
 
-#if TAG_MAJOR_VERSION == 34
     DNGN_ABYSSAL_STAIR,
+#if TAG_MAJOR_VERSION == 34
     DNGN_BADLY_SEALED_DOOR,
 #endif
 
@@ -1891,6 +1884,7 @@ enum enchant_type
     ENCH_PERMA_BRIBED,
     ENCH_CORROSION,
     ENCH_GOLD_LUST,
+    ENCH_DRAINED,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2809,7 +2803,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_SHARK,
+#endif
     MONS_KRAKEN,
     MONS_KRAKEN_TENTACLE,
     MONS_KRAKEN_TENTACLE_SEGMENT,
@@ -3643,6 +3639,7 @@ enum pronoun_type
     PRONOUN_POSSESSIVE,
     PRONOUN_REFLEXIVE,
     PRONOUN_OBJECTIVE,
+    NUM_PRONOUN_CASES
 };
 
 // Be sure to update _prop_name[] in wiz-item.cc to match.  Also
@@ -4388,9 +4385,6 @@ enum zap_type
     ZAP_DISINTEGRATE,
     ZAP_BREATHE_STEAM,
     ZAP_THROW_ICICLE,
-#if TAG_MAJOR_VERSION == 34
-    ZAP_ICE_STORM,
-#endif
     ZAP_CORONA,
     ZAP_HIBERNATION,
     ZAP_FLAME_TONGUE,
@@ -4647,6 +4641,7 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_PERM_SUMMON= 0x1000000000000ULL,
     TILE_FLAG_DEATHS_DOOR = 0x2000000000000ULL,
     TILE_FLAG_RECALL =     0x4000000000000ULL,
+    TILE_FLAG_DRAIN =      0x8000000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,

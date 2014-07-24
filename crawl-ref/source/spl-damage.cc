@@ -756,12 +756,12 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             if (mons_atts_aligned(m->attitude, mons->attitude))
             {
                 beam.friend_info.count++;
-                beam.friend_info.power += (m->hit_dice * this_damage / hurted);
+                beam.friend_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
             else
             {
                 beam.foe_info.count++;
-                beam.foe_info.power += (m->hit_dice * this_damage / hurted);
+                beam.foe_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
         }
     }
@@ -1357,8 +1357,8 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + div_rand_round(caster->hit_dice * 9, 2);
-    int rad = 3 + div_rand_round(caster->hit_dice, 5);
+    int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
+    int rad = 3 + div_rand_round(caster->get_hit_dice(), 5);
 
     int dest = 0;
     for (distance_iterator di(caster->pos(), true, true, rad); di; ++di)
@@ -2536,7 +2536,7 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 void forest_damage(const actor *mon)
 {
     const coord_def pos = mon->pos();
-    const int hd = mon->get_experience_level();
+    const int hd = mon->get_hit_dice();
 
     if (one_chance_in(4))
     {
@@ -2823,7 +2823,7 @@ void toxic_radiance_effect(actor* agent, int mult)
     if (agent->is_player())
         pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
     else
-        pow = agent->as_monster()->hit_dice * 8;
+        pow = agent->as_monster()->get_hit_dice() * 8;
 
     bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
 

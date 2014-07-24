@@ -591,9 +591,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
 
     // Check for banned schools.
     if (cannot_use_spell_school(spell))
-    {
         return true;
-    }
 
     return rc;
 }
@@ -795,6 +793,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
+    bool         form           = false;
 
     for (spells_to_books::iterator i = book_hash.begin();
          i != book_hash.end(); ++i)
@@ -803,7 +802,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         if (spell == current_spell || you.has_spell(spell))
             num_known++;
-        else if (you_cannot_memorise(spell))
+        else if (you_cannot_memorise(spell, form))
             num_race++;
         else
         {
@@ -842,12 +841,18 @@ static bool _get_mem_list(spell_list &mem_spells,
         mprf(MSGCH_PROMPT, "You already know all available spells.");
     else if (num_race == total || (num_known + num_race) == total)
     {
-        const bool lichform = (you.form == TRAN_LICH);
-        const string species = "a " + species_name(you.species);
-        mprf(MSGCH_PROMPT,
-             "You cannot memorise any of the available spells because you "
-             "are %s.", lichform ? "in Lich form"
-                                 : lowercase_string(species).c_str());
+        if (form)
+        {
+            mprf(MSGCH_PROMPT, "You cannot currently memorise any of the "
+                 "available spells because you are in %s form.",
+                 uppercase_first(transform_name()).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_PROMPT, "You cannot memorise any of the available "
+                 "spells because you are %s.",
+                 article_a(species_name(you.species)).c_str());
+        }
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
@@ -1163,20 +1168,10 @@ string desc_cannot_memorise_reason(spell_type spell, bool form)
 {
     string desc;
     if (cannot_use_spell_school(spell))
-    {
         desc = "You cannot memorise or cast this type of magic.";
-    }
     else
     {
-        desc = "You cannot ";
-        if (form)
-            desc += "currently ";
-        desc += "memorise or cast this spell because you are ";
-
-        if (form)
-            desc += "in " + uppercase_first(transform_name()) + " form";
-        else
-            desc += "a " + lowercase_string(species_name(you.species));
+        desc += article_a(species_name(you.species));
 
         desc += ".";
     }
@@ -2492,14 +2487,22 @@ void make_book_Kiku_gift(item_def &book, bool first)
 
     if (first)
     {
-        chosen_spells[0] = coinflip() ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
+        bool can_bleed = you.species != SP_GARGOYLE
+                         && you.species != SP_GHOUL
+                         && you.species != SP_MUMMY;
+        bool can_regen = you.species != SP_DEEP_DWARF
+                         && you.species != SP_MUMMY;
+        bool pain = coinflip();
+
+        chosen_spells[0] = pain ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
         chosen_spells[1] = SPELL_CORPSE_ROT;
-        chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
-        chosen_spells[3] = (you.species == SP_DEEP_DWARF
-                            || you.species == SP_MUMMY
-                            || coinflip())
+        chosen_spells[2] = (can_bleed ? SPELL_SUBLIMATION_OF_BLOOD
+                                      : pain ? SPELL_ANIMATE_SKELETON
+                                             : SPELL_PAIN);
+        chosen_spells[3] = (!can_regen || coinflip())
                            ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
         chosen_spells[4] = SPELL_CONTROL_UNDEAD;
+
     }
     else
     {

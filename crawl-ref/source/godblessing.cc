@@ -140,10 +140,11 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
 
     if (!launcher)
         ammo.sub_type = MI_TOMAHAWK;
-    else if (weapon_skill(*launcher) == SK_SLINGS)
-        ammo.sub_type = MI_SLING_BULLET; // ugly special case to avoid stones
     else
         ammo.sub_type = fires_ammo_type(*launcher);
+
+    if (ammo.sub_type == MI_STONE)
+        ammo.sub_type = MI_SLING_BULLET; // ugly special case
 
     // XXX: should beogh be gifting needles?
     // if not, we'd need special checks in player gifting, etc... better to
@@ -238,7 +239,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
     }
 
     // no launcher, no shield: give them a crossbow & some ammo.
-    _gift_weapon_to_orc(mon, WPN_CROSSBOW);
+    _gift_weapon_to_orc(mon, WPN_ARBALEST);
     if (mon->launcher() == NULL)
     {
         dprf("Couldn't give crossbow to follower!");

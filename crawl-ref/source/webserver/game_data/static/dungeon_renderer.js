@@ -246,7 +246,7 @@ function ($, cr, map_knowledge, options, dngn) {
             {
                 var map_cell = map_knowledge.get(cx, cy);
                 var cell = map_cell.t;
-                if (map_knowledge.visible(cx, cy) && cell_is_animated(cell))
+                if (map_knowledge.visible(map_cell) && cell_is_animated(cell))
                 {
                     animate_cell(cell);
                     var x = (cx - this.view.x) * this.cell_width;

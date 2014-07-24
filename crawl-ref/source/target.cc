@@ -509,7 +509,7 @@ aff_type targetter_cleave::is_affected(coord_def loc)
 
 targetter_cloud::targetter_cloud(const actor* act, int range,
                                  int count_min, int count_max) :
-    cnt_min(count_min), cnt_max(count_max)
+    cnt_min(count_min), cnt_max(count_max), avoid_clouds(true)
 {
     ASSERT(cnt_min > 0);
     ASSERT(cnt_max > 0);
@@ -519,11 +519,11 @@ targetter_cloud::targetter_cloud(const actor* act, int range,
     range2 = dist_range(range);
 }
 
-static bool _cloudable(coord_def loc)
+static bool _cloudable(coord_def loc, bool avoid_clouds)
 {
     return in_bounds(loc)
            && !cell_is_solid(loc)
-           && env.cgrid(loc) == EMPTY_CLOUD;
+           && (!avoid_clouds || env.cgrid(loc) == EMPTY_CLOUD);
 }
 
 bool targetter_cloud::valid_aim(coord_def a)
@@ -544,9 +544,9 @@ bool targetter_cloud::valid_aim(coord_def a)
         return notify_fail(_wallmsg(a));
     if (agent)
     {
-        if (env.cgrid(a) != EMPTY_CLOUD)
+        if (env.cgrid(a) != EMPTY_CLOUD && avoid_clouds)
             return notify_fail("There's already a cloud there.");
-        ASSERT(_cloudable(a));
+        ASSERT(_cloudable(a, avoid_clouds));
     }
     return true;
 }
@@ -572,7 +572,7 @@ bool targetter_cloud::set_aim(coord_def a)
         {
             coord_def c = queue[d1][i];
             for (adjacent_iterator ai(c); ai; ++ai)
-                if (_cloudable(*ai) && !seen.count(*ai))
+                if (_cloudable(*ai, avoid_clouds) && !seen.count(*ai))
                 {
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);
                     if (d2 >= queue.size())

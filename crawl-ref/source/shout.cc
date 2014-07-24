@@ -302,7 +302,7 @@ bool check_awaken(monster* mons)
         return true;
 
     // I assume that creatures who can sense invisible are very perceptive.
-    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
+    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice()
                        + mons_sense_invis(mons) * 5;
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
@@ -564,8 +564,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 
             // Let sleeping hounds lie.
             if (mi->asleep()
-                && mons_species(mi->type) != MONS_VAMPIRE
-                && mi->type != MONS_SHARK)
+                && mons_species(mi->type) != MONS_VAMPIRE)
             {
                 // 33% chance of sleeping on
                 // 33% of being disturbed (start BEH_WANDER)
@@ -586,35 +585,6 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                             mi->name(DESC_PLAIN).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
-
-            if (mi->type == MONS_SHARK)
-            {
-                // Sharks go into a battle frenzy if they smell blood.
-                monster_pathfind mp;
-                if (mp.init_pathfind(*mi, where))
-                {
-                    mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
-                    const int dist = 15 - (mi->pos() - where).rdist();
-                    const int dur  = random_range(dist, dist*2)
-                                     * speed_to_duration(mi->speed);
-
-                    if (ench.ench != ENCH_NONE)
-                    {
-                        int level = ench.degree;
-                        if (level < 4 && one_chance_in(2*level))
-                            ench.degree++;
-                        ench.duration = max(ench.duration, dur);
-                        mi->update_ench(ench);
-                    }
-                    else
-                    {
-                        mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, 0, dur));
-                        simple_monster_message(*mi, " goes into a frenzy at the "
-                                                    "smell of blood!");
-                    }
-                }
-            }
-            break;
 
         case SENSE_WEB_VIBRATION:
             if (!mons_class_flag(mi->type, M_WEB_SENSE)

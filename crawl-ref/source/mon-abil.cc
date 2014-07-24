@@ -321,8 +321,8 @@ static void _merge_ench_durations(monster* initial, monster* merge_to, bool useh
 {
     mon_enchant_list::iterator i;
 
-    int initial_count = usehd ? initial->hit_dice : initial->number;
-    int merge_to_count = usehd ? merge_to->hit_dice : merge_to->number;
+    int initial_count = usehd ? initial->get_hit_dice() : initial->number;
+    int merge_to_count = usehd ? merge_to->get_hit_dice() : merge_to->number;
     int total_count = initial_count + merge_to_count;
 
     for (i = initial->enchantments.begin();
@@ -416,7 +416,7 @@ static monster* _do_split(monster* thing, coord_def & target)
     thing->number -= split_off;
     new_slime->number = split_off;
 
-    new_slime->hit_dice = thing->hit_dice;
+    new_slime->set_hit_dice(thing->get_experience_level());
 
     _stats_from_blob_count(thing, max_per_blob, current_per_blob);
     _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
@@ -457,8 +457,8 @@ static void _lose_turn(monster* mons, bool has_gone)
 // abomination.
 static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 {
-    const int orighd = merge_to->hit_dice;
-    int addhd = crawlie->hit_dice;
+    const int orighd = merge_to->get_experience_level();
+    int addhd = crawlie->get_experience_level();
 
     // Abomination is fully healed.
     if (merge_to->type == MONS_ABOMINATION_LARGE
@@ -536,7 +536,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         change_monster_type(merge_to, new_type);
 
     // Combine enchantment durations (weighted by original HD).
-    merge_to->hit_dice = orighd;
+    merge_to->set_hit_dice(orighd);
     _merge_ench_durations(crawlie, merge_to, true);
 
     init_abomination(merge_to, newhd);
@@ -1149,7 +1149,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
         && chief->can_see(foe)
         && coinflip())
     {
-        const int level = chief->hit_dice > 12? 2 : 1;
+        const int level = chief->get_hit_dice() > 12? 2 : 1;
         vector<monster* > seen_affected;
         for (monster_near_iterator mi(chief, LOS_NO_TRANS); mi; ++mi)
         {
@@ -1160,7 +1160,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 && !mi->has_ench(ENCH_MIGHT)
                 && !mi->cannot_move()
                 && !mi->confused()
-                && (mi->hit_dice < chief->hit_dice
+                && (mi->get_hit_dice() < chief->get_hit_dice()
                     || type == BATTLECRY_CHERUB_HYMN))
             {
                 mon_enchant ench = mi->get_ench(battlecry);
@@ -1838,31 +1838,23 @@ static bool _lost_soul_affectable(const monster* mons)
            && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 }
 
-struct hd_sorter
-{
-    bool operator()(const pair<monster* ,int> &a, const pair<monster* ,int> &b)
-    {
-        return a.second > b.second;
-    }
-};
-
 static bool _lost_soul_teleport(monster* mons)
 {
     bool seen = you.can_see(mons);
 
-   vector<pair<monster*, int> > candidates;
+    typedef pair<monster*, int> mon_quality;
+    vector<mon_quality> candidates;
 
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
         {
-            pair<monster* , int> m = make_pair(*mi, min(mi->hit_dice, 18)
-                                                    + random2(8));
+            mon_quality m(*mi, min(mi->get_experience_level(), 18) + random2(8));
             candidates.push_back(m);
         }
     }
-    sort(candidates.begin(), candidates.end(), hd_sorter());
+    sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
 
     for (unsigned int i = 0; i < candidates.size(); ++i)
     {
@@ -1914,9 +1906,9 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
             --count;
     }
 
-    return count <= -1 || target->hit_dice > 9
-           || x_chance_in_y(target->hit_dice * target->hit_dice * target->hit_dice,
-                            1200);
+    const int target_hd = target->get_experience_level();
+    return count <= -1 || target_hd > 9
+           || x_chance_in_y(target_hd * target_hd * target_hd, 1200);
 }
 
 bool lost_soul_revive(monster* mons)
@@ -3249,10 +3241,10 @@ void siren_song(monster* mons)
         if (*mi != mons && mons_aligned(mons, *mi) && !mons_is_firewood(*mi)
             && mi->type != MONS_DROWNED_SOUL)
         {
-            ally_hd += mi->hit_dice;
+            ally_hd += mi->get_experience_level();
         }
     }
-    if (ally_hd > mons->hit_dice)
+    if (ally_hd > mons->get_experience_level())
     {
         if (mons->props.exists("siren_call"))
         {
@@ -3306,7 +3298,7 @@ void siren_song(monster* mons)
 
                 // Scale down drowned soul damage for low level sirens
                 if (soul)
-                    soul->hit_dice = mons->hit_dice;
+                    soul->set_hit_dice(mons->get_hit_dice());
             }
         }
     }
@@ -3459,7 +3451,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         beem.name        = "bolt of electricity";
         beem.aux_source  = "bolt of electricity";
         beem.range       = 8;
-        beem.damage      = dice_def(3, 3 + mons->hit_dice);
+        beem.damage      = dice_def(3, 3 + mons->get_hit_dice());
         beem.hit         = 35;
         beem.colour      = LIGHTCYAN;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -3497,7 +3489,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->type == MONS_OKLOB_PLANT)
         {
             // reduced chance in zotdef
-            spit = x_chance_in_y(mons->hit_dice,
+            spit = x_chance_in_y(mons->get_hit_dice(),
                 crawl_state.game_is_zotdef() ? 40 : 30);
         }
         if (mons->type == MONS_OKLOB_SAPLING)
@@ -3758,7 +3750,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons_genus(mons->type) == MONS_CRAB)
             {
                 beem.is_big_cloud = true;
-                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
+                beem.damage       = dice_def(1, (mons->get_hit_dice()*3)/2);
             }
 
             // Fire tracer.
@@ -3858,7 +3850,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.check_res_magic(mons->hit_dice * 22 / 3 + 15) > 0
+                && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
                     || you.clarity())
                     || you.duration[DUR_MESMERISE_IMMUNE])
             {
@@ -4128,7 +4120,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (foe && mons->can_see(foe) && one_chance_in(4))
         {
             simple_monster_message(mons, " exhales a fierce blast of wind!");
-            wind_blast(mons, 12 * mons->hit_dice, foe->pos());
+            wind_blast(mons, 12 * mons->get_hit_dice(), foe->pos());
             mon_enchant breath_timeout =
                 mon_enchant(ENCH_BREATH_WEAPON, 1, mons,
                             (4 + random2(9)) * 10);
@@ -4313,7 +4305,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (!victim)
                 break;
             used = _do_throw(mons, actor_by_mid(throw_choice),
-                             mons->hit_dice * 4);
+                             mons->get_hit_dice() * 4);
         }
         break;
 
@@ -4427,7 +4419,7 @@ void mon_nearby_ability(monster* mons)
                 interrupt_activity(AI_MONSTER_ATTACKS, mons);
             }
 
-            int res_margin = foe->check_res_magic((mons->hit_dice * 5)
+            int res_margin = foe->check_res_magic((mons->get_hit_dice() * 5)
                              * confuse_power);
             if (res_margin > 0)
             {

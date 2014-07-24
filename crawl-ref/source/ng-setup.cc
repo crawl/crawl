@@ -259,7 +259,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING]    = 3;
@@ -273,13 +272,11 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
-        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
         you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
-        you.mutation[MUT_UNBREATHING]                = 1;
         you.mutation[MUT_ROT_IMMUNITY]               = 1;
         break;
     case SP_TENGU:
@@ -300,7 +297,6 @@ void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
-        you.mutation[MUT_UNBREATHING]  = 1;
         break;
     case SP_FELID:
         you.mutation[MUT_FANGS]           = 3;
@@ -338,6 +334,7 @@ void give_basic_mutations(species_type speci)
     // Some mutations out-sourced because they're
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
+    you.mutation[MUT_UNBREATHING] = species_is_unbreathing(speci);
 
     // Necessary mostly for wizmode race changing.
     you.mutation[MUT_COLD_BLOODED] = species_genus(speci) == GENPC_DRACONIAN;
@@ -494,8 +491,9 @@ static void _update_weapon(const newgame_def& ng)
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
-    case WPN_CROSSBOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus);
+    case WPN_HAND_CROSSBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW, -1, 1,
+                          plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
         autopickup_starting_ammo(MI_BOLT);
 
@@ -507,6 +505,8 @@ static void _update_weapon(const newgame_def& ng)
                           plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
         autopickup_starting_ammo(MI_SLING_BULLET);
+        autopickup_starting_ammo(MI_STONE);
+
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -990,7 +990,7 @@ static void _give_items_skills(const newgame_def& ng)
         if (!you.weapon())
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-            you.skills[weapon_skill(*you.weapon())] = weap_skill;
+            you.skills[melee_skill(*you.weapon())] = weap_skill;
     }
 
     if (you.species == SP_FELID)

@@ -785,8 +785,12 @@ void append_weapon_stats(string &description, const item_def &item)
     _append_value(description, property(item, PWPN_HIT), true);
     description += "  ";
 
+    const int base_dam = property(item, PWPN_DAMAGE);
+    const int ammo_type = fires_ammo_type(item);
+    const int ammo_dam = ammo_type == MI_NONE ? 0 :
+                                                ammo_type_damage(ammo_type);
     description += "Base damage: ";
-    _append_value(description, property(item, PWPN_DAMAGE), false);
+    _append_value(description, base_dam + ammo_dam, false);
     description += "  ";
 
     description += "Base attack delay: ";
@@ -795,6 +799,13 @@ void append_weapon_stats(string &description, const item_def &item)
 
     description += "Minimum delay: ";
     _append_value(description, weapon_min_delay(item) / 10.0f, false);
+
+    if (range_skill(item) == SK_SLINGS)
+    {
+        description += make_stringf("\nFiring bullets:    Base damage: %d",
+                                    base_dam +
+                                    ammo_type_damage(MI_SLING_BULLET));
+    }
 }
 
 static string _handedness_string(const item_def &item)
@@ -810,10 +821,7 @@ static string _handedness_string(const item_def &item)
             description += "It is a one handed weapon.";
         break;
     case HANDS_TWO:
-        if (you.species == SP_FORMICID)
-            description += "It is a weapon for two hand-pairs.";
-        else
-            description += "It is a two handed weapon.";
+        description += "It is a two handed weapon.";
         break;
     }
 
@@ -845,7 +853,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (verbose)
     {
-        switch (weapon_skill(item))
+        switch (item_attack_skill(item))
         {
         case SK_POLEARMS:
             description += "\n\nIt can be evoked to extend its reach.";
@@ -889,8 +897,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "particularly susceptible opponents.";
                 if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
                 {
-                    description += " Big, fiery blades are also staple armaments "
-                        "of hydra-hunters.";
+                    description += " Big, fiery blades are also staple "
+                        "armaments of hydra-hunters.";
                 }
             }
             break;
@@ -1033,20 +1041,17 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    const bool launcher = is_range_weapon(item);
     if (verbose)
     {
         description += "\n\nThis weapon falls into the";
 
-        const skill_type skill =
-            is_range_weapon(item)? range_skill(item) : weapon_skill(item);
+        const skill_type skill = item_attack_skill(item);
 
         description +=
             make_stringf(" '%s' category. ",
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
-        if (!launcher)
-            description += _handedness_string(item);
+        description += _handedness_string(item);
 
         if (!you.could_wield(item, true))
             description += "\nIt is too large for you to wield.";
@@ -1080,12 +1085,10 @@ static string _describe_ammo(const item_def &item)
 
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
-    bool always_destroyed = false;
 
     if (item.special && item_type_known(item))
     {
         description += "\n\n";
-        string bolt_name;
 
         string threw_or_fired;
         if (can_throw)
@@ -1105,11 +1108,7 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_FROST:
             description += "It turns into a bolt of frost.";
             break;
-            break;
         case SPMSL_CHAOS:
-            if (bolt_name.empty())
-                bolt_name = "a random type";
-
             description += "When ";
 
             if (can_throw)
@@ -1122,10 +1121,7 @@ static string _describe_ammo(const item_def &item)
             if (can_launch)
                 description += "fired from an appropriate launcher, ";
 
-            description += "it turns into a bolt of ";
-            description += bolt_name;
-            description += ".";
-            always_destroyed = true;
+            description += "it turns into a bolt of a random type.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
@@ -1167,13 +1163,11 @@ static string _describe_ammo(const item_def &item)
             description += "Any target it hits will blink, with a "
                 "tendency towards blinking further away from the one "
                 "who " + threw_or_fired + " it.";
-            always_destroyed = true;
             break;
         case SPMSL_EXPLODING:
             description += "It will explode into fragments upon "
                 "hitting a target, hitting an obstruction, or reaching "
                 "the end of its range.";
-            always_destroyed = true;
             break;
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 30% more "
@@ -1191,10 +1185,7 @@ static string _describe_ammo(const item_def &item)
         }
     }
 
-    if (always_destroyed)
-        description += "\nIt will always be destroyed upon impact.";
-    else if (item.sub_type != MI_THROWING_NET)
-        append_missile_info(description);
+    append_missile_info(description, item);
 
     return description;
 }
@@ -1209,9 +1200,16 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, -property(item, PARM_EVASION), false);
 }
 
-void append_missile_info(string &description)
+void append_missile_info(string &description, const item_def &item)
 {
-    description += "\nAll pieces of ammunition may get destroyed upon impact.";
+    const int dam = property(item, PWPN_DAMAGE);
+    if (dam)
+        description += make_stringf("\nBase damage: %d\n", dam);
+
+    if (ammo_always_destroyed(item))
+        description += "\nIt will always be destroyed on impact.";
+    else if (!ammo_never_destroyed(item))
+        description += "\nIt may be destroyed on impact.";
 }
 
 //---------------------------------------------------------------
@@ -4238,16 +4236,6 @@ static string _religion_help(god_type god)
         }
         break;
 
-    case GOD_QAZLAL:
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
-        {
-            result += "You can pray at an altar to gain a choice of elemental "
-                      "resistances.";
-        }
-        break;
-
     case GOD_GOZAG:
         if (!player_under_penance()
             && !you.one_time_ability_used[god])
@@ -4958,39 +4946,6 @@ void describe_god(god_type which_god, bool give_title)
                 {
                     have_any = true;
                 }
-
-            // Print divine resistances at the end of the list.
-            if (which_god == GOD_QAZLAL)
-            {
-                if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from fire (rF+).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_COLD_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from cold (rC+).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from electricity (rElec).",
-                        ABIL_NON_ABILITY);
-                }
-                if (you.attribute[ATTR_DIVINE_AC])
-                {
-                    _print_final_god_abil_desc(
-                        which_god,
-                        "Qazlal protects you from physical attacks (AC+3).",
-                        ABIL_NON_ABILITY);
-                }
-            }
         }
 
         string extra = get_linebreak_string(_religion_help(which_god),

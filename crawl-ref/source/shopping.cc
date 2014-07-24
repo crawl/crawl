@@ -989,6 +989,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_FLAIL:
         case WPN_LONG_SWORD:
         case WPN_TRIDENT:
+        case WPN_HAND_CROSSBOW:
             valued += 35;
             break;
 
@@ -1003,11 +1004,8 @@ unsigned int item_value(item_def item, bool ident)
             valued += 40;
             break;
 
-        case WPN_CROSSBOW:
-            valued += 41;
-            break;
-
         case WPN_LONGBOW:
+        case WPN_ARBALEST:
             valued += 45;
             break;
 
@@ -1022,6 +1020,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 90;
             break;
 
+        case WPN_TRIPLE_CROSSBOW:
         case WPN_CLAYMORE:
         case WPN_EXECUTIONERS_AXE:
             valued += 100;

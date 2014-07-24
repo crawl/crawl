@@ -193,6 +193,7 @@ static void _abyss_fixup_vault(const vault_placement *vp)
         const dungeon_feature_type feat(grd(p));
         if (feat_is_stair(feat)
             && feat != DNGN_EXIT_ABYSS
+            && feat != DNGN_ABYSSAL_STAIR
 #if TAG_MAJOR_VERSION == 34
             && feat != DNGN_ENTER_PORTAL_VAULT
 #endif
@@ -213,7 +214,7 @@ static bool _abyss_place_map(const map_def *mdef)
 
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
-        _abyss_fixup_vault(env.level_vaults[env.level_vaults.size() - 1]);
+        _abyss_fixup_vault(env.level_vaults.back());
 
     return did_place;
 }
@@ -436,6 +437,8 @@ static bool _abyss_check_place_feat(coord_def p,
             // Link the vault-placed items.
             _abyss_postvault_fixup();
         }
+        else if (!abyss_genlevel_mask(p))
+            return false;
         else
             grd(p) = which_feat;
 
@@ -673,6 +676,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     env.map_knowledge(p).clear();
     if (env.map_forgotten.get())
         (*env.map_forgotten.get())(p).clear();
+    env.map_seen.set(p, false);
     StashTrack.update_stash(p);
 }
 
@@ -1556,7 +1560,7 @@ static void _increase_depth()
         abyssal_state.phase -= M_PI;
 }
 
-void abyss_morph(double duration)
+void abyss_morph()
 {
     if (abyssal_state.destroy_all_terrain)
     {

@@ -504,7 +504,8 @@ ENDMAP
 ##############################################################
 # layout_gehenna_lava_caves
 #
-# TODO: Add round buildings, depth convergence.
+# Basically perlin noise, with rock and lava at the extreme
+#  values.  The middle values become the paths.
 #
 NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
@@ -516,7 +517,16 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
-  local scale = util.random_range_real(.3,1.8)
+
+  -- choose some parameters based on depth
+  local depth_fraction = you.depth_fraction()
+  local scale      = 1.6 - crawl.random_real() * 0.3 - depth_fraction * 0.4
+  local padding    = crawl.random_range(6, 10)
+  local wall_break = 0.05 + crawl.random_real() * 0.05 + depth_fraction * 0.1
+  local lava_break = 0.15 + crawl.random_real() * 0.1  + depth_fraction * 0.15
+  local open_break = 0.55 + crawl.random_real() * 0.05 + depth_fraction * 0.15
+
+  -- set up the main perlin noise function
   local perlin1 = procedural.simplex3d { scale = scale }
   if crawl.coinflip() then
     perlin1 = procedural.distort {
@@ -527,23 +537,39 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
     }
   end
 
-  local padding = crawl.random_range(5,12)
+  -- set up the edges for the map
+  local boundary = 8
+  local min_hard     = boundary
+  local min_padded   = boundary + padding
+  local max_padded_x = gxm - 1 - boundary - padding
+  local max_hard_x   = gxm - 1 - boundary
+  local max_padded_y = gym - 1 - boundary - padding
+  local max_hard_y   = gym - 1 - boundary
 
+  -- render the map
   for x = 1,gxm-2,1 do
     for y = 1,gym-2,1 do
-      local val = perlin1(x,y) * procedural.boundary_map(x,1,padding,gxm-2-padding,gxm-2) * procedural.boundary_map(y,1,padding,gym-2-padding,gym-2)
-      if val < 0.1 then
+      local val = perlin1(x, y)
+                  * procedural.boundary_map(x, min_hard,     min_padded,
+                                               max_padded_x, max_hard_x)
+                  * procedural.boundary_map(y, min_hard,     min_padded,
+                                               max_padded_y, max_hard_y)
+      if val < wall_break then
         mapgrd[x][y] = "x"
-      elseif val < 0.25 then
+      elseif val < lava_break then
         mapgrd[x][y] = "l"
-      elseif val < 0.6 then
+      elseif val < open_break then
         mapgrd[x][y] = "."
+      else
+        -- leave as 'x'
       end
     end
   end
 
+  -- assorted fixups
+  theme.add_gehenna_buildings(_G)
   zonify.map_fill_zones(_G, 1, 'l')
-
+  zonify.map_fill_lava_zones(_G, 1, 'x')
 }}
 MAP
 ENDMAP

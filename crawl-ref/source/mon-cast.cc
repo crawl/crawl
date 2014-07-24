@@ -745,7 +745,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
             beam.damage   = dice_def(3, 2 + (power / 30));
 
         // Natural ability, so don't use spell_hd here
-        beam.hit      = 20 + (3 * mons->hit_dice);
+        beam.hit      = 20 + (3 * mons->get_hit_dice());
         beam.flavour  = BEAM_ACID;
         break;
 
@@ -789,7 +789,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_HELLFIRE:           // fiend's hellfire
         beam.name         = "blast of hellfire";
         beam.aux_source   = "blast of hellfire";
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.damage       = dice_def(3, 20);
         beam.hit          = 24;
         beam.flavour      = BEAM_HELLFIRE;
@@ -826,7 +826,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
         beam.short_name = "flames";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = RED;
         beam.hit        = 30;
         beam.flavour    = BEAM_FIRE;
@@ -836,7 +836,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CHAOS_BREATH:
         beam.name       = "blast of chaos";
         beam.aux_source = "blast of chaotic breath";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = ETC_RANDOM;
         beam.hit        = 30;
         beam.flavour    = BEAM_CHAOS;
@@ -847,7 +847,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name       = "blast of cold";
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = WHITE;
         beam.hit        = 30;
         beam.flavour    = BEAM_COLD;
@@ -856,7 +856,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HOLY_BREATH:
         beam.name     = "blast of cleansing flame";
-        beam.damage   = dice_def(3, (mons->hit_dice * 2));
+        beam.damage   = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour   = ETC_HOLY;
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 18 + power / 25;
@@ -865,7 +865,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_DRACONIAN_BREATH:
-        beam.damage      = dice_def(3, (mons->hit_dice * 2));
+        beam.damage      = dice_def(3, (mons->get_hit_dice() * 2));
         beam.hit         = 30;
         beam.is_beam     = true;
         break;
@@ -1476,7 +1476,7 @@ static bool _valid_blink_away_ally(const monster* caster, const monster* target,
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
 {
     return mons_aligned(caller, callee) && mons_is_beast(callee->type)
-           && callee->hit_dice <= 20
+           && callee->get_experience_level() <= 20
            && !callee->is_shapeshifter()
            && !caller->see_cell(callee->pos())
            && mons_habitat(callee) != HT_WATER
@@ -2215,7 +2215,7 @@ static bool _should_recall(monster* caller)
             if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi)
                 && !mons_is_firewood(*mi))
             {
-                ally_hd += mi->hit_dice;
+                ally_hd += mi->get_experience_level();
             }
         }
         return 25 + roll_dice(2, 22) > ally_hd;
@@ -2439,8 +2439,9 @@ static void _cast_druids_call(const monster* mon)
     shuffle_array(mon_list);
 
     const actor* target = mon->get_foe();
-    const int num = min((int)mon_list.size(), mon->hit_dice > 10 ? random_range(2, 3)
-                                                                 : random_range(1, 2));
+    const int num = min((int)mon_list.size(),
+                        mon->get_experience_level() > 10 ? random_range(2, 3)
+                                                      : random_range(1, 2));
 
     for (int i = 0; i < num; ++i)
         _place_druids_call_beast(mon, mon_list[i], target);
@@ -2634,14 +2635,14 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
             tracer.friend_info.count++;
             tracer.friend_info.power +=
                     ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+                                    : ai->as_monster()->get_experience_level();
         }
         else
         {
             tracer.foe_info.count++;
             tracer.foe_info.power +=
                     ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+                                    : ai->as_monster()->get_experience_level();
         }
     }
     return mons_should_fire(tracer);
@@ -2891,7 +2892,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     }
     // Servitors never fail to (try) to cast a spell
     else if (mons->type != MONS_SPELLFORGED_SERVITOR
-             && random2(200) > mons->hit_dice + 50)
+             && random2(200) > mons->get_hit_dice() + 50)
     {
         return false;
     }
@@ -3563,7 +3564,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
     bool shielded = false;
     if (you_worship(GOD_SHINING_ONE))
     {
-        pow = pow * (30 - target->hit_dice) / 30;
+        pow = pow * (30 - target->get_hit_dice()) / 30;
         if (pow < duration)
         {
             simple_god_message(" protects your fellow warrior from evil "
@@ -4803,7 +4804,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                MSGCH_MONSTER_SPELL);
         // Not spell_hd(spell_cast); this is an invocation
         const int dur = BASELINE_DELAY
-            * min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
+            * min(5 + roll_dice(2, (mons->get_hit_dice() * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
@@ -5167,12 +5168,15 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     {
         // Invocation; don't use spell_hd
-        const int power = (mons->hit_dice * 20)+ random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        const int power = (mons->get_hit_dice() * 20)
+                          + random2(mons->get_hit_dice() * 5)
+                          - random2(mons->get_hit_dice() * 5);
         monster_type to_summon;
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
-            monster_type berserkers[] = { MONS_POLAR_BEAR, MONS_ELEPHANT, MONS_DEATH_YAK };
+            monster_type berserkers[] = { MONS_POLAR_BEAR, MONS_ELEPHANT,
+                                          MONS_DEATH_YAK };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
         else

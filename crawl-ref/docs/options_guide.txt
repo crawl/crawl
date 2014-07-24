@@ -105,7 +105,8 @@ The contents of this text are:
                 tile_font_lbl_size, tile_font_ft_light,
                 tile_show_minihealthbar, tile_show_minimagicbar,
                 tile_show_demon_tier, tile_water_anim, tile_misc_anim,
-                tile_realtime_anim, tile_layout_priority, tile_display_mode,
+                tile_realtime_anim, tile_show_player_species,
+                tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar
 4-  Character Dump.
 4-a     Saving.
@@ -903,10 +904,10 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         overrides any previous setting.
 
         All the existing trap types can be used, but in practice only
-        the mechanical traps (dart, bolt, arrow, needle, spear, blade)
+        the mechanical traps (bolt, arrow, needle, spear, blade)
         make sense. Note that travel tries to avoid traps if this is
         easily possible. Defaults to none. For example,
-              trapwalk_safe_hp = dart:15, needle:25, spear:50
+              trapwalk_safe_hp = needle:25, spear:50
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
@@ -1500,7 +1501,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / tomahawk / dart / stone / rock / net
+fire_order += javelin / tomahawk / stone / rock / net
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items
@@ -1848,6 +1849,10 @@ tile_realtime_anim = false
         If enabled, tile animations will run in real time and will not be tied
         to player actions.
         This option is only available on WebTiles.
+
+tile_show_player_species = false
+        If enabled, displays the player using the monster tile for her species,
+        instead of using the normal doll and showing equipment.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         (Ordered list option)

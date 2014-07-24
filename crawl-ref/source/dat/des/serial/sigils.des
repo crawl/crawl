@@ -32,7 +32,7 @@ CHANCE: 0.5% (Depths:1, Elf:1, Crypt), 1%
 
 NAME:    serial_sigils_hangedman_gut
 TAGS:    allow_dup
-DEPTH:   D:16-, Elf, Crypt, Abyss
+DEPTH:   Depths, Elf, Crypt, Abyss
 WEIGHT:  5
 SHUFFLE: AB / AB / BA, ab / ab / ba
 SUBST:   a : Ac.., A : c.., b : Bc..., B : c..., C : cc.
@@ -61,7 +61,7 @@ ENDMAP
 NAME:    serial_sigils_hangedman_quiver
 TAGS:    allow_dup
 WEIGHT:  5
-DEPTH:   D:16-, Elf, Crypt, Abyss
+DEPTH:   Depths, Elf, Crypt, Abyss
 SUBST:   C : cc., D : cc., E : cc.
 : init_sigils(_G)
 MAP
@@ -83,7 +83,7 @@ ENDMAP
 NAME:    serial_sigils_hangedman_snap
 TAGS:    allow_dup
 WEIGHT:  5
-DEPTH:   D:16-, Elf, Crypt, Abyss
+DEPTH:   Depths, Elf, Crypt, Abyss
 SUBST:   C : cc., D : cc., E : cc., F : cc.
 : init_sigils(_G)
 MAP
@@ -115,7 +115,7 @@ ENDMAP
 NAME:    serial_sigils_hangedman_shear
 TAGS:    allow_dup
 WEIGHT:  5
-DEPTH:   D:16-, Elf, Crypt, Abyss
+DEPTH:   Depths, Elf, Crypt, Abyss
 SHUFFLE: CD
 SUBST:   a : c..., b : c..., C : cc., D : c:8 .:1, E : cc., F : cc.
 : init_sigils(_G)

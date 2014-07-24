@@ -248,7 +248,7 @@ static const pop_entry pop_lair[] =
   {  1, 11,  455, SEMI, MONS_BLACK_MAMBA },
   {  1, 11,  515, SEMI, MONS_HYDRA },
   {  3,  9,   52, SEMI, MONS_CATOBLEPAS },
-  {  3,  9,  125, SEMI, MONS_TORPOR_SNAIL },
+  {  3,  9,   80, SEMI, MONS_TORPOR_SNAIL },
   {  4,  8,   14, SEMI, MONS_BRAIN_WORM },
   {  2, 10,   89, PEAK, MONS_WYVERN },
   {  1, 11,  275, PEAK, MONS_FIRE_DRAKE },
@@ -368,7 +368,7 @@ static const pop_entry pop_spider[] =
   {  0, 10,  765, SEMI, MONS_DEMONIC_CRAWLER },
   {  2, 10,  200, PEAK, MONS_GHOST_MOTH },
   {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
-  {  1,  7,  175, FLAT, MONS_TORPOR_SNAIL },
+  {  1,  7,  100, FLAT, MONS_TORPOR_SNAIL },
   { -1,  5,  193, SEMI, MONS_NO_MONSTER}, // Old worm/cockroach/mite weight
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1064,6 +1064,7 @@ static const pop_entry pop_depths[] =
   {  1,  6,  200, FLAT, MONS_VERY_UGLY_THING },
   {  1,  6,  175, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,   75, FLAT, MONS_GIANT_ORANGE_BRAIN },
+  {  1,  6,   75, FLAT, MONS_TORPOR_SNAIL },
   {  1,  6,  125, FLAT, MONS_MINOTAUR },
   {  1,  7,  250, DOWN, MONS_DIRE_ELEPHANT },
   {  1,  7,  250, DOWN, MONS_EMPEROR_SCORPION },

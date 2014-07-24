@@ -16,18 +16,6 @@ function ch_item_wieldable(it)
     -- by Crawl itself.
     local spells = make_hash(you.spells())
 
-    if spells["Sublimation of Blood"] and food.ischunk(it)
-    then
-        return true
-    end
-
-    if spells["Sublimation of Blood"]
-            and (string.find(it.name("a"), " potions? of blood") or
-                 string.find(it.name("a"), " potions? of coagulated blood"))
-    then
-        return true
-    end
-
     if spells["Sandblast"]
             and it.class(true) == "missile"
             and (string.find(it.name("a"), " stones?")

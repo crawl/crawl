@@ -26,6 +26,8 @@ enum gender_type
     GENDER_NEUTER,
     GENDER_MALE,
     GENDER_FEMALE,
+    GENDER_YOU, // A person, not a gender, but close enough.
+    NUM_GENDERS
 };
 
 // TODO: Unify this and a player_equivalent (if applicable)
@@ -50,8 +52,10 @@ enum attack_type
     AT_CONSTRICT,
     AT_TRAMPLE,
     AT_TRUNK_SLAP,
+#if TAG_MAJOR_VERSION == 34
     AT_SNAP,
     AT_SPLASH,
+#endif
     AT_POUNCE,
     AT_REACH_STING,
     AT_CHERUB,

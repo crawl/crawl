@@ -264,6 +264,23 @@ a son of Earth.”
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 %%%%
+arbalest
+
+“(Tell enters with his crossbow)
+ W. TELL:
+ My precious jewel now, —my chiefest treasure—
+ A mark I'll set thee, which the cry of grief
+ Could never penetrate,—but thou shalt pierce it,—
+ And thou, my trusty bowstring, that so oft
+ For sport has served me faithfully and well,
+ Desert me not in this dread hour of need,—
+ Only be true this once, my own good cord,
+ That hast so often wing'd the biting shaft:—
+ For shouldst thou fly successless from my hand,
+ I have no second to send after thee.”
+    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
+     trans. Sir Theodore Martin, 1898.
+%%%%
 Asmodeus
 
 “For myself, I have other occupations:  I make absurd matches; I marry
@@ -965,23 +982,6 @@ crocodile
   With gently smiling jaws!”
     -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
 %%%%
-crossbow
-
-“(Tell enters with his crossbow)
- W. TELL:
- My precious jewel now, —my chiefest treasure—
- A mark I'll set thee, which the cry of grief
- Could never penetrate,—but thou shalt pierce it,—
- And thou, my trusty bowstring, that so oft
- For sport has served me faithfully and well,
- Desert me not in this dread hour of need,—
- Only be true this once, my own good cord,
- That hast so often wing'd the biting shaft:—
- For shouldst thou fly successless from my hand,
- I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
-     trans. Sir Theodore Martin, 1898.
-%%%%
 cutlass
 
 “Who was the first that forged the deadly blade?
@@ -1406,6 +1406,10 @@ hand axe
  When she saw what she had done
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
+%%%%
+hand crossbow
+
+<arbalest>
 %%%%
 harpy
 
@@ -2859,6 +2863,10 @@ chase, in which the fish is pursued and struck with barbed spears, or a sort of
 long shafted trident, called a waster, is much practised at the mouth of the
 Esk, and in the other salmon rivers of Scotland.”
     -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
+%%%%
+triple crossbow
+
+<arbalest>
 %%%%
 troll hide
 

@@ -117,7 +117,7 @@ void alarm(unsigned int seconds)
 }
 # endif
 
-# ifndef HAVE_FDATASYNC
+# ifndef CRAWL_HAVE_FDATASYNC
 // implementation by Richard W.M. Jones
 // He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
 // to show that vital metadata is indeed flushed, others report that at least
@@ -180,7 +180,7 @@ int mkstemp(char *dummy)
 
 #else
 // non-Windows
-# ifndef HAVE_FDATASYNC
+# ifndef CRAWL_HAVE_FDATASYNC
 // At least MacOS X 10.6 has it (as required by Posix) but present only
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)

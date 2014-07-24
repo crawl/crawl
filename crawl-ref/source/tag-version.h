@@ -114,6 +114,7 @@ enum tag_minor_version
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
     TAG_MINOR_RU_RENAME,           // Fix up a property by changing the name.
     TAG_MINOR_RU_PIETY,            // Rescale Ru piety
+    TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

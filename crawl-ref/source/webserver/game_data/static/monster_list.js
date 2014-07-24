@@ -16,14 +16,10 @@ function ($, map_knowledge, cr, dungeon_renderer, options) {
 
     function update_loc(loc)
     {
-        var mon = map_knowledge.get(loc.x, loc.y).mon;
-        if (mon)
-        {
-            if (map_knowledge.visible(loc.x, loc.y))
-                monsters[[loc.x,loc.y]] = { mon: mon, loc: loc };
-            else
-                delete monsters[[loc.x,loc.y]];
-        }
+        var map_cell = map_knowledge.get(loc.x, loc.y);
+        var mon = map_cell.mon;
+        if (mon && map_knowledge.visible(map_cell))
+            monsters[[loc.x,loc.y]] = { mon: mon, loc: loc };
         else
             delete monsters[[loc.x,loc.y]];
     }
