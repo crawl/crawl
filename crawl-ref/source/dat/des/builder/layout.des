@@ -1474,64 +1474,6 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_overlapping_boxes
-#
-# This layout places many overlapping boxes and then connects
-# the resulting mess into a layout.
-#
-# This layout should only appear once, so it does not have the
-# "allow_dup" tag.
-#
-# TODO: Revise without width-1 corridors.  If then good enough
-#       to use, add with weight 5.
-#
-NAME:   layout_overlapping_boxes
-DEPTH:  Dis:1-6
-WEIGHT: 0
-ORIENT: encompass
-TAGS:   overwritable layout unrand layout_type_divisions
-TAGS:   no_rotate no_vmirror no_hmirror
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym}
-    fill_area{fill="x"}
-
-    local xmin_half = 6
-    local xmax_half = gxm / 2 - 6
-    local ymin_half = 3
-    local ymax_half = gym / 2 - 3
-
-    for i = 1, 100 do
-        local xs
-        local ys
-        if crawl.one_chance_in(8) then
-            xs = crawl.random_range(2, 3)
-            ys = crawl.random_range(6, 15)
-        elseif crawl.one_chance_in(7) then
-            xs = crawl.random_range(6, 15)
-            ys = crawl.random_range(2, 3)
-        else
-            xs = crawl.random_range(3, 6)
-            ys = crawl.random_range(3, 6)
-        end
-        local x = crawl.random_range(xmin_half, xmax_half - xs)
-        local y = crawl.random_range(ymin_half, ymax_half - ys)
-        make_box { x1 = x*2, y1 = y*2, x2 = (x + xs)*2, y2 = (y + ys)*2,
-                   wall = 'x', floor = '.' }
-    end
-
-    connect_adjacent_rooms { wall = "x", floor = ".", replace = '+',
-                             max = 800, check_empty = true }
-    zonify.map_fill_zones(_G, 1, 'x')
-}}
-# Enforce minimum floor size
-validate {{
-    return count_feature_in_box { feat="." } > 1200
-}}
-MAP
-ENDMAP
-
-##############################################################
 # layout_jigsaw
 #
 # A grid of irregular rooms with walls between them.  The
