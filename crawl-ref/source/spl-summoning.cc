@@ -144,7 +144,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     }
 
     const int dur = min(3 + random2(pow) / 20, 5);
-    int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS)) / 4;
+    int how_many_max = 1 + min(6, random2(pow) / 15);
     const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
