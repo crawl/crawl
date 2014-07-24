@@ -654,12 +654,6 @@ void seen_monster(monster* mons)
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
 
-    if (mons->flags & MF_SEEN)
-        return;
-
-    // First time we've seen this particular monster.
-    mons->flags |= MF_SEEN;
-
     // mark items as seen.
     for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
     {
@@ -667,6 +661,12 @@ void seen_monster(monster* mons)
         if (item_id != NON_ITEM)
             mitm[item_id].flags |= ISFLAG_SEEN;
     }
+
+    if (mons->flags & MF_SEEN)
+        return;
+
+    // First time we've seen this particular monster.
+    mons->flags |= MF_SEEN;
 
     if (!mons_is_mimic(mons->type))
     {
