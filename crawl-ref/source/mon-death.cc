@@ -2742,10 +2742,6 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
              grid == DNGN_LAVA ? "lava" : "water");
     }
 
-
-    /*    if (grid == DNGN_LAVA && mons->res_fire() >= 2)
-            grid = DNGN_DEEP_WATER;*/
-
     // Even fire resistant monsters perish in lava.
     if (grid == DNGN_LAVA && mons->res_fire() < 2)
     {
