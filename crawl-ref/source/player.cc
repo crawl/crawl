@@ -6532,8 +6532,8 @@ int player::armour_class() const
             case SP_GARGOYLE:
                 AC += 200 + 100 * experience_level * 2 / 5     // max 20
                           + 100 * (max(0, experience_level - 7) * 2 / 5);
-                if (form == TRAN_STATUE)
-                    AC += 1300 + skill(SK_EARTH_MAGIC, 50);
+                if (form == TRAN_STATUE)                       // max 28
+                    AC += 1300 + you.props[TRANSFORM_POW_KEY].get_int() * 10;
                 break;
 
             default:
@@ -6566,10 +6566,10 @@ int player::armour_class() const
             break;
 
         case TRAN_ICE_BEAST:
-            AC += 500 + skill(SK_ICE_MAGIC, 25) + 25;    // max 12
+            AC += 500 + you.props[TRANSFORM_POW_KEY].get_int() * 7; // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
+                AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
             break;
 
         case TRAN_WISP:
@@ -6583,7 +6583,7 @@ int player::armour_class() const
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
+            AC += 1700 + you.props[TRANSFORM_POW_KEY].get_int() * 10; // max 32
             // Stoneskin bonus already accounted for.
             break;
 
