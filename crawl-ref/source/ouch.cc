@@ -257,11 +257,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
-        {
-            drain_player(min(75, 35 + original * 2 / 3),
-                         beam ? beam->beam_source : -1,
-                         source.c_str(), true);
-        }
+            drain_player(min(75, 35 + original * 2 / 3), true);
         break;
 
     case BEAM_ICE:
@@ -514,15 +510,12 @@ void lose_level(int death_source, const char *aux)
  * Drain the player.
  *
  * @param power             The amount by which to drain the player.
- * @param death_source      The index of the monster causing the draining.
- * @param cause             The source of the draining. (May be null.)
  * @param announce_full     Whether to print messages even when fully resisting
  *                          the drain.
  * @param ignore_protection Whether to ignore the player's rN.
  * @return                  Whether draining occurred.
  */
-bool drain_player(int power, int death_source, const char* cause,
-                  bool announce_full, bool ignore_protection)
+bool drain_player(int power, bool announce_full, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
@@ -540,52 +533,22 @@ bool drain_player(int power, int death_source, const char* cause,
         power /= (protection * 2);
     }
 
-    if (power <= 0)
-        return false;
-
-    // at xl27, at worst go from skill 27 to ~19
-    // at xl1, at worst go from skill 3 to 1, or 4 to 2
-    const int MAX_DRAIN = ignore_protection ? INT_MAX :
-                                              150 + you.experience_level * 10;
-    const int drain_power = max(0,
-                                min(MAX_DRAIN - you.attribute[ATTR_XP_DRAIN],
-                                    power));
-    const int pain_power = power - drain_power;
-
-    if (pain_power)
-    {
-        mpr("You feel horribly drained!");
-        xom_is_stimulated(25);
-    }
-    else
+    if (power > 0)
     {
         mpr("You feel drained.");
         xom_is_stimulated(15);
-    }
 
-    if (drain_power)
-    {
-        you.attribute[ATTR_XP_DRAIN] += drain_power;
+        you.attribute[ATTR_XP_DRAIN] += power;
         // Losing skills may affect AC/EV.
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
 
-        dprf("Drained by %d points (%d total)", drain_power,
-             you.attribute[ATTR_XP_DRAIN]);
+        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
+
+        return true;
     }
 
-    if (pain_power)
-    {
-        // -- just die already!
-        const int pain_damage = pain_power / 5
-                                + get_real_hp(true) * pain_power / 200;
-        ouch(pain_damage, death_source, KILLED_BY_DRAINING, NULL,
-             announce_full, cause, false);
-        dprf("%d overflow drain/pain points -> %d damage", pain_power,
-                                                           pain_damage);
-    }
-
-    return true;
+    return false;
 }
 
 static void _xom_checks_damage(kill_method_type death_type,
@@ -992,10 +955,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
-            {
-                drain_player(drain_amount, death_source,
-                             "taking damage in shadow form", true, true);
-            }
+                drain_player(drain_amount, true, true);
         }
         if (you.hp > 0)
           return;

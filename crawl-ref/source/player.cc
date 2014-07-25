@@ -7207,9 +7207,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
 bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return drain_player(pow, who ? who->mindex() : -1,
-                        who ? who->name(DESC_A, true).c_str() : NULL,
-                        !quiet);
+    return drain_player(pow, !quiet);
 }
 
 void player::confuse(actor *who, int str)
