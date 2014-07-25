@@ -6489,7 +6489,7 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
+        AC += 400 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
     AC += _stoneskin_bonus();
 

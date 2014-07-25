@@ -94,18 +94,16 @@ spret_type ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
+    else if (you.form == TRAN_ICE_BEAST)
+        mpr("Your icy body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_ICE_BEAST)
-            mpr("Your icy body feels more resilient.");
-        else
-            mpr("A film of ice covers your body!");
+        mpr("A film of ice covers your body!");
 
-        you.redraw_armour_class = true;
-    }
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
+    you.props[ICY_ARMOUR_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }
