@@ -2724,7 +2724,7 @@ int player_shield_class()
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
-            shield += 800 + you.skill(SK_ICE_MAGIC, 60);
+            shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])

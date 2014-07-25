@@ -22,6 +22,8 @@
 #include "tiledoll.h"
 #endif
 
+#define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+
 class targetter;
 
 int check_stealth();
