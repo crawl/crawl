@@ -6426,16 +6426,14 @@ static int _stoneskin_bonus()
     if (!player_stoneskin())
         return 0;
 
-    // Max +7.4 base
     int boost = 200;
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         boost += 20 * you.experience_level;
     else
 #endif
-    boost += you.skill(SK_EARTH_MAGIC, 20);
+    boost += you.props[STONESKIN_KEY].get_int() * 5;
 
-    // Max additional +7.75 from statue form
     if (you.form == TRAN_STATUE)
     {
         boost += 100;
@@ -6444,7 +6442,7 @@ static int _stoneskin_bonus()
             boost += 25 * you.experience_level;
         else
 #endif
-        boost += you.skill(SK_EARTH_MAGIC, 25);
+        boost += you.props[STONESKIN_KEY].get_int() * 6;
     }
 
     return boost;

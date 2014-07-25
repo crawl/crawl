@@ -463,17 +463,14 @@ spret_type cast_stoneskin(int pow, bool fail)
 
     if (you.duration[DUR_STONESKIN])
         mpr("Your skin feels harder.");
+    else if (you.form == TRAN_STATUE)
+        mpr("Your stone body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("Your skin hardens.");
-
-        you.redraw_armour_class = true;
-    }
+        mpr("Your skin hardens.");
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+    you.props[STONESKIN_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }

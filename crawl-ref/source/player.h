@@ -23,6 +23,7 @@
 #endif
 
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+#define STONESKIN_KEY "stoneskin_pow"
 
 class targetter;
 
