@@ -1054,6 +1054,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     _remove_equipment(rem_stuff);
 
+    you.props[TRANSFORM_POW_KEY] = pow;
+
     if (str)
     {
         notify_stat_change(STAT_STR, str, true,
