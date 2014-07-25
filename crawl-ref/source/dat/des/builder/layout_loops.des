@@ -753,9 +753,9 @@ function loopsInsertRoomHexagonNSOpen (e, center_x, center_y, radius)
     local abs_y = math.abs(y)
     local max_x = radius - math.ceil((abs_y - y_addend) / 2)
     for x = -radius, radius do
-	  if (math.abs(x) <= max_x) then
-        e.mapgrd[center_x + x][center_y + y] = '.'
-      end
+        if (math.abs(x) <= max_x) then
+            e.mapgrd[center_x + x][center_y + y] = '.'
+        end
     end
   end
 end
@@ -768,9 +768,9 @@ function loopsInsertRoomHexagonEWOpen (e, center_x, center_y, radius)
     local abs_x = math.abs(x)
     local max_y = radius - math.ceil((abs_x - x_addend) / 2)
     for y = -radius, radius do
-	  if (math.abs(y) <= max_y) then
-        e.mapgrd[center_x + x][center_y + y] = '.'
-      end
+        if (math.abs(y) <= max_y) then
+            e.mapgrd[center_x + x][center_y + y] = '.'
+        end
     end
   end
 end
@@ -879,7 +879,7 @@ function loopsInsertRoomHexagonNSSolid (e, center_x, center_y,
       local abs_x = math.abs(x)
       if (abs_x <= solid_x and abs_y < radius) then
         e.mapgrd[center_x + x][center_y + y] = wall_glyph
-	  elseif (abs_x <= open_x) then
+      elseif (abs_x <= open_x) then
         e.mapgrd[center_x + x][center_y + y] = '.'
       end
     end
@@ -897,9 +897,9 @@ function loopsInsertRoomHexagonEWSolid (e, center_x, center_y,
     local solid_y = radius - math.ceil((abs_x - x_addend + 2) / 2)
     for y = -radius, radius do
       local abs_y = math.abs(y)
-	  if (abs_y <= solid_y and abs_x < radius) then
+      if (abs_y <= solid_y and abs_x < radius) then
         e.mapgrd[center_x + x][center_y + y] = wall_glyph
-	  elseif (abs_y <= open_y) then
+      elseif (abs_y <= open_y) then
         e.mapgrd[center_x + x][center_y + y] = '.'
       end
     end
