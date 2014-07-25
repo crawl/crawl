@@ -869,7 +869,7 @@ static const struct spell_desc spelldata[] =
      SPTYP_CHARMS | SPTYP_ICE,
      SPFLAG_NONE,
      3,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -1810,7 +1810,7 @@ static const struct spell_desc spelldata[] =
      SPTYP_EARTH | SPTYP_TRANSMUTATION, // was ench -- bwr
      SPFLAG_HELPFUL,
      2,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
