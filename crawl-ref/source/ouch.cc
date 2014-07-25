@@ -257,9 +257,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
+        {
             drain_player(min(75, 35 + original * 2 / 3),
                          beam ? beam->beam_source : -1,
                          source.c_str(), true);
+        }
         break;
 
     case BEAM_ICE:
