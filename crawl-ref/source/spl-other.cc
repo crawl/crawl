@@ -445,7 +445,7 @@ spret_type cast_stoneskin(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
     {
-        mpr("This spell conflicts with another spell still in effect.");
+        mpr("Turning your skin into stone would shatter your icy armour.");
         return SPRET_ABORT;
     }
 
