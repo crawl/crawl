@@ -357,7 +357,8 @@ living casters nigh invulnerable to harm for a brief period, but brings them
 dangerously close to death in the process. So close in fact, that the body
 believes itself to be dead — healing effects will do nothing.
 
-The caster will receive one warning shortly before the spell expires. Undead
+The caster will receive one warning shortly before the spell expires. With high
+power, the caster will be left more resilient when the effect ends. Undead
 cannot use this spell.
 %%%%
 Debugging Ray spell
