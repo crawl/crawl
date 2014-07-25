@@ -248,10 +248,10 @@ airborne targets.
 Condensation Shield spell
 
 This spell causes a disc of dense vapour to condense out of the air surrounding
-the caster. It acts like a normal shield, but its density (and therefore
-stopping power) depends upon the caster's skill with Ice Magic. The disc is
-controlled by the caster's mind and thus will not conflict with the wielding of
-a two-handed weapon.
+the caster. It blocks attacks like a normal shield, but its stopping power
+depends solely on the power of the spell, not the Shields skill. The disc is
+controlled by the caster's mind, and thus will not conflict with the wielding
+of a two-handed weapon.
 %%%%
 Confuse spell
 
@@ -357,9 +357,8 @@ living casters nigh invulnerable to harm for a brief period, but brings them
 dangerously close to death in the process. So close in fact, that the body
 believes itself to be dead — healing effects will do nothing.
 
-The caster will receive one warning shortly before the spell expires. Being
-more skilled at Necromancy leaves the caster more resilient. Undead cannot use
-this spell.
+The caster will receive one warning shortly before the spell expires. Undead
+cannot use this spell.
 %%%%
 Debugging Ray spell
 
@@ -873,12 +872,12 @@ immense force on impact.
 %%%%
 Ozocubu's Armour spell
 
-This spell envelops the caster's body in a protective layer of ice, the power
-of which depends on his or her skill with ice magic. The caster and the
-caster's equipment will not suffer cold from this layer, yet can be affected by
-other sources of cold normally. The spell will not function for casters already
-wearing heavy armour (any body armour with an encumbrance rating of 5 or more).
-The effects of this spell are boosted if the caster is in ice form.
+This spell envelops the caster's body in a protective layer of ice. The caster
+and the caster's equipment will not suffer cold from this layer, yet can be
+affected by other sources of cold normally. The spell will not function for
+casters already wearing heavy armour (any body armour with an encumbrance
+rating of 5 or more). The effects of this spell are boosted if the caster is in
+Ice Form.
 %%%%
 Ozocubu's Refrigeration spell
 
@@ -1194,10 +1193,10 @@ This spell hurls a sharp spine of rock outward from the caster.
 %%%%
 Stoneskin spell
 
-This spell hardens one's skin to a degree determined by one's skill in Earth
-Magic. It only works on relatively normal flesh, and will aid neither the
-undead nor the bodily transformed. However, there is one exception: the effects
-of this spell will be boosted for casters in Statue Form.
+This spell hardens one's skin. It only works on relatively normal flesh, and
+will aid neither the undead nor the bodily transformed. However, there is one
+exception: the effects of this spell will be boosted for casters in Statue
+Form.
 %%%%
 Strip Resistance spell
 
