@@ -9,6 +9,7 @@
 : require("dlua/layout/procedural_transform.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 {{
 
@@ -339,12 +340,21 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   zonify.map_fill_zones(_G, 1, 'x')
   theme.level_material(_G)
 }}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+  -- If we try to validate the map before without creating it,
+  --  we get a crash at start
+  if is_validating() then return end
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES, ".W")
+}}
 
 ##############################################################
 # layout_onion_interference
 #
 # Layers two onions on top of each other to create an
 # interference pattern (with option xor)
+#
+# TODO: A better way of dealing with small maps
 #
 NAME:   layout_onion_interference
 DEPTH:  Snake, Zot:1-4
@@ -400,7 +410,7 @@ TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
   zonify.map_fill_zones(_G, 1, 'x')
 }}
 validate {{
-  return count_feature_in_box { feat="." } >= 750
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
 }}
 
 ##############################################################
@@ -528,6 +538,7 @@ ENDMAP
 #
 # TODO: Use Snake variant in Lair, add with weight 3.
 # TODO: Minimum area validation in Snake (can be disconnected).
+#       Then remove minimum size validate as unneeded
 #
 NAME:   layout_concentric_octagons
 DEPTH:  Snake, Zot
@@ -815,4 +826,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
     fill_disconnected{wanted = '@'}
     mapgrd[gxm/2][gym/2] = '.'
   end
+}}
+# Enforce minimum floor size - remove when connection is working in Snake
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.PASSAGES)
 }}

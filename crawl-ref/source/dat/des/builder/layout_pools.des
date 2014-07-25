@@ -10,6 +10,7 @@
 
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 ##############################################################
 #
@@ -37,9 +38,6 @@
     --  usually at the canyon end: increasing this makes diving
     --  longer and thus harder
     STAIRS_PLACE_PERCENT = 20
-
-    -- The minimum floor area for a layout
-    FLOOR_AREA_MINIMUM = 750
 
     -- The width of the path before the caves are grown is
     --  1 + 2 * PATH_SIZE_???
@@ -191,7 +189,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 }}
 # Enforce minimum floor size - this is important
 validate {{
-    return count_feature_in_box { feat="." } > 600
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.DIVISIONS)
 }}
 MAP
 ENDMAP
@@ -328,7 +326,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     gehenna_layout_epilogue(_G)
 }}
 validate {{
-    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES)
 }}
 
 ##############################################################
@@ -402,7 +400,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     gehenna_layout_epilogue(_G)
 }}
 validate {{
-    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES)
 }}
 
 ##############################################################
@@ -535,5 +533,5 @@ TAGS:   no_rotate no_vmirror no_hmirror
     gehenna_layout_epilogue(_G)
 }}
 validate {{
-    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES)
 }}
