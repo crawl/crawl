@@ -426,6 +426,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
     else
         mpr("A crackling disc of dense vapour forms in the air!");
     you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
+    you.props[CONDENSATION_SHIELD_KEY] = pow;
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
