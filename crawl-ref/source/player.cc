@@ -2556,10 +2556,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
         evbonus--;
     evbonus += max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
-    // transformation penalties/bonuses not covered by size alone:
-    if (you.form == TRAN_STATUE)
-        evbonus -= 10;               // stiff and slow
-
     return evbonus;
 }
 
