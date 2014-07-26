@@ -935,52 +935,90 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
 
 ///////////////////////////////////////////////////
 
-static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
-                                        actor* defender, bool mondied, int dam)
+/**
+ * Calculate the bonus damage that the Elemental Staff does with an attack of
+ * the given flavour.
+ *
+ * @param flavour   The elemental flavour of attack; may be BEAM_NONE for earth
+ *                  (physical) attacks.
+ * @param defender  The victim of the attack. (Not const because checking res
+ *                  may end up IDing items on monsters... )
+ * @return          The amount of damage that the defender will recieve.
+ */
+static int _calc_elemental_staff_damage(beam_type flavour,
+                                        actor* defender)
 {
-    int evoc = attacker->skill(SK_EVOCATIONS, 27);
-    beam_type flavour = BEAM_NONE;
+    const int base_bonus_dam = 10 + random2(15);
 
-    if (mondied || !(x_chance_in_y(evoc, 729) || x_chance_in_y(evoc, 729)))
+    if (flavour == BEAM_NONE) // earth
+        return defender->apply_ac(base_bonus_dam);
+
+    // XXX: refactor this into some more general function (why isn't there one
+    // already???)
+    int resist = 0;
+    switch (flavour)
+    {
+        case BEAM_FIRE:
+            resist = defender->res_fire();
+            break;
+        case BEAM_COLD:
+            resist = defender->res_cold();
+            break;
+        case BEAM_ELECTRICITY:
+            resist = defender->res_elec();
+            break;
+        default:
+            break;
+    }
+
+    return resist_adjust_damage(defender, flavour, resist, base_bonus_dam);
+}
+
+static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
+                                           actor* defender, bool mondied,
+                                           int)
+{
+    const int evoc = attacker->skill(SK_EVOCATIONS, 27);
+    if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
-    int d = 10 + random2(15);
+    const char *verb = NULL;
+    beam_type flavour = BEAM_NONE;
 
-    const char *verb = "hit";
     switch (random2(4))
     {
     case 0:
-        d = resist_adjust_damage(defender, BEAM_FIRE,
-                                 defender->res_fire(), d);
         verb = "burn";
         flavour = BEAM_FIRE;
         break;
     case 1:
-        d = resist_adjust_damage(defender, BEAM_COLD,
-                                 defender->res_cold(), d);
         verb = "freeze";
         flavour = BEAM_COLD;
         break;
     case 2:
-        d = resist_adjust_damage(defender, BEAM_ELECTRICITY,
-                                 defender->res_elec(), d);
         verb = "electrocute";
         flavour = BEAM_ELECTRICITY;
         break;
+    default:
+        dprf("Bad damage type for elemental staff; defaulting to earth");
+        // fallthrough to earth
     case 3:
-        d = defender->apply_ac(d);
         verb = "crush";
         break;
     }
 
-    if (!d)
+    const int bonus_dam = _calc_elemental_staff_damage(flavour, defender);
+
+    if (bonus_dam <= 0)
         return;
 
     mprf("%s %s %s.",
          attacker->name(DESC_THE).c_str(),
          attacker->is_player() ? verb : pluralise(verb).c_str(),
          defender->name(DESC_THE).c_str());
-    defender->hurt(attacker, d);
+
+    defender->hurt(attacker, bonus_dam);
+
     if (defender->alive() && flavour != BEAM_NONE)
         defender->expose_to_element(flavour, 2);
 }
