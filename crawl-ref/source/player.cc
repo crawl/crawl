@@ -1845,18 +1845,6 @@ int player_res_acid(bool calc_unid, bool items)
     return you.res_corr(calc_unid, items) ? 1 : 0;
 }
 
-// Returns a factor X such that post-resistance acid damage can be calculated
-// as pre_resist_damage * X / 100.
-int player_acid_resist_factor()
-{
-    int rA = player_res_acid();
-    if (rA >= 3)
-        return 0;
-    else if (rA >= 1)
-        return 50;
-    return 100;
-}
-
 int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;

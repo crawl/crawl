@@ -287,12 +287,12 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        if (player_res_acid())
-        {
-            if (doEffects)
-                canned_msg(MSG_YOU_RESIST);
-            hurted = hurted * player_acid_resist_factor() / 100;
-        }
+        mprf("pre-dam: %d", hurted);
+        hurted = resist_adjust_damage(&you, flavour, player_res_acid(),
+                                      hurted, true);
+        mprf("post-dam: %d", hurted);
+        if (hurted < original && doEffects)
+            canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_MIASMA:
@@ -408,7 +408,9 @@ void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
     dam += 2;
     dam = roll_dice(dam, acid_strength);
 
-    const int post_res_dam = dam * player_acid_resist_factor() / 100;
+    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID,
+                                                  you.res_acid(), dam);
+    mprf("pre-dam: %d, post-dam: %d", dam, post_res_dam);
 
     if (post_res_dam > 0)
     {
