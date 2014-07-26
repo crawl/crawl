@@ -4067,19 +4067,25 @@ static const char* _attack_delay_desc(int attack_delay)
                                    "blindingly fast";
 }
 
+/**
+ * Print a message indicating the player's attack delay with their current
+ * weapon & quivered ammo (if applicable).
+ *
+ * Uses melee attack delay for ranged weapons if no appropriate ammo is
+ * is quivered, purely for simplicity of implementation; XXX fix this
+ */
 static void _display_attack_delay()
 {
-    const int delay = you.attack_delay(you.weapon(), NULL, false, false);
+    const item_def* ammo = NULL;
+    you.m_quiver->get_desired_item(&ammo, NULL);
+    const bool uses_ammo = ammo && you.weapon()
+                           && ammo->sub_type == fires_ammo_type(*you.weapon());
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+                                       false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
-    int avg;
-    // FIXME for new ranged combat
-/*    const item_def* weapon = you.weapon();
-    if (weapon && is_range_weapon(*weapon))
-        avg = launcher_final_speed(*weapon, you.shield(), false);
-    else */
-        avg = 10 * delay;
+    int avg = 10 * delay;
 
     // Haste shouldn't be counted, but let's show finesse.
     if (you.duration[DUR_FINESSE])

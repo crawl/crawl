@@ -229,7 +229,8 @@ public:
     int         body_weight(bool base = false) const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
-    random_var  attack_delay(item_def *weapon, item_def *projectile = NULL,
+    random_var  attack_delay(const item_def *weapon,
+                             const item_def *projectile = NULL,
                              bool random = true, bool scaled = true) const;
     int         has_claws(bool allow_tran = true) const;
 

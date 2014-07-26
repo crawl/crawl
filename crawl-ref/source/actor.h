@@ -110,8 +110,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(item_def *weapon,
-                                    item_def *projectile = NULL,
+    virtual random_var attack_delay(const item_def *weapon,
+                                    const item_def *projectile = NULL,
                                     bool random = true, bool scaled = true)
                                    const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
