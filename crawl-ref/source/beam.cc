@@ -1580,7 +1580,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_POISON_ARROW:
         hurted = resist_adjust_damage(mons, pbolt.flavour,
                                       mons->res_poison(),
-                                      hurted);
+                                      hurted, true);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1610,7 +1610,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         {
             hurted = resist_adjust_damage(mons, pbolt.flavour,
                                           mons->res_negative_energy(),
-                                          hurted);
+                                          hurted, true);
 
             // Early out if no side effects.
             if (!doFlavouredEffects)
