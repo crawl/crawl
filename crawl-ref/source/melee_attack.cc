@@ -2184,45 +2184,45 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
     return false;
 }
 
+/**
+ * Apply passive retaliation damage from hitting acid monsters.
+ */
 void melee_attack::attacker_sustain_passive_damage()
 {
     // If the defender has been cleaned up, it's too late for anything.
     if (defender->type == MONS_PROGRAM_BUG)
         return;
 
-    if (mons_class_flag(defender->type, M_ACID_SPLASH))
+    if (!mons_class_flag(defender->type, M_ACID_SPLASH))
+        return;
+
+    const int rA = attacker->res_acid();
+    if (rA >= 3)
+        return;
+
+    const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
+
+    const item_def *weap = weapon ? weapon : attacker->slot_item(EQ_GLOVES);
+
+    // Spectral weapons can't be corroded (but can take acid damage).
+    const bool avatar = attacker->is_monster()
+                        && mons_is_avatar(attacker->as_monster()->type);
+
+    if (weap && !avatar)
     {
-        int rA = attacker->res_acid();
-        if (rA < 3)
-        {
-            int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
-            item_def *weap = weapon;
-            // Spectral weapons can't be corroded (but can take acid damage).
-            bool avatar = attacker->is_monster()
-                          && mons_is_avatar(attacker->as_monster()->type);
-
-            if (!weap)
-                weap = attacker->slot_item(EQ_GLOVES);
-
-            if (weap && !avatar)
-            {
-                if (x_chance_in_y(acid_strength + 1, 30))
-                    corrode_actor(attacker);
-            }
-            else if (attacker->is_player())
-            {
-                mprf("Your %s burn!", you.hand_name(true).c_str());
-                ouch(roll_dice(1, acid_strength), defender->mindex(),
-                     KILLED_BY_ACID);
-            }
-            else
-            {
-                simple_monster_message(attacker->as_monster(),
-                                       " is burned by acid!");
-                attacker->hurt(defender, roll_dice(1, acid_strength),
-                    BEAM_ACID, false);
-            }
-        }
+        if (x_chance_in_y(acid_strength + 1, 30))
+            corrode_actor(attacker);
+    }
+    else if (attacker->is_player())
+    {
+        mprf("Your %s burn!", you.hand_name(true).c_str());
+        ouch(roll_dice(1, acid_strength), defender->mindex(), KILLED_BY_ACID);
+    }
+    else
+    {
+        simple_monster_message(attacker->as_monster(), " is burned by acid!");
+        attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
+                       false);
     }
 }
 
