@@ -6374,7 +6374,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
-               special_explosion(NULL), animate(true),
+               special_explosion(NULL), was_missile(false), animate(true),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
