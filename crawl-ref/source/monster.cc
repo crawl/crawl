@@ -442,7 +442,19 @@ int monster::damage_type(int which_attack)
     return get_vorpal_type(*mweap);
 }
 
-random_var monster::attack_delay(item_def *weap, item_def *projectile,
+/**
+ * Return the delay caused by attacking with the provided weapon & projectile.
+ *
+ * @param weap          The weapon to be used; may be null.
+ * @param projectile    The projectile to be fired/thrown; may be null.
+ * @param random        Whether to randomize delay, or provide a fixed value
+ *                      for display.
+ * @param scaled        Unused (interface parameter)
+ * @return              The time taken by an attack with the given weapon &
+ *                      projectile, in aut.
+ */
+random_var monster::attack_delay(const item_def *weap,
+                                 const item_def *projectile,
                                  bool random, bool scaled) const
 {
     const bool use_unarmed =
