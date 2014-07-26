@@ -524,9 +524,8 @@ static inline int get_resistible_fraction(beam_type flavour)
 /**
  * Adjusts damage for elemental resists, electricity and poison.
  *
- * FIXME: Does not (yet) handle life draining, player acid damage
- * (does handle monster acid damage), miasma, and other exotic
- * attacks.
+ * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
+ * XXX: which other attacks?
  *
  * @param defender      The victim of the attack.
  * @param flavour       The type of attack having its damage adjusted.
@@ -553,7 +552,9 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
 
     if (res > 0)
     {
-        if (((is_mon || flavour == BEAM_NEG) && res >= 3) || res > 3)
+        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG
+                                            || flavour == BEAM_ACID;
+        if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
         {
