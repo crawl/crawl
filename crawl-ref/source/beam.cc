@@ -3145,6 +3145,8 @@ bool bolt::is_harmless(const monster* mon) const
     }
 }
 
+// N.b. only called for player-originated beams; if that is changed,
+// be sure to adjust the Qazlal cloud immunities below.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
