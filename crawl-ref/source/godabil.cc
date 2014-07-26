@@ -2777,7 +2777,7 @@ int fedhas_check_corpse_spores(bool quiet)
     vector<stack_iterator> positions;
     int count = count_corpses_in_los(&positions);
 
-    if (count == 0)
+    if (quiet || count == 0)
         return count;
 
     viewwindow(false);
@@ -2798,8 +2798,7 @@ int fedhas_check_corpse_spores(bool quiet)
 #endif
     }
 
-    if (!quiet
-        && yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
