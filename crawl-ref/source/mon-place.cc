@@ -3479,6 +3479,12 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
+    // Hostile ghosts and illusions are always interesting.
+    else if (mons->type == MONS_PLAYER_GHOST
+             || mons->type == MONS_PLAYER_ILLUSION)
+    {
+        interesting = true;
+    }
     // Jellies are never interesting to Jiyva.
     else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
         interesting = false;

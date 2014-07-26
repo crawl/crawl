@@ -4496,7 +4496,7 @@ void monster::ghost_init(bool need_pos)
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
-    flags           = MF_INTERESTING;
+    flags           = 0;
     foe             = MHITNOT;
     foe_memory      = 0;
     number          = MONS_NO_MONSTER;

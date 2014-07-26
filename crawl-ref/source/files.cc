@@ -1827,6 +1827,7 @@ bool load_ghost(bool creating_level)
             mons->bind_spell_flags();
         if (mons->ghost->species == SP_DEEP_DWARF)
             mons->flags |= MF_NO_REGEN;
+        mark_interesting_monst(mons, mons->behaviour);
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
