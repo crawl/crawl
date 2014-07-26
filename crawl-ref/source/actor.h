@@ -242,6 +242,8 @@ public:
                        bool real = false, bool drained = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
+    bool torpor_slowed() const;
+
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
 

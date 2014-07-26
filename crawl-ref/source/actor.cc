@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 #include <sstream>
 
+#include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
@@ -13,6 +14,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
@@ -798,4 +800,33 @@ string actor::describe_props() const
         }
     }
     return oss.str();
+}
+
+/**
+ * Is the actor currently being slowed by a torpor snail?
+ */
+bool actor::torpor_slowed() const
+{
+    if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
+        || is_stationary()
+        || (is_monster() && this->as_monster()->check_stasis(true))
+        || (!is_monster() && stasis()))
+    {
+        return false;
+    }
+
+    for (monster_near_iterator ri(pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        const monster *mons = *ri;
+        if (mons && mons->type == MONS_TORPOR_SNAIL
+            && !is_sanctuary(mons->pos())
+            && !mons_aligned(mons, this)
+            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
+            // friendly torpor snails are way too abusable otherwise :(
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

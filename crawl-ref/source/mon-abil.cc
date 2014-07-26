@@ -4757,6 +4757,7 @@ void ancient_zyme_sicken(monster* mons)
 void torpor_snail_slow(monster* mons)
 {
     // XXX: might be nice to refactor together with ancient_zyme_sicken().
+    // XXX: also with torpor_slowed().... so many duplicated checks :(
 
     if (is_sanctuary(mons->pos())
         || mons->attitude != ATT_HOSTILE
@@ -4767,7 +4768,6 @@ void torpor_snail_slow(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
-        && you.can_see(mons)
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.duration[DUR_SLOW])
@@ -4776,20 +4776,19 @@ void torpor_snail_slow(monster* mons)
                  mons->name(DESC_THE).c_str());
         }
 
-        if (you.duration[DUR_SLOW] < 27)
-            you.set_duration(DUR_SLOW, 18 + random2(10), 27);
-        // can't set this much shorter, or you periodically 'speed up'
-        // for a turn in the middle of TORPOR COMBAT
+        if (you.duration[DUR_SLOW] <= 1)
+            you.set_duration(DUR_SLOW, 1);
+        you.props[TORPOR_SLOWED_KEY] = true;
     }
 
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
     {
-        monster *m = monster_at(*ri);
+        monster *m = *ri;
         if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
-            && !m->is_stationary() && !is_sanctuary(*ri)
-            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+            && !m->is_stationary() && !is_sanctuary(m->pos()))
         {
-            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 18 + random2(10)));
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
+            m->props[TORPOR_SLOWED_KEY] = true;
         }
     }
 }

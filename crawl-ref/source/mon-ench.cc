@@ -1097,11 +1097,12 @@ void monster::timeout_enchantments(int levels)
                 del_ench(i->first);
                 break;
             }
-            // Deliberate fall-through
+            lose_ench_levels(i->second, levels);
+            break;
 
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
-        case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
+        case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
@@ -1118,6 +1119,17 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
         case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
             lose_ench_levels(i->second, levels);
+            break;
+
+        case ENCH_SLOW:
+            if (torpor_slowed())
+                lose_ench_levels(i->second, min(levels, i->second.degree - 1));
+            else
+            {
+                lose_ench_levels(i->second, levels);
+                if (props.exists(TORPOR_SLOWED_KEY))
+                    props.erase(TORPOR_SLOWED_KEY);
+            }
             break;
 
         case ENCH_INVIS:

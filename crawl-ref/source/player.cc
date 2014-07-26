@@ -54,6 +54,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -5286,12 +5287,21 @@ void dec_slow_player(int delay)
     if (!you.duration[DUR_SLOW])
         return;
 
-    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
+    if (you.duration    [DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
             ? haste_mul(delay) : delay;
     }
+
+    if (you.torpor_slowed())
+    {
+        you.duration[DUR_SLOW] = 1;
+        return;
+    }
+    if (you.props.exists(TORPOR_SLOWED_KEY))
+        you.props.erase(TORPOR_SLOWED_KEY);
+
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
         mprf(MSGCH_DURATION, "You feel yourself speed up.");
