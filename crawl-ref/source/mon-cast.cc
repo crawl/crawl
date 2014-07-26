@@ -4461,7 +4461,7 @@ static const pop_entry _planerend_lair[] =
 { // Lair enemies
   {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
   {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,   1,   60, FLAT, MONS_DEATH_YAK },
+  {  1,   1,   60, FLAT, MONS_TORPOR_SNAIL },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4479,8 +4479,8 @@ static const pop_entry _planerend_spider[] =
   {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
   {  1,   1,   20, FLAT, MONS_RED_WASP },
-  {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
-  {  1,   1,   60, FLAT, MONS_WOLF_SPIDER },
+  {  1,   1,   60, FLAT, MONS_ORB_SPIDER },
+  {  1,   1,   20, FLAT, MONS_TARANTELLA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4516,7 +4516,7 @@ static const pop_entry _planerend_orc[] =
   {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
   {  1,   1,   80, FLAT, MONS_ORC_SORCERER },
   {  1,   1,   80, FLAT, MONS_ORC_HIGH_PRIEST },
-  {  1,   1,   40, FLAT, MONS_IRON_TROLL },
+  {  1,   1,   40, FLAT, MONS_STONE_GIANT },
   {  1,   1,   60, FLAT, MONS_OGRE_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
