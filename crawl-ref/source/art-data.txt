@@ -336,9 +336,9 @@ COLD:    -1
 BOOL:    poison
 MAGIC:   1
 
-NAME:    mace of Brilliance
-OBJ:     OBJ_WEAPONS/WPN_MACE
-PLUS:    +5
+NAME:    eveningstar "Brilliance"
+OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
+PLUS:    +1
 COLOUR:  ETC_HOLY
 TILE:    urand_brilliance
 TILE_EQ: mace_of_brilliance
