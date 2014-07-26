@@ -3603,10 +3603,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
     inf.quote += quote2;
 
-    // Except for draconians and player ghosts, I have to admit I find the
-    // following special descriptions rather pointless. I certainly can't
-    // say I like them, though "It has come for your soul!" and
-    // "It wants to drink your blood!" have something going for them. (jpeg)
     switch (mi.type)
     {
     case MONS_VAMPIRE:
