@@ -1255,7 +1255,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 2400, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, NULL, NULL,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }
