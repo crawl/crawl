@@ -1244,6 +1244,8 @@ void untransform(bool skip_wielding, bool skip_move)
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
+    if (you.props.exists(TRANSFORM_POW_KEY))
+        you.props.erase(TRANSFORM_POW_KEY);
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;
