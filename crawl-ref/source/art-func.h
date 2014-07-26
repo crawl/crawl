@@ -1017,7 +1017,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
          attacker->is_player() ? verb : pluralise(verb).c_str(),
          defender->name(DESC_THE).c_str());
 
-    defender->hurt(attacker, bonus_dam);
+    defender->hurt(attacker, bonus_dam, flavour);
 
     if (defender->alive() && flavour != BEAM_NONE)
         defender->expose_to_element(flavour, 2);
