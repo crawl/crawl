@@ -3340,7 +3340,7 @@ ENDMAP
 NAME:  bh_chokoban
 TAGS:  extra decor no_exits
 TAGS:  no_rotate no_hmirror no_vmirror
-DEPTH: D:2-14, Depths:2-4, Lair:2-7
+DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
 ITEM:  fruit q:1
 MAP
 cccccc  ccccc
