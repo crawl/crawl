@@ -33,7 +33,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 coord_def landing_pos, set<coord_def> landing_sites,
                 bool jump_blocked, bool *did_hit = NULL);
 
-int resist_adjust_damage(actor *defender, beam_type flavour,
+int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
