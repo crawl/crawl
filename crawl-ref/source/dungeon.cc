@@ -128,8 +128,6 @@ static bool _connect_spotty(const coord_def& from,
 static bool _connect_vault_exit(const coord_def& exit);
 
 // VAULT FUNCTIONS
-static const vault_placement *_primary_vault = NULL;
-
 static const vault_placement *
 _build_secondary_vault(const map_def *vault,
                        bool check_collisions = true,
@@ -2767,8 +2765,6 @@ static bool _pan_level()
 // to place more vaults after this
 static bool _builder_by_type()
 {
-    _primary_vault = NULL;
-
     if (player_in_branch(BRANCH_LABYRINTH))
     {
         dgn_build_labyrinth_level();
@@ -3290,7 +3286,6 @@ static bool _builder_normal()
         die("Couldn't pick a layout.");
 
     _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
-    _primary_vault = NULL;
     return true;
 }
 
@@ -4274,18 +4269,7 @@ static const vault_placement *_build_secondary_vault(const map_def *vault,
 //
 static const vault_placement *_build_primary_vault(const map_def *vault)
 {
-    _primary_vault = _build_vault_impl(vault, false, false, true);
-    return _primary_vault;
-}
-
-static bool _branch_is_spotty()
-{
-    return player_in_branch(BRANCH_ORC)
-#if TAG_MAJOR_VERSION == 34
-           || player_in_branch(BRANCH_FOREST)
-#endif
-           || player_in_branch(BRANCH_SWAMP)
-           || player_in_branch(BRANCH_SLIME);
+    return _build_vault_impl(vault);
 }
 
 // Builds a vault or minivault. Do not use this function directly: always
@@ -4393,7 +4377,15 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     }
 
     if (!make_no_exits)
-        place.connect(_branch_is_spotty());
+    {
+        const bool spotty = player_in_branch(BRANCH_ORC)
+#if TAG_MAJOR_VERSION == 34
+                            || player_in_branch(BRANCH_FOREST)
+#endif
+                            || player_in_branch(BRANCH_SWAMP)
+                            || player_in_branch(BRANCH_SLIME);
+        place.connect(spotty);
+    }
 
     // Fire any post-place hooks defined for this map; any failure
     // here is an automatic veto. Note that the post-place hook must
@@ -4432,8 +4424,6 @@ static void _build_postvault_level(vault_placement &place)
             _build_secondary_vault(layout, false);
         }
     }
-    if (_primary_vault)
-        _primary_vault->connect(_branch_is_spotty());
 }
 
 static object_class_type _acquirement_object_class()
