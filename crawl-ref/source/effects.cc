@@ -2829,8 +2829,9 @@ void corrode_actor(actor *act)
         return;
     }
 
-    // Anti-corrosion items protect against 90% of corrosion.
-    if (act->res_corr() && !one_chance_in(10))
+    // rCorr protects against 50% of corrosion. (Effectively somewhat more,
+    // since rCorr also reduces acid damage, which affects corrosion chance.)
+    if (act->res_corr() && coinflip())
     {
         dprf("Amulet protects.");
         return;
