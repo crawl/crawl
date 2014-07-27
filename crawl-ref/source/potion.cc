@@ -83,7 +83,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             && you.duration[DUR_POISONING] == 0
             && you.rotting == 0
             && you.disease == 0
-            && (you.hp_max_temp == you.hp_max))
+            // The potion won't heal us, so don't count rot unless at max HP.
+            && (you.hp_max_temp >= 0 || you.hp != you.hp_max))
         {
             mpr("You have no ailments to cure.");
             return false;
