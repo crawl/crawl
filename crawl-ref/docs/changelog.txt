@@ -112,7 +112,7 @@ Spells
   caster's HP.
 * Simulacrum now works on a single corpse at the caster's feet, creating
   several simulacrula from it.
-* Monsters casting Simulacrum now affect all monsters in LOS, producing half as
+* Monsters casting Simulacrum now affect all corpses in LOS, producing half as
   many simulacrula as the player version of the spell.
 * Death Channel lasts twice as long.
 * The Book of War Chants is no more.
