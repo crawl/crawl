@@ -4503,57 +4503,68 @@ void mon_nearby_ability(monster* mons)
     }
 }
 
-// When giant spores move maybe place a ballistomycete on the they move
-// off of.
+/**
+ * Possibly place mold & ballistomycetes in giant spores' wake.
+ *
+ * @param mons      The giant spore in question.
+ * @param position  Its last location. (Where to place the ballistomycete.)
+ */
 void ballisto_on_move(monster* mons, const coord_def& position)
 {
-    if (mons->type == MONS_GIANT_SPORE && !crawl_state.game_is_zotdef()
-        && !mons->is_summoned())
+    if (mons->type != MONS_GIANT_SPORE
+        || crawl_state.game_is_zotdef()
+        || mons->is_summoned())
     {
-        dungeon_feature_type ftype = env.grid(mons->pos());
-
-        if (ftype == DNGN_FLOOR)
-            env.pgrid(mons->pos()) |= FPROP_MOLD;
-
-        // The number field is used as a cooldown timer for this behavior.
-        if (mons->number <= 0)
-        {
-            if (one_chance_in(4))
-            {
-                beh_type attitude = attitude_creation_behavior(mons->attitude);
-                if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                        attitude,
-                                                        NULL,
-                                                        0,
-                                                        0,
-                                                        position,
-                                                        MHITNOT,
-                                                        MG_FORCE_PLACE)))
-                {
-                    if (mons_is_god_gift(mons, GOD_FEDHAS))
-                    {
-                        plant->flags |= MF_NO_REWARD;
-
-                        if (attitude == BEH_FRIENDLY)
-                        {
-                            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-                            mons_make_god_gift(plant, GOD_FEDHAS);
-                        }
-                    }
-
-                    // Don't leave mold on squares we place ballistos on
-                    remove_mold(position);
-                    if (you.can_see(plant))
-                        mpr("A ballistomycete grows in the wake of the spore.");
-                }
-
-                mons->number = 40;
-            }
-        }
-        else
-            mons->number--;
+        return;
     }
+
+    // place mold under the spore's current tile, if there isn't any now.
+    const dungeon_feature_type current_ftype = env.grid(mons->pos());
+    if (current_ftype == DNGN_FLOOR)
+        env.pgrid(mons->pos()) |= FPROP_MOLD;
+
+    // The number field is used as a cooldown timer for this behavior.
+    if (mons->number > 0)
+    {
+        mons->number--;
+        return;
+    }
+
+    if (!one_chance_in(4))
+        return;
+
+    // try to make a ballistomycete.
+    const beh_type attitude = attitude_creation_behavior(mons->attitude);
+    monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
+                                              NULL, 0, 0, position, MHITNOT,
+                                              MG_FORCE_PLACE));
+
+    if (!plant)
+        return;
+
+    if (mons_is_god_gift(mons, GOD_FEDHAS))
+    {
+        plant->flags |= MF_NO_REWARD; // XXX: is this needed?
+
+        if (attitude == BEH_FRIENDLY)
+        {
+            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            mons_make_god_gift(plant, GOD_FEDHAS);
+        }
+    }
+
+    // Don't leave mold on squares we place ballistos on
+    remove_mold(position);
+
+    if (you.can_see(plant))
+    {
+        mprf("%s grows in the wake of %s.",
+             plant->name(DESC_A).c_str(), mons->name(DESC_THE).c_str());
+    }
+
+    // reset the cooldown.
+    mons->number = 40;
 }
 
 static bool _ballisto_at(const coord_def & target)
