@@ -152,9 +152,7 @@ swamp_worm MONS_SWAMP_WORM
 worm MONS_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
-%rim 0
 torpor_snail MONS_TORPOR_SNAIL
-%rim 1
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
