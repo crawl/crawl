@@ -4673,7 +4673,7 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    int enp = you.experience_level + you.mp_max_adj_base;
+    int enp = you.experience_level;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
     int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
@@ -5660,7 +5660,6 @@ void player::init()
     magic_points     = 0;
     max_magic_points = 0;
     mp_max_adj       = 0;
-    mp_max_adj_base  = 0;
 
     stat_loss.init(0);
     base_stats.init(0);

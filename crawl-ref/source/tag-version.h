@@ -112,6 +112,7 @@ enum tag_minor_version
     TAG_MINOR_MERGE_EW,            // Combine enchant weapons scrolls.
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
     TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
+    TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
