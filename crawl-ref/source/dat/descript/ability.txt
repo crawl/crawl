@@ -63,8 +63,6 @@ Turn into a speedy vampire bat. In bat form, you can neither interact with
 items in any form (except picking them up or dropping them), nor cast spells.
 Note that Bat Form will decrease your current Strength while increasing your
 Dexterity. Thus, you won't be able to change form if your Strength is too low.
-The flight is magically augmented, so you will stay in the air even if the
-weight of your possessions or some disability would normally drag you down.
 %%%%
 Bottle Blood ability
 
