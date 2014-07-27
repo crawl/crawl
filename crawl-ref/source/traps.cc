@@ -1139,7 +1139,7 @@ trap_type get_trap_type(const coord_def& pos)
 static bool _disarm_is_deadly(trap_def& trap)
 {
     int dam = trap.max_damage(you);
-    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 0)
+    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 1)
         dam += 15; // arbitrary
 
     return you.hp <= dam;

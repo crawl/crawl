@@ -488,6 +488,8 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_STICKY_FLAME:
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
+    case BEAM_POISON:
+    case BEAM_POISON_ARROW:
         return true;
     default:
         return false;
