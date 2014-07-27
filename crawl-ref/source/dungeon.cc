@@ -6877,17 +6877,13 @@ int vault_placement::connect(bool spotty) const
     for (vector<coord_def>::const_iterator i = exits.begin();
          i != exits.end(); ++i)
     {
-        if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid))
-            continue;
-
-        if (player_in_branch(BRANCH_SHOALS) &&
-            dgn_shoals_connect_point(*i, _feat_is_wall_floor_liquid))
+        if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid)
+            || player_in_branch(BRANCH_SHOALS)
+               && dgn_shoals_connect_point(*i, _feat_is_wall_floor_liquid)
+            || _connect_vault_exit(*i))
         {
-            continue;
-        }
-
-        if (_connect_vault_exit(*i))
             exits_placed++;
+        }
         else
             dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);
     }
