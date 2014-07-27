@@ -58,13 +58,13 @@ public:
 
   int hp;
   int hp_max;
-  int hp_max_temp;            // temporary max HP loss (rotting)
-  int hp_max_perm;            // base HPs from background (and permanent loss)
+  int hp_max_adj_temp;        // temporary max HP loss (rotting)
+  int hp_max_adj_perm;        // base HPs from background (and permanent loss)
 
   int magic_points;
   int max_magic_points;
-  int mp_max_temp;            // temporary max MP loss? (currently unused)
-  int mp_max_perm;            // base MPs from background (and permanent loss)
+  int mp_max_adj_temp;        // temporary max MP loss? (currently unused)
+  int mp_max_adj_perm;        // base MPs from background (and permanent loss)
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;

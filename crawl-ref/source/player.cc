@@ -4532,7 +4532,7 @@ void inc_hp(int hp_gain)
 
 void rot_hp(int hp_loss)
 {
-    you.hp_max_temp -= hp_loss;
+    you.hp_max_adj_temp -= hp_loss;
     calc_hp();
 
     // Kill the player if they reached 0 maxhp.
@@ -4546,9 +4546,9 @@ void rot_hp(int hp_loss)
 
 void unrot_hp(int hp_recovered)
 {
-    you.hp_max_temp += hp_recovered;
-    if (you.hp_max_temp > 0)
-        you.hp_max_temp = 0;
+    you.hp_max_adj_temp += hp_recovered;
+    if (you.hp_max_adj_temp > 0)
+        you.hp_max_adj_temp = 0;
 
     calc_hp();
 
@@ -4557,12 +4557,12 @@ void unrot_hp(int hp_recovered)
 
 int player_rotted()
 {
-    return -you.hp_max_temp;
+    return -you.hp_max_adj_temp;
 }
 
 void rot_mp(int mp_loss)
 {
-    you.mp_max_temp -= mp_loss;
+    you.mp_max_adj_temp -= mp_loss;
     calc_mp();
 
     you.redraw_magic_points = true;
@@ -4571,7 +4571,7 @@ void rot_mp(int mp_loss)
 void inc_max_hp(int hp_gain)
 {
     you.hp += hp_gain;
-    you.hp_max_perm += hp_gain;
+    you.hp_max_adj_perm += hp_gain;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4580,7 +4580,7 @@ void inc_max_hp(int hp_gain)
 
 void dec_max_hp(int hp_loss)
 {
-    you.hp_max_perm -= hp_loss;
+    you.hp_max_adj_perm -= hp_loss;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4637,7 +4637,7 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = you.experience_level * 11 / 2 + 8;
-    hitp += you.hp_max_perm;
+    hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
     hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
           + (you.skill(SK_FIGHTING, 3, true) + 1) / 2;
@@ -4656,7 +4656,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp /= 100;
 
     if (!rotted)
-        hitp += you.hp_max_temp;
+        hitp += you.hp_max_adj_temp;
 
     if (trans)
         hitp += you.scan_artefacts(ARTP_HP);
@@ -4673,7 +4673,7 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    int enp = you.experience_level + you.mp_max_perm;
+    int enp = you.experience_level + you.mp_max_adj_perm;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
     int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
@@ -4686,7 +4686,7 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_temp;
+    enp += you.mp_max_adj_temp;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
@@ -5654,13 +5654,13 @@ void player::init()
 
     hp               = 0;
     hp_max           = 0;
-    hp_max_temp      = 0;
-    hp_max_perm      = 0;
+    hp_max_adj_temp  = 0;
+    hp_max_adj_perm  = 0;
 
     magic_points     = 0;
     max_magic_points = 0;
-    mp_max_temp      = 0;
-    mp_max_perm      = 0;
+    mp_max_adj_temp  = 0;
+    mp_max_adj_perm  = 0;
 
     stat_loss.init(0);
     base_stats.init(0);

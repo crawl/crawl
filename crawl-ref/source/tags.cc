@@ -1340,10 +1340,10 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
 
-    marshallShort(th, you.hp_max_temp);
-    marshallShort(th, you.hp_max_perm);
-    marshallShort(th, you.mp_max_temp);
-    marshallShort(th, you.mp_max_perm);
+    marshallShort(th, you.hp_max_adj_temp);
+    marshallShort(th, you.hp_max_adj_perm);
+    marshallShort(th, you.mp_max_adj_temp);
+    marshallShort(th, you.mp_max_adj_perm);
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
@@ -2214,13 +2214,13 @@ static void tag_read_you(reader &th)
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 
-    you.hp_max_temp               = unmarshallShort(th);
-    you.hp_max_perm               = unmarshallShort(th);
-    you.mp_max_temp               = unmarshallShort(th);
-    you.mp_max_perm               = unmarshallShort(th);
+    you.hp_max_adj_temp           = unmarshallShort(th);
+    you.hp_max_adj_perm           = unmarshallShort(th);
+    you.mp_max_adj_temp           = unmarshallShort(th);
+    you.mp_max_adj_perm           = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CLASS_HP_0)
-        you.hp_max_perm -= 8;
+        you.hp_max_adj_perm -= 8;
 #endif
 
     const int x = unmarshallShort(th);
