@@ -84,7 +84,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
         text += fs.tostring(2, -2);
     }
 
-    // Include singular form (royal jelly vs royal jellies).
+    // Include singular form (slice of pizza vs slices of pizza).
     if (item->quantity > 1)
     {
         text += "\n";
@@ -183,11 +183,13 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
     update();
 }
 
-bool Stash::are_items_same(const item_def &a, const item_def &b)
+bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.base_type == b.base_type
         && a.sub_type == b.sub_type
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD)
+        // Ignore Gozag's gold flag, and rod charges.
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
+                             || a.base_type == OBJ_RODS && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.colour == b.colour
@@ -196,7 +198,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
 
     // Account for rotting meat when comparing items.
     return same
-           || (a.base_type == b.base_type
+           || (!exact && a.base_type == b.base_type
                && (a.base_type == OBJ_CORPSES
                    || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
                        && b.sub_type == FOOD_CHUNK))
@@ -355,7 +357,16 @@ void Stash::update()
         // the top item matches what we remember.
         const item_def &first = items[0];
         // Compare these items
-        if (!are_items_same(first, item))
+        if (are_items_same(first, item))
+        {
+            // Replace the item to reflect seen recharging, rotting, etc.
+            if (!are_items_same(first, item, true))
+            {
+                items.erase(items.begin());
+                add_item(item, true);
+            }
+        }
+        else
         {
             // See if 'item' matches any of the items we have. If it does,
             // we'll just make that the first item and leave 'verified'
@@ -869,8 +880,10 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
     const iflags_t oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
+    {
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK
             | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET;
+    }
 
     item_def it = static_cast<item_def>(si.item);
     describe_item(it);
@@ -1665,67 +1678,59 @@ protected:
 };
 
 // helper for search_stashes
-class compare_by_distance
+static bool _compare_by_distance(const stash_search_result& lhs,
+                                 const stash_search_result& rhs)
 {
-public:
-    bool operator()(const stash_search_result& lhs,
-                    const stash_search_result& rhs)
+    if (lhs.player_distance != rhs.player_distance)
     {
-        if (lhs.player_distance != rhs.player_distance)
-        {
-            // Sort by increasing distance
-            return lhs.player_distance < rhs.player_distance;
-        }
-        else if (lhs.player_distance == 0)
-        {
-            // If on the same level, sort by distance to player.
-            const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
-            const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
-            if (lhs_dist != rhs_dist)
-                return lhs_dist < rhs_dist;
-        }
-
-        if (lhs.matches != rhs.matches)
-        {
-            // Then by decreasing number of matches
-            return lhs.matches > rhs.matches;
-        }
-        else if (lhs.match != rhs.match)
-        {
-            // Then by name.
-            return lhs.match < rhs.match;
-        }
-        else
-            return false;
+        // Sort by increasing distance
+        return lhs.player_distance < rhs.player_distance;
     }
-};
+    else if (lhs.player_distance == 0)
+    {
+        // If on the same level, sort by distance to player.
+        const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
+        const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
+        if (lhs_dist != rhs_dist)
+            return lhs_dist < rhs_dist;
+    }
+
+    if (lhs.matches != rhs.matches)
+    {
+        // Then by decreasing number of matches
+        return lhs.matches > rhs.matches;
+    }
+    else if (lhs.match != rhs.match)
+    {
+        // Then by name.
+        return lhs.match < rhs.match;
+    }
+    else
+        return false;
+}
 
 // helper for search_stashes
-class compare_by_name
+static bool _compare_by_name(const stash_search_result& lhs,
+                             const stash_search_result& rhs)
 {
-public:
-    bool operator()(const stash_search_result& lhs,
-                    const stash_search_result& rhs)
+    if (lhs.match != rhs.match)
     {
-        if (lhs.match != rhs.match)
-        {
-            // Sort by name
-            return lhs.match < rhs.match;
-        }
-        else if (lhs.player_distance != rhs.player_distance)
-        {
-            // Then sort by increasing distance
-            return lhs.player_distance < rhs.player_distance;
-        }
-        else if (lhs.matches != rhs.matches)
-        {
-            // Then by decreasing number of matches
-            return lhs.matches > rhs.matches;
-        }
-        else
-            return false;
+        // Sort by name
+        return lhs.match < rhs.match;
     }
-};
+    else if (lhs.player_distance != rhs.player_distance)
+    {
+        // Then sort by increasing distance
+        return lhs.player_distance < rhs.player_distance;
+    }
+    else if (lhs.matches != rhs.matches)
+    {
+        // Then by decreasing number of matches
+        return lhs.matches > rhs.matches;
+    }
+    else
+        return false;
+}
 
 void StashTracker::search_stashes()
 {
@@ -1756,7 +1761,7 @@ void StashTracker::search_stashes()
     }
     msgwin_reply(validline ? buf : "");
 
-    mesclr();
+    clear_messages();
     if (!validline || (!*buf && lastsearch.empty()))
     {
         canned_msg(MSG_OK);
@@ -2089,9 +2094,9 @@ bool StashTracker::display_search_results(
     }
 
     if (sort_by_dist)
-        sort(results->begin(), results->end(), compare_by_distance());
+        sort(results->begin(), results->end(), _compare_by_distance);
     else
-        sort(results->begin(), results->end(), compare_by_name());
+        sort(results->begin(), results->end(), _compare_by_name);
 
     StashSearchMenu stashmenu(show_as_stacks ? "hide" : "show",
                               sort_by_dist ? "dist" : "name",

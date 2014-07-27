@@ -9,6 +9,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "player.h"
+#include "mgen_data.h"
 
 #include "religion-enum.h"
 
@@ -46,11 +47,11 @@ void dec_penance(god_type god, int val);
 
 void excommunication(god_type new_god = GOD_NO_GOD);
 
-void gain_piety(int pgn, int denominator = 1,
-                bool force = false, bool should_scale_piety = true);
+bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
+void set_piety(int piety);
 void handle_god_time(int time_delta);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
@@ -98,10 +99,6 @@ bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
 bool is_follower(const monster* mon);
-bool bless_follower(monster* follower = NULL,
-                    god_type god = you.religion,
-                    bool (*suitable)(const monster* mon) = is_follower,
-                    bool force = false);
 
 // Vehumet gift interface.
 bool vehumet_is_offering(spell_type spell);
@@ -117,6 +114,12 @@ void religion_turn_end();
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
 int get_fuzzied_monster_difficulty(const monster *mons);
+
+typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
+
+void delayed_monster(const mgen_data &mg, delayed_callback callback = NULL);
+void delayed_monster_done(string success, string failure,
+                          delayed_callback callback = NULL);
 
 bool do_god_gift(bool forced = false);
 

@@ -7,6 +7,7 @@
 
 #include "itemname.h"
 
+#include <algorithm>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -28,7 +29,6 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
 #include "player.h"
@@ -37,6 +37,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
+#include "terrain.h"
 #include "xom.h"
 
 static iflags_t _full_ident_mask(const item_def& item);
@@ -59,7 +60,7 @@ struct armour_def
 // flexible and adjustable and can be worn by any player character...
 // providing they also pass the shape test, of course.
 static int Armour_index[NUM_ARMOURS];
-static const armour_def Armour_prop[NUM_ARMOURS] =
+static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,  100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
@@ -165,173 +166,174 @@ struct weapon_def
     int                 str_weight;
 
     skill_type          skill;
-    hands_reqd_type     hands;
-    size_type           fit_size;
+    size_type           min_2h_size; // min size to wield the weapon 2h
+    size_type           min_1h_size; // min size to wield the weapon 1h
     missile_type        ammo;         // MI_NONE for non-launchers
 
     int                 dam_type;
+    int                 commonness;
     int                 acquire_weight;
 };
 
 static int Weapon_index[NUM_WEAPONS];
-static const weapon_def Weapon_prop[NUM_WEAPONS] =
+static const weapon_def Weapon_prop[] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 0 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CRUSHING, 10, 0 },
     { WPN_ROD,               "rod",                 5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 0 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CRUSHING, 0, 0 },
     { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 0 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLASHING, 4, 0 },
     { WPN_HAMMER,            "hammer",              7,  3, 13,  90,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 0 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CRUSHING, 0, 0 },
     { WPN_MACE,              "mace",                8,  3, 14, 120,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 10 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CRUSHING, 9, 10 },
     { WPN_FLAIL,             "flail",              10,  0, 14, 130,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 10 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CRUSHING, 8, 10 },
     { WPN_MORNINGSTAR,       "morningstar",        13, -2, 15, 140,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 10 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_CRUSHING | DAM_PIERCE, 7, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 2 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLASHING, 0, 2 },
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 0 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLASHING, 0, 0 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 10 },
+        SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
+        DAMV_CRUSHING | DAM_PIERCE, 2, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15, 180,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 2 },
+        SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_CRUSHING | DAM_PIERCE, 0, 2 },
     { WPN_GREAT_MACE,        "great mace",         17, -4, 17, 270,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CRUSHING, 10 },
+        SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
+        DAMV_CRUSHING, 3, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
-        DAMV_CRUSHING, 10 },
+        SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
+        DAMV_CRUSHING, 1, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 10 },
+        SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
+        DAMV_CRUSHING | DAM_PIERCE, 1, 10 },
 
     // Short Blades
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_STABBING | DAM_SLICE, 10 },
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_STABBING | DAM_SLICE, 10, 10 },
     { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_STABBING | DAM_SLICE, 2 },
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_STABBING | DAM_SLICE, 0, 2 },
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
-        DAMV_SLICING | DAM_PIERCE, 10 },
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
+        DAMV_SLICING | DAM_PIERCE, 8, 10 },
     { WPN_CUTLASS,           "cutlass",             7,  4, 12,  90,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
-        DAMV_SLICING | DAM_PIERCE, 10 },
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
+        DAMV_SLICING | DAM_PIERCE, 8, 10 },
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLICING, 7, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_BLESSED_FALCHION,      "blessed falchion",       9,  2, 12, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 0 },       // or perhaps DAMV_CHOPPING is more apt?
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLICING, 0, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 10 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 7, 10 },
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
     { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 10 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 6, 10 },
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 2 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 2 },
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
     { WPN_BASTARD_SWORD,          "bastard sword",        15, -1, 15, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_SLICING, 2 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_SLICING, 0, 2 },
     { WPN_BLESSED_BASTARD_SWORD, "blessed bastard sword", 16, -2, 14, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_SLICING, 0, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 16, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 10 },
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 6, 10 },
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
     { WPN_CLAYMORE,              "claymore",              19, -4, 19, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 2 },
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 0, 2 },
     { WPN_BLESSED_CLAYMORE,      "blessed claymore",      20, -5, 18, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
 
     // Axes
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
-        SK_AXES,         HANDS_ONE,    SIZE_LITTLE, MI_NONE,
-        DAMV_CHOPPING, 10 },
+        SK_AXES,       SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_CHOPPING, 9, 10 },
     { WPN_WAR_AXE,           "war axe",            11,  0, 15, 180,  7,
-        SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_CHOPPING, 10 },
+        SK_AXES,       SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_CHOPPING, 7, 10 },
     { WPN_BROAD_AXE,         "broad axe",          13, -2, 16, 230,  8,
-        SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_CHOPPING, 10 },
+        SK_AXES,       SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_CHOPPING, 4, 10 },
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17, 250,  8,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CHOPPING, 10 },
+        SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
+        DAMV_CHOPPING, 6, 10 },
     { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20, 280,  9,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CHOPPING, 2 },
+        SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
+        DAMV_CHOPPING, 0, 2 },
 
     // Polearms
     { WPN_SPEAR,             "spear",               6,  4, 11,  50,  3,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_SMALL,  MI_NONE,
-        DAMV_PIERCING, 10 },
+        SK_POLEARMS,     SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_PIERCING, 8, 10 },
     { WPN_TRIDENT,           "trident",             9,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 10 },
+        SK_POLEARMS,     SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_PIERCING, 6, 10 },
     { WPN_HALBERD,           "halberd",            13, -3, 15, 200,  5,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CHOPPING | DAM_PIERCE, 10 },
+        SK_POLEARMS,     SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_CHOPPING | DAM_PIERCE, 5, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 0 },
+        SK_POLEARMS,     SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 2, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 2 },
+        SK_POLEARMS,     SIZE_LITTLE,    SIZE_MEDIUM, MI_NONE,
+        DAMV_PIERCING, 0, 2 },
     { WPN_TRISHULA,          "trishula",           13,  0, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 0 },
+        SK_POLEARMS,     SIZE_LITTLE,    SIZE_MEDIUM, MI_NONE,
+        DAMV_PIERCING, 0, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 17, 200,  6,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CHOPPING, 10 },
+        SK_POLEARMS,     SIZE_MEDIUM,    NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_CHOPPING, 5, 10 },
     { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CHOPPING, 2 },
+        SK_POLEARMS,     SIZE_MEDIUM,    NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_CHOPPING, 1, 2 },
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  3,
-        SK_STAVES,       HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
-        DAMV_CRUSHING, 0 },
+        SK_STAVES,       SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_CRUSHING, 0, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_CRUSHING, 10 },
+        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_CRUSHING, 8, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
-        DAMV_SLICING, 2 },
+        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 2, 2 },
 
     // Range weapons
     // Notes:
@@ -339,20 +341,32 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE,
-        DAMV_NON_MELEE, 0 },
-    { WPN_SLING,             "sling",               2,  2, 11,  20,  1,
-        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
-        DAMV_NON_MELEE, 10 },
-    { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
-        SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
-        DAMV_NON_MELEE, 10 },
-    { WPN_SHORTBOW,          "shortbow",            3,  1, 11,  90,  2,
-        SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
-        DAMV_NON_MELEE, 10 },
-    { WPN_LONGBOW,           "longbow",             6,  0, 12, 120,  3,
-        SK_BOWS,         HANDS_TWO,    SIZE_LARGE,  MI_ARROW,
-        DAMV_NON_MELEE, 10 },
+        SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
+        DAMV_NON_MELEE, 5, 0 },
+
+    { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,  20,  1,
+        SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
+        DAMV_NON_MELEE, 8, 10 },
+    { WPN_GREATSLING,        "greatsling",          8, -1, 14,  30,  1,
+        SK_SLINGS,       SIZE_LITTLE,  SIZE_SMALL, MI_STONE,
+        DAMV_NON_MELEE, 2, 2 },
+
+    { WPN_HAND_CROSSBOW,     "hand crossbow",      11,  5, 15,  50,  5,
+        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
+        DAMV_NON_MELEE, 7, 10 },
+    { WPN_ARBALEST,          "arbalest",           18,  2, 19, 150,  8,
+        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 5, 10 },
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23,  0, 23, 250,  9,
+        SK_CROSSBOWS,    SIZE_SMALL,  NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 0, 2 },
+
+    { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
+        SK_BOWS,         SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_ARROW,
+        DAMV_NON_MELEE, 8, 10 },
+    { WPN_LONGBOW,           "longbow",            15,  0, 17, 120,  3,
+        SK_BOWS,         SIZE_MEDIUM,  NUM_SIZE_LEVELS, MI_ARROW,
+        DAMV_NON_MELEE, 2, 10 },
 };
 
 struct missile_def
@@ -361,28 +375,25 @@ struct missile_def
     const char *name;
     int         dam;
     int         mass;
+    int         mulch_rate;
     bool        throwable;
 };
 
 static int Missile_index[NUM_MISSILES];
-static const missile_def Missile_prop[NUM_MISSILES] =
+static const missile_def Missile_prop[] =
 {
-    { MI_NEEDLE,        "needle",        0,    1, false },
-    { MI_STONE,         "stone",         2,    6, true  },
-    { MI_DART,          "dart",          2,    3, true  },
-    { MI_ARROW,         "arrow",         7,    5, false },
-    { MI_BOLT,          "bolt",          9,    5, false },
-    { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
-    { MI_SLING_BULLET,  "sling bullet",  4,    4, false },
-    { MI_JAVELIN,       "javelin",      10,   80, true  },
-    { MI_THROWING_NET,  "throwing net",  0,   30, true  },
-    { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
-};
-
-enum food_flag_type
-{
-    FFL_NONE  = 0x00,
-    FFL_FRUIT = 0x01,
+#if TAG_MAJOR_VERSION == 34
+    { MI_DART,          "dart",          2,    3, 1,  true  },
+#endif
+    { MI_NEEDLE,        "needle",        0,    1, 12, false },
+    { MI_STONE,         "stone",         2,    6, 8,  true  },
+    { MI_ARROW,         "arrow",         0,    5, 8,  false },
+    { MI_BOLT,          "bolt",          0,    5, 8,  false },
+    { MI_LARGE_ROCK,    "large rock",   20,  600, 30, true  },
+    { MI_SLING_BULLET,  "sling bullet",  4,    4, 8,  false },
+    { MI_JAVELIN,       "javelin",      10,   80, 20, true  },
+    { MI_THROWING_NET,  "throwing net",  0,   30, 0,  true  },
+    { MI_TOMAHAWK,      "tomahawk",      6,   30, 20, true  },
 };
 
 struct food_def
@@ -394,7 +405,6 @@ struct food_def
     int         herb_mod;
     int         mass;
     int         turns;
-    uint32_t    flags;
 };
 
 // NOTE: Any food with special random messages or side effects
@@ -403,34 +413,37 @@ struct food_def
 // (like ghoul chunks) to guarantee that the special thing is only
 // done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
-static const food_def Food_prop[NUM_FOODS] =
+static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
-    { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3, FFL_NONE },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3 },
+    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2 },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4 },
 
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 2, FFL_FRUIT},
-    { FOOD_ORANGE,       "orange",       1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_BANANA,       "banana",       1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_LEMON,        "lemon",        1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_PEAR,         "pear",          700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APPLE,        "apple",         700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APRICOT,      "apricot",       700,  -200,   200,  15, 2, FFL_FRUIT},
-    { FOOD_CHOKO,        "choko",         600,  -200,   200,  30, 2, FFL_FRUIT},
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -50,    50,   5, 2, FFL_FRUIT},
-    { FOOD_GRAPE,        "grape",         100,   -20,    20,   2, 1, FFL_FRUIT},
-    { FOOD_SULTANA,      "sultana",        70,   -20,    20,   1, 1, FFL_FRUIT},
+    { FOOD_FRUIT,        "fruit",         850,  -100,    50,  20, 1 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  5000,     0,     0,  55, 2, FFL_NONE },
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2 },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2 },
+
+#if TAG_MAJOR_VERSION == 34
+    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2 },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2 },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 2 },
+    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 2 },
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 2 },
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 2 },
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 2 },
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 2 },
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 2 },
+    { FOOD_GRAPE,        "buggy",         100,   -20,    20,   2, 1 },
+    { FOOD_SULTANA,      "buggy",          70,   -20,    20,   1, 1 },
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 2 },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 2 },
+#endif
 };
 
 // Must call this functions early on so that the above tables can
@@ -438,7 +451,7 @@ static const food_def Food_prop[NUM_FOODS] =
 void init_properties()
 {
     // The compiler would complain about too many initializers but not
-    // about too few, check it by hand:
+    // about too few, so we check this ourselves.
     COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
     COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
@@ -498,13 +511,11 @@ bool curse_an_item(bool ignore_holy_wrath)
             if (you.inv[i].cursed())
                 continue;
 
-            // Melded items cannot be cursed.
-            if (item_is_melded(you.inv[i]))
-                continue;
-
             if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
                 && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+            {
                 continue;
+            }
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
@@ -641,18 +652,55 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         ash_check_bondage();
 }
 
-// Is item stationary (cannot be picked up)?
-void set_item_stationary(item_def &item)
+/**
+ * Make a net stationary (because it currently traps a victim).
+ *
+ * @param item The net item.
+*/
+void set_net_stationary(item_def &item)
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
         item.plus2 = 1;
 }
 
+/**
+ * Is the item stationary (unmovable)?
+ *
+ * Currently only carrion and nets with a trapped victim are stationary.
+ * @param item The item.
+ * @return  True iff the item is stationary.
+*/
 bool item_is_stationary(const item_def &item)
 {
-    return item.base_type == OBJ_MISSILES
-           && item.sub_type == MI_THROWING_NET
-           && item.plus2;
+    return item.base_type == OBJ_CORPSES || item_is_stationary_net(item);
+}
+
+/**
+ * Is the item a stationary net?
+ *
+ * @param item The item.
+ * @return  True iff the item is a stationary net.
+*/
+bool item_is_stationary_net(const item_def &item)
+{
+    return item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET
+        && item.plus2;
+}
+
+/**
+ * Get the actor held in a stationary net.
+ *
+ * @param net A stationary net item.
+ * @return  A pointer to the actor in the net, guaranteed to be non-null.
+ */
+actor *net_holdee(const item_def &net)
+{
+    ASSERT(item_is_stationary_net(net));
+    // Stationary nets should not be in inventory etc.
+    ASSERT_IN_BOUNDS(net.pos);
+    actor * const a = actor_at(net.pos);
+    ASSERTM(a, "No actor in stationary net at (%d,%d)", net.pos.x, net.pos.y);
+    return a;
 }
 
 static bool _in_shop(const item_def &item)
@@ -947,7 +995,12 @@ bool hide2armour(item_def &item)
     return true;
 }
 
-// Return the enchantment limit of a piece of armour.
+/**
+ * Return the enchantment limit of a piece of armour.
+ *
+ * @param item      The item being considered.
+ * @return          The maximum enchantment the item can hold.
+ */
 int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -958,9 +1011,12 @@ int armour_max_enchant(const item_def &item)
     if (eq_slot == EQ_BODY_ARMOUR
         || item.sub_type == ARM_CENTAUR_BARDING
         || item.sub_type == ARM_NAGA_BARDING)
+    {
         max_plus = property(item, PARM_AC);
+    }
     else if (eq_slot == EQ_SHIELD)
-        max_plus = 3;
+        // 3 / 5 / 8 for bucklers/shields/lg. shields
+        max_plus = (property(item, PARM_AC) - 3)/2 + 3;
 
     return max_plus;
 }
@@ -1070,9 +1126,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
     }
     else if (it.base_type == OBJ_RODS)
     {
-        if (item_is_melded(it))
-            return false;
-
         if (!hide_charged)
             return true;
 
@@ -1158,21 +1211,20 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     if (arm.base_type != OBJ_ARMOUR)
         return false;
 
-    // Melded armour cannot be enchanted.
-    if (item_is_melded(arm))
-        return false;
-
     // If we don't know the plusses, assume enchanting is possible.
-    if (unknown && !is_known_artefact(arm)
-        && !item_ident(arm, ISFLAG_KNOW_PLUSES))
-    {
+    if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
-    }
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI);
+    {
+        if (!uncurse || you_worship(GOD_ASHENZARI))
+            return false;
+        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
+            return true;
+        return arm.cursed();
+    }
 
     return true;
 }
@@ -1183,91 +1235,10 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 
 // Checks how rare a weapon is. Many of these have special routines for
 // placement, especially those with a rarity of zero. Chance is out of 10.
+// ^^^ vvv "rarity" is exactly the wrong term - inverted...
 int weapon_rarity(int w_type)
 {
-    switch (w_type)
-    {
-    case WPN_CLUB:
-    case WPN_DAGGER:
-        return 10;
-
-    case WPN_HAND_AXE:
-    case WPN_MACE:
-        return 9;
-
-    case WPN_SHORTBOW:
-    case WPN_FLAIL:
-    case WPN_CUTLASS:
-    case WPN_SHORT_SWORD:
-    case WPN_SLING:
-    case WPN_SPEAR:
-    case WPN_QUARTERSTAFF:
-        return 8;
-
-    case WPN_FALCHION:
-    case WPN_LONG_SWORD:
-    case WPN_MORNINGSTAR:
-    case WPN_WAR_AXE:
-        return 7;
-
-    case WPN_BATTLEAXE:
-    case WPN_CROSSBOW:
-    case WPN_GREAT_SWORD:
-    case WPN_SCIMITAR:
-    case WPN_TRIDENT:
-        return 6;
-
-    case WPN_GLAIVE:
-    case WPN_HALBERD:
-    case WPN_BLOWGUN:
-        return 5;
-
-    case WPN_BROAD_AXE:
-    case WPN_WHIP:
-        return 4;
-
-    case WPN_GREAT_MACE:
-        return 3;
-
-    case WPN_DIRE_FLAIL:
-    case WPN_SCYTHE:
-    case WPN_LONGBOW:
-    case WPN_LAJATANG:
-        return 2;
-
-    case WPN_GIANT_CLUB:
-    case WPN_GIANT_SPIKED_CLUB:
-    case WPN_BARDICHE:
-        return 1;
-
-    case WPN_BASTARD_SWORD:
-    case WPN_EVENINGSTAR:
-    case WPN_EXECUTIONERS_AXE:
-    case WPN_QUICK_BLADE:
-    case WPN_CLAYMORE:
-    case WPN_DEMON_WHIP:
-    case WPN_DEMON_BLADE:
-    case WPN_DEMON_TRIDENT:
-    case WPN_BLESSED_FALCHION:
-    case WPN_BLESSED_LONG_SWORD:
-    case WPN_BLESSED_SCIMITAR:
-    case WPN_EUDEMON_BLADE:
-    case WPN_BLESSED_BASTARD_SWORD:
-    case WPN_BLESSED_GREAT_SWORD:
-    case WPN_BLESSED_CLAYMORE:
-    case WPN_SACRED_SCOURGE:
-    case WPN_TRISHULA:
-    case WPN_STAFF:
-    case WPN_ROD:
-    case WPN_HAMMER:
-        // Zero value weapons must be placed specially -- see make_item() {dlb}
-        return 0;
-
-    default:
-        break;
-    }
-
-    return 0;
+    return Weapon_prop[Weapon_index[w_type]].commonness;
 }
 
 int get_vorpal_type(const item_def &item)
@@ -1318,47 +1289,20 @@ int single_damage_type(const item_def &item)
     return ret;
 }
 
-size_type weapon_size(const item_def &item)
-{
-    return Weapon_prop[Weapon_index[item.sub_type]].fit_size;
-}
-
 // Give hands required to wield weapon for a torso of "size".
 // Not adjusted by species or anything, which is why it's "basic".
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
-    hands_reqd_type ret = HANDS_ONE;
+    const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type :
+                         OBJ_RODS == item.base_type    ? WPN_ROD :
+                         OBJ_STAVES == item.base_type  ? WPN_STAFF :
+                                                         WPN_UNKNOWN;
 
-    switch (item.base_type)
-    {
-    case OBJ_STAVES:
-        if (size < SIZE_MEDIUM)
-            ret = HANDS_TWO;
-        else
-            ret = HANDS_ONE;
-        break;
-
-    case OBJ_WEAPONS:
-        ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
-
-        // Adjust handedness only for small races using melee weapons
-        // that are larger than they are.
-        if (!is_range_weapon(item)
-            && size < SIZE_MEDIUM
-            && weapon_size(item) > size)
-        {
-            ret = HANDS_TWO;
-        }
-        break;
-
-    case OBJ_CORPSES:   // unwieldy
-        ret = HANDS_TWO;
-        break;
-
-    default:
-        break;
-    }
-    return ret;
+    // Non-weapons.
+    if (wpn_type == WPN_UNKNOWN)
+        return HANDS_ONE;
+    return size >= Weapon_prop[Weapon_index[wpn_type]].min_1h_size ? HANDS_ONE
+                                                                   : HANDS_TWO;
 }
 
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type)
@@ -1369,54 +1313,93 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
     return ac->hands_reqd(item);
 }
 
+/**
+ * Is the provided type a kind of giant club?
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's a kind of giant club.
+ */
 bool is_giant_club_type(int wpn_type)
 {
     return wpn_type == WPN_GIANT_CLUB
            || wpn_type == WPN_GIANT_SPIKED_CLUB;
 }
 
-bool is_demonic(const item_def &item)
+/**
+ * Is the provided type a kind of ranged weapon?
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's a kind of launcher.
+ */
+bool is_ranged_weapon_type(int wpn_type)
 {
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        switch (item.sub_type)
-        {
-        case WPN_DEMON_BLADE:
-        case WPN_DEMON_WHIP:
-        case WPN_DEMON_TRIDENT:
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
+    return Weapon_prop[Weapon_index[wpn_type]].ammo != MI_NONE;
 }
 
+/**
+ * Is the provided type a kind of demon weapon?
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's a kind of demon weapon.
+ */
+bool is_demonic_weapon_type(int wpn_type)
+{
+    return wpn_type == WPN_DEMON_BLADE
+           || wpn_type == WPN_DEMON_WHIP
+           || wpn_type == WPN_DEMON_TRIDENT;
+}
+
+/**
+ * Is the provided type a kind of blessed weapon?
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's a kind of blessed weapon.
+ */
+bool is_blessed_weapon_type(int wpn_type)
+{
+    return wpn_type >= WPN_BLESSED_FALCHION && wpn_type <= WPN_TRISHULA;
+}
+
+/**
+ * Is the weapon type provided magical (& can't be generated in a usual way)?
+ * (I.e., magic staffs & rods.)
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's a magic staff or rod.
+ */
+bool is_magic_weapon_type(int wpn_type)
+{
+    return wpn_type == WPN_STAFF || wpn_type == WPN_ROD;
+}
+
+
+bool is_melee_weapon(const item_def &weapon)
+{
+    return is_weapon(weapon) && !is_range_weapon(weapon);
+}
+
+/**
+ * Is the provided item a demon weapon?
+ *
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a demon weapon.
+ */
+bool is_demonic(const item_def &item)
+{
+    return item.base_type == OBJ_WEAPONS
+           && is_demonic_weapon_type(item.sub_type);
+}
+
+/**
+ * Is the provided item a blessed weapon? (Not just holy wrath.)
+ *
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a blessed weapon.
+ */
 bool is_blessed(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        switch (item.sub_type)
-        {
-        case WPN_BLESSED_FALCHION:
-        case WPN_BLESSED_LONG_SWORD:
-        case WPN_BLESSED_SCIMITAR:
-        case WPN_EUDEMON_BLADE:
-        case WPN_BLESSED_BASTARD_SWORD:
-        case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_CLAYMORE:
-        case WPN_SACRED_SCOURGE:
-        case WPN_TRISHULA:
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
+    return item.base_type == OBJ_WEAPONS
+            && is_blessed_weapon_type(item.sub_type);
 }
 
 bool is_blessed_convertible(const item_def &item)
@@ -1426,7 +1409,7 @@ bool is_blessed_convertible(const item_def &item)
                && (is_demonic(item)
                    || item.sub_type == WPN_SACRED_SCOURGE
                    || item.sub_type == WPN_TRISHULA
-                   || weapon_skill(item) == SK_LONG_BLADES));
+                   || melee_skill(item) == SK_LONG_BLADES));
 }
 
 bool convert2good(item_def &item)
@@ -1475,7 +1458,7 @@ bool convert2bad(item_def &item)
     return true;
 }
 
-bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
+bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 {
     if (wpn.base_type != OBJ_WEAPONS)
         return false;
@@ -1483,14 +1466,12 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
     if (is_artefact(wpn))
         return false;
 
-    if (!allow_ranged && is_range_weapon(wpn)
-        || wpn.sub_type == WPN_BLOWGUN)
-    {
+    if (!allow_ranged && is_range_weapon(wpn) || wpn.sub_type == WPN_BLOWGUN)
         return false;
-    }
 
-    if (you.duration[DUR_WEAPON_BRAND] != 0
-        && you.weapon() == &wpn)
+    // Only gods can rebrand blessed weapons, and they revert back to their
+    // old base type in the process.
+    if (is_blessed(wpn) && !divine)
         return false;
 
     return true;
@@ -1510,8 +1491,44 @@ int weapon_str_weight(const item_def &wpn)
     return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
 
-// Returns melee skill of item.
-skill_type weapon_skill(const item_def &item)
+/**
+ * Returns the skill used by the given item to attack.
+ *
+ * @param item  The item under consideration.
+ * @return      The skill used to attack with the given item; defaults to
+ *              SK_FIGHTING if no melee or ranged skill applies.
+ */
+skill_type item_attack_skill(const item_def &item)
+{
+    return is_range_weapon(item) ? range_skill(item) : melee_skill(item);
+}
+
+/**
+ * Returns the skill used by the given item type to attack.
+ *
+ * @param wclass  The item base type under consideration.
+ * @param wtype   The item subtype under consideration.
+ * @return      The skill used to attack with the given item type; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type item_attack_skill(object_class_type wclass, int wtype)
+{
+    item_def    wpn;
+
+    wpn.base_type = wclass;
+    wpn.sub_type = wtype;
+
+    return item_attack_skill(wpn);
+}
+
+/**
+ * Returns the skill used by the given item to attack in melee.
+ *
+ * @param item  The item under consideration.
+ * @return      The skill used to attack with the given item; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type melee_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
@@ -1524,15 +1541,22 @@ skill_type weapon_skill(const item_def &item)
     return SK_FIGHTING;
 }
 
-// Front function for the above when we don't have a physical item to check.
-skill_type weapon_skill(object_class_type wclass, int wtype)
+/**
+ * Returns the skill used by the given item type to attack in melee.
+ *
+ * @param wclass  The item base type under consideration.
+ * @param wtype   The item subtype under consideration.
+ * @return      The skill used to attack with the given item type; defaults to
+ *              SK_FIGHTING if no melee skill applies.
+ */
+skill_type melee_skill(object_class_type wclass, int wtype)
 {
     item_def    wpn;
 
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return weapon_skill(wpn);
+    return melee_skill(wpn);
 }
 
 // Returns range skill of the item.
@@ -1624,7 +1648,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
-    skill_type sk = weapon_skill(item);
+    skill_type sk = melee_skill(item);
     if (sk != SK_FIGHTING)
         skills.insert(sk);
 
@@ -1635,36 +1659,25 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     return !skills.empty();
 }
 
-// Returns number of sizes away from being a usable weapon.
-static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
-{
-    const int fit = Weapon_prop[Weapon_index[item.sub_type]].fit_size - size;
-
-    return (fit < -2) ? fit + 2 :
-           (fit >  1) ? fit - 1 : 0;
-}
-
-// Returns true if weapon is usable as a weapon.
-bool check_weapon_wieldable_size(const item_def &item, size_type size)
+/**
+ * Checks if the provided weapon is wieldable by a creature of the given size.
+ *
+ * @param item      The weapon in question.
+ * @param size      The size of the creature trying to wield the weapon.
+ * @return          Whether a creature of the given size can wield the weapon.
+ */
+bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
     // Staves and rods are currently wieldable for everyone just to be nice.
     if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
-        || weapon_skill(item) == SK_STAVES)
+        || melee_skill(item) == SK_STAVES)
     {
         return true;
     }
 
-    int fit = _fit_weapon_wieldable_size(item, size);
-
-    // Adjust fit for size.
-    if (size < SIZE_SMALL && fit > 0)
-        fit--;
-    else if (size > SIZE_LARGE && fit < 0)
-        fit++;
-
-    return fit == 0;
+    return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
 }
 
 //
@@ -1680,7 +1693,7 @@ missile_type fires_ammo_type(const item_def &item)
 
 bool is_range_weapon(const item_def &item)
 {
-    return fires_ammo_type(item) != MI_NONE;
+    return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
 }
 
 const char *ammo_name(missile_type ammo)
@@ -1699,8 +1712,10 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return ammo.sub_type != MI_DART
-           && ammo.sub_type != MI_LARGE_ROCK
+    return ammo.sub_type != MI_LARGE_ROCK
+#if TAG_MAJOR_VERSION == 34
+           && ammo.sub_type != MI_DART
+#endif
            && ammo.sub_type != MI_JAVELIN
            && ammo.sub_type != MI_TOMAHAWK
            && ammo.sub_type != MI_THROWING_NET;
@@ -1742,17 +1757,62 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
-bool is_melee_weapon(const item_def &weapon)
+
+/**
+ * Returns whether a given missile will always destroyed on impact.
+ *
+ * @param missile      The missile in question.
+ * @return             Whether the missile should always be destroyed on
+ *                     impact.
+ */
+bool ammo_always_destroyed(const item_def &missile)
 {
-    return is_weapon(weapon) && !is_range_weapon(weapon);
+    const int brand = get_ammo_brand(missile);
+    return brand == SPMSL_CHAOS
+           || brand == SPMSL_DISPERSAL
+           || brand == SPMSL_EXPLODING;
 }
+
+/**
+ * Returns whether a given missile will never destroyed on impact.
+ *
+ * @param missile      The missile in question.
+ * @return             Whether the missile should never be destroyed on impact.
+ */
+bool ammo_never_destroyed(const item_def &missile)
+{
+    return missile.sub_type == MI_THROWING_NET;
+}
+
+/**
+ * Returns the one_chance_in for a missile type for be destroyed on impact.
+ *
+ * @param missile_type      The missile type to get the mulch chance for.
+ * @return                  The inverse of the missile type's mulch chance.
+ */
+int ammo_type_destroy_chance(int missile_type)
+{
+    return Missile_prop[ Missile_index[missile_type] ].mulch_rate;
+}
+
+/**
+ * Returns the base damage of a given item type.
+ *
+ * @param missile_type      The missile type to get the damage for.
+ * @return                  The base damage of the given missile type.
+ */
+int ammo_type_damage(int missile_type)
+{
+    return Missile_prop[ Missile_index[missile_type] ].dam;
+}
+
 
 //
 // Reaching functions:
 //
 reach_type weapon_reach(const item_def &item)
 {
-    if (weapon_skill(item) == SK_POLEARMS)
+    if (melee_skill(item) == SK_POLEARMS)
         return REACH_TWO;
     return REACH_NONE;
 }
@@ -1795,32 +1855,30 @@ bool item_is_spellbook(const item_def &item)
 //
 // Ring functions:
 
-// Returns number of pluses on jewellery (always none for amulets yet).
-int ring_has_pluses(const item_def &item)
+// Returns whether jewellery has plusses.
+bool ring_has_pluses(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    // not known -> no pluses
+    // not known -> no plusses
     if (!item_type_known(item))
-        return 0;
+        return false;
 
     switch (item.sub_type)
     {
     case RING_SLAYING:
-        return 2;
-
     case RING_PROTECTION:
     case RING_EVASION:
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
-        return 1;
+        return true;
 
     default:
         break;
     }
 
-    return 0;
+    return false;
 }
 
 // Returns true if having two rings of the same type on at the same
@@ -1931,10 +1989,7 @@ bool can_cut_meat(const item_def &item)
 
 bool is_fruit(const item_def & item)
 {
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT;
+    return item.base_type == OBJ_FOOD && item.sub_type == FOOD_FRUIT;
 }
 
 bool food_is_rotten(const item_def &item)
@@ -2355,7 +2410,9 @@ bool gives_ability(const item_def &item)
 
         if (ego == SPARM_DARKNESS || ego == SPARM_FLYING
             || ego == SPARM_JUMPING)
+        {
             return true;
+        }
         break;
     }
     default:
@@ -2449,6 +2506,12 @@ bool gives_resistance(const item_def &item)
     return false;
 }
 
+/**
+ * Return the mass of an item (aum).
+ *
+ * @param item The item.
+ * @return  The mass of the item.
+*/
 int item_mass(const item_def &item)
 {
     int unit_mass = 0;
@@ -2546,6 +2609,36 @@ int item_mass(const item_def &item)
     return (unit_mass > 0) ? unit_mass : 0;
 }
 
+bool is_item_jelly_edible(const item_def &item)
+{
+    // Don't eat artefacts.
+    if (is_artefact(item))
+        return false;
+
+    // Don't eat mimics.
+    if (item.flags & ISFLAG_MIMIC)
+        return false;
+
+    // Shouldn't eat stone things
+    //   - but what about wands and rings?
+    if (item.base_type == OBJ_MISSILES
+        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+    {
+        return false;
+    }
+
+    // Don't eat special game items.
+    if (item.base_type == OBJ_ORBS
+        || (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_RUNE_OF_ZOT
+                || item.sub_type == MISC_HORN_OF_GERYON)))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 equipment_type get_item_slot(const item_def& item)
 {
     return get_item_slot(item.base_type, item.sub_type);
@@ -2637,15 +2730,42 @@ const char* weapon_base_name(weapon_type subtype)
     return Weapon_prop[Weapon_index[subtype]].name;
 }
 
+void remove_whitespace(string &str)
+{
+    str.erase(remove_if(str.begin(), str.end(),
+        static_cast<int(*)(int)>(isspace)), str.end());
+}
+
+/**
+ * Try to find a weapon, given the weapon's name without whitespace.
+ *
+ * @param name_nospace  The weapon's base name, with all whitespace removed.
+ * @return              The id of the weapon, or WPN_UNKNOWN if nothing matches.
+ */
+weapon_type name_nospace_to_weapon(string name_nospace)
+{
+    for (size_t ii = 0; ii < ARRAYSZ(Weapon_prop); ii++)
+    {
+        string weap_nospace = Weapon_prop[ii].name;
+        remove_whitespace(weap_nospace);
+
+        if (name_nospace == weap_nospace)
+            return (weapon_type) Weapon_prop[ii].id;
+    }
+
+    // No match found
+    return WPN_UNKNOWN;
+}
+
 void seen_item(const item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
         // Known brands will be set in set_item_flags().
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_MISCELLANY
             && !is_deck(item))
         {
@@ -2654,6 +2774,7 @@ void seen_item(const item_def &item)
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.
+    ((item_def*)&item)->flags |= ISFLAG_SEEN;
     if (you_worship(GOD_ASHENZARI))
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)

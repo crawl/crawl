@@ -6,6 +6,6 @@
 #ifndef LEVPAND_H
 #define LEVPAND_H
 
-void init_pandemonium(void);
+void init_pandemonium();
 
 #endif

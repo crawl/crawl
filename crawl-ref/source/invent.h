@@ -20,7 +20,7 @@ enum object_selector
     OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
     OSEL_ENCH_ARM                =  -6,
-    OSEL_VAMP_EAT                =  -7,
+//  OSEL_VAMP_EAT                =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
     OSEL_EVOKABLE                = -10,
@@ -31,6 +31,7 @@ enum object_selector
     OSEL_UNCURSED_WORN_JEWELLERY = -15,
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
+    OSEL_BLESSABLE_WEAPON        = -18,
 };
 
 #define SLOT_BARE_HANDS      -2
@@ -113,8 +114,6 @@ public:
 #ifdef USE_TILE
     virtual bool get_tiles(vector<tile_def>& tiles) const;
 #endif
-
-    bool show_weight;
 
 private:
     void add_class_hotkeys(const item_def &i);

@@ -14,7 +14,9 @@ enum fire_type
 {
     FIRE_NONE      = 0x0000,
     FIRE_LAUNCHER  = 0x0001,
+#if TAG_MAJOR_VERSION == 34
     FIRE_DART      = 0x0002,
+#endif
     FIRE_STONE     = 0x0004,
     FIRE_JAVELIN   = 0x0010,
     FIRE_ROCK      = 0x0100,
@@ -32,13 +34,12 @@ bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
-void throw_item_no_quiver(void);
+void throw_item_no_quiver();
 
 bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                            string &dmg_msg);
 
-bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
-              int acc_bonus = 0, dist *target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, dist *target = NULL);
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
 int launcher_final_speed(const item_def &launcher,

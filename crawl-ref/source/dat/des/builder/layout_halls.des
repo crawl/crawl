@@ -9,6 +9,7 @@
 : require("dlua/layout/procedural_transform.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 {{
 
@@ -75,11 +76,21 @@
 
 }}
 
+##############################################################
+# layout_hall_layers
+#
+# TODO: Correctly assign "layout_type_open_caves" tag with cave
+#       mode and "layout_mode_passages" tag without it.
+# TODO: Needs to make narrower paths (e.g. max 5 width).  When
+#       that works, add to Zot at weight 15.
+# TODO: Elf needs a version that never does caves.  When that
+#       and previous TODO are in, add to Elf with weight 10.
+#
 NAME:   layout_hall_layers
-DEPTH:  Depths, Zot, Lair, Elf
-WEIGHT: 5, 10 (Zot), 5 (Lair), 20 (Elf)
+DEPTH:  Lair
+WEIGHT: 7
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -213,14 +224,18 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 MAP
 ENDMAP
 
-# Takes one of the primitive shapes and creates nested corridors in that
-# shape, somewhat like an onion. Carves randomly spaced gaps in the walls
-# to connect everything up.
+##############################################################
+# layout_onion
+#
+# Takes one of the primitive shapes and creates nested corridors
+# in that shape, somewhat like an onion. Carves randomly spaced
+# gaps in the walls to connect everything up.
+#
 NAME:   layout_onion
-DEPTH:  Zot,Snake
-WEIGHT: 20
+DEPTH:  Snake, Zot
+WEIGHT: 10 (Snake), 5 (Zot)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -250,16 +265,22 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 MAP
 ENDMAP
 
-# Takes an inverted version of the onion layout so what were walls
-# are now rooms - connects these up with a noise pattern.
+##############################################################
+# layout_catacombs
+#
+# Takes an inverted version of the onion layout so what were
+# walls are now rooms - connects these up with a noise pattern.
 # Hopefully this should look like ancient abandoned catacombs.
-# TODO: Other ways of connecting up the rooms. Need something starting
-# in the centre and spreading out in a branching way, like particle diffusion.
+#
+# TODO: Other ways of connecting up the rooms. Need something
+#       starting in the centre and spreading out in a branching
+#       way, like particle diffusion.
+#
 NAME:   layout_catacombs
-DEPTH:  Crypt,Tar
-WEIGHT: 50, 50 (Tar)
+DEPTH:  Crypt, Tar
+WEIGHT: 10 (Crypt), 10 (Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_catacombs
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -319,128 +340,101 @@ TAGS: overwritable layout allow_dup unrand layout_type_catacombs
   zonify.map_fill_zones(_G, 1, 'x')
   theme.level_material(_G)
 }}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+  -- If we try to validate the map before without creating it,
+  --  we get a crash at start
+  if is_validating() then return end
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES, ".W")
+}}
 
+##############################################################
+# layout_onion_interference
+#
 # Layers two onions on top of each other to create an
 # interference pattern (with option xor)
+#
+# TODO: A better way of dealing with small maps
+#
 NAME:   layout_onion_interference
-DEPTH:  Zot:1-4,Snake
-WEIGHT: 0
+DEPTH:  Snake, Zot:1-4
+WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
 
-  -- TODO: This comes out with really stunning layouts 80% of the time
-  -- but sometimes they're small and weird-looking. Needs more tweaking.
-  -- Ideas:
-  --  * Convert to use the other shape functions
-  --  * Layer different shapes instead of the same two
-
-  if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
-  local fcircle
-  if crawl.coinflip() then
-    fcircle = procedural.distance { radius = math.min(gxm,gym)/2.2 - 2, origin = { x = gxm/2, y = gym/2 } }
-  else
-    local padx,pady = crawl.random_range(2,5),crawl.random_range(2,5)
-    fcircle = procedural.box { x1 = padx, y1 = pady, x2 = gxm-1-padx, y2 = gym-1-pady }
-  end
-
   local wall_break = util.random_range_real(.4,.6)
-  local rings = crawl.random_range(5,8)
+  local num_rings1 = crawl.random_range(5,8)
+  local num_rings2 = crawl.random_range(5,8)
 
   local fill_center = crawl.coinflip()
-  local frings = function(x,y)
-    local r = fcircle(x,y)
-    if r >= 1 then return -1 end
-    local rr = r * rings
-    local level = math.floor(rr)
-    r = rr - level
-    if fill_center and level == 0 then return 1 end
-    return r
-  end
-
-  if you.in_branch("Snake") then
-    frings = procedural.transform.damped_distortion(frings)
-  end
-
-  -- Generate the interference pattern by combining two coords
-  -- from the original func
-  local cardinal = crawl.coinflip()
-  local basedirs
-  if cardinal then
-    basedirs = vector.diagonals
-  else
-    basedirs = {}
-    local dir = { x = util.random_range_real(0.5,1), y = util.random_range_real(0.5,1) }
-    for n=1,4,1 do
-      basedirs[n] = { x = vector.diagonals[n].x*dir.x, y = vector.diagonals[n].y*dir.y }
-    end
-  end
+  local frings1 = onion_skin(num_rings1,wall_break)
+  local frings2 = onion_skin(num_rings2,wall_break)
 
   local dist = crawl.random_range(3,6)
-  local dirs = {}
-  for n=1,4,1 do
-    dirs[n] = { x = basedirs[n].x*dist, y = basedirs[n].y*dist }
+  local dir = { x = util.random_range_real(0.5,1) * dist,
+                y = util.random_range_real(0.5,1) * dist }
+
+  -- Position on map
+  frings1 = procedural.translate(
+                procedural.scale(frings1,
+                                 math.min(gxm,gym)*(3+crawl.random2(2))/8),
+                                 gxm/2,gym/2)
+  frings2 = procedural.translate(
+                procedural.scale(frings2,
+                                 math.min(gxm,gym)*(3+crawl.random2(2))/8),
+                                 gxm/2+dir.x,gym/2+dir.y)
+
+  if you.in_branch("Snake") then
+    frings1 = procedural.transform.damped_distortion(frings1)
+    frings2 = procedural.transform.damped_distortion(frings2)
   end
 
+  -- Generate the interference pattern by combining the two functions
   local xor = crawl.coinflip()
-
-  local vals = {}
-  local fvals = function(x,y)
-    for n=1,4,1 do
-      vals[n] = frings(x+dirs[n].x,y+dirs[n].y)
-    end
-    return vals
-  end
-
-  local fphase
-  local two_or_four = crawl.coinflip()
-  if xor then
-    fphase = function(x,y)
-      local vals = fvals(x,y)
-      if two_or_four then
-        if vals[1] < 0 or vals[2] < 0 or vals[3] < 0 or vals[4] < 0 then return 0 end
-        if vals[1] > wall_break and vals[2] > wall_break or vals[3] > wall_break and vals[4] > wall_break then
-          return vals[1] - vals[2] + vals[3] - vals[4]
-        end
+  local fphase = function(x,y)
+    if xor then
+      if frings1(x, y) > wall_break then
+        return frings2(x,y) > wall_break and 0 or 1
       else
-        if vals[1] < 0 or vals[3] < 0 then return 0 end
-        if vals[1] > wall_break and vals[3] > wall_break then
-          return vals[1] - vals[3]
-        end
-      end
-      return 1
-    end
-  else
-    fphase = function(x,y)
-      local vals = fvals(x,y)
-      if two_or_four then
-        if vals[1] < 0 or vals[2] < 0 or vals[3] < 0 or vals[4] < 0 then return 0 end
-        return math.max(vals[1],vals[2],vals[3],vals[4])
-      else
-        if vals[1] < 0 or vals[3] < 0 then return 0 end
-        return math.max(vals[1],vals[3])
+        return frings2(x,y) > wall_break and 1 or 0
       end
     end
+    return (frings1(x,y) + frings2(x,y)) / 2
   end
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
 
   zonify.map_fill_zones(_G, 1, 'x')
 }}
-MAP
-ENDMAP
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
+}}
 
-# This maps the x,y domain to a 3D cylinder extruded along the y-axis in the
-# Worley space. This creates a strong sense of repetition and symmetry along
-# the horizontal whilst still allowing the patterns to connect. Optionally
-# it applies a polar transform producing something sometimes like a spiderweb.
+##############################################################
+# layout_cathedral_of_symmetry
+#
+# This maps the x,y domain to a 3D cylinder extruded along the
+# y-axis in the Worley space. This creates a strong sense of
+# repetition and symmetry along the horizontal whilst still
+# allowing the patterns to connect. Optionally it applies a
+# polar transform producing something sometimes like a
+# spiderweb.
+#
+# TODO: Use "layout_type_narrow_caves" tag for the less open
+#       (normal) version and the "layout_type_open_caves" tag
+#       for the openm version that sometimes appears.  If they
+#       are all mixed up, layout_type_open_caves is probably
+#       better.
+# TODO: less open space on Zot
+#
 NAME:   layout_cathedral_of_symmetry
-DEPTH:  Zot,Tar
-WEIGHT: 20, 50(Tar)
+DEPTH:  Zot, Tar
+WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -510,6 +504,11 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
     end
   end
 
+  -- Zot:5 always gets a polar layout.
+  if you.in_branch("zot") and you.at_branch_bottom() then
+    polarise = true
+  end
+
   local scale = 80/reps
   local breakpoint = 0.3
   local fbase = procedural.worley_diff{ scale = wscale }
@@ -530,3 +529,305 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 }}
 MAP
 ENDMAP
+
+##############################################################
+# layout_concentric_octagons
+# Idea by Vivificient, code by infiniplex
+#
+# This is properly called a labyrinth, but that name is already taken
+#
+# TODO: Use Snake variant in Lair, add with weight 3.
+# TODO: Minimum area validation in Snake (can be disconnected).
+#       Then remove minimum size validate as unneeded
+#
+NAME:   layout_concentric_octagons
+DEPTH:  Snake, Zot
+WEIGHT: 5 (Snake), 10 (Zot)
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand central layout_type_passages
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+  --   xx
+  --  xxxx
+  --  xxxx
+  --   xx
+  function draw_plug (x, y, fill)
+    for x1 = x - 1, x + 2 do
+      for y1 = y - 1, y + 2 do
+        if (   (x1 ~= x - 1 and x1 ~= x + 2)
+            or (y1 ~= y - 1 and y1 ~= y + 2)) then
+          mapgrd[x1][y1] = fill
+        end
+      end
+    end
+  end
+  function is_plug (x, y, check)
+    for x1 = x - 1, x + 2 do
+      for y1 = y - 1, y + 2 do
+        if (   (x1 ~= x - 1 and x1 ~= x + 2)
+            or (y1 ~= y - 1 and y1 ~= y + 2)) then
+          if (mapgrd[x1][y1] == check) then
+            return true
+          end
+        end
+      end
+    end
+    return false
+  end
+
+  function sign (n)
+    if (n > 0) then
+      return 1
+    elseif (n < 0) then
+      return -1
+    else
+      return 0
+    end
+  end
+
+  function resolve_position (layer, position, out_straight, out_diagonal)
+    local x
+    local y
+    if (position < layer.side_start[1]) then
+      -- north
+      local offset = position - layer.side_start[0]
+      x = layer.x2 + offset
+      y = layer.y1          - out_straight
+    elseif (position < layer.side_start[2]) then
+      -- northeast
+      local offset = position - layer.side_start[1]
+      out_diagonal = math.floor(out_diagonal)
+      x = layer.x3 + offset + out_diagonal
+      y = layer.y1 + offset - out_diagonal + 1
+    elseif (position < layer.side_start[3]) then
+      -- east
+      local offset = position - layer.side_start[2]
+      x = layer.x4          + out_straight - 1
+      y = layer.y2 + offset
+    elseif (position < layer.side_start[4]) then
+      -- southeast
+      local offset = position - layer.side_start[3]
+      out_diagonal = math.floor(out_diagonal)
+      x = layer.x4 - offset + out_diagonal - 1
+      y = layer.y3 + offset + out_diagonal
+    elseif (position < layer.side_start[5]) then
+      -- south
+      local offset = position - layer.side_start[4]
+      x = layer.x3 - offset                - 1
+      y = layer.y4          + out_straight - 1
+    elseif (position < layer.side_start[6]) then
+      -- southwest
+      local offset = position - layer.side_start[5]
+      out_diagonal = math.floor(out_diagonal)
+      x = layer.x2 - offset - out_diagonal
+      y = layer.y4 - offset + out_diagonal - 1
+    elseif (position < layer.side_start[7]) then
+      -- west
+      local offset = position - layer.side_start[6]
+      x = layer.x1          - out_straight
+      y = layer.y3 - offset                - 1
+    else
+      -- northwest
+      local offset = position - layer.side_start[7]
+      out_diagonal = math.ceil(out_diagonal) -- otherwise blocks miss hallway
+      x = layer.x1 + offset - out_diagonal + 1
+      y = layer.y2 - offset - out_diagonal
+    end
+    return x, y
+  end
+
+  -- draw hallways of the correct width, length, and direction
+  function draw_hallway_s_n (x, y, length, fill)
+    local sign_val = sign(length)
+    for y1 = y, y + length, sign(length) do
+      mapgrd[x    ][y1] = fill
+      mapgrd[x + 1][y1] = fill
+    end
+  end
+  function draw_hallway_e_w (x, y, length, fill)
+    local sign_val = sign(length)
+    for x1 = x, x + length, sign(length) do
+      mapgrd[x1][y    ] = fill
+      mapgrd[x1][y + 1] = fill
+    end
+  end
+  function draw_hallway_se_nw (x, y, length, fill)
+    local sign_val = sign(length)
+    for i = 0, length, sign_val do
+      local x1 = x + i
+      local y1 = y + i
+      mapgrd[x1][y1] = fill
+      if (i ~= 0) then
+        mapgrd[x1 - sign_val][y1           ] = fill
+        mapgrd[x1           ][y1 - sign_val] = fill
+      end
+    end
+  end
+  function draw_hallway_sw_ne (x, y, length, fill)
+    local sign_val = sign(length)
+    for i = 0, length, sign_val do
+      local x1 = x - i
+      local y1 = y + i
+      mapgrd[x1][y1] = fill
+      if (i ~= 0) then
+        mapgrd[x1 + sign_val][y1           ] = fill
+        mapgrd[x1           ][y1 - sign_val] = fill
+      end
+    end
+  end
+
+  local GXM, GYM = dgn.max_bounds()
+  extend_map{width = GXM, height = GYM}
+  fill_area{fill="x"}
+
+  local CENTER_X = GXM / 2
+  local CENTER_Y = GYM / 2
+
+  local HALLWAY_SIZE = you.in_branch("Snake") and 3 or 2
+  local layer_size = 2 * crawl.random_range(HALLWAY_SIZE, HALLWAY_SIZE + 2)
+  local center_radius = 2 * crawl.random_range(2, 3)
+  local layer_size_diagonal = layer_size * 3 / 4  -- can have a .5 on it
+
+  local border = crawl.random_range(2, 8 - (layer_size - 4))
+  local max_radius = math.min(CENTER_X, CENTER_Y) - border
+  local layer_count = math.floor((max_radius - center_radius) / layer_size)
+
+  local radial_seperation_min = crawl.random_range(4, 8)
+  local radial_seperation_max = crawl.random_range(radial_seperation_min+4, 20)
+  local plug_percent = crawl.random_range(0, 100)
+
+  -- make the octagon layers
+  local layer = {}
+  for i = layer_count, 0, -1 do
+    -- calculate octagon properties
+    --
+    --    ....    y1
+    --   ......
+    --  ...  ...  y2
+    --  ..    ..
+    --  ..    ..
+    --  ...  ...  y3
+    --   ......
+    --    ....    y4
+    --
+    layer[i] = {}
+    layer[i].radius = center_radius + layer_size * i
+    layer[i].oblique = layer[i].radius / 2
+    layer[i].x1 = CENTER_X - layer[i].radius
+    layer[i].x4 = CENTER_X + layer[i].radius - 1
+    layer[i].x2 = layer[i].x1 + layer[i].oblique
+    layer[i].x3 = layer[i].x4 - layer[i].oblique
+    layer[i].y1 = CENTER_Y - layer[i].radius
+    layer[i].y4 = CENTER_Y + layer[i].radius - 1
+    layer[i].y2 = layer[i].y1 + layer[i].oblique
+    layer[i].y3 = layer[i].y4 - layer[i].oblique
+
+    -- where each of the 8 sides start
+    --  -> needed for placing connections between rings
+    layer[i].side_straight = layer[i].x3 - layer[i].x2 - 1
+    layer[i].side_diagonal = layer[i].x4 - layer[i].x3 - 1
+    layer[i].side_start = {}
+    layer[i].side_start[0] = 0
+    for j = 1, 8 do
+      if (j % 2 == 0) then
+        layer[i].side_start[j]=layer[i].side_start[j-1]+layer[i].side_diagonal
+      else
+        layer[i].side_start[j]=layer[i].side_start[j-1]+layer[i].side_straight
+      end
+    end
+
+    -- draw the octagons
+    --   -> inner room has chance of being open
+    octa_room{ x1 = layer[i].x1, y1 = layer[i].y1,
+               x2 = layer[i].x4, y2 = layer[i].y4,
+               oblique = layer[i].oblique,
+               replace = 'x', inside = '.', outside = 'x' }
+
+    if (i > 0 or (crawl.one_chance_in(3) and layer[i].radius >= 3)) then
+      octa_room{ x1 = layer[i].x1 + HALLWAY_SIZE,
+                 y1 = layer[i].y1 + HALLWAY_SIZE,
+                 x2 = layer[i].x4 - HALLWAY_SIZE,
+                 y2 = layer[i].y4 - HALLWAY_SIZE,
+                 oblique = layer[i].oblique - HALLWAY_SIZE / 2,
+                 replace = '.', inside = 'x', outside = '.' }
+    end
+  end
+
+  -- connect the layers
+  for i = 0, layer_count - 1 do
+    local total_distance = layer[i].side_start[8]
+    local hallway_pos = crawl.random2(total_distance)
+    local hallway_pos_end = hallway_pos + total_distance-radial_seperation_min
+    local is_next_plug = false
+
+    while (hallway_pos < hallway_pos_end) do
+      -- find a spot for the hallway
+      local hallway_pos_fixed = hallway_pos % total_distance
+      local good_spot = false
+      while (not good_spot and hallway_pos < hallway_pos_end) do
+        local x, y = resolve_position(layer[i], hallway_pos_fixed, 0, 0)
+        if (not is_plug(x, y, 'c')) then
+          good_spot = true
+        else
+          hallway_pos = hallway_pos + crawl.random_range(1, 4)
+          hallway_pos_fixed = hallway_pos % total_distance
+        end
+      end
+
+      if (good_spot) then
+        if (is_next_plug) then
+          -- draw a plug
+          local x, y = resolve_position(layer[i], hallway_pos_fixed,
+                                        layer_size, layer_size_diagonal)
+          is_next_plug = false -- 2 blocks in a row can disconnect map
+
+          draw_plug(x, y, 'c')
+        else
+          -- draw a hallway
+          local x, y = resolve_position(layer[i], hallway_pos_fixed, 0, 0)
+          is_next_plug = crawl.x_chance_in_y(plug_percent, 100)
+
+          if     (hallway_pos_fixed < layer[i].side_start[1]) then
+            draw_hallway_s_n  (x, y, -layer_size,          '.')  -- north
+          elseif (hallway_pos_fixed < layer[i].side_start[2]) then
+            draw_hallway_sw_ne(x, y, -layer_size_diagonal, '.')  -- northeast
+          elseif (hallway_pos_fixed < layer[i].side_start[3]) then
+            draw_hallway_e_w  (x, y,  layer_size,          '.')  -- east
+          elseif (hallway_pos_fixed < layer[i].side_start[4]) then
+            draw_hallway_se_nw(x, y,  layer_size_diagonal, '.')  -- southeast
+          elseif (hallway_pos_fixed < layer[i].side_start[5]) then
+            draw_hallway_s_n  (x, y,  layer_size,          '.')  -- south
+          elseif (hallway_pos_fixed < layer[i].side_start[6]) then
+            draw_hallway_sw_ne(x, y,  layer_size_diagonal, '.')  -- southwest
+          elseif (hallway_pos_fixed < layer[i].side_start[7]) then
+            draw_hallway_e_w  (x, y, -layer_size,          '.')  -- west
+          else
+            draw_hallway_se_nw(x, y, -layer_size_diagonal, '.')  -- northwest
+          end
+        end
+      end
+
+      hallway_pos = hallway_pos + crawl.random_range(radial_seperation_min,
+                                                     radial_seperation_max)
+    end
+  end
+
+  -- turn the plugs into ordinary walls and floor
+  subst("c = x")
+
+  -- Smear the layout a la layout_big_octagon in Snake.
+  -- (Actually, that's where this code originates.)
+  if you.in_branch("Snake") then
+    local gxm, gym = dgn.max_bounds()
+    local iterations = 50 + crawl.random2(50) + crawl.random2(50)
+    smear_map{iterations = iterations, boxy = false}
+
+    mapgrd[gxm/2][gym/2] = '@'
+    fill_disconnected{wanted = '@'}
+    mapgrd[gxm/2][gym/2] = '.'
+  end
+}}
+# Enforce minimum floor size - remove when connection is working in Snake
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.PASSAGES)
+}}

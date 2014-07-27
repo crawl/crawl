@@ -29,7 +29,7 @@ end
 }}
 
 NAME:   dk_yredelemnul_ordeal
-TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul mini_float
+TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul
 DEPTH:  D:2-10
 MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
         goblin skeleton / kobold skeleton / human skeleton / jackal skeleton

@@ -92,7 +92,6 @@ natasha MONS_NATASHA
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
-giant_firefly MONS_FIREFLY
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -104,11 +103,9 @@ komodo_dragon MONS_KOMODO_DRAGON
 ## Slugs ('j')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
-%sdir mon/animals
-giant_slug MONS_GIANT_SLUG
-elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
+%sdir mon/animals
 %rim 0
 rat MONS_RAT
 green_rat MONS_GREEN_RAT
@@ -143,18 +140,19 @@ alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
 fire_crab MONS_FIRE_CRAB
+ghost_crab MONS_GHOST_CRAB
 %rim 1
 
 ## Worms ('w')
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
-lava_worm MONS_LAVA_WORM
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
+torpor_snail MONS_TORPOR_SNAIL
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
@@ -166,9 +164,7 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 
 ## Aquatics (';')
 %sdir mon/aquatic
-big_fish MONS_BIG_FISH
 electric_eel MONS_ELECTRIC_EEL
-shark MONS_SHARK
 %rim 1
 
 %include dc-tentacles.txt
@@ -666,9 +662,6 @@ tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
 %sdir mon/unique
 sojobo MONS_SOJOBO
-%sdir mon/holy
-shedu MONS_SHEDU
-%sdir mon/unique
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 
@@ -693,8 +686,6 @@ slime_creature3
 slime_creature4
 slime_creature5
 %rim 1
-pulsating_lump MONS_PULSATING_LUMP
-brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
 death_ooze MONS_DEATH_OOZE
@@ -944,7 +935,6 @@ water_nymph MONS_WATER_NYMPH
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
-rotting_hulk MONS_ROTTING_HULK
 
 %sdir mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
@@ -969,6 +959,8 @@ vault/deformed_orc MONS_DEFORMED_ORC
 %rim 0
 shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
+## Ghosts of AXED_MONs
+missing_ghost MONS_GHOST
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
@@ -1009,7 +1001,7 @@ murray MONS_MURRAY
 
 ## Sprint specials
 %sdir mon/sprint
-succubus MONS_SUCCUBUS
+dimme MONS_DIMME
 %rim 0
 orb_of_ice MONS_ORB_OF_ICE
 orb_of_electricity MONS_ORB_OF_ELECTRICITY

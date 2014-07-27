@@ -29,9 +29,9 @@ ae += [^n]identified.*spellbook
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
 ae += amulet of (inaccuracy|the gourmand|warding)
-ae += amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
+ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
 # Rings of teleportation are not redundant -- double *Tele is pretty good in
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control)
+ae += ring of (invisibility|teleport control|sustain abilities)

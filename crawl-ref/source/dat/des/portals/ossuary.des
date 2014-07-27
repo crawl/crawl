@@ -69,6 +69,7 @@ end
 default-depth: D:4-8
 
 NAME:   enter_ossuary_1
+TAGS:   transparent
 SUBST:  . = . ':7
 : ossuary_portal(_G)
 MAP
@@ -80,6 +81,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ossuary_2
+TAGS:    transparent
 SHUFFLE: C+
 SUBST:   C = c
 : ossuary_portal(_G)
@@ -94,6 +96,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_3
+TAGS:   transparent
 SUBST:  . = ' .
 MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
@@ -107,6 +110,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_4
+TAGS:   transparent
 COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
 FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
@@ -123,6 +127,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_5
+TAGS:   transparent
 COLOUR: c = white, + = white, ' = yellow
 : ossuary_portal(_G)
 MAP
@@ -138,7 +143,7 @@ MAP
 ENDMAP
 
 NAME:   gup_ossuary_entry_pyramid
-TAGS:   mini_float
+TAGS:   transparent
 KMONS:  O = mummy
 NSUBST: ' = 3:~ / *:'
 : ossuary_portal(_G)
@@ -193,6 +198,7 @@ xc'O'A'O'cx
 ENDMAP
 
 NAME: nicolae_ossuary_entry_giza
+TAGS: transparent
 NSUBST: M = 1:O / *:z
 KMONS: O = mummy
 KMONS: z = goblin zombie / hobgoblin zombie / kobold zombie / orc zombie
@@ -334,8 +340,8 @@ NAME:    ossuary_tomb_2
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
-KFEAT:   ~ = dart trap w:1 / arrow trap w:1 / needle trap
-KFEAT:   ^ = dart trap / arrow trap
+KFEAT:   ~ = arrow trap w:2 / needle trap
+KFEAT:   ^ = arrow trap / floor w:5
 # Number of 1's is 53, number of ~'s is 57.
 : if crawl.one_chance_in(10) then
 SUBST:   ~ = 1
@@ -487,7 +493,7 @@ ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
-         potion of paralysis / potion of degeneration / \
+         potion of poison / potion of degeneration / \
          potion of confusion w:20
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
@@ -535,7 +541,7 @@ MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
         human zombie / kobold zombie / goblin zombie / \
         big kobold zombie / centaur zombie / scorpion zombie w:20
 ITEM:   any scroll / any potion / any jewellery w:1 / nothing
-KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:50
+KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / floor w:50
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
@@ -767,11 +773,11 @@ MONS:    mummy
 MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
          generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / net trap / needle trap / alarm trap / floor w:40
+KFEAT:   ~ = net trap / needle trap / alarm trap w:5 / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
 KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
 COLOUR:  ^ = red
-KFEAT:   W = dart trap / floor w:20
+KFEAT:   W = arrow trap / floor w:20
 : ossuary_setup_features(_G)
 MAP
            cccccccccccccccccccc
@@ -863,7 +869,7 @@ SUBST:   X = x2
 KITEM:   x = any scroll / any potion
 KMONS:   x = mummy
 NSUBST:  ' = 10:^ / *:.
-KFEAT:   ^ = dart trap / arrow trap
+KFEAT:   ^ = arrow trap
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 KMONS:   y = rat skeleton
 : ossuary_setup_features(_G)
@@ -903,7 +909,7 @@ MONS:    mummy
 KMONS:   4 = Menkaure, mummy
 # Loot: 1-16 items
 ITEM:    any scroll / any potion / w:5 nothing
-KFEAT:   ^ = arrow trap / dart trap / alarm trap
+KFEAT:   ^ = arrow trap w:20 / alarm trap
 KFEAT:   m = spear trap
 KFEAT:   ~ = alarm trap
 NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
@@ -967,8 +973,8 @@ KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
 ITEM:   any potion / any scroll / nothing w:1
 #
 # There are not always traps in corridors but they are guaranteed near the loot:
-KFEAT:  ' = arrow trap w:3 / dart trap w:5 / alarm trap w:7 / floor w:85
-KFEAT:  " = spear trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
+KFEAT:  ' = arrow trap w:8 / alarm trap w:7 / floor w:85
+KFEAT:  " = spear trap w:1 / net trap w:3 / arrow trap w:15
 #
 : ossuary_setup_features(_G)
 MAP

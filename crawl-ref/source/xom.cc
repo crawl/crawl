@@ -40,7 +40,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -103,7 +103,7 @@ static const spell_type _xom_tension_spells[] =
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR, SPELL_ENGLACIATION,
     SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES, SPELL_DISCORD,
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_WARP_BRAND, SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL, SPELL_SUMMON_SWARM,
     SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
     SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SHADOW_CREATURES,
@@ -345,7 +345,7 @@ void xom_tick()
         }
     }
 
-    if (you.faith() ? coinflip() : one_chance_in(3))
+    if (x_chance_in_y(2 + you.faith(), 6))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :
@@ -456,9 +456,6 @@ static bool _spell_weapon_check(const spell_type spell)
 {
     switch (spell)
     {
-    case SPELL_TUKIMAS_DANCE:
-        // Requires a wielded weapon.
-        return player_weapon_wielded() && !player_in_branch(BRANCH_ABYSS);
     case SPELL_EXCRUCIATING_WOUNDS:
     case SPELL_WARP_BRAND:
     {
@@ -728,7 +725,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     god_acting gdact(GOD_XOM);
 
-    int thing_created = items(true, base, subtype, true, power, 0, 0, 0, GOD_XOM);
+    int thing_created = items(true, base, subtype, true, power, 0, 0, GOD_XOM);
 
     if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
                            !silenced(you.pos())))
@@ -851,16 +848,12 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_blessed(item))
         return false;
 
-    // God gifts from good gods are protected.  Also, Beogh hates all
-    // the other gods, so he'll protect his gifts as well.
+    // God gifts are protected.
     if (item.orig_monnum < 0)
     {
         god_type iorig = static_cast<god_type>(-item.orig_monnum);
-        if (iorig > GOD_NO_GOD && iorig < NUM_GODS
-            && (is_good_god(iorig) || iorig == GOD_BEOGH))
-        {
+        if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
             return false;
-        }
     }
 
     // Leave branded items alone, since this is supposed to be an
@@ -963,7 +956,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
             // If the launcher alters its ammo, then branding the
             // monster's ammo won't be an upgrade.
             int brand = get_weapon_brand(item);
-            if (brand == SPWPN_FLAME || brand == SPWPN_FROST
+            if (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
                 || brand == SPWPN_VENOM)
             {
                 special_launcher = true;
@@ -1021,8 +1014,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
             item.flags |= ISFLAG_GLOWING;
 
         // Make the pluses more like a randomly generated ego item.
-        item.plus  += random2(5);
-        item.plus2 += random2(5);
+        if (item.base_type == OBJ_WEAPONS)
+            item.plus  += random2(5);
     }
 }
 
@@ -1421,7 +1414,7 @@ static int _xom_swap_weapons(bool debug = false)
             && !(weapon.flags & ISFLAG_SUMMONED)
             && you.can_wield(weapon, true) && mi->can_wield(*wpn, true)
             && get_weapon_brand(weapon) != SPWPN_DISTORTION
-            && (get_weapon_brand(weapon) != SPWPN_VAMPIRICISM
+            && (get_weapon_brand(weapon) != SPWPN_VAMPIRISM
                 || you.is_undead || you.hunger_state >= HS_FULL)
             && (!is_artefact(weapon) || _art_is_safe(weapon)))
         {
@@ -1497,8 +1490,6 @@ static int _xom_swap_weapons(bool debug = false)
     myitem        = mitm[monwpn];
     myitem.link   = freeslot;
     myitem.pos.set(-1, -1);
-    // Remove "dropped by ally" flag.
-    myitem.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
 
     if (!myitem.slot)
         myitem.slot = index_to_letter(myitem.link);
@@ -1507,7 +1498,6 @@ static int _xom_swap_weapons(bool debug = false)
     note_inscribe_item(myitem);
     dec_mitm_item_quantity(monwpn, myitem.quantity);
     you.m_quiver->on_inv_quantity_changed(freeslot, myitem.quantity);
-    burden_change();
 
     mprf("You wield %s %s!",
          mon->name(DESC_ITS).c_str(),
@@ -1642,10 +1632,11 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             const int sub_type =
                     (base_type == OBJ_MISSILES ?
                         (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
-                            : _xom_random_stickable(mi->hit_dice));
+                            : _xom_random_stickable(mi->get_experience_level()));
 
             int thing_created = items(0, base_type, sub_type, true,
-                                      mi->hit_dice / 3 - 1, 0, 0, -1, -1);
+                                      mi->get_experience_level() / 3 - 1,
+                                      0, 0, -1, -1);
 
             if (thing_created == NON_ITEM)
                 continue;
@@ -1800,7 +1791,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
  * but it may include the player as a victim.
  * @param debug  If true, don't have Xom act, but return a value indicating
  *               whether he would have acted.
- * @returns      XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
+ * @return       XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
  *               otherwise.
  */
 static int _xom_throw_divine_lightning(bool debug = false)
@@ -2216,7 +2207,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
         ench = RANDOM_ELEMENT(enchantments);
     }
 
-    enchant_monster_with_flavour(mon, 0, ench);
+    enchant_actor_with_flavour(mon, 0, ench);
 
     // Take a note.
     static char ench_buf[80];
@@ -3201,7 +3192,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, 100);
+            drain_player(100, true);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
@@ -4001,7 +3992,7 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
  * save you.
  * @param death_type  The type of death that occurred.
  * @param aux         Additional string describing this death.
- * @returns           True if Xom saves your life, false otherwise.
+ * @return            True if Xom saves your life, false otherwise.
  */
 bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
 {

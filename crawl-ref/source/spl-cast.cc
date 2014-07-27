@@ -34,10 +34,10 @@
 #include "menu.h"
 #include "misc.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-project.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -383,6 +383,7 @@ int spell_fail(spell_type spell)
     }
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
@@ -454,8 +455,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
         {
-            power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
-            power /= 10;
+            power *= (10 + 5 * player_mutation_level(MUT_WILD_MAGIC));
+            power /= (10 + 5 * player_mutation_level(MUT_PLACID_MAGIC));
         }
 
         // Augmentation boosts spell power at high HP.
@@ -515,12 +516,15 @@ static int _spell_enhancement(unsigned int typeflags)
         enhanced -= 2;
 
     enhanced += you.archmagi();
+    enhanced += player_equip_unrand(UNRAND_MAJIN);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
     {
         enhanced++;
     }
+#endif
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -605,7 +609,15 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-// Returns false if spell failed, and true otherwise.
+/**
+ * Cast a spell.
+ *
+ * Handles general preconditions & costs.
+ *
+ * @param check_range   If true, abort if no targets are in range. (z vs Z)
+ * @param spell         The type of spell to be cast.
+ * @return              Whether the spell was successfully cast.
+ **/
 bool cast_a_spell(bool check_range, spell_type spell)
 {
     if (!_can_cast())
@@ -634,7 +646,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             if (isaalpha(keyin) || key_is_escape(keyin))
                 break;
             else
-                mesclr();
+                clear_messages();
 
             keyin = 0;
 #else
@@ -680,7 +692,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 if (isaalpha(keyin) || key_is_escape(keyin))
                     break;
                 else
-                    mesclr();
+                    clear_messages();
 
                 keyin = 0;
             }
@@ -714,7 +726,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (!enough_mp(spell_mana(spell), true))
+    const int cost = spell_mana(spell);
+    if (!enough_mp(cost, true))
     {
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
@@ -772,9 +785,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    const int cost = spell_mana(spell);
     dec_mp(cost, true);
-    const spret_type cast_result = your_spells(spell, 0, true, check_range);
+
+    const spret_type cast_result = your_spells(spell, 0, true);
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
@@ -838,7 +851,7 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     const int conduct_level = 10 + spell_difficulty(spell);
 
-    if (is_unholy_spell(spell))
+    if (is_unholy_spell(spell) || you.spellcasting_unholy())
         did_god_conduct(DID_UNHOLY, conduct_level);
 
     if (is_unclean_spell(spell))
@@ -867,11 +880,10 @@ static void _spellcasting_god_conduct(spell_type spell)
  * Spell noise, magic 'sap' effects, and god conducts.
  *
  * @param spell         The type of spell just cast.
- * @param pow           The power of the spell. UNUSED.
  * @param god           Which god is casting the spell; NO_GOD if it's you.
  * @param real_spell    An actual spellcast, vs. spell-like effects (rods?)
  */
-static void _spellcasting_side_effects(spell_type spell, int pow, god_type god,
+static void _spellcasting_side_effects(spell_type spell, god_type god,
                                        bool real_spell)
 {
     _spellcasting_god_conduct(spell);
@@ -920,6 +932,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _too_hot_to_cast(spell_type spell)
 {
     if (you.species != SP_LAVA_ORC)
@@ -947,6 +960,7 @@ static bool _too_hot_to_cast(spell_type spell)
         return false;
     }
 }
+#endif
 
 bool is_prevented_teleport(spell_type spell)
 {
@@ -973,6 +987,7 @@ bool spell_is_uncastable(spell_type spell, string &msg)
         return true;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (_too_hot_to_cast(spell))
     {
         if (spell == SPELL_STONESKIN && temperature_effect(LORC_STONESKIN))
@@ -983,6 +998,7 @@ bool spell_is_uncastable(spell_type spell, string &msg)
             msg = "Your temperature is too high to benefit from that spell.";
         return true;
     }
+#endif
 
     return false;
 }
@@ -1015,7 +1031,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;
-    mon->hit_dice   = you.experience_level;
+    mon->set_hit_dice(you.experience_level);
     mon->set_position(you.pos());
     mon->target     = spd.target;
     mon->mid        = MID_PLAYER;
@@ -1044,9 +1060,7 @@ static void _maybe_cancel_repeat(spell_type spell)
 {
     switch (spell)
     {
-    case SPELL_DELAYED_FIREBALL:
-    case SPELL_TUKIMAS_DANCE:
-        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
+    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
                                                  spell_title(spell)));
         break;
 
@@ -1058,10 +1072,9 @@ static void _maybe_cancel_repeat(spell_type spell)
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion,
-                           bool check_range, bool fail);
+                           bool fail);
 
 static bool _spellcasting_aborted(spell_type spell,
-                                  bool check_range_usability,
                                   bool wiz_cast)
 {
     string msg;
@@ -1168,6 +1181,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_POLYMORPH:
     case SPELL_DISPEL_UNDEAD:
     case SPELL_CRYSTAL_BOLT:
+    case SPELL_TUKIMAS_DANCE:
         return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     case SPELL_RANDOM_BOLT:
         return new targetter_beam(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
@@ -1176,14 +1190,52 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     }
 }
 
-// Returns SPRET_SUCCESS if spell is successfully cast for purposes of
-// exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
-// the casting.
-// Not all of these are actually real spells; invocations, decks, rods or misc.
-// effects might also land us here.
-// Others are currently unused or unimplemented.
+static double _chance_miscast_prot()
+{
+    double miscast_prot = 0;
+
+    if (you_worship(GOD_SIF_MUNA)
+        && !player_under_penance()
+        && you.piety >= piety_breakpoint(3))
+    {
+        miscast_prot = (double) you.piety/piety_breakpoint(5);
+    }
+    return min(1.0, miscast_prot);
+}
+
+/**
+ * Handles damage from corrupted magic effects.
+ *
+ * Currently only from the Majin-Bo.
+ *
+ * @param spell         The type of spell that was just cast.
+ **/
+static void _spellcasting_corruption(spell_type spell)
+{
+    // never kill the player (directly)
+    int hp_cost = min(you.spell_hp_cost() * spell_mana(spell), you.hp - 1);
+    const char * source = NULL;
+    if (player_equip_unrand(UNRAND_MAJIN))
+        source = "the Majin-Bo"; // for debugging
+    ouch(hp_cost, NON_MONSTER, KILLED_BY_SOMETHING, source);
+}
+
+/**
+ * Targets and fires player-cast spells & spell-like effects.
+ *
+ * Not all of these are actually real spells; invocations, decks, rods or misc.
+ * effects might also land us here.
+ * Others are currently unused or unimplemented.
+ *
+ * @param spell         The type of spell being cast.
+ * @param powc          Spellpower.
+ * @param allow_fail    Whether spell-fail chance applies.
+ * @return SPRET_SUCCESS if spell is successfully cast for purposes of
+ * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
+ * the casting.
+ **/
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool check_range)
+                       bool allow_fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1195,7 +1247,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (_spellcasting_aborted(spell, check_range, wiz_cast))
+    if (_spellcasting_aborted(spell, wiz_cast))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);
@@ -1223,10 +1275,10 @@ spret_type your_spells(spell_type spell, int powc,
             targ = TARG_HOSTILE_UNDEAD;
 
         targeting_type dir  =
-            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
-             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
-             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
-             testbits(flags, SPFLAG_DIR)      ? DIR_DIR           :
+            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
+             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET         :
+             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET         :
+             testbits(flags, SPFLAG_DIR)      ? DIR_DIR            :
                                                 DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
@@ -1359,7 +1411,13 @@ spret_type your_spells(spell_type spell, int powc,
 
     const bool old_target = actor_at(beam.target);
 
-    switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
+    spret_type cast_result = _do_cast(spell, powc, spd, beam, god,
+                                      potion, fail);
+
+    if (cast_result != SPRET_ABORT && you.spell_hp_cost() && allow_fail)
+        _spellcasting_corruption(spell);
+
+    switch (cast_result)
     {
     case SPRET_SUCCESS:
     {
@@ -1377,7 +1435,7 @@ spret_type your_spells(spell_type spell, int powc,
         {
             dithmenos_shadow_spell(&beam, spell);
         }
-        _spellcasting_side_effects(spell, powc, god, allow_fail);
+        _spellcasting_side_effects(spell, god, allow_fail);
         return SPRET_SUCCESS;
     }
     case SPRET_FAIL:
@@ -1389,10 +1447,7 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if (you_worship(GOD_SIF_MUNA)
-            && !player_under_penance()
-            && you.piety >= piety_breakpoint(3)
-            && x_chance_in_y(you.piety, piety_breakpoint(5)))
+        if (decimal_chance(_chance_miscast_prot()))
         {
             simple_god_message(" protects you from the effects of your miscast!");
             return SPRET_FAIL;
@@ -1442,7 +1497,14 @@ spret_type your_spells(spell_type spell, int powc,
     return SPRET_SUCCESS;
 }
 
-// Special-cased after-effects.
+/**
+ * Handles special-cased aftereffects of spellcasting.
+ *
+ * Currently handles damage from casting Pain, since that occurs before the
+ * spellcast, whether or not it's successful, as long as it's not aborted.
+ *
+ * @param spell         The type of spell that was just cast.
+ **/
 static void _spell_zap_effect(spell_type spell)
 {
     // Casting pain costs 1 hp.
@@ -1459,7 +1521,7 @@ static void _spell_zap_effect(spell_type spell)
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion,
-                           bool check_range, bool fail)
+                           bool fail)
 {
     // First handle the zaps.
     zap_type zap = spell_to_zap(spell);
@@ -1621,10 +1683,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_MANA_VIPER:
         return cast_summon_mana_viper(powc, god, fail);
 
-    case SPELL_TUKIMAS_DANCE:
-        // Temporarily turns a wielded weapon into a dancing weapon.
-        return cast_tukimas_dance(powc, god, false, fail);
-
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, god, fail);
 
@@ -1728,14 +1786,10 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
-        if (cast_healing(5, 5) < 0)
-            return SPRET_ABORT;
-        break;
+        return cast_healing(5, 5);
 
     case SPELL_MAJOR_HEALING:
-        if (cast_healing(25, 25) < 0)
-            return SPRET_ABORT;
-        break;
+        return cast_healing(25, 25);
 
     // Self-enchantments. (Spells that can only affect the player.)
     // Resistances.
@@ -1960,7 +2014,7 @@ static double _get_true_fail_rate(int raw_fail)
  * Compute the chance of getting a miscast effect of a given severity or higher.
  * @param spell     The spell to be checked.
  * @param severity  Check the chance of getting a miscast this severe or higher.
- * @returns         The chance of this kind of miscast.
+ * @return          The chance of this kind of miscast.
  */
 double get_miscast_chance(spell_type spell, int severity)
 {
@@ -1980,11 +2034,21 @@ double get_miscast_chance(spell_type spell, int severity)
     return chance;
 }
 
+static double _get_miscast_chance_with_miscast_prot(spell_type spell)
+{
+    double raw_chance = get_miscast_chance(spell);
+    double miscast_prot = _chance_miscast_prot();
+    double chance = raw_chance * (1 - miscast_prot);
+
+    return chance;
+}
+
 // Chooses a colour for the failure rate display for a spell. The colour is
 // based on the chance of getting a severity >= 2 miscast.
 int failure_rate_colour(spell_type spell)
 {
-    double chance = get_miscast_chance(spell);
+    double chance = _get_miscast_chance_with_miscast_prot(spell);
+
     return (chance < 0.001) ? LIGHTGREY :
            (chance < 0.005) ? YELLOW    :
            (chance < 0.025) ? LIGHTRED  :

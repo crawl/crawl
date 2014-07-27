@@ -84,7 +84,10 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
     else if (tileidx < TILE_WALL_MAX)
         m_buf_wall.add(tileidx, x, y);
     else if (in_water)
+    {
+        m_buf_floor.add(TILE_DNGN_SHALLOW_WATER, x, y);
         m_buf_feat_trans.add(tileidx, x, y, 0, true, false);
+    }
     else
         m_buf_feat.add(tileidx, x, y);
 }
@@ -201,9 +204,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
-    if (cell.mangrove_water && bg_idx > TILE_DNGN_UNSEEN)
-        m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
-
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         add_dngn_tile(cell.flv.floor, x, y);
 
@@ -278,8 +278,10 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
+#if TAG_MAJOR_VERSION == 34
             if (cell.heat_aura)
                 m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
+#endif
             if (cell.gold_aura)
                 m_buf_feat.add(TILE_GOLD_AURA + cell.gold_aura - 1, x, y);
             if (cell.is_silenced)
@@ -451,6 +453,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_MIGHT, x, y, -status_shift, 0);
         status_shift += 6;
     }
+    if (fg & TILE_FLAG_DRAIN)
+    {
+        m_buf_icons.add(TILEI_DRAIN, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_PAIN_MIRROR)
     {
         m_buf_icons.add(TILEI_PAIN_MIRROR, x, y, -status_shift, 0);
@@ -470,6 +477,16 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     {
         m_buf_icons.add(TILEI_BLIND, x, y, -status_shift, 0);
         status_shift += 10;
+    }
+    if (fg & TILE_FLAG_DEATHS_DOOR)
+    {
+        m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_RECALL)
+    {
+        m_buf_icons.add(TILEI_RECALL, x, y, -status_shift, 0);
+        status_shift += 9;
     }
 
     // Summoned and anim. weap. icons will overlap if you have a

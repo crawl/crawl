@@ -9,17 +9,21 @@
 #include "enum.h"
 #include "externs.h"
 
+#define NEWLY_TRAPPED_KEY "newly_trapped"
+
 struct bolt;
 class monster;
 struct trap_def;
 
+void search_around();
 void disarm_trap(const coord_def& where);
-void free_self_from_net(void);
+void free_self_from_net();
+void mons_clear_trapping_net(monster* mon);
 void free_stationary_net(int item_index);
 
 void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
-void monster_caught_in_net(monster* mon, actor *agent);
+bool monster_caught_in_net(monster* mon, actor *agent);
 bool player_caught_in_net();
 void clear_trapping_net();
 void check_net_will_hold_monster(monster* mon);
@@ -33,7 +37,6 @@ trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
 bool     is_valid_shaft_level(const level_id &place = level_id::current());
-bool     shaft_known(int depth, bool randomly_placed);
 level_id generic_shaft_dest(coord_def pos, bool known);
 void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 

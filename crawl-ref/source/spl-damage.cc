@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -34,7 +35,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "ouch.h"
 #include "options.h"
@@ -45,6 +45,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -161,7 +162,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.flavour           = BEAM_HELLFIRE;
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour            = RED;
+    beam.colour            = LIGHTRED;
     beam.beam_source       = MHITYOU;
     beam.thrower           = KILL_YOU;
     beam.obvious_effect    = false;
@@ -680,7 +681,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         mpr(player_msg);
         flash_view(flash_colour, &hitfunc);
         more();
-        mesclr();
+        clear_messages();
         flash_view(0);
     }
     else if (actual)
@@ -755,12 +756,12 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             if (mons_atts_aligned(m->attitude, mons->attitude))
             {
                 beam.friend_info.count++;
-                beam.friend_info.power += (m->hit_dice * this_damage / hurted);
+                beam.friend_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
             else
             {
                 beam.foe_info.count++;
-                beam.foe_info.power += (m->hit_dice * this_damage / hurted);
+                beam.foe_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
         }
     }
@@ -768,8 +769,10 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     if (actual)
     {
         if (post_hook)
+        {
             (*post_hook)(agent, affects_you, affected_monsters, pow,
                          total_damage);
+        }
 
         return SPRET_SUCCESS;
     }
@@ -780,6 +783,9 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
 // Screaming Sword
 void sonic_damage(bool scream)
 {
+    if (is_sanctuary(you.pos()))
+        return;
+
     // First build the message.
     counted_monster_list affected_monsters;
 
@@ -829,7 +835,7 @@ void sonic_damage(bool scream)
         dprf("damage done: %d", hurt);
         mi->hurt(&you, hurt);
 
-        if (is_sanctuary(you.pos()) || is_sanctuary(mi->pos()))
+        if (is_sanctuary(mi->pos()))
             remove_sanctuary(true);
     }
 }
@@ -1121,7 +1127,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            return 4;
+            return coinflip() ? 5 : 4;
         // Double damage to bone.
         else if (mon->is_skeletal())
             return 6;
@@ -1224,7 +1230,7 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     {
         noisy(30, where);
 
-        nuke_wall(where);
+        destroy_wall(where);
 
         if (agent->is_player() && grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
@@ -1237,18 +1243,43 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     return 0;
 }
 
+static int _shatter_player_dice()
+{
+    if (you.is_insubstantial())
+        return 0;
+    else if (you.petrified())
+        return 12; // reduced later
+    else if (you.petrifying())
+        return 6;  // reduced later
+    // Same order as for monsters -- petrified flyers get hit hard, skeletal
+    // flyers get no extra damage.
+    else if (you.airborne())
+        return 1;
+    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        return 6;
+    else if (you.form == TRAN_ICE_BEAST)
+        return coinflip() ? 5 : 4;
+    else
+        return 3;
+}
+
+/**
+ * Is this a valid target for shatter?
+ *
+ * @param act     The actor being considered
+ * @return        Whether the actor will take damage from shatter.
+ */
 static bool _shatterable(const actor *act)
 {
     if (act->is_player())
-        return true; // no player ghostlies... at least user-controllable ones
+        return _shatter_player_dice();
     return _shatter_mon_dice(act->as_monster());
 }
 
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        int r_min = 3 + you.skill(SK_EARTH_MAGIC) / 5;
-        targetter_los hitfunc(&you, LOS_ARENA, r_min, min(r_min + 1, 8));
+        targetter_los hitfunc(&you, LOS_ARENA);
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1264,10 +1295,8 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
-    int rad = 3 + you.skill_rdiv(SK_EARTH_MAGIC, 1, 5);
-
     int dest = 0;
-    for (distance_iterator di(you.pos(), true, true, rad); di; ++di)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         // goes from the center out, so newly dug walls recurse
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
@@ -1281,24 +1310,6 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
     return SPRET_SUCCESS;
-}
-
-static int _shatter_player_dice()
-{
-    if (you.petrified())
-        return 12; // reduced later
-    else if (you.petrifying())
-        return 6;  // reduced later
-    // Same order as for monsters -- petrified flyers get hit hard, skeletal
-    // flyers get no extra damage.
-    else if (you.airborne())
-        return 1;
-    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
-        return 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        return 4;
-    else
-        return 3;
 }
 
 static int _shatter_player(int pow, actor *wielder, bool devastator = false)
@@ -1331,8 +1342,10 @@ bool mons_shatter(monster* caster, bool actual)
     if (actual)
     {
         if (silence)
+        {
             mprf("The dungeon shakes around %s!",
                  caster->name(DESC_THE).c_str());
+        }
         else
         {
             noisy(30, caster->pos(), caster->mindex());
@@ -1341,11 +1354,10 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + div_rand_round(caster->hit_dice * 9, 2);
-    int rad = 3 + div_rand_round(caster->hit_dice, 5);
+    int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
 
     int dest = 0;
-    for (distance_iterator di(caster->pos(), true, true, rad); di; ++di)
+    for (distance_iterator di(caster->pos(), true, true, LOS_RADIUS); di; ++di)
     {
         // goes from the center out, so newly dug walls recurse
         if (!cell_see_cell(caster->pos(), *di, LOS_SOLID))
@@ -1446,9 +1458,6 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
         // Burn poisonous potions.
         switch (item.sub_type)
         {
-        case POT_STRONG_POISON:
-            strength = 20 * item.quantity;
-            break;
         case POT_DEGENERATION:
         case POT_POISON:
             strength = 10 * item.quantity;
@@ -1743,7 +1752,6 @@ static bool maybe_abort_ignite()
         {
             switch (item.sub_type)
             {
-            case POT_STRONG_POISON:
             case POT_DEGENERATION:
             case POT_POISON:
                 prompt += "over ";
@@ -1998,7 +2006,8 @@ spret_type cast_dispersal(int pow, bool fail)
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,
-                              const char **what, bool &destroy_wall, bool &hole)
+                              const char **what, bool &should_destroy_wall,
+                              bool &hole)
 {
     beam.flavour     = BEAM_FRAG;
     beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
@@ -2191,7 +2200,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                      || !allow_random && get_max_distance)))
         {
             beam.ex_size = 2;
-            destroy_wall = true;
+            should_destroy_wall = true;
         }
         break;
 
@@ -2211,7 +2220,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
-            destroy_wall     = true;
+            should_destroy_wall     = true;
         }
         break;
 
@@ -2227,7 +2236,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             || !allow_random && get_max_distance)
         {
             beam.ex_size = 3;
-            destroy_wall = true;
+            should_destroy_wall = true;
         }
         break;
 
@@ -2240,7 +2249,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";
-        destroy_wall = true;
+        should_destroy_wall = true;
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
@@ -2275,15 +2284,16 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 spret_type cast_fragmentation(int pow, const actor *caster,
                               const coord_def target, bool fail)
 {
-    bool destroy_wall = false;
-    bool hole         = true;
-    const char *what  = NULL;
+    bool should_destroy_wall = false;
+    bool hole                = true;
+    const char *what         = NULL;
     const dungeon_feature_type grid = grd(target);
 
     bolt beam;
 
+    // should_destroy_wall is an output argument.
     if (!setup_fragmentation_beam(beam, pow, caster, target, true, false,
-                                  false, &what, destroy_wall, hole))
+                                  false, &what, should_destroy_wall, hole))
     {
         return SPRET_ABORT;
     }
@@ -2321,8 +2331,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
-        if (destroy_wall)
-            nuke_wall(target);
+        if (should_destroy_wall)
+            destroy_wall(target);
     }
     else if (target == you.pos()) // You explode.
     {
@@ -2522,9 +2532,10 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 void forest_damage(const actor *mon)
 {
     const coord_def pos = mon->pos();
-    const int hd = mon->get_experience_level();
+    const int hd = mon->get_hit_dice();
 
     if (one_chance_in(4))
+    {
         forest_message(pos, random_choose(
             "The trees move their gnarly branches around.",
             "You feel roots moving beneath the ground.",
@@ -2532,6 +2543,7 @@ void forest_damage(const actor *mon)
             "Trunks creak and shift.",
             "Tree limbs sway around you.",
             0), MSGCH_TALK_VISUAL);
+    }
 
     for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
     {
@@ -2807,7 +2819,7 @@ void toxic_radiance_effect(actor* agent, int mult)
     if (agent->is_player())
         pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
     else
-        pow = agent->as_monster()->hit_dice * 8;
+        pow = agent->as_monster()->get_hit_dice() * 8;
 
     bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
 

@@ -950,7 +950,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
             tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(BLUE);
         }
-        else if(job_allowed(ng->species, job) == CC_RESTRICTED)
+        else if (job_allowed(ng->species, job) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(BLUE);
@@ -1625,8 +1625,8 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
     vector<weapon_choice> weapons;
     if (ng->job == JOB_HUNTER || ng->job == JOB_ARCANE_MARKSMAN)
     {
-        weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_SHORTBOW,
-                                    WPN_CROSSBOW };
+        weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
+                                    WPN_SHORTBOW, WPN_HAND_CROSSBOW };
 
         for (int i = 0; i < 4; i++)
         {
@@ -1705,10 +1705,6 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
 {
     switch (ng_choice->weapon)
     {
-    case WPN_UNKNOWN:
-        ng->weapon = WPN_UNKNOWN;
-        return;
-
     case WPN_VIABLE:
     {
         int good_choices = 0;
@@ -1729,16 +1725,9 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
         return;
 
     default:
-        // Check this is a legal choice, in case it came
-        // through command line options.
+        // _fixup_weapon will return WPN_UNKNOWN, allowing the player
+        // to select the weapon, if the weapon option is incompatible.
         ng->weapon = _fixup_weapon(ng_choice->weapon, weapons);
-        if (ng->weapon == WPN_UNKNOWN)
-        {
-            // Either an invalid combination was passed in through options,
-            // or we messed up.
-            end(1, false,
-                "Incompatible weapon specified in options file.");
-        }
         return;
     }
 }
@@ -1779,13 +1768,14 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
         return true;
     }
 
-    if (ng_choice->weapon == WPN_UNKNOWN
-        && !_prompt_weapon(ng, ng_choice, defaults, weapons))
+    _resolve_weapon(ng, ng_choice, weapons);
+    if (ng->weapon == WPN_UNKNOWN)
     {
-        return false;
+        if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
+            return false;
+        _resolve_weapon(ng, ng_choice, weapons);
     }
 
-    _resolve_weapon(ng, ng_choice, weapons);
     return true;
 }
 

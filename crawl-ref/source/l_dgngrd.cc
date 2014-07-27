@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
+#include "state.h"
 #include "terrain.h"
 
 static int dgn_feature_number(lua_State *ls)
@@ -106,7 +107,12 @@ static int dgn_grid(lua_State *ls)
     {
         const dungeon_feature_type feat = _get_lua_feature(ls, 3);
         if (feat)
-            grd(c) = feat;
+        {
+            if (crawl_state.generating_level)
+                grd(c) = feat;
+            else
+                dungeon_terrain_changed(c, feat);
+        }
     }
     PLUARET(number, grd(c));
 }

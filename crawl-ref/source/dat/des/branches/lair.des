@@ -62,6 +62,91 @@ function lair_small_ending(e)
         end
     end)
 end
+
+function beast_lair_populate_mons_large(e)
+    local set = crawl.random2(3)
+    if you.depth() > 3 then
+      set = set + 3
+    end
+    e.tags("no_monster_gen")
+    e.mons("plant") -- 1 is always plant.
+    if set == 0 then
+        e.mons("hound / wolf")
+        e.mons("wolf")
+        e.mons("wolf / warg w:1")
+    elseif set == 1 then
+        e.mons("black bear")
+        e.mons("black bear / polar bear")
+        e.mons("polar bear")
+    elseif set == 2 then
+        e.mons("iguana")
+        e.mons("iguana / komodo dragon")
+        e.mons("komodo dragon w:20 / basilisk w:1 / hydra w:1")
+    elseif set == 3 then
+        e.mons("elephant")
+        e.mons("elephant")
+        e.mons("elephant / dire elephant w:1")
+    elseif set == 4 then
+        e.mons("yak")
+        e.mons("yak / death yak")
+        e.mons("death yak / catoblepas w:1")
+    else
+        e.mons("water moccasin")
+        e.mons("water moccasin / black mamba w:5")
+        e.mons("black mamba / anaconda w:1")
+    end
+end
+
+function beast_lair_populate_mons_small(e)
+    if crawl.one_chance_in(25) then
+        beast_lair_populate_mons_large(e)
+    else
+        local monster_list = {}
+        if you.depth() < 4 then
+            monster_list = { "porcupine", "porcupine", "iguana", "giant frog",
+                             "wolf", "yak", "komodo dragon", "spiny frog",
+                             "crocodile" }
+        else
+            monster_list = { "yak", "yak", "polar bear", "death yak",
+                             "elephant", "spiny frog", "komodo dragon",
+                             "wyvern" }
+        end
+        e.mons(plant)
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+    end
+end
+
+function beast_lair_randomise(e)
+    -- Tools for randomizing environment
+    -- A has a 33% chance of being a plant, 66% chance of being floor.
+    e.subst("A = 1:5 .")
+    -- B has a 23% chance of being a wall, 77% chance of being floor.
+    e.subst("B = x:3 .")
+    -- C has a 23% chance of being shallow water, 77% chance of being floor.
+    e.subst("C = W:3 .")
+    -- D has even odds of being shallow water, a wall, a plant of empty floor.
+    e.subst("D = Wx1.")
+    -- 25% chance that all instances of E in the vault will be plants.
+    e.subst("E : 1:3 .:9")
+    -- 25% chance that all instances of F in the vault will be walls.
+    e.subst("F : x:3 .:9")
+    -- 25% chance that all instances of G in the vault will be shallow water.
+    e.subst("G : W:3 .:9")
+    -- Tools or randomizin monsters and items
+    -- M, for monster. 33% chance to be 2, 67% chance to be floor.
+    e.subst("M = 2:4 .:8")
+    -- P, for pack. 17% chance to be 2, 83% chance to be floor.
+    e.subst("P : 2:2 .")
+    -- L (Loot) tiny chance to be good item, high chance to be normal item.
+    e.subst("L = *:1 % .:5")
+    -- J (Junk) small chance to be an item, high chance to be nothing.
+    e.subst("J = %:6 .:28")
+    -- Universal settings
+    e.tags("no_trap_gen")
+    e.depth("Lair, !Lair:$")
+end
 }}
 
 ################################################################################
@@ -80,9 +165,10 @@ ENDMAP
 ##############################################################################
 # Generic Lair entry
 #
+# This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, giant slug / elephant slug / nothing
+MONS:    crocodile / sheep, goliath beetle
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -127,13 +213,12 @@ ENDMAP
 NAME:    dpeg_lair_monsters
 TAGS:    lair_entry
 ORIENT:  float
-MONS:    w:60 nothing / w:30 giant slug
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    green rat / porcupine / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / spiny frog
-SHUFFLE: 12345
+SHUFFLE: 1234
 KFEAT:   O = enter_lair
 MAP
 111...@......
@@ -208,7 +293,7 @@ NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry
 ORIENT: float
 MONS:   plant / bush w:2 / fungus w:2
-MONS:   crocodile / basilisk w:5 / giant slug
+MONS:   crocodile / basilisk w:5
 MONS:   yak
 MONS:   sheep
 MONS:   rat w:2 / porcupine / green rat / quokka w:1
@@ -294,7 +379,7 @@ MONS:    steam dragon / mottled dragon / swamp drake
 MONS:    w:20 iguana / komodo dragon / giant gecko / crocodile / nothing
 SUBST:   ? = x.c
 SHUFFLE: %*RO
-KITEM:   R = w:2 honeycomb / w:1 royal jelly
+KITEM:   R = royal jelly
 KFEAT:   O = enter_lair
 
 MAP
@@ -426,7 +511,7 @@ ORIENT:  northeast
 DEPTH:   D:5-8, Lair
 SHUFFLE: 23, 34
 MONS:    rat, rat / green rat w:5, green rat, orange rat
-ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+ITEM:    slice of pizza w:80 / fruit
 SUBST:   d = d$..., e = d$
 : if you.branch() == "Lair" then
 TAGS:    extra
@@ -470,8 +555,7 @@ DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
-MONS:    giant slug zombie / \
-         elephant slug zombie w:2 / nothing
+MONS:    elephant zombie w:2 / nothing
 MONS:    crocodile zombie / basilisk zombie / \
          komodo dragon zombie w:4 / nothing
 MAP
@@ -500,14 +584,14 @@ ENDMAP
 #
 
 # Three separate decorative bubbles mixed into one vault.
-NAME:   lemuel_strawberry_fields
+NAME:   lemuel_fruit_fields
 TAGS:   allow_dup extra transparent decor
 DEPTH:  Lair
 ORIENT: float
 WEIGHT: 9
 MONS:   plant, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
-        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
+ITEM:   fruit q:1 / fruit q:2 w:7 / fruit q:3 w:3 /\
+        fruit q:4 w:1 / fruit q:5 w:1 / fruit q:6 w:1
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
@@ -551,7 +635,7 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
+KITEM:  a : fruit q:1
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
 SUBST:  0`-. = .:90 a:10 2:1
@@ -576,84 +660,6 @@ _---..`"`..--_
 ENDMAP
 
 ##############################################################################
-# A number of fruity vaults, by blue_anna
-# [Condensed into one vault by HangedMan.]
-#
-# The "fruiting_plant" tag uses this as a subvault for food vaults.
-#
-# TODO: Using KMONS and KITEM, we could have fruits on the same
-#       square as a plant, though it'd change nutrition averages.
-#
-# Average of 6.044 apples, pears, apricots, oranges, lemons, lychee, and rambutan,
-# 12.5 grapes, 14.236 sultanas, 5.756 snozzcumbers,
-# 14.608 strawberries, 10.875 bananas, and 4.675 chokos.
-# Nutrition averages, normal/herbivore 3 [carnivore 3 is always 0]:
-# apple/pear/apricot   4.2k/9.7k  |  snozzcumber    8.6k/17.3k
-# orange/lemon         6k/13.2k   |  strawberry     2.9k/???
-# lychee/rambutan      3.6k/8.1k  |  banana         10.9k/23.4k
-# grape                1.2k/3.1k  |  choko          2.8k/6.3k
-# sultana              1k/2.3k
-#
-NAME:   blue_anna_fruit_fields
-TAGS:   fruiting_plant allow_dup extra decor
-# Needs to be available in D because it is used as a subvault of some
-# food vaults.
-DEPTH:  Lair, D:7-14
-MONS:   plant
-ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic
-ITEM:   pear q:1 no_mimic / pear q:2 no_mimic / pear q:3 w:2 no_mimic
-ITEM:   apricot q:1 no_mimic / apricot q:2 no_mimic / apricot q:3 w:2 no_mimic
-: if crawl.coinflip() then
-ITEM:   orange q:1 no_mimic / orange q:2 no_mimic / orange q:3 w:2 no_mimic
-ITEM:   lychee q:1 no_mimic / lychee q:2 no_mimic / lychee q:3 w:2 no_mimic
-ITEM:   grape q:1 w:3 no_mimic / grape q:2 w:5 no_mimic / grape q:3 no_mimic / \
-        grape q:4 w:7 no_mimic / grape q:5 w:5 no_mimic / grape q:6 w:2 no_mimic
-: else
-ITEM:   lemon q:1 no_mimic / lemon q:2 no_mimic / lemon q:3 w:2 no_mimic
-ITEM:   rambutan q:1 no_mimic / rambutan q:2 no_mimic / \
-        rambutan q:3 w:2 no_mimic
-ITEM:   sultana q:1 w:2 no_mimic / sultana q:2 w:3 no_mimic / \
-        sultana q:3 no_mimic / \
-        sultana q:4 w:5 no_mimic / sultana q:5 w:7 no_mimic / sultana q:6 w:5 no_mimic
-: end
-ITEM:   snozzcumber q:1 no_mimic / snozzcumber q:2 no_mimic / \
-        snozzcumber q:3 w:2 no_mimic
-ITEM:   strawberry q:1 no_mimic / strawberry q:2 w:7 no_mimic / \
-        strawberry q:3 w:3 no_mimic / strawberry q:4 w:1 no_mimic / \
-        strawberry q:5 w:1 no_mimic / strawberry q:6 w:1 no_mimic
-KITEM:  l = banana q:6 w:2 no_mimic / banana q:7 w:4 no_mimic / \
-        banana q:10 no_mimic / banana q:12 no_mimic / \
-        banana q:14 w:4 no_mimic / banana q:16 w:2 no_mimic
-KITEM:  m = choko q:1 / choko q:2 / choko q:3 w:2
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-: local fruitchoice = crawl.random2(18)
-: if fruitchoice < 9 then
-SUBST:  . = d .:50, '" = d .:33
-SHUFFLE: defgh
-: elseif fruitchoice < 11 then
-SUBST:  .'"1 = i 1 .:34
-: elseif fruitchoice < 12 then
-SUBST:  .'" = j 1 .:34
-: elseif fruitchoice < 14 then
-NSUBST: . = 2:1 / * = kkk..1
-: elseif fruitchoice < 16 then
-NSUBST: 1" = 1:l / *:., '. = 1:1 / * = .....1
-: else
-SUBST: .'"1 = m 1 .:50
-: end
-MAP
-.'''.
-."1".
-.""".
-.....
-ENDMAP
-
-##############################################################################
 # Ice dragon lair with assorted imp pets
 #
 NAME:   bobbens_ice_dragon_lair
@@ -662,11 +668,9 @@ TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
 MONS:   white imp
-ITEM:   any good_item
 KPROP:  _` = no_rtele_into
-SUBST:  ! = $:3 d:2
-SUBST:  ' = w:15 x:9 c:3 `:1
-SUBST:  ? = x:3 c:1
+SUBST:  ! = $:3 *:2
+SUBST:  ' = w:15 x:12 `:1
 SUBST:  ; = x:2 .:3
 SUBST:  _ = %:1 `:3
 SUBST:  " = G:1 .:3
@@ -674,14 +678,14 @@ MAP
 ;;..;..;;;.;;.;;;
 ;;...wwww.;;..ww.;;
 ;..ww'''ww..wwwww;;;;
-;.ww'???wwwwwwwww;....
-;.ww'?!??''''''w...ww.
-;..ww?!!??????'w..www.
-;;..w?!1?..>??'w"www.;
-;;;.w?!!.2?3.?'wwww.;
-;;;ww??w2.?W.''www.;;
-;..www'??????''wwww.;;
-..wwww''????ww'''ww.;;
+;.ww'xxxwwwwwwwww;....
+;.ww'x!xx''''''w...ww.
+;..wwx!!xxxxxx'w..www.
+;;..wx!1x..>xx'w"www.;
+;;;.wx!!.2x3.x'wwww.;
+;;;wwxxw2.xW.''www.;;
+;..www'xxxxxxw'wwww.;;
+..wwww''xxxxwww''ww.;;
 .wwwwwww...www'_'ww.;
 ..wwwww....www'''w.;;
 .;www...V..wwwwww.;;
@@ -694,7 +698,7 @@ ENDMAP
 #
 NAME:   bobbens_dragon_lair_wall
 DEPTH:  Lair:2-
-TAGS:   no_monster_gen mini_float
+TAGS:   no_monster_gen
 : if you.depth() >= 7 then
 MONS:   fire dragon w:9 / lindwurm w:1
 MONS:   fire drake / w:2 mottled dragon / w:4 nothing
@@ -780,11 +784,34 @@ xx44..........3.xx
 ENDMAP
 
 ##############################################################################
+# Snail & Pal
+#
+NAME:   pf_torpor_hydra
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Lair:3-7
+MONS:   torpor snail, hydra
+# A decent item visible from the door, a superb item not visible, and a couple
+# of floor items anywhere
+NSUBST: . = 1:* / *:.
+NSUBST: _ = 1:| / *:.
+NSUBST: . = 2:% / *:.
+MAP
+x xx  x
+ xxxxxx x
+xx.2..xxx
+x__x1..=xx
+x______x@x
+xx__x_xx
+ xxxxxx
+   x  x
+ENDMAP
+
+##############################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
 DEPTH:  Lair
-TAGS:   allow_dup no_monster_gen no_item_gen mini_float
+TAGS:   allow_dup no_monster_gen no_item_gen
 MONS:   ice dragon / fire dragon / swamp dragon / anaconda w:5
 MONS:   swamp dragon / hydra / catoblepas
 MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
@@ -966,7 +993,7 @@ NAME:   minmay_lair_goldilocks
 WEIGHT: 5
 DEPTH:  Lair
 MONS:   black bear, polar bear
-ITEM:   potion of porridge / honeycomb
+ITEM:   potion of porridge
 MAP
 .......
 .xxxxx.
@@ -998,7 +1025,6 @@ ENDMAP
 # Two stream minivaults
 NAME:   guppyfry_lair_drakes
 DEPTH:  Lair
-TAGS:   mini_float
 WEIGHT: 15
 : if you.depth() > 3 and crawl.coinflip() then
 MONS:   fire drake / swamp drake / mottled dragon
@@ -1027,7 +1053,7 @@ ENDMAP
 ###############################################################################
 # A polar bear lost in the jungle, how odd
 NAME:  roderic_lost_polar_bear
-TAGS:  no_monster_gen mini_float
+TAGS:  no_monster_gen
 DEPTH: Lair:3-7
 MONS:  plant, polar_bear, bush
 SUBST: ? = 1t
@@ -1170,7 +1196,6 @@ t1..t1.t.tt.t111.t...c..4C4..c..1t.1.tt.t.
 ENDMAP
 
 NAME:   wad_woods_01
-TAGS:   mini_float
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "small", 2, true, 21, 2, 8)
 MAP
@@ -1191,7 +1216,6 @@ ttt.tt4ttt..%.4ttOttt
 ENDMAP
 
 NAME:   wad_woods_02
-TAGS:   mini_float
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
 MAP
@@ -1233,7 +1257,6 @@ MAP
 ENDMAP
 
 NAME:   wad_woods_04
-TAGS:   mini_float
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "rock", 2, false, 0, 0, 0)
 FTILE:  '+*0 = floor_dirt
@@ -1258,7 +1281,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   wad_woods_06
-TAGS:   mini_float extra
+TAGS:   extra
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
 MAP
@@ -1276,7 +1299,7 @@ t1tt1ttt21tt
 ENDMAP
 
 NAME:   wad_woods_antlair
-TAGS:   mini_float uniq_anthill
+TAGS:   uniq_anthill
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
 MONS:   worker ant, soldier ant
@@ -1328,7 +1351,7 @@ ttt5tt.t.tt1t1t.t%1tt.t5tttttt
 ENDMAP
 
 NAME:   wad_woods_river_02
-TAGS:   mini_float extra
+TAGS:   extra
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "small", 1, true, 32, 2, 24)
 MAP
@@ -1348,7 +1371,6 @@ ttt1ttt.WWWt.ttt0t1t
 ENDMAP
 
 NAME:   wad_woods_river_03
-TAGS:   mini_float
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "decor", 1, false, 32, 3, 24)
 MAP
@@ -1366,7 +1388,7 @@ WWWWt.t.t1t
 ENDMAP
 
 NAME:   wad_woods_river_04
-TAGS:   no_vmirror no_rotate mini_float
+TAGS:   no_vmirror no_rotate
 DEPTH:  D, Lair, Forest
 TILE:   X = wall_brick_dark_leak
 TILE:   x = wall_brick_dark
@@ -1587,7 +1609,7 @@ DEPTH:  Lair
 ORIENT: float
 MONS:   green rat band, orange rat, green rat / rat
 KMONS:  P = plant / fungus w:2
-KITEM:  d = cheese / slice of pizza / sausage / bread ration
+KITEM:  d = slice of pizza / beef jerky / bread ration
 NSUBST: W = 1:1 / 2:P / 2:2 / 2:3 / 2:d
 MAP
  xxxx
@@ -1607,7 +1629,7 @@ TAGS:   ruin
 DEPTH:  Lair
 ORIENT: float
 MONS:   green rat / rat, orange rat, rat
-KITEM:  d = cheese / slice of pizza / sausage / bread ration
+KITEM:  d = slice of pizza / beef jerky / bread ration
 SUBST:  d = d123..., 2 = 2.
 NSUBST: 1 = *:1
 MAP
@@ -1677,9 +1699,9 @@ MAP
 ENDMAP
 
 # an altar to chei, and a few followers
-NAME:  kennysheep_slug_temple
+NAME:  kennysheep_snail_temple
 DEPTH: Lair
-MONS:  giant slug / elephant slug w:2 / nothing
+MONS:  torpor snail / nothing
 KFEAT: a = altar_cheibriados
 MAP
  @
@@ -1705,9 +1727,8 @@ ORIENT: float
 TAGS:   patrolling no_monster_gen
 MONS:   black bear / polar bear
 KFEAT:  " = W
-KMONS:  " = big fish / shark / electric eel
-KITEM:  % = strawberry / grape / lychee / choko / rambutan / apple / pear \
-            / orange / w:1 meat ration
+KMONS:  " = electric eel w:40 / nothing
+KITEM:  % = fruit w:80 / w:1 meat ration
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
 CLEAR:  E
 MAP
@@ -1734,8 +1755,8 @@ SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
 NSUBST: 0 = 2:9 / *:0
 MONS:   plant / bush / toadstool
 KMONS:  2 = plant / toadstool
-KMONS:  3 = w:2 shark / plant / toadstool
-KMONS:  4 = w:5 big fish / shark / electric eel
+KMONS:  3 = plant / toadstool
+KMONS:  4 = electric eel w:40 / nothing
 KFEAT:  23 = W
 KFEAT:  4 = w
 KMONS:  5 =  lindwurm / dire elephant / catoblepas
@@ -1779,7 +1800,8 @@ NAME: nicolae_quartered_pool_little
 DEPTH: Lair
 TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
-SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
+SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W
+NSUBST: 7 = t@
 MAP
     777777
    7qolLOQ7
@@ -1802,7 +1824,8 @@ DEPTH: Lair
 TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
-SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
+SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W
+NSUBST: 7 = t@
 MAP
       7777
     77spPS77
@@ -1829,7 +1852,7 @@ SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
 SHUFFLE: 12, 34, 56
 SUBST: abcdefghijklmnopqrstuvwxyz135 = ., ABCDEFGHIJKLMNOPQRSTUVWXYZ246 = W
-SUBST: 7 = t
+NSUBST: 7 = @ / t@
 MAP
       777777
     771xtTX277
@@ -1849,23 +1872,6 @@ MAP
    76ZWSPpswz57
     772XTtx177
       777777
-ENDMAP
-
-NAME: nicolae_lair_firefly_meadow
-DEPTH: Lair
-TAGS: transparent
-MONS: giant firefly
-NSUBST: . = 5:1
-MAP
- .......
-.........
-.........
-.........
-.........
-.........
-.........
-.........
- .......
 ENDMAP
 
 NAME: nicolae_lair_grove_arrangements
@@ -1903,13 +1909,11 @@ DEPTH: Lair:6-
 TAGS: no_monster_gen no_item_gen no_trap_gen
 SUBST: P = P.
 NSUBST: D = 1:D / *:.
-KITEM: f = apple / orange / apricot / nothing
+KITEM: f = fruit w:30 / nothing
 KMONS: Y = yak
 KMONS: D = death yak
 KMONS: C = catoblepas
 KMONS: P = plant
-KMONS: k = big fish
-KFEAT: k = w
 MAP
         .@@@.
       .........
@@ -1919,8 +1923,8 @@ MAP
  .PPttP..P.P.PP.ftP...
  .P....PPP...PPP.PP..@
 ..PP..PPPwwwC.P..PPP.@
-......Y.wkwwww.Y.ttP.@
-.@.PP..Pwwwwkw...fttt.
+......Y.wwwwww.Y.ttP.@
+.@.PP..Pwwwwww...fttt.
  @..P..PP.wwwPP.ttttt
   @.PP.PPP..PP..PPttt
   ...Ptt.P.PPPPPP....
@@ -1972,7 +1976,7 @@ ENDMAP
 NAME:   forest_entry_grove
 DEPTH:  Lair:2-, !Lair:$
 MONS:   centaur w:4 / spriggan
-MONS:   wolf / giant firefly w:2, black bear, polar bear
+MONS:   wolf, black bear, polar bear
 KMONS:  P = plant / bush
 NSUBST: Q = 2:1 / *:.
 NSUBST: R = 3:2 / 1:3 / 1:4 / *:.
@@ -1991,13 +1995,14 @@ xttt.......tttx
 xxtttt...ttttxx
  xxxtt..ttxxxx
   xxxtt..ttxx
-   xxtt..ttx
+   xxtt@@ttx
 ENDMAP
 
 NAME:    bh_autumn_forest_stairs
 TAGS:    extra luniq_staircase decor
 ORIENT:  float
 DEPTH:   Lair
+WEIGHT:  5
 COLOUR:  t = lightred / red w:3
 SHUFFLE: Aaq / Bbr / Ccs
 SUBST:   q = @
@@ -2030,40 +2035,39 @@ NAME: grunt_forest_small_clearings
 TAGS: transparent extra decor
 DEPTH: Lair
 MONS: plant / bush
-KITEM: d = strawberry q:3 / grape q:3 / lychee / choko / \
-           rambutan / apple / pear / orange
+KITEM: d = fruit
 KMASK: G = no_monster_gen
 SHUFFLE: Ww. / ''` / ''`
 SUBST: t = t.., '` = 1:49 d:36 .:405
 SUBST: G = w., W = WW., w = wwW
 MAP
- tt...tt
+ tt@@@tt
 t.......t
 t..WWW..t
-..WwwwW..
-..WwGwW..
-..WwwwW..
+@.WwwwW.@
+@.WwGwW.@
+@.WwwwW.@
 t..WWW..t
 t.......t
- tt...tt
+ tt@@@tt
 ENDMAP
 
 NAME: grunt_forest_small_clearing_treed
 TAGS: transparent patrolling
 DEPTH: Lair
-MONS: plant / bush, spriggan
+MONS: plant / bush
 SUBST: t = t..
 KPROP: * = no_rtele_into
 MAP
- tt...tt
+ tt@@@tt
 t.......t
 t.1...1.t
-...ttt...
-...t*t...
-...ttt...
+@..ttt..@
+@..t*t..@
+@..ttt..@
 t.1...1.t
 t.......t
- tt...tt
+ tt@@@tt
 ENDMAP
 
 # Prviously large_clearing_fruit, _statues, _slash, _guards
@@ -2071,19 +2075,18 @@ NAME:    grunt_forest_large_clearings
 TAGS:    transparent
 DEPTH:   Lair
 WEIGHT:  20
-MONS:    plant / bush, wolf / giant firefly w:2
+MONS:    plant / bush, wolf
 MONS:    black bear / polar bear, spriggan / centaur w:4
 KMONS:   9 = 9
 KMONS:   * = spriggan rider / faun w:4
-ITEM:    strawberry q:3 / grape q:3 / lychee / choko / \
-         rambutan / apple / pear / orange
+ITEM:    fruit
 KITEM:   9* = *
 KFEAT:   9 = W
 SHUFFLE: wW'"^~-_9 / ''GG''''* / '''0''''% / ``````22G
 SUBST:   t = t.., '. = 1:49 d:36 .:405, W = WW., "w = wwW
 NSUBST:  2 = 3:2 / 2:3 / 1:4 / *:.
 MAP
-      tt...tt
+      tt@@@tt
     ttt.....ttt
   ttt.........ttt
   tww...........t
@@ -2091,9 +2094,9 @@ MAP
  t..www..'.......t
 tt...w"w....'....tt
 t.....ww-._.......t
-.......-~W^_.......
-.....'..W9W..'.....
-......._^W~-.......
+@......-~W^_......@
+@....'..W9W..'....@
+@......_^W~-......@
 t.....'._.-ww.....t
 tt.........w"w...tt
  t.......'..www..t
@@ -2101,7 +2104,7 @@ tt.........w"w...tt
   t...........wwt
   ttt.........ttt
     ttt.....ttt
-      tt...tt
+      tt@@@tt
 ENDMAP
 
 NAME:  grunt_forest_large_clearing_hut
@@ -2113,7 +2116,7 @@ SUBST: . = 1 .:90
 COLOUR: -*29 = lightgrey
 FTILE:  -*29 = floor_normal
 MAP
-      tt...tt
+      tt@@@tt
     ttt.....ttt
   ttt.........ttt
   t.............t
@@ -2121,9 +2124,9 @@ MAP
  t...............t
 tt...............tt
 t......ccccc......t
-.......c-9*c.......
-.......+-*2c.......
-.......c-9*c.......
+@......c-9*c......@
+@......+-*2c......@
+@......c-9*c......@
 t......ccccc......t
 tt...............tt
  t...............t
@@ -2131,7 +2134,272 @@ tt...............tt
   t.............t
   ttt.........ttt
     ttt.....ttt
-      tt...tt
+      tt@@@tt
+ENDMAP
+
+####
+# Some "beast lair" vaults, originally submitted as a serial vault.
+NAME:   beast_lair_carwin_large_1
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+                E.EEJ
+      1     1  ..E.ME
+...........1.xxx.ME.
+ .Axxxxx..xxxx.xxxA..
+..xxJ..xx.xx.B.FFxx1.E
+ ..xxx.B........GGxx...
+ .xxA.....FFxxG..Gxxx.
+ .x...423...xGGG.GGGx.
+..x.AxxxFFFxxG4223Axx.1
+..xx..AFFFxx%LL4xxxx..
+..Axx..MFxxxxxxxx.xxx.
+ ..x..xxxxAxx......A..
+ .A.............  .
+      .            ..
+ENDMAP
+
+NAME:   beast_lair_carwin_large_2
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+  ..1.. 1
+   .x........
+  ...xxxxxxx.
+. ..xxxLxxJxx.
+ ..Ax44....Ex.
+ .Gxx%4xx..xx.
+ GGGxLxxxE.xx.
+ .GGxxxx...xx.
+ .Gxxxx..EEx..A
+..xx31xx..xx....
+1.x32..x.xx..  A
+ .xxx....xx1.
+ ..xxxxEMExx..
+ .............
+ENDMAP
+
+NAME:   beast_lair_carwin_large_3
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+            ..
+        .......
+ .........Mxxx...
+ x  xxx.xxxxxxxxx
+ xxxxM...A......xx
+ .xxA......xx..M.xx.
+..x...xxAA..x22.Mx...
+..xx.xxxxxx.xxx..xx..
+ .xx.xx44LA...x.......
+ .x..xx%4...x.xxxxx.
+......xxxxLx......x..
+..xx.MM.2xxx....xxxx.
+   x...24x....xxx  ..
+   xxxxxxx.xxxxxx x
+    ................
+   ...         .
+ENDMAP
+
+# This vault is kinda neat because if the Fs become walls (1/4th of the time)
+# it's a maze-like warren, but if they become floors it's an open "village".
+NAME:   beast_lair_carwin_large_4
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+SUBST: T:5 6:3
+MAP
+  .          .A1
+.........  ........x    .
+ ...xxxA.....xxxx.......x
+ ...x3xxFFFAxx4x...xxxx..x.
+ ..xx.xx..Fx...xFFxx24xA.....
+...x3..........2xF....x...x
+..FxxF11..FFxxx.x.....xxx.
+.......Fx...LF....xx.xx  .
+.x...xxx..x4Tx.F...F...D 1.
+x.Mxxx...xxxxxxx.FFF.D.2WWW
+xxxx....x.24xxxxxF...MWWWW
+2....xx...Mxxxxx.D..3WWWWWWW
+4..       .  Ax ..M1WWW W
+ENDMAP
+
+NAME: beast_lair_carwin_1
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+     ..
+  1......
+ ..xxxxx..
+ .xxM3Axx1..
+ .xAMJ4xFx.
+.Axx.xxxFF.1
+..1x..x...
+ ..xx..x...
+  .....
+ENDMAP
+
+NAME:   beast_lair_carwin_2
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+ITEM: w:7 meat ration / beef jerky
+SUBST: ? : .
+MAP
+  ...
+ ..2..
+..3d2..
+ ..2..
+  ...
+ENDMAP
+
+NAME: beast_lair_carwin_3
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  1
+   ..
+....B..
+ .xxxx..
+..x33xx.1
+.xxM.Ax.
+A.xx.xx.
+ ..B...B
+ENDMAP
+
+
+NAME:   beast_lair_carwin_4
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  ...  A
+ ..x....
+A.xxxFA..
+..x32FFB.
+..xxM1x...
+.xx..x1.
+....FxA
+ENDMAP
+
+NAME:   beast_lair_carwin_5
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+ .
+ ...1...
+..xxxx......
+ ...3x.xBA.
+ .x2xx.xxxB
+ .xJ.2...
+1.xxBxxxA
+ ........A
+ENDMAP
+
+NAME:   beast_lair_carwin_6
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  .........
+   .Axxxx.1
+ .....GGxx.
+ ..xxxxGGx...
+..1xxGG.Gxx.
+ .xxD24Jxx..
+ ..xx32xxA.
+ .A.FFFFF..
+  ......
+ENDMAP
+
+NAME: beast_lair_carwin_7
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+.x....
+...x....
+..1x.x....
+ .xx.xx.x..
+..xPPxxxxx..x .
+Exx3PPx1Jx..x.
+E.xxxxx....x.
+ E.EEx42Pxxx..
+ ..E.xxxxx.x...1
+  ...........
+     A
+ENDMAP
+
+NAME:   beast_lair_carwin_8
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+. .. . ..   1   .......   1
+ ..Axxxx.... .  xxxxxx....
+..xxGGGxx.xxxxxxA.1.xxx.
+..xGGGGG..M243.....F..x..
+.xxxGGxxxxxxxxxxxx...xxx..
+....G..1         FFA......
+ENDMAP
+
+NAME:   beast_lair_carwin_9
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+ .   1    .
+ ........  .
+...xxxxx.....
+ .AAxxxxxxxx.
+ ..1xxxx4Lx....
+..xxx.M44xx.
+ x.....xxx..
+...xxxxx... A
+...xxxx..x.s
+      .
+ENDMAP
+
+NAME: beast_lair_carwin_10
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  AA
+ .......
+ .x..xx.xx
+...x..xx.
+ .Axx.4x.
+ ..Jx3xx.
+...xxxx1x
+  .x43xx.1
+ .xxx.Ax..
+ .xxx.xx.1
+1.........
+ENDMAP
+
+NAME: beast_lair_carwin_11
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+     .E
+. .......xx
+ ..xxxxx..E
+..xx2x4xE..
+.xx...2xx.
+..B.xxxxxx..
+ ...    .....E
 ENDMAP
 
 ###############################################################################
@@ -2256,9 +2524,9 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    elephant slug / giant slug, worm, brain worm
-MONS:    giant leech, lindwurm, fire dragon
-KMONS:   8 = giant firefly
+MONS:    fire drake, worm, brain worm
+MONS:    giant leech, lindwurm, fire dragon / ice dragon
+KMONS:   8 = orange rat
 SHUFFLE: ABC
 SUBST:   P = 11.
 NSUBST:  A = 3:8 / 1:65 / * = 33338, B = 3:4 / 1:24 / * = 33334
@@ -2306,8 +2574,8 @@ KMONS:   7 = black bear
 KMONS:   8 = hog
 KMONS:   9 = polar bear
 KMONS:   0 = raiju
-KITEM:   $ = any, sausage q:3
-KITEM:   % = any, honeycomb q:2
+KITEM:   $ = any, beef jerky q:3
+KITEM:   % = any, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
 NSUBST:  4 = 1:6 / *:4
 SHUFFLE: %'*" / '$"|
@@ -2397,7 +2665,7 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / polar bear w:12, wolf, giant firefly w:9 / yellow wasp w:1
+MONS:   black bear / polar bear w:12, wolf, redback w:9 / yellow wasp w:1
 MONS:   spriggan, spriggan rider, spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = tt..., E = t_
@@ -2540,24 +2808,32 @@ NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen patrolling
 ORIENT:  float
 PLACE:   Lair:$
+# mons are in groups of four, each ordered from least to most dangerous.
+# mythological or dragon-y reptiles
 MONS:    basilisk, fire drake, komodo dragon, hydra
-MONS:    manticore, hippogriff, griffon
+# mythological non-reptiles
+MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas
+# fast things
 KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
-KMONS:   C = giant slug
-KMONS:   D = elephant slug
-KMONS:   E = boring beetle
-KMONS:   F = boulder beetle
+# beetles/worms
+KMONS:   C = boring beetle
+KMONS:   D = torpor snail
+KMONS:   E = boulder beetle
+KMONS:   F = lindwurm
+# yaks & pals
 KMONS:   G = sheep
 KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
+# some non-set monsters right outside the vault to make sure you don't miss
+# that there's a vault here maybe
 KMONS:   K = crocodile
-KMONS:   L = wolf
-KMONS:   M = green rat
+KMONS:   L = green rat
+KMONS:   M = wolf
 KMONS:   N = wyvern
 KMONS:   P = plant w:12 / fungus w:8 / nothing
 KITEM:   ~ = any good_item

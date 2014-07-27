@@ -450,10 +450,6 @@ Convert to Beogh ability
 
 他の全ての神はビオを嫌い、軽々しく改宗者を受け容れない。
 %%%%
-Make dart trap ability
-
-指定した位置に投げ矢の罠を生成する。
-%%%%
 Make oklob sapling ability
 
 指定した位置に酸を吐く能力を持ったオクロブの幼草を植える。

@@ -224,12 +224,12 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_ORC_SLAYING
                || brand == SPWPN_RETURNING
                || brand == SPWPN_REACHING
-#endif
-               || brand == SPWPN_DRAGON_SLAYING
-               || brand == SPWPN_PROTECTION
-               || brand == SPWPN_EVASION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST
+               || brand == SPWPN_DRAGON_SLAYING
+#endif
+               || brand == SPWPN_PROTECTION
+               || brand == SPWPN_EVASION
                );
     }
 
@@ -416,7 +416,7 @@ void ghost_demon::init_player_ghost()
         {
             damage = property(weapon, PWPN_DAMAGE);
 
-            damage *= 25 + you.skills[weapon_skill(weapon)];
+            damage *= 25 + you.skills[melee_skill(weapon)];
             damage /= 25;
 
             if (weapon.base_type == OBJ_WEAPONS)
@@ -451,7 +451,7 @@ void ghost_demon::init_player_ghost()
     else
     {
         // Unarmed combat.
-        if (you.innate_mutations[MUT_CLAWS])
+        if (you.innate_mutation[MUT_CLAWS])
             damage += you.experience_level;
 
         damage += you.skills[SK_UNARMED_COMBAT];
@@ -503,15 +503,11 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
     switch (u_att_flav)
     {
     case AF_FIRE:
-        u_att_flav = AF_NAPALM;
+        u_att_flav = AF_STICKY_FLAME;
         break;
 
     case AF_POISON:
         u_att_flav = AF_POISON_STRONG;
-        break;
-
-    case AF_DISEASE:
-        u_att_flav = AF_ROT;
         break;
 
     default:
@@ -541,10 +537,6 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 
     case CYAN:
         u_att_flav = AF_ELEC;
-        break;
-
-    case MAGENTA:
-        u_att_flav = AF_DISEASE;
         break;
 
     case LIGHTGREY:
@@ -604,6 +596,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
+    if (colour == MAGENTA)
+        damage += 5;
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
@@ -644,7 +638,7 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     switch (u_att_flav)
     {
     case AF_FIRE:
-    case AF_NAPALM:
+    case AF_STICKY_FLAME:
         return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
 
     case AF_ACID:
@@ -656,10 +650,6 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 
     case AF_ELEC:
         return MR_RES_ELEC * (very_ugly ? 2 : 1);
-
-    case AF_DISEASE:
-    case AF_ROT:
-        return MR_RES_ROTTING;
 
     case AF_COLD:
         return MR_RES_COLD * (very_ugly ? 2 : 1);
@@ -677,7 +667,6 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 {
-    int mass  = item_mass(weapon);
     int delay = property(weapon, PWPN_SPEED);
     int damg  = property(weapon, PWPN_DAMAGE);
 
@@ -687,34 +676,30 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     colour = weapon.colour;
     fly = FL_LEVITATE;
 
-    // We want Tukima to reward characters who invest heavily in both
-    // carrying capacity and Hexes skill.  Therefore, heavy weapons are a bit
-    // stronger when animated, and benefit much more from very high skill.
+    // We want Tukima to reward characters who invest heavily in
+    // Hexes skill. Therefore, weapons benefit from very high skill.
 
-    // First set up what the monsters will look like at very high skill.
+    // First set up what the monsters will look like with 100 power.
     // Daggers are weak here! In the table, "44+22" means d44+d22 with
     // d22 being base damage and d44 coming from power.
-
-    // Giant spiked club: speed 12, 44+22 damage, 35 AC, 70 HP, 16 EV
-    // Bardiche:          speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
-    // Dagger:            speed 20,  8+ 4 damage,  2 AC,  4 HP, 20 EV
-    // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 10 HP, 22 EV
-    // Cutlass:           speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
+    // Giant spiked club: speed 12, 44+22 damage, 22 AC, 36 HP, 16 EV
+    // Bardiche:          speed 10, 40+20 damage, 18 AC, 40 HP, 15 EV
+    // Dagger:            speed 20,  8+ 4 damage,  4 AC, 20 HP, 20 EV
+    // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 14 HP, 22 EV
+    // Cutlass:           speed 18, 14+ 7 damage,  7 AC, 24 HP, 19 EV
 
     xl = 15;
 
     speed   = 30 - delay;
     ev      = 25 - delay / 2;
-    ac      = mass / 10;
+    ac      = damg;
     damage  = 2 * damg;
-    max_hp  = mass / 5;
+    max_hp  = delay * 2;
 
-    // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
-    // a way that lays most of the penalty on heavy weapons.
+    // Don't allow the speed to become too low.
+    speed = max(3, (speed / 2) * (1 + power / 100));
 
-    speed = max(3, speed - (10 - power / 10));
-    ev    = max(3, ev    - (10 - power / 10));
-
+    ev    = max(3, ev * power / 100);
     ac = ac * power / 100;
     max_hp = max(5, max_hp * power / 100);
     damage = max(1, damage * power / 100);
@@ -786,7 +771,7 @@ static bool _know_spell(spell_type spell)
  * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
  * @param ignore_up_to_spell Ignore entries in the list up to and
  *                           including this one.
- * @returns The first spell the player knows.
+ * @return  The first spell the player knows.
  */
 static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
 {
@@ -798,7 +783,7 @@ static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_
             break;
     }
 
-    while(spells[i] != SPELL_NO_SPELL)
+    while (spells[i] != SPELL_NO_SPELL)
     {
         if (_know_spell(spells[i]))
             return spells[i];

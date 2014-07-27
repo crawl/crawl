@@ -286,10 +286,6 @@ helmet
 
 Una protección metálica para la cabeza.
 %%%%
-honeycomb
-
-Un trozo de un panal de miel, creado por abejas gigantes.
-%%%%
 ice dragon hide
 
 La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
@@ -378,12 +374,6 @@ La escamosa piel de un dragón nacarado. Puede usarse para elaborar una armadura
 propiamente dicha, pero incluso en esta basta forma proporciona protección
 contra la energía negativa.
 %%%%
-piece of ambrosia
-
-Un poco una extraña sustancia producida por la polillas fantasma. Su consumo
-proporciona tanto energía mágica como sustento, pero perderás tu concentración
-mental durante un corto periodo de tiempo.
-%%%%
 potion of agility
 
 Una poción mágica que incrementa muy considerablemente la destreza y elusividad
@@ -451,10 +441,6 @@ Una poción que te da temporalmente resistencia a los elementos y al veneno.
 potion of slowing
 
 Una poción que vuelve más lentas tus acciones.
-%%%%
-potion of strong poison
-
-Una poción muy venenosa.
 %%%%
 quad damage
 

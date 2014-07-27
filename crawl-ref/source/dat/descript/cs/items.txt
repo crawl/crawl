@@ -123,10 +123,6 @@ helmet
 
 Část kovové pokrývky hlavy.
 %%%%
-honeycomb
-
-Kus lahodného plástve obřích včel.
-%%%%
 lajatang
 
 Velmi vzácná a velmi efektivní dovážená zbraň. Představuje jí tyč s
@@ -166,11 +162,6 @@ pair of gloves
 
 Pár rukavic.
 %%%%
-piece of ambrosia
-
-Kousek podivné hmoty vytvářené přízračnými motýli. Konzumací dojde k doplnění
-živin i magické energie, avšak za cenu dočasné ztráty mentálního soustředění.
-%%%%
 potion of agility
 
 Kouzelný lektvar, jehož vypití náramně zvyšuje obratnost a schopnost uhýbat.
@@ -198,10 +189,6 @@ Hnusná jedovatá kapalina.
 potion of slowing
 
 Lektvar, který zpomaluje vaše akce.
-%%%%
-potion of strong poison
-
-Nesmírně jedovatý lektvar.
 %%%%
 quarterstaff
 

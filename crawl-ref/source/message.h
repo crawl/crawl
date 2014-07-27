@@ -18,7 +18,7 @@ void clear_message_window();
 
 void scroll_message_window(int n);
 
-void mesclr(bool force = false);
+void clear_messages(bool force = false);
 
 void flush_prev_message();
 

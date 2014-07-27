@@ -214,7 +214,7 @@ default-depth: Depths
 # The generic entry; this is the one that should place in encompass vaults.
 # Has a higher weight than everything else.
 NAME: pan_entry
-TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_pan
+TAGS: allow_dup overwrite_floor_cell replace_portal transparent fallback_enter_pan
 WEIGHT: 50
 : pan_entry_feature(_G, 'O', true)
 MAP
@@ -241,7 +241,7 @@ x@@xxxxxxxx
 ENDMAP
 
 NAME:   rand_demon_pan_entry_3
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -260,7 +260,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_4
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -278,7 +278,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_5
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -297,7 +297,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_7
-TAGS:   mini_float transparent
+TAGS:   transparent
 NSUBST: ? = 1:O / 4:1 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
@@ -317,7 +317,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_8
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -336,7 +336,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
-TAGS:   mini_float transparent
+TAGS:   transparent
 NSUBST: ^ = 4:1 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
@@ -359,7 +359,7 @@ ENDMAP
 # More entries based on panlord vaults.
 
 NAME:  grunt_pan_entry_in_and_out
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -379,7 +379,7 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_spiral
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -399,7 +399,7 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -2459,6 +2459,70 @@ x1x@
 xxx
 ENDMAP
 
+##################################
+NAME:   reaverb_pan_chaos_star
+TAGS:   extra decor transparent
+MAP
+        ...
+ ....  ..x..  ....
+ .xx.  .x.x.  .xx.
+ .x... ..x.. ...x.
+ ...x.. .x. ..x...
+   ..x...x...x..
+    ..x.....x..
+ ... ....x.... ...
+..x.....xxx.....x..
+.x.xxx.xxxxx.xxx.x.
+..x.....xxx.....x..
+ ... ....x.... ...
+    ..x.....x..
+   ..x...x...x..
+ ...x.. .x....x...
+ .x... ..x.. ...x.
+ .xx.  .x.x.  .xx.
+ ....  ..x..  ....
+        ...
+ENDMAP
+
+###################################
+NAME: reaverb_pan_squares
+TAGS: extra decor transparent
+MAP
+.......
+.xxxxx.
+.x...x.
+.x...x.
+.x...x.
+.x...x.
+.xxx+x.
+ .x..x.
+ .x..x.
+ .xx+x.
+  .x.x.
+  .x+x.
+  .....
+ENDMAP
+
+###################################
+NAME: reaverb_pan_figure_eight
+TAGS: extra decor transparent
+MAP
+    x@x
+   xx.xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+   xx.xx
+    x@x
+ENDMAP
+
 ###################################
 
 NAME:   pan_captured_pigsty
@@ -3120,7 +3184,6 @@ MONS:   cherub
 MONS:   angel
 MONS:   ophan
 MONS:   ophan
-MONS:   shedu band
 MONS:   daeva
 #  8 was phoenix but they were removed.
 KMONS:  9 = pearl dragon
@@ -3137,7 +3200,7 @@ COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 TILE:   GH = dngn_golden_statue
-FTILE:  _124SDcG|*' = floor_limestone
+FTILE:  _124SDcG|*'O = floor_limestone
 FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
 FTILE:  -ZBghi&v = floor_vault
@@ -3145,7 +3208,7 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel / cherub / ophan / daeva /" ..
-:                     "apis / shedu band / apis / shedu band / angel")
+:                     "apis / apis / angel")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
@@ -3155,7 +3218,7 @@ xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C7CCCC+CCCC7C.Cxxxxxxxxxxx
+xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
 xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
@@ -3165,7 +3228,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
-xCf73......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
+xCf63......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
 xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
 xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
 xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
@@ -3202,7 +3265,7 @@ xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
 xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
 xxxx..xx...vvv----v-----iv.v................................x..........xxxxxxxxx
 xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
-xxxxx.....vvi-----v-----iv........v.........6.......6......xxx.........xxxxxxxxx
+xxxxx.....vvi-----v-----iv........v........................xxx.........xxxxxxxxx
 xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
 xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
 xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx

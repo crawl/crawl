@@ -99,7 +99,7 @@ function sroom_beehive(e)
     fill_special_room(e, "patrolling killer bee",
                       "patrolling queen bee", true)
 
-    e.kitem('12 = royal jelly w:1 / honeycomb w:24 / nothing w:25')
+    e.kitem('12 = royal jelly / nothing')
 end
 
 function sroom_morgue(e)
@@ -154,7 +154,7 @@ function sroom_morgue(e)
                  .. "iron troll corpse / iron troll skeleton"
         bodies_chance = 40
     elseif you.branch() == "Tar" or you.branch() == "Crypt" then
-        mons[5] = "eidolon w:6 / jiangshi w:6 / plague shambler w:2"
+        mons[5] = "eidolon w:6 / jiangshi w:6"
         mons[6] = "mummy priest w:2 / death knight w:2 / revenant w:2"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse"
@@ -209,7 +209,7 @@ function sroom_jelly_pit(e)
 
     mons[1] = "ooze w:" .. (27 - math.floor(level / 3))
     mons[2] = "jelly w:15"
-    mons[3] = "brown_ooze w:" .. (6 + level)
+    mons[3] = "great orb of eyes w:" .. (3 + level)
     mons[4] = "death ooze w:" .. (2 + (2 * math.floor(level / 3)))
 
     if level >= 12 then

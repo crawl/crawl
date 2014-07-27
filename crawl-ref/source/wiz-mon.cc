@@ -21,6 +21,7 @@
 #include "env.h"
 #include "files.h"
 #include "ghost.h"
+#include "godblessing.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -30,10 +31,11 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mgen_data.h"
+#include "mon-death.h"
 #include "mon-pathfind.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
@@ -50,7 +52,7 @@
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
-void wizard_create_spec_monster(void)
+void wizard_create_spec_monster()
 {
     int mon = prompt_for_int("Which monster by number? ", true);
 
@@ -175,11 +177,11 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
-        string newerr;
+        string newerr = "yes";
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs, true);
-        if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
+        if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
             newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
@@ -580,9 +582,10 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
+         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
-         mons.hit_dice,
+         mons.get_hit_dice(),
+         mons.get_experience_level(),
          mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.ac, mons.armour_class(),
@@ -607,9 +610,10 @@ void debug_stethoscope(int mon)
     const habitat_type hab = mons_habitat(&mons);
 
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
+    const actor * const summoner = actor_by_mid(mons.summoner);
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
-         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s",
+         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
          : mons_is_wandering(&mons)       ? "wander"
@@ -630,7 +634,11 @@ void debug_stethoscope(int mon)
          mons.target.x, mons.target.y,
          mons.firing_pos.x, mons.firing_pos.y,
          mons.patrol_point.x, mons.patrol_point.y,
-         god_name(mons.god).c_str());
+         god_name(mons.god).c_str(),
+         (summoner ? make_stringf(" summoner=%s(%d)",
+                                  summoner->name(DESC_PLAIN, true).c_str(),
+                                  summoner->mindex()).c_str()
+                   : ""));
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
@@ -799,11 +807,6 @@ void debug_make_monster_shout(monster* mon)
     mpr("== Done ==");
 }
 
-static bool _force_suitable(const monster* mon)
-{
-    return mon->alive();
-}
-
 void wizard_gain_monster_level(monster* mon)
 {
     // Give monster as much experience as it can hold,
@@ -835,7 +838,7 @@ void wizard_apply_monster_blessing(monster* mon)
     else
         god = GOD_SHINING_ONE;
 
-    if (!bless_follower(mon, god, _force_suitable, true))
+    if (!bless_follower(mon, god, true))
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 
@@ -1061,7 +1064,7 @@ void wizard_give_monster_item(monster* mon)
         }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
-        move_item_to_player(old_eq, mitm[old_eq].quantity);
+        move_item_to_inv(old_eq, mitm[old_eq].quantity);
     }
 }
 

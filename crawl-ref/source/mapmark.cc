@@ -201,8 +201,10 @@ map_lua_marker::map_lua_marker(const string &s, const string &,
     else
     {
         if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
+        {
             mprf(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
                  dlua.error.c_str());
+        }
     }
     check_register_table();
 }
@@ -774,9 +776,10 @@ string map_door_seal_marker::debug_describe() const
 
 map_terrain_change_marker::map_terrain_change_marker (const coord_def& p,
                     dungeon_feature_type oldfeat, dungeon_feature_type newfeat,
-                    int dur, terrain_change_type ctype, int mnum)
+                    int dur, terrain_change_type ctype, int mnum, int oldcol)
     : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), mon_num(mnum),
-        old_feature(oldfeat), new_feature(newfeat), change_type(ctype)
+      old_feature(oldfeat), new_feature(newfeat), change_type(ctype),
+      colour(oldcol)
 {
 }
 
@@ -788,6 +791,7 @@ void map_terrain_change_marker::write(writer &out) const
     marshallUByte(out, new_feature);
     marshallUByte(out, change_type);
     marshallShort(out, mon_num);
+    marshallUByte(out, colour);
 }
 
 void map_terrain_change_marker::read(reader &in)
@@ -799,6 +803,12 @@ void map_terrain_change_marker::read(reader &in)
     new_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
     change_type = static_cast<terrain_change_type>(unmarshallUByte(in));
     mon_num = unmarshallShort(in);
+#if TAG_MAJOR_VERSION == 34
+    if (in.getMinorVersion() < TAG_MINOR_SAVE_TERRAIN_COLOUR)
+        colour = BLACK;
+    else
+#endif
+        colour = unmarshallUByte(in);
 }
 
 map_marker *map_terrain_change_marker::read(reader &in, map_marker_type)
@@ -812,7 +822,7 @@ map_marker *map_terrain_change_marker::clone() const
 {
     map_terrain_change_marker *mark =
         new map_terrain_change_marker(pos, old_feature, new_feature, duration,
-                                      change_type, mon_num);
+                                      change_type, mon_num, colour);
     return mark;
 }
 
@@ -1299,8 +1309,10 @@ void remove_markers_and_listeners_at(coord_def p)
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         if (markers[i]->get_type() == MAT_LUA_MARKER)
+        {
             dungeon_events.remove_listener(
                 dynamic_cast<map_lua_marker*>(markers[i]));
+        }
     }
 
     env.markers.remove_markers_at(p);

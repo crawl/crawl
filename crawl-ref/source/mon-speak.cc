@@ -554,7 +554,7 @@ bool mons_speaks(monster* mons)
             prefix += prefixes[i];
             prefix += " ";
         }
-        mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s: prefix = %s",
+        dprf(DIAG_SPEECH, "monster speech lookup for %s: prefix = %s",
              mons->name(DESC_PLAIN).c_str(), prefix.c_str());
     }
 #endif
@@ -623,7 +623,7 @@ bool mons_speaks(monster* mons)
         }
 
         // If the monster was originally a unique which has been polymorphed
-        // into a non-unique, is its current monter type capable of using its
+        // into a non-unique, is its current monster type capable of using its
         // old speech?
         if (!mons->mname.empty() && mons->can_speak() && msg.empty())
         {
@@ -657,7 +657,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -686,7 +686,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -742,7 +742,7 @@ bool mons_speaks(monster* mons)
     if (msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+        dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
         return false;
     }
@@ -773,7 +773,7 @@ bool mons_speaks(monster* mons)
                 if (msg == "__NONE" && msg2 == "__NONE")
                 {
 #ifdef DEBUG_MONSPEAK
-                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+                    dprf(DIAG_SPEECH, "result: \"__NONE\"!");
 #endif
                     return false;
                 }
@@ -795,7 +795,7 @@ bool mons_speaks(monster* mons)
     if (msg.empty() || msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
+        dprf(DIAG_SPEECH, "final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
         return false;

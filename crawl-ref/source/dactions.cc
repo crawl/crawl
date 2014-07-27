@@ -18,7 +18,6 @@
 #include "mapmark.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "player.h"
@@ -45,7 +44,9 @@ static const char *daction_names[] =
 
     // Actions not needing a counter.
     "old enslaved souls go poof",
+#if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
+#endif
 #if TAG_MAJOR_VERSION > 34
     "slimes allow another conversion attempt",
 #endif
@@ -83,7 +84,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_ALLY_UNHOLY_EVIL:
         return mon->wont_attack() && (mon->is_unholy() || mon->is_evil());
     case DACT_ALLY_UNCLEAN_CHAOTIC:
-        return mon->wont_attack() && (mon->is_unclean() || mon->is_chaotic());
+        return mon->wont_attack() && (mon->how_unclean() || mon->how_chaotic());
     case DACT_ALLY_SPELLCASTER:
         return mon->wont_attack() && mon->is_actual_spellcaster();
     case DACT_ALLY_YRED_SLAVE:
@@ -130,10 +131,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_BRIBE_TIMEOUT:
         return mon->has_ench(ENCH_BRIBED)
+               || mon->has_ench(ENCH_PERMA_BRIBED)
                || mon->props.exists(GOZAG_BRIBE_KEY)
-               || !you_worship(GOD_GOZAG)
-                  && (mon->has_ench(ENCH_PERMA_BRIBED)
-                      || mon->props.exists(GOZAG_PERMABRIBE_KEY));
+               || mon->props.exists(GOZAG_PERMABRIBE_KEY);
 
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
@@ -244,14 +244,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_BRIBE_TIMEOUT:
             mon->del_ench(ENCH_BRIBED);
+            mon->del_ench(ENCH_PERMA_BRIBED);
             if (mon->props.exists(GOZAG_BRIBE_KEY))
                 mon->props.erase(GOZAG_BRIBE_KEY);
-            if (!you_worship(GOD_GOZAG))
-            {
-                mon->del_ench(ENCH_PERMA_BRIBED);
             if (mon->props.exists(GOZAG_PERMABRIBE_KEY))
                 mon->props.erase(GOZAG_PERMABRIBE_KEY);
-            }
             break;
 
         case DACT_SET_BRIBES:
@@ -324,7 +321,7 @@ static void _apply_daction(daction_type act)
                 if (j->base_type == OBJ_GOLD)
                 {
                     bool detected = false;
-                    int dummy = j->link;
+                    int dummy = j->index();
                     j->special = 0;
                     unlink_item(dummy);
                     move_item_to_grid(&dummy, *ri, true);
@@ -334,7 +331,9 @@ static void _apply_daction(daction_type act)
                         detected = true;
                     }
                     update_item_at(*ri, true);
-                    if (detected)
+
+                    // The gold might be beneath deep water.
+                    if (detected && env.map_knowledge(*ri).item())
                         env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
                     break;
                 }

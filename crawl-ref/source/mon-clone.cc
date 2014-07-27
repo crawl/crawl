@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "mon-clone.h"
 
 #include "act-iter.h"
 #include "arena.h"
@@ -16,10 +17,9 @@
 #include "mgen_data.h"
 #include "monster.h"
 #include "mon-behv.h"
-#include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-enum.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
@@ -28,9 +28,6 @@
 #include "transform.h"
 #include "unwind.h"
 #include "view.h"
-
-const string clone_master_key = "mcloneorig";
-const string clone_slave_key  = "mclonedupe";
 
 static string _monster_clone_id_for(monster* mons)
 {
@@ -41,16 +38,18 @@ static string _monster_clone_id_for(monster* mons)
 
 static bool _monster_clone_exists(monster* mons)
 {
-    if (!mons->props.exists(clone_master_key))
+    if (!mons->props.exists(CLONE_MASTER_KEY))
         return false;
 
-    const string clone_id = mons->props[clone_master_key].get_string();
+    const string clone_id = mons->props[CLONE_MASTER_KEY].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
         monster* thing(*mi);
-        if (thing->props.exists(clone_slave_key)
-            && thing->props[clone_slave_key].get_string() == clone_id)
+        if (thing->props.exists(CLONE_SLAVE_KEY)
+            && thing->props[CLONE_SLAVE_KEY].get_string() == clone_id)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -59,7 +58,7 @@ static bool _mons_is_illusion(monster* mons)
 {
     return mons->type == MONS_PLAYER_ILLUSION
            || mons->has_ench(ENCH_PHANTOM_MIRROR)
-           || mons->props.exists(clone_slave_key);
+           || mons->props.exists(CLONE_SLAVE_KEY);
 }
 
 static bool _mons_is_illusion_cloneable(monster* mons)
@@ -105,12 +104,13 @@ static void _mons_summon_monster_illusion(monster* caster,
     if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
         const string clone_id = _monster_clone_id_for(foe);
-        clone->props[clone_slave_key] = clone_id;
-        foe->props[clone_master_key] = clone_id;
+        clone->props[CLONE_SLAVE_KEY] = clone_id;
+        foe->props[CLONE_MASTER_KEY] = clone_id;
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
+        clone->summoner = caster->mid;
 
         // Discard unsuitable enchantments.
         clone->del_ench(ENCH_CHARM);
@@ -123,9 +123,11 @@ static void _mons_summon_monster_illusion(monster* caster,
         if (cloning_visible)
         {
             if (!you.can_see(caster))
+            {
                 mprf("%s seems to step out of %s!",
                      foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
+            }
             else
                 mprf("%s seems to draw %s out of %s!",
                      caster->name(DESC_THE).c_str(),
@@ -187,15 +189,26 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
 }
 
 void mons_summon_illusion_from(monster* mons, actor *foe,
-                               spell_type spell_cast)
+                               spell_type spell_cast, int card_power)
 {
     if (foe->is_player())
     {
+        int abj = 6;
+
+        if (card_power >= 0)
+        {
+          // card effect
+          abj = 2 + random2(card_power);
+        }
+
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          6, spell_cast, mons->pos(), mons->foe, 0)))
+                          abj, spell_cast, mons->pos(), mons->foe, 0)))
         {
-            mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
+            if (card_power >= 0)
+                mpr("Suddenly you stand beside yourself.");
+            else
+                mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
@@ -203,6 +216,8 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
         }
+        else if (card_power >= 0)
+            mpr("You see a puff of smoke.");
     }
     else
     {

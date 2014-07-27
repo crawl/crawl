@@ -52,7 +52,6 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player.h"
@@ -73,12 +72,12 @@
 #include "shout.h"
 #include "xom.h"
 
-static void _end_game(scorefile_entry &se);
+static NORETURN void _end_game(scorefile_entry &se);
 
-static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
+void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -92,7 +91,8 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 
         if (you.mutation[MUT_ICEMAIL])
         {
-            mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+            if (!you.duration[DUR_ICEMAIL_DEPLETED])
+                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
@@ -125,7 +125,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     }
 
     if (doEffects)
-        _maybe_melt_player_enchantments(flavour, hurted);
+        maybe_melt_player_enchantments(flavour, hurted);
 
     switch (flavour)
     {
@@ -257,7 +257,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
-            drain_exp(true, min(75, 35 + original * 2 / 3));
+            drain_player(min(75, 35 + original * 2 / 3), true);
         break;
 
     case BEAM_ICE:
@@ -287,12 +287,10 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        if (player_res_acid())
-        {
-            if (doEffects)
-                canned_msg(MSG_YOU_RESIST);
-            hurted = hurted * player_acid_resist_factor() / 100;
-        }
+        hurted = resist_adjust_damage(&you, flavour, player_res_acid(),
+                                      hurted, true);
+        if (hurted < original && doEffects)
+            canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_MIASMA:
@@ -358,10 +356,22 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     return hurted;
 }
 
-void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
+/**
+ * Attempts to apply corrosion to the player and deals acid damage.
+ *
+ * Each full equipment slot gives a chance of applying the corrosion debuff,
+ * and each empty equipment slot increases the amount of acid damage taken.
+ *
+ * @param acid_strength The strength of the acid.
+ * @param death_source The monster index of the acid's source.
+ * @param allow_corrosion Whether to try and apply the corrosion debuff.
+ * @param hurt_msg A message to display when dealing damage.
+ */
+void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
                       const char* hurt_msg)
 {
     int dam = 0;
+    bool do_corrosion = false;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
@@ -375,10 +385,13 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
             if (!item && slot != EQ_SHIELD)
                 dam++;
 
-            if (item && corrode_items && x_chance_in_y(acid_strength + 1, 20))
-                corrode_item(*item, &you);
+            if (item && allow_corrosion && x_chance_in_y(acid_strength + 1, 30))
+                do_corrosion = true;
         }
     }
+
+    if (do_corrosion)
+        corrode_actor(&you);
 
     // Covers head, hands and feet.
     if (player_equip_unrand(UNRAND_LEAR))
@@ -393,7 +406,8 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
     dam += 2;
     dam = roll_dice(dam, acid_strength);
 
-    const int post_res_dam = dam * player_acid_resist_factor() / 100;
+    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID,
+                                                  you.res_acid(), dam);
 
     if (post_res_dam > 0)
     {
@@ -406,217 +420,22 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
     }
 }
 
-// Helper function for the expose functions below.
-// This currently works because elements only target a single type each.
-static int _get_target_class(beam_type flavour)
+/**
+ * Handle side-effects for exposure to element other than damage.
+ *
+ * @param flavour The beam type.
+ * @param strength The strength, which is interpreted as a number of player turns.
+ * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
+ *                          is cold-blooded and not cold-resistant, slow the
+ *                          player 50% of the time.
+ */
+void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    int target_class = OBJ_UNASSIGNED;
-
-    switch (flavour)
-    {
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_NAPALM:
-    case BEAM_HELLFIRE:
-        target_class = OBJ_SCROLLS;
-        break;
-
-    case BEAM_COLD:
-    case BEAM_ICE:
-        target_class = OBJ_POTIONS;
-        break;
-
-    case BEAM_SPORE:
-    case BEAM_DEVOUR_FOOD:
-        target_class = OBJ_FOOD;
-        break;
-
-    default:
-        break;
-    }
-
-    return target_class;
-}
-
-// XXX: These expose functions could use being reworked into a real system...
-// the usage and implementation is currently very hacky.
-// Handles the destruction of inventory items from the elements.
-static bool _expose_invent_to_element(beam_type flavour, int strength)
-{
-    int num_dest = 0;
-    int total_dest = 0;
-    int jiyva_block = 0;
-
-    const int target_class = _get_target_class(flavour);
-    if (target_class == OBJ_UNASSIGNED)
-        return false;
-
-    // Wisp form semi-melds all of inventory, making it unusable for you,
-    // but also immune to destruction.  No message is needed.
-    if (you.form == TRAN_WISP)
-        return false;
-
-    // Fedhas worshipers are exempt from the food destruction effect
-    // of spores.
-    if (flavour == BEAM_SPORE
-        && you_worship(GOD_FEDHAS))
-    {
-        simple_god_message(" protects your food from the spores.",
-                           GOD_FEDHAS);
-        return false;
-    }
-
-    // Currently we test against each stack (and item in the stack)
-    // independently at strength%... perhaps we don't want that either
-    // because it makes the system very fair and removes the protection
-    // factor of junk (which might be more desirable for game play).
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].defined())
-            continue;
-
-        if (you.inv[i].base_type == target_class
-            || target_class == OBJ_FOOD
-               && you.inv[i].base_type == OBJ_CORPSES)
-        {
-            // Conservation doesn't help against harpies' devouring food.
-            if (flavour != BEAM_DEVOUR_FOOD
-                && you.conservation() && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            // These stack with conservation; they're supposed to be good.
-            if (target_class == OBJ_SCROLLS
-                && you.mutation[MUT_CONSERVE_SCROLLS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (target_class == OBJ_SCROLLS
-                && player_equip_unrand(UNRAND_FIRESTARTER)
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (target_class == OBJ_POTIONS
-                && you.mutation[MUT_CONSERVE_POTIONS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (you_worship(GOD_JIYVA) && !player_under_penance()
-                && x_chance_in_y(you.piety, MAX_PIETY))
-            {
-                ++jiyva_block;
-                continue;
-            }
-
-            // Get name and quantity before destruction.
-            const string item_name = you.inv[i].name(DESC_PLAIN);
-            const int quantity = you.inv[i].quantity;
-            num_dest = 0;
-
-            // Loop through all items in the stack.
-            for (int j = 0; j < you.inv[i].quantity; ++j)
-            {
-                if (bernoulli(strength, 0.01))
-                {
-                    num_dest++;
-
-                    if (i == you.equip[EQ_WEAPON])
-                        you.wield_change = true;
-
-                    if (dec_inv_item_quantity(i, 1))
-                        break;
-                    else if (is_blood_potion(you.inv[i]))
-                        remove_oldest_blood_potion(you.inv[i]);
-                }
-            }
-
-            // Name destroyed items.
-            // TODO: Combine messages using a vector.
-            if (num_dest > 0)
-            {
-                switch (target_class)
-                {
-                case OBJ_SCROLLS:
-                    mprf("%s %s catch%s fire!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "es" : "");
-                    break;
-
-                case OBJ_POTIONS:
-                    mprf("%s %s freeze%s and shatter%s!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "s" : "",
-                         (num_dest == 1) ? "s" : "");
-                    break;
-
-                case OBJ_FOOD:
-                    mprf("%s %s %s %s!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are",
-                         (flavour == BEAM_DEVOUR_FOOD) ?
-                             "devoured" : "covered with spores");
-                    break;
-
-                default:
-                    mprf("%s %s %s destroyed!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                    break;
-                }
-
-                total_dest += num_dest;
-            }
-        }
-    }
-
-    if (jiyva_block)
-    {
-        simple_god_message(
-            make_stringf(" shields %s delectables from destruction.",
-                         (total_dest > 0) ? "some of your" : "your").c_str(),
-            GOD_JIYVA);
-    }
-
-    if (!total_dest)
-        return false;
-
-    // Message handled elsewhere.
-    if (flavour == BEAM_DEVOUR_FOOD)
-        return true;
-
-    xom_is_stimulated((num_dest > 1) ? 25 : 12);
-
-    return true;
-}
-
-// Handle side-effects for exposure to element other than damage.  This
-// function exists because some code calculates its own damage instead
-// of using check_your_resists() and we want to isolate all the special
-// code they keep having to do... namely condensation shield checks,
-// you really can't expect this function to even be called for much
-// else.
-//
-// This function now calls _expose_invent_to_element() if strength > 0.
-//
-// XXX: This function is far from perfect and a work in progress.
-bool expose_player_to_element(beam_type flavour, int strength,
-                              bool damage_inventory, bool slow_dracs)
-{
-    _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
     qazlal_element_adapt(flavour, strength);
 
-    if (flavour == BEAM_COLD && slow_dracs && player_genus(GENPC_DRACONIAN)
+    if (flavour == BEAM_COLD && slow_cold_blooded
+        && player_mutation_level(MUT_COLD_BLOODED)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -626,14 +445,9 @@ bool expose_player_to_element(beam_type flavour, int strength,
     {
         mprf(MSGCH_WARN, "The flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
     }
-
-    if (strength <= 0 || !damage_inventory)
-        return false;
-
-    return _expose_invent_to_element(flavour, strength);
 }
 
 static void _lose_level_abilities()
@@ -691,7 +505,16 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int power, bool ignore_protection)
+/**
+ * Drain the player.
+ *
+ * @param power             The amount by which to drain the player.
+ * @param announce_full     Whether to print messages even when fully resisting
+ *                          the drain.
+ * @param ignore_protection Whether to ignore the player's rN.
+ * @return                  Whether draining occurred.
+ */
+bool drain_player(int power, bool announce_full, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
@@ -780,7 +603,7 @@ static void _xom_checks_damage(kill_method_type death_type,
             return;
         }
 
-        int leveldif = mons->hit_dice - you.experience_level;
+        int leveldif = mons->get_experience_level() - you.experience_level;
         if (leveldif == 0)
             leveldif = 1;
 
@@ -969,7 +792,7 @@ static void _wizard_restore_life()
     if (you.hp_max <= 0)
         unrot_hp(9999);
     while (you.hp_max <= 0)
-        you.hp_max_perm++, calc_hp();
+        you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
 }
@@ -1008,13 +831,20 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         dam = div_rand_round(dam * (10 - min(degree, 5)), 10);
     }
 
-    if (you.species == SP_DEEP_DWARF && dam != INSTANT_DEATH
-                                     && death_type != KILLED_BY_POISON)
+    if ((you.duration[DUR_FORTITUDE] || you.species == SP_DEEP_DWARF)
+         && dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
     {
-        // Deep Dwarves get to shave any hp loss.
-        int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
-        dprf("HP shaved: %d.", shave);
-        dam -= shave;
+        if (you.species == SP_DEEP_DWARF)
+        {
+            // Deep Dwarves get to shave any hp loss.
+            int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
+            dprf("HP shaved: %d.", shave);
+            dam -= shave;
+        }
+
+        if (you.duration[DUR_FORTITUDE])
+            dam -= random2(10);
+
         if (dam <= 0)
         {
             // Rotting and costs may lower hp directly.
@@ -1124,7 +954,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
-                drain_exp(true, drain_amount, true);
+                drain_player(drain_amount, true, true);
         }
         if (you.hp > 0)
           return;
@@ -1285,7 +1115,7 @@ static void _delete_files()
     you.save = 0;
 }
 
-void screen_end_game(string text)
+NORETURN void screen_end_game(string text)
 {
     crawl_state.cancel_cmd_all();
     _delete_files();
@@ -1303,7 +1133,7 @@ void screen_end_game(string text)
     game_ended();
 }
 
-void _end_game(scorefile_entry &se)
+static NORETURN void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (you.inv[i].defined() && item_type_unknown(you.inv[i]))

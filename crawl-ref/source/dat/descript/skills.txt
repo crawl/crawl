@@ -12,16 +12,16 @@ foes.
 Being skilled with Short Blades will allow you to attack more quickly with all
 weapons of this type, as well as increasing your accuracy and damage with them.
 
-Being skilled with Short Blades makes it easier to become more skilled with
-Long Blades, and vice versa.
+Being skilled with Short Blades increases your effectiveness with Long Blades,
+and vice versa.
 %%%%
 Long Blades
 
 Being skilled with Long Blades will allow you to attack more quickly with all
 weapons of this type, as well as increasing your accuracy and damage with them.
 
-Being skilled with Long Blades makes it easier to become more skilled with
-Short Blades, and vice versa.
+Being skilled with Long Blades increases your effectiveness with Short Blades,
+and vice versa.
 %%%%
 Axes
 
@@ -31,8 +31,8 @@ arc around the wielder.
 Being skilled with Axes will allow you to attack more quickly with all weapons
 of this type, as well as increasing your accuracy and damage with them.
 
-Being skilled with Axes makes it easier to become more skilled with Maces &
-Flails or Polearms, and vice versa.
+Being skilled with Axes increases your effectiveness with Maces & Flails and
+Polearms, and vice versa.
 %%%%
 Maces & Flails
 
@@ -40,8 +40,8 @@ Being skilled with Maces & Flails will allow you to attack more quickly with
 all weapons of this type, as well as increasing your accuracy and damage with
 them.
 
-Being skilled with Maces & Flails makes it easier to become more skilled with
-Axes or Staves, and vice versa.
+Being skilled with Maces & Flails increases your effectiveness with Axes and
+Staves, and vice versa.
 %%%%
 Polearms
 
@@ -50,8 +50,8 @@ Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
 Being skilled with Polearms will allow you to attack more quickly with all
 weapons of this type, as well as increasing your accuracy and damage with them.
 
-Being skilled with Polearms makes it easier to become more skilled with Axes or
-Staves, and vice versa.
+Being skilled with Polearms increases your effectiveness with Axes and Staves,
+and vice versa.
 %%%%
 Staves
 
@@ -61,16 +61,16 @@ although they lack the high damage potential of some other weapon classes.
 Being skilled with Staves will allow you to attack more quickly with all
 weapons of this type, as well as increasing your accuracy and damage with them.
 
-Being skilled with Staves makes it easier to become more skilled with Maces &
-Flails or Polearms, and vice versa.
+Being skilled with Staves increases your effectiveness with Maces & Flails and
+Polearms, and vice versa.
 %%%%
 Slings
 
 Being skilled with Slings will let you deal more damage when using the
 appropriate launcher and ammunition.
 
-Being skilled with Slings makes it easier to become more skilled in Throwing,
-and vice versa.
+Being skilled with Slings increases your effectiveness in Throwing, and vice
+versa.
 %%%%
 Bows
 
@@ -89,8 +89,8 @@ effective. In particular, it makes weapons of returning more likely to return
 to their thrower, and makes certain magical needles more likely to have an
 effect when fired from a blowgun.
 
-Being skilled in Throwing makes it easier to become more skilled with Slings,
-and vice versa.
+Being skilled in Throwing increases your effectiveness with Slings, and vice
+versa.
 %%%%
 Armour
 
@@ -242,8 +242,6 @@ Being skilled in Fire Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
-
-Being skilled in Fire Magic makes Ice Magic harder to learn, and vice versa.
 %%%%
 Ice Magic
 
@@ -254,8 +252,6 @@ Being skilled in Ice Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in
 which case spellcasting success and power will depend on the average skill in
 these schools.
-
-Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 %%%%
 Air Magic
 
@@ -268,8 +264,6 @@ Being skilled in Air Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in
 which case spellcasting success and power will depend on the average skill in
 these schools.
-
-Being skilled in Air Magic makes Earth Magic harder to learn, and vice versa.
 %%%%
 Earth Magic
 
@@ -282,8 +276,6 @@ Being skilled in Earth Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
-
-Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 

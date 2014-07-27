@@ -64,4 +64,15 @@ coord_def rotate_adjacent(coord_def vector, int direction) PURE;
 
 coord_def clamp_in_bounds(const coord_def &p) PURE;
 
+#ifdef ASSERTS
+#  define ASSERT_IN_BOUNDS(where)                                           \
+     ASSERTM(in_bounds(where), "%s = (%d,%d)", #where, (where).x, (where).y)
+#  define ASSERT_IN_BOUNDS_OR_ORIGIN(where)               \
+     ASSERTM(in_bounds(where) || (where).origin(),        \
+            "%s = (%d,%d)", #where, (where).x, (where).y)
+#else
+#  define ASSERT_IN_BOUNDS(where)           ((void) 0)
+#  define ASSERT_IN_BOUNDS_OR_ORIGIN(where) ((void) 0)
+#endif
+
 #endif

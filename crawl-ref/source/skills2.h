@@ -11,9 +11,6 @@ const int MAX_SKILL_ORDER = 100;
 #include "enum.h"
 #include "player.h"
 
-// This threshold is in tenths of a skill point.
-const int CROSSTRAIN_THRESHOLD = 1;
-
 struct skill_state
 {
     FixedBitVector<NUM_SKILLS>            can_train;
@@ -72,9 +69,6 @@ unsigned int skill_exp_needed(int lev, skill_type sk,
 skill_type opposite_skill(skill_type sk);
 bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
-
-float crosstrain_bonus(skill_type sk);
-bool is_antitrained(skill_type sk);
 
 int elemental_preference(spell_type spell, int scale = 1);
 

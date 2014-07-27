@@ -60,6 +60,8 @@ AsgKISS::AsgKISS(uint32_t init_key[], int key_length)
 
 uint32_t get_uint32(int generator)
 {
+    ASSERT(generator >= 0);
+    ASSERT((size_t) generator < ARRAYSZ(asg_rng));
     return asg_rng[generator].get_uint32();
 }
 

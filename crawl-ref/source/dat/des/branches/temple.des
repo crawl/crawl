@@ -1,7 +1,30 @@
 ##############################################################################
 # temple.des: Entries for the Ecumenical Temple, and Temples themselves
+#
+# You can create temples with variable numbers of altars by specifying a
+# "temple_variable" tag and one or more "temple_altars_#" tags with the
+# number of altars you wish to place. Use get_altar_count() below to get
+# the number of altars you need to place; see corrupted_temple for an
+# example.
 ##############################################################################
 
+{{
+function get_altar_count(e, default)
+  local params = dgn.map_parameters()
+  local count = "";
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_altars_ is 14 characters
+      count = string.sub(tag, 15)
+    end
+  end
+  if count == nil or count == "" then
+     count = default
+  end
+  return count
+end
+}}
 
 ##############################################################################
 # Temple entries
@@ -491,24 +514,6 @@ MAP
 .....
 ENDMAP
 
-NAME:   minmay_temple_entry_spiral
-TAGS:   temple_entry
-ORIENT: float
-KFEAT:  O = enter_temple
-MAP
-cncncncnc@c
-n.......n.n
-c.cncnc.c.c
-n.n...n.n.n
-c.c.c.c.c.c
-n.n.nOn.n.n
-c.c.cnc.c.c
-n.n.....n.n
-c.cncncnc.c
-n.........n
-cncncncncnc
-ENDMAP
-
 NAME:   minmay_temple_entry_butterflies
 TAGS:   temple_entry
 ORIENT: float
@@ -759,14 +764,7 @@ NAME:   minmay_temple_entry_water_ring
 TAGS:   temple_entry no_pool_fixup
 ORIENT: float
 WEIGHT: 3
-KMONS:  1 = big fish
-KFEAT:  1 = W
 KMASK:  W = no_monster_gen
-NSUBST: W = 1:1
-: if crawl.one_chance_in(5) then
-SUBST:  W = w
-KPROP:  ' = no_rtele_into
-: end
 SUBST:  ' = .
 SUBST:  x : xxcccvvbt
 KFEAT:  O = enter_temple
@@ -1003,7 +1001,7 @@ SUBST:   W : mvbG
 SUBST:   W = w
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
-KMONS:   1 = shark / electric eel / big fish
+KMONS:   1 = electric eel
 : else
 SUBST:   W = w
 :end
@@ -1064,7 +1062,7 @@ SUBST:   W : mvbG
 SUBST:   W = w
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
-KMONS:   1 = shark / electric eel / big fish
+KMONS:   1 = electric eel
 : else
 SUBST:   W = w
 :end
@@ -1188,7 +1186,7 @@ ENDMAP
 
 ##########################################################################
 # Temples with lots of trees
-#    Total weight: 40 = 10+5+2+2+3+3+10+5
+#    Total weight: 45 = 10+5+2+2+3+3+10+5+5
 #    Trees, sometimes other plants.
 
 # 18 gods
@@ -1577,6 +1575,58 @@ ttttttttttT'''''''''''''''''''''''Ttttttttttt
 tttttttttttTTTTTTTTTTTTTTTTTTTTTTTttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 16 gods
+NAME:   lightli_temple_of_artemis
+WEIGHT: 5
+PLACE:  Temple
+TAGS:   no_pool_fixup
+ORIENT: encompass
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+                              pow_min = 100, pow_max = 100, delay = 10, \
+                              start_clouds = 1, size = 1, spread_rate = 0, \
+                              excl_rad = 0 }
+COLOUR: c = white
+COLOUR: . = lightgrey
+KFEAT:  ~ = floor
+COLOUR: ~ = green
+FTILE:  . = floor_marble
+FTILE:  ~ = floor_grass
+FTILE:  c = wall_marble
+MAP
+ttttttttttttttttttttt
+twwwwwwwwwwwwwwwwwwwt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~c~c~c~c~c~c~c~wt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~ccccccccccc~c~wt
+tw~~~c...cdc...c~~~wt
+tw~c~c....B....c~c~wt
+tw~~~c...cGc...c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c..B.B.B..c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c..B.B.B..c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c..B.B.B..c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c..B.B.B..c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~cG.B.B.B.Gc~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~cccc...cccc~c~wt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~c~c~c~c~c~c~c~wt
+twwwwwwwww{wwwwwwwwwt
+ttttttttttttttttttttt
 ENDMAP
 
 ##########################################################################
@@ -3028,21 +3078,21 @@ MAP
                 bbbbb
                 b...b
             bbbbb.B.bbbbb
-            b... ... ...b
-        bbbbb.B.bb bb.B.bbbbb
-        b... ... ... ... ...b
-    bbbbb.B.bb bb.T.bb bb.B.bbbbb
-    b... ... ... ... ... ... ...b
-bbbbb.B.bb bb.T.bb bb.T.bb bb.B.bbbbb
-b... ... ... ... ... ... ... ... ...b
-b.B.bb bb.B.bb bb.{.bb bb.B.bb bb.B.b
-b... ... ... ... ... ... ... ... ...b
-bbbbb.B.bb bb.T.bb bb T.bb bb.B.bbbbb
-    b... ... ... ... ... ... ...b
-    bbbbb.B.bb bb.T.bb bb.B.bbbbb
-        b... ... ... ... ...b
-        bbbbb.B.bb bb.B.bbbbb
-            b... ... ...b
+            b...........b
+        bbbbb.B.bb.bb.B.bbbbb
+        b...................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+b...................................b
+b.B.bb.bb.B.bb.bb.{.bb.bb.B.bb.bb.B.b
+b...................................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+        b...................b
+        bbbbb.B.bb.bb.B.bbbbb
+            b...........b
             bbbbb.B.bbbbb
                 b...b
                 bbbbb
@@ -3183,7 +3233,7 @@ ENDMAP
 
 ##########################################################################
 # Some sporadic layouts
-#   Total weight: 16 = 3+10+1+2
+#   Total weight: 19 = 3+10+2+1+1+2
 
 # 12 gods
 NAME:    minmay_freezing_vapour_temple_12
@@ -3214,19 +3264,18 @@ c.............c
 ccccccccccccccc
 ENDMAP
 
-# 6 gods
-# plus 6 more altars to Lugonu.
-# NOTE: A random number of temple gods would be nicer, but
-#       this does not currently work. Since the map is evaluated
-#       twice (once at gamestart, once at Temple generation),
-#       pre-rolled altars may end up not being placed without
-#       overflow altars to replace them elsewhere, leading to
-#       gods missing from the game entirely.
-NAME:     corrupted_temple_6
+# 6-9 gods
+# plus 3-6 altars to Lugonu.
+NAME:     corrupted_temple
+TAGS:     temple_variable
+TAGS:     temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
 PLACE:    Temple
 WEIGHT:   10
 ORIENT:   encompass
-NSUBST:   O = 6:B / *:O
+{{
+local altar_count = get_altar_count(_G, 6)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
 KFEAT:    O = altar_lugonu
 MONS:     plant col:random name:demonic name_adjective tile:mons_demonic_plant
 SUBST:    . = . x:1 w:1 l:1
@@ -3263,6 +3312,97 @@ xx.O.xxx.'.xxx.O.xx
        x'..x
        x1{1x
        xxxxx
+ENDMAP
+
+# 6-9 gods
+# plus 3-6 more altars to Jiyva.
+# Layout based on zaba_magenta_temple_12.
+NAME:      pf_slimified_temple
+TAGS:      temple_variable
+TAGS:      temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+PLACE:     Temple
+WEIGHT:    2
+TAGS:      no_rotate
+ORIENT:    encompass
+{{
+local altar_count = get_altar_count(_G, 6)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
+KFEAT:     O = altar_jiyva
+KFEAT:     S = slimy_wall
+SUBST:     E = D.
+KFEAT:     D = floor
+LFLOORCOL: green
+COLOUR:    D = lightgray
+FTILE:     .O = floor_slime
+MAP
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSS...S...SSSSSSS.......SSSSSSS...S...SSSS
+SS...O...O...SSS...O...O...SSS...O...O...SS
+S......E......S.....EEE.....S......E......S
+SS....EEEEE.......EEEEEE........EEEEE....SS
+SSS..EEEEEEEEEEEEEEEE{EEEEEEEEEEEEEEEE..SSS
+SS....EEEEE.......EEEEEE........EEEEE....SS
+S......E......S.....EEE.....S......E......S
+SS...O...O...SSS...O...O...SSS...O...O...SS
+SSSS...S...SSSSSSS.......SSSSSSS...S...SSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+ENDMAP
+
+# 6-9 gods
+# plus 4-7 more altars to Jiyva.
+NAME:      pf_slime_end_temple
+TAGS:      temple_variable
+TAGS:      temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+PLACE:     Temple
+WEIGHT:    1
+ORIENT:    encompass
+{{
+local altar_count = get_altar_count(_G, 6)
+nsubst("O = " .. altar_count .. ":B / *:Z")
+}}
+KFEAT:     Z = altar_jiyva
+SUBST:     " : " .:3,  " = .c
+SUBST:     ' : ' .:3,  ' = .S
+SUBST:     E = DD.
+KFEAT:     D = floor
+LFLOORCOL: green
+COLOUR:    D = lightgray
+KFEAT:     S = slimy_wall
+FTILE:     .OZ = floor_slime
+{{
+    set_feature_name("stone_wall", "rune carved stone wall")
+}}
+
+MAP
+SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSS''''''''''''SSSSSSSS
+SSSSSSS'............'SSSSSSS
+SSSSSS'..............'SSSSSS
+SSSSS'...""""."""""...'SSSSS
+SSSS'..."cccc.ccccc"...'SSSS
+SSS'..."ccOcc..ccOcc"...'SSS
+SS'..."cc...cc.c...cc"...'SS
+S'..."cc...cc..cc...cc"...'S
+S'.."cc....Oc.ccO....cc"..'S
+S'.."ccO...cc..cc...Occ"..'S
+S'.."ccc..c.cc.c.c..ccc"..'S
+S'.."ccccccc....ccccccc"..'S
+S..E.c...c....Z...c...c"..'S
+S.E{E.c...c....c...c......'S
+S..E.ccccccc....ccccccc"..'S
+S'.."ccc..c.cc.c.c..ccc"..'S
+S'.."ccO...cc..cc...Occ"..'S
+S'.."cc....Oc.ccO....cc"..'S
+S'..."cc...cc..cc...cc"...'S
+SS'..."cc...cc.c...cc"...'SS
+SSS'..."ccOcc..ccOcc"...'SSS
+SSSS'..."cccc.ccccc"...'SSSS
+SSSSS'...""""."""""...'SSSSS
+SSSSSS'..............'SSSSSS
+SSSSSSS'............'SSSSSSS
+SSSSSSSS''''''''''''SSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ENDMAP
 
 # 8 gods

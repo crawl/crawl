@@ -53,7 +53,9 @@ struct cloud_info
 #define MAP_UMBRAED        0x1000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
+#if TAG_MAJOR_VERSION == 34
 #define MAP_HOT           0x10000000
+#endif
 #define MAP_GOLDEN        0x20000000
 
 /*
@@ -149,7 +151,14 @@ struct map_cell
 
     bool detected_item() const
     {
-        return !!(flags & MAP_DETECTED_ITEM);
+        const bool ret = !!(flags & MAP_DETECTED_ITEM);
+        // TODO: change to an ASSERT when the underlying crash goes away
+        if (ret && !_item)
+        {
+            //clear_item();
+            return false;
+        }
+        return ret;
     }
 
     void set_item(const item_info& ii, bool more_items)
@@ -307,7 +316,7 @@ void set_terrain_seen(const coord_def c);
 void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
 
-int count_detected_mons(void);
+int count_detected_mons();
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 

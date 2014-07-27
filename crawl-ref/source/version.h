@@ -17,16 +17,16 @@ enum rel_type
 
 namespace Version
 {
-    //! The major version string.
-    /*!
+    /// The major version string.
+    /**
      * This version is just the major release number, e.g. '0.10' for
      * all of 0.10-a0, 0.10, and 0.10.1 (assuming this last is even
      * released).
      */
     extern const char* Major;
 
-    //! The short version string.
-    /*!
+    /// The short version string.
+    /**
      * This version will generally match the last version tag. For instance,
      * if the last tag of Crawl before this build was '0.1.2', you'd see
      * '0.1.2'. This version number does not include some rather important
@@ -36,8 +36,8 @@ namespace Version
      */
     extern const char* Short;
 
-    //! The long version string.
-    /*!
+    /// The long version string.
+    /**
      * This string contains detailed version information about the CrissCross
      * build in use. The string will always start with the Git tag that this
      * build descended from. If this build is not an exact match for a given
@@ -46,8 +46,8 @@ namespace Version
      */
     extern const char* Long;
 
-    //! The release type.
-    /*!
+    /// The release type.
+    /**
      * Indicates whether it's a devel or a stable version.
      */
     extern const rel_type ReleaseType;

@@ -96,7 +96,8 @@ private:
 
     vector<item_def> items;
 
-    static bool are_items_same(const item_def &, const item_def &);
+    static bool are_items_same(const item_def &, const item_def &,
+                               bool exact = false);
 
     friend class LevelStashes;
     friend class ST_ItemIterator;

@@ -226,10 +226,6 @@ Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
 %%%%
-Chaos Breath cast
-
-@The_monster@ breathes @beam@ @at@ @target@.
-%%%%
 Frenzy cast
 
 @The_monster@ convulses with anger.
@@ -335,6 +331,14 @@ giant orange brain cast
 
 @The_monster@ pulsates.
 %%%%
+orange crystal statue cast
+
+@The_monster@ glitters.
+%%%%
+orange crystal statue cast targeted
+
+@The_monster@ fixes its piercing gaze on @target@.
+%%%%
 orb of fire cast
 
 @The_monster@ glows yellow.
@@ -346,6 +350,10 @@ orb of fire cast
 @The_monster@ glows red.
 
 @The_monster@ emits a lurid red light.
+%%%%
+silver statue cast
+
+@The_monster@'s eyes glow briefly.
 %%%%
 # Sphinxes can't gesture or point.
 sphinx cast
@@ -417,6 +425,10 @@ angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
+crab cast targeted
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
@@ -476,15 +488,6 @@ Bolt of Fire ophan cast
 unseen Bolt of Fire ophan cast
 
 Something harnesses the cleansing power of fire!
-%%%%
-shedu cast
-
-@The_monster@ performs a healing ritual in @possessive_God@ name.
-%%%%
-# Should only be casting spells at each other.
-shedu cast targeted
-
-@The_monster@ beseeches @possessive_God@ to heal @possessive@ mate!
 %%%%
 Shock shock serpent cast
 

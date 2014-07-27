@@ -22,6 +22,7 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -29,11 +30,11 @@
 #include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-pick.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "makeitem.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player-stats.h"
@@ -59,8 +60,6 @@ static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
-static bool _tso_holy_revenge();
-static bool _ely_holy_revenge(const monster *victim);
 
 static bool _yred_random_zombified_hostile()
 {
@@ -296,12 +295,9 @@ static void _ely_dull_inventory_weapons()
 
         if (you.inv[i].base_type == OBJ_WEAPONS)
         {
-            // Don't dull artefacts at all, or weapons below -1/-1.
-            if (is_artefact(you.inv[i])
-                || you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
-            {
+            // Don't dull artefacts at all, or weapons below -1.
+            if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1)
                 continue;
-            }
 
             // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
@@ -315,8 +311,6 @@ static void _ely_dull_inventory_weapons()
             // Dull the weapon.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-            if (you.inv[i].plus2 > -1)
-                you.inv[i].plus2--;
 
             // Update the weapon display, if necessary.
             if (wielded)
@@ -472,7 +466,7 @@ static bool _makhleb_retribution()
         avatar->mname = "the fury of Makhleb";
         avatar->flags |= MF_NAME_REPLACE;
         avatar->attitude = ATT_HOSTILE;
-        avatar->hit_dice = you.experience_level;
+        avatar->set_hit_dice(you.experience_level);
 
         spell_type spell = SPELL_NO_SPELL;
         const int severity = min(random_range(you.experience_level / 14,
@@ -799,7 +793,6 @@ static bool _beogh_retribution()
                 set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
 
                 wpn.plus  = random2(3);
-                wpn.plus2 = random2(3);
                 wpn.sub_type = wpn_type;
 
                 set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
@@ -919,10 +912,6 @@ static bool _sif_muna_retribution()
         break;
 
     case 7:
-        if (!forget_spell())
-            mpr("You get a splitting headache.");
-        break;
-
     case 8:
         if (you.magic_points > 0
 #if TAG_MAJOR_VERSION == 34
@@ -939,23 +928,26 @@ static bool _sif_muna_retribution()
         // This will set all the extendable duration spells to
         // a duration of one round, thus potentially exposing
         // the player to real danger.
-        antimagic();
+        debuff_player();
         break;
     }
 
     return true;
 }
 
-static bool _lugonu_retribution()
+/**
+ * Perform translocation-flavored Lugonu retribution.
+ *
+ * 50% chance of tloc miscasts; failing that, 50% chance of teleports/blinks.
+ */
+static void _lugonu_transloc_retribution()
 {
-    // abyssal servant theme
     const god_type god = GOD_LUGONU;
 
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
         MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lugonu's touch");
-        // No return - Lugonu's touch is independent of other effects.
     }
     else if (coinflip())
     {
@@ -966,28 +958,51 @@ static bool _lugonu_retribution()
             you_teleport_now(false);
         else
             random_blink(false);
-
-        // No return.
     }
+}
 
+/**
+ * Summon Lugonu's minions to punish the player.
+ *
+ * Possibly a major minion with pals, possibly just some riff-raff, depending
+ * on level & chance.
+ */
+static void _lugonu_minion_retribution()
+{
+    // abyssal servant theme
+    const god_type god = GOD_LUGONU;
+
+    // should we summon more & higher-tier lugonu minions?
+    // linear chance, from 0% at xl 4 to 80% at xl 16
+    const bool major = (you.experience_level > (4 + random2(12))
+                        && !one_chance_in(5));
+
+    // how many lesser minions should we try to summon?
+    // if this is major wrath, summon a few minions; 0 below xl9, 0-3 at xl 27.
+    // otherwise, summon exactly (!) 1 + xl/7 minions, maxing at 4 at xl 21.
+    const int how_many = (major ? random2(you.experience_level / 9 + 1)
+                                : 1 + you.experience_level / 7);
+
+    // did we successfully summon any minions? (potentially set true below)
     bool success = false;
-    bool major = (you.experience_level > (4 + random2(12)) && !one_chance_in(5));
-    int how_many = (major ? random2(you.experience_level / 9 + 1)
-                          : 1 + you.experience_level /7);
 
-    for (; how_many > 0; --how_many)
+    for (int i = 0; i < how_many; ++i)
     {
-        mgen_data temp =
-            mgen_data::hostile_at(
-                random_choose_weighted(
-                    15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
-                    (you.experience_level/2),       MONS_ABOMINATION_LARGE,
-                    6,                              MONS_THRASHING_HORROR,
-                    3,                              MONS_ANCIENT_ZYME,
-                    0),
-                "the touch of Lugonu",
-                true, 0, 0, you.pos(), 0, god);
+        // try to summon a few minor minions...
+        // weight toward large abominations, and away from small ones, at
+        // higher levels
+        const monster_type to_summon =
+            random_choose_weighted(
+                15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
+                you.experience_level/2,         MONS_ABOMINATION_LARGE,
+                6,                              MONS_THRASHING_HORROR,
+                3,                              MONS_ANCIENT_ZYME,
+                0
+            );
 
+        mgen_data temp = mgen_data::hostile_at(to_summon,
+                                               "the touch of Lugonu", true, 0,
+                                               0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -996,15 +1011,15 @@ static bool _lugonu_retribution()
 
     if (major)
     {
-        mgen_data temp =
-        mgen_data::hostile_at(random_choose(
-                                MONS_TENTACLED_STARSPAWN,
-                                MONS_WRETCHED_STAR,
-                                MONS_STARCURSED_MASS,
-                                -1),
-                                "the touch of Lugonu",
-                                true, 0, 0, you.pos(), 0, god);
+        // try to summon one nasty monster.
+        const monster_type to_summon = random_choose(MONS_TENTACLED_STARSPAWN,
+                                                     MONS_WRETCHED_STAR,
+                                                     MONS_STARCURSED_MASS,
+                                                     -1);
 
+        mgen_data temp = mgen_data::hostile_at(to_summon,
+                                               "the touch of Lugonu", true, 0,
+                                               0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1012,7 +1027,18 @@ static bool _lugonu_retribution()
     }
 
     simple_god_message(success ? " sends minions to punish you."
-                                : "'s minions fail to arrive.", god);
+                               : "'s minions fail to arrive.", god);
+}
+
+/**
+ * Call down the wrath of Lugonu upon the player!
+ *
+ * @return Whether to take further divine wrath actions afterward. (false.)
+ */
+static bool _lugonu_retribution()
+{
+    _lugonu_transloc_retribution();
+    _lugonu_minion_retribution();
 
     return false;
 }
@@ -1031,7 +1057,7 @@ static bool _vehumet_retribution()
     avatar->mname = "the wrath of Vehumet";
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
-    avatar->hit_dice = you.experience_level;
+    avatar->set_hit_dice(you.experience_level);
 
     spell_type spell = SPELL_NO_SPELL;
     const int severity = min(random_range(1 + you.experience_level / 5,
@@ -1204,7 +1230,6 @@ static bool _jiyva_retribution()
             MONS_SHINING_EYE,
             MONS_GIANT_ORANGE_BRAIN,
             MONS_JELLY,
-            MONS_BROWN_OOZE,
             MONS_ACID_BLOB,
             MONS_AZURE_JELLY,
             MONS_DEATH_OOZE,
@@ -1385,7 +1410,7 @@ static bool _dithmenos_retribution()
     // shadow theme
     const god_type god = GOD_DITHMENOS;
 
-    switch(random2(4))
+    switch (random2(4))
     {
     case 0:
     {
@@ -1447,7 +1472,7 @@ static bool _qazlal_retribution()
     // disaster/elemental theme
     const god_type god = GOD_QAZLAL;
 
-    switch(random2(3))
+    switch (random2(3))
     {
     case 0:
     {
@@ -1637,7 +1662,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return true;
 }
 
-bool do_god_revenge(conduct_type thing_done, const monster *victim)
+bool do_god_revenge(conduct_type thing_done)
 {
     bool retval = false;
 
@@ -1645,16 +1670,6 @@ bool do_god_revenge(conduct_type thing_done, const monster *victim)
     {
     case DID_DESTROY_ORCISH_IDOL:
         retval = _beogh_idol_revenge();
-        break;
-    case DID_KILL_HOLY:
-    case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
-    case DID_HOLY_KILLED_BY_SERVANT:
-        // It's TSO who does the smiting and war stuff so he handles revenge
-        // for his allies as well -- unless another god has some special ties.
-        if (victim && victim->god == GOD_ELYVILON)
-            retval = _ely_holy_revenge(victim);
-        else
-            retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -1727,78 +1742,6 @@ static void _tso_blasts_cleansing_flame(const char *message)
         cleansing_flame(5 + (you.experience_level * 7) / 12,
                         CLEANSING_FLAME_TSO, you.pos());
     }
-}
-
-// Currently only used when holy beings have been killed.
-static string _get_tso_speech(const string key)
-{
-    string result = getSpeakString("the Shining One " + key);
-
-    if (result.empty())
-        return "The Shining One is angry!";
-
-    return result;
-}
-
-// Killing holy beings may anger TSO.
-static bool _tso_holy_revenge()
-{
-    god_acting gdact(GOD_SHINING_ONE, true);
-
-    // TSO watches evil god worshippers more closely.
-    if (!is_good_god(you.religion)
-        && ((is_evil_god(you.religion) && one_chance_in(6))
-            || one_chance_in(8)))
-    {
-        string revenge;
-
-        if (is_evil_god(you.religion))
-            revenge = _get_tso_speech("holy evil");
-        else
-            revenge = _get_tso_speech("holy other");
-
-        _tso_blasts_cleansing_flame(revenge.c_str());
-
-        return true;
-    }
-
-    return false;
-}
-
-// Killing apises may make Elyvilon sad.  She'll sulk and stuff.
-static bool _ely_holy_revenge(const monster *victim)
-{
-    god_acting gdact(GOD_ELYVILON, true);
-
-    if (!is_good_god(you.religion)
-        && ((is_evil_god(you.religion) && one_chance_in(4))
-            || one_chance_in(6)))
-    {
-        string msg = getSpeakString("Elyvilon holy");
-        if (msg.empty())
-            msg = "Elyvilon is displeased.";
-        mprf(MSGCH_GOD, GOD_ELYVILON, "%s", msg.c_str());
-
-        vector<monster*> targets;
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mi->friendly())
-                targets.push_back(*mi);
-        }
-
-        mprf("You %sare rebuked by divine will.", targets.size() ? "and your allies "
-                                                                 : "");
-        for (vector<monster*>::const_iterator mi = targets.begin();
-             mi != targets.end(); ++mi)
-        {
-            (*mi)->weaken(NULL, 25);
-        }
-        you.weaken(NULL, 25);
-
-        return true;
-    }
-
-    return false;
 }
 
 static void _god_smites_you(god_type god, const char *message,
@@ -1882,24 +1825,24 @@ void gozag_incite(monster *mon)
         int tries = 3;
         do
         {
-            switch(random2(3))
+            switch (random2(3))
             {
                 case 0:
                     if (mon->has_ench(ENCH_MIGHT))
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_MIGHT);
+                    enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
                     success = true;
                     break;
                 case 1:
                     if (mon->has_ench(ENCH_HASTE))
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_HASTE);
+                    enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
                     success = true;
                     break;
                 case 2:
                     if (mon->invisible() || you.can_see_invisible())
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_INVISIBILITY);
+                    enchant_actor_with_flavour(mon, mon, BEAM_INVISIBILITY);
                     success = true;
                     break;
             }
@@ -1909,4 +1852,53 @@ void gozag_incite(monster *mon)
 
     if (success)
         view_update_at(mon->pos());
+}
+
+/**
+ * Invoke the CURSE OF GOZAG by goldifying some part of a stack that the player
+ * is trying to pick up.
+ * @param it            The item being picked up.
+ * @param quant_got     The number of items being picked up. (May be only part
+ * of the stack.)
+ * @param quiet         Whether to suppress messages.
+ * @return              How much of the stack was goldified.
+ */
+bool gozag_goldify(const item_def &it, int quant_got, bool quiet)
+{
+    if (it.base_type != OBJ_POTIONS
+        && it.base_type != OBJ_SCROLLS
+        && it.base_type != OBJ_FOOD)
+    {
+        return 0;
+    }
+
+
+    const int val = item_value(it, true) / it.quantity;
+    double prob = (double)(val - 20) / 100.0;
+    if (prob > 1.0)
+        prob = 1.0;
+
+    int goldified_count = 0;
+    for (int i = 0; i < quant_got; i++)
+        if (decimal_chance(prob))
+            goldified_count++;
+
+    if (!goldified_count)
+        return goldified_count;
+
+    if (!quiet)
+    {
+        string msg = get_desc_quantity(goldified_count, quant_got, "the")
+                     + " " + it.name(DESC_PLAIN);
+        msg += goldified_count > 1 ? " turn" : " turns";
+        msg += " to gold as you touch ";
+        msg += goldified_count > 1 ? "them." : "it.";
+
+        mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+    }
+
+    get_gold(it, goldified_count, quiet);
+    dec_penance(GOD_GOZAG, goldified_count);
+
+    return goldified_count;
 }

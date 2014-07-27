@@ -20,7 +20,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "player.h"
 #include "religion.h"
 #include "shout.h"
@@ -187,9 +186,14 @@ void ash_check_bondage(bool msg)
         // Octopodes don't count these slots:
         else if (you.species == SP_OCTOPODE &&
                  (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+        {
             continue;
+        }
         // *Only* octopodes count these slots:
         else if (you.species != SP_OCTOPODE && i > EQ_AMULET)
+            continue;
+        // Never count the macabre finger necklace's extra ring slot.
+        else if (i == EQ_RING_AMULET)
             continue;
         else
             s = ET_JEWELS;
@@ -243,9 +247,13 @@ void ash_check_bondage(bool msg)
     // kittehs don't obey hoomie rules!
     if (you.species == SP_FELID)
     {
-        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+        for (int i = EQ_LEFT_RING; i <= EQ_AMULET; ++i)
             if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
                 ++you.bondage_level;
+
+        // Allow full bondage when all available slots are cursed.
+        if (you.bondage_level == 3)
+            ++you.bondage_level;
     }
     else
         for (int i = ET_WEAPON; i < NUM_ET; ++i)
@@ -329,16 +337,20 @@ string ash_describe_bondage(int flags, bool level)
     else
     {
         if (flags & ETF_ARMOUR && you.bondage[ET_ARMOUR] != -1)
+        {
             desc += make_stringf("You are %s bound in armour.\n",
                                  you.bondage[ET_ARMOUR] == 0 ? "not" :
                                  you.bondage[ET_ARMOUR] == 1 ? "partially"
                                                              : "fully");
+        }
 
         if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
+        {
             desc += make_stringf("You are %s bound in magic.\n",
                                  you.bondage[ET_JEWELS] == 0 ? "not" :
                                  you.bondage[ET_JEWELS] == 1 ? "partially"
                                                              : "fully");
+        }
     }
 
     if (level)
@@ -419,7 +431,7 @@ bool god_id_item(item_def& item, bool silent)
         // gives more information than absolutely needed.
         brand_type brand = get_weapon_brand(item);
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING)
+            || brand == SPWPN_VAMPIRISM || brand == SPWPN_REAPING)
         {
             ided |= ISFLAG_KNOW_TYPE;
         }
@@ -579,10 +591,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
         // Boost weapon skill.
         if (wpn->base_type == OBJ_WEAPONS)
-        {
-            boost[is_range_weapon(*wpn) ? range_skill(*wpn)
-                                        : weapon_skill(*wpn)] = bondage;
-        }
+            boost[item_attack_skill(*wpn)] = bondage;
 
         // Those staves don't benefit from evocation.
         // Boost spellcasting instead.
@@ -772,7 +781,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     {
         case BEAM_FIRE:
         case BEAM_LAVA:
-        case BEAM_NAPALM:
+        case BEAM_STICKY_FLAME:
         case BEAM_STEAM:
             what = BEAM_FIRE;
             dur = DUR_QAZLAL_FIRE_RES;

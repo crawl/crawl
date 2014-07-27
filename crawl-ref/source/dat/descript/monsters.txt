@@ -405,7 +405,7 @@ after a catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
 
-A man of very bad manners whose roars can make an ogre envious.
+A human whose savage roars bring terror to all those who hear them.
 %%%%
 Saint Roka
 
@@ -606,10 +606,6 @@ A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, yet it will provide fire support, assaulting whatever its conjurer
 casts at with magical missiles that never miss.
 %%%%
-big fish
-
-A stout fish with a wide, toothy mouth.
-%%%%
 big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
@@ -698,11 +694,6 @@ Brimstone Fiend
 
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
 the most fearsome denizens of any of the Hells.
-%%%%
-brown ooze
-
-A viscous liquid being that flows along the floor in search of matter to
-dissolve and consume.
 %%%%
 burning bush
 
@@ -948,8 +939,7 @@ itself through a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
-This obelisk appears to be indestructible. You'd better find a way around... it
-might even provide one.
+A towering obelisk surrounded by a powerful storm.
 %%%%
 dire elephant
 
@@ -1058,10 +1048,6 @@ elephant
 
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with
 its trunk.
-%%%%
-elephant slug
-
-A grey gastropod of impressive size, with folds upon folds of wrinkled skin.
 %%%%
 elf
 
@@ -1187,12 +1173,16 @@ gargoyle
 
 A granite statue of a hideous winged monster, somehow brought to life.
 %%%%
+ghost crab
+
+A close relative of the fire crab, twisted by proximity to negative energy.
+Apparitions of the dead swirl around it, only barely visible.
+%%%%
 ghost moth
 
 A vile interdimensional predator that feeds on the life force of living beings.
 The few who have seen one and lived recall that it resembles an enormous, spiny
-moth. Its bizarre lifecycle involves the production of ambrosia, much valued by
-gods and wizards.
+moth.
 %%%%
 ghoul
 
@@ -1219,12 +1209,6 @@ giant eyeball
 
 A giant floating eyeball, with a gaze that can paralyse even the most
 strong-willed of adventurers. Some say giant eyeballs are servitors of Jiyva.
-%%%%
-giant firefly
-
-Unlike its mundane counterparts that are merely half an inch big, this enormous
-flying bug is large enough to be ridden by some spriggans. When threatened, it
-can flash warning signals to its kin (and anyone else close enough to observe).
 %%%%
 giant frog
 
@@ -1254,10 +1238,6 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
 energies. Every now and then it seems to pulsate.
-%%%%
-giant slug
-
-A huge and disgusting gastropod, squirming slowly across the dungeon floor.
 %%%%
 giant spore
 
@@ -1462,11 +1442,8 @@ claws may be enough to rip hydra heads.
 %%%%
 hyperactive ballistomycete
 
-This ballistomycete is in a state of all-out reproduction. It is constantly
-ravaged by explosions of spores, damaging everything around, and it is
-ultimately going to die to its own spores.
-
-Be sure to keep your distance!
+A ballistomycete in a state of all-out reproduction. It is constantly ravaged
+by explosions of spores, damaging everything nearby.
 %%%%
 ice beast
 
@@ -1501,8 +1478,7 @@ infernal demonspawn
 %%%%
 inept feature mimic
 
-A predator masquerading as an ordinary dungeon feature. This one is less
-dangerous than most mimics, but can still devour the likes of you.
+A predator masquerading as an ordinary dungeon feature.
 %%%%
 inept item mimic
 
@@ -1619,22 +1595,12 @@ are too big to embrace a small creature like you.
 large abomination
 
 A large and hideous conglomeration of mangled body parts, demonically possessed
-and altered in ways that challenge your sanity.
-%%%%
-lava orc
-
-A tall, muscular humanoid strongly in tune with the elemental forces of fire
-and earth. These distant relatives of cave orcs are possessed of passionate
-hearts, and their inner temperature is closely linked to their emotions.
+and altered in ways that challenge sanity.
 %%%%
 lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
 at passers-by.
-%%%%
-lava worm
-
-A vicious red worm which swims through molten rock.
 %%%%
 lich
 
@@ -1731,11 +1697,6 @@ monstrous demonspawn
 
 <demonspawn>
 %%%%
-moth
-
-Although this moth is unusually large and aggressive, it is quite mundane
-compared to most moths found in the dungeon.
-%%%%
 moth of wrath
 
 A rare species of moth, eradicated from the surface centuries ago due to its
@@ -1794,9 +1755,9 @@ unholy energies, and the raising of corpses into a parody of life.
 %%%%
 necrophage
 
-A vile undead creation of the most unholy necromancy, these creatures are made
-from the decaying corpses of humanoid creatures. They exist to spread disease
-and decay, and gain power from the decaying corpses of other beings.
+A vile undead creation of the most unholy necromancy, this creature is made
+from the decaying corpses of humanoid creatures. It exists to spread disease
+and decay, and gains power from the decaying corpses of other beings.
 %%%%
 neqoxec
 
@@ -1811,9 +1772,9 @@ beneath the waves and serve their King.
 %%%%
 octopode crusher
 
-This warrior is much stronger than its lesser octopode brethren and no less
-clever. Its tentacles move with uncanny grace and seem capable of sending you
-hurtling through the air.
+This unusually strong warrior has achieved mastery over the rocks as well as
+the waves. Its tentacles move with uncanny grace and seem capable of sending
+you hurtling through the air.
 %%%%
 ogre
 
@@ -1955,19 +1916,9 @@ A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
 %%%%
-phoenix
-
-A bird of myth and legend, said to die in flames and be reborn from the ashes.
-%%%%
 pillar of salt
 
 A large pillar of salt that is quickly crumbling away.
-%%%%
-plague shambler
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
 %%%%
 plant
 
@@ -2001,13 +1952,6 @@ program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
-%%%%
-pulsating lump
-
-A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
-marrow — piled haphazardly into a single writhing mass. This distorted flesh is
-mutagenic on contact, but without any kind of structural arrangement to its
-parts, it lacks the coordination needed to move quickly.
 %%%%
 purple draconian
 
@@ -2199,17 +2143,6 @@ shapeshifter
 A disturbing creature with the power to change its form. It is very rarely
 observed alive in its natural state.
 %%%%
-shark
-
-A sharp-toothed predatory denizen of the waters, the shark evolved over
-millions of years into an almost perfect killing machine.
-%%%%
-shedu
-
-These boviform divine beings are always found in pairs, often protecting some
-sacred shrine. They can heal and even resurrect each other, doubling their
-effectiveness as guardians.
-%%%%
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
@@ -2392,8 +2325,8 @@ who so much as snaps a twig.
 %%%%
 spriggan rider
 
-Mounted on giant fireflies, these riders make sure no one who dares to intrude
-on the spriggan forests and cairns will be able to just walk away.
+Mounted on wasps, these cruel riders make sure anyone who dares to intrude on
+the spriggan fens and cairns will regret it.
 %%%%
 starcursed mass
 
@@ -2533,6 +2466,13 @@ tormentor
 
 A malign devil covered in all manner of claws, spines, and cruel hooks. It is
 able to inflict torturous agony on those foolish enough to gaze upon it.
+%%%%
+torpor snail
+
+A huge gastropod with a lime-green shell. Torpor snails are said to be in some
+way connected with the god Cheibriados; just being near them is enough to slow
+the movements of unwary adventurers, leaving them easy prey for the snails'
+terrifying, ever-gnashing radulae.
 %%%%
 torturous demonspawn
 
@@ -2810,8 +2750,8 @@ somewhat dangerous.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that you
-should be afraid. Very afraid.
+By the power of Ashenzari, you know there is some creature here, and that it is
+very dangerous.
 %%%%
 friendly sensed monster
 
@@ -2916,6 +2856,11 @@ Just as demons are shaped in a mockery of living beings, this thing is a
 mockery of a plant, with mysterious appendages and tentacles writhing around.
 Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
+dimme
+
+A terrible demon, or perhaps a demigodess, with powers over death, disease,
+and suffering. Its presence is horrifying, but supernaturally compelling.
+%%%%
 drunken dwarf
 
 This short fellow seems to be working as an ale quality tester, and is enjoying
@@ -2924,21 +2869,6 @@ the job a little too much.
 earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
-%%%%
-faint deep troll monk
-
-A flimsy representation of a deep troll monk; little more than a half-formed
-memory, yet still ready to fight.
-%%%%
-faint demonspawn monk
-
-A flimsy representation of a monstrous demonspawn monk; little more than a
-half-formed memory, yet still ready to fight.
-%%%%
-faint grey draconian monk
-
-A flimsy representation of a draconian monk; little more than a half-formed
-memory, yet still ready to fight.
 %%%%
 fire elementalist statue
 
@@ -3043,6 +2973,12 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
+orb beetle
+
+A monstrously big beetle who apparently ate a mighty conjurer, or maybe an orb
+spider. Or perhaps it's a product of divine experiments, in which case it looks
+like Xom's handiwork...
+%%%%
 orb of electricity
 
 A massive floating ball. It resembles ball lightning, but looks far more
@@ -3058,12 +2994,6 @@ A globe of primordial ice, floating in the air. You don't know whether the
 tales about the world's once being a void bracketed by realms of endless fire
 and cold are true, but if they are, this orb may be a relic of that ancient
 time.
-%%%%
-orb slug
-
-A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
-spider. Or perhaps it's a product of divine experiments, in which case it looks
-like Xom's handiwork...
 %%%%
 petrified plant
 
@@ -3111,12 +3041,6 @@ A spriggan that has mastered the culinary arts.
 strange machine
 
 A glistening silver machine.
-%%%%
-succubus
-
-A female demon who uses her charms to seduce humanoid males. If you wish to
-take advantage of her, however, you will fail: she seems very angry right now
-and has blood more on her mind than fun.
 %%%%
 water elementalist statue
 

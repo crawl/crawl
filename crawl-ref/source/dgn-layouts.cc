@@ -24,7 +24,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 static void _builder_extras(int level_number);
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor);
-static dungeon_feature_type _random_wall(void);
+static dungeon_feature_type _random_wall();
 static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
@@ -97,61 +97,6 @@ void dgn_build_basic_level()
         upstairs.push_back(begin);
     }
 
-    // Generate a random dead-end that /may/ have a shaft.  Good luck!
-    if (is_valid_shaft_level() && !one_chance_in(4)) // 3/4 times
-    {
-        // This is kinda hack-ish.  We're still early in the dungeon
-        // generation process, and we know that there will be no other
-        // traps.  If we promise to make /just one/, we can get away
-        // with making this trap the first trap.
-        // If we aren't careful, we'll trigger an assert in _place_traps().
-
-        begin.reset(); end.reset();
-
-        _make_trail(50, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     begin, end);
-
-        dprf("Placing shaft trail...");
-        if (!end.origin())
-        {
-            if (!begin.origin())
-                upstairs.push_back(begin);
-            if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
-            {
-                trap_def* ts = NULL;
-                int i = 0;
-                for (; i < MAX_TRAPS; i++)
-                {
-                    if (env.trap[i].type != TRAP_UNASSIGNED)
-                        continue;
-
-                    ts = &env.trap[i];
-                    break;
-                }
-                if (i < MAX_TRAPS)
-                {
-                    ts->type = TRAP_SHAFT;
-                    ts->pos = end;
-                    grd(end) = DNGN_UNDISCOVERED_TRAP;
-                    env.tgrid(end) = i;
-                    if (shaft_known(level_number, false))
-                        ts->reveal();
-                    dprf("Trail ends in shaft.");
-                }
-                else
-                {
-                    grd(end) = DNGN_FLOOR;
-                    dprf("Trail does not end in shaft.");
-                }
-            }
-            else
-            {
-                grd(end) = DNGN_FLOOR;
-                dprf("Trail does not end in shaft.");
-            }
-        }
-    }
-
     for (vector<coord_def>::iterator pathstart = upstairs.begin();
          pathstart != upstairs.end(); pathstart++)
     {
@@ -182,7 +127,7 @@ void dgn_build_basic_level()
     _builder_extras(level_number);
 }
 
-void dgn_build_bigger_room_level(void)
+void dgn_build_bigger_room_level()
 {
     env.level_build_method += " bigger_room";
     env.level_layout_types.insert("open");
@@ -384,8 +329,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         else
             dir.y = _trail_random_dir(pos.y, GYM, 15);
 
-        if (dir.x == 0 && dir.y == 0
-            || map_masked(pos + dir, MMT_VAULT))
+        if (dir.origin() || map_masked(pos + dir, MMT_VAULT))
             continue;
 
         // Corridor length... change only when going vertical?

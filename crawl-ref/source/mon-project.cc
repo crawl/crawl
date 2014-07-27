@@ -14,6 +14,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
@@ -21,7 +22,6 @@
 #include "mgen_data.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "shout.h"
@@ -199,11 +199,11 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 // Alas, too much differs to reuse beam shield blocks :(
 static bool _iood_shielded(monster& mon, actor &victim)
 {
-    if (!victim.shield() || victim.incapacitated())
+    if (!victim.shielded() || victim.incapacitated())
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
-        mon.props["iood_pow"].get_short()/12 : mon.hit_dice/2);
+        mon.props["iood_pow"].get_short()/12 : mon.get_hit_dice()/2);
     const int con_block = random2(to_hit + victim.shield_block_penalty());
     const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
@@ -236,13 +236,28 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 
     bolt beam;
     beam.name = "orb of destruction";
-    beam.flavour = BEAM_NUKE;
+    beam.flavour = BEAM_DEVASTATION;
     beam.attitude = mon.attitude;
 
     actor *caster = actor_by_mid(mon.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = &mon;  // friendliness is correct)
     beam.set_agent(caster);
+    if (mon.props.exists("iood_reflector"))
+    {
+        beam.reflections = 1;
+
+        const mid_t refl_mid = mon.props["iood_reflector"].get_int64();
+
+        if (refl_mid == MID_PLAYER)
+            beam.reflector = NON_MONSTER;
+        else
+        {
+            // If the reflecting monster has died, credit the original caster.
+            const monster * const rmon = monster_by_mid(refl_mid);
+            beam.reflector = rmon ? rmon->mindex() : caster->mindex();
+        }
+    }
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
@@ -390,11 +405,16 @@ move_again:
     {
         if (cell_is_solid(pos))
         {
-            if (you.see_cell(pos))
+            const int boulder_noisiness = 5; // don't want this to be big
+            if (you.see_cell(pos) && you.see_cell(mon.pos()))
             {
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description_at(pos, false, DESC_A).c_str());
+                if (!iood)
+                    noisy(boulder_noisiness, pos);
             }
+            else if (!iood && !silenced(you.pos()))
+                noisy(boulder_noisiness, pos, "You hear a crash.");
 
             if (!iood) // boulders need to stop now
             {
@@ -487,7 +507,7 @@ move_again:
         if (victim && _iood_shielded(mon, *victim))
         {
             item_def *shield = victim->shield();
-            if (!shield_reflects(*shield))
+            if (!shield || !shield_reflects(*shield))
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
@@ -527,6 +547,8 @@ move_again:
             }
             victim->shield_block_succeeded(&mon);
 
+            // mid_t is unsigned so won't fit in a plain int
+            mon.props["iood_reflector"] = (int64_t) victim->mid;
             mon.props["iood_vx"] = vx = -vx;
             mon.props["iood_vy"] = vy = -vy;
 

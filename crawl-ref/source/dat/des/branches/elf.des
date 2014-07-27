@@ -689,7 +689,6 @@ ENDMAP
 
 NAME:  guppyfry_elf_castle
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf fighter / deep elf mage / deep elf knight
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
 MONS:  plant
@@ -712,7 +711,6 @@ ENDMAP
 
 NAME:  guppyfry_elf_garden
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf fighter / deep elf mage / deep elf priest
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
 MONS:  plant
@@ -760,12 +758,11 @@ ENDMAP
 
 NAME:  guppyfry_elf_lava
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf conjurer / deep elf mage / deep elf summoner
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
        w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
-       w:4 any weapon ego:flaming | w:4 shortbow ego:flame | w:12 arrow ego:flame | \
+       w:4 any weapon ego:flaming | w:4 shortbow ego:flaming | w:12 arrow ego:flame | \
        w:7 wand of flame | w:5 wand of fire | w:3 wand of fireball | \
        w:4 staff of fire | w:17 randbook disc:fire | w:6 robe ego:fire_resistance | \
        w:9 any armour ego:fire_resistance
@@ -846,7 +843,7 @@ ENDMAP
 
 NAME:    nicolae_elf_stone_circles
 DEPTH:   Elf
-TAGS:    transparent extra decor allow_dup luniq mini_float
+TAGS:    transparent extra decor allow_dup luniq
 SHUFFLE: za, bd
 SUBST:   a = A, b = B, zd = c
 SHUFFLE: AB, DEFG
@@ -1085,7 +1082,7 @@ cG..xJ..E.x.xxDxx
 ENDMAP
 
 NAME:    hangedman_elven_pyramids
-TAGS:    extra transparent mini_float decor
+TAGS:    extra transparent decor
 DEPTH:   Elf
 SHUFFLE: ABCD, +-_, yz / yz / zy
 SUBST:   A : ZZ., B : Z., C : Z.., D = .
@@ -1168,7 +1165,7 @@ ENDMAP
 #
 # Elf:$ branch endings
 #
-# Total weight: 160.
+# Total weight: 190.
 ##############################################################################
 ##############################################################################
 
@@ -1177,6 +1174,7 @@ ENDMAP
 ## Classical elf_hall
 ##
 NAME:    elf_hall
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 WEIGHT:  30
 ORIENT:  northwest
@@ -1228,6 +1226,7 @@ ENDMAP
 ## A wide and narrow one, with total weight 20.
 ##
 NAME:    elf_hall_gauntlet_wide
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
@@ -1274,6 +1273,7 @@ xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
@@ -1329,6 +1329,7 @@ ENDMAP
 ## minmay's Elf hall
 ##
 NAME:    minmay_elf_hall
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  southwest
 : elf_setup(_G)
@@ -1427,6 +1428,7 @@ ENDMAP
 # Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
 #
 NAME:    minmay_elf_hall_hex
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1484,6 +1486,7 @@ ENDMAP
 
 # Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
 NAME:    minmay_elf_hall_dome
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1521,6 +1524,7 @@ ENDMAP
 
 # Before transforms: 32x$, 27x*, 27x|, 4x1, 8x2, 9x3, 2x4, 10x5, 2x6, 2x7
 NAME:    minmay_elf_hall_spiked
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1563,6 +1567,7 @@ ENDMAP
 
 # Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
 NAME:    minmay_elf_hall_quartered_circle
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1609,6 +1614,7 @@ ENDMAP
 # The elves have created golems to guard their treasure.
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1651,6 +1657,7 @@ ENDMAP
 
 # Before transforms: 28x$, 27x*, 29x|, 4x1, 9x2, 8x3, 6x4, 8x5, 2x6, 2x7
 NAME:    minmay_elf_hall_x
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1694,6 +1701,7 @@ ENDMAP
 
 # Before transforms: 18x$, 23x*, 31x|, 6x1, 8x2, 7x3, 10x4, 11x5, 2x6, 4x7
 NAME:    minmay_elf_hall_four_x
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1785,6 +1793,7 @@ ENDMAP
 
 # Before transforms: 26x|, 31x*, 28x$, 8x1, 7x2, 8x3, 7x4, 8x5, 4x6, 4x7
 NAME:    nooodl_elf_gasket
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1848,4 +1857,150 @@ xxxxxxxxxxxcc*|c......1......c|*ccxxxxxxxx
 xxxxxxxxxxxxcccccc.........ccccccxxxxxxxxx
 xxxxxxxxxxxxxxccccc.......cccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxcccccc@ccccccxxxxxxxxxxxxx
+ENDMAP
+
+# Before transform: 30x$, 31x*, 26x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_branching
+TAGS:   nolayout_halls
+PLACE:  Elf:$
+ORIENT: north
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccxxxxxxxxxxx
+xxxxxxxxxxcc$|*|*|$ccxxxxxxxxxx
+xxxxxxxxxxc$|*|*|*|$cxxxxxxxxxx
+xxxxxxxxxxc$.|*|*|.$cxxxxxxxxxx
+xxxxxxxxxxcc+ccccc+ccxxxxxxxxxx
+xxxxxxxxxxc2.3ccc2.3cxxxxxxxxxx
+xxxxxxxxxxc...ccc...cxxxxxxxxxx
+xxccccccxxc...ccc...cxxccccccxx
+xcc|*$$cxxcc.5...4.ccxxc$$*|ccx
+cc|*$*.cxxxc...b...cxxxc.*$*|cc
+c|*|cc+cxxxcc..b..ccxxxc+cc|*|c
+c*$cc3.ccccxc.4b5.cxcccc.2cc$*c
+c$*c261.5.cccc...cccc.4.173c*$c
+c$.+...4U....c.2.c....U5...+.$c
+ccccccc...5..3...3..4...ccccccc
+c..............b..............c
+@.bbb.2..3..2.bbb.2..2..3.bbb.@
+c..............b..............c
+ccccccc...4..3...3..5...ccccccc
+c$.+...5U....c.2.c....U4...+.$c
+c$*c371.4.cccc...cccc.5.162c*$c
+c*$cc2.ccccxxc.b.cxxcccc.3cc$*c
+c|*|cc+cxxxxxc.b.cxxxxxc+cc|*|c
+cc|*$*.cxxxxxc.b.cxxxxxc.*$*|cc
+ cc|*$$cxxxxxc...cxxxxxc$$*|cc
+  ccccccxxxxxcc@ccxxxxxcccccc
+ENDMAP
+
+# Before randomisation: 28x$, 32x*, 27x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_diamonds
+TAGS:   nolayout_halls
+PLACE:  Elf:$
+ORIENT: north
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccxxxxxxxxxxxxxx
+xxxxxxcccxxxxcc|ccxxxxcccxxxxxx
+xxxxxcc$ccxxcc|*|ccxxcc$ccxxxxx
+xxxxcc$..cccc|*|*|cccc..$ccxxxx
+xxxcc|*$..cc|*|*|*|cc..$*|ccxxx
+xxcc|*|*.5.cc$*|*$cc.5.*|*|ccxx
+xcc$*|*b....cc$.$cc....b*|*$ccx
+xc$.$*bbb..3.cc+cc.2..bbb*$.$cx
+xcc....b....cc...cc....b....ccx
+xxcc.4...6.cc.3.2.cc.7...4.ccxx
+xxxcc..........5..........ccxxx
+xxxccc.2.c.1..2.3..1.c.3.cccxxx
+xxcc.cc.cc..b..4..b..cc.cc.ccxx
+xcc.3.ccc....bb.bb....ccc.2.ccx
+cc.....c...3.bbbbb.2...c.....cc
+@...U.....4.5.bbb.5.4.....U...@
+cc.....c...2.bbbbb.3...c.....cc
+xcc.2.ccc....bb.bb....ccc.3.ccx
+xxcc.cc.cc..b..4..b..cc.cc.ccxx
+xxxccc.3.c.1..3.2..1.c.2.cccxxx
+xxxcc..........5..........ccxxx
+xxcc.4...7.cc.....cc.6...4.ccxx
+xcc....b....cc...cc....b....ccx
+xc$.$*bbb..2.cc.cc.3..bbb*$.$cx
+xcc$*|*b....cc...cc....b*|*$ccx
+xxcc|*|*.5.cc.....cc.5.*|*|ccxx
+xxxcc|*$..cc.2.U.3.cc..$*|ccxxx
+xxxxcc$..cccc.....cccc..$ccxxxx
+xxxxxcc$ccxxcc...ccxxcc$ccxxxxx
+xxxxxxcccxxxxcc@ccxxxxcccxxxxxx
+ENDMAP
+
+# Before randomisation: 27x$, 27x*, 28x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_asides
+TAGS:   nolayout_halls
+PLACE:  Elf:$
+ORIENT: northeast
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+SHUFFLE: AB, CD, EFGH, IJKL, MNOP
+SUBST:   ACEFIJ = ., BDGH = c, KLP = b, MNO = $
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcccccxxxxxxxxxxx
+xxxxxxxxcc|*|ccxxxxxxxxxx
+xxxxxxxcc|*|*|ccxxxxxxxxx
+xxxxxxccO*|*|*Pccxxxxxxxx
+xxxxxccOOO*|*PPPccxxxxxxx
+xxxxcc|*OOO*PPP*|ccxxxxxx
+xxxxc|*|*OObPP*|*|cxxxxxx
+xxxxc*|*|*bbb*|*|*cxxxxxx
+xxxxc|*|*MMbNN*|*|cxxxxxx
+xxxxcc|*MMM.NNN*|ccxxxxxx
+xxxxxccMMM3U2NNNccxxxxxxx
+xxxxxxccM.4L5.Nccxxxxxxxx
+xxxxxccH2.KbK.3Gccxxxxxxx
+xxxxccHH..5L4..GGccxxxxxx
+xxxccHH.3..1..2.GGccxxxxx
+xxcc...7.HH|GG.6...ccxxxx
+xcc.....HHbbbGG.....ccxxx
+xc3.5J4.HbbbbbG.5J4.2cxxx
+xcU.IbI1|bbbbb|1IbI.Ucxxx
+xc2.3J2.EbbbbbF.3J2.3cxxx
+xcc.....EEbbbFF.....ccxxx
+xxcc...6.EE|FF.7...ccxxxx
+xxxccEE.3..1..2.FFccxxxxx
+xxxxccEE..4L5..FFccxxxxxx
+xxxxxccE..KbK..Fccxxxxxxx
+xxxxxxcc..5L4..ccxxxxxxxx
+xxxxxcc.2.....3.ccxxxxxxx
+xxxxcc...CC.DD...ccxxxxxx
+xxxxc.3.CCC2DDD.2.cxxxxxx
+xxxxc4.CCC3.5DDD.5cxxxxxx
+xxxxc.CCC..4..DDD.cxxxxxx
+xxxxccCC...c...DDccxxxxxx
+xxxxxcc.3.ccc.2.ccxxxxxxx
+xxxxxxcc.AAcBB.ccxxxxxxxx
+xxxxxxxccAA.BBccxxxxxxxxx
+xxxxxxxxcc...ccxxxxxxxxxx
+xxxxxxxxxcc@ccxxxxxxxxxxx
 ENDMAP

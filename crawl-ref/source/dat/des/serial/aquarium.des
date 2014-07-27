@@ -10,12 +10,12 @@
 #  branch.  The contents are as follows:
 #   -> D:1-3   grass, bushes, butterfly
 #   -> D:4-6   some shallow water, fungus, bat
-#   -> D:7-12  deep water, shark, big fish
-#   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
+#   -> D:7-12  deep water, electric eel,
+#   -> D:13-15 deep water, electric eel, sea snake, snapping turtle
 #   -> D:16-18 ice, polar bear, yak, death yak, wolf
 #   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
 #   -> D:22-24 lava, fire vortex, lava snake, salamander
-#   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
+#   -> D:25-27 lava, fire vortex, fire bat, fire elemental
 #   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
 #
 # Most of these vaults come in three sizes/shapes depending on
@@ -117,14 +117,10 @@ function init_aquarium(e)
   elseif you.absdepth() <= 9 then
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
-                 w:6  generate_awake shark /
-                 w:6  generate_awake big fish /
                  w:3  generate_awake electric eel]] )
   elseif you.absdepth() <= 12 then
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
-                 w:6  generate_awake big fish /
-                 w:4  generate_awake shark /
                  w:1  generate_awake sea snake /
                  w:4  generate_awake snapping turtle]] )
   elseif you.absdepth() <= 15 then
@@ -179,7 +175,6 @@ function init_aquarium(e)
     e.kprop('l = no_cloud_gen')
     e.kmons('l = w:' .. nothing_weight .. [[ nothing /
                  w:30 generate_awake fire vortex /
-                 w:8  generate_awake lava worm /
                  w:2  generate_awake salamander /
                  w:5  generate_awake fire elemental]] )
     e.kfeat('! = l')
@@ -261,7 +256,7 @@ end
 
 NAME:    serial_aquarium
 TAGS:    allow_dup extra luniq_serial decor
-TAGS:    layout_rooms layout_misc
+TAGS:    layout_rooms layout_corridors
 DEPTH:   D, Depths, Elf
 CHANCE:  1%
 {{
@@ -364,7 +359,7 @@ ENDMAP
 # subvaults for small islands
 
 NAME:    aquarium_subvault_small_water
-TAGS:    aquarium_subvault_small_water
+TAGS:    aquarium_subvault_small_water no_exits
 : init_aquarium(_G)
 MAP
 cmc
@@ -385,7 +380,7 @@ ENDMAP
 # subvaults for large islands
 
 NAME:    aquarium_subvault_large_water
-TAGS:    aquarium_subvault_large_water
+TAGS:    aquarium_subvault_large_water no_exits
 : init_aquarium(_G)
 MAP
 cmmmmmc
@@ -1347,7 +1342,7 @@ ENDMAP
 
 NAME:    aquarium_pool_1
 WEIGHT:  10
-TAGS:    serial_aquarium_pool mini_float
+TAGS:    serial_aquarium_pool
 NSUBST:  ! = 1:@ / *:!
 SUBST:   ! = @....
 : init_aquarium(_G)
@@ -1363,7 +1358,7 @@ ENDMAP
 
 NAME:    aquarium_pool_2
 WEIGHT:  20
-TAGS:    serial_aquarium_pool mini_float
+TAGS:    serial_aquarium_pool
 NSUBST:  ! = 1:@ / *:!
 SUBST:   ! = @....
 : init_aquarium(_G)

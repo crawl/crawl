@@ -10,6 +10,8 @@
 #include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
+#include "attitude-change.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -26,6 +28,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "religion.h"
 #include "spl-clouds.h"
@@ -33,6 +36,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -194,7 +198,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_STONESKIN:
         {
             // player gets 2+earth/5
-            const int ac_bonus = hit_dice / 2;
+            const int ac_bonus = get_hit_dice() / 2;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -205,7 +209,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_OZOCUBUS_ARMOUR:
         {
             // player gets 4+ice/3
-            const int ac_bonus = 4 + hit_dice / 3;
+            const int ac_bonus = 4 + get_hit_dice() / 3;
 
             ac += ac_bonus;
             // the monster may get drained or level up, we need to store the bonus
@@ -623,42 +627,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_PERMA_BRIBED:
-        // Only demand further payment if you can see the player.
-        if (you_worship(GOD_GOZAG) && !props.exists(GOZAG_BRIBE_BROKEN_KEY))
-        {
-            if (!you.can_see(this))
-            {
-                add_ench(mon_enchant(ENCH_PERMA_BRIBED, 1, NULL,
-                                     20 * BASELINE_DELAY));
-                break;
-            }
-            else
-            {
-                string monname = name(DESC_THE);
-                const int cost =
-                    max(1, fuzz_value(exper_value(this), 15, 15) / 10);
-                mprf("%s demands further payment of %d gold.", monname.c_str(),
-                     cost);
-                if (you.gold >= cost)
-                {
-                    string prompt = make_stringf("Pay %s demand of %d gold?",
-                                                 apostrophise(monname).c_str(),
-                                                 cost);
-                    if (yesno(prompt.c_str(), false, 0))
-                    {
-                        mprf("%s seems mollified.", monname.c_str());
-                        you.gold -= cost;
-                        add_ench(ENCH_PERMA_BRIBED);
-                        break;
-                    }
-                }
-                else
-                    mpr("You cannot afford to meet that demand!");
-            }
-        }
-        // deliberate fall-through
     case ENCH_BRIBED:
+    case ENCH_PERMA_BRIBED:
         if (!quiet)
             simple_monster_message(this, " is no longer bribed.");
 
@@ -703,12 +673,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_ROT:
         if (!quiet)
-        {
-            if (type == MONS_BOG_BODY)
-                simple_monster_message(this, "'s decay slows.");
-            else
-                simple_monster_message(this, " is no longer rotting.");
-        }
+            simple_monster_message(this, " is no longer rotting.");
         break;
 
     case ENCH_HELD:
@@ -717,6 +682,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (net != NON_ITEM)
         {
             free_stationary_net(net);
+
+            if (props.exists(NEWLY_TRAPPED_KEY))
+                props.erase(NEWLY_TRAPPED_KEY);
 
             if (!quiet)
                 simple_monster_message(this, " breaks free.");
@@ -1011,14 +979,31 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BLACK_MARK:
         if (!quiet)
+        {
             simple_monster_message(this, " is no longer absorbing vital"
                                          " energies.");
+        }
         calc_speed();
         break;
 
     case ENCH_SAP_MAGIC:
         if (!quiet)
             simple_monster_message(this, " is no longer being sapped.");
+        break;
+
+    case ENCH_CORROSION:
+        if (!quiet)
+           simple_monster_message(this, " is no longer covered in acid.");
+        break;
+
+    case ENCH_GOLD_LUST:
+        if (!quiet)
+           simple_monster_message(this, " is no longer distracted by gold.");
+        break;
+
+    case ENCH_DRAINED:
+        if (!quiet)
+            simple_monster_message(this, " seems less drained.");
         break;
 
     default:
@@ -1112,11 +1097,12 @@ void monster::timeout_enchantments(int levels)
                 del_ench(i->first);
                 break;
             }
-            // Deliberate fall-through
+            lose_ench_levels(i->second, levels);
+            break;
 
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
-        case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
+        case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
@@ -1131,8 +1117,19 @@ void monster::timeout_enchantments(int levels)
         case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
-        case ENCH_PERMA_BRIBED:
+        case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
             lose_ench_levels(i->second, levels);
+            break;
+
+        case ENCH_SLOW:
+            if (torpor_slowed())
+                lose_ench_levels(i->second, min(levels, i->second.degree - 1));
+            else
+            {
+                lose_ench_levels(i->second, levels);
+                if (props.exists(TORPOR_SLOWED_KEY))
+                    props.erase(TORPOR_SLOWED_KEY);
+            }
             break;
 
         case ENCH_INVIS:
@@ -1181,14 +1178,6 @@ void monster::timeout_enchantments(int levels)
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(i->first, actdur))
                 monster_die(this, KILL_MISC, NON_MONSTER, true);
-            break;
-        }
-
-        case ENCH_PREPARING_RESURRECT:
-        {
-            const int actdur = speed_to_duration(speed) * levels;
-            if (lose_ench_duration(i->first, actdur))
-                shedu_do_actual_resurrection(this);
             break;
         }
 
@@ -1259,10 +1248,26 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
+bool monster::clear_far_engulf(void)
+{
+    if (you.duration[DUR_WATER_HOLD]
+        && (mid_t) you.props["water_holder"].get_int() == mid)
+    {
+        you.clear_far_engulf();
+    }
+
+    const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
+    if (me.ench == ENCH_NONE)
+        return false;
+    const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
+    if (nonadj)
+        del_ench(ENCH_WATER_HOLD);
+    return nonadj;
+}
+
 void monster::apply_enchantment(const mon_enchant &me)
 {
     enchant_type en = me.ench;
-    const int spd = 10;
     switch (me.ench)
     {
     case ENCH_INSANE:
@@ -1301,7 +1306,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        // Deliberate fall through.
+        decay_enchantment(en);
+        break;
 
     case ENCH_SLOW:
     case ENCH_HASTE:
@@ -1341,14 +1347,13 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
     case ENCH_POISON_VULN:
-    case ENCH_RETCHING:
     case ENCH_DIMENSION_ANCHOR:
     case ENCH_AGILE:
     case ENCH_FROZEN:
     case ENCH_EPHEMERAL_INFUSION:
     case ENCH_SAP_MAGIC:
-    case ENCH_PERMA_BRIBED:
-    // case ENCH_ROLLING:
+    case ENCH_CORROSION:
+    case ENCH_GOLD_LUST:
         decay_enchantment(en);
         break;
 
@@ -1370,6 +1375,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_BATTLE_FRENZY:
     case ENCH_ROUSED:
+    case ENCH_DRAINED:
         decay_enchantment(en, false);
         break;
 
@@ -1391,137 +1397,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_HELD:
-    {
-        if (is_stationary() || cannot_act() || asleep())
-            break;
+        break; // handled in mon-act.cc:struggle_against_net()
 
-        int net = get_trapping_net(pos(), true);
-
-        if (net == NON_ITEM)
-        {
-            trap_def *trap = find_trap(pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                if (coinflip())
-                {
-                    if (mons_near(this) && !visible_to(&you))
-                        mpr("Something you can't see is thrashing in a web.");
-                    else
-                    {
-                        simple_monster_message(this,
-                            " struggles to get unstuck from the web.");
-                    }
-                    break;
-                }
-                maybe_destroy_web(this);
-            }
-            del_ench(ENCH_HELD);
-            break;
-        }
-
-        // Handled in handle_pickup().
-        if (mons_eats_items(this))
-            break;
-
-        // The enchantment doubles as the durability of a net
-        // the more corroded it gets, the more easily it will break.
-        const int hold = mitm[net].plus; // This will usually be negative.
-        const int mon_size = body_size(PSIZE_BODY);
-
-        // Smaller monsters can escape more quickly.
-        if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
-        {
-            if (mons_near(this) && !visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles to escape the net.");
-
-            // Confused monsters have trouble finding the exit.
-            if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
-                break;
-
-            decay_enchantment(en, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
-
-            // Frayed nets are easier to escape.
-            if (mon_size <= -(hold-1)/2)
-                decay_enchantment(en, (NUM_SIZE_LEVELS - mon_size));
-        }
-        else // Large (and above) monsters always thrash the net and destroy it
-        {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
-
-            if (mons_near(this) && !visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles against the net.");
-
-            // Confused monsters more likely to struggle without result.
-            if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
-                break;
-
-            // Nets get destroyed more quickly for larger monsters
-            // and if already strongly frayed.
-            int damage = 0;
-
-            // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
-            if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
-                damage++;
-
-            // Handled specially to make up for its small size.
-            if (type == MONS_DANCING_WEAPON)
-            {
-                damage += one_chance_in(3);
-
-                if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
-                    damage++;
-            }
-
-            // Extra damage for large (50%) and big (always).
-            if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
-                damage++;
-
-            // overall damage per struggle:
-            // tiny   -> 1/6
-            // little -> 2/5
-            // small  -> 3/4
-            // medium -> 1
-            // large  -> 1,5
-            // big    -> 2
-
-            // extra damage if already damaged
-            if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
-                damage++;
-
-            // Berserking doubles damage dealt.
-            if (berserk())
-                damage *= 2;
-
-            // Faster monsters can damage the net more often per
-            // time period.
-            if (speed != 0)
-                damage = div_rand_round(damage * speed, spd);
-
-            mitm[net].plus -= damage;
-
-            if (mitm[net].plus < -7)
-            {
-                if (mons_near(this))
-                {
-                    if (visible_to(&you))
-                    {
-                        mprf("The net rips apart, and %s comes free!",
-                             name(DESC_THE).c_str());
-                    }
-                    else
-                        mpr("All of a sudden the net rips apart!");
-                }
-                destroy_item(net);
-
-                del_ench(ENCH_HELD, true);
-            }
-        }
-        break;
-    }
     case ENCH_CONFUSION:
         if (!mons_class_flag(type, M_CONFUSED))
             decay_enchantment(en);
@@ -1654,7 +1531,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 }
             }
 
-            hurt(me.agent(), dam, BEAM_NAPALM);
+            hurt(me.agent(), dam, BEAM_STICKY_FLAME);
         }
 
         decay_enchantment(en, true);
@@ -1686,11 +1563,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
         }
-        break;
-
-    case ENCH_PREPARING_RESURRECT:
-        if (decay_enchantment(en))
-            shedu_do_actual_resurrection(this);
         break;
 
     case ENCH_SPORE_PRODUCTION:
@@ -1863,7 +1735,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!(flags & MF_TAKING_STAIRS)
             && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
-                || x_chance_in_y(1000 / (15 * max(1, hit_dice) / 5), 1000)))
+                || x_chance_in_y(1000 / (15 * max(1, get_hit_dice()) / 5),
+                                 1000)))
         {
             monster_polymorph(this, RANDOM_MONSTER);
         }
@@ -1918,7 +1791,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
-        if (is_chaotic())
+        if (how_chaotic())
         {
             int dam = roll_dice(2, 4) - 1;
             simple_monster_message(this, " is seared!");
@@ -1971,12 +1844,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WATER_HOLD:
-        if (!me.agent()
-            || (me.agent() && !adjacent(me.agent()->as_monster()->pos(), pos())))
-        {
-            del_ench(ENCH_WATER_HOLD);
-        }
-        else
+        if (!clear_far_engulf())
         {
             if (res_water_drowning() <= 0)
             {
@@ -2212,17 +2080,24 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic",
 #if TAG_MAJOR_VERSION == 34
-    "fading_away",
+    "fading_away", "preparing_resurrect",
 #endif
-    "preparing_resurrect", "regen",
+    "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "flight",
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
-    "awaken vines", "control_winds", "wind_aided", "summon_capped",
+    "drowning", "flayed", "haunting",
+#if TAG_MAJOR_VERSION == 34
+    "retching",
+#endif
+    "weak", "dimension_anchor", "awaken vines", "control_winds",
+#if TAG_MAJOR_VERSION == 34
+    "wind_aided",
+#endif
+    "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
     "barbs",
@@ -2232,7 +2107,7 @@ static const char *enchant_names[] =
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
-    "buggy",
+    "corrosion", "gold_lust", "drained", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2296,8 +2171,8 @@ void mon_enchant::merge_killer(kill_category k, mid_t m)
 
 void mon_enchant::cap_degree()
 {
-    // Sickness is not capped.
-    if (ench == ENCH_SICK)
+    // Sickness & draining are not capped.
+    if (ench == ENCH_SICK || ench == ENCH_DRAINED)
         return;
 
     // Hard cap to simulate old enum behaviour, we should really throw this
@@ -2347,7 +2222,7 @@ actor* mon_enchant::agent() const
 
 int mon_enchant::modded_speed(const monster* mons, int hdplus) const
 {
-    return _mod_speed(mons->hit_dice + hdplus, mons->speed);
+    return _mod_speed(mons->get_hit_dice() + hdplus, mons->speed);
 }
 
 int mon_enchant::calc_duration(const monster* mons,
@@ -2389,6 +2264,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
+    case ENCH_CORROSION:
         cturn = 250 / (1 + modded_speed(mons, 10));
         break;
     case ENCH_FEAR:
@@ -2439,10 +2315,6 @@ int mon_enchant::calc_duration(const monster* mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return random_range(475, 525) * 10;
-
-    case ENCH_PREPARING_RESURRECT:
-        // A timer. When it runs out, the creature will cast resurrect.
-        return random_range(4, 7) * 10;
 
     case ENCH_EXPLODING:
         return random_range(3, 7) * 10;
@@ -2502,9 +2374,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;
-        break;
-    case ENCH_PERMA_BRIBED:
-        cturn = 10000 / _mod_speed(25, mons->speed);
         break;
     default:
         break;

@@ -33,7 +33,6 @@
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "misc.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -42,6 +41,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-util.h"
 #include "spl-book.h"
 #include "stuff.h"
@@ -98,7 +98,7 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     return weight == TAG_UNFOUND ? defweight : weight;
 }
 
-void clear_subvault_stack(void)
+void clear_subvault_stack()
 {
     env.new_subvault_names.clear();
     env.new_subvault_tags.clear();
@@ -290,8 +290,10 @@ void level_range::set(const string &br, int s, int d) throw (string)
     deepest    = d;
 
     if (deepest < shallowest || deepest <= 0)
+    {
         throw make_stringf("Level-range %s:%d-%d is malformed",
                            br.c_str(), s, d);
+    }
 }
 
 level_range level_range::parse(string s) throw (string)
@@ -577,7 +579,7 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
-void map_lines::apply_grid_overlay(const coord_def &c)
+void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
 {
     if (!overlay.get())
         return;
@@ -586,6 +588,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
         for (int x = width() - 1; x >= 0; --x)
         {
             coord_def gc(c.x + x, c.y + y);
+            if (is_layout && map_masked(gc, MMT_VAULT))
+                continue;
 
             const int colour = (*overlay)(x, y).colour;
             if (colour)
@@ -608,7 +612,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
 
             bool has_floor = false, has_rock = false;
             string name = (*overlay)(x, y).floortile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).floor_idx =
                     store_tilename_get_index(name);
@@ -623,7 +627,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
             name = (*overlay)(x, y).rocktile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).wall_idx =
                     store_tilename_get_index(name);
@@ -638,7 +642,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
             name = (*overlay)(x, y).tile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).feat_idx =
                     store_tilename_get_index(name);
@@ -669,10 +673,10 @@ void map_lines::apply_grid_overlay(const coord_def &c)
         }
 }
 
-void map_lines::apply_overlays(const coord_def &c)
+void map_lines::apply_overlays(const coord_def &c, bool is_layout)
 {
     apply_markers(c);
-    apply_grid_overlay(c);
+    apply_grid_overlay(c, is_layout);
 }
 
 const vector<string> &map_lines::get_lines() const
@@ -2588,9 +2592,11 @@ void map_def::copy_hooks_from(const map_def &other_map, const string &hook_name)
     const dlua_set_map mset(this);
     if (!dlua.callfn("dgn_map_copy_hooks_from", "ss",
                      other_map.name.c_str(), hook_name.c_str()))
+    {
         mprf(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
              hook_name.c_str(), other_map.name.c_str(),
              name.c_str(), dlua.error.c_str());
+    }
 }
 
 // Runs Lua hooks registered by the map's Lua code, if any. Returns true if
@@ -2601,9 +2607,11 @@ bool map_def::run_hook(const string &hook_name, bool die_on_lua_error)
     if (!dlua.callfn("dgn_map_run_hook", "s", hook_name.c_str()))
     {
         if (die_on_lua_error)
+        {
             end(1, false, "Lua error running hook '%s' on map '%s': %s",
                 hook_name.c_str(), name.c_str(),
                 rewrite_chunk_errors(dlua.error).c_str());
+        }
         else
             mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
                  hook_name.c_str(), name.c_str(),
@@ -2782,6 +2790,39 @@ string map_def::validate_map_placeable()
                         name.c_str(), tags.c_str());
 }
 
+/**
+ * Check to see if the vault can connect normally to the rest of the dungeon.
+ */
+bool map_def::has_exit() const
+{
+    map_def dup = *this;
+    for (int y = 0, cheight = map.height(); y < cheight; ++y)
+        for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
+        {
+            if (!map.in_map(coord_def(x, y)))
+                continue;
+            const char glyph = map.glyph(x, y);
+            dungeon_feature_type feat =
+                map_feature_at(&dup, coord_def(x, y), -1);
+            // If we have a stair, assume the vault can be disconnected.
+            if (feat_is_stair(feat) && !feat_is_escape_hatch(feat))
+                return true;
+            const bool non_floating =
+                glyph == '@' || glyph == '=' || glyph == '+';
+            if (non_floating
+                || !feat_is_solid(feat) || feat_is_closed_door(feat))
+            {
+                if (x == 0 || x == cwidth - 1 || y == 0 || y == cheight - 1)
+                    return true;
+                for (orth_adjacent_iterator ai(coord_def(x, y)); ai; ++ai)
+                    if (!map.in_map(*ai))
+                        return true;
+            }
+        }
+
+    return false;
+}
+
 string map_def::validate_map_def(const depth_ranges &default_depths)
 {
     unwind_bool valid_flag(validating_map_flag, true);
@@ -2806,13 +2847,18 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
             return err;
     }
 
+    if (has_tag("overwrite_floor_cell") && (map.width() != 1 || map.height() != 1))
+        return "Map tagged 'overwrite_floor_cell' must be 1x1";
+
     // Abyssal vaults have additional size and orientation restrictions.
     if (has_tag("abyss") || has_tag("abyss_rune"))
     {
         if (orient == MAP_ENCOMPASS)
+        {
             return make_stringf(
                 "Map '%s' cannot use 'encompass' orientation in the abyss",
                 name.c_str());
+        }
 
         const int max_abyss_map_width =
             GXM / 2 - MAPGEN_BORDER - ABYSS_AREA_SHIFT_RADIUS;
@@ -2895,6 +2941,20 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         break;
     default:
         break;
+    }
+
+    // Encompass vaults, pure subvaults, and dummy vaults are exempt from
+    // exit-checking.
+    if (orient != MAP_ENCOMPASS && !has_tag("unrand") && !has_tag("dummy")
+        && !has_tag("no_exits") && map.width() > 0 && map.height() > 0)
+    {
+        if (!has_exit())
+        {
+            return make_stringf(
+                "Map '%s' has no (possible) exits; use TAGS: no_exits if "
+                "this is intentional",
+                name.c_str());
+        }
     }
 
     dlua_set_map dl(this);
@@ -4053,7 +4113,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
                      && (!mons_class_is_animated_weapon(type)
-                         || mspec.items.size() > 1))
+                         || mspec.items.size() > 1)
+                     && (type != MONS_ZOMBIE && type != MONS_SKELETON
+                         || invalid_monster_type(mspec.monbase)
+                         || mons_class_itemuse(mspec.monbase)
+                            < MONUSE_STARTING_EQUIPMENT))
             {
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
@@ -4702,7 +4766,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "resistance",
         "positive_energy",
         "archmagi",
+#if TAG_MAJOR_VERSION == 34
         "preservation",
+#endif
         "reflection",
         "spirit_shield",
         "archery",
@@ -4719,8 +4785,8 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "electrocution",
 #if TAG_MAJOR_VERSION == 34
         "orc_slaying",
-#endif
         "dragon_slaying",
+#endif
         "venom",
         "protection",
         "draining",
@@ -4728,9 +4794,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "vorpal",
         "flame",
         "frost",
-        "vampiricism",
+        "vampirism",
         "pain",
-        "anti-magic",
+        "antimagic",
         "distortion",
 #if TAG_MAJOR_VERSION == 34
         "reaching",
@@ -5804,7 +5870,7 @@ void keyed_mapspec::parse_features(const string &s)
  *
  * @param s       The string to be parsed.
  * @param weight  The weight of this string.
- * @returns       A feature_spec with the contained, parsed trap_spec stored via
+ * @return        A feature_spec with the contained, parsed trap_spec stored via
  *                unique_ptr as feature_spec->trap.
 **/
 feature_spec keyed_mapspec::parse_trap(string s, int weight)
@@ -5834,7 +5900,7 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
  * @param weight   The weight of this string.
  * @param mimic    What kind of mimic (if any) to set for this shop.
  * @param no_mimic Whether to prohibit mimics altogether for this shop.
- * @returns        A feature_spec with the contained, parsed shop_spec stored
+ * @return         A feature_spec with the contained, parsed shop_spec stored
  *                 via unique_ptr as feature_spec->shop.
 **/
 feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,

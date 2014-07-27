@@ -8,6 +8,7 @@
 
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 {{
     -- Call func num times around a circle of radius centered at (x, y)
@@ -68,11 +69,17 @@
 # This replaces dungeon.cc:_plan_1(). It usually creates a
 # room with a large hole in the middle.
 #
+# This layout should only appear once, and thus does not have the
+# "allow_dup" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
+#
 NAME:   layout_forbidden_donut
-DEPTH:  D:4-, Lair:1-7, Pan
-WEIGHT: 10
+DEPTH:  Depths
+WEIGHT: 5
 ORIENT: encompass
-TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
+TAGS:   overwritable layout no_primary_vault unrand layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -145,11 +152,17 @@ ENDMAP
 # This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
-NAME:    layout_cross
-DEPTH:   D:4-, Lair:1-7
-WEIGHT:  10
-ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand layout_type_cross
+# Only one of this layout and layout_big_octagon should appear.
+# Therefore both of these layouts have a "uniq_open_layout" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
+#
+NAME:   layout_cross
+DEPTH:  D:9-, Depths, Pan
+WEIGHT: 2
+ORIENT: encompass
+TAGS:   overwritable layout unrand uniq_open_layout layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
@@ -214,12 +227,33 @@ ENDMAP
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
-NAME: layout_big_octagon
-DEPTH:   D:4-, Lair:1-7, Pan
-WEIGHT:  6 (Pan), 10
-ORIENT:  encompass
-TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
+# Only one of this layout and layout_cross should appear.
+# Therefore both of these layouts have a "uniq_open_layout" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
+#
+# TODO: A better way of preventing small maps
+#
+NAME:   layout_big_octagon
+DEPTH:  D:9-, Depths, Pan
+WEIGHT: 3
+ORIENT: encompass
+TAGS:   overwritable layout unrand no_primary_vault layout_type_open
+TAGS:   uniq_open_layout
 {{
+    function smear()
+        local gxm, gym = dgn.max_bounds()
+        local iterations = 100 + crawl.random2(800)
+        smear_map{iterations = iterations, boxy = false}
+
+        --Fill in disconnected zones now, prior to adding the stairs.
+        --Temporarily set a (passable) unique symbol in the middle of the map,
+        --to guarantee everything is connected to it after smearing.
+        mapgrd[gxm/2][gym/2] = '@'
+        fill_disconnected{wanted = '@'}
+        mapgrd[gxm/2][gym/2] = '.'
+    end
     -- Step 1: Big octagon.
 
     local gxm, gym = dgn.max_bounds()
@@ -235,17 +269,12 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         replace = 'x',
         inside = '.'}
 
+    -- 50% chance of smearing at all; 50% chance of including pillars in
+    -- smearing when smearing.
     local do_smear = crawl.coinflip()
-    if do_smear then
-        local iterations = 100 + crawl.random2(800)
-        smear_map{iterations = iterations, boxy = false}
-
-        --Fill in disconnected zones now, prior to adding the stairs.
-        --Temporarily set a (passable) unique symbol in the middle of the map,
-        --to guarantee everything is connected to it after smearing.
-        mapgrd[gxm/2][gym/2] = '@'
-        fill_disconnected{wanted = '@'}
-        mapgrd[gxm/2][gym/2] = '.'
+    local smear_before = crawl.coinflip()
+    if do_smear and smear_before then
+        smear()
     end
 
     -- Step 2: Add pillars
@@ -271,24 +300,36 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         make_rounded_square
     }
 
-    -- Pillar size params
-    -- NOTE: Be careful about tweaking the ranges here. Pillars that are
-    -- too large, close, or large in number can entirely surround the center.
-    local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
-    local num = 3 + crawl.random2(9)
-    local pillar_radius = 1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
-    local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
-    local fill = crawl.random_element(pillar_fill)
+    -- Sometimes generate more than one pillar ring for variety.
+    local ring_count = 1 + crawl.random2(4)
+    local circle_radius = 2 + crawl.random2(ring_count == 1 and 6 or 3)
 
-    -- Finally, make the pillars
-    local make_pillar = function(x, y)
-        return pfunc({
-            x = x,
-            y = y,
-            radius = pillar_radius,
-            fill = fill})
+    for i = 1, ring_count do
+        -- Pillar size params
+        -- NOTE: Be careful about tweaking the ranges here. Pillars that are
+        -- too large, close, or large in number can entirely surround the center.
+        local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
+        local num = 3 + 2*i crawl.random2(9 - 2*i)
+        local pillar_radius =
+            1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
+        circle_radius = circle_radius + pillar_radius * 2 + num / 2
+        if circle_radius >= (gym-oblique)/2 then break end
+        local fill = crawl.random_element(pillar_fill)
+
+        -- Finally, make the pillars
+        local make_pillar = function(x, y)
+            return pfunc({
+                x = x,
+                y = y,
+                radius = pillar_radius,
+                fill = fill})
+        end
+        apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
     end
-    apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
+
+    if do_smear and not smear_before then
+        smear()
+    end
 
     -- Step 3: Create stairs
 
@@ -300,15 +341,31 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
     -- 4) down
     -- 5) left
 
-    local up_loc = crawl.random2(6)
-    local down_loc = crawl.random2(6)
-    while up_loc == down_loc do
-        down_loc = crawl.random2(6)
-    end
+    local full_stair_set = {[0] = {}, [1] = {}, [2] = {},
+                            [3] = {}, [4] = {}, [5] = {} }
 
-    local up_stairs = {"{", "(", "["}
-    local down_stairs = {"}", ")", "]"}
-    local full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
+    if crawl.coinflip() then
+        -- Sets of stairs all in the same place, as with the original layout.
+        local up_loc = crawl.random2(6)
+        local down_loc = crawl.random2(6)
+        while up_loc == down_loc do
+            down_loc = crawl.random2(6)
+        end
+
+        local up_stairs = {"{", "(", "["}
+        local down_stairs = {"}", ")", "]"}
+        full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
+    else
+        -- Each stair goes to a unique location.
+        local stairs = {"{", "}", "(", ")", "[", "]"}
+        local locs = {0, 1, 2, 3, 4, 5}
+        for i = 1, #stairs do
+            local which = crawl.random2(#locs) + 1
+            local loc = locs[which]
+            table.remove(locs, which)
+            full_stair_set[loc] = { stairs[i] }
+        end
+    end
 
     for loc, stair_list in pairs (full_stair_set) do
         for i = 1, #stair_list do
@@ -358,20 +415,19 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         end
     end
 
-    if (you.in_branch("D") and you.depth() > 21 or you.where() == "Pan")
-      and crawl.coinflip()
-    then
+    -- Do we still want this special case here?
+    if you.where() == "Pan" and crawl.coinflip() then
         mapgrd[40][36] = 'O'
         mapgrd[41][36] = 'O'
         nsubst('O = 1:O / *:.')
-        if you.in_branch("Pan") then
-            kfeat('O = exit_through_abyss')
-        else
-            kfeat('O = enter_abyss')
-        end
+        kfeat('O = exit_through_abyss')
     end
 
     theme.level_material(_G)
+}}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN)
 }}
 MAP
 ENDMAP
@@ -381,15 +437,81 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_3().
 #
-NAME: layout_rooms
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
-WEIGHT: 60 (Pan), 10 (Zot), 20
+# TODO: Make Elf version and add at weight 10.
+#
+NAME:   layout_rooms
+DEPTH:  D, Snake, Crypt, Pan
+WEIGHT: 15 (D), 15 (Snake), 10 (Crypt), 10 (Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
+    function draw_room(room)
+        local room_type = 0
+        if you.branch() == "Elf" then
+           if crawl.coinflip() then
+             room_type = 1
+           else
+             room_type = 2
+           end
+        else
+           room_type = crawl.random2(3)
+        end
+        if room_type == 0 then
+            -- rectangular
+            replace_area({
+                x1 = room.x1,
+                y1 = room.y1,
+                x2 = room.x2,
+                y2 = room.y2,
+                find = "x",
+                replace = "."})
+        elseif room_type == 1 then
+            -- octagonal-ish
+            local corner_size =
+                1 + crawl.random2(math.min(room.x2 - room.x1 - 1,
+                                           room.y2 - room.y1 - 1))
+            for i = 0, corner_size do
+                local j = corner_size - i
+                replace_area({
+                    x1 = room.x1 + i,
+                    y1 = room.y1 + j,
+                    x2 = room.x2 - i,
+                    y2 = room.y2 - j,
+                    find = "x",
+                    replace = "."})
+            end
+        else
+            -- circular-ish
+            local xdelta = room.x2 - room.x1
+            local ydelta = room.y2 - room.y1
+            local radius = math.max(xdelta, ydelta) / 2
+            local steps = math.abs(ydelta - xdelta) - radius
+            if ydelta > xdelta then
+                for i = 1, steps do
+                    make_circle ({ x = room.x1 + radius,
+                                   y = room.y1 + radius + i,
+                                   radius = radius, fill = '.'})
+                    make_circle ({ x = room.x2 - radius,
+                                   y = room.y1 + radius + i,
+                                   radius = radius, fill = '.'})
+                end
+            else
+                for i = 1, steps do
+                    make_circle ({ x = room.x1 + radius + i,
+                                   y = room.y1 + radius,
+                                   radius = radius, fill = '.'})
+                    make_circle ({ x = room.x1 + radius + i,
+                                   y = room.y2 - radius,
+                                   radius = radius, fill = '.'})
+                end
+            end
+        end
+    end
+
     function random_room_point(room)
-        return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
-                         room.y1 + crawl.random2(room.y2 - room.y1))
+        -- TODO: make this properly random for the new room types
+        return dgn.point((room.x1 + room.x2) / 2,
+                         (room.y1 + room.y2) / 2)
     end
 
     function join_the_dots_p(start, finish)
@@ -425,13 +547,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
             feat = "x"})
 
         if (not exclusive or not_walls == 0) then
-            replace_area({
-                x1 = new_room.x1,
-                y1 = new_room.y1,
-                x2 = new_room.x2,
-                y2 = new_room.y2,
-                find = "x",
-                replace = "."})
+            draw_room(new_room)
 
             if #rooms > 0 and not exclusive2 then
                 join_the_dots_p(random_room_point(new_room),
@@ -458,107 +574,75 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_city
+# layout_regular_city
 #
 # This replaces dungeon.cc:_city_level().
+# Previously named "layout_city".
 #
-# Only available on upper Lair depths otherwise the high
-# ruination makes it basically indistinguishable from a big
-# open room
-NAME:   layout_city
-DEPTH:  Lair:1-2, Snake, Crypt:1-4, Dis:1-6
-WEIGHT: 10
+NAME:   layout_regular_city
+DEPTH:  Lair, Crypt, !Crypt:$, Dis, !Dis:$
+WEIGHT: 10, 15 (Lair)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    function treasure_area (x1, y1, x2, y2)
-        x2 = x2 + 1
-        y2 = y2 + 1
-
-        if x2 <= x1 or y2 <= y1 then
-            return false
-        end
-
-        local area = (x2 - x1) * (y2 - y1)
-        if area >= 40 then
-            return false
-        end
-
-        -- for bigger rooms, use less valuable loot
-        local loot = { }
-        if area <= 4 then
-            loot['|'] = 1
-        elseif area <= 10 then
-            loot['|'] = 10 - area
-            loot['*'] = area - 4
-        elseif area < 25 then
-            loot['*'] = 25 - area
-            loot['%'] = area - 10
-        else
-            loot['%'] = 1
-        end
-
-        local tl = dgn.point(x1, y1)
-        local br = dgn.point(x2 - 1, y2 - 1)
-
-        for point in iter.rect_iterator(tl, br) do
-            if is_valid_coord {x = point.x, y = point.y } then
-                if is_passable_coord { x=point.x, y=point.y }
-                   or crawl.coinflip() then
-                    mapgrd[point.x][point.y] = crawl.random_element (loot)
-                end
-            end
-        end
-
-        return true
-    end
-
-    local gxm, gym = dgn.max_bounds()
-
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local wall_type
     local rooms = {}
     local i, j
 
-    if you.branch() == "Dis" then
-        wall_type = 'x'
-    elseif crawl.one_chance_in(100) then
-        wall_type = 'b'
-    else
-        wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
-    end
-
+    local wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
     local percent_thickness_2 =   crawl.random_range(0, 8)
                                 * crawl.random_range(0, 8)
     local percent_thickness_3 =   crawl.random_range(0, 7)
                                 * crawl.random_range(0, 7)
-    local percent_inner_box = crawl.random_range(0, 25)
+    local percent_thickness_4 = 0
     local percent_inner_new_wall = crawl.random_range(0, 100)
+    local percent_inner_box   = crawl.random_range(0, 25)
     local percent_inner_split = crawl.random_range(0, 25)
-    if you.branch() == "Dis" then
+    local percent_room_gone = 14 -- was 1/7 chance
+    local max_wall_in = 5
+
+    if you.branch() == "Lair" then
+        wall_type = 'x'
+        percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:4
+        percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:8
+        percent_thickness_4 = 10 + you.depth_fraction() * 40
+        percent_inner_new_wall = 0
+        percent_inner_box   = 0
+        percent_inner_split = 0
+        percent_room_gone = 0
+        max_wall_in = you.at_branch_bottom() and 3 or 4
+    elseif you.branch() == "Dis" then
+        wall_type = 'x'
         percent_thickness_2 = 0
         percent_thickness_3 = 0
-        percent_inner_box = percent_inner_box * 1.5
         percent_inner_new_wall = 0
+        percent_inner_box   = percent_inner_box * 1.5
         percent_inner_split = percent_inner_split * 2
     end
 
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'} --wall_type}
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
-    for i = 0, 5 do
-        for j = 0, 4 do
+    for i = 0, 4 do
+        for j = 0, 3 do
             local xs = 8 + (i * 13)
             local ys = 8 + (j * 14)
-            local a1 = xs + crawl.random2avg(5, 2);
-            local a2 = ys + crawl.random2avg(5, 2);
-            local b1 = xs + 11 - crawl.random2avg(5, 2);
-            local b2 = ys + 11 - crawl.random2avg(5, 2);
+            local a1 = xs +      crawl.random2avg(max_wall_in, 2)
+            local a2 = ys +      crawl.random2avg(max_wall_in, 2)
+            local b1 = xs + 11 - crawl.random2avg(max_wall_in, 2)
+            local b2 = ys + 11 - crawl.random2avg(max_wall_in, 2)
 
-            if crawl.x_chance_in_y(6, 7)
+            -- move walls in if they would hit the edge of the open area
+            --  -> otherwise edge rooms sometimes don't appear
+            a1 = (a1 >= 9)      and a1 or 9
+            a2 = (a2 >= 9)      and a2 or 9
+            b1 = (b1 <= gxm-10) and b1 or gxm-10
+            b2 = (b2 <= gym-10) and b2 or gym-10
+
+            if not crawl.x_chance_in_y(percent_room_gone, 100)
                 and is_valid_coord {x=a1, y=a2}
-                and is_valid_coord{x=b1, y=b2}
+                and is_valid_coord {x=b1, y=b2}
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
@@ -568,8 +652,11 @@ TAGS:   layout_type_city
                 local size_x = b1 - a1
                 local size_y = b2 - a2
                 local thickness = 1
-                if size_x > 6 and size_y > 6
-                   and crawl.x_chance_in_y(percent_thickness_3, 100) then
+                if size_x > 8 and size_y > 8
+                   and crawl.x_chance_in_y(percent_thickness_4, 100) then
+                    thickness = 4
+                elseif size_x > 6 and size_y > 6
+                       and crawl.x_chance_in_y(percent_thickness_3, 100) then
                     thickness = 3
                 elseif size_x > 4 and size_y > 4
                        and crawl.x_chance_in_y(percent_thickness_2, 100) then
@@ -601,11 +688,6 @@ TAGS:   layout_type_city
                                    wall=wall_type_inner }
                         make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
                                          number=door_number }
-
-                        if crawl.x_chance_in_y(thickness*4,
-                                               percent_inner_box) then
-                            treasure_area(A1+1, A2+1, B1-1, B2-1)
-                        end
 
                     elseif crawl.x_chance_in_y(percent_inner_split, 100) then
                         local door_x = a1 + thickness + 1
@@ -649,6 +731,9 @@ TAGS:   layout_type_city
         elseif thickness == 3 then
             outer_door = crawl.random_element { ['+'] = 2, ['.'] = 1 }
             inner_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+        elseif thickness == 4 then
+            outer_door = crawl.random_element { ['+'] = 4, ['.'] = 1 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 1 }
         end
 
         if outer_door == '.' and crawl.coinflip() then
@@ -664,21 +749,30 @@ TAGS:   layout_type_city
                         veto_gates=true }
     end
 
-    -- Prevent treasure rooms being overwritten by vaults
-    kmask('|*% = vault')
+    -- remove doors in Lair, increasingly with depth
+    if you.branch() == "Lair" then
+        local keep_weight   = dgn.br_depth(you.branch())
+        local remove_weight = you.depth() * 2
+        subst("+ = .:" .. remove_weight .. " +:" .. keep_weight)
+    end
 }}
 MAP
 ENDMAP
 
 ##############################################################
-# layout_misc
+# layout_misc_corridors
 #
 # This replaces dungeon.cc:_plan_5().
-NAME: layout_misc
-DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
-WEIGHT: 10
+# Previously named "layout_misc".
+#
+# TODO: Wider paths for Zot, then add at weight 20.
+# TODO: Straight paths for Crypt, Zot.
+#
+NAME:   layout_misc_corridors
+DEPTH:  Lair, Snake, Crypt
+WEIGHT: 5 (Lair), 20 (Snake), 20 (Crypt)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_misc
+TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -715,12 +809,13 @@ ENDMAP
 # One (sometimes more) large open caverns with irregular
 # walls.
 #
-NAME: layout_caves
-DEPTH: D:9-, Depths, Orc, Slime
-CHANCE: 100% (Orc), 100% (Slime)
+# TODO: Take out special case for non-Orc non-Slime.
+#
+NAME:   layout_caves
+DEPTH:  Orc, Slime
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -755,19 +850,24 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
 }}
 # Enforce minimum floor size - otherwise we get very tiny floors sometimes
 validate {{
-    return count_feature_in_box { feat="." } > 600
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES)
 }}
 MAP
 ENDMAP
 
 ##############################################################
+# layout_twisted_cavern
+#
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
+#
+# TODO: Rework and add at weight 5.  Possible ideas on devwiki.
+#
 NAME: layout_twisted_cavern
-DEPTH: D:5-
-WEIGHT: 10
+DEPTH: D:4-, Depths
+WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
     if is_validating() then return; end
 
@@ -782,21 +882,20 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 }}
 
 ##############################################################
-## This replaces dungeon.cc:_roguey_level.
-NAME: layout_roguey
-DEPTH: D:2-, Lair, Snake, Elf
-WEIGHT: 20
+# This replaces dungeon.cc:_roguey_level.
+#
+NAME:   layout_roguey
+DEPTH:  D:9-, Lair, Depths
+WEIGHT: 25 (D), 10 (Lair), 10 (Depths)
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 {{
-    function make_inner_room(room, feat, treasure)
+    function make_inner_room(room, feat)
         local inner_room = {
             x1 = room.x1 + 1, y1 = room.y1 + 1,
             x2 = room.x2 - 1, y2 = room.y2 - 1,
             wall = feat, number = 1
         }
-
-        if treasure then inner_room.floor = '*' end
 
         make_box(inner_room)
         make_box_doors(inner_room)
@@ -1038,7 +1137,7 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
                 local feat = crawl.random_element { ['v'] = 2,
                                                     ['c'] = 3,
                                                     ['x'] = 3 }
-                make_inner_room(room, feat, crawl.coinflip())
+                make_inner_room(room, feat)
             end
         end
     end
@@ -1087,11 +1186,19 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 MAP
 ENDMAP
 
-NAME: layout_delve
-DEPTH: Spider
-CHANCE: 100%
+##############################################################
+# layout_spider_delve
+#
+# Previously named "layout_delve".
+#
+# TODO: Use "layout_type_narrow_caves" tag for passage-y version
+#       and "layout_type_open_caves" tag for more open version.
+#
+NAME:   layout_spider_delve
+DEPTH:  Spider
+WEIGHT: 25
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
     if is_validating() then return; end
 
@@ -1129,20 +1236,25 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 }}
 
 ################################################################
-# layout_cocytus
+# layout_cocytus_delve
+#
+# Previously named "layout_cocytus".
 #
 # An ice cave approximation for Cocytus.  There is one main
-#  delved path that is guaranteed to contain at least one up and
-#  down stairs.  There are also other delved paths and
-#  diamond-shaped rooms, but these might be behind pools of
-#  water.  To avoid trapping the player, all random teleports go
-#  to the main path.
+# delved path that is guaranteed to contain at least one up and
+# down stairs.  There are also other delved paths and
+# diamond-shaped rooms, but these might be behind pools of
+# water.  To avoid trapping the player, all random teleports go
+# to the main path.
 #
-NAME: layout_cocytus
-DEPTH: Coc
-CHANCE: 100%
+# TODO: Serious improvements, less glyph switching
+#
+NAME:   layout_cocytus_delve
+DEPTH:  Coc
+WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if is_validating() then return; end
 
@@ -1259,12 +1371,18 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
 }}
 
 ##############################################################
-# layout_dis, by rwbarton
-NAME: layout_dis
-DEPTH: Dis:1-6
-WEIGHT: 20
+# layout_subdivisions, by rwbarton
+#
+# Previously named "layout_dis".
+#
+# TODO: place around primary vault, then allow on Dis:$.
+#
+NAME:   layout_subdivisions
+DEPTH:  Dis:1-6
+WEIGHT: 15
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local subdivide_threshold = 12
 
@@ -1355,61 +1473,10 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
 }}
 # Enforce minimum floor size - this is important with the alt version
 validate {{
-    return count_feature_in_box { feat="." } > 1200
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.DIVISIONS)
 }}
 COLOUR:  G : cyan
 TILE:    G = dngn_statue_iron_golem
-MAP
-ENDMAP
-
-##############################################################
-# layout_overlapping_boxes
-#
-# This layout places many overlapping boxes and then connects
-# the resulting mess into a layout.
-#
-NAME: layout_overlapping_boxes
-DEPTH: Dis:1-6
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym}
-    fill_area{fill="x"}
-
-    local xmin_half = 6
-    local xmax_half = gxm / 2 - 6
-    local ymin_half = 3
-    local ymax_half = gym / 2 - 3
-
-    for i = 1, 100 do
-        local xs
-        local ys
-        if crawl.one_chance_in(8) then
-            xs = crawl.random_range(2, 3)
-            ys = crawl.random_range(6, 15)
-        elseif crawl.one_chance_in(7) then
-            xs = crawl.random_range(6, 15)
-            ys = crawl.random_range(2, 3)
-        else
-            xs = crawl.random_range(3, 6)
-            ys = crawl.random_range(3, 6)
-        end
-        local x = crawl.random_range(xmin_half, xmax_half - xs)
-        local y = crawl.random_range(ymin_half, ymax_half - ys)
-        make_box { x1 = x*2, y1 = y*2, x2 = (x + xs)*2, y2 = (y + ys)*2,
-                   wall = 'x', floor = '.' }
-    end
-
-    connect_adjacent_rooms { wall = "x", floor = ".", replace = '+',
-                             max = 800, check_empty = true }
-    zonify.map_fill_zones(_G, 1, 'x')
-}}
-# Enforce minimum floor size
-validate {{
-    return count_feature_in_box { feat="." } > 1200
-}}
 MAP
 ENDMAP
 
@@ -1420,11 +1487,14 @@ ENDMAP
 #  effect of this is that it is not always obvious whether you
 #  are inside a room or outside.
 #
-NAME: layout_jigsaw
-DEPTH: Dis:1-6
+# This is a Dis-specific variant of layout_honeycomb.
+#
+NAME:   layout_jigsaw
+DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
@@ -1542,36 +1612,60 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
 MAP
 ENDMAP
 
+
+
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
-NAME: layout_basic
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot
-WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
+#
+
+##############################################################
+# layout_basic
+#
+# TODO: Remove the C++ code that adds layout type "basic".
+#
+NAME:   layout_basic
+DEPTH:  D, Snake, Crypt, Depths, Zot, Pan
+WEIGHT: 35 (D), 15 (Snake), 10 (Crypt), 20 (Depths), 20 (Zot), 15 (Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_basic
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then layout_basic() end
 }}
 MAP
 ENDMAP
 
-# XXX: Disabled until we can annoy the player less with water monsters.
-NAME: layout_bigger_room
-DEPTH: D:9-, Lair:1-7
+##############################################################
+# layout_bigger_room
+#
+# Disabled until we can annoy the player less with water monsters.
+#
+NAME:   layout_bigger_room
+DEPTH:  D:9-, Lair:1-7
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     if not is_validating() then layout_bigger_room() end
 }}
 MAP
 ENDMAP
 
-NAME: layout_chaotic_city
-DEPTH: D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
-WEIGHT: 10
+##############################################################
+# layout_chaotic_city
+#
+# This layout places many non-overlapping boxes, some hollow.
+#
+# TODO: Lair should only have rock walls.  It should have sometimes
+#       thicker walls, especially on deeper depths so it can be used
+#       for the whole branch.
+#
+NAME:   layout_chaotic_city
+DEPTH:  Lair:1-3, Crypt:1-4, Dis
+WEIGHT: 10, 15 (Crypt)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then
       layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
@@ -1580,22 +1674,30 @@ TAGS: overwritable layout allow_dup unrand layout_type_city
 MAP
 ENDMAP
 
-NAME: layout_shoals
-DEPTH: Shoals
-CHANCE: 100%
+##############################################################
+# layout_shoals
+#
+NAME:   layout_shoals
+DEPTH:  Shoals
+WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_shoals
+TAGS:   overwritable layout allow_dup unrand layout_type_shoals
 {{
     if not is_validating() then layout_shoals() end
 }}
 MAP
 ENDMAP
 
-NAME: layout_swamp
-DEPTH: Swamp
-WEIGHT: 25
+##############################################################
+# layout_basic_swamp
+#
+# Previously named "layout_swamp".
+#
+NAME:   layout_basic_swamp
+DEPTH:  Swamp
+WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_swamp
+TAGS:   overwritable layout allow_dup unrand layout_type_swamp
 {{
     if is_validating() then return; end
 
@@ -1604,6 +1706,221 @@ TAGS: overwritable layout allow_dup unrand layout_type_swamp
     -- Prevent tele closets
     zonify.grid_fill_water_zones(1,"tree")
 
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_diamond_mine
+#
+# A cave-like mine based off diamond shapes.
+#
+# Places around primary vaults.
+#
+# There is a grid of potential rooms across the map.  We
+#  repeatedly select one at random (weighted towards the center)
+#  and add it.  This gives much better control over map size
+#  than just giving each room a chance of appearing.
+#
+NAME:   layout_diamond_mine
+DEPTH:  Orc
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+TAGS:   no_rotate no_hmirror no_vmirror
+{{
+  -- information for rooms of different sizes
+
+  local GLPYH_BY_RADIUS =
+    { [4] = { [0] = "c", "-", ".", ".", ":" },
+      [5] = { [0] = "c", "-", ".", ".", ":", ":" },
+      [6] = { [0] = "c", "c", "-", ".", ".", ":", ":" },
+      [7] = { [0] = "c", "c", "-", "-", ".", ".", ":", ":" },
+      [8] = { [0] = "c", "c", "-", "-", ".", ".", ":", ":", ":" },
+      [9] = { [0] = "c", "c", "-", "-", ".", ".", ".", ":", ":", ":" },
+     [10] = { [0] = "c", "c", "-", "-", "-", ".", ".", ".", ":", ":", ":" },
+     [11] = { [0] = "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":" },
+     [12] = { [0] = "c", "c", "c", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":" },
+     [13] = { [0] = "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":" },
+     [14] = { [0] = "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":", ":" },
+     [15] = { [0] = "c", "c", "c", "c", "-", "-", "-",
+                    ".", ".", ".", ".", ":", ":", ":", ":", ":" } }
+
+  -- these are based on where the last "." glyph is in the array above
+  local SPACING_BY_RADIUS =
+    { [4] =  6,
+      [5] =  6,
+      [6] =  8,
+      [7] =  8,
+      [8] = 10,
+      [9] = 12,
+     [10] = 12,
+     [11] = 14,
+     [12] = 16,
+     [13] = 16,
+     [14] = 16,
+     [15] = 18 }
+
+  -- these are based on how many rooms fit
+  local ROOMS_ACROSS_BY_RADIUS =
+    { [4] = 10,
+      [5] = 10,
+      [6] =  7,
+      [7] =  7,
+      [8] =  5,
+      [9] =  5,
+     [10] =  4,
+     [11] =  4,
+     [12] =  3,
+     [13] =  3,
+     [14] =  3,
+     [15] =  3 }
+
+  -- which glyphs replace which when placing rooms
+  local GLYPH_PRIORITY =
+   { ["c"] = 0, ["-"] = 1, ["."] = 2, [":"] = 3, ["x"] = 4 }
+
+  -- this function draws a diamond shape with the appropriate
+  --  glyphs at different distances from the center
+  function draw_diamond (center_x, center_y, radius)
+    for dx = -radius, radius do
+      for dy = -radius, radius do
+        local x = center_x + dx
+        local y = center_y + dy
+        local abs_sum = math.abs(dx) + math.abs(dy)
+        if (abs_sum <= radius) then
+          local new_glyph = GLPYH_BY_RADIUS[radius][abs_sum]
+          if (GLYPH_PRIORITY[new_glyph] <
+              GLYPH_PRIORITY[mapgrd[x][y]]) then
+            mapgrd[x][y] = new_glyph
+          end
+        end
+      end
+    end
+  end
+
+  -- choose parameters for layout
+
+  -- valid room sizes 4 - 15, but middle ones look better
+  local room_radius = math.floor(8.5 + you.depth_fraction() * 3
+                                     + crawl.random_real() * 4
+                                     - crawl.random_real() * 4)
+  local ROOM_SPACING = SPACING_BY_RADIUS[room_radius]
+  local ROOMS_ACROSS = ROOMS_ACROSS_BY_RADIUS[room_radius]
+
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  local CENTER_X = gxm/2
+  local CENTER_Y = gym/2
+  local ROOMS_FROM_CENTER = (ROOMS_ACROSS - 1) / 2
+
+  local MIN_ZONE_SIZE = 20  -- for connectivity
+
+  -- room frequency and distribution
+  local room_chance_center = 0.8
+  local room_chance_at_1   = 0.5
+  local room_chance_decrease = room_chance_center - room_chance_at_1
+  local rooms_placed_fraction = 0.3 + crawl.random_real() * 0.1
+  if you.at_branch_bottom() then
+    rooms_placed_fraction = 0.4 + crawl.random_real() * 0.2
+  end
+
+  -- Variables for keeping track of how many rooms we have
+  --  already added and which ones.
+  --  -> We also keep track of the number of attempts so that we
+  --     don't get an infinite loop if there is no room to place
+  --     the rooms around the primary vault.
+  local ROOM_COUNT_MAX = ROOMS_ACROSS * ROOMS_ACROSS
+  local rooms_to_place = math.floor(ROOM_COUNT_MAX * rooms_placed_fraction)
+  local rooms_placed_so_far = 0
+  local sanity = 0
+  local sanity_max = ROOM_COUNT_MAX * 10
+  local room_already_placed = {}
+  for x = 0, ROOMS_ACROSS - 1 do
+    room_already_placed[x] = {}
+    for y = 0, ROOMS_ACROSS - 1 do
+      room_already_placed[x][y] = false
+    end
+  end
+
+  -- place the rooms
+  while (rooms_placed_so_far < rooms_to_place and sanity < sanity_max) do
+    x = crawl.random_range(0, ROOMS_ACROSS - 1)
+    y = crawl.random_range(0, ROOMS_ACROSS - 1)
+    sanity = sanity + 1
+
+    if (not room_already_placed[x][y]) then
+      -- We are using a distribution with equal probability
+      --  lines that form a superellipse (n=4).  This should
+      --  yield a large map than a simple circle, but not look
+      --  as regular as a square distribution.
+      local x2 = x / ROOMS_FROM_CENTER - 1
+      local y2 = y / ROOMS_FROM_CENTER - 1
+      local distance_fraction = math.sqrt(x2*x2*x2*x2 + y2*y2*y2*y2)
+
+      -- Probabilities of room placement fall of quadratically
+      local falloff_factor = distance_fraction * distance_fraction
+      local probability = room_chance_center -
+                          room_chance_decrease * falloff_factor
+      if (crawl.random_real() < probability) then
+        -- the position will have a .5 if the number of rooms is even
+        local room_x = CENTER_X +
+                       math.floor((x - ROOMS_FROM_CENTER) * ROOM_SPACING)
+        local room_y = CENTER_Y +
+                       math.floor((y - ROOMS_FROM_CENTER) * ROOM_SPACING)
+        if (not find_in_area {x1 = room_x - room_radius,
+                              y1 = room_y - room_radius,
+                              x2 = room_x + room_radius,
+                              y2 = room_y + room_radius,
+                              find = "", find_vault = true } ) then
+          draw_diamond(room_x, room_y, room_radius)
+          rooms_placed_so_far = rooms_placed_so_far + 1
+          room_already_placed[x][y] = true
+        end
+      end
+    end
+  end
+
+  -- crazy substitutions and effects to produce randomness
+  subst("c=x")
+  subst("-=:")
+  smear_map { onto = ":", smear = "x", boxy = true,
+              iterations = crawl.random_range(300, 500) }
+  subst(":=.")
+  if (crawl.coinflip()) then
+    spotty_map { replace = "x", fill = ".", boxy = false,
+                 iterations = crawl.random_range(50, 100) }
+  end
+
+  -- clean up the map
+  --  -> the branch bottom must have only one open bubble
+  --  -> remove disconnected areas
+  --  -> ensure each bubble has a down stairs
+  --  -> largest bubble should have the branch exit
+
+  if you.at_branch_bottom() then
+    zonify.map_fill_zones(_G, 1, 'x')
+  else
+    zonify.map_fill_zones(_G, 3, 'x', MIN_ZONE_SIZE)
+    zonify.map_fill_zones(_G, 2, 'v', MIN_ZONE_SIZE)
+    zonify.map_fill_zones(_G, 1, 'b', MIN_ZONE_SIZE)
+    nsubst(". = 1:} / *:.")
+    if you.depth() == 0 then
+      nsubst(". = 1:{ / *:.")
+    end
+    nsubst("b = 1:) / *:.")
+    nsubst("v = 1:] / *:.")
+    shuffle("})]")
+  end
+}}
+# Enforce minimum floor size - this is important
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
 }}
 MAP
 ENDMAP

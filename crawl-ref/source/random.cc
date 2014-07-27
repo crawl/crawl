@@ -115,8 +115,7 @@ const char* random_choose_weighted(int weight, const char* first, ...)
 #define UINT32_MAX ((uint32_t)(-1))
 #endif
 
-// [0, max)
-int random2(int max)
+static int _random2(int max, int rng)
 {
     if (max <= 1)
         return 0;
@@ -125,34 +124,28 @@ int random2(int max)
 
     while (true)
     {
-        uint32_t bits = get_uint32();
+        uint32_t bits = get_uint32(rng);
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
             return (int)val;
     }
+}
+
+// [0, max)
+int random2(int max)
+{
+    return _random2(max, 0);
 }
 
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    if (max <= 1)
-        return 0;
-
-    uint32_t partn = UINT32_MAX / max;
-
-    while (true)
-    {
-        uint32_t bits = get_uint32(1);
-        uint32_t val  = bits / partn;
-
-        if (val < (uint32_t)max)
-            return (int)val;
-    }
+    return _random2(max, 1);
 }
 
 // [0, 1]
-bool coinflip(void)
+bool coinflip()
 {
     return static_cast<bool>(random2(2));
 }
@@ -236,19 +229,6 @@ dice_def calc_dice(int num_dice, int max_damage)
     }
 
     return ret;
-}
-
-// Attempts to make missile weapons nicer to the player by reducing the
-// extreme variance in damage done.
-void scale_dice(dice_def &dice, int threshold)
-{
-    while (dice.size > threshold)
-    {
-        dice.num *= 2;
-        // If it's an odd number, lose one; this is more than
-        // compensated by the increase in number of dice.
-        dice.size /= 2;
-    }
 }
 
 // Calculates num/den and randomly adds one based on the remainder.
@@ -344,31 +324,6 @@ double random_real()
     return get_uint32() / 4294967296.0;
 }
 
-// range [0, 1.0]
-double random_real_inc()
-{
-    return get_uint32() / 4294967295.0;
-}
-
-// range [0, 1.0], weighted to middle with multiple rolls
-double random_real_avg(int rolls)
-{
-    ASSERT(rolls > 0);
-    double sum = 0;
-
-    for (int i = 0; i < rolls; i++)
-        sum += random_real_inc();
-
-    return sum / (double)rolls;
-}
-
-// range [low, high], weighted to middle with multiple rolls
-double random_range_real(double low, double high, int nrolls)
-{
-    const int roll = random_real_avg(nrolls) * (high - low);
-    return low + roll;
-}
-
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
 // not integer.
 // [0, 1]
@@ -376,7 +331,7 @@ bool bernoulli(double n_trials, double trial_prob)
 {
     if (n_trials <= 0 || trial_prob <= 0)
         return false;
-    return random_real() >= pow(1 - trial_prob, n_trials);
+    return !decimal_chance(pow(1 - trial_prob, n_trials));
 }
 
 bool one_chance_in(int a_million)
@@ -401,6 +356,11 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     const int lfuzz = lowfuzz * val / 100,
         hfuzz = highfuzz * val / 100;
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
+}
+
+bool decimal_chance(double percent)
+{
+    return random_real() < percent;
 }
 
 // This is used when the front-end randomness is inconclusive.  There are

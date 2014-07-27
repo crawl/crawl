@@ -6,6 +6,7 @@
 #include "branch.h"
 #include "env.h"
 #include "evoke.h"
+#include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "libutil.h"
@@ -20,170 +21,13 @@
 #include "spl-transloc.h"
 #include "stuff.h"
 
-// Status defaults for durations that are handled straight-forwardly.
-struct duration_def
-{
-    duration_type dur;
-    bool expire;         // whether to do automat expiring transforms
-    int    light_colour; // status light base colour
-    string light_text;   // for the status lights
-    string short_text;   // for @: line
-    string long_text ;   // for @ message
-};
-
-static duration_def duration_data[] =
-{
-    { DUR_AGILITY, false,
-      LIGHTBLUE, "Agi", "agile", "You are agile." },
-    { DUR_ANTIMAGIC, true,
-      RED, "-Mag", "antimagic", "You have trouble accessing your magic." },
-    { DUR_BERSERK, true,
-      BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
-    { DUR_BREATH_WEAPON, false,
-      YELLOW, "Breath", "short of breath", "You are short of breath." },
-    { DUR_BRILLIANCE, false,
-      LIGHTBLUE, "Brill", "brilliant", "You are brilliant." },
-    { DUR_CONF, false,
-      RED, "Conf", "confused", "You are confused." },
-    { DUR_CONFUSING_TOUCH, true,
-      BLUE, "Touch", "confusing touch", "" },
-    { DUR_CONTROL_TELEPORT, true,
-      MAGENTA, "cTele", "controlling teleports", "You can control teleportations." },
-    { DUR_CORONA, false,
-      YELLOW, "Corona", "", "" },
-    { DUR_DEATH_CHANNEL, true,
-      MAGENTA, "DChan", "death channel", "You are channeling the dead." },
-    { DUR_DIVINE_STAMINA, true,
-      WHITE, "Vit", "vitalised", "You are divinely vitalised." },
-    { DUR_DIVINE_VIGOUR, false,
-      0, "", "divinely vigorous", "You are imbued with divine vigour." },
-    { DUR_EXHAUSTED, false,
-      YELLOW, "Exh", "exhausted", "You are exhausted." },
-    { DUR_FIRE_SHIELD, true,
-      BLUE, "RoF", "immune to fire clouds", "" },
-    { DUR_ICY_ARMOUR, true,
-      0, "", "icy armour", "You are protected by a layer of icy armour." },
-    { DUR_LIQUID_FLAMES, false,
-      RED, "Fire", "liquid flames", "You are covered in liquid flames." },
-    { DUR_LOWERED_MR, false,
-      RED, "-MR", "vulnerable", "" },
-    { DUR_MAGIC_SHIELD, false,
-      0, "", "shielded", "" },
-    { DUR_MIGHT, false,
-      LIGHTBLUE, "Might", "mighty", "You are mighty." },
-    { DUR_PARALYSIS, false,
-      RED, "Para", "paralysed", "You are paralysed." },
-    { DUR_PETRIFIED, false,
-      RED, "Stone", "petrified", "You are petrified." },
-    { DUR_PETRIFYING, true,
-      LIGHTRED, "Petr", "petrifying", "You are turning to stone." },
-    { DUR_RESISTANCE, true,
-      BLUE, "Resist", "resistant", "You resist elements." },
-    { DUR_SLIMIFY, true,
-      GREEN, "Slime", "slimy", "" },
-    { DUR_SLEEP, false,
-      0, "", "sleeping", "You are sleeping." },
-    { DUR_STONESKIN, false,
-      0, "", "stone skin", "Your skin is tough as stone." },
-    { DUR_SWIFTNESS, true,
-      BLUE, "Swift", "swift", "You can move swiftly." },
-    { DUR_TELEPATHY, false,
-      LIGHTBLUE, "Emp", "empathic", "" },
-    { DUR_TELEPORT, false,
-      LIGHTBLUE, "Tele", "about to teleport", "You are about to teleport." },
-    { DUR_DEATHS_DOOR, true,
-      LIGHTGREY, "DDoor", "death's door", "" },
-    { DUR_PHASE_SHIFT, true,
-      0, "", "phasing", "You are out of phase with the material plane." },
-    { DUR_QUAD_DAMAGE, true,
-      BLUE, "Quad", "quad damage", "" },
-    { DUR_SILENCE, true,
-      MAGENTA, "Sil", "silence", "You radiate silence." },
-    { DUR_STEALTH, false,
-      BLUE, "Stealth", "especially stealthy", "" },
-    { DUR_AFRAID, true,
-      RED, "Fear", "afraid", "You are terrified." },
-    { DUR_MIRROR_DAMAGE, false,
-      WHITE, "Mirror", "injury mirror", "You mirror injuries." },
-    { DUR_SCRYING, false,
-      WHITE, "Scry", "scrying",
-      "Your astral vision lets you see through walls." },
-    { DUR_TORNADO, true,
-      LIGHTGREY, "Tornado", "tornado",
-      "You are in the eye of a mighty hurricane." },
-    { DUR_LIQUEFYING, false,
-      LIGHTBLUE, "Liquid", "liquefying",
-      "The ground has become liquefied beneath your feet." },
-    { DUR_HEROISM, false,
-      LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
-    { DUR_FINESSE, false,
-      LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
-    { DUR_LIFESAVING, true,
-      LIGHTGREY, "Prot", "protection", "You are calling for your life to be saved." },
-    { DUR_DARKNESS, true,
-      BLUE, "Dark", "darkness", "You emit darkness." },
-    { DUR_SHROUD_OF_GOLUBRIA, true,
-      BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
-    { DUR_TORNADO_COOLDOWN, false,
-      YELLOW, "Tornado", "", "" ,},
-    { DUR_DISJUNCTION, true,
-      BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
-    { DUR_SENTINEL_MARK, true,
-      MAGENTA, "Mark", "marked", "You are marked for hunting." },
-    { DUR_INFUSION, true,
-      BLUE, "Infus", "infused", "Your attacks are magically infused."},
-    { DUR_SONG_OF_SLAYING, true,
-      BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
-    { DUR_FLAYED, true,
-      RED, "Flay", "flayed", "You are covered in terrible wounds." },
-    { DUR_RETCHING, true,
-      RED, "Retch", "retching", "You are retching with violent nausea." },
-    { DUR_WEAK, false,
-      RED, "Weak", "weakened", "Your attacks are enfeebled." },
-    { DUR_DIMENSION_ANCHOR, false,
-      RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
-    { DUR_TOXIC_RADIANCE, false,
-      MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
-    { DUR_RECITE, false,
-      WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
-    { DUR_GRASPING_ROOTS, false,
-      BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
-    { DUR_FIRE_VULN, false,
-      RED, "-rF", "fire vulnerable", "You are more vulnerable to fire." },
-    { DUR_BARBS, false,
-      RED, "Barbs", "manticore barbs", "Manticore spikes are embedded in your body." },
-    { DUR_POISON_VULN, false,
-      RED, "-rP", "poison vulnerable", "You are more vulnerable to poison." },
-    { DUR_FROZEN, false,
-      RED, "Frozen", "frozen", "You are partly encased in ice." },
-    { DUR_SAP_MAGIC, false,
-      RED, "Sap", "sap magic", "Casting spells hinders your spell success." },
-    { DUR_PORTAL_PROJECTILE, false,
-      LIGHTBLUE, "PProj", "portal projectile", "You are teleporting projectiles to their destination." },
-    { DUR_FORESTED, false,
-      GREEN, "Forest", "", "" },
-    { DUR_DRAGON_CALL, false,
-      WHITE, "Dragoncall", "dragon's call", "You are beckoning forth a horde of dragons." },
-    { DUR_DRAGON_CALL_COOLDOWN, false,
-      YELLOW, "Dragoncall", "", "" },
-    { DUR_ABJURATION_AURA, false,
-      BLUE, "Abj", "aura of abjuration", "You are abjuring all hostile summons around you." },
-    { DUR_NO_POTIONS, false,
-      RED, "-Potion", "no potions", "You cannot drink potions." },
-    { DUR_QAZLAL_FIRE_RES, false,
-      LIGHTBLUE, "rF+", "protected from fire", "Qazlal is protecting you from fire." },
-    { DUR_QAZLAL_COLD_RES, false,
-      LIGHTBLUE, "rC+", "protected from cold", "Qazlal is protecting you from cold." },
-    { DUR_QAZLAL_ELEC_RES, false,
-      LIGHTBLUE, "rElec+", "protected from electricity", "Qazlal is protecting you from electricity." },
-    { DUR_QAZLAL_AC, false,
-      LIGHTBLUE, "", "protected from physical damage", "Qazlal is protecting you from physical damage." },
-};
+#include "duration-data.h"
 
 static int duration_index[NUM_DURATIONS];
 
 void init_duration_index()
 {
+    COMPILE_CHECK(ARRAYSZ(duration_data) == NUM_DURATIONS);
     for (int i = 0; i < NUM_DURATIONS; ++i)
         duration_index[i] = -1;
 
@@ -191,6 +35,7 @@ void init_duration_index()
     {
         duration_type dur = duration_data[i].dur;
         ASSERT_RANGE(dur, 0, NUM_DURATIONS);
+        // Catch redefinitions.
         ASSERT(duration_index[dur] == -1);
         duration_index[dur] = i;
     }
@@ -203,6 +48,11 @@ static const duration_def* _lookup_duration(duration_type dur)
         return NULL;
     else
         return &duration_data[duration_index[dur]];
+}
+
+const char *duration_name(duration_type dur)
+{
+    return _lookup_duration(dur)->name();
 }
 
 static void _reset_status_info(status_info* inf)
@@ -257,7 +107,6 @@ static void _mark_expiring(status_info* inf, bool expiring)
 }
 
 static void _describe_airborne(status_info* inf);
-static void _describe_burden(status_info* inf);
 static void _describe_glow(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
@@ -307,8 +156,19 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+
+    case DUR_CORROSION:
+        inf->light_text = make_stringf("Corr (%d)",
+                          (-3 * you.props["corrosion_amount"].get_int()));
+        break;
+
     case DUR_CONTROL_TELEPORT:
         if (!allow_control_teleport(true))
+            inf->light_colour = DARKGREY;
+        break;
+
+    case DUR_NO_POTIONS:
+        if (you_foodless(true))
             inf->light_colour = DARKGREY;
         break;
 
@@ -336,10 +196,6 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text   = "mesmerised";
             inf->long_text    = "You are mesmerised.";
         }
-        break;
-
-    case STATUS_BURDEN:
-        _describe_burden(inf);
         break;
 
     case STATUS_CONTAMINATION:
@@ -422,17 +278,8 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CONFUSING_TOUCH:
     {
-        const int dur = you.duration[DUR_CONFUSING_TOUCH];
-        const int high = 40 * BASELINE_DELAY;
-        const int low  = 20 * BASELINE_DELAY;
-        inf->long_text = string("Your ") + you.hand_name(true) + " are glowing ";
-        if (dur > high)
-            inf->long_text += "an extremely bright ";
-        else if (dur > low)
-            inf->long_text += "bright ";
-        else
-           inf->long_text += "a soft ";
-        inf->long_text += "red.";
+        inf->long_text = string("Your ") + you.hand_name(true)
+                         + " are glowing red.";
         break;
     }
 
@@ -640,9 +487,9 @@ bool fill_status_info(int status, status_info* inf)
             if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
                 inf->light_colour = WHITE;
             else if (you.duration[DUR_ELIXIR_HEALTH])
-                inf->light_colour = LIGHTBLUE;
+                inf->light_colour = LIGHTGREEN;
             else
-                inf->light_colour = LIGHTMAGENTA;
+                inf->light_colour = LIGHTBLUE;
             inf->light_text   = "Elixir";
         }
         break;
@@ -680,31 +527,33 @@ bool fill_status_info(int status, status_info* inf)
         vector<string> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
-            if (bribe < branch_bribe[i])
-                bribe = branch_bribe[i];
             if (branch_bribe[i] > 0)
             {
+                if (player_in_branch(static_cast<branch_type>(i)))
+                    bribe = branch_bribe[i];
+
                 places.push_back(branches[static_cast<branch_type>(i)]
                                  .longname);
             }
         }
 
-        if (bribe == 0)
-            break;
+        if (bribe > 0)
+        {
+            inf->light_colour = (bribe >= 2000) ? WHITE :
+                                (bribe >= 1000) ? LIGHTBLUE
+                                                : BLUE;
 
-        inf->light_colour = (bribe >= 2000) ? WHITE :
-                            (bribe >= 1000) ? LIGHTBLUE
-                                            : BLUE;
-
-        inf->light_text = "Bribe";
-        inf->short_text = make_stringf("bribing [%s]",
-                                       comma_separated_line(places.begin(),
-                                                            places.end(),
-                                                            ", ", ", ")
-                                                            .c_str());
-        inf->long_text = "You are bribing "
-                         + comma_separated_line(places.begin(), places.end())
-                         + ".";
+            inf->light_text = "Bribe";
+            inf->short_text = make_stringf("bribing [%s]",
+                                           comma_separated_line(places.begin(),
+                                                                places.end(),
+                                                                ", ", ", ")
+                                                                .c_str());
+            inf->long_text = "You are bribing "
+                             + comma_separated_line(places.begin(),
+                                                    places.end())
+                             + ".";
+        }
         break;
     }
 
@@ -953,27 +802,6 @@ static void _describe_sickness(status_info* inf)
 
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";
-    }
-}
-
-static void _describe_burden(status_info* inf)
-{
-    switch (you.burden_state)
-    {
-    case BS_OVERLOADED:
-        inf->light_colour = RED;
-        inf->light_text   = "Overloaded";
-        inf->short_text   = "overloaded";
-        inf->long_text    = "You are overloaded with stuff.";
-        break;
-    case BS_ENCUMBERED:
-        inf->light_colour = LIGHTRED;
-        inf->light_text   = "Burdened";
-        inf->short_text   = "burdened";
-        inf->long_text    = "You are burdened.";
-        break;
-    case BS_UNENCUMBERED:
-        break;
     }
 }
 

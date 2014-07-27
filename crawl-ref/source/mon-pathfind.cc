@@ -6,8 +6,8 @@
 #include "directn.h"
 #include "env.h"
 #include "los.h"
+#include "mon-movetarget.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
@@ -356,7 +356,7 @@ vector<coord_def> monster_pathfind::backtrack()
 #endif
         path.insert(path.begin(), pos);
 
-        if (pos.x == 0 && pos.y == 0)
+        if (pos.origin())
             break;
     }
     while (pos != start);

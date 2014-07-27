@@ -35,6 +35,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skills2.h"
 #include "spl-summoning.h"
@@ -433,26 +434,26 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
     return item;
 }
 
+// Portal Projectile requires MP per shot.
+static bool _is_pproj_active()
+{
+    return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
+           && enough_mp(1, true, false);
+}
+
 // If item == -1, prompt the user.
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
     dist target;
-    // Portal Projectile, requires MP per shot.
-    bool teleport = !you.confused()
-                    && you.duration[DUR_PORTAL_PROJECTILE]
-                    && enough_mp(1, true, false);
-    int acc_bonus = 0;
-    item = get_ammo_to_shoot(item, target, teleport);
+    item = get_ammo_to_shoot(item, target, _is_pproj_active());
     if (item == -1)
         return;
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
         bolt beam;
-        if (teleport)
-            acc_bonus = random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4);
-        throw_it(beam, item, teleport, acc_bonus, &target);
+        throw_it(beam, item, &target);
     }
 }
 
@@ -487,7 +488,6 @@ void throw_item_no_quiver()
         return;
     }
 
-    // Okay, item is valid.
     bolt beam;
     throw_it(beam, slot);
 }
@@ -625,9 +625,13 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     case WPN_BLOWGUN:
         return;
 
-    case WPN_SLING:
+    case WPN_HUNTING_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
+        break;
+    case WPN_GREATSLING:
+        level = 3;
+        msg   = "You hear a loud whirring sound.";
         break;
      case WPN_SHORTBOW:
         level = 5;
@@ -637,9 +641,17 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
-     case WPN_CROSSBOW:
+    case WPN_HAND_CROSSBOW:
+        level = 2;
+        msg   = "You hear a quiet thunk.";
+        break;
+     case WPN_ARBALEST:
         level = 7;
         msg   = "You hear a thunk.";
+        break;
+    case WPN_TRIPLE_CROSSBOW:
+        level = 9;
+        msg   = "You hear a triplet of thunks.";
         break;
 
     default:
@@ -660,12 +672,12 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 //
 // Return value is only relevant if dummy_target is non-NULL, and returns
 // true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
-              dist *target)
+bool throw_it(bolt &pbolt, int throw_2, dist *target)
 {
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
+    const bool teleport = _is_pproj_active();
 
     if (you.confused())
     {
@@ -768,15 +780,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
-            monster *m = monster_at(target->target);
+            monster *m = monster_at(thr.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, target->target, false);
+                cancelled = stop_attack_prompt(m, false, thr.target, false);
         }
         else
         {
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
-            pbolt.hit    = 100;
+            pbolt.hit    = AUTOMATIC_HIT;
             pbolt.damage = dice_def(1, 100);
 
             // Init tracer variables.
@@ -899,7 +911,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
 
-    pbolt.hit = acc_bonus;
+    pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
+                         : 0;
 
     bool hit = false;
     if (teleport)
@@ -908,7 +921,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.use_target_as_pos = true;
         pbolt.affect_cell();
         pbolt.affect_endpoint();
-        if (!did_return && acc_bonus != DEBUG_COOKIE)
+        if (!did_return)
             pbolt.drop_object();
         // Costs 1 MP per shot.
         dec_mp(1);
@@ -940,9 +953,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
-
-    if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-        did_god_conduct(DID_FIRE, 1, true);
 
     if (did_return)
     {
@@ -983,12 +993,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         delete pbolt.special_explosion;
 
     if (!teleport
+        && projected
         && you_worship(GOD_DITHMENOS)
         && thrown.base_type == OBJ_MISSILES
-        && thrown.sub_type != MI_NEEDLE
-        && acc_bonus != DEBUG_COOKIE)
+        && thrown.sub_type != MI_NEEDLE)
     {
-        dithmenos_shadow_throw(thr.target);
+        dithmenos_shadow_throw(thr.target, item);
     }
 
     return hit;
@@ -1041,8 +1051,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
-    if (mons->friendly())
-        item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
     // FIXME we should actually determine a sensible range here
     beam.range         = you.current_vision;
@@ -1170,66 +1178,33 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
-    string name = item->name(DESC_PLAIN, false, true, false);
-
     if (item->base_type != OBJ_MISSILES)
         return false;
 
-    int brand = get_ammo_brand(*item);
-    if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL || brand == SPMSL_EXPLODING)
+    if (ammo_always_destroyed(*item))
         return true;
 
-    // Nets don't get destroyed by throwing.
-    if (item->sub_type == MI_THROWING_NET)
+    if (ammo_never_destroyed(*item))
         return false;
 
-    int chance;
+    const int base_chance = ammo_type_destroy_chance(item->sub_type);
+    const int brand = get_ammo_brand(*item);
 
-    // [dshaligram] Removed influence of Throwing on ammo preservation.
-    // The effect is nigh impossible to perceive.
-    switch (item->sub_type)
+    // Inflate by 2 to avoid rounding errors.
+    const int mult = 2;
+    int chance = base_chance * mult;
+
+    switch (brand)
     {
-    case MI_NEEDLE:
-        chance = (brand == SPMSL_CURARE ? 6 : 12);
-        break;
-
-    case MI_SLING_BULLET:
-    case MI_STONE:
-    case MI_ARROW:
-    case MI_BOLT:
-        chance = 8;
-        break;
-
-    case MI_DART:
-        chance = 6;
-        break;
-
-    case MI_TOMAHAWK:
-        chance = 30;
-        break;
-
-    case MI_JAVELIN:
-        chance = 20;
-        break;
-
-    case MI_LARGE_ROCK:
-        chance = 50;
-        break;
-
-    default:
-        die("Unknown missile type");
+        case SPMSL_STEEL:
+            chance *= 10;
+            break;
+        case SPMSL_FLAME:
+        case SPMSL_FROST:
+        case SPMSL_CURARE:
+            chance /= 2;
+            break;
     }
-
-    // Inflate by 4 to avoid rounding errors.
-    const int mult = 4;
-    chance *= mult;
-
-    if (brand == SPMSL_STEEL)
-        chance *= 10;
-    if (brand == SPMSL_FLAME)
-        chance /= 2;
-    if (brand == SPMSL_FROST)
-        chance /= 2;
 
     return x_chance_in_y(mult, chance);
 }

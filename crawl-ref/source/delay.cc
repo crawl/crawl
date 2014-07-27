@@ -14,6 +14,8 @@
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bloodspatter.h"
+#include "butcher.h"
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
@@ -22,6 +24,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "exercise.h"
 #include "enum.h"
 #include "fprop.h"
@@ -40,7 +43,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
@@ -58,6 +60,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "teleport.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -440,12 +443,12 @@ void handle_interrupted_swap()
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-bool you_are_delayed(void)
+bool you_are_delayed()
 {
     return !you.delay_queue.empty();
 }
 
-delay_type current_delay_action(void)
+delay_type current_delay_action()
 {
     return you_are_delayed() ? you.delay_queue.front().type
                              : DELAY_NOT_DELAYED;
@@ -860,7 +863,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_JEWELLERY_ON:
-        puton_ring(delay.parm1);
+        puton_ring(delay.parm1, false);
         break;
 
     case DELAY_ARMOUR_ON:
@@ -977,7 +980,7 @@ static void _finish_delay(const delay_queue_item &delay)
             if (monster* m = monster_at(pass))
             {
                 // One square, a few squares, anywhere...
-                if (!shift_monster(m) && !monster_blink(m, true))
+                if (!m->shift() && !monster_blink(m, true))
                     monster_teleport(m, true, true);
                 // Might still fail.
                 if (monster_at(pass))
@@ -1291,7 +1294,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
     if (cmd != CMD_NO_CMD)
     {
         if (delay.type != DELAY_REST)
-            mesclr();
+            clear_messages();
         process_command(cmd);
     }
 
@@ -1559,7 +1562,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        string text = mon->full_name(DESC_A);
+        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        if (text.empty())
+            text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
@@ -1604,7 +1609,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " comes up the stairs.";
         else if (at.context == SC_DOWNSTAIRS)
             text += " comes down the stairs.";
-        else if (at.context == SC_GATE)
+        else if (at.context == SC_ARCH)
             text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);
@@ -1675,6 +1680,11 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                     dec_penance(GOD_GOZAG, 1);
                 }
             }
+        }
+        if (player_mutation_level(MUT_SCREAM)
+            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        {
+            yell(mon);
         }
         const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }
@@ -1800,9 +1810,9 @@ bool interrupt_activity(activity_interrupt_type ai,
 
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "statue",
-    "hungry", "message", "hp_loss", "burden", "stat",
-    "monster", "monster_attack", "teleport", "hit_monster", "sense_monster"
+    "force", "keypress", "full_hp", "full_mp", "statue", "hungry", "message",
+    "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
+    "sense_monster"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)

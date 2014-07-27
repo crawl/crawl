@@ -197,7 +197,7 @@ WEIGHT: 5
 KMONS:  123 = water moccasin / black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of poison / potion of strong poison / \
+KITEM:  1235 = potion of poison w:20 / \
                potion of confusion / nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2
@@ -228,7 +228,6 @@ ENDMAP
 
 NAME:   nicolae_snake_lava_pool
 DEPTH:  Snake
-TAGS:   mini_float
 SUBST:  L = l1
 SUBST:  1 = 1.
 MONS:   adder / ball python / black mamba / anaconda w:5 / \
@@ -255,7 +254,6 @@ ENDMAP
 
 NAME:   nicolae_snake_springs
 DEPTH:  Snake
-TAGS:   mini_float
 SUBST:  W = w1
 SUBST:  1 = 1.
 MONS:   adder / ball python / black mamba / anaconda w:5 / \
@@ -399,7 +397,7 @@ xx.B...B.xx
 ENDMAP
 
 NAME:   nicolae_snake_shapes
-TAGS:   no_pool_fixup mini_float
+TAGS:   no_pool_fixup
 DEPTH:  Snake
 NSUBST: 0 = 2:9 / 1:8 / *:0
 SUBST:  x : xcvmlwWb
@@ -924,7 +922,7 @@ WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = known teleport trap w:2 / .
-KFEAT:   z = teleport trap / Zot trap / . w:20
+KFEAT:   z = permanent teleport trap / Zot trap / . w:20
 MONS:    naga / nothing
 MONS:    greater naga / nothing
 MONS:    guardian serpent / nothing

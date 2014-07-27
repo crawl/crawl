@@ -70,7 +70,6 @@ static void _sdump_header(dump_params &);
 static void _sdump_stats(dump_params &);
 static void _sdump_location(dump_params &);
 static void _sdump_religion(dump_params &);
-static void _sdump_burden(dump_params &);
 static void _sdump_hunger(dump_params &);
 static void _sdump_transform(dump_params &);
 static void _sdump_visits(dump_params &);
@@ -125,7 +124,6 @@ static dump_section_handler dump_handlers[] =
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },
     { "religion",       _sdump_religion      },
-    { "burden",         _sdump_burden        },
     { "hunger",         _sdump_hunger        },
     { "transform",      _sdump_transform     },
     { "visits",         _sdump_visits        },
@@ -218,23 +216,6 @@ static void _sdump_stats(dump_params &par)
     par.text += "\n\n";
 }
 
-static void _sdump_burden(dump_params &par)
-{
-    string verb = par.se? "were" : "are";
-
-    switch (you.burden_state)
-    {
-    case BS_OVERLOADED:
-        par.text += "You " + verb + " overloaded with stuff.\n";
-        break;
-    case BS_ENCUMBERED:
-        par.text += "You " + verb + " encumbered.\n";
-        break;
-    default:
-        break;
-    }
-}
-
 static void _sdump_hunger(dump_params &par)
 {
     if (par.se)
@@ -291,7 +272,8 @@ static void _sdump_transform(dump_params &par)
             else
             {
                 text += make_stringf("You %s grown temporary %s.",
-                                     par.se ? "had" : "have", appendage_name());
+                                     par.se ? "had" : "have",
+                                     mutation_name((mutation_type) you.attribute[ATTR_APPENDAGE]));
             }
             break;
         case TRAN_FUNGUS:
@@ -491,7 +473,6 @@ static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
     _sdump_religion(par);
-    _sdump_burden(par);
     _sdump_hunger(par);
     _sdump_transform(par);
     _sdump_visits(par);
@@ -1160,6 +1141,8 @@ static string _describe_action(caction_type type)
         return "  Use";
     case CACT_STAB:
         return " Stab";
+    case CACT_EAT:
+        return "  Eat";
     default:
         return "Error";
     }
@@ -1249,6 +1232,9 @@ static string _describe_action_subtype(caction_type type, int subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STAB);
         ASSERT_RANGE(subtype, 1, NUM_STAB);
         return _stab_names[subtype];
+    case CACT_EAT:
+        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
+                            : "Corpse";
     default:
         return "Error";
     }
@@ -1360,7 +1346,7 @@ static const char* thirst_names[] =
     "almost alive",
 };
 
-const char *hunger_level(void)
+const char *hunger_level()
 {
     COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
     COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);

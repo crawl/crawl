@@ -9,6 +9,7 @@
 
 #include "abyss.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "dbg-util.h"
 #include "food.h"
@@ -27,6 +28,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "status.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
@@ -43,7 +45,7 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
-void wizard_change_species(void)
+void wizard_change_species()
 {
     char specs[80];
 
@@ -98,24 +100,24 @@ void wizard_change_species(void)
     uint8_t prev_muts[NUM_MUTATIONS];
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (you.innate_mutations[i] > 0)
+        if (you.innate_mutation[i] > 0)
         {
-            if (you.innate_mutations[i] > you.mutation[i])
+            if (you.innate_mutation[i] > you.mutation[i])
                 you.mutation[i] = 0;
             else
-                you.mutation[i] -= you.innate_mutations[i];
+                you.mutation[i] -= you.innate_mutation[i];
 
-            you.innate_mutations[i] = 0;
+            you.innate_mutation[i] = 0;
         }
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (prev_muts[i] > you.innate_mutations[i])
-            you.innate_mutations[i] = 0;
+        if (prev_muts[i] > you.innate_mutation[i])
+            you.innate_mutation[i] = 0;
         else
-            you.innate_mutations[i] -= prev_muts[i];
+            you.innate_mutation[i] -= prev_muts[i];
     }
 
     switch (sp)
@@ -165,7 +167,7 @@ void wizard_change_species(void)
                 continue;
 
             ++you.mutation[m];
-            ++you.innate_mutations[m];
+            ++you.innate_mutation[m];
         }
         break;
     }
@@ -216,7 +218,6 @@ void wizard_change_species(void)
     calc_hp();
     calc_mp();
 
-    burden_change();
     // The player symbol depends on species.
     update_player_symbol();
 #ifdef USE_TILE
@@ -228,7 +229,7 @@ void wizard_change_species(void)
 
 #ifdef WIZARD
 // Casts a specific spell by number or name.
-void wizard_cast_spec_spell(void)
+void wizard_cast_spec_spell()
 {
     char specs[80], *end;
     int spell;
@@ -258,7 +259,7 @@ void wizard_cast_spec_spell(void)
         crawl_state.cancel_cmd_repeat();
 }
 
-void wizard_memorise_spec_spell(void)
+void wizard_memorise_spec_spell()
 {
     char specs[80], *end;
     int spell;
@@ -366,9 +367,9 @@ void wizard_set_piety()
     }
 
     const int newpiety = atoi(buf);
-    if (newpiety < 0 || newpiety > 200)
+    if (newpiety < 0 || newpiety > MAX_PIETY)
     {
-        mpr("Piety needs to be between 0 and 200.");
+        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
         return;
     }
 
@@ -411,19 +412,7 @@ void wizard_set_piety()
         return;
     }
     mprf("Setting piety to %d.", newpiety);
-
-    // We have to set the exact piety value this way, because diff may
-    // be decreased to account for things like penance and gift timeout.
-    int diff;
-    do
-    {
-        diff = newpiety - you.piety;
-        if (diff > 0)
-            gain_piety(diff, 1, true, false);
-        else if (diff < 0)
-            lose_piety(-diff);
-    }
-    while (diff != 0);
+    set_piety(newpiety);
 
     // Automatically reduce penance to 0.
     if (player_under_penance())
@@ -436,7 +425,7 @@ void wizard_set_piety()
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void wizard_exercise_skill(void)
+void wizard_exercise_skill()
 {
     skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
@@ -493,7 +482,7 @@ void wizard_set_skill_level(skill_type skill)
 #endif
 
 #ifdef WIZARD
-void wizard_set_all_skills(void)
+void wizard_set_all_skills()
 {
     double amount = prompt_for_float("Set all skills to what level? ");
 
@@ -732,181 +721,33 @@ void wizard_set_stats()
     you.redraw_evasion = true;
 }
 
-static const char* dur_names[] =
+void wizard_edit_durations()
 {
-    "invis",
-    "conf",
-    "paralysis",
-    "slow",
-    "mesmerised",
-    "haste",
-    "might",
-    "brilliance",
-    "agility",
-    "flight",
-    "berserker",
-    "poisoning",
-    "confusing touch",
-    "sure blade",
-    "corona",
-    "deaths door",
-    "fire shield",
-    "building rage",
-    "exhausted",
-    "liquid flames",
-    "icy armour",
-#if TAG_MAJOR_VERSION == 34
-    "repel missiles",
-    "prayer",
-#endif
-    "piety pool",
-    "divine vigour",
-    "divine stamina",
-    "divine shield",
-    "regeneration",
-    "swiftness",
-#if TAG_MAJOR_VERSION == 34
-    "controlled flight",
-#endif
-    "teleport",
-    "control teleport",
-    "breath weapon",
-    "transformation",
-    "death channel",
-#if TAG_MAJOR_VERSION == 34
-    "deflect missiles",
-#endif
-    "phase shift",
-#if TAG_MAJOR_VERSION == 34
-    "see invisible",
-#endif
-    "weapon brand",
-    "demonic guardian",
-    "pbd",
-    "silence",
-    "condensation shield",
-    "stoneskin",
-    "gourmand",
-#if TAG_MAJOR_VERSION == 34
-    "bargain",
-    "insulation",
-#endif
-    "resistance",
-#if TAG_MAJOR_VERSION == 34
-    "slaying",
-#endif
-    "stealth",
-    "magic shield",
-    "sleep",
-    "telepathy",
-    "petrified",
-    "lowered mr",
-    "repel stairs move",
-    "repel stairs climb",
-    "coloured smoke trail",
-    "slimify",
-    "time step",
-    "icemail depleted",
-#if TAG_MAJOR_VERSION == 34
-    "misled",
-#endif
-    "quad damage",
-    "afraid",
-    "mirror damage",
-    "scrying",
-    "tornado",
-    "liquefying",
-    "heroism",
-    "finesse",
-    "lifesaving",
-    "paralysis immunity",
-    "darkness",
-    "petrifying",
-    "shrouded",
-    "tornado cooldown",
-#if TAG_MAJOR_VERSION == 34
-    "nausea",
-#endif
-    "ambrosia",
-#if TAG_MAJOR_VERSION == 34
-    "temporary mutations",
-#endif
-    "disjunction",
-    "vehumet gift",
-#if TAG_MAJOR_VERSION == 34
-    "battlesphere",
-#endif
-    "sentinel's mark",
-    "sickening",
-    "drowning",
-    "drowning immunity",
-    "flayed",
-    "retching",
-    "weak",
-    "dimension anchor",
-    "antimagic",
-#if TAG_MAJOR_VERSION == 34
-    "spirit howl",
-#endif
-    "infused",
-    "song of slaying",
-#if TAG_MAJOR_VERSION == 34
-    "song of shielding",
-#endif
-    "toxic radiance",
-    "reciting",
-    "grasping roots",
-    "sleep immunity",
-    "fire vulnerability",
-    "elixir health",
-    "elixir magic",
-#if TAG_MAJOR_VERSION == 34
-    "antennae extend",
-#endif
-    "trogs hand",
-    "manticore barbs",
-    "poison vulnerability",
-    "frozen",
-    "sap magic",
-    "magic sapped",
-    "portal projectile",
-    "forested",
-    "dragon call",
-    "dragon call cooldown",
-    "aura of abjuration",
-    "mesmerisation immunity",
-    "no potions",
-    "qazlal fire resistance",
-    "qazlal cold resistance",
-    "qazlal elec resistance",
-    "qazlal ac"
-};
-
-void wizard_edit_durations(void)
-{
-    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
-    vector<int> durs;
+    vector<duration_type> durs;
     size_t max_len = 0;
 
     for (int i = 0; i < NUM_DURATIONS; ++i)
     {
+        const duration_type dur = static_cast<duration_type>(i);
+
         if (!you.duration[i])
             continue;
 
-        max_len = max(strlen(dur_names[i]), max_len);
-        durs.push_back(i);
+        max_len = max(strlen(duration_name(dur)), max_len);
+        durs.push_back(dur);
     }
 
     if (!durs.empty())
     {
-        for (unsigned int i = 0; i < durs.size(); ++i)
+        for (size_t i = 0; i < durs.size(); ++i)
         {
-            int dur = durs[i];
-            mprf_nocap(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
-                 dur_names[dur], you.duration[dur]);
+            const duration_type dur = durs[i];
+            const char ch = i >= 26 ? ' ' : 'a' + i;
+            mprf_nocap(MSGCH_PROMPT, "%c%c %-*s : %d",
+                 ch, ch == ' ' ? ' ' : ')',
+                 (int)max_len, duration_name(dur), you.duration[dur]);
         }
-        mprf(MSGCH_PROMPT, "");
-        mprf(MSGCH_PROMPT, "Edit which duration (letter or name)? ");
+        mprf(MSGCH_PROMPT, "\nEdit which duration (letter or name)? ");
     }
     else
         mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
@@ -925,43 +766,44 @@ void wizard_edit_durations(void)
         return;
     }
 
-    int choice = -1;
+    duration_type choice = NUM_DURATIONS;
 
-    if (strlen(buf) == 1)
+    if (strlen(buf) == 1 && isalower(buf[0]))
     {
         if (durs.empty())
         {
             mprf(MSGCH_PROMPT, "No existing durations to choose from.");
             return;
         }
-        choice = buf[0] - 'a';
+        const int dchoice = buf[0] - 'a';
 
-        if (choice < 0 || choice >= (int) durs.size())
+        if (dchoice < 0 || dchoice >= (int) durs.size())
         {
             mprf(MSGCH_PROMPT, "Invalid choice.");
             return;
         }
-        choice = durs[choice];
+        choice = durs[dchoice];
     }
     else
     {
-        vector<int>    matches;
+        vector<duration_type> matches;
         vector<string> match_names;
 
         for (int i = 0; i < NUM_DURATIONS; ++i)
         {
-            if (strcmp(dur_names[i], buf) == 0)
+            const duration_type dur = static_cast<duration_type>(i);
+            if (strcmp(duration_name(dur), buf) == 0)
             {
-                choice = i;
+                choice = dur;
                 break;
             }
-            if (strstr(dur_names[i], buf) != NULL)
+            if (strstr(duration_name(dur), buf) != NULL)
             {
-                matches.push_back(i);
-                match_names.push_back(dur_names[i]);
+                matches.push_back(dur);
+                match_names.push_back(duration_name(dur));
             }
         }
-        if (choice != -1)
+        if (choice != NUM_DURATIONS)
             ;
         else if (matches.size() == 1)
             choice = matches[0];
@@ -982,7 +824,7 @@ void wizard_edit_durations(void)
         }
     }
 
-    snprintf(buf, sizeof(buf), "Set '%s' to: ", dur_names[choice]);
+    snprintf(buf, sizeof(buf), "Set '%s' to: ", duration_name(choice));
     int num = prompt_for_int(buf, false);
 
     if (num == 0)
@@ -1017,19 +859,20 @@ static void debug_uptick_xl(int newxl, bool train)
 static void debug_downtick_xl(int newxl)
 {
     set_hp(you.hp_max);
-    you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    // boost maxhp so we don't die if heavily rotted
+    you.hp_max_adj_perm += 1000;
     you.experience = exp_needed(newxl);
     level_change();
     you.skill_cost_level = 0;
     check_skill_cost_change();
     // restore maxhp loss
-    you.hp_max_perm -= 1000;
+    you.hp_max_adj_perm -= 1000;
     calc_hp();
     if (you.hp_max <= 0)
     {
         // ... but remove it completely if unviable
-        you.hp_max_temp = max(you.hp_max_temp, 0);
-        you.hp_max_perm = max(you.hp_max_perm, 0);
+        you.hp_max_adj_temp = max(you.hp_max_adj_temp, 0);
+        you.hp_max_adj_perm = max(you.hp_max_adj_perm, 0);
         calc_hp();
     }
 
@@ -1066,7 +909,7 @@ void set_xl(const int newxl, const bool train)
         debug_uptick_xl(newxl, train);
 }
 
-void wizard_get_god_gift(void)
+void wizard_get_god_gift()
 {
     if (you_worship(GOD_NO_GOD))
     {
@@ -1223,19 +1066,24 @@ static void _wizard_modify_character(string inputdata)
     return;
 }
 
-void wizard_load_dump_file()
+/**
+ * Load a character from a dump file.
+ *
+ * @param filename The name of the file to open.
+ * @pre The file either does not exist, or is a complete
+ *      dump or morgue file.
+ * @returns True if the file existed and could be opened.
+ * @post The player's stats, level, skills, training, and gold are
+ *       those listed in the dump file.
+ */
+static bool _load_dump_file(const char *filename)
 {
-    char filename[80];
-    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
-    if (filename[0] == '\0')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
+    FileLineInput f(filename);
+    if (f.eof())
+        return false;
 
     you.init_skills();
 
-    FileLineInput f(filename);
     while (!f.eof())
         _wizard_modify_character(f.get_line());
 
@@ -1243,4 +1091,19 @@ void wizard_load_dump_file()
     init_can_train();
     init_train();
     init_training();
+    return true;
+}
+
+void wizard_load_dump_file()
+{
+    char filename[80];
+    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
+
+    if (filename[0] == '\0')
+        canned_msg(MSG_OK);
+    else if (!_load_dump_file(filename)
+             && !_load_dump_file((morgue_directory() + filename).c_str()))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+    }
 }

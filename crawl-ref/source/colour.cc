@@ -8,7 +8,6 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -66,7 +65,7 @@ int random_element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*real_calc)(rand(non_random), loc, rand_vals);
 }
 
-colour_t random_colour(void)
+colour_t random_colour()
 {
     return 1 + random2(15);
 }

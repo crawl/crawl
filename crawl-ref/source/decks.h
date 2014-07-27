@@ -44,8 +44,10 @@ enum card_flags_type
 
 enum card_type
 {
+#if TAG_MAJOR_VERSION == 34
     CARD_PORTAL,                // "the mover"
     CARD_WARP,                  // "the jumper"
+#endif
     CARD_SWAP,                  // "swap"
     CARD_VELOCITY,              // "the runner"
 
@@ -54,20 +56,22 @@ enum card_type
     CARD_DAMNATION,             // banishment
     CARD_SOLITUDE,              // dispersal
     CARD_WARPWRIGHT,            // create teleport trap
-    CARD_FLIGHT,
+    CARD_SHAFT,
 
     CARD_VITRIOL,               // acid damage
-    CARD_FLAME,                 // fire damage
-    CARD_FROST,                 // cold damage
+    CARD_CLOUD,                 // fire/cold clouds
+    CARD_HAMMER,                // plain damage
     CARD_VENOM,                 // poison damage
-    CARD_HAMMER,                // pure damage
-    CARD_SPARK,                 // lightning damage
+    CARD_FORTITUDE,             // strength and damage shaving
+    CARD_STORM,
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
     CARD_ORB,
 
     CARD_ELIXIR,                // healing
+#if TAG_MAJOR_VERSION == 34
     CARD_BATTLELUST,            // melee boosts
+#endif
     CARD_METAMORPHOSIS,         // transformation
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
@@ -84,8 +88,8 @@ enum card_type
 
     CARD_POTION,
     CARD_FOCUS,
-    CARD_SHUFFLE,
 #if TAG_MAJOR_VERSION == 34
+    CARD_SHUFFLE,
     CARD_EXPERIENCE,
 #endif
     CARD_WILD_MAGIC,
@@ -106,8 +110,8 @@ enum card_type
 #endif
     CARD_STAIRS,                // moves stairs around
 
-    CARD_GENIE,                 // acquirement OR rotting/deterioration
 #if TAG_MAJOR_VERSION == 34
+    CARD_GENIE,                 // acquirement OR rotting/deterioration
     CARD_BARGAIN,               // shopping discount
 #endif
     CARD_WRATH,                 // Godly wrath
@@ -117,6 +121,8 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
+    CARD_ILLUSION,
+    CARD_DEGEN,
 
     NUM_CARDS
 };

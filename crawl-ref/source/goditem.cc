@@ -207,7 +207,7 @@ bool is_evil_item(const item_def& item)
         const int item_brand = get_weapon_brand(item);
         return item_brand == SPWPN_DRAINING
                || item_brand == SPWPN_PAIN
-               || item_brand == SPWPN_VAMPIRICISM
+               || item_brand == SPWPN_VAMPIRISM
                || item_brand == SPWPN_REAPING;
         }
         break;
@@ -351,7 +351,7 @@ bool is_hasty_item(const item_def& item)
         retval = (item.sub_type == WAND_HASTING);
         break;
     case OBJ_JEWELLERY:
-        retval = (item.sub_type == AMU_RAGE);
+        retval = (item.sub_type == AMU_RAGE && !is_artefact(item));
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_HASTE
@@ -363,12 +363,6 @@ bool is_hasty_item(const item_def& item)
         break;
     default:
         break;
-    }
-
-    if (is_artefact(item) && item.base_type != OBJ_BOOKS
-        && (artefact_wpn_property(item, ARTP_ANGRY)))
-    {
-        retval = true;
     }
 
     return retval;
@@ -462,7 +456,7 @@ bool is_fiery_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_FLAMING || item_brand == SPWPN_FLAME)
+        if (item_brand == SPWPN_FLAMING)
             return true;
         }
         break;
@@ -704,9 +698,13 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         // effect, are risky to use, or would otherwise amuse him, but
         // that would be a really small number of spells.
 
+        // Neutral, but in an amusing way.
+        if (spell == SPELL_INNER_FLAME)
+            return false;
+
         // Xom would probably find these extra boring.
         if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
-                     | SPFLAG_RECOVERY | SPFLAG_MAPPING))
+                     | SPFLAG_RECOVERY))
         {
             return true;
         }

@@ -149,9 +149,11 @@ int dlua_chunk::check_op(CLua &interp, int err)
 int dlua_chunk::load(CLua &interp)
 {
     if (!compiled.empty())
+    {
         return check_op(interp,
                          interp.loadbuffer(compiled.c_str(), compiled.length(),
                                            context.c_str()));
+    }
 
     if (empty())
     {

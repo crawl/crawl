@@ -110,7 +110,7 @@ void disjunction()
 // a monster being at the target spot), and the player gains no
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
-          string *pre_msg)
+          string *pre_msg, bool safely_cancellable)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -140,6 +140,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     // The orb sometimes degrades controlled blinks to completely uncontrolled.
     else if (orb_haloed(you.pos()) && !wizard_blink)
     {
+        if (safely_cancellable && !high_level_controlled_blink
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return -1;
+        }
+
         if (pre_msg)
             mpr(pre_msg->c_str());
         mprf(MSGCH_ORB, "The orb interferes with your control of the blink!");
@@ -150,6 +158,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
+        if (safely_cancellable && !high_level_controlled_blink
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return -1;
+        }
+
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
@@ -178,11 +194,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
             if (!beam.isValid || beam.target == you.pos())
             {
-                if (!wizard_blink
+                if (!wizard_blink && !safely_cancellable
                     && !yesno("Are you sure you want to cancel this blink?",
                               false, 'n'))
                 {
-                    mesclr();
+                    clear_messages();
                     continue;
                 }
                 canned_msg(MSG_OK);
@@ -207,12 +223,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
             if (grd(beam.target) == DNGN_OPEN_SEA)
             {
-                mesclr();
+                clear_messages();
                 mpr("You can't blink into the sea!");
             }
             else if (grd(beam.target) == DNGN_LAVA_SEA)
             {
-                mesclr();
+                clear_messages();
                 mpr("You can't blink into the sea of lava!");
             }
             else if (!check_moveto(beam.target, "blink"))
@@ -230,12 +246,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                 if (wizard_blink)
                     break;
 
-                mesclr();
+                clear_messages();
                 mpr("There's something in the way!");
             }
             else
             {
-                mesclr();
+                clear_messages();
                 mpr("You can only blink to visible locations.");
             }
         }
@@ -347,7 +363,7 @@ spret_type cast_teleport_self(bool fail)
     return SPRET_SUCCESS;
 }
 
-void you_teleport(void)
+void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
@@ -809,6 +825,13 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     item_def& item = mitm[item_idx];
 
+    // Nets can be apported when they have a victim trapped.
+    if (item_is_stationary(item) && !item_is_stationary_net(item))
+    {
+        mpr("You cannot apport that!");
+        return SPRET_ABORT;
+    }
+
     // Can't apport the Orb in zotdef or sprint
     if (item_is_orb(item)
         && (crawl_state.game_is_zotdef()
@@ -819,23 +842,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
 
     fail_check();
-    // Mass of one unit.
-    const int unit_mass = item_mass(item);
-    const int max_mass = pow * 30 + random2(pow * 20);
-
-    int max_units = item.quantity;
-    if (unit_mass > 0)
-        max_units = max_mass / unit_mass;
-
-    if (max_units <= 0)
-    {
-        if (item_is_orb(item))
-            orb_pickup_noise(where, 30);
-
-        mpr("The mass is resisting your pull.");
-
-        return SPRET_SUCCESS;
-    }
 
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
@@ -862,9 +868,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
 
     // If we apport a net, free the monster under it.
-    if (item.base_type == OBJ_MISSILES
-        && item.sub_type == MI_THROWING_NET
-        && item_is_stationary(item))
+    if (item_is_stationary_net(item))
     {
         free_stationary_net(item_idx);
         if (monster* mons = monster_at(where))
@@ -887,10 +891,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     // The maximum number of squares the item will actually move, always
     // at least one square.
-    int quantity = item.quantity;
-    int apported_mass = unit_mass * min(quantity, max_units);
-
-    int max_dist = max(60 * pow / (apported_mass + 150), 1);
+    int max_dist = max(pow * 2 / 5, 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
@@ -922,19 +923,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     mprf("Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
 
-    if (max_units < item.quantity)
-    {
-        if (!copy_item_to_grid(item, new_spot, max_units))
-        {
-            // Always >1 item.
-            mpr("They abruptly stop in place!");
-            // Too late to abort.
-            return SPRET_SUCCESS;
-        }
-        item.quantity -= max_units;
-    }
-    else
-        move_top_item(where, new_spot);
+    move_top_item(where, new_spot);
 
     // Mark the item as found now.
     origin_set(new_spot);

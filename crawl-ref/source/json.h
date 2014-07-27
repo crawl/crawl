@@ -95,12 +95,12 @@ JsonNode   *json_first_child    (const JsonNode *node);
 
 /*** Construction and manipulation ***/
 
-JsonNode *json_mknull(void);
+JsonNode *json_mknull();
 JsonNode *json_mkbool(bool b);
 JsonNode *json_mkstring(const char *s);
 JsonNode *json_mknumber(double n);
-JsonNode *json_mkarray(void);
-JsonNode *json_mkobject(void);
+JsonNode *json_mkarray();
+JsonNode *json_mkobject();
 
 void json_append_element(JsonNode *array, JsonNode *element);
 void json_prepend_element(JsonNode *array, JsonNode *element);

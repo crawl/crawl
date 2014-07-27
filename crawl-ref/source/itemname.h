@@ -79,6 +79,13 @@ enum
     NDSC_BOOK_SEC  = 8,
 };
 
+enum mbn_type
+{
+    MBN_TERSE, // terse brand name
+    MBN_NAME,  // brand name for item naming (adj for prefix, noun for postfix)
+    MBN_BRAND, // plain brand name
+};
+
 bool is_vowel(const ucs_t chr);
 
 void check_item_knowledge(bool unknown_items = false);
@@ -101,8 +108,9 @@ bool is_useless_item(const item_def &item, bool temp = false);
 
 string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
 
-const char* weapon_brand_name(const item_def& item, bool terse);
+const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0);
 const char* armour_ego_name(const item_def& item, bool terse);
+const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
 item_type_id_state_type get_ident_type(const item_def &item);
@@ -129,12 +137,13 @@ const char* rune_type_name(int p);
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
 const char* deck_rarity_name(deck_rarity_type rarity);
-string base_type_string(object_class_type type, bool known = true);
-string base_type_string(const item_def &item, bool known = true);
+string base_type_string(object_class_type type);
+string base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 
-string ego_type_string(const item_def &item, bool terse = false);
+string ego_type_string(const item_def &item, bool terse = false, int override_brand = 0);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
+const char* jewellery_effect_name(int jeweltype) PURE; //used in l_item.cc
 #endif

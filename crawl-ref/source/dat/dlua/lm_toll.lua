@@ -1,7 +1,8 @@
 ------------------------------------------------------------------------------
 -- lm_toll.lua:
 -- One-way toll-stair marker.
--- TAG_MAJOR_VERSION: please remove
+-- This file is necessary for TAG_MAJOR_VERSION == 34.
+-- If TAG_MAJOR_VERSION > 34 this file should be removed.
 ------------------------------------------------------------------------------
 
 require("dlua/lm_1way.lua")

@@ -43,6 +43,7 @@ game_state::game_state()
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
       lua_calls_no_turn(0), stat_gain_prompt(false),
       level_annotation_shown(false), viewport_monster_hp(false),
+      viewport_weapons(false),
 #ifndef USE_TILE_LOCAL
       mlist_targeting(false),
 #else
@@ -477,8 +478,10 @@ void game_state::dump()
                   "arena_suspended: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended);
     if (last_winch)
+    {
         fprintf(stderr, "Last resize was %" PRId64" seconds ago.\n",
                 (int64_t)(time(0) - last_winch));
+    }
 
     fprintf(stderr, "\n");
 
@@ -522,9 +525,11 @@ void game_state::dump()
     {
         fprintf(stderr, "Other gods acting:\n");
         for (unsigned int i = 0; i < god_act_stack.size(); i++)
+        {
             fprintf(stderr, "God %s with depth %d\n",
                     god_name(god_act_stack[i].which_god).c_str(),
                     god_act_stack[i].depth);
+        }
         fprintf(stderr, "\n\n");
     }
 
@@ -539,8 +544,10 @@ void game_state::dump()
     {
         fprintf(stderr, "Others monsters acting:\n");
         for (unsigned int i = 0; i < mon_act_stack.size(); i++)
+        {
             fprintf(stderr, "    %s\n",
                     debug_mon_str(mon_act_stack[i]).c_str());
+        }
     }
 }
 

@@ -22,6 +22,7 @@
 #define TEMPLE_GODS_KEY      "temple_gods_key"
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
+#define TEMPLE_SIZE_KEY      "temple_size_key"
 
 const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;
@@ -34,18 +35,20 @@ const unsigned short INVALID_MAP_INDEX = 10000;
 
 enum map_mask_type
 {
-    MMT_NONE       = 0x0,
-    MMT_VAULT      = 0x01,    // This is a square in a vault.
-    MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
-    MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
-    MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
-    MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
-    MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
-    MMT_NO_TRAP    = 0x80,    // No trap generation
-    MMT_MIMIC      = 0x100,   // Feature mimics
-    MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
-    MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
-    MMT_NUKED      = 0x800,   // This feature was dug, deconstructed or nuked.
+    MMT_NONE            = 0x0,
+    MMT_VAULT           = 0x01,  // This is a square in a vault.
+    MMT_NO_ITEM         = 0x02,  // Random items should not be placed here.
+    MMT_NO_MONS         = 0x04,  // Random monsters should not be placed here.
+    MMT_NO_POOL         = 0x08,  // Pool fixup should not be applied here.
+    MMT_NO_WALL         = 0x20,  // Wall fixup should not be applied here.
+    MMT_OPAQUE          = 0x40,  // Vault may impede connectivity.
+    MMT_NO_TRAP         = 0x80,  // No trap generation
+    MMT_MIMIC           = 0x100, // Feature mimics
+    MMT_NO_MIMIC        = 0x200, // Feature shouldn't be turned into a mimic.
+#if TAG_MAJOR_VERSION == 34
+    MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
+#endif
+    MMT_TURNED_TO_FLOOR = 0x800, // This feature was dug, deconstructed or such.
 };
 
 class dgn_region;
@@ -136,7 +139,7 @@ public:
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
-    void connect(bool spotty = false) const;
+    int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
     dungeon_feature_type feature_at(const coord_def &c);
     bool is_exit(const coord_def &c);
@@ -286,5 +289,5 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);
 
-void fixup_misplaced_items(void);
+void fixup_misplaced_items();
 #endif

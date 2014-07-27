@@ -166,7 +166,7 @@ static bool userfunc_referenced(int index)
 }
 
 // Expensive function to discard unused function names
-static void userfunc_collectgarbage(void)
+static void userfunc_collectgarbage()
 {
     for (int i = userfunctions.size() - 1; i >= 0; --i)
     {
@@ -883,14 +883,14 @@ static string _macro_type_name(bool keymap, KeymapContext keymc)
                         (keymap ? "keymap" : "macro"));
 }
 
-void macro_add_query(void)
+void macro_add_query()
 {
     int input;
     bool keymap = false;
     bool raw = false;
     KeymapContext keymc = KMC_DEFAULT;
 
-    mesclr();
+    clear_messages();
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
                        "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");
@@ -989,9 +989,11 @@ void macro_add_query(void)
     {
         const bool deleted_macro = macro_del(mapref, key);
         if (deleted_macro)
+        {
             mprf("Deleted %s for '%s'.",
                  macro_type.c_str(),
                  vtostr(key).c_str());
+        }
         else
             canned_msg(MSG_OK);
     }

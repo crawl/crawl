@@ -40,7 +40,6 @@
 #include "mon-act.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
@@ -92,8 +91,11 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        if (setup_mons_cast(&fake_mon, pbolt, spell, true))
+        if (spell == SPELL_MELEE
+            || setup_mons_cast(&fake_mon, pbolt, spell, true))
+        {
             _valid_mon_spells[i] = true;
+        }
     }
 }
 
@@ -201,19 +203,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
 
         bool got_target = false;
 
-        // Shedu only heal each other.
-        if (mons_is_shedu(caster))
-        {
-            if (mons_is_shedu(*targ) && caster->mid == targ->number
-                && caster->number == targ->mid
-                && _flavour_benefits_monster(pbolt.flavour, **targ))
-            {
-                got_target = true;
-            }
-            else
-                continue;
-        }
-        else if ((mons_genus(targ->type) == caster_genus
+        if ((mons_genus(targ->type) == caster_genus
                  || mons_genus(targ->base_monster) == caster_genus
                  || (caster_genus == MONS_SALAMANDER        // Let mystics haste
                      && mons_genus(targ->type) == MONS_NAGA)// their brethren
@@ -578,7 +568,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.ex_size      = 1;
         beam.flavour      = BEAM_HELLFIRE;
         beam.is_explosion = true;
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.aux_source.clear();
         beam.is_tracer    = false;
         beam.hit          = 20;
@@ -704,8 +694,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.short_name = "energy";
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
-        beam.flavour    = BEAM_NUKE; // a magical missile which destroys walls
-        beam.is_beam    = true;
+        beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
+        beam.is_beam    = true;             // except it also destroys walls
         break;
 
     case SPELL_STING:              // sting
@@ -754,7 +744,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
             beam.damage   = dice_def(3, 2 + (power / 30));
 
         // Natural ability, so don't use spell_hd here
-        beam.hit      = 20 + (3 * mons->hit_dice);
+        beam.hit      = 20 + (3 * mons->get_hit_dice());
         beam.flavour  = BEAM_ACID;
         break;
 
@@ -798,7 +788,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_HELLFIRE:           // fiend's hellfire
         beam.name         = "blast of hellfire";
         beam.aux_source   = "blast of hellfire";
-        beam.colour       = RED;
+        beam.colour       = LIGHTRED;
         beam.damage       = dice_def(3, 20);
         beam.hit          = 24;
         beam.flavour      = BEAM_HELLFIRE;
@@ -835,7 +825,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
         beam.short_name = "flames";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = RED;
         beam.hit        = 30;
         beam.flavour    = BEAM_FIRE;
@@ -845,7 +835,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CHAOS_BREATH:
         beam.name       = "blast of chaos";
         beam.aux_source = "blast of chaotic breath";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = ETC_RANDOM;
         beam.hit        = 30;
         beam.flavour    = BEAM_CHAOS;
@@ -856,7 +846,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name       = "blast of cold";
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
-        beam.damage     = dice_def(3, (mons->hit_dice * 2));
+        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour     = WHITE;
         beam.hit        = 30;
         beam.flavour    = BEAM_COLD;
@@ -865,7 +855,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HOLY_BREATH:
         beam.name     = "blast of cleansing flame";
-        beam.damage   = dice_def(3, (mons->hit_dice * 2));
+        beam.damage   = dice_def(3, (mons->get_hit_dice() * 2));
         beam.colour   = ETC_HOLY;
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 18 + power / 25;
@@ -874,7 +864,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_DRACONIAN_BREATH:
-        beam.damage      = dice_def(3, (mons->hit_dice * 2));
+        beam.damage      = dice_def(3, (mons->get_hit_dice() * 2));
         beam.hit         = 30;
         beam.is_beam     = true;
         break;
@@ -893,7 +883,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
-        beam.flavour  = BEAM_NUKE;
+        beam.flavour  = BEAM_DEVASTATION;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
         // we'll ignore that.  We need some damage on the tracer so the monster
@@ -1077,6 +1067,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_CRYSTAL;
         beam.hit      = 17 + power / 25;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_DRAIN_MAGIC:
+        beam.ench_power = mons->spell_hd(real_spell) * 6;
+        beam.flavour    = BEAM_DRAIN_MAGIC;
         break;
 
     default:
@@ -1480,7 +1475,7 @@ static bool _valid_blink_away_ally(const monster* caster, const monster* target,
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
 {
     return mons_aligned(caller, callee) && mons_is_beast(callee->type)
-           && callee->hit_dice <= 20
+           && callee->get_experience_level() <= 20
            && !callee->is_shapeshifter()
            && !caller->see_cell(callee->pos())
            && mons_habitat(callee) != HT_WATER
@@ -1808,7 +1803,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_CHARM)
                 && *mi != mon && mon->see_cell_no_trans(mi->pos())
                 && !mi->has_ench(ENCH_INJURY_BOND))
+            {
                     return false; // We found at least one target; that's enough.
+            }
         }
         ret = true;
         break;
@@ -1932,7 +1929,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             && !adjacent(you.pos(), mon->pos())
             || (mon->foe != MHITYOU && mon->foe != MHITNOT
                 && !adjacent(menv[mon->foe].pos(), mon->pos())))
+        {
             ret = true;
+        }
         break;
 
     case SPELL_PORTAL_PROJECTILE:
@@ -2215,7 +2214,7 @@ static bool _should_recall(monster* caller)
             if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi)
                 && !mons_is_firewood(*mi))
             {
-                ally_hd += mi->hit_dice;
+                ally_hd += mi->get_experience_level();
             }
         }
         return 25 + roll_dice(2, 22) > ally_hd;
@@ -2439,8 +2438,9 @@ static void _cast_druids_call(const monster* mon)
     shuffle_array(mon_list);
 
     const actor* target = mon->get_foe();
-    const int num = min((int)mon_list.size(), mon->hit_dice > 10 ? random_range(2, 3)
-                                                                 : random_range(1, 2));
+    const int num = min((int)mon_list.size(),
+                        mon->get_experience_level() > 10 ? random_range(2, 3)
+                                                      : random_range(1, 2));
 
     for (int i = 0; i < num; ++i)
         _place_druids_call_beast(mon, mon_list[i], target);
@@ -2634,14 +2634,14 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
             tracer.friend_info.count++;
             tracer.friend_info.power +=
                     ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+                                    : ai->as_monster()->get_experience_level();
         }
         else
         {
             tracer.foe_info.count++;
             tracer.foe_info.power +=
                     ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+                                    : ai->as_monster()->get_experience_level();
         }
     }
     return mons_should_fire(tracer);
@@ -2782,6 +2782,9 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     hitfunc.set_aim(pos);
 
     bolt tracer;
+    tracer.foe_ratio = 80;
+    tracer.beam_source = agent->mindex();
+    tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(*ai))
@@ -2888,7 +2891,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     }
     // Servitors never fail to (try) to cast a spell
     else if (mons->type != MONS_SPELLFORGED_SERVITOR
-             && random2(200) > mons->hit_dice + 50)
+             && random2(200) > mons->get_hit_dice() + 50)
     {
         return false;
     }
@@ -3144,6 +3147,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     }
                 }
 
+                // Don't knockback something we're trying to constrict.
+                const actor *victim = actor_at(beem.target);
+                if (victim &&
+                    beem.can_knockback(victim)
+                    && mons->is_constricting()
+                    && mons->constricting->count(victim->mid))
+                {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
@@ -3302,7 +3316,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast),
                                       mons, false) != SPRET_SUCCESS)
+            {
                 return false;
+            }
         }
         else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
         {
@@ -3498,7 +3514,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
     bool shielded = false;
     if (you_worship(GOD_SHINING_ONE))
     {
-        pow = pow * (30 - target->hit_dice) / 30;
+        pow = pow * (30 - target->get_hit_dice()) / 30;
         if (pow < duration)
         {
             simple_god_message(" protects your fellow warrior from evil "
@@ -3907,7 +3923,7 @@ void setup_breath_timeout(monster* mons)
  * @param mons      The monster doing the mesmerisation.
  * @param actual    Whether or not we are actually casting the spell. If false,
  *                  no messages are emitted.
- * @returns         0 if the player could be mesmerised but wasn't, 1 if the
+ * @return          0 if the player could be mesmerised but wasn't, 1 if the
  *                  player was mesmerised, -1 if the player couldn't be
  *                  mesmerised.
 **/
@@ -4141,7 +4157,9 @@ static coord_def _mons_fragment_target(monster *mons)
         bolt beam;
         if (!setup_fragmentation_beam(beam, pow, mons, *di, false, true, true,
                                       NULL, temp, temp))
+        {
             continue;
+        }
 
         beam.range = range;
         fire_tracer(mons, beam, true);
@@ -4151,7 +4169,9 @@ static coord_def _mons_fragment_target(monster *mons)
         bolt beam2;
         if (!setup_fragmentation_beam(beam2, pow, mons, *di, false, false, true,
                                       NULL, temp, temp))
+        {
             continue;
+        }
 
         beam2.range = range;
         fire_tracer(mons, beam2, true);
@@ -4441,7 +4461,7 @@ static const pop_entry _planerend_lair[] =
 { // Lair enemies
   {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
   {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,   1,   60, FLAT, MONS_DEATH_YAK },
+  {  1,   1,   60, FLAT, MONS_TORPOR_SNAIL },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4459,8 +4479,8 @@ static const pop_entry _planerend_spider[] =
   {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
   {  1,   1,   20, FLAT, MONS_RED_WASP },
-  {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
-  {  1,   1,   60, FLAT, MONS_WOLF_SPIDER },
+  {  1,   1,   60, FLAT, MONS_ORB_SPIDER },
+  {  1,   1,   20, FLAT, MONS_TARANTELLA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4496,7 +4516,7 @@ static const pop_entry _planerend_orc[] =
   {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
   {  1,   1,   80, FLAT, MONS_ORC_SORCERER },
   {  1,   1,   80, FLAT, MONS_ORC_HIGH_PRIEST },
-  {  1,   1,   40, FLAT, MONS_IRON_TROLL },
+  {  1,   1,   40, FLAT, MONS_STONE_GIANT },
   {  1,   1,   60, FLAT, MONS_OGRE_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -4677,7 +4697,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #ifdef ASSERTS
     const unsigned int flags = get_spell_flags(spell_cast);
 
-    ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
+    ASSERT(!(flags & SPFLAG_TESTING));
 
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
@@ -4734,7 +4754,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                MSGCH_MONSTER_SPELL);
         // Not spell_hd(spell_cast); this is an invocation
         const int dur = BASELINE_DELAY
-            * min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
+            * min(5 + roll_dice(2, (mons->get_hit_dice() * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
@@ -4755,8 +4775,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STONESKIN:
     {
         if (you.can_see(mons))
+        {
             mprf("%s skin hardens.",
                  apostrophise(mons->name(DESC_THE)).c_str());
+        }
         const int power = (mons->spell_hd(spell_cast) * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
                        BASELINE_DELAY * (10 + (2 * random2(power)))));
@@ -5096,12 +5118,15 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     {
         // Invocation; don't use spell_hd
-        const int power = (mons->hit_dice * 20)+ random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        const int power = (mons->get_hit_dice() * 20)
+                          + random2(mons->get_hit_dice() * 5)
+                          - random2(mons->get_hit_dice() * 5);
         monster_type to_summon;
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
-            monster_type berserkers[] = { MONS_POLAR_BEAR, MONS_ELEPHANT, MONS_DEATH_YAK };
+            monster_type berserkers[] = { MONS_POLAR_BEAR, MONS_ELEPHANT,
+                                          MONS_DEATH_YAK };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
         else
@@ -6134,8 +6159,8 @@ static string _noise_message(const vector<string>& key_list,
         const string key = key_list[i];
 
 #ifdef DEBUG_MONSPEAK
-        mprf(MSGCH_DIAGNOSTICS, "monster casting lookup: %s%s", prefix.c_str(),
-                                                                key.c_str());
+        dprf(DIAG_SPEECH, "monster casting lookup: %s%s",
+             prefix.c_str(), key.c_str());
 #endif
 
         msg = getSpeakString(prefix + key);

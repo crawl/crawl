@@ -143,7 +143,7 @@ static void _init_consoles()
 static void _shutdown_console()
 {
 #ifdef TARGET_OS_WINDOWS
-    typedef BOOL (WINAPI *fc_func)(void);
+    typedef BOOL (WINAPI *fc_func)();
     fc_func free_console = (fc_func)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
     if (free_console)
@@ -883,8 +883,6 @@ int TilesFramework::getch_ck()
 
 static const int map_margin      = 2;
 static const int map_stat_margin = 4;
-static const int crt_width       = 80;
-static const int crt_height      = 30;
 static const int min_stat_height = 12;
 static const int min_inv_height  = 4;
 static const int max_inv_height  = 6;
@@ -1269,7 +1267,6 @@ void TilesFramework::place_gold_turns()
     if (m_statcol_bottom - m_statcol_top < m_region_stat->dy)
         return;
 
-    Options.show_gold_turns = true;
     ++crawl_view.hudsz.y;
     m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
     if (m_region_map)
@@ -1295,7 +1292,6 @@ void TilesFramework::layout_statcol()
         m_region_map = NULL;
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
-    Options.show_gold_turns = false;
 
     if (use_small_layout)
     {
@@ -1337,9 +1333,11 @@ void TilesFramework::layout_statcol()
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
+#if TAG_MAJOR_VERSION == 34
         // Lava orc temperature bar and zot points.
         if (you.species == SP_LAVA_ORC)
             ++crawl_view.hudsz.y;
+#endif
         if (crawl_state.game_is_zotdef())
             ++crawl_view.hudsz.y;
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);

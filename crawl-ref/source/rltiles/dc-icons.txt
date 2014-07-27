@@ -54,6 +54,9 @@ fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
 sleeping STAB_BRAND
 pain_mirror PAIN_MIRROR
+deaths_door DEATHS_DOOR
+recall RECALL
+drain DRAIN
 
 something_under SOMETHING_UNDER
 tried TRIED

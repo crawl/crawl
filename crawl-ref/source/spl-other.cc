@@ -19,6 +19,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -29,6 +30,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
+#include "rot.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -56,99 +58,49 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
     bool success = false;
 
-    int wielded = you.equip[EQ_WEAPON];
-
-    if (wielded != -1)
+    if (you.duration[DUR_DEATHS_DOOR])
+        mpr("You can't draw power from your own body while in Death's door.");
+    else if (!you.can_bleed())
     {
-        if (you.inv[wielded].base_type == OBJ_FOOD
-            && you.inv[wielded].sub_type == FOOD_CHUNK)
-        {
-            fail_check();
-            success = true;
-
-            mpr("The chunk of flesh you are holding crumbles to dust.");
-
-            mpr("A flood of magical energy pours into your mind!");
-
-            inc_mp(5 + random2(2 + pow / 15));
-
-            dec_inv_item_quantity(wielded, 1);
-
-            if (mons_genus(you.inv[wielded].mon_type) == MONS_ORC)
-                did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-            if (mons_class_holiness(you.inv[wielded].mon_type) == MH_HOLY)
-                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-        }
-        else if (is_blood_potion(you.inv[wielded])
-                 && item_type_known(you.inv[wielded]))
-        {
-            fail_check();
-            success = true;
-
-            mprf("The blood within %s froths and boils.",
-                 you.inv[wielded].quantity > 1 ? "one of your flasks"
-                                               : "the flask you are holding");
-
-            mpr("A flood of magical energy pours into your mind!");
-
-            inc_mp(5 + random2(2 + pow / 15));
-
-            remove_oldest_blood_potion(you.inv[wielded]);
-            dec_inv_item_quantity(wielded, 1);
-        }
+        if (you.species == SP_VAMPIRE)
+            mpr("You don't have enough blood to draw power from your own body.");
         else
-            wielded = -1;
+            mpr("Your body is bloodless.");
     }
-
-    if (wielded == -1)
+    else if (!enough_hp(2, true))
+        mpr("Your attempt to draw power from your own body fails.");
+    else
     {
-        if (you.duration[DUR_DEATHS_DOOR])
+        int food = 0;
+        // Take at most 90% of currhp.
+        const int minhp = max(div_rand_round(you.hp, 10), 1);
+
+        while (you.magic_points < you.max_magic_points && you.hp > minhp
+               && (you.is_undead != US_SEMI_UNDEAD
+                   || you.hunger - food >= HUNGER_SATIATED))
         {
-            mpr("A conflicting enchantment prevents the spell from "
-                "coming into effect.");
-        }
-        else if (!you.can_bleed())
-        {
-            if (you.species == SP_VAMPIRE)
-                mpr("You don't have enough blood to draw power from your own body.");
-            else
-                mpr("Your body is bloodless.");
-        }
-        else if (!enough_hp(2, true))
-            mpr("Your attempt to draw power from your own body fails.");
-        else
-        {
-            int food = 0;
-            // Take at most 90% of currhp.
-            const int minhp = max(div_rand_round(you.hp, 10), 1);
+            fail_check();
+            success = true;
 
-            while (you.magic_points < you.max_magic_points && you.hp > minhp
-                   && (you.is_undead != US_SEMI_UNDEAD
-                       || you.hunger - food >= HUNGER_SATIATED))
-            {
-                fail_check();
-                success = true;
+            inc_mp(1);
+            dec_hp(1, false);
 
-                inc_mp(1);
-                dec_hp(1, false);
+            if (you.is_undead == US_SEMI_UNDEAD)
+                food += 15;
 
-                if (you.is_undead == US_SEMI_UNDEAD)
-                    food += 15;
-
-                for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
-                    if (x_chance_in_y(6, pow))
-                        dec_hp(1, false);
-
+            for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
                 if (x_chance_in_y(6, pow))
-                    break;
-            }
-            if (success)
-                mpr("You draw magical energy from your own body!");
-            else
-                mpr("Your attempt to draw power from your own body fails.");
+                    dec_hp(1, false);
 
-            make_hungry(food, false);
+            if (x_chance_in_y(6, pow))
+                break;
         }
+        if (success)
+            mpr("You draw magical energy from your own body!");
+        else
+            mpr("Your attempt to draw power from your own body fails.");
+
+        make_hungry(food, false);
     }
 
     return success ? SPRET_SUCCESS : SPRET_ABORT;
@@ -180,14 +132,6 @@ spret_type cast_recall(bool fail)
     return SPRET_SUCCESS;
 }
 
-struct recall_sorter
-{
-    bool operator()(const pair<mid_t,int> &a, const pair<mid_t,int> &b)
-    {
-        return a.second > b.second;
-    }
-};
-
 // Type recalled:
 // 0 = anything
 // 1 = undead only (Yred religion ability)
@@ -195,7 +139,8 @@ struct recall_sorter
 void start_recall(int type)
 {
     // Assemble the recall list.
-    vector<pair<mid_t, int> > rlist;
+    typedef pair<mid_t, int> mid_hd;
+    vector<mid_hd> rlist;
 
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
@@ -214,7 +159,7 @@ void start_recall(int type)
                 continue;
         }
 
-        pair<mid_t, int> m = make_pair(mi->mid, mi->hit_dice);
+        mid_hd m(mi->mid, mi->get_experience_level());
         rlist.push_back(m);
     }
 
@@ -226,7 +171,7 @@ void start_recall(int type)
         // Sort the recall list roughly by HD, randomizing a little
         for (unsigned int i = 0; i < rlist.size(); ++i)
             rlist[i].second += random2(10);
-        sort(rlist.begin(), rlist.end(), recall_sorter());
+        sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
 
         you.recall_list.clear();
         for (unsigned int i = 0; i < rlist.size(); ++i)
@@ -284,6 +229,9 @@ static bool _try_recall(mid_t mid)
             {
                 recall_orders(mons);
                 simple_monster_message(mons, " is recalled.");
+                mons->apply_location_effects(mons->pos());
+                // mons may have been killed, shafted, etc,
+                // but they were still recalled!
                 return true;
             }
         }
@@ -364,9 +312,9 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    int shallow = 1 + you.skill(SK_EARTH_MAGIC) / 8;
-    int range = shallow + random2(pow) / 25;
-    int maxrange = shallow + pow / 25;
+    int shallow = 1 + min(pow / 30, 3);      // minimum penetrable depth
+    int range = shallow + random2(pow) / 25; // penetrable depth for this cast
+    int maxrange = shallow + pow / 25;       // max penetrable depth
 
     coord_def dest;
     for (dest = you.pos() + delta;
@@ -459,9 +407,15 @@ void remove_condensation_shield()
 
 spret_type cast_condensation_shield(int pow, bool fail)
 {
-    if (you.shield() || you.duration[DUR_FIRE_SHIELD])
+    if (you.shield())
     {
         canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_ABORT;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("Your ring of flames would instantly melt the ice.");
         return SPRET_ABORT;
     }
 
@@ -472,6 +426,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
     else
         mpr("A crackling disc of dense vapour forms in the air!");
     you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
+    you.props[CONDENSATION_SHIELD_KEY] = pow;
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
@@ -490,10 +445,11 @@ spret_type cast_stoneskin(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
     {
-        mpr("This spell conflicts with another spell still in effect.");
+        mpr("Turning your skin into stone would shatter your icy armour.");
         return SPRET_ABORT;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
         // We can't get here from normal casting, and probably don't want
@@ -501,22 +457,20 @@ spret_type cast_stoneskin(int pow, bool fail)
         // mpr("Your skin is naturally stony.");
         return SPRET_ABORT;
     }
+#endif
 
     fail_check();
 
     if (you.duration[DUR_STONESKIN])
         mpr("Your skin feels harder.");
+    else if (you.form == TRAN_STATUE)
+        mpr("Your stone body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("Your skin hardens.");
-
-        you.redraw_armour_class = true;
-    }
+        mpr("Your skin hardens.");
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+    you.props[STONESKIN_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }

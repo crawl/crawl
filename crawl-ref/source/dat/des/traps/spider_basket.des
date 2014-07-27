@@ -17,7 +17,7 @@ function callback.spider_trap_stepped(data, triggerable, triggerer, marker, ev)
   dgn.grid(x, y, "floor")
   local spiders = 0
   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
-    if (dgn.mons_at(p.x, p.y) == nil and p ~= you.pos() and dgn.is_passable(p.x, p.y)) then
+    if (dgn.mons_at(p.x, p.y) == nil and p ~= dgn.point(you.pos) and dgn.is_passable(p.x, p.y)) then
       if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
         spiders = spiders + 1
       end

@@ -255,7 +255,7 @@ TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
-MONS:    kobold ; dart . mace
+MONS:    kobold ; mace
 SHUFFLE: ABCD
 NSUBST:  X = 1:+ / *:x
 NSUBST:  Y = 1:+ / *:x
@@ -367,7 +367,7 @@ WEIGHT: 3
 ORIENT: float
 NSUBST: . = 1:d / *:.
 NSUBST: = = 3:+ / *:x
-ITEM:   stone / dart
+ITEM:   stone
 MAP
           xxxxxxxx.@.xx
        xxxx......=....xxxx
@@ -399,7 +399,7 @@ TAGS:   arrival no_monster_gen no_rotate
 WEIGHT: 1
 ORIENT: float
 NSUBST: . = 1:d / *:.
-ITEM:   stone / dart
+ITEM:   stone
 MAP
           xxxxxxxxxxxxx
        xxxx......x....xxxx
@@ -435,7 +435,7 @@ SHUFFLE: ab, cd, ef, gh, ij, kl, mn
 SUBST:   a=., c=., e=., g=., i=., k=., m=.
 SUBST:   b=x, d=x, f=x, h=x, j=x, l=x, n=x
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
           xxxxxxxxxxxxx
        xxxx.....h.....xxxx

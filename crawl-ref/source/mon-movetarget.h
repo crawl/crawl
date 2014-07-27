@@ -12,4 +12,6 @@ void set_random_slime_target(monster* mon);
 bool find_siren_water_target(monster* mon);
 bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index);
 
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2);
 #endif

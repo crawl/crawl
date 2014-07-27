@@ -5,6 +5,7 @@
 #include "tilereg-inv.h"
 #include "process_desc.h"
 
+#include "butcher.h"
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
@@ -46,7 +47,8 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if ((y==my-1 && x==mx-1 && item.tile) || (y==0 && x==0 && m_grid_page>0))
+            if ((y==my-1 && x==mx-1 && item.tile)
+                || (y==0 && x==0 && m_grid_page>0))
             {
                 // draw a background for paging tiles
                 m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
@@ -337,12 +339,21 @@ bool InventoryRegion::update_tip_text(string& tip)
         if (!display_actions)
             return true;
 
-        tip += "\n[L-Click] Pick up (%)";
-        cmd.push_back(CMD_PICKUP);
-        if (item.quantity > 1)
+        if (item_is_stationary_net(item))
         {
-            tip += "\n[Ctrl + L-Click] Partial pick up (%)";
-            cmd.push_back(CMD_PICKUP_QUANTITY);
+            tip += make_stringf(" (holding %s)",
+                                net_holdee(item)->name(DESC_A).c_str());
+        }
+
+        if (!item_is_stationary(item))
+        {
+            tip += "\n[L-Click] Pick up (%)";
+            cmd.push_back(CMD_PICKUP);
+            if (item.quantity > 1)
+            {
+                tip += "\n[Ctrl + L-Click] Partial pick up (%)";
+                cmd.push_back(CMD_PICKUP_QUANTITY);
+            }
         }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
@@ -518,29 +529,14 @@ bool InventoryRegion::update_tip_text(string& tip)
             case OBJ_POTIONS:
                 tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
-                // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (item_type_known(item)
-                         && is_blood_potion(item)
-                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-                {
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
-                }
                 break;
             case OBJ_FOOD:
                 tmp += "Eat (%)";
                 cmd.push_back(CMD_EAT);
-                // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (food_is_meaty(item)
-                             && you.has_spell(SPELL_SIMULACRUM)
-                         || item.sub_type == FOOD_CHUNK
-                             && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-                {
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
-                }
                 break;
             case OBJ_CORPSES:
                 if (you.species == SP_VAMPIRE)
@@ -713,8 +709,7 @@ void InventoryRegion::update()
     if (mx * my == 0)
         return;
 
-    int max_pack_row = (ENDOFPACK-1) / mx + 1;
-    int max_pack_items = max_pack_row * mx;
+    const int max_pack_items = ENDOFPACK;
 
     bool inv_shown[ENDOFPACK];
     memset(inv_shown, 0, sizeof(inv_shown));
@@ -722,13 +717,6 @@ void InventoryRegion::update()
     int num_ground = 0;
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
-
-/* *** use paging instead
-    // If the inventory is full, show at least one row of the ground.
-    int min_ground = min(num_ground, mx);
-    max_pack_items = min(max_pack_items, mx * my * (m_grid_page+1) - min_ground);
-    max_pack_items = min(ENDOFPACK, max_pack_items);
-*/
 
     ucs_t c;
     const char *tp = Options.tile_show_items.c_str();
@@ -781,7 +769,8 @@ void InventoryRegion::update()
     int empty_on_this_row = mx - m_items.size() % mx;
 
     // If we're not on the last row...
-    if ((int)m_items.size() < mx * (my-1)) // * (m_grid_page+1)) // let's deliberately not do this on page 2
+    if ((int)m_items.size() < mx * (my-1))
+        // let's deliberately not do this on page 2
     {
         if (num_ground > remaining - empty_on_this_row)
         {
@@ -856,7 +845,8 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    while ((int)m_items.size() < mx * my) // * (m_grid_page+1)) // let's not do this for p2 either
+    while ((int)m_items.size() < mx * my)
+        // let's not do this for p2 either
     {
         InventoryTile desc;
         desc.flag = TILEI_FLAG_FLOOR;

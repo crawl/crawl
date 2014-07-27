@@ -20,6 +20,9 @@ struct spell_desc
 }
 */
 
+static const struct spell_desc spelldata[] =
+{
+
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
      SPTYP_TRANSLOCATION,
@@ -866,7 +869,7 @@ struct spell_desc
      SPTYP_CHARMS | SPTYP_ICE,
      SPFLAG_NONE,
      3,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -1051,13 +1054,13 @@ struct spell_desc
 {
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
      SPTYP_HEXES,
-     SPFLAG_NONE,
-     5,
+     SPFLAG_DIR_OR_TARGET,
+     3,
      100,
-     -1, -1,
+     LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
-     false,
+     true,
      false
 },
 
@@ -1360,7 +1363,7 @@ struct spell_desc
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      6,
-     200,
+     150,
      -1, -1,
      0,
      NULL,
@@ -1373,7 +1376,7 @@ struct spell_desc
      SPTYP_ICE | SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      4,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -1490,8 +1493,8 @@ struct spell_desc
     SPELL_CONFUSING_TOUCH, "Confusing Touch",
      SPTYP_HEXES,
      SPFLAG_NONE,
-     1,
-     200,
+     2,
+     50,
      -1, -1,
      0,
      NULL,
@@ -1807,7 +1810,7 @@ struct spell_desc
      SPTYP_EARTH | SPTYP_TRANSMUTATION, // was ench -- bwr
      SPFLAG_HELPFUL,
      2,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -2844,7 +2847,7 @@ struct spell_desc
 {
     SPELL_INNER_FLAME, "Inner Flame",
      SPTYP_HEXES | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      3,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3763,6 +3766,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DRAIN_MAGIC, "Drain Magic",
+     SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
@@ -3774,3 +3790,5 @@ struct spell_desc
      false,
      false
 },
+
+};

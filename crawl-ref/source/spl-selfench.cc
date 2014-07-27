@@ -25,9 +25,9 @@
 #include "transform.h"
 #include "view.h"
 
-int allowed_deaths_door_hp(void)
+int allowed_deaths_door_hp()
 {
-    int hp = you.skill(SK_NECROMANCY) / 2;
+    int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
     if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
@@ -94,18 +94,16 @@ spret_type ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
+    else if (you.form == TRAN_ICE_BEAST)
+        mpr("Your icy body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_ICE_BEAST)
-            mpr("Your icy body feels more resilient.");
-        else
-            mpr("A film of ice covers your body!");
+        mpr("A film of ice covers your body!");
 
-        you.redraw_armour_class = true;
-    }
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
+    you.props[ICY_ARMOUR_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }
@@ -162,7 +160,7 @@ spret_type cast_revivification(int pow, bool fail)
         fail_check();
         mpr("Your body is healed in an amazingly painful way.");
 
-        int loss = 2;
+        int loss = 6;
         for (int i = 0; i < 9; ++i)
             if (x_chance_in_y(8, pow))
                 loss++;
@@ -186,7 +184,7 @@ spret_type cast_revivification(int pow, bool fail)
 
 spret_type cast_swiftness(int power, bool fail)
 {
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return SPRET_ABORT;
@@ -293,7 +291,7 @@ int cast_selective_amnesia(string *pre_msg)
 
         if (!isaalpha(keyin))
         {
-            mesclr();
+            clear_messages();
             mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
             keyin = get_ch();
             continue;
@@ -324,9 +322,9 @@ spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_INFUSION])
-        mpr("Your attacks are magically infused.");
+        mpr("You begin infusing your attacks with magical energy.");
     else
-        mpr("Your attacks are magically infused for longer.");
+        mpr("You extend your infusion's duration.");
 
     you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
     you.props["infusion_power"] = pow;

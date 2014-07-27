@@ -92,7 +92,8 @@ sub find_skill
 sub split_species
 {
     my $sp = shift;
-    return ($2, $1) if ($sp =~ /^(.*) (.*)$/);
+    # Don't split Vine Stalker, because it's not a kind of Stalker.
+    return ($2, $1) if ($sp =~ /^(?!Vine Stalker)(.*) (.*)$/);
     return ($sp, $sp);
 }
 
@@ -125,6 +126,7 @@ sub aptitude_table
     {
         next if $sp eq 'Sludge Elf';
         next if $sp eq 'Djinni';
+        next if $sp eq 'Lava Orc';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);
@@ -144,6 +146,11 @@ sub aptitude_table
             my $fmt = "%+3d";
             $fmt = "%3d" if $skill == 0;
             $fmt = " NA" if $skill == -99;
+	    if ($abbr eq 'HP' || $abbr eq 'MP')
+	    {
+	        $skill = $skill * 10;
+                $fmt = "%+3d%%";
+	    }
             $line .= sprintf($fmt, $skill);
         }
         $text .= "$line\n";

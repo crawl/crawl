@@ -33,6 +33,10 @@ bool shoptype_identifies_stock(shop_type type);
 bool is_shop_item(const item_def &item);
 bool shop_item_unknown(const item_def &item);
 
+int str_to_shoptype(const string &s);
+const char *shoptype_to_str(shop_type type);
+void list_shop_types();
+
 /////////////////////////////////////////////////////////////////////
 
 struct level_pos;

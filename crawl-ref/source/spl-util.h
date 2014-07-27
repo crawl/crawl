@@ -47,7 +47,7 @@ enum spell_highlight_colours
 };
 
 bool is_valid_spell(spell_type spell);
-void init_spell_descs(void);
+void init_spell_descs();
 void init_spell_name_cache();
 spell_type spell_by_name(string name, bool partial_match = false);
 
@@ -128,13 +128,11 @@ skill_type spell_type2skill(unsigned int which_spelltype);
 spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_useless(spell_type spell, bool transient = false);
-bool spell_is_useful(spell_type spell);
-bool spell_is_risky(spell_type spell);
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell);
+bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
 
 #endif

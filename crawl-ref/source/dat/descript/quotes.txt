@@ -264,6 +264,23 @@ a son of Earth.”
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 %%%%
+arbalest
+
+“(Tell enters with his crossbow)
+ W. TELL:
+ My precious jewel now, —my chiefest treasure—
+ A mark I'll set thee, which the cry of grief
+ Could never penetrate,—but thou shalt pierce it,—
+ And thou, my trusty bowstring, that so oft
+ For sport has served me faithfully and well,
+ Desert me not in this dread hour of need,—
+ Only be true this once, my own good cord,
+ That hast so often wing'd the biting shaft:—
+ For shouldst thou fly successless from my hand,
+ I have no second to send after thee.”
+    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
+     trans. Sir Theodore Martin, 1898.
+%%%%
 Asmodeus
 
 “For myself, I have other occupations:  I make absurd matches; I marry
@@ -645,10 +662,6 @@ amulet of clarity
 
 <amulet>
 %%%%
-amulet of conservation
-
-<amulet>
-%%%%
 amulet of faith
 
 <amulet>
@@ -711,31 +724,6 @@ apocalypse crab
  scuttling across the floors of silent seas.”
     -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
 %%%%
-apple
-
-“MINERVA was the goddess of wisdom, but on one occasion she did a very foolish
-thing; she entered into competition with Juno and Venus for the prize of
-beauty. It happened thus: At the nuptials of Peleus and Thetis all the gods
-were invited with the exception of Eris, or Discord. Enraged at her exclusion,
-the goddess threw a golden apple among the guests, with the inscription, ‘For
-the fairest.’”
-    -Thomas Bulfinch, _Bulfinch’s Mythology_, ch.. XXVII. a. 1855.
-%%%%
-apricot
-
-“Apricot Ratafia
-
-This is made two Ways, viz. either by infusing the Apricots cut in Pieces in
-Brandy for a Day or two, and then passing it thro’ the draining Bag, and
-putting in the usual Ingredients; or else the Apricots may be boil’d in White
-wine, and by that Means more easily clarify’d adding an equal Quantity of
-Brandy, and a quarter of a pound of Sugar to every quart, with Cinnamon,
-Cloves, Mace, and Kernels of the Apricots. After all the Ingredients have
-infused eight or ten Days the Liquor is to be strain’d again and put into
-Bottles and so kept.”
-    -Charles Carter, _The Compleat City and Country Cook: Or, Accomplish’d
-House-wife_. 1732.
-%%%%
 arrow
 
 “I saw in a hall an arrow pointing the way and I thought that this inoffensive
@@ -785,11 +773,6 @@ battlesphere
 
 Rule 4: Close air support covereth a multitude of sins.
     -The Seven Habits of Highly Effective Pirates
-%%%%
-big fish
-
-“And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
 %%%%
 blowgun
 
@@ -954,16 +937,6 @@ of the brightness of Yahweh’s glory.
 the voice of God Almighty when he speaks.”
     -WEB Bible, Ezekiel 10:4-5
 %%%%
-choko
-
-“I ought not to omit naming a vegetable which Mr Yates placed on our table, and
-to which he directed our attention. It was the Tchu-tchu (Sechium edule) called
-also by the people _pepinella_. It is a small gourd, very much like vegetable
-marrow; one seed covers a wall with its ramifications.”
-    -John Overton Choules, _The Cruise of the Steam Yacht North Star: A
-Narrative of the Excursion of Mr. Vanderbilt’s Party to England, Russia,
-Denmark, France, Spain, Malta, Turkey, Madeira, Etc_. 1854.
-%%%%
 claymore
 
 <demon blade>
@@ -1009,23 +982,6 @@ crocodile
   With gently smiling jaws!”
     -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
 %%%%
-crossbow
-
-“(Tell enters with his crossbow)
- W. TELL:
- My precious jewel now, —my chiefest treasure—
- A mark I'll set thee, which the cry of grief
- Could never penetrate,—but thou shalt pierce it,—
- And thou, my trusty bowstring, that so oft
- For sport has served me faithfully and well,
- Desert me not in this dread hour of need,—
- Only be true this once, my own good cord,
- That hast so often wing'd the biting shaft:—
- For shouldst thou fly successless from my hand,
- I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
-     trans. Sir Theodore Martin, 1898.
-%%%%
 cutlass
 
 “Who was the first that forged the deadly blade?
@@ -1060,12 +1016,6 @@ dark maul
 “This caliber should be appropriate.”
     -prince Dajmiech, “Kajko and Kokosz: The Battle with Dajmiech”, Janusz
 Christa
-%%%%
-dart
-
-“Loving the hand that sent it
- I the dart revere.”
-    -Emily Dickinson. mid 19th cent.
 %%%%
 demon blade
 
@@ -1131,7 +1081,7 @@ elephant
  ‘Assuredly, Lord: we now know what an elephant is like.’
  ‘Tell me then, O blind men, what an elephant is like.’
  And those blind men, O Bhikkhus, who had felt the head of the elephant, said:
-‘An elephant, Sir, is like a large round jar .
+‘An elephant, Sir, is like a large round jar.
  Those who had felt its ears, said: 'it is like a winnowing basket.’
  Those who had felt its tusks, said: ‘it is like a plough-share.’
  Those who had felt its trunk, said: ‘it is like a plough.’
@@ -1146,20 +1096,6 @@ this.’”
  And the King, O Bhikkhus, was highly delighted.
     -_Udāna_, VI “Jaccandhavagga”. ca. 5th cent. B.C.
      trans. Dawsonne Melanchthon Strong, 1902.
-
-“And so these men of Indostan
- Disputed loud and long,
- Each in his own opinion
- Exceeding stiff and strong,
- Though each was partly in the right,
- And all were in the wrong!
- So oft in theologic wars,
- The disputants, I ween,
- Rail on in utter ignorance
- Of what each other mean,
- And prate about an Elephant
- Not one of them has seen!”
-    -John Godfrey Saxe, “The Blind Men and the Elephant”. 1872.
 %%%%
 emperor scorpion
 
@@ -1359,7 +1295,7 @@ silence gave way, as it were with a grace, to the rapid screams of Tonker as
 they picked him up from behind — screams that came faster and faster until they
 were incoherent. And where they took him it is not good to ask, and what they
 did with him I shall not say.”
-    -Lord Dunsany, “How Nuth Would Have Practiced His Art Upon the Gnoles”.
+    -Lord Dunsany, “How Nuth Would Have Practised His Art Upon the Gnoles”.
 1912.
 %%%%
 goblin
@@ -1471,6 +1407,10 @@ hand axe
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
 %%%%
+hand crossbow
+
+<arbalest>
+%%%%
 harpy
 
 “Bird-bodied, girl-faced things they are; abominable their droppings, their
@@ -1484,6 +1424,17 @@ coming and raised the alarm. Yet they had hardly done so before the Harpyiai
 had devoured the whole meal and were on the wing once more, far out at sea. All
 they left was an intolerable stench.”
     -Apollonius Rhodius, Argonautica 2. 179 — 434
+%%%%
+hell hound
+
+“About her middle round
+ A cry of Hell-hounds never-ceasing barked
+ With wide Cerberean mouths full loud, and rung
+ A hideous peal; yet, when they list, would creep,
+ If aught disturbed their noise, into her womb,
+ And kennel there; yet there still barked and howled
+ Within unseen.”
+    -John Milton, _Paradise Lost_, Book II, l. 653-659. 1667.
 %%%%
 hell knight
 
@@ -1655,13 +1606,6 @@ lasher statue
  Which slashes the flesh, lacerates the back”
     -Samael, “Flagellation”
 %%%%
-lava worm
-
-“Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos
-(Greek, =worm), masculine, ‘lava-worm’ for the locality, springs in the lava
-beds of Shasta County, Calif., from which topotypes were taken.”
-    -_Proceedings of the United States National Musem_. 1968.
-%%%%
 leather armour
 
 “Nought can Deform the Human race
@@ -1723,20 +1667,6 @@ lost soul
  Her hand gently beckons, she whispers your name—
   But those who go with her are never the same.”
     -Magic: the Gathering
-%%%%
-lychee
-
-“The Litchi is the most celebrated native fruit of China. It is nearly round,
-about an inch and a half in diameter, the shell is tough, becoming brittle, of
-a chocolate brown colour covered all over with wart-like protuberances. When
-fresh it is filled with a white almost transparent, sweet, jelly-like pulp in
-which lies a rather large, shining, brown seed; the pulp is of a delicious
-sub-acid flavour when fresh. The Chinese dry it when it becomes black like a
-prune and thus preserve it for use throughout the year; in this state it is
-frequently to be seen in the London fruit shops.”
-    -John Smith, _A Dictionary of Popular Names of the Plants which Furnish the
-Natural and Acquired Wants of Man, in All Matters of Domestic and General
-Economy: Their History, Products, & Uses_. 1882.
 %%%%
 mace
 
@@ -1931,18 +1861,6 @@ ophan
  high and awesome, and all four rims were full of eyes all around.”
     -Ezekiel 1:15-18 (New International Version)
 %%%%
-orange
-
-“Conserve of Orange Peel
-
-HAVING grated the rinds of some Seville oranges as thin as you can, weigh them,
-and to every pound of orange rind add three pounds of loaf sugar. Pound the
-orange rind well in a marble mortar, mix the sugar by degrees with them and
-beat all well together. Put it into gallipots and tie it down so as properly to
-prevent the air getting to it.”
-    -Francis Collingwood, John Woollams, _The Universal Cook: And City and
-Country Housekeeper._ 1792.
-%%%%
 orange demon
 
 “In Sparkill buried lies that man of mark
@@ -1985,26 +1903,6 @@ us ofte foresee.”
 phase bat
 
 <bat>
-%%%%
-phoenix
-
-“They have also another sacred bird called the phoenix which I myself have
-never seen, except in pictures. Indeed it is a great rarity, even in Egypt,
-only coming there (according to the accounts of the people of Heliopolis) once
-in five hundred years, when the old phoenix dies. Its size and appearance, if
-it is like the pictures, are as follow:- The plumage is partly red, partly
-golden, while the general make and size are almost exactly that of the eagle.
-They tell a story of what this bird does, which does not seem to me to be
-credible: that he comes all the way from Arabia, and brings the parent bird,
-all plastered over with myrrh, to the temple of the Sun, and there buries the
-body. In order to bring him, they say, he first forms a ball of myrrh as big as
-he finds that he can carry; then he hollows out the ball, and puts his parent
-inside, after which he covers over the opening with fresh myrrh, and the ball
-is then of exactly the same weight as at first; so he brings it to Egypt,
-plastered over as I have said, and deposits it in the temple of the Sun. Such
-is the story they tell of the doings of this bird.”
-    -Herodotus, _Histories_, II, 73. ca. 440 B.C.
-     trans. George Rawlinson, 1858.
 %%%%
 pillar of salt
 
@@ -2051,7 +1949,7 @@ potion of poison
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of strong poison
+potion of curing
 
 “But if when you say "whiskey" you mean the oil of conversation,
  the philosophic wine, the ale that is consumed when good fellows
@@ -2079,14 +1977,6 @@ program bug
 “If builders built buildings the way programmers wrote programs, then the first
 woodpecker that came along would destroy civilization.”
     -Gerald Weinberg, Weinberg’s Second Law
-%%%%
-pulsating lump
-
-“Doom!
- He finds that in a sudden scrimmage,
- And lies, an unsightly lump on the sodden grass …
- An image that shall take long to pass!”
-    -Ford Madox Hueffer, “Antwerp”. 1915.
 %%%%
 quarterstaff
 
@@ -2139,20 +2029,6 @@ shoulders were broad like the neck of a tree; his ears were like unto arrows,
 and his features were frightful.”
     -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
-%%%%
-rambutan
-
-“The rambutan (_nephelium lappaceum_) is a beautiful fruit to which I have
-already alluded, as resembling the mammoth arbutus; and you suppose them at
-first, when at a little distance from you, a delicious dish of some tropical
-strawberry. But you find on inquiring into the ‘particulars within’ the outer
-coat, that there is concealed beneath the red and hairy covering a
-semi-transparent pulp of a pleasant acid taste, enveloping a single oval and
-oblong seed. I know not but I am peculiar in my memory of the beautiful fruits
-of the straits, but none lingers in my recollection so sweetly in its clustered
-beauties of the fruit-dish as the bearded and rosy rambutan.”
-    -Fitch Waterman Taylor, _A Voyage Round the World And Visits to Various
-Foreign Countries, in the United States Frigate Columbia_. 1847.
 %%%%
 raven
 
@@ -2376,15 +2252,7 @@ scroll of enchant armour
 
 <scroll>
 %%%%
-scroll of enchant weapon i
-
-<scroll>
-%%%%
-scroll of enchant weapon ii
-
-<scroll>
-%%%%
-scroll of enchant weapon iii
+scroll of enchant weapon
 
 <scroll>
 %%%%
@@ -2528,13 +2396,6 @@ shapeshifter
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
-shedu
-
-“May my god stand at my right hand!
- May my goddess stand at my left hand!
- May the favourable Shedu, the favourable Lamassu...with me!”
-    -Assyrian prayer. 2nd millennium B.C.
-%%%%
 shield
 
 <buckler>
@@ -2655,12 +2516,21 @@ slime creature
  Upon the slimy sea.”
     -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
-sling
+hunting sling
 
 “And David put his hand in his bag, and took thence a stone, and slang it, and
 smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
+%%%%
+greatsling
+
+“Thrice whirling round his head
+ The whistling thong, Mezentius took his aim.
+ Clean through his temples hissed the molten lead,
+ And prostrate in the dust, the gallant youth lay dead.”
+    -Virgil, Aeneid 9
+     trans. E. Fairfax Taylor
 %%%%
 sling bullet
 
@@ -2856,25 +2726,6 @@ storm dragon hide
 
 <steam dragon hide>
 %%%%
-strawberry
-
-“A Samurai was out walking when a large tiger began to chase him. The samurai
-ran for his life, never seeing the cliff under his feet. As he fell, he reached
-out and caught a vine that hung down. He looked down and saw another tiger
-circling below; the first tiger waited above. The vine began to give away. The
-samurai then saw a single strawberry growing on the vine. He reached out and
-ate the strawberry. How sweet it tasted!”
-    -Attributed to various Japanese buddhist monks.
-%%%%
-sultana
-
-“A Turkish garden was among the curiosities to which the Jew found access for
-Bentham. It was a sort of orchard of vines and other trees, without order or
-apparent arrangement. From that garden Bentham sent specimens of the Sultana
-raisin to England which he believed to have been the first of that species
-which had ever reached his country.”
-    -John Bowring, _The Works of Jeremy Bentham_. 1839.
-%%%%
 sun demon
 
 “Behold him setting in his western skies,
@@ -3012,6 +2863,10 @@ chase, in which the fish is pursued and struck with barbed spears, or a sort of
 long shafted trident, called a waster, is much practised at the mouth of the
 Esk, and in the other salmon rivers of Scotland.”
     -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
+%%%%
+triple crossbow
+
+<arbalest>
 %%%%
 troll hide
 

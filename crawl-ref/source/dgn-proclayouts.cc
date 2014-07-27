@@ -188,7 +188,9 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 {
     if (feat_is_gate(feature) || feature == DNGN_TELEPORTER)
         feature = DNGN_STONE_ARCH;
-    if (feat_is_stair(feature))
+    if (feature == DNGN_SEALED_DOOR)
+        feature = DNGN_CLOSED_DOOR;
+    if (feat_is_stair(feature) || feat_is_sealed(feature))
         feature = strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
     if (feat_is_altar(feature))
         feature = DNGN_FLOOR;
@@ -503,7 +505,9 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         {
             if ((lateral >= 0.3 && lateral < 0.4 || lateral >= 0.6 && lateral < 0.7)
                  || (lateral >= 0.4 && lateral < 0.6 && city < (city_outer_limit+city_wall_width)))
+            {
                 feat = city_wall;
+            }
             else if (lateral >= 0.4 && lateral < 0.6)
                 feat = DNGN_FLOOR;
         }
@@ -549,7 +553,7 @@ double NoiseLayout::_optimum_range(const double val, const double rstart, const 
 }
 double NoiseLayout::_optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const
 {
-    if (rmax1 <= val <= rmax2) return 1.0;
+    if (rmax1 <= val && val <= rmax2) return 1.0;
     if (val <= rstart || val >= rend) return 0.0;
     if (val < rmax1)
         return (val - rstart) / (rmax1-rstart);

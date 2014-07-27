@@ -140,6 +140,7 @@ O
 ENDMAP
 
 NAME: enter_bailey_2
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM: hand axe
@@ -157,6 +158,7 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_3
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe
@@ -179,6 +181,7 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_4
+TAGS:   transparent
 WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -209,6 +212,7 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_5
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
@@ -230,6 +234,7 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_6
+TAGS:   transparent
 WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
@@ -311,6 +316,7 @@ MAP
 ENDMAP
 
 NAME: lightli_bailey_entry_fortress
+TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -396,7 +402,7 @@ KMASK:  Z = no_item_gen
 KITEM:  Z = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
             unobtainable war axe / unobtainable good_item war axe w:5 /\
             unobtainable good_item executioner's axe w:1
-KFEAT:  Z = teleport trap
+KFEAT:  Z = known permanent teleport trap
 #
 # Traps are alarm on the entrance and alarm/net near the loot. Yes, I want
 # everyone to wake up.
@@ -407,7 +413,7 @@ KFEAT: ~ = known alarm trap / floor
 # stranded.
 NSUBST: s = 1:T / *:.
 NSUBST: t = 1:T / *:.
-KFEAT:  T = known teleport trap
+KFEAT:  T = known permanent teleport trap
 : bailey_setup(_G)
 MAP
   ccccccccc
@@ -497,7 +503,7 @@ TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
-KFEAT:  T = known teleport trap
+KFEAT:  T = known permanent teleport trap
 #
 # Monsters defined in the header. Do not change order!
 : kobold_axe_returning(_G)
@@ -625,8 +631,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
         potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
-        scroll of enchant weapon i w:2 / scroll of enchant weapon ii w:2 / \
-        scroll of enchant weapon iii w:1 / scroll of enchant armour w:5
+        scroll of enchant weapon w:5 / scroll of enchant armour w:5
 ITEM:   potion of beneficial mutation w:30 / potion of cure mutation / \
         potion of experience / scroll of acquirement
 : easy_axe_fighter(_G)
@@ -754,8 +759,8 @@ ENDMAP
 NAME:   bailey_polearm_2
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
-MONS:   orc warrior w:5 ; crossbow . bolt . ring mail | scale mail / \
-        orc ; crossbow . bolt . ring mail | scale mail
+MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
+        orc ; arbalest . bolt . ring mail | scale mail
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
@@ -763,13 +768,13 @@ MONS:   orc knight
 SUBST:  2 = 23
 NSUBST: 4 = 1:4 / *:3
 SUBST:  W : W..
-KFEAT:  T = known teleport trap
+KFEAT:  T = known permanent teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
 ITEM:   potion of experience / scroll of acquirement /\
-        scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
+        scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
         legendary deck of wonders ident:type
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
@@ -827,7 +832,7 @@ TAGS:    bailey_polearm no_rotate
 SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 3, G : .
 NSUBST:  d = 3:d / *:$
-ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
+ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          scroll of acquirement w:5 / scroll of silence q:3 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
@@ -872,7 +877,7 @@ NAME:   bailey_polearm_4
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen no_pool_fixup
 ITEM:   any good_item
-MONS:   orc warrior ; crossbow . bolt . ring mail | scale mail | chain mail / \
+MONS:   orc warrior ; arbalest . bolt . ring mail | scale mail | chain mail / \
         orc warrior ; halberd . ring mail | scale mail | chain mail
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
@@ -912,9 +917,9 @@ ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
         potion of berserk rage w:3 / potion of haste w:2 /\
         potion of invisibility w:3 / potion of resistance w:2
 ITEM:   scroll of brand weapon w:5 / scroll of acquirement w:5 /\
-        scroll of enchant weapon III
-ITEM:   scroll of enchant weapon I / scroll of enchant weapon II /\
-        scroll of enchant armour / scroll of summoning
+        scroll of enchant weapon q:2
+ITEM:   scroll of enchant weapon / scroll of enchant armour /\
+        scroll of summoning
 SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5

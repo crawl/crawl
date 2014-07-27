@@ -12,7 +12,6 @@
 #include "areas.h"
 #include "env.h"
 #include "message.h"
-#include "mon-stuff.h"
 #include "random.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -38,7 +37,7 @@ int englaciate(coord_def where, int pow, int, actor *agent)
     }
 
     int duration = (roll_dice(3, pow) / 6
-                    - random2(victim->get_experience_level()))
+                    - random2(victim->get_hit_dice()))
                     * BASELINE_DELAY;
 
     if (duration <= 0)
@@ -52,7 +51,9 @@ int englaciate(coord_def where, int pow, int, actor *agent)
 
     if ((!mons && player_genus(GENPC_DRACONIAN)) // res_cold() checked above
         || (mons && mons_class_flag(mons->type, M_COLD_BLOOD)))
+    {
         duration *= 2;
+    }
 
     if (!mons)
         return slow_player(duration);

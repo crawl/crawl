@@ -29,12 +29,13 @@
 #include "player.h"
 #include "player-stats.h"
 #include "skill_menu.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
 #include "xom.h"
 
-/*
+/**
  * Apply the effect of a potion to the player.
  *
  * This is called when the player quaffs a potion, but also for some cards,
@@ -50,12 +51,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 {
     pow = min(pow, 150);
 
-    int factor = (you.species == SP_VAMPIRE
-                  && you.hunger_state < HS_SATIATED
-                  && potion ? 2 : 1);
+    // Reduced effect for healing potions.
+    int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
 
     // Knowingly drinking bad potions is much less amusing.
-    int xom_factor = factor;
+    int xom_factor = 1;
     if (potion && was_known)
     {
         xom_factor *= 2;
@@ -66,35 +66,29 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     switch (pot_eff)
     {
     case POT_CURING:
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            if (potion && was_known)
-            {
-                mpr("You can't heal while in Death's door!");
-                return false;
-            }
-            mpr("You feel queasy.");
-            break;
-        }
+    {
+        const bool ddoor = you.duration[DUR_DEATHS_DOOR];
 
-        if (!you.can_device_heal()
+        if ((!you.can_device_heal() || ddoor)
             && potion && was_known
             && you.duration[DUR_CONF] == 0
             && you.duration[DUR_POISONING] == 0
             && you.rotting == 0
-            && you.disease == 0)
+            && you.disease == 0
+            // The potion won't heal us, so don't count rot unless at max HP.
+            && (!player_rotted() || you.hp != you.hp_max))
         {
-            mpr("You have no ailments to cure.");
+            mprf("You have no ailments to cure%s.",
+                 ddoor && you.can_device_heal()
+                     ? ", and can't heal while in Death's door"
+                     : "");
             return false;
         }
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL])
-            factor = 2;
+        if (you.can_device_heal() && !ddoor)
+            inc_hp((5 + random2(7)) * mut_factor / 3);
 
-        if (you.can_device_heal())
-            inc_hp((5 + random2(7)) / factor);
-
-        mpr("You feel better.");
+        mprf("You feel %s.", ddoor ? "queasy" : "better");
 
         // Only fix rot when healed to full.
         if (you.hp == you.hp_max)
@@ -108,6 +102,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
         break;
+    }
 
     case POT_HEAL_WOUNDS:
         if (you.duration[DUR_DEATHS_DOOR])
@@ -132,16 +127,13 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL])
-            factor = 2;
-
-        inc_hp((10 + random2avg(28, 3)) / factor);
+        inc_hp((10 + random2avg(28, 3)) * mut_factor / 3);
         mpr("You feel much better.");
 
         // only fix rot when healed to full
         if (you.hp == you.hp_max)
         {
-            unrot_hp((2 + random2avg(5, 2)) / factor);
+            unrot_hp(2 + random2avg(5, 2));
             set_hp(you.hp_max);
         }
         break;
@@ -171,6 +163,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             {
                 // Likes it.
                 mpr("This tastes like blood.");
+                if (you.species == SP_GHOUL && player_rotted())
+                {
+                    mpr("You feel more resilient.");
+                    unrot_hp(1);
+                }
                 lessen_hunger(value, true);
             }
             else
@@ -196,7 +193,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             return false;
         }
 
-        if (haste_player((40 + random2(pow)) / factor))
+        if (haste_player(40 + random2(pow)))
             did_god_conduct(DID_HASTY, 10, was_known);
         break;
 
@@ -207,7 +204,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
-        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
 
         if (!were_mighty)
             notify_stat_change(STAT_STR, 5, true, "");
@@ -221,8 +218,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_brilliant ? "more clever" : "clever");
 
-        you.increase_duration(DUR_BRILLIANCE,
-                              (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
 
         if (!were_brilliant)
             notify_stat_change(STAT_INT, 5, true, "");
@@ -236,7 +232,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_agile ? "more agile" : "agile");
 
-        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
 
         if (!were_agile)
             notify_stat_change(STAT_DEX, 5, true, "");
@@ -273,47 +269,37 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_POISON:
+#if TAG_MAJOR_VERSION == 34
     case POT_STRONG_POISON:
-        if (player_res_poison() >= (pot_eff == POT_POISON ? 1 : 3))
-        {
-            mprf("You feel %s nauseous.",
-                 (pot_eff == POT_POISON) ? "slightly" : "quite");
-        }
+#endif
+        if (player_res_poison() >= 1)
+            mpr("You feel slightly nauseous.");
         else
         {
             mprf(MSGCH_WARN,
-                 "That liquid tasted %s nasty...",
-                 (pot_eff == POT_POISON) ? "very" : "extremely");
+                 "That liquid tasted very nasty...");
 
-            int amount;
-            string msg;
-            if (pot_eff == POT_POISON)
-            {
-                amount = 10 + random2avg(15, 2);
-                msg = "a potion of poison";
-            }
-            else
-            {
-                amount = 30 + random2avg(55, 2);
-                msg = "a potion of strong poison";
-            }
+            int amount = 10 + random2avg(15, 2);
+            string msg = "a potion of poison";
+
             poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
         break;
 
+    // Potions of slowing no longer exist, but tons of other effects use
+    // potion_effect(POT_SLOWING) so this code stays in.
     case POT_SLOWING:
-        if (slow_player((10 + random2(pow)) / factor))
+        if (slow_player(10 + random2(pow)))
             xom_is_stimulated(50 / xom_factor);
         break;
 
-    case POT_PARALYSIS:
-        paralyse_player("a potion of paralysis", 0, factor);
-        xom_is_stimulated(50 / xom_factor);
+    case POT_CANCELLATION:
+        debuff_player();
         break;
 
     case POT_CONFUSION:
-        if (confuse_player((3 + random2(8)) / factor))
+        if (confuse_player(3 + random2(8)))
             xom_is_stimulated(100 / xom_factor);
         break;
 
@@ -366,7 +352,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
         break;
 
-    case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
+    case POT_PORRIDGE:
         if (you.species == SP_VAMPIRE
             || player_mutation_level(MUT_CARNIVOROUS) == 3)
         {
@@ -383,16 +369,15 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         if (potion)
             mpr("There was something very wrong with that liquid!");
 
-        if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
+        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
                       "drinking a potion of degeneration"))
         {
             xom_is_stimulated(50 / xom_factor);
         }
         break;
 
-    // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
-        if (you.rot(&you, 0, (3 + random2(3)) / factor))
+        if (you.rot(&you, 0, 3 + random2(3)))
             xom_is_stimulated(50 / xom_factor);
         break;
 
@@ -460,13 +445,13 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         else
         {
-            if (go_berserk(was_known, true))
+            if (you.go_berserk(was_known, true))
                 xom_is_stimulated(50);
         }
         break;
 
     case POT_CURE_MUTATION:
-        if (potion && was_known && undead_mutation_rot(true))
+        if (potion && was_known && undead_mutation_rot())
         {
             mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
                                       : "You cannot mutate.");
@@ -479,7 +464,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_MUTATION:
-        if (potion && was_known && undead_mutation_rot(true))
+        if (potion && was_known && undead_mutation_rot())
         {
             mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
                                       : "You cannot mutate.");
@@ -495,7 +480,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_BENEFICIAL_MUTATION:
-        if (undead_mutation_rot(true))
+        if (undead_mutation_rot())
         {
             if (potion && was_known)
             {
@@ -523,7 +508,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     case POT_RESISTANCE:
         mprf(MSGCH_DURATION, "You feel protected.");
-        you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
         break;
 
     case POT_LIGNIFY:

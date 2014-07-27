@@ -64,7 +64,7 @@ void inscribe_item(item_def &item, bool msgwin);
 
 void append_weapon_stats(string &description, const item_def &item);
 void append_armour_stats(string &description, const item_def &item);
-void append_missile_info(string &description);
+void append_missile_info(string &description, const item_def &item);
 
 int describe_monsters(const monster_info &mi, bool force_seen = false,
                       const string &footer = "");
@@ -93,6 +93,7 @@ string artefact_inscription(const item_def& item);
 void add_inscription(item_def &item, string inscrip);
 
 string trap_name(trap_type trap);
+string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
 int count_desc_lines(const string& _desc, const int width);

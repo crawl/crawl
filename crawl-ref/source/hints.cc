@@ -106,7 +106,7 @@ void init_hints_options()
 
     // Clear possible debug messages before messing
     // with messaging options.
-    mesclr(true);
+    clear_messages(true);
 //     Options.clear_messages = true;
     Options.show_more  = true;
     Options.small_more = false;
@@ -1272,7 +1272,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
              << "</w>') </console>"
-                "you've picked up. Missiles like darts and throwing nets "
+                "you've picked up. Missiles like tomahwaks and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
                 "really effective. "
@@ -1299,8 +1299,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         else
         {
-            text << "\nFor now you might be best off with sticking to darts "
-                    "or stones for ranged attacks.";
+            text << "\nFor now you might be best off with sticking to "
+                    "stones for ranged attacks.";
         }
         break;
 
@@ -1485,15 +1485,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and can also be sacrificed to some gods. ";
 
-        if (!Options.show_gold_turns)
-        {
-            text << "Whenever you pick up some gold, your current amount will "
-                    "be mentioned. If you'd like to check your wealth at other "
-                    "times, you can press <w>%</w>. It will also be "
-                    "listed on the <w>%</w> screen.";
-            cmd.push_back(CMD_LIST_GOLD);
-            cmd.push_back(CMD_RESISTS_SCREEN);
-        }
+        text << "Whenever you pick up some gold, your current amount will "
+                "be mentioned. If you'd like to check your wealth at other "
+                "times, you can press <w>$</w>. It will also be "
+                "listed on the <w>%</w> screen.";
+        cmd.push_back(CMD_LIST_GOLD);
+        cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
     case HINT_SEEN_STAIRS:
@@ -2007,21 +2004,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_PICKUP);
         break;
 
-    case HINT_HEAVY_LOAD:
-        if (you.burden_state != BS_UNENCUMBERED)
-        {
-            text << "It is not usually a good idea to run around encumbered; "
-                    "it slows you down and increases your hunger.";
-        }
-        else
-        {
-            text << "Sadly, your inventory is limited to 52 items, and it "
-                    "appears your knapsack is full.";
-        }
-
+    case HINT_FULL_INVENTORY:
+        text << "Sadly, your inventory is limited to 52 items, and it "
+            "appears your knapsack is full.";
         text << " However, this is easy enough to rectify: simply "
-                "<w>%</w>rop some of the stuff you don't need or that's too "
-                "heavy to lug around permanently.";
+                "<w>%</w>rop some of the stuff you don't need right now.";
         cmd.push_back(CMD_DROP);
 
 #ifdef USE_TILE
@@ -2049,14 +2036,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_ROTTEN_FOOD:
         if (!crawl_state.game_is_hints())
         {
-            text << "One or more of the chunks or corpses you carry has "
-                    "started to rot. While some species can eat rotten "
-                    "meat, you can't.";
+            text << "One or more of the chunks you carry has started to rot. "
+                    "While some species can eat rotten meat, you can't.";
             break;
         }
-        text << "One or more of the chunks or corpses you carry has started "
-                "to rot. Few species can digest these, so you might just as "
-                "well <w>%</w>rop them now. "
+        text << "One or more of the chunks you carry has started to rot. Few "
+                "species can digest these, so you might just as well "
+                "<w>%</w>rop them now. "
                 "When selecting items from a menu, there's a shortcut "
                 "(<w>,</w>) to select all items in your inventory at once "
                 "that are useless to you.";
@@ -2557,8 +2543,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
                 "fleeing creature by throwing something after it. If you "
-                "have any darts or stones in your <w>%</w>nventory, you can "
-                "look at one of them to read an explanation of how to do this.";
+                "have any stones in your <w>%</w>nventory, you can look "
+                "at one of them to read an explanation of how to do this.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
@@ -2713,10 +2699,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>)"
 #endif
                 ", keep moving, don't fight any of the monsters, and don't "
-                "bother picking up any items on the ground. If you're "
-                "encumbered or overburdened, then lighten up your load, and if "
-                "the monsters are closing in, try to use items of hasting to get "
-                "away.";
+                "bother picking up any items on the ground. If the monsters "
+                "are closing in, try to use items of hasting to get away.";
         break;
 
     case HINT_SPELL_MISCAST:
@@ -3001,8 +2985,7 @@ string hints_skills_info()
         "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
         "will not be trained and ease the training of others. "
-        "Press <w>!</w> to learn about skill training and <w>?</w> to read "
-        "your skills' descriptions.";
+        "Press <w>?</w> to read your skills' descriptions.";
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3214,7 +3197,7 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     // Compare with other melee weapons.
-                    curr_wpskill = weapon_skill(item);
+                    curr_wpskill = melee_skill(item);
                     best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
                     // Maybe unarmed is better.
                     if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])
@@ -3469,8 +3452,7 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "skeletons, corpses and rotten chunks in your "
-                            "inventory. ";
+                            "rotten chunks in your inventory. ";
                     cmd.push_back(CMD_DROP);
                     cmd.push_back(CMD_DROP);
                 }
@@ -3669,9 +3651,9 @@ void hints_describe_item(const item_def &item)
 
                 if (in_inventory(item))
                 {
-                    ostr << " In the drop menu you can select all skeletons, "
-                            "corpses, and rotten chunks in your inventory "
-                            "at once with <w>%&</w>.";
+                    ostr << " In the drop menu you can select all rotten "
+                            " chunks in your inventory at once with "
+                            "<w>%&</w>.";
                     cmd.push_back(CMD_DROP);
                 }
                 break;
@@ -3699,22 +3681,11 @@ void hints_describe_item(const item_def &item)
                 else
                 {
                     ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "skeletons and rotten chunks or corpses in your "
-                            "inventory. ";
+                            "rotten chunks in your inventory. ";
                     cmd.push_back(CMD_DROP);
                     cmd.push_back(CMD_DROP);
                 }
                 ostr << "No god will accept such rotten sacrifice, either.";
-            }
-            else
-            {
-#ifdef USE_TILE
-                ostr << " For an individual corpse in your inventory, the most "
-                        "practical way to chop it up is to drop it by clicking "
-                        "on it with your <w>left mouse button</w> while "
-                        "<w>Shift</w> is pressed, and then repeat that command "
-                        "for the corpse tile now lying on the floor.";
-#endif
             }
             if (!in_inventory(item))
                 break;
@@ -4149,7 +4120,7 @@ static void _hints_describe_feature(int x, int y)
             ostr << "\n\n";
 
         ostr << "Many forms of combat and some forms of magical attack "
-                "will splatter the surroundings with blood (if the victim has "
+                "will spatter the surroundings with blood (if the victim has "
                 "any blood, that is). Some monsters can smell blood from "
                 "a distance and will come looking for whatever the blood "
                 "was spilled from.";

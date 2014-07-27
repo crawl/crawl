@@ -1,17 +1,9 @@
-// mutation definitions:
-// first  number  = probability (0 means it doesn't appear naturally
-//                  unless you have some level of it already)
-// second number  = maximum levels
-// first  boolean = is mutation mostly bad?
-// second boolean = is mutation physical, i.e. external only?
-// third  boolean = is mutation suppressed when shapechanged?
-// first  string  = what to show in '%'
-// second strings = what to show in 'A'
-// third  strings = message given when gaining the mutation
-// fourth strings = message given when losing the mutation
-// fifth  string  = wizard-mode name of mutation
+// mutation_def struct is defined & documented in mutation.h.
 
-{ MUT_TOUGH_SKIN,                     0,  3, false,  true,  true,
+static const mutation_def mut_data[] =
+{
+
+{ MUT_TOUGH_SKIN,                     0,  3, MUTFLAG_GOOD, true,
   "tough skin",
 
   {"You have tough skin (AC +1).",
@@ -25,54 +17,44 @@
   {"Your skin feels delicate.",
    "Your skin feels delicate.",
    "Your skin feels delicate."},
-
-  "tough skin"
 },
 
-{ MUT_STRONG,                         7, 2, false,  true, false,
+{ MUT_STRONG,                         7, 2, MUTFLAG_GOOD, false,
   "strong",
 
   {"Your muscles are strong. (Str +2)",
    "Your muscles are very strong. (Str +4)", ""},
   {"", "", ""},
   {"", "", ""},
-
-  "strong"
 },
 
-{ MUT_CLEVER,                         7, 2, false,  true, false,
+{ MUT_CLEVER,                         7, 2, MUTFLAG_GOOD, false,
   "clever",
 
   {"Your mind is acute. (Int +2)",
    "Your mind is very acute. (Int +4)", ""},
   {"", "", ""},
   {"", "", ""},
-
-  "clever"
 },
 
-{ MUT_AGILE,                          7, 2, false,  true, false,
+{ MUT_AGILE,                          7, 2, MUTFLAG_GOOD, false,
   "agile",
 
   {"You are agile. (Dex +2)",
    "You are very agile. (Dex +4)", ""},
   {"", "", ""},
   {"", "", ""},
-
-  "agile"
 },
 
-{ MUT_POISON_RESISTANCE,              4,  1, false, false,  true,
+{ MUT_POISON_RESISTANCE,              4,  1, MUTFLAG_GOOD, true,
   "poison resistance",
 
   {"Your system is resistant to poisons.", "", ""},
   {"You feel resistant to poisons.", "",  ""},
   {"You feel less resistant to poisons.", "", ""},
-
-  "poison resistance"
 },
 
-{ MUT_CARNIVOROUS,                    0,  3, false, false, false,
+{ MUT_CARNIVOROUS,                    0,  3, MUTFLAG_GOOD, false,
   "carnivore",
 
   {"Your digestive system is specialised to digest meat.",
@@ -86,11 +68,9 @@
   {"You feel able to eat a more balanced diet.",
    "You feel able to eat a more balanced diet.",
    "You feel able to eat a more balanced diet."},
-
-  "carnivorous"
 },
 
-{ MUT_HERBIVOROUS,                    0,  3,  true, false, false,
+{ MUT_HERBIVOROUS,                    0,  3,  MUTFLAG_BAD, false,
   "herbivore",
 
   {"You digest meat inefficiently.",
@@ -104,11 +84,9 @@
   {"You feel able to eat a more balanced diet.",
    "You feel able to eat a more balanced diet.",
    "You feel able to eat a more balanced diet."},
-
-  "herbivorous"
 },
 
-{ MUT_HEAT_RESISTANCE,                4,  3, false, false,  true,
+{ MUT_HEAT_RESISTANCE,                4,  3, MUTFLAG_GOOD, true,
   "fire resistance",
 
   {"Your flesh is heat resistant.",
@@ -122,11 +100,9 @@
   {"You no longer feel heat resistant.",
    "You feel less heat resistant.",
    "You feel less heat resistant."},
-
-  "heat resistance"
 },
 
-{ MUT_COLD_RESISTANCE,                4,  3, false, false,  true,
+{ MUT_COLD_RESISTANCE,                4,  3, MUTFLAG_GOOD, true,
   "cold resistance",
 
   {"Your flesh is cold resistant.",
@@ -140,11 +116,9 @@
   {"You no longer feel cold resistant.",
    "You feel less cold resistant.",
    "You feel less cold resistant."},
-
-  "cold resistance"
 },
 
-{ MUT_HEAT_VULNERABILITY,             0,  3, true, false,  true,
+{ MUT_HEAT_VULNERABILITY,             0,  3, MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL, true,
   "heat vulnerability",
 
   {"You are vulnerable to heat.",
@@ -158,11 +132,9 @@
   {"You no longer feel vulnerable to heat.",
    "You feel less vulnerable to heat.",
    "You feel less vulnerable to heat."},
-
-  "heat vulnerability"
 },
 
-{ MUT_COLD_VULNERABILITY,             0,  3, true, false,  true,
+{ MUT_COLD_VULNERABILITY,             0,  3, MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL, true,
   "cold vulnerability",
 
   {"You are vulnerable to cold.",
@@ -176,11 +148,9 @@
   {"You no longer feel vulnerable to cold.",
    "You feel less vulnerable to cold.",
    "You feel less vulnerable to cold."},
-
-  "cold vulnerability"
 },
 
-{ MUT_DEMONIC_GUARDIAN,               0,  3, false, false, false,
+{ MUT_DEMONIC_GUARDIAN,               0,  3, MUTFLAG_GOOD, false,
   "demonic guardian",
 
   {"A weak demonic guardian rushes to your aid.",
@@ -194,31 +164,25 @@
   {"Your demonic guardian is gone.",
    "Your demonic guardian is weakened.",
    "Your demonic guardian is weakened."},
-
-  "demonic guardian"
 },
 
-{ MUT_SHOCK_RESISTANCE,               2,  1, false, false,  true,
+{ MUT_SHOCK_RESISTANCE,               2,  1, MUTFLAG_GOOD, true,
   "electricity resistance",
 
   {"You are resistant to electric shocks.", "", ""},
   {"You feel insulated.", "", ""},
   {"You feel conductive.", "", ""},
-
-  "shock resistance"
 },
 
-{ MUT_SHOCK_VULNERABILITY,            0,  1, true,  false,  true,
+{ MUT_SHOCK_VULNERABILITY,            0,  1, MUTFLAG_BAD | MUTFLAG_QAZLAL, true,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
   {"You feel vulnerable to electricity.", "", ""},
   {"You feel less vulnerable to electricity.", "", ""},
-
-  "shock vulnerability"
 },
 
-{ MUT_REGENERATION,                   3,  3, false, false, false,
+{ MUT_REGENERATION,                   3,  3, MUTFLAG_GOOD, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
@@ -232,11 +196,9 @@
   {"Your rate of healing slows.",
    "Your rate of healing slows.",
    "Your rate of healing slows."},
-
-  "regeneration"
 },
 
-{ MUT_SLOW_HEALING,                   3,  3,  true, false, false,
+{ MUT_SLOW_HEALING,                   3,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
   "slow healing",
 
   {"You heal slowly when monsters are visible.",
@@ -250,11 +212,9 @@
   {"Your natural healing is strengthened.",
    "Your natural healing is strengthened.",
    "Your natural healing is strengthened."},
-
-  "slow healing"
 },
 
-{ MUT_FAST_METABOLISM,               10,  3,  true, false, false,
+{ MUT_FAST_METABOLISM,               10,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
   "fast metabolism",
 
   {"You have a fast metabolism.",
@@ -268,11 +228,9 @@
   {"Your metabolism slows.",
    "Your metabolism slows.",
    "Your metabolism slows."},
-
-  "fast metabolism"
 },
 
-{ MUT_SLOW_METABOLISM,                7,  2, false, false, false,
+{ MUT_SLOW_METABOLISM,                7,  2, MUTFLAG_GOOD, false,
   "slow metabolism",
 
   {"You have a slow metabolism.",
@@ -286,50 +244,43 @@
   {"You feel a little hungry.",
    "You feel a little hungry.",
    ""},
-
-  "slow metabolism"
 },
 
-{ MUT_WEAK,                          8, 2,  true,  true, false,
+{ MUT_WEAK,                          8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
   "weak",
   {"You are weak. (Str -2)",
    "You are very weak. (Str -4)", ""},
   {"", "", ""},
   {"", "", ""},
-  "weak"
 },
 
-{ MUT_DOPEY,                         8, 2,  true,  true, false,
+{ MUT_DOPEY,                         8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
   "dopey",
   {"You are dopey. (Int -2)",
    "You are very dopey. (Int -4)", ""},
   {"", "", ""},
   {"", "", ""},
-  "dopey",
 },
 
-{ MUT_CLUMSY,                        8, 2,  true,  true, false,
+{ MUT_CLUMSY,                        8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
   "clumsy",
   {"You are clumsy. (Dex -2)",
    "You are very clumsy. (Dex -4)", ""},
   {"", "", ""},
   {"", "", ""},
-  "clumsy"
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_TELEPORT_CONTROL,               0,  1, false, false, false,
+{ MUT_TELEPORT_CONTROL,               0,  1, MUTFLAG_GOOD, false,
   "teleport control",
 
   {"You can control translocations.", "", ""},
   {"You feel controlled.", "", ""},
   {"You feel random.", "", ""},
-
-  "teleport control"
 },
 #endif
 
-{ MUT_TELEPORT,                       3,  3,  true, false, false,
+{ MUT_TELEPORT,                       3,  3,  MUTFLAG_BAD, false,
   "teleportitis",
 
   {"Space occasionally distorts in your vicinity.",
@@ -343,11 +294,9 @@
   {"You feel stable.",
    "You feel stable.",
    "You feel stable."},
-
-  "teleport"
 },
 
-{ MUT_MAGIC_RESISTANCE,               5,  3, false, false, false,
+{ MUT_MAGIC_RESISTANCE,               5,  3, MUTFLAG_GOOD, false,
   "magic resistance",
 
   {"You are resistant to hostile enchantments.",
@@ -361,11 +310,9 @@
   {"You feel less resistant to hostile enchantments.",
    "You feel less resistant to hostile enchantments.",
    "You feel vulnerable to magic hostile enchantments."},
-
-  "magic resistance"
 },
 
-{ MUT_FAST,                           0,  3, false, false,  true,
+{ MUT_FAST,                           0,  3, MUTFLAG_GOOD, true,
   "speed",
 
   {"You cover ground quickly.",
@@ -379,11 +326,9 @@
   {"You feel sluggish.",
    "You feel sluggish.",
    "You feel sluggish."},
-
-  "fast"
 },
 
-{ MUT_SLOW,                           0,  3,  true, false,  true,
+{ MUT_SLOW,                           0,  3,  MUTFLAG_BAD, true,
   "slowness",
 
   {"You cover ground slowly.",
@@ -397,11 +342,9 @@
   {"You feel quick.",
    "You feel quick.",
    "You feel quick."},
-
-  "slow"
 },
 
-{ MUT_ACUTE_VISION,                   2,  1, false, false, false,
+{ MUT_ACUTE_VISION,                   2,  1, MUTFLAG_GOOD, false,
   "see invisible",
 
   {"You have supernaturally acute eyesight.", "", ""},
@@ -413,21 +356,17 @@
   {"Your vision seems duller.",
    "Your vision seems duller.",
    "Your vision seems duller."},
-
-  "acute vision"
 },
 
-{ MUT_DEFORMED,                       8,  1,  true,  true,  true,
+{ MUT_DEFORMED,                       8,  1,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL, true,
   "deformed body",
 
   {"Armour fits poorly on your strangely shaped body.", "", ""},
   {"Your body twists and deforms.", "", ""},
   {"Your body's shape seems more normal.", "", ""},
-
-  "deformed"
 },
 
-{ MUT_SPIT_POISON,                    8,  3, false, false, false,
+{ MUT_SPIT_POISON,                    8,  3, MUTFLAG_GOOD, false,
   "spit poison",
 
   {"You can spit poison.",
@@ -441,11 +380,9 @@
   {"You feel an ache in your throat.",
    "You feel an ache in your throat.",
    "You feel an ache in your throat."},
-
-  "spit poison"
 },
 
-{ MUT_BREATHE_FLAMES,                 4,  3, false, false, false,
+{ MUT_BREATHE_FLAMES,                 4,  3, MUTFLAG_GOOD, false,
   "breathe flames",
 
   {"You can breathe flames.",
@@ -459,11 +396,9 @@
   {"A chill runs up and down your throat.",
    "A chill runs up and down your throat.",
    "A chill runs up and down your throat."},
-
-  "breathe flames"
 },
 
-{ MUT_JUMP,                 0,  3, false, false, false,
+{ MUT_JUMP,                 0,  3, MUTFLAG_GOOD, false,
   "jump",
 
   {"You can jump attack at a short distance.",
@@ -477,11 +412,9 @@
   {"You feel less sure on your feet.",
    "You feel less sure on your feet.",
    "You feel less sure on your feet."},
-
-  "jump"
 },
 
-{ MUT_BLINK,                          3,  3, false, false, false,
+{ MUT_BLINK,                          3,  3, MUTFLAG_GOOD, false,
   "blink",
 
   {"You can translocate small distances at will.",
@@ -495,12 +428,10 @@
   {"You feel a little less jittery.",
    "You feel less jittery.",
    "You feel less jittery."},
-
-  "blink"
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_STRONG_STIFF,                  0,  3, false,  true, false,
+{ MUT_STRONG_STIFF,                  0,  3, MUTFLAG_GOOD, false,
   "strong stiff",
 
   {"Your muscles are strong, but stiff (Str +1, Dex -1).",
@@ -514,11 +445,9 @@
   {"Your muscles feel loose.",
    "Your muscles feel loose.",
    "Your muscles feel loose."},
-
-  "strong stiff"
 },
 
-{ MUT_FLEXIBLE_WEAK,                 0,  3, false,  true, false,
+{ MUT_FLEXIBLE_WEAK,                 0,  3, MUTFLAG_GOOD, false,
   "flexible weak",
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
@@ -532,17 +461,15 @@
   {"Your muscles feel sore.",
    "Your muscles feel sore.",
    "Your muscles feel sore."},
-
-  "flexible weak"
 },
 #endif
 
-{ MUT_SCREAM,                         6,  3,  true, false, false,
+{ MUT_SCREAM,                         6,  3,  MUTFLAG_BAD | MUTFLAG_XOM, false,
   "screaming",
 
-  {"You occasionally shout uncontrollably.",
-   "You sometimes yell uncontrollably.",
-   "You frequently scream uncontrollably."},
+  {"You occasionally shout uncontrollably at your foes.",
+   "You sometimes yell uncontrollably at your foes.",
+   "You frequently scream uncontrollably at your foes."},
 
   {"You feel the urge to shout.",
    "You feel a strong urge to yell.",
@@ -551,21 +478,17 @@
   {"Your urge to shout disappears.",
    "Your urge to yell lessens.",
    "Your urge to scream lessens."},
-
-  "scream"
 },
 
-{ MUT_CLARITY,                        6,  1, false, false, false,
+{ MUT_CLARITY,                        6,  1, MUTFLAG_GOOD, false,
   "clarity",
 
   {"You possess an exceptional clarity of mind.", "", ""},
   {"Your thoughts seem clearer.", "", ""},
   {"Your thinking seems confused.", "", ""},
-
-  "clarity"
 },
 
-{ MUT_BERSERK,                        7,  3,  true, false, false,
+{ MUT_BERSERK,                        7,  3,  MUTFLAG_BAD, false,
   "berserk",
 
   {"You tend to lose your temper in combat.",
@@ -579,11 +502,9 @@
   {"You feel a little more calm.",
    "You feel a little less angry.",
    "You feel a little less angry."},
-
-  "berserk"
 },
 
-{ MUT_DETERIORATION,                 10,  3,  true, false, false,
+{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "deterioration",
 
   {"Your body is slowly deteriorating.",
@@ -597,11 +518,9 @@
   {"You feel healthier.",
    "You feel a little healthier.",
    "You feel a little healthier."},
-
-  "deterioration"
 },
 
-{ MUT_BLURRY_VISION,                 10,  3,  true, false, false,
+{ MUT_BLURRY_VISION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "blurry vision",
 
   {"Your vision is a little blurry.",
@@ -615,11 +534,9 @@
   {"Your vision sharpens.",
    "Your vision sharpens a little.",
    "Your vision sharpens a little."},
-
-  "blurry vision"
 },
 
-{ MUT_MUTATION_RESISTANCE,            4,  3, false, false, false,
+{ MUT_MUTATION_RESISTANCE,            4,  3, MUTFLAG_GOOD, false,
   "mutation resistance",
 
   {"You are somewhat resistant to further mutation.",
@@ -633,11 +550,9 @@
   {"You feel genetically unstable.",
    "You feel genetically unstable.",
    "You feel genetically unstable."},
-
-  "mutation resistance"
 },
 
-{ MUT_EVOLUTION,                      4,  2, false, false, false,
+{ MUT_EVOLUTION,                      4,  2, MUTFLAG_GOOD, false,
   "evolution",
 
   {"You evolve.",
@@ -651,11 +566,9 @@
   {"You feel genetically stable.",
    "Your wild genetic ride slows down.",
    ""},
-
-  "evolution"
 },
 
-{ MUT_FRAIL,                         10,  3,  true,  true, false,
+{ MUT_FRAIL,                         10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "frail",
 
   {"You are frail (-10% HP).",
@@ -669,11 +582,9 @@
   {"You feel robust.",
    "You feel robust.",
    "You feel robust."},
-
-  "frail"
 },
 
-{ MUT_ROBUST,                         5,  3, false,  true, false,
+{ MUT_ROBUST,                         5,  3, MUTFLAG_GOOD, false,
   "robust",
 
   {"You are robust (+10% HP).",
@@ -687,32 +598,26 @@
   {"You feel frail.",
    "You feel frail.",
    "You feel frail."},
-
-  "robust"
 },
 
-{ MUT_UNBREATHING,                    0,  1, false, false,  true,
+{ MUT_UNBREATHING,                    0,  1, MUTFLAG_GOOD, true,
   "unbreathing",
 
   {"You can survive without breathing.", "", ""},
   {"You feel breathless.", "", ""},
   {"", "", ""},
-
-  "unbreathing"
 },
 
-{ MUT_TORMENT_RESISTANCE,             0,  1, false, false, false,
+{ MUT_TORMENT_RESISTANCE,             0,  1, MUTFLAG_GOOD, false,
   "torment resistance",
 
   {"You are immune to unholy pain and torment.", "", ""},
   {"You feel a strange anaesthesia.", "", ""},
   {"", "", ""},
-
-  "torment resistance"
 },
 
-{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false, false,
-  "life protection",
+{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, MUTFLAG_GOOD, false,
+  "negative energy resistance",
 
   {"You resist negative energy.",
    "You are quite resistant to negative energy.",
@@ -723,22 +628,18 @@
    "You feel negative."},
 
   {"", "", ""},
-
-  "negative energy resistance"
 },
 
-{ MUT_HURL_HELLFIRE,                  0,  1, false, false, false,
+{ MUT_HURL_HELLFIRE,                  0,  1, MUTFLAG_GOOD, false,
   "hurl hellfire",
 
   {"You can hurl blasts of hellfire.", "", ""},
   {"You smell fire and brimstone.", "", ""},
   {"", "", ""},
-
-  "hurl hellfire"
 },
 
 // body-slot facets
-{ MUT_HORNS,                          7,  3, false,  true,  true,
+{ MUT_HORNS,                          7,  3, MUTFLAG_GOOD, true,
   "horns",
 
   {"You have a pair of small horns on your head.",
@@ -752,21 +653,17 @@
   {"The horns on your head shrink away.",
    "The horns on your head shrink a bit.",
    "The horns on your head shrink a bit."},
-
-  "horns"
 },
 
-{ MUT_BEAK,                           1,  1, false,  true,  true,
+{ MUT_BEAK,                           1,  1, MUTFLAG_GOOD, true,
   "beak",
 
   {"You have a beak for a mouth.", "", ""},
   {"Your mouth lengthens and hardens into a beak!", "", ""},
   {"Your beak shortens and softens into a mouth.", "", ""},
-
-  "beak"
 },
 
-{ MUT_CLAWS,                          2,  3, false,  true,  true,
+{ MUT_CLAWS,                          2,  3, MUTFLAG_GOOD, true,
   "claws",
 
   {"You have sharp fingernails.",
@@ -780,11 +677,9 @@
   {"Your fingernails shrink to normal size.",
    "Your fingernails look duller.",
    "Your hands feel fleshier."},
-
-  "claws"
 },
 
-{ MUT_FANGS,                          1,  3, false,  true,  true,
+{ MUT_FANGS,                          1,  3, MUTFLAG_GOOD, true,
   "fangs",
 
   {"You have very sharp teeth.",
@@ -798,11 +693,9 @@
   {"Your teeth shrink to normal size.",
    "Your teeth shrink and become duller.",
    "Your teeth shrink and become duller."},
-
-  "fangs"
 },
 
-{ MUT_HOOVES,                         5,  3, false,  true,  true,
+{ MUT_HOOVES,                         5,  3, MUTFLAG_GOOD, true,
   "hooves",
 
   {"You have large cloven feet.",
@@ -816,11 +709,9 @@
   {"Your hooves expand and flesh out into feet!",
    "Your hooves look more like feet.",
    "Your hooves look more like feet."},
-
-  "hooves"
 },
 
-{ MUT_ANTENNAE,                       4,  3, false,  true,  true,
+{ MUT_ANTENNAE,                       4,  3, MUTFLAG_GOOD, true,
   "antennae",
 
   {"You have a pair of small antennae on your head.",
@@ -834,11 +725,9 @@
   {"The antennae on your head shrink away.",
    "The antennae on your head shrink a bit.",
    "The antennae on your head shrink a bit."},
-
-  "antennae"
 },
 
-{ MUT_TALONS,                         5,  3, false,  true,  true,
+{ MUT_TALONS,                         5,  3, MUTFLAG_GOOD, true,
   "talons",
 
   {"You have sharp toenails.",
@@ -852,12 +741,10 @@
   {"Your talons dull and shrink into feet.",
    "Your talons look more like feet.",
    "Your talons look more like feet."},
-
-  "talons"
 },
 
 // Octopode only
-{ MUT_TENTACLE_SPIKE,                10,  3, false,  true,  true,
+{ MUT_TENTACLE_SPIKE,                10,  3, MUTFLAG_GOOD, true,
   "tentacle spike",
 
   {"One of your tentacles bears a spike.",
@@ -871,23 +758,19 @@
   {"Your tentacle spike disappears.",
    "Your tentacle spike becomes smaller.",
    "Your tentacle spike recedes somewhat."},
-
-  "tentacle spike"
 },
 
 // Naga only
-{ MUT_BREATHE_POISON,                 4,  1, false, false,  false,
+{ MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
   {"You taste something nasty.", "", ""},
   {"Your breath is less nasty.", "", ""},
-
-  "breathe poison"
 },
 
 // Naga and Draconian only
-{ MUT_STINGER,                        8,  3, false,  true,  true,
+{ MUT_STINGER,                        8,  3, MUTFLAG_GOOD, true,
   "stinger",
 
   {"Your tail ends in a poisonous barb.",
@@ -901,23 +784,19 @@
   {"The barb on your tail disappears.",
    "The barb on your tail seems less sharp.",
    "The barb on your tail seems less sharp."},
-
-  "stinger"
 },
 
 // Draconian only
-{ MUT_BIG_WINGS,                      4,  1, false,  true,  true,
-  "large and strong wings",
+{ MUT_BIG_WINGS,                      4,  1, MUTFLAG_GOOD, true,
+  "big wings",
 
   {"Your wings are large and strong.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
-
-  "big wings"
 },
 
 // species-dependent innate mutations
-{ MUT_SAPROVOROUS,                    0,  3, false, false, false,
+{ MUT_SAPROVOROUS,                    0,  3, MUTFLAG_GOOD, false,
   "saprovore",
 
   {"You can tolerate rotten meat.",
@@ -929,21 +808,25 @@
    "You hunger for rotting flesh."},
 
   {"", "", ""},
-
-  "saprovorous"
 },
 
-{ MUT_GOURMAND,                       0,  1, false, false, false,
+{ MUT_ROT_IMMUNITY,                 0,  1, MUTFLAG_GOOD, false,
+  "rot immunity",
+
+  {"You are immune to rotting.", "", ""},
+  {"You feel immune to rotting.", "", ""},
+  {"You feel vulnerable to rotting.", "", ""},
+},
+
+{ MUT_GOURMAND,                       0,  1, MUTFLAG_GOOD, false,
   "gourmand",
 
   {"You like to eat raw meat.", "", ""},
   {"", "", ""},
   {"", "", ""},
-
-  "gourmand"
 },
 
-{ MUT_SHAGGY_FUR,                     2,  3, false,  true,  true,
+{ MUT_SHAGGY_FUR,                     2,  3, MUTFLAG_GOOD, true,
   "shaggy fur",
 
   {"You are covered in fur (AC +1).",
@@ -957,11 +840,9 @@
   {"You shed all your fur.",
    "Your thick fur recedes somewhat.",
    "Your shaggy fur recedes somewhat."},
-
-  "shaggy fur"
 },
 
-{ MUT_HIGH_MAGIC,                     2,  3, false, false, false,
+{ MUT_HIGH_MAGIC,                     2,  3, MUTFLAG_GOOD, false,
   "high mp",
 
   {"You have an increased reservoir of magic (+10% MP).",
@@ -975,11 +856,9 @@
   {"You feel less energetic.",
    "You feel less energetic.",
    "You feel less energetic."},
-
-  "high mp"
 },
 
-{ MUT_LOW_MAGIC,                      9,  3,  true, false, false,
+{ MUT_LOW_MAGIC,                      9,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
   "low mp",
 
   {"Your magical capacity is low (-10% MP).",
@@ -993,11 +872,9 @@
   {"You feel more energetic.",
    "You feel more energetic.",
    "You feel more energetic."},
-
-  "low mp"
 },
 
-{ MUT_WILD_MAGIC,                     6,  3, false, false, false,
+{ MUT_WILD_MAGIC,                     6,  3, MUTFLAG_GOOD, false,
   "wild magic",
 
   {"Your spells are a little harder to cast, but a little more powerful.",
@@ -1011,21 +888,41 @@
   {"You regain control of your magic.",
    "You feel more in control of your magic.",
    "You feel more in control of your magic."},
-
-  "wild magic"
 },
 
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, false, false, false,
+{ MUT_PLACID_MAGIC,                6,  3,  MUTFLAG_BAD, false,
+  "placid magic",
+
+  {"Your spells are a little easier to cast, but a little less powerful.",
+   "Your spells are easier to cast, but less powerful.",
+   "Your spells are much easier to cast, but much less powerful."},
+
+  {"Your connection to magic feels subdued.",
+   "Your connection to magic feels more subdued.",
+   "Your connection to magic feels nearly dormant."},
+
+  {"Your magic regains its normal vibrancy.",
+   "Your connection to magic feels less subdued.",
+   "Your connection to magic feels less subdued."},
+},
+
+{ MUT_FORLORN,                      3,  1,  MUTFLAG_BAD, false,
+  "forlorn",
+
+  {"You have difficulty communicating with the divine.","",""},
+  {"You feel forlorn.","",""},
+  {"You feel more spiritual.","",""},
+},
+
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, MUTFLAG_GOOD, false,
   "50% torment resistance",
 
   {"You are somewhat able to resist unholy torments (1 in 2 success).","",""},
   {"You feel a strange anaesthesia.","",""},
   {"","",""},
-
-  "stochastic torment resistance"
 },
 
-{ MUT_PASSIVE_MAPPING,                3,  3, false, false, false,
+{ MUT_PASSIVE_MAPPING,                3,  3, MUTFLAG_GOOD, false,
   "sense surroundings",
 
   {"You passively map a small area around you.",
@@ -1039,50 +936,43 @@
   {"You feel slightly disoriented.",
    "You feel slightly disoriented.",
    "You feel slightly disoriented."},
-
-  "passive mapping"
 },
 
-{ MUT_ICEMAIL,                        0,  1, false, false, false,
+{ MUT_ICEMAIL,                        0,  1, MUTFLAG_GOOD, false,
   "icemail",
 
   {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
-
-  "icemail"
 },
 
-{ MUT_CONSERVE_SCROLLS,               0,  1, false, false, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_CONSERVE_SCROLLS,               0,  1, MUTFLAG_GOOD, false,
   "conserve scrolls",
 
   {"You are very good at protecting items from fire.", "", ""},
   {"You feel less concerned about heat.", "", ""},
   {"", "", ""},
-
-  "conserve scrolls",
 },
 
-{ MUT_CONSERVE_POTIONS,               0,  1, false, false, false,
+{ MUT_CONSERVE_POTIONS,               0,  1, MUTFLAG_GOOD, false,
   "conserve potions",
 
   {"You are very good at protecting items from cold.", "", ""},
   {"You feel less concerned about cold.", "", ""},
   {"", "", ""},
-  "conserve potions",
 },
+#endif
 
-{ MUT_PASSIVE_FREEZE,                 0,  1, false, false, false,
+{ MUT_PASSIVE_FREEZE,                 0,  1, MUTFLAG_GOOD, false,
   "passive freeze",
 
   {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
   {"Your skin feels very cold.", "", ""},
   {"", "", ""},
-
-  "passive freeze",
 },
 
-{ MUT_NIGHTSTALKER,                   0,  3, false,  true, false,
+{ MUT_NIGHTSTALKER,                   0,  3, MUTFLAG_GOOD, false,
   "nightstalker",
 
   {"You are slightly more attuned to the shadows.",
@@ -1096,11 +986,9 @@
   {"Your affinity for the darkness vanishes.",
    "Your affinity for the darkness weakens.",
    "Your affinity for the darkness weakens."},
-
-  "nightstalker"
 },
 
-{ MUT_SPINY,                          0,  3, false,  true,  true,
+{ MUT_SPINY,                          0,  3, MUTFLAG_GOOD, true,
   "spiny",
 
   {"You are partially covered in sharp spines.",
@@ -1114,11 +1002,9 @@
   {"Your sharp spines disappear entirely.",
    "Your sharp spines retract somewhat.",
    "Your sharp spines retract somewhat."},
-
-  "spiny"
 },
 
-{ MUT_POWERED_BY_DEATH,               0,  3, false, false, false,
+{ MUT_POWERED_BY_DEATH,               0,  3, MUTFLAG_GOOD, false,
   "powered by death",
 
   {"You can steal the life force of nearby defeated enemies.",
@@ -1132,11 +1018,9 @@
   {"Your control of surrounding life forces is gone.",
    "Your control of surrounding life forces weakens.",
    "Your control of surrounding life forces weakens."},
-
-  "powered by death"
 },
 
-{ MUT_POWERED_BY_PAIN,                0,  3, false, false, false,
+{ MUT_POWERED_BY_PAIN,                0,  3, MUTFLAG_GOOD, false,
   "powered by pain",
 
   {"You sometimes gain a little power by taking damage.",
@@ -1148,11 +1032,9 @@
    "You feel completely energised by your suffering."},
 
   {"", "", ""},
-
-  "powered by pain"
 },
 
-{ MUT_AUGMENTATION,                   0,  3, false, false, false,
+{ MUT_AUGMENTATION,                   0,  3, MUTFLAG_GOOD, false,
   "augmentation",
 
   {"Your magical and physical power is slightly enhanced at high health.",
@@ -1164,42 +1046,34 @@
    "You feel saturated with power."},
 
   {"", "", ""},
-
-  "augmentation"
 },
 
-{ MUT_MANA_SHIELD,                    0,  1, false, false, false,
+{ MUT_MANA_SHIELD,                    0,  1, MUTFLAG_GOOD, false,
   "magic shield",
 
   {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
   {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
   {"", "", ""},
-
-  "magic shield"
 },
 
-{ MUT_MANA_REGENERATION,              0,  1, false, false, false,
+{ MUT_MANA_REGENERATION,              0,  1, MUTFLAG_GOOD, false,
   "magic regeneration",
 
   {"You regenerate magic rapidly.", "", ""},
   {"You feel your magic shroud grow more resilient.", "", ""},
   {"", "", ""},
-
-  "magic regeneration"
 },
 
-{ MUT_MANA_LINK,                      0,  1, false, false, false,
+{ MUT_MANA_LINK,                      0,  1, MUTFLAG_GOOD, false,
   "magic link",
 
   {"When low on magic, you restore magic in place of health.", "", ""},
   {"You feel your life force and your magical essence meld.", "", ""},
   {"", "", ""},
-
-  "magic link"
 },
 
 // Jiyva only mutations
-{ MUT_GELATINOUS_BODY,                0,  3, false,  true,  true,
+{ MUT_GELATINOUS_BODY,                0,  3, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "gelatinous body",
 
   {"Your rubbery body absorbs attacks (AC +1).",
@@ -1213,11 +1087,9 @@
   {"Your body returns to its normal consistency.",
    "Your body becomes less malleable.",
    "Your body becomes less viscous."},
-
-  "gelatinous body"
 },
 
-{ MUT_EYEBALLS,                       0,  3, false,  true,  true,
+{ MUT_EYEBALLS,                       0,  3, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "eyeballs",
 
   {"Your body is partially covered in golden eyeballs (Acc +3).",
@@ -1231,11 +1103,9 @@
   {"The eyeballs on your body disappear.",
    "The eyeballs on your body recede somewhat.",
    "The eyeballs on your body recede somewhat."},
-
-  "eyeballs"
 },
 
-{ MUT_TRANSLUCENT_SKIN,               0,  3, false,  true,  true,
+{ MUT_TRANSLUCENT_SKIN,               0,  3, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "translucent skin",
 
   {"Your skin is partially translucent.",
@@ -1249,11 +1119,9 @@
   {"Your skin returns to its normal opacity.",
    "Your skin's translucency fades.",
    "Your skin's transparency fades."},
-
-  "translucent skin"
 },
 
-{ MUT_PSEUDOPODS,                     0,  3, false,  true,  true,
+{ MUT_PSEUDOPODS,                     0,  3, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1267,62 +1135,52 @@
   {"Your pseudopods retract into your body.",
    "Your pseudopods become smaller.",
    "Your pseudopods become smaller."},
-
-  "pseudopods"
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_FOOD_JELLY,                     0,  1, false,  true, false,
+{ MUT_FOOD_JELLY,                     0,  1, MUTFLAG_GOOD, false,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
   {"You feel more connected to the slimes.", "", ""},
   {"Your connection to the slimes vanishes.", "", ""},
-
-  "jelly spawner"
 },
 #endif
 
-{ MUT_ACIDIC_BITE,                    0,  1, false,  true,  true,
+{ MUT_ACIDIC_BITE,                    0,  1, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
   {"Acid begins to drip from your mouth.", "", ""},
   {"Your mouth feels dry.", "", ""},
-
-  "acidic bite"
 },
 
-{ MUT_ANTIMAGIC_BITE,                 0,  1, false,  true,  true,
+{ MUT_ANTIMAGIC_BITE,                 0,  1, MUTFLAG_GOOD, true,
   "antimagic bite",
 
   {"Your bite disrupts and absorbs the magic of your enemies.", "", ""},
   {"You feel a sudden thirst for magic.", "", ""},
   {"Your magical appetite wanes.", "", ""},
-
-  "antimagic bite"
 },
 
-{ MUT_NO_DEVICE_HEAL,                 7,  2, true,  false,  false,
+{ MUT_NO_DEVICE_HEAL,                 3,  3, MUTFLAG_BAD, false,
   "no device heal",
 
   {"Potions and wands are less effective at restoring your health.",
-   "Potions and wands cannot restore your health.",
-   ""},
+   "Potions and wands are poor at restoring your health.",
+   "Potions and wands cannot restore your health."},
 
   {"Your system partially rejects artificial healing.",
-   "Your system completely rejects artificial healing.",
-   ""},
+   "Your system mostly rejects artificial healing.",
+   "Your system completely rejects artificial healing."},
 
   {"Your system completely accepts artificial healing.",
-   "Your system partially accepts artificial healing.",
-   ""},
-
-  "no device heal"
+   "Your system mostly accepts artificial healing.",
+   "Your system partly accepts artificial healing."},
 },
 
 // Scale mutations
-{ MUT_DISTORTION_FIELD,               2,  3, false, false, false,
+{ MUT_DISTORTION_FIELD,               2,  3, MUTFLAG_GOOD, false,
   "repulsion field",
 
   {"You are surrounded by a mild repulsion field (EV +2).",
@@ -1336,11 +1194,9 @@
   {"You feel less repulsive.",
    "You feel less repulsive.",
    "You feel less repulsive."},
-
-  "repulsion field"
 },
 
-{ MUT_ICY_BLUE_SCALES,                2,  3, false,  true,  true,
+{ MUT_ICY_BLUE_SCALES,                2,  3, MUTFLAG_GOOD, true,
   "icy blue scales",
 
   {"You are partially covered in icy blue scales (AC +1).",
@@ -1354,11 +1210,9 @@
   {"Your icy blue scales disappear.",
    "Your icy blue scales recede somewhat.",
    "Your icy blue scales recede somewhat."},
-
-  "icy blue scales"
 },
 
-{ MUT_IRIDESCENT_SCALES,              2,  3, false,  true,  true,
+{ MUT_IRIDESCENT_SCALES,              2,  3, MUTFLAG_GOOD, true,
   "iridescent scales",
 
   {"You are partially covered in iridescent scales (AC +4).",
@@ -1372,16 +1226,14 @@
   {"Your iridescent scales disappear.",
    "Your iridescent scales recede somewhat.",
    "Your iridescent scales recede somewhat."},
-
-  "iridescent scales"
 },
 
-{ MUT_LARGE_BONE_PLATES,              2,  3, false,  true,  true,
+{ MUT_LARGE_BONE_PLATES,              2,  3, MUTFLAG_GOOD, true,
   "large bone plates",
 
   {"You are partially covered in large bone plates (AC +2, SH +2).",
-   "You are mostly covered in large bone plates (AC +3, SH +4).",
-   "You are completely covered in large bone plates (AC +4, SH +6)."},
+   "You are mostly covered in large bone plates (AC +3, SH +3).",
+   "You are completely covered in large bone plates (AC +4, SH +4)."},
 
   {"Large bone plates grow over parts of your arms.",
    "Large bone plates spread over more of your arms.",
@@ -1390,11 +1242,9 @@
   {"Your large bone plates disappear.",
    "Your large bone plates recede somewhat.",
    "Your large bone plates recede somewhat."},
-
-  "large bone plates"
 },
 
-{ MUT_MOLTEN_SCALES,                  2,  3, false,  true,  true,
+{ MUT_MOLTEN_SCALES,                  2,  3, MUTFLAG_GOOD, true,
   "molten scales",
 
   {"You are partially covered in molten scales (AC +1).",
@@ -1408,11 +1258,9 @@
   {"Your molten scales disappear.",
    "Your molten scales recede somewhat.",
    "Your molten scales recede somewhat."},
-
-  "molten scales"
 },
 
-{ MUT_ROUGH_BLACK_SCALES,             2,  3, false,  true,  true,
+{ MUT_ROUGH_BLACK_SCALES,             2,  3, MUTFLAG_GOOD, true,
   "rough black scales",
 
   {"You are partially covered in rough black scales (AC +4, Dex -1).",
@@ -1426,11 +1274,9 @@
   {"Your rough black scales disappear.",
    "Your rough black scales recede somewhat.",
    "Your rough black scales recede somewhat."},
-
-  "rough black scales"
 },
 
-{ MUT_RUGGED_BROWN_SCALES,            2,  3, false,  true,  true,
+{ MUT_RUGGED_BROWN_SCALES,            2,  3, MUTFLAG_GOOD, true,
   "rugged brown scales",
 
   {"You are partially covered in rugged brown scales (AC +1, +3% HP).",
@@ -1444,11 +1290,9 @@
   {"Your rugged brown scales disappear.",
    "Your rugged brown scales recede somewhat.",
    "Your rugged brown scales recede somewhat."},
-
-  "rugged brown scales"
 },
 
-{ MUT_SLIMY_GREEN_SCALES,             2,  3, false,  true,  true,
+{ MUT_SLIMY_GREEN_SCALES,             2,  3, MUTFLAG_GOOD, true,
   "slimy green scales",
 
   {"You are partially covered in slimy green scales (AC +2).",
@@ -1462,11 +1306,9 @@
   {"Your slimy green scales disappear.",
    "Your slimy green scales recede somewhat.",
    "Your slimy green scales recede somewhat."},
-
-  "slimy green scales"
 },
 
-{ MUT_THIN_METALLIC_SCALES,           2,  3, false,  true,  true,
+{ MUT_THIN_METALLIC_SCALES,           2,  3, MUTFLAG_GOOD, true,
   "thin metallic scales",
 
   {"You are partially covered in thin metallic scales (AC +2).",
@@ -1480,11 +1322,9 @@
   {"Your thin metallic scales disappear.",
    "Your thin metallic scales recede somewhat.",
    "Your thin metallic scales recede somewhat."},
-
-  "thin metallic scales"
 },
 
-{ MUT_THIN_SKELETAL_STRUCTURE,        2,  3, false,  true, false,
+{ MUT_THIN_SKELETAL_STRUCTURE,        2,  3, MUTFLAG_GOOD, false,
   "thin skeletal structure",
 
   {"You have a somewhat thin skeletal structure (Dex +2, Stealth).",
@@ -1498,11 +1338,9 @@
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",
    "Your skeletal structure densifies."},
-
-  "thin skeletal structure"
 },
 
-{ MUT_YELLOW_SCALES,                  2,  3, false,  true,  true,
+{ MUT_YELLOW_SCALES,                  2,  3, MUTFLAG_GOOD, true,
   "yellow scales",
 
   {"You are partially covered in yellow scales (AC +2).",
@@ -1516,11 +1354,9 @@
   {"Your yellow scales disappear.",
    "Your yellow scales recede somewhat.",
    "Your yellow scales recede somewhat."},
-
-  "yellow scales"
 },
 
-{ MUT_CAMOUFLAGE,                     1,  3, false,  true,  true,
+{ MUT_CAMOUFLAGE,                     1,  3, MUTFLAG_GOOD, true,
   "camouflage",
 
   {"Your skin changes colour to match your surroundings (Stealth).",
@@ -1534,25 +1370,21 @@
   {"Your skin no longer functions as natural camouflage.",
    "Your natural camouflage becomes less effective.",
    "Your natural camouflage becomes less effective."},
-
-   "camouflage"
 },
 
-{ MUT_IGNITE_BLOOD,                   0,  1, false, false, false,
+{ MUT_IGNITE_BLOOD,                   0,  1, MUTFLAG_GOOD, false,
   "ignite blood",
 
   {"Your demonic aura causes spilled blood to erupt in flames.", "", ""},
   {"Your blood runs red-hot!", "", ""},
   {"", "", ""},
-
-  "ignite blood"
 },
 
-{ MUT_FOUL_STENCH,                    0,  2, false, false, false,
+{ MUT_FOUL_STENCH,                    0,  2, MUTFLAG_GOOD, false,
   "foul stench",
 
-  {"You emit a foul stench, and are resistant to rotting and decay.",
-   "You radiate miasma, and are resistant to rotting and decay.",
+  {"You emit a foul stench.",
+   "You radiate miasma.",
    ""},
 
   {"You begin to emit a foul stench of rot and decay.",
@@ -1560,72 +1392,58 @@
    ""},
 
   {"", "", ""},
-
-  "foul stench"
 },
 
-{ MUT_TENDRILS,                       0,  1, false,  true, true,
+{ MUT_TENDRILS,                       0,  1, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "tendrils",
 
   {"Thin tendrils of slime have grown from your body.", "", ""},
   {"Thin, slimy tendrils emerge from your body.", "", ""},
   {"Your tendrils retract into your body.", "", ""},
-
-  "tendrils"
 },
 
-{ MUT_JELLY_GROWTH,                       0,  1, false,  true, true,
+{ MUT_JELLY_GROWTH,                       0,  1, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "jelly sensing items",
 
   {"You have a small jelly attached to you that senses nearby items.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
-
-  "jelly growth"
 },
 
-{ MUT_JELLY_MISSILE,                       0,  1, false,  true, true,
+{ MUT_JELLY_MISSILE,                       0,  1, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "jelly absorbing missiles",
 
   {"You have a small jelly attached to you that may absorb incoming projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
-
-  "jelly missile"
 },
 
-{ MUT_PETRIFICATION_RESISTANCE,            0,  1, false, false, false,
+{ MUT_PETRIFICATION_RESISTANCE,            0,  1, MUTFLAG_GOOD, false,
   "petrification resistance",
 
   {"You are immune to petrification.", "", ""},
   {"Your body vibrates.", "", ""},
   {"You briefly stop moving.", "", ""},
-
-  "petrification resistance"
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_TRAMPLE_RESISTANCE,                  0,  1, false, false, false,
+{ MUT_TRAMPLE_RESISTANCE,                  0,  1, MUTFLAG_GOOD, false,
   "trample resistance",
 
   {"You are resistant to trampling.", "", ""},
   {"You feel steady.", "", ""},
   {"You feel unsteady..", "", ""},
-
-  "trample resistance"
 },
 
-{ MUT_CLING,                               0,  1, false, false, true,
+{ MUT_CLING,                               0,  1, MUTFLAG_GOOD, true,
   "cling",
 
   {"You can cling to walls.", "", ""},
   {"You feel sticky.", "", ""},
   {"You feel slippery.", "", ""},
-
-  "cling"
 },
 
-{ MUT_EXOSKELETON,                         0,  2, false,  true,  true,
+{ MUT_EXOSKELETON,                         0,  2, MUTFLAG_GOOD, true,
   "exoskeleton",
 
   {"Your body is surrounded by an exoskeleton. (buggy)",
@@ -1639,27 +1457,47 @@
   {"Your exoskeleton softens.",
    "Your exoskeleton softens.",
    ""},
-
-  "exoskeleton"
 },
 
-{ MUT_FUMES,            0,  2, false, false, false,
+{ MUT_FUMES,            0,  2, MUTFLAG_GOOD, false,
   "fuming",
 
   {"You emit clouds of smoke.", "You frequently emit clouds of smoke.", ""},
   {"You fume.", "You fume more.", ""},
   {"You stop fuming.", "You fume less.", ""},
-
-  "fumes"
 },
 #endif
 
-{ MUT_BLACK_MARK,                  0,  1, false, false, false,
+{ MUT_BLACK_MARK,                  0,  1, MUTFLAG_GOOD, false,
   "black mark",
 
   {"Your melee attacks sometimes drain vitality from your foes.", "", ""},
   {"An ominous black mark forms on your body.", "", ""},
   {"", "", ""},
+},
 
-  "black mark"
-}
+{ MUT_COLD_BLOODED,                0,  1, MUTFLAG_BAD, true,
+  "cold-blooded",
+
+  {"Your cold-blooded metabolism reacts poorly to cold.", "", ""},
+  {"You feel cold-blooded.", "", ""},
+  {"You feel warm-blooded.", "", ""},
+},
+
+{ MUT_FLAME_CLOUD_IMMUNITY,               0,  1, MUTFLAG_GOOD, false,
+  "flame cloud immunity",
+
+  {"You are immune to clouds of flame.", "", ""},
+  {"You feel less concerned about heat.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_FREEZING_CLOUD_IMMUNITY,               0,  1, MUTFLAG_GOOD, false,
+  "freezing cloud immunity",
+
+  {"You are immune to freezing clouds.", "", ""},
+  {"You feel less concerned about cold.", "", ""},
+  {"", "", ""},
+},
+
+};

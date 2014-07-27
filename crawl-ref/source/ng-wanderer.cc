@@ -8,6 +8,7 @@
 #include "player.h"
 #include "random.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-util.h"
 
 // Returns true if a "good" weapon is given.
@@ -75,7 +76,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_CROSSBOWS:
-        sub_type = WPN_CROSSBOW;
+        sub_type = WPN_HAND_CROSSBOW;
         break;
     }
 
@@ -83,7 +84,6 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     you.inv[slot].quantity  = 1;
     you.inv[slot].special   = 0;
     you.inv[slot].plus  = plus;
-    you.inv[slot].plus2 = plus;
 
     return true;
 }
@@ -560,7 +560,6 @@ static void _wanderer_good_equipment(skill_type & skill,
         // +2 dagger and a good consumable
         newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
         you.inv[slot].plus  = 2;
-        you.inv[slot].plus2 = 2;
         slot++;
         _good_potion_or_scroll(slot);
         break;
@@ -663,7 +662,8 @@ static void _give_wanderer_spell(skill_type skill)
         break;
     }
 
-    add_spell_to_memory(spell);
+    if (!you_cannot_memorise(spell))
+        add_spell_to_memory(spell);
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
@@ -820,7 +820,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_CROSSBOW)
+            && range_skill(you.inv[i]) == SK_CROSSBOWS)
         {
             need_bolts = true;
             break;
@@ -841,7 +841,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_SHORTBOW)
+            && range_skill(you.inv[i]) == SK_BOWS)
         {
             needs_arrows = true;
             break;
@@ -859,7 +859,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
 // New style wanderers are supposed to be decent in terms of skill
 // levels/equipment, but pretty randomised.
-void create_wanderer(void)
+void create_wanderer()
 {
     // Decide what our character roles are.
     stat_type primary_role   = _wanderer_choose_role();

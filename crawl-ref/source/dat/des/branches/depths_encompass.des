@@ -24,6 +24,75 @@
                                         size = 1, spread_rate = 0,
                                         walk_dist = 0, excl_rad = 0 })
     end
+
+    function radiant_caverns_setup(e)
+        e.set_random_mon_list(
+            "glowing shapeshifter w:100 / air elemental / fire elemental / " ..
+            "earth elemental / crystal guardian / molten gargoyle / " ..
+            "war gargoyle / dancing weapon / very ugly thing band")
+        e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
+               "storm dragon w:5 / wind drake w:5")
+        e.mons("fire giant / fire dragon / molten gargoyle / " ..
+               "salamander mystic / salamander firebrand w:2 / " ..
+               "nothing w:42")
+        e.mons("glowing shapeshifter / nothing")
+        e.mons("very ugly thing w:5 / ugly thing")
+        e.mons("ball lightning / nothing w:4")
+        e.mons("insubstantial wisp / nothing")
+        e.mons("crystal guardian")
+        e.shuffle("wKLMN / lghij")
+        e.shuffle("KLMN")
+        e.shuffle("ghij")
+        e.shuffle("JH")
+        e.shuffle("34")
+        e.shuffle("m6")
+        e.subst("x = xxxxxbb")
+        e.subst("s = .*$p|O")
+        e.subst("u = ||$.O")
+        e.kitem("p = w:50 potion of mutation / " ..
+                "w:15 amulet of resist mutation ident:all / " ..
+                "w:1 potion of cure mutation")
+        e.kitem("O = | mimic")
+        e.kitem("Q = potion of cure mutation")
+        e.kitem("Z = amulet of resist mutation ident:all")
+        e.kitem("U = potion of cure mutation / nothing")
+        e.nsubst("u = 2:Q / 1:Z / 1:U / *:u")
+        e.subst("x = x b:2")
+        e.nsubst("H = 2:D / 2:E")
+        e.nsubst("Y = 1:G / *:I")
+        e.nsubst("J = 2:E / 2:4")
+        e.nsubst(": = 3:a / *:.")
+        e.nsubst("w = 4:r / *:w")
+        e.nsubst("1 = 2:1 / *:.")
+        e.kfeat("r = deep_water")
+        e.kmons("r = water elemental")
+        e.kmons("n = glowing shapeshifter / w:5 dancing weapon / w:25 nothing")
+        e.kmons("m = very ugly thing w:5 / ugly thing / w:25 nothing")
+        e.kmons("jL = war gargoyle / crystal guardian / w:1 iron golem / " ..
+                "w:21 nothing")
+        e.kmons("iN = earth elemental / nothing")
+        e.kmons("h = w:30 air elemental / glowing shapeshifter / " ..
+                " w:30 nothing")
+        e.kmons("g = w:30 water elemental / glowing shapeshifter / " ..
+                "w:30 nothing")
+        e.kmons("q = war gargoyle / crystal guardian / " ..
+                "glowing shapeshifter / earth elemental")
+        e.kmons("tV = ball lightning / fire vortex / fire elemental / " ..
+                "air elemental / wind drake / nothing w:75")
+        e.kmons("S = gargoyle / molten gargoyle / w:1 war gargoyle / " ..
+                "w:21 nothing")
+        e.kmons("D = dancing weapon")
+        e.kmons("E = glowing shapeshifter")
+        e.kmons("K = molten gargoyle / fire elemental / " ..
+                "w:50 earth elemental / w:70 nothing")
+        e.kmons("M = earth elemental / fire elemental / w:20 nothing")
+        e.kmons("I = silver statue / ice statue / w:1 orange crystal statue")
+        e.kmons("y = glowing shapeshifter / war gargoyle w:5 / " ..
+                "crystal guardian w:5")
+        e.kmons("z = crystal guardian / w:30 dancing weapon")
+        e.kfeat("A = stone_arch")
+        e.marker("A = lua:props_marker { portal=1 }")
+    end
 }}
 
 default-depth: Depths:2-, !Depths:$
@@ -162,11 +231,11 @@ KMONS:   Z = queen bee
 ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
 ITEM:    amulet of stasis
-KITEM:   gzZ = royal jelly / honeycomb w:20 / nothing w:120
+KITEM:   gzZ = royal jelly w:10 / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
 KFEAT:   ^ = known teleport trap / known Zot trap
-KFEAT:   T = known teleport trap
+KFEAT:   T = known permanent teleport trap
 NSUBST:  T = 1:. / *:T
 NSUBST:  w = 1:~ / *:w, l = 1:L / *:l
 NSUBST:  A = 1:+ / *:b, B = 1:+ / *:b
@@ -243,111 +312,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################
-# Zero! Nine! Eight!
-#
-NAME:    hangedman_slaughterboxes
-TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling uniq_d_encompass
-ORIENT:  encompass
-DEPTH:   Depths:2-
-PLACE:   D:$, Depths:$
-WEIGHT:  1 (D:$), 2 (Depths:$), 10
-MONS:    fungus, plant
-KMONS:   S = 0 band
-KMONS:   # = 9 band
-KMONS:   = = draconian annihilator / draconian knight / draconian monk
-KFEAT:   ^ = stone_arch
-KFEAT:   - = enter_depths
-KFEAT:   = = enter_zot
-SHUFFLE: :;, `~, 34, 67, !?, XZ / yz
-SUBST:   % = %:40 $:20 ., * = *:30 %, | = |:30 *
-SHUFFLE: ABCDE / BADCE / AGHIC / ACGHE, BDF
-SUBST:   ACF = ., BDGHI = x, E : .x
-SHUFFLE: JKLMN / KJMLN / JPQRL / JLPQN, KMO
-SUBST:   JLO = ., KMPQR = x, N : .x
-SHUFFLE: cdefg / dcfeg / cijke / ceijg, dfh
-SUBST:   ceh = ., dfijk = x, g : .x
-SHUFFLE: nopqr / onqpr / ntuvp / nptur, oqs
-SUBST:   nps = ., oqtuv = x, r : .x
-SUBST:   X = xx', y= x'', Z = xx., z = x..
-SUBST:   ;` = ., :~ = x, T = TTV, U = TUU
-SUBST:   7? = ., 36! = 0, Y : 09, 5 = 09, 4 = 9
-SUBST:   " : WW', _  = C, @ = G
-NSUBST:  ' = 7:S / 2:# / 6 = S:2 #:1 .:2 / *:.
-: if you.absdepth() > 20 then
-SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
-MARKER:  ^ = lua:props_marker { portal=1 }
-:    if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBST:   ) = =, >]} = .
-:    end
-: else
-SUBST:   & : a:80 x:15 c:3 v:1 b:1, a : c:38 v:2 b:2
-:    if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-SUBST:   }] = ., ) = -, > = <
-:    end
-: end
-MAP
-   xxxxxxxxxxxxxxx      xxxxx       xxxxx
-  xxxxxxxxxxxxxxxxx    xxxxxxx    xxxxxxaaaaaaaaaaaaaaa
- xxxZZZZZZZZZZZZxxxxxxxxxXXXxxxxxxxxxZZaaaaaaaaaaaaaaaaa
-xxxZ............ZxxxxxxXX'''XXxxxxxZZ..aaalalalalalalaaaa
-xxZ..`x~x`x~x`x..ZZXXXX'''x'''XXZZZ....aalllllllllllllaaaa
-xxZ.`x........`....'''''''x''''''......aal%%%%*****|||laaa
-xxZ.x..~xxx`x.x....'x'''x'''x'''x...{..aal%........38|llaa
-xxZ.~.~x''''`.~...x'''x'''x'''x''.x..[.aal%.&4&&..&&3|laaa
-xxZ.x.x'`~`'x.x....'x'''x'''x'''x...(..aal%.48&&.&&&.*llaa
-xxZ.`.x'~0~'x.`....''''''''''''''......aal%.&&&...&..*laaa
-xxZ.x.x'`~`'x.x..aaaaaaaaaaaaaaaaaaaaaaaal%.&&.|.....*llaa
-xxZ.~.`''''x~.~.aaaaraaaaaaaEaaaaaaaaaaal&&.....|.&&.*laaa
-xxZ.x.x`xxx~..x.aa9...0.&.0..67aalllllll&&&+.....&&&.%llaa
-xxZ.`........x`.aa.nop.&+&.ADC6aal%%%%%%&&.m+...&&84.%laaa
-xxZ.x`x~x`x~x`..ar.qrq..&..BEB.Eal%90&...+m.m+..&&4&.%llaa
-xxZ.............aa.pon.&+&.CDA.aal%0.&.0..+m.m+......%laaa
-xxxZ.......aaaaaaa....9.&.....0aal%&&......+m.&&%%%%%%llaa
- xxxZ.....aaaaNaaaa.a.aaaa.&.&.aal%......<..+&&&lllllllaaa
- xxxZ.BAD.aa9....aaa+a+a0a&+&+&aaaaa+a+a5....&&laaaaaaaaaax
-  xxX'CEA'aa.JKL..aaa....a.&.&.aaaa.a.aaa..0.%laaaaaaaaaaxx
-  xxX'DCB'aN.MNM.a+acde..a...!?.&......a+....%laa.......Zxx
-  xxX'''''aa.LKJ..a.fgf.%a.nop!&+&.]1U..a..&&%laa..)....Zxx
-  xxX'''''aa....9a+.edc0%a.qrq..&..1@1.a+.&.0%laa.>.>..Zxxx
-  xxX'LKJ'aa.&.&.aa...08*a.pon.&+&.U1}..a.&09%laa......Zxx
-  xxX'MNM'aa&+&+&a0..%%*aa9.....&......aa%%%%%laa..x..Zxxx
- xxxX'JKL'aa.&.&.aaaaaaaa+aaaaaaa..&.&.aallllllaa.....Xxx
- xxX''''''aa....0.&.....0aa&...+.a&+&+&aaaaaaaaaa'x'x'Xxx
- xxX''''''aa.ABC.&+&.JKL.aY&.&.a+a.&.&.aaaaaEaaaa'''''Xxx
- xxX'CBA''aE.DED..&..MNM.a..efc..a...!?.&.0..67aa''x''Xxx
- xxX'DED''aa.CBA.&+&.LKJ.a.&dgf&.a.nqp!&+&.ABC6aa''''''Xxx
- xxX'ABC''aa9.....&.0....a%0cde..a.oro..&..DED.Ea'x'x''Xxxx
- xxX''''''aaaaEaaaaa.&.&.a*80&.&&a.pqn.&+&.CBA.aa'''''''Xxx
- xxX''''''aaaaaaaaaa&+&+&a|*%..Yaa9.....&.....0aa''x'xx'Xxx
- xxX'pon''aawwwwwwaa.&.&.aaaaaaaa+aaaaaaaa.&.&.aa'''''''Xxx
- xxX'qrq''aaw2112waa....5.&.....0aa*%%..0a&+&+&aa'x'x''Xxxx
- xxX'nop''aaw..T.Wa..DCB.&+&.JML.a*80...aa.&.&.aa''''''Xxx
- xxX''''''aaw....W+a.AEC..&..KNK.a%0cfe.+a9...0aa''x''Xxx
- xxX''''''aaw.2..Wa..BAD.&+&.LMJ.a%.dgd.a..nqp.aa'''''Xxx
- xxxX'edc'aaw....W+a......&.0....a..efca+a.oro.ra'x'x'Xxx
-  xxX'fgf'aaw...@waaa.a.aaaa.&.&.a....aaa..pqn.aa'''''Xxx
-  xxX'cde'aaw._..wwa+a+aaaaa&+&+&a0a+a+aaa....9aa..x..Zxxx
-  xxX'''''aaw....@wwWWWWwwaa.&.&.aaaa.a.aaaaraaaa.....Zxxxx
-  xxX'''''.aW......@....2waa....0.&.9....aaaaaaa.......Zxxx
-  xxX'cde'.+W.._.......T1waa.ADC.&+&.JML.aa.............Zxx
-  xxZ'fgd'.+W....._..2..1waE.BEB..&..KNK.Na..;x:x;x:x;x.Zxx
- xxxZ.efc..aww..........2waa.CDA.&+&.LMJ.aa.;x........;.Zxx
-xxxxZ......aawWWWwwwwwwwwwaa9.....&.....9aa.x..:xxx;x.x.Zxx
-xxxX'''2'..aaa++aaaaaaaaaaaaaaEaaaaaaaNaaaa.:.:x'''';.:.Zxx
-xxX''''''........aaaaaaaaaaaaaaaaaaaaaaaaa..x.x';:;'x.x.Zxx
-xxX''''''2....''''''''''''''''''''''''''....;.x':0:'x.;.Zxx
-xxX'2'^'''''.cde''efc''''''''''''LMJ''BAD...x.x';:;'x.x.Zxx
-xxX'''""'''2.fgd''dgd''pqn''CDA''KNK''CEA...:.;''''x:.x.Zxx
-xxX'''""^'''.efc''cfe''oro''BEB''JML''DCB...x.x;xxx:..x.Zxx
-xxX''^''''''..'''''''''nqp''ADC'''''''''....;........x;.Zxx
-xxX'''''2'''ZZZXXXXXXX''''''''''XXXXXXXXZZ..x;x:x;x:x;..Zxx
-xxxX'''''''XxxxxxxxxxxXXXXXXXXXXxxxxxxxxxxZ............Zxxx
- xxxXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxZZZZZZZZZZZZxxx
-  xxxxxxxxxxx        xxxxxxxxxxxxx       xxxxxxxxxxxxxxxx
-   xxxxxxxxx                              xxxxxxxxxxxxxx
-ENDMAP
-
-################################################################################
 # Profane Halls, by Grunt.
 #
 default-depth:
@@ -363,9 +327,6 @@ SHUFFLE: {[(<
 SUBST: }])> = G
 : else
 SHUFFLE: }])>
-:   if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-KFEAT: > = enter_vaults
-:   end
 : end
 SUBVAULT: d : grunt_profane_temple
 SUBVAULT: e : grunt_profane_temple
@@ -680,169 +641,6 @@ ccJ.1.Jcc
 ENDMAP
 
 default-depth: Depths:2-, !Depths:$
-###############################################################################
-#  This vault excercises varied old ideas for the Vaults branch:
-#  a primarily humanoid-based monster set, a focus on placing groups,
-#  and a pattern-based layout emphasizing lots of distinct rooms.
-#  Of course, HangedMan twisted these ideas thoroughly.
-#  Many thanks to elliott for writing the band placement lua!
-#
-NAME:    hangedman_spin_cycle
-TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling uniq_d_encompass
-ORIENT:  encompass
-DEPTH:   Depths:2-
-PLACE:   D:$, Depths:$
-WEIGHT:  1 (D:$), 2 (Depths:$), 10
-KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
-KMONS:   no = vault guard
-KMONS:   p = giant eyeball
-KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
-KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
-KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
-: local bands = {
-:     [65 - you.absdepth() * 3] =
-:         { "cyclops", "tengu warrior", "centaur warrior", },
-:     [42 - you.absdepth() * 2] =
-:         { "kobold demonologist", "tengu conjurer", "deep elf fighter",
-:           "necromancer", "yaktaur", "Azrael", "Kirke", },
-:     [26 - you.absdepth()] =
-:         { "boggart", "orc knight", "ogre mage", "skeletal warrior",
-:           "spriggan rider", "naga mage", "rakshasa", },
-:     [you.absdepth() * 2 - 37] =
-:         { "deep elf knight", "orc high priest", "deep troll shaman", },
-:     [you.absdepth() * 2 - 42] =
-:         { "harpy", "hell knight", "naga sharpshooter", "vampire mage",
-:           "orc warlord", "vampire knight", "yaktaur captain",
-:           "deep elf high priest", "spriggan defender", },
-:     [you.absdepth() - 18] =
-:         { "death knight", "ancient champion",
-:           "merfolk aquamancer", "salamander firebrand",
-:           "Margery", "Saint Roka", "Sojobo", },
-: }
-: local kmonsters = {}
-: for weight, monsters in pairs(bands) do
-:     if weight > 0 then
-:         for _, mons in ipairs(monsters) do
-:             if not you.uniques(mons) then
-:                 table.insert(kmonsters, mons .. " band w:" .. weight)
-:             end
-:         end
-:     end
-: end
-: kmons("s = " .. table.concat(kmonsters, " / "))
-KITEM:   ? = any ring randart w:390 / ring of loudness unrand:ring_of_the_octopus_king
-KITEM:   ! = ring of invisibility / ring of regeneration / \
-             ring of teleport control / ring of slaying / \
-             ring of wizardry / any good_item ring no_uniq w:75
-KITEM:   | = | / any good_item
-KFEAT:   ^ = known teleport trap
-KFEAT:   ~ = teleport trap
-KFEAT:   aD = stone_arch
-KFEAT:   A = enter_hell
-KFEAT:   & = enter_pandemonium
-KFEAT:   @ = enter_abyss
-KFEAT:   B = enter_depths
-KFEAT:   C : C / any shop
-KFEAT:   Z = enter_zot
-SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
-: if you.absdepth() > 17 then
-SUBST:   ( = D
-MARKER:  D = lua:props_marker { portal=1 }
-:     if crawl.random2(you.depth()-15) > (you.depth()-18) then
-SUBST:   A&@ = a, _ = -, l = W
-:     else
-SHUFFLE: aA&@
-:     end
-:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-NSUBST:  ( = 1:Z / *:(
-SUBST:   f = ', 2 = t
-:     end
-: else
-SUBST:   A&@ = a, _ = -, l = W
-:     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-NSUBST:  ( = 1:B / *:(
-SUBST:   f = ', 2 = r
-:     end
-: end
-SUBST:   {} = **|||, ( = T, ) : TTCCC, [ = !, ] = ?
-NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
-SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
-SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
-SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
-SHUFFLE: LM / LM / LM / LM / LM / LM / LM / ML / ML / MM
-SHUFFLE: NO / NO / NO / NO / NO / NO / NO / ON / ON / OO
-SHUFFLE: PQ / PQ / PQ / PQ / PQ / QP, RS / RS / RS / RS / SR
-SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
-NSUBST:  ~ = 2:~ / 1:~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
-COLOUR:  "-_ = green
-COLOUR:  '`089rs%*|!? = white
-FTILE:   ^"aA@&-_U = floor_grass
-: if crawl.coinflip() then
-FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_vault
-: else
-FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_pebble_darkgray
-: end
-MAP
-                          vvvvvvv
-                         vv'%<%'vv
-                 vvvv    vd'''''dv    vvvv
-                vv%'vvvvvv'''`'''vvvvvv'%vv
-               vv{''evvcccc+ccc+ccccvvg''[vv
-               v%'1'''cc...........cc'''3'%v
-               v'''cc+c.......N.....c+cc'''v
-               vve'c.....L~~~~OO~......c'gvv
-                vv'+....~MM~~~~N~~~....+'vv
-          xxxx xcccc..~~~~L~~~~OO~~~~..ccv  xxxx
-         xxJJxxx~~~..~~~~~MM~~~~N~~Q~~..ccxxxKKxx
-         xJJJJxx~~~~px~~~~~L~~~~OO~~x~~~~~xxKKKKx
-         xJJJJx~~~~~xn~~~~~MM~~~~N~~~P~~~~~xKKKKx
-         xxJJ~~~~~~~~~~~~~~.L...~~~~~~~~~~~~~KKxx
-    vvvv  xxx~www~~~~~~~~~.......~~~~~~~~www~xxxx
-   vv%'vv xx~~www~x~~~.....c+c+c....~~~x~www~~~xx vvvvv
-  vv(''fvvc~~~ww~R~~~.....cc'''cc.....~~R~ww~~~~cvv'%vvv
-  v%'2'''cc~~~~~RS~~..c+ccc''4''ccc+c..~SR~~~~~~cvf''(vv
-  v'''cc+c.~~~~x~~...cc''kch'''hci''cc..~~x~~~~~c'''2'%v
-  vvf'c....~~~~~~....+'7''cc%>%cc''5'+..~~~~~~~.c+cc'''v
-   vv'+...~~P~~~..c+cck''%bbbbbbb%''ic...~~~~xq....c'fvv
-   vvcc..~~x~~~..cc'jbbb%]bbbbbbb}%bbc+c..~~~ox~...+'vv
-   vcc...~Q~~~~..+'6'bbbbbbblllbbbbbbj'cc..~~~~~~..ccvv
-   vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
- vvvc...~~~ON~~..cj'%)bblllll"llllbb%'''c..~~~~~~....cv
-vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
-v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
-v%''c.NO~~~~~..+'''%bblll"_""""""lbbbbck'cc..~~MLM~..+'''v
-v['3c..~~~~~ML.c'5'}bbl^"""""""U"lllbb%'''+..MLM~~~..c''%v
-v%''c..~~~MLM..+'''%bblll"U"""""""^lbb]'7'c.LM~~~~~..c1'{v
-v'''+..~MLM~~..cc'icbbbbl""""""_"lllbb%'''+..~~~~~ON.c''%v
-vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
- vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
-   vc....~~~~~~..c'''%bbllll"lllllbb>%'hc..~~NO~~~~..cvvv
-   vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
-   vvcc..~~~~~~..cc'hbbbbbblllbbbbbbb'4'+..~~~~Q~...ccv
-  vvv'+...~xo~~~..c+cbb%]bbbbbbb}%bbbh'cc..~~~x~~..ccvv
-  vvd'c....qx~~~~...ck''%bbbbbbb%''icc+c..~~~P~~...+'vvv
-  v'''cc+c.~~~~~~~..+'7''cc%)%cc''5'+....~~~~~~....c'dvv
-  v%'`'''c~~~~~x~~..cc''kcj'''jci''cc...~~x~~~~.c+cc'''v
-  vv<''dvc~~~~~~RS~..c+ccc''6''ccc+c..~~SR~~~~~cc'''`'%v
-   vv%'vvc~~~~ww~R~~.....cc'''cc.....~~~R~ww~~~cvvd''<vv
-    vvvv cxx~~www~x~~.....c+c+c.....~~~x~www~~xx vv'%vv
-          xxx~www~~~~~~~~.......~~~~~~~~~www~xxx  vvvv
-         xxKK~~~~~~~~~~~~~..L..~~~~~~~~~~~~~~JJxx
-         xKKKKx~~~~~P~~~N~~~MM~~~~~~nx~~~~~xJJJJx
-         xKKKKxx~~~~~x~~OO~~~L~~~~~~xp~~~~xxJJJJx
-         xxKKxxxxc..~~Q~~N~~~MM~~~~~~..~~~xxxJJxx
-          xxxx  vcc..~~~~OO~~~L~~~~~..ccccc xxxx
-               vv'+....~~~N~~~MM~~....+'vv
-              vve'c.....~~OO~~~L~.....c'gvv
-              v'''cc+c.....N.......c+cc'''v
-              v%'1'''cc...........cc'''3'%v
-              vv{''evvcccc+ccc+ccccvvg''[vv
-               vv%'vvvvvv'''2'''vvvvvv'%vv
-                vvvv    vf'''''fv    vvvv
-                        vv'%(%'vv
-                         vvvvvvv
-ENDMAP
 
 ################################################################################
 # A bizarre, imposing crystal construct, radiating great elemental magic
@@ -856,7 +654,7 @@ NAME:    hangedman_crystal_crosses_colossus
 TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
 MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
-         centaur warrior w:8 ; shortbow ego:flame | shortbow ego:frost . arrow / \
+         centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . arrow / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
          rakshasa w:5 ; wand of flame | wand of frost . whip . robe
@@ -872,7 +670,7 @@ MONS:    very ugly thing w:15 / shapeshifter / unseen horror w:15 / \
          dire flail w:5 ego:flaming | dire flail w:5 ego:freezing
 MONS:    frost giant w:5 / fire giant w:5 / naga mage w:15 / hell knight w:5 / \
          salamander mystic w:5 / spriggan air mage / deep troll earth mage / \
-         yaktaur captain ; crossbow ego:flame | crossbow ego:frost . bolt / \
+         yaktaur captain ; arbalest ego:flaming | arbalest ego:freezing . bolt / \
          rakshasa w:5 ; robe . wand of fire | wand of cold . \
          glaive w:2 ego:flaming | glaive w:2 ego:freezing
 MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
@@ -1007,308 +805,6 @@ bb...........b...b.%.b......1....b...b.%.b....1......bb
 ENDMAP
 
 ################################################################################
-# Giving players the runaround...
-
-default-depth:
-
-NAME: grunt_runaround
-TAGS: no_monster_gen uniq_d_encompass
-PLACE: Depths:$
-DEPTH: Depths:2-
-WEIGHT: 2 (Depths:$), 10
-ORIENT: encompass
-SUBVAULT: B : grunt_runaround_doors_1
-SUBVAULT: C : grunt_runaround_doors_2
-SUBVAULT: D : grunt_runaround_doors_3
-SUBVAULT: E : grunt_runaround_doors_4
-: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-KFEAT:  Z = stone_wall
-TILE:   Z = wall_zot_magenta
-COLOUR: Z = lightmagenta
-SUBVAULT: F : grunt_runaround_zot
-NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
-KFEAT: Z = metal_wall
-SUBVAULT: F : grunt_runaround_loot
-NSUBST: < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
-: end
-{{
-local room_centres = { 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-                       'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-                       'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' }
-for i = 1, #room_centres do
-  subst(room_centres[i] .. ' : .:21 w l c v b:2')
-end
-}}
-#KMASK: 09 = !no_monster_gen
-SUBST: 0 = 0.
-SUBST: 9 = 90
-KMONS: 0 = 0 band
-KMONS: 9 = 9 band
-KFEAT: G = granite_statue / fountain_blue / fountain_sparkling w:1 / \
-           floor w:21
-MARKER: A = lua:props_marker { portal=1 }
-KFEAT:  A = floor
-MAP
-                  cccccccccccccccc
-                ccc.......<......ccc
-             cccc..................cccc
-           ccc..c..0.dddGddGddd.0..c..ccc
-          cc....BB................BB....cc
-         cc...0..c.cBBccccccccBBc.c..0...cc
-        cc......cccc.....cc.....cccc......cc
-       cc..kk.ccc...HH...CC...II...ccc.ee..cc
-      cc<.Gk.BB..HHGH..0.CC.0..IGII..BB.eG.<cc
-     cc..kk.cc...H.......cc.......I...cc.ee..cc
-    cc..Gk.cc..0....cCCccccccCCc....0..cc.eG..cc
-   cc..kk.ccc.....ccc..........ccc.....ccc.ee..cc
-   c...k.cccCC..CCc.c..0.QQ.0..c.cCC..CCccc.e...c
-  cc....Bc..CCccc...DD..QGGQ..DD...cccCC..cB....cc
-  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
-  c....c..0..cc.PP...cDDccccDDc...RR.cc..0..c....c
- cccB.cc....Cc.PG..DDc...ZZ...cDD..GR.cC....cc.Bccc
- c..Bcc.OO..C..P..cc...9.EE.9...cc..R..C..JJ.ccB..c
-cc....c.O..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..J.c....cc
-c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
-c....B.OO.cccD..D..EEZZEEZZEEZZEE..D..Dccc.JJ.B....c
-c..j.B.O..C..Dccc...ZZZFFFFFFZZZ...cccD..C..J.B.f..c
-c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
-c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
-c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
-c<.j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f..c
-c..j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f.<c
-c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
-c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
-c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
-c..j.B.N..C..Dccc...ZZZFFFFFFZZZ...cccD..C..K.B.f..c
-c....B.NN.cccD..D..EEZZEEZZEEZZEE..D..Dccc.KK.B....c
-c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
-cc....c.N..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..K.c....cc
- c..Bcc.NN..C..V..cc...9.EE.9...cc..T..C..KK.ccB..c
- cccB.cc....Cc.VG..DDc...ZZ...cDD..GT.cC....cc.Bccc
-  c....c..0..cc.VV...cDDccccDDc...TT.cc..0..c....c
-  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
-  cc....Bc..CCccc...DD..UGGU..DD...cccCC..cB....cc
-   c...i.cccCC..CCc.c..0.UU.0..c.cCC..CCccc.g...c
-   cc..ii.ccc.....ccc..........ccc.....ccc.gg..cc
-    cc..Gi.cc..0....cCCccccccCCc....0..cc.gG..cc
-     cc..ii.cc...M.......cc.......L...cc.gg..cc
-      cc<.Gi.BB..MMGM..0.CC.0..LGLL..BB.gG.<cc
-       cc..ii.ccc...MM...CC...LL...ccc.gg..cc
-        cc......cccc.....cc.....cccc......cc
-         cc...0..c.cBBccccccccBBc.c..0...cc
-          cc....BB................BB....cc
-           ccc..c..0.hhhGhhGhhh.0..c..ccc
-             cccc..................cccc
-                ccc......<.......ccc
-                  cccccccccccccccc
-ENDMAP
-
-NAME: grunt_runaround_doors_1
-TAGS: grunt_runaround_doors_1 allow_dup
-: map("            AA                BB")
-: map("                II        JJ")
-: map(" ")
-: map(" ")
-: map("         XX                      KK")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map("    W                                  L")
-: map("    W                                  L")
-: map(" ")
-: map("H                                          C")
-: map("H                                          C")
-: map(" ")
-: map(" ")
-: map(" V                                        M")
-: map(" V                                        M")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" U                                        N")
-: map(" U                                        N")
-: map(" ")
-: map("")
-: map("G                                          D")
-: map("G                                          D")
-: map(" ")
-: map("    T                                  O")
-: map("    T                                  O")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map("         SS                      PP")
-: map(" ")
-: map(" ")
-: map("                RR        QQ")
-: map("            FF                EE")
-SHUFFLE: ABCDEFGH
-SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-
-NAME: grunt_runaround_doors_2
-TAGS: grunt_runaround_doors_2 allow_dup
-: map("                  AA")
-: map("                  AA")
-: map(" ")
-: map("              XX      II")
-: map(" ")
-: map("     HH  WW                JJ  BB")
-: map("     HH                        BB")
-: map(" ")
-: map(" ")
-: map("     V                          K")
-: map("     V                          K")
-: map(" ")
-: map(" ")
-: map(" ")
-: map("   U                              L")
-: map("   U                              L")
-: map(" ")
-: map(" ")
-: map("GG                                  CC")
-: map("GG                                  CC")
-: map(" ")
-: map(" ")
-: map("   T                              M")
-: map("   T                              M")
-: map(" ")
-: map(" ")
-: map(" ")
-: map("     S                          N")
-: map("     S                          N")
-: map(" ")
-: map(" ")
-: map("     FF                        DD")
-: map("     FF  RR                OO  DD")
-: map(" ")
-: map("              QQ      PP")
-: map(" ")
-: map("                  EE")
-: map("                  EE")
-SHUFFLE: ABCDEFGH
-SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-
-NAME: grunt_runaround_doors_3
-TAGS: grunt_runaround_doors_3 allow_dup
-: map("       AA        BB")
-: map(" ")
-: map("         II    JJ")
-: map("      XX          KK")
-: map(" ")
-: map(" ")
-: map("   W                  L")
-: map("H  W                  L  C")
-: map("H                        C")
-: map("  V                    M")
-: map("  V                    M")
-: map(" ")
-: map(" ")
-: map(" ")
-: map(" ")
-: map("  U                    N")
-: map("  U                    N")
-: map("G                        D")
-: map("G  T                  O  D")
-: map("   T                  O")
-: map(" ")
-: map(" ")
-: map("      SS          PP")
-: map("         RR    QQ")
-: map(" ")
-: map("       FF        EE")
-SHUFFLE: ABCDEFGH
-SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-
-NAME: grunt_runaround_doors_4
-TAGS: grunt_runaround_doors_4 allow_dup
-: map("        AA ")
-: map("        AA")
-: map("  HH          BB")
-: map("  HH  PP  II  BB")
-: map(" ")
-: map(" ")
-: map("   O          J")
-: map("   O          J")
-: map("GG              CC")
-: map("GG              CC")
-: map("   N          K")
-: map("   N          K")
-: map(" ")
-: map(" ")
-: map("  FF  MM  LL  DD")
-: map("  FF          DD")
-: map("        EE")
-: map("        EE")
-SHUFFLE: ABCDEFGH
-SHUFFLE: IJKLMNOP
-SUBST:   ABCDEFGI : +, HJKLMNOP : Z
-: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-KFEAT:  Z = stone_wall
-TILE:   Z = wall_zot_magenta
-COLOUR: Z = lightmagenta
-: else
-KFEAT:  Z = metal_wall
-: end
-
-NAME: grunt_runaround_loot
-TAGS: grunt_runaround_loot allow_dup
-SHUFFLE: }>de
-SUBST: de = %
-NSUBST: % = 4:| / 8:* / *=%
-KMONS: 9 = 9 band
-KMONS: 8 = 8 band
-MAP
-  ......
- ..9..9..
-..8.%%.8..
-.9.%%%%.9.
-..%%}>%%..
-..%%de%%..
-.9.%%%%.9.
-..8.%%.8..
- ..9..9..
-  ......
-ENDMAP
-
-NAME: grunt_runaround_zot
-TAGS: grunt_runaround_zot allow_dup
-COLOUR: .1defghijO = magenta
-FTILE: .1defghijO = floor_hall
-SHUFFLE: defg
-SHUFFLE: Ohij
-SUBST: hij = .
-NSUBST: 1 = 1:2 / *=1
-KFEAT: O = enter_zot
-KMONS: d = golden dragon
-KMONS: e = quicksilver dragon
-KMONS: f = storm dragon
-KMONS: g = shadow dragon
-MONS: base draconian
-MONS: nonbase draconian
-MAP
-  ......
- ..1..1..
-..d....e..
-.1......1.
-....Oh....
-....ij....
-.1......1.
-..f....g..
- ..1..1..
-  ......
-ENDMAP
-
-################################################################################
 # IT IS AN EMPTY, ROTTEN WORLD.
 # LIE DOWN. FORGET YOUR TROUBLES.
 # SMILE.
@@ -1318,48 +814,6 @@ ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
-MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
-         mottled dragon w:8 / giant firefly w:3 / boulder beetle w:5 / \
-         red wasp / mana viper w:5 / wolf spider / \
-         sea snake w:5 / alligator / hell hound w:2
-MONS:    swamp dragon w:5 / fire crab w:4 / catoblepas w:4 / \
-         fire dragon w:16 / ice dragon w:16 / orb spider w:1 / \
-         dire elephant w:9 / anaconda / hydra w:15 / snapping turtle / harpy w:4
-MONS:    ghost moth w:4 / death drake w:2 / golden dragon / iron dragon / \
-         quicksilver dragon w:15 / shadow dragon w:20 / storm dragon w:20 / \
-         hell beast w:4 / hellephant w:5 / \
-         alligator snapping turtle w:5 / emperor scorpion w:5
-MONS:    very ugly thing / very large slime creature / great orb of eyes / \
-         shapeshifter hd:4 w:5 / unseen horror / \
-         eye of draining / shadow wraith w:5 / shadow / \
-         air elemental / dancing weapon w:4 ; short sword good_item
-MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
-         shapeshifter hd:6 w:5 / shapeshifter hd:7 / shapeshifter hd:8 w:5 / \
-         titanic slime creature / water elemental w:5 / hydra simulacrum w:3 / \
-         anaconda simulacrum w:3 / harpy simulacrum w:3 / eidolon w:5 / \
-         dire elephant simulacrum w:1 / dancing weapon w:5 ; long sword good_item
-MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
-         glowing shapeshifter hd:12 w:30 / glowing shapeshifter hd:13 w:15 / \
-         azure jelly / flayed ghost / \
-         dancing weapon w:5 ; glaive good_item / war gargoyle
-MONS:    centaur warrior / yaktaur w:5 / orc knight / \
-         deep elf priest w:5 / deep troll / boggart w:5 / \
-         rakshasa w:3 / wizard / necromancer / spriggan rider w:5 / \
-         cyclops w:5 / kobold demonologist w:3 / \
-         skeletal warrior w:5 / vampire
-KMONS:   8 = orc high priest / orc sorcerer / naga warrior w:5 / naga mage / \
-         yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
-         hell knight / efreet w:1 / deep elf conjurer / \
-         guardian serpent w:5 / phantasmal warrior w:5 / salamander mystic w:4
-KMONS:   9 = fire giant / frost giant w:11 / stone giant w:11 / ettin w:11 / \
-         orc warlord / spriggan berserker w:3 / minotaur w:5 / \
-         deep troll shaman w:5 / deep troll earth mage w:8 / \
-         vampire knight / tengu reaver w:4 / salamander firebrand w:5 / \
-         spriggan air mage w:6 / deep elf death mage w:6 / \
-         ancient champion w:6 / deep elf demonologist w:5 / vampire mage w:5
-KMONS:   0 = titan w:15 / lich / sphinx / deep elf annihilator / \
-         deep elf sorcerer / deep elf high priest w:5 / greater naga w:5 / \
-         spriggan defender w:5 / shadow demon w:5 / reaper w:5
 KMONS:   & = draconian knight / draconian monk w:15 / \
          draconian annihilator / deep elf blademaster w:15 / \
          deep elf master archer w:15 / lich w:15 / ancient lich w:15 / \
@@ -1372,22 +826,13 @@ SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
 NSUBST:  ] = 1:) / 1:]
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
-SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
+SUBST:   b : b:6 v:1 c:1, ^ = 099888
 SUBST:   y = Y, & = &:26 0:1
-: local Z = you.depth()
-:   subst("9 = 9:90 0:" .. Z + 5)
-:   subst("8 = 9:" .. Z + 2 .. " 8:20")
-:   subst("5 = 6:" .. Z + 2 .. " 5:20")
-:   subst("2 = 3:" .. Z + 2 .. " 2:20")
-:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  )]} = ., > = <, " = `
 NSUBST: ' = 1:Z / 2:` / *:`
-:     end
+: end
 SUBST:  '" = .
-: subst("1 = 1:" .. math.max(26 - Z * 2, 16) .. " 2:" .. Z + 1)
-: subst("4 = 4:" .. math.max(26 - Z * 2, 16) .. " 5:" .. Z + 1)
-: subst("7 = 7:" .. math.max(26 - Z * 2, 16) .. " 8:" .. Z + 1)
-SUBST:  ! = 1, $ = 4, ? = 7, 7 = 7:499 .:1
 MARKER: Y = lua:props_marker { portal=1 }
 FTILE:  Z` = floor_marble
 MAP
@@ -1397,67 +842,186 @@ xxxxxxxxxxJ.............xxxxxx
 xxxxxxxxxxx......c.........xxx
 xxxxxxxxx"".....cbc..x......xxx
 xxxxxxxxx".....cbcbc.x......Mxxxx
-xxxxxx'"7.....xF.b.cc...n....Lxxxx
-xxxxxx""1....x...x..cc.x.......xxx
-xxxxxx74.........b..7cc.........xxx
-xxxx"".....x..xxb.bxb.cc..8.....xxx
-xxJx".....x..E...b...b.cc@..n...xxx
-xx.......x.......xx.4x.8cc.x.....xx
+xxxxxx'"0.....xF.b.cc...n....Lxxxx
+xxxxxx""0....x...x..cc.x.......xxx
+xxxxxx00.........b..0cc.........xxx
+xxxx"".....x..xxb.bxb.cc..9.....xxx
+xxJx".....x..E...b...b.cc0..n...xxx
+xx.......x.......xx.0x.9cc.x.....xx
 xx.............F...x.b*..cc......xx
 xx.....x..E........xb.bxb.cc.xx..xx
-xx....x..x...........b.7.b9cc....xxxxxxxxxxxxx
-xx...cF..x..F....%...xx.5x..cc...xxxxxxxxxxxxxx
-xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
+xx....x..x...........b.0.b8cc....xxxxxxxxxxxxx
+xx...cF..x..F....%...xx.9x..cc...xxxxxxxxxxxxxx
+xx..cb...b......%*.....x.b...bc..xxxx0.%.%.0.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
 xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
-xx....cc7b71.b.......b%65b8cc....xxxxxxxx...I.x.xxxx
+xx....cc0b00.b.......b%89b9cc....xxxxxxxx...I.x.xxxx
 xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.^..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
-xx.....x.cc8.x1.xxx.3x*&cc.......xx.......xx...H....xxx
-xxxx..n..@cc.b72.b..2b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....8..cc.bxb.bxb.cc.8.xxx...xxx...xxx...x......@xx
-  xx........cc9..b..8cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+xx.....x.cc9.x0.xxx.8x*&cc.......xx.......xx...H....xxx
+xxxx..n..0cc.b09.b..9b|cc.....xMx.x.xLx.....x.x.I....xx
+ xxx....9..cc.bxb.bxb.cc.9.xxx...xxx...xxx...x......0xx
+  xx........cc8..b..9cc.........x...x........xx......xx
+  xxxxL....x.cc..x..cc...x.0..SR..0..RS..0.x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
-    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx@xx
+    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx0xx
    xxc.xx...............x.x...x.J...H.x...x.x...xxxxxxx
-   xc@.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
-   xc....xx.....nnnnxxxxxx.@..NO..z..ON..@.xxxxxxxxxxxxxxx
+   xc0.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
+   xc....xx.....nnnnxxxxxx.0..NO..z..ON..0.xxxxxxxxxxxxxxx
   xc.....xx........nx....x.....c.(.{.c.....x.xxxxxxxxxxxxxx
   xc.......xx......nx...x.x...x.H...J.x...x.x............xxxxxx
   xxc......xx.......xx..M..RRR.I.cPc.K.RRR..L......c......xxxxx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x..Y..cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x]....xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..1c...x.x....Mxxxx
-    xc..cc..cc.@b.....KJ........x...x.....y....b..7b81.b.........xx
+    x0cc......cb%bc...x..x.0..SR..0..RS..0.x.x.x..0c...x.x....Mxxxx
+    xc..cc..cc.0b.....KJ........x...x.....y....b..0b90.b.........xx
     xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx.....x.x..1c.1ccc1.c1..x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx.......b.47b*cc&cc%b92.b.......xx
-     xxc..%%..c.......xx....xxxx..xx..Y..xb.bcbcbc6x6cbcbcb.bx.....xx
-     xc..k.....c......xx.......xxxxx....x..b..*b9..x..9b*..b..x....xx
-    xxc........c...j....xx......nnnx...x...c.4cc.7|x|*4cc7.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.74c%cc3.|x%*|.2cc*b82.bc..xx
-    xc@.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..8c%cc3.|*%x.....%C...Bx..xx
-    xc........1"b".cc..cc.@b.......x...x..4c.4cc.*|x....C..x...x...xx
-   xxc.mm....ll4c....cc....c.xx....x....x..b..%c91.x.....%.x..x....xx
-   xc..mm...%ll..c........c..xx....x.....xb.bccccc5x....D.x........xx
-   xc......xx%...c.....k..c....xx..........b..9c*ccc.C%D...........xx
-  xc%.....%xx.....c..%...c.....xx........x.x.5.c.4cc.....D.x.......xx
+     xc.....k..c....xx..KJJ.......xx.....x.x..0c.0ccc0.c0..x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx.......b.00b*cc&cc%b89.b.......xx
+     xxc..%%..c.......xx....xxxx..xx..Y..xb.bcbcbc8x8cbcbcb.bx.....xx
+     xc..k.....c......xx.......xxxxx....x..b..*b8..x..8b*..b..x....xx
+    xxc........c...j....xx......nnnx...x...c.0cc.0|x|*0cc0.c...x...xx
+    xc....cc....c.......xx.c......nx..cb.00c%cc8.|x%*|.9cc*b99.bc..xx
+    xc0.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb'bc......cb%bc....nx..cb..9c%cc8.|*%x.....%C...Bx..xx
+    xc........0"b".cc..cc.0b.......x...x..0c.0cc.*|x....C..x...x...xx
+   xxc.mm....ll0c....cc....c.xx....x....x..b..%c80.x.....%.x..x....xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc9x....D.x........xx
+   xc......xx%...c.....k..c....xx..........b..8c*ccc.C%D...........xx
+  xc%.....%xx.....c..%...c.....xx........x.x.9.c.0cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
   xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
-   xc..ll%...mm..c........c...j....xx..........b..5b........"""JRlxxx
-   xxc2ll....mm.c....cc....c.......xx.cxM....x.x..8c........"'"jxxxxx
-    xc^5........c@.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
-    xxcc......cc.ccxxxxxxcc@cc.....@ccxxxx.......xbcBx......Jjklxxxxx
+   xc..ll%...mm..c........c...j....xx..........b..9b........"""JRlxxx
+   xxc9ll....mm.c....cc....c.......xx.cxM....x.x..9c........"'"jxxxxx
+    xc^9........c0.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+    xxcc......cc.ccxxxxxxcc0cc.....0ccxxxx.......xbcBx......Jjklxxxxx
      xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
        xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx
          xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx
                                             xxxxxxxxxxxxxxxxxxxxxxxxx
                                              xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Maps from the now-defunct Radiant Caverns portal vault idea.
+# Original design by rkd; modernised by Grunt.
+
+NAME:   radiant_caverns_a_rkd
+TAGS:   no_monster_gen no_item_gen uniq_d_encompass
+ORIENT: encompass
+: radiant_caverns_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx{.(.[.....xxxxxxxxxlllxxxsss..xxxxxxxxxxxxxxx.....H....xxxxxxxxxxxx
+xx...........xxxxxxxlllxxxxssJJ..xxxxxxxxxxx..V..HH...H...xxxxxxxxxxx
+xx}..........xxxxxlllxxxxx).JJ...xxxxxxx............xx....xxxxxxxxxxx
+xxxxxxx........xxxlllxxxxxxx...xx..xxxxx..VV...xxllxxxx.V...xxxxxxxxx
+xxxxxxxx....KK..xlllxxxxxxxxxxxxxx..xx...VV...xxllxxxx......xxxxxxxxx
+xxxxxxxx....KK.Klllxxxxxxxxxxxxxxxx.........xxxllxxxx...4..xxxxxxxxxx
+xxxxxxx.......Klll......xxxxxxxxxxxx......xxxxll......V.4.xxxxxxxxxxx
+xxxxxx..V...xxlll....N.N.xxxxxxxxxx.....xxxxxll.VV.......xxxxxxxxxxxx
+xxxxxx....xxxlllx....N.N..xxxxxxxxx..V.xxxxxll34..xxxxxxxxxxxxxxxxxxx
+xxxxx....xxllllxx..........xxxxxxx.SS.xxxxxllx4....xxxxxxxxxxxxxxxxxx
+xxxxx...xxllllxx.L..xx..L..xxxxxx.SS.xxxxxllxxx..V..xxxxxxxxxxxxxxxxx
+xxxx.M..xlllxxx....xxxx..LV.xxxx.SS.xxxxxllxxxxx.3...xxxxxxxxxxxxxxxx
+xxxx.M..lllxx.....xxxxxx.....xx....xxxxxllssxxxx.34..xxxxxxxxxxxxxxxx
+xxxx..MM......L..xxxxxxxx....xx...xxxxxllssY<xx..V..xxxxxxxxxxxxxxxxx
+xxxxlll...V.....xxxxxxxxxx.L.....xxxxxllxxxxxx.3...xxxxxxxxxxxxxxxxxx
+xxxlllx.....L..xxxxxxxxxxxxxxxxxxxxxxllxxxxx1...xxxxxxxxxxxxxxxxxxxxx
+xxlllxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllxxxx...xxxxxxxxxxxxxxxxxxxxxxxx
+xllxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx......V...xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbb.................................bbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbb......................V............bbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbb.....5..666...V.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxbb.h..V....666.......5.....mmm....V....j.bbxxxxxxxxxxxxx
+xxxxxxxxxxxxbb.h..5......V..5..........5........V..j.j.bbxxxxxxxxxxxx
+xxxxxxxxxxxbbww..h..n............V................n...wwbbxxxxxxxxxxx
+xxxxxxxxxxbbwwwwh...V.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx
+xxxxxxxxxxbwwwwwwV..5....wwwwww.......wwwwwwii......wwwwwwbxxxxxxxxxx
+xxxxxxxxxxbsswwwwwg.....wwwwwwww.n.n.wwwwwwwwi..V..wwwwwssbxxxxxxxxxx
+xxxxxxxxxxbYsswwwwg.ggnwwbbbbbbww...wwbbbbbbww.n.n.wwwwssYbxxxxxxxxxx
+xxxxxxxxxxbbsswwwwwwwwwwwbuu..bww.V.wwb.yu.bwwwwwwwwwwwssbbxxxxxxxxxx
+xxxxxxxxxxxbbswwwwwwwwwwwb.yAubww.V.wwbuAuubwwwwwwwwwwwsbbxxxxxxxxxxx
+xxxxxxxxxxxxbbwwwwbbbbbbwb.z.ubww...wwb.z..bwbbbbbbwwwwbbxxxxxxxxxxxx
+xxxxxxxxxxxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbbbbbb.b....b...b...b...b....b.bbbbbbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.b...........b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....bzbqq.b...b.qqbzb....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbz1..b.bbq.......qbb.b..1zbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbbbbbb.Ybbbb+++bbbbY.bbbbbbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbuuuub..bb.......bb..buuuubbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb.uuub.bb.........bb.buuu.bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb..uub.b...ttttt...b.buu..bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.....ttttt.....b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbbbb+bbbb..ttttt..bbbbb+bbbxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxbb.zyz.b.........b.yzz.bbxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxbb....bb.bb>bb.bb....bbxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxbb.......bbb.......bbxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxbbbbbbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   radiant_caverns_b_rkd
+TAGS:   no_monster_gen no_item_gen uniq_d_encompass
+ORIENT: encompass
+: radiant_caverns_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.HH.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxHHV..x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..3.33...1.......xxb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxbb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.Vxxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx4.xxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..xxxxbb.................................bbxxxxxxxxxxxxxxxx
+xxxxxxxxx.V.xxxbb......................V............bbxxxxxxxxxxxxxxx
+xxxxxxxx.44xxxbb.....5..666...V.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxx..4xxxbb.h..V....666.......5.....mmm....V....j.bbxxxxxxxxxxxxx
+xxxxxx.3.xxxbb.h..5......V..5..........5........V..j.j.bbxxxxxxxxxxxx
+xxxxx.3.xxxbbww..h..n............V................n...wwbbxxxxxxxxxxx
+xxxxx..xxxbbwwwwh...V.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx
+xxxxx.xxxxbwwwwwwV..5....wwwwww.......wwwwwwii......wwwwwwbxxxxxxxxxx
+xxxxx.xxxxbsswwwwwg.....wwwwwwww.n.n.wwwwwwwwi..V..wwwwwssbxxxxxxxxxx
+xxxxx.xxxxbYsswwwwg.ggnwwbbbbbbww...wwbbbbbbww.n.n.wwwwssYbxxxxxxxxxx
+xxxx...xxxbbsswwwwwwwwwwwbuu..bww.V.wwb.yu.bwwwwwwwwwwwssbbxxxxxxxxxx
+xxx.....xxxbbswwwwwwwwwwwb.yAubww.V.wwbuAuubwwwwwwwwwwwsbbxxxxxxxxxxx
+xx..NN...xxxbbwwwwbbbbbbwb.z.ubww...wwb.z..bwbbbbbbwwwwbbxxxxxxxxxxxx
+xx..NN.V.xxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
+xx.V.......xxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
+xx..JJV..xx.xxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
+xx.......xxx.xxxbbbbbb.b....b...b...b...b....b.bbbbbbxxxxxxxxxxxxxxxx
+xxx.....xxxxx.xxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxx...xxxxxxxV.xxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxx..xxxxxxxxV.xxxbb....b.b...........b.b....bbxlllllxxxxxxxxxxxxxx
+xxxxxx..xxxxxxxx..xxbb....bzbqq.b...b.qqbzb....bbxlKK.lxxxxxxxxxxxxxx
+xxxxxxx..xxxxxxx..xxbbz1..b.bbq.......qbb.b..1zbbxl.K.lxxxxxxxxxxxxxx
+xxxxxxxx..xxxxxx..xxbbbbbbb.Ybbbb+++bbbbY.bbbbbbbxlllllxxxxxllxxxxxxx
+xxxxxxxx..xxxxxx..xxbbuuuub..bb.......bb..buuuubbxxxllxxxxxllx.xxxxxx
+xxxxxxxx..xxxxxx..xxbb.uuub.bb.........bb.buuu.bbxxllxxxxxllxx.xxxxxx
+xxxxxxxx..xxxxxxJ.xxbb..uub.b...ttttt...b.buu..bbxllxxxxxllxx...xxxxx
+xxxxxx.......xxx.Jxxbb....b.....ttttt.....b....bbxlllxxxxlxxss..<xxxx
+xxxxxx.SSSVV.xxx..xxxbbbb+bbbb..ttttt..bbbbb+bbbxllxllxxlllxxsY.xxxxx
+xxxxx..SSS.V.xx....xxxbb.zyz.b.........b.yzz.bbxllxxllxllxllxxxxxxxxx
+xxxxx.V......xx.JJssxxxbb....bb.bb>bb.bb....bbxxlxx..lllxxxllxxxxxxxx
+xxxxx........xx).sssxxxxbb.......bbb.......bbxxllxx..LLL..xxllxxxxxxx
+xxxxxxxxxxx.xxxxxxxxxxxxxbbbbbbbbbbbbbbbbbbbxxx.llxx.LL..ssxxlxxxxxxx
+xxxxxxxxxxx...xxxxxxMM..xxxxxxxxxxxxxxxxxxxxxxx.Vllxxssssxxxxlxxxxxxx
+xxM...xxxxxxx.xxxxxxMM.V.xxxx............xxxxxxx.Kllxx<xxxllllxxxxxxx
+xxs.x.xxxxxxx....xxx.......xx.xxx.[..xxx.xx.....V.Kllxxxlllxxxxxxxxxx
+xxssx..M.....xxxx...xxxxxx....xx.{.(.}xx....xxxxxxxxlllllxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

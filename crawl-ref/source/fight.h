@@ -33,7 +33,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 coord_def landing_pos, set<coord_def> landing_sites,
                 bool jump_blocked, bool *did_hit = NULL);
 
-int resist_adjust_damage(actor *defender, beam_type flavour,
+int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
@@ -53,4 +53,10 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
 
 int weapon_min_delay(const item_def &weapon);
 int finesse_adjust_delay(int delay);
+
+int mons_weapon_damage_rating(const item_def &launcher);
+int mons_missile_damage(monster* mons, const item_def *launch,
+                        const item_def *missile);
+int mons_usable_missile(monster* mons, item_def **launcher);
+
 #endif

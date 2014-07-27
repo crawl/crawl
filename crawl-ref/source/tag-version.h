@@ -96,6 +96,23 @@ enum tag_minor_version
     TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
+    TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
+    TAG_MINOR_SAPROVOROUS,         // Remove Saprovorous from several species
+    TAG_MINOR_CE_HA_DIET,          // Remove intrinsic diet muts from Ce & Ha
+    TAG_MINOR_NO_POT_FOOD,         // Remove Royal Jellies & Ambrosia
+    TAG_MINOR_ROT_IMMUNITY,        // Make rot immunity an intrinsic mutation.
+    TAG_MINOR_FOUL_STENCH,         // Remove Saprovore from the Foul Stench DS Facet
+    TAG_MINOR_FOOD_PURGE,          // Cleaning up old types of food.
+    TAG_MINOR_FOOD_PURGE_AP_FIX,   // Correctly carry over old fruit autopickup.
+    TAG_MINOR_WEIGHTLESS,          // Removal of player burden.
+    TAG_MINOR_DS_CLOUD_MUTATIONS,  // Change Ds conservation muts to cloud immunities.
+    TAG_MINOR_FRIENDLY_PICKUP,     // Remove the friendly_pickup setting.
+    TAG_MINOR_STICKY_FLAME,        // Change the name of you.props "napalmer" & "napalm_aux"
+    TAG_MINOR_SLAYRING_PLUSES,     // Combine Acc/Dam on rings of slaying and artefacts.
+    TAG_MINOR_MERGE_EW,            // Combine enchant weapons scrolls.
+    TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
+    TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
+    TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

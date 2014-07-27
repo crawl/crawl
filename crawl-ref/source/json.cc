@@ -524,7 +524,7 @@ static JsonNode *mknode(JsonTag tag)
     return ret;
 }
 
-JsonNode *json_mknull(void)
+JsonNode *json_mknull()
 {
     return mknode(JSON_NULL);
 }
@@ -555,12 +555,12 @@ JsonNode *json_mknumber(double n)
     return node;
 }
 
-JsonNode *json_mkarray(void)
+JsonNode *json_mkarray()
 {
     return mknode(JSON_ARRAY);
 }
 
-JsonNode *json_mkobject(void)
+JsonNode *json_mkobject()
 {
     return mknode(JSON_OBJECT);
 }

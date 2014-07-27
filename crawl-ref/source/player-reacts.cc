@@ -20,7 +20,6 @@
 #  include <langinfo.h>
 # endif
 #endif
-#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -33,17 +32,9 @@
 #include <signal.h>
 #endif
 
-#include "ability.h"
-#include "abyss.h"
-#include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
-#include "art-enum.h"
-#include "artefact.h"
-#include "arena.h"
 #include "beam.h"
-#include "branch.h"
-#include "chardump.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
@@ -52,9 +43,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "crash.h"
-#include "dactions.h"
 #include "database.h"
-#include "dbg-scan.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "describe.h"
@@ -64,60 +53,55 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
-#include "errors.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "externs.h"
-#include "goditem.h"
-#include "map_knowledge.h"
-#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
 #include "food.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godconduct.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "godprayer.h"
-#include "hiscores.h"
+#include "hints.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "evoke.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
-#include "makeitem.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-cast.h"
-#include "mon-stuff.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "notes.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "player.h"
-#include "player-equip.h"
 #include "player-stats.h"
+#include "player.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -127,11 +111,12 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "stairs.h"
+#include "startup.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "startup.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
@@ -139,22 +124,12 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "shout.h"
-#include "stash.h"
-#include "uncancel.h"
 #include "version.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
-#include "wiz-dgn.h"
-#include "wiz-fsim.h"
-#include "wiz-item.h"
-#include "wiz-mon.h"
-#include "wiz-you.h"
 #include "xom.h"
-#include "zotdef.h"
 
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
@@ -183,7 +158,7 @@
  * @param chan The channel where the endmsg will be printed if the duration
  *             ends.
  *
- * @returns True if the duration ended, false otherwise.
+ * @return  True if the duration ended, false otherwise.
  */
 
 static bool _decrement_a_duration(duration_type dur, int delay,
@@ -305,8 +280,10 @@ void player_reacts_to_monsters()
     }
 
     if (you.duration[DUR_TELEPATHY])
+    {
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
+    }
 
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoid duplicate
@@ -368,7 +345,9 @@ static void _handle_recitation(int step)
 
     if (apply_area_visible(_zin_recite_to_monsters,
                            you.attribute[ATTR_RECITE_TYPE], &you))
+    {
         viewwindow();
+    }
 
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
@@ -441,10 +420,6 @@ static void _decrement_durations()
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
     }
 
-    // Must come before berserk.
-    if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
-        go_berserk(false);
-
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
@@ -455,6 +430,8 @@ static void _decrement_durations()
                               melted ? nullptr
                               : "Your icy armour starts to melt."))
     {
+        if (you.props.exists(ICY_ARMOUR_KEY))
+            you.props.erase(ICY_ARMOUR_KEY);
         you.redraw_armour_class = true;
     }
 
@@ -505,71 +482,15 @@ static void _decrement_durations()
     }
 
     //jmf: More flexible weapon branding code.
-    int last_value = you.duration[DUR_WEAPON_BRAND];
-
-    if (last_value > 0)
+    if (you.duration[DUR_WEAPON_BRAND] > 0)
     {
         you.duration[DUR_WEAPON_BRAND] -= delay;
 
         if (you.duration[DUR_WEAPON_BRAND] <= 0)
         {
-            you.duration[DUR_WEAPON_BRAND] = 0;
-            item_def& weapon = *you.weapon();
-            const int temp_effect = get_weapon_brand(weapon);
-
-            set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            const char *msg = nullptr;
-
-            switch (temp_effect)
-            {
-                case SPWPN_VORPAL:
-                    if (get_vorpal_type(weapon) == DVORP_SLICING)
-                        msg = " seems blunter.";
-                    else
-                        msg = " feels lighter.";
-                    break;
-                case SPWPN_FLAME:
-                case SPWPN_FLAMING:
-                    msg = " goes out.";
-                    break;
-                case SPWPN_FREEZING:
-                    msg = " stops glowing.";
-                    break;
-                case SPWPN_FROST:
-                    msg = "'s frost melts away.";
-                    break;
-                case SPWPN_VENOM:
-                    msg = " stops dripping with poison.";
-                    break;
-                case SPWPN_DRAINING:
-                    msg = " stops crackling.";
-                    break;
-                case SPWPN_DISTORTION:
-                    msg = " seems straighter.";
-                    break;
-                case SPWPN_PAIN:
-                    msg = " seems less pained.";
-                    break;
-                case SPWPN_CHAOS:
-                    msg = " seems more stable.";
-                    break;
-                case SPWPN_ELECTROCUTION:
-                    msg = " stops emitting sparks.";
-                    break;
-                case SPWPN_HOLY_WRATH:
-                    msg = "'s light goes out.";
-                    break;
-                case SPWPN_ANTIMAGIC:
-                    msg = " stops repelling magic.";
-                    calc_mp();
-                    break;
-                default:
-                    msg = " seems inexplicably less special.";
-                    break;
-            }
-
-            mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
-            you.wield_change = true;
+            you.duration[DUR_WEAPON_BRAND] = 1;
+            ASSERT(you.weapon());
+            end_weapon_brand(*you.weapon(), true);
         }
     }
 
@@ -580,9 +501,11 @@ static void _decrement_durations()
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
-    // Vampire bat transformations are permanent (until ended).
+    // Vampire bat transformations are permanent (until ended), unless they
+    // are uncancellable (polymorph wand on a full vampire).
     if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
-        || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
+        || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
+        || you.transform_uncancellable)
     {
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
                                   "Your transformation is almost over."))
@@ -639,6 +562,8 @@ static void _decrement_durations()
                               coinflip(),
                               "Your icy shield starts to melt."))
     {
+        if (you.props.exists(CONDENSATION_SHIELD_KEY))
+            you.props.erase(CONDENSATION_SHIELD_KEY);
         you.redraw_armour_class = true;
     }
 
@@ -649,7 +574,11 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
+    {
+        if (you.props.exists(STONESKIN_KEY))
+            you.props.erase(STONESKIN_KEY);
         you.redraw_armour_class = true;
+    }
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
@@ -730,7 +659,8 @@ static void _decrement_durations()
                           0, NULL, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          "You can drink potions again.",
+                          you_foodless(true) ? NULL
+                                             : "You can drink potions again.",
                           0, NULL, MSGCH_RECOVERY);
 
     dec_slow_player(delay);
@@ -745,6 +675,13 @@ static void _decrement_durations()
     {
         invalidate_agrid();
     }
+
+    if (_decrement_a_duration(DUR_FORTITUDE, delay,
+                              "Your fortitude fades away."))
+    {
+        notify_stat_change(STAT_STR, -10, true, "Fortitude card running out");
+    }
+
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
@@ -800,8 +737,10 @@ static void _decrement_durations()
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
             mprf(MSGCH_WARN, "You are exhausted.");
 
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC)
             mpr("You feel less hot-headed.");
+#endif
 
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
@@ -843,7 +782,7 @@ static void _decrement_durations()
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
-        gain_piety(1, 1, true);
+        gain_piety(1, 1);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
@@ -993,9 +932,9 @@ static void _decrement_durations()
                           "Your shroud begins to fray at the edges.");
 
     _decrement_a_duration(DUR_INFUSION, delay,
-                          "Your attacks are no longer magically infused.",
+                          "You are no longer magically infusing your attacks.",
                           0,
-                          "You are feeling less magically infused.");
+                          "Your magical infusion is running out.");
 
     _decrement_a_duration(DUR_SONG_OF_SLAYING, delay,
                           "Your song has ended.",
@@ -1015,6 +954,14 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SAP_MAGIC, delay,
                           "Your magic seems less tainted.");
+
+    if (_decrement_a_duration(DUR_CORROSION, delay,
+                          "You repair your equipment."))
+    {
+        you.props["corrosion_amount"] = 0;
+        you.redraw_armour_class = true;
+        you.wield_change = true;
+    }
 
     if (!you.duration[DUR_SAP_MAGIC])
     {
@@ -1049,8 +996,6 @@ static void _decrement_durations()
         else if (you.duration[DUR_FLAYED] < 80)
             you.duration[DUR_FLAYED] += div_rand_round(50, delay);
     }
-
-    _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
 
     if (you.duration[DUR_TOXIC_RADIANCE])
     {
@@ -1165,11 +1110,13 @@ static void _check_equipment_conducts()
 }
 
 
-// cjo: Handles player hp and mp regeneration. If the counter you.hit_points_regeneration
-// is over 100, a loop restores 1 hp and decreases the counter by 100 (so you can regen
-// more than 1 hp per turn). If the counter is below 100, it is increased by a variable
-// calculated from delay, BASELINE_DELAY, and your regeneration rate. MP regeneration happens
-// similarly, but the countup depends on delay, BASELINE_DELAY, and you.max_magic_points
+// cjo: Handles player hp and mp regeneration. If the counter
+// you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
+// the counter by 100 (so you can regen more than 1 hp per turn). If the counter
+// is below 100, it is increased by a variable calculated from delay,
+// BASELINE_DELAY, and your regeneration rate. MP regeneration happens
+// similarly, but the countup depends on delay, BASELINE_DELAY, and
+// you.max_magic_points
 static void _regenerate_hp_and_mp(int delay)
 {
     if (crawl_state.disables[DIS_PLAYER_REGEN])
@@ -1245,15 +1192,17 @@ void player_reacts()
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         temperature_check();
+#endif
 
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
 
     _check_equipment_conducts();
 
-    if (you.unrand_reacts != 0)
+    if (you.unrand_reacts.any())
         unrand_reacts();
 
     // Handle sound-dependent effects that are silenced
@@ -1284,7 +1233,6 @@ void player_reacts()
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
             you_teleport_now(false); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
@@ -1323,16 +1271,7 @@ void player_reacts()
     food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
     if (food_use > 0 && you.hunger > 0)
-    {
         make_hungry(food_use, true);
-        if (you.duration[DUR_AMBROSIA])
-        {
-            if (food_use > you.duration[DUR_AMBROSIA])
-                food_use = you.duration[DUR_AMBROSIA];
-            you.duration[DUR_AMBROSIA] -= food_use;
-            inc_mp(food_use);
-        }
-    }
 
     _regenerate_hp_and_mp(capped_time);
 

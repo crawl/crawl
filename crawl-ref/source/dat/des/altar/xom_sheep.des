@@ -1,0 +1,86 @@
+# Xom sends flaming sheep into four corners of the world.
+
+{{
+function callback.kb_xom_exploding_sheep(data, triggerable,
+                                         triggerer, marker, ev)
+  if dgn.persist.kb_xom_sheep_generated then return end
+  dgn.persist.kb_xom_sheep_generated = true
+
+  local x, y = marker:pos()
+
+  crawl.mpr("Walls come down!")
+  for p in iter.slave_iterator("feat_remove", 1) do
+    dgn.terrain_changed(p.x, p.y, "floor", false, false, false)
+  end
+
+  -- The logic here is a bit obtuse; the idea is to get the
+  -- "5 sheep come into view" message to display before anything
+  -- else.
+  local nsheep = 0
+  local sheeparray = {}
+  local visarray = {}
+  local flee = mons.behaviour("flee")
+  for p in iter.slave_iterator("sheep_place", 1) do
+    local sheep = dgn.create_monster(p.x, p.y, 'generate_awake sheep')
+    if sheep then
+      nsheep = nsheep + 1
+      sheeparray[nsheep] = sheep
+      visarray[nsheep] = you.see_cell(p.x, p.y)
+    end
+  end
+  view.update_monsters()
+  for i = 1, nsheep do
+    local sheep = sheeparray[i]
+    sheep.add_ench("inner_flame", 1, 30000)
+    sheep.add_ench("sticky_flame", 1, 30000)
+    sheep.add_ench("fear", 1, 30000)
+    sheep.beh = flee
+    if visarray[i] then
+      crawl.mpr("A sheep catches fire!", "warning")
+      sheep.speak("sheep flee")
+    end
+  end
+  crawl.god_speaks("Xom", "You hear mad divine giggling.")
+end
+}}
+
+
+NAME:   kb_xom_exploding_sheep
+TAGS:   transparent no_monster_gen no_item_gen temple_overflow_1
+TAGS:   temple_overflow_xom uniq_altar_xom
+DEPTH:  D:3-, Lair
+WEIGHT: 2
+KFEAT:  _ = altar_xom
+{{
+dgn.persist.kb_xom_sheep_generated = false
+local tm = TriggerableFunction:new{func="callback.kb_xom_exploding_sheep",
+                                   repeated = true}
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+lua_marker('_', props_marker {sheep_place = 1})
+lua_marker('H', props_marker {sheep_place = 1})
+lua_marker('c', props_marker {feat_remove = 1})
+lua_marker('+', props_marker {feat_remove = 1})
+lua_marker('+', restrict_door())
+
+if you.branch() == "D" then
+  if you.absdepth() > 9 then
+    tags('extra')
+  end
+else
+  tags('extra')
+end
+}}
+KPROP: H'_ = no_rtele_into
+SUBST: ' = .
+MAP
+@.......@
+.........
+..ccccc..
+..cH'Hc..
+..c'_'c..
+..cH'Hc..
+..cc+cc..
+.........
+@.......@
+ENDMAP

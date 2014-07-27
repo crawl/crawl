@@ -18,9 +18,10 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; sling . stone / hobgoblin w:2; sling . sling bullet / nothing
+MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
+         bullet / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
-MONS:    kobold; dart / nothing
+MONS:    kobold; stone / nothing
 MONS:    kobold; club / big kobold w:1; club | short sword w:2 / nothing
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
 SUBST:   5 = 2 1:2 .:24
@@ -94,7 +95,7 @@ WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
-KITEM:  R = w:2 honeycomb / w:1 royal jelly
+KITEM:  R = royal jelly
 MONS:   patrolling black bear
 MAP
 xxxxxxxxxxxxxxx
@@ -112,7 +113,7 @@ WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
-KITEM:  R = w:2 honeycomb / w:1 royal jelly
+KITEM:  R = royal jelly
 MONS:   patrolling black bear
 MAP
 xxxxxxxx@xx
@@ -850,9 +851,9 @@ MAP
   @@@@@@ @@@@@@@@@@@@@@@@@@@ @@@@@@
 xx......v...................v.......xxxxxxxxxxxxxxxxx
 xx......v..G.............G..v.......xxxxxxxxxxxxxxxxx
-xx......v...................v.......xxxxxxxxxxxxxxxxx
+xx......v.........1.........v.......xxxxxxxxxxxxxxxxx
 xxxxxxxxvvvvvv.........vvvvvvxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxvvvvvvvvvvvvv===vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
+xxxxvvvvvvvvvvvvv+++vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
 xxxvv.....vvvvvv.....vvvvvv.....vvxxxxxxxxxxxxxxxxxxx
 xxxv.......+vvv...Y...vvv+.......vxxxxxxxxxxxxxxxxxxx
 xxxvvvV1.vvv.vvv.....vvv.vvv.1Vvvvxxxxxxxxxxxxxxxxxxx
@@ -889,7 +890,7 @@ DEPTH:  Depths, !Depths:$, Crypt:1-4
 ORIENT: southeast
 NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
-KFEAT:  ^ = teleport trap
+KFEAT:  ^ = permanent teleport trap
 KFEAT:  m = iron_grate
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
@@ -1440,7 +1441,7 @@ DEPTH:   D:12-
 ORIENT:  north
 MONS:    killer bee, queen bee, oklob plant
 KFEAT:   X = x
-ITEM:    honeycomb / royal jelly w:1, honeycomb w:4 / royal jelly
+ITEM:    royal jelly
 KITEM:   | = |
 SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
 : if you.absdepth() > 14 then
@@ -1614,7 +1615,7 @@ TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
 DEPTH:  D:2-4
 KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
-MONS:   goblin, goblin ; sling . stone, jackal
+MONS:   goblin, goblin ; hunting sling . stone, jackal
 NSUBST: . = 1:6 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -1723,78 +1724,43 @@ ppptc.......c..........c...c...ctpt''
                         @@@
 ENDMAP
 
-
-## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
-## the worship of a life-bringing water diety.
-NAME:     gammafunk_depths_water_palace
-DEPTH:    Depths:2-, !Depths:$
-ORIENT:   float
-TAGS:     no_monster_gen patrolling no_pool_fixup
-## Plants or water monsters
-KMONS:    f = plant / fungus
-KMONS:    R = electric eel / shark / water elemental
-KMONS:    S = electric eel / shark / water elemental
-## Main monster sets
-KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
-              / minotaur / satyr / merfolk impaler / deep elf knight
-KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
-              / octopode crusher
-KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
-KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
-              / alligator snapping turtle / shambling mangrove / thorn hunter
-KMONS:    6 = siren
-KMONS:    7 = water nymph / wind drake
-KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
-              / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
-KMONS:    O = the Enchantress band
-## The loot items need this to be placed in water
-KITEM:    % = %
-KITEM:    $ = $
-KITEM:    * = *
-KITEM:    E| = |
-KFEAT:    567DER%$*| = W
-KFEAT:    S = w
-KFEAT:    m = t
-KPROP:    ~`5R = no_rtele_into
-SHUFFLE:  HI / JK
-NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffWmm, '` = W
-COLOUR:   c = white
-COLOUR:   x = cyan
-TILE:     m = dngn_mangrove
-TILE:     x = wall_pebble_cyan
-FTILE:    .+ctmGTUf1234O = floor_pebble_cyan
-veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
-}}
+NAME: cheibrodos_hippocracy
+DEPTH: D:12-15
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: north
+MONS: giant orange brain, small abomination, giant eyeball, demonic crawler
+ITEM: randbook
+NSUBST: ' = 3:4 / *:.
+NSUBST: " = 4:0 / 1:9 / *:.
+NSUBST: ? = 1:9 / *:0
 MAP
-      ccccccccccccccccccccccccc
-    cccttct1t.t.'Gx'Hx'Hx'mcmTccc
-   cc'...+....3.''''''I''''+'wwwcc
-  ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
-  ccc'.GcccBBccccccccccccccc''''wwc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
- cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
- cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
-c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
-+.''''.nmcU|$''''...''''''++'D''''llc
-+.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
-+.''''.nmcU|$''''...''''''++'D''''llc
-c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
- cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
- ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
- cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
-  ccc'.GcccCCccccccccccccccc''''wwc
-  ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
-   cc'...+....3.''''''K''''+'wwwcc
-    cccttct1t.t.'Gx''''Jx'mcmTccc
-     ccccccccccccccccccccccccccc
+      xxxxxxxxxxxxxxxxxxxxxxx
+     xxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxwwwwwxxxxxxxxx......xxxx
+  xxxxwxxxxx...xxxx...xxxx..xxx
+ xxxwwxx.........x..xxx..xx..xx
+xxxwxxx............xx.....xx.xx
+xxwxx*...?.?......xx..xx..2x.xx
+xxwx%d....1.......x..xxW22Wx.xx
+xxwx**...?.?.....xx..xxWWWxx.xx
+xxwxx%..........xx....xxwxx..xx
+xxxwxxxx......xxxw.xx..xxx..xxx
+ xxxwwwxxxxxxxxwwww'xx.....xxx
+  xxxxxwwwwwwwwxx.w'xxxxxxxxx
+   xxxxxxxx4.xxxx.w'xxxxxxxx
+   xx"m"xxx*%xxxxw'wxx
+  xx"m""".xmxxxxx'wxxx
+  xx3m"""..xxxx''w'xx
+  xx"m"""..xxx'ww'xx
+   xx"m"xx.xxx'w'xx
+    xxxxxx.xx'ww'xx
+        xx.xxx'w'xx
+         xx.xx'ww'xx
+         xx.xx'ww'xx
+         xx.x.xw'xx
+          xx.xxx'xxx
+           xxxxxw.xx
+              xxw.xx
+              xx.xxx
+              xx@xxx
 ENDMAP

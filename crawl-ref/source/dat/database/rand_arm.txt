@@ -728,8 +728,6 @@ the Duke
 
 the Duchess
 
-the Doge
-
 the Ban
 
 the Castellan
@@ -785,6 +783,8 @@ the Orb Guardian
 
 the Storm King
 
+the @_card_@ of @_suit_@
+
 the Hanged Man
 
 Hedge Wizardry
@@ -812,6 +812,46 @@ Wasted Space
 the Other World
 
 Inevitability
+%%%%
+_card_
+
+Two
+
+Three
+
+Four
+
+Five
+
+Six
+
+Seven
+
+Eight
+
+Nine
+
+Ten
+
+Page
+
+Knight
+
+Queen
+
+King
+
+Ace
+%%%%
+_suit_
+
+Cups
+
+Pentacles
+
+Wands
+
+Swords
 %%%%
 # "something" rather than of Something
 _plain_armour_name_

@@ -109,7 +109,7 @@ const Branch branches[NUM_BRANCHES] =
       NULL,
       true, LIGHTGREY, BROWN,
       'V', true, 0 },
-
+#if TAG_MAJOR_VERSION == 34
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_BLADE, DNGN_RETURN_FROM_BLADE,
@@ -117,6 +117,7 @@ const Branch branches[NUM_BRANCHES] =
       NULL,
       true, LIGHTGREY, BROWN,
       'B', false, -7 },
+#endif
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 3, 3, 19,
       0, 0,

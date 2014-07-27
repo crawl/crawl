@@ -49,6 +49,7 @@ struct game_state
     int  seen_hups;         // Set to true if SIGHUP received.
 
     bool map_stat_gen;      // Set if we're generating stats on maps.
+    bool obj_stat_gen;      // Set if we're generating object stats.
 
     game_type type;
     game_type last_type;
@@ -90,6 +91,7 @@ struct game_state
 
     bool level_annotation_shown;
     bool viewport_monster_hp;
+    bool viewport_weapons;
 
 #ifndef USE_TILE_LOCAL
     // Are we currently targeting using the mlist?

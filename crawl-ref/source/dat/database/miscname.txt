@@ -359,30 +359,6 @@ SOUND:You hear words spoken in a strange and terrible language...
 
 SOUND:You hear diabolical laughter!
 %%%%
-eating_cheese
-
-Mmm...@_cheese_kind_@.
-%%%%
-_cheese_kind_
-
-Cheddar
-
-Edam
-
-Wensleydale
-
-Camembert
-
-Goat cheese
-
-Fruit cheese
-
-Mozzarella
-
-Sheep cheese
-
-Yak cheese
-%%%%
 eating_pizza
 
 @_carni_mmm_@ Ham and pineapple.
@@ -405,7 +381,7 @@ end
 
 Mmm... That's the fabled Pandemonium Pizza!
 
-Mmm... Cheesy.
+Mmm... @_cheese_kind_@ pizza.
 
 @_herbi_mmm_@ Vegetable.
 
@@ -416,7 +392,7 @@ Mmm... Cheesy.
 _carni_mmm_
 
 {{
-if you.mutation("herbivorous") > 0 then
+if you.mutation("herbivore") > 0 then
     return "Yeuchh!"
 else
     return "Mmm..."
@@ -426,10 +402,133 @@ end
 _herbi_mmm_
 
 {{
-if you.mutation("carnivorous") > 0 then
+if you.mutation("carnivore") > 0 then
     return "Yeuchh!"
 else
     return "Mmm..."
 end
 }}
+%%%%
+_cheese_kind_
+
+Cheddar
+
+Edam
+
+Wensleydale
+
+Camembert
+
+Goat cheese
+
+Fruit cheese
+
+Mozzarella
+
+Sheep cheese
+
+Yak cheese
+%%%%
+eating_fruit
+
+Mmmm... Yummy @_fruit_type_@.
+
+That @_fruit_type_@ was delicious!
+
+Mmm - a full handful of @_small_fruits_@!
+
+w:1
+That @_peel_fruit_@ was delicious! Even the peel tasted good!
+
+w:1
+That @_sour_fruit_@ was rather sour... but delicious nonetheless!
+
+That choko was very bland.
+
+w:1
+That durian smelled terrible... but tasted delicious!
+
+w:1
+That snozzcumber tasted truly putrid!
+%%%%
+_fruit_type_
+
+orange
+
+banana
+
+pear
+
+apple
+
+apricot
+
+tomato
+
+peach
+
+plum
+
+rambutan
+
+lychee
+
+mango
+
+watermelon
+
+coconut
+
+breadfruit
+
+eggfruit
+
+dragonfruit
+
+guava
+
+mangosteen
+
+tangerine
+%%%%
+_small_fruits_
+
+strawberries
+
+blueberries
+
+blackberries
+
+bilberries
+
+raspberries
+
+huckleberries
+
+gooseberries
+
+cherries
+
+grapes
+
+sultanas
+
+figs
+
+dates
+
+almonds
+
+%%%%
+_peel_fruit_
+
+orange
+
+banana
+%%%%
+_sour_fruit_
+
+lemon
+
+lime
 %%%%

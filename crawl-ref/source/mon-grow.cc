@@ -7,9 +7,9 @@
 
 #include "enum.h"
 #include "mon-grow.h"
+#include "mon-message.h"
 #include "mon-util.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "monster.h"
 #include "random.h"
 
@@ -42,8 +42,10 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 
+    monster_level_up(MONS_NAGA, MONS_NAGA_MAGE, 500),
     monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR),
     monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
+    monster_level_up(MONS_NAGA_WARRIOR, MONS_GREATER_NAGA),
 
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
@@ -135,11 +137,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     ev += m->ev - orig->ev;
 
     if (adjust_hd)
-    {
-        const int minhd = dummy.hit_dice;
-        if (hit_dice < minhd)
-            hit_dice += minhd - hit_dice;
-    }
+        set_hit_dice(max(get_experience_level(), dummy.get_hit_dice()));
 
     if (adjust_hp)
     {
@@ -160,7 +158,9 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
 bool monster::level_up_change()
 {
-    if (const monster_level_up *lup = _monster_level_up_target(type, hit_dice))
+    const monster_level_up *lup = _monster_level_up_target(type,
+                                                           get_experience_level());
+    if (lup)
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
         return true;
@@ -169,7 +169,7 @@ bool monster::level_up_change()
     {
         base_monster = type;
         monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN, type);
-        if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == hit_dice)
+        if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == get_experience_level())
             upgrade_type(upgrade, false, true);
     }
     return false;
@@ -177,23 +177,24 @@ bool monster::level_up_change()
 
 bool monster::level_up()
 {
-    if (hit_dice >= MAX_MONS_HD)
+    if (get_experience_level() >= MAX_MONS_HD)
         return false;
 
-    ++hit_dice;
+    set_hit_dice(get_experience_level() + 1);
 
     // A little maxhp boost.
     if (max_hit_points < 1000)
     {
         int hpboost =
-            (hit_dice > 3? max_hit_points / 8 : max_hit_points / 4)
+            (get_experience_level() > 3? max_hit_points / 8 : max_hit_points / 4)
             + random2(5);
 
         // Not less than 3 hp, not more than 25.
         hpboost = min(max(hpboost, 3), 25);
 
         dprf("%s: HD: %d, maxhp: %d, boost: %d",
-             name(DESC_PLAIN).c_str(), hit_dice, max_hit_points, hpboost);
+             name(DESC_PLAIN).c_str(), get_experience_level(),
+             max_hit_points, hpboost);
 
         max_hit_points += hpboost;
         hit_points     += hpboost;
@@ -209,8 +210,8 @@ void monster::init_experience()
 {
     if (experience || !alive())
         return;
-    hit_dice   = max(hit_dice, 1);
-    experience = mexplevs[min(hit_dice, MAX_MONS_HD)];
+    set_hit_dice(max(get_experience_level(), 1));
+    experience = mexplevs[min(get_experience_level(), MAX_MONS_HD)];
 }
 
 bool monster::gain_exp(int exp, int max_levels_to_gain)
@@ -219,7 +220,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     init_experience();
-    if (hit_dice >= MAX_MONS_HD)
+    if (get_experience_level() >= MAX_MONS_HD)
         return false;
 
     // Only natural monsters can level-up.
@@ -239,8 +240,8 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
     const monster mcopy(*this);
     int levels_gained = 0;
     // Monsters can normally gain a maximum of two levels from one kill.
-    while (hit_dice < MAX_MONS_HD
-           && experience >= mexplevs[hit_dice + 1]
+    while (get_experience_level() < MAX_MONS_HD
+           && experience >= mexplevs[get_experience_level() + 1]
            && level_up()
            && ++levels_gained < max_levels_to_gain);
 
@@ -252,8 +253,12 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
             simple_monster_message(&mcopy, " looks stronger.");
     }
 
-    if (hit_dice < MAX_MONS_HD && experience >= mexplevs[hit_dice + 1])
-        experience = (mexplevs[hit_dice] + mexplevs[hit_dice + 1]) / 2;
+    if (get_experience_level() < MAX_MONS_HD
+        && experience >= mexplevs[get_experience_level() + 1])
+    {
+        experience = (mexplevs[get_experience_level()]
+                      + mexplevs[get_experience_level() + 1]) / 2;
+    }
 
     // If the monster has leveled up to a monster that will be angered
     // by the player, handle it properly.

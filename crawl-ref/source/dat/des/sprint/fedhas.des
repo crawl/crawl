@@ -37,8 +37,7 @@ KMONS:  h = moth of wrath
 KMONS:  m = green rat
 KMONS:  n = worker ant
 KMONS:  u = rat
-KITEM:  j = piece of ambrosia q:3
-KITEM:  k = honeycomb q:3
+KITEM:  j = royal jelly q:3
 KITEM:  n = ring of invisibility ident:type
 KITEM:  M = any book
 KITEM:  # = Orb of Zot
@@ -52,13 +51,13 @@ xcAA..+.%...+.c%%.+ooooooooooooo+.Dc$E$c.F.G+*|cc+ccccx
 xcAAAAc...m.cCcn..coooooooooooooc..ccc+cc.**ccZc$$ccccx
 xccccccccccccccc+ccoooooooooooooc.*ccZZ$+..Fccccc..R.cx
 xcHH.t........+...coooooooooooooccccccccccccccccc...Zcx
-xckI....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
+xcjI....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
 xcHH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
 xcc+cccc+ccccccC|+......t..tccM.c.Nc.A....Pcccccccccccx
 xc*.c$$$$+......Fct..ttt.tJ.ccc.cc+cc.A.O..cccccccccccx
 xcL*cG|cccG...L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
 xcccccccccccccccccccccccccccccccc.....ccccccccccccccccx
-xckj....................ccccccc..t..t....cccccccccccccx
+xcjj....................ccccccc..t..t....cccccccccccccx
 xcZa..N...............Y.ccccc.U.t......t...tccccccccccx
 xcZQ..........T......XY..........t.V...Z.Z..W|ccccccccx
 xcZb..................Y...ccccccccccccccccccccccccccccx

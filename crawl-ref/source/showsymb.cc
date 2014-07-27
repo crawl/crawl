@@ -33,12 +33,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
-    // These aren't shown mossy/bloody/slimy in console, nor do they
-    // obey vault recolouring.
-    const bool norecolour = feat > DNGN_OPEN_DOOR
-                            || feat_is_door(feat)
-                            // unknown traps won't get here
-                            || feat == DNGN_MALIGN_GATEWAY;
+    // These do not obey vault recolouring.
+    const bool no_vault_recolour = feat > DNGN_OPEN_DOOR
+                                 // unknown traps won't get here
+                                 || feat == DNGN_MALIGN_GATEWAY;
+
+    // These aren't shown mossy/bloody/slimy in console.
+    const bool norecolour = feat_is_door(feat) || no_vault_recolour;
 
     if (is_stair_exclusion(loc))
         colour = Options.tc_excluded;
@@ -88,7 +89,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         colour = LIGHTGREEN;
     }
-    else if (cell.feat_colour() && !norecolour)
+    else if (cell.feat_colour() && !no_vault_recolour)
         colour = cell.feat_colour();
     else
     {
@@ -134,8 +135,10 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)
             colour = BLUE;
+#if TAG_MAJOR_VERSION == 34
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
+#endif
         else if (cell.flags & MAP_GOLDEN)
             colour = ETC_GOLD;
     }
@@ -397,6 +400,16 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         if (mi->props.exists("glyph") && override)
             g.col = mons_class_colour(stype);
+
+        // If we want to show weapons, overwrite all of that.
+        item_def* weapon = mi->inv[MSLOT_WEAPON].get();
+        if (crawl_state.viewport_weapons && weapon)
+        {
+            show = *weapon;
+            g = _get_item_override(*weapon);
+            if (!g.col)
+                g.col = weapon->colour;
+        }
 
         break;
     }

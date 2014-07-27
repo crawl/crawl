@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 #include <sstream>
 
+#include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
@@ -13,6 +14,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
@@ -31,7 +33,7 @@ actor::~actor()
 
 bool actor::will_trigger_shaft() const
 {
-    return ground_level() && total_weight() > 0 && is_valid_shaft_level()
+    return ground_level() && body_weight() > 0 && is_valid_shaft_level()
            // let's pretend that they always make their saving roll
            && !(is_monster()
                 && mons_is_elven_twin(static_cast<const monster* >(this)));
@@ -120,15 +122,6 @@ bool actor::handle_trap()
 int actor::skill_rdiv(skill_type sk, int mult, int div) const
 {
     return div_rand_round(skill(sk, mult * 256), div * 256);
-}
-
-int actor::res_holy_fire() const
-{
-    if (is_evil() || is_unholy())
-        return -1;
-    else if (is_holy())
-        return 3;
-    return 0;
 }
 
 int actor::check_res_magic(int power)
@@ -245,8 +238,6 @@ int actor::body_weight(bool base) const
         return 1500;
     case SIZE_GIANT:
         return 1800;
-    case SIZE_HUGE:
-        return 2200;
     default:
         die("invalid body weight");
     }
@@ -262,18 +253,9 @@ bool actor::gourmand(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_THE_GOURMAND, calc_unid);
 }
 
-bool actor::conservation(bool calc_unid, bool items) const
-{
-    return items && (wearing(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
-                                    calc_unid));
-}
-
 bool actor::res_corr(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
-                                    calc_unid));
+    return items && wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid);
 }
 
 // This is a bit confusing. This is not the function that determines whether or
@@ -307,9 +289,17 @@ bool actor::clarity(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_CLARITY, calc_unid));
 }
 
-bool actor::faith(bool calc_unid, bool items) const
+int actor::faith(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
+    int net_faith = 0;
+
+    if (items && wearing(EQ_AMULET, AMU_FAITH, calc_unid))
+        net_faith++;
+
+    if (is_player() && player_mutation_level(MUT_FORLORN))
+        net_faith--;
+
+    return net_faith;
 }
 
 bool actor::warding(bool calc_unid, bool items) const
@@ -433,7 +423,7 @@ bool actor_slime_wall_immune(const actor *act)
 /**
  * Accessor method to the clinging member.
  *
- * @returns The value of clinging.
+ * @return  The value of clinging.
  */
 bool actor::is_wall_clinging() const
 {
@@ -444,7 +434,7 @@ bool actor::is_wall_clinging() const
  * Check a cell to see if actor can keep clinging if it moves to it.
  *
  * @param p Coordinates of the cell checked.
- * @returns Whether the actor can cling.
+ * @return  Whether the actor can cling.
  */
 bool actor::can_cling_to(const coord_def& p) const
 {
@@ -571,6 +561,7 @@ void actor::stop_being_constricted(bool quiet)
 
 void actor::clear_far_constrictions()
 {
+    clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
     if (!constrictor || !adjacent(pos(), constrictor->pos()))
@@ -689,25 +680,25 @@ void actor::handle_constriction()
         damage = defender->hurt(this, damage, BEAM_MISSILE, false);
         DIAG_ONLY(const int infdam = damage);
 
-        string exclams;
+        string exclamations;
         if (damage <= 0 && is_player()
             && you.can_see(defender))
         {
-            exclams = ", but do no damage.";
+            exclamations = ", but do no damage.";
         }
         else if (damage < HIT_WEAK)
-            exclams = ".";
+            exclamations = ".";
         else if (damage < HIT_MED)
-            exclams = "!";
+            exclamations = "!";
         else if (damage < HIT_STRONG)
-            exclams = "!!";
+            exclamations = "!!";
         else
         {
             int tmpdamage = damage;
-            exclams = "!!!";
+            exclamations = "!!!";
             while (tmpdamage >= 2*HIT_STRONG)
             {
-                exclams += "!";
+                exclamations += "!";
                 tmpdamage >>= 1;
             }
         }
@@ -724,7 +715,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
         else if (you.can_see(defender) || defender->is_player())
         {
@@ -736,7 +727,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
 
         dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
@@ -809,4 +800,33 @@ string actor::describe_props() const
         }
     }
     return oss.str();
+}
+
+/**
+ * Is the actor currently being slowed by a torpor snail?
+ */
+bool actor::torpor_slowed() const
+{
+    if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
+        || is_stationary()
+        || (is_monster() && this->as_monster()->check_stasis(true))
+        || (!is_monster() && stasis()))
+    {
+        return false;
+    }
+
+    for (monster_near_iterator ri(pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        const monster *mons = *ri;
+        if (mons && mons->type == MONS_TORPOR_SNAIL
+            && !is_sanctuary(mons->pos())
+            && !mons_aligned(mons, this)
+            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
+            // friendly torpor snails are way too abusable otherwise :(
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

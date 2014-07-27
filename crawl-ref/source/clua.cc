@@ -18,6 +18,12 @@
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
+// 64-bit luajit does not support custom allocators. Only checking
+// TARGET_CPU_X64 because luajit doesn't support other 64-bit archs.
+#if defined(USE_LUAJIT) && defined(TARGET_CPU_X64)
+#define NO_CUSTOM_ALLOCATOR
+#endif
+
 #define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
     do \
     {\
@@ -31,7 +37,9 @@
 
 static int  _clua_panic(lua_State *);
 static void _clua_throttle_hook(lua_State *, lua_Debug *);
+#ifndef NO_CUSTOM_ALLOCATOR
 static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize);
+#endif
 static int  _clua_guarded_pcall(lua_State *);
 static int  _clua_require(lua_State *);
 static int  _clua_dofile(lua_State *);
@@ -634,7 +642,18 @@ void CLua::init_lua()
     if (_state)
         return;
 
+#ifdef NO_CUSTOM_ALLOCATOR
+    // If this is likely to be used as a server, warn the builder.
+    // NOTE: #warning doesn't work on MSVC, so this will be fatal there
+    // (not that webtiles or dgamelaunch are supported on Windows anyway).
+# if defined(USE_TILE_WEB) || defined(DGAMELAUNCH)
+#   warning Detected 64-bit Luajit, disabling CLua memory throttling.
+# endif
+    _state = luaL_newstate();
+#else
+    // Throttle memory usage in managed (clua) VMs
     _state = managed_vm? lua_newstate(_clua_allocator, this) : luaL_newstate();
+#endif
     if (!_state)
         end(1, false, "Unable to create Lua state.");
 
@@ -951,6 +970,7 @@ static int _clua_panic(lua_State *ls)
     return 0;
 }
 
+#ifndef NO_CUSTOM_ALLOCATOR
 static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
     CLua *cl = static_cast<CLua *>(ud);
@@ -970,6 +990,7 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     else
         return realloc(ptr, nsize);
 }
+#endif
 
 static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {

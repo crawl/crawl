@@ -14,6 +14,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -71,8 +72,8 @@ static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
 static list<monster*> displaced_monsters;
 
-static void abyss_area_shift(void);
-static void _push_items(void);
+static void abyss_area_shift();
+static void _push_items();
 static void _push_displaced_monster(monster* mon);
 
 // If not_seen is true, don't place the feature where it can be seen from
@@ -180,8 +181,8 @@ static int _abyssal_rune_roll()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
-
-    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+    const int divisor = 2 * brdepth[BRANCH_ABYSS] - 2;
+    return (int) pow(100.0, depth/divisor);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -192,6 +193,7 @@ static void _abyss_fixup_vault(const vault_placement *vp)
         const dungeon_feature_type feat(grd(p));
         if (feat_is_stair(feat)
             && feat != DNGN_EXIT_ABYSS
+            && feat != DNGN_ABYSSAL_STAIR
 #if TAG_MAJOR_VERSION == 34
             && feat != DNGN_ENTER_PORTAL_VAULT
 #endif
@@ -212,7 +214,7 @@ static bool _abyss_place_map(const map_def *mdef)
 
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
-        _abyss_fixup_vault(env.level_vaults[env.level_vaults.size() - 1]);
+        _abyss_fixup_vault(env.level_vaults.back());
 
     return did_place;
 }
@@ -281,15 +283,14 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
     if (places_found)
     {
         dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
-        int thing_created = items(1, OBJ_MISCELLANY,
-                                  MISC_RUNE_OF_ZOT, true, 0, 0);
-        if (thing_created != NON_ITEM)
+        int item_ind  = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
+        if (item_ind != NON_ITEM)
         {
-            mitm[thing_created].plus = RUNE_ABYSSAL;
-            item_colour(mitm[thing_created]);
+            mitm[item_ind].plus = RUNE_ABYSSAL;
+            item_colour(mitm[item_ind]);
         }
-        move_item_to_grid(&thing_created, chosen_spot);
-        return thing_created != NON_ITEM;
+        move_item_to_grid(&item_ind, chosen_spot);
+        return item_ind != NON_ITEM;
     }
 
     return false;
@@ -436,6 +437,8 @@ static bool _abyss_check_place_feat(coord_def p,
             // Link the vault-placed items.
             _abyss_postvault_fixup();
         }
+        else if (!abyss_genlevel_mask(p))
+            return false;
         else
             grd(p) = which_feat;
 
@@ -673,6 +676,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     env.map_knowledge(p).clear();
     if (env.map_forgotten.get())
         (*env.map_forgotten.get())(p).clear();
+    env.map_seen.set(p, false);
     StashTrack.update_stash(p);
 }
 
@@ -1160,13 +1164,13 @@ static void _update_abyss_terrain(const coord_def &p,
     }
 }
 
-static void _nuke_all_terrain(bool vaults)
+static void _destroy_all_terrain(bool vaults)
 {
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         if (vaults && env.level_map_mask(*ri) & MMT_VAULT)
             continue;
-        env.level_map_mask(*ri) = MMT_NUKED;
+        env.level_map_mask(*ri) = MMT_TURNED_TO_FLOOR;
     }
 }
 
@@ -1220,15 +1224,16 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     {
         const coord_def p(*ri);
         const coord_def abyss_coord = p + abyssal_state.major_coord;
-        bool nuked = map_masked(p, MMT_NUKED);
-        if (used_queue && !nuked)
+        bool turned_to_floor = map_masked(p, MMT_TURNED_TO_FLOOR);
+        if (used_queue && !turned_to_floor)
             continue;
 
-        if (nuked && (now || x_chance_in_y(delta, 50)) || !nuked && !used_queue)
+        if (turned_to_floor && (now || x_chance_in_y(delta, 50))
+            || !turned_to_floor && !used_queue)
         {
             ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
-            env.level_map_mask(p) &= ~MMT_NUKED;
+            env.level_map_mask(p) &= ~MMT_TURNED_TO_FLOOR;
         }
         if (morph)
             continue;
@@ -1250,7 +1255,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 2400, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, NULL, NULL,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }
@@ -1338,7 +1343,7 @@ static void _initialize_abyss_state()
     abyssal_state.seed = random_int() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
-    abyssal_state.nuke_all = false;
+    abyssal_state.destroy_all_terrain = false;
     abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
@@ -1349,14 +1354,14 @@ void set_abyss_state(coord_def coord, uint32_t depth)
     abyssal_state.depth = depth;
     abyssal_state.seed = random_int() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
-    abyssal_state.nuke_all = true;
+    abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
     you.moveto(ABYSS_CENTRE);
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask, true, true);
 }
 
-static void abyss_area_shift(void)
+static void abyss_area_shift()
 {
     dprf(DIAG_ABYSS, "area_shift() - player at pos (%d, %d)",
          you.pos().x, you.pos().y);
@@ -1555,12 +1560,12 @@ static void _increase_depth()
         abyssal_state.phase -= M_PI;
 }
 
-void abyss_morph(double duration)
+void abyss_morph()
 {
-    if (abyssal_state.nuke_all)
+    if (abyssal_state.destroy_all_terrain)
     {
-        _nuke_all_terrain(false);
-        abyssal_state.nuke_all = false;
+        _destroy_all_terrain(false);
+        abyssal_state.destroy_all_terrain = false;
     }
     if (!player_in_branch(BRANCH_ABYSS))
         return;
@@ -1577,6 +1582,7 @@ void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
+    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));

@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 #include <math.h>
+#include <cfloat>
 
 #include "spl-damage.h"
 
@@ -12,13 +13,13 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "los.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"
 #include "shout.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 
 static bool _airtight(coord_def c)
 {
@@ -173,7 +174,7 @@ static coord_def _rotate(coord_def org, coord_def from,
         return from;
 
     coord_def best = from;
-    double hiscore = 1e38;
+    double hiscore = DBL_MAX;
 
     double dist0 = sqrt((from - org).abs());
     double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
@@ -192,7 +193,7 @@ static coord_def _rotate(coord_def org, coord_def from,
     }
 
     // must find _something_, the original space might be already taken
-    ASSERT(hiscore != 1e38);
+    ASSERT(hiscore != DBL_MAX);
 
     return best;
 }
@@ -235,7 +236,7 @@ void tornado_damage(actor *caster, int dur)
     if (caster->is_player())
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
-        pow = caster->as_monster()->hit_dice * 4;
+        pow = caster->as_monster()->get_hit_dice() * 4;
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     int noise = 0;

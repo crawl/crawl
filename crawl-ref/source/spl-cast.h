@@ -15,7 +15,8 @@ enum spflag_type
     SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targeting
     SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targeting
     SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targeting
-    SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_TARGET_OBJECT targ.
+    // TODO: we need a new targetting flag if we want to target corpses too.
+    SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_MOVABLE_OBJECT targ.
     SPFLAG_TARGETING_MASK       = 0x00001f,      // used to test for targeting
     SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
@@ -24,7 +25,7 @@ enum spflag_type
     SPFLAG_UNCLEAN              = 0x000200,      // counts as "unclean"
     SPFLAG_CHAOTIC              = 0x000400,      // counts as "chaotic"
     SPFLAG_HASTY                = 0x000800,      // counts as "hasty"
-    SPFLAG_MAPPING              = 0x001000,      // a mapping spell of some kind
+                                //0x001000,
     SPFLAG_ESCAPE               = 0x002000,      // useful for running away
     SPFLAG_RECOVERY             = 0x004000,      // healing or recovery spell
     SPFLAG_AREA                 = 0x008000,      // area affect
@@ -68,8 +69,7 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
-spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       bool check_range = true);
+spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int failure_rate_colour(spell_type spell);

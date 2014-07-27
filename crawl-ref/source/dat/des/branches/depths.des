@@ -129,7 +129,7 @@ KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
             tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
             name_adjective tile:mons_withered_plant
 MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
-MONS: skeletal warrior / guardian mummy w:2 / plague shambler w:2
+MONS: skeletal warrior / guardian mummy w:2
 KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
 NSUBST: . = 4:1 / 1:2 / 2:3 / *:.
 SUBST: . = .....--__tG

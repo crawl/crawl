@@ -44,9 +44,10 @@ Features
 --------
  @ - Entry point - must be on outside edge. This point will be connected to the
      rest of the level with a corridor for both normal vaults and minivaults.
-     If a normal vault, or a minivault tagged 'mini_float', has no entry points
-     defined, random traversable squares on its edge will be chosen and
-     connected, as if they had the @ glyph.
+     If a vault has no entry points defined, random traversable squares on
+     its edge will be chosen and connected, as if they had the @ glyph. (In
+     the rare event where you don't want this - usually completely enclosed
+     vaults accessible through some other means - use the "no_exits" tag.)
 
      The + and = glyphs, when placed on the edge of the map, are also considered
      entry points.
@@ -88,21 +89,6 @@ Items
  * - higher level item (good)
  | - superb item (almost guaranteed excellent)
  d-k - item array item. See section below on ITEM: arrays for more info.
-
-NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
-      2/3 chance or else a royal jelly) symbols have been removed. You can
-      produce the desired behaviour using
-      SUBST: P = O..
-      KITEM: R = w:2 honeycomb / w:1 royal jelly
-
-      The O symbol has been removed. It used to either place an appropriate
-      rune, or an appropriate substitution for a rune (a staircase/portal into
-      a branch in branch entry vaults, a portal in portal entry vaults). This
-      behaviour can be produced with appropriate KITEM and KFEAT lines, for
-      example:
-      KITEM: O = decaying rune of Zot
-      KFEAT: O = enter_swamp
-      KFEAT: O = enter_portal_vault
 
 Monsters
 --------
@@ -377,11 +363,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              the area.
           * "no_item_gen": Prevents random item generation in the vault.
              Items explicitly placed by the vault are not affected.
-          * "mini_float": applicable only to minivaults, requests that
-             the dungeon builder pick random exits from the minivault and
-             connect it to the rest of the level, similar to the exit behaviour
-             for floating vaults. Has no effect if the minivault has explicitly
-             defined exits (the @ glyph).
+          * "no_exits": In the absence of explicit exits, requests that the
+             dungeon builder does not try to pick its own exits from the
+             (mini)vault. Usually only used when the vault is completely
+             enclosed and accessible through other means.
           * "no_monster_gen": Prevents random monster generation at the time of
              the vault's creation. Highly advised for arrival vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
@@ -420,19 +405,32 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
           * "overwritable": Lets the dungeon builder overwrite this vault with
              other ones. Don't use this casually.
-          * "can_overwrite": Tells the dungeon builder that this vault can be
-             placed on top of other vaults, even those without the
-             "overwritable" tag. Don't use this casually.
+          * "overwrite_floor_cell": Tells the dungeon builder that this vault
+             intends to overwrite a single floor cell, possibly inside another
+             vault, even if that vault does not have the "overwritable" tag.
+             This tag can only be applied to 1x1 vaults.  Don't use it casually.
           * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any
              layout. Multiple layout_foo tags can be used if it can be used
-             with multiple layouts. Current values for "foo" are: rooms,
-             city, open, caves, cross, abyss, basic, delve, misc, shoals,
-             swamp, labyrinth (though currently random vaults aren't placed
-             in the last three).
+             with multiple layouts. Current values for "foo" are:
+             * corridors: Mostly 1-cell-wide corridors
+             * rooms: Corridors connecting rooms
+             * passages: Mostly multi-cell corridors
+             * narrow_caves: Corridor-like caves
+             * open_caves: Open caves
+             * city: A large open room with "building" rooms in it
+             * open: Layout is mostly open but not cavelike
+             * divisions: Just ajoining rooms
+             * vaults: Used in the Vaults branch (no normal vault placement)
+             * shoals: Used in the Shoals branch
+             * swamp: Used in the Swamp branch
+             * forest: Was used in the now-defunct Forest branch
+             For more details on the layout types and the layouts that place
+             there, see Layout Types on the devwiki at
+             crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:dungeon:layout_types
           * "no_species_xx": Disables the vault for a given player species
              (two-letter abbreviation). Note that the current design rules
              strictly disallow varying the map generation based on the
@@ -442,21 +440,19 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              removing walls near the edges, making it look like a ruin.
              You can request that a vault be ruined only in a particular
              branch using "ruin_<branch>". For instance: "ruin_lair".
-          * "trowel_portal": This vault can be created by the Trowel card.
-             This tag should be used exclusively for the generic (one tile)
-             entries to portal vaults, like bazaars and labyrinths. Other
-             portal vaults may be eligible for Trowel, too.
           * "no_dump": Don't dump out this vault's name in the list of
              vaults generated during the game. Use this if the vault
              is predictable (like the Vaults:5 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
           * "unrand": Don't pick this vault randomly by DEPTH. Can still be
-             picked by tag or PLACE.
+             picked by tag or PLACE. Almost exclusively used by layouts and
+             subvaults.
           * "transparent": Marks the vault as potentially passable for the
              purposes of level connectivity. By default, vaults are considered
              non-passable regardless of their contents. With this tag, the
              actual terrain of the vault affects its passability as seen by the
-             dungeon builder.
+             dungeon builder. A disconnected region inside a transparent vault
+             will cause a veto of the level (but see the "opaque" KMASK below).
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
           should only be used for vaults with ORIENT encompass or with PLACE.
@@ -551,14 +547,6 @@ ITEM:     (list of items, separated by comma)
             carrion.
             All of these are usable in map definitions, apart from "orb" and
             "carrion".
-          * "race:race_name", where "race_name" is "elven", "dwarven" or
-            "orcish"; it can also be "none" or "no_race" to prevent the item
-            from being randomly being made racial. Has no effect if the item
-            can't take that kind of racial setting.
-            NOTE: Can result in a non-racial item if used with "any" and the
-            chosen item isn't compatible with the desired race. If race is not
-            explicitly set, this can result in boots being replaced by a
-            barding.
           * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
@@ -819,9 +807,6 @@ MONS:     (list of monsters)
           with will be removed and destroyed. This can be used to force
           a monster to have no items whatsoever:
               MONS: orc; nothing
-
-          Items given to an orc, dwarf or elf will be made orcish, dwarven
-          or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters derived from that monster
@@ -1383,15 +1368,19 @@ KMASK:    Z = no_monster_gen
           symbols, rather than for the entire vault like if you did it
           with TAGS. Valid masks are
 
-          * "no_item_gen":   Prevents random item on that symbol. Items
+          * "no_item_gen": Prevents random item on that symbol. Items
              explicitly placed on that symbol aren't affected.
           * "no_monster_gen": Prevents random monster generation on that
              symbol.
           * "no_trap_gen": Prevents random trap generation on that symbol.
-          * "no_pool_fixup": prevents a water square next to land from being
+          * "no_pool_fixup": Prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
-          * "no_wall_fixup": prevents (rock) walls from being converted to
+          * "no_wall_fixup": Prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
+          * "opaque": Overrides the "transparent" tag for this particular
+             symbol. The symbol is considered impassible for level-building
+             purposes. A "transparent" vault with a deliberately disconnected
+             region must use this mask on the disconnected part.
 
           For example
 
@@ -1447,10 +1436,10 @@ KPROP:    x = bloody
              feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from choosing to use this
-             square. Use this to prevent nasty situations like the player
-             ending up in a closet (for example, because your map randomises
-             wall/floor so much that closets may occur) or an extremely dense
-             monster array (like a hellion island).
+             square. Also prevents this square from being the destination of
+             a shaft or hatch. Use this tag to prevent nasty situations like
+             the player ending up in a closet or an extremely dense monster
+             array (like a hellion island).
           * "no_ctele_into": Prevents controlled teleportation into this square.
              Will instead generate the message "A strong magical force throws
              you back!".

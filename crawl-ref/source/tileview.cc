@@ -108,8 +108,10 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 #endif
 
-    case BRANCH_ELF:
+#if TAG_MAJOR_VERSION == 34
     case BRANCH_BLADE:
+#endif
+    case BRANCH_ELF:
         flv.wall  = TILE_WALL_HALL;
         flv.floor = TILE_FLOOR_HALL;
         return;
@@ -412,8 +414,10 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
     const dungeon_feature_type door = grd(gc);
     return feat_is_closed_door(door) && feat == DNGN_SEALED_DOOR
            || door == DNGN_SEALED_DOOR && feat_is_closed_door(feat)
-           || door == feat
-           || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+#if TAG_MAJOR_VERSION == 34
+           || map_masked(gc, MMT_WAS_DOOR_MIMIC)
+#endif
+           || door == feat;
 }
 
 void tile_init_flavour(const coord_def &gc)
@@ -1076,7 +1080,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
         flv->special = ((flv->special - ((flv->special % 4)))
                         + 4 + random2(4)) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_DNGN_ENTER_ZOT_CLOSED
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_FLOOR_MAX
              && Options.tile_water_anim)
     {
         flv->special = random2(256);
@@ -1398,8 +1402,10 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 
+#if TAG_MAJOR_VERSION == 34
     if (mc.flags & MAP_HOT)
         cell.heat_aura = 1 + random2(3);
+#endif
 
     if (mc.flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;

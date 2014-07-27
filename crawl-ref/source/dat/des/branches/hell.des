@@ -18,13 +18,10 @@ end
 
 function hell_entry_tier(e, tier)
     e.tags("nolayout_encompass")
-    if tier == "low" then
-        e.weight(14)
-    else
+    if tier ~= "low" then
         e.tags("luniq_hellpanabyss_threat_entry")
         if tier == "high" then
             e.tags("uniq_hell_entry_high")
-            e.weight(6)
         end
     end
 end
@@ -57,6 +54,8 @@ function hell_lava_spawns(e)
 end
 }}
 
+default-depth: Depths, D:21-
+
 ##############################################################################
 # Vestibule entries
 ##############################################################################
@@ -65,15 +64,12 @@ end
 # it also acts as the backup entrance and the entrance for encompass vault
 # placements.
 NAME:   hell_entry
-TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
-DEPTH:  Depths
+TAGS:   allow_dup overwrite_floor_cell replace_portal transparent fallback_enter_hell
 WEIGHT: 50
 : hell_entry_feature(_G, 'O')
 MAP
 O
 ENDMAP
-
-default-depth: Depths
 
 ##############################################################################
 # Hellmouth (Lemuel)
@@ -113,6 +109,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 2 (Lemuel)
 NAME:   hellmouth_2
+WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
@@ -185,6 +182,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   grunt_hell_entry_demonic_statue
+WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_rtele_into
 MONS:   blue devil / orange demon / red devil / w:5 iron devil / \
@@ -223,10 +221,8 @@ xxbbbbGbbbbbGdbbbxx
  xxbG1bbbbbbb1Gbxx
   xbbbbG1b1Gbbbbx
   xxxbbbbb%bbbxxx
-    xxxbdbbbxxx
-    xxxv===vxxx
-    xxxH...Ixxx
-    xx@@@@@@@xx
+    xxxHdbbIxxx
+    xxxv+++vxxx
 ENDMAP
 
 ###############################################################################
@@ -264,7 +260,8 @@ ENDMAP
 
 ##############################################################################
 NAME: grunt_hell_horde
-TAGS: nolayout_encompass mini_float uniq_hell_entry_high
+WEIGHT: 6
+TAGS: nolayout_encompass uniq_hell_entry_high
 : hell_entry_feature(_G, 'O')
 NSUBST: + = 1:+ / 1:+x / *:x
 MONS: hell hog / hell hound, hell hound / nothing
@@ -282,6 +279,7 @@ xxl2.2lxx
 ENDMAP
 
 NAME: grunt_metal_band
+WEIGHT: 6
 KMONS: O = Margery band / hell knight band w:4, hell knight band
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
@@ -324,10 +322,10 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Large need for non-threat hell entries if there's going to be a chance
-# on every floor of a branch for a hell entry vault, so.
+# Some branch-inspired mini entries. Total weight 14 for each branch.
 NAME:    hangedman_geh_valley
-TAGS:    transparent
+WEIGHT:  4
+TAGS:    transparent uniq_hell_entry_geh
 KMONS:   O = red devil / crimson imp w:20 / nothing
 SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
@@ -349,8 +347,92 @@ xlxxxxlxxxxlx
 xxx  xxx  xxx
 ENDMAP
 
+# Inspired by the grated corridors in evilmike_geh.
+NAME:   pf_hell_entry_great_geh
+TAGS:   uniq_hell_entry_geh
+WEIGHT: 4
+KFEAT:  m = iron_grate
+TILE:   c = dngn_stone_wall_red
+COLOUR: c = red
+FTILE:  .O = floor_infernal_blank
+KMASK:  l = no_monster_gen
+KPROP:  l = no_rtele_into
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+cccc@cccc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+cccc+cccc
+ccl...lcc
+ccl.O.lcc
+ccl...lcc
+ccclllccc
+ccccccccc
+ENDMAP
+
+# Inspired by the entrance to evilmike_geh.
+NAME:    pf_vacation_house_of_asmodeus
+TAGS:    transparent uniq_hell_entry_geh
+WEIGHT:  4
+TILE:    c = dngn_stone_wall_red
+COLOUR:  c = red
+FTILE:  'O = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+       @
+  ccccc'ccccc
+ cc'''c'c'''cc
+ c'''''''''''c
+ c''vv'''vv''c
+ c''vv'''vv''c
+ cc'''''''''cc
+@''''''O''''''@
+ cc'''''''''cc
+ c''vv'''vv''c
+ c''vv'''vv''c
+ c'''''''''''c
+ cc'''c'c'''cc
+  ccccc'ccccc
+       @
+ENDMAP
+
+# Inspired by the end of lightli_geh, sort of.
+# (Low weight because the associated vault is disabled. -- Grunt)
+NAME:   pf_dread_powers_of_hell
+TAGS:   transparent uniq_hell_entry_geh
+WEIGHT: 2
+KMONS:  i = crimson imp ; wand of flame ident:type
+TILE:   c = dngn_stone_wall_red
+COLOUR: c = red
+FTILE:  'iO = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+     ........
+    ..cccccc...
+   ....cci'ccc..
+  ...l..cc'''cc..
+ ...lll..cc'''cc..
+...lllll..cc'''cc..
+..lllllll.'''O''c..
+...lllll..cc'''cc..
+ ...lll..cc'''cc..
+  ...l..cc'''cc..
+   ....cci'ccc..
+    ..cccccc...
+     ........
+ENDMAP
+
 NAME:    hangedman_coc_ice_floe
-TAGS:    transparent no_pool_fixup
+WEIGHT:  7
+TAGS:    transparent no_pool_fixup uniq_hell_entry_coc
 KMONS:   O = blue devil / white imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: ab / ab / ba
@@ -374,8 +456,37 @@ MAP
   ..  ..
 ENDMAP
 
+# A variant on hangedman_coc_ice_floe.
+NAME:   pf_coc_iceberg
+WEIGHT: 7
+TAGS:   transparent no_pool_fixup uniq_hell_entry_coc
+TILE:   x = wall_ice
+COLOUR: x = lightcyan
+FTILE:  'O = floor_frozen
+COLOUR: ' = lightblue
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+   ..  ..
+  .........
+ ...wwwww...
+...wwxxxww...
+...wxxxxxw...
+..wxxx'xxxw..
+..wxx'''xxw..
+..wxx'O'WxW..
+..wxx'''xWw..
+..wxxx'xxxw..
+...wxxxxxw...
+...wwxxxww...
+ ...wwwww...
+  .........
+   ..   ..
+ENDMAP
+
 NAME:    hangedman_tar_grid_catacomb
-TAGS:    transparent
+WEIGHT:  4
+TAGS:    transparent uniq_hell_entry_tar
 KMONS:   O = shadow imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: o@O& / O&o@
@@ -400,27 +511,82 @@ xx....cccc....xx
     x@xxxx@x
 ENDMAP
 
+# Inspired by the loot vaults in tar_minmay_river.
+NAME:   pf_hell_entry_tar_spiral
+TAGS:   transparent no_monster_gen uniq_hell_entry_tar
+WEIGHT: 5
+TILE:   c = wall_cobalt_stone
+COLOUR: . = magenta
+FTILE:  +.O = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+    cccc
+  ccc..ccc
+ cc......cc
+ cc..cccc..c
+ c..cc..cc..
+cc.cc....cc.@
+c..c..cc.+..
+c..c..cc.ccc
+cc.cc......c
+ c..cc+c.O.c
+ cc..c.c..cc
+  cc...cccc
+   ccc....c
+     cccc.c
+         @
+ENDMAP
+
+# Inspired by the sad fish in tar_minmay river. They've never gotten a kill. :(
+# (They probably won't get a kill here, either.)
+NAME:   pf_hell_entry_tar_river
+TAGS:   transparent no_pool_fixup uniq_hell_entry_tar
+WEIGHT: 5
+COLOUR: . = magenta
+FTILE:  .O = floor_infernal_blank
+NSUBST: w = 5=F / *:w
+KMONS:  F = spectral swamp worm
+KFEAT:  EFw = deep_water
+KMASK:  Ww = no_monster_gen
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+      @
+   wwWwwww
+  wwWwwwwww
+ wwwwWwwwwww
+ wwwwwWwwwww
+ wwWww.wwWww
+@WWwW.O.WwWw@
+ wwwww.wwwwW
+ wwwwWwwwwww
+ wwwwwWwwwww
+  wwwwWwwww
+   wwwwWww
+      @
+ENDMAP
+
 ####
 # A couple of Dis-inspired mini-entries; total weight 14.
 NAME: grunt_hell_entry_dis_old
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 4
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 MAP
 ...................
 .vvvv.........vvvv.
 .v%.vvvvvvvvvvv.%v.
-.v.1+$%vvvvv$%+1.v.
+.v..+$%vvvvv$%+..v.
 .vv+vvvv...vvvv+vv.
-..v....+.1.+....v..
+..v....+...+....v..
 ..v+vvvv...vvvv.v..
 ..v....vv+vv.%v.v..
 ..v..vOvv.vv.vv.v..
 ..v....vv.vv....v..
 .vv+v..vv.vvvvv+vv.
-.v.1vvvvv.vvvvv1.v.
+.v..vvvvv.vvvvv..v.
 .v%.vvvvv+vvvvv.%v.
 .vvvv.........vvvv.
 .........@.........
@@ -429,19 +595,18 @@ ENDMAP
 NAME: grunt_hell_entry_dis_mu
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
 ...................
 ..vvvvvvv.vvv......
 ..v$v$v$vvv$vvv....
-.vv+v+v1+.+1vvvvv..
+.vv+v+v.+.+.vvvvv..
 .v....vvv.vvv...vv.
-.v1vvvvv...v.vvv.v.
-.v.+.1.+.1.+.vO+1v.
-.v1vvvvv...v.vvv.v.
+.v.vvvvv...v.vvv.v.
+.v.+...+...+.vO+.v.
+.v.vvvvv...v.vvv.v.
 .v....vvv+vvv...vv.
 .vv+v+vvv.vvvvvvv..
 ..v$v$v.v.vvvvv....
@@ -452,21 +617,20 @@ ENDMAP
 NAME: grunt_hell_entry_dis_grunt
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
 ...................
 ...................
 ...vvvvvvvvv...vvv.
-...v.+1v$v1vv.vv1v.
-...v1v+v+vv.vvv.vv.
-.v+v.v.v1vvv...vv..
-.+1+.v1+.+1+.%.v...
-.v+v.v.v1vvv...vv..
-...v1v+v+vv.vvv.vv.
-...v.+1v$vOvv.vv1v.
+...v.+.v$v.vv.vv.v.
+...v.v+v+vv.vvv.vv.
+.v+v.v.v.vvv...vv..
+.+.+.v.+.+.+.%.v...
+.v+v.v.v.vvv...vv..
+...v.v+v+vv.vvv.vv.
+...v.+.v$vOvv.vv.v.
 ...vvvvvvvvv...vvv.
 ...................
 .........@.........

@@ -73,7 +73,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_swamp_entry_swarm
-TAGS:   swamp_entry mini_float
+TAGS:   swamp_entry
 WEIGHT: 5
 SUBST:  W = 1WWWWW, t = ttt., T = tttW, W = WWWwww., ' = W
 NSUBST: 1 = 2:1 / 1WWWWW
@@ -173,7 +173,7 @@ MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
 NSUBST: A = ttttw / w, B = ttttw / w, C = ttttw / w, D = ttttw / w
 NSUBST: E = T / ., F = T / ., G = T / ., H = T / ., I = T / ., J = T / .
 SUBST: T = tt.
-KMONS: 1 = swamp worm / big fish
+KMONS: 1 = swamp worm
 KMONS: 2 = electric eel
 KFEAT: 12 = w
 MAP
@@ -196,7 +196,7 @@ default-depth: Swamp
 ###############################################################################
 # A series of pools by Jude.
 NAME:   swamp_pool1
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 1000
 {{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
 SUBST:  "=ttw
@@ -211,7 +211,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool2
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  "=ttttw
 MAP
@@ -225,7 +225,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool3
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
 MAP
@@ -238,7 +238,7 @@ twwww"t
 ENDMAP
 
 NAME:   swamp_pool4
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  "=ttttw
 MAP
@@ -252,7 +252,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool5
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
 WEIGHT: 500
@@ -323,7 +323,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_treefoil
-TAGS: transparent mini_float extra decor
+TAGS: transparent extra decor
 SUBST: T = t.
 KFEAT: . = . w:30 / W
 MAP
@@ -913,8 +913,8 @@ NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    bog body
-MONS:    plague shambler / necrophage w:4
-MONS:    ghoul w:19 / plague shambler w:1
+MONS:    necrophage
+MONS:    ghoul
 SUBST:   jl = t
 KFEAT:   % = shallow_water / .
 SHUFFLE: jJ / lL, })
@@ -939,8 +939,8 @@ NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = slime creature
-KMONS:   2 = slime creature / brown ooze
-KMONS:   3 = brown ooze
+KMONS:   2 = slime creature / brown ugly thing
+KMONS:   3 = jelly
 KFEAT:   12 = shallow_water
 SHUFFLE: })
 SUBST:   T = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
@@ -1193,8 +1193,8 @@ MONS: hydra
 NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
-KITEM: K = potion of confusion / potion of paralysis / potion of degeneration \
-           / potion of decay / potion of mutation
+KITEM: K = potion of confusion / potion of degeneration / \
+           potion of decay / potion of mutation
 KPROP: w = no_rtele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
@@ -1285,10 +1285,10 @@ NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
 # Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
 MONS: necromancer actual_spells spells:bolt_of_cold;agony;.;animate_dead;simulacrum;.
-KMONS: z = big fish zombie / swamp drake zombie / swamp worm zombie / \
+KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / red wasp zombie / alligator zombie / \
-        crocodile zombie / hydra zombie / giant leech zombie / hydra zombie / \
+        hydra zombie / giant leech zombie / hydra zombie / \
         alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
         swamp dragon simulacrum w:1 / hydra simulacrum w:1
 KFEAT: z = shallow_water
@@ -1321,7 +1321,7 @@ tWTTWWTTWt
 ENDMAP
 
 NAME: nicolae_swamp_snake_nest
-TAGS: transparent no_monster_gen mini_float
+TAGS: transparent no_monster_gen
 KMONS: 1 = anaconda
 KMONS: 2 = adder / ball python / water moccasin / black mamba
 SUBST: T = ..ttw
@@ -1382,7 +1382,7 @@ tttt@@tttt
 ENDMAP
 
 NAME: nicolae_swamp_dragon_and_kin
-TAGS: patrolling transparent mini_float
+TAGS: patrolling transparent
 SUBST: T = t., B = tt_
 NSUBST: d = D / d
 KMONS: D = swamp dragon
@@ -1407,7 +1407,7 @@ BBttTTTTTTTtttBB
 ENDMAP
 
 NAME: nicolae_swamp_hydra_murder_den
-TAGS: no_monster_gen mini_float
+TAGS: no_monster_gen
 : local heads = crawl.roll_dice(2, 3) + 7
 KPROP: ' = no_rtele_into
 SUBST: Z = T_
@@ -1559,7 +1559,7 @@ txx+xxt
 ENDMAP
 
 NAME:  cheibrodos_swamp_minitomb
-TAGS:  no_item_gen no_monster_gen mini_float
+TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
 KMONS: - = bog body w:20 / troll zombie / troll skeleton / shadow w:5
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
@@ -1598,7 +1598,7 @@ SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
 KMONS: SGHI = spriggan / nothing
 KMONS: F = spriggan druid
-KITEM: f = potion of porridge / bread ration / apple / banana
+KITEM: f = potion of porridge / bread ration / fruit
 MAP
        ttttt
   ttttttgggt
@@ -1622,7 +1622,7 @@ SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
 NSUBST: ' = 1:^ / 1:o / *:'
 SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
        _ = .._, . = ......W
-KFEAT: ^ = teleport trap
+KFEAT: ^ = permanent teleport trap
 KMONS: o = oklob plant
 CLEAR: _
 MAP
@@ -1667,6 +1667,35 @@ tttwWttttttt.www.tttttttt  tc2.+.cccttt
   .Wtt       tttt          tcccc3+%ctt
   @.                         ttttccct
                                  ttt
+ENDMAP
+
+NAME: cheibrodos_swamp_tower_of_moss
+DEPTH: Swamp, !Swamp:$
+TAGS: ruin
+ORIENT: float
+MONS: toadstool
+KMONS: 2 = thorn hunter
+KFEAT: 2 = W
+KFEAT: - = .
+SUBST: " = ---Wtt1, t = ttt-, - = -:50 .
+TILE: x = wall_brick_vines
+FTILE: -Wt1 = floor_sandstone
+MAP
+   .........
+  ..xxxxxxx..
+ ..xx"-"--xx..
+..xx"-"""-"xx..
+.xx""-t"t-""xx.
+.x"--W"W"W--"x.
+.x-"t"WWW"t"--@
+.x"""WW2WW"""x.
+.x-"t"WWW"t"-x.
+.x"--W"W"W--"x.
+.xx""-t"t-""xx.
+..xx"-"""-"xx..
+ ..xx"-"-"xx..
+  ..xxxxxxx..
+   .........
 ENDMAP
 
 ###############################################################################

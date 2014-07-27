@@ -17,7 +17,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "monster.h"
 #include "player.h"
 #include "random.h"
@@ -26,10 +26,10 @@
 #include "traps.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
-                             bool tele) :
-                             ::attack(attk, defn), range_used(0),
-                             reflected(false), projectile(proj), teleport(tele),
-                             orig_to_hit(0)
+                             bool tele, actor *blame)
+    : ::attack(attk, defn, blame), range_used(0), reflected(false),
+      projectile(proj), teleport(tele), orig_to_hit(0),
+      should_alert_defender(true)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -43,7 +43,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if(is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
+    else if (is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
     {
         aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
@@ -69,8 +69,8 @@ int ranged_attack::calc_to_hit(bool random)
     {
         orig_to_hit +=
             (attacker->is_player())
-            ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
-            : 3 * attacker->as_monster()->hit_dice;
+            ? maybe_random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4, random)
+            : 3 * attacker->as_monster()->get_hit_dice();
     }
 
     int hit = orig_to_hit;
@@ -139,7 +139,8 @@ bool ranged_attack::attack()
 
     // TODO: adjust_noise
 
-    alert_defender();
+    if (should_alert_defender)
+        alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -240,7 +241,7 @@ bool ranged_attack::handle_phase_dodged()
                  defender->conj_verb("phase").c_str(),
                  projectile->name(DESC_THE).c_str(),
                  defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation().c_str());
+                 attack_strength_punctuation(damage_done).c_str());
         }
 
         return true;
@@ -252,7 +253,7 @@ bool ranged_attack::handle_phase_dodged()
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
              defender_name().c_str(),
-             attack_strength_punctuation().c_str());
+             attack_strength_punctuation(damage_done).c_str());
     }
 
     return true;
@@ -315,7 +316,8 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster())
+    if (attacker->is_player() && defender->is_monster()
+        && should_alert_defender)
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def(), !stab_attempt);
@@ -339,7 +341,10 @@ int ranged_attack::weapon_damage()
     if (projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) == SPMSL_STEEL)
     {
-        dam = div_rand_round(dam * 13, 10);
+        if (dam)
+            dam = div_rand_round(dam * 13, 10);
+        else
+            dam += 2;
     }
     if (using_weapon())
         dam += property(*weapon, PWPN_DAMAGE);
@@ -358,8 +363,10 @@ int ranged_attack::calc_base_unarmed_damage()
     if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
         return 0;
 
-    // Darts and stones get half bonus; everything else gets full bonus.
-    return div_rand_round(attack::calc_base_unarmed_damage()
+    int damage = you.skill_rdiv(wpn_skill);
+
+    // Stones get half bonus; everything else gets full bonus.
+    return div_rand_round(damage
                           * min(4, property(*projectile, PWPN_DAMAGE)), 4);
 }
 
@@ -367,7 +374,7 @@ int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
     const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_experience_level() * hd_mult / 6;
+    return 18 + attacker->get_hit_dice() * hd_mult / 6;
 }
 
 int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
@@ -376,7 +383,7 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
     {
-        const int bonus = attacker->get_experience_level() * 4 / 3;
+        const int bonus = attacker->get_hit_dice() * 4 / 3;
         damage += random2avg(bonus, 2);
     }
     half_ac = false;
@@ -386,9 +393,9 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
 bool ranged_attack::attack_ignores_shield(bool verbose)
 {
     if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
-        && (weapon && get_weapon_brand(*weapon) == SPWPN_PENETRATION
-            || projectile->base_type == OBJ_MISSILES
-               && get_ammo_brand(*projectile) == SPMSL_PENETRATION))
+            && projectile->base_type == OBJ_MISSILES
+            && get_ammo_brand(*projectile) == SPMSL_PENETRATION
+        || using_weapon() && get_weapon_brand(*weapon) == SPWPN_PENETRATION)
     {
         if (verbose)
         {
@@ -420,8 +427,6 @@ bool ranged_attack::apply_damage_brand(const char *what)
             || brand == SPWPN_HOLY_WRATH
             || brand == SPWPN_ELECTROCUTION
             || brand == SPWPN_VENOM
-            || brand == SPWPN_FLAME
-            || brand == SPWPN_FROST
             || brand == SPWPN_CHAOS))
     {
         return false;
@@ -560,8 +565,8 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     if (attacker->is_monster())
     {
-        int chance = 85 - ((defender->get_experience_level()
-                            - attacker->get_experience_level()) * 5 / 2);
+        int chance = 85 - ((defender->get_hit_dice()
+                            - attacker->get_hit_dice()) * 5 / 2);
         chance += enchantment * 4;
         chance = min(95, chance);
 
@@ -577,15 +582,15 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
-    if (defender->get_experience_level() < 15 && random2(100) <= 2)
+    if (defender->get_hit_dice() < 15 && random2(100) <= 2)
         return true;
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
     dprf("Brand rolled %d against defender HD: %d.",
-         resist_roll, defender->get_experience_level());
+         resist_roll, defender->get_hit_dice());
 
-    if (resist_roll < defender->get_experience_level())
+    if (resist_roll < defender->get_hit_dice())
     {
         if (needs_message)
         {
@@ -610,7 +615,7 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
         return 2;
 
     const int base_power = (attacker->is_monster())
-                           ? attacker->get_experience_level()
+                           ? attacker->get_hit_dice()
                            : attacker->skill_rdiv(SK_THROWING);
 
     const int plus = using_weapon() ? weapon->plus : 0;
@@ -654,8 +659,7 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_FLAME:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FROST
-                || get_weapon_brand(*weapon) == SPWPN_FREEZING))
+            && get_weapon_brand(*weapon) == SPWPN_FREEZING)
         {
             break;
         }
@@ -663,18 +667,17 @@ bool ranged_attack::apply_missile_brand()
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
-        attacker->god_conduct(DID_FIRE, 1);
+        attacker->god_conduct(DID_FIRE, 2);
         break;
     case SPMSL_FROST:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FLAME
-                || get_weapon_brand(*weapon) == SPWPN_FLAMING))
+            && get_weapon_brand(*weapon) == SPWPN_FLAMING)
         {
             break;
         }
         calc_elemental_brand_damage(BEAM_COLD, defender->res_fire(), "freeze",
                                     projectile->name(DESC_THE).c_str());
-        defender->expose_to_element(BEAM_COLD, 2, false);
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
     case SPMSL_POISONED:
         if (stab_attempt
@@ -767,6 +770,7 @@ bool ranged_attack::apply_missile_brand()
         if (!blowgun_check(brand))
             break;
         defender->put_to_sleep(attacker, damage_done);
+        should_alert_defender = false;
         break;
     case SPMSL_CONFUSION:
         if (!blowgun_check(brand))
@@ -777,7 +781,13 @@ bool ranged_attack::apply_missile_brand()
         if (!blowgun_check(brand))
             break;
         if (defender->is_monster())
-            defender->as_monster()->go_frenzy(attacker);
+        {
+            monster* mon = defender->as_monster();
+            // Wake up the monster so that it can frenzy.
+            if (mon->behaviour == BEH_SLEEP)
+                mon->behaviour = BEH_WANDER;
+            mon->go_frenzy(attacker);
+        }
         else
             defender->go_berserk(false);
         break;
@@ -854,13 +864,17 @@ void ranged_attack::set_attack_verb()
 
 void ranged_attack::announce_hit()
 {
+    if (!needs_message)
+        return;
+
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
-         defender_name().c_str(),
+         // Not defender_name because reflexive is bad here.
+         def_name(DESC_THE).c_str(),
          damage_done > 0 && stab_attempt && stab_bonus > 0
              ? " in a vulnerable spot"
              : "",
          debug_damage_number().c_str(),
-         attack_strength_punctuation().c_str());
+         attack_strength_punctuation(damage_done).c_str());
 }

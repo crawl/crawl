@@ -774,6 +774,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
         switch (job)
         {
@@ -789,6 +790,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+#endif
     case SP_GARGOYLE:
         switch (job)
         {
@@ -908,7 +910,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_HUMAN:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_MUMMY:
         case SP_CENTAUR:
         case SP_NAGA:
@@ -933,7 +937,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         {
         case SP_HUMAN:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -962,7 +968,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         {
         case SP_HUMAN:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -978,6 +986,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_HALFLING:
             return CC_UNRESTRICTED;
 
         default:
@@ -1010,7 +1019,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_RESTRICTED;
         }
 
-    case WPN_CROSSBOW:
+    case WPN_HAND_CROSSBOW:
         switch (ng.species)
         {
         case SP_DEEP_ELF:
@@ -1019,7 +1028,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MERFOLK:
         case SP_OGRE:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_SPRIGGAN:
         case SP_TROLL:
             return CC_RESTRICTED;
@@ -1038,7 +1049,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_OGRE:
         case SP_TROLL:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_FORMICID:
         case SP_SPRIGGAN:
             return CC_RESTRICTED;
@@ -1048,7 +1061,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_UNRESTRICTED;
         }
 
-    case WPN_SLING:
+    case WPN_HUNTING_SLING:
         switch (ng.species)
         {
         case SP_DEEP_ELF:
@@ -1057,7 +1070,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MERFOLK:
         case SP_OGRE:
         case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
+#endif
         case SP_TROLL:
         case SP_GARGOYLE:
             return CC_RESTRICTED;

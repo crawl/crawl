@@ -13,8 +13,6 @@ struct item_def;
 
 void banished(const string &who = "");
 
-bool forget_spell(void);
-
 int mushroom_prob(item_def & corpse);
 
 bool mushroom_spawn_message(int seen_targets, int seen_corpses);
@@ -44,7 +42,7 @@ int recharge_wand(bool known = true, string *pre_msg = NULL);
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 
-void yell(bool force = false);
+void yell(const actor* mon = NULL);
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
                bool silent = false, actor *attacker = NULL);
@@ -67,6 +65,7 @@ void handle_time();
 void recharge_rods(int aut, bool floor_only);
 void recharge_xp_evokers(int exp);
 
+void corrode_actor(actor *act);
 void slime_wall_damage(actor* act, int delay);
 
 #endif

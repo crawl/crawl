@@ -29,7 +29,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int hit_dice;
     int ac;
     int ev;
     int speed;
@@ -82,6 +81,8 @@ public:
     uint32_t get_client_id() const;
     void reset_client_id();
     void ensure_has_client_id();
+
+    void set_hit_dice(int new_hd);
 
     mon_attitude_type temp_attitude() const;
 
@@ -182,6 +183,7 @@ public:
     bool is_patrolling() const;
     bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
+    bool is_trap_safe(const coord_def& where, bool just_check = false) const;
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
     bool find_home_near_player();
@@ -205,6 +207,7 @@ public:
 
     // actor interface
     int mindex() const;
+    int       get_hit_dice() const;
     int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;
@@ -224,10 +227,10 @@ public:
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const;
     int         body_weight(bool base = false) const;
-    int         total_weight() const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
-    random_var  attack_delay(item_def *weapon, item_def *projectile = NULL,
+    random_var  attack_delay(const item_def *weapon,
+                             const item_def *projectile = NULL,
                              bool random = true, bool scaled = true) const;
     int         has_claws(bool allow_tran = true) const;
 
@@ -240,6 +243,7 @@ public:
     item_def *mslot_item(mon_inv_type sl) const;
     item_def *weapon(int which_attack = -1) const;
     item_def *launcher();
+    item_def *melee_weapon() const;
     item_def *missiles();
     item_def *shield() const;
 
@@ -252,7 +256,8 @@ public:
                         bool ignore_transform = false) const;
     bool      could_wield(const item_def &item,
                           bool ignore_brand = false,
-                          bool ignore_transform = false) const;
+                          bool ignore_transform = false,
+                          bool quiet = true) const;
 
     int       missile_count();
     void      wield_melee_weapon(int near = -1);
@@ -266,18 +271,17 @@ public:
     bool      pickup_gold(item_def &item, int near);
     bool      pickup_launcher(item_def &launcher, int near, bool force = false);
     bool      pickup_melee_weapon(item_def &item, int near);
-    bool      pickup_missile(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_jewellery(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
-    bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
     bool      drop_item(int eslot, int near);
     void      equip(item_def &item, int slot, int near = -1);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
     void      steal_item_from_player();
+    item_def* take_item(int steal_what, int mslot);
 
     bool      can_use_missile(const item_def &item) const;
 
@@ -300,13 +304,14 @@ public:
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
-    int  skill(skill_type skill, int scale = 1, bool real = false) const;
+    int  skill(skill_type skill, int scale = 1,
+               bool real = false, bool drained = true) const;
 
     void attacking(actor *other, bool ranged);
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
     bool can_jump() const;
-    void go_berserk(bool intentional, bool potion = false);
+    bool go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
@@ -320,19 +325,19 @@ public:
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
-                           bool damage_inventory = true,
                            bool slow_cold_blood = true);
 
     monster_type mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
+    bool holy_wrath_susceptible() const;
     bool is_holy(bool check_spells = true) const;
     bool is_unholy(bool check_spells = true) const;
     bool is_evil(bool check_spells = true) const;
-    bool is_unclean(bool check_spells = true) const;
-    bool is_known_chaotic() const;
-    bool is_chaotic() const;
+    int how_unclean(bool check_god = true) const;
+    int known_chaos(bool check_spells_god = false) const;
+    int how_chaotic(bool check_spells_god = false) const;
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
@@ -382,17 +387,21 @@ public:
     bool confused_by_you() const;
     bool caught() const;
     bool asleep() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
-    bool umbra(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool self_halo = true) const;
+    bool umbra() const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2() const;
     int umbra_radius2() const;
+#if TAG_MAJOR_VERSION == 34
     int heat_radius2() const;
+#endif
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
     bool liquefied_ground() const;
+    int natural_regen_rate() const;
+    int off_level_regen_rate() const;
 
     bool friendly() const;
     bool neutral() const;
@@ -432,6 +441,7 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    void splash_with_acid(const actor* evildoer);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true,
@@ -441,10 +451,10 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
+    bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp = -1);
 
-    void hibernate(int power = 0);
-    void put_to_sleep(actor *attacker, int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false);
     void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
@@ -453,6 +463,7 @@ public:
     int stat_maxhp() const { return max_hit_points; }
     int stealth() const;
 
+    bool    shielded() const;
     int     shield_bonus() const;
     int     shield_block_penalty() const;
     void    shield_block_succeeded(actor *foe);
@@ -487,6 +498,7 @@ public:
     void bind_spell_flags();
     void calc_speed();
     bool attempt_escape(int attempts = 1);
+    void struggle_against_net();
     bool has_usable_tentacle() const;
 
     bool check_clarity(bool silent) const;
@@ -499,6 +511,7 @@ public:
     bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
 
+    bool is_illusion() const;
     bool is_divine_companion() const;
     bool is_projectile() const;
     // Jumping spiders (jump instead of blink)
@@ -508,6 +521,11 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void align_avatars(bool force_friendly = false);
     void remove_avatars();
+
+    bool clear_far_engulf();
+
+private:
+    int hit_dice;
 
 private:
     void init_with(const monster& mons);

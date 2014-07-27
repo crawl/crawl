@@ -178,9 +178,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_BOWS,            2),
     APT(SP_HALFLING,        SK_CROSSBOWS,      -1),
     APT(SP_HALFLING,        SK_THROWING,        3),
-    APT(SP_HALFLING,        SK_ARMOUR,         -2),
-    APT(SP_HALFLING,        SK_DODGING,         2),
-    APT(SP_HALFLING,        SK_STEALTH,         4),
+    APT(SP_HALFLING,        SK_ARMOUR,          1),
+    APT(SP_HALFLING,        SK_DODGING,         1),
+    APT(SP_HALFLING,        SK_STEALTH,         1),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_HALFLING,        SK_STABBING,      -99),
 #endif
@@ -203,7 +203,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_EARTH_MAGIC,     0),
     APT(SP_HALFLING,        SK_POISON_MAGIC,   -1),
     APT(SP_HALFLING,        SK_INVOCATIONS,     1),
-    APT(SP_HALFLING,        SK_EVOCATIONS,      2),
+    APT(SP_HALFLING,        SK_EVOCATIONS,      1),
 
     // SP_HILL_ORC
     APT(SP_HILL_ORC,        SK_FIGHTING,        2),
@@ -329,7 +329,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_NAGA,            SK_AXES,            0),
     APT(SP_NAGA,            SK_MACES_FLAILS,    0),
     APT(SP_NAGA,            SK_POLEARMS,        0),
-    APT(SP_NAGA,            SK_STAVES,         -1),
+    APT(SP_NAGA,            SK_STAVES,          0),
     APT(SP_NAGA,            SK_SLINGS,         -1),
     APT(SP_NAGA,            SK_BOWS,           -1),
     APT(SP_NAGA,            SK_CROSSBOWS,      -1),
@@ -990,9 +990,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GARGOYLE,         SK_SHORT_BLADES,   -1),
     APT(SP_GARGOYLE,         SK_LONG_BLADES,    -1),
     APT(SP_GARGOYLE,         SK_AXES,           -1),
-    APT(SP_GARGOYLE,         SK_MACES_FLAILS,    1),
+    APT(SP_GARGOYLE,         SK_MACES_FLAILS,    0),
     APT(SP_GARGOYLE,         SK_POLEARMS,       -1),
-    APT(SP_GARGOYLE,         SK_STAVES,          1),
+    APT(SP_GARGOYLE,         SK_STAVES,          0),
     APT(SP_GARGOYLE,         SK_SLINGS,         -1),
     APT(SP_GARGOYLE,         SK_BOWS,            0),
     APT(SP_GARGOYLE,         SK_CROSSBOWS,       0),
@@ -1007,7 +1007,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 #if TAG_MAJOR_VERSION == 34
     APT(SP_GARGOYLE,         SK_TRAPS,         -99),
 #endif
-    APT(SP_GARGOYLE,         SK_UNARMED_COMBAT,  1),
+    APT(SP_GARGOYLE,         SK_UNARMED_COMBAT,  0),
     APT(SP_GARGOYLE,         SK_SPELLCASTING,   -1),
     APT(SP_GARGOYLE,         SK_CONJURATIONS,    1),
     APT(SP_GARGOYLE,         SK_HEXES,          -1),
@@ -1290,9 +1290,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_TRANSLOCATIONS,  4),
     APT(SP_FELID,           SK_TRANSMUTATIONS,  1),
     APT(SP_FELID,           SK_FIRE_MAGIC,     -1),
-    APT(SP_FELID,           SK_ICE_MAGIC,      -2),
+    APT(SP_FELID,           SK_ICE_MAGIC,      -1),
     APT(SP_FELID,           SK_AIR_MAGIC,      -1),
-    APT(SP_FELID,           SK_EARTH_MAGIC,    -2),
+    APT(SP_FELID,           SK_EARTH_MAGIC,    -1),
     APT(SP_FELID,           SK_POISON_MAGIC,   -1),
     APT(SP_FELID,           SK_INVOCATIONS,     0),
     APT(SP_FELID,           SK_EVOCATIONS,      2),
@@ -1370,7 +1370,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_POISON_MAGIC,   -1),
     APT(SP_DJINNI,          SK_INVOCATIONS,    -1),
     APT(SP_DJINNI,          SK_EVOCATIONS,      2),
-#endif
 
     // SP_LAVA_ORC
     APT(SP_LAVA_ORC,        SK_FIGHTING,        2),
@@ -1387,13 +1386,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_ARMOUR,          1),
     APT(SP_LAVA_ORC,        SK_DODGING,        -2),
     APT(SP_LAVA_ORC,        SK_STEALTH,        -1),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_STABBING,      -99),
-#endif
     APT(SP_LAVA_ORC,        SK_SHIELDS,         1),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_TRAPS,         -99),
-#endif
     APT(SP_LAVA_ORC,        SK_UNARMED_COMBAT,  1),
     APT(SP_LAVA_ORC,        SK_SPELLCASTING,   -3),
     APT(SP_LAVA_ORC,        SK_CONJURATIONS,    0),
@@ -1410,6 +1405,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_POISON_MAGIC,   -1),
     APT(SP_LAVA_ORC,        SK_INVOCATIONS,     3),
     APT(SP_LAVA_ORC,        SK_EVOCATIONS,      1),
+#endif
 
     // SP_FORMICID
     APT(SP_FORMICID,        SK_FIGHTING,        1),

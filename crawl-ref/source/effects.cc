@@ -23,7 +23,9 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -57,7 +59,6 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-project.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -66,6 +67,7 @@
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
@@ -83,8 +85,6 @@
 #include "travel.h"
 #include "viewchar.h"
 #include "xom.h"
-
-static void _update_corpses(int elapsedTime);
 
 static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
 {
@@ -430,37 +430,6 @@ void banished(const string &who)
     }
 }
 
-bool forget_spell(void)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!you.spell_no)
-        return false;
-
-    // find a random spell to forget:
-    int slot = -1;
-    int num  = 0;
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        if (you.spells[i] != SPELL_NO_SPELL)
-        {
-            num++;
-            if (one_chance_in(num))
-                slot = i;
-        }
-    }
-
-    if (slot == -1)              // should never happen though
-        return false;
-
-    mprf("Your knowledge of %s becomes hazy all of a sudden, and you forget "
-         "the spell!", spell_title(you.spells[slot]));
-
-    del_spell_from_memory_by_slot(slot);
-    return true;
-}
-
 void direct_effect(monster* source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
@@ -504,7 +473,7 @@ void direct_effect(monster* source, spell_type spell,
         pbolt.flavour    = BEAM_AIR;
         pbolt.aux_source = "by the air";
 
-        damage_taken     = 10 + 2 * source->hit_dice;
+        damage_taken     = 10 + 2 * source->get_hit_dice();
 
         damage_taken = defender->beam_resists(pbolt, damage_taken, false);
 
@@ -528,7 +497,7 @@ void direct_effect(monster* source, spell_type spell,
             pbolt.flavour    = BEAM_WATER;
             pbolt.aux_source = "by the raging water";
 
-            damage_taken     = roll_dice(3, 7 + source->hit_dice);
+            damage_taken     = roll_dice(3, 7 + source->get_hit_dice());
 
             damage_taken = defender->beam_resists(pbolt, damage_taken, false);
             damage_taken = defender->apply_ac(damage_taken);
@@ -819,12 +788,8 @@ static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
            && mon->type != MONS_GIANT_SPORE
-           && mon->type != MONS_BALL_LIGHTNING
-           && mon->type != MONS_BATTLESPHERE
-           && mon->type != MONS_SPECTRAL_WEAPON
-           && mon->type != MONS_GRAND_AVATAR
            && !mon->berserk_or_insane()
-           && !mon->is_projectile()
+           && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);
 }
 
@@ -873,7 +838,7 @@ static void _set_allies_withdraw(const coord_def &target)
         if (mons_class_flag(mi->type, M_STATIONARY))
             continue;
         mi->behaviour = BEH_WITHDRAW;
-        mi->target = target;
+        mi->target = clamp_in_bounds(target);
         mi->patrol_point = rally_point;
         mi->foe = MHITNOT;
 
@@ -884,15 +849,9 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
-void yell(bool force)
+void yell(const actor* mon)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        mpr("You cannot shout while unable to breathe!");
-        return;
-    }
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
@@ -905,9 +864,9 @@ void yell(bool force)
 
     if (you.cannot_speak())
     {
-        if (force)
+        if (mon)
         {
-            if (you.paralysed())
+            if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
@@ -926,12 +885,12 @@ void yell(bool force)
         return;
     }
 
-    if (force)
+    if (mon)
     {
-        if (you.duration[DUR_RECITE])
-            mpr("You feel yourself shouting your recitation.");
-        else
-            mprf("A %s rips itself from your throat!", shout_verb.c_str());
+        mprf("You %s%s at %s!",
+             shout_verb.c_str(),
+             you.duration[DUR_RECITE] ? " your recitation" : "",
+             mon->name(DESC_THE).c_str());
         noisy(noise_level, you.pos());
         return;
     }
@@ -959,7 +918,7 @@ void yell(bool force)
     mpr(" Anything else - Stay silent.");
 
     int keyn = get_ch();
-    mesclr();
+    clear_messages();
 
     switch (keyn)
     {
@@ -1755,236 +1714,6 @@ void change_labyrinth(bool msg)
     }
 }
 
-static bool _food_item_needs_time_check(item_def &item)
-{
-    if (!item.defined())
-        return false;
-
-    if (item.base_type != OBJ_CORPSES
-        && item.base_type != OBJ_FOOD
-        && item.base_type != OBJ_POTIONS)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_CORPSES
-        && item.sub_type > CORPSE_SKELETON)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-        return false;
-
-    if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
-        return false;
-
-    // The object specifically asks not to be checked:
-    if (item.props.exists(CORPSE_NEVER_DECAYS))
-        return false;
-
-    return true;
-}
-
-#define ROTTING_WARNED_KEY "rotting_warned"
-
-static void _rot_inventory_food(int time_delta)
-{
-    // Update all of the corpses and food chunks in the player's
-    // inventory. {should be moved elsewhere - dlb}
-    bool burden_changed_by_rot = false;
-    vector<char> rotten_items;
-
-    int num_chunks         = 0;
-    int num_chunks_gone    = 0;
-    int num_bones          = 0;
-    int num_bones_gone     = 0;
-    int num_corpses        = 0;
-    int num_corpses_rotted = 0;
-    int num_corpses_gone   = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (item.quantity < 1)
-            continue;
-
-        if (!_food_item_needs_time_check(item))
-            continue;
-
-        if (item.base_type == OBJ_POTIONS)
-        {
-            // Also handles messaging.
-            if (maybe_coagulate_blood_potions_inv(item))
-                burden_changed_by_rot = true;
-            continue;
-        }
-
-        if (item.base_type == OBJ_FOOD)
-            num_chunks++;
-        else if (item.sub_type == CORPSE_SKELETON)
-            num_bones++;
-        else
-            num_corpses++;
-
-        // Food item timed out -> make it disappear.
-        if ((time_delta / 20) >= item.special)
-        {
-            if (item.base_type == OBJ_FOOD)
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                // In case time_delta >= 220
-                if (!item.props.exists(ROTTING_WARNED_KEY))
-                    num_chunks_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-
-                continue;
-            }
-
-            // The item is of type carrion.
-            if (item.sub_type == CORPSE_SKELETON
-                || !mons_skeleton(item.mon_type))
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                if (item.sub_type == CORPSE_SKELETON)
-                    num_bones_gone++;
-                else
-                    num_corpses_gone++;
-
-                item_was_destroyed(item);
-                destroy_item(item);
-                burden_changed_by_rot = true;
-                continue;
-            }
-
-            turn_corpse_into_skeleton(item);
-            if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-            burden_changed_by_rot = true;
-
-            num_corpses_rotted++;
-            continue;
-        }
-
-        // If it hasn't disappeared, reduce the rotting timer.
-        item.special -= (time_delta / 20);
-
-        if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
-        {
-            rotten_items.push_back(index_to_letter(i));
-            if (you.equip[EQ_WEAPON] == i)
-                you.wield_change = true;
-        }
-    }
-
-    //mv: messages when chunks/corpses become rotten
-    if (!rotten_items.empty())
-    {
-        string msg = "";
-
-        // Races that can't smell don't care, and trolls are stupid and
-        // don't care.
-        if (you.can_smell() && you.species != SP_TROLL)
-        {
-            int temp_rand = 0; // Grr.
-            int level = player_mutation_level(MUT_SAPROVOROUS);
-            if (!level && you.species == SP_VAMPIRE)
-                level = 1;
-
-            switch (level)
-            {
-            // level 1 and level 2 saprovores, as well as vampires, aren't so touchy
-            case 1:
-            case 2:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "You smell rotting flesh." :
-                      (temp_rand == 6) ? "You smell decay."
-                                       : "There is something rotten in your inventory.";
-                break;
-
-            // level 3 saprovores like it
-            case 3:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                      (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                       : "Wow! There is something tasty in your inventory.";
-                break;
-
-            default:
-                temp_rand = random2(8);
-                msg = (temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                      (temp_rand == 6) ? "You smell decay. Yuck!"
-                                       : "Ugh! There is something really disgusting in your inventory.";
-                break;
-            }
-        }
-        else
-            msg = "Something in your inventory has become rotten.";
-
-        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
-             msg.c_str(),
-             rotten_items.size() > 1 ? "s" : "",
-             comma_separated_line(rotten_items.begin(),
-                                  rotten_items.end()).c_str());
-
-        learned_something_new(HINT_ROTTEN_FOOD);
-    }
-
-    if (burden_changed_by_rot)
-    {
-        if ((num_chunks_gone + num_bones_gone + num_corpses_gone
-             + num_corpses_rotted) > 0)
-        {
-            string msg;
-            if (num_chunks_gone == num_chunks
-                && num_bones_gone == num_bones
-                && (num_corpses_gone + num_corpses_rotted) == num_corpses)
-            {
-                msg = "All of the ";
-            }
-            else
-                msg = "Some of the ";
-
-            vector<string> strs;
-            if (num_chunks_gone > 0)
-                strs.push_back("chunks of flesh");
-            if (num_bones_gone > 0)
-                strs.push_back("skeletons");
-            if ((num_corpses_gone + num_corpses_rotted) > 0)
-                strs.push_back("corpses");
-
-            msg += comma_separated_line(strs.begin(), strs.end());
-            msg += " in your inventory have ";
-
-            if (num_corpses_rotted == 0)
-                msg += "completely ";
-            else if ((num_chunks_gone + num_bones_gone
-                      + num_corpses_gone) == 0)
-            {
-                msg += "partially ";
-            }
-            else
-                msg += "completely or partially ";
-
-            msg += "rotted away.";
-            mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
-        }
-        burden_change();
-    }
-}
-
 static void _handle_magic_contamination()
 {
     int added_contamination = 0;
@@ -2027,7 +1756,58 @@ static void _handle_magic_contamination()
 }
 
 // Bad effects from magic contamination.
-static void _magic_contamination_effects(int time_delta)
+static void _magic_contamination_effects()
+{
+    mprf(MSGCH_WARN, "Your body shudders with the violent release "
+                     "of wild energies!");
+
+    const int contam = you.magic_contamination;
+
+    // For particularly violent releases, make a little boom.
+    if (contam > 10000 && coinflip())
+    {
+        bolt beam;
+
+        beam.flavour      = BEAM_RANDOM;
+        beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
+        beam.target       = you.pos();
+        beam.name         = "magical storm";
+        beam.beam_source  = NON_MONSTER;
+        beam.aux_source   = "a magical explosion";
+        beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
+        beam.ench_power   = div_rand_round(contam, 200);
+        beam.is_explosion = true;
+
+        // Undead enjoy extra contamination explosion damage because
+        // the magical contamination has a harder time dissipating
+        // through non-living flesh. :-)
+        if (you.is_undead)
+            beam.damage.size *= 2;
+
+        beam.explode();
+    }
+
+    // We want to warp the player, not do good stuff!
+    mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+           "mutagenic glow", true,
+           coinflip(),
+           false, false, false, false,
+#if TAG_MAJOR_VERSION == 34
+           you.species == SP_DJINNI
+#else
+           false
+#endif
+           );
+
+    // we're meaner now, what with explosions and whatnot, but
+    // we dial down the contamination a little faster if its actually
+    // mutating you.  -- GDL
+    contaminate_player(-(random2(contam / 4) + 1000));
+}
+// Checks if the player should be hit with magic contaimination effects,
+// then actually does it if they should be.
+static void _handle_magic_contamination(int time_delta)
 {
     UNUSED(time_delta);
 
@@ -2035,59 +1815,15 @@ static void _magic_contamination_effects(int time_delta)
     const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
 
-    if (glow_effect && is_sanctuary(you.pos()))
+    if (glow_effect)
     {
-        mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
-                        "energies until Zin's power calms it.");
-    }
-    else if (glow_effect)
-    {
-        mprf(MSGCH_WARN, "Your body shudders with the violent release "
-                         "of wild energies!");
-
-        // For particularly violent releases, make a little boom.
-        if (you.magic_contamination > 10000 && coinflip())
+        if (is_sanctuary(you.pos()))
         {
-            bolt beam;
-
-            beam.flavour      = BEAM_RANDOM;
-            beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage       = dice_def(3,
-                                 div_rand_round(you.magic_contamination, 2000));
-            beam.target       = you.pos();
-            beam.name         = "magical storm";
-            beam.beam_source  = NON_MONSTER;
-            beam.aux_source   = "a magical explosion";
-            beam.ex_size      = max(1, min(9,
-                               div_rand_round(you.magic_contamination, 15000)));
-            beam.ench_power   = div_rand_round(you.magic_contamination, 200);
-            beam.is_explosion = true;
-
-            // Undead enjoy extra contamination explosion damage because
-            // the magical contamination has a harder time dissipating
-            // through non-living flesh. :-)
-            if (you.is_undead)
-                beam.damage.size *= 2;
-
-            beam.explode();
+            mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
+                            "energies until Zin's power calms it.");
         }
-
-        // We want to warp the player, not do good stuff!
-        mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-               "mutagenic glow", true,
-               coinflip(),
-               false, false, false, false,
-#if TAG_MAJOR_VERSION == 34
-               you.species == SP_DJINNI
-#else
-               false
-#endif
-               );
-
-        // we're meaner now, what with explosions and whatnot, but
-        // we dial down the contamination a little faster if its actually
-        // mutating you.  -- GDL
-        contaminate_player(-(random2(you.magic_contamination / 4) + 1000));
+        else
+            _magic_contamination_effects();
     }
 }
 
@@ -2145,17 +1881,6 @@ static void _deteriorate(int time_delta)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
-    }
-}
-
-static void _scream(int time_delta)
-{
-    UNUSED(time_delta);
-    if (player_mutation_level(MUT_SCREAM)
-        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
-        && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
-    {
-        yell(true);
     }
 }
 
@@ -2275,22 +2000,6 @@ static void _evolve(int time_delta)
         }
 }
 
-static void _bribe_timeout(int time_delta)
-{
-    if (!you_worship(GOD_GOZAG))
-        return;
-
-    int reduction = time_delta / BASELINE_DELAY;
-
-    for (int i = 0; i < NUM_BRANCHES; i++)
-    {
-        if (branch_bribe[i] <= 0)
-            continue;
-
-        gozag_deduct_bribe(static_cast<branch_type>(i), reduction);
-    }
-}
-
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
 {
@@ -2309,20 +2018,24 @@ struct timed_effect
 
 static struct timed_effect timed_effects[] =
 {
-    { TIMER_CORPSES,       _update_corpses,               200,   200, true  },
+    { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
     { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
     { TIMER_STAT_RECOVERY, _recover_stats,                100,   300, false },
-    { TIMER_CONTAM,        _magic_contamination_effects,  200,   600, false },
+    { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
     { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
-    { TIMER_SCREAM,        _scream,                       100,   300, false },
-    { TIMER_FOOD_ROT,      _rot_inventory_food,           100,   300, false },
+#if TAG_MAJOR_VERSION == 34
+    { TIMER_SCREAM, NULL,                                   0,     0, false },
+#endif
+    { TIMER_FOOD_ROT,      rot_inventory_food,           100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
     { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
     { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
-    { TIMER_BRIBE_TIMEOUT, _bribe_timeout,                100,   300, false },
+#if TAG_MAJOR_VERSION == 34
+    { TIMER_BRIBE_TIMEOUT, NULL,                            0,     0, false },
+#endif
 };
 
 // Do various time related actions...
@@ -2358,6 +2071,13 @@ void handle_time()
         if (crawl_state.game_is_arena() && !timed_effects[i].arena)
             continue;
 
+        if (!timed_effects[i].trigger)
+        {
+            if (you.next_timer_effect[i] < INT_MAX)
+                you.next_timer_effect[i] = INT_MAX;
+            continue;
+        }
+
         if (you.elapsed_time >= you.next_timer_effect[i])
         {
             int time_delta = you.elapsed_time - you.last_timer_effect[i];
@@ -2371,8 +2091,33 @@ void handle_time()
     }
 }
 
+/**
+ * Return the number of turns it takes for monsters to forget about the player
+ * 50% of the time.
+ *
+ * @param   The intelligence of the monster.
+ * @return  An average number of turns before the monster forgets.
+ */
+static int _mon_forgetfulness_time(mon_intel_type intelligence)
+{
+    switch (intelligence)
+    {
+        case I_HIGH:
+            return 1000;
+        case I_NORMAL:
+        default:
+            return 500;
+        case I_ANIMAL:
+        case I_REPTILE:
+        case I_INSECT:
+            return 250;
+        case I_PLANT:
+            return 125;
+    }
+}
+
 // Move monsters around to fake them walking around while player was
-// off-level. Also let them go back to sleep eventually.
+// off-level.
 static void _catchup_monster_moves(monster* mon, int turns)
 {
     // Summoned monsters might have disappeared.
@@ -2430,30 +2175,12 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
 
     // After x turns, half of the monsters will have forgotten about the
-    // player, and a quarter has gone to sleep. A given monster has a
-    // 95% chance of forgetting the player after 4*x turns, and going to
-    // sleep after 10*x turns.
-    int x = 0; // Quiet unitialized variable compiler warning.
-    switch (mons_intel(mon))
-    {
-    case I_HIGH:
-        x = 1000;
-        break;
-    case I_NORMAL:
-        x = 500;
-        break;
-    case I_ANIMAL:
-    case I_REPTILE:
-    case I_INSECT:
-        x = 250;
-        break;
-    case I_PLANT:
-        x = 125;
-        break;
-    }
+    // player. A given monster has a 95% chance of forgetting the player after
+    // 4*x turns.
+    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
 
     bool changed = false;
-    for (int i = 0; i < range/x; i++)
+    for (int i = 0; i < range/forgetfulness_time; i++)
     {
         if (mon->behaviour == BEH_SLEEP)
             break;
@@ -2461,14 +2188,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
         if (coinflip())
         {
             changed = true;
-            if (coinflip())
-                mon->behaviour = BEH_SLEEP;
-            else
-            {
-                mon->behaviour = BEH_WANDER;
-                mon->foe = MHITNOT;
-                mon->target = random_in_bounds();
-            }
+
+            mon->behaviour = BEH_WANDER;
+            mon->foe = MHITNOT;
+            mon->target = random_in_bounds();
         }
     }
 
@@ -2515,7 +2238,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         }
         else
         {
-            shift_monster(mon, mon->pos());
+            mon->shift(mon->pos());
             dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
             return;
         }
@@ -2555,8 +2278,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         pos = next;
     }
 
-    if (!shift_monster(mon, pos))
-        shift_monster(mon, mon->pos());
+    if (!mon->shift(pos))
+        mon->shift(mon->pos());
 
     // Submerge monsters that fell asleep, as on placement.
     if (changed && mon->behaviour == BEH_SLEEP
@@ -2592,7 +2315,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    _update_corpses(elapsedTime);
+    rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
@@ -2628,7 +2351,7 @@ void update_level(int elapsedTime)
         // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
         // const bool healthy = (mi->hit_points * 2 > mi->max_hit_points);
 
-        mi->heal(div_rand_round(turns * mons_off_level_regen_rate(*mi), 100));
+        mi->heal(div_rand_round(turns * mi->off_level_regen_rate(), 100));
 
         // Handle nets specially to remove the trapping property of the net.
         if (mi->caught())
@@ -2649,19 +2372,6 @@ void update_level(int elapsedTime)
     for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud(i);
 }
-
-// A comparison struct for use in an stl priority queue.
-template<typename T>
-struct greater_second
-{
-    // The stl priority queue is a max queue and uses < as the default
-    // comparison.  We want a min queue so we have to use a > operation
-    // here.
-    bool operator()(const T & left, const T & right)
-    {
-        return left.second > right.second;
-    }
-};
 
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
@@ -2713,9 +2423,11 @@ int place_ring(vector<coord_def> &ring_points,
         prototype.pos = ring_points.at(i);
 
         if (create_monster(prototype, false))
+        {
             spawned_count++;
             if (you.see_cell(ring_points.at(i)))
                 seen_count++;
+        }
     }
 
     return spawned_count;
@@ -2734,7 +2446,8 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
 
     // Using a priority queue because squares don't make very good circles at
     // larger radii.  We will visit points in order of increasing euclidean
-    // distance from the origin (not path distance).
+    // distance from the origin (not path distance).  We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
     priority_queue<coord_dist, vector<coord_dist>,
                    greater_second<coord_dist> > fringe;
 
@@ -3051,69 +2764,6 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
     return true;
 }
 
-//---------------------------------------------------------------
-//
-// update_corpses
-//
-// Update all of the corpses and food chunks on the floor.
-//
-//---------------------------------------------------------------
-static void _update_corpses(int elapsedTime)
-{
-    if (elapsedTime <= 0)
-        return;
-
-    const int rot_time = elapsedTime / 20;
-
-    for (int c = 0; c < MAX_ITEMS; ++c)
-    {
-        item_def &it = mitm[c];
-
-        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
-        {
-            bool old_aura = it.special > 0;
-            it.special = max(0, it.special - rot_time);
-            if (old_aura && !it.special)
-            {
-                invalidate_agrid(true);
-                you.redraw_armour_class = true;
-                you.redraw_evasion = true;
-            }
-            continue;
-        }
-
-        if (!_food_item_needs_time_check(it))
-            continue;
-
-        if (it.base_type == OBJ_POTIONS)
-        {
-            if (is_shop_item(it))
-                continue;
-            maybe_coagulate_blood_potions_floor(c);
-            continue;
-        }
-
-        if (rot_time >= it.special && !is_being_butchered(it))
-        {
-            if (it.base_type == OBJ_FOOD)
-                destroy_item(c);
-            else
-            {
-                if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton(it.mon_type))
-                {
-                    item_was_destroyed(it);
-                    destroy_item(c);
-                }
-                else
-                    turn_corpse_into_skeleton(it);
-            }
-        }
-        else
-            it.special -= rot_time;
-    }
-}
-
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
     if (rod.base_type != OBJ_RODS || rod.plus >= rod.plus2)
@@ -3165,6 +2815,54 @@ void recharge_rods(int aut, bool level_only)
 
     for (int item = 0; item < MAX_ITEMS; ++item)
         _recharge_rod(mitm[item], aut, false);
+}
+
+/**
+ * Applies a temporary corrosion debuff to an actor.
+ */
+void corrode_actor(actor *act)
+{
+    // Don't corrode spectral weapons.
+    if (act->is_monster()
+        && mons_is_avatar(act->as_monster()->type))
+    {
+        return;
+    }
+
+    // rCorr protects against 50% of corrosion.
+    if (act->res_corr() && coinflip())
+    {
+        dprf("Amulet protects.");
+        return;
+    }
+
+    if (act->is_player())
+    {
+        you.increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
+                              "The acid corrodes your equipment!");
+        xom_is_stimulated(50);
+        you.props["corrosion_amount"].get_int()++;
+        you.redraw_armour_class = true;
+        you.wield_change = true;
+    }
+    else if (act->type == MONS_PLAYER_SHADOW)
+        return; // it's just a temp copy of the item
+    else if (you.see_cell(act->pos()))
+    {
+        if (act->type == MONS_DANCING_WEAPON)
+        {
+            mprf("The acid corrodes %s!",
+                 act->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("The acid corrodes %s equipment!",
+                 apostrophise(act->name(DESC_THE)).c_str());
+        }
+    }
+
+    if (act->is_monster())
+        act->as_monster()->add_ench(mon_enchant(ENCH_CORROSION, 0));
 }
 
 void slime_wall_damage(actor* act, int delay)

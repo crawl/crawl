@@ -218,7 +218,8 @@ static void _shoals_smooth_water()
 static void _shoals_apply_level()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        grd(*ri) = _shoals_feature_at(*ri);
+        if (!map_masked(*ri, MMT_VAULT))
+            grd(*ri) = _shoals_feature_at(*ri);
 }
 
 static void _shoals_postbuild_apply_level()
@@ -526,10 +527,12 @@ static void _shoals_plant_supercluster(coord_def c,
         const coord_def satellite(
             dgn_random_point_from(c, random_range(2, 12), _shoals_margin));
         if (!satellite.origin())
+        {
             _shoals_plant_cluster(satellite, random_range(5, 12, 2),
                                   random_range(2, 7),
                                   favoured_feat,
                                   verboten);
+        }
     }
 }
 
@@ -895,10 +898,16 @@ static void _clear_net_trapping_status(coord_def c)
     }
 }
 
-static bool _shoals_tide_sweep_items_clear(coord_def c)
+/**
+ * Have the shoals tides sometimes move items at a location to a higher spot
+ * with a solid floor.
+ *
+ * @param c The location.
+*/
+static void _shoals_tide_sweep_items_clear(coord_def c)
 {
     if (igrd(c) == NON_ITEM)
-        return true;
+        return;
 
     for (stack_iterator si(c); si; ++si)
     {
@@ -917,17 +926,23 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
         const coord_def target(_shoals_escape_place_from(c, NULL, &item));
         if (!target.origin())
         {
-            if (item_is_stationary(item))
+            if (item_is_stationary_net(item))
                 _clear_net_trapping_status(c);
 
             int id = si.link();
             move_item_to_grid(&id, target);
         }
     }
-
-    return true;
 }
 
+/**
+ * Have the shoals tides sometimes move non-water-capable actors a location to
+ * an adjacent spot.
+ *
+ * @param c The location.
+ * @return  False if there was a drownable actor at the location that couldn't
+ *          be moved, true otherwise.
+*/
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
 {
     actor *victim = actor_at(c);
@@ -968,12 +983,18 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     return true;
 }
 
-// The tide will attempt to push items and non-water-capable monsters to
-// adjacent squares.
+/**
+ * Have the shoals tides sometimes move items and non-water-capable actors a
+ * location to an adjacent spot.
+ *
+ * @param c The location.
+ * @return  False if there was a drownable actor at the location that couldn't
+ *          be moved, true otherwise.
+*/
 static bool _shoals_tide_sweep_clear(coord_def c)
 {
-    return _shoals_tide_sweep_items_clear(c)
-        && _shoals_tide_sweep_actors_clear(c);
+    _shoals_tide_sweep_items_clear(c);
+    return _shoals_tide_sweep_actors_clear(c);
 }
 
 static void _shoals_tide_wash_blood_away_at(coord_def c)
@@ -1290,7 +1311,7 @@ void wizard_mod_tide()
         mpr("");
         const int res =
             cancellable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
-        mesclr(true);
+        clear_messages(true);
         if (key_is_escape(res))
             break;
         if (!res)

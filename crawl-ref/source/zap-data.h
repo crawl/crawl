@@ -22,6 +22,9 @@ struct zap_info
 }
 */
 
+static const zap_info zap_data[] =
+{
+
 {
     ZAP_THROW_FLAME,
     "puff of flame",
@@ -191,6 +194,22 @@ struct zap_info
     BLACK,
     true,
     BEAM_CONFUSION,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
+{
+    ZAP_TUKIMAS_DANCE,
+    "",
+    100,
+    NULL,
+    NULL,
+    BLACK,
+    true,
+    BEAM_TUKIMAS_DANCE,
     NUM_DCHAR_TYPES,
     false,
     false,
@@ -759,24 +778,6 @@ struct zap_info
     4
 },
 
-#if TAG_MAJOR_VERSION == 34
-{                           // ench_power controls radius
-    ZAP_ICE_STORM,
-    "great blast of cold",
-    200,
-    new calcdice_calculator<7, 22, 1, 1>,
-    new tohit_calculator<20, 1, 10>,
-    BLUE,
-    false,
-    BEAM_ICE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    true,
-    9 // XXX: Should a storm be louder?
-},
-#endif
-
 {
     ZAP_CORONA,
     "",
@@ -961,7 +962,7 @@ struct zap_info
     new tohit_calculator<AUTOMATIC_HIT>,
     WHITE,
     false,
-    BEAM_NUKE,
+    BEAM_DEVASTATION,
     NUM_DCHAR_TYPES, // no dchar, to get bolt.glyph == 0,
                      // hence invisible
     true,
@@ -1179,3 +1180,5 @@ struct zap_info
     false,
     0
 },
+
+};

@@ -8,6 +8,11 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "spl-cast.h"
+
+#define BEOGH_WPN_GIFT_KEY "given beogh weapon"
+#define BEOGH_ARM_GIFT_KEY "given beogh armour"
+#define BEOGH_SH_GIFT_KEY "given beogh shield"
 
 struct bolt;
 class stack_iterator;
@@ -39,6 +44,8 @@ void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_water_walk();
+bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
+bool beogh_gift_item();
 
 bool yred_injury_mirror();
 bool yred_can_animate_dead();
@@ -53,16 +60,16 @@ bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt& beam, const monster* victim);
 int fedhas_fungal_bloom();
-bool fedhas_sunlight();
+spret_type fedhas_sunlight(bool fail = false);
 void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int count_corpses_in_los(vector<stack_iterator> *positions);
-int fedhas_check_corpse_spores();
+int fedhas_check_corpse_spores(bool quiet = false);
 int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_check_evolve_flora();
+bool fedhas_check_evolve_flora(bool quiet = false);
 void fedhas_evolve_flora();
 
 void lugonu_bend_space();
@@ -81,21 +88,25 @@ bool dithmenos_shadow_step();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
 void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(coord_def target);
+void dithmenos_shadow_throw(coord_def target, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_porridge_price();
-bool gozag_setup_potion_petition();
+bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
-bool gozag_setup_call_merchant();
+bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();
 int gozag_type_bribable(monster_type type, bool force = false);
 branch_type gozag_bribable_branch(monster_type type);
+bool gozag_branch_bribable(branch_type branch);
+int gozag_branch_bribe_susceptibility(branch_type branch);
 void gozag_deduct_bribe(branch_type br, int amount);
+bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
-bool qazlal_upheaval(coord_def target, bool quiet = false);
+spret_type qazlal_upheaval(coord_def target, bool quiet = false,
+                           bool fail = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
 #endif

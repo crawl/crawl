@@ -34,6 +34,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <cfloat>
 #include "worley.h"  /* Function prototype */
 
 namespace worley
@@ -79,7 +80,7 @@ namespace worley
            first real sample tests. Note we'll be storing and comparing the
            SQUARED distance from the feature points to avoid lots of slow
            sqrt() calls. We'll use sqrt() only on the final answer. */
-        for (i=0; i<max_order; i++) F[i]=1e38;
+        for (i=0; i<max_order; i++) F[i]=DBL_MAX;
 
         /* Make our own local copy, multiplying to make mean(F[0])==1.0  */
         new_at[0]=DENSITY_ADJUSTMENT*at[0];

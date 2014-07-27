@@ -38,7 +38,9 @@ void packed_cell::clear()
     travel_trail     = 0;
     quad_glow        = 0;
     disjunct         = 0;
+#if TAG_MAJOR_VERSION == 34
     heat_aura        = 0;
+#endif
     gold_aura        = 0;
 }
 
@@ -62,7 +64,9 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (travel_trail != other.travel_trail) return false;
     if (quad_glow != other.quad_glow) return false;
     if (disjunct != other.disjunct) return false;
+#if TAG_MAJOR_VERSION == 34
     if (heat_aura != other.heat_aura) return false;
+#endif
     if (gold_aura != other.gold_aura) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
@@ -77,11 +81,6 @@ enum wave_type
     WV_SHALLOW,
     WV_DEEP,
 };
-
-static wave_type _get_wave_type(bool shallow)
-{
-    return shallow ? WV_SHALLOW : WV_DEEP;
-}
 
 static void _add_overlay(int tileidx, packed_cell *cell)
 {
@@ -151,11 +150,8 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
         return;
     }
 
-    if (feat != DNGN_FLOOR && feat != DNGN_UNDISCOVERED_TRAP
-        && feat != DNGN_SHALLOW_WATER && feat != DNGN_DEEP_WATER)
-    {
+    if (feat <= DNGN_LAVA)
         return;
-    }
 
     const bool ink_only = (feat == DNGN_DEEP_WATER);
 
@@ -174,7 +170,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 
         const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
 
-        bool shallow = false;
+        wave_type wt = WV_NONE;
         if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
         {
             // Adjacent shallow water is only interesting for
@@ -182,9 +178,12 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
             if (!ink && feat == DNGN_SHALLOW_WATER)
                 continue;
 
-            shallow = true;
+            if (feat != DNGN_SHALLOW_WATER)
+                wt = WV_SHALLOW;
         }
-        else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
+        else if (env.map_knowledge(*ri).feat() == DNGN_DEEP_WATER)
+            wt = WV_DEEP;
+        else
             continue;
 
         if (!ink_only)
@@ -192,32 +191,32 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
             if (ri->x == gc.x) // orthogonals
             {
                 if (ri->y < gc.y)
-                    north = _get_wave_type(shallow);
+                    north = wt;
                 else
-                    south = _get_wave_type(shallow);
+                    south = wt;
             }
             else if (ri->y == gc.y)
             {
                 if (ri->x < gc.x)
-                    west = _get_wave_type(shallow);
+                    west = wt;
                 else
-                    east = _get_wave_type(shallow);
+                    east = wt;
             }
             else // diagonals
             {
                 if (ri->x < gc.x)
                 {
                     if (ri->y < gc.y)
-                        nw = _get_wave_type(shallow);
+                        nw = wt;
                     else
-                        sw = _get_wave_type(shallow);
+                        sw = wt;
                 }
                 else
                 {
                     if (ri->y < gc.y)
-                        ne = _get_wave_type(shallow);
+                        ne = wt;
                     else
-                        se = _get_wave_type(shallow);
+                        se = wt;
                 }
             }
         }
@@ -335,20 +334,24 @@ static dungeon_feature_type _safe_feat(coord_def gc)
     return env.map_knowledge(gc).feat();
 }
 
+static bool _feat_is_mangrove(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP);
+}
+
 static bool _is_seen_land(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat);
+    return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat)
+           && !_feat_is_mangrove(feat);
 }
 
 static bool _is_seen_shallow(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return feat == DNGN_SHALLOW_WATER || (feat == DNGN_TREE
-                                          && player_in_branch(BRANCH_SWAMP));
-
+    return feat == DNGN_SHALLOW_WATER || _feat_is_mangrove(feat);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
@@ -434,19 +437,38 @@ static bool _is_seen_wall(coord_def gc)
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell,
                                tileidx_t tile)
 {
-    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_OPEN_DOOR)
+    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_GRATE)
         return;
 
+    bool ne = 0;
+    bool nw = 0;
+    int offset;
+
+    // orthogonals
     if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
-        _add_overlay(tile, cell);
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
-        _add_overlay(tile + 1, cell);
+    {
+        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)) ? 0 : 5;
+        _add_overlay(tile + offset, cell);
+        nw = 1;
+    }
     if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
+    {
         _add_overlay(tile + 2, cell);
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
-        _add_overlay(tile + 3, cell);
+        ne = 1;
+        nw = 1;
+    }
     if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
-        _add_overlay(tile + 4, cell);
+    {
+        offset = _is_seen_wall(coord_def(gc.x + 1, gc.y - 1)) ? 4 : 6;
+        _add_overlay(tile + offset, cell);
+        ne = 1;
+    }
+
+    // corners
+    if (nw == 0 && _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
+        _add_overlay(tile + 1, cell);
+    if (ne == 0 && _is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
+        _add_overlay(tile + 3, cell);
 }
 
 static bool _is_seen_slimy_wall(const coord_def& gc)
@@ -475,7 +497,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     else
     {
         tileidx_t shadow_tile = TILE_DNGN_WALL_SHADOW;
-        if (player_in_branch(BRANCH_CRYPT))
+        if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
         _pack_wall_shadows(gc, cell, shadow_tile);
     }

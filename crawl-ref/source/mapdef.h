@@ -392,8 +392,8 @@ public:
     string add_lua_marker(const string &key, const lua_datum &fn);
 
     void apply_markers(const coord_def &pos);
-    void apply_grid_overlay(const coord_def &pos);
-    void apply_overlays(const coord_def &pos);
+    void apply_grid_overlay(const coord_def &pos, bool is_layout);
+    void apply_overlays(const coord_def &pos, bool is_layout);
 
     const vector<string> &get_lines() const;
     vector<string> &get_lines();
@@ -1040,8 +1040,10 @@ public:
         ranges.clear(reader_fn(inf));
         const int count = unmarshallShort(inf);
         for (int i = 0; i < count; ++i)
+        {
             ranges.depth_range_Xs.push_back(
                 depth_range_X<X>::read(inf, reader_fn));
+        }
         return ranges;
     }
     template <typename writer_fn_type>
@@ -1298,11 +1300,12 @@ private:
     string rewrite_chunk_errors(const string &s) const;
     string apply_subvault(string_spec &);
     string validate_map_placeable();
+    bool has_exit() const;
 };
 
 const int CHANCE_ROLL = 10000;
 
-void clear_subvault_stack(void);
+void clear_subvault_stack();
 
 void map_register_flag(const string &flag);
 

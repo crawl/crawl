@@ -1,7 +1,11 @@
 # GDB autoload file
 
 import gdb.printing
+import sys
 
+# We want to work with both Python 2 and 3
+if sys.version_info[0] > 2:
+    long = int
 
 ## Copied from gdb.printing because, having an initial underscore,
 ## it's probably not a stable interface...
@@ -126,8 +130,6 @@ class item_def_printer:
             yield f('plus')
 
         plus2typename = {
-            ('OBJ_ARMOUR', 'ARM_HELMET'):'helmet_desc_type',
-            ('OBJ_ARMOUR', 'ARM_BOOTS'):'type_boots',
             ('OBJ_ARMOUR', 'ARM_GLOVES'):'gloves_desc_type',
             }.get((ty, sub_ty), 'short')
         yield g('plus2', plus2typename)

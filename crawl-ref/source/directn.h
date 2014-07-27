@@ -113,6 +113,7 @@ public:
     bool choose_direction();
 
 private:
+    bool targets_objects() const;
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();
@@ -307,7 +308,7 @@ string feature_description(dungeon_feature_type grid,
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
-void full_describe_view(void);
+void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 
 extern const struct coord_def Compass[9];

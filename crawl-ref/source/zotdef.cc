@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "bitary.h"
+#include <functional>
 
 #include "branch.h"
 #include "coordit.h"
@@ -21,7 +22,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-place.h"
 #include "mon-pick.h"
 #include "mon-util.h"
@@ -80,8 +80,6 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
         return wavenum > 15;                 // 3.2K-
     case BRANCH_SLIME:
         return wavenum > 20 && coinflip();   // 4K-
-    case BRANCH_BLADE:
-        return wavenum > 30;                 // 6K-
     case BRANCH_TOMB:
         return wavenum > 30 && coinflip();   // 6K-
     case BRANCH_DIS:                         // 8K-
@@ -109,9 +107,9 @@ static branch_type _zotdef_random_branch()
          pb = static_cast<branch_type>(random2(NUM_BRANCHES));
     while (!_is_branch_fitting(pb, wavenum));
 
+    // strong bias to main dungeon and depths
     if (one_chance_in(4))
         return wavenum < 15 ? BRANCH_DUNGEON : BRANCH_DEPTHS;
-        // strong bias to main dungeon and depths
 
     return pb;
 }
@@ -223,7 +221,7 @@ static void _fire_wave(int power)
         MONS_FIRE_DRAGON, MONS_FIRE_VORTEX, MONS_FIRE_GIANT, MONS_HELLION,
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
         MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
-        MONS_FLAMING_CORPSE, MONS_MOTTLED_DRAGON, MONS_EFREET,
+        MONS_MOTTLED_DRAGON, MONS_EFREET,
         MONS_HELL_KNIGHT, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
         MONS_HELL_HOG, END};
     monster_type boss[] = {MONS_AZRAEL, MONS_XTAHUA, MONS_SERPENT_OF_HELL,
@@ -420,7 +418,7 @@ static void _insect_wave(int power)
     wave_name("INSECT WAVE");
     monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
                 MONS_GOLIATH_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
-                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_FIREFLY, MONS_REDBACK,
+                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
                 MONS_SCORPION, END};
@@ -702,9 +700,6 @@ void zotdef_set_wave()
     case 3:
     {
         branch_type b = _zotdef_random_branch();
-        // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_BLADE && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
-            b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
     }
@@ -916,6 +911,11 @@ bool create_trap(trap_type spec_type)
     return result;
 }
 
+static bool _can_make_altar(god_type g, bool wizmode)
+{
+    return wizmode || !is_unavailable_god(g);
+}
+
 /**
  * Create an altar to the god of the player's choice.
  * @param wizmode if true, bypass some checks.
@@ -934,23 +934,13 @@ bool zotdef_create_altar(bool wizmode)
 
     string spec = lowercase_string(specs);
 
-    god_type god = GOD_NO_GOD;
+    // Skip GOD_NO_GOD
+    god_type god = find_earliest_match(
+                       spec, (god_type) 1, NUM_GODS,
+                       bind2nd(ptr_fun(_can_make_altar), wizmode),
+                       bind2nd(ptr_fun(god_name), false));
 
-    for (int i = 1; i < NUM_GODS; ++i)
-    {
-        const god_type gi = static_cast<god_type>(i);
-
-        if (!wizmode && is_unavailable_god(gi))
-            continue;
-
-        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
-        {
-            god = gi;
-            break;
-        }
-    }
-
-    if (god == GOD_NO_GOD)
+    if (god == NUM_GODS)
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
@@ -1028,13 +1018,11 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                const rune_type which_rune = _get_rune();
-                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
-                               which_rune, which_rune);
+                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    mitm[ip].plus = which_rune;
+                    mitm[ip].plus = _get_rune();
                     move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }

@@ -213,8 +213,8 @@ function ice_cave_caverns_natural_giant_loot(e)
           glaive " .. goodfreezeweap .. " w:4 / \
           great sword " .. goodfreezeweap .. " w:2 / nothing")
   e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
-          crossbow ego:frost good_item no_uniq ident:type / \
-          longbow ego:frost good_item no_uniq ident:type / nothing w:20")
+          arbalest ego:freezing good_item no_uniq ident:type / \
+          longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
   e.item("ring of ice / ring of protection from cold / wand of cold / \
           arrow ego:frost q:25 / bolt ego:frost q:20 / nothing")
 end
@@ -226,6 +226,7 @@ end
 default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_01
+TAGS:   transparent
 WEIGHT: 4
 : ice_cave_portal(_G)
 MAP
@@ -239,6 +240,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_02
+TAGS:   transparent
 WEIGHT: 4
 : ice_cave_portal(_G)
 MAP
@@ -252,6 +254,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_03
+TAGS:   transparent
 WEIGHT: 2
 : ice_cave_portal(_G)
 MAP
@@ -267,7 +270,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_imps
-TAGS:   patrolling no_monster_gen
+TAGS:   patrolling no_monster_gen transparent
 : ice_cave_portal(_G)
 MONS:   white imp
 MAP
@@ -279,7 +282,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_beasts
-TAGS:   patrolling no_monster_gen
+TAGS:   patrolling no_monster_gen transparent
 : ice_cave_portal(_G)
 MONS:   ice beast
 MAP
@@ -425,7 +428,7 @@ MAP
 ENDMAP
 
 NAME:     portal_ice_cave_entry_ugly_swarm
-TAGS:     no_monster_gen no_item_gen
+TAGS:     no_monster_gen no_item_gen transparent
 DEPTH:    D:14-, Elf, Swamp, Shoals, Snake, Spider
 WEIGHT:   2
 SUBST:    : = 1.

@@ -48,7 +48,7 @@ string getHelpString(const string &topic);
 string getMiscString(const string &misc, const string &suffix = "");
 string getHintString(const string &key);
 
-vector<string> getAllFAQKeys(void);
+vector<string> getAllFAQKeys();
 string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
 #endif

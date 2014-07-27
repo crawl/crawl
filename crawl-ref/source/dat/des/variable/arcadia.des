@@ -29,7 +29,7 @@ KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / stone giant / \
              sphinx / tengu reaver w:5 / deep elf high priest w:5
 KMONS:   J = bat skeleton
-KMONS:   K = giant firefly
+KMONS:   K = spriggan rider
 KMONS:   L = spriggan ; robe . dagger
 KMONS:   M = yak
 KMONS:   N = spriggan ; robe . quarterstaff
@@ -38,7 +38,7 @@ KMONS:   Q = bush
 KMONS:   R = plant
 ITEM:    dagger / short sword / cutlass / flail / whip / blowgun / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon armour w:1
-ITEM:    bread ration q:2, cheese q:3
+ITEM:    bread ration q:3
 KFEAT:   _ = altar_trog
 NSUBST:  . = 10:0 / 8 = 00... / 2:O / 1:3 / 1:5 / *:.
 NSUBST:  6 = 1:9 / 2 = 669 / *:6
@@ -199,13 +199,13 @@ MONS:   the Enchantress patrolling, thorn hunter / spriggan defender
 MONS:   tengu reaver / glowing shapeshifter hd:13
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
-        tengu conjurer ; quarterstaff . robe . crossbow . bolt / \
+        tengu conjurer ; quarterstaff . robe . arbalest . bolt / \
         centaur warrior / rakshasa / ogre mage ; giant club . \
         robe . potion of berserk rage q:1 ident:type
 KMONS:  L = water nymph
 KMONS:  P = plant
-ITEM:   grape q:1 / grape q:2 / nothing w:180
-ITEM:   any potion / grape q:1 / nothing w:30
+ITEM:   fruit q:1 / fruit q:2 / nothing w:180
+ITEM:   any potion / fruit q:1 / nothing w:30
 KFEAT:  L = deep_water
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.

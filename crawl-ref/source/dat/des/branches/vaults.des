@@ -282,9 +282,9 @@ ENDMAP
 NAME: grunt_vaults_entry_fortified
 TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling
 ORIENT: north
-MONS: human ; crossbow . bolt q:10 . short sword | dagger . \
+MONS: human ; arbalest . bolt q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
-      orc warrior ; crossbow . bolt q:10 . short sword | dagger . \
+      orc warrior ; arbalest . bolt q:10 . short sword | dagger . \
                     leather armour w:5 | ring mail | scale mail / \
       deep elf fighter / gargoyle / yaktaur
 MONS: vault guard / orc knight w:2
@@ -465,7 +465,7 @@ ENDMAP
 # Used by the 'vaults_end_rune()' function in the prelude.
 #
 NAME:  vaults_end_norune
-TAGS:  vaults_end_norune allow_dup
+TAGS:  vaults_end_norune allow_dup unrand
 KMONS: o = 8 / 9
 : if crawl.random2(13) == 12 then
 KFEAT:   o = any shop
@@ -483,7 +483,7 @@ ENDMAP
 # Used by the 'vaults_end_rune()' function in the prelude.
 #
 NAME:    vaults_end_rune_mimic
-TAGS:    vaults_end_norune
+TAGS:    vaults_end_norune unrand
 WEIGHT:  1
 KITEM:   o = silver rune of Zot mimic
 MAP
@@ -497,7 +497,7 @@ ENDMAP
 ############################################################
 # about 2 |
 NAME: vaults_end_classical_cross
-TAGS: vaults_end_quadrant
+TAGS: vaults_end_quadrant unrand
 NSUBST:  U = 1:. / *:xxxx.
 NSUBST:  V = 1:. / *:xxxx.
 SUBST:   - = 8 9 .:20
@@ -532,7 +532,7 @@ ENDMAP
 ############################################################
 # about 4 |
 NAME:    vaults_end_classical_diamond
-TAGS:    vaults_end_quadrant
+TAGS:    vaults_end_quadrant unrand
 SHUFFLE: !_
 SUBST:   ! = | * .:20
 SUBST:   _ = 8 9 .:20
@@ -568,7 +568,7 @@ ENDMAP
 ############################################################
 # about 5 |
 NAME: vaults_end_classical_stripes
-TAGS: vaults_end_quadrant
+TAGS: vaults_end_quadrant unrand
 # double use of Y=Y. and Z=Z. for decreasing variance
 SUBST:   Y = Y ., Z = Z ., Y = Y ., Z = Z .
 SUBST:   Y = 9:30 8:10 .:40
@@ -605,7 +605,7 @@ ENDMAP
 ############################################################
 # about 4 |
 NAME:   vaults_end_mu_clover
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: ? = 1:O / *:*
 NSUBST: " = 1:. / *:x
@@ -640,7 +640,7 @@ ENDMAP
 ############################################################
 # about 8 |
 NAME:   vaults_end_mu_not_diamond
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 *:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -673,7 +673,7 @@ ENDMAP
 ############################################################
 # about 11 |
 NAME:    vaults_end_mu_boxes
-TAGS:    vaults_end_quadrant
+TAGS:    vaults_end_quadrant unrand
 NSUBST:  a = 1:+ / *:x
 NSUBST:  b = 1:+ / *:x
 NSUBST:  c = 1:+ / *:x
@@ -719,7 +719,7 @@ ENDMAP
 ############################################################
 # about 8 |
 NAME:   vaults_end_mu_long
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:10
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = |**$
@@ -755,7 +755,7 @@ ENDMAP
 ############################################################
 # 19 *, 14 monsters
 NAME:   vaults_end_minmay_circular_pillars
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 NSUBST: a = 1:+ / *:x, b = 1:+ / *:x, c = 1:+ / *:x, d = 1:+ / *:x
 NSUBST: O = 1:O / *:*
 SUBST:  9 = 8 9 .:20
@@ -790,7 +790,7 @@ ENDMAP
 ############################################################
 # 20 *, 12 monsters
 NAME:   vaults_end_minmay_hexagonal
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -823,7 +823,7 @@ ENDMAP
 ############################################################
 # 16 *, 10 monsters
 NAME:  vaults_end_minmay_subdivision
-TAGS:  vaults_end_quadrant
+TAGS:  vaults_end_quadrant unrand
 SUBST: 9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -856,7 +856,7 @@ ENDMAP
 ############################################################
 # 14 *, 8 monsters
 NAME:   vaults_end_minmay_triangle_fans
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:*
 : vaults_end_loot(_G)
@@ -890,7 +890,7 @@ ENDMAP
 ############################################################
 # 8 |, 11 monsters
 NAME:   vaults_end_minmay_pillar_box
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -923,7 +923,7 @@ ENDMAP
 ############################################################
 # 20 *, 15 monsters
 NAME:   vaults_end_minmay_partial_spiral
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -956,7 +956,7 @@ ENDMAP
 ############################################################
 # 2 |, 19 *, 16 monsters
 NAME:   vaults_end_minmay_grid2
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / 1:* / *:|
 : vaults_end_loot(_G)
@@ -990,7 +990,7 @@ ENDMAP
 ############################################################
 # 2 |, 15 *, 14 monsters
 NAME:   vaults_end_minmay_pluses
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -1024,7 +1024,7 @@ ENDMAP
 ############################################################
 # 14 *, 9 monsters
 NAME:   vaults_end_minmay_broken_diamonds
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: * = 1:O / 14:* / *:.
 : vaults_end_loot(_G)
@@ -1058,7 +1058,7 @@ ENDMAP
 ############################################################
 # 17 *, 10 monsters
 NAME:   vaults_end_minmay_smooth_crossroads
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:.
 : vaults_end_loot(_G)
@@ -1092,7 +1092,7 @@ ENDMAP
 ############################################################
 # 14 *, 10 monsters
 NAME:   vaults_end_minmay_diagonal_split
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1125,7 +1125,7 @@ ENDMAP
 ############################################################
 # 82 $, 16 monsters
 NAME:    vaults_end_minmay_loops
-TAGS:    vaults_end_quadrant vaults_end_quadrant_mall
+TAGS:    vaults_end_quadrant vaults_end_quadrant_mall unrand
 SHUFFLE: ae / bf / cg / dh
 SUBST:   a = +, e = ., bcdfgh = x
 SUBST:   9 = 8 9 .:20
@@ -1160,7 +1160,7 @@ ENDMAP
 ############################################################
 # One shop, 16 monsters
 NAME:    vaults_end_dpeg_shops1
-TAGS:    vaults_end_quadrant vaults_end_quadrant_mall
+TAGS:    vaults_end_quadrant vaults_end_quadrant_mall unrand
 KFEAT:   S = any shop
 : if crawl.one_chance_in(4) then
 SUBST:   A = +, a = ., CD = x
@@ -1201,7 +1201,7 @@ ENDMAP
 # Consumable shops (scrolls, potions, food).
 # Monsters in rooms.
 NAME:    vaults_end_dpeg_shops2
-TAGS:    vaults_end_quadrant vaults_end_quadrant_mall
+TAGS:    vaults_end_quadrant vaults_end_quadrant_mall unrand
 NSUBST:  A = 1:+ / *:x+
 NSUBST:  B = 1:+ / *:x+
 NSUBST:  C = 1:+ / *:x+
@@ -1241,7 +1241,7 @@ ENDMAP
 ############################################################
 # 20 *, 20 monsters
 NAME:   vaults_end_minmay_plus_grid
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 NSUBST: * = 1:O / *:*
 SUBST:  * = 9 8 *:20 .
 : vaults_end_loot(_G)
@@ -1275,7 +1275,7 @@ ENDMAP
 ############################################################
 # 14 *, 12 monsters
 NAME:   vaults_end_minmay_curved1
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:*
 : vaults_end_loot(_G)
@@ -1309,7 +1309,7 @@ ENDMAP
 ############################################################
 # 18 *, 20 monsters
 NAME:   vaults_end_minmay_broken_lines
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1342,7 +1342,7 @@ ENDMAP
 ############################################################
 # 16 *, 12 monsters
 NAME:    vaults_end_minmay_surrounding_squares
-TAGS:    vaults_end_quadrant
+TAGS:    vaults_end_quadrant unrand
 SHUFFLE: AB
 SUBST:   9 = 8 9 .:20
 SUBST:   A = ., B = x
@@ -1377,7 +1377,7 @@ ENDMAP
 ############################################################
 # 4 |, 15 *, 18 monsters
 NAME:   vaults_end_minmay_split_center
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1410,7 +1410,7 @@ ENDMAP
 ############################################################
 # 16 *, 12 monsters
 NAME:   vaults_end_minmay_sharp_edges
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:*
 : vaults_end_loot(_G)
@@ -1444,7 +1444,7 @@ ENDMAP
 ############################################################
 # 20 *, 14 monsters
 NAME:   vaults_end_minmay_outlined_triangles
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1477,7 +1477,7 @@ ENDMAP
 ############################################################
 # 12 *, 11 monsters
 NAME:   vaults_end_minmay_oval
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1510,7 +1510,7 @@ ENDMAP
 ############################################################
 # 12 *, 12 monsters
 NAME:   vaults_end_minmay_fences
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 NSUBST: A = 1:+ / *:x, B = 1:+ / *:x
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
@@ -1544,7 +1544,7 @@ ENDMAP
 ############################################################
 # 17 *, 2 |, 14 monsters
 NAME:   vaults_end_minmay_wings
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -1578,7 +1578,7 @@ ENDMAP
 ############################################################
 # 16 *, 1 |, 13 monsters
 NAME:   vaults_end_minmay_cones
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -1611,7 +1611,7 @@ ENDMAP
 
 # 19 *, 12 monsters
 NAME:   vaults_end_grunt_pinched
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 NSUBST: O = 1:O / *:.
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
@@ -1644,7 +1644,7 @@ ENDMAP
 
 # 18 *, 12 monsters
 NAME:    vaults_end_grunt_door_to_door
-TAGS:    vaults_end_quadrant
+TAGS:    vaults_end_quadrant unrand
 SHUFFLE: 456
 NSUBST:  1 = 1:9 / *:*
 NSUBST:  2 = 1:9 / *:*
@@ -1683,7 +1683,7 @@ ENDMAP
 
 # 17 *, 12 monsters
 NAME:   vaults_end_grunt_cloverleaf
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1715,7 +1715,7 @@ ENDMAP
 
 # 20 *, 14 monsters
 NAME:   vaults_end_grunt_tight_spiral
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1747,7 +1747,7 @@ ENDMAP
 
 # 18 *, 12 monsters
 NAME:   vaults_end_grunt_simple_division
-TAGS:   vaults_end_quadrant
+TAGS:   vaults_end_quadrant unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:*
 : vaults_end_loot(_G)
@@ -1780,7 +1780,7 @@ ENDMAP
 
 # 20 *, 14 monsters
 NAME: vaults_grunt_end_bulge
-TAGS: vaults_end_quadrant
+TAGS: vaults_end_quadrant unrand
 NSUBST: O = 1:O / *:*
 SUBST: 9 = 8 9 .:20
 : vaults_end_loot(_G)
@@ -1813,7 +1813,7 @@ ENDMAP
 
 # 18 *, 12 monsters
 NAME:  vaults_end_grunt_zigzag
-TAGS:  vaults_end_quadrant
+TAGS:  vaults_end_quadrant unrand
 SUBST: 9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1850,7 +1850,7 @@ ENDMAP
 ############################################################
 # 11 |, 12 *, 15 monsters
 NAME:   vaults_end_minmay_curved2
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -1884,7 +1884,7 @@ ENDMAP
 ############################################################
 # 31 *, 18 $, 20 monsters
 NAME:    vaults_end_minmay_connected_circles
-TAGS:    vaults_end_quadrant_prize
+TAGS:    vaults_end_quadrant_prize unrand
 SUBST:   9 = 8 9 .:20
 NSUBST:  * = 1:O / *:*
 : vaults_end_loot(_G)
@@ -1918,7 +1918,7 @@ ENDMAP
 ############################################################
 # 3 |, 24 *, 18 monsters
 NAME:   vaults_end_minmay_x
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -1952,7 +1952,7 @@ ENDMAP
 ############################################################
 # 8 |, 20 *, 16 monsters
 NAME:   vaults_end_minmay_split_x
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1985,7 +1985,7 @@ ENDMAP
 ############################################################
 # 18 |, 12 *, 21 monsters
 NAME:   vaults_end_minmay_slanted
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2019,7 +2019,7 @@ ENDMAP
 ############################################################
 # 16 |, 14 *, 20 monsters
 NAME:    vaults_end_minmay_not_circular
-TAGS:    vaults_end_quadrant_prize
+TAGS:    vaults_end_quadrant_prize unrand
 SHUFFLE: abcd
 SUBST:   a : ., b : x .:1, c : x .:1, d : x .:1
 SUBST:   9 = 8 9 .:20
@@ -2054,7 +2054,7 @@ ENDMAP
 ############################################################
 # about 21 |, 29 *
 NAME:   vaults_end_mu_corners
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = | *:15 $:5
@@ -2090,7 +2090,7 @@ ENDMAP
 ############################################################
 # about 21 |
 NAME:   vaults_end_mu_flips
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 NSUBST: ; = 3:l / 3:z / 3:A / *:.
 SUBST:  9 = 8 9
 SUBST:  $ = | * $
@@ -2130,7 +2130,7 @@ ENDMAP
 ############################################################
 # about 21 |
 NAME:   vaults_end_mu_construction
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = |*$.
 SUBST:  c = xn9.
@@ -2171,7 +2171,7 @@ ENDMAP
 ############################################################
 # about 19 |
 NAME:   vaults_end_mu_triangles
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: ? = 1:O / *:|
 SUBST:  " = +:1 x:99
@@ -2208,7 +2208,7 @@ ENDMAP
 # Two guaranteed good shops. Perhaps more shops.
 # Almost all monsters are in the rooms.
 NAME:    vaults_end_dpeg_mall
-TAGS:    vaults_end_quadrant_prize vaults_end_quadrant_prize_mall
+TAGS:    vaults_end_quadrant_prize vaults_end_quadrant_prize_mall unrand
 SHUFFLE: AB, CD
 SUBST:   A=+, B:xx+, C:xxx+, D:xxxx+
 NSUBST:  S = 2:S / 1:O / *:RRU9
@@ -2250,7 +2250,7 @@ ENDMAP
 ############################################################
 # 26 *, 16 monsters
 NAME:   vaults_end_minmay_bent_boxes
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2284,7 +2284,7 @@ ENDMAP
 ############################################################
 # 28 *, 1 |, 20 monsters
 NAME:   vaults_end_minmay_cup_spider
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2318,7 +2318,7 @@ ENDMAP
 ############################################################
 # 11 |, 18 *, 20 monsters
 NAME:   vaults_end_minmay_30_sandwiches
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: | = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2352,7 +2352,7 @@ ENDMAP
 ############################################################
 # 11 |, 16 *, 18 monsters
 NAME:   vaults_end_minmay_small_xes
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: | = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2386,7 +2386,7 @@ ENDMAP
 ############################################################
 # 11 |, 12 *, 16 monsters
 NAME:   vaults_end_minmay_plusses
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: | = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2420,7 +2420,7 @@ ENDMAP
 ############################################################
 # 11 |, 16 *, 16 monsters
 NAME:   vaults_end_minmay_circles_and_squares
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2454,7 +2454,7 @@ ENDMAP
 ############################################################
 # 14 |, 6 *, 20 monsters
 NAME:   vaults_end_minmay_odd_checkers
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -2487,7 +2487,7 @@ ENDMAP
 ############################################################
 # 8 |, 19 *, 18 monsters
 NAME:   vaults_end_minmay_bends
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2521,7 +2521,7 @@ ENDMAP
 ############################################################
 # 7 |, 18 *, 20 monsters
 NAME:   vaults_end_minmay_plus_grid_2
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 NSUBST: O = 1:O / *:|
 SUBST:  X : x., Y : x.
@@ -2556,7 +2556,7 @@ ENDMAP
 ############################################################
 # 16 *, 8 |, 16 monsters
 NAME:   vaults_end_minmay_odd_hourglass
-TAGS:   vaults_end_quadrant_prize
+TAGS:   vaults_end_quadrant_prize unrand
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -2589,7 +2589,7 @@ ENDMAP
 ############################################################
 # 16 *, 10 |, 16 monsters
 NAME:    vaults_end_nooodl_tilted_maze
-TAGS:    vaults_end_quadrant_prize
+TAGS:    vaults_end_quadrant_prize unrand
 SUBST:   9 = 8 9 .:10
 NSUBST:  O = 1:O / *:|
 SUBST:   * = * $:4
@@ -2623,7 +2623,7 @@ ENDMAP
 
 # 21 |, 20 monsters
 NAME:    vaults_end_grunt_nonplussed
-TAGS:    vaults_end_quadrant_prize
+TAGS:    vaults_end_quadrant_prize unrand
 NSUBST:  9 = 10:8 / 10:9 / *:.
 NSUBST:  O = 1:O / *:|
 : vaults_end_loot(_G)
@@ -2664,7 +2664,7 @@ ENDMAP
 #
 # about 24 |
 NAME:     vaults_end_classical_rooms
-TAGS:     vaults_end_quadrant_prize
+TAGS:     vaults_end_quadrant_prize unrand
 SHUFFLE:  AC/BD, EG/FH, IKN/MJL
 SUBST:    A=., B=xx+, C=+, D=x, E=+, F=xx+, G=., H=x
 SUBST:    I=., M=xx+, J=x, K=+, N=+, L=xx+

@@ -26,6 +26,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "effects.h"
 #include "env.h"
 #include "exclude.h"
 #include "feature.h"
@@ -40,7 +41,8 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
+#include "mon-death.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "options.h"
 #include "notes.h"
@@ -67,6 +69,8 @@
 #endif
 
 //#define DEBUG_PANE_BOUNDS
+
+static bool _show_terrain = false;
 
 crawl_view_geometry crawl_view;
 
@@ -146,20 +150,24 @@ void seen_monsters_react()
         gozag_check_bribe(*mi);
         slime_convert(*mi);
 
-        // XXX: Hack for triggering Duvessa's going berserk.
-        if (mi->props.exists("duvessa_berserk"))
+        // Trigger Duvessa & Dowan upgrades
+        if (mi->props.exists(ELVEN_ENERGIZE_KEY))
         {
-            mi->props.erase("duvessa_berserk");
-            mi->go_berserk(true);
+            mi->props.erase(ELVEN_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
         }
-
-        // XXX: Hack for triggering Dowan's spell changes.
-        if (mi->props.exists("dowan_upgrade"))
+#if TAG_MAJOR_VERSION == 34
+        else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
         {
-            mi->add_ench(ENCH_HASTE);
-            mi->props.erase("dowan_upgrade");
-            simple_monster_message(*mi, " seems to find hidden reserves of power!");
+            mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
         }
+        else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
+        {
+            mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
+        }
+#endif
     }
 }
 
@@ -199,7 +207,7 @@ static monster_type _mons_genus_keep_uniques(monster_type mc)
     return mons_is_unique(mc) ? mc : mons_genus(mc);
 }
 
-/*
+/**
  * Monster list simplification
  *
  * When too many monsters come into view at once, we group the ones with the
@@ -296,6 +304,7 @@ void update_monsters_in_view()
         unsigned int size = monsters.size();
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
+        const monster* target = NULL;
         for (unsigned int i = 0; i < size; ++i)
         {
             const monster_type type = monsters[i]->type;
@@ -320,6 +329,13 @@ void update_monsters_in_view()
         for (unsigned int i = 0; i < size; ++i)
         {
             const monster* mon = monsters[i];
+            if (!target
+                && player_mutation_level(MUT_SCREAM)
+                && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3,
+                                 100))
+            {
+                target = mon;
+            }
             if (!mon->props.exists("ash_id") && !mon->props.exists("zin_id"))
                 continue;
 
@@ -364,6 +380,9 @@ void update_monsters_in_view()
                 update_monster_pane();
 #endif
         }
+
+        if (target)
+            yell(target);
 
         if (player_under_penance(GOD_GOZAG))
         {
@@ -622,6 +641,7 @@ void fully_map_level()
 // Is the given monster near (in LOS of) the player?
 bool mons_near(const monster* mons)
 {
+    ASSERT(mons);
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return true;
     return you.see_cell(mons->pos());
@@ -706,7 +726,9 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    if (you.attribute[ATTR_SHADOWS])
+    if (_show_terrain)
+        return BLACK;
+    else if (you.attribute[ATTR_SHADOWS])
         return LIGHTGREY;
     else if (you.berserk())
         return RED;
@@ -1006,8 +1028,6 @@ static void _draw_los(screen_cell_t *cell,
     UNUSED(anim_updates);
 #endif
 }
-
-static bool _show_terrain = false;
 
 //---------------------------------------------------------------
 //

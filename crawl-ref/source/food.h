@@ -21,7 +21,6 @@
 #define HUNGER_DEFAULT       5900
 #define HUNGER_MAXIMUM      11900
 
-int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
 bool eat_food(int slot = -1);
@@ -51,7 +50,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 bool chunk_is_poisonous(int chunktype);
 bool eat_item(item_def &food);
 
-int eat_from_floor(bool skip_chunks = true);
+int eat_from_floor();
 bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
 
@@ -74,5 +73,5 @@ bool you_foodless_normally();
 void handle_starvation();
 string hunger_cost_string(const int hunger);
 
-maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot = false);
+bool drop_spoiled_chunks();
 #endif

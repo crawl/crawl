@@ -55,7 +55,7 @@ epilogue{{
   crawl.tutorial_hint("HINT_NEW_LEVEL")
   -- TODO: Replace this with a hint on trying to _eat_ rotten food.
   crawl.tutorial_hint("HINT_ROTTEN_FOOD")
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.tutorial_msg("tutorial2 start")
   tutorial_intro()
 }}
@@ -100,10 +100,10 @@ FTILE:   deABCDEF = tutorial_pad
 MONS:    training dummy hp:2 ; stone q:10
 MONS:    rat always_corpse
 MONS:    worm
-ITEM:    dart mundane q:30
+ITEM:    tomahawk mundane q:10
 ITEM:    shortbow mundane not_cursed
 ITEM:    arrow mundane q:30
-MARKER:  d = lua:tutorial2.msg("darts")
+MARKER:  d = lua:tutorial2.msg("tomahawks")
 MARKER:  A = lua:tutorial2.msg("throwing")
 MARKER:  B = lua:tutorial2.msg("resting_reminder")
 MARKER:  e = lua:tutorial2.msg("wield_bow")
@@ -128,7 +128,7 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial2.win" }
 epilogue{{
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.tutorial_msg("tutorial2 newlevel")
 }}
 MAP

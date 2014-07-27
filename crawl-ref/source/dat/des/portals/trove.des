@@ -22,7 +22,6 @@ function trove.get_trove_item(e, value, base_item)
   --  sub_type="robe" (short sword, etc)
   --  ego_type="resistance" (or false)
   --  plus1=4 (or false)
-  --  plus2=false
   --  artefact_name=false (setting this will compare artefact names and status
   --                       and will be used as the full title for artefact books
   --                       and so-on. leave as false for non-artefacts.)
@@ -32,16 +31,15 @@ function trove.get_trove_item(e, value, base_item)
     sub_type="",
     ego_type=false,
     plus1=false,
-    plus2=false,
+    plus2=false, -- #if TAG_MAJOR_VERSION == 34
     artefact_name=false,
   }
 
   -- For testing purposes, you can force an item.
   if base_item ~= nil then
     item.quantity = base_item.quantity
-    local p1, p2 = base_item.pluses()
+    local p1 = base_item.pluses()
     item.plus1 = p1
-    item.plus2 = p2
     item.ego_type = base_item.ego_type
     item.base_type = base_item.base_type
     item.sub_type = base_item.sub_type
@@ -63,7 +61,7 @@ function trove.get_trove_item(e, value, base_item)
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
                           "ring of strength", "ring of intelligence",
-                          "ring of dexterity"}
+                          "ring of dexterity", "ring of slaying"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
       if shop_item.identified() then
@@ -74,27 +72,19 @@ function trove.get_trove_item(e, value, base_item)
         if shop_item.artefact then
           item.artefact_name = shop_item.artefact_name
         end
-        local shop_plus1, shop_plus2 = shop_item.pluses()
+        local shop_plus1 = shop_item.pluses()
         if item.base_type == "armour" then
           item.plus1 = shop_plus1
-          item.plus2 = false
         elseif item.base_type == "weapon" then
           item.plus1 = shop_plus1
-          item.plus2 = shop_plus2
         elseif item.base_type == "jewellery" then
-          if item.sub_type == "ring of slaying" then
+          if util.contains(jwith_pluses, item.sub_type) then
             item.plus1 = shop_plus1
-            item.plus2 = shop_plus2
-          elseif util.contains(jwith_pluses, item.sub_type) then
-            item.plus1 = shop_plus1
-            item.plus2 = false
           end
         elseif item.base_type == "book" and string.find(item.sub_type, "manual") then
             item.plus1 = shop_plus1
-            item.plus2 = false
         else
           item.plus1 = false
-          item.plus2 = false
         end
         return item
       end
@@ -125,12 +115,9 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="fire dragon armour", quant=2+d(3), weight=armour_weight},
        {base="armour", type="ice dragon armour", quant=2+d(3), weight=armour_weight},
 
-       {base="weapon", type="demon whip", quant=3+d(3),
-                                          quant2=3+d(3), weight=weapon_weight},
-       {base="weapon", type="demon trident", quant=3+d(3),
-                                             quant2=3+d(3), weight=weapon_weight},
-       {base="weapon", type="demon blade", quant=3+d(3),
-                                           quant2=3+d(3), weight=weapon_weight},
+       {base="weapon", type="demon whip", quant=3+d(3), weight=weapon_weight},
+       {base="weapon", type="demon trident", quant=3+d(3), weight=weapon_weight},
+       {base="weapon", type="demon blade", quant=3+d(3), weight=weapon_weight},
 
        {base="wand", type="heal wounds", quant=7+d(2), weight=1},
        {base="potion", type="curing", quant=12+d(4)+d(4), weight=potion_weight},
@@ -156,7 +143,6 @@ function trove.get_trove_item(e, value, base_item)
     item.plus1 = chosen.quant
   elseif chosen.base == "weapon" then
     item.plus1 = chosen.quant
-    item.plus2 = chosen.quant2
   elseif chosen.base == "scroll" or chosen.base == "potion" then
     item.quantity = chosen.quant
   end
@@ -198,8 +184,7 @@ end
 -- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls,
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)
-    e.item([[scroll of enchant weapon i / scroll of enchant weapon ii /
-             scroll of enchant weapon iii w:5 / scroll of brand weapon w:3 /
+    e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
              scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
              scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 /
@@ -248,6 +233,7 @@ default-depth: D:10-, Depths, Elf, Vaults
 ##############################################################################
 
 NAME:   enter_trove_0
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -255,6 +241,7 @@ O
 ENDMAP
 
 NAME:   enter_trove_1
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -264,6 +251,7 @@ MAP
 ENDMAP
 
 NAME:   enter_trove_2
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -312,7 +300,6 @@ cl.lc
 c.e.c
 cl.lc
 cc+cc
-  @
 ENDMAP
 
 # Someone left some gold behind for you!
@@ -330,7 +317,6 @@ c$XOX$c
 c$XXX$c
 c$$$$$c
 ccc+ccc
-   @
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
@@ -394,6 +380,7 @@ cccO.cc
 ENDMAP
 
 NAME: nicolae_trove_entry_free_sample
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: % = blue
@@ -405,7 +392,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_isolated
-TAGS: no_pool_fixup
+TAGS: no_pool_fixup transparent
 CHANCE: 5%
 KPROP: .O = no_rtele_into
 KFEAT: ' = .
@@ -757,8 +744,8 @@ MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
-ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
-ITEM:    shortbow good_item / crossbow good_item / any useful weapon good_item
+ITEM:    arrow good_item / bolt good_item
+ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
 : trove.setup_features(_G)

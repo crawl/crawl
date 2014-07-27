@@ -99,11 +99,11 @@ public:
     reader(const string &filename, int minorVersion = TAG_MINOR_INVALID);
     reader(FILE* input, int minorVersion = TAG_MINOR_INVALID)
         : _file(input), _chunk(0), opened_file(false), _pbuf(0),
-          _read_offset(0), _minorVersion(minorVersion) {}
+          _read_offset(0), _minorVersion(minorVersion), _safe_read(false) {}
     reader(const vector<unsigned char>& input,
            int minorVersion = TAG_MINOR_INVALID)
         : _file(0), _chunk(0), opened_file(false), _pbuf(&input),
-          _read_offset(0), _minorVersion(minorVersion) {}
+          _read_offset(0), _minorVersion(minorVersion), _safe_read(false) {}
     reader(package *save, const string &chunkname,
            int minorVersion = TAG_MINOR_INVALID);
     ~reader();
@@ -119,6 +119,8 @@ public:
 
     string filename() const { return _filename; }
 
+    void set_safe_read(bool setting) { _safe_read = setting; }
+
 private:
     string _filename;
     FILE* _file;
@@ -127,6 +129,8 @@ private:
     const vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
     int _minorVersion;
+    // always throw an exception rather than dying when reading past EOF
+    bool _safe_read;
 };
 
 class short_read_exception : exception {};

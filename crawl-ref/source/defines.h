@@ -159,9 +159,6 @@ const int LABYRINTH_BORDER = 4;
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
-// Yes, I know we have 32-bit ints now.
-const int DEBUG_COOKIE = 32767;
-
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
 const int HIGH_EXP_POOL = 20000;
@@ -195,7 +192,6 @@ const int MAG_IMMUNE = 5000;
 const int INSTANT_DEATH = -9999;
 
 // Maximum enchantment on weapons/armour/secondary armours
-// This is the same as for ammunition.
 const int MAX_WPN_ENCHANT = 9;
 
 // Note: use armour_max_enchant(item) to get the correct limit for item
@@ -219,8 +215,6 @@ const int INVALID_ABSDEPTH = -1000;
   #define FEATURE_MIMIC_CHANCE 100
   #define ITEM_MIMIC_CHANCE    1000
 #endif
-
-const int ANTITRAIN_PENALTY = 2;
 
 const int AGILITY_BONUS = 5;
 
@@ -339,8 +333,6 @@ const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
 const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
-const char * const GOZAG_SHOP_GREED_KEY      = "gozag_shop_greed_%d";
-const char * const GOZAG_SHOP_ITEMS_KEY      = "gozag_shop_items_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 const char * const GOZAG_BRIBE_KEY           = "gozag_bribed";

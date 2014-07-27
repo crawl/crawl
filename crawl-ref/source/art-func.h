@@ -26,11 +26,11 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
+#include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
-#include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
@@ -229,7 +229,6 @@ static void _olgreb_pluses(item_def *item)
     // Giving Olgreb's staff a little lift since staves of poison have
     // been made better. -- bwr
     item->plus  = you.skill(SK_POISON_MAGIC) / 3;
-    item->plus2 = item->plus;
 }
 
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -307,7 +306,6 @@ static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
 static void _power_pluses(item_def *item)
 {
     item->plus  = min(you.hp / 10, 27);
-    item->plus2 = item->plus;
 }
 
 static void _POWER_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -525,20 +523,12 @@ static void _VARIABILITY_world_reacts(item_def *item)
     do_uncurse_item(*item);
 
     if (x_chance_in_y(2, 5))
-        item->plus  += (coinflip() ? +1 : -1);
-
-    if (x_chance_in_y(2, 5))
-        item->plus2 += (coinflip() ? +1 : -1);
+        item->plus += (coinflip() ? +1 : -1);
 
     if (item->plus < -4)
         item->plus = -4;
     else if (item->plus > 16)
         item->plus = 16;
-
-    if (item->plus2 < -4)
-        item->plus2 = -4;
-    else if (item->plus2 > 16)
-        item->plus2 = 16;
 }
 
 ///////////////////////////////////////////////////
@@ -690,39 +680,82 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
                             : "You feel an overwhelming desire to slay dragons!");
 }
 
+static bool is_dragonkind(const actor *act)
+{
+    if (mons_genus(act->mons_species()) == MONS_DRAGON
+        || mons_genus(act->mons_species()) == MONS_DRAKE
+        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
+    {
+        return true;
+    }
+
+    if (act->is_player())
+        return you.form == TRAN_DRAGON;
+
+    // Else the actor is a monster.
+    const monster* mon = act->as_monster();
+
+    if (mons_is_zombified(mon)
+        && (mons_genus(mon->base_monster) == MONS_DRAGON
+            || mons_genus(mon->base_monster) == MONS_DRAKE
+            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return true;
+    }
+
+    if (mons_is_ghost_demon(mon->type)
+        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
-    if (!mondied || !defender || !is_dragonkind(defender)
-        || defender->is_summoned()
-        || defender->is_monster()
-           && testbits(defender->as_monster()->flags, MF_NO_REWARD))
+    if (!is_dragonkind(defender))
+        return;
+
+    // Since the target will become a DEAD MONSTER if it dies due to the extra
+    // damage to dragons, we need to grab this information now.
+    int hd = min(defender->as_monster()->get_experience_level(), 18);
+    string name = defender->name(DESC_THE);
+
+    if (!mondied)
+    {
+        mprf("<grey>%s %s!</grey>",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("convulse").c_str());
+
+        defender->hurt(attacker, 1 + random2(3*dam/2));
+
+        mondied = !defender->alive();
+    }
+
+    if (!mondied || !defender || defender->is_summoned()
+        || (defender->is_monster()
+            && testbits(defender->as_monster()->flags, MF_NO_REWARD)))
     {
         return;
     }
-    if (defender->is_player())
-    {
-        // can't currently happen even on a death blow
-        mpr("<green>You see the lance glow as it kills you.</green>");
-        return;
-    }
+
     // The cap can be reached by:
     // * iron dragon, golden dragon, pearl dragon (18)
     // * Xtahua (19)
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
     // * pghosts (up to 27)
-    int hd = min(defender->as_monster()->hit_dice, 18);
     dprf("Killed a drac with hd %d.", hd);
-    bool boosted = false;
+
     if (weapon->plus < hd)
-        weapon->plus++, boosted = true;
-    if (weapon->plus2 < hd)
-        weapon->plus2++, boosted = true;
-    if (boosted)
     {
+        weapon->plus++;
+
         mprf("<green>The lance glows as it skewers %s.</green>",
-              defender->name(DESC_THE).c_str());
+              name.c_str());
+
         you.wield_change = true;
     }
 }
@@ -902,52 +935,90 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
 
 ///////////////////////////////////////////////////
 
-static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
-                                        actor* defender, bool mondied, int dam)
+/**
+ * Calculate the bonus damage that the Elemental Staff does with an attack of
+ * the given flavour.
+ *
+ * @param flavour   The elemental flavour of attack; may be BEAM_NONE for earth
+ *                  (physical) attacks.
+ * @param defender  The victim of the attack. (Not const because checking res
+ *                  may end up IDing items on monsters... )
+ * @return          The amount of damage that the defender will recieve.
+ */
+static int _calc_elemental_staff_damage(beam_type flavour,
+                                        actor* defender)
 {
-    int evoc = attacker->skill(SK_EVOCATIONS, 27);
-    beam_type flavour = BEAM_NONE;
+    const int base_bonus_dam = 10 + random2(15);
 
-    if (mondied || !(x_chance_in_y(evoc, 729) || x_chance_in_y(evoc, 729)))
+    if (flavour == BEAM_NONE) // earth
+        return defender->apply_ac(base_bonus_dam);
+
+    // XXX: refactor this into some more general function (why isn't there one
+    // already???)
+    int resist = 0;
+    switch (flavour)
+    {
+        case BEAM_FIRE:
+            resist = defender->res_fire();
+            break;
+        case BEAM_COLD:
+            resist = defender->res_cold();
+            break;
+        case BEAM_ELECTRICITY:
+            resist = defender->res_elec();
+            break;
+        default:
+            break;
+    }
+
+    return resist_adjust_damage(defender, flavour, resist, base_bonus_dam);
+}
+
+static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
+                                           actor* defender, bool mondied,
+                                           int)
+{
+    const int evoc = attacker->skill(SK_EVOCATIONS, 27);
+    if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
-    int d = 10 + random2(15);
+    const char *verb = NULL;
+    beam_type flavour = BEAM_NONE;
 
-    const char *verb = "hit";
     switch (random2(4))
     {
     case 0:
-        d = resist_adjust_damage(defender, BEAM_FIRE,
-                                 defender->res_fire(), d);
         verb = "burn";
         flavour = BEAM_FIRE;
         break;
     case 1:
-        d = resist_adjust_damage(defender, BEAM_COLD,
-                                 defender->res_cold(), d);
         verb = "freeze";
         flavour = BEAM_COLD;
         break;
     case 2:
-        d = resist_adjust_damage(defender, BEAM_ELECTRICITY,
-                                 defender->res_elec(), d);
         verb = "electrocute";
         flavour = BEAM_ELECTRICITY;
         break;
+    default:
+        dprf("Bad damage type for elemental staff; defaulting to earth");
+        // fallthrough to earth
     case 3:
-        d = defender->apply_ac(d);
         verb = "crush";
         break;
     }
 
-    if (!d)
+    const int bonus_dam = _calc_elemental_staff_damage(flavour, defender);
+
+    if (bonus_dam <= 0)
         return;
 
     mprf("%s %s %s.",
          attacker->name(DESC_THE).c_str(),
          attacker->is_player() ? verb : pluralise(verb).c_str(),
          defender->name(DESC_THE).c_str());
-    defender->hurt(attacker, d);
+
+    defender->hurt(attacker, bonus_dam, flavour);
+
     if (defender->alive() && flavour != BEAM_NONE)
         defender->expose_to_element(flavour, 2);
 }
@@ -1010,11 +1081,9 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
         {
             vector<spschool_flag_type> schools;
             for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            {
                 if (testbits(school, 1 << i))
-                    schools.push_back(
-                        static_cast<spschool_flag_type>(1 << i));
-            }
+                    schools.push_back(static_cast<spschool_flag_type>(1 << i));
+
             ASSERT(schools.size() > 0);
             MiscastEffect(defender, attacker->mindex(),
                           schools[random2(schools.size())],
@@ -1071,4 +1140,121 @@ static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
                             (3 + random2(dam)) * BASELINE_DELAY));
         }
     }
+}
+
+///////////////////////////////////////////////////
+
+static void _CHILLY_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The dagger glows with an icy blue light!");
+}
+
+static void _CHILLY_DEATH_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The dagger stops glowing.");
+}
+
+static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    if (dam)
+    {
+        if (defender->is_monster()
+            && !mondied
+            && !defender->as_monster()->has_ench(ENCH_FROZEN))
+        {
+            mprf("%s is flash-frozen.",
+                 defender->name(DESC_THE).c_str());
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FROZEN, 0, attacker,
+                            (5 + random2(dam)) * BASELINE_DELAY));
+        }
+        else if (defender->is_player()
+            && !you.duration[DUR_FROZEN])
+        {
+            mprf(MSGCH_WARN, "You are encased in ice.");
+            you.increase_duration(DUR_FROZEN, 5 + random2(dam));
+        }
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _FLAMING_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The scimitar bursts into red hot flame!");
+}
+
+static void _FLAMING_DEATH_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The scimitar stops flaming.");
+}
+
+static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    if (!mondied && (dam > 2 && one_chance_in(3)))
+    {
+        if (defender->is_player())
+            napalm_player(random2avg(7, 3) + 1, attacker->name(DESC_A, true));
+        else
+        {
+            napalm_monster(
+                defender->as_monster(),
+                attacker,
+                min(4, 1 + random2(attacker->get_hit_dice())/2));
+        }
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you.max_magic_points)
+        _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+}
+
+static void _MAJIN_unequip(item_def *item, bool *show_msgs)
+{
+    if (you.max_magic_points)
+    {
+        _equip_mpr(show_msgs,
+                   "The darkness slowly releases its grasp on your magic.");
+    }
+}
+
+///////////////////////////////////////////////////
+
+static int _octorings_worn()
+{
+    int worn = 0;
+
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+    {
+        if (you.melded[i] || you.equip[i] == -1)
+            continue;
+
+        item_def& ring = you.inv[you.equip[i]];
+        if (is_unrandom_artefact(ring) && ring.special == UNRAND_OCTOPUS_KING_RING)
+            worn++;
+    }
+
+    return worn;
+}
+
+static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    int rings = _octorings_worn();
+
+    if (rings == 8)
+        _equip_mpr(show_msgs, "You feel like a king!");
+    else if (rings)
+        _equip_mpr(show_msgs, "You feel regal.");
+    item->plus = 8 + rings;
+}
+
+static void _OCTOPUS_KING_world_reacts(item_def *item)
+{
+    item->plus = 8 + _octorings_worn();
 }

@@ -70,10 +70,7 @@ struct spell_desc
     bool         ms_utility;
 };
 
-static const struct spell_desc spelldata[] =
-{
-    #include "spl-data.h"
-};
+#include "spl-data.h"
 
 static int spell_list[NUM_SPELLS];
 
@@ -86,7 +83,7 @@ static const struct spell_desc *_seekspell(spell_type spellid);
 //
 
 // All this does is merely refresh the internal spell list {dlb}:
-void init_spell_descs(void)
+void init_spell_descs()
 {
     for (int i = 0; i < NUM_SPELLS; i++)
         spell_list[i] = -1;
@@ -151,26 +148,9 @@ spell_type spell_by_name(string name, bool partial_match)
         return SPELL_NO_SPELL;
     }
 
-    spell_type spellmatch = SPELL_NO_SPELL;
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        spell_type type = static_cast<spell_type>(i);
-        if (!is_valid_spell(type))
-            continue;
-
-        const char *sptitle = spell_title(type);
-        const string spell_name = lowercase_string(sptitle);
-
-        if (spell_name.find(name) != string::npos)
-        {
-            if (spell_name == name)
-                return type;
-
-            spellmatch = type;
-        }
-    }
-
-    return spellmatch;
+    const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                              is_valid_spell, spell_title);
+    return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 
 spschool_flag_type school_by_name(string name)
@@ -285,8 +265,6 @@ bool add_spell_to_memory(spell_type spell)
                 you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
             {
                 j = letter_to_index(Options.auto_spell_letters[k].second[l]);
-                mprf("Spell assigned to '%c'.",
-                     Options.auto_spell_letters[k].second[l]);
                 break;
             }
         if (j != -1)
@@ -300,6 +278,7 @@ bool add_spell_to_memory(spell_type spell)
                 break;
         }
 
+    mprf("Spell assigned to '%c'.", index_to_letter(j));
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
@@ -1095,6 +1074,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         }
 
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
         {
             switch (spell)
@@ -1109,6 +1089,7 @@ bool spell_is_useless(spell_type spell, bool transient)
                 break;
             }
         }
+#endif
     }
 
     switch (spell)
@@ -1120,7 +1101,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
-        if (transient && you.form == TRAN_TREE)
+        if (transient && you.is_stationary())
             return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
@@ -1165,10 +1146,12 @@ bool spell_is_useless(spell_type spell, bool transient)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_STONESKIN:
         if (you.species == SP_LAVA_ORC)
             return true;
         break;
+#endif
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (!you.stand_on_solid_ground()
@@ -1189,16 +1172,25 @@ bool spell_is_useless(spell_type spell, bool transient)
     return false;
 }
 
-// This function takes a spell, and determines what color it should be
-// highlighted with. You shouldn't have to touch this unless you want
-// to add new highlighting options.
+/**
+ * Determines what color a spell should be highlighted with.
+ *
+ * @param spell           The type of spell to be colored.
+ * @param default_color   Color to be used if the spell is unremarkable.
+ * @param transient       If true, check if spell is temporarily useless.
+ * @param rod_spell       If the spell being evoked from a rod.
+ * @return                The color to highlight the spell.
+ */
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
 {
     // If your god hates the spell, that
     // overrides all other concerns
-    if (god_hates_spell(spell, you.religion, rod_spell))
+    if (god_hates_spell(spell, you.religion, rod_spell)
+        || is_good_god(you.religion) && you.spellcasting_unholy())
+    {
         return COL_FORBIDDEN;
+    }
 
     if (_spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
@@ -1209,13 +1201,13 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     return default_color;
 }
 
-bool spell_no_hostile_in_range(spell_type spell)
+bool spell_no_hostile_in_range(spell_type spell, bool rod)
 {
     int minRange = get_dist_to_nearest_monster();
     if (minRange < 0)
         return false;
 
-    const int range = calc_spell_range(spell);
+    const int range = calc_spell_range(spell, 0, rod);
     if (range < 0)
         return false;
 
@@ -1242,6 +1234,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HOLY_BREATH:
     {
         targetter_cloud tgt(&you, range);
+        // Accept monsters that are in clouds for the hostiles-in-range check
+        // (not for actual targetting).
+        tgt.avoid_clouds = false;
         for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
              ri; ++ri)
         {
@@ -1260,7 +1255,9 @@ bool spell_no_hostile_in_range(spell_type spell)
                     && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
                         || (mons->type == MONS_BALLISTOMYCETE
                             && mons->number != 0)))
+                {
                     return false;
+                }
             }
         }
 
@@ -1273,6 +1270,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
         return false;
+
+    const bool neutral = testbits(get_spell_flags(spell), SPFLAG_NEUTRAL);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1323,7 +1322,8 @@ bool spell_no_hostile_in_range(spell_type spell)
             tempbeam = beam;
             tempbeam.target = *ri;
             tempbeam.fire();
-            if (tempbeam.foe_info.count > 0)
+            if (tempbeam.foe_info.count > 0
+                || neutral && tempbeam.friend_info.count > 0)
             {
                 found = true;
                 break;

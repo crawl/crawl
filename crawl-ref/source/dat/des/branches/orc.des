@@ -189,11 +189,10 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = sausage / nothing / animal skin / potion of confusion /\
-             potion of paralysis /\
+KITEM:   1 = beef jerky / nothing / animal skin / potion of confusion /\
              potion of degeneration / w:2 potion of haste / w:2 potion of might
 KFEAT:   1 = 1
-ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
+ITEM:    club, potion of confusion, slice of pizza, beef jerky / weight:40 nothing
 ITEM:    potion of confusion
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
@@ -699,7 +698,6 @@ ENDMAP
 # A temple (minmay)
 #
 NAME:   minmay_orc_temple_a
-TAGS:   mini_float
 DEPTH:  Orc
 MONS:   orc, patrolling orc priest
 KFEAT:  _ = altar_beogh
@@ -718,7 +716,6 @@ ENDMAP
 # Another temple (minmay)
 #
 NAME:   minmay_orc_temple_b
-TAGS:   mini_float
 DEPTH:  Orc
 MONS:   orc / nothing w:40, patrolling orc priest / nothing w:5
 KFEAT:  _ = altar_beogh
@@ -752,7 +749,6 @@ ENDMAP
 # Still another temple (minmay)
 #
 NAME:   minmay_orc_temple_c
-TAGS:   mini_float
 DEPTH:  Orc:2-
 MONS:   orc, orc priest, orc high priest
 SUBST:  . = 1 .:200
@@ -789,7 +785,6 @@ ENDMAP
 #######################
 # Yet Another Temple
 NAME:   bh_open_orc_temple
-TAGS:   mini_float
 DEPTH:  Orc:3-
 SUBST:  " = 1.......
 MONS:   orc w:8 / orc priest w:2 / orc warrior
@@ -818,7 +813,6 @@ ENDMAP
 # Treasure chamber (minmay)
 #
 NAME:   minmay_orc_treasury
-TAGS:   mini_float
 DEPTH:  Orc:3-
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
@@ -852,11 +846,11 @@ vv...................vv
 ENDMAP
 
 NAME:    guppyfry_orc_lava_fort
-TAGS:    no_item_gen no_monster_gen mini_float
+TAGS:    no_item_gen no_monster_gen
 DEPTH:   Orc:3-
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; crossbow . bolt . spear | hand axe | mace
+KMONS:   3 = orc warrior / orc ; arbalest . bolt . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
 KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
@@ -886,7 +880,7 @@ NAME:   mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat
-MONS:   generate_awake orc ; shortbow ego:flame | shortbow ego:frost | shortbow ego:vorpal . arrow q:10
+MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal . arrow q:10
 NSUBST: . = 2:2 / 2:c
 NSUBST: c = *: 2 .
 KITEM:  d = arrow q:1
@@ -918,9 +912,9 @@ ENDMAP
 ##################################################
 # The orcs piled up some loose rubble.
 NAME:   rock_pile
-TAGS:   no_item_gen no_monster_gen mini_float
+TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
-MONS:   orc ; sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling . stone q:30, boulder beetle
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
 NSUBST: b = 1:2 / 5:1 / *:d
@@ -1189,7 +1183,7 @@ xxxxxxXXXX''''Exxx
 ENDMAP
 
 NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor mini_float transparent
+TAGS: extra decor transparent
 DEPTH: Orc
 SUBST: W = w., c : ccccbv
 MAP
@@ -1275,7 +1269,7 @@ xxxxXXxxxxxX....@
 ENDMAP
 
 NAME: nicolae_orc_rockfall
-TAGS: transparent extra decor mini_float no_item_gen
+TAGS: transparent extra decor no_item_gen
 DEPTH: Orc
 : dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
 KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
@@ -1291,7 +1285,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_orc_sculptors_studio
-TAGS: extra decor mini_float no_item_gen
+TAGS: extra decor no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI
@@ -1407,10 +1401,10 @@ ENDMAP
 NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 PLACE:   Orc:$
-MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | morningstar /\
-         orc w:10 ; crossbow . bolt . trident | hand axe | mace
-MONS:    orc warrior ; crossbow . bolt . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; crossbow . bolt . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; arbalest . bolt . halberd | war axe | morningstar /\
+         orc w:10 ; arbalest . bolt . trident | hand axe | mace
+MONS:    orc warrior ; arbalest . bolt . glaive | broad axe | battleaxe | great mace
+MONS:    orc knight ; arbalest . bolt . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
 SUBST:   3 = 23

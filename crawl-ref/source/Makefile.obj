@@ -15,6 +15,8 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
+butcher.o \
+bloodspatter.o \
 chardump.o \
 cio.o \
 cloud.o \
@@ -66,6 +68,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godblessing.o \
 godcompanions.o \
 godconduct.o \
 goditem.o \
@@ -142,14 +145,15 @@ mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
+mon-message.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
 mon-place.o \
+mon-poly.o \
 mon-project.o \
 mon-speak.o \
 mon-stealth.o \
-mon-stuff.o \
 mon-transit.o \
 mon-util.o \
 monster.o \
@@ -180,6 +184,7 @@ random.o \
 random-var.o \
 ranged_attack.o \
 ray.o \
+rot.o \
 religion.o \
 shopping.o \
 shout.o \

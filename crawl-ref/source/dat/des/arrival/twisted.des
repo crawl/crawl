@@ -84,6 +84,7 @@ TAGS:    arrival no_monster_gen no_item_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
+KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_rtele_into
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
@@ -177,8 +178,9 @@ ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
+KPROP:   M = no_rtele_into
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = teleport trap
+KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
@@ -297,7 +299,7 @@ SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
 SUBST:   z=x, y=x, B=., '=+, V=., "=+
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
 xxxxxxxxxxxxxxxxxxx....@
 xxxxxxxCCCCCCCxxxxx.....
@@ -320,7 +322,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_connections
-TAGS:    arrival
+TAGS:    arrival no_rtele_into
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
 SUBST:   ([ = .
@@ -438,7 +440,7 @@ SUBST:   t : U....
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
 SUBST:   t : U....
-KMONS:   1 = jelly / ooze / brown ooze w:5 / pulsating lump w:1
+KMONS:   1 = jelly / ooze
 :else
 SUBST:   D = C
 SHUFFLE: VCd

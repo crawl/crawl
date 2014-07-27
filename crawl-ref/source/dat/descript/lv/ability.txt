@@ -44,10 +44,6 @@ End Transfer Knowledge ability
 
 Pārtraukt notiekošo pramju parnesi.
 %%%%
-Make dart trap ability
-
-Izvēlētajā vietā izveidot šautriņu lamatas.
-%%%%
 Make arrow trap ability
 
 Izvēlētajā vietā izveidot bultu lamatas.

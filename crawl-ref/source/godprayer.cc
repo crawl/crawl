@@ -5,6 +5,8 @@
 #include <cmath>
 
 #include "artefact.h"
+#include "bloodspatter.h"
+#include "butcher.h"
 #include "coordit.h"
 #include "database.h"
 #include "effects.h"
@@ -21,7 +23,6 @@
 #include "player.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "monster.h"
 #include "notes.h"
 #include "options.h"
@@ -30,6 +31,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "state.h"
+#include "spl-wpnench.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "unwind.h"
@@ -83,7 +85,7 @@ string god_prayer_reaction()
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+                                       OSEL_BLESSABLE_WEAPON, true, true, false);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
         return false;
@@ -91,7 +93,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     item_def& wpn(you.inv[item_slot]);
 
     // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH))
+    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
         return false;
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
@@ -110,7 +112,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return false;
     }
 
-    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+    if (you.duration[DUR_WEAPON_BRAND]) // just in case
+    {
+        ASSERT(you.weapon());
+        end_weapon_brand(*you.weapon());
+    }
 
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
@@ -119,7 +125,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     const bool is_cursed = wpn.cursed();
 
-    enchant_weapon(wpn, 1 + random2(2), 1 + random2(2), 0);
+    enchant_weapon(wpn, true);
+    enchant_weapon(wpn, true);
 
     if (is_cursed)
         do_uncurse_item(wpn, false);
@@ -133,16 +140,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
             origin_acquired(wpn, GOD_SHINING_ONE);
             wpn.flags |= ISFLAG_BLESSED_WEAPON;
         }
-
-        burden_change();
     }
     else if (is_evil_god(god))
     {
         convert2bad(wpn);
-
         wpn.flags &= ~ISFLAG_BLESSED_WEAPON;
-
-        burden_change();
     }
 
     you.wield_change = true;
@@ -254,13 +256,11 @@ static bool _altar_prayer()
             }
         }
 
-        int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
-                                  0, 0, 0, you.religion);
+        int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1, 0,
+                                  0, you.religion);
 
-        if (thing_created == NON_ITEM)
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
             return false;
-
-        move_item_to_grid(&thing_created, you.pos());
 
         simple_god_message(" grants you a gift!");
         more();
@@ -274,6 +274,7 @@ static bool _altar_prayer()
     else if (you_worship(GOD_GOZAG) && !player_under_penance()
         && !you.one_time_ability_used[GOD_GOZAG])
     {
+        bool found = false;
         bool prompted = false;
         for (stack_iterator j(you.pos()); j; ++j)
         {
@@ -282,6 +283,7 @@ static bool _altar_prayer()
                 || item_is_rune(*j)
                 || j->base_type == OBJ_GOLD)
             {
+                found = true;
                 continue;
             }
 
@@ -316,129 +318,120 @@ static bool _altar_prayer()
         }
         if (prompted)
             canned_msg(MSG_OK);
+        else if (found)
+            mprf("There's no item here that can be duplicated.");
         return false;
-    }
-
-    // Qazlal offers you an elemental resistance (rF+, rC+, rElec, AC+3).
-    else if (you_worship(GOD_QAZLAL) && !player_under_penance()
-             && you.piety >= piety_breakpoint(5)
-             && !you.one_time_ability_used[GOD_QAZLAL])
-    {
-        simple_god_message(
-            " will protect you from an element of your choice.");
-        more();
-        mesclr();
-        mpr_nojoin(MSGCH_PLAIN, "[a] Fire  (rF+)");
-        mpr_nojoin(MSGCH_PLAIN, "[b] Ice   (rC+)");
-        mpr_nojoin(MSGCH_PLAIN, "[c] Air   (rElec)");
-        mpr_nojoin(MSGCH_PLAIN, "[d] Earth (AC+3)");
-        mprf(MSGCH_PROMPT, "Request which resistance (ESC to cancel)?");
-        int keyin = toalower(get_ch()) - 'a';
-        if (keyin < 0 || keyin > 3)
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-
-        you.one_time_ability_used.set(you.religion);
-        switch (keyin)
-        {
-            default:
-            case 0:
-                you.attribute[ATTR_DIVINE_FIRE_RES] = 1;
-                simple_god_message(" grants you protection from fire!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rF+"));
-                break;
-            case 1:
-                you.attribute[ATTR_DIVINE_COLD_RES] = 1;
-                simple_god_message(" grants you protection from cold!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rC+"));
-                break;
-            case 2:
-                you.attribute[ATTR_DIVINE_ELEC_RES] = 1;
-                simple_god_message(" grants you protection from electricity!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rElec"));
-                break;
-            case 3:
-                you.attribute[ATTR_DIVINE_AC] = 1;
-                simple_god_message(
-                    " grants you protection from physical attacks!");
-                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "AC+3"));
-                you.redraw_armour_class = true;
-                break;
-        }
-        return true;
     }
 
     // None of above are true, nothing happens.
     return false;
 }
 
+/**
+ * Pray at, or convert to, an altar at the current position.
+ *
+ * @return Whether anything happened that took time.
+ */
+static bool _altar_pray_or_convert()
+{
+    const god_type altar_god = feat_altar_god(grd(you.pos()));
+    if (altar_god == GOD_NO_GOD)
+        return false;
+
+    if (you.species == SP_DEMIGOD)
+    {
+        mpr("A being of your status worships no god.");
+        return false;
+    }
+
+    if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
+    {
+        // consider conversion
+        you.turn_is_over = true;
+        // But if we don't convert then god_pitch
+        // makes it not take a turn after all.
+        god_pitch(feat_altar_god(grd(you.pos())));
+        return you.turn_is_over;
+    }
+
+    // pray to your own god's altar
+    return _altar_prayer();
+}
+
+/**
+ * Zazen.
+ */
+static void _zen_meditation()
+{
+    const mon_holy_type holi = you.holiness();
+    mprf(MSGCH_PRAY,
+         "You spend a moment contemplating the meaning of %s.",
+         holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
+}
+
+/**
+ * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
+ * you're an orc being preached at.)
+ */
 void pray()
 {
     // only successful prayer takes time
     you.turn_is_over = false;
 
-    bool something_happened = false;
-    const god_type altar_god = feat_altar_god(grd(you.pos()));
-    if (altar_god != GOD_NO_GOD)
+    // try to pray to an altar (if any is present)
+    if (_altar_pray_or_convert())
     {
-        if (!you_worship(GOD_NO_GOD) && altar_god == you.religion)
-            something_happened = _altar_prayer();
-        else if (altar_god != GOD_NO_GOD)
-        {
-            if (you.species == SP_DEMIGOD)
-            {
-                mpr("A being of your status worships no god.");
-                return;
-            }
+        you.turn_is_over = true;
+        return;
+    }
 
-            you.turn_is_over = true;
-            // But if we don't convert then god_pitch
-            // makes it not take a turn after all.
-            god_pitch(feat_altar_god(grd(you.pos())));
+    // convert to beogh via priest.
+    if (you_worship(GOD_NO_GOD) && env.level_state & LSTATE_BEOGH
+        && can_convert_to_beogh())
+    {
+        // TODO: deduplicate this with the code in _altar_pray_or_convert.
+        you.turn_is_over = true;
+        // But if we don't convert then god_pitch
+        // makes it not take a turn after all.
+        god_pitch(GOD_BEOGH);
+        if (you_worship(GOD_BEOGH))
+        {
+            spare_beogh_convert();
             return;
         }
     }
 
+    ASSERT(!you.turn_is_over);
+
+    // didn't convert to anyone.
     if (you_worship(GOD_NO_GOD))
     {
-        const mon_holy_type holi = you.holiness();
-
-        mprf(MSGCH_PRAY,
-             "You spend a moment contemplating the meaning of %s.",
-             holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
-
-        // Zen meditation is timeless.
+        // wasn't considering following a god; just meditating.
+        if (feat_altar_god(grd(you.pos())) == GOD_NO_GOD)
+            _zen_meditation();
         return;
     }
 
-    if (!something_happened) // If something happened, there already was a prayer
-        mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
-            you.cannot_speak() ? "silent " : "",
-            god_name(you.religion).c_str());
+    mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
+         you.cannot_speak() ? "silent " : "",
+         god_name(you.religion).c_str());
 
-    if (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom())
-        something_happened = true;
-
-    // All sacrifices affect items you're standing on.
-    something_happened |= _offer_items();
+    you.turn_is_over = _offer_items()
+                      || (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom());
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
+    else if (you_worship(GOD_GOZAG))
+        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else if (player_under_penance())
         simple_god_message(" demands penance!");
-    if (you_worship(GOD_GOZAG))
-        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else
         mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
 
-    if (something_happened)
-        you.turn_is_over = true;
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
-int zin_tithe(item_def& item, int quant, bool quiet, bool converting)
+int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
 {
     int taken = 0;
     int due = quant += you.attribute[ATTR_TITHE_BASE];
@@ -593,7 +586,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                          jwl, SCR_CURSE_JEWELLERY,
                                          0);
         }
-        int it = items(0, OBJ_SCROLLS, scr, true, 0, 0, 0, 0, GOD_ASHENZARI);
+        int it = items(0, OBJ_SCROLLS, scr, true, 0, 0, 0, GOD_ASHENZARI);
         if (it == NON_ITEM)
         {
             mpr("You feel the world is against you.");
@@ -643,7 +636,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
             const monsterentry *m = get_monster_data(dummy.type);
             int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
 
-            dummy.hit_dice = hd;
+            dummy.set_hit_dice(hd);
             dummy.max_hit_points = hp;
         }
         int gain = get_fuzzied_monster_difficulty(&dummy);
@@ -747,33 +740,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         break;
     }
 
-    case GOD_NEMELEX_XOBEH:
-    {
-        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
-        {
-            you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
-            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                 you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-        }
-        // Nemelex piety gain is fairly fast... at least when you
-        // have low piety.
-        int piety_change = value/2 + 1;
-        if (is_artefact(item))
-            piety_change *= 2;
-        int piety_denom = 30 + you.piety/2;
-
-        gain_piety(piety_change, piety_denom);
-
-        // Preserving the old behaviour of giving the big message for
-        // artefacts and artefacts only.
-        relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
-                                is_artefact(item) ?
-                                  PIETY_LOTS : PIETY_SOME : PIETY_NONE;
-        break;
-    }
-
     case GOD_JIYVA:
     {
         // compress into range 0..250
@@ -816,6 +782,11 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
     return relative_gain;
 }
 
+/**
+ * Sacrifice the items at the player's location to the player's god.
+ *
+ * @return  True if an item was sacrificed, false otherwise.
+*/
 static bool _offer_items()
 {
     if (!god_likes_items(you.religion))
@@ -830,7 +801,6 @@ static bool _offer_items()
 
     int num_sacced = 0;
     int num_disliked = 0;
-    item_def *disliked_item = 0;
 
     while (i != NON_ITEM)
     {
@@ -838,14 +808,11 @@ static bool _offer_items()
         const int next = item.link;  // in case we can't get it later.
         const bool disliked = !god_likes_item(you.religion, item);
 
-        if (item_is_stationary(item) || disliked)
+        if (item_is_stationary_net(item) || disliked)
         {
-            i = next;
             if (disliked)
-            {
                 num_disliked++;
-                disliked_item = &item;
-            }
+            i = next;
             continue;
         }
 
@@ -881,23 +848,10 @@ static bool _offer_items()
     // Explanatory messages if nothing the god likes is sacrificed.
     if (num_sacced == 0 && num_disliked > 0)
     {
-        ASSERT(disliked_item);
-
-        if (item_is_orb(*disliked_item))
-            simple_god_message(" wants the Orb's power used on the surface!");
-        else if (item_is_rune(*disliked_item))
-            simple_god_message(" wants the runes to be proudly displayed.");
-        // Zin was handled above, and the other gods don't care about
-        // sacrifices.
-        else if (god_likes_fresh_corpses(you.religion))
+        if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you_worship(GOD_BEOGH))
             simple_god_message(" only cares about orcish remains!");
-        else if (you_worship(GOD_NEMELEX_XOBEH))
-            if (disliked_item->base_type == OBJ_GOLD)
-                simple_god_message(" does not care about gold!");
-            else
-                simple_god_message(" expects you to use your decks, not offer them!");
         else if (you_worship(GOD_ASHENZARI))
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }

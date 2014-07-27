@@ -199,40 +199,36 @@ void TilesFramework::finish_message()
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
-            int retries = 10;
+            int retries = 30;
             ssize_t sent = 0;
             while (sent < fragment_size)
             {
                 ssize_t retval = sendto(m_sock, fragment_start + sent,
                     fragment_size - sent, 0, (sockaddr*) &m_dest_addrs[i],
                     sizeof(sockaddr_un));
-                if (retval == -1)
+                if (retval <= 0)
                 {
+                    const char *errmsg = retval == 0 ? "No bytes sent"
+                                                     : strerror(errno);
                     if (--retries <= 0)
-                        die("Socket write error: %s", strerror(errno));
+                        die("Socket write error: %s", errmsg);
 
-                    if (errno == ECONNREFUSED || errno == ENOENT)
+                    if (retval == 0 || errno == ENOBUFS || errno == EWOULDBLOCK
+                        || errno == EINTR || errno == EAGAIN)
+                    {
+                        // Wait for half a second at first (up to five), then
+                        // try again.
+                        usleep(retries <= 10 ? 5000 * 1000 : 500 * 1000);
+                    }
+                    else if (errno == ECONNREFUSED || errno == ENOENT)
                     {
                         // the other side is dead
                         m_dest_addrs.erase(m_dest_addrs.begin() + i);
                         i--;
                         break;
                     }
-                    else if (errno == ENOBUFS || errno == EAGAIN
-                        || errno == EWOULDBLOCK || errno == EINTR)
-                    {
-                        // Wait for up to half a second, then try again
-                        usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
-                    }
                     else
-                        die("Socket write error: %s", strerror(errno));
-                }
-                else if (retval <= 0)
-                {
-                    if (--retries <= 0)
-                        die("Socket write error: retval <= 0");
-
-                    usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
+                        die("Socket write error: %s", errmsg);
                 }
                 else
                     sent += retval;
@@ -736,12 +732,15 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         _update_int(force_full, c.heat, temperature(), "heat");
+#endif
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, player_evasion(), "ev");
-    _update_int(force_full, c.shield_class, player_shield_class(), "sh");
+    _update_int(force_full, c.shield_class, player_displayed_shield_class(),
+                "sh");
 
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
     _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
@@ -1161,8 +1160,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
 
+#if TAG_MAJOR_VERSION == 34
         if (next_pc.heat_aura != current_pc.heat_aura)
             json_write_int("heat_aura", next_pc.heat_aura);
+#endif
 
         if (next_pc.gold_aura != current_pc.gold_aura)
             json_write_int("gold_aura", next_pc.gold_aura);

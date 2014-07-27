@@ -66,8 +66,7 @@ string InvTitle::get_text(const bool) const
 }
 
 InvEntry::InvEntry(const item_def &i, bool show_bg)
-    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i),
-      show_weight(false)
+    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i)
 {
     data = const_cast<item_def *>(item);
 
@@ -80,6 +79,12 @@ InvEntry::InvEntry(const item_def &i, bool show_bg)
     }
     else
         text = i.name(DESC_A, false);
+
+    if (item_is_stationary_net(i))
+    {
+        text += make_stringf(" (holding %s)",
+                             net_holdee(i)->name(DESC_A).c_str());
+    }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(index_to_letter(i.link));
@@ -197,14 +202,19 @@ string InvEntry::get_text(bool need_cursor) const
 
     ostringstream tstr;
 
-    tstr << ' ' << static_cast<char>(hotkeys[0]);
+    const bool nosel = hotkeys.empty();
+    const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
+
+    tstr << ' ' << key;
 
     if (need_cursor)
         tstr << '[';
     else
         tstr << ' ';
 
-    if (!selected_qty)
+    if (nosel)
+        tstr << ' ';
+    else if (!selected_qty)
         tstr << '-';
     else if (selected_qty < quantity)
         tstr << '#';
@@ -219,16 +229,7 @@ string InvEntry::get_text(bool need_cursor) const
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    //For weights display we need to know maximum number of chars in each column
-    //which fit in one line.
-    //XXX There should be a better way to determine this, for now we simply
-    //estimate it by the following heuristics {kittel}.
     unsigned max_chars_in_line = get_number_of_cols() - 2;
-#ifdef USE_TILE_LOCAL
-    if (Options.tile_menu_icons && show_weight)
-        max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
-#endif
-
     int colour_tag_adjustment = 0;
     if (InvEntry::show_glyph)
     {
@@ -238,29 +239,13 @@ string InvEntry::get_text(bool need_cursor) const
         colour_tag_adjustment = colour_tag.size() * 2 + 5;
     }
 
-    if (show_weight)
-        max_chars_in_line -= 1;
-
-    const int w_weight = show_weight ? 10 //length of " (999 aum)"
-                                     : 0;
     const int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + strwidth(text) + w_weight - max_chars_in_line;
+                     + strwidth(text) - max_chars_in_line;
     if (excess > 0)
         tstr << chop_string(text, max(0, strwidth(text) - excess - 2)) << "..";
     else
         tstr << text;
 
-    if (show_weight)
-    {
-        const int mass = item_mass(*item) * item->quantity;
-        // Note: If updating the " (%i aum)" format, remember to update
-        // w_weight above.
-        tstr << setw(max_chars_in_line - strwidth(tstr.str())
-                     + colour_tag_adjustment)
-             << right
-             << make_stringf(" (%i aum)",
-                             static_cast<int>(0.5 + BURDEN_TO_AUM * mass));
-    }
     return tstr.str();
 }
 
@@ -411,13 +396,8 @@ void InvMenu::set_title(const string &s)
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
 
-        const int cap = carrying_capacity(BS_UNENCUMBERED);
-
         stitle = make_stringf(
-            "Inventory: %.0f/%.0f aum (%d%%, %d/%d slots)",
-            BURDEN_TO_AUM * you.burden,
-            BURDEN_TO_AUM * cap,
-            (you.burden * 100) / cap,
+            "Inventory: %d/%d slots",
             inv_count(),
             ENDOFPACK);
 
@@ -495,8 +475,7 @@ static string _no_selectables_message(int item_selector)
     case OSEL_ENCH_ARM:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
-    case OSEL_VAMP_EAT:
-        return "You don't have any corpses which you can drain.";
+        return "You don't have any corpses.";
     case OSEL_DRAW_DECK:
         return "You aren't carrying any decks from which to draw.";
     case OBJ_FOOD:
@@ -867,16 +846,12 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         items_in_class.clear();
 
         InvEntry *forced_first = NULL;
-        const bool show_weight = Options.show_inventory_weights
-                                 >= (flags & MF_DROP_PICKUP ? MB_MAYBE : MB_TRUE);
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
             if (mitems[j]->base_type != i)
                 continue;
 
             InvEntry * const ie = new InvEntry(*mitems[j]);
-            ie->show_weight = show_weight;
-
             if (mitems[j]->sub_type == get_max_subtype(mitems[j]->base_type))
                 forced_first = ie;
             else
@@ -891,10 +866,20 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         {
             InvEntry *ie = items_in_class[j];
             if (tag == "pickup")
-                ie->tag = "pickup";
+            {
+                if (ie->item && item_is_stationary(*ie->item))
+                    ie->tag = "nopickup";
+                else
+                    ie->tag = "pickup";
+            }
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
-                ie->hotkeys[0] = ckey++;
+            {
+                if (ie->tag == "nopickup")
+                    ie->hotkeys.clear();
+                else
+                    ie->hotkeys[0] = ckey++;
+            }
             do_preselect(ie);
 
             add_entry(procfn? (*procfn)(ie) : ie);
@@ -938,15 +923,6 @@ vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
-    if (key == CONTROL('W'))
-    {
-        for (size_t i = 0; i < items.size(); i++)
-            if (InvEntry *ie = dynamic_cast<InvEntry *>(items[i]))
-                ie->show_weight = !ie->show_weight;
-        draw_menu();
-        return true;
-    }
-
     if (type == MT_KNOW)
     {
         bool resetting = (lastch == CONTROL('D'));
@@ -1034,24 +1010,12 @@ string item_class_name(int type, bool terse)
 {
     if (terse)
     {
-        // TODO: merge with base_type_string()
         switch (type)
         {
-        case OBJ_GOLD:       return "gold";
-        case OBJ_WEAPONS:    return "weapon";
-        case OBJ_MISSILES:   return "missile";
-        case OBJ_ARMOUR:     return "armour";
-        case OBJ_WANDS:      return "wand";
-        case OBJ_FOOD:       return "food";
-        case OBJ_SCROLLS:    return "scroll";
-        case OBJ_JEWELLERY:  return "jewellery";
-        case OBJ_POTIONS:    return "potion";
-        case OBJ_BOOKS:      return "book";
         case OBJ_STAVES:     return "magical staff";
-        case OBJ_RODS:       return "rod";
-        case OBJ_ORBS:       return "orb";
         case OBJ_MISCELLANY: return "misc";
         case OBJ_CORPSES:    return "carrion";
+        default:             return base_type_string((object_class_type) type);
         }
     }
     else
@@ -1110,21 +1074,17 @@ const char* item_slot_name(equipment_type type, bool terse)
 
 vector<SelItem> select_items(const vector<const item_def*> &items,
                              const char *title, bool noselect,
-                             menu_type mtype, invtitle_annotator titlefn)
+                             menu_type mtype,
+                             invtitle_annotator titlefn)
 {
     vector<SelItem> selected;
     if (!items.empty())
     {
         InvMenu menu;
         menu.set_type(mtype);
-        menu.set_title_annotator(titlefn);
         menu.set_title(title);
         if (mtype == MT_PICKUP)
-        {
             menu.set_tag("pickup");
-            // Need this before load_items.
-            menu.set_flags(menu.get_flags() | MF_DROP_PICKUP);
-        }
 
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
@@ -1208,10 +1168,6 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_FOOD:
         return itype == OBJ_FOOD && !is_inedible(i);
 
-    case OSEL_VAMP_EAT:
-        return itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-               && !food_is_rotten(i) && mons_has_blood(i.mon_type);
-
     case OSEL_DRAW_DECK:
         return is_deck(i);
 
@@ -1241,13 +1197,27 @@ static bool _item_class_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-        return is_weapon(i)
-               && (itype == OBJ_WEAPONS
-                    && !is_artefact(i)
-                    && (i.plus < MAX_WPN_ENCHANT
-                        || i.plus2 < MAX_WPN_ENCHANT
-                        || !(item_ident(i, ISFLAG_KNOW_PLUSES)))
-                   || i.cursed());
+    {
+        if (!is_weapon(i))
+            return false;
+        if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
+            // Ashenzari would just preserve the curse.
+            && !you_worship(GOD_ASHENZARI))
+        {
+            return true;
+        }
+        if (itype != OBJ_WEAPONS || is_artefact(i))
+            return false;
+        if (!item_ident(i, ISFLAG_KNOW_PLUSES))
+            return true;
+
+        if (i.plus < MAX_WPN_ENCHANT)
+            return true;
+        return false;
+    }
+
+    case OSEL_BLESSABLE_WEAPON:
+        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
 
     default:
         return false;
@@ -1317,8 +1287,6 @@ static unsigned char _invent_select(const char *title = NULL,
                                     Menu::selitem_tfn selitemfn = NULL,
                                     const vector<SelItem> *pre_select = NULL)
 {
-    if (type == MT_DROP || type == MT_PICKUP)
-        flags |= MF_DROP_PICKUP;
     InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
@@ -1439,7 +1407,7 @@ vector<SelItem> prompt_invent_items(
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1491,7 +1459,7 @@ vector<SelItem> prompt_invent_items(
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
@@ -1739,7 +1707,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
         && item.sub_type == AMU_FAITH
-        && !you_worship(GOD_NO_GOD))
+        && !you_worship(GOD_NO_GOD)
+        && !you_worship(GOD_XOM))
     {
         return true;
     }
@@ -1757,7 +1726,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
             return true;
         }
 
-        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
+        if (get_weapon_brand(item) == SPWPN_VAMPIRISM
             && !you.is_undead && !crawl_state.game_is_zotdef()
             && !you_foodless())
         {
@@ -1844,9 +1813,11 @@ bool check_warning_inscriptions(const item_def& item,
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
         if (_nasty_stasis(item, oper))
+        {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
                          you.duration[DUR_SLOW] ? "slowed" : "hasted");
+        }
         prompt += "?";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);
@@ -1914,7 +1885,7 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1974,7 +1945,7 @@ int prompt_invent_item(const char *prompt,
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
             }
         }
@@ -2060,15 +2031,16 @@ bool item_is_wieldable(const item_def &item)
               && item.sub_type == MISC_LANTERN_OF_SHADOWS;
 }
 
-/*
- * Return wether an item can be evoked.
+/**
+ * Return whether an item can be evoked.
+ *
  * @param item      The item to check
  * @param reach     Do weapons of reaching count?
- * @param known     When set it returns true for items of unknown type which
+ * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
- * @param all_wands When set, it returns true for empty wands.
+ * @param all_wands When set, return true for empty wands.
  * @param msg       Whether we need to print a message.
- * @param equip     When disabled, ignore wield and meld requirements.
+ * @param equip     When false, ignore wield and meld requirements.
  */
 bool item_is_evokable(const item_def &item, bool reach, bool known,
                       bool all_wands, bool msg, bool equip)

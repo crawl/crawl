@@ -18,7 +18,7 @@ void drink(int slot = -1);
 
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
-bool puton_ring(int slot = -1);
+bool puton_ring(int slot = -1, bool allow_prompt = true);
 
 void read_scroll(int slot = -1);
 
@@ -43,15 +43,14 @@ bool item_is_worn(int inv_slot);
 
 void zap_wand(int slot = -1);
 
-bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour);
+bool enchant_weapon(item_def &wpn, bool quiet);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
 void prompt_inscribe_item();
 
-bool stasis_blocks_effect(bool calc_unid, bool identify,
+bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);
-item_def* get_only_unided_ring();
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

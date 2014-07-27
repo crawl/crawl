@@ -37,6 +37,7 @@
 #include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "options.h"
 #include "place.h"
@@ -433,19 +434,12 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
     const map_cell& levelmap_cell = env.map_knowledge(c);
-    const monster_info *minfo = levelmap_cell.monsterinfo();
-
-    // Can't swap with monsters caught in nets
-    if (minfo && minfo->attitude >= ATT_STRICT_NEUTRAL
-        && (minfo->is(MB_CAUGHT) || minfo->is(MB_WEBBED)) && !try_fallback)
-    {
-        return false;
-    }
 
     // Travel will not voluntarily cross squares blocked by immobile
     // monsters.
     if (!ignore_danger && !ignore_hostile)
     {
+        const monster_info *minfo = levelmap_cell.monsterinfo();
         if (minfo && _monster_blocks_travel(minfo))
             return false;
     }
@@ -601,7 +595,7 @@ static inline void _check_interesting_square(const coord_def pos,
     ed.found_feature(pos, grd(pos));
 }
 
-static void _userdef_run_stoprunning_hook(void)
+static void _userdef_run_stoprunning_hook()
 {
 #ifdef CLUA_BINDINGS
     if (you.running)
@@ -611,7 +605,7 @@ static void _userdef_run_stoprunning_hook(void)
 #endif
 }
 
-static void _userdef_run_startrunning_hook(void)
+static void _userdef_run_startrunning_hook()
 {
 #ifdef CLUA_BINDINGS
     if (you.running)
@@ -2156,7 +2150,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     level_id curr = level_id::current();
     while (true)
     {
-        mesclr();
+        clear_messages();
 
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -2440,7 +2434,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
     {
-        mesclr();
+        clear_messages();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.p.id.branch].longname,
@@ -3752,7 +3746,7 @@ void TravelCache::delete_waypoint()
 
     while (get_waypoint_count())
     {
-        mesclr();
+        clear_messages();
         mpr("Existing waypoints:");
         list_waypoints();
         mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
@@ -3781,7 +3775,7 @@ void TravelCache::delete_waypoint()
         return;
     }
 
-    mesclr();
+    clear_messages();
     mpr("All waypoints deleted. Have a nice day!");
 }
 
@@ -3793,7 +3787,7 @@ void TravelCache::add_waypoint(int x, int y)
         return;
     }
 
-    mesclr();
+    clear_messages();
 
     const bool waypoints_exist = get_waypoint_count();
     if (waypoints_exist)
@@ -3837,7 +3831,7 @@ void TravelCache::add_waypoint(int x, int y)
     waypoints[waynum].pos = pos;
 
     string new_dest = _get_trans_travel_dest(waypoints[waynum], false, true);
-    mesclr();
+    clear_messages();
     if (overwrite)
     {
         if (lid == old_lid) // same level
@@ -4538,7 +4532,7 @@ void do_interlevel_travel()
         _start_translevel_travel_prompt();
 
     if (you.running)
-        mesclr();
+        clear_messages();
 }
 
 #ifdef USE_TILE

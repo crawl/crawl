@@ -24,8 +24,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, pickup_menu, pickup_menu_limit,
-                drop_filter, default_friendly_pickup
+                assign_item_slot, pickup_menu_limit, drop_filter
 3-b     Targeting.
                 darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
@@ -51,8 +50,8 @@ The contents of this text are:
                 runrest_safe_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
 3-h     Command Enhancements.
-                auto_switch, easy_open, easy_unequip,
-                equip_unequip, easy_confirm, allow_self_target,
+                auto_switch, easy_open, easy_unequip, equip_unequip,
+                jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
@@ -62,18 +61,18 @@ The contents of this text are:
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
-                show_more, small_more, show_inventory_weights,
-                show_newturn_mark, show_gold_turns, show_game_turns,
-                item_stack_summary_minimum,
-                mlist_min_height, msg_min_height, msg_max_height,
-                messages_at_top, skill_focus,
-                mlist_allow_alternate_layout, mlist_targeting,
-                menu_colour, message_colour, force_more_message,
-                msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour, view_delay
-3-j     Missiles.
+                show_more, small_more, show_newturn_mark,
+                show_game_turns, item_stack_summary_minimum,
+                mlist_min_height, mlist_allow_alternate_layout,
+                mlist_targeting, msg_min_height, msg_max_height,
+                messages_at_top, skill_focus, msg_condense_repeats,
+                msg_condense_short, show_travel_trail, monster_list_colour,
+                view_delay, force_more_message
+3-j     Colours (messages and menus)
+                menu_colour, message_colour
+3-k     Missiles.
                 fire_items_start, fire_order
-3-k     Message Channels.
+3-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, timed_portal, sound,
                 intrinsic_gain, mutation, monster_spell, monster_enchant,
@@ -81,12 +80,12 @@ The contents of this text are:
                 monster_target, banishment, rotten_meat, equipment, floor,
                 multiturn, examine, examine_filter, diagnostics, error,
                 tutorial, orb, hell_effect
-3-l     Inscriptions.
+3-m     Inscriptions.
                 autoinscribe, autoinscribe_cursed
-3-m     Macro related Options.
+3-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
-3-n     Tiles Options.
+3-o     Tiles Options.
                 tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
@@ -106,7 +105,8 @@ The contents of this text are:
                 tile_font_lbl_size, tile_font_ft_light,
                 tile_show_minihealthbar, tile_show_minimagicbar,
                 tile_show_demon_tier, tile_water_anim, tile_misc_anim,
-                tile_realtime_anim, tile_layout_priority, tile_display_mode,
+                tile_realtime_anim, tile_show_player_species,
+                tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar
 4-  Character Dump.
 4-a     Saving.
@@ -486,20 +486,14 @@ assign_item_slot = (forward | backward)
         With "backward", items dropped/fired and picked up later are
         more likely to get their old slot back.
 
-pickup_menu = true
-        When true (the default), displays a menu when picking up multiple
-        items. Note that no matter how many items you choose, picking up will
-        always take one turn.
-        When false, you will be prompted one by one when picking up multiple
-        items, unless there are at least 4 items on your square in which case
-        the menu will be used. This number can be adjusted with the
-        pickup_menu_limit option.
+pickup_menu_limit = 1
+        If there are more items than this on your square, a menu will be
+        displayed when picking up multiple items instead of prompting for each
+        item. If zero, never use the menu. If negative, use the value of
+        item_stack_summary_minimum - 1, instead.
 
-pickup_menu_limit = 4
-        If pickup_menu is false and there are at least this many items on your
-        square, a menu will be displayed when picking up multiple items instead
-        of prompting for each item. If zero, never use the menu. If negative,
-        use the value of item_stack_summary_minimum instead.
+        Note that no matter the vaulue of the option, picking up will always
+        take one turn.
 
 drop_filter += <regex>, <regex>, ...
         (List option)
@@ -521,30 +515,6 @@ drop_filter += <regex>, <regex>, ...
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
         expression(s).
-
-default_friendly_pickup = (friend | player | none | all)
-        Using an in-game toggle, you can control what types of items
-        your allies will pick up:
-             none   = They won't pick up anything at all.
-             friend = They may pick up anything they or another ally
-                      dropped, e.g. if another ally dies.
-                      (This is the default setting.)
-             player = Like 'friend', but they may also pick up anything
-                      you've dropped or thrown.
-             all    = They may pick up anything they want to have.
-                      (This is how it works for hostile monsters.)
-
-        This option controls which is the default setting for this toggle
-        when you start a new game, or when you enter a level for the first
-        time.
-
-        Note that this only works for intelligent allies (such as those you can
-        get when worshipping Beogh), and that monsters have their own
-        reasonings for which items they may need, and when they feel safe
-        enough to pick them up. Except for "none", these options won't let you
-        override these requirements.
-        Also, friendly jellies won't ever eat any items, regardless of
-        this option.
 
 3-b     Targeting.
 -------------------
@@ -873,7 +843,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-k below on Message
+        the channel name and a colon (see section 3-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message += god:wrath finds you
@@ -894,6 +864,15 @@ runrest_stop_message += <regex>, <regex>, ...
 
         Note also that runrest_ignore_message has no effect on what
         explore_stop stops for.
+
+interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
+        (List option)
+        Use this option to not interrupt a delayed action on a certain trigger.
+        The list of delay types is in delay.cc in the delay_names string array,
+        and the list of interruption types is in activity_interrupt_names.
+        For example, use
+            interrupt_travel -= sense_monster
+        to not interrupt autotravel when a monster is sensed but not seen.
 
 runrest_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
@@ -925,10 +904,10 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         overrides any previous setting.
 
         All the existing trap types can be used, but in practice only
-        the mechanical traps (dart, bolt, arrow, needle, spear, blade)
+        the mechanical traps (bolt, arrow, needle, spear, blade)
         make sense. Note that travel tries to avoid traps if this is
         easily possible. Defaults to none. For example,
-              trapwalk_safe_hp = dart:15, needle:25, spear:50
+              trapwalk_safe_hp = needle:25, spear:50
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
@@ -963,6 +942,13 @@ equip_unequip = false
         If this is true, 'W'ear will also allow you to 'T'ake off worn
         armour, and vice versa, and the same is true for 'P'utting on/
         'R'emoving jewellery.
+
+jewellery_prompt = false
+        If this is true, equipping rings will always prompt for the slot to
+        use, instead of automatically equipping the ring if there is an
+        available empty slot. Unequipping jewellery will also always prompt for
+        an item to remove, instead of skipping the prompt if only one item
+        of jewellery is equipped.
 
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
@@ -1281,23 +1267,9 @@ small_more = false
         small_more = true, it is just the bottom left character if
         clear_messages is not set.
 
-show_inventory_weights = drop_pickup|true|false
-        When this is set to true, inventory listings will mention the
-        weight of each item.  When set to "drop_pickup" (the default), or
-        indeed any value other than true/false/yes/no, the menus for
-        picking up and dropping items will list item weights, but other
-        inventory menus will not.
-        Note: This option doesn't currently work for Tiles unless you use
-              tile_menu_icons = false.
-
 show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in
         front of the first line of a turn.
-
-show_gold_turns = true
-        If set to false, this option hides the extra line in the stat area
-        which displays the current gold and turn counters. In Tiles, this
-        option is ignored. Use the tile_layout_priority option instead.
 
 show_game_turns = true
         By default, the turn counter in the stat area displays game turns, which
@@ -1327,6 +1299,18 @@ mlist_min_height = 4
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
 
+mlist_allow_alternate_layout = false
+        Display the monster list wherever Crawl may find space on
+        your console display, usually to the left of the map, rather
+        than using the fixed position below the stat area.
+        This option is not supported in the tiles build.
+
+mlist_targeting = false
+        Using the monster list you can directly target monsters in targeting
+        mode. This can be toggled during a game with Ctrl-L while in targeting
+        mode, and this option controls the initial setting at game start or
+        reload.
+
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
         minimum value is 5.
@@ -1342,124 +1326,6 @@ messages_at_top = false
         Put the message window at the top of the screen. This moves
         the last message close to the center of the view when not
         using clear_messages=true.
-
-mlist_allow_alternate_layout = false
-        Display the monster list wherever Crawl may find space on
-        your console display, usually to the left of the map, rather
-        than using the fixed position below the stat area.
-        This option is not supported in the tiles build.
-
-mlist_targeting = false
-        Using the monster list you can directly target monsters in targeting
-        mode. This can be toggled during a game with Ctrl-L while in targeting
-        mode, and this option controls the initial setting at game start or
-        reload.
-
-menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
-        (Ordered list option)
-        This prints a line (of the inventory, a menu, or the discoveries
-        screen) containing regex in the stated colour. There can be
-        several statements in a list, and also several menu_colour
-        lines. When using several menu_colour lines, the colour of the
-        _first_ matching regex is applied. For a list of colours, check
-        the colour option in 5-a.
-
-        The match specifies which listings are affected by the
-        colouring. If you specify 'any', or completely skip the <match>:
-        part, then all listings are used. Possible values for match are:
-           ability       (the A screen)
-           description   (the \ screen)
-           equip         (the [, (, ), " screens)
-           help          (the manual)
-           inventory     (inventory and pickup menus)
-           pickup        (specific to pickup menus)
-           shop          (shop menus)
-           notes         (the ?: screen)
-           resists       (the % screen)
-           spell         (the Z and I screens)
-           stash         (the results from Ctrl-F)
-
-        Crawl has a couple of prefixes defined to make inventory colouring
-        easier. These are, in order of definition:
-           identified      (The item is fully identified.)
-           known           (You recognize the item's subtype.)
-           unidentified    (You don't recognize the item's subtype.)
-
-        Items are also prefixed with their base type (armour, weapon, wand,
-        etc.)
-
-        The following only apply to items whose subtype is known.
-           forbidden       (Your god would hate it if you used this item.)
-
-           emergency_item  (This item is invaluable in emergencies.)
-           good_item       (This item is generally a good item.)
-           dangerous_item  (Using this item can be dangerous.)
-           bad_item        (This item is generally a bad item.)
-           useless_item    (This item is of no use to you.)
-
-           inedible        (You cannot eat this, or get no nutrition from it.)
-           preferred       (The food type your character prefers, for example
-                            for herbivores/carnivores.)
-           poisonous       (Chunks/corpses that are poisonous.)
-           mutagenic       (Chunks/corpses that are mutagenic.)
-           contaminated    (Chunks/corpses that give reduced nutrition.)
-           rot-inducing    (Chunks/corpses that cause rotting.)
-
-           equipped        (Equipped items.)
-           artefact        (For artefacts, whether identified or not.)
-
-        When looking for menu_colour matches, these prefixes are prepended to
-        the actual item name, e.g. in the form of
-           identified forbidden wand of draining (4)
-           unidentified equipped artefact sparkling ring (left hand)
-
-        The same prefixes can also be used for highlighting prompts pertaining
-        to items matching the description, or to define autopickup_exceptions.
-
-        If you want to colour all items that contain a certain prefix, use
-          menu_colour ^= lightgreen:poisonous
-
-        To colour worn stuff and highlight cursed items (except where other,
-        presumably more important, message colours match), use
-          menu_colour += inventory:lightred:equipped.* cursed
-          menu_colour += inventory:green:equipped
-          menu_colour += inventory:red: cursed
-
-        To colour identified artefacts, try
-          menu_colour ^= inventory:white:( [-+] the)
-        or
-          menu_colour ^= inventory:white:identified.*artefact
-
-        If you frequently die because you forget to use emergency items,
-        try
-          menu_colour ^= inventory:cyan:emergency_item
-          menu_colour ^= inventory:lightcyan:wand of (fire|cold|draining)
-
-        If you'd like to see rotting chunks and corpses at a glance, use
-          menu_colour ^= inventory:red: rotting
-
-        menu_colour can also be applied to colour the in-game notes (to
-        be read with '?:'). The following line will show level ups in
-        white:
-          menu_colour ^= notes:white:Reached XP level
-
-message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
-        (Ordered list option)
-        message_colour allows you to override colours for individual
-        messages. For instance, if you find the low hp warning to be
-        insufficiently attention grabbing, you could do something like
-             message_colour += yellow:LOW HITPOINT WARNING
-        You can also narrow the message match to a specific channel:
-             message_colour += lightred:god:xom
-        If you don't want to see a message at all, you can mute it:
-             message_colour += mute:You start resting
-
-force_more_message += <regex>, <regex>
-        (List option)
-        Any message that contains a regex specified here, will enforce a
-        -More- prompt, so it can be used to highlight really important
-        events.
-        The syntax is identical to that of runrest_ignore_message (3-g).
 
 msg_condense_repeats = true
         If the same message is repeated multiple times during the same
@@ -1514,7 +1380,120 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
-3-j     Missiles.
+force_more_message += <regex>, <regex>
+        (List option)
+        Any message that contains a regex specified here, will enforce a
+        -More- prompt, so it can be used to highlight really important
+        events.
+        The syntax is identical to that of runrest_ignore_message (3-g).
+
+3-j     Colours (messages and menus)
+-----------------
+
+menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
+        (Ordered list option)
+        This prints a line (of the inventory, a menu, or the discoveries
+        screen) containing regex in the stated colour. There can be
+        several statements in a list, and also several menu_colour
+        lines. When using several menu_colour lines, the colour of the
+        _first_ matching regex is applied. For a list of colours, check
+        the colour option in 5-a.
+
+        The match specifies which listings are affected by the
+        colouring. If you specify 'any', or completely skip the <match>:
+        part, then all listings are used. Possible values for match are:
+           ability       (the A screen)
+           description   (the \ screen)
+           equip         (the [, (, ), " screens)
+           help          (the manual)
+           inventory     (inventory and pickup menus)
+           pickup        (specific to pickup menus)
+           shop          (shop menus)
+           notes         (the ?: screen)
+           resists       (the % screen)
+           spell         (the Z and I screens)
+           stash         (the results from Ctrl-F)
+           stats         (the player stats panel)
+
+        Crawl has a couple of prefixes defined to make inventory colouring
+        easier. These are, in order of definition:
+           identified      (The item is fully identified.)
+           known           (You recognize the item's subtype.)
+           unidentified    (You don't recognize the item's subtype.)
+
+        Items are also prefixed with their base type (armour, weapon, wand,
+        etc.)
+
+        The following only apply to items whose subtype is known.
+           forbidden       (Your god would hate it if you used this item.)
+           emergency_item  (This item is invaluable in emergencies.)
+           good_item       (This item is generally a good item.)
+           dangerous_item  (Using this item can be dangerous.)
+           bad_item        (This item is generally a bad item.)
+           useless_item    (This item is of no use to you.)
+
+        The following apply only to items of certain base types, whether
+        identified or not:
+           inedible        (You cannot eat this, or get no nutrition from it.)
+           preferred       (The food type your character prefers, for example
+                            for herbivores/carnivores.)
+           poisonous       (Chunks/corpses that are poisonous.)
+           mutagenic       (Chunks/corpses that are mutagenic.)
+           contaminated    (Chunks/corpses that give reduced nutrition.)
+           rot-inducing    (Chunks/corpses that cause rotting.)
+
+           equipped        (Equipped items.)
+           artefact        (For artefacts, whether identified or not.)
+           melee           (Melee weapons, including rods and magical staves.)
+           ranged          (Ranged weapons.)
+
+        When looking for menu_colour matches, these prefixes are prepended to
+        the actual item name, e.g. in the form of
+           identified forbidden wand of draining (4)
+           unidentified equipped artefact sparkling ring (left hand)
+
+        The same prefixes can also be used for highlighting prompts pertaining
+        to items matching the description, or to define autopickup_exceptions.
+
+        If you want to colour all items that contain a certain prefix, use
+          menu_colour ^= lightgreen:poisonous
+
+        To colour worn stuff and highlight cursed items (except where other,
+        presumably more important, message colours match), use
+          menu_colour += inventory:lightred:equipped.* cursed
+          menu_colour += inventory:green:equipped
+          menu_colour += inventory:red: cursed
+
+        To colour identified artefacts, try
+          menu_colour ^= inventory:white:( [-+] the)
+        or
+          menu_colour ^= inventory:white:identified.*artefact
+
+        If you frequently die because you forget to use emergency items,
+        try
+          menu_colour ^= inventory:cyan:emergency_item
+          menu_colour ^= inventory:lightcyan:wand of (fire|cold|draining)
+
+        If you'd like to see rotting chunks and corpses at a glance, use
+          menu_colour ^= inventory:red: rotting
+
+        menu_colour can also be applied to colour the in-game notes (to
+        be read with '?:'). The following line will show level ups in
+        white:
+          menu_colour ^= notes:white:Reached XP level
+
+message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
+        (Ordered list option)
+        message_colour allows you to override colours for individual
+        messages. For instance, if you find the low hp warning to be
+        insufficiently attention grabbing, you could do something like
+             message_colour += yellow:LOW HITPOINT WARNING
+        You can also narrow the message match to a specific channel:
+             message_colour += lightred:god:xom
+        If you don't want to see a message at all, you can mute it:
+             message_colour += mute:You start resting
+
+3-k     Missiles.
 -----------------
 
 fire_items_start = a
@@ -1522,7 +1501,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / tomahawk / dart / stone / rock / net
+fire_order += javelin / tomahawk / stone / rock / net
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items
@@ -1546,7 +1525,7 @@ fire_order += inscribed
 
 (See also pickup_thrown in 3-a.)
 
-3-k     Message Channels.
+3-l     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -1606,7 +1585,7 @@ COLOUR can be any of the colours described in section 5-a (colour option).
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
 
-3-l     Inscriptions.
+3-m     Inscriptions.
 ---------------------
 
 See the "Inscriptions" section of the crawl manual for more information
@@ -1640,7 +1619,7 @@ show_god_gift = unident|yes|no
         fully known. Regardless of this setting, you can see the item's
         origin in its description.
 
-3-m     Macro related Options.
+3-n     Macro related Options.
 ------------------------------
 
 flush.failure = true
@@ -1672,7 +1651,7 @@ bindkey = [^D] CMD_BUTCHER
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
-3-n     Tiles Options.
+3-o     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
 
@@ -1870,6 +1849,10 @@ tile_realtime_anim = false
         If enabled, tile animations will run in real time and will not be tied
         to player actions.
         This option is only available on WebTiles.
+
+tile_show_player_species = false
+        If enabled, displays the player using the monster tile for her species,
+        instead of using the normal doll and showing equipment.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         (Ordered list option)

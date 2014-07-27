@@ -10,7 +10,6 @@ enum status_type
 {
     STATUS_AIRBORNE = NUM_DURATIONS + 1,
     STATUS_BEHELD,
-    STATUS_BURDEN,
     STATUS_CONTAMINATION,
     STATUS_NET,
     STATUS_HUNGER,
@@ -61,6 +60,7 @@ struct status_info
 // returns true if the status has a description
 bool fill_status_info(int status, status_info* info);
 
+const char *duration_name(duration_type dur);
 void init_duration_index();
 
 #endif

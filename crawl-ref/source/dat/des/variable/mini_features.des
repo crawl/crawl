@@ -33,7 +33,7 @@ default-depth: D, Depths, Elf, Crypt
 
 NAME:   glass_columns_a
 DEPTH:  D, Depths, Elf, Crypt
-TAGS:   serial_glass transparent mini_float extra allow_dup decor
+TAGS:   serial_glass transparent extra allow_dup decor
 WEIGHT: 5
 MAP
 .....
@@ -45,7 +45,7 @@ ENDMAP
 
 NAME:   glass_columns_b
 DEPTH:  D, Depths, Elf, Crypt
-TAGS:   serial_glass transparent mini_float extra allow_dup decor
+TAGS:   serial_glass transparent extra allow_dup decor
 WEIGHT: 3
 MAP
 .......
@@ -59,7 +59,7 @@ ENDMAP
 
 NAME:   glass_columns_c
 DEPTH:  D, Depths, Elf, Crypt
-TAGS:   serial_glass transparent mini_float extra allow_dup decor
+TAGS:   serial_glass transparent extra allow_dup decor
 WEIGHT: 2
 MAP
 .........
@@ -137,7 +137,7 @@ ENDMAP
 # Small intersection with statues (Eino)
 NAME:    small_statue_intersection
 DEPTH:   D:2-, Depths:2-, !Depths:$, Elf, Crypt, Lair, Abyss
-TAGS:    transparent mini_float allow_dup no_hmirror no_vmirror extra
+TAGS:    transparent allow_dup no_hmirror no_vmirror extra
 TAGS:    ruin_lair ruin_abyss decor
 MAP
 xx.xx
@@ -172,7 +172,7 @@ ENDMAP
 # This is an ancient vault.
 NAME:  solitary_fountain
 DEPTH: D, Depths, Elf
-TAGS:  transparent mini_float allow_dup extra decor
+TAGS:  transparent allow_dup extra decor
 SUBST: ?=TUV
 KMASK: TU = no_monster_gen
 MAP
@@ -186,7 +186,7 @@ ENDMAP
 # Another very classical vault.
 NAME:  fountainhead
 DEPTH: D, Depths, Elf, Crypt
-TAGS:  transparent mini_float allow_dup extra decor
+TAGS:  transparent allow_dup extra decor
 SUBST: ?=TUV
 MAP
 ..............
@@ -222,7 +222,7 @@ ENDMAP
 
 NAME:   corexii_leaking_fountain
 DEPTH:  D, Depths, Elf, Crypt
-TAGS:   transparent mini_float no_monster_gen no_item_gen extra decor
+TAGS:   transparent no_monster_gen no_item_gen extra decor
 NSUBST: W = 5:W / *:.
 MAP
 .....
@@ -280,7 +280,7 @@ MAP
 ENDMAP
 
 NAME:  nrook_mini_vaults
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 MAP
 .........
@@ -379,7 +379,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_door_square
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 MAP
 .................
@@ -444,7 +444,7 @@ xxx@xxx
 ENDMAP
 
 NAME:  minmay_misc_feat_pillars
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf, Crypt
 SUBST: x : xxxxcvbmG
 MAP
@@ -456,7 +456,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_square
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 SUBST: x = x.
 KPROP: x = no_rtele_into
@@ -471,7 +471,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_plants
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 MONS:  plant, bush, fungus
 DEPTH: D, Depths
 SUBST: x : xxxxcvbmGt123
@@ -491,7 +491,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_rows
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf, Crypt
 MAP
 .......
@@ -508,7 +508,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_diagonals
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf
 SUBST: x : xmb
 MAP
@@ -522,7 +522,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_doors
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 MAP
 x.x.x.x.x
@@ -567,7 +567,7 @@ xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_misc_feat_five
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf, Crypt
 SUBST: x : xxxxcvbm
 MAP
@@ -579,7 +579,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_chi
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 MAP
 ..........
@@ -618,7 +618,7 @@ xx?xx   xx?xx
 ENDMAP
 
 NAME:   minmay_misc_feat_enclosed
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  X = xx.
 KPROP:  ' = no_rtele_into
@@ -636,7 +636,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_room
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  ? = GGGTUV
 KMASK:  TU = no_monster_gen
@@ -651,7 +651,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_iff
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  X : xcvb.
 MAP
@@ -670,7 +670,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_columns
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf, Crypt
 MAP
 ...
@@ -685,7 +685,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_cross
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf, Crypt
 SUBST:  X : x.
 MAP
@@ -751,7 +751,7 @@ xx@xx@xx
 ENDMAP
 
 NAME:   minmay_misc_feat_nine_boxes
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 NSUBST: A = 1:. / *:x, B = 1:. / *:x, C = 1:. / *:x
 NSUBST: D = 1:. / *:x, E = 1:. / *:x, F = 1:. / *:x
@@ -773,7 +773,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_four_crosses
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  c : ccx
 SUBST:  G : GGGb
@@ -792,7 +792,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_roman
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 MAP
 .............
@@ -807,7 +807,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_more_columns
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  X : x.
 MAP
@@ -824,7 +824,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_x
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 MAP
 ........    ........
@@ -840,7 +840,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_secret_circle
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  X : x.
 SUBST:  Y : x.
@@ -870,7 +870,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_tiny
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 MAP
 ......
@@ -882,7 +882,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_stone_trees_small
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 6
 MAP
@@ -896,7 +896,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_stone_trees_medium
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 3
 MAP
@@ -916,7 +916,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_stone_trees_large
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 1
 SUBST:  T = t.
@@ -954,7 +954,7 @@ wwwwwwwww
 ENDMAP
 
 NAME:   minmay_holes
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D:5-, !D:$, Depths, !Depths:$, Lair:1-7
 KFEAT:  ^ = known shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
@@ -977,7 +977,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_splitting_lines
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 5
 MAP
@@ -1005,7 +1005,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_curled_crystal
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 3
 MAP
@@ -1018,7 +1018,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_parallelograms
-TAGS:    transparent mini_float extra decor
+TAGS:    transparent extra decor
 DEPTH:   D, Depths
 WEIGHT:  2
 SHUFFLE: EFGH
@@ -1042,7 +1042,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_large_rounded_square
-TAGS:    transparent mini_float extra decor
+TAGS:    transparent extra decor
 DEPTH:   D, Depths, Crypt
 WEIGHT:  1
 SUBST:   x : x c:2 v:1 b:1
@@ -1154,7 +1154,7 @@ MAP
 ENDMAP
 
 NAME:   roderic_chinese_pattern_swastika
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
 MAP
@@ -1303,7 +1303,7 @@ ENDMAP
 
 #cross filled (sun sumbol) in ancient Mid East and Greece
 NAME:   roderic_filled_cross
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
 SUBST:  ? = x+
@@ -1325,7 +1325,7 @@ ENDMAP
 
 #cross of infinity
 NAME:   roderic_cross_of_infinity
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
 MAP
@@ -1347,11 +1347,11 @@ ENDMAP
 
 #nine men's morris (Roderic)
 NAME:    roderic_nine_men_s_morris
-TAGS:    transparent mini_float extra decor
+TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
 SHUFFLE: defgh
-ITEM:    q:1 $, sausage, choko q:1, sultana q:1, stone q:1
+ITEM:    q:1 $, beef jerky, fruit q:1, royal jelly q:1, stone q:1
 NSUBST:  ' = 9:d / *:.
 MAP
 '.......'.......'
@@ -1378,7 +1378,7 @@ NAME:   roderic_three_in_a_row
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 1
-ITEM:   q:1 $, sultana q:1, stone, choko q:1
+ITEM:   q:1 $, fruit q:1, stone, fruit q:1
 SUBST:  ' : TUdefg
 MAP
 @xxxx@xxxx@
@@ -1395,7 +1395,7 @@ x'...'...'x
 ENDMAP
 
 NAME:    roderic_ancient_swastika
-TAGS:    transparent mini_float extra decor
+TAGS:    transparent extra decor
 DEPTH:   D, Depths
 WEIGHT:  1
 SHUFFLE: '"
@@ -1419,7 +1419,7 @@ MAP
 ENDMAP
 
 NAME:  roderic_lattice_a
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 DEPTH: D, Depths
 MAP
 ...........................................
@@ -1448,7 +1448,7 @@ ENDMAP
 
 # Malta's cross
 NAME:   roderic_malta_cross
-TAGS:   transparent mini_float allow_dup extra decor
+TAGS:   transparent allow_dup extra decor
 WEIGHT: 1
 DEPTH:  D, Depths
 MAP
@@ -1466,7 +1466,7 @@ MAP
 ENDMAP
 
 NAME:   roderic_whirl
-TAGS:   transparent mini_float allow_dup extra decor
+TAGS:   transparent allow_dup extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 1
 SUBST:  ? : ttTTG
@@ -1512,7 +1512,7 @@ MAP
 ENDMAP
 
 NAME:  hex_tiny
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 MAP
   ...
  .x.x.
@@ -1524,7 +1524,7 @@ MAP
 ENDMAP
 
 NAME:  hex_medium
-TAGS:  transparent mini_float extra decor
+TAGS:  transparent extra decor
 MAP
     .......
    .x.x.x.x.
@@ -1544,7 +1544,7 @@ MAP
 ENDMAP
 
 NAME:  hex_large
-TAGS:  transparent mini_float extra
+TAGS:  transparent extra
 MAP
       ...........
      .x.x.x.x.x.x.
@@ -1615,7 +1615,7 @@ ENDMAP
 
 NAME:   moated_statue
 DEPTH:  D, Depths, Elf, Crypt
-TAGS:   transparent extra allow_dup mini_float decor
+TAGS:   transparent extra allow_dup decor
 MAP
 xxxxxxx
 .WWGWW.
@@ -1642,7 +1642,7 @@ xx..m..mm.....mm..m..xx
 ENDMAP
 
 NAME:   wad_floor_pattern_1
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 WEIGHT: 2
 FTILE:  ' = floor_volcanic
 COLOUR: ' = red
@@ -1674,7 +1674,7 @@ MAP
 ENDMAP
 
 NAME:   wad_floor_pattern_2
-TAGS:   transparent mini_float extra decor
+TAGS:   transparent extra decor
 WEIGHT: 2
 FTILE:  ' = floor_pebble_cyan
 COLOUR: ' = green
@@ -1706,7 +1706,7 @@ MAP
 ENDMAP
 
 NAME: wad_floor_pattern_untrapped
-TAGS: transparent mini_float extra decor
+TAGS: transparent extra decor
 WEIGHT: 4
 KFEAT:  ~ = floor
 FTILE:  GT = floor_pebble_darkgray
@@ -2627,6 +2627,32 @@ x.....wccccccw......
      ....xtx...
 ENDMAP
 
+NAME: nicolae_two_hexagons
+DEPTH: D:8-, Depths
+TAGS: transparent extra decor
+SHUFFLE: ABCDEF, GHIJK, LMNOPQ, RSTUVW
+SUBST: AGMNOPQSTUVW = ., BCDEFHIJKLR = x
+MAP
+      ......      ......
+    ..........  ..........
+  ......cc..........cc......
+......BBccCC......KKccJJ......
+....BBBBMMCCCC..KKKKSSJJJJ....
+..ccBB..MM..CCccKK..SS..JJcc..
+..ccLL..MM..NNccRR..SS..TTcc..
+..AALLLLMMNNNNDDRRRRSSTTTTII..
+..AA..LLccNN..DD..RRccTT..II..
+..AA..QQccOO..DD..WWccUU..II..
+..AAQQQQPPOOOODDWWWWVVUUUUII..
+..ccQQ..PP..OOccWW..VV..UUcc..
+..ccFF..PP..EEccGG..VV..HHcc..
+....FFFFPPEEEE..GGGGVVHHHH....
+......FFccEE......GGccHH......
+  ......cc..........cc......
+    ..........  ..........
+      ......      ......
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2750,15 +2776,15 @@ ENDMAP
 # Don't you wish you knew apportation?
 NAME: baited_tele_trap
 DEPTH: D, Depths, Orc, Elf, Lair, Swamp, Shoals, Snake, Spider, Vaults, Crypt, Zot
-KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
-KFEAT: x = teleport trap
+KITEM: ^ = any good_item, any good_item/nothing, any good_item/nothing
+KFEAT: ^ = permanent teleport trap
 MAP
-x
+^
 ENDMAP
 
 # Not hard to obtain as is, but requires getting shafted.
 NAME:  minmay_item_behind_shaft
-TAGS:  extra mini_float
+TAGS:  extra
 DEPTH: D:2-, !D:$, Depths, !Depths:$
 KFEAT: S = shaft trap
 MAP
@@ -2783,7 +2809,7 @@ ENDMAP
 NAME:  min_item_tele_traps
 TAGS:  extra
 DEPTH: D:2-, Depths
-KFEAT: ! = known teleport trap
+KFEAT: ! = known permanent teleport trap
 MAP
 .....
 .v!v.
@@ -2901,7 +2927,7 @@ TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
-       potion of strong poison / potion of poison
+       potion of poison
 : else
 ITEM:  scroll of random uselessness / potion of degeneration / potion of poison
 : end
@@ -2943,7 +2969,7 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   mini_float allow_dup extra ruin_lair ruin_abyss
+TAGS:   allow_dup extra ruin_lair ruin_abyss
 DEPTH:  D:4-, Depths, Lair, Abyss
 MAP
  xxxxx
@@ -3028,7 +3054,7 @@ NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+ITEM:   fruit q:1 / fruit q:5
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass / floor_dirt
@@ -3050,7 +3076,7 @@ NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+ITEM:   fruit q:1 / fruit q:5
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass
@@ -3067,7 +3093,7 @@ NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+ITEM:   fruit q:1 / fruit q:5
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
 KFEAT:  w = shallow_water
@@ -3082,6 +3108,27 @@ MAP
 :.ww..
 .ww...
 :...::
+ENDMAP
+
+# Wand duel gone wrong.
+NAME:   nicolae_wand_duel
+DEPTH:  D:6-
+WEIGHT: 1
+KITEM:  d = wand of disintegration charges:0 ident:all
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
+SUBST:  a = a A:4, b = b B:4
+KPROP:  ABd = bloody
+SUBST:  A = a, B = b
+NSUBST: a = 5:c / *:. , b = 5:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
+MAP
+  aaa.....bbb
+ aaaaa...bbbbb
+aaaaaaa.bbbbbbb
+aaadaaa.bbbdbbb
+aaaaaaa.bbbbbbb
+ aaaaa...bbbbb
+  aaa.....bbb
 ENDMAP
 
 NAME:  mrwooster_statue_mirror
@@ -3102,7 +3149,7 @@ NAME: nicolae_benzene_ring
 DEPTH: D:6-, Depths
 NSUBST: d = d / .
 ITEM: any ring
-TAGS: transparent mini_float extra decor
+TAGS: transparent extra decor
 MAP
  xxxxxxxxxx...xxxxxxxxxx
  xxxxxxxx...x...xxxxxxxx
@@ -3290,6 +3337,27 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
+NAME:  bh_chokoban
+TAGS:  extra decor no_exits
+TAGS:  no_rotate no_hmirror no_vmirror
+DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
+ITEM:  fruit q:1
+MAP
+cccccc  ccccc
+c....c  c...c
+c.d..cccc.d.c
+c.d......d..c
+c..ccc)cccd.c
+cccccccccc.ccc
+c.....(c.....c
+c..cccccd....c
+cc.c   c.d...c
+ c.ccccc.d...c
+ c......d.d..c
+ c%%cccccccccc
+ cccc
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
@@ -3332,7 +3400,7 @@ MARKER: * = lua:fog_machine { cloud_type="flame", \
 COLOUR: n = red
 SUBST:  * = .
 :  if you.branch() == "Geh" then
-TAGS:   transparent mini_float extra
+TAGS:   transparent extra
 :  end
 MAP
 ...........
@@ -3604,7 +3672,7 @@ cvvv+vvvc
 ENDMAP
 
 NAME: nrook_campfire
-TAGS: transparent mini_float extra decor
+TAGS: transparent extra decor
 DEPTH: D, Depths
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 5, \
@@ -3619,32 +3687,6 @@ MAP
 .......
 ENDMAP
 
-NAME:  kilobyte_tornado_obelisk
-TAGS:  no_monster_gen
-DEPTH: Depths, Elf
-ITEM:  acquire any
-MONS:  diamond obelisk
-KPROP: .d1 = no_tele_into
-MAP
-      ccc
-     ccdcc
-   ccc...ccc
-  cc.......cc
- cc.........cc
- c...........c
-cc...........cc
-c.............c
-c......1......c
-c.............c
-cc...........cc
- c...........c
- cc.........cc
-  cc.......cc
-   ccc...ccc
-     c.@.c
-ENDMAP
-
-
 #######################################################################
 #
 # <<5>> Classical minivaults
@@ -3654,7 +3696,7 @@ ENDMAP
 #######################################################################
 
 NAME:  minivault_1
-TAGS:  transparent mini_float allow_dup extra ruin_abyss
+TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:4-, Depths, Abyss
 MAP
 ............
@@ -3672,7 +3714,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_4
-TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_abyss decor
 DEPTH: D, Elf, Crypt, Abyss
 MAP
 ............
@@ -3711,7 +3753,7 @@ ENDMAP
 NAME:  minivault_10
 DEPTH: D:6-, Depths, !Depths:$
 SUBST: * = %:30 * |:1
-TAGS:  mini_float extra
+TAGS:  extra
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -3728,7 +3770,7 @@ ENDMAP
 # Multicoloured onion
 NAME:    minivault_11
 DEPTH:   D, Depths, Elf, Crypt, Lair, Abyss
-TAGS:    transparent mini_float extra ruin_abyss ruin_lair decor
+TAGS:    transparent extra ruin_abyss ruin_lair decor
 SHUFFLE: bcv
 MAP
 ............
@@ -3747,7 +3789,7 @@ ENDMAP
 
 # Water cross
 NAME: minivault_14
-TAGS: transparent mini_float allow_dup extra decor
+TAGS: transparent allow_dup extra decor
 MAP
 ............
 .wwwww.wwww.
@@ -3764,7 +3806,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_19
-TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3782,7 +3824,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_21
-TAGS:  transparent mini_float allow_dup extra
+TAGS:  transparent allow_dup extra
 DEPTH: D:8-, !D:$, Depths:2-, !Depths:$
 MAP
 ............
@@ -3800,7 +3842,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_22
-TAGS:  transparent mini_float allow_dup extra ruin_abyss
+TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:6-, Depths, !Depths:$, Abyss
 SUBST: $ : $ *:5
 SUBST: ~ : . +:2
@@ -3820,7 +3862,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_23
-TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 x.x.x.x.x.x.
@@ -3838,7 +3880,7 @@ x.x.x.x.x.x.
 ENDMAP
 
 NAME:  minivault_24
-TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+TAGS:  transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
@@ -3856,7 +3898,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25
-TAGS:    transparent mini_float allow_dup extra ruin_abyss decor
+TAGS:    transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH:   D, Elf, Crypt, Lair, Abyss
 SHUFFLE: XY
 SUBST:   X=x, Y=+
@@ -3876,7 +3918,7 @@ MAP
 ENDMAP
 
 NAME: minivault_26
-TAGS: transparent mini_float allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 c..........c
@@ -3894,7 +3936,7 @@ c..........c
 ENDMAP
 
 NAME: minivault_27
-TAGS: transparent mini_float allow_dup extra ruin_abyss decor
+TAGS: transparent allow_dup extra ruin_lair ruin_abyss decor
 DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............

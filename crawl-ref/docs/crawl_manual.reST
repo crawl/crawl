@@ -661,8 +661,8 @@ unusual. When the inventory screen shows "-more-", to show you that there is
 another page of items, you can type the letter of the item you want, even if it
 is not visible, instead of pressing Space or Enter to see the next page.
 
-You can carry at most 52 items at once, and your total weight is limited by your
-carrying capacity. Both of these are printed at the top of the inventory screen.
+You can carry at most 52 items at once, and your item slot usage is printed at
+the top of the inventory screen.
 
 You can use the adjust command (the '=' key) to change the letters to which your
 possessions are assigned. This command can be used to change spell or ability
@@ -705,10 +705,9 @@ accuracy, and speed (up to a point). The same goes for Unarmed Combat.
 
 Weapons can be enchanted; when you first wield or otherwise identify them,
 you reveal values which tell you how much more effective they are than an
-unenchanted version. The first number is the enchantment to-hit, which affects
-the weapon's accuracy, and the second is its damage enchantment; weapons which
-are not enchanted are simply '+0'. Some weapons also have special magical
-effects which make them very effective in certain situations.
+unenchanted version. Weapons which are not enchanted are simply '+0'. Some
+weapons also have special magical effects which make them very effective
+against vulnerable enemies.
 
 You can wield weapons with the 'w' command, which is a very quick action. If for
 some reason you want to go bare-handed, type 'w' followed by a hyphen ('-').
@@ -788,7 +787,8 @@ With '[' you can have a quick look at your current gear.
 
 Most armours can be improved by reading the appropriate scroll. Body armour and
 bardings can be enchanted up to the base value of AC they provide. Shields can
-be enchanted up to +3. Other gear is limited to +2.
+be enchanted up to +3, +5, or +8, depending on their size. Other gear is limited
+to +2.
 
 % Food and Carrion
 ========================================
@@ -933,7 +933,7 @@ $ Gold
 ========================================
 
 Gold can be used to buy items should you run across shops. There are also a
-few more esoteric uses for gold. Gold coins do not have any weight in Crawl.
+few more esoteric uses for gold.
 
 Whenever you pick up gold, your total wealth is shown as well. Should you want
 to have a glance at your finances at some other opportunity, pressing '$' (or
@@ -950,8 +950,8 @@ way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property. These are
 called 'ego items', and examples are: boots of running, a weapon of flaming, a
-helmet of see invisible, and so on. Note that such items can be modified, and
-thus are subject to corrosion and enchanting scrolls.
+helmet of see invisible, and so on. Note that, unlike artefacts, such items can
+be modified by enchanting scrolls.
 
 All ego items are noted with special adjectives but not all items noted in this
 way need have a special property (they often have some positive or negative
@@ -2181,7 +2181,7 @@ Stealth
   with a dagger, slightly less effective with other short blades and less useful
   (although by no means negligible) with any other weapon. Stabbing also improves
   some melee attacks against confused or otherwise incapacitated monsters, though
-  this is much less effective than when the monster is asleep or paralyzed.
+  this is much less effective than when the monster is asleep or paralysed.
 
   Note that in addition to the bonus from using a short blade/dagger, there is an
   additional stabbing bonus based on the average of your stealth skill and your
@@ -2189,7 +2189,7 @@ Stealth
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
-  which it hinders you. For most races, 5/15/25 skill us enough to mitigate the
+  which it hinders you. For most races, 5/15/25 skill is enough to mitigate the
   encumbrance of bucklers/shields/large shields respectively, though larger
   races need less skill and and smaller races more.
 
@@ -2388,10 +2388,11 @@ Ctrl-A
   Toggle autopickup. Note that encounters with invisible monsters always turns
   autopickup off. You need to switch it on with Ctrl-A afterwards.
 
+Ctrl-V
+  Toggle colouring monsters by their remaining HP. (Console only)
+
 Ctrl-T
-  Toggle your allies' pickup behaviour between three settings: don't pick up
-  anything, only pick up items dropped by allies, pick up anything. This toggle
-  only works for characters who have gained permanent, intelligent allies.
+  Toggle displaying monsters' weapons' glyphs. (Console only)
 
 \`
   Re-do previous command
@@ -2463,7 +2464,7 @@ Ctrl-F
   for altars to a special god, a search for 'Trog' , etc. works. A string like
   'D:13' will list all known items on that level. 'D:1}' will search for items
   on level 1 only, as opposed to 'D:1', which will also list items on D:10
-  through D:19. Once the list of all   found places is displayed, you can cause
+  through D:19. Once the list of all found places is displayed, you can cause
   auto-travel to go there (press the associated letter) or you can examine the
   items (press ? followed by the letter).
 
@@ -2705,9 +2706,7 @@ Examining surroundings ('x')
 ========================================
 
 When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
-have a look at items or monsters in line of sight. You may also examine stashed
-items outside current view using the option target_oos = true (if using this,
-check the option target_los_first).
+have a look at items or monsters in line of sight.
 
 Esc, Space, x
   Return to playing mode.
@@ -2826,10 +2825,9 @@ cTele
   not totally reliable.
 
 Fly
-  You fly above the ground, and so are able to cross water and lava and avoid
-  most types of traps. Due to low ceilings in the dungeon, this is not enough
-  to get out of reach of ground-based enemies. Most types of flight will time
-  out - be sure you're not above deadly liquids when that happens.
+  You fly above the ground, and are able to cross water and lava. Most types of
+  flight will time out - be sure you're not above deadly liquids when that
+  happens.
 
 Regen
   You regenerate hit points at an unnaturally fast rate. This is only shown for
@@ -2870,13 +2868,10 @@ Starving
   combat abilities are impaired and you are unable to cast spells or use many
   evoked or divine abilities.
 
-Retch
-  Something is causing you to feel rather ill. You cannot eat anything or quaff
-  any potions in this state.
-
 Pois
-  You are poisoned and continually lose hit points. There are several levels of
-  poisoning. Cure with potions of curing or by waiting it out.
+  You are poisoned and continually lose hit points. While poisoned, your current
+  health will be partially recoloured to display the eventual poison damage that
+  will be dealt. Cure with potions of curing or by waiting it out.
 
 Drain
   Your skills have been drained by negative energy, and are less effective.
@@ -2989,9 +2984,8 @@ uses.
 Automatic inscriptions
 ========================================
 
-These are done by the game to help you to identify items. For example, rings or
-scrolls which did not do anything obvious upon first use will be automatically
-inscribed with "{tried}".
+These are done by the game to help you to identify items. For example, items
+that you have seen a monster use will be inscribed with "{tried by monster}".
 
 Inscriptions as shortcuts
 ========================================
@@ -3077,6 +3071,9 @@ commands:
 \+F
   Include this item when cycling ammunition.
 
+=R
+  Do not offer to swap out this ring if another one can be removed instead.
+
 !D
   Prompt before performing an action that might destroy this item. If you're
   attempting to destroy an item thus inscribed by sacrificing it, destroying a
@@ -3088,7 +3085,7 @@ commands:
 You can use the autoinscribe option to have some items automatically inscribed.
 See options_guide.txt for details. Some examples are:
 
-  autoinscribe = royal jell:=g
+  autoinscribe = royal jelly:=g
   autoinscribe = wand of heal wounds:!v
 
 Artefacts autoinscriptions
@@ -3170,11 +3167,11 @@ Acc+3
 MR
   boost to magical resistance to hostile enchantments
 
-Stlth
+Stealth+
   stealth boost
 
-Stlth+
-  higher stealth boost
+Stealth-
+  stealth penalty
 
 rCorr
   resist corrosion
@@ -3212,9 +3209,6 @@ Contam
 Noisy
   makes noises on hit
 
-Hunger, Hunger+
-  increased rate of hunger
-
 Curse
   chance of self-cursing when equipped
 
@@ -3226,9 +3220,6 @@ Ice
 
 SustAb
   sustain abilities
-
-Hunger-
-  sustenance
 
 Regen
   regeneration
@@ -3250,9 +3241,6 @@ SInv
 
 Clar
   clarity
-
-Cons
-  conservation
 
 Gourm
   gourmand

@@ -2,17 +2,17 @@
 use Getopt::Std;
 use strict;
 
-our ($opt_a, $opt_n);
-getopts('na');
+our ($opt_A, $opt_n);
+getopts('nA');
 my $dry_run = $opt_n;
-my $add_braces = $opt_a;
+my $add_braces = !$opt_A;
 my $any_bad = 0;
 
 my @files = @ARGV;
 undef $/;
 unless (@files)
 {
-    @files = (grep /\.(cc|h)$/ && !/^prebuilt\//, split /\n/, `git ls-files`);
+    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `git ls-files`);
 }
 
 sub rebrace($$$)

@@ -157,20 +157,18 @@ public:
 
     int         autopickup_on;
     bool        autopickup_starting_ammo;
-    int         default_friendly_pickup;
     bool        default_manual_training;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
-    bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
-    maybe_bool  show_inventory_weights; // show weights in inventory listings
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        travel_open_doors;     // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
+    bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
@@ -178,7 +176,6 @@ public:
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
-    bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
@@ -330,7 +327,6 @@ public:
     // Order of sections in the character dump.
     vector<string> dump_order;
 
-    bool        pickup_menu;        // false for single, true for menu
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
     bool        easy_exit_menu;     // Menus are easier to get out of
@@ -457,6 +453,7 @@ public:
     bool        tile_show_demon_tier;
     bool        tile_water_anim;
     bool        tile_misc_anim;
+    bool        tile_show_player_species;
     vector<string> tile_layout_priority;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;

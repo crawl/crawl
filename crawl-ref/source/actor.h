@@ -88,6 +88,7 @@ public:
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
 
+    virtual int       get_hit_dice() const = 0;
     virtual int       get_experience_level() const = 0;
 
     virtual bool shove(const char* feat_name = "") = 0;
@@ -101,7 +102,6 @@ public:
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
     virtual int       body_weight(bool base = false) const;
-    virtual int       total_weight() const = 0;
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
     virtual int       damage_type(int which_attack = -1) = 0;
@@ -110,8 +110,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(item_def *weapon,
-                                    item_def *projectile = NULL,
+    virtual random_var attack_delay(const item_def *weapon,
+                                    const item_def *projectile = NULL,
                                     bool random = true, bool scaled = true)
                                    const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
@@ -139,7 +139,8 @@ public:
                            bool ignore_transform = false) const = 0;
     virtual bool could_wield(const item_def &item,
                              bool ignore_brand = false,
-                             bool ignore_transform = false) const = 0;
+                             bool ignore_transform = false,
+                             bool quiet = true) const = 0;
 
     virtual void make_hungry(int nutrition, bool silent = true)
     {
@@ -172,7 +173,7 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
-    virtual void go_berserk(bool intentional, bool potion = false) = 0;
+    virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
@@ -224,22 +225,24 @@ public:
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength,
+                              bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
-                                   bool damage_inventory = true,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
 
-    virtual int  skill(skill_type sk, int scale = 1, bool real = false) const = 0;
+    virtual int  skill(skill_type sk, int scale = 1,
+                       bool real = false, bool drained = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
+
+    bool torpor_slowed() const;
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
@@ -254,6 +257,7 @@ public:
                  int stab_bypass = 0) const;
     virtual int melee_evasion(const actor *attacker,
                               ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
+    virtual bool shielded() const = 0;
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
@@ -272,16 +276,16 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
+    virtual bool holy_wrath_susceptible() const = 0;
     virtual bool is_holy(bool spells = true) const = 0;
     virtual bool is_unholy(bool spells = true) const = 0;
     virtual bool is_evil(bool spells = true) const = 0;
-    virtual bool is_chaotic() const = 0;
+    virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
     virtual int res_fire() const = 0;
-    virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
@@ -303,14 +307,14 @@ public:
     virtual bool inaccuracy() const;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
-    virtual bool conservation(bool calc_unid = true, bool items = true) const;
+
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
     bool has_notele_item(bool calc_unid = true) const;
     virtual bool stasis(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
-    virtual bool faith(bool calc_unid = true, bool items = true) const;
+    virtual int faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
@@ -343,21 +347,20 @@ public:
     virtual bool caught() const = 0;
     virtual bool asleep() const { return false; }
 
-    // check_haloed: include halo
     // self_halo: include own halo (actually if self_halo = false
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
-    virtual bool umbra(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
+    virtual bool backlit(bool self_halo = true) const = 0;
+    virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
+#if TAG_MAJOR_VERSION == 34
     // Being heated by a heat aura?
     virtual bool heated() const;
+#endif
     // Squared halo radius.
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
@@ -365,7 +368,9 @@ public:
     // Squared liquefying radius
     virtual int liquefying_radius2() const = 0;
     virtual int umbra_radius2() const = 0;
+#if TAG_MAJOR_VERSION == 34
     virtual int heat_radius2() const = 0;
+#endif
 
     virtual bool glows_naturally() const = 0;
 
@@ -430,6 +435,7 @@ public:
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
+    virtual bool clear_far_engulf() = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();

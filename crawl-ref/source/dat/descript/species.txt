@@ -1,8 +1,8 @@
 %%%%
 Centaur
 
-Swift, strong and bulky, Centaurs need more food than other species. They are
-particularly skilled with ranged weaponry.
+Swift, strong and bulky, Centaurs are particularly skilled with ranged
+weaponry.
 %%%%
 Deep Dwarf
 
@@ -74,11 +74,6 @@ Kobold
 
 Small, mischievous and a little fragile, but multi-talented. They can and will
 eat any meat.
-%%%%
-Lava Orc
-
-These masters of earth and fire magic come from deep below the Dungeon. Their
-abilities change with their temperature.
 %%%%
 Merfolk
 

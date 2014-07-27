@@ -1,3 +1,4 @@
+
 /**
  * @file
  * @brief Misc stuff.
@@ -305,7 +306,7 @@ NORETURN void game_ended_with_error(const string &message)
         end(1, false, "%s", message.c_str());
 }
 
-void redraw_screen(void)
+void redraw_screen()
 {
     if (!crawl_state.need_save)
     {
@@ -323,8 +324,10 @@ void redraw_screen(void)
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         you.redraw_temperature = true;
+#endif
     you.redraw_stats.init(true);
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
@@ -371,7 +374,7 @@ int stepdown(int value, int step, rounding_type rounding, int max)
     {
         double intpart;
         double fracpart = modf(ret, &intpart);
-        if (random_real() < fracpart)
+        if (decimal_chance(fracpart))
             ++intpart;
         return intpart;
     }
@@ -633,7 +636,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         }
 
         if (clear_after && message)
-            mesclr();
+            clear_messages();
 
         if (tmp == 'N')
             return false;
@@ -745,7 +748,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
         }
 
         if (clear_after)
-            mesclr();
+            clear_messages();
 
         if (tmp == 'N')
             return 0;

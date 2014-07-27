@@ -10,7 +10,6 @@ background = be
 # CK is slowed down by constant tension checks.
 weapon = mace
 restart_after_game = false
-show_gold_turns = true
 show_more = false
 autofight_stop = 0
 
@@ -40,7 +39,7 @@ function ready()
     crawl.sendkeys("g&o[large shield" .. eol .. "reflection" .. eol)
     crawl.sendkeys("g&o[helmet" .. eol .. "see invis" .. eol)
     crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
-    crawl.sendkeys("g&o[cloak" .. eol .. "preservation" .. eol)
+    crawl.sendkeys("g&o[cloak" .. eol .. "" .. eol)
     --# somehow ga doesn't work... why?
     crawl.sendkeys("gwcWdWeWfWgWhWi")
     crawl.sendkeys("&tca9" .. eol .. "b9" .. eol .. esc)

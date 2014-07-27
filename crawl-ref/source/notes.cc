@@ -345,6 +345,13 @@ string Note::describe(bool when, bool where, bool what) const
             if (!name.empty())
                 result << " [" << name << "]";
             break;
+        case NOTE_PERM_MUTATION:
+            result << "Mutation became permanent: "
+                   << mutation_desc(static_cast<mutation_type>(first),
+                                    second == 0 ? 1 : second);
+            if (!name.empty())
+                result << " [" << name << "]";
+            break;
         case NOTE_DEATH:
             result << name;
             break;

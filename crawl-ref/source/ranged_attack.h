@@ -13,7 +13,7 @@ public:
 // Public Methods
 public:
     ranged_attack(actor *attacker, actor *defender, item_def *projectile,
-                  bool teleport);
+                  bool teleport, actor *blame = 0);
 
     int calc_to_hit(bool random);
 
@@ -57,6 +57,7 @@ private:
     const item_def *projectile;
     bool teleport;
     int orig_to_hit;
+    bool should_alert_defender;
 };
 
 #endif

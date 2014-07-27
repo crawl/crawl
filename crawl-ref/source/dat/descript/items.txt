@@ -4,11 +4,6 @@ amulet of clarity
 This amulet protects its wearer from some forms of mental confusion, including
 being berserked against one's will.
 %%%%
-amulet of conservation
-
-This amulet protects some of the possessions of its wearer from outright
-destruction, but not infallibly so.
-%%%%
 amulet of faith
 
 This is a talisman crafted to call the attention of the gods to its wearer.
@@ -42,11 +37,13 @@ This amulet protects its wearer from mutations, although not infallibly so.
 amulet of stasis
 
 An amulet meticulously constructed with magical wards to block magical and
-physiological effects that would otherwise teleport, slow, haste, or paralyse
-its wearer.
+physiological effects that would otherwise teleport, slow, haste, enrage, or
+paralyse its wearer. Equipping it whilst already under such an effect will
+immediately end the effect, causing a large amount of magical contamination
+in the process.
 
-While the amulet is effective against most translocular magic, plane shifts
-such as banishment are beyond its ability to block.
+While the amulet is effective against most translocations, plane shifts such as
+banishment are beyond its ability to block.
 %%%%
 amulet of the gourmand
 
@@ -65,22 +62,15 @@ A large piece of thick skin covered in fur, cut from the corpse of an animal
 and worn as a primitive garment. It offers rudimentary protection against harm,
 but, having never been tanned, it carries a light stench of rotting flesh.
 %%%%
-apple
+arbalest
 
-A delicious fruit, tart to the tongue.
-%%%%
-apricot
-
-A succulent yellow-orange fruit, prunus armeniaca.
+A large piece of machinery used for firing bolts, braced with steel and cranked
+with a windlass. It takes some time to load and fire.
 %%%%
 arrow
 
 A long shafted projectile intended to be shot with a short- or longbow, fletched
 with feathers at one end and a point at the other.
-%%%%
-banana
-
-A delicious yellow fruit.
 %%%%
 bardiche
 
@@ -359,12 +349,6 @@ This unholy book describes a variety of magical methods for the creation and
 command of undead servants. The dreadful book radiates a malignant aura, and
 its parchment pages sometimes twitch and shudder on their own.
 %%%%
-book of war chants
-
-A book of spells helpful for a warrior. The versions contained here have a
-musical form, following the traditions of fighting skalds. Functionally,
-though, they work the same as spells whose magic words are merely spoken.
-%%%%
 book of wizardry
 
 A book of various magic spells, useful for any sufficiently-talented
@@ -403,14 +387,6 @@ A suit made entirely out of tiny metal rings. Offering strong protection
 against weapons, claws and carnassials, chain mail hinders quick and stealthy
 movement.
 %%%%
-cheese
-
-A lump of cheese.
-%%%%
-choko
-
-An almost tasteless green vegetable, which grows on a vine.
-%%%%
 chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
@@ -433,11 +409,6 @@ corpse
 
 A corpse. You can butcher it to produce edible meat chunks.
 %%%%
-crossbow
-
-A piece of machinery used for firing bolts, which takes some time to load and
-fire. It does very good damage in combat.
-%%%%
 crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy,
@@ -455,10 +426,6 @@ A broad curved short sword.
 dagger
 
 A double-edged fighting knife with a sharp point.
-%%%%
-dart
-
-A fletched, sharply pointed projectile designed to be thrown by hand.
 %%%%
 decaying skeleton
 
@@ -568,6 +535,10 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
+fruit
+
+A delicious edible flower ovary.
+%%%%
 giant club
 
 A giant lump of wood.
@@ -603,13 +574,15 @@ their will the terrible things from betwixt the planes. Many have been the
 unwary souls, however, who have toyed with this tome and been driven mad by
 unimaginable eldritch horrors.
 %%%%
-grape
-
-A small fruit.
-%%%%
 great mace
 
 An enormous metal war club, of great cumbrousness.
+%%%%
+greatsling
+
+A large piece of cloth and reinforced leather, meant for launching stones. Does
+more damage when launching purpose-made projectiles, rather than rocks found on
+the floor.
 %%%%
 great sword
 
@@ -628,6 +601,11 @@ hand axe
 
 A small axe.
 %%%%
+hand crossbow
+
+A compact piece of machinery, used for firing bolts. It takes some time to load
+and fire.
+%%%%
 hat
 
 A cloth or leather hat.
@@ -636,15 +614,17 @@ helmet
 
 A piece of metal headgear.
 %%%%
-honeycomb
-
-A lump of the delicious honeycomb made by giant bees.
-%%%%
 horn of Geryon
 
 The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
 this unholy item has the power to call forth the aid of demonic beasts. It is
 also said, however, that the alliances of these monsters are not certain.
+%%%%
+hunting sling
+
+A piece of cloth and leather for launching stones. Does more damage when
+launching purpose-made projectiles, rather than rocks found on the floor.
+Adequate for hunting small game, like rabbits or goblins.
 %%%%
 ice dragon armour
 
@@ -725,10 +705,6 @@ A suit made from layers of tanned animal hide, this light armour provides basic
 protection with almost no hindrance to elaborate gestures or swift, stealthy
 movement.
 %%%%
-lemon
-
-A yellow fruit.
-%%%%
 lightning rod
 
 This rod allows its wielder to fire continuous lightning: the discharge is
@@ -742,12 +718,7 @@ A sword with a long, slashing blade.
 %%%%
 longbow
 
-A long, strong bow made of yew. It does excellent damage in combat and a
-skilled archer can use it to great effect.
-%%%%
-lychee
-
-A tropical fruit.
+A long, strong bow made of yew.
 %%%%
 mace
 
@@ -795,10 +766,6 @@ A thin piece of metal, typically coated in some harmful substance. When
 launched from a blowgun it can deliver its toxins into the bloodstream of a
 living or demonic being.
 %%%%
-orange
-
-A delicious, juicy orange fruit.
-%%%%
 orb of zot
 
 Once you have escaped to the surface with this invaluable artefact, your quest
@@ -811,10 +778,6 @@ A pair of boots.
 pair of gloves
 
 A pair of gloves.
-%%%%
-pear
-
-A delicious, juicy fruit.
 %%%%
 pearl dragon armour
 
@@ -832,12 +795,6 @@ phial of floods
 An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water spirits
 that dwell within it.
-%%%%
-piece of ambrosia
-
-A portion of strange substance, produced by ghost moths. Consuming it provides
-magical energy as well as nutrition, at the cost of losing your mental focus
-for a short period.
 %%%%
 plate armour
 
@@ -867,6 +824,10 @@ potion of brilliance
 
 A magic potion which greatly increases the intelligence and magical power of
 one who drinks it.
+%%%%
+potion of cancellation
+
+A potion which ends most magical effects, good or bad, affecting you.
 %%%%
 potion of coagulated blood
 
@@ -920,8 +881,7 @@ potion of lignification
 
 A potion which temporarily transforms the imbiber into an animated tree with
 branches capable of holding weapons. Such a tree is very resilient, although it
-is rooted in place for the duration, and additionally cannot teleport or
-consume food or potions.
+is rooted in place for the duration and cannot teleport.
 %%%%
 potion of magic
 
@@ -935,10 +895,6 @@ who drinks it.
 potion of mutation
 
 A potion which does very strange things to you.
-%%%%
-potion of paralysis
-
-A potion which causes paralysis.
 %%%%
 potion of poison
 
@@ -965,10 +921,6 @@ potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
 %%%%
-potion of strong poison
-
-A terribly venomous potion.
-%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -983,11 +935,6 @@ quick blade
 
 This carefully wrought short sword is preternaturally well-balanced, making it
 much easier for even inexperienced handlers to attack with it quickly.
-%%%%
-rambutan
-
-A small but delicious tropical fruit. How it got into this dungeon is anyone's
-guess.
 %%%%
 ring mail
 
@@ -1035,8 +982,8 @@ but increases the speed of their metabolism greatly while doing so.
 %%%%
 ring of loudness
 
-This ring passively emits an aura of loud noise, causing the wearer to be
-considerably less stealthy.
+This ring causes the wearer's movements to be particularly loud, making them
+less stealthy.
 %%%%
 ring of magical power
 
@@ -1080,12 +1027,11 @@ This ring allows its wearer to see those things hidden from view by magic.
 ring of slaying
 
 This ring increases or decreases the wearer's effectiveness with ranged weapons
-and melee attacks. It has two enchantment levels, affecting accuracy and damage
-respectively.
+and melee attacks.
 %%%%
 ring of stealth
 
-This ring dampens the noises of the wearer, making them more stealthy.
+This ring allows the wearer to move quietly, making them more stealthy.
 %%%%
 ring of strength
 
@@ -1156,8 +1102,7 @@ This rod allows its wielder to summon a swarm of insects.
 %%%%
 royal jelly
 
-A particularly rich and golden gelatinous thing. Consuming it will restore lost
-abilities, in addition to the nutrition it provides.
+A particularly rich and golden gelatinous thing.
 %%%%
 rune of zot
 
@@ -1172,11 +1117,6 @@ sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
-%%%%
-sausage
-
-An elongated lump of low-grade gristle, entrails and cereal products encased in
-an intestine. Yum!
 %%%%
 scale mail
 
@@ -1226,33 +1166,19 @@ This scroll places a curse on a wielded weapon.
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour. Most armour can only be
-enchanted to +2, except for shields which can be enchanted to +3, and body
-armour and bardings which can be enchanted up to the same value as their base
-AC. Magical artefacts cannot be enchanted at all.
+This scroll places an enchantment on a piece of armour. Body armour and
+bardings can be enchanted up to the same value as their base AC. Bucklers,
+shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
+other armour can be enchanted up to +2. Magical artefacts cannot be enchanted
+at all.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
-scroll of enchant weapon i
+scroll of enchant weapon
 
-This scroll places an enchantment on a weapon chosen by the reader, making it
-more accurate in combat. It becomes increasingly less likely to succeed when
-used on highly enchanted weapons, and can only ever enchant them up to +9.
-Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon ii
-
-This scroll places an enchantment on a weapon chosen by the reader, making it
-inflict greater damage in combat. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon iii
-
-This scroll enchants a chosen weapon to be far more effective in combat,
-increasing both accuracy and damage. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
+This scroll places an enchantment on a weapon chosen by the reader, increasing
+both accuracy and damage. Weapons can be enchanted up to +9. Magical artefacts
+cannot be enchanted at all.
 %%%%
 scroll of fear
 
@@ -1334,10 +1260,8 @@ although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-This scroll cancels all magical enchantments from the reader and from beings in
-the vicinity. It also briefly halves the resistance to hostile enchantments of
-the reader and nearby beings. The latter effect does not apply to beings fully
-immune to magic.
+This briefly halves the resistance to hostile enchantments of the reader and
+nearby beings. The scroll cannot affect beings fully immune to magic.
 %%%%
 scythe
 
@@ -1351,8 +1275,7 @@ attacks.
 %%%%
 shortbow
 
-A curved piece of wood and string, for shooting arrows. It does good damage in
-combat, and a skilled user can use it to great effect.
+A curved piece of wood and string, for shooting arrows.
 %%%%
 short sword
 
@@ -1363,20 +1286,10 @@ slice of pizza
 A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
 basil.
 %%%%
-sling
-
-A piece of cloth and leather for launching stones, which do a small amount of
-damage on impact. Unlike with other launchers, wearing a shield does not slow
-down its rate of fire.
-%%%%
 sling bullet
 
 A small, heavy projectile specially shaped for use with slings. It is more
 effective as ammunition than simple stones.
-%%%%
-snozzcumber
-
-A repulsive cucumber-shaped vegetable.
 %%%%
 spear
 
@@ -1484,14 +1397,6 @@ scales. In its raw form it does not provide much protection beyond resistance
 to electrical discharge, but with magical means it may be used to make
 excellent armour.
 %%%%
-strawberry
-
-A small but delicious red fruit.
-%%%%
-sultana
-
-A humble raisin.
-%%%%
 swamp dragon armour
 
 Armour made from the scales of a swamp dragon. It confers resistance to poison
@@ -1527,6 +1432,12 @@ trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
 %%%%
+triple crossbow
+
+Initially designed as a siege weapon and then scaled down, this crossbow uses
+three strings arranged in series to provide exceptional power. It takes a
+considerable amount of time to load and fire.
+%%%%
 trishula
 
 A blessed trident moulded by cleansing flame, with three points symbolising the
@@ -1558,7 +1469,7 @@ A magical device which drills tunnels through unworked rock.
 wand of disintegration
 
 A magical device which disrupts the physical structure of anything but the
-hardest walls — even rigid statues, to say nothing of flesh.
+hardest walls — even granite statues, to say nothing of flesh.
 %%%%
 wand of draining
 

@@ -143,7 +143,7 @@ static bool _has_test(const string& test)
     return crawl_state.tests_selected[0].find(test) != string::npos;
 }
 
-static void _run_test(const string &name, void (*func)(void))
+static void _run_test(const string &name, void (*func)())
 {
     if (crawl_state.test_list)
         return (void)printf("%s\n", name.c_str());
@@ -191,6 +191,7 @@ void run_tests()
         for_each(tests.begin(), tests.end(), run_test);
 
         if (failures.empty() && !ntests && crawl_state.script)
+        {
             failures.push_back(
                 file_error(
                     "Script setup",
@@ -199,6 +200,7 @@ void run_tests()
                                          crawl_state.tests_selected.end(),
                                          ", ",
                                          ", ")));
+        }
     }
 
     if (crawl_state.test_list)

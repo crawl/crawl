@@ -391,10 +391,6 @@ helmet
 
 En hovedbeklædning af metal.
 %%%%
-honeycomb
-
-En klump lækker bikage, som er lavet af kæmpebier.
-%%%%
 ice dragon hide
 
 Det skællede skind fra en drage med kuldeånde. Det kan laves om til en rigtig
@@ -505,12 +501,6 @@ Dette fortryllede kar er ved at flyde over af elementarvand. Hvis man fjerner
 proppen, flyder en rivende strøm af vand fra karret og slipper vandånderne i
 den fri.
 %%%%
-piece of ambrosia
-
-En del af en sælsom substans, som spøgelsesmøl producerer. Man får både magisk
-energi og næring, når man spiser den, på bekostning af at miste sit mentale
-fokus i en kort periode.
-%%%%
 potion of agility
 
 En trylledrik, som øger din behændighed og din evne til at undvige
@@ -585,10 +575,6 @@ gift.
 potion of slowing
 
 En drik, som forsinker dine handlinger.
-%%%%
-potion of strong poison
-
-En forfærdeligt giftig drik.
 %%%%
 quad damage
 
@@ -769,21 +755,7 @@ deres basis-RK. Magiske artefakter kan slet ikke fortrylles.
 
 Den kan også bruges til at fortrylle visse eksotiske væseners skind.
 %%%%
-scroll of enchant weapon i
-
-Denne skriftrulle fortryller et våben af eget valg og gør det mere præcist i
-kamp. Det bliver sværere og sværere at få den til at virke på stærkt
-fortryllede våben og kan aldrig fortrylle dem højere end +9. Magiske artefakter
-kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon ii
-
-Denne skriftrulle fortryller et våben efter eget valg og får det til at
-forvolde større skade i kamp. Det bliver sværere og sværere at få den til at
-virke på stærkt fortryllede våben og kan aldrig fortrylle dem højere end +9.
-Magiske artefakter kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon iii
+scroll of enchant weapon
 
 Denne skriftrulle fortryller et våben efter eget valg og gør det langt mere
 effektivt i kamp ved at øge både præcision og skade. Det bliver sværere og

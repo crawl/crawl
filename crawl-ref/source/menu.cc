@@ -31,7 +31,6 @@
  #include "tilereg-menu.h"
 #endif
 #ifdef USE_TILE
- #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
  #include "tiledef-dngn.h"
@@ -367,10 +366,15 @@ int Menu::get_cursor() const
     if (last_selected == -1)
         return -1;
 
+    unsigned int last = last_selected % item_count();
     unsigned int next = (last_selected + 1) % item_count();
 
-    if (items[next]->level != MEL_ITEM)
+    // Items with no hotkeys are unselectable
+    while (next != last && (items[next]->hotkeys.empty()
+                            || items[next]->level != MEL_ITEM))
+    {
         next = (next + 1) % item_count();
+    }
 
     return next;
 }
@@ -2499,22 +2503,16 @@ void PrecisionMenu::attach_object(MenuObject* item)
 }
 
 // Predicate for std::find_if
-class _string_lookup : public binary_function<MenuObject*, string, bool>
+static bool _string_lookup(MenuObject* item, string lookup)
 {
-public:
-    bool operator() (MenuObject* item, string lookup) const
-    {
-        if (item->get_name().compare(lookup) == 0)
-            return true;
-        return false;
-    }
-};
+    return item->get_name().compare(lookup) == 0;
+}
 
 MenuObject* PrecisionMenu::get_object_by_name(const string &search)
 {
     vector<MenuObject*>::iterator ret_val;
     ret_val = find_if(m_attached_objects.begin(), m_attached_objects.end(),
-                      bind2nd(_string_lookup(), search));
+                      bind2nd(ptr_fun(_string_lookup), search));
     if (ret_val != m_attached_objects.end())
         return *ret_val;
     return NULL;
@@ -3312,6 +3310,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     }
 
     if (m_active_item == NULL && m_default_item != NULL)
+    {
         switch (key)
         {
         case CK_UP:
@@ -3322,6 +3321,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             set_active_item(m_default_item);
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
+    }
 
     MenuItem* find_entry = NULL;
     switch (key)
@@ -3474,16 +3474,10 @@ MenuItem* MenuFreeform::get_active_item()
 }
 
 // Predicate for std::find_if
-class _id_comparison : public binary_function<MenuItem*, int, bool>
+static bool _id_comparison(MenuItem* item, int ID)
 {
-public:
-    bool operator() (MenuItem* item, int ID) const
-    {
-        if (item->get_id() == ID)
-            return true;
-        return false;
-    }
-};
+    return item->get_id() == ID;
+}
 
 /**
  * Sets item by ID
@@ -3493,7 +3487,7 @@ void MenuFreeform ::set_active_item(int ID)
 {
     vector<MenuItem*>::iterator ret_val;
     ret_val = find_if(m_entries.begin(), m_entries.end(),
-                      bind2nd(_id_comparison(), ID));
+                      bind2nd(ptr_fun(_id_comparison), ID));
     if (ret_val != m_entries.end())
     {
         m_active_item = *ret_val;
@@ -4007,7 +4001,7 @@ void MenuScroller::set_active_item(int ID)
 
     vector<MenuItem*>::iterator ret_val;
     ret_val = find_if(m_entries.begin(), m_entries.end(),
-                      bind2nd(_id_comparison(), ID));
+                      bind2nd(ptr_fun(_id_comparison), ID));
     if (ret_val != m_entries.end())
     {
         set_active_item(*ret_val);

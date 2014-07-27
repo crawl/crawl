@@ -1,0 +1,551 @@
+###############################################################################
+# layout_geoelf.des: Layouts for Elf with geometric rooms
+#                    These are not the only Elf layouts
+#                    These layouts will build around primary vaults correctly.
+###############################################################################
+
+# Required file contains overview
+: require("dlua/layout/geoelf.lua")
+
+##############################################################
+# layout_geoelf_grid
+#
+# A grid of rooms, inspired by layout_roguey.  There are no
+#  missing rooms because they mess up the corridors between
+#  rooms and can disconnect the map (or connect it through a
+#  primary vault and have the connection be overwritten).
+#
+# These 3 layouts could be combined into 1 big layout, but it
+# would be as long as the three combined, so it would just make
+# them harder to read.
+#
+#  O-O-O-O-O
+#  |X|X|X|X|      O-O-O-O
+#  O-O-O-O-O      |X|X|X|
+#  |X|X|X|X|      O-O-O-O
+#  O-O-O-O-O      |X|X|X|
+#  |X|X|X|X|  OR  O-O-O-O
+#  O-O-O-O-O      |X|X|X|
+#  |X|X|X|X|      O-O-O-O
+#  O-O-O-O-O      |X|X|X|
+#  |X|X|X|X|      O-O-O-O
+#  O-O-O-O-O      16 Rooms
+#   25 Rooms
+#
+NAME:   layout_geoelf_grid
+DEPTH:  Elf
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  local depth_fraction = you.depth_fraction()
+
+  -- some paramters
+  local rooms_across = 5
+  local room_spacing = 13
+  local offset_max = 1
+  local radius_min = math.floor(2 + depth_fraction + crawl.random_real())
+  local radius_max = math.floor(4 + depth_fraction + crawl.random_real())
+  local extra_corridor_fraction = 0.7 - depth_fraction * 0.2
+  local fancy_room_fraction = 0.1 + depth_fraction * 0.1
+
+  if (depth_fraction * 2 + crawl.random_real() * 4 >= 3) then
+    rooms_across = 4
+    room_spacing = crawl.random_range(13, 17)
+    offset_max = math.floor(1 + depth_fraction + crawl.random_real())
+    radius_min = math.floor(offset_max + 1 + crawl.random_real())
+    radius_max = math.floor(4 + depth_fraction + crawl.random_real() * 2)
+    fancy_room_fraction = 0.15 + depth_fraction * 0.1
+  end
+
+  -- create the arrays
+  local room_data         = { count = 0 }
+  local corridor_data     = { count = 0 }
+  local rooms_by_position = {}
+
+  -- choose the room positions
+  for y = 0, rooms_across - 1 do
+    rooms_by_position[y] = {}
+    for x = 0, rooms_across - 1 do
+      local x_pos = gxm / 2 +
+                    math.floor(room_spacing * (x - (rooms_across - 1) / 2)) +
+                    crawl.random_range(-offset_max, offset_max)
+      local y_pos = gym / 2 +
+                    math.floor(room_spacing * (y - (rooms_across - 1) / 2)) +
+                    crawl.random_range(-offset_max, offset_max)
+      local radius = crawl.random_range(radius_min, radius_max)
+
+      -- we are only actually checking for vaults
+      if (not find_in_area {x1 = x_pos - radius, y1 = y_pos - radius,
+                            x2 = x_pos + radius, y2 = y_pos + radius,
+                            find = "", find_vault = true }) then
+        rooms_by_position[y][x] = geoelf.add_room(room_data,
+                                                  x_pos, y_pos, radius)
+      else
+        rooms_by_position[y][x] = nil
+      end
+    end
+  end
+
+  -- add potential corridors
+  for y = 0, rooms_across - 1 do
+    for x = 0, rooms_across - 1 do
+      if (rooms_by_position[y][x] ~= nil) then
+        local index = rooms_by_position[y][x]
+
+        -- east-west
+        if (x >= 1 and rooms_by_position[y][x - 1] ~= nil) then
+          local other_index = rooms_by_position[y][x - 1]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.E, nil)
+        end
+
+        -- south-north
+        if (y >= 1 and rooms_by_position[y - 1][x] ~= nil) then
+          local other_index = rooms_by_position[y - 1][x]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.S, nil)
+        end
+
+        -- southeast-northwest
+        if (x >= 1 and y >= 1 and
+            rooms_by_position[y - 1][x - 1] ~= nil) then
+          local other_index = rooms_by_position[y - 1][x - 1]
+
+          -- determine if there is another corridor that would
+          --  block this one (i.e. an NE-SW one)
+          local block_index = nil
+          if (rooms_by_position[y][x - 1] ~= nil) then
+            old_index = rooms_by_position[y][x - 1]
+            block_index = room_data[old_index].corridor[geoelf.directions.NE]
+          end
+
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.SE, block_index)
+        end
+
+        -- southwest-northeast
+        if (x + 1 < rooms_across and y >= 1 and
+            rooms_by_position[y - 1][x + 1] ~= nil) then
+          local other_index = rooms_by_position[y - 1][x + 1]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.SW, nil)
+        end
+      end
+    end
+  end
+
+  -- generate the layout
+  geoelf.generate(_G, room_data, corridor_data, extra_corridor_fraction,
+                  fancy_room_fraction, false, false)
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_geoelf_diagonals
+#
+# A grid of rooms, with most connection along the diagonals.
+#
+#    O---O---O
+#   /|\ /|\ /|\         O---O---O
+#  O-+-O-+-O-+-O       /|\ /|\ /|
+#  |\|/|\|/|\|/|      O-+-O-+-O |
+#  | O-+-O-+-O |      |\|/|\|/|\|
+#  |/|\|/|\|/|\|      | O-+-O-+-O  Note that the grid actually is 7x7
+#  O-+-O-+-O-+-O  OR  |/|\|/|\|/|  (or 6x6), but only half the cells
+#  |\|/|\|/|\|/|      O-+-O-+-O |  are used (in a checkerboard pattern).
+#  | O-+-O-+-O |      |\|/|\|/|\|
+#  |/|\|/|\|/|\|      | O-+-O-+-O
+#  O-+-O-+-O-+-O      |/ \|/ \|/
+#   \|/ \|/ \|/       O---O---O
+#    O---O---O         18 Rooms
+#     24 Rooms
+#
+NAME:   layout_geoelf_diagonals
+DEPTH:  Elf
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  local depth_fraction = you.depth_fraction()
+
+  -- some paramters
+  local rooms_across = 7
+  local room_spacing = 9
+  local offset_max = 1
+  local radius_min = 2
+  local radius_max = math.floor(4 + depth_fraction + crawl.random_real())
+  local extra_corridor_fraction = 0.7 - depth_fraction * 0.2
+  local fancy_room_fraction = 0.1 + depth_fraction * 0.1
+
+  if (depth_fraction * 2 + crawl.random_real() * 4 >= 3) then
+    rooms_across = 6
+    room_spacing = crawl.random_range(9, 11)
+    radius_min = math.floor(2 + depth_fraction + crawl.random_real())
+    radius_max = math.floor(4 + depth_fraction + crawl.random_real() * 2)
+    fancy_room_fraction = 0.15 + depth_fraction * 0.1
+  end
+
+  -- create the arrays
+  local room_data         = { count = 0 }
+  local corridor_data     = { count = 0 }
+  local rooms_by_position = {}
+
+  -- choose the room positions
+  for y = 0, rooms_across - 1 do
+    rooms_by_position[y] = {}
+    for x = 0, rooms_across - 1 do    -- checkerboard test
+      if ((x + y) % 2 == 1) then
+        local x_pos = gxm / 2 +
+                      math.floor(room_spacing * (x - (rooms_across - 1) / 2)) +
+                      crawl.random_range(-offset_max, offset_max)
+        local y_pos = gym / 2 +
+                      math.floor(room_spacing * (y - (rooms_across - 1) / 2)) +
+                      crawl.random_range(-offset_max, offset_max)
+        local radius = crawl.random_range(radius_min, radius_max)
+
+        -- we are only actually checking for vaults
+        if (not find_in_area {x1 = x_pos - radius, y1 = y_pos - radius,
+                              x2 = x_pos + radius, y2 = y_pos + radius,
+                              find = "", find_vault = true }) then
+          rooms_by_position[y][x] = geoelf.add_room(room_data,
+                                                    x_pos, y_pos, radius)
+        else
+          rooms_by_position[y][x] = nil
+        end
+      else
+        rooms_by_position[y][x] = nil
+      end
+    end
+  end
+
+  -- add potential corridors
+  for y = 0, rooms_across - 1 do
+    for x = 0, rooms_across - 1 do
+      if (rooms_by_position[y][x] ~= nil) then
+        -- we have impliclitly passed the checkerboard test if we gwt here
+
+        local index = rooms_by_position[y][x]
+
+        -- east-west
+        if (x >= 2 and rooms_by_position[y][x - 2] ~= nil) then
+          local other_index = rooms_by_position[y][x - 2]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.E, nil)
+        end
+
+        -- south-north
+        if (y >= 2 and rooms_by_position[y - 2][x] ~= nil) then
+          local other_index = rooms_by_position[y - 2][x]
+
+          -- determine if there is another corridor that would
+          --  block this one (i.e. an E-W one)
+          local block_index = nil
+          if (x >= 1 and rooms_by_position[y - 1][x - 1] ~= nil) then
+            old_index = rooms_by_position[y - 1][x - 1]
+            block_index = room_data[old_index].corridor[geoelf.directions.E]
+          end
+
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.S, block_index)
+        end
+
+        -- southeast-northwest
+        if (x >= 1 and y >= 1 and
+            rooms_by_position[y - 1][x - 1] ~= nil) then
+          local other_index = rooms_by_position[y - 1][x - 1]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.SE, nil)
+        end
+
+        -- southwest-northeast
+        if (x + 1 < rooms_across and y >= 1 and
+            rooms_by_position[y - 1][x + 1] ~= nil) then
+          local other_index = rooms_by_position[y - 1][x + 1]
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.SW, nil)
+        end
+      end
+    end
+  end
+
+  -- generate the layout
+  geoelf.generate(_G, room_data, corridor_data, extra_corridor_fraction,
+                  fancy_room_fraction, false, false)
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_geoelf_octagon
+#
+# A large central room, with 2 rings of other rooms around it.
+#  There is no simple formula for this one, so the code is a bit
+#  confusing.  Basically the rooms all start in an array.
+#
+#      O--O--O               O
+#     /  /|\  \             /|\
+#    O--O-+-O--O        O--O-+-O--O         O---O
+#   /|\/|\|/|\/|\       |\/|\|/|\/|        /|\ /|\
+#  O |/\| O |/\| O      |/\| O |/\|       / | O | \
+#  | O--O | O--O |      O--O | O--O      O--O | O--O
+#  |/|\  \|/  /|\|     /|\  \|/  /|\     |\  \|/  /|
+#  O-+-O--O--O-+-O    O-+-O--O--O-+-O    | O--O--O |
+#  |\|/  /|\  \|/|     \|/  /|\  \|/     |/  /|\  \|
+#  | O--O | O--O |      O--O | O--O      O--O | O--O
+#  O |\/| O |\/| O      |\/| O |\/|       \ | O | /
+#   \|/\|/|\|/\|/       |/\|/|\|/\|        \|/ \|/
+#    O--O-+-O--O        O--O-+-O--O         O---O
+#     \  \|/  /             \|/            17 Rooms
+#      O--O--O               O
+#      33 Rooms           25 Rooms
+#
+#
+#      29--21-28
+#     /   /|\   \
+#    22-13-+-12-2O
+#   / |\/|\|/|\/| \
+#  3O |/\| 5 |/\| 27
+#  |  14-6 | 4--11 |
+#  | /|\  \|/  /| \|    Room Indexes
+#  23-+-7--O--3-+-19
+#  | \|/  /|\  \| /|    Smaller versions are missing higher indexes
+#  |  15-8 | 2--1O |
+#  31 |\/| 1 |\/| 26
+#   \ |/\|/|\|/\| /
+#    24-16-+-9--18
+#     \   \|/   /
+#      32--17-25
+#
+NAME:   layout_geoelf_octagon
+DEPTH:  Elf
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  -- some paramters
+  local depth_fraction = you.depth_fraction()
+  local place_rings = crawl.random_range(2, 4)
+  local extra_corridor_fraction = 0.7 - depth_fraction * 0.2
+  local fancy_room_fraction = (0.025 + depth_fraction * 0.025) *
+                              (7 - place_rings)
+
+  -- positions are from layout center
+  local ROOMS_TO_PLACE = {
+      -- center room
+      [0]  = { x =  0,  y =  0,  radius_min = 3, radius_max = 5, offset = 1 },
+      -- ring 1
+      [1]  = { x =  0,  y =  12, radius_min = 2, radius_max = 4, offset = 0 },
+      [2]  = { x =  8,  y =  8,  radius_min = 2, radius_max = 4, offset = 0 },
+      [3]  = { x =  12, y =  0,  radius_min = 2, radius_max = 4, offset = 0 },
+      [4]  = { x =  8,  y = -8,  radius_min = 2, radius_max = 4, offset = 0 },
+      [5]  = { x =  0,  y = -12, radius_min = 2, radius_max = 4, offset = 0 },
+      [6]  = { x = -8,  y = -8,  radius_min = 2, radius_max = 4, offset = 0 },
+      [7]  = { x = -12, y =  0,  radius_min = 2, radius_max = 4, offset = 0 },
+      [8]  = { x = -8,  y =  8,  radius_min = 2, radius_max = 4, offset = 0 },
+      -- ring 2
+      [9]  = { x =  8,  y =  20, radius_min = 3, radius_max = 5, offset = 1 },
+      [10] = { x =  20, y =  8,  radius_min = 3, radius_max = 5, offset = 1 },
+      [11] = { x =  20, y = -8,  radius_min = 3, radius_max = 5, offset = 1 },
+      [12] = { x =  8,  y = -20, radius_min = 3, radius_max = 5, offset = 1 },
+      [13] = { x = -8,  y = -20, radius_min = 3, radius_max = 5, offset = 1 },
+      [14] = { x = -20, y = -8,  radius_min = 3, radius_max = 5, offset = 1 },
+      [15] = { x = -20, y =  8,  radius_min = 3, radius_max = 5, offset = 1 },
+      [16] = { x = -8,  y =  20, radius_min = 3, radius_max = 5, offset = 1 },
+      -- ring 3
+      [17] = { x =  0,  y =  28, radius_min = 2, radius_max = 4, offset = 1 },
+      [18] = { x =  20, y =  20, radius_min = 2, radius_max = 4, offset = 1 },
+      [19] = { x =  28, y =   0, radius_min = 2, radius_max = 4, offset = 1 },
+      [20] = { x =  20, y = -20, radius_min = 2, radius_max = 4, offset = 1 },
+      [21] = { x =  0,  y = -28, radius_min = 2, radius_max = 4, offset = 1 },
+      [22] = { x = -20, y = -20, radius_min = 2, radius_max = 4, offset = 1 },
+      [23] = { x = -28, y =   0, radius_min = 2, radius_max = 4, offset = 1 },
+      [24] = { x = -20, y =  20, radius_min = 2, radius_max = 4, offset = 1 },
+      -- ring 4
+      [25] = { x =  12, y =  28, radius_min = 2, radius_max = 3, offset = 1 },
+      [26] = { x =  28, y =  12, radius_min = 2, radius_max = 3, offset = 1 },
+      [27] = { x =  28, y = -12, radius_min = 2, radius_max = 3, offset = 1 },
+      [28] = { x =  12, y = -28, radius_min = 2, radius_max = 3, offset = 1 },
+      [29] = { x = -12, y = -28, radius_min = 2, radius_max = 3, offset = 1 },
+      [30] = { x = -28, y = -12, radius_min = 2, radius_max = 3, offset = 1 },
+      [31] = { x = -28, y =  12, radius_min = 2, radius_max = 3, offset = 1 },
+      [32] = { x = -12, y =  28, radius_min = 2, radius_max = 3, offset = 1 },
+    }
+
+  local DIRECTIONS_IN_ORDER = {
+      [0] = geoelf.directions.S,
+      [1] = geoelf.directions.SE,
+      [2] = geoelf.directions.E,
+      [3] = geoelf.directions.NE,
+      [4] = geoelf.directions.N,
+      [5] = geoelf.directions.NW,
+      [6] = geoelf.directions.W,
+      [7] = geoelf.directions.SW,
+    }
+
+  -- create the arrays
+  local room_data         = { count = 0 }
+  local corridor_data     = { count = 0 }
+  local rooms_by_position = {}
+
+  -- add rooms from array
+  for i = 0, place_rings * 8 do
+    local offset_max = ROOMS_TO_PLACE[i].offset
+    local x_pos
+    local y_pos
+    local radius
+    if (place_rings == 2) then
+      -- if we are only placing two rings of rooms, we have the
+      --  space to make everything bigger
+      local ROOM_POSITION_LOOKUP =
+        { [  0] = 0,
+          [  8] = 10,  [ -8] = -10,
+          [ 12] = 14,  [-12] = -14,
+          [ 20] = 24,  [-20] = -24,
+          [ 28] = 34,  [-28] = -34,
+        }
+      x_pos = gxm / 2 + ROOM_POSITION_LOOKUP[ROOMS_TO_PLACE[i].x] +
+              crawl.random_range(-offset_max, offset_max)
+      y_pos = gym / 2 + ROOM_POSITION_LOOKUP[ROOMS_TO_PLACE[i].y] +
+              crawl.random_range(-offset_max, offset_max)
+      radius = crawl.random_range(ROOMS_TO_PLACE[i].radius_min,
+                                  ROOMS_TO_PLACE[i].radius_max + 1)
+    else
+      x_pos = gxm / 2 + ROOMS_TO_PLACE[i].x +
+              crawl.random_range(-offset_max, offset_max)
+      y_pos = gym / 2 + ROOMS_TO_PLACE[i].y +
+              crawl.random_range(-offset_max, offset_max)
+      radius = crawl.random_range(ROOMS_TO_PLACE[i].radius_min,
+                                  ROOMS_TO_PLACE[i].radius_max)
+    end
+
+    -- we are only actually checking for vaults
+    if (not find_in_area {x1 = x_pos - radius, y1 = y_pos - radius,
+                          x2 = x_pos + radius, y2 = y_pos + radius,
+                          find = "", find_vault = true }) then
+      rooms_by_position[i] = geoelf.add_room(room_data, x_pos, y_pos, radius)
+    else
+      rooms_by_position[i] = nil
+    end
+  end
+
+  -- add corridors
+  --  -> the same pattern is repeated 8 times, so we use a loop
+  for i = 0, 7 do
+    local index_ring_1  = 1  + i
+    local index_ring_2  = 9  + i
+    local index_ring_2B = 9  + (i + 7) % 8
+    local index_ring_3  = 17 + i
+    local index_ring_4  = 25 + i
+    local index_ring_4B = 25 + (i + 7) % 8
+
+    -- connect center to ring 1
+    if (rooms_by_position[0] ~= nil and
+        rooms_by_position[index_ring_1] ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          rooms_by_position[0],
+                          rooms_by_position[index_ring_1],
+                          DIRECTIONS_IN_ORDER[i], nil)
+    end
+
+    -- connect ring 1 to ring 2
+    if (rooms_by_position[index_ring_1] ~= nil and
+        rooms_by_position[index_ring_2] ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          rooms_by_position[index_ring_1],
+                          rooms_by_position[index_ring_2],
+                          DIRECTIONS_IN_ORDER[(i + 1) % 8], nil)
+    end
+    if (rooms_by_position[index_ring_1] ~= nil and
+        rooms_by_position[index_ring_2B] ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          rooms_by_position[index_ring_1],
+                          rooms_by_position[index_ring_2B],
+                          DIRECTIONS_IN_ORDER[(i + 7) % 8], nil)
+    end
+
+    -- connect ring 2 in a loop
+    local c4  -- we will need this later
+    if (rooms_by_position[index_ring_2B] ~= nil and
+        rooms_by_position[index_ring_2] ~= nil) then
+      c4 = geoelf.add_corridor(room_data, corridor_data,
+                               rooms_by_position[index_ring_2B],
+                               rooms_by_position[index_ring_2],
+                               DIRECTIONS_IN_ORDER[(i + 2) % 8], nil)
+    else
+      c4 = nil
+    end
+
+    if (place_rings >= 3) then
+      -- connect ring 1 to ring 3
+      if (rooms_by_position[index_ring_1] ~= nil and
+          rooms_by_position[index_ring_3] ~= nil) then
+        geoelf.add_corridor(room_data, corridor_data,
+                            rooms_by_position[index_ring_1],
+                            rooms_by_position[index_ring_3],
+                            DIRECTIONS_IN_ORDER[i], c4)
+      end
+
+      -- connect ring 2 to ring 3
+      if (rooms_by_position[index_ring_2B] ~= nil and
+          rooms_by_position[index_ring_3] ~= nil) then
+        geoelf.add_corridor(room_data, corridor_data,
+                            rooms_by_position[index_ring_2B],
+                            rooms_by_position[index_ring_3],
+                            DIRECTIONS_IN_ORDER[(i + 1) % 8], nil)
+      end
+      if (rooms_by_position[index_ring_2] ~= nil and
+          rooms_by_position[index_ring_3] ~= nil) then
+        geoelf.add_corridor(room_data, corridor_data,
+                            rooms_by_position[index_ring_2],
+                            rooms_by_position[index_ring_3],
+                            DIRECTIONS_IN_ORDER[(i + 7) % 8], nil)
+      end
+
+      if (place_rings >= 4) then
+        -- connect ring 3 to ring 4
+        if (rooms_by_position[index_ring_3] ~= nil and
+            rooms_by_position[index_ring_4] ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              rooms_by_position[index_ring_3],
+                              rooms_by_position[index_ring_4],
+                              DIRECTIONS_IN_ORDER[(i + 2) % 8], nil)
+        end
+        if (rooms_by_position[index_ring_3] ~= nil and
+            rooms_by_position[index_ring_4B] ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              rooms_by_position[index_ring_3],
+                              rooms_by_position[index_ring_4B],
+                              DIRECTIONS_IN_ORDER[(i + 6) % 8], nil)
+        end
+      end
+    end
+  end
+
+  -- generate the layout
+  geoelf.generate(_G, room_data, corridor_data, extra_corridor_fraction,
+                  fancy_room_fraction, false, false)
+}}
+MAP
+ENDMAP

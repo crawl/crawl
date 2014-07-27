@@ -12,6 +12,7 @@
 
 #include "act-iter.h"
 #include "beam.h"
+#include "butcher.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -240,6 +241,9 @@ void manage_fire_shield(int delay)
     if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
+    // Melt ice armour and condensation shield entirely.
+    maybe_melt_player_enchantments(BEAM_FIRE, 100);
+
     // Remove fire clouds on top of you
     if (env.cgrid(you.pos()) != EMPTY_CLOUD
         && env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)
@@ -327,7 +331,7 @@ int holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
     int cloud_count = 0;
-    const int dur = 8 + random2avg(caster->hit_dice * 3, 2);
+    const int dur = 8 + random2avg(caster->get_hit_dice() * 3, 2);
 
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
@@ -495,7 +499,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
          caster->conj_verb("create").c_str(),
          cloud_type_name(cloud).c_str());
 
-    if (cloud == CLOUD_FIRE)
+    if (cloud == CLOUD_FIRE && caster->is_player())
         did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
 
     return SPRET_SUCCESS;

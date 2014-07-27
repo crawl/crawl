@@ -40,7 +40,7 @@ static colour_t _pan_rock_colour()
     return col;
 }
 
-void init_pandemonium(void)
+void init_pandemonium()
 {
     for (int pc = 0; pc < PAN_MONS_ALLOC; ++pc)
     {

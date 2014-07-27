@@ -21,12 +21,12 @@ struct abyss_state
     uint32_t depth;
     double phase;
     level_id level;
-    bool nuke_all;
+    bool destroy_all_terrain;
 };
 
 extern abyss_state abyssal_state;
 
-void abyss_morph(double duration);
+void abyss_morph();
 void push_features_to_abyss();
 
 void generate_abyss();

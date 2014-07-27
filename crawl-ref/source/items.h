@@ -17,7 +17,9 @@ enum item_source_type
     // Empty space for the gods
 
     AQ_SCROLL     = 100,
+#if TAG_MAJOR_VERSION == 34
     AQ_CARD_GENIE,
+#endif
     IT_SRC_START,
     IT_SRC_SHOP,
 
@@ -29,35 +31,36 @@ enum item_source_type
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
-bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+bool dec_inv_item_quantity(int obj, int amount);
 bool dec_mitm_item_quantity(int obj, int amount);
 
-void inc_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+void inc_inv_item_quantity(int obj, int amount);
 void inc_mitm_item_quantity(int obj, int amount);
 
 bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
-int  move_item_to_player(int obj, int quant_got, bool quiet = false,
-                         bool ignore_burden = false);
+bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
+bool merge_items_into_inv(const item_def &it, int quant_got, int &inv_slot,
+                          bool quiet = false);
 void mark_items_non_pickup_at(const coord_def &pos);
 void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
 bool items_stack(const item_def &item1, const item_def &item2);
-void merge_item_stacks(item_def &source, item_def &dest,
-                       int quant = -1);
+void merge_item_stacks(const item_def &source, item_def &dest, int quant = -1);
+void get_gold(const item_def& item, int quant, bool quiet);
 
 item_def *find_floor_item(object_class_type cls, int sub_type);
 int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
 
-void link_items(void);
+void link_items();
 
-void fix_item_coordinates(void);
+void fix_item_coordinates();
 
 int get_mitm_slot(int reserve = 50);
 
@@ -90,9 +93,9 @@ const item_def* top_item_at(const coord_def& where);
 // Returns whether there is more than one item in a given cell.
 bool multiple_items_at(const coord_def& where);
 
-void drop(void);
+void drop();
 
-int inv_count(void);
+int inv_count();
 int runes_in_pack();
 
 bool pickup_single_item(int link, int qty);
@@ -136,7 +139,6 @@ equipment_type item_equip_slot(const item_def &item);
 
 void item_was_lost(const item_def &item);
 void item_was_destroyed(const item_def &item, int cause = -1);
-void corrode_item(item_def &item, actor *holder);
 
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted,
@@ -150,6 +152,7 @@ bool is_valid_mimic_item(const item_def &item);
 bool maybe_identify_base_type(item_def &item);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
+int count_movable_items(int obj);
 
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're

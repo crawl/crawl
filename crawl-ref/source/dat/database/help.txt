@@ -16,9 +16,6 @@ There are shortcuts to quickly select several items in succession:
 <w>'</w>   moves the cursor down without changing selection
 The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 
-<h>Show weights</h>
-Pressing <w>Ctrl-W</w> toggles the display of item weights.
-
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
@@ -79,7 +76,7 @@ hotkey to travel to its location.
 
 Some examples of search strings:
 <w>cure mutation</w> find all potions of cure mutation, including potions in shops.
-<w>jelly</w>         finds every single royal jelly and heaps of royal jellies.
+<w>royal</w>         finds every single royal jelly and heaps of royal jellies.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
@@ -249,9 +246,8 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 How fast you train a skill is governed by the following factors:
 * aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that
       less experience is needed to advance a skill. Depends on species.
-* cross-training: Some skills are easier to learn when you already are
-      proficient with a related one, e.g. Long and Short Blades.
-      The aptitude bonus for crosstraining is indicated in <green>green</green>.
+* cross-training: Proficiency in some skills carries over to related skills.
+      The enhancer bonus for crosstraining is indicated in <blue>blue</blue>.
 * magic penalties: It is harder to learn an elemental skill if you are
       proficient in the opposing element (Air-Earth, Ice-Fire).
       The aptitude penalty is indicated in <red>red</red>.

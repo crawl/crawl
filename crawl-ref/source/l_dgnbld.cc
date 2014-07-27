@@ -344,6 +344,7 @@ static bool _wall_is_empty(map_lines &lines,
     return true;
 }
 
+
 LUAFN(dgn_count_feature_in_box)
 {
     LINES(ls, 1, lines);
@@ -563,6 +564,65 @@ LUAFN(dgn_height)
     PLUARET(number, lines.height());
 }
 
+LUAFN(dgn_primary_vault_dimensions)
+{
+    LINES(ls, 1, lines);
+
+    static const int NO_PRIMARY_VAULT = 99999;
+
+    int x_min =  NO_PRIMARY_VAULT;
+    int x_max = -NO_PRIMARY_VAULT;
+    int y_min =  NO_PRIMARY_VAULT;
+    int y_max = -NO_PRIMARY_VAULT;
+
+    for (int y = 0; y < lines.height(); y++)
+        for (int x = 0; x < lines.width(); x++)
+        {
+            if (env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
+            {
+                if (x < x_min)
+                    x_min = x;
+                if (x > x_max)
+                    x_max = x;
+                if (y < y_min)
+                    y_min = y;
+                if (y > y_max)
+                    y_max = y;
+            }
+        }
+
+    if (x_min != NO_PRIMARY_VAULT)
+    {
+        if (x_max == -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no x_max", x_min);
+        if (y_min ==  NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no y_min", x_min);
+        if (y_max == -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no y_max", x_min);
+
+        lua_pushnumber(ls, x_min);
+        lua_pushnumber(ls, x_max);
+        lua_pushnumber(ls, y_min);
+        lua_pushnumber(ls, y_max);
+    }
+    else  // no primary vault found
+    {
+        if (x_max != -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_max %d but no x_min", x_max);
+        if (y_min !=  NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has y_min %d but no x_min", y_min);
+        if (y_max != -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has y_max %d but no x_min", y_max);
+
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+
+    return 4;
+}
+
 LUAFN(dgn_join_the_dots)
 {
     LINES(ls, 1, lines);
@@ -596,16 +656,19 @@ LUAFN(dgn_join_the_dots)
         if (at == to)
             break;
 
-        if (at.x < to.x)
+        if (at.y == to.y || coinflip())
         {
-            at.x++;
-            continue;
-        }
+            if (at.x < to.x)
+            {
+                at.x++;
+                continue;
+            }
 
-        if (at.x > to.x)
-        {
-            at.x--;
-            continue;
+            if (at.x > to.x)
+            {
+                at.x--;
+                continue;
+            }
         }
 
         if (at.y > to.y)
@@ -1219,7 +1282,7 @@ LUAFN(dgn_connect_adjacent_rooms)
 {
     LINES(ls, 1, lines);
 
-    TABLE_STR(ls, wall, "xcvb");
+    TABLE_STR(ls, wall, "xcvbmn");
     TABLE_STR(ls, floor, ".");
     TABLE_CHAR(ls, replace, '.');
     TABLE_INT(ls, max, 1);
@@ -1282,6 +1345,253 @@ LUAFN(dgn_connect_adjacent_rooms)
         }
         count--;
     }
+
+    return 0;
+}
+
+LUAFN(dgn_remove_disconnected_doors)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, door, "+");
+    TABLE_STR(ls, open, traversable_glyphs);
+    TABLE_CHAR(ls, replace, '.');
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    // we never go right up to the border to avoid looking off the map edge
+    if (x1 < 1)
+        x1 = 1;
+    if (x2 >= lines.width() - 1)
+        x2 = lines.width() - 2;
+    if (y1 < 1)
+        y1 = 1;
+    if (y2 >= lines.height() - 1)
+        y2 = lines.height() - 2;
+
+    // TODO: Improve this to handle gates correctly.
+    //  -> Right now it just removes them.
+    //  -> I (infiniplex) tried to find formulas for this and their were
+    //     too many weird cases.
+    //    -> 2-long hallway with doors at both end should not be a gate
+    //    -> end(s) of gate surround by wall should become wall
+    //    -> door glyphs in a shape other than a straight line
+    //    -> walls of either side of the middle of a gate when the ends
+    //       are open may connect otherwise-disconnected regions
+    //    -> results must be direction-independant
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (strchr(door, lines(x, y)))
+            {
+                //
+                // This door is not part of a gate
+                //  -> There are a lot of cases here because doors
+                //     can be at corners
+                //  -> We will choose the doors we want to keep
+                //     and remove the rest of them
+                //
+
+                // which directions are open
+                bool south     = strchr(open, lines(x,     y + 1));
+                bool north     = strchr(open, lines(x,     y - 1));
+                bool east      = strchr(open, lines(x + 1, y));
+                bool west      = strchr(open, lines(x - 1, y));
+                bool southeast = strchr(open, lines(x + 1, y + 1));
+                bool northwest = strchr(open, lines(x - 1, y - 1));
+                bool southwest = strchr(open, lines(x - 1, y + 1));
+                bool northeast = strchr(open, lines(x + 1, y - 1));
+
+
+                //
+                // A door in an S-N straight wall
+                //
+                //     x      x     .x      x      x.
+                //    .+.     +.     +.    .+     .+
+                //     x     .x      x      x.     x
+                //
+                if (!south && !north
+                    && (east || west)
+                    && (east || southeast or northeast)
+                    && (west || southwest or northwest))
+                {
+                    continue;
+                }
+
+                //
+                // A door in an E-W straight wall
+                //
+                //     .     .        .     .      .
+                //    x+x    x+x    x+x    x+x    x+x
+                //     .      .      .     .        .
+                //
+                if (!east && !west
+                    && (south || north)
+                    && (south || northeast or northwest)
+                    && (north || southeast or southwest))
+                {
+                    continue;
+                }
+
+                //
+                // A door in a SE-NW diagonal
+                //
+                //    .x     ..     .xx
+                //    x+.    .+x    x+x
+                //     ..     x.    xx.
+                //
+                if (southeast && northwest && south == east && north == west)
+                {
+                    if (south != west)
+                        continue;
+                    else if (!south && !west && !southwest && !northeast)
+                        continue;
+                }
+
+                //
+                // A door in a SW-NE diagonal
+                //
+                //     ..     x.    xx.
+                //    x+.    .+x    x+x
+                //    .x     ..     .xx
+                //
+                if (southwest && northeast && south == west && north == east)
+                {
+                    if (south != east)
+                        continue;
+                    else if (!south && !east && !southeast && !northwest)
+                        continue;
+                }
+
+                // if we get her, the door is invalid
+                lines(x, y) = replace;
+            }
+
+    return 0;
+}
+
+LUAFN(dgn_add_windows)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, wall, "xcvbmn");
+    TABLE_STR(ls, open, traversable_glyphs);
+    TABLE_CHAR(ls, window, 'm');
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    // we never go right up to the border to avoid looking off the map edge
+    if (x1 < 1)
+        x1 = 1;
+    if (x2 >= lines.width() - 1)
+        x2 = lines.width() - 2;
+    if (y1 < 1)
+        y1 = 1;
+    if (y2 >= lines.height() - 1)
+        y2 = lines.height() - 2;
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (strchr(wall, lines(x, y)))
+            {
+                // which directions are open
+                bool south_open     = strchr(open, lines(x,     y + 1));
+                bool north_open     = strchr(open, lines(x,     y - 1));
+                bool east_open      = strchr(open, lines(x + 1, y));
+                bool west_open      = strchr(open, lines(x - 1, y));
+                bool southeast_open = strchr(open, lines(x + 1, y + 1));
+                bool northwest_open = strchr(open, lines(x - 1, y - 1));
+                bool southwest_open = strchr(open, lines(x - 1, y + 1));
+                bool northeast_open = strchr(open, lines(x + 1, y - 1));
+
+                // which directions are blocked by walls
+                bool south_blocked     = strchr(wall, lines(x,     y + 1));
+                bool north_blocked     = strchr(wall, lines(x,     y - 1));
+                bool east_blocked      = strchr(wall, lines(x + 1, y));
+                bool west_blocked      = strchr(wall, lines(x - 1, y));
+                bool southeast_blocked = strchr(wall, lines(x + 1, y + 1));
+                bool northwest_blocked = strchr(wall, lines(x - 1, y - 1));
+                bool southwest_blocked = strchr(wall, lines(x - 1, y + 1));
+                bool northeast_blocked = strchr(wall, lines(x + 1, y - 1));
+
+                // a simple window in a straight wall
+                //
+                //   .    x
+                //  xmx  .m.
+                //   .    x
+                //
+                if (south_open && north_open && east_blocked && west_blocked)
+                    lines(x, y) = window;
+                if (east_open && west_open && south_blocked && north_blocked)
+                    lines(x, y) = window;
+
+                // a diagonal window in a straight segment of a bent wall
+                //
+                //  . x  x .   x    x
+                //  xmx  xmx  .m.  .m.
+                //  x .  . x   x    x
+                //
+                if (east_blocked && west_blocked)
+                {
+                    if (southeast_open && northwest_open
+                        && southwest_blocked && northeast_blocked)
+                    {
+                        lines(x, y) = window;
+                    }
+                    if (southwest_open && northeast_open
+                        && southeast_blocked && northwest_blocked)
+                    {
+                        lines(x, y) = window;
+                    }
+                }
+
+                // a window in a 3-wide diagonal wall
+                //
+                //  .x    x.
+                //  xmx  xmx
+                //   x.  .x
+                //
+                if (   south_blocked && north_blocked
+                    && east_blocked  && west_blocked)
+                {
+                    if (southeast_open && northwest_open)
+                        lines(x, y) = window;
+                    if (southwest_open && northeast_open)
+                        lines(x, y) = window;
+                }
+
+                // a window in a 2-wide diagonal wall
+                //  -> this will change the whole wall
+                //
+                //   .    .   .x    x.
+                //  .mx  xm.  xm.  .mx
+                //   x.  .x    .    .
+                //
+                if (south_blocked && east_blocked
+                    && north_open && west_open && southeast_open)
+                {
+                    lines(x, y) = window;
+                }
+                if (south_blocked && west_blocked
+                    && north_open && east_open && southwest_open)
+                {
+                    lines(x, y) = window;
+                }
+                if (north_blocked && west_blocked
+                    && south_open && east_open && northwest_open)
+                {
+                    lines(x, y) = window;
+                }
+                if (north_blocked && east_blocked
+                    && south_open && west_open && northeast_open)
+                {
+                    lines(x, y) = window;
+                }
+            }
 
     return 0;
 }
@@ -1845,6 +2155,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "fill_disconnected", &dgn_fill_disconnected },
     { "find_in_area", &dgn_find_in_area },
     { "height", dgn_height },
+    { "primary_vault_dimensions", &dgn_primary_vault_dimensions },
     { "join_the_dots", &dgn_join_the_dots },
     { "make_circle", &dgn_make_circle },
     { "make_diamond", &dgn_make_diamond },
@@ -1859,6 +2170,8 @@ const struct luaL_reg dgn_build_dlib[] =
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },
     { "widen_paths", &dgn_widen_paths },
     { "connect_adjacent_rooms", &dgn_connect_adjacent_rooms },
+    { "remove_disconnected_doors", &dgn_remove_disconnected_doors },
+    { "add_windows", &dgn_add_windows },
     { "replace_area", &dgn_replace_area },
     { "replace_first", &dgn_replace_first },
     { "replace_random", &dgn_replace_random },

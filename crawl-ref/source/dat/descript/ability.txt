@@ -63,8 +63,6 @@ Turn into a speedy vampire bat. In bat form, you can neither interact with
 items in any form (except picking them up or dropping them), nor cast spells.
 Note that Bat Form will decrease your current Strength while increasing your
 Dexterity. Thus, you won't be able to change form if your Strength is too low.
-The flight is magically augmented, so you will stay in the air even if the
-weight of your possessions or some disability would normally drag you down.
 %%%%
 Bottle Blood ability
 
@@ -471,8 +469,10 @@ Choose any deck in your inventory and draw a card from it.
 Peek at Two ability
 
 Discard one card from any deck in your inventory to draw two cards from the
-deck, look at them, and shuffle them back into the deck. The deck will be
-identified and inscribed as containing those two cards.
+deck, look at them, and place them back on top of the deck. The deck will be
+identified and inscribed as containing those two cards. Note that once
+peeked at, a deck cannot be used with any of Nemelex's other abilities
+(except Draw One).
 %%%%
 Triple Draw ability
 
@@ -505,6 +505,11 @@ surroundings.
 Stop Recall ability
 
 Stop recalling your followers.
+%%%%
+Give Item to Named Follower ability
+
+Give a weapon or piece of armour to a named orcish follower. An orc can only
+ever receive one of these gifts.
 %%%%
 # Fedhas
 Sunlight ability
@@ -668,10 +673,6 @@ you've built your reputation!
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
 # Zotdef
-Make dart trap ability
-
-Create a dart trap at the targeted location.
-%%%%
 Make oklob sapling ability
 
 Plant an oklob sapling with the ability to spit acid at the targeted location.
@@ -769,11 +770,6 @@ Acquire a large quantity of gold.
 Make oklob circle ability
 
 Grow a circle of oklob plants centred at the targeted location.
-%%%%
-Sage ability
-
-Funnel some of your earned experience towards a certain skill and train it
-faster than normal.
 %%%%
 Acquirement ability
 

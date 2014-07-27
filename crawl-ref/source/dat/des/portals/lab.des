@@ -242,7 +242,7 @@ dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
 
  -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
 dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
-   .. 'arrow good_item, apple / orange / pear / apricot / lemon / nothing, '
+   .. 'arrow good_item, fruit w:50 / nothing, '
    .. 'helmet / centaur barding / pair of gloves' )
 
  -- Dwarven artificer. 3 items.
@@ -277,7 +277,7 @@ dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
    .. 'ring of wizardry / any jewellery / nothing w:20' )
 
  -- Halfling warper. 4-5 items.
-dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'dart ego:dispersal / dart, '
+dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
    .. 'randbook disc:translocation / any book, scroll of blinking / '
    .. 'scroll of teleportation / ring of teleportation / '
    .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
@@ -683,7 +683,7 @@ ENDMAP
 # Baited teleport trap - this is evil!
 NAME:    labyrinth_baited_teleportation_trap
 TAGS:    extra
-KFEAT:   Y = known teleport trap / known zot trap / .
+KFEAT:   Y = known permanent teleport trap / known zot trap / .
 KITEM:   Y = any good_item
 SHUFFLE: cxv
 WEIGHT:  1
@@ -716,10 +716,9 @@ ENDMAP
 NAME:   labyrinth_skeletal_remains
 TAGS:   allow_dup extra
 WEIGHT: 40
-KFEAT:  x = .
-: dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
+: dgn.delayed_decay(_G, 'd', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
-x
+d
 ENDMAP
 
 ############################################################################

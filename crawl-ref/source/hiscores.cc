@@ -70,7 +70,7 @@ static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 static int newest_entry = -1;
 
 static FILE *_hs_open(const char *mode, const string &filename);
-static void  _hs_close(FILE *handle, const char *mode, const string &filename);
+static void  _hs_close(FILE *handle, const string &filename);
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
 static void  _hs_write(FILE *scores, scorefile_entry &entry);
 static time_t _parse_time(const string &st);
@@ -156,7 +156,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     if (!inserted)
     {
         newest_entry = -1; // This might not be the first game
-        _hs_close(scores, "a+", _score_file_name());
+        _hs_close(scores, _score_file_name());
         return;
     }
 
@@ -179,7 +179,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     }
 
     // close scorefile.
-    _hs_close(scores, "a+", _score_file_name());
+    _hs_close(scores, _score_file_name());
 }
 
 void logfile_new_entry(const scorefile_entry &ne)
@@ -200,7 +200,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     _hs_write(logfile, le);
 
     // close logfile.
-    _hs_close(logfile, "a", _log_file_name());
+    _hs_close(logfile, _log_file_name());
 }
 
 template <class t_printf>
@@ -249,7 +249,7 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 }
 
 // Displays high scores using curses. For output to the console, use
@@ -279,7 +279,7 @@ void hiscores_print_list(int display_count, int format)
     total_entries = i;
 
     // close off
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 
     textcolor(LIGHTGREY);
 
@@ -342,7 +342,7 @@ static void _construct_hiscore_table(MenuScroller* scroller)
             break;
     }
 
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 
     for (int j=0; j<i; j++)
         _add_hiscore_row(scroller, *hs_list[j], j);
@@ -379,7 +379,7 @@ static void _show_morgue(scorefile_entry& se)
         morgue_text += "<w>" + line + "</w>" + '\n';
     }
 
-    lk_close(morgue, "r", morgue_path);
+    lk_close(morgue, morgue_path);
 
     clrscr();
 
@@ -561,9 +561,9 @@ static FILE *_hs_open(const char *mode, const string &scores)
     return lk_open(mode, scores);
 }
 
-static void _hs_close(FILE *handle, const char *mode, const string &scores)
+static void _hs_close(FILE *handle, const string &scores)
 {
-    lk_close(handle, mode, scores);
+    lk_close(handle, scores);
 }
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
@@ -813,7 +813,7 @@ enum old_job_type
     OLD_JOB_STALKER      = -5,
     OLD_JOB_JESTER       = -6,
     OLD_JOB_PRIEST       = -7,
-    NUM_OLD_JOBS
+    NUM_OLD_JOBS = -OLD_JOB_PRIEST
 };
 
 static const char* _job_name(int job)
@@ -875,7 +875,7 @@ static int _job_by_name(const string& name)
     if (job != JOB_UNKNOWN)
         return job;
 
-    for (job = -1; job > NUM_OLD_JOBS - 2; job--)
+    for (job = -1; job >= -NUM_OLD_JOBS; job--)
         if (name == _job_name(job))
             return job;
 
@@ -1320,8 +1320,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     if (death_type == KILLED_BY_BURNING)
     {
-        death_source_name = you.props["napalmer"].get_string();
-        auxkilldata = you.props["napalm_aux"].get_string();
+        death_source_name = you.props["sticky_flame_source"].get_string();
+        auxkilldata = you.props["sticky_flame_aux"].get_string();
     }
 }
 
@@ -1526,99 +1526,12 @@ void scorefile_entry::init(time_t dt)
         }
     }
 
-    // Note active status effects.
-    const int statuses[] =
-    {
-        DUR_AGILITY,
-        DUR_BERSERK,
-        DUR_BRILLIANCE,
-        DUR_CONF,
-        DUR_CONFUSING_TOUCH,
-        DUR_CONTROL_TELEPORT,
-        DUR_DEATH_CHANNEL,
-        DUR_DIVINE_STAMINA,
-        DUR_DIVINE_VIGOUR,
-        DUR_EXHAUSTED,
-        DUR_FIRE_SHIELD,
-        DUR_ICY_ARMOUR,
-        DUR_LIQUID_FLAMES,
-        DUR_LOWERED_MR,
-        DUR_MAGIC_SHIELD,
-        DUR_MIGHT,
-        DUR_PARALYSIS,
-        DUR_PETRIFIED,
-        DUR_PETRIFYING,
-        DUR_RESISTANCE,
-        DUR_SLIMIFY,
-        DUR_SLEEP,
-        DUR_STONESKIN,
-        DUR_SWIFTNESS,
-        DUR_TELEPATHY,
-        DUR_TELEPORT,
-        DUR_DEATHS_DOOR,
-        DUR_PHASE_SHIFT,
-        DUR_QUAD_DAMAGE,
-        DUR_SILENCE,
-        DUR_STEALTH,
-        DUR_AFRAID,
-        DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
-        DUR_TORNADO,
-        DUR_LIQUEFYING,
-        DUR_HEROISM,
-        DUR_FINESSE,
-        DUR_LIFESAVING,
-        DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA,
-        DUR_DISJUNCTION,
-        DUR_SENTINEL_MARK,
-        STATUS_AIRBORNE,
-        STATUS_BEHELD,
-        STATUS_BURDEN,
-        STATUS_CONTAMINATION,
-        STATUS_BACKLIT,
-        STATUS_UMBRA,
-        STATUS_NET,
-        STATUS_HUNGER,
-        STATUS_REGENERATION,
-        STATUS_SICK,
-        STATUS_SPEED,
-        STATUS_INVISIBLE,
-        DUR_POISONING,
-        STATUS_MISSILES,
-        DUR_SURE_BLADE,
-        DUR_TRANSFORMATION,
-        STATUS_CONSTRICTED,
-        STATUS_SILENCE,
-        STATUS_RECALL,
-        DUR_WEAK,
-        DUR_DIMENSION_ANCHOR,
-        DUR_ANTIMAGIC,
-        DUR_FLAYED,
-        DUR_WATER_HOLD,
-        STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE,
-        DUR_FIRE_VULN,
-        DUR_POISON_VULN,
-        DUR_FROZEN,
-        DUR_SAP_MAGIC,
-        STATUS_MAGIC_SAPPED,
-        DUR_PORTAL_PROJECTILE,
-        DUR_NO_POTIONS,
-#if TAG_MAJOR_VERSION == 34
-        STATUS_GOLDEN,
-#endif
-        STATUS_BRIBE,
-        DUR_QAZLAL_FIRE_RES,
-        DUR_QAZLAL_COLD_RES,
-        DUR_QAZLAL_ELEC_RES,
-        DUR_QAZLAL_AC,
-    };
-
+    // A hard-coded duration/status list used to be used here. This list is no
+    // longer hard-coded. May 2014. -reaverb
     status_info inf;
-    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";
@@ -1642,7 +1555,7 @@ void scorefile_entry::init(time_t dt)
 
     ac    = you.armour_class();
     ev    = player_evasion();
-    sh    = player_shield_class();
+    sh    = player_displayed_shield_class();
 
     god = you.religion;
     if (!you_worship(GOD_NO_GOD))
@@ -1984,11 +1897,12 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     return place;
 }
 
-static bool _species_is_undead(int sp)
-{
-    return sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE;
-}
-
+/**
+ * Describes the cause of the player's death.
+ *
+ * @param verbosity     The verbosity of the description.
+ * @return              A description of the cause of death.
+ */
 string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 {
     bool needs_beam_cause_line = false;
@@ -2036,7 +1950,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_ROLLING:
         if (terse)
-            desc += "rolling " + death_source_desc();
+            desc += "squashed by " + death_source_desc();
         else
             desc += "Rolled over by " + death_source_desc();
         needs_damage = true;
@@ -2194,7 +2108,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN || race == SP_GARGOYLE)
+        else if (species_is_unbreathing(race))
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
@@ -2227,7 +2141,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (_species_is_undead(race))
+            else if (species_is_undead(race))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";
@@ -2516,6 +2430,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "Thrown by " + death_source_desc();
         needs_damage = true;
         break;
+
 
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";
@@ -2905,7 +2820,7 @@ void mark_milestone(const string &type, const string &milestone,
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
-        lk_close(fp, "a", milestone_file);
+        lk_close(fp, milestone_file);
     }
 #endif // DGL_MILESTONES
 }

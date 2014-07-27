@@ -18,6 +18,7 @@ bool form_can_swim(transformation_type form = you.form);
 bool form_likes_water(transformation_type form = you.form);
 bool form_likes_lava(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
+bool form_can_bleed(transformation_type form = you.form);
 bool form_can_use_wand(transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,
                         transformation_type form = you.form);
@@ -42,9 +43,12 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
-const char* appendage_name(int app = you.attribute[ATTR_APPENDAGE]);
 const char* transform_name(transformation_type form = you.form);
 
 int form_hp_mod();
+
+void emergency_untransform();
+void merfolk_start_swimming(bool step = false);
+void merfolk_stop_swimming();
 
 #endif

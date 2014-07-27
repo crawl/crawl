@@ -1,6 +1,8 @@
 #ifndef ATTITUDE_CHANGE_H
 #define ATTITUDE_CHANGE_H
 
+void mons_att_changed(monster* mons);
+
 void fedhas_neutralise(monster* mons);
 bool fedhas_plants_hostile();
 void beogh_follower_convert(monster* mons, bool orc_hit = false);

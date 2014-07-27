@@ -148,8 +148,10 @@ static void _update_feat_at(const coord_def &gp)
     if (disjunction_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_DISJUNCT;
 
+#if TAG_MAJOR_VERSION == 34
     if (heated(gp))
         env.map_knowledge(gp).flags |= MAP_HOT;
+#endif
 
     if (golden(gp))
         env.map_knowledge(gp).flags |= MAP_GOLDEN;
@@ -329,13 +331,15 @@ static void _check_monster_pos(const monster* mons)
  *
  * @param where    The location being queried.
  * @param mons     The moster being mimicked.
- * @returns        True if valid, otherwise False.
+ * @return         True if valid, otherwise False.
 */
 static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
 {
     if (!you.see_cell(where) || where == you.pos()
         || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
+    {
         return false;
+    }
 
     monster *mons_at = monster_at(where);
     if (mons_at && mons_at != mons)
@@ -397,7 +401,7 @@ static void _mark_invisible_at(const coord_def &where,
 static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
 {
     // Monster didn't go unseen last turn.
-    if(mons->unseen_pos.origin())
+    if (mons->unseen_pos.origin())
         return;
 
 

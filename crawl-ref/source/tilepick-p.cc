@@ -9,7 +9,7 @@
 #include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "mon-stuff.h"
+#include "options.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
@@ -245,14 +245,17 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         break;
 
     // Ranged
-    case WPN_SLING:
-        tile = TILEP_HAND1_SLING;
+    case WPN_HUNTING_SLING:
+    case WPN_GREATSLING:
+        tile = TILEP_HAND1_HUNTING_SLING;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;
         break;
-    case WPN_CROSSBOW:
-        tile = TILEP_HAND1_CROSSBOW;
+    case WPN_HAND_CROSSBOW:
+    case WPN_ARBALEST:
+    case WPN_TRIPLE_CROSSBOW:
+        tile = TILEP_HAND1_ARBALEST;
         break;
     case WPN_BLOWGUN:
         tile = TILEP_HAND1_BLOWGUN;
@@ -496,11 +499,15 @@ tileidx_t tileidx_player()
             break;
         }
         // no special tile
-        case TRAN_BLADE_HANDS: break;
+        case TRAN_BLADE_HANDS:
         case TRAN_APPENDAGE:
         case TRAN_NONE:
         default:
-            break;
+            {
+                if (Options.tile_show_player_species)
+                    ch = tileidx_player_mons();
+                break;
+            }
     }
 
     // Currently, the flying flag is only used for not drawing the tile in the
@@ -579,8 +586,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_HALFLING;
     case SP_HILL_ORC:
         return TILEP_BASE_ORC;
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
         return TILEP_BASE_LAVA_ORC;
+#endif
     case SP_KOBOLD:
         return TILEP_BASE_KOBOLD;
     case SP_MUMMY:
@@ -689,6 +698,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_HILL_ORC:
             hair = 0;
             break;
+#if TAG_MAJOR_VERSION == 34
         case SP_LAVA_ORC:
             // This should respect the player's choice of base tile, if possible.
             switch (temperature_colour(you.temperature))
@@ -717,6 +727,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             }
             hair = 0;
             break;
+#endif
         case SP_KOBOLD:
             hair = 0;
             break;

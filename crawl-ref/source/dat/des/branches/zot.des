@@ -741,8 +741,8 @@ ENDMAP
 #
 NAME:  lemuel_golem_globe
 DEPTH: Zot
-TAGS:  no_rotate
-KFEAT: T = teleport trap
+TAGS:  no_rotate no_exits
+KFEAT: T = permanent teleport trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
@@ -894,7 +894,7 @@ MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
 SUBST:  % = !:20 ?:5 .:20
-KITEM:  ! = banana
+KITEM:  ! = fruit
 KITEM:  ? = wand of random effects
 COLOUR: " : yellow
 MAP
@@ -1037,7 +1037,7 @@ ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
 MONS:   ice statue / silver statue / orange crystal statue / \
-        patrolling curse skull / w:5 nothing
+        curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
@@ -1082,8 +1082,8 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         scythe ego:chaos w:5 | any weapon ego:chaos w:2 | dire flail w:30 | \
         great mace w:30 | battleaxe w:30 | great sword w:30 | \
         scythe w:30 | glaive w:30 | any weapon w:12 . \
-        randart sling ego:chaos | randart shortbow ego:chaos | \
-        randart crossbow ego:chaos | sling | shortbow | crossbow | \
+        randart hunting sling ego:chaos | randart shortbow ego:chaos | \
+        randart arbalest ego:chaos | hunting sling | shortbow | arbalest | \
         nothing w:15 . sling bullet | arrow | bolt . \
         lightning rod w:6 | rod of shadows w:4 | rod of the swarm w:4 | \
         rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
@@ -1096,7 +1096,7 @@ KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   0 = known zot trap
-KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
+KFEAT:   ^~ = permanent teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KFEAT:   z = iron_grate
@@ -1180,7 +1180,7 @@ MAP
 ENDMAP
 
 NAME:   bh_zot_levy_curve
-TAGS:   extra mini_float
+TAGS:   extra
 DEPTH:  Zot
 SUBST:  W = Ww
 MAP
@@ -2301,7 +2301,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:$
 ORIENT:     north
-TAGS:       no_dump layout_halls
+TAGS:       no_dump
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
@@ -2325,7 +2325,7 @@ SUBST:    F = .
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
 MONS:     ancient lich, orange crystal statue / silver statue / ice statue
-SUBST:    8=8., 8=8., 5=5.
+SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?
 SUBST:    ? : KLM

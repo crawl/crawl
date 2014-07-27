@@ -15,9 +15,7 @@ enum corpse_effect_type
 {
     CE_NOCORPSE,
     CE_CLEAN,
-    CE_CONTAMINATED,
     CE_POISONOUS,
-    CE_POISON_CONTAM,
     CE_ROT,
     CE_MUTAGEN,
     CE_ROTTEN,
@@ -28,6 +26,8 @@ enum gender_type
     GENDER_NEUTER,
     GENDER_MALE,
     GENDER_FEMALE,
+    GENDER_YOU, // A person, not a gender, but close enough.
+    NUM_GENDERS
 };
 
 // TODO: Unify this and a player_equivalent (if applicable)
@@ -52,8 +52,10 @@ enum attack_type
     AT_CONSTRICT,
     AT_TRAMPLE,
     AT_TRUNK_SLAP,
+#if TAG_MAJOR_VERSION == 34
     AT_SNAP,
     AT_SPLASH,
+#endif
     AT_POUNCE,
     AT_REACH_STING,
     AT_CHERUB,
@@ -73,7 +75,9 @@ enum attack_flavour
     AF_BLINK,
     AF_COLD,
     AF_CONFUSE,
+#if TAG_MAJOR_VERSION == 34
     AF_DISEASE,
+#endif
     AF_DRAIN_STR,
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
@@ -101,7 +105,7 @@ enum attack_flavour
     AF_KLOWN,
     AF_DISTORT,
     AF_RAGE,
-    AF_NAPALM,
+    AF_STICKY_FLAME,
     AF_CHAOS,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34
@@ -117,7 +121,9 @@ enum attack_flavour
     AF_PURE_FIRE,
     AF_DRAIN_SPEED,
     AF_VULN,
+#if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
+#endif
     AF_WEAKNESS_POISON,
     AF_SHADOWSTAB,
     AF_DROWN,

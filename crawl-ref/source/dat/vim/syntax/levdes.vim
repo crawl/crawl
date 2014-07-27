@@ -96,13 +96,13 @@ syn keyword desOrientation lab generate_loot
 syn keyword desOrientation ziggurat_pillar centered
 " map building in dungeon.cc (`transparent` is handled later)
 "Note: `dummy` mis-catches `training dummy` about half as often as actually used as tag
-syn keyword desOrientation dummy arrival mini_float extra ruin layout pan decor
+syn keyword desOrientation dummy arrival no_exits extra ruin layout pan decor
 syn keyword desOrientation allow_dup uniq luniq
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation no_dump
 " vault placement in maps.cc
 syn keyword desOrientation unrand place_unique special_room tutorial
-syn keyword desOrientation water_ok can_overwrite replace_portal
+syn keyword desOrientation water_ok overwrite_floor_cell replace_portal
 " V vault building (mostly dlua/v_layouts and v_rooms)
 syn keyword desOrientation vaults_room vaults_empty vaults_hard no_windows preserve_wall
 

@@ -918,7 +918,7 @@
        SPELL_SHADOW_CREATURES,
        SPELL_SHADOW_CREATURES,
        SPELL_INVISIBILITY,
-       SPELL_BLINK_AWAY,
+       SPELL_BLINK,
        SPELL_SHADOW_CREATURES,
        SPELL_NO_SPELL
       }
@@ -1469,7 +1469,7 @@
        SPELL_LIGHTNING_BOLT,
        SPELL_CONTROL_WINDS,
        SPELL_AIRSTRIKE,
-       SPELL_HASTE,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
     },
@@ -1614,17 +1614,6 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_VAMPIRIC_DRAINING,
-      }
-    },
-
-    {  MST_SHEDU,
-      {
-       SPELL_HEAL_OTHER,
-       SPELL_NO_SPELL,
-       SPELL_HEAL_OTHER,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
       }
     },
 
@@ -2434,9 +2423,9 @@
 
     {  MST_OCTOPODE_CRUSHER,
       {
-       SPELL_THROW_ICICLE,
-       SPELL_THROW_ICICLE,
-       SPELL_NO_SPELL,
+       SPELL_IRON_SHOT,
+       SPELL_IRON_SHOT,
+       SPELL_MELEE,
        SPELL_MELEE,
        SPELL_MELEE,
        SPELL_NO_SPELL,
@@ -2451,6 +2440,28 @@
        SPELL_ANIMATE_DEAD,
        SPELL_DISPEL_UNDEAD,
        SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SILVER_STATUE,
+      {
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_DEMON,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_DEMON,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ORANGE_CRYSTAL_STATUE,
+      {
+       SPELL_BRAIN_FEED,
+       SPELL_DRAIN_MAGIC,
+       SPELL_MASS_CONFUSION,
+       SPELL_BRAIN_FEED,
+       SPELL_DRAIN_MAGIC,
+       SPELL_MASS_CONFUSION
       }
     },
 #endif

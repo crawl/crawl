@@ -9,8 +9,7 @@
 enum status_redraw_flag_type
 {
     REDRAW_HUNGER         = 0x00000001,
-    REDRAW_BURDEN         = 0x00000002,
-    REDRAW_LINE_1_MASK    = 0x00000003,
+    REDRAW_LINE_1_MASK    = 0x00000002,
 
     REDRAW_PRAYER         = 0x00000100,
     REDRAW_BREATH         = 0x00000200,
@@ -32,22 +31,22 @@ enum status_redraw_flag_type
 };
 
 #ifdef DGL_SIMPLE_MESSAGING
-void update_message_status(void);
+void update_message_status();
 #endif
 
-void update_turn_count(void);
+void update_turn_count();
 
-void print_stats(void);
-void print_stats_level(void);
-void draw_border(void);
+void print_stats();
+void print_stats_level();
+void draw_border();
 
 string mpr_monster_list(bool past = false);
-int update_monster_pane(void);
+int update_monster_pane();
 
 const char *equip_slot_to_name(int equip);
 int equip_name_to_slot(const char *s);
 
-void print_overview_screen(void);
+void print_overview_screen();
 
 string dump_overview_screen(bool full_id);
 

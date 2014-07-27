@@ -79,6 +79,6 @@ public:
 };
 
 void quiver_item(int slot);
-void choose_item_for_quiver(void);
+void choose_item_for_quiver();
 
 #endif
