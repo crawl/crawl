@@ -838,10 +838,14 @@ static void _print_stats_ev(int x, int y)
     CPRINTF("%2d ", player_evasion());
 }
 
-static void _print_stats_wp(int y)
+/**
+ * Get the appropriate colour for the UI text describing the player's weapon.
+ * (Or hands/ice fists/etc, as appropriate.)
+ *
+ * @return     A colour enum for the player's weapon.
+ */
+static int _wpn_name_colour()
 {
-    int col;
-    string text;
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
@@ -849,59 +853,64 @@ static void _print_stats_wp(int y)
         const string prefix = item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
-            col = prefcol;
-        else if (you.duration[DUR_CORROSION])
-            col = RED;
-        else
-            col = LIGHTGREY;
-
-        text = wpn.name(DESC_INVENTORY, true, false, true);
+            return prefcol;
+        if (you.duration[DUR_CORROSION])
+            return RED;
+        return LIGHTGREY;
     }
-    else
+
+    switch (you.form)
     {
-        const string prefix = "-) ";
-        col = LIGHTGREY;
-        switch (you.form)
-        {
         case TRAN_SPIDER:
-            col = LIGHTGREEN;
-            break;
+            return LIGHTGREEN;
+
         case TRAN_BLADE_HANDS:
-            col = RED;
-            break;
-        case TRAN_STATUE:
-        case TRAN_WISP:
-            col = LIGHTGREY;
-            break;
+            return RED;
+
         case TRAN_ICE_BEAST:
-            col = WHITE;
-            break;
+            return WHITE;
+
         case TRAN_DRAGON:
-            col = GREEN;
-            break;
+            return GREEN;
+
         case TRAN_LICH:
         case TRAN_SHADOW:
-            col = MAGENTA;
-            break;
+            return MAGENTA;
+
+        case TRAN_FUNGUS:
+        case TRAN_TREE:
+            return BROWN;
+
+        case TRAN_STATUE:
+        case TRAN_WISP:
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
-            col = LIGHTGREY;
-            break;
-        case TRAN_FUNGUS:
-        case TRAN_TREE:
-            col = BROWN;
-            break;
         default:
-            break;
-        }
-        text = prefix + you.unarmed_attack_name();
+            return LIGHTGREY;
     }
+}
+
+/**
+ * Print a description of the player's weapon (or lack thereof) to the UI.
+ *
+ * @param y     The y-coordinate to print the description at.
+ */
+static void _print_stats_wp(int y)
+{
+    string text;
+    if (you.weapon())
+    {
+        const item_def& wpn = *you.weapon();
+        text = wpn.name(DESC_INVENTORY, true, false, true);
+    }
+    else
+        text = "-) " + you.unarmed_attack_name();
 
     CGOTOXY(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     CPRINTF("Wp: ");
-    textcolor(col);
+    textcolor(_wpn_name_colour());
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
