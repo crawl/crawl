@@ -177,7 +177,6 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_DEX] += d;
 
     you.hp_max_adj_perm = 0;
-    you.mp_max_adj_base = 0;
 }
 
 // Make sure no stats are unacceptably low
@@ -1065,8 +1064,8 @@ static void _setup_tutorial_miscs()
     // No gold to begin with.
     you.gold = 0;
 
-    // Give him some mana to play around with.
-    you.mp_max_adj_base += 2;
+    // Give them some mana to play around with.
+    you.mp_max_adj += 2;
 
     _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 

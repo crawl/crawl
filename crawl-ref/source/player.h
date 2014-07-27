@@ -63,8 +63,7 @@ public:
 
   int magic_points;
   int max_magic_points;
-  int mp_max_adj;             // max MP loss from ability costs (post-stepdown)
-  int mp_max_adj_base;        // base MPs from background (pre-stepdown)
+  int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
