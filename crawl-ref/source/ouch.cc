@@ -258,7 +258,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
-            drain_exp(true, min(75, 35 + original * 2 / 3));
+            drain_player(min(75, 35 + original * 2 / 3), true);
         break;
 
     case BEAM_ICE:
@@ -288,12 +288,10 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        if (player_res_acid())
-        {
-            if (doEffects)
-                canned_msg(MSG_YOU_RESIST);
-            hurted = hurted * player_acid_resist_factor() / 100;
-        }
+        hurted = resist_adjust_damage(&you, flavour, player_res_acid(),
+                                      hurted, true);
+        if (hurted < original && doEffects)
+            canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_MIASMA:
@@ -409,7 +407,8 @@ void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
     dam += 2;
     dam = roll_dice(dam, acid_strength);
 
-    const int post_res_dam = dam * player_acid_resist_factor() / 100;
+    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID,
+                                                  you.res_acid(), dam);
 
     if (post_res_dam > 0)
     {
@@ -507,7 +506,16 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int power, bool ignore_protection)
+/**
+ * Drain the player.
+ *
+ * @param power             The amount by which to drain the player.
+ * @param announce_full     Whether to print messages even when fully resisting
+ *                          the drain.
+ * @param ignore_protection Whether to ignore the player's rN.
+ * @return                  Whether draining occurred.
+ */
+bool drain_player(int power, bool announce_full, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
@@ -596,7 +604,7 @@ static void _xom_checks_damage(kill_method_type death_type,
             return;
         }
 
-        int leveldif = mons->hit_dice - you.experience_level;
+        int leveldif = mons->get_experience_level() - you.experience_level;
         if (leveldif == 0)
             leveldif = 1;
 
@@ -968,7 +976,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _maybe_erupt(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
-                drain_exp(true, drain_amount, true);
+                drain_player(drain_amount, true, true);
         }
         if (you.hp > 0)
           return;

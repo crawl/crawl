@@ -18,6 +18,9 @@ public:
     // General attack properties, set on instantiation or through a normal
     // thread of execution
     actor   *attacker, *defender;
+    // Who is morally responsible for the attack? Could be YOU_FAULTLESS
+    // or a monster if this is a reflected ranged attack.
+    actor *responsible;
 
     bool    attack_occurred;
     bool    cancel_attack;
@@ -100,7 +103,7 @@ public:
 
 // Public Methods
 public:
-    attack(actor *attk, actor *defn);
+    attack(actor *attk, actor *defn, actor *blame = 0);
 
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool random);

@@ -33,9 +33,8 @@ define(["jquery", "./enums"], function ($, enums) {
         bounds = null;
     }
 
-    function visible(x, y)
+    function visible(cell)
     {
-        var cell = get(x, y);
         if (cell.t)
         {
             cell.t.bg = enums.prepare_bg_flags(cell.t.bg || 0);

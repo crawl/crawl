@@ -1469,7 +1469,7 @@
        SPELL_LIGHTNING_BOLT,
        SPELL_CONTROL_WINDS,
        SPELL_AIRSTRIKE,
-       SPELL_HASTE,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
     },
@@ -2458,10 +2458,10 @@
       {
        SPELL_BRAIN_FEED,
        SPELL_DRAIN_MAGIC,
-       SPELL_CONFUSE,
+       SPELL_MASS_CONFUSION,
        SPELL_BRAIN_FEED,
        SPELL_DRAIN_MAGIC,
-       SPELL_CONFUSE
+       SPELL_MASS_CONFUSION
       }
     },
 #endif

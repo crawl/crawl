@@ -453,6 +453,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_MIGHT, x, y, -status_shift, 0);
         status_shift += 6;
     }
+    if (fg & TILE_FLAG_DRAIN)
+    {
+        m_buf_icons.add(TILEI_DRAIN, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_PAIN_MIRROR)
     {
         m_buf_icons.add(TILEI_PAIN_MIRROR, x, y, -status_shift, 0);

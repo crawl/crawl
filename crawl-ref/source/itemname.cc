@@ -718,51 +718,99 @@ static const char* scroll_type_name(int scrolltype)
     }
 }
 
-static const char* jewellery_type_name(int jeweltype)
-{
+/**
+ * Get the name for the effect provided by a kind of jewellery.
+ *
+ * @param jeweltype     The jewellery_type of the item in question.
+ * @return              A string describing the effect of the given jewellery
+ *                      subtype.
+ */
+const char* jewellery_effect_name(int jeweltype)
+ {
     switch (static_cast<jewellery_type>(jeweltype))
     {
-    case RING_REGENERATION:          return "ring of regeneration";
-    case RING_PROTECTION:            return "ring of protection";
-    case RING_PROTECTION_FROM_FIRE:  return "ring of protection from fire";
-    case RING_POISON_RESISTANCE:     return "ring of poison resistance";
-    case RING_PROTECTION_FROM_COLD:  return "ring of protection from cold";
-    case RING_STRENGTH:              return "ring of strength";
-    case RING_SLAYING:               return "ring of slaying";
-    case RING_SEE_INVISIBLE:         return "ring of see invisible";
-    case RING_INVISIBILITY:          return "ring of invisibility";
-    case RING_LOUDNESS:              return "ring of loudness";
-    case RING_TELEPORTATION:         return "ring of teleportation";
-    case RING_EVASION:               return "ring of evasion";
-    case RING_SUSTAIN_ABILITIES:     return "ring of sustain abilities";
-    case RING_STEALTH:               return "ring of stealth";
-    case RING_DEXTERITY:             return "ring of dexterity";
-    case RING_INTELLIGENCE:          return "ring of intelligence";
-    case RING_WIZARDRY:              return "ring of wizardry";
-    case RING_MAGICAL_POWER:         return "ring of magical power";
-    case RING_FLIGHT:                return "ring of flight";
-    case RING_LIFE_PROTECTION:       return "ring of positive energy";
-    case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
-    case RING_FIRE:                  return "ring of fire";
-    case RING_ICE:                   return "ring of ice";
-    case RING_TELEPORT_CONTROL:      return "ring of teleport control";
-    case AMU_RAGE:              return "amulet of rage";
-    case AMU_CLARITY:           return "amulet of clarity";
-    case AMU_WARDING:           return "amulet of warding";
-    case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
-    case AMU_THE_GOURMAND:      return "amulet of the gourmand";
+    case RING_REGENERATION:          return "regeneration";
+    case RING_PROTECTION:            return "protection";
+    case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
+    case RING_POISON_RESISTANCE:     return "poison resistance";
+    case RING_PROTECTION_FROM_COLD:  return "protection from cold";
+    case RING_STRENGTH:              return "strength";
+    case RING_SLAYING:               return "slaying";
+    case RING_SEE_INVISIBLE:         return "see invisible";
+    case RING_INVISIBILITY:          return "invisibility";
+    case RING_LOUDNESS:              return "loudness";
+    case RING_TELEPORTATION:         return "teleportation";
+    case RING_EVASION:               return "evasion";
+    case RING_SUSTAIN_ABILITIES:     return "sustain abilities";
+    case RING_STEALTH:               return "stealth";
+    case RING_DEXTERITY:             return "dexterity";
+    case RING_INTELLIGENCE:          return "intelligence";
+    case RING_WIZARDRY:              return "wizardry";
+    case RING_MAGICAL_POWER:         return "magical power";
+    case RING_FLIGHT:                return "flight";
+    case RING_LIFE_PROTECTION:       return "positive energy";
+    case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
+    case RING_FIRE:                  return "fire";
+    case RING_ICE:                   return "ice";
+    case RING_TELEPORT_CONTROL:      return "teleport control";
+    case AMU_RAGE:              return "rage";
+    case AMU_CLARITY:           return "clarity";
+    case AMU_WARDING:           return "warding";
+    case AMU_RESIST_CORROSION:  return "resist corrosion";
+    case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
-    case AMU_CONSERVATION:      return "amulet of conservation";
-    case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
+    case AMU_CONSERVATION:      return "conservation";
+    case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
-    case AMU_INACCURACY:        return "amulet of inaccuracy";
-    case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
-    case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
-    case AMU_FAITH:             return "amulet of faith";
-    case AMU_STASIS:            return "amulet of stasis";
+    case AMU_INACCURACY:        return "inaccuracy";
+    case AMU_RESIST_MUTATION:   return "resist mutation";
+    case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
+    case AMU_FAITH:             return "faith";
+    case AMU_STASIS:            return "stasis";
     default: return "buggy jewellery";
     }
 }
+
+// lua doesn't want "the" in gourmand, but we do, so...
+static const char* _jewellery_effect_prefix(int jeweltype)
+{
+    if (jeweltype == AMU_THE_GOURMAND)
+        return "the ";
+    return "";
+}
+
+/**
+ * Get the name for the category of a type of jewellery.
+ *
+ * @param jeweltype     The jewellery_type of the item in question.
+ * @return              A string describing the kind of jewellery it is.
+ */
+static const char* _jewellery_class_name(int jeweltype)
+{
+    if (jeweltype < RING_FIRST_RING || jeweltype >= NUM_JEWELLERY
+        || jeweltype >= NUM_RINGS && jeweltype < AMU_FIRST_AMULET)
+    {
+        return "buggy"; // "buggy buggy jewellery"
+    }
+
+    if (jeweltype < NUM_RINGS)
+        return "ring of";
+    return "amulet of";
+}
+
+/**
+ * Get the name for a type of jewellery.
+ *
+ * @param jeweltype     The jewellery_type of the item in question.
+ * @return              The full name of the jewellery type in question.
+ */
+static string jewellery_type_name(int jeweltype)
+{
+    return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
+                                   _jewellery_effect_prefix(jeweltype),
+                                    jewellery_effect_name(jeweltype));
+}
+
 
 static const char* ring_secondary_string(int s)
 {
@@ -1130,12 +1178,12 @@ static const char* rod_type_name(int type)
     }
 }
 
-string base_type_string(const item_def &item, bool known)
+string base_type_string(const item_def &item)
 {
-    return base_type_string(item.base_type, known);
+    return base_type_string(item.base_type);
 }
 
-string base_type_string(object_class_type type, bool known)
+string base_type_string(object_class_type type)
 {
     switch (type)
     {
@@ -3293,10 +3341,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_POTIONS:
     {
-        // Not useless, even if you can't quaff it.
-        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD) && is_blood_potion(item))
-            return false;
-
         // Mummies can't use potions.
         if (you.species == SP_MUMMY)
             return true;
@@ -3457,12 +3501,8 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (item.sub_type == FOOD_CHUNK
-            && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-                || !temp && you.form == TRAN_LICH))
-        {
+        if (!temp && you.form == TRAN_LICH)
             return false;
-        }
 
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
@@ -3481,9 +3521,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
             return false;
         }
-
-        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-            return false;
 
         return true;
 

@@ -2339,7 +2339,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             // (though not immunity) check.  Specifically,
             // you can convert Killer Klowns this way.
             // Might be too good.
-            if (mi->hit_dice * 35 < random2(power))
+            if (mi->get_hit_dice() * 35 < random2(power))
             {
                 simple_monster_message(*mi, " is converted.");
                 mi->add_ench(ENCH_CHARM);
@@ -2809,7 +2809,8 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
         }
 
         if (mons &&
-            x_chance_in_y((power_level + 1) * 5 + random2(5), mons->hit_dice))
+            x_chance_in_y((power_level + 1) * 5 + random2(5),
+                          mons->get_hit_dice()))
         {
             effects = true;
             monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
@@ -2912,7 +2913,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_SHAFT:            _shaft_card(); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
-    case CARD_WRAITH:           drain_exp(false, power / 4); break;
+    case CARD_WRAITH:           drain_player(power / 4, false); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;

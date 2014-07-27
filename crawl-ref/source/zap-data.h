@@ -778,24 +778,6 @@ static const zap_info zap_data[] =
     4
 },
 
-#if TAG_MAJOR_VERSION == 34
-{                           // ench_power controls radius
-    ZAP_ICE_STORM,
-    "great blast of cold",
-    200,
-    new calcdice_calculator<7, 22, 1, 1>,
-    new tohit_calculator<20, 1, 10>,
-    BLUE,
-    false,
-    BEAM_ICE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    true,
-    9 // XXX: Should a storm be louder?
-},
-#endif
-
 {
     ZAP_CORONA,
     "",

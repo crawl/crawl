@@ -1746,15 +1746,15 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-
-    bool do_diagnostics = false;
-#ifdef WIZARD
-    do_diagnostics = !creating_level;
-#endif
-#if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
-    do_diagnostics = true;
-#endif
-
+    const bool do_diagnostics =
+#  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
+        true
+#  elif defined(WIZARD)
+        !creating_level
+#  else // Can't happen currently
+        false
+#  endif
+        ;
 #endif // BONES_DIAGNOSTICS
 
     const string ghost_filename = _find_ghost_file();
@@ -1827,6 +1827,8 @@ bool load_ghost(bool creating_level)
             mons->bind_spell_flags();
         if (mons->ghost->species == SP_DEEP_DWARF)
             mons->flags |= MF_NO_REGEN;
+        mark_interesting_monst(mons,
+                               attitude_creation_behavior(mons->attitude));
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
@@ -2054,8 +2056,8 @@ level_excursion::~level_excursion()
         // markers will still not be activated.
         go_to(original);
 
-        // Reactivate markers.
-        env.markers.activate_all();
+        // Quietly reactivate markers.
+        env.markers.activate_all(false);
     }
 }
 
@@ -2288,15 +2290,15 @@ static FILE* _make_bones_file(string * return_gfilename)
 void save_ghost(bool force)
 {
 #ifdef BONES_DIAGNOSTICS
-
-    bool do_diagnostics = false;
-#ifdef WIZARD
-    do_diagnostics = you.wizard;
-#endif
-#if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
-    do_diagnostics = true;
-#endif
-
+    const bool do_diagnostics =
+#  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
+        true
+#  elif defined(WIZARD)
+        you.wizard
+#  else // Can't happen currently
+        false
+#  endif
+        ;
 #endif // BONES_DIAGNOSTICS
 
     ghosts = ghost_demon::find_ghosts();

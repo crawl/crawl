@@ -100,11 +100,18 @@ scimitar of Flaming Death
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
 %%%%
+# TAG_MAJOR_VERSION == 34
 mace of Brilliance
 
 This mace illuminates the dungeon's recesses, but its halo may alert enemies to
 your presence. Its light is hated by the undead, and can reveal any
 machinations of those who try to stay invisible.
+%%%%
+eveningstar "Brilliance"
+
+This eveningstar illuminates the dungeon's recesses, but its halo may alert
+enemies to your presence. Its light is hated by the undead, and reveals the
+machinations of those who would prefer to stay invisible.
 %%%%
 demon blade "Leech"
 

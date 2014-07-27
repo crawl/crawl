@@ -144,7 +144,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     }
 
     const int dur = min(3 + random2(pow) / 20, 5);
-    int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS)) / 4;
+    int how_many_max = 1 + min(6, random2(pow) / 15);
     const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
@@ -1225,7 +1225,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
             else
             {
                 // Choose a new duration based on HD.
-                int x = max(mons->hit_dice - 3, 1);
+                int x = max(mons->get_experience_level() - 3, 1);
                 int d = div_rand_round(17,x);
                 if (scroll)
                     d++;
@@ -1781,9 +1781,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // If the original monster has been drained or levelled up, its HD
     // might be different from its class HD, in which case its HP should
     // be rerolled to match.
-    if (mons->hit_dice != hd)
+    if (mons->get_experience_level() != hd)
     {
-        mons->hit_dice = max(hd, 1);
+        mons->set_hit_dice(max(hd, 1));
         roll_zombie_hp(mons);
     }
 
@@ -2484,7 +2484,7 @@ static int _abjuration(int pow, monster *mon)
         // TSO and Trog's abjuration protection.
         if (mons_is_god_gift(mon, GOD_SHINING_ONE))
         {
-            sockage = sockage * (30 - mon->hit_dice) / 45;
+            sockage = sockage * (30 - mon->get_hit_dice()) / 45;
             if (sockage < duration)
             {
                 simple_god_message(" protects a fellow warrior from your evil magic!",
@@ -2561,7 +2561,7 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         if (mi->friendly() && mi->is_summoned() && mi->summoner == you.mid
             && you.see_cell_no_trans(mi->pos()))
         {
-            explode.push_back(make_pair(mi->pos(), mi->hit_dice));
+            explode.push_back(make_pair(mi->pos(), mi->get_hit_dice()));
         }
     }
 
@@ -2993,7 +2993,7 @@ bool fire_battlesphere(monster* mons)
         beam.name       = "barrage of energy";
         beam.range      = LOS_RADIUS;
         beam.hit        = AUTOMATIC_HIT;
-        beam.damage     = dice_def(2, 5 + mons->hit_dice);
+        beam.damage     = dice_def(2, 5 + mons->get_hit_dice());
         beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.colour     = MAGENTA;
         beam.flavour    = BEAM_MMISSILE;

@@ -636,7 +636,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
             const monsterentry *m = get_monster_data(dummy.type);
             int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
 
-            dummy.hit_dice = hd;
+            dummy.set_hit_dice(hd);
             dummy.max_hit_points = hp;
         }
         int gain = get_fuzzied_monster_difficulty(&dummy);

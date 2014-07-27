@@ -7,6 +7,7 @@
 
 #include "itemname.h"
 
+#include <algorithm>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -353,17 +354,17 @@ static const weapon_def Weapon_prop[] =
     { WPN_HAND_CROSSBOW,     "hand crossbow",      11,  5, 15,  50,  5,
         SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 7, 10 },
-    { WPN_ARBALEST,          "arbalest",           20,  2, 19, 150,  8,
+    { WPN_ARBALEST,          "arbalest",           18,  2, 19, 150,  8,
         SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10 },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    25,  0, 23, 250,  9,
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23,  0, 23, 250,  9,
         SK_CROSSBOWS,    SIZE_SMALL,  NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2 },
 
     { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
         SK_BOWS,         SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10 },
-    { WPN_LONGBOW,           "longbow",            15,  0, 18, 120,  3,
+    { WPN_LONGBOW,           "longbow",            15,  0, 17, 120,  3,
         SK_BOWS,         SIZE_MEDIUM,  NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 2, 10 },
 };
@@ -389,7 +390,7 @@ static const missile_def Missile_prop[] =
     { MI_ARROW,         "arrow",         0,    5, 8,  false },
     { MI_BOLT,          "bolt",          0,    5, 8,  false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, 30, true  },
-    { MI_SLING_BULLET,  "sling bullet",  5,    4, 8,  false },
+    { MI_SLING_BULLET,  "sling bullet",  4,    4, 8,  false },
     { MI_JAVELIN,       "javelin",      10,   80, 20, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, 0,  true  },
     { MI_TOMAHAWK,      "tomahawk",      6,   30, 20, true  },
@@ -2738,6 +2739,33 @@ string food_type_name(int sub_type)
 const char* weapon_base_name(weapon_type subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
+}
+
+void remove_whitespace(string &str)
+{
+    str.erase(remove_if(str.begin(), str.end(),
+        static_cast<int(*)(int)>(isspace)), str.end());
+}
+
+/**
+ * Try to find a weapon, given the weapon's name without whitespace.
+ *
+ * @param name_nospace  The weapon's base name, with all whitespace removed.
+ * @return              The id of the weapon, or WPN_UNKNOWN if nothing matches.
+ */
+weapon_type name_nospace_to_weapon(string name_nospace)
+{
+    for (size_t ii = 0; ii < ARRAYSZ(Weapon_prop); ii++)
+    {
+        string weap_nospace = Weapon_prop[ii].name;
+        remove_whitespace(weap_nospace);
+
+        if (name_nospace == weap_nospace)
+            return (weapon_type) Weapon_prop[ii].id;
+    }
+
+    // No match found
+    return WPN_UNKNOWN;
 }
 
 void seen_item(const item_def &item)

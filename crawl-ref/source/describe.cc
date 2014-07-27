@@ -1202,14 +1202,14 @@ void append_armour_stats(string &description, const item_def &item)
 
 void append_missile_info(string &description, const item_def &item)
 {
+    const int dam = property(item, PWPN_DAMAGE);
+    if (dam)
+        description += make_stringf("\nBase damage: %d\n", dam);
+
     if (ammo_always_destroyed(item))
         description += "\nIt will always be destroyed on impact.";
     else if (!ammo_never_destroyed(item))
         description += "\nIt may be destroyed on impact.";
-
-    const int dam = property(item, PWPN_DAMAGE);
-    if (dam)
-        description += make_stringf("\nBase damage: %d", dam);
 }
 
 //---------------------------------------------------------------
@@ -3603,10 +3603,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
     inf.quote += quote2;
 
-    // Except for draconians and player ghosts, I have to admit I find the
-    // following special descriptions rather pointless. I certainly can't
-    // say I like them, though "It has come for your soul!" and
-    // "It wants to drink your blood!" have something going for them. (jpeg)
     switch (mi.type)
     {
     case MONS_VAMPIRE:

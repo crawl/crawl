@@ -137,12 +137,13 @@ const char* rune_type_name(int p);
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
 const char* deck_rarity_name(deck_rarity_type rarity);
-string base_type_string(object_class_type type, bool known = true);
-string base_type_string(const item_def &item, bool known = true);
+string base_type_string(object_class_type type);
+string base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 
 string ego_type_string(const item_def &item, bool terse = false, int override_brand = 0);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
+const char* jewellery_effect_name(int jeweltype) PURE; //used in l_item.cc
 #endif

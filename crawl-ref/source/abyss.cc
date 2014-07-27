@@ -181,8 +181,8 @@ static int _abyssal_rune_roll()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
-
-    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+    const int divisor = 2 * brdepth[BRANCH_ABYSS] - 2;
+    return (int) pow(100.0, depth/divisor);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -1255,7 +1255,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 2400, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, NULL, NULL,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }

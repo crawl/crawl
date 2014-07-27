@@ -499,7 +499,7 @@ static bool _makhleb_retribution()
         avatar->mname = "the fury of Makhleb";
         avatar->flags |= MF_NAME_REPLACE;
         avatar->attitude = ATT_HOSTILE;
-        avatar->hit_dice = you.experience_level;
+        avatar->set_hit_dice(you.experience_level);
 
         spell_type spell = SPELL_NO_SPELL;
         const int severity = min(random_range(you.experience_level / 14,
@@ -968,16 +968,19 @@ static bool _sif_muna_retribution()
     return true;
 }
 
-static bool _lugonu_retribution()
+/**
+ * Perform translocation-flavored Lugonu retribution.
+ *
+ * 50% chance of tloc miscasts; failing that, 50% chance of teleports/blinks.
+ */
+static void _lugonu_transloc_retribution()
 {
-    // abyssal servant theme
     const god_type god = GOD_LUGONU;
 
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
         MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lugonu's touch");
-        // No return - Lugonu's touch is independent of other effects.
     }
     else if (coinflip())
     {
@@ -988,28 +991,51 @@ static bool _lugonu_retribution()
             you_teleport_now(false);
         else
             random_blink(false);
-
-        // No return.
     }
+}
 
+/**
+ * Summon Lugonu's minions to punish the player.
+ *
+ * Possibly a major minion with pals, possibly just some riff-raff, depending
+ * on level & chance.
+ */
+static void _lugonu_minion_retribution()
+{
+    // abyssal servant theme
+    const god_type god = GOD_LUGONU;
+
+    // should we summon more & higher-tier lugonu minions?
+    // linear chance, from 0% at xl 4 to 80% at xl 16
+    const bool major = (you.experience_level > (4 + random2(12))
+                        && !one_chance_in(5));
+
+    // how many lesser minions should we try to summon?
+    // if this is major wrath, summon a few minions; 0 below xl9, 0-3 at xl 27.
+    // otherwise, summon exactly (!) 1 + xl/7 minions, maxing at 4 at xl 21.
+    const int how_many = (major ? random2(you.experience_level / 9 + 1)
+                                : 1 + you.experience_level / 7);
+
+    // did we successfully summon any minions? (potentially set true below)
     bool success = false;
-    bool major = (you.experience_level > (4 + random2(12)) && !one_chance_in(5));
-    int how_many = (major ? random2(you.experience_level / 9 + 1)
-                          : 1 + you.experience_level /7);
 
-    for (; how_many > 0; --how_many)
+    for (int i = 0; i < how_many; ++i)
     {
-        mgen_data temp =
-            mgen_data::hostile_at(
-                random_choose_weighted(
-                    15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
-                    (you.experience_level/2),       MONS_ABOMINATION_LARGE,
-                    6,                              MONS_THRASHING_HORROR,
-                    3,                              MONS_ANCIENT_ZYME,
-                    0),
-                "the touch of Lugonu",
-                true, 0, 0, you.pos(), 0, god);
+        // try to summon a few minor minions...
+        // weight toward large abominations, and away from small ones, at
+        // higher levels
+        const monster_type to_summon =
+            random_choose_weighted(
+                15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
+                you.experience_level/2,         MONS_ABOMINATION_LARGE,
+                6,                              MONS_THRASHING_HORROR,
+                3,                              MONS_ANCIENT_ZYME,
+                0
+            );
 
+        mgen_data temp = mgen_data::hostile_at(to_summon,
+                                               "the touch of Lugonu", true, 0,
+                                               0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1018,15 +1044,15 @@ static bool _lugonu_retribution()
 
     if (major)
     {
-        mgen_data temp =
-        mgen_data::hostile_at(random_choose(
-                                MONS_TENTACLED_STARSPAWN,
-                                MONS_WRETCHED_STAR,
-                                MONS_STARCURSED_MASS,
-                                -1),
-                                "the touch of Lugonu",
-                                true, 0, 0, you.pos(), 0, god);
+        // try to summon one nasty monster.
+        const monster_type to_summon = random_choose(MONS_TENTACLED_STARSPAWN,
+                                                     MONS_WRETCHED_STAR,
+                                                     MONS_STARCURSED_MASS,
+                                                     -1);
 
+        mgen_data temp = mgen_data::hostile_at(to_summon,
+                                               "the touch of Lugonu", true, 0,
+                                               0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1034,7 +1060,18 @@ static bool _lugonu_retribution()
     }
 
     simple_god_message(success ? " sends minions to punish you."
-                                : "'s minions fail to arrive.", god);
+                               : "'s minions fail to arrive.", god);
+}
+
+/**
+ * Call down the wrath of Lugonu upon the player!
+ *
+ * @return Whether to take further divine wrath actions afterward. (false.)
+ */
+static bool _lugonu_retribution()
+{
+    _lugonu_transloc_retribution();
+    _lugonu_minion_retribution();
 
     return false;
 }
@@ -1053,7 +1090,7 @@ static bool _vehumet_retribution()
     avatar->mname = "the wrath of Vehumet";
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
-    avatar->hit_dice = you.experience_level;
+    avatar->set_hit_dice(you.experience_level);
 
     spell_type spell = SPELL_NO_SPELL;
     const int severity = min(random_range(1 + you.experience_level / 5,

@@ -1632,10 +1632,11 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             const int sub_type =
                     (base_type == OBJ_MISSILES ?
                         (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
-                            : _xom_random_stickable(mi->hit_dice));
+                            : _xom_random_stickable(mi->get_experience_level()));
 
             int thing_created = items(0, base_type, sub_type, true,
-                                      mi->hit_dice / 3 - 1, 0, 0, -1, -1);
+                                      mi->get_experience_level() / 3 - 1,
+                                      0, 0, -1, -1);
 
             if (thing_created == NON_ITEM)
                 continue;
@@ -3191,7 +3192,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, 100);
+            drain_player(100, true);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;

@@ -4132,7 +4132,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
     marshallByte(th, m.ev);
-    marshallByte(th, m.hit_dice);
+    marshallByte(th, m.get_experience_level());
     marshallByte(th, m.speed);
     marshallByte(th, m.speed_increment);
     marshallByte(th, m.behaviour);
@@ -4863,13 +4863,13 @@ void unmarshallMonster(reader &th, monster& m)
     m.mname           = unmarshallString(th);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
-    m.hit_dice        = unmarshallByte(th);
+    m.set_hit_dice(     unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
     // Draining used to be able to take a monster to 0 HD, but that
     // caused crashes if they tried to cast spells.
-    m.hit_dice = max(m.hit_dice, 1);
+    m.set_hit_dice(max(m.get_experience_level(), 1));
 #else
-    ASSERT(m.hit_dice > 0);
+    ASSERT(m.get_experience_level() > 0);
 #endif
     m.speed           = unmarshallByte(th);
     // Avoid sign extension when loading files (Elethiomel's hang)

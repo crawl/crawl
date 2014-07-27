@@ -187,6 +187,7 @@ define(function () {
     fg_flags.flags.PERM_SUMMON  = [0, 0x10000];
     fg_flags.flags.DEATHS_DOOR  = [0, 0x20000];
     fg_flags.flags.RECALL       = [0, 0x40000];
+    fg_flags.flags.DRAIN        = [0, 0x80000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

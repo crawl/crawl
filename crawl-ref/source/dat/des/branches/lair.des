@@ -668,11 +668,9 @@ TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
 MONS:   white imp
-ITEM:   any good_item
 KPROP:  _` = no_rtele_into
-SUBST:  ! = $:3 d:2
-SUBST:  ' = w:15 x:9 c:3 `:1
-SUBST:  ? = x:3 c:1
+SUBST:  ! = $:3 *:2
+SUBST:  ' = w:15 x:12 `:1
 SUBST:  ; = x:2 .:3
 SUBST:  _ = %:1 `:3
 SUBST:  " = G:1 .:3
@@ -680,14 +678,14 @@ MAP
 ;;..;..;;;.;;.;;;
 ;;...wwww.;;..ww.;;
 ;..ww'''ww..wwwww;;;;
-;.ww'???wwwwwwwww;....
-;.ww'?!??''''''w...ww.
-;..ww?!!??????'w..www.
-;;..w?!1?..>??'w"www.;
-;;;.w?!!.2?3.?'wwww.;
-;;;ww??w2.?W.''www.;;
-;..www'??????''wwww.;;
-..wwww''????ww'''ww.;;
+;.ww'xxxwwwwwwwww;....
+;.ww'x!xx''''''w...ww.
+;..wwx!!xxxxxx'w..www.
+;;..wx!1x..>xx'w"www.;
+;;;.wx!!.2x3.x'wwww.;
+;;;wwxxw2.xW.''www.;;
+;..www'xxxxxxw'wwww.;;
+..wwww''xxxxwww''ww.;;
 .wwwwwww...www'_'ww.;
 ..wwwww....www'''w.;;
 .;www...V..wwwwww.;;
@@ -2810,24 +2808,32 @@ NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen patrolling
 ORIENT:  float
 PLACE:   Lair:$
+# mons are in groups of four, each ordered from least to most dangerous.
+# mythological or dragon-y reptiles
 MONS:    basilisk, fire drake, komodo dragon, hydra
-MONS:    manticore, hippogriff, griffon
+# mythological non-reptiles
+MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas
+# fast things
 KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
-KMONS:   C = porcupine
-KMONS:   D = giant frog
-KMONS:   E = boring beetle
-KMONS:   F = boulder beetle
+# beetles/worms
+KMONS:   C = boring beetle
+KMONS:   D = torpor snail
+KMONS:   E = boulder beetle
+KMONS:   F = lindwurm
+# yaks & pals
 KMONS:   G = sheep
 KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
+# some non-set monsters right outside the vault to make sure you don't miss
+# that there's a vault here maybe
 KMONS:   K = crocodile
-KMONS:   L = wolf
-KMONS:   M = green rat
+KMONS:   L = green rat
+KMONS:   M = wolf
 KMONS:   N = wyvern
 KMONS:   P = plant w:12 / fungus w:8 / nothing
 KITEM:   ~ = any good_item

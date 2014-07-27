@@ -102,14 +102,11 @@ bool form_can_swim(transformation_type form)
     if (form == TRAN_ICE_BEAST)
         return true;
 
-    if ((you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+    if (species_can_swim(you.species)
         && (!form_changed_physiology(form) || form == TRAN_LICH))
     {
         return true;
     }
-
-    if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
-        return true;
 
     size_type size = you.transform_size(form, PSIZE_BODY);
     if (size == SIZE_CHARACTER)
@@ -122,8 +119,7 @@ bool form_likes_water(transformation_type form)
 {
     // Grey dracs can't swim, so can't statue form merfolk/octopodes
     // -- yet they can still survive in water.
-    if (you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
-        || you.species == SP_OCTOPODE)
+    if (species_likes_water(you.species))
     {
         if (form == TRAN_NONE
             || form == TRAN_BLADE_HANDS
@@ -157,6 +153,15 @@ bool form_changed_physiology(transformation_type form)
 {
     return form != TRAN_NONE && form != TRAN_APPENDAGE
            && form != TRAN_BLADE_HANDS;
+}
+
+bool form_can_bleed(transformation_type form)
+{
+    return form != TRAN_STATUE && form != TRAN_ICE_BEAST
+           && form != TRAN_SPIDER && form != TRAN_TREE
+           && form != TRAN_FUNGUS && form != TRAN_PORCUPINE
+           && form != TRAN_SHADOW && form != TRAN_LICH
+           && form != TRAN_MAGMA;
 }
 
 bool form_can_use_wand(transformation_type form)
@@ -1069,6 +1074,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     _remove_equipment(rem_stuff);
 
+    you.props[TRANSFORM_POW_KEY] = pow;
+
     if (str)
     {
         notify_stat_change(STAT_STR, str, true,
@@ -1172,7 +1179,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_SHADOW:
-        drain_exp(true, 25, true);
+        drain_player(25, true, true);
         if (you.invisible())
             mpr("You fade into the shadows.");
         else
@@ -1282,6 +1289,8 @@ void untransform(bool skip_wielding, bool skip_move)
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
+    if (you.props.exists(TRANSFORM_POW_KEY))
+        you.props.erase(TRANSFORM_POW_KEY);
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;

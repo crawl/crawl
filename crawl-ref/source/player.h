@@ -22,6 +22,11 @@
 #include "tiledoll.h"
 #endif
 
+#define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+#define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
+#define STONESKIN_KEY "stoneskin_pow"
+#define TRANSFORM_POW_KEY "transform_pow"
+
 class targetter;
 
 int check_stealth();
@@ -486,6 +491,7 @@ public:
 
     // actor
     int mindex() const;
+    int get_hit_dice() const;
     int get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
     monster* as_monster() { return NULL; }
@@ -509,7 +515,8 @@ public:
     int         body_weight(bool base = false) const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
-    random_var  attack_delay(item_def *weapon, item_def *projectile = NULL,
+    random_var  attack_delay(const item_def *weapon, const
+                             item_def *projectile = NULL,
                              bool random = true, bool scaled = true) const;
     int         constriction_damage() const;
 
@@ -756,6 +763,8 @@ public:
 
     bool form_uses_xl() const;
 
+    bool clear_far_engulf();
+
 protected:
     void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;
@@ -870,7 +879,6 @@ int player_regen();
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
-int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
 int player_kiku_res_torment();

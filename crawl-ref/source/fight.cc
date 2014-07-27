@@ -521,21 +521,29 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
-// Adjusts damage for elemental resists, electricity and poison.
-//
-// FIXME: Does not (yet) handle life draining, player acid damage
-// (does handle monster acid damage), miasma, and other exotic
-// attacks.
-//
-// beam_type is just used to determine the damage flavour, it does not
-// necessarily imply that the attack is a beam attack.
-int resist_adjust_damage(actor *defender, beam_type flavour,
-                         int res, int rawdamage, bool ranged)
+/**
+ * Adjusts damage for elemental resists, electricity and poison.
+ *
+ * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
+ * XXX: which other attacks?
+ *
+ * @param defender      The victim of the attack.
+ * @param flavour       The type of attack having its damage adjusted.
+ *                      (Does not necessarily imply the attack is a beam.)
+ * @param res           The level of resistance that the defender possesses.
+ * @param rawdamage     The base damage, to be adjusted by resistance.
+ * @param ranged        Whether the attack is ranged, and therefore has a
+ *                      smaller damage multiplier against victims with negative
+ *                      resistances. (????)
+ * @return              The amount of damage done, after resists are applied.
+ */
+int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
+                         int rawdamage, bool ranged)
 {
     if (!res)
         return rawdamage;
 
-    const bool mons = (defender->is_monster());
+    const bool is_mon = defender->is_monster();
 
     const int resistible_fraction = get_resistible_fraction(flavour);
 
@@ -544,7 +552,9 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if (((mons || flavour == BEAM_NEG) && res >= 3) || res > 3)
+        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG
+                                            || flavour == BEAM_ACID;
+        if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
         {
@@ -556,7 +566,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
             // Use a new formula for players, but keep the old, more
             // effective one for monsters.
-            if (mons)
+            if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG)
                 resistible /= res * 2;

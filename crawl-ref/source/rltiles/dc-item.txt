@@ -162,14 +162,19 @@ blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_HUNTING_SLING
 sling2
+greatsling WPN_GREATSLING
 
 %rim 0
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+hand_crossbow WPN_HAND_CROSSBOW
+hand_crossbow2
 arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3
+triple_crossbow WPN_TRIPLE_CROSSBOW
+triple_crossbow2
 longbow1 WPN_LONGBOW
 longbow2
 longbow3

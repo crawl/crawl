@@ -711,7 +711,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     // Resistance is now based on HD. You can affect up to (30+30)/2 = 30 'power' (HD).
     int power = (skill_bump(SK_INVOCATIONS, 10) + you.piety * 3 / 2) / 20;
     // Old recite was mostly deterministic, which is bad.
-    int resist = mon->get_experience_level() + random2(6);
+    int resist = mon->get_hit_dice() + random2(6);
     int check = power - resist;
 
     // We abort if we didn't *beat* their HD - but first we might get a cute message.
@@ -1117,7 +1117,7 @@ static void _zin_saltify(monster* mon)
     const monster_type pillar_type =
         mons_is_zombified(mon) ? mons_zombie_base(mon)
                                : mons_species(mon->type);
-    const int hd = mon->get_experience_level();
+    const int hd = mon->get_hit_dice();
 
     simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
 
@@ -1777,12 +1777,11 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
 
-    // If the original monster has been drained or levelled up, its HD
-    // might be different from its class HD, in which case its HP should
-    // be rerolled to match.
-    if (mon->hit_dice != orig.hit_dice)
+    // If the original monster has been levelled up, its HD might be different
+    // from its class HD, in which case its HP should be rerolled to match.
+    if (mon->get_experience_level() != orig.get_experience_level())
     {
-        mon->hit_dice = max(orig.hit_dice, 1);
+        mon->set_hit_dice(max(orig.get_experience_level(), 1));
         roll_zombie_hp(mon);
     }
 
@@ -2782,7 +2781,7 @@ int fedhas_check_corpse_spores(bool quiet)
     vector<stack_iterator> positions;
     int count = count_corpses_in_los(&positions);
 
-    if (count == 0)
+    if (quiet || count == 0)
         return count;
 
     viewwindow(false);
@@ -2803,8 +2802,7 @@ int fedhas_check_corpse_spores(bool quiet)
 #endif
     }
 
-    if (!quiet
-        && yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
@@ -3142,7 +3140,8 @@ void fedhas_evolve_flora()
     if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         plant->add_ench(ENCH_EXPLODING);
 
-    plant->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
+    plant->set_hit_dice(plant->get_experience_level()
+                        + you.skill_rdiv(SK_INVOCATIONS));
 
     if (upgrade.fruit_cost)
     {
@@ -3219,7 +3218,8 @@ void cheibriados_time_bend(int pow)
         monster* mon = monster_at(*ai);
         if (mon && !mon->is_stationary())
         {
-            int res_margin = roll_dice(mon->hit_dice, 3) - random2avg(pow, 2);
+            int res_margin = roll_dice(mon->get_hit_dice(), 3)
+                             - random2avg(pow, 2);
             if (res_margin > 0)
             {
                 mprf("%s%s",
@@ -3675,11 +3675,11 @@ monster* shadow_monster(bool equip)
                     | MF_WAS_IN_VIEW | MF_HARD_RESET
                     | MF_ACTUAL_SPELLS;
     mon->hit_points = you.hp;
-    mon->hit_dice   = min(27, max(1,
+    mon->set_hit_dice(min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
                                                  ? melee_skill(mitm[wpn_index])
                                                  : SK_UNARMED_COMBAT, 10, 20)
-                                  + you.skill_rdiv(SK_FIGHTING, 10, 20)));
+                                  + you.skill_rdiv(SK_FIGHTING, 10, 20))));
     mon->set_position(you.pos());
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
@@ -3773,9 +3773,9 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
         return;
 
     // Don't let shadow spells get too powerful.
-    mon->hit_dice = max(1,
-                        min(3 * spell_difficulty(spell),
-                            you.experience_level) / 2);
+    mon->set_hit_dice(max(1,
+                          min(3 * spell_difficulty(spell),
+                              you.experience_level) / 2));
 
     mon->target = target;
     if (actor_at(target))

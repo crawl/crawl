@@ -660,6 +660,7 @@ monster_type resolve_monster_type(monster_type mon_type,
         if (!vault_mon_types.empty())
         {
             int i = 0;
+            int tries = 0;
             int type;
             do
             {
@@ -667,6 +668,10 @@ monster_type resolve_monster_type(monster_type mon_type,
                                            vault_mon_weights.end());
                 type = vault_mon_types[i];
 
+                // Give up after enough attempts: for example, a Yred
+                // worshipper casting Shadow Creatures in holy Pan.
+                if (tries++ >= 300)
+                    type = MONS_NO_MONSTER;
                 // If the monster list says not to place, or to place
                 // by level, or to place a random monster, accept that.
                 // If it's random, we'll be recursively calling ourselves
@@ -1454,7 +1459,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             bonus2 = mbase->hpdice[2];
             bonus3 = mbase->hpdice[3];
         }
-        mon->hit_dice = mg.hd;
+        mon->set_hit_dice(mg.hd);
         // Re-roll HP.
         int hp = hit_points(mg.hd, m_ent->hpdice[1] + bonus1,
                                    m_ent->hpdice[2] + bonus2);
@@ -1935,20 +1940,20 @@ void roll_zombie_hp(monster* mon)
     switch (mon->type)
     {
     case MONS_ZOMBIE:
-        hp = hit_points(mon->hit_dice, 6, 5);
+        hp = hit_points(mon->get_hit_dice(), 6, 5);
         break;
 
     case MONS_SKELETON:
-        hp = hit_points(mon->hit_dice, 5, 4);
+        hp = hit_points(mon->get_hit_dice(), 5, 4);
         break;
 
     case MONS_SIMULACRUM:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp = hit_points(mon->hit_dice, 1, 4);
+        hp = hit_points(mon->get_hit_dice(), 1, 4);
         break;
 
     case MONS_SPECTRAL_THING:
-        hp = hit_points(mon->hit_dice, 4, 4);
+        hp = hit_points(mon->get_hit_dice(), 4, 4);
         break;
 
     default:
@@ -2841,15 +2846,23 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         natural_leader = true; // snails are natural-born leaders. fact.
 
         // would be nice to support more branches, generically...
-        if (player_in_branch(BRANCH_LAIR))
+        switch (you.where_are_you)
         {
-            band = random_choose_weighted(5, BAND_YAKS,
-                                          2, BAND_DEATH_YAKS,
-                                          1, BAND_SHEEP,
-                                          0);
+            case BRANCH_LAIR:
+                band = random_choose_weighted(5, BAND_YAKS,
+                                              2, BAND_DEATH_YAKS,
+                                              1, BAND_SHEEP,
+                                              0);
+                break;
+            case BRANCH_SPIDER:
+                band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
+                break;
+            case BRANCH_DEPTHS:
+                band = BAND_RANDOM_SINGLE;
+                break;
+            default:
+                break;
         }
-        else if (player_in_branch(BRANCH_SPIDER))
-            band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
 
         switch (band)
         {
@@ -3466,6 +3479,12 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
+    // Hostile ghosts and illusions are always interesting.
+    else if (mons->type == MONS_PLAYER_GHOST
+             || mons->type == MONS_PLAYER_ILLUSION)
+    {
+        interesting = true;
+    }
     // Jellies are never interesting to Jiyva.
     else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
         interesting = false;

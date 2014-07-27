@@ -21,12 +21,14 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "mon-util.h" // for decline_pronoun
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -142,12 +144,18 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
+              || form == TRAN_TREE
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
                   && (form == TRAN_LICH || form == TRAN_STATUE
                       || form == TRAN_SHADOW
                       || !form_changed_physiology());
+}
+
+int player::get_hit_dice() const
+{
+    return experience_level;
 }
 
 int player::get_experience_level() const
@@ -281,8 +289,21 @@ brand_type player::damage_brand(int)
     return ret;
 }
 
-random_var player::attack_delay(item_def *weap, item_def *projectile,
-                                bool random, bool scaled) const
+
+/**
+ * Return the delay caused by attacking with the provided weapon & projectile.
+ *
+ * @param weap          The weapon to be used; may be null.
+ * @param projectile    The projectile to be fired/thrown; may be null.
+ * @param random        Whether to randomize delay, or provide a fixed value
+ *                      for display.
+ * @param scaled        Whether to apply special delay modifiers (finesse)
+ * @return              The time taken by an attack with the given weapon &
+ *                      projectile, in aut.
+ */
+random_var player::attack_delay(const item_def *weap,
+                                const item_def *projectile, bool random,
+                                bool scaled) const
 {
     random_var attk_delay = constant(15);
     const int armour_penalty = adjusted_body_armour_penalty(20);
@@ -432,13 +453,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 {
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
-    if (species == SP_FELID)
-    {
-        if (!quiet)
-            mpr("You can't use weapons.");
-        return false;
-    }
-
     // Only ogres and trolls can wield large rocks (for sandblast).
     if (bsize < SIZE_LARGE
         && item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
@@ -451,21 +465,20 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     // Most non-weapon objects can be wielded, though there's rarely a point
     if (!is_weapon(item))
     {
-        if (item.base_type == OBJ_ARMOUR)
+        if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mpr("You can't wield armour.");
-            return false;
-        }
-
-        if (item.base_type == OBJ_JEWELLERY)
-        {
-            if (!quiet)
-                mpr("You can't wield jewellery.");
+                mprf("You can't wield %s.", base_type_string(item).c_str());
             return false;
         }
 
         return true;
+    }
+    else if (species == SP_FELID)
+    {
+        if (!quiet)
+            mpr("You can't use weapons.");
+        return false;
     }
 
     // Small species wielding large weapons...
@@ -516,16 +529,9 @@ string player::name(description_level_type dt, bool) const
     }
 }
 
-string player::pronoun(pronoun_type pro, bool) const
+string player::pronoun(pronoun_type pro, bool /*force_visible*/) const
 {
-    switch (pro)
-    {
-    default:
-    case PRONOUN_SUBJECTIVE:        return "you";
-    case PRONOUN_POSSESSIVE:        return "your";
-    case PRONOUN_REFLEXIVE:         return "yourself";
-    case PRONOUN_OBJECTIVE:         return "you";
-    }
+    return decline_pronoun(GENDER_YOU, pro);
 }
 
 string player::conj_verb(const string &verb) const

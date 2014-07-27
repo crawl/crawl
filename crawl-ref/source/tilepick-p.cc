@@ -9,6 +9,7 @@
 #include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "options.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
@@ -245,12 +246,15 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
     // Ranged
     case WPN_HUNTING_SLING:
+    case WPN_GREATSLING:
         tile = TILEP_HAND1_HUNTING_SLING;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;
         break;
+    case WPN_HAND_CROSSBOW:
     case WPN_ARBALEST:
+    case WPN_TRIPLE_CROSSBOW:
         tile = TILEP_HAND1_ARBALEST;
         break;
     case WPN_BLOWGUN:
@@ -496,11 +500,15 @@ tileidx_t tileidx_player()
             break;
         }
         // no special tile
-        case TRAN_BLADE_HANDS: break;
+        case TRAN_BLADE_HANDS:
         case TRAN_APPENDAGE:
         case TRAN_NONE:
         default:
-            break;
+            {
+                if (Options.tile_show_player_species)
+                    ch = tileidx_player_mons();
+                break;
+            }
     }
 
     // Currently, the flying flag is only used for not drawing the tile in the

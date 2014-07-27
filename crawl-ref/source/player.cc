@@ -54,6 +54,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -511,8 +512,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     }
 
-    // Traps go off.
-    if (trap_def* ptrap = find_trap(you.pos()))
+    // Traps go off. (But magical traps don't go off again when losing flight
+    // - i.e., moving into the same tile)
+    trap_def* ptrap = find_trap(you.pos());
+    if (ptrap && (old_pos != you.pos() || ptrap->ground_only()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     if (stepped)
@@ -552,6 +555,18 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     moveto_location_effects(old_grid, stepped, old_pos);
 }
 
+
+/**
+ * Check if the given terrain feature is safe for the player to move into.
+ * (Or, at least, not instantly lethal.)
+ *
+ * @param grid          The type of terrain feature under consideration.
+ * @param permanently   Whether to disregard temporary effects (non-permanent
+ *                      flight, forms, etc)
+ * @param ignore_flight Whether to ignore all forms of flight (including
+ *                      permanent flight)
+ * @return              Whether the terrain is safe.
+ */
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_flight)
 {
@@ -1870,18 +1885,6 @@ int player_res_acid(bool calc_unid, bool items)
     return you.res_corr(calc_unid, items) ? 1 : 0;
 }
 
-// Returns a factor X such that post-resistance acid damage can be calculated
-// as pre_resist_damage * X / 100.
-int player_acid_resist_factor()
-{
-    int rA = player_res_acid();
-    if (rA >= 3)
-        return 0;
-    else if (rA >= 1)
-        return 50;
-    return 100;
-}
-
 int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;
@@ -2589,10 +2592,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
         evbonus--;
     evbonus += max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
-    // transformation penalties/bonuses not covered by size alone:
-    if (you.form == TRAN_STATUE)
-        evbonus -= 10;               // stiff and slow
-
     return evbonus;
 }
 
@@ -2763,7 +2762,7 @@ int player_shield_class()
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
-            shield += 800 + you.skill(SK_ICE_MAGIC, 60);
+            shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
@@ -4117,19 +4116,25 @@ static const char* _attack_delay_desc(int attack_delay)
                                    "blindingly fast";
 }
 
+/**
+ * Print a message indicating the player's attack delay with their current
+ * weapon & quivered ammo (if applicable).
+ *
+ * Uses melee attack delay for ranged weapons if no appropriate ammo is
+ * is quivered, purely for simplicity of implementation; XXX fix this
+ */
 static void _display_attack_delay()
 {
-    const int delay = you.attack_delay(you.weapon(), NULL, false, false);
+    const item_def* ammo = NULL;
+    you.m_quiver->get_desired_item(&ammo, NULL);
+    const bool uses_ammo = ammo && you.weapon()
+                           && ammo->sub_type == fires_ammo_type(*you.weapon());
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+                                       false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
-    int avg;
-    // FIXME for new ranged combat
-/*    const item_def* weapon = you.weapon();
-    if (weapon && is_range_weapon(*weapon))
-        avg = launcher_final_speed(*weapon, you.shield(), false);
-    else */
-        avg = 10 * delay;
+    int avg = 10 * delay;
 
     // Haste shouldn't be counted, but let's show finesse.
     if (you.duration[DUR_FINESSE])
@@ -5337,12 +5342,21 @@ void dec_slow_player(int delay)
     if (!you.duration[DUR_SLOW])
         return;
 
-    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
+    if (you.duration    [DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
             ? haste_mul(delay) : delay;
     }
+
+    if (you.torpor_slowed())
+    {
+        you.duration[DUR_SLOW] = 1;
+        return;
+    }
+    if (you.props.exists(TORPOR_SLOWED_KEY))
+        you.props.erase(TORPOR_SLOWED_KEY);
+
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
         mprf(MSGCH_DURATION, "You feel yourself speed up.");
@@ -5565,6 +5579,25 @@ static void _end_water_hold()
     you.duration[DUR_WATER_HOLD] = 0;
     you.duration[DUR_WATER_HOLD_IMMUNITY] = 1;
     you.props.erase("water_holder");
+}
+
+bool player::clear_far_engulf()
+{
+    if (!you.duration[DUR_WATER_HOLD])
+        return false;
+
+    monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
+    if (!mons || !adjacent(mons->pos(), you.pos()))
+    {
+        if (you.res_water_drowning())
+            mpr("The water engulfing you falls away.");
+        else
+            mpr("You gasp with relief as air once again reaches your lungs.");
+
+        _end_water_hold();
+        return true;
+    }
+    return false;
 }
 
 void handle_player_drowning(int delay)
@@ -6462,16 +6495,14 @@ static int _stoneskin_bonus()
     if (!player_stoneskin())
         return 0;
 
-    // Max +7.4 base
     int boost = 200;
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         boost += 20 * you.experience_level;
     else
 #endif
-    boost += you.skill(SK_EARTH_MAGIC, 20);
+    boost += you.props[STONESKIN_KEY].get_int() * 5;
 
-    // Max additional +7.75 from statue form
     if (you.form == TRAN_STATUE)
     {
         boost += 100;
@@ -6480,7 +6511,7 @@ static int _stoneskin_bonus()
             boost += 25 * you.experience_level;
         else
 #endif
-        boost += you.skill(SK_EARTH_MAGIC, 25);
+        boost += you.props[STONESKIN_KEY].get_int() * 6;
     }
 
     return boost;
@@ -6539,7 +6570,7 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
+        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
     AC += _stoneskin_bonus();
 
@@ -6585,8 +6616,8 @@ int player::armour_class() const
             case SP_GARGOYLE:
                 AC += 200 + 100 * experience_level * 2 / 5     // max 20
                           + 100 * (max(0, experience_level - 7) * 2 / 5);
-                if (form == TRAN_STATUE)
-                    AC += 1300 + skill(SK_EARTH_MAGIC, 50);
+                if (form == TRAN_STATUE)                       // max 28
+                    AC += 1300 + you.props[TRANSFORM_POW_KEY].get_int() * 10;
                 break;
 
             default:
@@ -6620,10 +6651,10 @@ int player::armour_class() const
             break;
 
         case TRAN_ICE_BEAST:
-            AC += 500 + skill(SK_ICE_MAGIC, 25) + 25;    // max 12
+            AC += 500 + you.props[TRANSFORM_POW_KEY].get_int() * 7; // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
+                AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
             break;
 
         case TRAN_WISP:
@@ -6637,7 +6668,7 @@ int player::armour_class() const
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
+            AC += 1700 + you.props[TRANSFORM_POW_KEY].get_int() * 10; // max 32
             // Stoneskin bonus already accounted for.
             break;
 
@@ -7265,7 +7296,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
 bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return ::drain_exp(!quiet, pow);
+    return drain_player(pow, !quiet);
 }
 
 void player::confuse(actor *who, int str)
@@ -7722,17 +7753,9 @@ bool player::can_polymorph() const
 
 bool player::can_bleed(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // These transformations don't bleed. Lichform is handled as undead.
-        if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
-            || form == TRAN_SPIDER || form == TRAN_TREE
-            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
-            || form == TRAN_SHADOW || form == TRAN_MAGMA)
-        {
-            return false;
-        }
-    }
+    // XXX: Lich and statue forms are still caught by the holiness checks below.
+    if (allow_tran && !form_can_bleed(form))
+        return false;
 
     if (is_lifeless_undead()
 #if TAG_MAJOR_VERSION == 34
@@ -8121,7 +8144,7 @@ bool player::attempt_escape(int attempts)
 
     // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
     if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))
-        >= roll_dice(5, 8 + div_rand_round(themonst->hit_dice, 4)))
+        >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
         mprf("You escape %s's grasp.", themonst->name(DESC_THE, true).c_str());
 

@@ -450,7 +450,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // for the monster class.  By using the current hit dice
     // the player gets the opportunity to use draining more
     // effectively against shapeshifters. - bwr
-    source_power = mons->hit_dice;
+    source_power = mons->get_hit_dice();
     source_tier = mons_demon_tier(mons->type);
 
     // There's not a single valid target on the '&' demon tier, so unless we
@@ -498,7 +498,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         for (int mc = 0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data((monster_type) mc);
-            int delta = (int) me->hpdice[0] - mons->hit_dice;
+            int delta = (int) me->hpdice[0] - mons->get_hit_dice();
             if (delta != 1)
                 continue;
             if (!_valid_morph(mons, (monster_type) mc))
@@ -592,7 +592,7 @@ void slimify_monster(monster* mon, bool hostile)
 {
     monster_type target = MONS_JELLY;
 
-    const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
+    const int x = mon->get_hit_dice() + (coinflip() ? 1 : -1) * random2(5);
 
     if (x < 3)
         target = MONS_OOZE;
@@ -654,12 +654,6 @@ void seen_monster(monster* mons)
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
 
-    if (mons->flags & MF_SEEN)
-        return;
-
-    // First time we've seen this particular monster.
-    mons->flags |= MF_SEEN;
-
     // mark items as seen.
     for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
     {
@@ -667,6 +661,12 @@ void seen_monster(monster* mons)
         if (item_id != NON_ITEM)
             mitm[item_id].flags |= ISFLAG_SEEN;
     }
+
+    if (mons->flags & MF_SEEN)
+        return;
+
+    // First time we've seen this particular monster.
+    mons->flags |= MF_SEEN;
 
     if (!mons_is_mimic(mons->type))
     {
@@ -695,7 +695,8 @@ void seen_monster(monster* mons)
             && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
             && !crawl_state.game_is_arena())
         {
-            did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
+            did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
+                            true, mons);
         }
         mons->flags |= MF_TSO_SEEN;
     }

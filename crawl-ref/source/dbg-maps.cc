@@ -92,11 +92,13 @@ static bool _do_build_level()
     if (!builder())
     {
         ++levels_failed;
-        // A level build failure can't be backed out of easily for
-        // objstat.
+        // Abort level build failure in objstat since the statistics will be
+        // off.
+        // XXX - Maybe try the level build some small number of times instead
+        // of aborting on first fail.
         if (crawl_state.obj_stat_gen)
         {
-            fprintf(stderr, "Level build failed on %s, aborting.",
+            fprintf(stderr, "Level build failed on %s. Aborting.\n",
                     level_id::current().describe().c_str());
             return false;
         }
@@ -200,6 +202,7 @@ static void _dungeon_places()
             generated_levels.push_back(l);
             if (new_branch)
                 ++branch_count;
+            new_branch = false;
         }
     }
 }
@@ -226,23 +229,20 @@ static bool _build_dungeon()
     return true;
 }
 
-void mapstat_build_levels(int niters)
+bool mapstat_build_levels()
 {
     if (!generated_levels.size())
         _dungeon_places();
-    for (int i = 0; i < niters; ++i)
+    for (int i = 0; i < SysEnv.map_gen_iters; ++i)
     {
         clear_messages();
         mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
              "%d try, %d (%.2lf%%) vetoes",
-             i, niters,
-             levels_tried, levels_failed,
+             i, SysEnv.map_gen_iters, levels_tried, levels_failed,
              (unsigned int)errors.size(),
-             last_error.empty()? ""
-             : (" (" + last_error + ")").c_str(),
-             (unsigned int)use_count.size(),
-             build_attempts, level_vetoes,
-             build_attempts? level_vetoes * 100.0 / build_attempts : 0.0);
+             last_error.empty() ? "" : (" (" + last_error + ")").c_str(),
+             (unsigned int)use_count.size(), build_attempts, level_vetoes,
+             build_attempts ? level_vetoes * 100.0 / build_attempts : 0.0);
 
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
@@ -251,8 +251,11 @@ void mapstat_build_levels(int niters)
         initialise_branch_depths();
         init_level_connectivity();
         if (!_build_dungeon())
-            break;
+            return false;
+        if (crawl_state.obj_stat_gen)
+            objstat_iteration_stats();
     }
+    return true;
 }
 
 void mapstat_report_map_try(const map_def &map)
@@ -503,7 +506,9 @@ void mapstat_generate_stats()
            "%d branch(es).\n", SysEnv.map_gen_iters,
            (int) generated_levels.size(), branch_count);
     fflush(stdout);
-    mapstat_build_levels(SysEnv.map_gen_iters);
+    // We write mapstats even if the iterations were aborted due to a bad level
+    // build.
+    mapstat_build_levels();
     _write_map_stats();
 }
 

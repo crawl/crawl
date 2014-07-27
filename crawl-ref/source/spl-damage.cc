@@ -756,12 +756,12 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             if (mons_atts_aligned(m->attitude, mons->attitude))
             {
                 beam.friend_info.count++;
-                beam.friend_info.power += (m->hit_dice * this_damage / hurted);
+                beam.friend_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
             else
             {
                 beam.foe_info.count++;
-                beam.foe_info.power += (m->hit_dice * this_damage / hurted);
+                beam.foe_info.power += (m->get_hit_dice() * this_damage / hurted);
             }
         }
     }
@@ -1279,8 +1279,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        int r_min = 3 + you.skill(SK_EARTH_MAGIC) / 5;
-        targetter_los hitfunc(&you, LOS_ARENA, r_min, min(r_min + 1, 8));
+        targetter_los hitfunc(&you, LOS_ARENA);
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1296,10 +1295,8 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
-    int rad = 3 + you.skill_rdiv(SK_EARTH_MAGIC, 1, 5);
-
     int dest = 0;
-    for (distance_iterator di(you.pos(), true, true, rad); di; ++di)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         // goes from the center out, so newly dug walls recurse
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
@@ -1357,11 +1354,10 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + div_rand_round(caster->hit_dice * 9, 2);
-    int rad = 3 + div_rand_round(caster->hit_dice, 5);
+    int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
 
     int dest = 0;
-    for (distance_iterator di(caster->pos(), true, true, rad); di; ++di)
+    for (distance_iterator di(caster->pos(), true, true, LOS_RADIUS); di; ++di)
     {
         // goes from the center out, so newly dug walls recurse
         if (!cell_see_cell(caster->pos(), *di, LOS_SOLID))
@@ -2536,7 +2532,7 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 void forest_damage(const actor *mon)
 {
     const coord_def pos = mon->pos();
-    const int hd = mon->get_experience_level();
+    const int hd = mon->get_hit_dice();
 
     if (one_chance_in(4))
     {
@@ -2823,7 +2819,7 @@ void toxic_radiance_effect(actor* agent, int mult)
     if (agent->is_player())
         pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
     else
-        pow = agent->as_monster()->hit_dice * 8;
+        pow = agent->as_monster()->get_hit_dice() * 8;
 
     bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
 
