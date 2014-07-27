@@ -66,18 +66,10 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     switch (pot_eff)
     {
     case POT_CURING:
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            if (potion && was_known)
-            {
-                mpr("You can't heal while in Death's door!");
-                return false;
-            }
-            mpr("You feel queasy.");
-            break;
-        }
+    {
+        const bool ddoor = you.duration[DUR_DEATHS_DOOR];
 
-        if (!you.can_device_heal()
+        if ((!you.can_device_heal() || ddoor)
             && potion && was_known
             && you.duration[DUR_CONF] == 0
             && you.duration[DUR_POISONING] == 0
@@ -86,14 +78,17 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             // The potion won't heal us, so don't count rot unless at max HP.
             && (you.hp_max_temp >= 0 || you.hp != you.hp_max))
         {
-            mpr("You have no ailments to cure.");
+            mprf("You have no ailments to cure%s.",
+                 ddoor && you.can_device_heal()
+                     ? ", and can't heal while in Death's door"
+                     : "");
             return false;
         }
 
-        if (you.can_device_heal())
+        if (you.can_device_heal() && !ddoor)
             inc_hp((5 + random2(7)) * mut_factor / 3);
 
-        mpr("You feel better.");
+        mprf("You feel %s.", ddoor ? "queasy" : "better");
 
         // Only fix rot when healed to full.
         if (you.hp == you.hp_max)
@@ -107,6 +102,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
         break;
+    }
 
     case POT_HEAL_WOUNDS:
         if (you.duration[DUR_DEATHS_DOOR])
