@@ -4867,7 +4867,7 @@ bool curare_hits_player(int death_source, int levels, string name,
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_poison() >= 3
-        || player_res_poison() > 0 && !one_chance_in(5))
+        || player_res_poison() > 0 && !one_chance_in(3))
     {
         return false;
     }
@@ -4918,7 +4918,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         dprf("Cannot poison, you are immune!");
         return false;
     }
-    else if (!force && player_res_poison() > 0 && !one_chance_in(10))
+    else if (!force && player_res_poison() > 0 && !one_chance_in(3))
         return false;
 
     const int old_value = you.duration[DUR_POISONING];

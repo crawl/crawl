@@ -2658,7 +2658,12 @@ bool melee_attack::mons_do_poison()
         amount = random_range(attacker->get_hit_dice() * 11 / 3,
                               attacker->get_hit_dice() * 13 / 2);
 
-        if (defender->res_poison() > 0 && defender->has_lifeforce())
+        // strong poison pierces monster rpois (at half strength)
+        // (players have the usual 2/3rds chance to resist)
+        // XXX: do we really need the has_lifeforce() check...? force doesn't
+        // override rpois+++
+        if (defender->res_poison() > 0 && defender->has_lifeforce()
+            && defender->is_monster())
         {
             amount /= 2;
             force = true;
@@ -3074,6 +3079,13 @@ void melee_attack::mons_apply_attack_flavour()
             break;
         }
 
+        // doesn't affect poison-immune enemies
+        if (defender->res_poison() >= 3
+            || defender->is_monster() && defender->res_poison() >= 1)
+        {
+            break;
+        }
+
         if (attacker->type == MONS_RED_WASP || one_chance_in(3))
         {
             int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
@@ -3085,14 +3097,14 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_YELLOW_WASP)
             paralyse_roll += 3;
 
-        if (defender->res_poison() <= 0)
-        {
-            int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
-            if (one_chance_in(paralyse_roll))
-                defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-            else
-                defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
-        }
+        const int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
+        const bool strong_result = one_chance_in(paralyse_roll);
+
+        if (strong_result && defender->res_poison() <= 0)
+            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
+        else if (strong_result || defender->res_poison() <= 0)
+            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+
         break;
     }
 
