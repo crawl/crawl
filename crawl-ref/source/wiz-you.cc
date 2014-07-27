@@ -859,19 +859,20 @@ static void debug_uptick_xl(int newxl, bool train)
 static void debug_downtick_xl(int newxl)
 {
     set_hp(you.hp_max);
-    you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    // boost maxhp so we don't die if heavily rotted
+    you.hp_max_adj_perm += 1000;
     you.experience = exp_needed(newxl);
     level_change();
     you.skill_cost_level = 0;
     check_skill_cost_change();
     // restore maxhp loss
-    you.hp_max_perm -= 1000;
+    you.hp_max_adj_perm -= 1000;
     calc_hp();
     if (you.hp_max <= 0)
     {
         // ... but remove it completely if unviable
-        you.hp_max_temp = max(you.hp_max_temp, 0);
-        you.hp_max_perm = max(you.hp_max_perm, 0);
+        you.hp_max_adj_temp = max(you.hp_max_adj_temp, 0);
+        you.hp_max_adj_perm = max(you.hp_max_adj_perm, 0);
         calc_hp();
     }
 

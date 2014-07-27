@@ -76,7 +76,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             && you.rotting == 0
             && you.disease == 0
             // The potion won't heal us, so don't count rot unless at max HP.
-            && (you.hp_max_temp >= 0 || you.hp != you.hp_max))
+            && (!player_rotted() || you.hp != you.hp_max))
         {
             mprf("You have no ailments to cure%s.",
                  ddoor && you.can_device_heal()
