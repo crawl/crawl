@@ -285,7 +285,7 @@ void handle_behaviour(monster* mon)
 
                 // If the rot would reduce us to <= 0 max HP, attribute the
                 // kill to the monster.
-                if (loss >= you.hp_max_temp)
+                if (loss >= you.hp_max)
                     ouch(loss, mon->mindex(), KILLED_BY_ROTTING);
 
                 rot_hp(loss);
