@@ -214,7 +214,7 @@ void ghost_demon::init_random_demon()
     xl = 10 + roll_dice(2, 10);
 
     // Is demon a spellcaster?
-    // Non-spellcasters get branded melee attacks and are faster instead.
+    // Non-spellcasters always have branded melee and are faster instead.
     spellcaster = x_chance_in_y(3,4);
 
     if (one_chance_in(3) || !spellcaster)
