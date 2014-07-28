@@ -44,6 +44,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 
