@@ -31,6 +31,7 @@
 #include "notes.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "state.h"

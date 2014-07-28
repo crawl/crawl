@@ -57,6 +57,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

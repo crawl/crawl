@@ -179,6 +179,7 @@ player-reacts.o \
 player-stats.o \
 player.o \
 potion.o \
+prompt.o \
 quiver.o \
 random.o \
 random-var.o \

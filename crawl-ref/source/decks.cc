@@ -52,6 +52,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skill_menu.h"

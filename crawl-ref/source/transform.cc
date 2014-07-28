@@ -32,6 +32,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "skills2.h"

@@ -22,6 +22,7 @@
 #include "newgame.h"
 #include "ng-setup.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"

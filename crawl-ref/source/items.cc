@@ -56,6 +56,7 @@
 #include "place.h"
 #include "player.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "rot.h"

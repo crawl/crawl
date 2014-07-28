@@ -65,6 +65,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"

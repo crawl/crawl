@@ -36,6 +36,7 @@
 #include "message.h"
 #include "options.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "species.h"
 #include "spl-cast.h"

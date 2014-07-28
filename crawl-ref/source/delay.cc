@@ -49,6 +49,7 @@
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"

@@ -13,11 +13,11 @@
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"
 #include "spl-miscast.h"
-#include "stuff.h"
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.

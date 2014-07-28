@@ -33,6 +33,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "orb.h"
+#include "prompt.h"
 #include "random.h"
 #include "shout.h"
 #include "spl-util.h"

@@ -45,24 +45,6 @@ class game_ended_condition : public exception
 {
 };
 
-// prompts
-
-bool yes_or_no(PRINTF(0, ));
-typedef map<int, int> explicit_keymap; // doesn't need to be public
-bool yesno(const char * str, bool safe, int safeanswer,
-            bool clear_after = true, bool interrupt_delays = true,
-            bool noprompt = false,
-            const explicit_keymap *map = NULL,
-            GotoRegion = GOTO_MSG);
-
-int yesnoquit(const char* str, bool safe = true, int safeanswer = 0,
-               bool allow_all = false, bool clear_after = true,
-              char alt_yes = 'Y', char alt_yes2 = 'Y');
-
-int prompt_for_quantity(const char *prompt);
-int prompt_for_int(const char *prompt, bool nonneg);
-double prompt_for_float(const char* prompt);
-
 // letter <-> index mapping
 
 char index_to_letter(int the_index);

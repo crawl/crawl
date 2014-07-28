@@ -39,6 +39,7 @@
 #include "ouch.h"
 #include "options.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "shout.h"
 #include "spl-summoning.h"
 #include "spl-util.h"

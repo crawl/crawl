@@ -393,6 +393,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\prompt.cc" />
     <ClCompile Include="..\libgui.cc" />
     <ClCompile Include="..\libutil.cc" />
     <ClCompile Include="..\libw32c.cc">
@@ -746,6 +747,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\player-stats.h" />
     <ClInclude Include="..\potion.h" />
     <ClInclude Include="..\prebuilt\levcomp.tab.h" />
+    <ClInclude Include="..\prompt.h" />
     <ClInclude Include="..\libgui.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
