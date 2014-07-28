@@ -54,6 +54,19 @@ enum map_mask_type
 class dgn_region;
 typedef vector<dgn_region> dgn_region_list;
 
+class dgn_veto_exception : public exception
+{
+public:
+    dgn_veto_exception(const string& _msg) : msg(_msg) { }
+    ~dgn_veto_exception() throw () { }
+    const char *what() const throw ()
+    {
+        return msg.c_str();
+    }
+private:
+    string msg;
+};
+
 class dgn_region
 {
 public:
