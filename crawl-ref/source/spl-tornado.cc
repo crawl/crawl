@@ -13,6 +13,7 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "los.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "ouch.h"
 #include "shout.h"

@@ -26,6 +26,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "monster.h"
 #include "mon-util.h" // for decline_pronoun
@@ -33,7 +34,6 @@
 #include "religion.h"
 #include "spl-damage.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"

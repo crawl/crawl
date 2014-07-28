@@ -17,6 +17,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "losglobal.h"
+#include "message.h"
 #include "monster.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -25,7 +26,6 @@
 #include "random.h"
 #include "random-weight.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 

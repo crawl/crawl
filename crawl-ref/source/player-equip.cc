@@ -15,6 +15,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
@@ -28,7 +29,6 @@
 #include "spl-summoning.h"
 #include "spl-wpnench.h"
 #include "state.h"
-#include "stuff.h"
 #include "transform.h"
 #include "xom.h"
 
