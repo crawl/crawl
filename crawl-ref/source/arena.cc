@@ -12,6 +12,7 @@
 #include "colour.h"
 #include "command.h"
 #include "dungeon.h"
+#include "end.h"
 #include "env.h"
 #include "externs.h"
 #include "food.h"
@@ -33,7 +34,6 @@
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE

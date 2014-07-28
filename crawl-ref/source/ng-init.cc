@@ -13,6 +13,7 @@
 #include "branch.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "end.h"
 #include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
@@ -23,7 +24,6 @@
 #include "spl-util.h"
 #include "state.h"
 #include "store.h"
-#include "stuff.h"
 #include "version.h"
 
 #ifdef DEBUG_DIAGNOSTICS

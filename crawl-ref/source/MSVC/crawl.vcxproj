@@ -284,6 +284,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\dlua.cc" />
     <ClCompile Include="..\dungeon.cc" />
     <ClCompile Include="..\effects.cc" />
+    <ClCompile Include="..\end.cc" />
     <ClCompile Include="..\errors.cc" />
     <ClCompile Include="..\evoke.cc" />
     <ClCompile Include="..\exclude.cc" />
@@ -669,6 +670,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\dungeon.h" />
     <ClInclude Include="..\duration-data.h" />
     <ClInclude Include="..\effects.h" />
+    <ClCompile Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
     <ClInclude Include="..\enum.h" />
     <ClInclude Include="..\env.h" />

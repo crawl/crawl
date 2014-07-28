@@ -26,6 +26,7 @@
 #include "dlua.h"
 #include "delay.h"
 #include "directn.h"
+#include "end.h"
 #include "errors.h"
 #include "kills.h"
 #include "files.h"

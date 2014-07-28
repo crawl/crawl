@@ -14,6 +14,7 @@
 #include <unistd.h>
 #endif
 
+#include "end.h"
 #include "clua.h"
 #include "database.h"
 #include "errors.h"
@@ -21,7 +22,6 @@
 #include "libutil.h"
 #include "options.h"
 #include "random.h"
-#include "stuff.h"
 #include "syscalls.h"
 #include "threads.h"
 #include "unicode.h"

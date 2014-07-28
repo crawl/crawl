@@ -18,6 +18,7 @@
 #include "defines.h"
 #include "dlua.h"
 #include "dungeon.h"
+#include "end.h"
 #include "env.h"
 #include "exclude.h"
 #include "files.h"

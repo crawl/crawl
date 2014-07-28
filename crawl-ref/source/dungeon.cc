@@ -32,6 +32,7 @@
 #include "dgn-labyrinth.h"
 #include "dgn-overview.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "enum.h"
 #include "map_knowledge.h"

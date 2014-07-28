@@ -10,6 +10,7 @@
 #include "cio.h"
 #include "command.h"
 #include "database.h"
+#include "end.h"
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
