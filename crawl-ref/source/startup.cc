@@ -66,6 +66,8 @@
  #include "tilereg-crt.h"
 #endif
 
+void _cio_init();
+
 // Initialise a whole lot of stuff...
 static void _initialize()
 {
@@ -175,7 +177,7 @@ static void _initialize()
     if (!crawl_state.test_list)
     {
         if (!crawl_state.io_inited)
-            cio_init();
+            _cio_init();
         clrscr();
     }
 
@@ -1045,4 +1047,15 @@ bool startup_step()
     _post_init(newchar);
 
     return newchar;
+}
+
+
+
+void _cio_init()
+{
+    crawl_state.io_inited = true;
+    console_startup();
+    set_cursor_enabled(false);
+    crawl_view.init_geometry();
+    textbackground(0);
 }
