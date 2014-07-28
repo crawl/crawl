@@ -4,11 +4,11 @@
 #include "ng-input.h"
 
 #include "cio.h"
+#include "end.h"
 #include "files.h"
 #include "format.h"
 #include "libutil.h"
 #include "options.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "version.h"
 

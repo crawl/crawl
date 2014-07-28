@@ -47,6 +47,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "errors.h"
 #include "fineff.h"
@@ -79,7 +80,6 @@
 #include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE

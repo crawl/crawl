@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "end.h"
 #include "externs.h"
 #include "food.h"
 #include "format.h"

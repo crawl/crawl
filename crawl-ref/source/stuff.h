@@ -34,17 +34,6 @@ int stepdown(int value, int step, rounding_type = ROUND_CLOSE, int max = 0);
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 
-// ending
-
-NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = NULL));
-NORETURN void game_ended();
-NORETURN void game_ended_with_error(const string &message);
-void cio_cleanup();
-
-class game_ended_condition : public exception
-{
-};
-
 // letter <-> index mapping
 
 char index_to_letter(int the_index);

@@ -5,6 +5,7 @@
 #include "ability.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "end.h"
 #include "files.h"
 #include "food.h"
 #include "godcompanions.h"

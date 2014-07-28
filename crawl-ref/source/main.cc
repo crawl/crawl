@@ -60,6 +60,7 @@
 #include "dlua.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "errors.h"
 #include "evoke.h"

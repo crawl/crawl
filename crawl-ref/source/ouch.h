@@ -91,6 +91,5 @@ bool drain_player(int power = 25, bool announce_full = true,
 void expose_player_to_element(beam_type flavour, int strength = 0,
                               bool slow_cold_blooded = true);
 
-NORETURN void screen_end_game(string text);
 int timescale_damage(const actor *act, int damage);
 #endif
