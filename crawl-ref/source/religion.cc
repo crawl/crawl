@@ -3954,29 +3954,6 @@ void handle_god_time(int time_delta)
     {
         switch (you.religion)
         {
-        case GOD_ELYVILON:
-            if (one_chance_in(50))
-                lose_piety(1);
-            return;
-
-        case GOD_SHINING_ONE:
-            if (one_chance_in(35))
-                lose_piety(1);
-            break;
-
-        case GOD_JIYVA:
-            if (one_chance_in(20))
-                lose_piety(1);
-            break;
-
-        case GOD_YREDELEMNUL:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_VEHUMET:
-        case GOD_ZIN:
-            if (one_chance_in(17))
-                lose_piety(1);
-            break;
-
         case GOD_OKAWARU:
         case GOD_TROG:
             if (one_chance_in(14))
@@ -3992,18 +3969,37 @@ void handle_god_time(int time_delta)
                 lose_piety(1);
             break;
 
-        case GOD_NEMELEX_XOBEH:
-            if (one_chance_in(35))
+        case GOD_YREDELEMNUL:
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_VEHUMET:
+        case GOD_ZIN:
+            if (one_chance_in(17))
                 lose_piety(1);
             break;
 
-        case GOD_SIF_MUNA:
-            if (one_chance_in(100))
+        case GOD_JIYVA:
+            if (one_chance_in(20))
                 lose_piety(1);
             break;
 
         case GOD_ASHENZARI:
             if (one_chance_in(25))
+                lose_piety(1);
+            break;
+
+        case GOD_SHINING_ONE:
+        case GOD_NEMELEX_XOBEH:
+            if (one_chance_in(35))
+                lose_piety(1);
+            break;
+
+        case GOD_ELYVILON:
+            if (one_chance_in(50))
+                lose_piety(1);
+            return;
+
+        case GOD_SIF_MUNA:
+            if (one_chance_in(100))
                 lose_piety(1);
             break;
 
