@@ -1954,6 +1954,35 @@ void melee_attack::rot_defender(int amount, int immediate)
     }
 }
 
+/**
+ * Attempt to move a set of stairs from one place to another.
+ *
+ * @param orig      The current location of the stiars.
+ * @param dest      The desired destination.
+ * @return          Whether the stairs were moved.
+ */
+static bool _move_stairs(coord_def orig, coord_def dest)
+{
+    const dungeon_feature_type stair_feat = grd(orig);
+
+    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
+        return false;
+
+    // The player can't use shops to escape, so don't bother.
+    if (stair_feat == DNGN_ENTER_SHOP)
+        return false;
+
+    // Don't move around notable terrain the player is aware of if it's
+    // out of sight.
+    if (is_notable_terrain(stair_feat)
+        && env.map_knowledge(orig).known() && !you.see_cell(orig))
+    {
+        return false;
+    }
+
+    return slide_feature_over(orig, dest);
+}
+
 void melee_attack::chaos_affects_attacker()
 {
     if (miscast_level >= 1 || !attacker->alive())
@@ -1965,7 +1994,7 @@ void melee_attack::chaos_affects_attacker()
         dest = defender->pos();
 
     // Move stairs out from under the attacker.
-    if (one_chance_in(100) && move_stairs(attack_position, dest))
+    if (one_chance_in(100) && _move_stairs(attack_position, dest))
     {
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,

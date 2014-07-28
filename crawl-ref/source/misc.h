@@ -102,8 +102,6 @@ string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
-bool move_stairs(coord_def orig, coord_def dest);
-
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
 struct position_node

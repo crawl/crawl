@@ -1300,25 +1300,3 @@ string counted_monster_list::describe(description_level_type desc)
     }
     return out;
 }
-
-bool move_stairs(coord_def orig, coord_def dest)
-{
-    const dungeon_feature_type stair_feat = grd(orig);
-
-    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
-        return false;
-
-    // The player can't use shops to escape, so don't bother.
-    if (stair_feat == DNGN_ENTER_SHOP)
-        return false;
-
-    // Don't move around notable terrain the player is aware of if it's
-    // out of sight.
-    if (is_notable_terrain(stair_feat)
-        && env.map_knowledge(orig).known() && !you.see_cell(orig))
-    {
-        return false;
-    }
-
-    return slide_feature_over(orig, dest);
-}
