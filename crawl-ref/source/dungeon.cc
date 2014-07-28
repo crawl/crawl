@@ -215,19 +215,6 @@ static int  dgn_zones = 0;
 
 static vector<string> _you_vault_list;
 
-class dgn_veto_exception : public exception
-{
-public:
-    dgn_veto_exception(const string& _msg) : msg(_msg) { }
-    ~dgn_veto_exception() throw () { }
-    const char *what() const throw ()
-    {
-        return msg.c_str();
-    }
-private:
-    string msg;
-};
-
 struct coloured_feature
 {
     dungeon_feature_type feature;

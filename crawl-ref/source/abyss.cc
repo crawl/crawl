@@ -212,11 +212,19 @@ static bool _abyss_place_map(const map_def *mdef)
     // until after everything is done.
     unwind_bool gen(crawl_state.generating_level, true);
 
-    const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
-    if (did_place)
-        _abyss_fixup_vault(env.level_vaults.back());
-
-    return did_place;
+    try
+    {
+        if (dgn_safe_place_map(mdef, true, false, INVALID_COORD))
+        {
+            _abyss_fixup_vault(env.level_vaults.back());
+            return true;
+        }
+    }
+    catch (dgn_veto_exception &e)
+    {
+        dprf("Abyss map placement vetoed: %s", e.what());
+    }
+    return false;
 }
 
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
