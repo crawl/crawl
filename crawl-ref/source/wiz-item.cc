@@ -32,13 +32,13 @@
 #include "mon-death.h"
 #include "options.h"
 #include "output.h"
+#include "prompt.h"
 #include "player-equip.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "stuff.h"
 #include "terrain.h"
 
 #ifdef WIZARD

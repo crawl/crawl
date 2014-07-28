@@ -38,6 +38,7 @@
 #include "mon-speak.h"
 #include "mon-util.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"

@@ -65,6 +65,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
+#include "prompt.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"

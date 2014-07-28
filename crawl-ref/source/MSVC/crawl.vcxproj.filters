@@ -135,6 +135,7 @@
     <ClCompile Include="..\potion.cc" />
     <ClCompile Include="..\prebuilt\levcomp.lex.cc" />
     <ClCompile Include="..\prebuilt\levcomp.tab.cc" />
+    <ClCompile Include="..\prompt.cc" />
     <ClCompile Include="..\libgui.cc" />
     <ClCompile Include="..\libutil.cc" />
     <ClCompile Include="..\libw32c.cc" />
@@ -437,6 +438,7 @@
     <ClInclude Include="..\player-stats.h" />
     <ClInclude Include="..\potion.h" />
     <ClInclude Include="..\prebuilt\levcomp.tab.h" />
+    <ClInclude Include="..\prompt.h" />
     <ClInclude Include="..\libgui.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />

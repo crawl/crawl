@@ -51,6 +51,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"

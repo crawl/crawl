@@ -55,6 +55,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "potion.h"
+#include "prompt.h"
 #include "ranged_attack.h"
 #include "religion.h"
 #include "godconduct.h"

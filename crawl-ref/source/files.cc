@@ -72,6 +72,7 @@
 #include "output.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "random.h"
 #include "show.h"
 #include "shopping.h"

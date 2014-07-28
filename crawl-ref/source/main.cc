@@ -107,6 +107,7 @@
 #include "player-reacts.h"
 #include "player-stats.h"
 #include "player.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"

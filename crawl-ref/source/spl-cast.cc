@@ -42,6 +42,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"

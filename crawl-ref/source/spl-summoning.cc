@@ -46,6 +46,7 @@
 #include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"

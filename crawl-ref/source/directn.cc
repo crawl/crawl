@@ -45,6 +45,7 @@
 #include "mon-death.h"
 #include "mon-info.h"
 #include "output.h"
+#include "prompt.h"
 #include "shopping.h"
 #include "show.h"
 #include "showsymb.h"

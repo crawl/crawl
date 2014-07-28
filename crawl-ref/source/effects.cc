@@ -67,6 +67,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"

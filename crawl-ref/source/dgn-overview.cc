@@ -25,6 +25,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "stairs.h"

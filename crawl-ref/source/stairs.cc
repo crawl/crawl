@@ -32,6 +32,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "spl-clouds.h"
@@ -40,7 +41,6 @@
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"
