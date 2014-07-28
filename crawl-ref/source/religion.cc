@@ -3927,7 +3927,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-//jmf: moved stuff from effects::handle_time()
 void handle_god_time(int time_delta)
 {
     UNUSED(time_delta);
@@ -3955,11 +3954,6 @@ void handle_god_time(int time_delta)
     {
         switch (you.religion)
         {
-        case GOD_XOM:
-// Moved to _player_reacts()
-//            xom_tick();
-            return;
-
         case GOD_ELYVILON:
             if (one_chance_in(50))
                 lose_piety(1);
@@ -3983,7 +3977,6 @@ void handle_god_time(int time_delta)
                 lose_piety(1);
             break;
 
-        // These gods accept corpses, so they time-out faster.
         case GOD_OKAWARU:
         case GOD_TROG:
             if (one_chance_in(14))
@@ -4000,23 +3993,13 @@ void handle_god_time(int time_delta)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            // Nemelex is relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
             break;
 
         case GOD_SIF_MUNA:
-            // [dshaligram] Sif Muna is now very patient - has to be
-            // to make up for the new spell training requirements, else
-            // it's practically impossible to get Master of Arcane status.
             if (one_chance_in(100))
                 lose_piety(1);
-            break;
-
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-            // Fedhas' piety is stable over time but we need a case here to
-            // avoid the error message below.
             break;
 
         case GOD_ASHENZARI:
@@ -4024,12 +4007,21 @@ void handle_god_time(int time_delta)
                 lose_piety(1);
             break;
 
+        case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
+            // These gods do not lose piety  over time but we need a case here
+            // to avoid the error message below.
+            break;
+
         case GOD_GOZAG:
+        case GOD_XOM:
+            // Gods without normal piety do nothing each tick.
             return;
 
         default:
             die("Bad god, no bishop!");
             return;
+
         }
 
         if (you.piety < 1)
