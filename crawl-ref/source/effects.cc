@@ -201,9 +201,6 @@ int torment_player(actor *attacker, int taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // [dshaligram] Switched to using ouch() instead of dec_hp() so that
-    // notes can also track torment and activities can be interrupted
-    // correctly.
     int hploss = 0;
 
     if (!player_res_torment(false))
