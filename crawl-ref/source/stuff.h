@@ -34,10 +34,6 @@ int stepdown(int value, int step, rounding_type = ROUND_CLOSE, int max = 0);
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 
-// ????
-
-int get_ch();
-
 // IO
 
 void cio_init();

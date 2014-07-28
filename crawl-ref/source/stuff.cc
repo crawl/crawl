@@ -94,17 +94,6 @@ void set_redraw_status(uint64_t flags)
     you.redraw_status_flags |= flags;
 }
 
-int get_ch()
-{
-    mouse_control mc(MOUSE_MODE_PROMPT);
-    int gotched = getchm();
-
-    if (gotched == 0)
-        gotched = getchm();
-
-    return gotched;
-}
-
 void cio_init()
 {
     crawl_state.io_inited = true;

@@ -16,6 +16,7 @@
 #include "godprayer.h"
 #include "godwrath.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "mutation.h"
 #include "newgame.h"

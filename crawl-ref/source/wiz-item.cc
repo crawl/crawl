@@ -25,6 +25,7 @@
 #include "items.h"
 #include "invent.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "mapdef.h"
 #include "misc.h"

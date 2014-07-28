@@ -27,6 +27,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "player.h"

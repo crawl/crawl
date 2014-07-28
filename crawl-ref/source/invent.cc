@@ -29,6 +29,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "player.h"
 #include "religion.h"

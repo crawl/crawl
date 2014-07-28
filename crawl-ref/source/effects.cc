@@ -49,6 +49,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
