@@ -19,7 +19,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "spl-transloc.h"
-#include "stuff.h"
+#include "traps.h"
 
 #include "duration-data.h"
 

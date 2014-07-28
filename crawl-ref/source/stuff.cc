@@ -536,14 +536,6 @@ void canned_msg(canned_message_type which_message)
     }
 }
 
-const char* held_status(actor *act)
-{
-    if (get_trapping_net(act->pos(), true) != NON_ITEM)
-        return "held in a net";
-    else
-        return "caught in a web";
-}
-
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.

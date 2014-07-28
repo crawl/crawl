@@ -35,6 +35,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "transform.h"
+#include "traps.h"
 #include "travel.h"
 
 /*

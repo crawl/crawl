@@ -289,6 +289,23 @@ int get_trapping_net(const coord_def& where, bool trapped)
     return NON_ITEM;
 }
 
+/**
+ * Return a string describing the reason a given actor is ensnared. (Since nets
+ * & webs use the same status.
+ *
+ * @param actor     The ensnared actor.
+ * @return          Either 'held in a net' or 'caught in a web'.
+ */
+const char* held_status(actor *act)
+{
+    act = act ? act : &you;
+
+    if (get_trapping_net(act->pos(), true) != NON_ITEM)
+        return "held in a net";
+    else
+        return "caught in a web";
+}
+
 // If there are more than one net on this square
 // split off one of them for checking/setting values.
 static void _maybe_split_nets(item_def &item, const coord_def& where)
