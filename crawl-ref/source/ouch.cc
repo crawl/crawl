@@ -229,10 +229,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_POISON_ARROW:
-        // [dshaligram] NOT importing uber-poison arrow from 4.1. Giving no
-        // bonus to poison resistant players seems strange and unnecessarily
-        // arbitrary.
-
         resist = player_res_poison();
 
         if (doEffects)
