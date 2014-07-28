@@ -4372,7 +4372,8 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 #endif
                             || player_in_branch(BRANCH_SWAMP)
                             || player_in_branch(BRANCH_SLIME);
-        if (place.connect(spotty) == 0 && place.exits.size() > 0)
+        if (place.connect(spotty) == 0 && place.exits.size() > 0
+            && !player_in_branch(BRANCH_ABYSS))
         {
             throw dgn_veto_exception("Failed to connect exits for: "
                                      + place.map.name);
