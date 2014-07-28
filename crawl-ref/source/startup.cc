@@ -66,7 +66,7 @@
  #include "tilereg-crt.h"
 #endif
 
-void _cio_init();
+static void _cio_init();
 
 // Initialise a whole lot of stuff...
 static void _initialize()
@@ -1051,7 +1051,7 @@ bool startup_step()
 
 
 
-void _cio_init()
+static void _cio_init()
 {
     crawl_state.io_inited = true;
     console_startup();
