@@ -383,10 +383,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
                            ceiling_value ? ceiling_value - diff : 0);
 }
 
-int div_round_up(int num, int den)
-{
-    return num / den + (num % den != 0);
-}char index_to_letter(int the_index)
+char index_to_letter(int the_index)
 {
     ASSERT_RANGE(the_index, 0, ENDOFPACK);
     return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
