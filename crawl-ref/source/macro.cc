@@ -755,6 +755,20 @@ int getchm(KeymapContext mc, int (*rgetch)())
     return macro_buf_get();
 }
 
+/**
+ * Get a character?
+ */
+int get_ch()
+{
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int gotched = getchm();
+
+    if (gotched == 0)
+        gotched = getchm();
+
+    return gotched;
+}
+
 /*
  * Replacement for getch(). Returns keys from the key buffer if available.
  * If not, adds some content to the buffer, and returns some of it.

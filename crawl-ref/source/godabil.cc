@@ -38,6 +38,7 @@
 #include "items.h"
 #include "losglobal.h"
 #include "libutil.h"
+#include "macro.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
