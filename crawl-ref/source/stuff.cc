@@ -94,15 +94,6 @@ void set_redraw_status(uint64_t flags)
     you.redraw_status_flags |= flags;
 }
 
-void cio_init()
-{
-    crawl_state.io_inited = true;
-    console_startup();
-    set_cursor_enabled(false);
-    crawl_view.init_geometry();
-    textbackground(0);
-}
-
 void cio_cleanup()
 {
     if (!crawl_state.io_inited)
