@@ -27,6 +27,7 @@
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "notes.h"

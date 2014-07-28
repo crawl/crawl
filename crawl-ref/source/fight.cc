@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "melee_attack.h"
+#include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"

@@ -25,6 +25,7 @@
 #include "fineff.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-clone.h"

@@ -16,12 +16,12 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-message.h"
 #include "monster.h"
 #include "player.h"
 #include "random.h"
-#include "stuff.h"
 #include "teleport.h"
 #include "traps.h"
 

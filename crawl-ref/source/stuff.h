@@ -45,12 +45,10 @@ class game_ended_condition : public exception
 {
 };
 
-// canned messages & prompts
-
-void canned_msg(canned_message_type which_message);
+// prompts
 
 bool yes_or_no(PRINTF(0, ));
-typedef map<int, int> explicit_keymap;
+typedef map<int, int> explicit_keymap; // doesn't need to be public
 bool yesno(const char * str, bool safe, int safeanswer,
             bool clear_after = true, bool interrupt_delays = true,
             bool noprompt = false,
