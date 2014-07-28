@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
@@ -22,7 +23,6 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 
 monster_type debug_prompt_for_monster()
 {
