@@ -171,6 +171,31 @@ void ghost_demon::reset()
     acting_part      = MONS_0;
 }
 
+static brand_type _random_special_pan_lord_brand()
+{
+    brand_type brand;
+
+    do
+    {
+        brand = static_cast<brand_type>(random2(MAX_PAN_LORD_BRANDS));
+        // some brands inappropriate (e.g. holy wrath)
+    }
+    while (brand == SPWPN_HOLY_WRATH
+#if TAG_MAJOR_VERSION == 34
+           || brand == SPWPN_ORC_SLAYING
+           || brand == SPWPN_RETURNING
+           || brand == SPWPN_REACHING
+           || brand == SPWPN_FLAME
+           || brand == SPWPN_FROST
+           || brand == SPWPN_DRAGON_SLAYING
+#endif
+           || brand == SPWPN_PROTECTION
+           || brand == SPWPN_EVASION
+           );
+
+    return brand;
+}
+
 void ghost_demon::init_random_demon()
 {
     do name = make_name(random_int(), false);
@@ -218,25 +243,7 @@ void ghost_demon::init_random_demon()
     spellcaster = x_chance_in_y(3,4);
 
     if (one_chance_in(3) || !spellcaster)
-    {
-        do
-        {
-            brand = static_cast<brand_type>(random2(MAX_PAN_LORD_BRANDS));
-            // some brands inappropriate (e.g. holy wrath)
-        }
-        while (brand == SPWPN_HOLY_WRATH
-#if TAG_MAJOR_VERSION == 34
-               || brand == SPWPN_ORC_SLAYING
-               || brand == SPWPN_RETURNING
-               || brand == SPWPN_REACHING
-               || brand == SPWPN_FLAME
-               || brand == SPWPN_FROST
-               || brand == SPWPN_DRAGON_SLAYING
-#endif
-               || brand == SPWPN_PROTECTION
-               || brand == SPWPN_EVASION
-               );
-    }
+        brand = _random_special_pan_lord_brand();
     else
         brand = SPWPN_NORMAL;
 
@@ -250,11 +257,12 @@ void ghost_demon::init_random_demon()
 
     spells.init(SPELL_NO_SPELL);
 
-    // This bit uses the list of player spells to find appropriate
-    // spells for the demon, then converts those spells to the monster
-    // spell indices.  Some special monster-only spells are at the end.
     if (spellcaster)
     {
+        // This bit uses the list of player spells to find appropriate
+        // spells for the demon, then converts those spells to the monster
+        // spell indices.  Some special monster-only spells are at the end.
+
         if (coinflip())
             spells[0] = RANDOM_ELEMENT(search_order_conj);
 
