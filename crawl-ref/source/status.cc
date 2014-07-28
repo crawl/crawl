@@ -625,10 +625,7 @@ static void _describe_glow(status_info* inf)
         if (cont > 1 || you.species != SP_DJINNI)
 #endif
         inf->light_text = "Contam";
-    }
 
-    if (cont > 0)
-    {
         inf->short_text =
                  (cont == 1) ? "very slightly " :
                  (cont == 2) ? "slightly " :
