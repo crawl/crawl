@@ -182,10 +182,6 @@ void ghost_demon::init_random_demon()
     ev = 5 + random2(20);
     ac = 5 + random2(20);
 
-    // Is demon a spellcaster?
-    // Non-spellcasters get some boosts to their melee and speed instead.
-    spellcaster = !one_chance_in(4);
-
     see_invis = true;
 
     resists = 0;
@@ -209,8 +205,17 @@ void ghost_demon::init_random_demon()
     // HTH damage:
     damage = 20 + roll_dice(2, 20);
 
-    // special attack type (uses weapon brand code):
-    brand = SPWPN_NORMAL;
+    // Does demon fly?
+    fly = (one_chance_in(3) ? FL_NONE :
+           one_chance_in(5) ? FL_LEVITATE
+                            : FL_WINGED);
+
+    // hit dice:
+    xl = 10 + roll_dice(2, 10);
+
+    // Is demon a spellcaster?
+    // Non-spellcasters get branded melee attacks and are faster instead.
+    spellcaster = x_chance_in_y(3,4);
 
     if (one_chance_in(3) || !spellcaster)
     {
@@ -232,14 +237,8 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_EVASION
                );
     }
-
-    // Does demon fly?
-    fly = (one_chance_in(3) ? FL_NONE :
-           one_chance_in(5) ? FL_LEVITATE
-                            : FL_WINGED);
-
-    // hit dice:
-    xl = 10 + roll_dice(2, 10);
+    else
+        brand = SPWPN_NORMAL;
 
     // Non-caster demons are fast, casters may get haste.
     if (!spellcaster)
@@ -248,11 +247,6 @@ void ghost_demon::init_random_demon()
         speed = 10;
     else
         speed = 8 + roll_dice(2,5);
-
-    // Does demon cycle colours?
-    cycle_colours = one_chance_in(10);
-
-    colour = random_colour();
 
     spells.init(SPELL_NO_SPELL);
 
@@ -352,6 +346,12 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(15))
             spells[4] = SPELL_DIG;
     }
+
+    // Does demon cycle colours?
+    cycle_colours = one_chance_in(10);
+
+    colour = random_colour();
+
 }
 
 // Returns the movement speed for a player ghost.  Note that this is a
