@@ -861,23 +861,6 @@ void run_environment_effects()
     run_cloud_spreaders(you.time_taken);
 }
 
-coord_def pick_adjacent_free_square(const coord_def& p)
-{
-    int num_ok = 0;
-    coord_def result(-1, -1);
-
-    for (adjacent_iterator ai(p); ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_FLOOR && monster_at(*ai) == NULL
-            && one_chance_in(++num_ok))
-        {
-            result = *ai;
-        }
-    }
-
-    return result;
-}
-
 // Converts a movement speed to a duration. i.e., answers the
 // question: if the monster is so fast, how much time has it spent in
 // its last movement?
