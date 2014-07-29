@@ -3305,6 +3305,111 @@ void siren_song(monster* mons)
     }
 }
 
+/**
+ * Have a mermaid or siren attempt to mesmerize the player.
+ *
+ * @param mons  The singing monster.
+ * @param spl   The channel to print messages in.
+ * @return      Whether the ability was used.
+ */
+bool _mermaid_sing(monster* mons, msg_channel_type spl)
+{
+    // Don't behold observer in the arena.
+    if (crawl_state.game_is_arena())
+        return false;
+
+    // Don't behold player already half down or up the stairs.
+    if (!you.delay_queue.empty())
+    {
+        const delay_queue_item delay = you.delay_queue.front();
+
+        if (delay.type == DELAY_ASCENDING_STAIRS
+            || delay.type == DELAY_DESCENDING_STAIRS)
+        {
+            dprf("Taking stairs, don't mesmerise.");
+            return false;
+        }
+    }
+
+    // Won't sing if either of you silenced, or it's friendly,
+    // confused, fleeing, or leaving the level.
+    if (mons->has_ench(ENCH_CONFUSION)
+        || mons_is_fleeing(mons)
+        || mons->pacified()
+        || mons->friendly()
+        || !player_can_hear(mons->pos()))
+    {
+        return false;
+    }
+
+    // Don't even try on berserkers. Mermaids know their limits.
+    // (Sirens should still sing since their song has other effects)
+    if (mons->type != MONS_SIREN && you.berserk())
+        return false;
+
+    const bool already_mesmerised = you.beheld_by(mons);
+
+    // XXX: clarify this block
+    if (!one_chance_in(5)
+        && (mons->foe != MHITYOU || already_mesmerised || coinflip()))
+    {
+        return false;
+    }
+
+    // sing!
+    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
+
+    if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
+        mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
+
+    if (you.can_see(mons))
+    {
+        const string song_adj = already_mesmerised ? "her luring"
+                                                   : "a haunting";
+        const string song_desc = make_stringf(" chants %s song.",
+                                              song_adj.c_str());
+        simple_monster_message(mons, song_desc.c_str(), spl);
+    }
+    else
+    {
+        // If you're already mesmerised by an invisible mermaid, she
+        // can still prolong the enchantment.
+        if (already_mesmerised)
+            mprf(MSGCH_SOUND, "You hear a luring song.");
+        else
+        {
+            // reduce spamminess
+            if (mons->type == MONS_SIREN || one_chance_in(4))
+            {
+                if (coinflip())
+                    mprf(MSGCH_SOUND, "You hear a haunting song.");
+                else
+                    mprf(MSGCH_SOUND, "You hear an eerie melody.");
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    // Once mesmerised by a particular monster, you cannot resist anymore.
+    if (!already_mesmerised
+        && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
+            || you.clarity())
+        || you.duration[DUR_MESMERISE_IMMUNE])
+    {
+        if (you.clarity())
+            canned_msg(MSG_YOU_UNAFFECTED);
+        else
+            canned_msg(MSG_YOU_RESIST);
+        return true;
+    }
+
+    you.add_beholder(mons);
+    return true;
+}
+
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -3776,95 +3881,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MERMAID:
     case MONS_SIREN:
     {
-        // Don't behold observer in the arena.
-        if (crawl_state.game_is_arena())
-            break;
-
-        // Don't behold player already half down or up the stairs.
-        if (!you.delay_queue.empty())
-        {
-            delay_queue_item delay = you.delay_queue.front();
-
-            if (delay.type == DELAY_ASCENDING_STAIRS
-                || delay.type == DELAY_DESCENDING_STAIRS)
-            {
-                dprf("Taking stairs, don't mesmerise.");
-                break;
-            }
-        }
-
-        // Won't sing if either of you silenced, or it's friendly,
-        // confused, fleeing, or leaving the level.
-        if (mons->has_ench(ENCH_CONFUSION)
-            || mons_is_fleeing(mons)
-            || mons->pacified()
-            || mons->friendly()
-            || !player_can_hear(mons->pos()))
-        {
-            break;
-        }
-
-        // Don't even try on berserkers. Mermaids know their limits.
-        // (Sirens should still sing since their song has other effects)
-        if (mons->type != MONS_SIREN && you.berserk())
-            break;
-
-        bool already_mesmerised = you.beheld_by(mons);
-
-        if (one_chance_in(5)
-            || mons->foe == MHITYOU && !already_mesmerised && coinflip())
-        {
-            noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
-
-            if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
-                mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
-
-            if (you.can_see(mons))
-            {
-                simple_monster_message(mons,
-                    make_stringf(" chants %s song.",
-                    already_mesmerised ? "her luring" : "a haunting").c_str(),
-                    spl);
-
-            }
-            else
-            {
-                // If you're already mesmerised by an invisible mermaid, she
-                // can still prolong the enchantment.
-                if (already_mesmerised)
-                    mprf(MSGCH_SOUND, "You hear a luring song.");
-                else
-                {
-                    if (one_chance_in(4)) // reduce spamminess
-                    {
-                        if (coinflip())
-                            mprf(MSGCH_SOUND, "You hear a haunting song.");
-                        else
-                            mprf(MSGCH_SOUND, "You hear an eerie melody.");
-                    }
-                    break;
-                }
-            }
-
-            // Once mesmerised by a particular monster, you cannot resist
-            // anymore.
-            if (!already_mesmerised
-                && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
-                    || you.clarity())
-                    || you.duration[DUR_MESMERISE_IMMUNE])
-            {
-                if (you.clarity())
-                    canned_msg(MSG_YOU_UNAFFECTED);
-                else
-                    canned_msg(MSG_YOU_RESIST);
-                used = true;
-                break;
-            }
-
-            you.add_beholder(mons);
-
-            used = true;
-        }
+        used = _mermaid_sing(mons, spl);
         break;
     }
 
