@@ -41,6 +41,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"

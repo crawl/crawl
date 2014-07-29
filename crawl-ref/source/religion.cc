@@ -63,6 +63,7 @@
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "prompt.h"

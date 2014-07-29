@@ -24,6 +24,7 @@
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"

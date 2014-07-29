@@ -16,6 +16,7 @@
 #include "hints.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"

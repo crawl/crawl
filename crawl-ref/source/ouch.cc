@@ -55,6 +55,7 @@
 #include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"

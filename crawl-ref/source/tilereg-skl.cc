@@ -8,6 +8,7 @@
 #include "cio.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
 #include "skills.h"
 #include "skills2.h"
 #include "stuff.h"

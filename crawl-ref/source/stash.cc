@@ -27,6 +27,7 @@
 #include "message.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "output.h"
 #include "place.h"
 #include "religion.h"
 #include "shopping.h"

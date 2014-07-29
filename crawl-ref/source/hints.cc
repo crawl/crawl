@@ -39,6 +39,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "ouch.h"
+#include "output.h"
 #include "jobs.h"
 #include "player.h"
 #include "random.h"

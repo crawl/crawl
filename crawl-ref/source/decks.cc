@@ -48,6 +48,7 @@
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"

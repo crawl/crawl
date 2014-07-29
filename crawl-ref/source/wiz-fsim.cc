@@ -29,6 +29,7 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "player-equip.h"
 #include "ranged_attack.h"

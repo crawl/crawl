@@ -38,6 +38,7 @@
 #include "files.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
 #include "message.h"
 #include "state.h"
 #include "stuff.h"
