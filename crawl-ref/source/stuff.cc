@@ -218,17 +218,3 @@ bool tobool(maybe_bool mb)
     ASSERT(mb != MB_MAYBE);
     return mb == MB_TRUE;
 }
-
-bool tobool(maybe_bool mb, bool def)
-{
-    switch (mb)
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-    default:
-        return def;
-    }
-}

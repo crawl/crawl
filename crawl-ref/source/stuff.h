@@ -43,7 +43,6 @@ int letter_to_index(int the_letter);
 // maybebools
 
 maybe_bool frombool(bool b);
-bool tobool(maybe_bool mb, bool def);
 bool tobool(maybe_bool mb);
 
 #endif
