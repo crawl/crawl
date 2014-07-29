@@ -241,10 +241,13 @@ void ghost_demon::init_random_demon()
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
-    // Non-caster demons are likely to be fast, casters may get haste.
-    speed = (!spellcaster ? 11 + roll_dice(2, 4) :
-             one_chance_in(3) ? 10 :
-             8 + roll_dice(2, 5));
+    // Non-caster demons are fast, casters may get haste.
+    if (!spellcaster)
+        speed = 11 + roll_dice(2,4);
+    else if (one_chance_in(3))
+        speed = 10;
+    else
+        speed = 8 + roll_dice(2,5);
 
     // Does demon cycle colours?
     cycle_colours = one_chance_in(10);
