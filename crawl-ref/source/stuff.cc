@@ -212,9 +212,3 @@ maybe_bool frombool(bool b)
 {
     return b ? MB_TRUE : MB_FALSE;
 }
-
-bool tobool(maybe_bool mb)
-{
-    ASSERT(mb != MB_MAYBE);
-    return mb == MB_TRUE;
-}
