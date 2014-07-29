@@ -22,6 +22,7 @@
 #include "ng-wanderer.h"
 #include "options.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "skills.h"

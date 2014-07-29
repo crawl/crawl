@@ -50,6 +50,7 @@
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills2.h"

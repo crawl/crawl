@@ -43,6 +43,7 @@
 #include "jobs.h"
 #include "ouch.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"

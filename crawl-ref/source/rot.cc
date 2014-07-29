@@ -21,6 +21,7 @@
 #include "mon-death.h"
 #include "player.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "stuff.h"

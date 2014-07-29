@@ -33,6 +33,7 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "quiver.h"
 #include "shopping.h"
