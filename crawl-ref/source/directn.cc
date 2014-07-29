@@ -2425,6 +2425,12 @@ static bool _want_target_monster(const monster *mon, int mode)
     return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
 }
 
+static bool _tobool(maybe_bool mb)
+{
+    ASSERT(mb != MB_MAYBE);
+    return mb == MB_TRUE;
+}
+
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc)
 {
@@ -2435,7 +2441,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
         if (x != MB_MAYBE)
-            return tobool(x);
+            return _tobool(x);
     }
 #endif
 
@@ -2476,7 +2482,7 @@ static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_p
         maybe_bool x = clua.callmbooleanfn("ch_target_jump", "dd",
                                            dp.x, dp.y);
         if (x != MB_MAYBE)
-            return tobool(x);
+            return _tobool(x);
     }
 #endif
 
@@ -2505,7 +2511,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
                                            dp.x, dp.y);
         if (x != MB_MAYBE)
-            return tobool(x);
+            return _tobool(x);
     }
 #endif
 
