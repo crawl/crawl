@@ -66,8 +66,6 @@ bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();
 void revive();
 
-coord_def pick_adjacent_free_square(const coord_def& p);
-
 int speed_to_duration(int speed);
 
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
