@@ -496,6 +496,11 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     return !err;
 }
 
+static maybe_bool _frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
+}
+
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
                                 va_list args)
 {
@@ -517,7 +522,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
-    maybe_bool r = frombool(lua_toboolean(ls, -1));
+    maybe_bool r = _frombool(lua_toboolean(ls, -1));
     CL_RESETSTACK_RETURN(ls, stacktop, r);
 }
 

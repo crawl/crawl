@@ -207,8 +207,3 @@ int letter_to_index(int the_letter)
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
 }
-
-maybe_bool frombool(bool b)
-{
-    return b ? MB_TRUE : MB_FALSE;
-}

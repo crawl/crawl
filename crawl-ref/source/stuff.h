@@ -40,8 +40,4 @@ char index_to_letter(int the_index);
 
 int letter_to_index(int the_letter);
 
-// maybebools
-
-maybe_bool frombool(bool b);
-
 #endif
