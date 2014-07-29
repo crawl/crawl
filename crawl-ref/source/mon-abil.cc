@@ -3829,8 +3829,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
             else
             {
-                // If you're already mesmerised by an invisible mermaid she
-                // can still prolong the enchantment; otherwise you "resist".
+                // If you're already mesmerised by an invisible mermaid, she
+                // can still prolong the enchantment.
                 if (already_mesmerised)
                     mprf(MSGCH_SOUND, "You hear a luring song.");
                 else
@@ -3841,8 +3841,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                             mprf(MSGCH_SOUND, "You hear a haunting song.");
                         else
                             mprf(MSGCH_SOUND, "You hear an eerie melody.");
-
-                        canned_msg(MSG_YOU_RESIST); // flavour only
                     }
                     break;
                 }
