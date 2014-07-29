@@ -3349,9 +3349,11 @@ bool _mermaid_sing(monster* mons, msg_channel_type spl)
 
     const bool already_mesmerised = you.beheld_by(mons);
 
-    // XXX: clarify this block
+    // If the mer is trying to mesmerize you, sing 80% of the time. Otherwise,
+    // only sing 40% of the time.
     if (!one_chance_in(5)
-        && (mons->foe != MHITYOU || already_mesmerised || coinflip()))
+        && (mons->foe != MHITYOU || already_mesmerised || !you.can_see(mons)
+            || coinflip()))
     {
         return false;
     }
@@ -3378,18 +3380,12 @@ bool _mermaid_sing(monster* mons, msg_channel_type spl)
             mprf(MSGCH_SOUND, "You hear a luring song.");
         else
         {
-            // reduce spamminess
-            if (mons->type == MONS_SIREN || one_chance_in(4))
-            {
-                if (coinflip())
-                    mprf(MSGCH_SOUND, "You hear a haunting song.");
-                else
-                    mprf(MSGCH_SOUND, "You hear an eerie melody.");
+            if (coinflip())
+                mprf(MSGCH_SOUND, "You hear a haunting song.");
+            else
+                mprf(MSGCH_SOUND, "You hear an eerie melody.");
 
-                return true;
-            }
-
-            return false;
+            return true;
         }
     }
 
