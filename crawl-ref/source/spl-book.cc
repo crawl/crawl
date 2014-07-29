@@ -2310,6 +2310,9 @@ bool make_book_theme_randart(item_def &book,
             owner = god_name(god, false);
         else if (god_gift && one_chance_in(3) || one_chance_in(5))
         {
+            bool highlevel = (highest_level >= 7 + random2(3)
+                              && (lowest_level > 1 || coinflip()));
+
             if (disc1 != disc2)
             {
                 string schools[2];
@@ -2318,7 +2321,11 @@ bool make_book_theme_randart(item_def &book,
                 sort(schools, schools + 2);
                 string lookup = schools[0] + " " + schools[1];
 
-                owner = getRandNameString(lookup + " owner");
+                if (highlevel)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
+
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
 
                 if (owner == "__NONE")
                     owner = "";
@@ -2327,8 +2334,11 @@ bool make_book_theme_randart(item_def &book,
             if (owner.empty() && all_spells_disc1)
             {
                 string lookup = spelltype_long_name(disc1);
+                if (highlevel && disc1 == disc2)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
 
-                owner = getRandNameString(lookup + " owner");
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
 
                 if (owner == "__NONE")
                     owner = "";
