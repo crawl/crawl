@@ -18,6 +18,7 @@
 #include "message.h"
 #include "misc.h"
 #include "options.h"
+#include "output.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"

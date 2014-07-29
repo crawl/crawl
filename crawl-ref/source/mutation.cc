@@ -41,6 +41,7 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"

@@ -30,6 +30,7 @@
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"

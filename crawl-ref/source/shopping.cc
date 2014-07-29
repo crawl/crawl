@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "prompt.h"

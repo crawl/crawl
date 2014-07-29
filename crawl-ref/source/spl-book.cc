@@ -36,6 +36,7 @@
 #include "macro.h"
 #include "message.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"

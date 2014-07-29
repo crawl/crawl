@@ -41,6 +41,7 @@
 #include "mon-place.h"
 #include "mutation.h"
 #include "options.h"
+#include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"

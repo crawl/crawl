@@ -53,6 +53,7 @@
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "player-equip.h"

@@ -32,6 +32,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "menu.h"
@@ -40,7 +41,7 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "jobs.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"
@@ -52,6 +53,7 @@
 #include "throw.h"
 #include "transform.h"
 #include "travel.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "showsymb.h"
@@ -1502,6 +1504,62 @@ void draw_border()
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
     CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
+}
+
+void set_redraw_status(uint64_t flags)
+{
+    you.redraw_status_flags |= flags;
+}
+
+void redraw_screen()
+{
+    if (!crawl_state.need_save)
+    {
+        // If the game hasn't started, don't do much.
+        clrscr();
+        return;
+    }
+
+#ifdef USE_TILE_WEB
+    tiles.close_all_menus();
+#endif
+
+    draw_border();
+
+    you.redraw_title        = true;
+    you.redraw_hit_points   = true;
+    you.redraw_magic_points = true;
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
+#endif
+    you.redraw_stats.init(true);
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_experience   = true;
+    you.wield_change        = true;
+    you.redraw_quiver       = true;
+
+    set_redraw_status(
+                      REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+
+    print_stats();
+
+    bool note_status = notes_are_active();
+    activate_notes(false);
+    print_stats_level();
+#ifdef DGL_SIMPLE_MESSAGING
+    update_message_status();
+#endif
+    update_turn_count();
+    activate_notes(note_status);
+
+    viewwindow();
+
+    // Display the message window at the end because it places
+    // the cursor behind possible prompts.
+    display_message_window();
+    update_screen();
 }
 
 // ----------------------------------------------------------------------

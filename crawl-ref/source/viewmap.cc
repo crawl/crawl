@@ -28,6 +28,7 @@
 #include "macro.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "showsymb.h"

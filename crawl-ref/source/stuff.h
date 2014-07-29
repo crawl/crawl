@@ -14,12 +14,6 @@
 string make_time_string(time_t abs_time, bool terse = false);
 string make_file_time(time_t when);
 
-// redraw
-
-void set_redraw_status(uint64_t flags);
-
-void redraw_screen();
-
 // stepdowns
 
 enum rounding_type

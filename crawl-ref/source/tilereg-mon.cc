@@ -11,6 +11,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "monster.h"
+#include "output.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"

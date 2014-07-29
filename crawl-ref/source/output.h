@@ -40,6 +40,10 @@ void print_stats();
 void print_stats_level();
 void draw_border();
 
+void set_redraw_status(uint64_t flags);
+
+void redraw_screen();
+
 string mpr_monster_list(bool past = false);
 int update_monster_pane();
 

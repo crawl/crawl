@@ -21,6 +21,7 @@
 #include "mutation.h"
 #include "newgame.h"
 #include "ng-setup.h"
+#include "output.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"

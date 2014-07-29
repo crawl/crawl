@@ -32,6 +32,7 @@
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"

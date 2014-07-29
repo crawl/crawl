@@ -21,6 +21,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"

@@ -8,6 +8,7 @@
 #include "describe.h"
 #include "libutil.h"
 #include "macro.h"
+#include "output.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
