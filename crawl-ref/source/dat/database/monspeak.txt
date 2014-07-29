@@ -2553,7 +2553,7 @@ w:50
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
 
-@The monster@ says, "Why do these elves have so many gross rats and spiders?"
+@The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
@@ -3437,7 +3437,7 @@ w:50
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
-@The monster@ says, "I bet you can make some really great dragon armour out of gold."
+@The_monster@ says, "I bet you can make some really great dragon armour out of gold."
 %%%%
 Qazlal Donald
 
