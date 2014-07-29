@@ -281,10 +281,10 @@ void ghost_demon::init_random_demon()
         if (coinflip())
             spells[4] = RANDOM_ELEMENT(search_order_misc);
 
-        if (coinflip())
-            spells[5] = SPELL_BLINK;
-        if (coinflip())
-            spells[5] = SPELL_TELEPORT_SELF;
+        spells[5] = random_choose_weighted(2, SPELL_TELEPORT_SELF,
+                                           1, SPELL_BLINK,
+                                           1, SPELL_NO_SPELL,
+                                           0);
 
         // Convert the player spell indices to monster spell ones.
         // Pan lords also get their Agony upgraded to Torment.
@@ -303,18 +303,16 @@ void ghost_demon::init_random_demon()
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
-        if (one_chance_in(25))
-            spells[0] = SPELL_HELLFIRE_BURST;
-        if (one_chance_in(25))
-            spells[0] = SPELL_FIRE_STORM;
-        if (one_chance_in(25))
-            spells[0] = SPELL_GLACIATE;
-        if (one_chance_in(25))
-            spells[0] = SPELL_METAL_SPLINTERS;
-        if (one_chance_in(25))
-            spells[0] = SPELL_ENERGY_BOLT;  // eye of devastation
-        if (one_chance_in(25))
-            spells[0] = SPELL_ORB_OF_ELECTRICITY;
+        if (one_chance_in(4))
+        {
+            spells[0] = random_choose(SPELL_HELLFIRE_BURST,
+                                      SPELL_FIRE_STORM,
+                                      SPELL_GLACIATE,
+                                      SPELL_METAL_SPLINTERS,
+             /* eye of devastation */ SPELL_ENERGY_BOLT,
+                                      SPELL_ORB_OF_ELECTRICITY,
+                                      -1);
+        }
 
         if (one_chance_in(25))
             spells[1] = SPELL_STEAM_BALL;
