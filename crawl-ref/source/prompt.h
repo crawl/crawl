@@ -22,4 +22,8 @@ int prompt_for_quantity(const char *prompt);
 int prompt_for_int(const char *prompt, bool nonneg);
 double prompt_for_float(const char* prompt);
 
+char index_to_letter(int the_index);
+
+int letter_to_index(int the_letter);
+
 #endif

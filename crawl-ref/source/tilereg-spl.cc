@@ -9,6 +9,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "prompt.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"

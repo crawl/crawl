@@ -33,6 +33,7 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-book.h"

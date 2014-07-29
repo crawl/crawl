@@ -45,6 +45,7 @@
 #include "output.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"

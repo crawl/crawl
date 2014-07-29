@@ -13,6 +13,7 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
+#include "viewchar.h"
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
@@ -309,4 +310,22 @@ double prompt_for_float(const char* prompt)
         ret = -1;
 
     return ret;
+}
+
+
+char index_to_letter(int the_index)
+{
+    ASSERT_RANGE(the_index, 0, ENDOFPACK);
+    return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
+}
+
+int letter_to_index(int the_letter)
+{
+    if (the_letter >= 'a' && the_letter <= 'z')
+        return the_letter - 'a'; // returns range [0-25] {dlb}
+    else if (the_letter >= 'A' && the_letter <= 'Z')
+        return the_letter - 'A' + 26; // returns range [26-51] {dlb}
+
+    die("slot not a letter: %s (%d)", the_letter ?
+        stringize_glyph(the_letter).c_str() : "null", the_letter);
 }

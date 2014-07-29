@@ -43,6 +43,7 @@
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"
+#include "prompt.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"

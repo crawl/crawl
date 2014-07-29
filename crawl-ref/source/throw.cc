@@ -34,6 +34,7 @@
 #include "mon-behv.h"
 #include "mutation.h"
 #include "options.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"

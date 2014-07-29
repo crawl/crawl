@@ -34,10 +34,4 @@ int stepdown(int value, int step, rounding_type = ROUND_CLOSE, int max = 0);
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 
-// letter <-> index mapping
-
-char index_to_letter(int the_index);
-
-int letter_to_index(int the_letter);
-
 #endif

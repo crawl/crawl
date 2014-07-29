@@ -26,6 +26,7 @@
 #include "jobs.h"
 #include "ouch.h"
 #include "place.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"

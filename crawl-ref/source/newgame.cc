@@ -27,6 +27,7 @@
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"
+#include "prompt.h"
 #include "random.h"
 #include "species.h"
 #include "state.h"
