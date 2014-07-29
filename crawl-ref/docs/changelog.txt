@@ -50,6 +50,10 @@ Character
     cloud immunity earlier and separately.
 * The hoof mutation no longer gives extra damage or a stealth penalty for
   players wearing boots.
+* Player rPois now gives a consistent 2/3rds resistance to poison effects; this
+  is lower than the previous resistance to poisoning, but higher than the old
+  resistance to direct poison damage. "Strong poison" effects no longer punch
+  through rPois, and paralytic stings (wasps) can now slow through rPois.
 
 Monsters
 --------
@@ -114,6 +118,11 @@ Spells
   several simulacrula from it.
 * Monsters casting Simulacrum now affect all corpses in LOS, producing half as
   many simulacrula as the player version of the spell.
+* Many spells, which used player skill, now use spellpower instead: Death's
+  Door, Passwall, Sticks to Snakes, Ozocubu's Armour, Condensation Shield,
+  Stoneskin, Statue Form, and Ice Form.
+* Shatter is now always full-LOS-ranged, instead of depending on Earth skill.
+* Statue Form no longer gives -10 EV.
 * Death Channel lasts twice as long.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
@@ -159,6 +168,7 @@ Items
     +10 or higher in an actual game, send screenshots!
   - Punk is now a +7 greatsling {Freeze, rC+}.
   - Sniper is now a "heavy crossbow", a triple crossbow with 27 base delay.
+  - The Mace of Brilliance is now the +1 Eveningstar "Brilliance".
   - Many other weapon artefacts have had their enchantments tweaked.
   - Maxwell's Patent Armour now gives rF+ rC+ instead of Conservation.
   - The Shield of Resistance, Shield of the Gong, and Large Shield of Ignorance
@@ -202,6 +212,7 @@ Items
 * Putting on or taking off armour now always takes five turns.
 * Gloves of archery no longer penalise melee.
 * Sustain abilities effects no longer stack.
+* Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
 * Staves of air now activate extra melee damage as often as other elemental staves.
 * Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
