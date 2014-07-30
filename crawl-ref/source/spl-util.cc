@@ -1278,6 +1278,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
+    beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
     if (spell == SPELL_FIREBALL)
@@ -1288,7 +1289,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true), beam);
+        zappy(zap, calc_spell_power(spell, true, false, true, rod), beam);
     }
     else if (spell == SPELL_MEPHITIC_CLOUD)
     {
@@ -1297,7 +1298,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         beam.damage = dice_def(1, 1); // so that foe_info is populated
         beam.hit = 20;
         beam.thrower = KILL_YOU;
-        beam.ench_power = calc_spell_power(spell, true);
+        beam.ench_power = calc_spell_power(spell, true, false, true, rod);
         beam.is_beam = false;
         beam.is_explosion = true;
     }
