@@ -3312,7 +3312,7 @@ void siren_song(monster* mons)
  * @param spl   The channel to print messages in.
  * @return      Whether the ability was used.
  */
-bool _mermaid_sing(monster* mons, msg_channel_type spl)
+static bool _mermaid_sing(monster* mons, msg_channel_type spl)
 {
     // Don't behold observer in the arena.
     if (crawl_state.game_is_arena())
