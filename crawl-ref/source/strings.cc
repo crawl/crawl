@@ -4,10 +4,10 @@
  **/
 
 #include "AppHdr.h"
-#include "strings.h"
 #include <cwctype>
 
 #include "random.h"
+#include "strings.h"
 #include "unicode.h"
 
 #ifndef CRAWL_HAVE_STRLCPY

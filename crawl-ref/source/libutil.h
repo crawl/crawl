@@ -11,7 +11,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "config.h"
 #include "strings.h" // :( for find_earliest_match
 
 bool key_is_escape(int key);
