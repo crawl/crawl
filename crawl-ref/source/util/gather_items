@@ -2,6 +2,12 @@
 
 my $db = grep /^-d$/, @ARGV;
 
+sub amulet_name($)
+{
+    my $amu = shift;
+    return "amulet of " . ($amu eq "gourmand" ? "the $amu" : "$amu");
+}
+
 open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
@@ -9,8 +15,8 @@ close IN;
 $items{"wand of $_"} = 1 for /WAND_[A-Z_]+: *return "([^"]+)";/g;
 $items{"potion of $_"} = 1 for /POT_[A-Z_]+: *return "([^"]+)";/g;
 $items{"scroll of $_"} = 1 for /SCR_[A-Z_]+: *return "([^"]+)";/g;
-$items{$_} = 1 for /RING_[A-Z_]+: *return "([^"]+)";/g;
-$items{$_} = 1 for /AMU_[A-Z_]+: *return "([^"]+)";/g;
+$items{"ring of $_"} = 1 for /RING_[A-Z_]+: *return "([^"]+)";/g;
+$items{amulet_name($_) } = 1 for /AMU_[A-Z_]+: *return "([^"]+)";/g;
 unless ($db)
 {
     $items{"$_ rune of Zot"} = 1 for /RUNE_[A-Z_]+: *return "([^"]+)";/g;
