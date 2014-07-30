@@ -1075,28 +1075,19 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_HUNTING_SLING:
             if (coinflip())
                 break;
-            // intentionally fallthrough to bow/xbow brands
+            // intentionally fallthrough to normal launcher brands
+        case WPN_GREATSLING:
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_HAND_CROSSBOW:
         case WPN_ARBALEST:
+        case WPN_TRIPLE_CROSSBOW:
             rc = random_choose_weighted(48, SPWPN_FLAMING,
                                         25, SPWPN_FREEZING,
                                         15, SPWPN_EVASION,
                                         11, SPWPN_VORPAL,
                                          1, SPWPN_NORMAL,
                                          0);
-            break;
-
-        case WPN_GREATSLING:
-        case WPN_TRIPLE_CROSSBOW:
-            // totally arbitrary, first draft for "rare ranged weapon" brands
-            rc = random_choose(SPWPN_SPEED,
-                               SPWPN_FREEZING,
-                               SPWPN_FLAMING,
-                               SPWPN_EVASION,
-                               SPWPN_VORPAL,
-                               -1);
             break;
 
         case WPN_BLOWGUN:
