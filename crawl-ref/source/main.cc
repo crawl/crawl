@@ -2542,17 +2542,16 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 
     if (find_trap(target) && grd(target) != DNGN_UNDISCOVERED_TRAP)
     {
-        if (!you.confused())
+        if (!form_can_wield())
         {
-            if (!form_can_wield())
-            {
-                mpr("You can't disarm traps in your present form.");
-                return true;
-            }
-
+            mpr("You can't disarm traps in your present form.");
+            return true;
+        }
+        else if (!you.confused())
+        {
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
-                && is_damaging_cloud(env.cloud[ cloud ].type, true))
+                && is_damaging_cloud(env.cloud[cloud].type, true))
             {
                 mpr("You can't get to that trap right now.");
                 return true;
