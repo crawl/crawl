@@ -1641,7 +1641,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (num_spells == -1)
     {
-        //555666421
+        // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+        // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
         num_spells = min(5 + (level - 1)/3, 18 - 2*level);
         num_spells = max(1, num_spells);
     }
