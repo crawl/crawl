@@ -849,6 +849,9 @@ static void _print_stats_ev(int x, int y)
  */
 static int _wpn_name_colour()
 {
+    if (you.duration[DUR_CORROSION])
+        return RED;
+
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
@@ -857,8 +860,6 @@ static int _wpn_name_colour()
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
             return prefcol;
-        if (you.duration[DUR_CORROSION])
-            return RED;
         return LIGHTGREY;
     }
 
