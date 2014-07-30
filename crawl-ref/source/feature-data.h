@@ -19,7 +19,7 @@ static feature_def feat_defs[] =
     // feat, name, vaultname
     DNGN_UNSEEN, "", "unseen",
     // dchar, symbol, magic_symbol
-    NUM_DCHAR_TYPES, 0, 0,
+    NUM_DCHAR_TYPES, NUM_DCHAR_TYPES, 0, 0,
     // colour, map_colour, seen_colour, em_colour, seen_em_colour
     BLACK, DARKGREY, DARKGREY, BLACK, DARKGREY,
     // flags, minimap
@@ -28,168 +28,168 @@ static feature_def feat_defs[] =
 
 {
     DNGN_EXPLORE_HORIZON, "explore horizon", "explore_horizon",
-    NUM_DCHAR_TYPES, 0, 0,
+    NUM_DCHAR_TYPES, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BLACK),
     FFT_NONE, MF_UNSEEN,
 },
 
 {
     DNGN_CLOSED_DOOR, "closed door", "closed_door",
-    DCHAR_DOOR_CLOSED, 0, 0,
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(LIGHTGREY),
     FFT_NONE, MF_DOOR,
 },
 
 {
     DNGN_RUNED_DOOR, "runed door", "runed_door",
-    DCHAR_DOOR_CLOSED, 0, 0,
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTBLUE),
     FFT_NONE, MF_DOOR,
 },
 
 {
     DNGN_SEALED_DOOR, "sealed door", "sealed_door",
-    DCHAR_DOOR_CLOSED, 0, 0,
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREEN),
     FFT_NONE, MF_DOOR,
 },
 
 {
     DNGN_TREE, "tree", "tree",
-    DCHAR_TREE, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_TREE, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_TREE),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_METAL_WALL, "metal wall", "metal_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(CYAN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_GREEN_CRYSTAL_WALL, "wall of green crystal", "green_crystal_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(GREEN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_ROCK_WALL, "rock wall", "rock_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_ROCK),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_SLIMY_WALL, "slime covered rock wall", "slimy_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTGREEN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_STONE_WALL, "stone wall", "stone_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTGREY),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_PERMAROCK_WALL, "unnaturally hard rock wall", "permarock_wall",
-    DCHAR_PERMAWALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_PERMAWALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_ROCK),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_CLEAR_ROCK_WALL, "translucent rock wall", "clear_rock_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_CLEAR_STONE_WALL, "translucent stone wall", "clear_stone_wall",
-    DCHAR_WALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_CLEAR_PERMAROCK_WALL, "translucent unnaturally hard rock wall", "clear_permarock_wall",
-    DCHAR_PERMAWALL, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_PERMAWALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_GRATE, "iron grate", "iron_grate",
-    DCHAR_GRATE, 0, Options.char_table[ DCHAR_WALL_MAGIC ],
+    DCHAR_GRATE, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTBLUE),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_OPEN_SEA, "the open sea", "open_sea",
-    DCHAR_WALL, 0, 0,
+    DCHAR_WALL, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BLUE),
     FFT_NONE, MF_DEEP_WATER,
 },
 
 {
     DNGN_LAVA_SEA, "the endless lava", "endless_lava",
-    DCHAR_WALL, 0, 0,
+    DCHAR_WALL, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(RED),
     FFT_NONE, MF_LAVA,
 },
 
 {
     DNGN_ORCISH_IDOL, "orcish idol", "orcish_idol",
-    DCHAR_STATUE, 0, 0,
+    DCHAR_STATUE, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BROWN),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_GRANITE_STATUE, "granite statue", "granite_statue",
-    DCHAR_STATUE, 0, 0,
+    DCHAR_STATUE, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(DARKGREY),
     FFT_NONE, MF_WALL,
 },
 
 {
     DNGN_MALIGN_GATEWAY, "portal to somewhere", "malign_gateway",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     COLOURS(ETC_SHIMMER_BLUE, LIGHTGREY),
     FFT_NONE, MF_STAIR_UP,
 },
 
 {
     DNGN_LAVA, "some lava", "lava",
-    DCHAR_WAVY, 0, 0,
+    DCHAR_WAVY, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(RED),
     FFT_NONE, MF_LAVA,
 },
 
 {
     DNGN_DEEP_WATER, "some deep water", "deep_water",
-    DCHAR_WAVY, 0, 0,
+    DCHAR_WAVY, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BLUE),
     FFT_NONE, MF_DEEP_WATER,
 },
 
 {
     DNGN_SHALLOW_WATER, "some shallow water", "shallow_water",
-    DCHAR_WAVY, 0, 0,
+    DCHAR_WAVY, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(CYAN),
     FFT_NONE, MF_WATER,
 },
 
 {
     DNGN_FLOOR, "floor", "floor",
-    DCHAR_FLOOR, 0, Options.char_table[ DCHAR_FLOOR_MAGIC ],
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC, 0, 0,
     COLOUR_IS(ETC_FLOOR),
     FFT_NONE, MF_FLOOR,
 },
@@ -197,7 +197,7 @@ static feature_def feat_defs[] =
 #if TAG_MAJOR_VERSION == 34
 {
     DNGN_BADLY_SEALED_DOOR, "", "badly_sealed_door",
-    DCHAR_FLOOR, 0, Options.char_table[ DCHAR_FLOOR_MAGIC ],
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC, 0, 0,
     COLOUR_IS(ETC_FLOOR),
     FFT_NONE, MF_FLOOR,
 },
@@ -205,14 +205,14 @@ static feature_def feat_defs[] =
 
 {
     DNGN_EXPIRED_PORTAL, "collapsed entrance", "expired_portal",
-    DCHAR_FLOOR, 0, Options.char_table[ DCHAR_FLOOR_MAGIC ],
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC, 0, 0,
     COLOUR_IS(BROWN),
     FFT_NONE, MF_FLOOR,
 },
 
 {
     DNGN_OPEN_DOOR, "open door", "open_door",
-    DCHAR_DOOR_OPEN, 0, 0,
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(LIGHTGREY),
     FFT_NONE, MF_DOOR,
 },
@@ -220,7 +220,7 @@ static feature_def feat_defs[] =
 #define TRAP(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
-    DCHAR_TRAP, 0, 0,\
+    DCHAR_TRAP, NUM_DCHAR_TYPES, 0, 0,\
     COLOUR_AND_MAP(colour),\
     FFT_NONE, MF_TRAP,\
 }
@@ -235,35 +235,35 @@ TRAP(DNGN_TRAP_WEB, "web", "trap_web", LIGHTGREY),
 
 {
     DNGN_UNDISCOVERED_TRAP, "floor", "undiscovered_trap",
-    DCHAR_FLOOR, 0, Options.char_table[ DCHAR_FLOOR_MAGIC ],
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC, 0, 0,
     COLOUR_IS(ETC_FLOOR),
     FFT_NONE, MF_FLOOR,
 },
 
 {
     DNGN_ENTER_SHOP, "shop", "enter_shop",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     YELLOW, LIGHTGREY, YELLOW, YELLOW, LIGHTGREY,
     FFT_NOTABLE, MF_FEATURE,
 },
 
 {
     DNGN_ABANDONED_SHOP, "abandoned shop", "abandoned_shop",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREY),
     FFT_NONE, MF_FLOOR,
 },
 
 {
     DNGN_STONE_ARCH, "empty arch of ancient stone", "stone_arch",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREY),
     FFT_NONE, MF_FLOOR,
 },
 
 {
     DNGN_UNKNOWN_PORTAL, "detected shop or portal", "unknown_portal",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     COLOURS(BLACK, LIGHTGREY),
     FFT_NONE, MF_PORTAL,
 },
@@ -271,7 +271,7 @@ TRAP(DNGN_TRAP_WEB, "web", "trap_web", LIGHTGREY),
 #define STONE_STAIRS_DOWN(num, num2)\
 {\
     DNGN_STONE_STAIRS_DOWN_##num, "stone staircase leading down", "stone_stairs_down_"#num2,\
-    DCHAR_STAIRS_DOWN, 0, 0,\
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,\
     RED, RED, RED, WHITE, WHITE,\
     FFT_NONE, MF_STAIR_DOWN,\
 }
@@ -283,7 +283,7 @@ STONE_STAIRS_DOWN(III, iii),
 #define STONE_STAIRS_UP(num, num2)\
 {\
     DNGN_STONE_STAIRS_UP_##num, "stone staircase leading up", "stone_stairs_up_"#num2,\
-    DCHAR_STAIRS_UP, 0, 0,\
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,\
     GREEN, GREEN, GREEN, WHITE, WHITE,\
     FFT_NONE, MF_STAIR_UP,\
 }
@@ -294,28 +294,28 @@ STONE_STAIRS_UP(III, iii),
 
 {
     DNGN_ESCAPE_HATCH_DOWN, "escape hatch in the floor", "escape_hatch_down",
-    DCHAR_STAIRS_DOWN, 0, 0,
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(BROWN),
     FFT_NONE, MF_STAIR_DOWN,
 },
 
 {
     DNGN_ESCAPE_HATCH_UP, "escape hatch in the ceiling", "escape_hatch_up",
-    DCHAR_STAIRS_UP, 0, 0,
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(BROWN),
     FFT_NONE, MF_STAIR_UP,
 },
 
 {
     DNGN_EXIT_LABYRINTH, "escape hatch in the ceiling", "exit_labyrinth",
-    DCHAR_STAIRS_UP, 0, 0,
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(BROWN),
     FFT_NONE, MF_STAIR_UP,
 },
 
 {
     DNGN_ENTER_LABYRINTH, "labyrinth entrance", "enter_labyrinth",
-    DCHAR_ARCH, 0, 0,
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     ETC_SHIMMER_BLUE, LIGHTGREY, ETC_SHIMMER_BLUE, ETC_SHIMMER_BLUE, ETC_SHIMMER_BLUE,
     (FFT_NOTABLE | FFT_EXAMINE_HINT), MF_PORTAL,
 },
@@ -323,7 +323,7 @@ STONE_STAIRS_UP(III, iii),
 #define PORTAL_ENTRANCE(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
-    DCHAR_ARCH, 0, 0,\
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,\
     colour, LIGHTGREY, colour, colour, colour,\
     FFT_NOTABLE, MF_PORTAL,\
 }
@@ -331,7 +331,7 @@ STONE_STAIRS_UP(III, iii),
 #define PORTAL_EXIT(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
-    DCHAR_ARCH, 0, 0,\
+    DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,\
     colour, LIGHTGREY, colour, colour, colour,\
     FFT_NONE, MF_PORTAL,\
 }
@@ -387,7 +387,7 @@ PORTAL_EXIT(DNGN_UNUSED_EXIT_PORTAL_1, "", "exit_unused", ETC_SHIMMER_BLUE),
 #define BRANCH_ENTRANCE(enum, name, vaultname)\
 {\
     enum, name, vaultname,\
-    DCHAR_STAIRS_DOWN, 0, 0,\
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,\
     YELLOW, RED, YELLOW, YELLOW, YELLOW,\
     FFT_NOTABLE, MF_STAIR_BRANCH,\
 }
@@ -395,21 +395,21 @@ PORTAL_EXIT(DNGN_UNUSED_EXIT_PORTAL_1, "", "exit_unused", ETC_SHIMMER_BLUE),
 #define BRANCH_EXIT(enum, name, vaultname)\
 {\
     enum, name, vaultname,\
-    DCHAR_STAIRS_UP, 0, 0,\
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,\
     YELLOW, GREEN, YELLOW, YELLOW, YELLOW,\
     FFT_NONE, MF_STAIR_UP,\
 }
 
 {
     DNGN_EXIT_DUNGEON, "staircase leading out of the dungeon", "exit_dungeon",
-    DCHAR_STAIRS_UP, 0, 0,
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,
     LIGHTBLUE, GREEN, LIGHTBLUE, LIGHTBLUE, LIGHTBLUE,
     FFT_NONE, MF_STAIR_UP,
 },
 
 {
     DNGN_ENTER_SLIME, "staircase to the Slime Pits", "enter_slime_pits",
-    DCHAR_STAIRS_DOWN, 0, 0,
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,
     YELLOW, RED, YELLOW, YELLOW, YELLOW,
     (FFT_NOTABLE | FFT_EXAMINE_HINT), MF_STAIR_BRANCH,
 },
@@ -417,7 +417,7 @@ BRANCH_EXIT(DNGN_RETURN_FROM_SLIME, "staircase back to the Lair", "return_from_s
 
 {
     DNGN_ENTER_ORC, "staircase to the Orcish Mines", "enter_orcish_mines",
-    DCHAR_STAIRS_DOWN, 0, 0,
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,
     YELLOW, RED, YELLOW, YELLOW, YELLOW,
     (FFT_NOTABLE | FFT_EXAMINE_HINT), MF_STAIR_BRANCH,
 },
@@ -465,7 +465,7 @@ BRANCH_EXIT(DNGN_RETURN_FROM_DEPTHS, "staircase back to the Dungeon", "return_fr
 #define ALTAR(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
-    DCHAR_ALTAR, 0, 0,\
+    DCHAR_ALTAR, NUM_DCHAR_TYPES, 0, 0,\
     colour, DARKGREY, colour, colour, colour,\
     FFT_NOTABLE, MF_FEATURE,\
 }
@@ -496,7 +496,7 @@ ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
-    DCHAR_FOUNTAIN, 0, 0,\
+    DCHAR_FOUNTAIN, NUM_DCHAR_TYPES, 0, 0,\
     COLOUR_IS(colour),\
     FFT_NONE, MF_FEATURE,\
 }
@@ -512,28 +512,28 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
 
 {
     DNGN_TELEPORTER, "short-range portal", "teleporter",
-    DCHAR_TELEPORTER, 0, 0,
+    DCHAR_TELEPORTER, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(YELLOW),
     FFT_NONE, MF_FEATURE,
 },
 
 {
     DNGN_SEALED_STAIRS_UP, "sealed passage leading up", "sealed_stair_up",
-    DCHAR_STAIRS_UP, 0, 0,
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREEN),
     FFT_NONE, MF_STAIR_UP,
 },
 
 {
     DNGN_SEALED_STAIRS_DOWN, "sealed passage leading down", "sealed_stair_down",
-    DCHAR_STAIRS_DOWN, 0, 0,
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREEN),
     FFT_NONE, MF_STAIR_DOWN,
 },
 
 {
     DNGN_ABYSSAL_STAIR, "gateway leading deeper into the Abyss", "abyssal_stair",
-    DCHAR_STAIRS_DOWN, 0, 0,
+    DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTCYAN),
     FFT_NONE, MF_STAIR_BRANCH,
 },
