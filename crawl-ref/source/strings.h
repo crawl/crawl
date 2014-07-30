@@ -6,6 +6,7 @@
 #ifndef STRINGS_H
 #define STRINGS_H
 
+#include "config.h"
 #ifdef CRAWL_HAVE_STRLCPY
 #include <cstring>
 #else
