@@ -2715,7 +2715,7 @@ bool melee_attack::mons_do_poison()
         if (force)
         {
             mprf("%s partially resist%s.",
-                defender_name().c_str(),
+                def_name(DESC_THE).c_str(),
                 defender->is_player() ? "" : "s");
         }
     }
