@@ -806,7 +806,7 @@ static int _cloud_base_damage(const actor *act,
 // Note that actor_cloud_immune may be false even if the actor will
 // not be harmed by the cloud. The cloud may have positive
 // side-effects on the actor.
-static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
+bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 {
     if (is_harmless_cloud(cloud.type))
         return true;
@@ -884,7 +884,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 // returns MAG_IMMUNE.
 static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 {
-    if (_actor_cloud_immune(act, cloud))
+    if (actor_cloud_immune(act, cloud))
         return MAG_IMMUNE;
     switch (cloud.type)
     {
@@ -1095,7 +1095,7 @@ static int _actor_cloud_base_damage(actor *act,
                                     int resist,
                                     bool maximum_damage)
 {
-    if (_actor_cloud_immune(act, cloud))
+    if (actor_cloud_immune(act, cloud))
         return 0;
 
     const int cloud_raw_base_damage =
@@ -1212,7 +1212,7 @@ int actor_apply_cloud(actor *act)
     monster *mons = !player? act->as_monster() : NULL;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
-    if (_actor_cloud_immune(act, cloud))
+    if (actor_cloud_immune(act, cloud))
         return 0;
 
     const int resist = _actor_cloud_resist(act, cloud);
@@ -1267,7 +1267,7 @@ int actor_apply_cloud(actor *act)
 static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
                               int maximum_negligible_damage)
 {
-    return !_actor_cloud_immune(act, cloud)
+    return !actor_cloud_immune(act, cloud)
            && (_cloud_has_negative_side_effects(cloud.type)
                || (_actor_cloud_damage(act, cloud, true) >
                    maximum_negligible_damage));
