@@ -3349,16 +3349,15 @@ static bool _mermaid_sing(monster* mons, msg_channel_type spl)
 
     const bool already_mesmerised = you.beheld_by(mons);
 
-    // If the mer is trying to mesmerize you, sing 80% of the time. Otherwise,
-    // only sing 40% of the time.
-    if (!one_chance_in(5)
-        && (mons->foe != MHITYOU || already_mesmerised || !you.can_see(mons)
-            || coinflip()))
-    {
-        return false;
-    }
+    // If the mer is trying to mesmerize you anew, sing 60% of the time.
+    // Otherwise, only sing 20% of the time.
+    const bool can_mesm_you = !already_mesmerised && mons->foe == MHITYOU
+                              && you.can_see(mons);
 
-    // sing!
+    if (x_chance_in_y(can_mesm_you ? 2 : 4, 5))
+        return false;
+
+    // Sing! Beyond this point, we should always return true.
     noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
 
     if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
@@ -3366,39 +3365,31 @@ static bool _mermaid_sing(monster* mons, msg_channel_type spl)
 
     if (you.can_see(mons))
     {
-        const string song_adj = already_mesmerised ? "her luring"
-                                                   : "a haunting";
-        const string song_desc = make_stringf(" chants %s song.",
-                                              song_adj.c_str());
+        const char * const song_adj = already_mesmerised ? "her luring"
+                                                         : "a haunting";
+        const string song_desc = make_stringf(" chants %s song.", song_adj);
         simple_monster_message(mons, song_desc.c_str(), spl);
     }
     else
     {
+        mprf(MSGCH_SOUND, "You hear %s.",
+                          already_mesmerised ? "a luring song" :
+                          coinflip()         ? "a haunting song"
+                                             : "an eerie melody");
+
         // If you're already mesmerised by an invisible mermaid, she
         // can still prolong the enchantment.
-        if (already_mesmerised)
-            mprf(MSGCH_SOUND, "You hear a luring song.");
-        else
-        {
-            if (coinflip())
-                mprf(MSGCH_SOUND, "You hear a haunting song.");
-            else
-                mprf(MSGCH_SOUND, "You hear an eerie melody.");
-
+        if (!already_mesmerised)
             return true;
-        }
     }
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
-    if (!already_mesmerised
-        && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
-            || you.clarity())
-        || you.duration[DUR_MESMERISE_IMMUNE])
+    if (you.duration[DUR_MESMERISE_IMMUNE]
+        || !already_mesmerised
+           && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
+               || you.clarity()))
     {
-        if (you.clarity())
-            canned_msg(MSG_YOU_UNAFFECTED);
-        else
-            canned_msg(MSG_YOU_RESIST);
+        canned_msg(you.clarity() ? MSG_YOU_UNAFFECTED : MSG_YOU_RESIST);
         return true;
     }
 
