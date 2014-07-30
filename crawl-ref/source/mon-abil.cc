@@ -1115,13 +1115,17 @@ static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
 
 static int _battle_cry(monster* chief, battlecry_type type)
 {
+    ASSERT(type != NUM_BATTLECRIES);
     const actor *foe = chief->get_foe();
     int affected = 0;
 
     enchant_type battlecry = (type == BATTLECRY_ORC ? ENCH_BATTLE_FRENZY
                                                     : ENCH_ROUSED);
 
-    const string messages[NUM_BATTLECRIES][4] =
+    // Columns 0 and 1 should have one instance of %s (for the monster),
+    // column 2 two (for a determiner and the monsters), and column 3 none.
+    enum { CRY, AFFECT_ONE, AFFECT_MANY, GENERIC_ALLIES };
+    static const char * const messages[][4] =
     {
         {
             "%s roars a battle-cry!",
@@ -1142,6 +1146,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
             "satyr's allies"
         },
     };
+    COMPILE_CHECK(ARRAYSZ(messages) == NUM_BATTLECRIES);
 
     if (foe
         && (!foe->is_player() || !chief->friendly())
@@ -1193,7 +1198,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
         {
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
-                mprf(MSGCH_SOUND, messages[type][0].c_str(),
+                mprf(MSGCH_SOUND, messages[type][CRY],
                      chief->name(DESC_THE).c_str());
             }
 
@@ -1211,7 +1216,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 if (seen_affected.size() == 1)
                 {
                     who = seen_affected[0]->name(DESC_THE);
-                    mprf(channel, messages[type][1].c_str(), who.c_str());
+                    mprf(channel, messages[type][AFFECT_ONE], who.c_str());
                 }
                 else
                 {
@@ -1228,10 +1233,10 @@ static int _battle_cry(monster* chief, battlecry_type type)
                     }
                     who = get_monster_data(mon_type)->name;
 
-                    mprf(channel, messages[type][2].c_str(),
+                    mprf(channel, messages[type][AFFECT_MANY],
                          chief->friendly() ? "Your" : "The",
                          (!generic ? pluralise(who).c_str()
-                                   : messages[type][3].c_str()));
+                                   : messages[type][GENERIC_ALLIES]));
                 }
             }
         }
