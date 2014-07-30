@@ -2551,7 +2551,8 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         {
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
-                && is_damaging_cloud(env.cloud[cloud].type, true))
+                && is_damaging_cloud(env.cloud[cloud].type, true)
+                && !actor_cloud_immune(&you, env.cloud[cloud]))
             {
                 mpr("You can't get to that trap right now.");
                 return true;
