@@ -253,7 +253,8 @@ bool ranged_attack::handle_phase_dodged()
         mprf("%s%s misses %s%s",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
-             defender_name().c_str(),
+             // Not defender_name because reflexive is bad here.
+             def_name(DESC_THE).c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 
