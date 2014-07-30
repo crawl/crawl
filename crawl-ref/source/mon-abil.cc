@@ -1140,7 +1140,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
             "holy creatures"
         },
         {
-            "%s plays a rousing melody on his pipes!",
+            "%s plays a rousing melody on its pipes!",
             "%s is stirred to greatness!",
             "%s %s are stirred to greatness!",
             "satyr's allies"
