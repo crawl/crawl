@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "strings.h"
+
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #include <sys/time.h>
@@ -72,7 +74,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 #include "initfile.h"
 #include "options.h"
 #include "state.h"
-#include "stuff.h"
+
 #include "syscalls.h"
 #include "threads.h"
 

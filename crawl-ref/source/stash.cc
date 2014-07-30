@@ -34,7 +34,7 @@
 #include "spl-book.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "env.h"
 #include "tags.h"

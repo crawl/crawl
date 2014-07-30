@@ -32,7 +32,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"

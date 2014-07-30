@@ -6,9 +6,9 @@
 #include <algorithm>
 #include "end.h"
 #include "l_defs.h"
-#include "libutil.h"
 #include "mapdef.h"
 #include "maps.h"
+#include "strings.h"
 
 #define YYERROR_VERBOSE 1
 #define YYENABLE_NLS 0

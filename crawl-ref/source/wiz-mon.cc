@@ -44,7 +44,7 @@
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "unwind.h"
 #include "view.h"

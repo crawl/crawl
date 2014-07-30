@@ -12,7 +12,7 @@
 #include "libutil.h"
 #include "monster.h"
 #include "output.h"
-#include "stuff.h"
+
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-player.h"

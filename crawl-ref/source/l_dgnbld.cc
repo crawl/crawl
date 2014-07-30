@@ -20,6 +20,7 @@
 #include "l_libs.h"
 #include "mapdef.h"
 #include "random.h"
+#include "strings.h"
 
 static const char *exit_glyphs = "{}()[]<>@";
 

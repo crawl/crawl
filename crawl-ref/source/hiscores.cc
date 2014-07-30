@@ -47,7 +47,7 @@
 #include "species.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "env.h"
 #include "tags.h"
 #include "unwind.h"

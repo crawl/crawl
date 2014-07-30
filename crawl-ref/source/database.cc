@@ -23,6 +23,7 @@
 #include "options.h"
 #include "random.h"
 #include "syscalls.h"
+#include "strings.h"
 #include "threads.h"
 #include "unicode.h"
 

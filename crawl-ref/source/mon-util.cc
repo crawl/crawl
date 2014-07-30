@@ -50,7 +50,7 @@
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "tileview.h"

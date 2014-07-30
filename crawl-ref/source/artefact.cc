@@ -33,7 +33,8 @@
 #include "species.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "unicode.h"
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)

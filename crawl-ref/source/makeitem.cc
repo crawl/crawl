@@ -29,7 +29,8 @@
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "stepdown.h"
 #include "travel.h"
 
 static armour_type _get_random_armour_type(int item_level);

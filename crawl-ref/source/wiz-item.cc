@@ -39,7 +39,9 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
+#include "strings.h"
 #include "terrain.h"
+#include "unicode.h"
 
 #ifdef WIZARD
 static void _make_all_books()

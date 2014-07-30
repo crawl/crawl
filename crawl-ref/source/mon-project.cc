@@ -25,7 +25,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "shout.h"
-#include "stuff.h"
+#include "stepdown.h"
 #include "terrain.h"
 #include "viewchar.h"
 

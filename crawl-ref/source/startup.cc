@@ -54,7 +54,7 @@
 #include "startup.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "view.h"

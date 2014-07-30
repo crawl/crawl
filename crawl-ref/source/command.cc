@@ -47,7 +47,9 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "unicode.h"
+
 #include "env.h"
 #include "syscalls.h"
 #include "terrain.h"

@@ -14,6 +14,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "beam.h"
 #include "branch.h"
 #include "cluautil.h"
@@ -29,8 +30,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
-#include "areas.h"
+#include "strings.h"
 #include "view.h"
 
 // Try the exact key lookup along with the entire prefix list.

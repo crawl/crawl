@@ -21,6 +21,7 @@
 #include "mon-util.h"
 #include "random.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"

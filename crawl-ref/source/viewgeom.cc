@@ -6,7 +6,7 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "stuff.h"
+
 
 // ----------------------------------------------------------------------
 // Layout helper classes

@@ -14,7 +14,6 @@
 #include "evoke.h"
 #include "fontwrapper-ft.h"
 #include "hints.h"
-#include "libutil.h"
 #include "options.h"
 #include "output.h"
 #include "player.h"
@@ -22,7 +21,8 @@
 #include "skills.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+
 #ifdef USE_TILE
  #include "tilepick.h"
  #include "tilereg-crt.h"

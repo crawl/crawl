@@ -3,7 +3,7 @@
 #include "spl-zap.h"
 
 #include "beam.h"
-#include "stuff.h"
+#include "stepdown.h"
 
 zap_type spell_to_zap(spell_type spell)
 {

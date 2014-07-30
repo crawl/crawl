@@ -37,6 +37,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
+#include "strings.h"
 #include "terrain.h"
 #include "xom.h"
 

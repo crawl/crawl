@@ -44,12 +44,13 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "target.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
 #include "transform.h"
+#include "unicode.h"
 
 #define SPELL_LIST_KEY "spell_list"
 

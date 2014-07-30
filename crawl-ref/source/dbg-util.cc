@@ -23,6 +23,7 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
+#include "strings.h"
 
 monster_type debug_prompt_for_monster()
 {

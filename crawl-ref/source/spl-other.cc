@@ -32,7 +32,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "spl-util.h"
-#include "stuff.h"
+
 #include "terrain.h"
 #include "transform.h"
 

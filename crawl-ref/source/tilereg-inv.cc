@@ -22,7 +22,7 @@
 #include "options.h"
 #include "output.h"
 #include "spl-book.h"
-#include "stuff.h"
+
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-icons.h"

@@ -43,9 +43,10 @@
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "throw.h"
 #include "transform.h"
+#include "unicode.h"
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);

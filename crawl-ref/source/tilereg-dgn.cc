@@ -27,7 +27,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "stuff.h"
+
 #include "terrain.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"

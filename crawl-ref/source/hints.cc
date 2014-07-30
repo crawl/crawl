@@ -50,7 +50,7 @@
 #include "species.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"

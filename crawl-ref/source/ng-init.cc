@@ -24,7 +24,9 @@
 #include "spl-util.h"
 #include "state.h"
 #include "store.h"
+#include "strings.h"
 #include "version.h"
+#include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

@@ -13,6 +13,7 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
+#include "strings.h"
 #include "viewchar.h"
 
 // Like yesno, but requires a full typed answer.
