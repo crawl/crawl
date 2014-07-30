@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "strings.h"
+#include <cwctype>
 
 #include "random.h"
 #include "unicode.h"
