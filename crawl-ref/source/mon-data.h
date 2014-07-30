@@ -310,7 +310,8 @@ static monsterentry mondata[] =
 // dummy for recolouring
 {
     MONS_FORMICID, 'a', GREEN, "formicid",
-    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_BURROWS,
+    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_BURROWS
+        | M_NO_POLY_TO,
     MR_NO_FLAGS,
     600, 10, MONS_FORMICID, MONS_FORMICID, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
