@@ -34,6 +34,7 @@
 #include "religion.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 #include "hints.h"

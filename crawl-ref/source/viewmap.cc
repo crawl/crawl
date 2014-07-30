@@ -34,10 +34,10 @@
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"
+#include "unicode.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 

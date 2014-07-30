@@ -219,8 +219,9 @@ startup.o \
 stash.o \
 state.o \
 status.o \
+stepdown.o \
 store.o \
-stuff.o \
+strings.o \
 syscalls.o \
 tags.o \
 target.o \

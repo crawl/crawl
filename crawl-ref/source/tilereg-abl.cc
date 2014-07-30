@@ -11,7 +11,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-#include "stuff.h"
+
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"

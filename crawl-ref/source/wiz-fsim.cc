@@ -37,7 +37,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "throw.h"
 #include "unwind.h"
 #include "version.h"

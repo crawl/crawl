@@ -16,9 +16,10 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-transloc.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
-#include "spl-transloc.h"
 #include "traps.h"
 
 #include "duration-data.h"

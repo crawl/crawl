@@ -40,7 +40,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"

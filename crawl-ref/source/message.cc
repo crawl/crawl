@@ -7,10 +7,12 @@
 
 #include "message.h"
 
+#include "areas.h"
 #include "cio.h"
 #include "colour.h"
 #include "delay.h"
 #include "format.h"
+#include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "menu.h"
@@ -21,13 +23,12 @@
 #include "religion.h"
 #include "stash.h"
 #include "state.h"
-#include "areas.h"
 #include "tags.h"
 #include "travel.h"
-#include "hints.h"
+#include "shout.h"
+#include "strings.h"
 #include "unwind.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 
 #include <sstream>

@@ -21,12 +21,12 @@
 #include "evoke.h"
 #include "externs.h"
 #include "godabil.h"
-#include "libutil.h"
 #include "player.h"
 #include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "skill_menu.h"
+#include "strings.h"
 #include "unwind.h"
 
 typedef string (*string_fn)();

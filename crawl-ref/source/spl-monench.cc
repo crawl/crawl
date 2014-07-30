@@ -14,7 +14,7 @@
 #include "message.h"
 #include "random.h"
 #include "spl-util.h"
-#include "stuff.h"
+
 #include "terrain.h"
 
 int englaciate(coord_def where, int pow, int, actor *agent)

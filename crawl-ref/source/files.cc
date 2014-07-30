@@ -80,6 +80,7 @@
 #include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE

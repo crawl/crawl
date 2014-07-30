@@ -37,7 +37,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 #include "xom.h"

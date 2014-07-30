@@ -48,7 +48,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "throw.h"

@@ -29,7 +29,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "view.h"
 #include "xom.h"
 

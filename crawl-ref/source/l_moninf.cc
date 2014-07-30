@@ -17,6 +17,7 @@
 #include "mon-book.h"
 #include "player.h"
 #include "spl-util.h"
+#include "strings.h"
 #include "transform.h"
 
 #include <algorithm>

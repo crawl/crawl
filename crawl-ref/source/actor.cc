@@ -21,7 +21,8 @@
 #include "religion.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 

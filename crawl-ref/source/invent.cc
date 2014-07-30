@@ -37,7 +37,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "stuff.h"
+#include "strings.h"
 #include "mon-util.h"
 #include "state.h"
 #include "throw.h"

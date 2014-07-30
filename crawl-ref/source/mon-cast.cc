@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -51,8 +52,8 @@
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
-#include "areas.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "target.h"
 #include "teleport.h"
 #include "traps.h"

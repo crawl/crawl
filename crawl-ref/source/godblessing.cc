@@ -12,7 +12,6 @@
 #include "itemprop.h"   // do_uncurse()
 #include "item_use.h"
 #include "items.h"      // items_stack()
-#include "libutil.h"   // make_stringf()
 #include "makeitem.h"   // item_set_appearance()
 #include "mgen_data.h"
 #include "monster.h"
@@ -20,6 +19,7 @@
 #include "mon-place.h"  // create_monster()
 #include "mon-util.h"   // give_monster_proper_name()
 #include "religion.h"
+#include "strings.h"    // make_stringf
 #include "view.h"       // flash_monster_colour
 
 /**

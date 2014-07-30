@@ -20,6 +20,7 @@
 #include "ng-init.h"
 #include "player.h"
 #include "state.h"
+#include "strings.h"
 #include "view.h"
 
 #ifdef DEBUG_DIAGNOSTICS

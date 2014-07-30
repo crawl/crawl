@@ -18,6 +18,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "l_libs.h"
+#include "strings.h"
 #include "tags.h"
 #include "terrain.h"
 #include "unwind.h"

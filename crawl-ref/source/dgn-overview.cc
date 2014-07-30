@@ -31,9 +31,10 @@
 #include "shopping.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "travel.h"
+#include "unicode.h"
 
 typedef map<branch_type, set<level_id> > stair_map_type;
 typedef map<level_pos, shop_type> shop_map_type;

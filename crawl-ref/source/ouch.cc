@@ -68,7 +68,7 @@
 #include "spl-selfench.h"
 #include "spl-other.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"

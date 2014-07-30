@@ -69,6 +69,7 @@
 #include "state.h"
 #include "env.h"
 #include "spl-wpnench.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"

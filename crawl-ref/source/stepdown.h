@@ -1,18 +1,10 @@
 /**
  * @file
- * @brief Misc stuff.
+ * @brief Stepdown functions.
 **/
 
-#ifndef STUFF_H
-#define STUFF_H
-
-#include <map>
-#include "player.h"
-
-// time
-
-string make_time_string(time_t abs_time, bool terse = false);
-string make_file_time(time_t when);
+#ifndef STEPDOWN_H
+#define STEPDOWN_H
 
 // stepdowns
 

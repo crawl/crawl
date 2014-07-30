@@ -15,11 +15,10 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "libutil.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
-#include "stuff.h"
+#include "strings.h"
 #include "tags.h"
 #include "throw.h"
 

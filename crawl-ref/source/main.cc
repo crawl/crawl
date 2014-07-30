@@ -130,7 +130,7 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"

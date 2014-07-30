@@ -84,7 +84,8 @@
 #include "stash.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE

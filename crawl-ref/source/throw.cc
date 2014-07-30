@@ -42,7 +42,7 @@
 #include "skills2.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"

@@ -51,11 +51,13 @@
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
+#include "shout.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "strings.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -63,7 +65,6 @@
 #endif
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 #include <algorithm>

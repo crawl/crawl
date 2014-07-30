@@ -23,7 +23,7 @@
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "stuff.h"
+
 #include "transform.h"
 #include "view.h"
 

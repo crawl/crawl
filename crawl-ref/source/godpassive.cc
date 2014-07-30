@@ -19,12 +19,13 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "libutil.h"
+#include "libutil.h"    // testbits
 #include "player.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "travel.h"
 
