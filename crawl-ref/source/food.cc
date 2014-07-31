@@ -1420,12 +1420,24 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     return ratio;
 }
 
+static mon_intel_type _chunk_intelligence(const item_def &chunk)
+{
+    // An optimising compiler can assume an enum value is in range, so
+    // check the range on the uncast value.
+    const bool bad = chunk.orig_monnum < 0 || chunk.orig_monnum >= NUM_MONSTERS;
+    const monster_type orig_mt = static_cast<monster_type>(chunk.orig_monnum);
+    const monster_type type = bad || invalid_monster_type(orig_mt)
+                            ? chunk.mon_type
+                            : orig_mt;
+    return mons_class_intel(type);
+}
+
 // Never called directly - chunk_effect values must pass
 // through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(item_def& food)
 {
     const bool cannibal  = is_player_same_genus(food.mon_type);
-    const int intel      = mons_class_intel(food.mon_type) - I_ANIMAL;
+    const int intel      = _chunk_intelligence(food) - I_ANIMAL;
     const bool rotten    = food_is_rotten(food);
     const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
     const bool holy      = (mons_class_holiness(food.mon_type) == MH_HOLY);
@@ -1852,7 +1864,7 @@ bool is_forbidden_food(const item_def &food)
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you_worship(GOD_ZIN) && mons_class_intel(food.mon_type) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && _chunk_intelligence(food) >= I_NORMAL)
         return true;
 
     // Everything else is allowed.
