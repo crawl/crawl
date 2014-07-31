@@ -5857,7 +5857,6 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_GIANT, MON_SHAPE_HUMANOID
 },
 
-// Antaeus is now demonic so that he'll resist torment. - bwr
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
     M_UNIQUE | M_WARM_BLOOD | M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS
