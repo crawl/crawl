@@ -2111,6 +2111,8 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 // ugly things ('u')
+// NOTE: ugly things are ghost demons and thus their stats vary treacherously
+// from those below. beware!
 {
     MONS_UGLY_THING, 'u', BLACK, "ugly thing",
     M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD | M_NO_GEN_DERIVED,

@@ -563,30 +563,33 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
     return u_att_flav;
 }
 
+/**
+ * Init a ghost demon object corresponding to an ugly thing monster.
+ *
+ * @param very_ugly     Whether the ugly thing is a very ugly thing.
+ * @param only_mutate   Whether to mutate the ugly thing's colour away from its
+ *                      old colour (the force_colour).
+ * @param force_colour  The ugly thing's colour. (Default BLACK = random)
+ */
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                   colour_t force_colour)
 {
-    // Movement speed: 10, the same as in mon-data.h.
-    speed = 10;
+    const monster_type type = very_ugly ? MONS_VERY_UGLY_THING
+                                        : MONS_UGLY_THING;
+    const monsterentry* stats = get_monster_data(type);
 
-    // Midpoint: 10, as in mon-data.h.
-    ev = 9 + random2(3);
-
-    // Midpoint: 3, as in mon-data.h.
-    ac = 2 + random2(3);
-
-    // Midpoint: 12, as in mon-data.h.
-    damage = 11 + random2(3);
+    speed = stats->speed;
+    // randomize slightly (+-1), keep the same midpoint
+    ev = stats->ev + random2(3) - 1;
+    ac = stats->AC + random2(3) - 1;
+    damage = stats->attack[0].damage + random2(3) - 1;
 
     // If we're mutating an ugly thing, leave its experience level, hit
     // dice and maximum hit points as they are.
     if (!only_mutate)
     {
-        // Experience level: 8, the same as in mon-data.h.
-        xl = 8;
-
-        // Hit dice: {8, 3, 5, 0}, the same as in mon-data.h.
-        max_hp = hit_points(xl, 3, 5);
+        xl = stats->hpdice[0];
+        max_hp = hit_points(xl, stats->hpdice[1], stats->hpdice[2]);
     }
 
     const attack_type att_types[] =
@@ -619,20 +622,6 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
 void ghost_demon::ugly_thing_to_very_ugly_thing()
 {
-    // Midpoint when added to an ugly thing: 4, as in mon-data.h.
-    ac++;
-
-    // Midpoint when added to an ugly thing: 17, as in mon-data.h.
-    damage += 5;
-
-    // Experience level when added to an ugly thing: 12, the same as in
-    // mon-data.h.
-    xl += 4;
-
-    // Hit dice when added to an ugly thing: {12, 3, 5, 0}, the same as
-    // in mon-data.h.
-    max_hp += hit_points(4, 3, 5);
-
     // A very ugly thing always gets a high-intensity colour.
     colour = make_high_colour(colour);
 
