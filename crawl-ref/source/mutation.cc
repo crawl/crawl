@@ -2327,15 +2327,12 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     while (how_much-- > 0)
     {
     dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutation[which_mut]);
-        if (you.mutation[which_mut] == cap
-            && you.innate_mutation[which_mut] > 0
-            && you.innate_mutation[which_mut] == cap-1)
+        if (you.mutation[which_mut] == cap && how_much == 0)
         {
             // [rpb] primarily for demonspawn, if the mutation level is already
-            // at the cap for this facet, the innate mutation level is greater
-            // than zero, and the innate mutation level for the mutation
-            // in question is one less than the cap, we are permafying a
-            // temporary mutation. This fails to produce any output normally.
+            // at the cap for this facet, we are permafying a temporary
+            // mutation. This would otherwise fail to produce any output in
+            // some situations.
             mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
             take_note(Note(NOTE_PERM_MUTATION, which_mut,
                            you.mutation[which_mut], reason.c_str()));
