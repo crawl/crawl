@@ -579,10 +579,9 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     const monsterentry* stats = get_monster_data(type);
 
     speed = stats->speed;
-    // randomize slightly (+-1), keep the same midpoint
-    ev = stats->ev + random2(3) - 1;
-    ac = stats->AC + random2(3) - 1;
-    damage = stats->attack[0].damage + random2(3) - 1;
+    ev = stats->ev;
+    ac = stats->AC;
+    damage = stats->attack[0].damage;
 
     // If we're mutating an ugly thing, leave its experience level, hit
     // dice and maximum hit points as they are.
