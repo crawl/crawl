@@ -609,7 +609,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
     if (colour == MAGENTA)
-        damage += 5;
+        damage = damage * 4 / 3; // +5 for uglies, +9 for v uglies
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);

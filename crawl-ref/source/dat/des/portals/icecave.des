@@ -168,7 +168,7 @@ function ice_cave_caverns_undead_demon_monster_set(e)
   e.mons("ice statue")
   e.mons("ice devil")
   e.mons(cruel_ice)
-  e.mons("freezing wraith / blue devil / white very ugly thing w:1")
+  e.mons("freezing wraith / blue devil / white ugly thing w:1")
   e.mons("patrolling ice fiend")
   e.kmons("8 = blizzard demon")
   e.shuffle("7` / 7` / `8")
@@ -432,7 +432,7 @@ TAGS:     no_monster_gen no_item_gen transparent
 DEPTH:    D:14-, Elf, Swamp, Shoals, Snake, Spider
 WEIGHT:   2
 SUBST:    : = 1.
-NSUBST:   2 = 1:2 / 1:12 / * = 1.
+NSUBST:   2 = 1:12 / 3 = 1. / *:.
 NSUBST:   1 = 7:1 / 1:1. / *:.
 MONS:     white ugly thing
 MONS:     white very ugly thing

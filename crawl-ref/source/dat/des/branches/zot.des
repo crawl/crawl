@@ -1703,19 +1703,19 @@ ENDMAP
 NAME:    hangedman_zot_spectrum
 TAGS:    no_monster_gen
 DEPTH:   Zot, !Zot:$
-KMONS:   A = red very ugly thing
+KMONS:   A = red ugly thing
 KMONS:   B = red draconian
 KMONS:   C = salamander firebrand / nonbase red draconian w:6
-KMONS:   D = cyan very ugly thing
+KMONS:   D = cyan ugly thing
 KMONS:   E = black draconian
 KMONS:   F = electric golem / nonbase black draconian w:6
-KMONS:   G = green very ugly thing
+KMONS:   G = green ugly thing
 KMONS:   H = green draconian
 KMONS:   I = green death / nonbase green draconian w:6
-KMONS:   J = white very ugly thing
+KMONS:   J = white ugly thing
 KMONS:   K = white draconian
 KMONS:   L = white draconian knight / nonbase white draconian w:6
-KMONS:   M = brown very ugly thing
+KMONS:   M = brown ugly thing
 KMONS:   N = yellow draconian
 KMONS:   O = acid blob / nonbase yellow draconian w:6
 KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
