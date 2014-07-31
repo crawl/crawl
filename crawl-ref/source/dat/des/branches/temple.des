@@ -1414,9 +1414,9 @@ SUBST:   " : """.
 COLOUR:  .12 = green
 COLOUR:  " : darkgrey
 COLOUR:  ' : white / lightgrey
-FTILE:   .t12 = floor_grass
+FTILE:   BT.t12 = floor_grass
 FTILE:   " = floor_dirt
-FTILE:   ' = floor_vault
+FTILE:   G' = floor_vault
 MONS:    plant, bush
 MAP
                  ttttttttttttttttttttttttttt
