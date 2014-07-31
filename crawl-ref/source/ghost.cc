@@ -435,8 +435,8 @@ void ghost_demon::init_player_ghost()
                 if (brand == SPWPN_HOLY_WRATH)
                     brand = SPWPN_NORMAL;
 
-                // Don't copy ranged-only brands from launchers (reaping etc.).
-                if (brand > MAX_PAN_LORD_BRANDS)
+                // Don't copy ranged- or artefact-only brands (reaping etc.).
+                if (brand > MAX_GHOST_BRAND)
                     brand = SPWPN_NORMAL;
             }
             else if (weapon.base_type == OBJ_STAVES)
@@ -949,7 +949,7 @@ bool debug_check_ghosts()
             return false;
         if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
             return false;
-        if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
+        if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
             return false;
         if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
             return false;
