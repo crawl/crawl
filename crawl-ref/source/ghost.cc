@@ -172,29 +172,26 @@ void ghost_demon::reset()
     acting_part      = MONS_0;
 }
 
+/**
+ * Choose a random brand for a pandemonium lord's melee attacks.
+ *
+ * @return  A random valid brand type (not holy wrath, protection, etc)
+ */
 static brand_type _random_special_pan_lord_brand()
 {
-    brand_type brand;
-
-    do
-    {
-        brand = static_cast<brand_type>(random2(MAX_PAN_LORD_BRANDS));
-        // some brands inappropriate (e.g. holy wrath)
-    }
-    while (brand == SPWPN_HOLY_WRATH
-#if TAG_MAJOR_VERSION == 34
-           || brand == SPWPN_ORC_SLAYING
-           || brand == SPWPN_RETURNING
-           || brand == SPWPN_REACHING
-           || brand == SPWPN_FLAME
-           || brand == SPWPN_FROST
-           || brand == SPWPN_DRAGON_SLAYING
-#endif
-           || brand == SPWPN_PROTECTION
-           || brand == SPWPN_EVASION
-           );
-
-    return brand;
+    return random_choose(SPWPN_FLAMING,
+                         SPWPN_FREEZING,
+                         SPWPN_ELECTROCUTION,
+                         SPWPN_VENOM,
+                         SPWPN_DRAINING,
+                         SPWPN_SPEED,
+                         SPWPN_VORPAL,
+                         SPWPN_VAMPIRISM,
+                         SPWPN_PAIN,
+                         SPWPN_ANTIMAGIC,
+                         SPWPN_DISTORTION,
+                         SPWPN_CHAOS,
+                         -1);
 }
 
 void ghost_demon::init_random_demon()
