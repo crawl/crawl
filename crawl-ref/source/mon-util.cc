@@ -1773,7 +1773,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
         {
             attack_flavour flavours[] =
                 {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
-                 AF_COLD, AF_ELEC, AF_ANTIMAGIC};
+                 AF_COLD, AF_ELEC, AF_ANTIMAGIC, AF_ACID};
 
             attk.flavour = RANDOM_ELEMENT(flavours);
         }
