@@ -17,7 +17,7 @@ Antaeus, Guardian of Cocytus
 %%%%
 Arachne title
 
-Arachne the Spider Queen
+Arachne the Weaver
 %%%%
 Asmodeus title
 
@@ -53,7 +53,7 @@ Dispater, Lord of the Iron City
 %%%%
 Dissolution title
 
-High Priest Dissolution
+Dissolution, High Priest of Jiyva
 %%%%
 Donald title
 
@@ -153,7 +153,7 @@ Josephine the Decaying Necromancer
 %%%%
 Khufu title
 
-The Undying Pharaoh, Khufu
+Khufu the Undying Pharaoh
 %%%%
 Kirke title
 
