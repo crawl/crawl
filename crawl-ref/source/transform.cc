@@ -753,6 +753,15 @@ static int _transform_duration(transformation_type which_trans, int pow)
     }
 }
 
+static int _beastly_appendage_level(int appendage)
+{
+    switch (appendage)
+    {
+    case MUT_HORNS: return 2;
+    default:        return 3;
+    }
+}
+
 // Transforms you into the specified form. If involuntary, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
@@ -1156,7 +1165,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             int app = you.attribute[ATTR_APPENDAGE];
             ASSERT(app != NUM_MUTATIONS);
             ASSERT(beastly_slot(app) != EQ_NONE);
-            you.mutation[app] = app == MUT_HORNS ? 2 : 3;
+            you.mutation[app] = _beastly_appendage_level(app);
         }
         break;
 
@@ -1353,12 +1362,24 @@ void untransform(bool skip_wielding, bool skip_move)
         {
             int app = you.attribute[ATTR_APPENDAGE];
             ASSERT(beastly_slot(app) != EQ_NONE);
-            // would be lots of work to do it via delete_mutation, the hacky
-            // way is one line:
-            you.mutation[app] = you.innate_mutation[app];
+            const int levels = you.mutation[app];
+            // Preserve extra mutation levels acquired after transforming.
+            const int beast_levels = _beastly_appendage_level(app);
+            const int extra = max(0, levels - you.innate_mutation[app]
+                                            - beast_levels);
+            you.mutation[app] = you.innate_mutation[app] + extra;
             you.attribute[ATTR_APPENDAGE] = 0;
-            mprf(MSGCH_DURATION, "Your %s disappear%s.", mutation_name((mutation_type) app),
-                 (app == MUT_TENTACLE_SPIKE) ? "s" : "");
+
+            // The mutation might have been removed already by a conflicting
+            // demonspawn innate mutation; no message then.
+            if (levels)
+            {
+                const char * const verb = you.mutation[app] ? "shrink"
+                                                            : "disappear";
+                mprf(MSGCH_DURATION, "Your %s %s%s.",
+                     mutation_name(static_cast<mutation_type>(app)), verb,
+                     app == MUT_TENTACLE_SPIKE ? "s" : "");
+            }
         }
         break;
 
