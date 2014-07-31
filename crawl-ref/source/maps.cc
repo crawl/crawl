@@ -434,6 +434,10 @@ static bool _map_safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
+        // Unconditionally allow portal placements to work.
+        if (vault_can_replace_portals && _is_portal_place(cp))
+            continue;
+
         if (!vault_can_overwrite_other_vaults)
         {
             // Also check adjacent squares for collisions, because being next
@@ -455,9 +459,7 @@ static bool _map_safe_vault_place(const map_def &map,
 
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
-        if (!_may_overwrite_feature(cp, water_ok)
-            && (!vault_can_replace_portals
-                || !_is_portal_place(cp)))
+        if (!_may_overwrite_feature(cp, water_ok))
         {
             return false;
         }
