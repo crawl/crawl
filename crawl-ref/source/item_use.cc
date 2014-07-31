@@ -548,7 +548,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
                 // No strange race can wear this.
-                const char* parts[] = { "head", "hands", "feet" };
+                static const char * const parts[] = { "head", "hands", "feet" };
+                COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
                 {
