@@ -460,9 +460,7 @@ static bool _map_safe_vault_place(const map_def &map,
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
         if (!_may_overwrite_feature(cp, water_ok))
-        {
             return false;
-        }
 
         // Don't overwrite monsters or items, either!
         if (monster_at(cp) || igrd(cp) != NON_ITEM)
