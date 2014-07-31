@@ -855,6 +855,8 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   33, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  5,   52, FLAT, MONS_GIANT_ORANGE_BRAIN },
   {  1,  5,    3, FLAT, MONS_BLACK_DRACONIAN },
+  {  1,  5,    3, FLAT, MONS_MOTTLED_DRACONIAN },
+  {  1,  5,    3, FLAT, MONS_YELLOW_DRACONIAN },
   {  1,  5,    3, FLAT, MONS_GREEN_DRACONIAN },
   {  1,  5,    3, FLAT, MONS_PURPLE_DRACONIAN },
   {  1,  5,    3, FLAT, MONS_RED_DRACONIAN },
