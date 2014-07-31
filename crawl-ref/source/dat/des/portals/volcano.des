@@ -310,8 +310,7 @@ function fiery_guardians (e, intelligent, village)
                    .. " / fire crab w:1")
         elseif set_weight < 5 then
             -- "Demonic" monster pack.
-            e.mons("crimson imp / red ugly thing / toenail golem"
-                   .. " / hell hound w:8"
+            e.mons("crimson imp / toenail golem / hell hound w:8"
                    .. " / red devil ; trident ego:flaming ident:type")
             e.mons("efreet / sun demon / smoke demon / " .. hellknight)
         elseif set_weight < 7 then

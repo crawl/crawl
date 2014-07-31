@@ -1592,12 +1592,12 @@ KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
               hellwing / chaos spawn w:5 / orange demon / blue devil /  \
               hell hound / red devil w:5 / lesser demon w:25 / mana viper w:5 / \
-              ugly thing w:30 / fire elemental w:5 / air elemental w:5
+              worldbinder w:30 / fire elemental w:5 / air elemental w:5
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
               ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
               wind drake w:5 / earth elemental w:5 / water elemental / \
-              very ugly thing / base draconian / guardian serpent / brain worm / \
+              ugly thing / base draconian / guardian serpent / brain worm / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
               great orb of eyes w:5 / giant orange brain
 KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
@@ -1686,7 +1686,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
-                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / very ugly thing w:5 /
+                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / ugly thing w:5 /
                     golden eye w:5 / executioner w:3 / shadow demon w:4 / hellion w:3 /
                     thrashing horror w:25 / tentacled starspawn w:25 / ]])
 

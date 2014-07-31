@@ -28,7 +28,7 @@ function base_monster_setup(e)
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            trapdoor spider / basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
-           griffon / ugly thing / gargoyle / molten gargoyle /\
+           griffon / gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf fighter band / boulder beetle / red wasp /\
            orc high priest band w:5 / boring beetle /\
@@ -46,7 +46,7 @@ function base_monster_setup(e)
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
-           centaur warrior band w:5 / ugly thing band w:5 / wizard /\
+           centaur warrior band w:5 / ugly thing w:5 / wizard /\
            simulacrum / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
@@ -66,7 +66,7 @@ function base_monster_setup(e)
            chaos spawn / ice devil / sun demon / iron devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = fire dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
-           very ugly thing band w:5 / sphinx / iron troll /\
+           ugly thing band w:5 / sphinx / iron troll /\
            orc warlord band / yaktaur captain band w:5 /\
            deep troll shaman band w:5 / fire giant w:20 / frost giant w:20 /\
            hell knight band / storm dragon / glowing shapeshifter /\

@@ -267,8 +267,8 @@ MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
-            small abomination w:15 / ugly thing w:15 / chaos spawn
-KMONS:  E = very ugly thing
+            small abomination w:15 / chaos spawn
+KMONS:  E = ugly thing
 KMONS:  F = large abomination / glowing shapeshifter w:7
 SHUFFLE: 123 / 456 / 789 / DEF
 SUBST:  C = xccv, w : w:8 l:1 .:1, W : .:9 W:1
@@ -538,7 +538,7 @@ ENDMAP
 NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
 MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
-MONS:    shapeshifter / very ugly thing / large abomination w:2, wretched star
+MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / ghoul / death ooze w:2, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
@@ -573,7 +573,7 @@ ENDMAP
 
 NAME:    hangedman_relentless_pull
 TAGS:    no_monster_gen no_item_gen
-MONS:    very ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
+MONS:    ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
 MONS:    tentacled starspawn / starcursed mass
 MONS:    very ugly thing, wretched star, lurking horror, ancient zyme
 SHUFFLE: 2d, 34eAB / 34eAB / '''CD, 34 / 56
@@ -599,7 +599,7 @@ NAME:    hangedman_steaming_rock
 TAGS:    transparent
 MONS:    eye of devastation w:9 / nothing w:1
 KMONS:   2 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
-             very ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
+             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
 KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
 KMONS:   4 = apocalypse crab / death drake w:5
@@ -643,7 +643,7 @@ NAME:    hangedman_classic_abyss_death
 TAGS:    transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
          skeleton / sixfirhy / smoke demon / neqoxec / \
-         efreet / rakshasa / giant orange brain / very ugly thing / \
+         efreet / rakshasa / giant orange brain / ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
@@ -892,7 +892,7 @@ TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
-MONS:    thrashing horror / blink frog / very ugly thing / \
+MONS:    thrashing horror / blink frog / ugly thing / \
          large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \

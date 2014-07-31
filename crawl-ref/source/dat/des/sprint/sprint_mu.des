@@ -939,7 +939,7 @@ SUBST: * = *|
 SUBST: | = |||$
 SUBST: f = f..
 NSUBST: . = 15:M / *:.
-KMONS: M = very ugly thing / slime creature / glowing shapeshifter
+KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
  scroll of acquirement ident:all, wand of disintegration / wand of fire, \

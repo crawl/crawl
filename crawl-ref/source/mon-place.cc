@@ -2164,7 +2164,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
     case MONS_UGLY_THING:
+        if (env.absdepth0 < 13)
+            break;
+        // fallthrough to very ugly things...
     case MONS_VERY_UGLY_THING:
+        if (env.absdepth0 < 19)
+            break;
         band = BAND_UGLY_THINGS;
         band_size = 2 + random2(4);
         break;
