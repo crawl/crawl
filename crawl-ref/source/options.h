@@ -537,4 +537,9 @@ object_class_type item_class_by_sym(ucs_t c);
 #endif
 extern game_options  Options;
 
+static inline short macro_colour(short col)
+{
+    return Options.colour[ col ];
+}
+
 #endif

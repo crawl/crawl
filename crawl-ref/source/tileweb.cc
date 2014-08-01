@@ -808,7 +808,7 @@ void TilesFramework::_send_player(bool force_full)
             if (!c.status[i].short_text.empty())
                 json_write_string("text", c.status[i].short_text);
             if (c.status[i].light_colour)
-                json_write_int("col", c.status[i].light_colour);
+                json_write_int("col", macro_colour(c.status[i].light_colour));
             json_close_object(true);
         }
         json_close_array();
@@ -882,7 +882,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
         const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
         const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
         if (force_full || current_prefcol != prefcol)
-            json_write_int("col", prefcol);
+            json_write_int("col", macro_colour(prefcol));
 
         tileidx_t tile = tileidx_item(next);
         if (force_full || tileidx_item(current) != tile)
@@ -1081,7 +1081,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
          || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
-        col = (_get_brand(col) << 4) | (col & 0xF);
+        col = (_get_brand(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
 
