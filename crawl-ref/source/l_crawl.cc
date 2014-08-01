@@ -1151,6 +1151,25 @@ static string _crawl_make_name(lua_State *ls)
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
+// FIXME: factor out the duplicated code in the next two functions.
+LUAFN(_crawl_unavailable_god)
+{
+    const char *god_name = luaL_checkstring(ls, 1);
+    if (!god_name)
+    {
+        string err = "unavailable_god requires a god!";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    god_type god = str_to_god(god_name);
+    if (god == GOD_NO_GOD)
+    {
+        string err = make_stringf("'%s' matches no god.", god_name);
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    lua_pushboolean(ls, is_unavailable_god(god));
+    return 1;
+}
+
 static int _crawl_god_speaks(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -1230,6 +1249,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "print_hint", crawl_print_hint },
 { "mark_game_won", _crawl_mark_game_won },
 { "hints_type", crawl_hints_type },
+{ "unavailable_god", _crawl_unavailable_god },
 
 { NULL, NULL }
 };
