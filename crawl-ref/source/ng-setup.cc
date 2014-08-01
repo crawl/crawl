@@ -816,6 +816,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
+        // keep picking up sticks
+        autopickup_starting_ammo(MI_ARROW);
+
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;

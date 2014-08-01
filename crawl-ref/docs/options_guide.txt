@@ -354,9 +354,9 @@ default_manual_training = false
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \
         menu) for the player's starting ammunition type (including stones
-        for Earth Elementalists). Even when this option is set, autopickup
-        of those items can be disabled from the \ menu once the game has
-        begun.
+        for Earth Elementalists and arrows for Transmuters). Even when this
+        option is set, autopickup of those items can be disabled from the
+        \ menu once the game has begun.
 
 2-  File System.
 ================
