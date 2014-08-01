@@ -3502,6 +3502,14 @@ bool is_useless_item(const item_def &item, bool temp)
         {
             return true;
         }
+        switch (item.sub_type)
+        {
+            case ROD_SHADOWS:
+            case ROD_SWARM:
+                return player_mutation_level(MUT_NO_LOVE);
+            default:
+                return false;
+        }
         break;
 
     case OBJ_STAVES:
@@ -3554,6 +3562,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_LANTERN_OF_SHADOWS:
         case MISC_RUNE_OF_ZOT:
             return false;
+
+        case MISC_SACK_OF_SPIDERS:
+        case MISC_BOX_OF_BEASTS:
+            return player_mutation_level(MUT_NO_LOVE);
 
         default:
             return player_mutation_level(MUT_NO_ARTIFICE);
