@@ -227,7 +227,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
             mon = RANDOM_ELEMENT(swarmers);
         while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
 
-        // If twenty tries wasn't enough, it's never going to work.
+        // If a hundred tries wasn't enough, it's never going to work.
         if (tries >= MAX_TRIES)
             break;
 
