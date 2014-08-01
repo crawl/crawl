@@ -1446,8 +1446,7 @@ int rod_spell(int rod, bool check_range)
     // All checks passed, we can cast the spell.
     if (you.confused())
         random_uselessness();
-    else if (your_spells(spell, power, false)
-                == SPRET_ABORT, true)
+    else if (your_spells(spell, power, false, true) == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return -1;
