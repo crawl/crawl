@@ -3779,6 +3779,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CORROSIVE_BOLT, "Corrosive Bolt",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET,
+    6,
+    200,
+    6, 6,
+    0,
+    NULL,
+    true,
+    false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
