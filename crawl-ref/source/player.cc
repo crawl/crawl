@@ -120,12 +120,12 @@ static void _moveto_maybe_repel_stairs()
 
     if (x_chance_in_y(pct, 100))
     {
+        const string stair_str = feature_description_at(you.pos(), false,
+                                                        DESC_THE, false);
+        const string prep = feat_preposition(new_grid, true, &you);
+
         if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
         {
-            string stair_str = feature_description_at(you.pos(), false,
-                                                      DESC_THE, false);
-            string prep = feat_preposition(new_grid, true, &you);
-
             mprf("%s slides away as you move %s it!", stair_str.c_str(),
                  prep.c_str());
 
