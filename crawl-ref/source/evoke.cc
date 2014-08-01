@@ -501,7 +501,7 @@ void tome_of_power(int slot)
              (temp_rand >  0) ? SPELL_THROW_FROST
                               : SPELL_MAGIC_DART);
 
-        your_spells(spell_casted, powc, false);
+        your_spells(spell_casted, powc, false, true);
     }
 }
 

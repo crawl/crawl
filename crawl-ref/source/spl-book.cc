@@ -503,7 +503,7 @@ bool you_cannot_memorise(spell_type spell)
 
 // form is set to true if a form (lich) prevents us from
 // memorising the spell.
-bool you_cannot_memorise(spell_type spell, bool &form)
+bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
 {
     bool rc = false;
 
@@ -590,14 +590,17 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (cannot_use_spell_school(spell))
+    if (cannot_use_spell_school(spell, evoked))
         return true;
 
     return rc;
 }
 
-bool cannot_use_spell_school(spell_type spell)
+bool cannot_use_spell_school(spell_type spell, bool evoked)
 {
+    if (evoked)
+        return false;
+
     if (
            (spell_typematch(spell, SPTYP_AIR)
             && player_mutation_level(MUT_NO_AIR_MAGIC))
@@ -1444,7 +1447,7 @@ int rod_spell(int rod, bool check_range)
     if (you.confused())
         random_uselessness();
     else if (your_spells(spell, power, false)
-                == SPRET_ABORT)
+                == SPRET_ABORT, true)
     {
         crawl_state.zero_turns_taken();
         return -1;
