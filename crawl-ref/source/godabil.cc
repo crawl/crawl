@@ -5341,7 +5341,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             _ru_kill_skill(SK_STEALTH);
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = 35 + _piety_for_skill(SK_EVOCATIONS);
+            piety_gain = 45 + _piety_for_skill(SK_EVOCATIONS);
 
             if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
                 "sacrifice all use of magical tools"))
