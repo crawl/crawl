@@ -1075,6 +1075,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_DRAIN_MAGIC;
         break;
 
+    case SPELL_CORROSIVE_BOLT:
+        beam.colour   = YELLOW;
+        beam.name     = "corrosive bolt";
+        beam.damage   = dice_def(3, 9 + power / 17);
+        beam.flavour  = BEAM_ACID;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (check_validity)
         {

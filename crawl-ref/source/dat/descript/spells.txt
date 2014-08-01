@@ -317,6 +317,10 @@ This spell rapidly accelerates the decomposition of any corpses lying around
 the caster, emitting in the process a foul miasmic vapour, which eats away at
 the life force of any creature it envelops.
 %%%%
+Corrosive Bolt spell
+
+This spell hurls a penetrating bolt of acid.
+%%%%
 Corrupt Body spell
 
 This spell instills a corruption within a target, temporarily mutating their

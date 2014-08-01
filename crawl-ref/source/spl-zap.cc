@@ -106,6 +106,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_CRYSTAL_BOLT;
     case SPELL_TUKIMAS_DANCE:
         return ZAP_TUKIMAS_DANCE;
+    case SPELL_CORROSIVE_BOLT:
+        return ZAP_CORROSIVE_BOLT;
     case SPELL_DEBUGGING_RAY:
         return ZAP_DEBUGGING_RAY;
     default:
