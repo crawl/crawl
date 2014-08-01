@@ -2103,6 +2103,7 @@
       }
     },
 
+    // deep elf ie
     {  MST_DEEP_ELF_MAGE_I,
       {
        SPELL_FREEZE,
@@ -2114,6 +2115,7 @@
       }
     },
 
+    // deep elf ee
     {  MST_DEEP_ELF_MAGE_II,
       {
        SPELL_BOLT_OF_MAGMA,
@@ -2125,6 +2127,7 @@
       }
     },
 
+    // deep elf wz
     {  MST_DEEP_ELF_MAGE_III,
       {
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
@@ -2136,6 +2139,7 @@
       }
     },
 
+    // deep elf --fe
     {  MST_DEEP_ELF_MAGE_IV,
       {
        SPELL_FLAME_TONGUE,
@@ -2147,6 +2151,7 @@
       }
     },
 
+    // deep elf cj
     {  MST_DEEP_ELF_MAGE_V,
       {
        SPELL_MAGIC_DART,
