@@ -280,6 +280,7 @@ effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
+%rim 0
 tomahawk1 MI_TOMAHAWK
 tomahawk2
 steel_tomahawk MI_TOMAHAWK_STEEL
@@ -294,6 +295,7 @@ effect/tomahawk5 MI_TOMAHAWK5
 effect/tomahawk6 MI_TOMAHAWK6
 effect/tomahawk7 MI_TOMAHAWK7
 
+%rim 1
 needle1 MI_NEEDLE
 needle2
 needle-p MI_NEEDLE_P
