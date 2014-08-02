@@ -103,8 +103,9 @@ KFEAT:  N = altar_vehumet
 KFEAT:  O = altar_sif_muna
 KFEAT:  P = altar_makhleb
 KFEAT:  Q = altar_dithmenos
-KFEAT:  R = altar_gozag
-KFEAT:  S = altar_qazlal
+KFEAT:  R = altar_qazlal
+KFEAT:  S = altar_gozag
+: if crawl.unavailable_god("Gozag") then _G.subst("S = .") end
 KMONS:  X = oklob sapling name:priest n_suf spells:cantrip;.;cantrip;smiting priest_spells
 
 MAP
