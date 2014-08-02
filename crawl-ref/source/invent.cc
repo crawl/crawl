@@ -1580,6 +1580,10 @@ bool check_old_item_warning(const item_def& item,
         if (!you.weapon())
             return true;
 
+        int equip = you.equip[EQ_WEAPON];
+        if (equip == -1 || item.link == equip)
+            return true;
+
         old_item = *you.weapon();
         if (!needs_handle_warning(old_item, OPER_WIELD))
             return true;
@@ -1592,7 +1596,8 @@ bool check_old_item_warning(const item_def& item,
             return true;
 
         equipment_type eq_slot = get_armour_slot(item);
-        if (you.equip[eq_slot] == -1)
+        int equip = you.equip[eq_slot];
+        if (equip == -1 || item.link == equip)
             return true;
 
         old_item = you.inv[you.equip[eq_slot]];
@@ -1769,6 +1774,11 @@ bool check_warning_inscriptions(const item_def& item,
             // a non-const item_def.
             if (!you.can_wield(item))
                 return true;
+
+            // Don't ask if item already wielded.
+            int equip = you.equip[EQ_WEAPON];
+            if (equip != -1 && item.link == equip)
+                return check_old_item_warning(item, oper);
         }
         else if (oper == OPER_WEAR)
         {
