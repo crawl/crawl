@@ -6356,7 +6356,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     {
         vector<skill_type> cross_skills = get_crosstrain_skills(sk);
         for (size_t i = 0; i < cross_skills.size(); ++i)
-            effective_points += skill_points[cross_skills[i]] / 5;
+            effective_points += skill_points[cross_skills[i]] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
