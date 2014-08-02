@@ -234,13 +234,11 @@ Shield
 Your hero's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
-  Abbreviated to "Str". Affects how much you can carry and your ability to use
-  heavy armours effectively.
+  Abbreviated to "Str". Affects your ability to use heavy armours effectively.
 
 Intelligence
   Abbreviated to "Int". Affects how well you can cast spells as well as how much
-  nutrition spellcasting takes. Your ability to use some magical items is also
-  influenced by your intelligence.
+  nutrition spellcasting takes.
 
 Dexterity
   Abbreviated to "Dex". Significantly affects your ability to dodge attacks aimed
@@ -2064,13 +2062,10 @@ skills include:
   * Staves
   * Polearms
 
-If you are already good at a weapon, say a long sword, and you practise for a
-while with a similar weapon such as a short sword, your practise will be sped up
-(and will require less experience) until both skills are equal; this is called
-crosstraining and is shown in green in the skill menu. The skills which benefit
-from it have a +4 displayed next their aptitude to show that they are trained
-twice as fast as they usually are. The skill responsible for the crosstraining
-is marked with a green asterisk. Similar types of weapons are:
+If you are already good using a class of weapons, say Long Blades, you'll get
+a bonus to using similar weapons, like Short Blades; this is called
+crosstraining and is shown in blue in the skill menu. Similar types of weapons
+are:
 
   * Short Blades and Long Blades
   * Maces &amp; Flails and Axes
@@ -2134,19 +2129,6 @@ a lesser extent than the more specialised magical skills.
 There are also individual skills for each different type of magic; the higher
 the skill, the more powerful the spell. Multidisciplinary spells use an average
 of the two or three skills.
-
-Elemental magic is a special case. When you practise an elemental magic skill
-(fire, ice, air or earth magic) you will improve much less quickly than normal
-if you already have the opposite elemental magic skill higher than the one you
-are practising: fire and ice are mutually opposed, as are earth and air. This is
-called antitraining and is shown in the skill menu in magenta. The "antitrained"
-skills have a -4 displayed next to their aptitude to show that they will be
-trained twice as slowly as they usually are. The skills responsible for the
-antitraining are marked with a magenta asterisk.
-
-  Say you have level 2 fire magic, level 4 ice magic and level 1 air magic.
-  Practising ice or air magic won't be a problem. Practising fire magic will be
-  very slow, as you have a higher level in ice magic.
 
 Miscellaneous skills
 ========================================
@@ -2879,14 +2861,6 @@ Drain
   experience. This status has multiple levels, and you can see just how much you
   have been drained by looking at the skills screen.
 
-Encumbered
-  Your load is heavy enough to slow you down. You also need more food when
-  walking around encumbered, and your stealth is reduced. Try to avoid this!
-
-Overloaded
-  You are carrying too much to do anything sensible. In addition to the effects
-  of Encumbered being worsened, you are unable to climb stairs. Drop something!
-
 Conf
   You are confused. Actions may not work properly, or may be targeted in a
   random direction. Wait it out or drink a potion of curing for immediate cure.
@@ -3158,11 +3132,8 @@ Dex+3
 Int+3
   intelligence modifier
 
-Dam+3
-  damage modifier (to melee and ranged combat)
-
-Acc+3
-  accuracy modifier (to melee and ranged combat)
+Slay+3
+  accuracy &amp; damage modifier (to melee and ranged combat)
 
 MR
   boost to magical resistance to hostile enchantments
