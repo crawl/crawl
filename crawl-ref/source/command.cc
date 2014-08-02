@@ -869,7 +869,8 @@ static vector<string> _get_god_keys()
     for (int i = GOD_NO_GOD + 1; i < NUM_GODS; i++)
     {
         god_type which_god = static_cast<god_type>(i);
-        names.push_back(god_name(which_god));
+        if (!is_disabled_god(which_god))
+            names.push_back(god_name(which_god));
     }
 
     return names;

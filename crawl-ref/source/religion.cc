@@ -541,12 +541,23 @@ bool is_unknown_god(god_type god)
     return god == GOD_NAMELESS;
 }
 
+/**
+ * Has the god been disabled in the current version of the game?
+ *
+ * @param god   The type of god in question.
+ * @return      Whether the god has been disabled.
+ */
+bool is_disabled_god(god_type god)
+{
+    return god == GOD_GOZAG && Version::ReleaseType != VER_ALPHA;
+}
+
 bool is_unavailable_god(god_type god)
 {
     if (god == GOD_JIYVA && jiyva_is_dead())
         return true;
 
-    if (god == GOD_GOZAG && Version::ReleaseType != VER_ALPHA)
+    if (is_disabled_god(god))
         return true;
 
     // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
@@ -4518,7 +4529,7 @@ static bool _is_god(god_type god)
 
 static bool _is_temple_god(god_type god)
 {
-    if (!_is_god(god))
+    if (!_is_god(god) || is_disabled_god(god))
         return false;
 
     switch (god)
@@ -4528,9 +4539,6 @@ static bool _is_temple_god(god_type god)
     case GOD_BEOGH:
     case GOD_JIYVA:
         return false;
-
-    case GOD_GOZAG:
-        return Version::ReleaseType == VER_ALPHA;
 
     default:
         return true;
