@@ -3699,10 +3699,29 @@ void shadow_monster_reset(monster *mon)
     mon->reset();
 }
 
+/**
+ * Check if the player is in melee range of the target.
+ *
+ * Certain effects, e.g. distortion blink, can cause monsters to leave melee
+ * range between the initial hit & the shadow mimic.
+ *
+ * XXX: refactor this with attack/fight code!
+ *
+ * @param target    The creature to be struck.
+ * @return          Whether the player is melee range of the target, using
+ *                  their current weapon.
+ */
+bool _in_melee_range(actor* target)
+{
+    const int dist = (you.pos() - target->pos()).abs();
+    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
+}
+
 void dithmenos_shadow_melee(actor* target)
 {
     if (!target
         || !target->alive()
+        || !_in_melee_range(target)
         || !_dithmenos_shadow_acts())
     {
         return;
