@@ -115,7 +115,6 @@ KFEAT: K = altar_vehumet
 KFEAT: L = altar_sif_muna
 KFEAT: M = altar_gozag
 KFEAT: N = altar_qazlal
-: if crawl.unavailable_god("Gozag") then _G.subst("M = .") end
 KFEAT: Y = any shop
 MAP
 xxxxx+xxxxx+x
