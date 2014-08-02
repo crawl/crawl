@@ -1,6 +1,6 @@
 Stone Soup 0.15 (up to 0.15-a0-1526-g60de0e4)
 --------------------------------------------
-* Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
+* New god: Qazlal Stormbringer.
 * Nemelex Xobeh and decks in general have had many changes.
 * Ranged combat has been rewritten from the ground up.
 * Inventory weight limits have been removed.
@@ -243,32 +243,19 @@ Cards
 
 Gods
 ----
-* Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer. Both are
-  temple gods with an altar either in Temple or on D:2-9.
-  - Gozag
-    - Charges a service fee for joining, dependent on the amount of gold that
-      has been generated in the game.
-    - Does not have piety.
-    - Defeated enemies turn to gold; these gold piles distract nearby
-      creatures, causing them to sometimes not act.
-    - Potion Petition: purchase one set of potion effects.
-    - Call Merchant: fund a merchant to set up shop somewhere near to areas
-      of the dungeon you have explored.
-    - Bribe Branch: send money to the inhabitants of a branch to turn them
-      temporarily neutral or incite them to join you.
-    - Duplication: one non-artefact item can be duplicated at an altar.
-  - Qazlal
-    - Piety on kills.
-    - All followers are immune from their own clouds.
-    - 1*: Storm Shield: you passively generate elemental clouds around you and
-          gain bonus SH, and gain RMsl at 3*; you also generate a lot of
-          noise.
-    - 2*: Upheaval: blast a small nearby area with elemental forces.
-    - 3*: Elemental Force: turn nearby clouds into elementals.
-    - 4*: Elemental Adaptation: taking elemental or physical damage sometimes
-          temporarily grants you resistance against that element.
-    - 5*: Disaster Area: blast the entire area around you with elemental
-          forces.
+* New god: Qazlal Stormbringer. Qazlal is a temple god, with an altar either in
+  Temple or on D:2-9.
+  - Piety on kills.
+  - All followers are immune from their own clouds.
+  - 1*: Storm Shield: you passively generate elemental clouds around you and
+        gain bonus SH, and gain RMsl at 3*; you also generate a lot of
+        noise.
+  - 2*: Upheaval: blast a small nearby area with elemental forces.
+  - 3*: Elemental Force: turn nearby clouds into elementals.
+  - 4*: Elemental Adaptation: taking elemental or physical damage sometimes
+        temporarily grants you resistance against that element.
+  - 5*: Disaster Area: blast the entire area around you with elemental
+        forces.
 * Nemelex has been revamped.
   - Nemelex only gives piety for exploration rather than item sacrifices or
     deck usage.
