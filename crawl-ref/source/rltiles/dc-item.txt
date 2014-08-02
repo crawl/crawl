@@ -337,15 +337,19 @@ effect/throwing_net5 MI_THROWING_NET5
 effect/throwing_net6 MI_THROWING_NET6
 effect/throwing_net7 MI_THROWING_NET7
 
+%rim 0
 rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
 ######OBJ_ARMOUR
 %sdir item/armour
-robe1 ARM_ROBE
-robe2
-robe3
+robe1 ARM_ROBE ARM_ROBE_FIRST
+robe2 ARM_ROBE_LAST
+robe_ego1 ARM_ROBE_EGO_FIRST
+robe_ego2 ARM_ROBE_EGO_LAST
+robe_art1 ARM_ROBE_ART_FIRST
+robe_art2 ARM_ROBE_ART_LAST
 
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
@@ -371,6 +375,7 @@ crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
 
+%rim 1
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
 
