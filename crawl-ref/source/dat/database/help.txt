@@ -148,6 +148,7 @@ level-map
              (Moves cursor to the last travel destination if still on @.)
 <w>[</w> or <w>]</w>     : Examine the next higher or lower level
 <w>G</w>          : Go to another level by branch and depth
+<w>o</w>          : Move the cursor to the next autoexplore target.
 
 <h>Travel exclusions</h>
 <w>e</w>          : Create a travel exclusion, change its radius, or remove it.
