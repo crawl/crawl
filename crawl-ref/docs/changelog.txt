@@ -1,4 +1,24 @@
-Stone Soup 0.15 (up to 0.15-a0-1526-g60de0e4)
+Stone Soup 0.16 (up to 0.16-a0-1-gcad5565)
+--------------------------------------------
+* New god: Gozag Ym Sagoz the Greedy.
+
+Gods
+----
+* New god: Gozag the Greedy. Gozag is a temple god, with an altar either in
+  Temple or on D:2-9.
+  - Charges a service fee for joining, dependent on the amount of gold that
+    has been generated in the game.
+  - Does not have piety.
+  - Defeated enemies turn to gold; these gold piles distract nearby
+    creatures, causing them to sometimes not act.
+  - Potion Petition: purchase one set of potion effects.
+  - Call Merchant: fund a merchant to set up shop somewhere near to areas
+    of the dungeon you have explored.
+  - Bribe Branch: send money to the inhabitants of a branch to turn them
+    temporarily neutral or incite them to join you.
+  - Duplication: one non-artefact item can be duplicated at an altar.
+
+Stone Soup 0.15
 --------------------------------------------
 * New god: Qazlal Stormbringer.
 * Nemelex Xobeh and decks in general have had many changes.
