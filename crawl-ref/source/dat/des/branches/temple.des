@@ -1156,13 +1156,12 @@ NAME:   grunt_circular_temple_18
 PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
-: if not crawl.unavailable_god("Gozag") then _G.subst("C = B") end
 MAP
                ccccccccccccc
            ccccc...........ccccc
         cccc...................cccc
       ccc.........................ccc
-    ccc..........B...C...B..........ccc
+    ccc..........B...B...B..........ccc
    cc........B...............B........cc
   cc...................................cc
  cc.......B.....................B.......cc
@@ -1196,10 +1195,6 @@ PLACE:   Temple
 WEIGHT:  10
 TAGS:    no_rotate
 ORIENT:  encompass
-{{ if crawl.unavailable_god("Gozag") then _G.subst('C = "')
-                                     else _G.subst("C = B")
-   end
-}}
 NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
 SUBST:   ' = .
 COLOUR:  " : darkgrey w:3 / white w:1 / none
@@ -1215,7 +1210,7 @@ tt.....{..21...t...............''ccccccccccccccccc...22.tttt
 ttt...........ttt.......t......''G'c"""""""""""""c..t..ttttt
 tttt......2....................''''c"B"B"B"B"B"B"ctt....tttt
 tttttt.....................t...''G'c"""""""""""""cttt...tttt
-ttttttttt..1.....2...t.........''''+"C"B"B"B"B"B"ctt..t...tt
+ttttttttt..1.....2...t.........''''+"B"B"B"B"B"B"ctt..t...tt
 tttttttt.......................''G'c"""""""""""""c...tt..ttt
 ttttttttt...................1..''''c"B"B"B"B"B"B"c..ttt.tttt
 ttttttttttttttt....2....t......''G'c"""""""""""""c...t..tttt
@@ -2881,7 +2876,6 @@ PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
 WEIGHT: 1
-: if not crawl.unavailable_god("Gozag") then _G.subst("C = B") end
 MAP
        bbb               bbb
      bbb.bb             bb.bbb
@@ -2900,7 +2894,7 @@ bb........B....B...B....B........bb
            bb.........bb
           bb...........bb
          bb....B...B....bb
-        bb.......C.......bb
+        bb.......B.......bb
          bbb...........bbb
            bbbb.....bbbb
               bbbbbbb
@@ -3080,7 +3074,6 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-: if not crawl.unavailable_god("Gozag") then _G.subst("C = B") end
 MAP
                 bbbbb
                 b...b
@@ -3100,7 +3093,7 @@ bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
         b...................b
         bbbbb.B.bb.bb.B.bbbbb
             b...........b
-            bbbbb.C.bbbbb
+            bbbbb.B.bbbbb
                 b...b
                 bbbbb
 ENDMAP
@@ -3111,9 +3104,7 @@ TAGS:    no_rotate
 PLACE:   Temple
 WEIGHT:  1
 ORIENT:  encompass
-: if crawl.unavailable_god("Gozag") then _G.nsubst("T = 1:t / *:T") end
 NSUBST:  T = 1:{ / 1:B / *:T
-SUBST:   t = T
 MAP
         bbb   bbb   bbb
        bb.bb bb.bb bb.bb

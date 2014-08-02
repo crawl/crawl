@@ -201,7 +201,7 @@ COLOUR:  " : white w:5 / none
 TILE:    " : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
-SHUFFLE: ABCDEFHIJKLMNOPQS
+SHUFFLE: ABCDEFHIJKLMNOPQRS
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
@@ -220,16 +220,15 @@ KFEAT:   P = altar_ashenzari
 KFEAT:   Q = altar_dithmenos
 KFEAT:   R = altar_gozag
 KFEAT:   S = altar_qazlal
-: if crawl.unavailable_god("Gozag") then _G.subst('R = "') end
 MAP
 ''''''...............
 ''ccccccccccccccccc..
 ''G'c"""""""""""""c..
 ''''c"A"B"C"D"E"F"c..
 ''G'c"""""""""""""ct.
-''''+"R"I"J"K"L"M"c..
+''''+"H"I"J"K"L"M"c..
 ''G'c"""""""""""""c..
-''''c"N"O"P"Q"H"S"c.t
+''''c"N"O"P"Q"R"S"c.t
 ''G'c"""""""""""""c..
 ''ccccccccccccccccc..
 .......t......ttt....

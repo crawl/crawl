@@ -774,7 +774,6 @@ RTILE:  x = wall_sandstone
 COLOUR: xG = yellow
 : set_feature_name("granite_statue", "golden statue")
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
      @
   xxx-xxx
@@ -802,7 +801,6 @@ RTILE:  x = wall_sandstone
 COLOUR: xG = yellow
 : set_feature_name("granite_statue", "golden statue")
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
         xxxxx
 .@......x-eGx
@@ -825,7 +823,6 @@ RTILE:  x = wall_sandstone
 COLOUR: xG = yellow
 : set_feature_name("granite_statue", "golden statue")
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
   xxxxxxx
  xx--_--xx
@@ -841,7 +838,6 @@ TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag \
 DEPTH: D:2-
 KFEAT: _ = altar_gozag
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
 bbb@bbb
 b....$b
@@ -864,7 +860,6 @@ KFEAT: _ = altar_gozag
 KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
         greed:100 ; any weapon randart | any armour randart | any jewellery randart
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
 wwwwwww....
 w'''''wwww.
@@ -882,7 +877,6 @@ DEPTH: D:2-
 ITEM:  gold q:1 / gold q:2
 KFEAT: _ = altar_gozag
 : interest_check(_G)
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
 ddd
 d_d
@@ -2815,7 +2809,6 @@ FTILE:   ._GOU+ = floor_limestone
 RTILE:   x = wall_sandstone
 COLOUR:  xG = yellow
 : set_feature_name("granite_statue", "golden statue")
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
   xxxxxxx
  xx.....xx
@@ -2842,7 +2835,6 @@ COLOUR: v = white
 FTILE:  +._O$ = floor_limestone
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
-: if crawl.unavailable_god("Gozag") then _G.weight(0) end
 MAP
 vvvvvvvvv
 v..$$$..v
