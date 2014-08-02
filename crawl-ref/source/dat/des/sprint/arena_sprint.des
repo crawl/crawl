@@ -1009,6 +1009,7 @@ KFEAT:  n = altar_fedhas
 KFEAT:  o = altar_dithmenos
 KFEAT:  p = altar_gozag
 KFEAT:  q = altar_qazlal
+: if crawl.unavailable_god("Gozag") then _G.subst("p = .") end
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of fire charges:5 ident:all, \

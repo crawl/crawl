@@ -263,6 +263,7 @@ KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KFEAT: G = altar_gozag
 KFEAT: Q = altar_qazlal
+: if crawl.unavailable_god("Gozag") then _G.subst("G = .") end
 KMONS: l = patrolling spatial vortex
 KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva

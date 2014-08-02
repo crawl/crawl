@@ -79,6 +79,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "hints.h"
+#include "version.h"
 #include "view.h"
 #include "xom.h"
 
@@ -543,6 +544,9 @@ bool is_unknown_god(god_type god)
 bool is_unavailable_god(god_type god)
 {
     if (god == GOD_JIYVA && jiyva_is_dead())
+        return true;
+
+    if (god == GOD_GOZAG && Version::ReleaseType != VER_ALPHA)
         return true;
 
     // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
@@ -4524,6 +4528,9 @@ static bool _is_temple_god(god_type god)
     case GOD_BEOGH:
     case GOD_JIYVA:
         return false;
+
+    case GOD_GOZAG:
+        return Version::ReleaseType == VER_ALPHA;
 
     default:
         return true;

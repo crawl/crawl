@@ -713,6 +713,7 @@ KFEAT:  r = altar_cheibriados
 KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
+: if crawl.unavailable_god("Gozag") then _G.subst("t = {") end
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -814,7 +815,7 @@ c......L..O...n
 ^...C..K..N...^
 b...B.........o
 ^.............^
-a^r^t^{^u^s^q^p
+a^r^u^{^t^s^q^p
 ENDMAP
 
 NAME:  room_1
