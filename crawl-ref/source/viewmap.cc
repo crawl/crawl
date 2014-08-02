@@ -1260,6 +1260,24 @@ bool show_map(level_pos &lpos,
                 redraw_map = true;
                 break;
 
+            case CMD_MAP_EXPLORE:
+                if (on_level && !player_in_branch(BRANCH_LABYRINTH))
+                {
+                    travel_pathfind tp;
+                    tp.set_floodseed(you.pos(), true);
+
+                    coord_def whereto = tp.pathfind(Options.explore_greedy
+                                                    ? RMODE_EXPLORE_GREEDY
+                                                    : RMODE_EXPLORE);
+                    _reset_travel_colours(features, on_level);
+
+                    if (!whereto.zero()) {
+                        move_x = whereto.x - lpos.pos.x;
+                        move_y = whereto.y - lpos.pos.y;
+                    }
+                }
+                break;
+
 #ifdef WIZARD
             case CMD_MAP_WIZARD_TELEPORT:
                 if (!you.wizard || !on_level || !in_bounds(lpos.pos))
