@@ -511,6 +511,7 @@ DEPTH:   D, Depths, Abyss
 MONS:    butterfly, plant, unseen horror, shadow wraith, wind drake
 SHUFFLE: 34GT, GTt
 : if you.branch() == "Abyss" then
+TAGS:    no_exits
 SHUFFLE: 345", ABCD / ACBD / ADCB
 SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
 SUBST:   AB : wwl, CD : wll
