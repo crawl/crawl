@@ -805,13 +805,6 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
     }
 
-    if (num_memable > 0 && you.spell_no >= MAX_KNOWN_SPELLS)
-    {
-        if (!just_check)
-            mpr("Your head is already too full of spells!");
-        return false;
-    }
-
     if (num_memable)
         return true;
 
