@@ -1488,8 +1488,8 @@ void read_maps()
     {
         unwind_var<FixedVector<int, NUM_BRANCHES> > depths(brdepth);
         // let the sanity check place maps
-        for (int i = 0; i < NUM_BRANCHES; i++)
-            brdepth[i] = branches[i].numlevels;
+        for (branch_iterator it; it; ++it)
+            brdepth[it->id] = it->numlevels;
         dlua.execfile("dlua/sanity.lua", true, true);
     }
 }

@@ -2112,9 +2112,9 @@ static vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 {
     vector<branch_type> result;
 
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-        if (selector(branches[i]))
-            result.push_back(branches[i].id);
+    for (branch_iterator it; it; ++it)
+        if (selector(**it))
+            result.push_back(it->id);
 
     return result;
 }
@@ -3132,11 +3132,11 @@ level_id level_id::get_next_level_id(const coord_def &pos)
         return stair_destination(pos);
 #endif
 
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (gridc == branches[i].entry_stairs)
+        if (gridc == it->entry_stairs)
         {
-            id.branch = static_cast<branch_type>(i);
+            id.branch = it->id;
             id.depth = 1;
             break;
         }

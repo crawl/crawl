@@ -5892,10 +5892,10 @@ void player::init()
     constricting = 0;
 
     // Protected fields:
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        branch_info[i].branch = (branch_type)i;
-        branch_info[i].assert_validity();
+        branch_info[it->id].branch = it->id;
+        branch_info[it->id].assert_validity();
     }
 }
 
@@ -7869,14 +7869,14 @@ vector<PlaceInfo> player::get_all_place_info(bool visited_only,
 {
     vector<PlaceInfo> list;
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        if (visited_only && branch_info[i].num_visits == 0
-            || dungeon_only && !is_connected_branch((branch_type)i))
+        if (visited_only && branch_info[it->id].num_visits == 0
+            || dungeon_only && !is_connected_branch(*it))
         {
             continue;
         }
-        list.push_back(branch_info[i]);
+        list.push_back(branch_info[it->id]);
     }
 
     return list;
