@@ -44,6 +44,20 @@ struct Branch
     int ambient_noise;           // affects noise loudness and player stealth
 };
 
+class branch_iterator {
+public:
+    branch_iterator();
+
+    operator bool() const;
+    const Branch* operator*() const;
+    const Branch* operator->() const;
+    branch_iterator& operator++();
+    branch_iterator operator++(int);
+
+protected:
+    int i;
+};
+
 extern const Branch branches[NUM_BRANCHES];
 extern FixedVector<level_id, NUM_BRANCHES> brentry;
 extern FixedVector<int, NUM_BRANCHES> brdepth;
@@ -55,6 +69,7 @@ const Branch& your_branch();
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
 bool is_random_subbranch(branch_type branch);
+bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();

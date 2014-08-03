@@ -3628,15 +3628,15 @@ static void _place_branch_entrances(bool use_vaults)
     // entrances (or mimics thereof) could be placed here.
     bool branch_entrance_placed[NUM_BRANCHES];
     bool could_be_placed = false;
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        branch_entrance_placed[i] = false;
+        branch_entrance_placed[it->id] = false;
         if (!could_be_placed
-            && !branch_is_unfinished(branches[i].id)
-            && !is_hell_subbranch(branches[i].id)
-            && ((you.depth >= branches[i].mindepth
-                 && you.depth <= branches[i].maxdepth)
-                || level_id::current() == brentry[i]))
+            && !branch_is_unfinished(it->id)
+            && !is_hell_subbranch(it->id)
+            && ((you.depth >= it->mindepth
+                 && you.depth <= it->maxdepth)
+                || level_id::current() == brentry[it->id]))
         {
             could_be_placed = true;
         }
@@ -3651,45 +3651,43 @@ static void _place_branch_entrances(bool use_vaults)
         if (!feat_is_branch_stairs(grd(*ri)))
             continue;
 
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs == grd(*ri)
+        for (branch_iterator it; it; ++it)
+            if (it->entry_stairs == grd(*ri)
                 && !feature_mimic_at(*ri))
             {
-                branch_entrance_placed[i] = true;
+                branch_entrance_placed[it->id] = true;
                 break;
             }
     }
 
     // Place actual branch entrances.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
         // Vestibule and hells are placed by other means.
         // Likewise, if we already have an entrance, keep going.
-        if (i >= BRANCH_VESTIBULE && i <= BRANCH_LAST_HELL
-            || branch_entrance_placed[i])
+        if (it->id >= BRANCH_VESTIBULE && it->id <= BRANCH_LAST_HELL
+            || branch_entrance_placed[it->id])
         {
             continue;
         }
 
-        const Branch *b = &branches[i];
-
-        const bool mimic = !branch_is_unfinished(b->id)
-                           && !is_hell_subbranch(b->id)
-                           && you.depth >= b->mindepth
-                           && you.depth <= b->maxdepth
+        const bool mimic = !branch_is_unfinished(it->id)
+                           && !is_hell_subbranch(it->id)
+                           && you.depth >= it->mindepth
+                           && you.depth <= it->maxdepth
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
 
-        if (b->entry_stairs != NUM_FEATURES
-            && player_in_branch(parent_branch((branch_type)i))
-            && (level_id::current() == brentry[i] || mimic))
+        if (it->entry_stairs != NUM_FEATURES
+            && player_in_branch(parent_branch(it->id))
+            && (level_id::current() == brentry[it->id] || mimic))
         {
             // Placing a stair.
-            dprf("Placing stair to %s", b->shortname);
+            dprf("Placing stair to %s", it->shortname);
 
             // Attempt to place an entry vault if allowed
             if (use_vaults)
             {
-                string entry_tag = string(b->abbrevname);
+                string entry_tag = string(it->abbrevname);
                 entry_tag += "_entry";
                 lowercase(entry_tag);
 
@@ -3703,12 +3701,12 @@ static void _place_branch_entrances(bool use_vaults)
             const coord_def portal_pos = find_portal_place(NULL, false);
             if (!portal_pos.origin())
             {
-                env.grid(portal_pos) = b->entry_stairs;
+                env.grid(portal_pos) = it->entry_stairs;
                 env.level_map_mask(portal_pos) |= MMT_VAULT;
                 continue;
             }
 
-            const coord_def stair_pos = _place_specific_feature(b->entry_stairs);
+            const coord_def stair_pos = _place_specific_feature(it->entry_stairs);
             // Don't allow subsequent vaults to overwrite the branch stair
             env.level_map_mask(stair_pos) |= MMT_VAULT;
         }
@@ -6439,10 +6437,10 @@ FixedVector<vector<StairConnectivity>, NUM_BRANCHES> connectivity;
 
 void init_level_connectivity()
 {
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        int depth = brdepth[i] > 0 ? brdepth[i] : 0;
-        connectivity[i].resize(depth);
+        int depth = brdepth[it->id] > 0 ? brdepth[it->id] : 0;
+        connectivity[it->id].resize(depth);
     }
 }
 

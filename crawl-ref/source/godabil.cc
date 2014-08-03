@@ -4491,11 +4491,11 @@ bool gozag_check_bribe_branch(bool quiet)
     branch_type branch2 = NUM_BRANCHES;
     if (feat_is_branch_stairs(grd(you.pos())))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs == grd(you.pos())
-                && gozag_branch_bribable(static_cast<branch_type>(i)))
+        for (branch_iterator it; it; ++it)
+            if (it->entry_stairs == grd(you.pos())
+                && gozag_branch_bribable(it->id))
             {
-                branch2 = static_cast<branch_type>(i);
+                branch2 = it->id;
                 break;
             }
     }
@@ -4529,16 +4529,16 @@ bool gozag_bribe_branch()
     branch_type branch = you.where_are_you;
     if (feat_is_branch_stairs(grd(you.pos())))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs == grd(you.pos())
-                && gozag_branch_bribable(static_cast<branch_type>(i)))
+        for (branch_iterator it; it; ++it)
+            if (it->entry_stairs == grd(you.pos())
+                && gozag_branch_bribable(it->id))
             {
                 string prompt =
                     make_stringf("Do you want to bribe the denizens of %s?",
-                                 branches[i].longname);
+                                 it->longname);
                 if (yesno(prompt.c_str(), true, 'n'))
                 {
-                    branch = static_cast<branch_type>(i);
+                    branch = it->id;
                     prompted = true;
                 }
                 break;

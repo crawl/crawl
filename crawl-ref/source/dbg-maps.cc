@@ -183,21 +183,20 @@ static void _dungeon_places()
 {
     generated_levels.clear();
     branch_count = 0;
-    for (int br = BRANCH_DUNGEON; br < NUM_BRANCHES; ++br)
+    for (branch_iterator it; it; ++it)
     {
-        if (brdepth[br] == -1)
+        if (brdepth[it->id] == -1)
             continue;
 #if TAG_MAJOR_VERSION == 34
         // Don't want to include Forest since it doesn't generate
-        if (br == BRANCH_FOREST)
+        if (it->id == BRANCH_FOREST)
             continue;
 #endif
 
         bool new_branch = true;
-        const branch_type branch = static_cast<branch_type>(br);
-        for (int depth = 1; depth <= brdepth[br]; ++depth)
+        for (int depth = 1; depth <= brdepth[it->id]; ++depth)
         {
-            level_id l(branch, depth);
+            level_id l(it->id, depth);
             if (SysEnv.map_gen_range.get() && !SysEnv.map_gen_range->is_usable_in(l))
                 continue;
             generated_levels.push_back(l);
@@ -325,15 +324,14 @@ static void _write_map_stats()
     }
 
     vector<level_id> mapless;
-    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (brdepth[i] == -1)
+        if (brdepth[it->id] == -1)
             continue;
 
-        const branch_type br = static_cast<branch_type>(i);
-        for (int dep = 1; dep <= brdepth[i]; ++dep)
+        for (int dep = 1; dep <= brdepth[it->id]; ++dep)
         {
-            const level_id lid(br, dep);
+            const level_id lid(it->id, dep);
             if (SysEnv.map_gen_range.get()
                 && !SysEnv.map_gen_range->is_usable_in(lid))
             {

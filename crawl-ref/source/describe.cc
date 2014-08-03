@@ -2115,12 +2115,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     // Display branch descriptions on the entries to those branches.
     if (feat_is_stair(feat))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
+        for (branch_iterator it; it; ++it)
         {
-            if (branches[i].entry_stairs == feat)
+            if (it->entry_stairs == feat)
             {
                 long_desc += "\n";
-                long_desc += getLongDescription(branches[i].shortname);
+                long_desc += getLongDescription(it->shortname);
                 break;
             }
         }
@@ -4452,9 +4452,9 @@ static string _describe_branch_bribability()
     string ret = "You can bribe the following branches:\n";
     vector<branch_type> targets;
     size_t width = 0;
-    for (unsigned int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        const branch_type br = static_cast<branch_type>(i);
+        const branch_type br = it->id;
         if (!gozag_branch_bribable(br))
             continue;
 
@@ -4464,7 +4464,7 @@ static string _describe_branch_bribability()
             continue;
 
         targets.push_back(br);
-        width = max(width, strlen(branches[i].longname));
+        width = max(width, strlen(it->longname));
     }
 
     for (unsigned int i = 0; i < targets.size(); i++)
