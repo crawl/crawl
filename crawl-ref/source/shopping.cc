@@ -578,6 +578,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             {
                 _shop_print("I'm sorry, you don't seem to have enough money.",
                             1);
+                _shop_more();
             }
             else if (!total_purchase) // Nothing selected.
                 continue;
