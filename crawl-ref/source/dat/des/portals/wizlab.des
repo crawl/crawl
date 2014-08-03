@@ -86,12 +86,7 @@ function wizlab_portal (e)
         finalmsg = "The crackle of the magical portal is almost imperceptible now.",
 
         verb = 'crackle',
-        noisemaker = 'magical portal',
-        ranges = {
-          { 5000, 'rapid ' },  { 4000, '' },
-          { 2500, 'slow ' }, { 1500, 'irregular ' },
-          { 0, 'erratic ' }
-        }
+        noisemaker = 'magical portal'
     }
 
     e.lua_marker('O',
