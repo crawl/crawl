@@ -5564,6 +5564,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (simple_monster_message(mon, " is charmed."))
             obvious_effect = true;
         mon->add_ench(ENCH_CHARM);
+        if (you.can_see(mon))
+            obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_PORKALATOR:
