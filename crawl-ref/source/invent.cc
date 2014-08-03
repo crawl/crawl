@@ -1683,7 +1683,7 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 }
 
-static bool _nasty_stasis(const item_def &item, operation_types oper)
+bool nasty_stasis(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON
            && (item.base_type == OBJ_JEWELLERY
@@ -1721,7 +1721,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return true;
     }
 
-    if (_nasty_stasis(item, oper))
+    if (nasty_stasis(item, oper))
         return true;
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
@@ -1825,7 +1825,7 @@ bool check_warning_inscriptions(const item_def& item,
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (_nasty_stasis(item, oper))
+        if (nasty_stasis(item, oper))
         {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
