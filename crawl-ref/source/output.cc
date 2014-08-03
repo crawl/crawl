@@ -1984,7 +1984,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname,
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 38 : sw - 31, false).c_str(),
+                                 melded ? sw - 43 : sw - 36, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }
