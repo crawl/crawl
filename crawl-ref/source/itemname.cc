@@ -1364,7 +1364,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_pluses)
         {
-            if (is_unrandom_artefact(*this) && special == UNRAND_WOE)
+            if (is_unrandom_artefact(*this, UNRAND_WOE))
                 buff << "+∞ ";
             else
                 buff << make_stringf("%+d ", it_plus);

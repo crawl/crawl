@@ -1256,9 +1256,8 @@ int acquirement_create_item(object_class_type class_wanted,
 
             int brand = get_weapon_brand(acq_item);
             if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(acq_item)
-                   && (acq_item.special == UNRAND_TROG
-                       || acq_item.special == UNRAND_WUCAD_MU))
+                || is_unrandom_artefact(acq_item, UNRAND_TROG)
+                || is_unrandom_artefact(acq_item, UNRAND_WUCAD_MU))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;

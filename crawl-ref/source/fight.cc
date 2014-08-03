@@ -333,8 +333,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
 
             // On the first landing site, check the hit function for Devastator.
             if (!check_landing_only && !conduct_prompted
-                && weapon && is_unrandom_artefact(*weapon)
-                && weapon->special == UNRAND_DEVASTATOR)
+                && weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
             {
                 const char* verb = "jump-attack";
                 string junk1, junk2;

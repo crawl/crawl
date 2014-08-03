@@ -400,7 +400,7 @@ bool is_poisoned_item(const item_def& item)
 bool is_illuminating_item(const item_def& item)
 {
     // No halo for you!
-    if (is_unrandom_artefact(item) && item.special == UNRAND_BRILLIANCE)
+    if (is_unrandom_artefact(item, UNRAND_BRILLIANCE))
         return true;
 
     switch (item.base_type)
@@ -448,7 +448,7 @@ static bool _is_potentially_fiery_item(const item_def& item)
 bool is_fiery_item(const item_def& item)
 {
     // Flaming Death is handled through its fire brand.
-    if (is_unrandom_artefact(item) && item.special == UNRAND_HELLFIRE)
+    if (is_unrandom_artefact(item, UNRAND_HELLFIRE))
         return true;
 
     switch (item.base_type)

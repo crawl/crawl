@@ -1537,8 +1537,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         {
             return weapon.base_type == OBJ_STAVES
                        && weapon.sub_type == STAFF_POISON
-                   || weapon.base_type == OBJ_WEAPONS
-                       && weapon.special == UNRAND_OLGREB;
+                   || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
         if (mons->type == MONS_FANNAR)
@@ -2978,7 +2977,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
 
     if (const item_def* w = weapon())
     {
-        if (is_unrandom_artefact(*w) && w->special == UNRAND_JIHAD)
+        if (is_unrandom_artefact(*w, UNRAND_JIHAD))
             for (actor_near_iterator mi(pos(), LOS_NO_TRANS); mi; ++mi)
                 if (mons_aligned(this, *mi))
                     mi->go_berserk(false);

@@ -74,7 +74,7 @@ struct unrandart_entry
 bool is_known_artefact(const item_def &item);
 bool is_artefact(const item_def &item);
 bool is_random_artefact(const item_def &item);
-bool is_unrandom_artefact(const item_def &item);
+bool is_unrandom_artefact(const item_def &item, unrand_type which = 0);
 bool is_special_unrandom_artefact(const item_def &item);
 bool is_randapp_artefact(const item_def &item);
 void autoid_unrand(item_def &item);

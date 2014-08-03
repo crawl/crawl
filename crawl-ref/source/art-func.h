@@ -1236,7 +1236,7 @@ static int _octorings_worn()
             continue;
 
         item_def& ring = you.inv[you.equip[i]];
-        if (is_unrandom_artefact(ring) && ring.special == UNRAND_OCTOPUS_KING_RING)
+        if (is_unrandom_artefact(ring, UNRAND_OCTOPUS_KING_RING))
             worn++;
     }
 
