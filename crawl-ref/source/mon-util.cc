@@ -4830,8 +4830,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
 
     return targ->alive()
            && !mons_class_is_stationary(targ->type)
-           && !mons_is_conjured(targ->type)
-           && monster_habitable_grid(targ, DNGN_FLOOR); //XXX?
+           && !mons_is_conjured(targ->type);
 }
 
 vector<monster* > get_on_level_followers()
