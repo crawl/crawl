@@ -98,6 +98,10 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             set_hp(you.hp_max);
         }
 
+        // need to redraw from yellow to green even if no hp was gained
+        if (you.duration[DUR_POISONING])
+            you.redraw_hit_points = true;
+
         you.duration[DUR_POISONING] = 0;
         you.rotting = 0;
         you.disease = 0;
