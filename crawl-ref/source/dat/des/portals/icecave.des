@@ -28,7 +28,7 @@ function ice_cave_portal(e)
       noisemaker = 'melting archway',
       ranges = {
         { 5000, 'faint ' },  { 4000, '' },
-        { 2500, 'steady ' }, { 1500, 'rapid ' },
+        { 2500, 'steady ' }, { 1500, 'quick ' },
         { 0, 'loud ' }
       }
     }
