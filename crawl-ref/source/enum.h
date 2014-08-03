@@ -1324,7 +1324,7 @@ enum dungeon_char_type
 //        docs/develop/levels/syntax.txt with the new symbol.
 // * Any: if its enumerator comes late in the list (as is likely for new
 //        feature types),_cell_feat_show_colour may need a special case to
-//        allow it to be recoloured.
+//        allow it to be recoloured by vaults/bloodspatters.
 // Also take note of MINMOVE and MINSEE above.
 //
 // Various pieces of code depend on the relative order of these enumerators,
