@@ -2214,12 +2214,26 @@ public:
                 name = "chunks";
                 break;
             case FOOD_MEAT_RATION:
-                name = "preserved meat";
+                name = "meat rations";
                 break;
+            case FOOD_BEEF_JERKY:
+                name = "beef jerky";
+                break;
+            case FOOD_BREAD_RATION:
+                name = "bread rations";
+                break;
+#if TAG_MAJOR_VERSION == 34
+            default:
+#endif
             case FOOD_FRUIT:
                 name = "fruit";
                 break;
-            default:
+            case FOOD_PIZZA:
+                name = "pizza";
+                break;
+            case FOOD_ROYAL_JELLY:
+                name = "royal jellies";
+                break;
                 name = "other food";
                 break;
             }
@@ -2474,13 +2488,13 @@ void check_item_knowledge(bool unknown_items)
         // Misc.
         static const object_class_type misc_list[] =
         {
-            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
+            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_FRUIT, FOOD_ROYAL_JELLY,
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
         };
