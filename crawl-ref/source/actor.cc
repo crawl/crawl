@@ -261,8 +261,8 @@ bool actor::res_corr(bool calc_unid, bool items) const
 
 // This is a bit confusing. This is not the function that determines whether or
 // not an actor is capable of teleporting, only whether they are specifically
-// under the influence of the "notele" effect. See item_blocks_teleport() in
-// item_use.cc for a superset of this function.
+// under the influence of the "notele" effect. See actor::no_tele() for a
+// superset of this function.
 bool actor::has_notele_item(bool calc_unid) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
