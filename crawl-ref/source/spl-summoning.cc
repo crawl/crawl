@@ -217,7 +217,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
         int tries = 0;
         do
         {
-            mon = random_choose_weighted(1, MONS_BUTTERFLY
+            mon = random_choose_weighted(1, MONS_BUTTERFLY,
                                          1, MONS_WORM,
                                          3, MONS_WORKER_ANT,
                                          1, MONS_SCORPION,

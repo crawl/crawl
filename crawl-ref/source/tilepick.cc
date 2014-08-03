@@ -2849,8 +2849,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             if (!mon.inv[MSLOT_SHIELD].get() && weapon
                 && (weapon->base_type == OBJ_STAVES
                       && weapon->sub_type == STAFF_POISON
-                    || weapon->base_type == OBJ_WEAPONS
-                      && weapon->special == UNRAND_OLGREB))
+                    || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return TILEP_MONS_ARACHNE;
             }

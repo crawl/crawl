@@ -514,7 +514,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Lear's hauberk covers also head, hands and legs.
-    if (is_unrandom_artefact(item) && item.special == UNRAND_LEAR)
+    if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
         if (!player_has_feet(!ignore_temporary))
         {

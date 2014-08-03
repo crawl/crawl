@@ -832,8 +832,7 @@ void ranged_attack::player_stab_check()
     {
         attack::player_stab_check();
         // Sometimes the blowgun of the Assassin lets you stab an aware target.
-        if (!stab_attempt && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_BLOWGUN_ASSASSIN
+        if (!stab_attempt && is_unrandom_artefact(*weapon, UNRAND_BLOWGUN_ASSASSIN)
             && one_chance_in(3))
         {
             stab_attempt = true;

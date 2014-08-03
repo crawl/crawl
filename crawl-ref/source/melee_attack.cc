@@ -147,8 +147,7 @@ bool melee_attack::handle_phase_attempted()
     {
         // These checks are handled in fight_jump() for jump attacks
         if (!jumping_attack && weapon
-            && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_DEVASTATOR)
+            && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
         {
             const char* verb = "attack";
             string junk1, junk2;

@@ -1588,7 +1588,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
 // True if item is a staff that deals extra damage based on Evocations skill.
 static bool _staff_uses_evocations(const item_def &item)
 {
-    if (is_unrandom_artefact(item) && item.special == UNRAND_ELEMENTAL_STAFF)
+    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
         return true;
 
     if (!item_type_known(item) || item.base_type != OBJ_STAVES)

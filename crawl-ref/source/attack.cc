@@ -280,11 +280,8 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (using_weapon() && is_unrandom_artefact(*weapon)
-        && weapon->special == UNRAND_WOE)
-    {
+    if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_WOE))
         return AUTOMATIC_HIT;
-    }
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -1756,7 +1753,7 @@ bool attack::apply_damage_brand(const char *what)
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || !attacker->is_player()
                && attacker->as_monster()->has_ench(ENCH_DEATHS_DOOR)
-            || (x_chance_in_y(2, 5) && !(weapon->special == UNRAND_LEECH)))
+            || (x_chance_in_y(2, 5) &&  !is_unrandom_artefact(*weapon, UNRAND_LEECH))
         {
             break;
         }
@@ -1782,8 +1779,8 @@ bool attack::apply_damage_brand(const char *what)
             }
         }
 
-        int hp_boost = weapon->special == UNRAND_VAMPIRES_TOOTH
-                     ? damage_done : 1 + random2(damage_done);
+        int hp_boost = is_unrandom_artefact(*weapon, UNRAND_VAMPIRES_TOOTH)
+                       ? damage_done : 1 + random2(damage_done);
 
         dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
              damage_done, hp_boost);
@@ -1853,8 +1850,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     default:
-        if (using_weapon() && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_HELLFIRE)
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_HELLFIRE))
         {
             calc_elemental_brand_damage(BEAM_HELLFIRE,
                                         defender->is_monster()

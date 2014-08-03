@@ -152,7 +152,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
     if (slot >= r1 && slot <= r2)
         return;
     if (const item_def* amu = you.slot_item(EQ_AMULET, true))
-        if (amu->special == UNRAND_FINGER_AMULET && slot == EQ_RING_AMULET)
+        if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET)
             return;
     die("ring on invalid slot %d", slot);
 #endif
