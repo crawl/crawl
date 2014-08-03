@@ -602,33 +602,33 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     }
 }
 
-skill_type opposite_skill(skill_type sk)
+/**
+ * Is the provided skill one of the elemental spellschools?
+ *
+ * @param sk    The skill in question.
+ * @return      Whether it is fire, ice, earth, or air.
+ */
+static bool _skill_is_elemental(skill_type sk)
 {
-    switch (sk)
-    {
-    case SK_FIRE_MAGIC  : return SK_ICE_MAGIC;   break;
-    case SK_ICE_MAGIC   : return SK_FIRE_MAGIC;  break;
-    case SK_AIR_MAGIC   : return SK_EARTH_MAGIC; break;
-    case SK_EARTH_MAGIC : return SK_AIR_MAGIC;   break;
-    default: return SK_NONE;
-    }
+    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
+           || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
 }
 
-static int _skill_elemental_preference(skill_type sk, int scale)
-{
-    const skill_type sk2 = opposite_skill(sk);
-    if (sk2 == SK_NONE)
-        return 0;
-    return you.skill(sk, scale) - you.skill(sk2, scale);
-}
-
+/**
+ * How skilled is the player at the elemental components of a spell?
+ *
+ * @param spell     The type of spell in question.
+ * @param scale     Scaling factor for skill.
+ * @return          The player's skill at the elemental parts of a given spell.
+ */
 int elemental_preference(spell_type spell, int scale)
 {
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
     for (skill_set_iter it = skill_list.begin(); it != skill_list.end(); ++it)
-        preference += _skill_elemental_preference(*it, scale);
+        if (_skill_is_elemental(*it))
+            preference += you.skill(*it, scale);
     return preference;
 }
 
