@@ -462,6 +462,7 @@ protected:
 
     virtual void draw_title();
     virtual void write_title();
+    virtual int title_height() const;
     virtual void draw_menu();
     virtual bool page_down();
     virtual bool line_down();

@@ -464,7 +464,10 @@ public:
     bool can_travel;
 protected:
     void draw_title();
+    int title_height() const;
     bool process_key(int key);
+private:
+    formatted_string create_title_string(bool wrap = true) const;
 };
 
 void StashMenu::draw_title()
@@ -472,42 +475,77 @@ void StashMenu::draw_title()
     if (title)
     {
         cgotoxy(1, 1);
-        formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%s", title->text.c_str());
-        if (title->quantity)
-        {
-            fs.cprintf(", %d item%s", title->quantity,
-                                      title->quantity == 1? "" : "s");
-        }
-        fs.cprintf(")");
-
-        if (action_cycle == Menu::CYCLE_TOGGLE)
-        {
-            fs.cprintf("  [a-z: %s  ?/!: %s]",
-                       menu_action == ACT_EXAMINE ? "examine" : "shopping",
-                       menu_action == ACT_EXAMINE ? "shopping" : "examine");
-        }
-
-        if (can_travel)
-        {
-            if (action_cycle == Menu::CYCLE_TOGGLE)
-            {
-                // XXX: This won't fit in the title, so it goes into the
-                // footer/-more-.  Not ideal, but I don't know where else
-                // to put it.
-                string str = "<w>[ENTER: travel]</w>";
-                set_more(formatted_string::parse_string(str));
-                flags |= MF_ALWAYS_SHOW_MORE;
-            }
-            else
-                fs.cprintf("  [ENTER: travel]");
-        }
-        fs.display();
+        create_title_string().display();
 
 #ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
+        webtiles_set_title(create_title_string(false));
 #endif
     }
+}
+
+int StashMenu::title_height() const
+{
+    if (title)
+    {
+        return 1 + (create_title_string().width() - 1) / get_number_of_cols();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+formatted_string StashMenu::create_title_string(bool wrap) const
+{
+    formatted_string fs = formatted_string(title->colour);
+    fs.cprintf("%s", title->text.c_str());
+    if (title->quantity)
+    {
+        fs.cprintf(", %d item%s", title->quantity,
+                                  title->quantity == 1? "" : "s");
+    }
+    fs.cprintf(")");
+
+    vector<string> extra_parts;
+
+    string part = "[a-z: ";
+    part += string(menu_action == ACT_EXAMINE ? "examine" : "shopping");
+    part += "  ?/!: ";
+    part += string(menu_action == ACT_EXAMINE ? "shopping" : "examine");
+    part += "]";
+    extra_parts.push_back(part);
+
+    if (can_travel)
+        extra_parts.push_back(string("[ENTER: travel]"));
+
+    int term_width = get_number_of_cols();
+    int remaining = term_width - fs.width();
+    unsigned int extra_idx = 0;
+    while (static_cast<int>(extra_parts[extra_idx].length()) + 2 <= remaining
+           || !wrap)
+    {
+        fs.cprintf("  %s", extra_parts[extra_idx].c_str());
+
+        remaining -= extra_parts[extra_idx].length() + 2;
+        extra_idx++;
+        if (extra_idx >= extra_parts.size())
+            break;
+    }
+    // XXX assuming only two rows are possible for now
+    if (extra_idx < extra_parts.size())
+    {
+        fs.cprintf("%s", string(remaining, ' ').c_str());
+
+        string second_line;
+        for (unsigned int i = extra_idx; i < extra_parts.size(); ++i)
+            second_line += string("  ") + extra_parts[i];
+
+        fs.cprintf("%s%s",
+                   string(term_width - second_line.length(), ' ').c_str(),
+                   second_line.c_str());
+    }
+
+    return fs;
 }
 
 bool StashMenu::process_key(int key)
