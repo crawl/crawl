@@ -908,13 +908,6 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
-static bool _can_sacrifice(const coord_def p)
-{
-    const dungeon_feature_type feat = grd(p);
-    return !you.cannot_speak()
-           && (!feat_is_altar(feat) || feat_is_player_altar(feat));
-}
-
 static bool _sacrificeable_at(const coord_def& p)
 {
     for (stack_iterator si(p, true); si; ++si)
@@ -1040,7 +1033,7 @@ command_type travel()
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                          || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
                         && (Options.auto_sacrifice != AS_YES || !sacrificeable
-                            || stack || !_can_sacrifice(newpos)))
+                            || stack))
                     {
                         explore_stopped_pos = newpos;
                         stop_running();
@@ -3035,7 +3028,7 @@ void start_explore(bool grab_items)
               && (Options.auto_sacrifice == AS_YES
                   || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
          {
-             pray();
+             pray(false);
          }
 
     }
@@ -3059,10 +3052,9 @@ void start_explore(bool grab_items)
             if ((Options.auto_sacrifice == AS_YES
                  || Options.auto_sacrifice == AS_BEFORE_EXPLORE
                  || Options.auto_sacrifice == AS_PROMPT
-                    && yesno("Do you want to sacrifice the items here? ", true, 'n'))
-                && _can_sacrifice(you.pos()))
+                    && yesno("Do you want to sacrifice the items here? ", true, 'n')))
             {
-                pray();
+                pray(false);
             }
             else if (Options.auto_sacrifice == AS_PROMPT_IGNORE)
             {

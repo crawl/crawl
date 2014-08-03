@@ -375,21 +375,21 @@ static void _zen_meditation()
  * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
  * you're an orc being preached at.)
  */
-void pray()
+void pray(bool allow_altar_prayer)
 {
     // only successful prayer takes time
     you.turn_is_over = false;
 
     // try to pray to an altar (if any is present)
-    if (_altar_pray_or_convert())
+    if (allow_altar_prayer && _altar_pray_or_convert())
     {
         you.turn_is_over = true;
         return;
     }
 
     // convert to beogh via priest.
-    if (you_worship(GOD_NO_GOD) && env.level_state & LSTATE_BEOGH
-        && can_convert_to_beogh())
+    if (allow_altar_prayer && you_worship(GOD_NO_GOD)
+        && (env.level_state & LSTATE_BEOGH) && can_convert_to_beogh())
     {
         // TODO: deduplicate this with the code in _altar_pray_or_convert.
         you.turn_is_over = true;
