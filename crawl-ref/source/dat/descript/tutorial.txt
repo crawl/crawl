@@ -645,7 +645,7 @@ found so far.
 tutorial5 altar
 
 You can pray on an altar with <input>$cmd[CMD_PRAY]</input><localtiles> (or by
-<input>clicking in the command panel</input> or <input>Shift-clicking</input>
+<input>clicking in the command panel</input> or <input>left clicking</input>
 on your character)</localtiles> to get an idea what a god offers you, and to
 join the faith. If you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
