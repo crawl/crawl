@@ -467,7 +467,7 @@ protected:
     int title_height() const;
     bool process_key(int key);
 private:
-    formatted_string create_title_string() const;
+    formatted_string create_title_string(bool wrap = true) const;
 };
 
 void StashMenu::draw_title()
@@ -478,7 +478,7 @@ void StashMenu::draw_title()
         create_title_string().display();
 
 #ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
+        webtiles_set_title(create_title_string(false));
 #endif
     }
 }
@@ -495,7 +495,7 @@ int StashMenu::title_height() const
     }
 }
 
-formatted_string StashMenu::create_title_string() const
+formatted_string StashMenu::create_title_string(bool wrap) const
 {
     formatted_string fs = formatted_string(title->colour);
     fs.cprintf("%s", title->text.c_str());
@@ -521,7 +521,8 @@ formatted_string StashMenu::create_title_string() const
     int term_width = get_number_of_cols();
     int remaining = term_width - fs.width();
     unsigned int extra_idx = 0;
-    while (static_cast<int>(extra_parts[extra_idx].length()) + 2 <= remaining)
+    while (static_cast<int>(extra_parts[extra_idx].length()) + 2 <= remaining
+           || !wrap)
     {
         fs.cprintf("  %s", extra_parts[extra_idx].c_str());
 
