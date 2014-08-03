@@ -302,9 +302,6 @@ static string _get_unseen_branches()
     char buffer[100];
     string disp;
 
-    /* see if we need to hide lair branches that don't exist */
-    int seen_lair_branches = 0;
-    int seen_vaults_branches = 0;
     for (branch_iterator it; it; ++it)
     {
         if (it->id < BRANCH_FIRST_NON_DUNGEON)
@@ -312,30 +309,10 @@ static string _get_unseen_branches()
 
         const branch_type branch = it->id;
 
-        if (!is_random_subbranch(branch))
-            continue;
-
-        if (stair_level.count(branch))
-        {
-            if (parent_branch(branch) == BRANCH_LAIR)
-                seen_lair_branches++;
-            else if (parent_branch(branch) == BRANCH_VAULTS)
-                seen_vaults_branches++;
-        }
-    }
-
-    for (branch_iterator it; it; ++it)
-    {
-        if (it->id < BRANCH_FIRST_NON_DUNGEON)
-            continue;
-
-        const branch_type branch = it->id;
-
-        if (is_random_subbranch(branch)
-            && ((parent_branch(branch) == BRANCH_LAIR
-                 && seen_lair_branches >= 2)
-                || (parent_branch(branch) == BRANCH_VAULTS)
-                    && seen_vaults_branches >= 1))
+        if (branch == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+            || branch == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+            || branch == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+            || branch == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
         {
             continue;
         }
