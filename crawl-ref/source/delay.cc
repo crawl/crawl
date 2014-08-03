@@ -864,8 +864,31 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_JEWELLERY_ON:
+    {
+        const item_def &item = you.inv[delay.parm1];
+
+        // recheck stasis here, since our condition may have changed since
+        // starting the amulet swap process
+        // just breaking here is okay because swapping jewellery is a one-turn
+        // action, so conceptually there is nothing to interrupt - in other
+        // words, this is equivalent to if the user took off the previous
+        // amulet and was slowed before putting the amulet of stasis on as a
+        // separate action on the next turn
+        if (nasty_stasis(item, OPER_PUTON))
+        {
+            string prompt = "Really put on ";
+            prompt += item.name(DESC_INVENTORY);
+            prompt += string(" while ")
+                      + (you.duration[DUR_TELEPORT] ? "about to teleport" :
+                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
+            prompt += "?";
+            if (!yesno(prompt.c_str(), false, 'n'))
+                break;
+        }
+
         puton_ring(delay.parm1, false);
         break;
+    }
 
     case DELAY_ARMOUR_ON:
         _armour_wear_effects(delay.parm1);
