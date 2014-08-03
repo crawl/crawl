@@ -352,7 +352,7 @@ PORTAL_EXIT(DNGN_TRANSIT_PANDEMONIUM, "gate leading to another region of Pandemo
 PORTAL_EXIT(DNGN_EXIT_PANDEMONIUM, "gate leading out of Pandemonium", "exit_pandemonium", LIGHTBLUE),
 
 PORTAL_ENTRANCE(DNGN_ENTER_VAULTS, "gate to the Vaults", "enter_vaults", LIGHTGREEN),
-PORTAL_EXIT(DNGN_RETURN_FROM_VAULTS, "gate leading back out of this place", "return_from_vaults", ETC_SHIMMER_BLUE),
+PORTAL_EXIT(DNGN_RETURN_FROM_VAULTS, "gate leading back out of this place", "return_from_vaults", LIGHTGREEN),
 
 PORTAL_ENTRANCE(DNGN_ENTER_ZOT, "gate to the Realm of Zot", "enter_zot", MAGENTA),
 PORTAL_EXIT(DNGN_RETURN_FROM_ZOT, "gate leading back out of this place", "return_from_zot", MAGENTA),
