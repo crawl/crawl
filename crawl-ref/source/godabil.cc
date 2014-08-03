@@ -3711,7 +3711,7 @@ void shadow_monster_reset(monster *mon)
  * @return          Whether the player is melee range of the target, using
  *                  their current weapon.
  */
-bool _in_melee_range(actor* target)
+static bool _in_melee_range(actor* target)
 {
     const int dist = (you.pos() - target->pos()).abs();
     return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
