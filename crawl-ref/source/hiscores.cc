@@ -284,7 +284,7 @@ void hiscores_print_list(int display_count, int format)
 
     textcolor(LIGHTGREY);
 
-    int start = (newest_entry > 10) ? newest_entry - 10 : 0;
+    int start = newest_entry - display_count / 2;
 
     if (start + display_count > total_entries)
         start = total_entries - display_count;
