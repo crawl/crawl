@@ -350,7 +350,7 @@ bool is_random_artefact(const item_def &item)
  *  @returns true if item is an unrand, and if which is not 0, if it is the unrand
  *           specfied by enum in which.
  */
-bool is_unrandom_artefact(const item_def &item, unrand_type which)
+bool is_unrandom_artefact(const item_def &item, int which)
 {
     return item.flags & ISFLAG_UNRANDART
            && (!which || which == item.special);
