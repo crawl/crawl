@@ -208,14 +208,6 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        const monster_type swarmers[] =
-        {
-            MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
-            MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
-            MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
-            MONS_YELLOW_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
-            MONS_WORKER_ANT
-        };
 
         monster_type mon = MONS_NO_MONSTER;
 
@@ -224,7 +216,18 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
         const int MAX_TRIES = 100;
         int tries = 0;
         do
-            mon = RANDOM_ELEMENT(swarmers);
+        {
+            mon = random_choose_weighted(1, MONS_BUTTERFLY
+                                         1, MONS_WORM,
+                                         3, MONS_WORKER_ANT,
+                                         1, MONS_SCORPION,
+                                         1, MONS_SPIDER,
+                                         1, MONS_GOLIATH_BEETLE,
+                                         3, MONS_KILLER_BEE,
+                                         1, MONS_VAMPIRE_MOSQUITO,
+                                         1, MONS_YELLOW_WASP,
+                                         0);
+        }
         while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
 
         // If a hundred tries wasn't enough, it's never going to work.
@@ -638,21 +641,9 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         else if (pow <= 180)
         {
             // trolls
-            switch (random2(8))
-            {
-            case 0:
-            case 1:
-            case 2:
-                mon = MONS_DEEP_TROLL;
-                break;
-            case 3:
-            case 4:
-                mon = MONS_IRON_TROLL;
-                break;
-            default:
-                mon = MONS_TROLL;
-                break;
-            }
+            mon = random_choose_weighted(3, MONS_TROLL,
+                                         3, MONS_DEEP_TROLL,
+                                         2, MONS_IRON_TROLL);
         }
         else
         {
