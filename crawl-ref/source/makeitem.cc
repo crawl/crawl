@@ -123,8 +123,12 @@ static int _missile_colour(const item_def &item)
     switch (item.sub_type)
     {
     case MI_STONE:
-    case MI_SLING_BULLET:
         item_colour = BROWN;
+#if TAG_MAJOR_VERSION == 34
+    case MI_DART:
+#endif
+    case MI_SLING_BULLET:
+        item_colour = CYAN;
         break;
     case MI_LARGE_ROCK:
         item_colour = LIGHTGREY;
@@ -138,11 +142,6 @@ static int _missile_colour(const item_def &item)
     case MI_BOLT:
         item_colour = LIGHTBLUE;
         break;
-#if TAG_MAJOR_VERSION == 34
-    case MI_DART:
-        item_colour = CYAN;
-        break;
-#endif
     case MI_JAVELIN:
         item_colour = RED;
         break;
