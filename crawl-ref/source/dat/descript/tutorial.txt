@@ -41,7 +41,7 @@ tutorial1 downstairs
 
 When standing on a staircase leading downwards, you can enter the next level
 with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or with
-<input>Shift-Click</input> on your character</localtiles>.
+<input>left click</input> on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
@@ -81,7 +81,7 @@ Congratulations! You've completed the first lesson!
 
 To exit the tutorial, simply go up these stairs with
 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
-<input>Shift-clicking</input> on your character</localtiles>. Confirm the
+<input>left clicking</input> on your character</localtiles>. Confirm the
 resulting prompt with an uppercase <input>Y</input>.
 %%%%
 tutorial1 newlevel
@@ -107,7 +107,7 @@ tutorial1 upstairs
 
 When standing on a staircase leading upwards, you can enter the previous level
 with <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
-<input>Shift-clicking</input> on your character</localtiles>.
+<input>left clicking</input> on your character</localtiles>.
 %%%%
 tutorial1 exit
 
