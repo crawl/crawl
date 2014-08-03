@@ -538,16 +538,16 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     }
 
     // Is it a branch stair?
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (branches[i].entry_stairs == feat)
+        if (it->entry_stairs == feat)
         {
-            place = static_cast<branch_type>(i);
+            place = it->id;
             break;
         }
-        else if (branches[i].exit_stairs == feat)
+        else if (it->exit_stairs == feat)
         {
-            place = brentry[i];
+            place = brentry[it->id];
             // This can happen on D:1 and in wizmode with random spawns on the
             // first floor of a branch that didn't generate naturally.
             if (!place.is_valid())

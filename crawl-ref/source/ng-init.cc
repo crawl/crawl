@@ -60,8 +60,8 @@ void initialise_branch_depths()
     // XXX: Should this go elsewhere?
     branch_bribe.init(0);
 
-    for (int br = 0; br < NUM_BRANCHES; ++br)
-        brentry[br].clear();
+    for (branch_iterator it; it; ++it)
+        brentry[it->id].clear();
 
     if (crawl_state.game_is_sprint())
     {
@@ -83,10 +83,15 @@ void initialise_branch_depths()
     {
         const Branch *b = &branches[branch];
         ASSERT(b->id == branch);
-        if (!branch_is_unfinished(b->id) && b->parent_branch != NUM_BRANCHES)
+    }
+
+    for (branch_iterator it; it; ++it)
+    {
+        if (!branch_is_unfinished(it->id) && it->parent_branch != NUM_BRANCHES)
         {
-            brentry[branch] = level_id(b->parent_branch,
-                                       random_range(b->mindepth, b->maxdepth));
+            brentry[it->id] = level_id(it->parent_branch,
+                                       random_range(it->mindepth,
+                                                    it->maxdepth));
         }
     }
 
@@ -104,8 +109,8 @@ void initialise_branch_depths()
         brentry[disabled_branch[i]].clear();
     }
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
-        brdepth[i] = branches[i].numlevels;
+    for (branch_iterator it; it; ++it)
+        brdepth[it->id] = it->numlevels;
 }
 
 #define MAX_OVERFLOW_LEVEL 9

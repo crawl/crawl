@@ -617,10 +617,10 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     }
 
     // Try to find a branch stair.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (branches[i].entry_stairs == feat)
-            return level_id(branches[i].id);
+        if (it->entry_stairs == feat)
+            return level_id(it->id);
     }
 
     return level_id();
