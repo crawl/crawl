@@ -420,7 +420,7 @@ void unmeld_one_equip(equipment_type eq)
 {
     if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
         if (const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true))
-            if (is_unrandom_artefact(*arm, UNRAND_LEAR)
+            if (is_unrandom_artefact(*arm, UNRAND_LEAR))
                 eq = EQ_BODY_ARMOUR;
 
     set<equipment_type> e;
