@@ -6159,7 +6159,8 @@ bool bolt::explosion_draw_cell(const coord_def& p)
 #endif
 #ifndef USE_TILE_LOCAL
             cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-            put_colour_ch(colour == BLACK ? random_colour() : colour,
+            put_colour_ch(colour == BLACK ? random_colour()
+                                          : element_colour(colour, false, p),
                           dchar_glyph(DCHAR_EXPLOSION));
 #endif
             return true;
