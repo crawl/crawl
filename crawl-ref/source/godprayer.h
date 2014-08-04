@@ -9,7 +9,7 @@
 #include "religion-enum.h"
 
 string god_prayer_reaction();
-void pray();
+void pray(bool allow_altar_prayer = true);
 
 piety_gain_t sacrifice_item_stack(const item_def& item, int *js = 0,
                                   int quantity = 0);
