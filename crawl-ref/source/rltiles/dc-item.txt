@@ -162,10 +162,10 @@ blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_HUNTING_SLING
 sling2
+%rim 0
 greatsling WPN_GREATSLING
 greatsling2
 
-%rim 0
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
