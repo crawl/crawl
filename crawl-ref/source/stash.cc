@@ -486,13 +486,9 @@ void StashMenu::draw_title()
 int StashMenu::title_height() const
 {
     if (title)
-    {
         return 1 + (create_title_string().width() - 1) / get_number_of_cols();
-    }
     else
-    {
         return 0;
-    }
 }
 
 formatted_string StashMenu::create_title_string(bool wrap) const

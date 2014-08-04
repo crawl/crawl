@@ -289,9 +289,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             && !backlit() && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
+            {
                 mprf("You detect the %s %s.",
                      ench.ench == ENCH_CHARM ? "charmed" : "bribed",
                      name(DESC_PLAIN, true).c_str());
+            }
 
             autotoggle_autopickup(false);
             handle_seen_interrupt(this);
@@ -615,8 +617,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
             {
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
+                {
                     mprf("%s breaks free of your control!",
                          name(DESC_THE, true).c_str());
+                }
                 else
                     mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
                          me.ench == ENCH_CHARM ? "charmed" : "bribed");
@@ -632,8 +636,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
             {
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
+                {
                     simple_monster_message(this,
                                            " breaks free of your control!");
+                }
                 else
                     simple_monster_message(this,
                                         me.ench == ENCH_CHARM
