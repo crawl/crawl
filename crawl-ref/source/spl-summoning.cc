@@ -643,7 +643,8 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
             // trolls
             mon = random_choose_weighted(3, MONS_TROLL,
                                          3, MONS_DEEP_TROLL,
-                                         2, MONS_IRON_TROLL);
+                                         2, MONS_IRON_TROLL,
+                                         0);
         }
         else
         {
