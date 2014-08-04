@@ -124,6 +124,7 @@ static int _missile_colour(const item_def &item)
     {
     case MI_STONE:
         item_colour = BROWN;
+        break;
 #if TAG_MAJOR_VERSION == 34
     case MI_DART:
 #endif
