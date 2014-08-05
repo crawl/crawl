@@ -44,35 +44,152 @@
 
 #define NUM_FORMS (LAST_FORM + 1)
 
-static void _extra_hp(int amount_extra);
-
-static const char* form_names[] =
+class Form
 {
-    "none",
-    "spider",
-    "blade",
-    "statue",
-    "ice",
-    "dragon",
-    "lich",
-    "bat",
-    "pig",
-    "appendage",
-    "tree",
-    "porcupine",
-    "wisp",
-#if TAG_MAJOR_VERSION == 34
-    "jelly",
-#endif
-    "fungus",
-    "shadow",
+public:
+    Form(const char *_name) : name(_name) { };
+
+public:
+    const char* const name;
 };
+
+
+class FormNone : public Form
+{
+public:
+    FormNone() : Form("none") { };
+};
+
+class FormSpider : public Form
+{
+public:
+    FormSpider() : Form("spider") { };
+};
+
+class FormBlade : public Form
+{
+public:
+    FormBlade() : Form("blade") { };
+};
+
+class FormStatue : public Form
+{
+public:
+    FormStatue() : Form("statue") { };
+};
+
+class FormIce : public Form
+{
+public:
+    FormIce() : Form("ice") { };
+};
+
+class FormDragon : public Form
+{
+public:
+    FormDragon() : Form("dragon") { };
+};
+
+class FormLich : public Form
+{
+public:
+    FormLich() : Form("lich") { };
+};
+
+class FormBat : public Form
+{
+public:
+    FormBat() : Form("bat") { };
+};
+
+class FormPig : public Form
+{
+public:
+    FormPig() : Form("pig") { };
+};
+
+class FormAppendage : public Form
+{
+public:
+    FormAppendage() : Form("appendage") { };
+};
+
+class FormTree : public Form
+{
+public:
+    FormTree() : Form("tree") { };
+};
+
+class FormPorcupine: public Form
+{
+public:
+    FormPorcupine() : Form("porcupine") { };
+};
+
+class FormWisp: public Form
+{
+public:
+    FormWisp() : Form("wisp") { };
+};
+
+#if TAG_MAJOR_VERSION == 34
+class FormJelly : public Form
+{
+public:
+    FormJelly() : Form("jelly") { };
+};
+#endif
+
+class FormFungus : public Form
+{
+public:
+    FormFungus() : Form("fungus") { };
+};
+
+class FormShadow: public Form
+{
+public:
+    FormShadow() : Form("shadow") { };
+};
+
+
+
+static const Form forms[NUM_FORMS] =
+{
+    FormNone(),
+    FormSpider(),
+    FormBlade(),
+    FormStatue(),
+    FormIce(),
+    FormDragon(),
+    FormLich(),
+    FormBat(),
+    FormPig(),
+    FormAppendage(),
+    FormTree(),
+    FormPorcupine(),
+    FormWisp(),
+#if TAG_MAJOR_VERSION == 34
+    FormJelly(),
+#endif
+    FormFungus(),
+    FormShadow()
+};
+
+
+
+
+
+
+
+
+static void _extra_hp(int amount_extra);
 
 const char* transform_name(transformation_type form)
 {
-    COMPILE_CHECK(ARRAYSZ(form_names) == NUM_FORMS);
+    COMPILE_CHECK(ARRAYSZ(forms) == NUM_FORMS);
     ASSERT_RANGE(form, 0, NUM_FORMS);
-    return form_names[form];
+    return forms[form].name;
 }
 
 bool form_can_wield(transformation_type form)
@@ -1243,7 +1360,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (you.hp <= 0)
     {
         ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
-             make_stringf("gaining the %s transformation", form_names[which_trans]).c_str());
+             make_stringf("gaining the %s transformation",
+                          transform_name(which_trans)).c_str());
     }
 
     return true;
@@ -1461,7 +1579,8 @@ void untransform(bool skip_wielding, bool skip_move)
     if (you.hp <= 0)
     {
         ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
-             make_stringf("losing the %s form", form_names[old_form]).c_str());
+             make_stringf("losing the %s form",
+                          transform_name(old_form)).c_str());
     }
 
     // Stop being constricted if we are now too large.
