@@ -618,7 +618,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BOOTS)
     {
-        if (player_mutation_level(MUT_HOOVES) == 3)
+        if (player_mutation_level(MUT_HOOVES, false) == 3)
         {
             if (verbose)
                 mpr("You can't wear boots with hooves!");
@@ -654,14 +654,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (slot == EQ_HELMET)
     {
         // Horns 3 & Antennae 3 mutations disallow all headgear
-        if (player_mutation_level(MUT_HORNS) == 3)
+        if (player_mutation_level(MUT_HORNS, false) == 3)
         {
             if (verbose)
                 mpr("You can't wear any headgear with your large horns!");
             return false;
         }
 
-        if (player_mutation_level(MUT_ANTENNAE) == 3)
+        if (player_mutation_level(MUT_ANTENNAE, false) == 3)
         {
             if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
@@ -671,21 +671,21 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // Soft helmets (caps and wizard hats) always fit, otherwise.
         if (is_hard_helmet(item))
         {
-            if (player_mutation_level(MUT_HORNS))
+            if (player_mutation_level(MUT_HORNS, false))
             {
                 if (verbose)
                     mpr("You can't wear that with your horns!");
                 return false;
             }
 
-            if (player_mutation_level(MUT_BEAK))
+            if (player_mutation_level(MUT_BEAK, false))
             {
                 if (verbose)
                     mpr("You can't wear that with your beak!");
                 return false;
             }
 
-            if (player_mutation_level(MUT_ANTENNAE))
+            if (player_mutation_level(MUT_ANTENNAE, false))
             {
                 if (verbose)
                     mpr("You can't wear that with your antennae!");
