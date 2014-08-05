@@ -261,20 +261,6 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 # endif
 #endif
-#ifdef TARGET_OS_WINDOWS
-    // No documentation about resetting this, nor about which versions of
-    // Windows is required.  Previous ones can't handle writing to the console
-    // outside ancient locales AT ALL via standard means.
-    // Even with _O_U8TEXT, output tends to fail unless the user manually
-    // switches the terminal to a truetype font.  And even that fails for
-    // anything not directly in the font, above U+FFFF, or within Arabic or
-    // any complex scripts.
-# ifndef _O_U8TEXT
-#  define _O_U8TEXT 0x40000
-# endif
-    _setmode(_fileno(stdout), _O_U8TEXT);
-    _setmode(_fileno(stderr), _O_U8TEXT);
-#endif
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
     {
