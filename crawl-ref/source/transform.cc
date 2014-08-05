@@ -42,6 +42,8 @@
 #include "traps.h"
 #include "xom.h"
 
+#define NUM_FORMS (LAST_FORM + 1)
+
 static void _extra_hp(int amount_extra);
 
 static const char* form_names[] =
@@ -68,8 +70,8 @@ static const char* form_names[] =
 
 const char* transform_name(transformation_type form)
 {
-    COMPILE_CHECK(ARRAYSZ(form_names) == LAST_FORM + 1);
-    ASSERT_RANGE(form, 0, LAST_FORM + 1);
+    COMPILE_CHECK(ARRAYSZ(form_names) == NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_FORMS);
     return form_names[form];
 }
 
