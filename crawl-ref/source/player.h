@@ -481,8 +481,7 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(transformation_type tform,
-                             int psize = PSIZE_TORSO) const;
+    size_type transform_size(transformation_type tform) const;
     string shout_verb() const;
     int shout_volume() const;
 

@@ -200,7 +200,7 @@ size_type player::body_size(size_part_type psize, bool base) const
         return species_size(species, psize);
     else
     {
-        size_type tf_size = transform_size(form, psize);
+        size_type tf_size = transform_size(form);
         return tf_size == SIZE_CHARACTER ? species_size(species, psize)
                                          : tf_size;
     }

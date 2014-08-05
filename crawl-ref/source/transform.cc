@@ -108,7 +108,7 @@ bool form_can_swim(transformation_type form)
         return true;
     }
 
-    size_type size = you.transform_size(form, PSIZE_BODY);
+    size_type size = you.transform_size(form);
     if (size == SIZE_CHARACTER)
         size = you.body_size(PSIZE_BODY, true);
 
@@ -449,7 +449,14 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
     _remove_equipment(r, meld, mutation);
 }
 
-size_type player::transform_size(transformation_type tform, int psize) const
+/**
+ * What size is the player, when in the given form?
+ *
+ * @param tform     The type of transformation in question.
+ * @return          The size of the player when in the given form; may be
+ *                  SIZE_CHARACTER (unchanged).
+ */
+size_type player::transform_size(transformation_type tform) const
 {
     switch (tform)
     {
