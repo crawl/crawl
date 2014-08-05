@@ -2831,7 +2831,7 @@ void corrode_actor(actor *act)
     // rCorr protects against 50% of corrosion.
     if (act->res_corr() && coinflip())
     {
-        dprf("Amulet protects.");
+        dprf("rCorr protects.");
         return;
     }
 

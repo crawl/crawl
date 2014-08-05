@@ -1812,7 +1812,10 @@ bool player::res_corr(bool calc_unid, bool items) const
         return true;
 
     if (form == TRAN_WISP)
-        return 1;
+        return true;
+
+    if (you.duration[DUR_RESISTANCE])
+        return true;
 
     if (items)
     {
