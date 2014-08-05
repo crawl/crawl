@@ -304,6 +304,9 @@ void wizard_heal(bool super_heal)
         you.clear_beholders();
         inc_max_hp(10);
         you.attribute[ATTR_XP_DRAIN] = 0;
+        you.duration[DUR_PETRIFIED] = 0;
+        you.duration[DUR_PETRIFYING] = 0;
+        you.duration[DUR_CORROSION] = 0;
     }
 
     // Clear most status ailments.
