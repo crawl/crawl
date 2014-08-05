@@ -818,7 +818,7 @@ static void _print_stats_ac(int x, int y)
     if (you.wizard)
         ac += make_stringf("(%d%%) ", you.gdr_perc());
 #endif
-    CPRINTF("%s", ac.c_str());
+    CPRINTF("%-12s", ac.c_str());
 
     // SH: (two lines lower)
     CGOTOXY(x+4, y+2, GOTO_STAT);
@@ -828,7 +828,8 @@ static void _print_stats_ac(int x, int y)
         textcolor(LIGHTBLUE);
     else
         textcolor(HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", player_displayed_shield_class());
+    string sh = make_stringf("%2d ", player_displayed_shield_class());
+    CPRINTF("%-12s", sh.c_str());
 }
 
 static void _print_stats_ev(int x, int y)
