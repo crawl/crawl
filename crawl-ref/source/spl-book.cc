@@ -977,26 +977,31 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    string more_str = make_stringf("<lightgreen>%d spell level%s left"
+    const bool shortmsg = num_unreadable > 0 && num_race > 0;
+    string more_str = make_stringf("<lightgreen>%d %slevel%s left"
                                    "<lightgreen>",
                                    player_spell_levels(),
+                                   shortmsg ? "" : "spell ",
                                    (player_spell_levels() > 1
                                     || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
     {
-        more_str += make_stringf(", <lightmagenta>%u overly difficult "
-                                 "spellbook%s</lightmagenta>",
+        more_str += make_stringf(", <lightmagenta>%u %sbook%s</lightmagenta>",
                                  num_unreadable,
+                                 shortmsg ? "difficult "
+                                          : "overly difficult spell",
                                  num_unreadable > 1 ? "s" : "");
     }
 
     if (num_race > 0)
     {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
+        more_str += make_stringf(", <lightred>%u%s%s unmemorisable"
                                  "</lightred>",
                                  num_race,
-                                 num_race > 1 ? "s" : "");
+                                 shortmsg ? "" : " spell",
+                                 // shorter message if we have both annotations
+                                 !shortmsg && num_race > 1 ? "s" : "");
     }
 
 #ifndef USE_TILE_LOCAL
