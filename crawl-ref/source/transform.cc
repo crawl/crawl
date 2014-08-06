@@ -119,6 +119,18 @@ bool Form::can_wear_item(const item_def& item) const
 }
 
 /**
+ * Get an monster type corresponding to the transformation.
+ *
+ * (Used for console player glyphs.)
+ *
+ * @return  A monster type corresponding to the player in this form.
+ */
+monster_type Form::get_equivalent_mons() const
+{
+    return equivalent_mons;
+}
+
+/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -131,11 +143,13 @@ bool Form::all_blocked(int slotflags) const
 }
 
 
+
 class FormNone : public Form
 {
 public:
     FormNone()
-    : Form("none", EQF_NONE)    // name, blocked slots
+    : Form("none", EQF_NONE,  // name, blocked slots
+           MONS_PLAYER)       // equivalent monster
     { };
 };
 
@@ -143,7 +157,8 @@ class FormSpider : public Form
 {
 public:
     FormSpider()
-    : Form("spider", EQF_PHYSICAL)    // name, blocked slots
+    : Form("spider", EQF_PHYSICAL,  // name, blocked slots
+           MONS_SPIDER)       // equivalent monster
     { };
 };
 
@@ -151,7 +166,8 @@ class FormBlade : public Form
 {
 public:
     FormBlade()
-    : Form("blade", EQF_HANDS)    // name, blocked slots
+    : Form("blade", EQF_HANDS,  // name, blocked slots
+           MONS_PLAYER)       // equivalent monster
     { };
 };
 
@@ -159,7 +175,8 @@ class FormStatue : public Form
 {
 public:
     FormStatue()
-    : Form("statue", EQF_STATUE)    // name, blocked slots
+    : Form("statue", EQF_STATUE,  // name, blocked slots
+           MONS_STATUE)       // equivalent monster
     { };
 };
 
@@ -167,7 +184,8 @@ class FormIce : public Form
 {
 public:
     FormIce()
-    : Form("ice", EQF_PHYSICAL | EQF_OCTO)    // name, blocked slots
+    : Form("ice", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           MONS_ICE_BEAST)       // equivalent monster
     { };
 };
 
@@ -175,15 +193,29 @@ class FormDragon : public Form
 {
 public:
     FormDragon()
-    : Form("dragon", EQF_PHYSICAL | EQF_OCTO)    // name, blocked slots
+    : Form("dragon", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           MONS_PROGRAM_BUG)       // equivalent monster
     { };
+
+    /**
+     * Get an monster type corresponding to the transformation.
+     *
+     * (Used for console player glyphs.)
+     *
+     * @return  A monster type corresponding to the player in this form.
+     */
+    monster_type get_equivalent_mons() const
+    {
+        return dragon_form_dragon_type();
+    }
 };
 
 class FormLich : public Form
 {
 public:
     FormLich()
-    : Form("lich", EQF_NONE)    // name, blocked slots
+    : Form("lich", EQF_NONE,  // name, blocked slots
+           MONS_LICH)       // equivalent monster
     { };
 };
 
@@ -191,15 +223,29 @@ class FormBat : public Form
 {
 public:
     FormBat()
-    : Form("bat", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    : Form("bat", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           MONS_PROGRAM_BUG)       // equivalent monster
     { };
+
+    /**
+     * Get an monster type corresponding to the transformation.
+     *
+     * (Used for console player glyphs.)
+     *
+     * @return  A monster type corresponding to the player in this form.
+     */
+    monster_type get_equivalent_mons() const
+    {
+        return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
+    }
 };
 
 class FormPig : public Form
 {
 public:
     FormPig()
-    : Form("pig", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    : Form("pig", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           MONS_HOG)       // equivalent monster
     { };
 };
 
@@ -207,7 +253,8 @@ class FormAppendage : public Form
 {
 public:
     FormAppendage()
-    : Form("appendage", EQF_NONE)    // name, blocked slots
+    : Form("appendage", EQF_NONE,  // name, blocked slots
+           MONS_PLAYER)       // equivalent monster
     { };
 };
 
@@ -215,7 +262,8 @@ class FormTree : public Form
 {
 public:
     FormTree()
-    : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO) // name, blocked slots
+    : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // name, blocked slots
+           MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
 
@@ -223,7 +271,8 @@ class FormPorcupine: public Form
 {
 public:
     FormPorcupine()
-    : Form("porcupine", EQF_ALL)    // name, blocked slots
+    : Form("porcupine", EQF_ALL,  // name, blocked slots
+           MONS_PORCUPINE)       // equivalent monster
     { };
 };
 
@@ -231,7 +280,8 @@ class FormWisp: public Form
 {
 public:
     FormWisp()
-    : Form("wisp", EQF_ALL)    // name, blocked slots
+    : Form("wisp", EQF_ALL,  // name, blocked slots
+           MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
 
@@ -240,7 +290,8 @@ class FormJelly : public Form
 {
 public:
     FormJelly()
-    : Form("jelly", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    : Form("jelly", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           MONS_JELLY)       // equivalent monster
     { };
 };
 #endif
@@ -249,7 +300,8 @@ class FormFungus : public Form
 {
 public:
     FormFungus()
-    : Form("fungus", EQF_PHYSICAL | EQF_OCTO) // name, blocked slots
+    : Form("fungus", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
 
@@ -257,7 +309,8 @@ class FormShadow: public Form
 {
 public:
     FormShadow()
-    : Form("shadow", EQF_NONE)    // name, blocked slots
+    : Form("shadow", EQF_NONE,  // name, blocked slots
+           MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };
 
@@ -694,6 +747,18 @@ size_type player::transform_size(transformation_type tform) const
     }
 }
 
+/**
+ * Get an monster type corresponding to the player's current form.
+ *
+ * (Used for console player glyphs.)
+ *
+ * @return  A monster type corresponding to the player in the form.
+ */
+monster_type transform_mons()
+{
+    return get_form()->get_equivalent_mons();
+}
+
 static bool _abort_or_fizzle(bool just_check)
 {
     if (!just_check && you.turn_is_over)
@@ -703,47 +768,6 @@ static bool _abort_or_fizzle(bool just_check)
         return true; // pay the necessary costs
     }
     return false; // SPRET_ABORT
-}
-
-monster_type transform_mons()
-{
-    switch (you.form)
-    {
-    case TRAN_FUNGUS:
-        return MONS_WANDERING_MUSHROOM;
-    case TRAN_SPIDER:
-        return MONS_SPIDER;
-    case TRAN_STATUE:
-        return MONS_STATUE;
-    case TRAN_ICE_BEAST:
-        return MONS_ICE_BEAST;
-    case TRAN_DRAGON:
-        return dragon_form_dragon_type();
-    case TRAN_LICH:
-        return MONS_LICH;
-    case TRAN_BAT:
-        return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
-    case TRAN_PIG:
-        return MONS_HOG;
-#if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:
-        return MONS_JELLY;
-#endif
-    case TRAN_PORCUPINE:
-        return MONS_PORCUPINE;
-    case TRAN_TREE:
-        return MONS_ANIMATED_TREE;
-    case TRAN_WISP:
-        return MONS_INSUBSTANTIAL_WISP;
-    case TRAN_SHADOW:
-        return MONS_PLAYER_SHADOW;
-    case TRAN_BLADE_HANDS:
-    case TRAN_APPENDAGE:
-    case TRAN_NONE:
-        return MONS_PLAYER;
-    }
-    die("unknown transformation");
-    return MONS_PLAYER;
 }
 
 string blade_parts(bool terse)
