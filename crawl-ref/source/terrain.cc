@@ -345,14 +345,6 @@ bool feat_is_statue_or_idol(dungeon_feature_type feat)
     return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
 
-bool feat_is_rock(dungeon_feature_type feat)
-{
-    return feat == DNGN_ORCISH_IDOL
-           || feat == DNGN_GRANITE_STATUE
-           || feat >= DNGN_ROCK_WALL
-              && feat <= DNGN_CLEAR_PERMAROCK_WALL;
-}
-
 bool feat_is_permarock(dungeon_feature_type feat)
 {
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
