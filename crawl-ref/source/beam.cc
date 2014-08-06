@@ -1009,7 +1009,7 @@ void bolt::destroy_wall_effect()
 
     if (feat == DNGN_ORCISH_IDOL)
     {
-        if (beam_source == NON_MONSTER)
+        if (beam_source == NON_MONSTER || beam_source == MHITYOU)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
     else if (feat_is_tree(feat))
