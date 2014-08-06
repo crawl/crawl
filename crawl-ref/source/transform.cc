@@ -149,6 +149,7 @@ class FormNone : public Form
 public:
     FormNone()
     : Form("none", EQF_NONE,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -158,6 +159,7 @@ class FormSpider : public Form
 public:
     FormSpider()
     : Form("spider", EQF_PHYSICAL,  // name, blocked slots
+           SIZE_TINY,           // size
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -167,6 +169,7 @@ class FormBlade : public Form
 public:
     FormBlade()
     : Form("blade", EQF_HANDS,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -176,6 +179,7 @@ class FormStatue : public Form
 public:
     FormStatue()
     : Form("statue", EQF_STATUE,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_STATUE)       // equivalent monster
     { };
 };
@@ -185,6 +189,7 @@ class FormIce : public Form
 public:
     FormIce()
     : Form("ice", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           SIZE_LARGE,    // size
            MONS_ICE_BEAST)       // equivalent monster
     { };
 };
@@ -194,6 +199,7 @@ class FormDragon : public Form
 public:
     FormDragon()
     : Form("dragon", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           SIZE_GIANT,    // size
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -215,6 +221,7 @@ class FormLich : public Form
 public:
     FormLich()
     : Form("lich", EQF_NONE,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_LICH)       // equivalent monster
     { };
 };
@@ -224,6 +231,7 @@ class FormBat : public Form
 public:
     FormBat()
     : Form("bat", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           SIZE_TINY,    // size
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -245,6 +253,7 @@ class FormPig : public Form
 public:
     FormPig()
     : Form("pig", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           SIZE_SMALL,    // size
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -254,6 +263,7 @@ class FormAppendage : public Form
 public:
     FormAppendage()
     : Form("appendage", EQF_NONE,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -263,6 +273,7 @@ class FormTree : public Form
 public:
     FormTree()
     : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
@@ -272,6 +283,7 @@ class FormPorcupine: public Form
 public:
     FormPorcupine()
     : Form("porcupine", EQF_ALL,  // name, blocked slots
+           SIZE_TINY,    // size
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -281,6 +293,7 @@ class FormWisp: public Form
 public:
     FormWisp()
     : Form("wisp", EQF_ALL,  // name, blocked slots
+           SIZE_TINY,    // size
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
@@ -291,6 +304,7 @@ class FormJelly : public Form
 public:
     FormJelly()
     : Form("jelly", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -301,6 +315,7 @@ class FormFungus : public Form
 public:
     FormFungus()
     : Form("fungus", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+           SIZE_TINY,    // size
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -310,6 +325,7 @@ class FormShadow: public Form
 public:
     FormShadow()
     : Form("shadow", EQF_NONE,  // name, blocked slots
+           SIZE_CHARACTER,    // size
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };
@@ -728,23 +744,7 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
  */
 size_type player::transform_size(transformation_type tform) const
 {
-    switch (tform)
-    {
-    case TRAN_SPIDER:
-    case TRAN_BAT:
-    case TRAN_PORCUPINE:
-    case TRAN_WISP:
-    case TRAN_FUNGUS:
-        return SIZE_TINY;
-    case TRAN_PIG:
-        return SIZE_SMALL;
-    case TRAN_ICE_BEAST:
-        return SIZE_LARGE;
-    case TRAN_DRAGON:
-        return SIZE_GIANT;
-    default:
-        return SIZE_CHARACTER;
-    }
+    return get_form()->size;
 }
 
 /**
