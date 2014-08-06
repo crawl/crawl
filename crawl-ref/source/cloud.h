@@ -32,7 +32,6 @@ void manage_clouds();
 
 bool is_opaque_cloud(int cloud_idx);
 
-int resist_fraction(int resist, int bonus_res = 0);
 int max_cloud_damage(cloud_type cl_type, int power = -1);
 int actor_apply_cloud(actor *act);
 

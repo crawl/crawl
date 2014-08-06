@@ -528,7 +528,10 @@ static inline int get_resistible_fraction(beam_type flavour)
  *
  * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
  * XXX: which other attacks?
- *
+ * Damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2, and 3,
+ * respectively.  For "boolean" attacks like electricity and sticky flame, the
+ * damage is instead reduced to 1/3, 1/4, and 1/6 at resist levels 1, 2, and 3
+ * respectively.
  * @param defender      The victim of the attack.
  * @param flavour       The type of attack having its damage adjusted.
  *                      (Does not necessarily imply the attack is a beam.)
@@ -573,7 +576,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
             else if (flavour == BEAM_NEG)
                 resistible /= res * 2;
             else
-                resistible /= resist_fraction(res, bonus_res);
+                resistible /= (3 * res + 1) / 2 + bonus_res;
         }
     }
     else if (res < 0)
