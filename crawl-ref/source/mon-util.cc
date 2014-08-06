@@ -2302,6 +2302,12 @@ unique_books get_unique_spells(const monster_info &mi)
     for (size_t i = 0; i < num_books; ++i)
     {
         const mon_spellbook_type book = books[i];
+        // TODO: should we build an index to speed this reverse lookup?
+        unsigned int msidx;
+        for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
+            if (mspell_list[msidx].type == book)
+                break;
+
         vector<spell_type> spells;
 
         for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
@@ -2310,7 +2316,10 @@ unique_books get_unique_spells(const monster_info &mi)
             if (book == MST_GHOST)
                 spell = mi.spells[j];
             else
-                spell = mspell_list[book].spells[j];
+            {
+                ASSERT(msidx < ARRAYSZ(mspell_list));
+                spell = mspell_list[msidx].spells[j];
+            }
 
             bool match = false;
 
