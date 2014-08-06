@@ -1,5 +1,4 @@
-#ifndef MON_SPLL_H
-#define MON_SPLL_H
+#include "mon-book.h"
 
 /* *********************************************************************
 
@@ -22,6 +21,8 @@
 
 ********************************************************************* */
 
+static const mon_spellbook mspell_list[] =
+{
     {  MST_ORC_WIZARD_I,
       {
        SPELL_MAGIC_DART,
@@ -2469,4 +2470,4 @@
        SPELL_MASS_CONFUSION
       }
     },
-#endif
+};
