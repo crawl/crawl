@@ -1167,7 +1167,7 @@ static const zap_info zap_data[] =
 
 {
     ZAP_CORROSIVE_BOLT,
-    "corrosive bolt",
+    "bolt of acid",
     200,
     new calcdice_calculator<1, 11, 3, 5>,
     new tohit_calculator<10, 1, 25>,
