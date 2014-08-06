@@ -155,9 +155,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         return true;
     }
 
-    const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
-        attacker->as_monster()->number : 4;
-    coord_def pos    = defender->pos();
+    const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
+        ? attacker->as_monster()->number + MAX_NUM_ATTACKS - 1
+        : MAX_NUM_ATTACKS;
+    coord_def pos = defender->pos();
 
     // Melee combat, tell attacker to wield its melee weapon.
     attacker->as_monster()->wield_melee_weapon();
