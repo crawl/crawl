@@ -966,7 +966,7 @@ void discover_mimic(const coord_def& pos, bool wake)
     const dungeon_feature_type feat = grd(pos);
 
     // If the feature has been destroyed, don't create a floor mimic.
-    if (feature_mimic && feat_cannot_be_mimic(feat))
+    if (feature_mimic && !feat_is_mimicable(feat, false))
     {
         env.level_map_mask(pos) &= !MMT_MIMIC;
         return;

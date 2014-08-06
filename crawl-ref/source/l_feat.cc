@@ -54,7 +54,7 @@ FEATF(_feat_is_lava, feat_is_lava)
 FEATF(_feat_is_altar, feat_is_altar)
 FEATF(_feat_is_player_altar, feat_is_player_altar)
 FEATF(_feat_is_branch_stairs, feat_is_branch_stairs)
-FEATF(_feat_is_critical, is_critical_feature)
+FEATF(_feat_is_critical, feat_is_critical)
 
 const struct luaL_reg feat_dlib[] =
 {

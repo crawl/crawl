@@ -436,7 +436,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         if (cell.item())
         {
             if (Options.feature_item_brand
-                && (is_critical_feature(cell.feat())
+                && (feat_is_critical(cell.feat())
                     || feat_is_solid(cell.feat())))
             {
                 g.col |= COLFLAG_FEATURE_ITEM;

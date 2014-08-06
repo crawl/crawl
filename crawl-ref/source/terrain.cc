@@ -58,17 +58,6 @@ actor* actor_at(const coord_def& c)
     return monster_at(c);
 }
 
-int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
-{
-    int count = 0;
-    for (adjacent_iterator ai(c); ai; ++ai)
-    {
-        if (checker(grd(*ai)))
-            count++;
-    }
-    return count;
-}
-
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
@@ -461,9 +450,94 @@ bool feat_is_fountain(dungeon_feature_type feat)
     return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN;
 }
 
+/** Can you reach past this feature?
+ *
+ *  @param feat the feature.
+ *  @returns true if the feature is non-solid enough to allow reaching.
+ */
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
     return !feat_is_opaque(feat) && !feat_is_wall(feat) && feat != DNGN_GRATE;
+}
+
+/** Is this feature important to the game?
+ *
+ *  @param feat the feature.
+ *  @returns true for altars for living gods, stairs/portals, and malign gateways (???).
+ */
+bool feat_is_critical(dungeon_feature_type feat)
+{
+    return feat_stair_direction(feat) != CMD_NO_CMD
+           || feat_altar_god(feat) != GOD_NO_GOD
+           || feat == DNGN_MALIGN_GATEWAY;
+}
+
+/** Can you use this feature for a map border?
+ *
+ *  @param the feature.
+ *  @returns true for walls or "sea"s.
+ */
+bool feat_is_valid_border(dungeon_feature_type feat)
+{
+    return feat_is_wall(feat)
+           || feat_is_tree(feat)
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_LAVA_SEA;
+}
+
+/** Can this feature be a mimic?
+ *
+ *  @param feat the feature
+ *  @param strict if true, disallow features for which being a mimic would be bad in
+                  normal generation; vaults can still use such mimics.
+ *  @returns whether this could make a valid mimic type.
+ */
+bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
+{
+    if (!strict && feat != DNGN_FLOOR && feat != DNGN_SHALLOW_WATER
+        && feat != DNGN_DEEP_WATER)
+    {
+        return true;
+    }
+
+    // Don't risk trapping the player inside a portal vault.
+    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
+#if TAG_MAJOR_VERSION == 34
+        || feat == DNGN_EXIT_PORTAL_VAULT
+#endif
+        )
+    {
+        return false;
+    }
+
+    // There's only one branch exit.
+    if (you.depth == 1 && feat_is_travelable_stair(feat)
+        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
+    {
+        return false;
+    }
+
+    if (feat_is_portal(feat) || feat_is_gate(feat))
+        return true;
+
+    if (feat_is_stone_stair(feat) || feat_is_branch_stairs(feat))
+        return true;
+
+    if (feat == DNGN_ENTER_SHOP)
+        return true;
+
+    return false;
+}
+
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    int count = 0;
+    for (adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (checker(grd(*ai)))
+            count++;
+    }
+    return count;
 }
 
 // For internal use by find_connected_identical only.
@@ -699,65 +773,6 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     return false;
 }
 
-bool is_critical_feature(dungeon_feature_type feat)
-{
-    return feat_stair_direction(feat) != CMD_NO_CMD
-           || feat_altar_god(feat) != GOD_NO_GOD
-           || feat == DNGN_MALIGN_GATEWAY;
-}
-
-bool is_valid_border_feat(dungeon_feature_type feat)
-{
-    return feat_is_wall(feat)
-           || feat_is_tree(feat)
-           || feat == DNGN_OPEN_SEA
-           || feat == DNGN_LAVA_SEA;
-}
-
-// This is for randomly generated mimics.
-// Other features can be defined as mimic in vaults.
-bool is_valid_mimic_feat(dungeon_feature_type feat)
-{
-    // Don't risk trapping the player inside a portal vault.
-    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
-#if TAG_MAJOR_VERSION == 34
-        || feat == DNGN_EXIT_PORTAL_VAULT
-#endif
-        )
-    {
-        return false;
-    }
-
-    // There's only one branch exit.
-    if (you.depth == 1 && feat_is_travelable_stair(feat)
-        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
-    {
-        return false;
-    }
-
-    if (feat_is_portal(feat) || feat_is_gate(feat))
-        return true;
-
-    if (feat_is_stone_stair(feat) || feat_is_branch_stairs(feat))
-        return true;
-
-    if (feat == DNGN_ENTER_SHOP)
-        return true;
-
-    return false;
-}
-
-// Those can never be mimiced.
-bool feat_cannot_be_mimic(dungeon_feature_type feat)
-{
-    if (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER
-        || feat == DNGN_DEEP_WATER)
-    {
-        return true;
-    }
-    return false;
-}
-
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos)
@@ -888,7 +903,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 static bool _dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
-    if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
+    if (!feat_is_critical(dfeat) && !env.markers.find(pos, MAT_ANY))
         return false;
 
     const coord_def dest =
@@ -956,7 +971,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
     {
         if (feat_is_solid(old_feat) != feat_is_solid(new_feat)
             || feat_is_water(new_feat) || new_feat == DNGN_LAVA
-            || is_critical_feature(new_feat))
+            || feat_is_critical(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
             remove_mold(pos);

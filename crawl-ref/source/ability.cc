@@ -2025,7 +2025,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
         // Early exit: don't clobber important features.
-        if (is_critical_feature(grd(you.pos())))
+        if (feat_is_critical(grd(you.pos())))
         {
             mpr("The dungeon trembles momentarily.");
             return SPRET_ABORT;

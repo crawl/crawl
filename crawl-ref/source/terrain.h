@@ -27,10 +27,6 @@ private:
 
 actor* actor_at(const coord_def& c);
 
-int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
-
-void fall_into_a_pool(dungeon_feature_type terrain);
-
 bool cell_is_solid(const coord_def &c);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
@@ -75,6 +71,13 @@ bool feat_is_branchlike(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
+
+bool feat_is_critical(dungeon_feature_type feat);
+bool feat_is_valid_border(dungeon_feature_type feat);
+bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
+
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
+
 void find_connected_identical(const coord_def& d, set<coord_def>& out);
 coord_def get_random_stair();
 
@@ -107,10 +110,7 @@ bool slide_feature_over(const coord_def &src,
                         coord_def preferred_dest = coord_def(-1, -1),
                         bool announce = true);
 
-bool is_critical_feature(dungeon_feature_type feat);
-bool is_valid_border_feat(dungeon_feature_type feat);
-bool is_valid_mimic_feat(dungeon_feature_type feat);
-bool feat_cannot_be_mimic(dungeon_feature_type feat);
+void fall_into_a_pool(dungeon_feature_type terrain);
 
 void                 init_feat_desc_cache();
 dungeon_feature_type feat_by_desc(string desc);
