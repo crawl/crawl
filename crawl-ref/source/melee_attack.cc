@@ -2117,6 +2117,11 @@ bool melee_attack::chop_hydra_head(int dam,
                                    int dam_type,
                                    brand_type wpn_brand)
 {
+    if (defender->as_monster()->mons_species() == MONS_SERPENT_OF_HELL)
+    {
+        return false; // nope
+    }
+
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons

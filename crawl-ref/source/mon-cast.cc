@@ -313,6 +313,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         case 5: real_spell = SPELL_CRYSTAL_BOLT;         break;
         }
     }
+    else if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
+    {
+        // this will be fixed up later in mons_cast
+        real_spell = SPELL_FIRE_BREATH;
+    }
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
@@ -4659,6 +4664,47 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
+    if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
+    {
+        spell_type real_breaths[3];
+        ASSERT(mons->number == ARRAYSZ(real_breaths));
+
+        switch (mons->type)
+        {
+        case MONS_SERPENT_OF_HELL:
+            real_breaths[0] = SPELL_HELLFIRE;
+            real_breaths[1] = SPELL_FIRE_BREATH;
+            real_breaths[2] = SPELL_FIREBALL;
+            break;
+        case MONS_SERPENT_OF_HELL_COCYTUS:
+            real_breaths[0] = SPELL_FREEZING_CLOUD;
+            real_breaths[1] = SPELL_COLD_BREATH;
+            real_breaths[2] = SPELL_OZOCUBUS_REFRIGERATION;
+            break;
+        case MONS_SERPENT_OF_HELL_DIS:
+            real_breaths[0] = SPELL_METAL_SPLINTERS;
+            real_breaths[1] = SPELL_QUICKSILVER_BOLT;
+            real_breaths[2] = SPELL_IRON_SHOT;
+            break;
+        case MONS_SERPENT_OF_HELL_TARTARUS:
+            real_breaths[0] = SPELL_BOLT_OF_DRAINING;
+            real_breaths[1] = SPELL_MIASMA_BREATH;
+            real_breaths[2] = SPELL_SPIT_ACID;
+            break;
+        default:
+            ASSERT(false);
+            break;
+        }
+
+        for (unsigned int i = 0; i < mons->number; ++i)
+        {
+            spell_type head_spell = real_breaths[i];
+            setup_mons_cast(mons, pbolt, head_spell);
+            mons_cast(mons, pbolt, head_spell, do_noise, special_ability);
+        }
+
+        return;
+    }
     // Always do setup.  It might be done already, but it doesn't hurt
     // to do it again (cheap).
     setup_mons_cast(mons, pbolt, spell_cast);
