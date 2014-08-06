@@ -131,6 +131,17 @@ monster_type Form::get_equivalent_mons() const
 }
 
 /**
+ * Get a multiplier for skill when calculating stealth values.
+ *
+ * @return  The stealth modifier for the given form. (0 = default to
+ *          racial values.)
+ */
+int Form::get_stealth_mod() const
+{
+    return stealth_mod;
+}
+
+/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -149,7 +160,7 @@ class FormNone : public Form
 public:
     FormNone()
     : Form("none", EQF_NONE,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 0,    // size, stealth mod
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -159,7 +170,7 @@ class FormSpider : public Form
 public:
     FormSpider()
     : Form("spider", EQF_PHYSICAL,  // name, blocked slots
-           SIZE_TINY,           // size
+           SIZE_TINY, 21,    // size, stealth mod
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -169,7 +180,7 @@ class FormBlade : public Form
 public:
     FormBlade()
     : Form("blade", EQF_HANDS,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 0,    // size, stealth mod
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -179,7 +190,7 @@ class FormStatue : public Form
 public:
     FormStatue()
     : Form("statue", EQF_STATUE,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 0,    // size, stealth mod
            MONS_STATUE)       // equivalent monster
     { };
 };
@@ -189,7 +200,7 @@ class FormIce : public Form
 public:
     FormIce()
     : Form("ice", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
-           SIZE_LARGE,    // size
+           SIZE_LARGE, 15,    // size, stealth mod
            MONS_ICE_BEAST)       // equivalent monster
     { };
 };
@@ -199,7 +210,7 @@ class FormDragon : public Form
 public:
     FormDragon()
     : Form("dragon", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
-           SIZE_GIANT,    // size
+           SIZE_GIANT, 6,    // size, stealth mod
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -221,7 +232,7 @@ class FormLich : public Form
 public:
     FormLich()
     : Form("lich", EQF_NONE,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 0,    // size, stealth mod
            MONS_LICH)       // equivalent monster
     { };
 };
@@ -231,7 +242,7 @@ class FormBat : public Form
 public:
     FormBat()
     : Form("bat", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
-           SIZE_TINY,    // size
+           SIZE_TINY, 17,    // size, stealth mod
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -246,6 +257,18 @@ public:
     {
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
+
+    /**
+     * Get a multiplier for skill when calculating stealth values.
+     *
+     * @return  The stealth modifier for the given form. (0 = default to
+     *          racial values.)
+     */
+    int get_stealth_mod() const
+    {
+        // vampires handle bat stealth in racial code
+        return you.species == SP_VAMPIRE ? 0 : stealth_mod;
+    }
 };
 
 class FormPig : public Form
@@ -253,7 +276,7 @@ class FormPig : public Form
 public:
     FormPig()
     : Form("pig", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
-           SIZE_SMALL,    // size
+           SIZE_SMALL, 9,    // size, stealth mod
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -263,7 +286,7 @@ class FormAppendage : public Form
 public:
     FormAppendage()
     : Form("appendage", EQF_NONE,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 0,    // size, stealth mod
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -273,7 +296,7 @@ class FormTree : public Form
 public:
     FormTree()
     : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 27,    // size, stealth mod
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
@@ -283,7 +306,7 @@ class FormPorcupine: public Form
 public:
     FormPorcupine()
     : Form("porcupine", EQF_ALL,  // name, blocked slots
-           SIZE_TINY,    // size
+           SIZE_TINY, 12,    // size, stealth mod
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -293,7 +316,7 @@ class FormWisp: public Form
 public:
     FormWisp()
     : Form("wisp", EQF_ALL,  // name, blocked slots
-           SIZE_TINY,    // size
+           SIZE_TINY, 21,    // size, stealth mod
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
@@ -304,7 +327,7 @@ class FormJelly : public Form
 public:
     FormJelly()
     : Form("jelly", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 21,    // size, stealth mod
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -315,7 +338,7 @@ class FormFungus : public Form
 public:
     FormFungus()
     : Form("fungus", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
-           SIZE_TINY,    // size
+           SIZE_TINY, 30,    // size, stealth mod
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -325,7 +348,7 @@ class FormShadow: public Form
 public:
     FormShadow()
     : Form("shadow", EQF_NONE,  // name, blocked slots
-           SIZE_CHARACTER,    // size
+           SIZE_CHARACTER, 30,    // size, stealth mod
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };

@@ -3561,9 +3561,86 @@ void adjust_level(int diff, bool just_xp)
         level_change();
 }
 
-// Here's a question for you: does the ordering of mods make a difference?
-// (yes) -- are these things in the right order of application to stealth?
-// - 12mar2000 {dlb}
+/**
+ * Return a multiplier for dex when calculating stealth values, based on the
+ * player's species.
+ *
+ * @return The stealth multiplier value for the player's species.
+ */
+static int _species_stealth_mod()
+{
+    if (player_genus(GENPC_DRACONIAN))
+        return 12;
+
+    switch (you.species)
+    {
+        case SP_TROLL:
+        case SP_OGRE:
+        case SP_CENTAUR:
+#if TAG_MAJOR_VERSION == 34
+        case SP_DJINNI:
+#endif
+            return 9;
+
+        case SP_MINOTAUR:
+            return 12;
+
+        case SP_VAMPIRE:
+            // Thirsty/bat-form vampires are (much) more stealthy
+            if (you.hunger_state == HS_STARVING)
+                return 21;
+            if (you.form == TRAN_BAT
+                     || you.hunger_state <= HS_NEAR_STARVING)
+            {
+                return 20;
+            }
+            if (you.hunger_state < HS_SATIATED)
+                return 19;
+            return 18;
+
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_NAGA:       // not small but very good at stealth
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return 18;
+
+        default:
+            return 15;
+    }
+}
+
+/**
+ * Return a multiplier for skill when calculating stealth values, based on the
+ * player's species & form.
+ *
+ * @return The player's current stealth multiplier value.
+ */
+static int _stealth_mod()
+{
+    const int form_stealth_mod = get_form()->get_stealth_mod();
+
+    if (form_stealth_mod != 0)
+        return form_stealth_mod;
+
+    const int species_stealth_mod = _species_stealth_mod();
+    if (you.form == TRAN_STATUE)
+        return species_stealth_mod - 3;
+    return species_stealth_mod;
+}
+
+/**
+ * Get the player's current stealth value.
+ *
+ * XXX: rename this to something more reasonable
+
+ *
+ * (Keep in mind, while tweaking this function: the order in which stealth
+ * modifiers are applied is significant!)
+ *
+ * @return  The player's current stealth value.
+ */
 int check_stealth()
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -3571,106 +3648,23 @@ int check_stealth()
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX]
-        || player_mutation_level(MUT_NO_STEALTH))
+    // lantern of shadows, berserking, "clumsy" (0-dex).
+    if (you.attribute[ATTR_SHADOWS] || you.berserk()
+        || you.stat_zero[STAT_DEX] || player_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
 
     int stealth = you.dex() * 3;
 
-    int race_mod = 0;
-    if (player_genus(GENPC_DRACONIAN))
-        race_mod = 12;
-    else
+    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
+        && !you.airborne())
     {
-        switch (you.species) // why not use body_size here?
-        {
-        case SP_TROLL:
-        case SP_OGRE:
-        case SP_CENTAUR:
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:
-#endif
-            race_mod = 9;
-            break;
-        case SP_MINOTAUR:
-            race_mod = 12;
-            break;
-        case SP_VAMPIRE:
-            // Thirsty/bat-form vampires are (much) more stealthy
-            if (you.hunger_state == HS_STARVING)
-                race_mod = 21;
-            else if (you.form == TRAN_BAT
-                     || you.hunger_state <= HS_NEAR_STARVING)
-            {
-                race_mod = 20;
-            }
-            else if (you.hunger_state < HS_SATIATED)
-                race_mod = 19;
-            else
-                race_mod = 18;
-            break;
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:       // not small but very good at stealth
-        case SP_FELID:
-        case SP_OCTOPODE:
-            race_mod = 18;
-            break;
-        default:
-            race_mod = 15;
-            break;
-        }
+        stealth -= 50; // klack klack klack go the blade paws
+        // this is an absurd special case but also it's really funny so w/e
     }
 
-    switch (you.form)
-    {
-    case TRAN_FUNGUS:
-    case TRAN_SHADOW: // You slip into the shadows.
-        race_mod = 30;
-        break;
-    case TRAN_TREE:
-        race_mod = 27; // masquerading as scenery
-        break;
-    case TRAN_SPIDER:
-#if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:
-#endif
-    case TRAN_WISP:
-        race_mod = 21;
-        break;
-    case TRAN_ICE_BEAST:
-        race_mod = 15;
-        break;
-    case TRAN_STATUE:
-        race_mod -= 3; // depends on the base race
-        break;
-    case TRAN_DRAGON:
-        race_mod = 6;
-        break;
-    case TRAN_PORCUPINE:
-        race_mod = 12; // small but noisy
-        break;
-    case TRAN_PIG:
-        race_mod = 9; // trotters, oinking...
-        break;
-    case TRAN_BAT:
-        if (you.species != SP_VAMPIRE)
-            race_mod = 17;
-        break;
-    case TRAN_BLADE_HANDS:
-        if (you.species == SP_FELID && !you.airborne())
-            stealth -= 50; // a constant penalty
-        break;
-    case TRAN_NONE:
-    case TRAN_APPENDAGE:
-    case TRAN_LICH:
-        break;
-    }
-
-    stealth += you.skill(SK_STEALTH, race_mod);
+    stealth += you.skill(SK_STEALTH, _stealth_mod());
 
     if (you.confused())
         stealth /= 3;

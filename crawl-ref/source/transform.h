@@ -15,21 +15,25 @@ class Form
 {
 public:
     Form(const char *_name, int _blocked_slots,
-         size_type _size,
+         size_type _size, int _stealth_mod,
          monster_type _equivalent_mons) :
     name(_name), blocked_slots(_blocked_slots),
-    size(_size),
+    size(_size), stealth_mod(_stealth_mod),
     equivalent_mons(_equivalent_mons)
     { };
 
     bool slot_available(int slot) const;
     bool can_wear_item(const item_def& item) const;
     virtual monster_type get_equivalent_mons() const;
+    virtual int get_stealth_mod() const;
 
 public:
     const char* const name;
     const int blocked_slots;
     const size_type size;
+
+protected:
+    const int stealth_mod;
 
 private:
     bool all_blocked(int slotflags) const;
