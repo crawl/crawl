@@ -657,7 +657,8 @@ monster_type resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (!vault_mon_types.empty())
+        // Only use the vault list if the monster comes from this level.
+        if (!vault_mon_types.empty() && *place == level_id::current())
         {
             int i = 0;
             int tries = 0;
