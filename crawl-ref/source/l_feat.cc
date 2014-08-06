@@ -39,7 +39,6 @@ FEATF(_feat_is_opaque, feat_is_opaque)
 FEATF(_feat_is_door, feat_is_door)
 FEATF(_feat_is_closed_door, feat_is_closed_door)
 FEATF(_feat_is_statue_or_idol, feat_is_statue_or_idol)
-FEATF(_feat_is_rock, feat_is_rock)
 FEATF(_feat_is_permarock, feat_is_permarock)
 FEATF(_feat_is_stone_stair, feat_is_stone_stair)
 FEATF(_feat_is_staircase, feat_is_staircase)
@@ -66,7 +65,6 @@ const struct luaL_reg feat_dlib[] =
 { "is_door", _feat_is_door },
 { "is_closed_door", _feat_is_closed_door },
 { "is_statue_or_idol", _feat_is_statue_or_idol },
-{ "is_rock", _feat_is_rock },
 { "is_permarock", _feat_is_permarock },
 { "is_stone_stair", _feat_is_stone_stair },
 { "is_staircase", _feat_is_staircase },
