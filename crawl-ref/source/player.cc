@@ -888,26 +888,32 @@ bool you_tran_can_wear(const item_def &item)
     }
 }
 
+/**
+ * Is the given equipment slot available to the player in their current state?
+ *
+ * @param eq                The equipment slot.
+ * @param check_mutation    Whether to consider mutations (horns, antennae)
+ *                          & mermaid fishtails.
+ * @return                  Whether the given slot is at all available. (Even
+ *                          if restricted.)
+ */
 bool you_tran_can_wear(int eq, bool check_mutation)
 {
     if (eq == EQ_NONE)
         return true;
 
-    if (you.form == TRAN_PORCUPINE
-#if TAG_MAJOR_VERSION == 34
-        || you.form == TRAN_JELLY
-#endif
-        || you.form == TRAN_WISP)
+    if (!get_form(you.form)->slot_available(eq))
+        return false;
+
+    // missing hand is implemented as a mutation, but it's permanent &
+    // irrevocable, so don't care about check_mutation.
+    if (player_mutation_level(MUT_MISSING_HAND)
+        && (eq == EQ_LEFT_RING
+            || eq == EQ_SHIELD
+            || eq == EQ_RING_EIGHT))
     {
         return false;
     }
-
-    if (eq == EQ_STAFF)
-        eq = EQ_WEAPON;
-
-    // Everybody but porcupines and wisps can wear at least some type of armour.
-    if (eq == EQ_ALL_ARMOUR)
-        return true;
 
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
@@ -929,76 +935,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return false;
         }
     }
-
-    if (player_mutation_level(MUT_MISSING_HAND)
-            && (eq == EQ_LEFT_RING
-                || eq == EQ_SHIELD
-                || eq == EQ_RING_EIGHT))
-    {
-        return false;
-    }
-
-    // No further restrictions.
-    if (you.form == TRAN_NONE
-        || you.form == TRAN_LICH
-        || you.form == TRAN_APPENDAGE)
-    {
-        return true;
-    }
-
-    // Bats and pigs cannot wear anything except amulets.
-    if ((you.form == TRAN_BAT || you.form == TRAN_PIG) && eq != EQ_AMULET)
-        return false;
-
-    // Everyone else can wear jewellery...
-    if (eq == EQ_AMULET || eq == EQ_RINGS
-        || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
-        || eq == EQ_RING_ONE || eq == EQ_RING_TWO
-        || eq == EQ_RING_AMULET)
-    {
-        return true;
-    }
-
-    // ...but not necessarily in all slots.
-    if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
-    {
-        return you.species == SP_OCTOPODE
-               && (form_keeps_mutations() || you.form == TRAN_SPIDER);
-    }
-
-    // These cannot use anything but jewellery.
-    if (you.form == TRAN_SPIDER || you.form == TRAN_DRAGON)
-        return false;
-
-    if (you.form == TRAN_BLADE_HANDS)
-    {
-        if (eq == EQ_WEAPON || eq == EQ_GLOVES || eq == EQ_SHIELD)
-            return false;
-        return true;
-    }
-
-    if (you.form == TRAN_ICE_BEAST)
-    {
-        if (eq != EQ_CLOAK)
-            return false;
-        return true;
-    }
-
-    if (you.form == TRAN_STATUE)
-    {
-        if (eq == EQ_WEAPON || eq == EQ_SHIELD
-            || eq == EQ_CLOAK || eq == EQ_HELMET)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    if (you.form == TRAN_FUNGUS)
-        return eq == EQ_HELMET;
-
-    if (you.form == TRAN_TREE)
-        return eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET;
 
     return true;
 }

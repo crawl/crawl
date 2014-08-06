@@ -44,139 +44,278 @@
 
 #define NUM_FORMS (LAST_FORM + 1)
 
-class Form
-{
-public:
-    Form(const char *_name) : name(_name) { };
+// transform slot enums into flags
+#define SLOTF(s) (1 << s)
 
-public:
-    const char* const name;
-};
+static const int EQF_NONE = 0;
+// "hand" slots
+static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
+                             | SLOTF(EQ_GLOVES);
+// core body slots (statue form)
+static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
+                              | SLOTF(EQ_BODY_ARMOUR);
+// more core body slots (Lear's Hauberk)
+static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
+// everything you can (W)ear
+static const int EQF_WEAR = EQF_LEAR | SLOTF(EQ_CLOAK) | SLOTF(EQ_SHIELD);
+// everything but jewellery
+static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
+// octopodes somtimes have their extra rings blocked
+static const int EQF_OCTO = SLOTF(EQ_RING_THREE) | SLOTF(EQ_RING_FOUR)
+                            | SLOTF(EQ_RING_FIVE) | SLOTF(EQ_RING_SIX)
+                            | SLOTF(EQ_RING_SEVEN) | SLOTF(EQ_RING_EIGHT);
+// all rings (except for the macabre finger amulet's)
+static const int EQF_RINGS = SLOTF(EQ_LEFT_RING) | SLOTF(EQ_RIGHT_RING)
+                             | SLOTF(EQ_RING_ONE) | SLOTF(EQ_RING_TWO)
+                             | EQF_OCTO;
+// amulet & pal
+static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
+// everything
+static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
+
+
+/**
+ * Is the given equipment slot available for use in this form?
+ *
+ * @param slot      The equipment slot in question. (May be a weird fake
+ *                  slot - EQ_STAFF or EQ_ALL_ARMOUR.)
+ * @return          Whether at least some items can be worn in this slot in
+ *                  this form.
+ *                  (The player's race, or mutations, may still block the
+ *                  slot, or it may be restricted to subtypes.)
+ */
+bool Form::slot_available(int slot) const
+{
+    if (slot == EQ_ALL_ARMOUR)
+        return !all_blocked(EQF_WEAR);
+    if (slot == EQ_RINGS || slot == EQ_RINGS_PLUS)
+        return !all_blocked(EQF_RINGS);
+
+    if (slot == EQ_STAFF)
+        slot = EQ_WEAPON;
+    return !(blocked_slots & SLOTF(slot));
+}
+
+/**
+ * Can the player wear the given item while in this form?
+ *
+ * @param item  The item in question
+ * @return      Whether this form prevents the player from wearing the
+ *              item. (Other things may also prevent it, of course)
+ */
+bool Form::can_wear_item(const item_def& item) const
+{
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (jewellery_is_amulet(item))
+            return slot_available(EQ_AMULET);
+        return !all_blocked(EQF_RINGS);
+    }
+
+    if (is_unrandom_artefact(item, UNRAND_LEAR))
+        return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
+
+    return slot_available(get_armour_slot(item));
+}
+
+/**
+ * Are all of the given equipment slots blocked while in this form?
+ *
+ * @param slotflags     A set of flags, corresponding to the union of
+ (1 << the slot enum) for each slot in question.
+ * @return              Whether all of the given slots are blocked.
+ */
+bool Form::all_blocked(int slotflags) const
+{
+    return slotflags == (blocked_slots & slotflags);
+}
 
 
 class FormNone : public Form
 {
 public:
-    FormNone() : Form("none") { };
+    FormNone()
+    : Form("none", EQF_NONE)    // name, blocked slots
+    { };
 };
 
 class FormSpider : public Form
 {
 public:
-    FormSpider() : Form("spider") { };
+    FormSpider()
+    : Form("spider", EQF_PHYSICAL)    // name, blocked slots
+    { };
 };
 
 class FormBlade : public Form
 {
 public:
-    FormBlade() : Form("blade") { };
+    FormBlade()
+    : Form("blade", EQF_HANDS)    // name, blocked slots
+    { };
 };
 
 class FormStatue : public Form
 {
 public:
-    FormStatue() : Form("statue") { };
+    FormStatue()
+    : Form("statue", EQF_STATUE)    // name, blocked slots
+    { };
 };
 
 class FormIce : public Form
 {
 public:
-    FormIce() : Form("ice") { };
+    FormIce()
+    : Form("ice", EQF_PHYSICAL | EQF_OCTO)    // name, blocked slots
+    { };
 };
 
 class FormDragon : public Form
 {
 public:
-    FormDragon() : Form("dragon") { };
+    FormDragon()
+    : Form("dragon", EQF_PHYSICAL | EQF_OCTO)    // name, blocked slots
+    { };
 };
 
 class FormLich : public Form
 {
 public:
-    FormLich() : Form("lich") { };
+    FormLich()
+    : Form("lich", EQF_NONE)    // name, blocked slots
+    { };
 };
 
 class FormBat : public Form
 {
 public:
-    FormBat() : Form("bat") { };
+    FormBat()
+    : Form("bat", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    { };
 };
 
 class FormPig : public Form
 {
 public:
-    FormPig() : Form("pig") { };
+    FormPig()
+    : Form("pig", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    { };
 };
 
 class FormAppendage : public Form
 {
 public:
-    FormAppendage() : Form("appendage") { };
+    FormAppendage()
+    : Form("appendage", EQF_NONE)    // name, blocked slots
+    { };
 };
 
 class FormTree : public Form
 {
 public:
-    FormTree() : Form("tree") { };
+    FormTree()
+    : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO) // name, blocked slots
+    { };
 };
 
 class FormPorcupine: public Form
 {
 public:
-    FormPorcupine() : Form("porcupine") { };
+    FormPorcupine()
+    : Form("porcupine", EQF_ALL)    // name, blocked slots
+    { };
 };
 
 class FormWisp: public Form
 {
 public:
-    FormWisp() : Form("wisp") { };
+    FormWisp()
+    : Form("wisp", EQF_ALL)    // name, blocked slots
+    { };
 };
 
 #if TAG_MAJOR_VERSION == 34
 class FormJelly : public Form
 {
 public:
-    FormJelly() : Form("jelly") { };
+    FormJelly()
+    : Form("jelly", EQF_PHYSICAL | EQF_RINGS)    // name, blocked slots
+    { };
 };
 #endif
 
 class FormFungus : public Form
 {
 public:
-    FormFungus() : Form("fungus") { };
+    FormFungus()
+    : Form("fungus", EQF_PHYSICAL | EQF_OCTO) // name, blocked slots
+    { };
 };
 
 class FormShadow: public Form
 {
 public:
-    FormShadow() : Form("shadow") { };
-};
-
-
-
-static const Form forms[NUM_FORMS] =
-{
-    FormNone(),
-    FormSpider(),
-    FormBlade(),
-    FormStatue(),
-    FormIce(),
-    FormDragon(),
-    FormLich(),
-    FormBat(),
-    FormPig(),
-    FormAppendage(),
-    FormTree(),
-    FormPorcupine(),
-    FormWisp(),
-#if TAG_MAJOR_VERSION == 34
-    FormJelly(),
-#endif
-    FormFungus(),
     FormShadow()
+    : Form("shadow", EQF_NONE)    // name, blocked slots
+    { };
 };
 
 
+static const FormNone FORM_NONE = FormNone();
+static const FormSpider FORM_SPIDER = FormSpider();
+static const FormBlade FORM_BLADE = FormBlade();
+static const FormStatue FORM_STATUE = FormStatue();
+
+static const FormIce FORM_ICE = FormIce();
+static const FormLich FORM_LICH = FormLich();
+static const FormDragon FORM_DRAGON = FormDragon();
+static const FormBat FORM_BAT = FormBat();
+
+static const FormPig FORM_PIG = FormPig();
+static const FormAppendage FORM_APPENDAGE = FormAppendage();
+static const FormTree FORM_TREE = FormTree();
+static const FormPorcupine FORM_PORCUPINE = FormPorcupine();
+
+static const FormWisp FORM_WISP = FormWisp();
+#if TAG_MAJOR_VERSION == 34
+static const FormJelly FORM_JELLY = FormJelly();
+#endif
+static const FormFungus FORM_FUNGUS = FormFungus();
+static const FormShadow FORM_SHADOW = FormShadow();
+
+
+static const Form* forms[] =
+{
+    &FORM_NONE,
+    &FORM_SPIDER,
+    &FORM_BLADE,
+    &FORM_STATUE,
+
+    &FORM_ICE,
+    &FORM_DRAGON,
+    &FORM_LICH,
+    &FORM_BAT,
+
+    &FORM_PIG,
+    &FORM_APPENDAGE,
+    &FORM_TREE,
+    &FORM_PORCUPINE,
+
+    &FORM_WISP,
+#if TAG_MAJOR_VERSION == 34
+    &FORM_JELLY,
+#endif
+    &FORM_FUNGUS,
+    &FORM_SHADOW,
+};
+
+const Form* get_form(transformation_type form)
+{
+    COMPILE_CHECK(ARRAYSZ(forms) == NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_FORMS);
+    return forms[form];
+}
 
 
 
@@ -185,23 +324,54 @@ static const Form forms[NUM_FORMS] =
 
 static void _extra_hp(int amount_extra);
 
+
+/**
+ * Get the name of a form.
+ *
+ * @param form      The form in question.
+ * @return          The form's casual, wizmode name.
+ */
 const char* transform_name(transformation_type form)
 {
-    COMPILE_CHECK(ARRAYSZ(forms) == NUM_FORMS);
     ASSERT_RANGE(form, 0, NUM_FORMS);
-    return forms[form].name;
+    return forms[form]->name;
 }
 
+/**
+ * Can the player (w)ield weapons when in the given form?
+ *
+ * @param form      The form in question.
+ * @return          Whether the player can wield items when in that form.
+*/
 bool form_can_wield(transformation_type form)
 {
-    return form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-           || form == TRAN_APPENDAGE || form == TRAN_TREE
-           || form == TRAN_SHADOW;
+    ASSERT_RANGE(form, 0, NUM_FORMS);
+    return forms[form]->slot_available(EQ_WEAPON);
 }
 
+/**
+ * Can the player (W)ear armour when in the given form?
+ *
+ * @param form      The form in question.
+ * @return          Whether the player can wear armour when in that form.
+ */
 bool form_can_wear(transformation_type form)
 {
-    return form_can_wield(form) || form == TRAN_BLADE_HANDS;
+    ASSERT_RANGE(form, 0, NUM_FORMS);
+    return (forms[form]->blocked_slots & EQF_WEAR) != EQF_WEAR;
+}
+
+/**
+ * Can the player (W)ear or (P)ut on the given item when in the given form?
+ *
+ * @param form      The item in question.
+ * @param form      The form in question.
+ * @return          Whether the player can wear that item when in that form.
+ */
+bool form_can_wear_item(const item_def& item, transformation_type form)
+{
+    ASSERT_RANGE(form, 0, NUM_FORMS);
+    return forms[form]->can_wear_item(item);
 }
 
 bool form_can_fly(transformation_type form)
@@ -284,66 +454,6 @@ bool form_can_use_wand(transformation_type form)
     return form_can_wield(form) || form == TRAN_DRAGON;
 }
 
-bool form_can_wear_item(const item_def& item, transformation_type form)
-{
-    if (form == TRAN_PORCUPINE
-#if TAG_MAJOR_VERSION == 34
-        || form == TRAN_JELLY
-#endif
-        || form == TRAN_WISP)
-    {
-        return false;
-    }
-
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        // Everyone but porcupines and wisps can wear amulets.
-        if (jewellery_is_amulet(item))
-            return true;
-        // Bats and pigs can't wear rings.
-        return form != TRAN_BAT && form != TRAN_PIG;
-    }
-
-    // It's not jewellery, and it's worn, so it must be armour.
-    const equipment_type eqslot = get_armour_slot(item);
-
-    switch (form)
-    {
-    // Some forms can wear everything.
-    case TRAN_NONE:
-    case TRAN_LICH:
-    case TRAN_SHADOW:
-    case TRAN_APPENDAGE: // handled as mutations
-        return true;
-
-    // Some can't wear anything.
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-    case TRAN_PIG:
-    case TRAN_SPIDER:
-    case TRAN_ICE_BEAST:
-        return false;
-
-    // And some need more complicated logic.
-    case TRAN_BLADE_HANDS:
-        return eqslot != EQ_SHIELD && eqslot != EQ_GLOVES
-               && item.special != UNRAND_LEAR;
-
-    case TRAN_STATUE:
-        return eqslot == EQ_CLOAK || eqslot == EQ_HELMET
-               || eqslot == EQ_SHIELD;
-
-    case TRAN_FUNGUS:
-        return eqslot == EQ_HELMET && !is_hard_helmet(item);
-
-    case TRAN_TREE:
-        return eqslot == EQ_SHIELD || eqslot == EQ_HELMET;
-
-    default:                // Bug-catcher.
-        die("Unknown transformation type %d in form_can_wear_item", you.form);
-    }
-}
-
 // Used to mark forms which keep most form-based mutations.
 bool form_keeps_mutations(transformation_type form)
 {
@@ -377,18 +487,7 @@ _init_equipment_removal(transformation_type form)
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
 
-        if (!pitem)
-            continue;
-
-        // Octopodes lose their extra ring slots (3--8) in forms that do not
-        // have eight limbs.  Handled specially here because we do have to
-        // distinguish between slots the same type.
-        if (i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
-            && !(form_keeps_mutations(form) || form == TRAN_SPIDER))
-        {
-            result.insert(eq);
-        }
-        else if (!form_can_wear_item(*pitem, form))
+        if (pitem && get_form(form)->blocked_slots & SLOTF(i))
             result.insert(eq);
     }
     return result;
@@ -409,7 +508,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
         bool unequip = !meld;
         if (!unequip && e == EQ_WEAPON)
         {
-            if (you.form == TRAN_NONE || form_can_wield(you.form))
+            if (form_can_wield(you.form))
                 unequip = true;
             if (!is_weapon(*equip))
                 unequip = true;
@@ -520,7 +619,6 @@ static void _unmeld_equipment_type(equipment_type e)
     }
     else
     {
-        // if (item.base_type != OBJ_JEWELLERY)
         mprf("%s unmelds from your body.", item.name(DESC_YOUR).c_str());
         unmeld_slot(e);
     }
@@ -547,9 +645,11 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
 void unmeld_one_equip(equipment_type eq)
 {
     if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
-        if (const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true))
-            if (is_unrandom_artefact(*arm, UNRAND_LEAR))
-                eq = EQ_BODY_ARMOUR;
+    {
+        const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
+        if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
+            eq = EQ_BODY_ARMOUR;
+    }
 
     set<equipment_type> e;
     e.insert(eq);
