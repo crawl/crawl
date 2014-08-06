@@ -702,18 +702,6 @@ cloud_type random_smoke_type()
     }
     return CLOUD_DEBUGGING;
 }
-
-// Returns by how much damage gets divided due to elemental resistances.
-// Damage is reduced to, level 1 -> 1/2, level 2 -> 1/3, level 3 -> 1/5, or
-// for "boolean" attacks (which use bonus_res = 1, sticky flame/electricity)
-// to level 1 -> 1/3, level 2 -> 1/4, or level 3 -> 1/6.
-// With the old formula (1 + resist * resist) this used to be
-// 1/2, 1/5, 1/10 (normal) and 1/3, 1/6, 1/11 (boolean), respectively.
-int resist_fraction(int resist, int bonus_res)
-{
-    return (3*resist + 1)/2 + bonus_res;
-}
-
 int max_cloud_damage(cloud_type cl_type, int power)
 {
     cloud_struct cloud;
