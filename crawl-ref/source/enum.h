@@ -1414,7 +1414,6 @@ enum dungeon_feature_type
     DNGN_ENTER_DWARF,
 #endif
     DNGN_ENTER_ORC,
-        DNGN_ENTER_FIRST_BRANCH = DNGN_ENTER_ORC,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME,
     DNGN_ENTER_VAULTS,
@@ -1434,7 +1433,6 @@ enum dungeon_feature_type
     DNGN_ENTER_FOREST,
 #endif
     DNGN_ENTER_DEPTHS,
-        DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_DEPTHS,
 
     // Exits from various branches
     // Order must be the same as above
@@ -1442,7 +1440,6 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_DWARF,
 #endif
     DNGN_RETURN_FROM_ORC,
-        DNGN_RETURN_FROM_FIRST_BRANCH = DNGN_RETURN_FROM_ORC,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME,
     DNGN_RETURN_FROM_VAULTS,
@@ -1462,7 +1459,6 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_FOREST,
 #endif
     DNGN_RETURN_FROM_DEPTHS,
-        DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_DEPTHS,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_ZIN,
@@ -1527,7 +1523,6 @@ enum dungeon_feature_type
     DNGN_PASSAGE_OF_GOLUBRIA,
 
     DNGN_ENTER_ZIGGURAT,
-        DNGN_ENTER_FIRST_PORTAL = DNGN_ENTER_ZIGGURAT,
     DNGN_ENTER_BAZAAR,
     DNGN_ENTER_TROVE,
     DNGN_ENTER_SEWER,
@@ -1536,11 +1531,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ICE_CAVE,
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
-        DNGN_ENTER_LAST_PORTAL = DNGN_ENTER_WIZLAB,
     DNGN_UNUSED_ENTER_PORTAL_1,
 
     DNGN_EXIT_ZIGGURAT,
-        DNGN_EXIT_FIRST_PORTAL = DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
     DNGN_EXIT_TROVE,
     DNGN_EXIT_SEWER,
@@ -1550,7 +1543,6 @@ enum dungeon_feature_type
     DNGN_EXIT_VOLCANO,
     DNGN_EXIT_WIZLAB,
     DNGN_EXIT_LABYRINTH,
-        DNGN_EXIT_LAST_PORTAL = DNGN_EXIT_LABYRINTH,
     DNGN_UNUSED_EXIT_PORTAL_1,
 
 #if TAG_MAJOR_VERSION == 34

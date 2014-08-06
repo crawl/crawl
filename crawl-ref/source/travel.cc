@@ -4274,6 +4274,15 @@ bool explore_discoveries::merge_feature(
     return false;
 }
 
+static bool _feat_is_branchlike(dungeon_feature_type feat)
+{
+    return feat_is_branch_entrance(feat)
+        || feat == DNGN_ENTER_HELL
+        || feat == DNGN_ENTER_ABYSS
+        || feat == DNGN_EXIT_THROUGH_ABYSS
+        || feat == DNGN_ENTER_PANDEMONIUM;
+}
+
 void explore_discoveries::found_feature(const coord_def &pos,
                                         dungeon_feature_type feat)
 {
@@ -4288,7 +4297,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         add_stair(stair);
         es_flags |= ES_STAIR;
     }
-    else if (feat_is_branchlike(feat) && ES_branch)
+    else if (_feat_is_branchlike(feat) && ES_branch)
     {
         const named_thing<int> stair(cleaned_feature_description(pos), 1);
         add_stair(stair);

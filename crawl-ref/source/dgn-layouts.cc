@@ -1080,7 +1080,7 @@ static bool _may_overwrite_pos(coord_def c)
 
     // Don't overwrite any stairs or branch entrances.
     if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_TELEPORTER
-        || grid >= DNGN_ENTER_FIRST_PORTAL && grid <= DNGN_EXIT_LAST_PORTAL
+        || feat_is_portal_entrance(grid)
         || grid == DNGN_EXIT_HELL)
     {
         return false;

@@ -76,8 +76,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
 
         dungeon_feature_type stairs = your_branch().exit_stairs;
 
-        if (stairs < DNGN_RETURN_FROM_FIRST_BRANCH
-            || stairs > DNGN_RETURN_FROM_LAST_BRANCH)
+        if (!feat_is_branch_exit(stairs))
         {
             mpr("This branch has no exit stairs defined.");
             return DNGN_UNSEEN;

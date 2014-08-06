@@ -826,40 +826,33 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (feat_is_escape_hatch(stair_taken))
         return stair_taken;
 
-    if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-        && stair_taken <= DNGN_RETURN_FROM_LAST_BRANCH)
+    if (feat_is_branch_exit(stair_taken))
     {
-        // Find entry point to subdungeon when leaving.
-        return stair_taken + DNGN_ENTER_FIRST_BRANCH
-                           - DNGN_RETURN_FROM_FIRST_BRANCH;
+        for (branch_iterator it; it; it++)
+            if (it->exit_stairs == stair_taken)
+                return it->entry_stairs;
+        die("entrance corresponding to exit %d not found", stair_taken);
     }
 
-    if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
-        && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
+    if (feat_is_branch_entrance(stair_taken))
     {
-        // Find exit staircase from subdungeon when entering.
-        return stair_taken + DNGN_RETURN_FROM_FIRST_BRANCH
-                           - DNGN_ENTER_FIRST_BRANCH;
+        for (branch_iterator it; it; it++)
+            if (it->entry_stairs == stair_taken)
+                return it->exit_stairs;
+        die("return corresponding to entry %d not found", stair_taken);
     }
 
     if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
         return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
-
-    if (
-#if TAG_MAJOR_VERSION == 34
-        stair_taken == DNGN_ENTER_PORTAL_VAULT ||
-#endif
-        stair_taken >= DNGN_ENTER_FIRST_PORTAL
-        && stair_taken <= DNGN_ENTER_LAST_PORTAL)
-    {
-        return DNGN_STONE_ARCH;
-    }
 
     if (stair_taken == DNGN_ENTER_LABYRINTH)
     {
         // dgn_find_nearby_stair uses special logic for labyrinths.
         return DNGN_ENTER_LABYRINTH;
     }
+
+    if (feat_is_portal_entrance(stair_taken))
+        return DNGN_STONE_ARCH;
 
     // Note: stair_taken can equal things like DNGN_FLOOR
     // Just find a nice empty square.

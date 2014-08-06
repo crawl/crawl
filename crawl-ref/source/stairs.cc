@@ -520,7 +520,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return lev;
     }
 
-    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
+    if (feat_is_portal_exit(feat))
         feat = DNGN_EXIT_PANDEMONIUM;
 
     switch (feat)
@@ -865,14 +865,9 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     if (stair_find == DNGN_ENTER_LABYRINTH || stair_find == DNGN_ENTER_ZIGGURAT)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
-    if (stair_find == DNGN_ENTER_LABYRINTH
-#if TAG_MAJOR_VERSION == 34
-        || stair_find == DNGN_ENTER_PORTAL_VAULT
-#endif
-        || stair_find == DNGN_ENTER_PANDEMONIUM
+    if (stair_find == DNGN_ENTER_PANDEMONIUM
         || stair_find == DNGN_ENTER_ABYSS
-        || stair_find >= DNGN_ENTER_FIRST_PORTAL
-           && stair_find <= DNGN_ENTER_LAST_PORTAL)
+        || feat_is_portal_entrance(stair_find))
     {
         you.level_stack.push_back(level_pos::current());
     }
