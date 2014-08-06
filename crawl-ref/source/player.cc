@@ -617,49 +617,8 @@ bool player_genus(genus_type which_genus, species_type species)
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
-bool is_player_same_genus(const monster_type mon, bool transform)
+bool is_player_same_genus(const monster_type mon)
 {
-    if (transform)
-    {
-        switch (you.form)
-        {
-        // Unique monsters.
-        case TRAN_BAT:
-            return mon == MONS_BAT;
-        case TRAN_ICE_BEAST:
-            return mon == MONS_ICE_BEAST;
-        case TRAN_TREE:
-            return mon == MONS_ANIMATED_TREE;
-        case TRAN_PORCUPINE:
-            return mon == MONS_PORCUPINE;
-        case TRAN_WISP:
-            return mon == MONS_INSUBSTANTIAL_WISP;
-        case TRAN_SHADOW:
-            return mons_genus(mon) == MONS_SHADOW;
-        // Compare with monster *species*.
-        case TRAN_LICH:
-            return mons_species(mon) == MONS_LICH;
-        // Compare with monster *genus*.
-        case TRAN_FUNGUS:
-            return mons_genus(mon) == MONS_FUNGUS;
-        case TRAN_SPIDER:
-            return mons_genus(mon) == MONS_SPIDER;
-        case TRAN_DRAGON:
-            return mons_genus(mon) == MONS_DRAGON;
-        case TRAN_PIG:
-            return mons_genus(mon) == MONS_HOG;
-#if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY:
-            return mons_genus(mon) == MONS_JELLY;
-#endif
-        case TRAN_STATUE:
-        case TRAN_BLADE_HANDS:
-        case TRAN_NONE:
-        case TRAN_APPENDAGE:
-            break; // Check real (non-transformed) form.
-        }
-    }
-
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
         return mons_species(mon) == MONS_GHOUL;
