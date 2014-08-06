@@ -11,6 +11,25 @@
 #include "enum.h"
 #include "player.h"
 
+class Form
+{
+public:
+    Form(const char *_name, int _blocked_slots) :
+        name(_name), blocked_slots(_blocked_slots)
+    { };
+
+    bool slot_available(int slot) const;
+    bool can_wear_item(const item_def& item) const;
+
+public:
+    const char* const name;
+    const int blocked_slots;
+
+private:
+    bool all_blocked(int slotflags) const;
+};
+const Form* get_form(transformation_type form = you.form);
+
 bool form_can_wield(transformation_type form = you.form);
 bool form_can_wear(transformation_type form = you.form);
 bool form_can_fly(transformation_type form = you.form);

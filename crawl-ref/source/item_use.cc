@@ -1317,26 +1317,28 @@ static bool _puton_item(int item_slot, bool prompt_slot)
         return false;
     }
 
+    if (!you_tran_can_wear(item))
+    {
+        mpr("You can't wear that in your present form.");
+        return false;
+    }
+
     const vector<equipment_type> ring_types = _current_ring_types();
     const bool is_amulet = jewellery_is_amulet(item);
 
     if (!is_amulet)     // i.e. it's a ring
     {
-        if (!you_tran_can_wear(item))
-        {
-            mpr("You can't wear that in your present form.");
-            return false;
-        }
-
         bool need_swap = true;
         for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
              eq_it != ring_types.end();
              ++eq_it)
+        {
             if (!you.slot_item(*eq_it, true))
             {
                 need_swap = false;
                 break;
             }
+        }
 
         if (need_swap)
             return _swap_rings(item_slot);
