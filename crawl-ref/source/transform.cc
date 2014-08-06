@@ -26,6 +26,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-enum.h" // stealing their resist flags
 #include "mutation.h"
 #include "newgame.h"
 #include "output.h"
@@ -119,29 +120,6 @@ bool Form::can_wear_item(const item_def& item) const
 }
 
 /**
- * Get an monster type corresponding to the transformation.
- *
- * (Used for console player glyphs.)
- *
- * @return  A monster type corresponding to the player in this form.
- */
-monster_type Form::get_equivalent_mons() const
-{
-    return equivalent_mons;
-}
-
-/**
- * Get a multiplier for skill when calculating stealth values.
- *
- * @return  The stealth modifier for the given form. (0 = default to
- *          racial values.)
- */
-int Form::get_stealth_mod() const
-{
-    return stealth_mod;
-}
-
-/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -161,6 +139,7 @@ public:
     FormNone()
     : Form("none", EQF_NONE,  // name, blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -171,6 +150,7 @@ public:
     FormSpider()
     : Form("spider", EQF_PHYSICAL,  // name, blocked slots
            SIZE_TINY, 21,    // size, stealth mod
+           5,                 // base unarmed damage
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -181,8 +161,17 @@ public:
     FormBlade()
     : Form("blade", EQF_HANDS,  // name, blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
+           -1,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const
+    {
+        return 8 + div_rand_round(you.strength() + you.dex(), 3);
+    }
 };
 
 class FormStatue : public Form
@@ -191,8 +180,17 @@ public:
     FormStatue()
     : Form("statue", EQF_STATUE,  // name, blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
+           -1,                 // base unarmed damage
            MONS_STATUE)       // equivalent monster
     { };
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const
+    {
+        return 6 + div_rand_round(you.strength(), 3);
+    }
 };
 
 class FormIce : public Form
@@ -201,6 +199,7 @@ public:
     FormIce()
     : Form("ice", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
            SIZE_LARGE, 15,    // size, stealth mod
+           12,                 // base unarmed damage
            MONS_ICE_BEAST)       // equivalent monster
     { };
 };
@@ -211,6 +210,7 @@ public:
     FormDragon()
     : Form("dragon", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
            SIZE_GIANT, 6,    // size, stealth mod
+           -1,                 // base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -225,6 +225,14 @@ public:
     {
         return dragon_form_dragon_type();
     }
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const
+    {
+        return 12 + div_rand_round(you.strength() * 2, 3);
+    }
 };
 
 class FormLich : public Form
@@ -233,6 +241,7 @@ public:
     FormLich()
     : Form("lich", EQF_NONE,  // name, blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
+           5,                 // base unarmed damage
            MONS_LICH)       // equivalent monster
     { };
 };
@@ -243,6 +252,7 @@ public:
     FormBat()
     : Form("bat", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
            SIZE_TINY, 17,    // size, stealth mod
+           -1,                 // base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -269,6 +279,14 @@ public:
         // vampires handle bat stealth in racial code
         return you.species == SP_VAMPIRE ? 0 : stealth_mod;
     }
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const
+    {
+        return you.species == SP_VAMPIRE ? 2 : 1;
+    }
 };
 
 class FormPig : public Form
@@ -277,6 +295,7 @@ public:
     FormPig()
     : Form("pig", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
            SIZE_SMALL, 9,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -287,6 +306,7 @@ public:
     FormAppendage()
     : Form("appendage", EQF_NONE,  // name, blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -297,6 +317,7 @@ public:
     FormTree()
     : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // name, blocked slots
            SIZE_CHARACTER, 27,    // size, stealth mod
+           12,                 // base unarmed damage
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
@@ -307,6 +328,7 @@ public:
     FormPorcupine()
     : Form("porcupine", EQF_ALL,  // name, blocked slots
            SIZE_TINY, 12,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -317,6 +339,7 @@ public:
     FormWisp()
     : Form("wisp", EQF_ALL,  // name, blocked slots
            SIZE_TINY, 21,    // size, stealth mod
+           5,                 // base unarmed damage
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
@@ -328,6 +351,7 @@ public:
     FormJelly()
     : Form("jelly", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
            SIZE_CHARACTER, 21,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -339,6 +363,7 @@ public:
     FormFungus()
     : Form("fungus", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
            SIZE_TINY, 30,    // size, stealth mod
+           12,                 // base unarmed damage
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -349,6 +374,7 @@ public:
     FormShadow()
     : Form("shadow", EQF_NONE,  // name, blocked slots
            SIZE_CHARACTER, 30,    // size, stealth mod
+           3,                 // base unarmed damage
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };

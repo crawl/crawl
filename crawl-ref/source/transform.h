@@ -16,16 +16,19 @@ class Form
 public:
     Form(const char *_name, int _blocked_slots,
          size_type _size, int _stealth_mod,
+         int _base_unarmed_damage,
          monster_type _equivalent_mons) :
     name(_name), blocked_slots(_blocked_slots),
     size(_size), stealth_mod(_stealth_mod),
+    base_unarmed_damage(_base_unarmed_damage),
     equivalent_mons(_equivalent_mons)
     { };
 
     bool slot_available(int slot) const;
     bool can_wear_item(const item_def& item) const;
-    virtual monster_type get_equivalent_mons() const;
-    virtual int get_stealth_mod() const;
+    virtual monster_type get_equivalent_mons() const { return equivalent_mons; }
+    virtual int get_stealth_mod() const { return stealth_mod; }
+    virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
 
 public:
     const char* const name;
@@ -34,6 +37,7 @@ public:
 
 protected:
     const int stealth_mod;
+    const int base_unarmed_damage;
 
 private:
     bool all_blocked(int slotflags) const;
