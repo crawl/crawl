@@ -15,8 +15,10 @@ class Form
 {
 public:
     Form(const char *_name, int _blocked_slots,
+         size_type _size,
          monster_type _equivalent_mons) :
     name(_name), blocked_slots(_blocked_slots),
+    size(_size),
     equivalent_mons(_equivalent_mons)
     { };
 
@@ -27,6 +29,7 @@ public:
 public:
     const char* const name;
     const int blocked_slots;
+    const size_type size;
 
 private:
     bool all_blocked(int slotflags) const;
