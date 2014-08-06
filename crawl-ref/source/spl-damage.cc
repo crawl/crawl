@@ -2119,7 +2119,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             if (petrified)
             {
                 beam.name       = "blast of petrified fragments";
-                beam.colour     = mons_class_colour(mon->type);
+                beam.colour     = mon->colour;
                 beam.damage.num = 3;
                 break;
             }
