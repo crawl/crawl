@@ -874,10 +874,10 @@ static const mon_spellbook mspell_list[] =
       {
        SPELL_SERPENT_OF_HELL_BREATH,
        SPELL_SERPENT_OF_HELL_BREATH,
-       SPELL_NO_SPELL,
+       SPELL_SUMMON_DRAGON,
+       SPELL_SUMMON_DRAGON,
        SPELL_SERPENT_OF_HELL_BREATH,
-       SPELL_SERPENT_OF_HELL_BREATH,
-       SPELL_NO_SPELL
+       SPELL_SUMMON_DRAGON
       }
     },
 
