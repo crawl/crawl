@@ -3992,16 +3992,20 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #endif
 
     case MISC_FAN_OF_GALES:
-        return TILE_MISC_AIR_ELEMENTAL_FAN;
+        return evoker_is_charged(item) ? TILE_MISC_FAN_OF_GALES
+                                       : TILE_MISC_FAN_OF_GALES_INERT;
 
     case MISC_LAMP_OF_FIRE:
-        return TILE_MISC_LAMP_OF_FIRE;
+        return evoker_is_charged(item) ? TILE_MISC_LAMP_OF_FIRE
+                                       : TILE_MISC_LAMP_OF_FIRE_INERT;
 
     case MISC_STONE_OF_TREMORS:
-        return TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
+        return evoker_is_charged(item) ? TILE_MISC_STONE_OF_TREMORS
+                                       : TILE_MISC_STONE_OF_TREMORS_INERT;
 
     case MISC_PHIAL_OF_FLOODS:
-        return TILE_MISC_PHIAL_OF_FLOODS;
+        return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
+                                       : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
