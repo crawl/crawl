@@ -3790,6 +3790,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SERPENT_OF_HELL_BREATH, "Serpent of Hell Breath",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    true,
+    false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
