@@ -2291,6 +2291,9 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
 // or in the case of ghosts their actual spells.
 unique_books get_unique_spells(const monster_info &mi)
 {
+    // No entry for MST_GHOST
+    COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
+
     const vector<mon_spellbook_type> books = get_spellbooks(mi);
     const size_t num_books = books.size();
 
