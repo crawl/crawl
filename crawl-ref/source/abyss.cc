@@ -193,10 +193,7 @@ static void _abyss_fixup_vault(const vault_placement *vp)
         if (feat_is_stair(feat)
             && feat != DNGN_EXIT_ABYSS
             && feat != DNGN_ABYSSAL_STAIR
-#if TAG_MAJOR_VERSION == 34
-            && feat != DNGN_ENTER_PORTAL_VAULT
-#endif
-            && !(feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL))
+            && !feat_is_portal_entrance(feat))
         {
             grd(p) = DNGN_FLOOR;
         }

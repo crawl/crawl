@@ -254,14 +254,11 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        if (grd(where) >= DNGN_EXIT_FIRST_PORTAL && grd(where) <= DNGN_EXIT_LAST_PORTAL)
+        if (feat_is_portal_exit(grd(where)))
             return true;
         switch (grd(where))
         {
         case DNGN_EXIT_HELL:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_EXIT_PORTAL_VAULT:
-#endif
         case DNGN_EXIT_ABYSS:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_RETURN_FROM_DEPTHS:
@@ -273,7 +270,7 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
     }
     else if (glyph == '>')
     {
-        if (grd(where) >= DNGN_ENTER_FIRST_PORTAL && grd(where) <= DNGN_ENTER_LAST_PORTAL)
+        if (feat_is_portal_entrance(grd(where)))
             return true;
         switch (grd(where))
         {

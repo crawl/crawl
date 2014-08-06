@@ -1916,7 +1916,7 @@ static bool _branch_entrances_are_connected()
     // stone stairs.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!feat_is_branch_stairs(grd(*ri)))
+        if (!feat_is_branch_entrance(grd(*ri)))
             continue;
         if (!_has_connected_stone_stairs_from(*ri))
             return false;
@@ -2342,7 +2342,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         }
 
         // If this is the real branch entry, don't mimic it.
-        if (feat_is_branch_stairs(feat)
+        if (feat_is_branch_entrance(feat)
             && level_id::current() == brentry[get_branch_at(pos)])
         {
             continue;
@@ -2365,7 +2365,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         }
 
         // If it is a branch entry, it's been put there for mimicing.
-        if (feat_is_branch_stairs(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
+        if (feat_is_branch_entrance(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
         {
             // For normal stairs, there is a chance to create another mimics
             // elsewhere instead of turning this one. That way, when the 3
@@ -3648,7 +3648,7 @@ static void _place_branch_entrances(bool use_vaults)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!feat_is_branch_stairs(grd(*ri)))
+        if (!feat_is_branch_entrance(grd(*ri)))
             continue;
 
         for (branch_iterator it; it; ++it)

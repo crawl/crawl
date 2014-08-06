@@ -4493,7 +4493,7 @@ bool gozag_check_bribe_branch(bool quiet)
     }
     branch_type branch = you.where_are_you;
     branch_type branch2 = NUM_BRANCHES;
-    if (feat_is_branch_stairs(grd(you.pos())))
+    if (feat_is_branch_entrance(grd(you.pos())))
     {
         for (branch_iterator it; it; ++it)
             if (it->entry_stairs == grd(you.pos())
@@ -4531,7 +4531,7 @@ bool gozag_bribe_branch()
     ASSERT(you.gold >= bribe_amount);
     bool prompted = false;
     branch_type branch = you.where_are_you;
-    if (feat_is_branch_stairs(grd(you.pos())))
+    if (feat_is_branch_entrance(grd(you.pos())))
     {
         for (branch_iterator it; it; ++it)
             if (it->entry_stairs == grd(you.pos())

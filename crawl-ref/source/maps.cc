@@ -522,7 +522,7 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
                 && !feat_is_gate(grd(v1))
-                && !feat_is_branch_stairs(grd(v1)))
+                && !feat_is_branch_entrance(grd(v1)))
             {
                 candidates.push_back(v1);
             }

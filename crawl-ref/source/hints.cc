@@ -3838,14 +3838,17 @@ bool hints_pos_interesting(int x, int y)
 static bool _hints_feat_interesting(dungeon_feature_type feat)
 {
     // Altars and branch entrances are always interesting.
-    if (feat_is_altar(feat))
+    if (feat_is_altar(feat)
+        || feat_is_branch_entrance(feat)
+        || feat_is_stone_stair(feat)
+        || feat_is_escape_hatch(feat))
+    {
         return true;
-    if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
-        return true;
+    }
 
     switch (feat)
     {
-    // So are statues, traps, and stairs.
+    // So are statues and traps.
     case DNGN_ORCISH_IDOL:
     case DNGN_GRANITE_STATUE:
     case DNGN_TRAP_TELEPORT:
@@ -3854,17 +3857,6 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_SHAFT:
     case DNGN_TRAP_WEB:
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ESCAPE_HATCH_UP:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_PORTAL_VAULT:
-#endif
         return true;
     default:
         return false;
@@ -4088,8 +4080,7 @@ static void _hints_describe_feature(int x, int y)
              Hints.hints_events[HINT_SEEN_ALTAR] = false;
              break;
          }
-         else if (feat >= DNGN_ENTER_FIRST_BRANCH
-                  && feat <= DNGN_ENTER_LAST_BRANCH)
+         else if (feat_is_branch_entrance(feat))
          {
              ostr << "An entryway into one of the many dungeon branches in "
                      "Crawl. ";
@@ -4363,7 +4354,7 @@ void hints_observe_cell(const coord_def& gc)
 {
     if (feat_is_escape_hatch(grd(gc)))
         learned_something_new(HINT_SEEN_ESCAPE_HATCH, gc);
-    else if (feat_is_branch_stairs(grd(gc)))
+    else if (feat_is_branch_entrance(grd(gc)))
         learned_something_new(HINT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
         learned_something_new(HINT_SEEN_STAIRS, gc);
@@ -4377,11 +4368,7 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
-#if TAG_MAJOR_VERSION == 34
-    else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
-        learned_something_new(HINT_SEEN_PORTAL, gc);
-#endif
-    else if (grd(gc) >= DNGN_ENTER_FIRST_PORTAL && grd(gc) <= DNGN_ENTER_LAST_PORTAL)
+    else if (feat_is_portal_entrance(grd(gc)))
         learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);

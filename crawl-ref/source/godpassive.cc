@@ -497,21 +497,17 @@ void ash_id_monster_equipment(monster* mon)
 
 static bool is_ash_portal(dungeon_feature_type feat)
 {
-    if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL)
+    if (feat_is_portal_entrance(feat))
         return true;
     switch (feat)
     {
     case DNGN_ENTER_HELL:
-    case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     // DNGN_TRANSIT_PANDEMONIUM is too mundane
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_PORTAL_VAULT:
-#endif
         return true;
     default:
         return false;
