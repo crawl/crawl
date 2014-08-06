@@ -14,12 +14,15 @@
 class Form
 {
 public:
-    Form(const char *_name, int _blocked_slots) :
-        name(_name), blocked_slots(_blocked_slots)
+    Form(const char *_name, int _blocked_slots,
+         monster_type _equivalent_mons) :
+    name(_name), blocked_slots(_blocked_slots),
+    equivalent_mons(_equivalent_mons)
     { };
 
     bool slot_available(int slot) const;
     bool can_wear_item(const item_def& item) const;
+    virtual monster_type get_equivalent_mons() const;
 
 public:
     const char* const name;
@@ -27,6 +30,9 @@ public:
 
 private:
     bool all_blocked(int slotflags) const;
+
+private:
+    const monster_type equivalent_mons;
 };
 const Form* get_form(transformation_type form = you.form);
 
