@@ -623,7 +623,7 @@ void fully_map_level()
     {
         bool ok = false;
         for (adjacent_iterator ai(*ri, false); ai; ++ai)
-            if (grd(*ai) >= DNGN_MINSEE)
+            if (!feat_is_opaque(grd(*ai)))
                 ok = true;
         if (!ok)
             continue;

@@ -2727,7 +2727,7 @@ int fedhas_rain(const coord_def &target)
             processed_count++;
         }
 
-        if (ftype >= DNGN_MINMOVE)
+        if (!feat_is_solid(ftype))
         {
             // Maybe place a raincloud.
             //

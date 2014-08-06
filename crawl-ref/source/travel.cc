@@ -276,7 +276,7 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
     }
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
-    else if (feat >= DNGN_MINWALK || feat == DNGN_RUNED_DOOR
+    else if (feat_has_solid_floor(feat) || feat == DNGN_RUNED_DOOR
              || feat == DNGN_CLOSED_DOOR
              || (feat == DNGN_SEALED_DOOR && try_fallback))
     {

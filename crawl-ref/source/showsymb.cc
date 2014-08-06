@@ -58,13 +58,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             return colour;
         }
     }
-    else if (feat >= DNGN_MINMOVE && cell.flags & MAP_WITHHELD)
+    else if (!feat_is_solid(feat) && cell.flags & MAP_WITHHELD)
     {
         // Colour grids that cannot be reached due to beholders
         // dark grey.
         colour = DARKGREY;
     }
-    else if (feat >= DNGN_MINMOVE
+    else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
     {
         if (cell.flags & MAP_SANCTUARY_1)
@@ -309,12 +309,12 @@ show_class get_cell_show_class(const map_cell& cell,
         return SH_CLOUD;
 
     const dungeon_feature_type feat = cell.feat();
-    if (feat && feat < DNGN_MINMOVE
+    if (feat && feat_is_solid(feat)
         || feat > DNGN_OPEN_DOOR
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH
            && feat != DNGN_EXPIRED_PORTAL
-           && (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_DRY_FOUNTAIN))
+           && !feat_is_fountain(feat))
     {
         return SH_FEATURE;
     }
@@ -437,7 +437,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         {
             if (Options.feature_item_brand
                 && (is_critical_feature(cell.feat())
-                 || cell.feat() < DNGN_MINMOVE))
+                    || feat_is_solid(cell.feat())))
             {
                 g.col |= COLFLAG_FEATURE_ITEM;
             }

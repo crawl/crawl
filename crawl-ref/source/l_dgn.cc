@@ -1143,7 +1143,7 @@ static int dgn_random_walk(lua_State *ls)
     // Fourth param being true means that we can move past
     // statues.
     const dungeon_feature_type minmove =
-    lua_isnil(ls, 4) ? DNGN_MINMOVE : DNGN_ORCISH_IDOL;
+    lua_isnil(ls, 4) ? DNGN_LAVA : DNGN_ORCISH_IDOL;
 
     if (!in_bounds(x, y))
     {

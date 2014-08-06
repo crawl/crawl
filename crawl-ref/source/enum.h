@@ -1322,10 +1322,9 @@ enum dungeon_char_type
 // * Any: edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
 //        if you want vault maps to be able to use it. If you do, also update
 //        docs/develop/levels/syntax.txt with the new symbol.
-// * Any: if its enumerator comes late in the list (as is likely for new
-//        feature types),_cell_feat_show_colour may need a special case to
+// * Any: if its enumerator comes after DNGN_TRAP_MECHANICAL (as is likely for
+//        new feature types), _cell_feat_show_colour may need a special case to
 //        allow it to be recoloured by vaults/bloodspatters.
-// Also take note of MINMOVE and MINSEE above.
 //
 // Various pieces of code depend on the relative order of these enumerators,
 // so there is even more reason (beyond the usual save-compatibility issues)
@@ -1337,45 +1336,36 @@ enum dungeon_feature_type
     DNGN_RUNED_DOOR,
     DNGN_SEALED_DOOR,
     DNGN_TREE,
+
+    // Walls
     DNGN_METAL_WALL,
-        DNGN_MINWALL = DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
-        DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
-        // Lowest grid value which can be seen through.
-        DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
-        DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
-    DNGN_GRATE,
-        DNGN_MAX_NONREACH = DNGN_GRATE,
 
+    DNGN_GRATE,
+
+    // Misc solid features
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
     DNGN_ORCISH_IDOL,
     DNGN_GRANITE_STATUE,
     DNGN_MALIGN_GATEWAY,
-        // Highest solid grid value.
-        DNGN_MAXSOLID = DNGN_MALIGN_GATEWAY,
 
     DNGN_LAVA            = 30,
-        DNGN_MINMOVE = DNGN_LAVA, // Can be moved through.
     DNGN_DEEP_WATER,
 
     DNGN_SHALLOW_WATER,
-        DNGN_MINWALK = DNGN_SHALLOW_WATER,
-
-    // Lowest grid value that an item can be placed on.
-    DNGN_MINITEM = DNGN_SHALLOW_WATER,
 
     DNGN_FLOOR,
     DNGN_OPEN_DOOR,
 
-    // Nothing after this point will be recoloured in console.
+    // Nothing after this point will be recoloured in console by default.
     DNGN_TRAP_MECHANICAL,
     DNGN_TRAP_TELEPORT,
     DNGN_TRAP_SHAFT,
@@ -1950,8 +1940,11 @@ enum eq_type_flags
 enum feature_flag_type
 {
     FFT_NONE          = 0,
-    FFT_NOTABLE       = 0x1,           // should be noted for dungeon overview
-    FFT_EXAMINE_HINT  = 0x2,           // could get an "examine-this" hint.
+    FFT_NOTABLE       = 1<< 0,           // should be noted for dungeon overview
+    FFT_EXAMINE_HINT  = 1<< 1,           // could get an "examine-this" hint.
+    FFT_OPAQUE        = 1<< 2,           // Does this feature block LOS?
+    FFT_WALL          = 1<< 3,           // Is this a "wall"?
+    FFT_SOLID         = 1<< 4,           // Does this feature block beams / normal movement?
 };
 
 enum flush_reason_type

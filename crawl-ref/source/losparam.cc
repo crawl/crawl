@@ -107,7 +107,7 @@ opacity_type opacity_solid_see::operator()(const coord_def& p) const
 opacity_type opacity_monmove::operator()(const coord_def& p) const
 {
     dungeon_feature_type feat = env.grid(p);
-    if (feat < DNGN_MINMOVE || !mon.can_pass_through_feat(feat))
+    if (feat_is_solid(feat) || !mon.can_pass_through_feat(feat))
         return OPC_OPAQUE;
     else
         return OPC_CLEAR;
