@@ -23,7 +23,7 @@ static feature_def feat_defs[] =
     // colour, map_colour, seen_colour, em_colour, seen_em_colour
     BLACK, DARKGREY, DARKGREY, BLACK, DARKGREY,
     // flags, minimap
-    FFT_NONE, MF_UNSEEN,
+    FFT_OPAQUE | FFT_SOLID, MF_UNSEEN,
 },
 
 {
@@ -37,133 +37,133 @@ static feature_def feat_defs[] =
     DNGN_CLOSED_DOOR, "closed door", "closed_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(LIGHTGREY),
-    FFT_NONE, MF_DOOR,
+    FFT_OPAQUE | FFT_SOLID, MF_DOOR,
 },
 
 {
     DNGN_RUNED_DOOR, "runed door", "runed_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTBLUE),
-    FFT_NONE, MF_DOOR,
+    FFT_OPAQUE | FFT_SOLID, MF_DOOR,
 },
 
 {
     DNGN_SEALED_DOOR, "sealed door", "sealed_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_AND_MAP(LIGHTGREEN),
-    FFT_NONE, MF_DOOR,
+    FFT_OPAQUE | FFT_SOLID, MF_DOOR,
 },
 
 {
     DNGN_TREE, "tree", "tree",
     DCHAR_TREE, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_TREE),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_METAL_WALL, "metal wall", "metal_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(CYAN),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_GREEN_CRYSTAL_WALL, "wall of green crystal", "green_crystal_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(GREEN),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_ROCK_WALL, "rock wall", "rock_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_ROCK),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_SLIMY_WALL, "slime covered rock wall", "slimy_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTGREEN),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_STONE_WALL, "stone wall", "stone_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTGREY),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_PERMAROCK_WALL, "unnaturally hard rock wall", "permarock_wall",
     DCHAR_PERMAWALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(ETC_ROCK),
-    FFT_NONE, MF_WALL,
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_CLEAR_ROCK_WALL, "translucent rock wall", "clear_rock_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
-    FFT_NONE, MF_WALL,
+    FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_CLEAR_STONE_WALL, "translucent stone wall", "clear_stone_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
-    FFT_NONE, MF_WALL,
+    FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_CLEAR_PERMAROCK_WALL, "translucent unnaturally hard rock wall", "clear_permarock_wall",
     DCHAR_PERMAWALL, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTCYAN),
-    FFT_NONE, MF_WALL,
+    FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_GRATE, "iron grate", "iron_grate",
     DCHAR_GRATE, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTBLUE),
-    FFT_NONE, MF_WALL,
+    FFT_NONE | FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_OPEN_SEA, "the open sea", "open_sea",
     DCHAR_WALL, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BLUE),
-    FFT_NONE, MF_DEEP_WATER,
+    FFT_NONE | FFT_SOLID, MF_DEEP_WATER,
 },
 
 {
     DNGN_LAVA_SEA, "the endless lava", "endless_lava",
     DCHAR_WALL, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(RED),
-    FFT_NONE, MF_LAVA,
+    FFT_SOLID, MF_LAVA,
 },
 
 {
     DNGN_ORCISH_IDOL, "orcish idol", "orcish_idol",
     DCHAR_STATUE, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BROWN),
-    FFT_NONE, MF_WALL,
+    FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_GRANITE_STATUE, "granite statue", "granite_statue",
     DCHAR_STATUE, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(DARKGREY),
-    FFT_NONE, MF_WALL,
+    FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_MALIGN_GATEWAY, "portal to somewhere", "malign_gateway",
     DCHAR_ARCH, NUM_DCHAR_TYPES, 0, 0,
     COLOURS(ETC_SHIMMER_BLUE, LIGHTGREY),
-    FFT_NONE, MF_STAIR_UP,
+    FFT_SOLID, MF_STAIR_UP,
 },
 
 {

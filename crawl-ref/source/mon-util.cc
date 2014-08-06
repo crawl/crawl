@@ -4209,7 +4209,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     if (you.see_cell(mons->pos()))
     {
         dungeon_feature_type feat = grd(mons->pos());
-        if (feat < DNGN_MINMOVE || feat >= NUM_FEATURES)
+        if (feat_is_solid(feat) || feat >= NUM_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
             msg = replace_all(msg, "@surface@", "lava");

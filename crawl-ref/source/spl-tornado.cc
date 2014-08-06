@@ -24,11 +24,9 @@
 
 static bool _airtight(coord_def c)
 {
-    // Broken by 6f473416 -- we should re-allow the wind through grates; this
-    // simplicistic check allows moving people through trees which is no good
-    // either.
+    // Broken by 6f473416 -- we should re-allow the wind through grates.
 
-    // return grd(c) <= DNGN_MAXWALL && grd(c);
+    // return (feat_is_wall(grd(c)) || feat_is_opaque(grd(c))) && grd(c);
     return grd(c) <= DNGN_GRATE;
 }
 

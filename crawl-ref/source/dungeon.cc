@@ -1465,7 +1465,7 @@ void fixup_misplaced_items()
         if (in_bounds(item.pos))
         {
             dungeon_feature_type feat = grd(item.pos);
-            if (feat >= DNGN_MINITEM)
+            if (feat_has_solid_floor(feat))
                 continue;
 
             // We accept items in deep water in the Abyss---they are likely to
@@ -3285,7 +3285,7 @@ static bool _shaft_is_in_corridor(const coord_def& c)
 {
     for (orth_adjacent_iterator ai(c); ai; ++ai)
     {
-        if (!in_bounds(*ai) || grd(*ai) < DNGN_MINWALK)
+        if (!(in_bounds(*ai) && feat_has_solid_floor(grd(*ai))))
             return true;
     }
     return false;
@@ -7131,7 +7131,7 @@ static void _calc_density()
         // places in unmodified parts should not suddenly become explorable.
         if (!testbits(env.pgrid(*ri), FPROP_SEEN_OR_NOEXP))
             for (adjacent_iterator ai(*ri, false); ai; ++ai)
-                if (grd(*ai) >= DNGN_MINITEM)
+                if (feat_has_solid_floor(grd(*ai)))
                 {
                     open++;
                     goto out;
@@ -7149,8 +7149,6 @@ static void _calc_density()
 static void _mark_solid_squares()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        if (grd(*ri) <= DNGN_MAXSOLID)
+        if (feat_is_solid(grd(*ri)))
             env.pgrid(*ri) |= FPROP_NO_RTELE_INTO;
-    }
 }

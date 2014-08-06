@@ -76,7 +76,7 @@ bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 
 bool feat_is_wall(dungeon_feature_type feat)
 {
-    return feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL;
+    return get_feature_def(feat).flags & FFT_WALL;
 }
 
 bool feat_is_stone_stair(dungeon_feature_type feat)
@@ -298,16 +298,12 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
 bool feat_is_opaque(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXOPAQUE
-#if TAG_MAJOR_VERSION == 34
-                || feat == DNGN_TREE
-#endif
-    ;
+    return get_feature_def(feat).flags & FFT_OPAQUE;
 }
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXSOLID;
+    return get_feature_def(feat).flags & FFT_SOLID;
 }
 
 bool cell_is_solid(const coord_def &c)
@@ -475,7 +471,7 @@ bool feat_is_fountain(dungeon_feature_type feat)
 
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
-    return feat > DNGN_MAX_NONREACH;
+    return !feat_is_opaque(feat) && !feat_is_wall(feat) && feat != DNGN_GRATE;
 }
 
 // For internal use by find_connected_identical only.
@@ -720,10 +716,10 @@ bool is_critical_feature(dungeon_feature_type feat)
 
 bool is_valid_border_feat(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL
-        || feat_is_tree(feat)
-        || feat == DNGN_OPEN_SEA
-        || feat == DNGN_LAVA_SEA;
+    return feat_is_wall(feat)
+           || feat_is_tree(feat)
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_LAVA_SEA;
 }
 
 // This is for randomly generated mimics.
