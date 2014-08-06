@@ -135,9 +135,9 @@ Spells
 * Sublimation of Blood no longer uses chunks; it now only draws from the
   caster's HP.
 * Simulacrum now works on a single corpse at the caster's feet, creating
-  several simulacrum from it.
+  several simulacra from it.
 * Monsters casting Simulacrum now affect all corpses in LOS, producing half as
-  many simulacrum as the player version of the spell.
+  many simulacra as the player version of the spell.
 * Many spells, which used player skill, now use spellpower instead: Death's
   Door, Passwall, Sticks to Snakes, Ozocubu's Armour, Condensation Shield,
   Stoneskin, Statue Form, and Ice Form.
