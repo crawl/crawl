@@ -4026,6 +4026,10 @@ item_info get_item_info(const item_def& item)
         if (ii.sub_type == NUM_MISCELLANY)
             ii.special = item.special; // deck rarity
 
+        // Preserve inert/charged state but not the actual numbers.
+        if (is_xp_evoker(item))
+            ii.plus2 = !!item.plus2;
+
         if (is_deck(item))
         {
             ii.special = item.special;
