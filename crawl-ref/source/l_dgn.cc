@@ -1035,7 +1035,7 @@ static int lua_dgn_set_border_fill_type(lua_State *ls)
         return 0;
     }
 
-    if (is_valid_border_feat(fill_type))
+    if (feat_is_valid_border(fill_type))
         map->border_fill_type = fill_type;
     else
         luaL_error(ls, ("set_border_fill_type cannot be the feature '" +

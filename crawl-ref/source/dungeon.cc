@@ -469,7 +469,7 @@ static void _builder_assertions()
 #ifdef ASSERTS
     for (rectangle_iterator ri(0); ri; ++ri)
         if (!in_bounds(*ri))
-            if (!is_valid_border_feat(grd(*ri)))
+            if (!feat_is_valid_border(grd(*ri)))
             {
                 die("invalid map border at (%d,%d): %s", ri->x, ri->y,
                     dungeon_feature_name(grd(*ri)));
@@ -2314,7 +2314,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             continue;
 
         // Only features valid for mimicing.
-        if (!is_valid_mimic_feat(feat))
+        if (!feat_is_mimicable(feat))
             continue;
 
         // Reduce the number of stairs and door mimics since those features
@@ -5188,7 +5188,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
 
     if (f.mimic > 0 && one_chance_in(f.mimic))
     {
-        ASSERT(!feat_cannot_be_mimic(grd(where)));
+        ASSERT(feat_is_mimicable(grd(where), false));
         env.level_map_mask(where) |= MMT_MIMIC;
     }
     else if (f.no_mimic)
