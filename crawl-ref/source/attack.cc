@@ -1604,7 +1604,8 @@ bool attack::attack_shield_blocked(bool verbose)
             mprf("%s %s %s attack.",
                  def_name(DESC_THE).c_str(),
                  defender->conj_verb("block").c_str(),
-                 atk_name(DESC_ITS).c_str());
+                 attacker == defender ? "its own"
+                                      : atk_name(DESC_ITS).c_str());
         }
 
         defender->shield_block_succeeded(attacker);
