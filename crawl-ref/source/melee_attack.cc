@@ -363,7 +363,7 @@ bool melee_attack::handle_phase_dodged()
                 mprf("%s%s misses %s%s",
                      atk_name(DESC_THE).c_str(),
                      evasion_margin_adverb().c_str(),
-                     defender_name().c_str(),
+                     defender_name(true).c_str(),
                      attack_strength_punctuation(damage_done).c_str());
             }
         }
@@ -1947,7 +1947,7 @@ void melee_attack::rot_defender(int amount, int immediate)
             special_damage_message =
                 make_stringf(
                     "%s %s!",
-                    def_name(DESC_THE).c_str(),
+                    defender_name(false).c_str(),
                     amount > 0 ? "rots" : "looks less resilient");
         }
     }
@@ -2146,7 +2146,7 @@ bool melee_attack::chop_hydra_head(int dam,
             mprf("%s %s %s last head off!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb(verb).c_str(),
-                 apostrophise(defender_name()).c_str());
+                 apostrophise(defender_name(true)).c_str());
         }
         defender->as_monster()->number--;
 
@@ -2167,7 +2167,7 @@ bool melee_attack::chop_hydra_head(int dam,
             mprf("%s %s one of %s heads off!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb(verb).c_str(),
-                 apostrophise(defender_name()).c_str());
+                 apostrophise(defender_name(true)).c_str());
         }
         defender->as_monster()->number--;
 
@@ -2524,7 +2524,7 @@ bool melee_attack::attack_warded_off()
         {
             mprf("%s tries to attack %s, but flinches away.",
                  atk_name(DESC_THE).c_str(),
-                 defender_name().c_str());
+                 defender_name(true).c_str());
         }
         return true;
     }
@@ -2654,7 +2654,7 @@ void melee_attack::announce_hit()
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_THE).c_str(),
              attacker->conj_verb(mons_attack_verb()).c_str(),
-             defender_name().c_str(),
+             defender_name(true).c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
              attack_strength_punctuation(damage_done).c_str());
@@ -2710,11 +2710,11 @@ bool melee_attack::mons_do_poison()
     {
         mprf("%s poisons %s!",
                 atk_name(DESC_THE).c_str(),
-                defender_name().c_str());
+                defender_name(true).c_str());
         if (force)
         {
             mprf("%s partially resist%s.",
-                def_name(DESC_THE).c_str(),
+                defender_name(false).c_str(),
                 defender->is_player() ? "" : "s");
         }
     }
@@ -2732,7 +2732,7 @@ void melee_attack::mons_do_napalm()
         if (needs_message)
         {
             mprf("%s %s covered in liquid flames%s",
-                 def_name(DESC_THE).c_str(),
+                 defender_name(false).c_str(),
                  defender->conj_verb("are").c_str(),
                  attack_strength_punctuation(special_damage).c_str());
         }
@@ -2952,7 +2952,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (needs_message && base_damage)
         {
             mprf("%s %s engulfed in flames%s",
-                 def_name(DESC_THE).c_str(),
+                 defender_name(false).c_str(),
                  defender->conj_verb("are").c_str(),
                  attack_strength_punctuation(special_damage).c_str());
 
@@ -2977,7 +2977,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("freeze").c_str(),
-                 defender_name().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
 
             _print_resist_messages(defender, base_damage, BEAM_COLD);
@@ -3002,7 +3002,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
-                 defender_name().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
 
             _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
@@ -3153,7 +3153,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("infuriate").c_str(),
-                 defender_name().c_str());
+                 defender_name(true).c_str());
         }
 
         defender->go_berserk(false);
@@ -3184,7 +3184,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("sear").c_str(),
-                 defender_name().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
 
         }
@@ -3239,7 +3239,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s.",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("grab").c_str(),
-                 defender_name().c_str());
+                 defender_name(true).c_str());
         }
         attacker->start_constricting(*defender);
         // if you got grabbed, interrupt stair climb and passwall
@@ -3270,7 +3270,7 @@ void melee_attack::mons_apply_attack_flavour()
                 mprf("%s %s %s in water!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb("engulf").c_str(),
-                     defender_name().c_str());
+                     defender_name(true).c_str());
             }
         }
 
@@ -3294,7 +3294,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s!",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("burn").c_str(),
-                    defender_name().c_str());
+                    defender_name(true).c_str());
 
             _print_resist_messages(defender, special_damage, BEAM_FIRE);
         }
@@ -3369,7 +3369,7 @@ void melee_attack::mons_apply_attack_flavour()
                 mprf("%s %s %s%s",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("drown").c_str(),
-                    defender_name().c_str(),
+                    defender_name(true).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
             }
         }
@@ -3390,7 +3390,7 @@ void melee_attack::mons_apply_attack_flavour()
             if (needs_message)
             {
                 mprf("The air around %s erupts in flames!",
-                    def_name(DESC_THE).c_str());
+                    defender_name(false).c_str());
 
                 for (adjacent_iterator ai(defender->pos()); ai; ++ai)
                 {
@@ -3778,7 +3778,7 @@ bool melee_attack::do_knockback(bool trample)
         if (needs_message)
         {
             mprf("%s %s backwards!",
-                 def_name(DESC_THE).c_str(),
+                 defender_name(false).c_str(),
                  defender->conj_verb("stumble").c_str());
         }
 
@@ -3803,7 +3803,7 @@ bool melee_attack::do_knockback(bool trample)
     if (needs_message)
     {
         mprf("%s %s %s ground!",
-             def_name(DESC_THE).c_str(),
+             defender_name(false).c_str(),
              defender->conj_verb("hold").c_str(),
              defender->pronoun(PRONOUN_POSSESSIVE).c_str());
     }

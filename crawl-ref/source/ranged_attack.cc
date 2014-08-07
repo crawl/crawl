@@ -194,7 +194,7 @@ bool ranged_attack::handle_phase_blocked()
     if (needs_message)
     {
         mprf("%s %s %s%s",
-             def_name(DESC_THE).c_str(),
+             defender_name(false).c_str(),
              defender->conj_verb(verb).c_str(),
              projectile->name(DESC_THE).c_str(),
              punctuation.c_str());
@@ -256,8 +256,7 @@ bool ranged_attack::handle_phase_dodged()
         mprf("%s%s misses %s%s",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
-             // Not defender_name because reflexive is bad here.
-             def_name(DESC_THE).c_str(),
+             defender_name(false).c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 
@@ -406,8 +405,7 @@ bool ranged_attack::attack_ignores_shield(bool verbose)
         {
             mprf("%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
-                 // Not defender_name because reflexive is bad here.
-                 apostrophise(def_name(DESC_THE)).c_str(),
+                 apostrophise(defender_name(false)).c_str(),
                  defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
                                  : "shielding");
         }
@@ -875,8 +873,7 @@ void ranged_attack::announce_hit()
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
-         // Not defender_name because reflexive is bad here.
-         def_name(DESC_THE).c_str(),
+         defender_name(false).c_str(),
          damage_done > 0 && stab_attempt && stab_bonus > 0
              ? " in a vulnerable spot"
              : "",

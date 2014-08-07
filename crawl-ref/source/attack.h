@@ -192,7 +192,7 @@ protected:
     // TODO: Definitely want to get rid of this, which we can't really do
     // until we refactor the whole pronoun / desc usage from these lowly
     // classes all the way up to monster/player (and actor) classes.
-    string defender_name();
+    string defender_name(bool allow_reflexive);
 
     attack_flavour random_chaos_attack_flavour();
 

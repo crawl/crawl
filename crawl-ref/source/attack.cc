@@ -497,7 +497,7 @@ bool attack::distortion_affects_defender()
             {
                 special_damage_message =
                     make_stringf("%s %s in the distortional energy.",
-                                 def_name(DESC_THE).c_str(),
+                                 defender_name(false).c_str(),
                                  defender->conj_verb("bask").c_str());
             }
 
@@ -510,7 +510,7 @@ bool attack::distortion_affects_defender()
     {
         special_damage_message =
             make_stringf("Space bends around %s.",
-            def_name(DESC_THE).c_str());
+            defender_name(false).c_str());
         special_damage += 1 + random2avg(7, 2);
         return false;
     }
@@ -519,7 +519,7 @@ bool attack::distortion_affects_defender()
     {
         special_damage_message =
             make_stringf("Space warps horribly around %s!",
-                         def_name(DESC_THE).c_str());
+                         defender_name(false).c_str());
         special_damage += 3 + random2avg(24, 2);
         return false;
     }
@@ -737,7 +737,7 @@ void attack::chaos_affects_defender()
             {
                 special_damage_message =
                     make_stringf("%s is duplicated!",
-                                 def_name(DESC_THE).c_str());
+                                 defender_name(false).c_str());
             }
 
             // The player shouldn't get new permanent followers from cloning.
@@ -1080,7 +1080,7 @@ void attack::drain_defender()
                     "%s %s %s!",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("drain").c_str(),
-                    defender_name().c_str());
+                    defender_name(true).c_str());
         }
 
         attacker->god_conduct(DID_NECROMANCY, 2);
@@ -1258,9 +1258,9 @@ string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
  * below, in calc_elemental_brand_damage, which is called for both frost and
  * flame brands for both players and monsters.
  */
-string attack::defender_name()
+string attack::defender_name(bool allow_reflexive)
 {
-    if (attacker == defender)
+    if (allow_reflexive && attacker == defender)
         return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
     else
         return def_name(DESC_THE);
@@ -1602,7 +1602,7 @@ bool attack::attack_shield_blocked(bool verbose)
         if (needs_message && verbose)
         {
             mprf("%s %s %s attack.",
-                 def_name(DESC_THE).c_str(),
+                 defender_name(false).c_str(),
                  defender->conj_verb("block").c_str(),
                  attacker == defender ? "its own"
                                       : atk_name(DESC_ITS).c_str());
@@ -1685,7 +1685,7 @@ bool attack::apply_damage_brand(const char *what)
             special_damage_message =
                 make_stringf(
                     "%s %s%s",
-                    def_name(DESC_THE).c_str(),
+                    defender_name(false).c_str(),
                     defender->conj_verb("convulse").c_str(),
                     attack_strength_punctuation(special_damage).c_str());
         }
@@ -1931,7 +1931,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
             what ? pluralise(verb).c_str() // XXX: may need to change this
                   : attacker->conj_verb(verb).c_str(),
             // Don't allow reflexive if the subject wasn't the attacker.
-            (what ? def_name(DESC_THE) : defender_name()).c_str(),
+            defender_name(!what).c_str(),
             attack_strength_punctuation(special_damage).c_str());
     }
 }
