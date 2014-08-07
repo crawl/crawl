@@ -851,13 +851,8 @@ static void _diamond_rooms(int level_number)
 
 static int _good_door_spot(int x, int y)
 {
-    if (!feat_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
-        || feat_is_closed_door(grd[x][y]))
-    {
-        return 1;
-    }
-
-    return 0;
+    return (!feat_is_solid(grd[x][y]) || feat_is_closed_door(grd[x][y]))
+            && !feat_is_critical(grd[x][y]);
 }
 
 // Returns TRUE if a room was made successfully.
@@ -896,7 +891,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     for (rx = sx; rx <= ex; rx++)
         for (ry = sy; ry <= ey; ry++)
         {
-            if (grd[rx][ry] <= DNGN_FLOOR)
+            if (!feat_has_dry_floor(grd[rx][ry]))
                 grd[rx][ry] = DNGN_FLOOR;
         }
 
@@ -1079,9 +1074,9 @@ static bool _may_overwrite_pos(coord_def c)
     const dungeon_feature_type grid = grd(c);
 
     // Don't overwrite any stairs or branch entrances.
-    if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_TELEPORTER
-        || feat_is_portal_entrance(grid)
-        || grid == DNGN_EXIT_HELL)
+    if (feat_is_stair(grid)
+        || grid == DNGN_ENTER_SHOP
+        || grid == DNGN_TELEPORTER)
     {
         return false;
     }

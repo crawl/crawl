@@ -34,9 +34,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     const feature_def &fdef = get_feature_def(feat);
 
     // These do not obey vault recolouring.
-    const bool no_vault_recolour = feat > DNGN_OPEN_DOOR
-                                 // unknown traps won't get here
-                                 || feat == DNGN_MALIGN_GATEWAY;
+    const bool no_vault_recolour = !feat_has_dry_floor(feat)
+                                   && feat != DNGN_FLOOR
+                                   && feat != DNGN_OPEN_DOOR;
 
     // These aren't shown mossy/bloody/slimy in console.
     const bool norecolour = feat_is_door(feat) || no_vault_recolour;
@@ -310,7 +310,9 @@ show_class get_cell_show_class(const map_cell& cell,
 
     const dungeon_feature_type feat = cell.feat();
     if (feat && feat_is_solid(feat)
-        || feat > DNGN_OPEN_DOOR
+        || feat_has_dry_floor(feat)
+           && feat != DNGN_FLOOR
+           && feat != DNGN_OPEN_DOOR
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH
            && feat != DNGN_EXPIRED_PORTAL

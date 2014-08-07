@@ -82,6 +82,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
+#include "terrain.h"
 #include "traps.h"
 #include "travel.h"
 #include "zotdef.h"
@@ -1024,8 +1025,8 @@ static void _fixup_hell_stairs()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-            && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+        if (feat_is_stone_stair_up(grd(*ri))
+            || grd(*ri) == DNGN_ESCAPE_HATCH_UP)
         {
             _set_grd(*ri, DNGN_ENTER_HELL);
         }
@@ -1036,8 +1037,8 @@ static void _fixup_pandemonium_stairs()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-            && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+        if (feat_is_stone_stair_up(grd(*ri))
+            || grd(*ri) == DNGN_ESCAPE_HATCH_UP)
         {
             _set_grd(*ri, DNGN_TRANSIT_PANDEMONIUM);
         }
@@ -1513,8 +1514,7 @@ static void _fixup_branch_stairs()
         {
             if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
                 _set_grd(*ri, DNGN_FLOOR);
-            else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-                     && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
+            else if (feat_is_stone_stair_up(grd(*ri)))
             {
 #ifdef DEBUG_DIAGNOSTICS
                 if (count++ && you.where_are_you != root_branch)
@@ -1567,8 +1567,8 @@ static void _fixup_branch_stairs()
     {
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+            if (feat_is_stone_stair_down(grd(*ri))
+                || grd(*ri) == DNGN_ESCAPE_HATCH_DOWN)
             {
                 _set_grd(*ri, feat);
             }
@@ -1596,14 +1596,12 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (feature_mimic_at(c))
             continue;
 
-        if (grd(c) >= DNGN_STONE_STAIRS_DOWN_I
-            && grd(c) <= DNGN_STONE_STAIRS_DOWN_III
+        if (feat_is_stone_stair_down(grd(c))
             && num_down_stairs < max_stairs)
         {
             down_stairs[num_down_stairs++] = c;
         }
-        else if (grd(c) >= DNGN_STONE_STAIRS_UP_I
-                 && grd(c) <= DNGN_STONE_STAIRS_UP_III
+        else if (feat_is_stone_stair_up(grd(c))
                  && num_up_stairs < max_stairs)
         {
             up_stairs[num_up_stairs++] = c;
@@ -6318,15 +6316,17 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             bool good_stair;
             const int looking_at = orig_terrain(coord_def(xpos, ypos));
 
-            if (stair_to_find <= DNGN_ESCAPE_HATCH_DOWN)
+            if (feat_is_stone_stair_down(stair_to_find)
+                || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
+                || stair_to_find == DNGN_FLOOR)
             {
-                good_stair = (looking_at >= DNGN_STONE_STAIRS_DOWN_I
-                              && looking_at <= DNGN_ESCAPE_HATCH_DOWN);
+                good_stair = feat_is_stone_stair_down((dungeon_feature_type)looking_at)
+                             || looking_at == DNGN_ESCAPE_HATCH_DOWN;
             }
             else
             {
-                good_stair =  (looking_at >= DNGN_STONE_STAIRS_UP_I
-                               && looking_at <= DNGN_ESCAPE_HATCH_UP);
+                good_stair = feat_is_stone_stair_up((dungeon_feature_type)looking_at)
+                              || looking_at == DNGN_ESCAPE_HATCH_UP;
             }
 
             const int dist = (xpos-basex)*(xpos-basex)

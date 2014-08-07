@@ -1312,23 +1312,18 @@ enum dungeon_char_type
 };
 
 // When adding:
-//
-// * Any: Add an entry in feature-data.h for the feature.
-// * New stairs/portals: update feat_stair_direction.
-// * Any: edit dat/descript/features.txt and add a
-//        long description if appropriate.
-// * Any: check the feat_* functions in terrain.cc and make sure
-//        they return sane values for your new feature.
-// * Any: edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
-//        if you want vault maps to be able to use it. If you do, also update
-//        docs/develop/levels/syntax.txt with the new symbol.
-// * Any: if its enumerator comes after DNGN_TRAP_MECHANICAL (as is likely for
-//        new feature types), _cell_feat_show_colour may need a special case to
-//        allow it to be recoloured by vaults/bloodspatters.
-//
-// Various pieces of code depend on the relative order of these enumerators,
-// so there is even more reason (beyond the usual save-compatibility issues)
-// to be careful when moving them around.
+
+// * Add an entry in feature-data.h for the feature.
+
+// * edit dat/descript/features.txt and add a
+//      long description if appropriate.
+
+// * check the feat_* functions in terrain.cc and make sure
+//      they return sane values for your new feature.
+
+// * edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
+//      if you want vault maps to be able to use it. If you do, also update
+//      docs/develop/levels/syntax.txt with the new symbol.
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,
@@ -1365,7 +1360,6 @@ enum dungeon_feature_type
     DNGN_FLOOR,
     DNGN_OPEN_DOOR,
 
-    // Nothing after this point will be recoloured in console by default.
     DNGN_TRAP_MECHANICAL,
     DNGN_TRAP_TELEPORT,
     DNGN_TRAP_SHAFT,
@@ -1460,9 +1454,7 @@ enum dungeon_feature_type
 #endif
     DNGN_RETURN_FROM_DEPTHS,
 
-    // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_ZIN,
-        DNGN_ALTAR_FIRST_GOD = DNGN_ALTAR_ZIN,
     DNGN_ALTAR_SHINING_ONE,
     DNGN_ALTAR_KIKUBAAQUDGHA,
     DNGN_ALTAR_YREDELEMNUL,
@@ -1481,18 +1473,9 @@ enum dungeon_feature_type
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
     DNGN_ALTAR_DITHMENOS,
-#if TAG_MAJOR_VERSION == 34
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
-#else
+#if TAG_MAJOR_VERSION > 34
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_QAZLAL,
-    DNGN_ALTAR_UNUSED_3,
-    DNGN_ALTAR_UNUSED_4,
-    DNGN_ALTAR_UNUSED_5,
-    DNGN_ALTAR_UNUSED_6,
-    DNGN_ALTAR_UNUSED_7,
-    DNGN_ALTAR_UNUSED_8,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -1531,7 +1514,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ICE_CAVE,
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
+#if TAG_MAJOR_VERSION == 34
     DNGN_UNUSED_ENTER_PORTAL_1,
+#endif
 
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
@@ -1543,9 +1528,9 @@ enum dungeon_feature_type
     DNGN_EXIT_VOLCANO,
     DNGN_EXIT_WIZLAB,
     DNGN_EXIT_LABYRINTH,
+#if TAG_MAJOR_VERSION == 34
     DNGN_UNUSED_EXIT_PORTAL_1,
 
-#if TAG_MAJOR_VERSION == 34
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
 #endif
@@ -1958,7 +1943,6 @@ enum flush_reason_type
     NUM_FLUSH_REASONS
 };
 
-// The order of this enum must match the order of DNGN_ALTAR_FOO.
 enum god_type
 {
     GOD_NO_GOD,

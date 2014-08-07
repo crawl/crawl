@@ -27,7 +27,7 @@ static bool _airtight(coord_def c)
     // Broken by 6f473416 -- we should re-allow the wind through grates.
 
     // return (feat_is_wall(grd(c)) || feat_is_opaque(grd(c))) && grd(c);
-    return grd(c) <= DNGN_GRATE;
+    return !feat_is_reachable_past(grd(c));
 }
 
 /* Explanation of the algorithm:
