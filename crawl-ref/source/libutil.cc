@@ -428,6 +428,24 @@ string apostrophise(const string &name)
     if (name == "it" || name == "It")
         return name + "s";
 
+    if (name == "itself")
+        return "its own";
+    
+    if (name == "himself")
+        return "its own";
+    
+    if (name == "himself")
+        return "its own";
+    
+    if (name == "herself")
+        return "her own";
+    
+    if (name == "themselves")
+        return "their own";
+    
+    if (name == "yourself")
+        return "your own";
+
     const char lastc = name[name.length() - 1];
     return name + (lastc == 's' ? "'" : "'s");
 }
