@@ -1131,18 +1131,21 @@ static bool _chardump_check_stats3(const vector<string> &tokens)
     if (size <= 5 || tokens[0] != "Gold")
         return false;
 
-    for (size_t k = 1; k < size; k++)
+    bool found;
+    for (size_t k = 0; k < size; k++)
     {
         if (tokens[k] == "Dex")
         {
             you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
             you.redraw_evasion = true;
-            return true;
+            found = true;
         }
+        else if (tokens[k] == "Gold")
+            you.set_gold(atoi(tokens[k+1].c_str()));
     }
 
-    return false;
+    return found;
 }
 
 static bool _chardump_check_char(const vector<string> &tokens)
