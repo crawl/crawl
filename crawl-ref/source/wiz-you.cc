@@ -7,6 +7,9 @@
 
 #include "wiz-you.h"
 
+#include <algorithm>
+#include <functional>
+
 #include "abyss.h"
 
 #include "chardump.h"
@@ -355,6 +358,73 @@ void wizard_set_hunger_state()
         mpr("Ghouls can never be full or above!");
 }
 
+static void _wizard_set_piety_to(int newpiety, bool force = false)
+{
+    if (newpiety < 0 || newpiety > MAX_PIETY)
+    {
+        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
+        return;
+    }
+
+    if (you_worship(GOD_XOM))
+    {
+        you.piety = newpiety;
+
+        int newinterest;
+        if (!force)
+        {
+            char buf[30];
+
+            // For Xom, also allow setting interest.
+            mprf(MSGCH_PROMPT,
+                 "Enter new interest (current = %d, Enter for 0): ",
+                 you.gift_timeout);
+
+            if (cancellable_get_line_autohist(buf, sizeof buf))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+
+            newinterest = atoi(buf);
+        }
+        else
+        {
+            newinterest = newpiety;
+        }
+
+        if (newinterest >= 0 && newinterest < 256)
+            you.gift_timeout = newinterest;
+        else
+            mpr("Interest must be between 0 and 255.");
+
+        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
+
+        const string new_xom_favour = describe_xom_favour();
+        const string msg = "You are now " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
+        return;
+    }
+
+    if (newpiety < 1 && !force)
+    {
+        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
+        {
+            you.piety = 0;
+            excommunication();
+        }
+        else
+            canned_msg(MSG_OK);
+        return;
+    }
+    mprf("Setting piety to %d.", newpiety);
+    set_piety(newpiety);
+
+    // Automatically reduce penance to 0.
+    if (player_under_penance())
+        dec_penance(you.penance[you.religion]);
+}
+
 void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))
@@ -372,57 +442,7 @@ void wizard_set_piety()
         return;
     }
 
-    const int newpiety = atoi(buf);
-    if (newpiety < 0 || newpiety > MAX_PIETY)
-    {
-        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
-        return;
-    }
-
-    if (you_worship(GOD_XOM))
-    {
-        you.piety = newpiety;
-
-        // For Xom, also allow setting interest.
-        mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
-             you.gift_timeout);
-
-        if (cancellable_get_line_autohist(buf, sizeof buf))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        const int newinterest = atoi(buf);
-        if (newinterest >= 0 && newinterest < 256)
-            you.gift_timeout = newinterest;
-        else
-            mpr("Interest must be between 0 and 255.");
-
-        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
-
-        const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-        return;
-    }
-
-    if (newpiety < 1)
-    {
-        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
-        {
-            you.piety = 0;
-            excommunication();
-        }
-        else
-            canned_msg(MSG_OK);
-        return;
-    }
-    mprf("Setting piety to %d.", newpiety);
-    set_piety(newpiety);
-
-    // Automatically reduce penance to 0.
-    if (player_under_penance())
-        dec_penance(you.penance[you.religion]);
+    _wizard_set_piety_to(atoi(buf));
 }
 
 //---------------------------------------------------------------
@@ -1058,9 +1078,10 @@ static bool _chardump_check_stats2(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // MP  45/45   EV 13   Int 12   God: Makhleb [******]
-    if (size <= 5 || tokens[0] != "MP")
+    if (size <= 8 || tokens[0] != "MP")
         return false;
 
+    bool found = false;
     for (size_t k = 1; k < size; k++)
     {
         if (tokens[k] == "Int")
@@ -1068,11 +1089,26 @@ static bool _chardump_check_stats2(const vector<string> &tokens)
             you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
             you.redraw_evasion = true;
-            return true;
+            found = true;
+        }
+        else if (tokens[k] == "God:")
+        {
+            god_type god = find_earliest_match(lowercase_string(tokens[k+1]),
+                                               (god_type) 1, NUM_GODS,
+                                               _always_true<god_type>,
+                                               bind2nd(ptr_fun(god_name),
+                                                       false));
+            join_religion(god, true);
+
+            string piety = tokens[k+2];
+            int piety_levels = std::count(piety.begin(), piety.end(), '*');
+            _wizard_set_piety_to(piety_levels > 0
+                                 ? piety_breakpoint(piety_levels - 1)
+                                 : 15);
         }
     }
 
-    return false;
+    return found;
 }
 
 static bool _chardump_check_stats3(const vector<string> &tokens)
