@@ -328,7 +328,7 @@ static const duration_def duration_data[] =
     { DUR_HORROR,
       false, RED, "Horr",
       "horrified", "",
-      "You are horrified, making it hard to attack and cast." },
+      "You are horrified, weakening your attacks and spells." },
     { DUR_NO_SCROLLS,
       false, RED, "-Scroll",
       "no scrolls", "",

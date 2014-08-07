@@ -341,24 +341,30 @@ void player_reacts_to_monsters()
 
             mon_threat_level_type threat_level = mons_threat_level(mon);
             if (threat_level == MTHRT_NASTY)
-                horror_level += 2;
+                horror_level += 3;
             else if (threat_level == MTHRT_TOUGH)
                 horror_level += 1;
         }
+
+        // Subtract one from the horror level so that you don't get a message
+        // when a single tough monster appears.
+        horror_level = max(0, horror_level - 1);
 
         if (horror_level > 0)
         {
             if (horror_level > old_horror_level)
             {
                 if (horror_level > old_horror_level)
-                // only show a message on change
+                {
+                    // only show a message on increase
 
-                if (horror_level > 4)
-                    mpr("Monsters! Monsters everywhere! You have to get out of here!");
-                else if (horror_level > 2)
-                    mpr("You reel with horror at the sight of these foes!");
-                else
-                    mpr("You feel a twist of horror at the sight of this foe.");
+                    if (horror_level > 4)
+                        mpr("Monsters! Monsters everywhere! You have to get out of here!");
+                    else if (horror_level > 2)
+                        mpr("You reel with horror at the sight of these foes!");
+                    else
+                        mpr("You feel a twist of horror at the sight of this foe.");
+                }
             }
             // as long as there's still scary enemies, keep the horror going
             you.props["horror_penalty"] = horror_level;
