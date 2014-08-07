@@ -232,78 +232,7 @@ static void _sdump_transform(dump_params &par)
 {
     string &text(par.text);
     if (you.form)
-    {
-        string verb = par.se? "were" : "are";
-
-        switch (you.form)
-        {
-        case TRAN_SPIDER:
-            text += "You " + verb + " in spider-form.";
-            break;
-        case TRAN_BAT:
-            text += "You " + verb + " in ";
-            if (you.species == SP_VAMPIRE)
-                text += "vampire ";
-            text += "bat-form.";
-            break;
-        case TRAN_BLADE_HANDS:
-            text += "Your " + blade_parts() + " " + verb + " blades.";
-            break;
-        case TRAN_STATUE:
-            text += "You " + verb + " a stone statue.";
-            break;
-        case TRAN_ICE_BEAST:
-            text += "You " + verb + " a creature of crystalline ice.";
-            break;
-        case TRAN_DRAGON:
-            text += "You " + verb + " a fearsome dragon!";
-            break;
-        case TRAN_LICH:
-            text += "You " + verb + " in lich-form.";
-            break;
-        case TRAN_PIG:
-            text += "You " + verb + " a filthy swine.";
-            break;
-        case TRAN_APPENDAGE:
-            if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
-            {
-                text += make_stringf("One of your tentacles %s a temporary spike.",
-                                     par.se ? "had" : "has");
-            }
-            else
-            {
-                text += make_stringf("You %s grown temporary %s.",
-                                     par.se ? "had" : "have",
-                                     mutation_name((mutation_type) you.attribute[ATTR_APPENDAGE]));
-            }
-            break;
-        case TRAN_FUNGUS:
-            text += "You " + verb + " a sentient fungus.";
-            break;
-        case TRAN_TREE:
-            text += "You " + verb + " an animated tree.";
-            break;
-#if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY:
-            text += "You " + verb + " an acidic jelly.";
-            break;
-#endif
-        case TRAN_PORCUPINE:
-            text += "You " + verb + " a porcupine.";
-            break;
-        case TRAN_WISP:
-            text += "You " + verb + " a barely coherent strand of gas.";
-            break;
-        case TRAN_SHADOW:
-            text += "You " + verb + " a swirling mass of dark shadows.";
-            break;
-        case TRAN_NONE:
-            break;
-        }
-
-        text += "\n\n";
-    }
-}
+        text += get_form()->get_description(par.se) + "\n\n";}
 
 static branch_type single_portals[] =
 {

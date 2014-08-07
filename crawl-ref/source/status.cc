@@ -847,96 +847,24 @@ static void _describe_sickness(status_info* inf)
     }
 }
 
+/**
+ * Populate a status info struct with a description of the player's current
+ * form.
+ *
+ * @param[out] inf  The status info struct to be populated.
+ */
 static void _describe_transform(status_info* inf)
 {
+    if (you.form == TRAN_NONE)
+        return;
+
+    const Form * const form = get_form();
+    inf->light_text = form->short_name;
+    inf->short_text = form->get_long_name();
+    inf->long_text = form->get_description();
+
     const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
-
-    switch (you.form)
-    {
-    case TRAN_BAT:
-        inf->light_text     = "Bat";
-        inf->short_text     = "bat-form";
-        inf->long_text      = "You are in ";
-        if (vampbat)
-            inf->long_text += "vampire ";
-        inf->long_text     += "bat-form.";
-        break;
-    case TRAN_BLADE_HANDS:
-        inf->light_text = "Blade";
-        inf->short_text = "blade " + blade_parts(true);
-        inf->long_text  = "You have blades for " + blade_parts() + ".";
-        break;
-    case TRAN_DRAGON:
-        inf->light_text = "Dragon";
-        inf->short_text = "dragon-form";
-        inf->long_text  = "You are in dragon-form.";
-        break;
-    case TRAN_ICE_BEAST:
-        inf->light_text = "Ice";
-        inf->short_text = "ice-form";
-        inf->long_text  = "You are an ice creature.";
-        break;
-    case TRAN_LICH:
-        inf->light_text = "Lich";
-        inf->short_text = "lich-form";
-        inf->long_text  = "You are in lich-form.";
-        break;
-    case TRAN_PIG:
-        inf->light_text = "Pig";
-        inf->short_text = "pig-form";
-        inf->long_text  = "You are a filthy swine.";
-        break;
-    case TRAN_SPIDER:
-        inf->light_text = "Spider";
-        inf->short_text = "spider-form";
-        inf->long_text  = "You are in spider-form.";
-        break;
-    case TRAN_STATUE:
-        inf->light_text = "Statue";
-        inf->short_text = "statue-form";
-        inf->long_text  = "You are a statue.";
-        break;
-    case TRAN_APPENDAGE:
-        inf->light_text = "App";
-        inf->short_text = "appendage";
-        inf->long_text  = "You have a beastly appendage.";
-        break;
-    case TRAN_FUNGUS:
-        inf->light_text = "Fungus";
-        inf->short_text = "fungus-form";
-        inf->long_text  = "You are a sentient fungus.";
-        break;
-    case TRAN_TREE:
-        inf->light_text = "Tree";
-        inf->short_text = "tree-form";
-        inf->long_text  = "You are an animated tree.";
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:
-        inf->light_text = "Jelly";
-        inf->short_text = "jelly-form";
-        inf->long_text  = "You are a lump of jelly.";
-        break;
-#endif
-    case TRAN_PORCUPINE:
-        inf->light_text = "Porc";
-        inf->short_text = "porcupine-form";
-        inf->long_text  = "You are a porcupine.";
-        break;
-    case TRAN_WISP:
-        inf->light_text = "Wisp";
-        inf->short_text = "wisp-form";
-        inf->long_text  = "You are an insubstantial wisp.";
-        break;
-    case TRAN_SHADOW:
-        inf->light_text = "Shadow",
-        inf->short_text = "shadow form";
-        inf->long_text  = "You are a swirling mass of dark shadows.";
-        break;
-    case TRAN_NONE:
-        break;
-    }
 
     inf->light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
