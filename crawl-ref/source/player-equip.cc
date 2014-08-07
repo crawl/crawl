@@ -244,11 +244,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
-                       !(msg && unknown_proprt(ARTP_STRENGTH)), item);
+                       !(msg && unknown_proprt(ARTP_STRENGTH)));
     notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE],
-                       !(msg && unknown_proprt(ARTP_INTELLIGENCE)), item);
+                       !(msg && unknown_proprt(ARTP_INTELLIGENCE)));
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
-                       !(msg && unknown_proprt(ARTP_DEXTERITY)), item);
+                       !(msg && unknown_proprt(ARTP_DEXTERITY)));
 
     if (unknown_proprt(ARTP_MUTAGENIC) && msg)
         mpr("You feel a build-up of mutagenic energy.");
@@ -307,12 +307,9 @@ static void _unequip_artefact_effect(item_def &item,
                                                   : MSG_MANA_INCREASE);
     }
 
-    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true, item,
-                       true);
-    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], true, item,
-                       true);
-    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    true, item,
-                       true);
+    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true);
+    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], true);
+    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    true);
 
     if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
         && !you.evokable_flight())
@@ -845,15 +842,15 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_STRENGTH:
-            notify_stat_change(STAT_STR, 3, false, arm);
+            notify_stat_change(STAT_STR, 3, false);
             break;
 
         case SPARM_DEXTERITY:
-            notify_stat_change(STAT_DEX, 3, false, arm);
+            notify_stat_change(STAT_DEX, 3, false);
             break;
 
         case SPARM_INTELLIGENCE:
-            notify_stat_change(STAT_INT, 3, false, arm);
+            notify_stat_change(STAT_INT, 3, false);
             break;
 
         case SPARM_PONDEROUSNESS:
@@ -993,15 +990,15 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_STRENGTH:
-        notify_stat_change(STAT_STR, -3, false, item, true);
+        notify_stat_change(STAT_STR, -3, false);
         break;
 
     case SPARM_DEXTERITY:
-        notify_stat_change(STAT_DEX, -3, false, item, true);
+        notify_stat_change(STAT_DEX, -3, false);
         break;
 
     case SPARM_INTELLIGENCE:
-        notify_stat_change(STAT_INT, -3, false, item, true);
+        notify_stat_change(STAT_INT, -3, false);
         break;
 
     case SPARM_PONDEROUSNESS:
@@ -1145,15 +1142,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_STRENGTH:
-        notify_stat_change(STAT_STR, item.plus, false, item);
+        notify_stat_change(STAT_STR, item.plus, false);
         break;
 
     case RING_DEXTERITY:
-        notify_stat_change(STAT_DEX, item.plus, false, item);
+        notify_stat_change(STAT_DEX, item.plus, false);
         break;
 
     case RING_INTELLIGENCE:
-        notify_stat_change(STAT_INT, item.plus, false, item);
+        notify_stat_change(STAT_INT, item.plus, false);
         break;
 
     case RING_MAGICAL_POWER:
@@ -1320,15 +1317,15 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_STRENGTH:
-        notify_stat_change(STAT_STR, -item.plus, false, item, true);
+        notify_stat_change(STAT_STR, -item.plus, false);
         break;
 
     case RING_DEXTERITY:
-        notify_stat_change(STAT_DEX, -item.plus, false, item, true);
+        notify_stat_change(STAT_DEX, -item.plus, false);
         break;
 
     case RING_INTELLIGENCE:
-        notify_stat_change(STAT_INT, -item.plus, false, item, true);
+        notify_stat_change(STAT_INT, -item.plus, false);
         break;
 
     case RING_FLIGHT:

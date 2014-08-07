@@ -865,7 +865,7 @@ bool player::go_berserk(bool intentional, bool potion)
     deflate_hp(you.hp_max, false);
 
     if (!you.duration[DUR_MIGHT])
-        notify_stat_change(STAT_STR, 5, true, "going berserk");
+        notify_stat_change(STAT_STR, 5, true);
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;

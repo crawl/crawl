@@ -1131,7 +1131,7 @@ void dec_penance(god_type god, int val)
             {
                 simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
-                notify_stat_change("mollifying Cheibriados");
+                notify_stat_change();
             }
             // Likewise Dithmenos's umbra.
             else if (god == GOD_DITHMENOS
@@ -1276,7 +1276,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_CHEIBRIADOS)
         {
             redraw_screen();
-            notify_stat_change("falling into Cheibriados' penance");
+            notify_stat_change();
         }
         else if (god == GOD_DITHMENOS)
         {
@@ -2466,7 +2466,7 @@ static void _gain_piety_point()
         && chei_stat_boost(old_piety) < chei_stat_boost())
     {
         simple_god_message(" raises the support of your attributes as your movement slows.");
-        notify_stat_change("Cheibriados piety gain");
+        notify_stat_change();
     }
 
     if (you_worship(GOD_QAZLAL)
@@ -2676,7 +2676,7 @@ void lose_piety(int pgn)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
         simple_god_message(" reduces the support of your attributes as your movement quickens.");
-        notify_stat_change("Cheibriados piety loss");
+        notify_stat_change();
     }
 
     if (you_worship(GOD_QAZLAL)
@@ -3441,7 +3441,7 @@ void join_religion(god_type which_god, bool immediate)
     {
         simple_god_message(" begins to support your attributes as your "
                            "movement slows.");
-        notify_stat_change("Cheibriados worship");
+        notify_stat_change();
         mprf(MSGCH_GOD, "You can now bend time to slow others.");
     }
 

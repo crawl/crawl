@@ -212,7 +212,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
 
         if (!were_mighty)
-            notify_stat_change(STAT_STR, 5, true, "");
+            notify_stat_change(STAT_STR, 5, true);
         break;
     }
 
@@ -226,7 +226,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
 
         if (!were_brilliant)
-            notify_stat_change(STAT_INT, 5, true, "");
+            notify_stat_change(STAT_INT, 5, true);
         break;
     }
 
@@ -240,7 +240,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
 
         if (!were_agile)
-            notify_stat_change(STAT_DEX, 5, true, "");
+            notify_stat_change(STAT_DEX, 5, true);
         break;
     }
 

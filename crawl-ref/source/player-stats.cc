@@ -75,9 +75,8 @@ int player::max_dex() const
     return max_stat(STAT_DEX);
 }
 
-static void _handle_stat_change(stat_type stat, const char *aux = NULL,
-                                bool see_source = true);
-static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
+static void _handle_stat_change(stat_type stat, bool see_source = true);
+static void _handle_stat_change(bool see_source = true);
 
 bool attribute_increase()
 {
@@ -260,11 +259,8 @@ void jiyva_stat_action()
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        const string cause = "the 'helpfulness' of " + god_name(you.religion);
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true,
-                    cause.c_str());
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true,
-                    cause.c_str());
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true);
     }
 }
 
@@ -296,7 +292,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
 }
 
 void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
-                 const char *cause, bool see_source)
+                 bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -320,11 +316,11 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
 
     you.base_stats[which_stat] += amount;
 
-    _handle_stat_change(which_stat, cause, see_source);
+    _handle_stat_change(which_stat, see_source);
 }
 
 void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        const char *cause, bool see_source)
+                        bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -346,49 +342,12 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    _handle_stat_change(which_stat, cause, see_source);
+    _handle_stat_change(which_stat, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        const item_def &cause, bool removed)
+void notify_stat_change()
 {
-    string name = cause.name(DESC_THE, false, true, false, false,
-                             ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    string verb;
-
-    switch (cause.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (removed)
-            verb = "removing";
-        else
-            verb = "wearing";
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-    case OBJ_RODS:
-        if (removed)
-            verb = "unwielding";
-        else
-            verb = "wielding";
-        break;
-
-    case OBJ_WANDS:   verb = "zapping";  break;
-    case OBJ_FOOD:    verb = "eating";   break;
-    case OBJ_SCROLLS: verb = "reading";  break;
-    case OBJ_POTIONS: verb = "drinking"; break;
-    default:          verb = "using";
-    }
-
-    notify_stat_change(which_stat, amount, suppress_msg,
-                       (verb + " " + name).c_str(), true);
-}
-
-void notify_stat_change(const char* cause)
-{
-    _handle_stat_change(cause);
+    _handle_stat_change();
 }
 
 static int _strength_modifier()
@@ -570,13 +529,12 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
             mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
             ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
         }
-        _handle_stat_change(which_stat, cause, see_source);
+        _handle_stat_change(which_stat, see_source);
         return true;
     }
     else
         return false;
 }
-
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const string cause, bool see_source)
 {
@@ -661,7 +619,7 @@ static void _normalize_stat(stat_type stat)
     you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
-static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
+static void _handle_stat_change(stat_type stat, bool see_source)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
@@ -699,10 +657,10 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     }
 }
 
-static void _handle_stat_change(const char* aux, bool see_source)
+static void _handle_stat_change(bool see_source)
 {
     for (int i = 0; i < NUM_STATS; ++i)
-        _handle_stat_change(static_cast<stat_type>(i), aux, see_source);
+        _handle_stat_change(static_cast<stat_type>(i), see_source);
 }
 
 // Called once per turn.
