@@ -11,6 +11,13 @@
 #include "enum.h"
 #include "player.h"
 
+enum form_capability
+{
+    DEFAULT,
+    ENABLE,
+    FORBID
+};
+
 class Form
 {
 public:
@@ -20,6 +27,7 @@ public:
          int _str_mod, int _dex_mod,
          size_type _size, int _stealth_mod,
          int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
+         form_capability _can_fly, form_capability _can_swim,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     str_mod(_str_mod), dex_mod(_dex_mod),
@@ -28,6 +36,7 @@ public:
     long_name(_long_name), description(_description),
     stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
+    can_fly(_can_fly), can_swim(_can_swim),
     equivalent_mons(_equivalent_mons)
     { };
 
@@ -41,6 +50,9 @@ public:
 
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
+
+    bool player_can_fly() const;
+    bool player_can_swim() const;
 
 public:
     const string short_name;
@@ -65,6 +77,9 @@ private:
     bool all_blocked(int slotflags) const;
 
 private:
+    const form_capability can_fly;
+    const form_capability can_swim;
+
     const monster_type equivalent_mons;
 };
 const Form* get_form(transformation_type form = you.form);
