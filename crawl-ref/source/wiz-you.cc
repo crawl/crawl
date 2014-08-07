@@ -1027,13 +1027,14 @@ static bool _chardump_check_skill(const vector<string> &tokens)
     return true;
 }
 
-static bool _chardump_check_str(const vector<string> &tokens)
+static bool _chardump_check_stats1(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // HP 121/199   AC 75   Str 35   XL: 27
-    if (size <= 5 || tokens[0] != "HP")
+    if (size <= 7 || tokens[0] != "HP")
         return false;
 
+    bool found = false;
     for (size_t k = 1; k < size; k++)
     {
         if (tokens[k] == "Str")
@@ -1041,14 +1042,19 @@ static bool _chardump_check_str(const vector<string> &tokens)
             you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
             you.redraw_evasion = true;
-            return true;
+            found = true;
+        }
+        else if (tokens[k] == "XL:")
+        {
+            set_xl(atoi(tokens[k+1].c_str()), false);
+            found = true;
         }
     }
 
-    return false;
+    return found;
 }
 
-static bool _chardump_check_int(const vector<string> &tokens)
+static bool _chardump_check_stats2(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // MP  45/45   EV 13   Int 12   God: Makhleb [******]
@@ -1069,7 +1075,7 @@ static bool _chardump_check_int(const vector<string> &tokens)
     return false;
 }
 
-static bool _chardump_check_dex(const vector<string> &tokens)
+static bool _chardump_check_stats3(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // Gold 15872   SH 59   Dex  9   Spells:  0 memorised, 26 levels left
@@ -1096,11 +1102,11 @@ static void _wizard_modify_character(string inputdata)
 
     if (_chardump_check_skill(tokens))
         return;
-    if (_chardump_check_str(tokens))
+    if (_chardump_check_stats1(tokens))
         return;
-    if (_chardump_check_int(tokens))
+    if (_chardump_check_stats2(tokens))
         return;
-    if (_chardump_check_dex(tokens))
+    if (_chardump_check_stats3(tokens))
         return;
 }
 
