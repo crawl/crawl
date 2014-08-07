@@ -1005,71 +1005,103 @@ void wizard_transform()
         mpr("Transformation failed.");
 }
 
-static void _wizard_modify_character(string inputdata)
-// for now this just sets skill levels and str dex int
-// (this should be enough to debug with)
+static bool _chardump_check_skill(const vector<string> &tokens)
 {
-    vector<string>  tokens = split_string(" ", inputdata);
-    int size = tokens.size();
-    if (size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
+    size_t size = tokens.size();
+    // * Level 25.0(24.4) Dodging
+    if (size <= 3 || tokens[1] != "Level")
+        return false;
+
+    skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
+    double amount = atof(tokens[2].c_str());
+    set_skill_level(skill, amount);
+    if (tokens[0] == "+")
+        you.train[skill] = 1;
+    else if (tokens[0] == "*")
+        you.train[skill] = 2;
+    else
+        you.train[skill] = 0;
+
+    redraw_skill(skill);
+
+    return true;
+}
+
+static bool _chardump_check_str(const vector<string> &tokens)
+{
+    size_t size = tokens.size();
+    // HP 121/199   AC 75   Str 35   XL: 27
+    if (size <= 5 || tokens[0] != "HP")
+        return false;
+
+    for (size_t k = 1; k < size; k++)
     {
-        skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
-        double amount = atof(tokens[2].c_str());
-        set_skill_level(skill, amount);
-        if (tokens[0] == "+")
-            you.train[skill] = 1;
-        else if (tokens[0] == "*")
-            you.train[skill] = 2;
-        else
-            you.train[skill] = 0;
+        if (tokens[k] == "Str")
+        {
+            you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+            you.redraw_stats.init(true);
+            you.redraw_evasion = true;
+            return true;
+        }
+    }
 
-        redraw_skill(skill);
+    return false;
+}
 
+static bool _chardump_check_int(const vector<string> &tokens)
+{
+    size_t size = tokens.size();
+    // MP  45/45   EV 13   Int 12   God: Makhleb [******]
+    if (size <= 5 || tokens[0] != "MP")
+        return false;
+
+    for (size_t k = 1; k < size; k++)
+    {
+        if (tokens[k] == "Int")
+        {
+            you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+            you.redraw_stats.init(true);
+            you.redraw_evasion = true;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool _chardump_check_dex(const vector<string> &tokens)
+{
+    size_t size = tokens.size();
+    // Gold 15872   SH 59   Dex  9   Spells:  0 memorised, 26 levels left
+    if (size <= 5 || tokens[0] != "Gold")
+        return false;
+
+    for (size_t k = 1; k < size; k++)
+    {
+        if (tokens[k] == "Dex")
+        {
+            you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+            you.redraw_stats.init(true);
+            you.redraw_evasion = true;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static void _wizard_modify_character(string inputdata)
+{
+    vector<string> tokens = split_string(" ", inputdata);
+
+    if (_chardump_check_skill(tokens))
         return;
-    }
-
-    if (size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
-    {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Str")
-            {
-                you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-
-    if (size > 5 && tokens[0] == "MP")
-    {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Int")
-            {
-                you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-    if (size > 5 && tokens[0] == "Gold")
-    {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Dex")
-            {
-                you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-
-    return;
+    if (_chardump_check_str(tokens))
+        return;
+    if (_chardump_check_int(tokens))
+        return;
+    if (_chardump_check_dex(tokens))
+        return;
 }
 
 /**
