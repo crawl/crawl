@@ -3694,9 +3694,11 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_PORKALATOR:
         if (!transform(ench_power, TRAN_PIG, true))
         {
-            mpr("You feel like a pig.");
+            mpr("You feel a momentary urge to oink.");
             break;
         }
+
+        you.transform_uncancellable = true;
         obvious_effect = true;
         break;
 

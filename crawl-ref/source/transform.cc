@@ -134,6 +134,29 @@ string Form::get_description(bool past_tense) const
 }
 
 /**
+ * Get a message for transforming into this form, based on your current
+ * situation (e.g. in water...)
+ *
+ * @return The message for turning into this form.
+ */
+string Form::transform_message(transformation_type previous_trans) const
+{
+    // XXX: refactor this into a second function (and also rethink the logic)
+    string start = "Buggily, y";
+    if (you.in_water() && player_can_fly())
+        start = "You fly out of the water as y";
+    else if (get_form(previous_trans)->player_can_fly()
+             && player_can_swim()
+             && feat_is_water(grd(you.pos())))
+        start = "As you dive into the water, y";
+    else
+        start = "Y";
+
+    return make_stringf("%sou turn into %s", start.c_str(),
+                        get_transform_description().c_str());
+}
+
+/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -189,6 +212,12 @@ public:
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
+
+    /**
+     * Get a string describing the form you're turning into. (If not the same
+     * as the one used to describe this form in @.
+     */
+    string get_transform_description() const { return "your old self."; }
 };
 
 class FormSpider : public Form
@@ -228,16 +257,35 @@ public:
         return 8 + div_rand_round(you.strength() + you.dex(), 3);
     }
 
+    /**
+     * % screen description
+     */
     string get_long_name() const
     {
         return "blade " + blade_parts(true);
     }
 
+    /**
+     * @ description
+     */
     string get_description(bool past_tense) const
     {
         return make_stringf("You %s blades for %s.",
                             past_tense ? "had" : "have",
                             blade_parts().c_str());
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(transformation_type previous_trans) const
+    {
+        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+
+        // XXX: a little ugly
+        return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
+                            blade_parts().c_str(), singular ? "s" : "",
+                            singular ? " a" : "", singular ? "" : "s");
     }
 };
 
@@ -261,6 +309,28 @@ public:
     int get_base_unarmed_damage() const
     {
         return 6 + div_rand_round(you.strength(), 3);
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(transformation_type previous_trans) const
+    {
+        if (you.species == SP_DEEP_DWARF && one_chance_in(10))
+            return "You inwardly fear your resemblance to a lawn ornament.";
+        else if (you.species == SP_GARGOYLE)
+            return "Your body stiffens and grows slower.";
+        else
+            return Form::transform_message(previous_trans);
+    }
+
+    /**
+     * Get a string describing the form you're turning into. (If not the same
+     * as the one used to describe this form in @.
+     */
+    string get_transform_description() const
+    {
+        return "a living statue of rough stone.";
     }
 };
 
@@ -327,6 +397,14 @@ public:
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_LICH)       // equivalent monster
     { };
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(transformation_type previous_trans) const
+    {
+        return "Your body is suffused with negative energy!";
+    }
 };
 
 class FormBat : public Form
@@ -381,6 +459,16 @@ public:
                             past_tense ? "were" : "are",
                             you.species == SP_VAMPIRE ?  "vampire-" : "");
     }
+
+    /**
+     * Get a string describing the form you're turning into. (If not the same
+     * as the one used to describe this form in @.
+     */
+    string get_transform_description() const
+    {
+        return make_stringf("a %sbat.",
+                            you.species == SP_VAMPIRE ? "vampire " : "");
+    }
 };
 
 class FormPig : public Form
@@ -425,6 +513,25 @@ public:
                             mutation_name((mutation_type)
                                           you.attribute[ATTR_APPENDAGE]));
     }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(transformation_type previous_trans) const
+    {
+        // ATTR_APPENDAGE must be set earlier!
+        switch (you.attribute[ATTR_APPENDAGE])
+        {
+            case MUT_HORNS:
+                return "You grow a pair of large bovine horns.";
+            case MUT_TENTACLE_SPIKE:
+                return "One of your tentacles grows a vicious spike.";
+            case MUT_TALONS:
+                return "Your feet morph into talons.";
+            default:
+                 die("Unknown beastly appendage.");
+        }
+    }
 };
 
 class FormTree : public Form
@@ -447,7 +554,7 @@ class FormPorcupine: public Form
 public:
     FormPorcupine()
     : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
-           "a porcupine.",  // description
+           "a spiny porcupine.",  // description
            EQF_ALL,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_TINY, 12,    // size, stealth mod
@@ -1255,8 +1362,7 @@ static int _beastly_appendage_level(int appendage)
 bool transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
-    transformation_type previous_trans = you.form;
-    bool was_in_water = you.in_water();
+    const transformation_type previous_trans = you.form;
     const flight_type was_flying = you.flight_mode();
 
     // Zin's protection.
@@ -1363,72 +1469,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    string msg;
-
-    if (was_in_water && form_can_fly(which_trans))
-        msg = "You fly out of the water as you turn into ";
-    else if (form_can_fly(previous_trans)
-             && form_can_swim(which_trans)
-             && feat_is_water(grd(you.pos())))
-        msg = "As you dive into the water, you turn into ";
-    else
-        msg = "You turn into ";
-
-    switch (which_trans)
+    if (which_trans == TRAN_APPENDAGE)
     {
-    case TRAN_SPIDER:
-        msg      += "a venomous arachnid creature.";
-        break;
-
-    case TRAN_BLADE_HANDS:
-        if (player_mutation_level(MUT_MISSING_HAND)
-            && you.species != SP_OCTOPODE)
-        {
-            msg       = "Your " + blade_parts()
-                        + " turns into a razor-sharp scythe blade.";
-        } else {
-            msg       = "Your " + blade_parts()
-                        + " turn into razor-sharp scythe blades.";
-        }
-        break;
-
-    case TRAN_STATUE:
-        if (you.species == SP_DEEP_DWARF && one_chance_in(10))
-            msg = "You inwardly fear your resemblance to a lawn ornament.";
-        else if (you.species == SP_GARGOYLE)
-            msg = "Your body stiffens and grows slower.";
-        else
-            msg += "a living statue of rough stone.";
-        break;
-
-    case TRAN_ICE_BEAST:
-        msg      += "a creature of crystalline ice.";
-        break;
-
-    case TRAN_DRAGON:
-        msg      += "a fearsome dragon!";
-        break;
-
-    case TRAN_LICH:
-        msg       = "Your body is suffused with negative energy!";
-        break;
-
-    case TRAN_BAT:
-        if (you.species == SP_VAMPIRE)
-            msg += "a vampire bat.";
-        else
-            msg += "a bat.";
-        break;
-
-    case TRAN_PIG:
-        msg       = "You have been turned into a pig!";
-        if (!just_check)
-            you.transform_uncancellable = true;
-        break;
-
-    case TRAN_APPENDAGE:
-    {
-        mutation_type app = _beastly_appendage();
+        const mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
             if (!involuntary)
@@ -1438,53 +1481,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
         if (!just_check)
         {
-            you.attribute[ATTR_APPENDAGE] = app;
-            switch (app)
-            {
-            case MUT_HORNS:
-                msg = "You grow a pair of large bovine horns.";
-                break;
-            case MUT_TENTACLE_SPIKE:
-                msg = "One of your tentacles grows a vicious spike.";
-                break;
-            case MUT_CLAWS:
-                msg = "Your hands morph into claws.";
-                break;
-            case MUT_TALONS:
-                msg = "Your feet morph into talons.";
-                break;
-            default:
-                die("Unknown beastly appendage.");
-            }
+            you.attribute[ATTR_APPENDAGE] = app; // need to set it here so
+                                                 // the message correlates
         }
-        break;
-    }
-
-    case TRAN_FUNGUS:
-        msg      += "a fleshy mushroom.";
-        break;
-
-    case TRAN_PORCUPINE:
-        msg      += "a spiny porcupine.";
-        break;
-
-    case TRAN_TREE:
-        msg      += "an animated tree.";
-        break;
-
-    case TRAN_WISP:
-        msg      += "an insubstantial wisp of gas.";
-        break;
-
-    case TRAN_SHADOW:
-        msg      += "a swirling mass of dark shadows.";
-        break;
-
-    case TRAN_NONE:
-        msg += "your old self.";
-        break;
-    default:
-        msg += "something buggy!";
     }
 
     if (!involuntary && just_check && !check_form_stat_safety(which_trans))
@@ -1514,7 +1513,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         you.duration[DUR_STONESKIN] = 0;
 
     // Give the transformation message.
-    mprf("%s", msg.c_str());
+    mpr(get_form(which_trans)->transform_message(previous_trans).c_str());
 
     // Update your status.
     you.form = which_trans;
