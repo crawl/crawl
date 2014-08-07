@@ -154,6 +154,7 @@ public:
     : Form("", "", "none", // short name, long name, wizmode name
            "",  // description
            EQF_NONE,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_PLAYER)       // equivalent monster
@@ -167,6 +168,7 @@ public:
     : Form("Spider", "spider-form", "spider", // short name, long name, wizmode name
            "a venomous arachnid creature.",  // description
            EQF_PHYSICAL,  // blocked slots
+           0, 5,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
            MONS_SPIDER)       // equivalent monster
@@ -180,6 +182,7 @@ public:
     : Form("Blade", "", "blade", // short name, long name, wizmode name
            "",  // description
            EQF_HANDS,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
            MONS_PLAYER)       // equivalent monster
@@ -213,6 +216,7 @@ public:
     : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
+           2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_STATUE)       // equivalent monster
@@ -234,6 +238,7 @@ public:
     : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
            "a creature of crystalline ice.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_LARGE, 15,    // size, stealth mod
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
            MONS_ICE_BEAST)       // equivalent monster
@@ -247,6 +252,7 @@ public:
     : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           10, 0,    // str mod, dex mod
            SIZE_GIANT, 6,    // size, stealth mod
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
            MONS_PROGRAM_BUG)       // equivalent monster
@@ -280,6 +286,7 @@ public:
     : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
            "a lich.",  // description
            EQF_NONE,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            MONS_LICH)       // equivalent monster
@@ -293,6 +300,7 @@ public:
     : Form("Bat", "bat-form", "bat", // short name, long name, wizmode name
            "",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           -5, 5,    // str mod, dex mod
            SIZE_TINY, 17,    // size, stealth mod
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_PROGRAM_BUG)       // equivalent monster
@@ -345,6 +353,7 @@ public:
     : Form("Pig", "pig-form", "pig", // short name, long name, wizmode name
            "a filthy swine.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_SMALL, 9,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_HOG)       // equivalent monster
@@ -358,6 +367,7 @@ public:
     : Form("App", "appendage", "appendage", // short name, long name, wizmode name
            "",  // description
            EQF_NONE,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_PLAYER)       // equivalent monster
@@ -385,6 +395,7 @@ public:
     : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
            "a tree.",  // description
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 27,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            MONS_ANIMATED_TREE)       // equivalent monster
@@ -398,6 +409,7 @@ public:
     : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
            "a porcupine.",  // description
            EQF_ALL,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_TINY, 12,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_PORCUPINE)       // equivalent monster
@@ -411,6 +423,7 @@ public:
     : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
@@ -425,6 +438,7 @@ public:
     : Form("Jelly",  "jelly-form", "jelly", // short name, long name, wizmode name
            "a lump of jelly.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 21,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            MONS_JELLY)       // equivalent monster
@@ -439,6 +453,7 @@ public:
     : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
            "a sentient fungus.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_TINY, 30,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            MONS_WANDERING_MUSHROOM)       // equivalent monster
@@ -452,6 +467,7 @@ public:
     : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
+           0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 30,    // size, stealth mod
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            MONS_PLAYER_SHADOW)       // equivalent monster
@@ -1114,6 +1130,36 @@ static bool _transformation_is_safe(transformation_type which_trans,
     return false;
 }
 
+/**
+ * If we transform into the given form, will all of our stats remain above 0,
+ * based purely on the stat modifiers of the current & destination form?
+ *
+ * May prompt the player.
+ *
+ * @param new_form  The form to check the safety of.
+ * @return          Whether it's okay to go ahead with the transformation.
+ */
+bool check_form_stat_safety(transformation_type new_form)
+{
+    const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
+    const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
+
+    const bool bad_str = you.strength() > 0 && str_mod + you.strength() <= 0;
+    const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
+    if (!bad_str && !bad_dex)
+        return true;
+
+    string prompt = make_stringf("%s will reduce your %s to zero.  Continue?",
+                                 new_form == TRAN_NONE ? "Turning back"
+                                                       : "Transforming",
+                                 bad_str ? "strength" : "dexterity");
+    if (yesno(prompt.c_str(), false, 'n'))
+        return true;
+
+    canned_msg(MSG_OK);
+    return false;
+}
+
 static int _transform_duration(transformation_type which_trans, int pow)
 {
     switch (which_trans)
@@ -1271,7 +1317,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    int str = 0, dex = 0;
     string msg;
 
     if (was_in_water && form_can_fly(which_trans))
@@ -1286,7 +1331,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     switch (which_trans)
     {
     case TRAN_SPIDER:
-        dex       = 5;
         msg      += "a venomous arachnid creature.";
         break;
 
@@ -1303,8 +1347,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_STATUE:
-        str       = 2;
-        dex       = -2;
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else if (you.species == SP_GARGOYLE)
@@ -1318,7 +1360,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_DRAGON:
-        str       = 10;
         msg      += "a fearsome dragon!";
         break;
 
@@ -1327,8 +1368,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_BAT:
-        str       = -5;
-        dex       = 5;
         if (you.species == SP_VAMPIRE)
             msg += "a vampire bat.";
         else
@@ -1380,12 +1419,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_PORCUPINE:
-        str       = -3;
         msg      += "a spiny porcupine.";
         break;
 
     case TRAN_TREE:
-        str       = 10;
         msg      += "an animated tree.";
         break;
 
@@ -1404,18 +1441,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg += "something buggy!";
     }
 
-    const bool bad_str = you.strength() > 0 && str + you.strength() <= 0;
-    if (!involuntary && just_check && (bad_str
-            || you.dex() > 0 && dex + you.dex() <= 0))
-    {
-        string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
-                                     bad_str ? "strength" : "dexterity");
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
+    if (!involuntary && just_check && !check_form_stat_safety(which_trans))
+        return false;
 
     // If we're just pretending return now.
     if (just_check)
@@ -1452,11 +1479,14 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     you.props[TRANSFORM_POW_KEY] = pow;
 
-    if (str)
-        notify_stat_change(STAT_STR, str, true);
+    const int str_mod = get_form(which_trans)->str_mod;
+    const int dex_mod = get_form(which_trans)->dex_mod;
 
-    if (dex)
-        notify_stat_change(STAT_DEX, dex, true);
+    if (str_mod)
+        notify_stat_change(STAT_STR, str_mod, true);
+
+    if (dex_mod)
+        notify_stat_change(STAT_DEX, dex_mod, true);
 
     _extra_hp(form_hp_mod());
 
@@ -1651,13 +1681,10 @@ void untransform(bool skip_wielding, bool skip_move)
     {
     case TRAN_SPIDER:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_DEX, -5, true);
         break;
 
     case TRAN_BAT:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_DEX, -5, true);
-        notify_stat_change(STAT_STR, 5, true);
         break;
 
     case TRAN_BLADE_HANDS:
@@ -1688,8 +1715,6 @@ void untransform(bool skip_wielding, bool skip_move)
         if (you.species != SP_LAVA_ORC)
 #endif
             mprf(MSGCH_DURATION, "You revert to your normal fleshy form.");
-        notify_stat_change(STAT_DEX, 2, true);
-        notify_stat_change(STAT_STR, -2, true);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -1713,7 +1738,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_DRAGON:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_STR, -10, true);
         break;
 
     case TRAN_LICH:
@@ -1767,12 +1791,20 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_TREE:
         mprf(MSGCH_DURATION, "You feel less woody.");
-        notify_stat_change(STAT_STR, -10, true);
         break;
 
     default:
         break;
     }
+
+    const int str_mod = get_form(old_form)->str_mod;
+    const int dex_mod = get_form(old_form)->dex_mod;
+
+    if (str_mod)
+        notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (dex_mod)
+        notify_stat_change(STAT_DEX, -dex_mod, true);
 
     _unmeld_equipment(melded);
 

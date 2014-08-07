@@ -382,14 +382,7 @@ static int _strength_modifier()
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
 #endif
 
-    // transformations
-    switch (you.form)
-    {
-    case TRAN_STATUE:          result +=  2; break;
-    case TRAN_DRAGON:          result += 10; break;
-    case TRAN_BAT:             result -=  5; break;
-    default:                                 break;
-    }
+    result += get_form()->str_mod;
 
     return result;
 }
@@ -453,14 +446,7 @@ static int _dex_modifier()
     result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
-    // transformations
-    switch (you.form)
-    {
-    case TRAN_SPIDER: result +=  5; break;
-    case TRAN_STATUE: result -=  2; break;
-    case TRAN_BAT:    result +=  5; break;
-    default:                        break;
-    }
+    result += get_form()->dex_mod;
 
     return result;
 }

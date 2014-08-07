@@ -17,10 +17,12 @@ public:
     Form(string _short_name, string _long_name, string _wiz_name,
          string _description,
          int _blocked_slots,
+         int _str_mod, int _dex_mod,
          size_type _size, int _stealth_mod,
          int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
+    str_mod(_str_mod), dex_mod(_dex_mod),
     blocked_slots(_blocked_slots), size(_size),
     unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
     long_name(_long_name), description(_description),
@@ -43,6 +45,9 @@ public:
 public:
     const string short_name;
     const string wiz_name;
+
+    const int str_mod;
+    const int dex_mod;
 
     const int blocked_slots;
     const size_type size;
@@ -80,6 +85,9 @@ bool form_keeps_mutations(transformation_type form = you.form);
 
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat);
+
+bool check_form_stat_safety(transformation_type new_form);
+
 bool transform(int pow, transformation_type which_trans,
                bool involuntary = false, bool just_check = false);
 
