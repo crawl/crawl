@@ -864,36 +864,7 @@ static int _wpn_name_colour()
         return LIGHTGREY;
     }
 
-    switch (you.form)
-    {
-        case TRAN_SPIDER:
-            return LIGHTGREEN;
-
-        case TRAN_BLADE_HANDS:
-            return RED;
-
-        case TRAN_ICE_BEAST:
-            return WHITE;
-
-        case TRAN_DRAGON:
-            return GREEN;
-
-        case TRAN_LICH:
-        case TRAN_SHADOW:
-            return MAGENTA;
-
-        case TRAN_FUNGUS:
-        case TRAN_TREE:
-            return BROWN;
-
-        case TRAN_STATUE:
-        case TRAN_WISP:
-        case TRAN_BAT:
-        case TRAN_PIG:
-        case TRAN_PORCUPINE:
-        default:
-            return LIGHTGREY;
-    }
+    return get_form()->uc_colour;
 }
 
 /**
