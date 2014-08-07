@@ -671,8 +671,8 @@ Using this ability exhausts and slightly drains you.
 Power Leap ability
 
 Use the power that infuses you to perform an incredibly fast leap. On landing,
-the power that drove the leap explodes outward, damaging everything adjacent to
-you. The amount of damage done increases with your piety.
+that power explodes outward, damaging everything adjacent to you. The amount of
+damage done increases with your piety and experience level.
 
 Using this ability exhausts you.
 %%%%
@@ -680,7 +680,8 @@ Cataclysm ability
 
 You unleash your hard-won power in a terrifying cataclysm. All enemies in your
 line of sight are dealt severe damage and may be rendered permanently mute or
-paralyzed or slowed. The damage dealt by this power increases with your piety.
+paralyzed or slowed. The damage dealt by this power increases with your piety
+and experience level.
 
 Using this ability exhausts and severely drains you.
 %%%%
