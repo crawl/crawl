@@ -2143,10 +2143,10 @@ bool melee_attack::chop_hydra_head(int dam,
     {
         if (defender_visible)
         {
-            mprf("%s %s %s's last head off!",
+            mprf("%s %s %s last head off!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb(verb).c_str(),
-                 def_name(DESC_THE).c_str());
+                 apostrophise(defender_name()).c_str());
         }
         defender->as_monster()->number--;
 
@@ -2164,10 +2164,10 @@ bool melee_attack::chop_hydra_head(int dam,
     {
         if (defender_visible)
         {
-            mprf("%s %s one of %s's heads off!",
+            mprf("%s %s one of %s heads off!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb(verb).c_str(),
-                 def_name(DESC_THE).c_str());
+                 apostrophise(defender_name()).c_str());
         }
         defender->as_monster()->number--;
 
@@ -3294,7 +3294,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s!",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("burn").c_str(),
-                    def_name(DESC_THE).c_str());
+                    defender_name().c_str());
 
             _print_resist_messages(defender, special_damage, BEAM_FIRE);
         }
