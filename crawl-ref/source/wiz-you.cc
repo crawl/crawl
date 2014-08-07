@@ -51,16 +51,9 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
-void wizard_change_species()
+static species_type _find_species(string species)
 {
-    char specs[80];
-
-    msgwin_get_line("What species would you like to be now? " ,
-                    specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return;
-    string spec = lowercase_string(specs);
+    string spec = lowercase_string(species);
 
     species_type sp = SP_UNKNOWN;
 
@@ -83,6 +76,11 @@ void wizard_change_species()
         }
     }
 
+    return sp;
+}
+
+static void _wizard_change_species_to(species_type sp)
+{
     // Can't use magic cookies or placeholder species.
     if (!is_valid_species(sp))
     {
@@ -230,6 +228,21 @@ void wizard_change_species()
     init_player_doll();
 #endif
     redraw_screen();
+}
+
+void wizard_change_species()
+{
+    char specs[80];
+
+    msgwin_get_line("What species would you like to be now? " ,
+                    specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return;
+
+    species_type sp = _find_species(specs);
+
+    _wizard_change_species_to(sp);
 }
 #endif
 
@@ -1132,6 +1145,29 @@ static bool _chardump_check_stats3(const vector<string> &tokens)
     return false;
 }
 
+static bool _chardump_check_char(const vector<string> &tokens)
+{
+    size_t size = tokens.size();
+
+    if (size <= 8)
+        return false;
+
+    for (size_t k = 1; k < size; k++)
+    {
+        if (tokens[k] == "Turns:")
+        {
+            string race = tokens[k-2].substr(1);
+            string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
+
+            _wizard_change_species_to(_find_species(race));
+            // XXX role
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static void _wizard_modify_character(string inputdata)
 {
     vector<string> tokens = split_string(" ", inputdata);
@@ -1143,6 +1179,8 @@ static void _wizard_modify_character(string inputdata)
     if (_chardump_check_stats2(tokens))
         return;
     if (_chardump_check_stats3(tokens))
+        return;
+    if (_chardump_check_char(tokens))
         return;
 }
 
