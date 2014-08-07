@@ -562,7 +562,7 @@ bool melee_attack::handle_phase_hit()
         mprf("%s %s %s but %s no damage.",
              attacker->name(DESC_THE).c_str(),
              attack_verb.c_str(),
-             defender->name(DESC_THE).c_str(),
+             defender_name().c_str(),
              attacker->is_player() ? "do" : "does");
     }
 
