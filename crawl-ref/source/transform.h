@@ -18,10 +18,11 @@ public:
          string _description,
          int _blocked_slots,
          size_type _size, int _stealth_mod,
-         int _base_unarmed_damage,
+         int _unarmed_hit_bonus, int _base_unarmed_damage,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     blocked_slots(_blocked_slots), size(_size),
+    unarmed_hit_bonus(_unarmed_hit_bonus),
     long_name(_long_name), description(_description),
     stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
@@ -44,6 +45,7 @@ public:
     const string wiz_name;
     const int blocked_slots;
     const size_type size;
+    const int unarmed_hit_bonus;
 
 protected:
     const string long_name;
