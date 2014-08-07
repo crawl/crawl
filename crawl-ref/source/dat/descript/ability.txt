@@ -762,10 +762,11 @@ Sacrifices cannot be taken back.
 Sacrifice Sanity ability
 
 Adherents who choose to sacrifice their sanity become terrified of dangerous
-monsters. Such monsters fill them with horror, which interferes with their
-combat and spellcasting abilties. If you make this sacrifice, your powers
-granted by Ru will become stronger in proportion to the value of the
-sacrifice, and you may gain new powers as well.
+monsters. Such monsters fill them with horror, which reduces the adherents'
+ability to hit and damage monsters in combat, and the power of the adherents'
+spells. If you make this sacrifice, your powers granted by Ru will become
+stronger in proportion to the value of the sacrifice, and you may gain new
+powers as well.
 
 Sacrifices cannot be taken back.
 %%%%

@@ -385,8 +385,6 @@ int spell_fail(spell_type spell)
     chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
-    if (you.duration[DUR_HORROR])
-        chance2 += div_rand_round(3 * you.props["horror_penalty"].get_int(), 2);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
@@ -467,6 +465,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         {
             power *= 10 + 4 * augmentation_amount();
             power /= 10;
+        }
+
+        // Each level of horror reduces spellpower by 10%
+        if (you.duration[DUR_HORROR] && !fail_rate_check)
+        {
+            power *= 10;
+            power /= 10 + (you.props["horror_penalty"].get_int() * 3) / 2 ;
         }
 
         power = stepdown_value(power / 100, 50, 50, 150, 200);
