@@ -3038,13 +3038,11 @@ static void _felid_extra_life()
  * @param aux                     A string describing the cause of the level
  *                                change.
  * @param skip_attribute_increase If true and XL has increased, don't process
- *                                stat gains.
+ *                                stat gains. Currently only used by wizmode
+ *                                commands.
  */
 void level_change(int source, const char* aux, bool skip_attribute_increase)
 {
-    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
-                      || crawl_state.repeat_cmd == CMD_WIZARD;
-
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
     you.redraw_experience = true;
@@ -3055,7 +3053,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))
     {
-        if (!skip_attribute_increase && !wiz_cmd)
+        if (!skip_attribute_increase)
         {
             crawl_state.cancel_cmd_all();
 
@@ -3113,12 +3111,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             switch (you.species)
             {
             case SP_HUMAN:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_HIGH_ELF:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3127,12 +3125,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_ELF:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3153,7 +3151,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat(coinflip() ? STAT_STR
                                            : STAT_INT, 1, false,
@@ -3162,12 +3160,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_HALFLING:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_DEX, 1, false, "level gain");
                 break;
 
             case SP_KOBOLD:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3179,7 +3177,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 #if TAG_MAJOR_VERSION == 34
             case SP_LAVA_ORC:
 #endif
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
@@ -3214,7 +3212,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (!(you.experience_level % 3))
@@ -3232,12 +3230,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_OGRE:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
@@ -3297,7 +3295,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     you.redraw_armour_class = true;
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 14)
@@ -3321,7 +3319,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_CENTAUR:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3330,12 +3328,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_DEMIGOD:
-                if (!(you.experience_level % 2))
+                if (!(you.experience_level % 2) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_SPRIGGAN:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3344,7 +3342,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_MINOTAUR:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3400,18 +3398,18 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     }
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
             }
 
             case SP_GHOUL:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_TENGU:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 5)
@@ -3421,12 +3419,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_MERFOLK:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_FELID:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3442,19 +3440,19 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_OCTOPODE:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
 #if TAG_MAJOR_VERSION == 34
             case SP_DJINNI:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
 #endif
             case SP_FORMICID:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_INT), 1, false,
@@ -3463,7 +3461,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_GARGOYLE:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_INT), 1, false,
@@ -3478,7 +3476,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_VINE_STALKER:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
