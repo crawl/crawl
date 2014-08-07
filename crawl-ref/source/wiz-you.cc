@@ -1151,3 +1151,19 @@ void wizard_load_dump_file()
         canned_msg(MSG_NOTHING_THERE);
     }
 }
+
+void wizard_join_religion()
+{
+    god_type god = choose_god();
+    if (god == GOD_NO_GOD)
+    {
+        if (you_worship(GOD_NO_GOD))
+            mpr("You already have no god!");
+        else
+            excommunication();
+    }
+    else
+    {
+        join_religion(god, true);
+    }
+}
