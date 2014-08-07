@@ -3133,7 +3133,7 @@ void move_child_tentacles(monster* mons)
         {
             actor::constricting_t::const_iterator it = tentacle->constricting->begin();
             constrictee = actor_by_mid(it->first);
-            if (grd(old_pos) >= DNGN_SHALLOW_WATER
+            if (feat_has_solid_floor(grd(old_pos))
                 && constrictee->is_habitable(old_pos))
             {
                 pull_constrictee = true;

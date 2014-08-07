@@ -150,7 +150,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
         return;
     }
 
-    if (feat <= DNGN_LAVA)
+    if (feat_is_solid(feat) || feat == DNGN_LAVA)
         return;
 
     const bool ink_only = (feat == DNGN_DEEP_WATER);

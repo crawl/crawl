@@ -128,14 +128,14 @@ static feature_def feat_defs[] =
     DNGN_GRATE, "iron grate", "iron_grate",
     DCHAR_GRATE, DCHAR_WALL_MAGIC, 0, 0,
     COLOUR_IS(LIGHTBLUE),
-    FFT_NONE | FFT_SOLID, MF_WALL,
+    FFT_SOLID, MF_WALL,
 },
 
 {
     DNGN_OPEN_SEA, "the open sea", "open_sea",
     DCHAR_WALL, NUM_DCHAR_TYPES, 0, 0,
     COLOUR_IS(BLUE),
-    FFT_NONE | FFT_SOLID, MF_DEEP_WATER,
+    FFT_SOLID, MF_DEEP_WATER,
 },
 
 {

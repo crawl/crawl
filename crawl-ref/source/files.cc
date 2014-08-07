@@ -802,25 +802,26 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (stair_taken == DNGN_ENTER_HELL)
         return DNGN_EXIT_HELL;
 
-    if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-                         && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    if (player_in_hell() && feat_is_stone_stair_down(stair_taken))
     {
         find_first = false;
         return DNGN_ENTER_HELL;
     }
 
-    if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-        && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    if (feat_is_stone_stair(stair_taken))
     {
-        // Look for corresponding up stair.
-        return stair_taken + DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I;
-    }
+        switch (stair_taken)
+        {
+        case DNGN_STONE_STAIRS_UP_I: return DNGN_STONE_STAIRS_DOWN_I;
+        case DNGN_STONE_STAIRS_UP_II: return DNGN_STONE_STAIRS_DOWN_II;
+        case DNGN_STONE_STAIRS_UP_III: return DNGN_STONE_STAIRS_DOWN_III;
 
-    if (stair_taken >= DNGN_STONE_STAIRS_UP_I
-        && stair_taken <= DNGN_STONE_STAIRS_UP_III)
-    {
-        // Look for coresponding down stair.
-        return stair_taken + DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I;
+        case DNGN_STONE_STAIRS_DOWN_I: return DNGN_STONE_STAIRS_UP_I;
+        case DNGN_STONE_STAIRS_DOWN_II: return DNGN_STONE_STAIRS_UP_II;
+        case DNGN_STONE_STAIRS_DOWN_III: return DNGN_STONE_STAIRS_UP_III;
+
+        default: die("unknown stone stair %d", stair_taken);
+        }
     }
 
     if (feat_is_escape_hatch(stair_taken))
@@ -842,8 +843,13 @@ static int _get_dest_stair_type(branch_type old_branch,
         die("return corresponding to entry %d not found", stair_taken);
     }
 
-    if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
+    if (stair_taken == DNGN_ENTER_DIS
+        || stair_taken == DNGN_ENTER_GEHENNA
+        || stair_taken == DNGN_ENTER_COCYTUS
+        || stair_taken == DNGN_ENTER_TARTARUS)
+    {
         return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+    }
 
     if (stair_taken == DNGN_ENTER_LABYRINTH)
     {

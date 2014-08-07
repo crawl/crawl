@@ -173,8 +173,8 @@ static void _update_feat_at(const coord_def &gp)
     if (you.made_nervous_by(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (feat >= DNGN_STONE_STAIRS_DOWN_I
-        && feat <= DNGN_ESCAPE_HATCH_UP
+    if ((feat_is_stone_stair(feat)
+         || feat_is_escape_hatch(feat))
         && is_exclude_root(gp))
     {
         env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;

@@ -24,7 +24,7 @@ static bool allow_bleeding_on_square(const coord_def& where)
         return false;
 
     // No spattering into lava or water.
-    if (grd(where) >= DNGN_LAVA && grd(where) < DNGN_FLOOR)
+    if (feat_is_lava(grd(where)) || feat_is_water(grd(where)))
         return false;
 
     // No spattering into fountains (other than blood).

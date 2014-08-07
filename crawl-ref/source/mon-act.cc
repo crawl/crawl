@@ -296,7 +296,7 @@ static void _swim_or_move_energy(monster* mon, bool diag = false)
     const dungeon_feature_type feat = grd(mon->pos());
 
     // FIXME: Replace check with mons_is_swimming()?
-    mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+    mon->lose_energy(((feat_is_lava(feat) || feat_is_water(feat))
                       && mon->ground_level()) ? EUT_SWIM : EUT_MOVE,
                       diag ? 10 : 1, diag ? 14 : 1);
 }

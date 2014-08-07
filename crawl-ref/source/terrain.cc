@@ -73,16 +73,29 @@ bool feat_is_wall(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_WALL;
 }
 
+/** Is this feature one of the main stone downstairs of a level?
+ */
+bool feat_is_stone_stair_down(dungeon_feature_type feat)
+{
+     return feat == DNGN_STONE_STAIRS_DOWN_I
+            || feat == DNGN_STONE_STAIRS_DOWN_II
+            || feat == DNGN_STONE_STAIRS_DOWN_III;
+}
+
+/** Is this feature one of the main stone upstairs of a level?
+ */
+bool feat_is_stone_stair_up(dungeon_feature_type feat)
+{
+    return feat == DNGN_STONE_STAIRS_UP_I
+           || feat == DNGN_STONE_STAIRS_UP_II
+           || feat == DNGN_STONE_STAIRS_UP_III;
+}
+
 /** Is this feature one of the main stone stairs of a level?
  */
 bool feat_is_stone_stair(dungeon_feature_type feat)
 {
-    return feat == DNGN_STONE_STAIRS_UP_I
-           || feat == DNGN_STONE_STAIRS_UP_II
-           || feat == DNGN_STONE_STAIRS_UP_III
-           || feat == DNGN_STONE_STAIRS_DOWN_I
-           || feat == DNGN_STONE_STAIRS_DOWN_II
-           || feat == DNGN_STONE_STAIRS_DOWN_III;
+    return feat_is_stone_stair_up(feat) || feat_is_stone_stair_down(feat);
 }
 
 /** Is it possible to call this feature a staircase? (purely cosmetic)
@@ -144,10 +157,13 @@ bool feat_is_branch_exit(dungeon_feature_type feat)
     return false;
 }
 
-/** Is this feature an entrance to a portal vault?
+/** Is this feature an entrance to a portal branch?
  */
 bool feat_is_portal_entrance(dungeon_feature_type feat)
 {
+    // These are have different rules from normal connected branches, but they
+    // also have different rules from "portal vaults," and are more similar to
+    // real branches in some respects.
     if (feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM)
         return false;
 
@@ -167,7 +183,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
     return false;
 }
 
-/** Is this feature the exit to a portal vault?
+/** Counterpart to feat_is_portal_entrance.
  */
 bool feat_is_portal_exit(dungeon_feature_type feat)
 {
@@ -422,6 +438,31 @@ bool feat_is_lava(dungeon_feature_type feat)
     return feat == DNGN_LAVA || feat == DNGN_LAVA_SEA;
 }
 
+static int _god_altars[][2] =
+{
+    { GOD_ZIN, DNGN_ALTAR_ZIN },
+    { GOD_SHINING_ONE, DNGN_ALTAR_SHINING_ONE },
+    { GOD_KIKUBAAQUDGHA, DNGN_ALTAR_KIKUBAAQUDGHA },
+    { GOD_YREDELEMNUL, DNGN_ALTAR_YREDELEMNUL },
+    { GOD_XOM, DNGN_ALTAR_XOM },
+    { GOD_VEHUMET, DNGN_ALTAR_VEHUMET },
+    { GOD_OKAWARU, DNGN_ALTAR_OKAWARU },
+    { GOD_MAKHLEB, DNGN_ALTAR_MAKHLEB },
+    { GOD_SIF_MUNA, DNGN_ALTAR_SIF_MUNA },
+    { GOD_TROG, DNGN_ALTAR_TROG },
+    { GOD_NEMELEX_XOBEH, DNGN_ALTAR_NEMELEX_XOBEH },
+    { GOD_ELYVILON, DNGN_ALTAR_ELYVILON },
+    { GOD_LUGONU, DNGN_ALTAR_LUGONU },
+    { GOD_BEOGH, DNGN_ALTAR_BEOGH },
+    { GOD_JIYVA, DNGN_ALTAR_JIYVA },
+    { GOD_FEDHAS, DNGN_ALTAR_FEDHAS },
+    { GOD_CHEIBRIADOS, DNGN_ALTAR_CHEIBRIADOS },
+    { GOD_ASHENZARI, DNGN_ALTAR_ASHENZARI },
+    { GOD_DITHMENOS, DNGN_ALTAR_DITHMENOS },
+    { GOD_GOZAG, DNGN_ALTAR_GOZAG },
+    { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
+};
+
 /** Whose altar is this feature?
  *
  *  @param feat the feature.
@@ -429,14 +470,9 @@ bool feat_is_lava(dungeon_feature_type feat)
  */
 god_type feat_altar_god(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (feat == DNGN_ALTAR_GOZAG)
-        return GOD_GOZAG;
-    if (feat == DNGN_ALTAR_QAZLAL)
-        return GOD_QAZLAL;
-#endif
-    if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
-        return static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1);
+    for (unsigned i = 0; i < ARRAYSZ(_god_altars); i++)
+        if ((dungeon_feature_type) _god_altars[i][1] == feat)
+            return (god_type) _god_altars[i][0];
 
     return GOD_NO_GOD;
 }
@@ -448,17 +484,12 @@ god_type feat_altar_god(dungeon_feature_type feat)
  */
 dungeon_feature_type altar_for_god(god_type god)
 {
-    if (god == GOD_NO_GOD || god >= NUM_GODS)
-        return DNGN_FLOOR;
 
-#if TAG_MAJOR_VERSION == 34
-    if (god == GOD_GOZAG)
-        return DNGN_ALTAR_GOZAG;
-    if (god == GOD_QAZLAL)
-        return DNGN_ALTAR_QAZLAL;
-#endif
+    for (unsigned i = 0; i < ARRAYSZ(_god_altars); i++)
+        if ((god_type) _god_altars[i][0] == god)
+            return (dungeon_feature_type) _god_altars[i][1];
 
-    return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+    return DNGN_FLOOR;
 }
 
 /** Is this feature an altar to any god?
@@ -1068,7 +1099,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (nfeat < DNGN_TRAP_MECHANICAL || nfeat > DNGN_UNDISCOVERED_TRAP)
+        if (feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 

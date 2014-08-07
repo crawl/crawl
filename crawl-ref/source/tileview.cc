@@ -545,15 +545,15 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     {
         for (int y = 0; y < GYM; y++)
         {
-            if (grd[x][y] < DNGN_FLOOR)
+            if (!feat_has_dry_floor(grd[x][y]))
                 continue;
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR);
-            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR);
-            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR);
-            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR);
+            bool l_flr = (x > 0 && feat_has_dry_floor(grd[x-1][y]));
+            bool r_flr = (x < GXM - 1 && feat_has_dry_floor(grd[x+1][y]));
+            bool u_flr = (y > 0 && feat_has_dry_floor(grd[x][y-1]));
+            bool d_flr = (y < GYM - 1 && feat_has_dry_floor(grd[x][y+1]));
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);
