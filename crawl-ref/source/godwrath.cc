@@ -1622,6 +1622,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:
+    case GOD_RU:
         // No reduction with time.
         return false;
 
