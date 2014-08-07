@@ -2453,48 +2453,15 @@ int melee_attack::calc_to_hit(bool random)
 {
     int mhit = attack::calc_to_hit(random);
 
-    if (attacker->is_player())
+    if (attacker->is_player() && !weapon)
     {
-        // other stuff
-        if (!weapon)
-        {
-            if (you.duration[DUR_CONFUSING_TOUCH])
-            {
-                // Just trying to touch is easier that trying to damage.
-                mhit += maybe_random2(you.dex(), random);
-            }
+        // Just trying to touch is easier than trying to damage.
+        if (you.duration[DUR_CONFUSING_TOUCH])
+            mhit += maybe_random2(you.dex(), random);
 
-            // TODO: Review this later (transformations getting extra hit
-            // almost across the board seems bad) - Cryp71c
-            switch (you.form)
-            {
-            case TRAN_SPIDER:
-            case TRAN_ICE_BEAST:
-            case TRAN_DRAGON:
-            case TRAN_LICH:
-            case TRAN_FUNGUS:
-            case TRAN_TREE:
-            case TRAN_WISP:
-                mhit += maybe_random2(10, random);
-                break;
-            case TRAN_BAT:
-            case TRAN_BLADE_HANDS:
-                mhit += maybe_random2(12, random);
-                break;
-            case TRAN_STATUE:
-                mhit += maybe_random2(9, random);
-                break;
-            case TRAN_PORCUPINE:
-            case TRAN_PIG:
-            case TRAN_APPENDAGE:
-#if TAG_MAJOR_VERSION == 34
-            case TRAN_JELLY:
-#endif
-            case TRAN_SHADOW:
-            case TRAN_NONE:
-                break;
-            }
-        }
+        // TODO: Review this later (transformations getting extra hit
+        // almost across the board seems bad) - Cryp71c
+        mhit += maybe_random2(get_form()->unarmed_hit_bonus, random);
     }
 
     return mhit;

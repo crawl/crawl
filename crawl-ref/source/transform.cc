@@ -155,7 +155,7 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -168,7 +168,7 @@ public:
            "a venomous arachnid creature.",  // description
            EQF_PHYSICAL,  // blocked slots
            SIZE_TINY, 21,    // size, stealth mod
-           5,                 // base unarmed damage
+           10, 5,                 // unarmed acc bonus, base unarmed damage
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -181,12 +181,12 @@ public:
            "",  // description
            EQF_HANDS,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
-           -1,                 // base unarmed damage
+           12, -1,                 // unarmed acc bonus, base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
 
     /**
-     * Find the player's base unarmed damage in this form.
+     * Find the player's unarmed acc bonus, base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -214,12 +214,12 @@ public:
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
-           -1,                 // base unarmed damage
+           9, -1,                 // unarmed acc bonus, base unarmed damage
            MONS_STATUE)       // equivalent monster
     { };
 
     /**
-     * Find the player's base unarmed damage in this form.
+     * Find the player's unarmed acc bonus, base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -235,7 +235,7 @@ public:
            "a creature of crystalline ice.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_LARGE, 15,    // size, stealth mod
-           12,                 // base unarmed damage
+           10, 12,                 // unarmed acc bonus, base unarmed damage
            MONS_ICE_BEAST)       // equivalent monster
     { };
 };
@@ -248,7 +248,7 @@ public:
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_GIANT, 6,    // size, stealth mod
-           -1,                 // base unarmed damage
+           10, -1,                 // unarmed acc bonus, base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -265,7 +265,7 @@ public:
     }
 
     /**
-     * Find the player's base unarmed damage in this form.
+     * Find the player's unarmed acc bonus, base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -281,7 +281,7 @@ public:
            "a lich.",  // description
            EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
-           5,                 // base unarmed damage
+           10, 5,                 // unarmed acc bonus, base unarmed damage
            MONS_LICH)       // equivalent monster
     { };
 };
@@ -294,7 +294,7 @@ public:
            "",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_TINY, 17,    // size, stealth mod
-           -1,                 // base unarmed damage
+           12, -1,                 // unarmed acc bonus, base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -323,7 +323,7 @@ public:
     }
 
     /**
-     * Find the player's base unarmed damage in this form.
+     * Find the player's unarmed acc bonus, base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -346,7 +346,7 @@ public:
            "a filthy swine.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_SMALL, 9,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -359,7 +359,7 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -386,7 +386,7 @@ public:
            "a tree.",  // description
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
            SIZE_CHARACTER, 27,    // size, stealth mod
-           12,                 // base unarmed damage
+           10, 12,                 // unarmed acc bonus, base unarmed damage
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
@@ -399,7 +399,7 @@ public:
            "a porcupine.",  // description
            EQF_ALL,  // blocked slots
            SIZE_TINY, 12,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -412,7 +412,7 @@ public:
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
            SIZE_TINY, 21,    // size, stealth mod
-           5,                 // base unarmed damage
+           10, 5,                 // unarmed acc bonus, base unarmed damage
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
@@ -426,7 +426,7 @@ public:
            "a lump of jelly.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_CHARACTER, 21,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -440,7 +440,7 @@ public:
            "a sentient fungus.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_TINY, 30,    // size, stealth mod
-           12,                 // base unarmed damage
+           10, 12,                 // unarmed acc bonus, base unarmed damage
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -453,11 +453,10 @@ public:
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 30,    // size, stealth mod
-           3,                 // base unarmed damage
+           0, 3,                 // unarmed acc bonus, base unarmed damage
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };
-
 
 static const FormNone FORM_NONE = FormNone();
 static const FormSpider FORM_SPIDER = FormSpider();
