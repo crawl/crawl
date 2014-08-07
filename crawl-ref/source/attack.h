@@ -189,10 +189,9 @@ protected:
                                             | ISFLAG_KNOW_PLUSES);
 
     int modify_blood_amount(const int damage, const int dam_type);
-    // TODO: Used in elemental brand dmg, definitely want to get rid of this
-    // which we can't really do until we refactor the whole pronoun / desc
-    // usage from these lowly classes all the way up to monster/player (and
-    // actor) classes.
+    // TODO: Definitely want to get rid of this, which we can't really do
+    // until we refactor the whole pronoun / desc usage from these lowly
+    // classes all the way up to monster/player (and actor) classes.
     string defender_name();
 
     attack_flavour random_chaos_attack_flavour();
