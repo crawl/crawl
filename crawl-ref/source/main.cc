@@ -745,7 +745,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
     case '^': wizard_set_piety();                    break;
-    case '_': zotdef_create_altar(true);             break;
+    case '_': wizard_join_religion();                break;
     case '-': wizard_get_god_gift();                 break;
     case '\'': wizard_list_items();                  break;
     case 'd': wizard_level_travel(true);             break;

@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <cmath>
+#include <functional>
 
 #include "externs.h"
 
@@ -2701,7 +2702,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(god_type new_god)
+void excommunication(god_type new_god, bool immediate)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -2736,7 +2737,8 @@ void excommunication(god_type new_god)
     you.redraw_quiver = true;
 
     mpr("You have lost your religion!");
-    more();
+    if (!immediate)
+        more();
 
     if (old_god == GOD_BEOGH)
     {
@@ -3310,120 +3312,8 @@ static void _god_welcome_handle_gear()
     }
 }
 
-void god_pitch(god_type which_god)
+void join_religion(god_type which_god, bool immediate)
 {
-    if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
-        mpr("You bow before the missionary of Beogh.");
-    else
-    {
-        mprf("You %s the altar of %s.",
-         you.form == TRAN_WISP   ? "swirl around" :
-         you.form == TRAN_BAT    ? "perch on" :
-         you.form == TRAN_DRAGON ? "bow your head before" :
-         you.flight_mode()       ? "hover solemnly before" :
-         you.form == TRAN_STATUE ? "place yourself before" :
-         you.form == TRAN_ICE_BEAST
-             || you.form == TRAN_PIG    ? "bow your head before" :
-         you.form == TRAN_SPIDER ? "crawl onto" :
-         you.form == TRAN_TREE   ? "sway towards" :
-         you.form == TRAN_FUNGUS ? "release spores on" :
-         you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
-         you.species == SP_NAGA  ? "coil in front of" :
-         you.species == SP_OCTOPODE  ? "curl up in front of" :
-         // < TGWi> you curl up on the altar and go to sleep
-         you.species == SP_FELID ? "sit before" :
-                                   "kneel at",
-         god_name(which_god).c_str());
-    }
-    more();
-
-    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
-
-    // Note: using worship we could make some gods not allow followers to
-    // return, or not allow worshippers from other religions. - bwr
-
-    // Gods can be racist...
-    if (!player_can_join_god(which_god))
-    {
-        you.turn_is_over = false;
-        if (which_god == GOD_SIF_MUNA)
-        {
-            simple_god_message(" does not accept worship from the ignorant!",
-                               which_god);
-        }
-        else if (which_god == GOD_GOZAG)
-        {
-            simple_god_message(" does not accept service from beggars like you!",
-                               which_god);
-            if (you.gold == 0)
-            {
-                mprf("The service fee for joining is currently %d gold; you have"
-                     " none.", fee);
-            }
-            else
-            {
-                mprf("The service fee for joining is currently %d gold; you only"
-                     " have %d.", fee, you.gold);
-            }
-        }
-        else if (!_transformed_player_can_join_god(which_god))
-        {
-            simple_god_message(" says: How dare you come in such a loathsome"
-                               " form!",
-                               which_god);
-        }
-        else
-        {
-            simple_god_message(" does not accept worship from those such as"
-                               " you!",
-                               which_god);
-        }
-        return;
-    }
-
-    if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
-    {
-        you.turn_is_over = false;
-        simple_god_message(" refuses to forgive you so easily!", which_god);
-        return;
-    }
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "god_pitch");
-#endif
-
-    describe_god(which_god, false);
-
-    string service_fee = "";
-    if (which_god == GOD_GOZAG)
-    {
-        if (fee == 0)
-        {
-            service_fee = string("Gozag will waive the service fee if you ")
-                          + (coinflip() ? "act now" : "join today") + "!\n";
-        }
-        else
-        {
-            service_fee = make_stringf(
-                    "The service fee for joining is currently %d gold; you"
-                    " currently have %d.\n",
-                    fee, you.gold);
-        }
-    }
-    snprintf(info, INFO_SIZE, "%sDo you wish to %sjoin this religion?",
-             service_fee.c_str(),
-             (you.worshipped[which_god]) ? "re" : "");
-
-    cgotoxy(1, 18, GOTO_CRT);
-    textcolor(channel_to_colour(MSGCH_PROMPT));
-    if (!yesno(info, false, 'n', true, true, false, NULL, GOTO_CRT))
-    {
-        you.turn_is_over = false; // Okay, opt out.
-        redraw_screen();
-        return;
-    }
-
-    // OK, so join the new religion.
     redraw_screen();
 
     const god_type old_god = you.religion;
@@ -3431,7 +3321,7 @@ void god_pitch(god_type which_god)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(which_god);
+        excommunication(which_god, immediate);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3462,7 +3352,8 @@ void god_pitch(god_type which_god)
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
-    more();
+    if (!immediate)
+        more();
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs berserk usable.
@@ -3658,6 +3549,7 @@ void god_pitch(god_type which_god)
     if (you_worship(GOD_GOZAG))
     {
         bool needs_redraw = false;
+        const int fee = gozag_service_fee();
         if (fee > 0)
         {
             mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
@@ -3707,6 +3599,140 @@ void god_pitch(god_type which_god)
 #endif
 
     learned_something_new(HINT_CONVERT);
+}
+
+void god_pitch(god_type which_god)
+{
+    if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
+        mpr("You bow before the missionary of Beogh.");
+    else
+    {
+        mprf("You %s the altar of %s.",
+         you.form == TRAN_WISP   ? "swirl around" :
+         you.form == TRAN_BAT    ? "perch on" :
+         you.form == TRAN_DRAGON ? "bow your head before" :
+         you.flight_mode()       ? "hover solemnly before" :
+         you.form == TRAN_STATUE ? "place yourself before" :
+         you.form == TRAN_ICE_BEAST
+             || you.form == TRAN_PIG    ? "bow your head before" :
+         you.form == TRAN_SPIDER ? "crawl onto" :
+         you.form == TRAN_TREE   ? "sway towards" :
+         you.form == TRAN_FUNGUS ? "release spores on" :
+         you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
+         you.species == SP_NAGA  ? "coil in front of" :
+         you.species == SP_OCTOPODE  ? "curl up in front of" :
+         // < TGWi> you curl up on the altar and go to sleep
+         you.species == SP_FELID ? "sit before" :
+                                   "kneel at",
+         god_name(which_god).c_str());
+    }
+    more();
+
+    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
+
+    // Note: using worship we could make some gods not allow followers to
+    // return, or not allow worshippers from other religions. - bwr
+
+    // Gods can be racist...
+    if (!player_can_join_god(which_god))
+    {
+        you.turn_is_over = false;
+        if (which_god == GOD_SIF_MUNA)
+        {
+            simple_god_message(" does not accept worship from the ignorant!",
+                               which_god);
+        }
+        else if (which_god == GOD_GOZAG)
+        {
+            simple_god_message(" does not accept service from beggars like you!",
+                               which_god);
+            if (you.gold == 0)
+            {
+                mprf("The service fee for joining is currently %d gold; you have"
+                     " none.", fee);
+            }
+            else
+            {
+                mprf("The service fee for joining is currently %d gold; you only"
+                     " have %d.", fee, you.gold);
+            }
+        }
+        else if (!_transformed_player_can_join_god(which_god))
+        {
+            simple_god_message(" says: How dare you come in such a loathsome"
+                               " form!",
+                               which_god);
+        }
+        else
+        {
+            simple_god_message(" does not accept worship from those such as"
+                               " you!",
+                               which_god);
+        }
+        return;
+    }
+
+    if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
+    {
+        you.turn_is_over = false;
+        simple_god_message(" refuses to forgive you so easily!", which_god);
+        return;
+    }
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "god_pitch");
+#endif
+
+    describe_god(which_god, false);
+
+    string service_fee = "";
+    if (which_god == GOD_GOZAG)
+    {
+        if (fee == 0)
+        {
+            service_fee = string("Gozag will waive the service fee if you ")
+                          + (coinflip() ? "act now" : "join today") + "!\n";
+        }
+        else
+        {
+            service_fee = make_stringf(
+                    "The service fee for joining is currently %d gold; you"
+                    " currently have %d.\n",
+                    fee, you.gold);
+        }
+    }
+    snprintf(info, INFO_SIZE, "%sDo you wish to %sjoin this religion?",
+             service_fee.c_str(),
+             (you.worshipped[which_god]) ? "re" : "");
+
+    cgotoxy(1, 18, GOTO_CRT);
+    textcolor(channel_to_colour(MSGCH_PROMPT));
+    if (!yesno(info, false, 'n', true, true, false, NULL, GOTO_CRT))
+    {
+        you.turn_is_over = false; // Okay, opt out.
+        redraw_screen();
+        return;
+    }
+
+    // OK, so join the new religion.
+    join_religion(which_god);
+}
+
+god_type choose_god()
+{
+    char specs[80];
+
+    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return GOD_NO_GOD;
+
+    string spec = lowercase_string(specs);
+
+    // Skip GOD_NO_GOD
+    return find_earliest_match(spec, (god_type) 1, NUM_GODS,
+                               _always_true<god_type>,
+                               bind2nd(ptr_fun(god_name), false));
 }
 
 int had_gods()
