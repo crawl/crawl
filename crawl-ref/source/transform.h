@@ -14,28 +14,40 @@
 class Form
 {
 public:
-    Form(const char *_name, int _blocked_slots,
+    Form(string _short_name, string _long_name, string _wiz_name,
+         string _description,
+         int _blocked_slots,
          size_type _size, int _stealth_mod,
          int _base_unarmed_damage,
          monster_type _equivalent_mons) :
-    name(_name), blocked_slots(_blocked_slots),
-    size(_size), stealth_mod(_stealth_mod),
+    short_name(_short_name), wiz_name(_wiz_name),
+    blocked_slots(_blocked_slots), size(_size),
+    long_name(_long_name), description(_description),
+    stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
     equivalent_mons(_equivalent_mons)
     { };
 
     bool slot_available(int slot) const;
     bool can_wear_item(const item_def& item) const;
+
     virtual monster_type get_equivalent_mons() const { return equivalent_mons; }
+
+    virtual string get_long_name() const { return long_name; }
+    virtual string get_description(bool past_tense = false) const;
+
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
 
 public:
-    const char* const name;
+    const string short_name;
+    const string wiz_name;
     const int blocked_slots;
     const size_type size;
 
 protected:
+    const string long_name;
+    const string description;
     const int stealth_mod;
     const int base_unarmed_damage;
 

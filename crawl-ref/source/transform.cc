@@ -120,6 +120,20 @@ bool Form::can_wear_item(const item_def& item) const
 }
 
 /**
+ * Get a verbose description for the form.
+ *
+ * @param past_tense     Whether the description should be in past or present
+ *                       tense.
+ * @return               A description for the form.
+ */
+string Form::get_description(bool past_tense) const
+{
+    return make_stringf("You %s %s",
+                        past_tense ? "were" : "are",
+                        description.c_str());
+}
+
+/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -137,7 +151,9 @@ class FormNone : public Form
 {
 public:
     FormNone()
-    : Form("none", EQF_NONE,  // name, blocked slots
+    : Form("", "", "none", // short name, long name, wizmode name
+           "",  // description
+           EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
@@ -148,7 +164,9 @@ class FormSpider : public Form
 {
 public:
     FormSpider()
-    : Form("spider", EQF_PHYSICAL,  // name, blocked slots
+    : Form("Spider", "spider-form", "spider", // short name, long name, wizmode name
+           "a venomous arachnid creature.",  // description
+           EQF_PHYSICAL,  // blocked slots
            SIZE_TINY, 21,    // size, stealth mod
            5,                 // base unarmed damage
            MONS_SPIDER)       // equivalent monster
@@ -159,7 +177,9 @@ class FormBlade : public Form
 {
 public:
     FormBlade()
-    : Form("blade", EQF_HANDS,  // name, blocked slots
+    : Form("Blade", "", "blade", // short name, long name, wizmode name
+           "",  // description
+           EQF_HANDS,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
            -1,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
@@ -172,13 +192,27 @@ public:
     {
         return 8 + div_rand_round(you.strength() + you.dex(), 3);
     }
+
+    string get_long_name() const
+    {
+        return "blade " + blade_parts(true);
+    }
+
+    string get_description(bool past_tense) const
+    {
+        return make_stringf("You %s blades for %s.",
+                            past_tense ? "had" : "have",
+                            blade_parts().c_str());
+    }
 };
 
 class FormStatue : public Form
 {
 public:
     FormStatue()
-    : Form("statue", EQF_STATUE,  // name, blocked slots
+    : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
+           "a stone statue.",  // description
+           EQF_STATUE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
            -1,                 // base unarmed damage
            MONS_STATUE)       // equivalent monster
@@ -197,7 +231,9 @@ class FormIce : public Form
 {
 public:
     FormIce()
-    : Form("ice", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+    : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
+           "a creature of crystalline ice.",  // description
+           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_LARGE, 15,    // size, stealth mod
            12,                 // base unarmed damage
            MONS_ICE_BEAST)       // equivalent monster
@@ -208,7 +244,9 @@ class FormDragon : public Form
 {
 public:
     FormDragon()
-    : Form("dragon", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+    : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
+           "a fearsome dragon!",  // description
+           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_GIANT, 6,    // size, stealth mod
            -1,                 // base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
@@ -239,7 +277,9 @@ class FormLich : public Form
 {
 public:
     FormLich()
-    : Form("lich", EQF_NONE,  // name, blocked slots
+    : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
+           "a lich.",  // description
+           EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
            5,                 // base unarmed damage
            MONS_LICH)       // equivalent monster
@@ -250,7 +290,9 @@ class FormBat : public Form
 {
 public:
     FormBat()
-    : Form("bat", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+    : Form("Bat", "bat-form", "bat", // short name, long name, wizmode name
+           "",  // description
+           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_TINY, 17,    // size, stealth mod
            -1,                 // base unarmed damage
            MONS_PROGRAM_BUG)       // equivalent monster
@@ -287,13 +329,22 @@ public:
     {
         return you.species == SP_VAMPIRE ? 2 : 1;
     }
+
+    string get_description(bool past_tense) const
+    {
+        return make_stringf("You %s in %sbat-form.",
+                            past_tense ? "were" : "are",
+                            you.species == SP_VAMPIRE ?  "vampire-" : "");
+    }
 };
 
 class FormPig : public Form
 {
 public:
     FormPig()
-    : Form("pig", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+    : Form("Pig", "pig-form", "pig", // short name, long name, wizmode name
+           "a filthy swine.",  // description
+           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_SMALL, 9,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_HOG)       // equivalent monster
@@ -304,18 +355,36 @@ class FormAppendage : public Form
 {
 public:
     FormAppendage()
-    : Form("appendage", EQF_NONE,  // name, blocked slots
+    : Form("App", "appendage", "appendage", // short name, long name, wizmode name
+           "",  // description
+           EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 0,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_PLAYER)       // equivalent monster
     { };
+
+    string get_description(bool past_tense) const
+    {
+        if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
+        {
+            return make_stringf("One of your tentacles %s a temporary spike.",
+                                 past_tense ? "had" : "has");
+        }
+
+        return make_stringf("You %s grown temporary %s.",
+                            past_tense ? "had" : "have",
+                            mutation_name((mutation_type)
+                                          you.attribute[ATTR_APPENDAGE]));
+    }
 };
 
 class FormTree : public Form
 {
 public:
     FormTree()
-    : Form("tree", EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // name, blocked slots
+    : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
+           "a tree.",  // description
+           EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
            SIZE_CHARACTER, 27,    // size, stealth mod
            12,                 // base unarmed damage
            MONS_ANIMATED_TREE)       // equivalent monster
@@ -326,7 +395,9 @@ class FormPorcupine: public Form
 {
 public:
     FormPorcupine()
-    : Form("porcupine", EQF_ALL,  // name, blocked slots
+    : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
+           "a porcupine.",  // description
+           EQF_ALL,  // blocked slots
            SIZE_TINY, 12,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_PORCUPINE)       // equivalent monster
@@ -337,7 +408,9 @@ class FormWisp: public Form
 {
 public:
     FormWisp()
-    : Form("wisp", EQF_ALL,  // name, blocked slots
+    : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
+           "an insubstantial wisp.",  // description
+           EQF_ALL,  // blocked slots
            SIZE_TINY, 21,    // size, stealth mod
            5,                 // base unarmed damage
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
@@ -349,7 +422,9 @@ class FormJelly : public Form
 {
 public:
     FormJelly()
-    : Form("jelly", EQF_PHYSICAL | EQF_RINGS,  // name, blocked slots
+    : Form("Jelly",  "jelly-form", "jelly", // short name, long name, wizmode name
+           "a lump of jelly.",  // description
+           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            SIZE_CHARACTER, 21,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_JELLY)       // equivalent monster
@@ -361,7 +436,9 @@ class FormFungus : public Form
 {
 public:
     FormFungus()
-    : Form("fungus", EQF_PHYSICAL | EQF_OCTO,  // name, blocked slots
+    : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
+           "a sentient fungus.",  // description
+           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            SIZE_TINY, 30,    // size, stealth mod
            12,                 // base unarmed damage
            MONS_WANDERING_MUSHROOM)       // equivalent monster
@@ -372,7 +449,9 @@ class FormShadow: public Form
 {
 public:
     FormShadow()
-    : Form("shadow", EQF_NONE,  // name, blocked slots
+    : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
+           "a swirling mass of dark shadows.",  // description
+           EQF_NONE,  // blocked slots
            SIZE_CHARACTER, 30,    // size, stealth mod
            3,                 // base unarmed damage
            MONS_PLAYER_SHADOW)       // equivalent monster
@@ -444,7 +523,7 @@ static void _extra_hp(int amount_extra);
 
 
 /**
- * Get the name of a form.
+ * Get the wizmode name of a form.
  *
  * @param form      The form in question.
  * @return          The form's casual, wizmode name.
@@ -452,7 +531,7 @@ static void _extra_hp(int amount_extra);
 const char* transform_name(transformation_type form)
 {
     ASSERT_RANGE(form, 0, NUM_FORMS);
-    return forms[form]->name;
+    return forms[form]->wiz_name.c_str();
 }
 
 /**
