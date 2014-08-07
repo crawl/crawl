@@ -134,6 +134,35 @@ string Form::get_description(bool past_tense) const
 }
 
 /**
+ * Can the player fly, if in this form?
+ *
+ * DOES consider player state besides form.
+ * @return  Whether the player will be able to fly in this form.
+ */
+bool Form::player_can_fly() const
+{
+    return can_fly != FORBID
+           && (can_fly == ENABLE
+               || you.racial_permanent_flight() && you.permanent_flight());
+}
+
+/**
+ * Can the player swim, if in this form?
+ *
+ * DOES consider player state besides form.
+ * @return  Whether the player will be able to swim in this form.
+ */
+bool Form::player_can_swim() const
+{
+    const size_type player_size = size == SIZE_CHARACTER ?
+                                          you.body_size(PSIZE_BODY, true) :
+                                          size;
+    return can_swim == ENABLE
+           || species_can_swim(you.species) && can_swim != FORBID
+           || player_size >= SIZE_GIANT;
+}
+
+/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -157,6 +186,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 };
@@ -171,6 +201,7 @@ public:
            0, 5,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -185,6 +216,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -219,6 +251,7 @@ public:
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_STATUE)       // equivalent monster
     { };
 
@@ -241,6 +274,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 15,    // size, stealth mod
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, ENABLE,     // can_fly, can_swim
            MONS_ICE_BEAST)       // equivalent monster
     { };
 };
@@ -255,6 +289,7 @@ public:
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 6,    // size, stealth mod
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
+           ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -289,6 +324,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_LICH)       // equivalent monster
     { };
 };
@@ -303,6 +339,7 @@ public:
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 17,    // size, stealth mod
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -356,6 +393,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 9,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,  // can_fly (false for most pigs), can_swim
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -370,6 +408,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -398,6 +437,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 27,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
+           FORBID, FORBID,     // can_fly, can_swim
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 };
@@ -412,6 +452,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 12,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -426,6 +467,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           ENABLE, FORBID,     // can_fly, can_swim
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 };
@@ -441,6 +483,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 21,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -456,6 +499,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 30,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -470,6 +514,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 30,    // size, stealth mod
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
+           DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 };
@@ -586,32 +631,33 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     return forms[form]->can_wear_item(item);
 }
 
+/**
+ * Can the player fly, if in this form?
+ *
+ * DOES consider player state besides form.
+ * @param form      The form in question.
+ * @return          Whether the player will be able to fly in this form.
+ */
 bool form_can_fly(transformation_type form)
 {
-    if (form == TRAN_TREE)
-        return false;
-    if (you.racial_permanent_flight() && you.permanent_flight())
-        return true;
-    return form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP;
+    return get_form(form)->player_can_fly();
 }
 
+
+/**
+ * Can the player swim, if in this form?
+ *
+ * (Swimming = traversing deep & shallow water without penalties; includes
+ * floating (ice form) and wading forms (giants - currently just dragon form,
+ * which normally flies anyway...))
+ *
+ * DOES consider player state besides form.
+ * @param form      The form in question.
+ * @return          Whether the player will be able to swim in this form.
+ */
 bool form_can_swim(transformation_type form)
 {
-    // Ice floats.
-    if (form == TRAN_ICE_BEAST)
-        return true;
-
-    if (species_can_swim(you.species)
-        && (!form_changed_physiology(form) || form == TRAN_LICH))
-    {
-        return true;
-    }
-
-    size_type size = you.transform_size(form);
-    if (size == SIZE_CHARACTER)
-        size = you.body_size(PSIZE_BODY, true);
-
-    return size >= SIZE_GIANT;
+    return get_form(form)->player_can_swim();
 }
 
 bool form_likes_water(transformation_type form)
