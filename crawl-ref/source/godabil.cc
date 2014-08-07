@@ -1173,9 +1173,9 @@ bool zin_vitalisation()
     you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
     you.set_duration(DUR_DIVINE_STAMINA, 60 + roll_dice(2, 10));
 
-    notify_stat_change(STAT_STR, stamina_amt, true, "");
-    notify_stat_change(STAT_INT, stamina_amt, true, "");
-    notify_stat_change(STAT_DEX, stamina_amt, true, "");
+    notify_stat_change(STAT_STR, stamina_amt, true);
+    notify_stat_change(STAT_INT, stamina_amt, true);
+    notify_stat_change(STAT_DEX, stamina_amt, true);
 
     return true;
 }
@@ -1183,12 +1183,9 @@ bool zin_vitalisation()
 void zin_remove_divine_stamina()
 {
     mprf(MSGCH_DURATION, "Your divine stamina fades away.");
-    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
+    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA], true);
+    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA], true);
+    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA], true);
     you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }

@@ -904,7 +904,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     int str = 0, dex = 0;
-    const char* tran_name = "buggy";
     string msg;
 
     if (was_in_water && form_can_fly(which_trans))
@@ -919,13 +918,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     switch (which_trans)
     {
     case TRAN_SPIDER:
-        tran_name = "spider";
         dex       = 5;
         msg      += "a venomous arachnid creature.";
         break;
 
     case TRAN_BLADE_HANDS:
-        tran_name = ("Blade " + uppercase_first(blade_parts(true))).c_str();
         if (player_mutation_level(MUT_MISSING_HAND)
             && you.species != SP_OCTOPODE)
         {
@@ -938,7 +935,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_STATUE:
-        tran_name = "statue";
         str       = 2;
         dex       = -2;
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
@@ -950,23 +946,19 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_ICE_BEAST:
-        tran_name = "ice beast";
         msg      += "a creature of crystalline ice.";
         break;
 
     case TRAN_DRAGON:
-        tran_name = "dragon";
         str       = 10;
         msg      += "a fearsome dragon!";
         break;
 
     case TRAN_LICH:
-        tran_name = "lich";
         msg       = "Your body is suffused with negative energy!";
         break;
 
     case TRAN_BAT:
-        tran_name = "bat";
         str       = -5;
         dex       = 5;
         if (you.species == SP_VAMPIRE)
@@ -976,7 +968,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
 
     case TRAN_PIG:
-        tran_name = "pig";
         msg       = "You have been turned into a pig!";
         if (!just_check)
             you.transform_uncancellable = true;
@@ -984,7 +975,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     case TRAN_APPENDAGE:
     {
-        tran_name = "appendage";
         mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
@@ -1018,34 +1008,28 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     case TRAN_FUNGUS:
-        tran_name = "fungus";
         msg      += "a fleshy mushroom.";
         break;
 
     case TRAN_PORCUPINE:
-        tran_name = "porcupine";
         str       = -3;
         msg      += "a spiny porcupine.";
         break;
 
     case TRAN_TREE:
-        tran_name = "tree";
         str       = 10;
         msg      += "an animated tree.";
         break;
 
     case TRAN_WISP:
-        tran_name = "wisp";
         msg      += "an insubstantial wisp of gas.";
         break;
 
     case TRAN_SHADOW:
-        tran_name = "shadow";
         msg      += "a swirling mass of dark shadows.";
         break;
 
     case TRAN_NONE:
-        tran_name = "null";
         msg += "your old self.";
         break;
     default:
@@ -1101,18 +1085,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     you.props[TRANSFORM_POW_KEY] = pow;
 
     if (str)
-    {
-        notify_stat_change(STAT_STR, str, true,
-                    make_stringf("gaining the %s transformation",
-                                 tran_name).c_str());
-    }
+        notify_stat_change(STAT_STR, str, true);
 
     if (dex)
-    {
-        notify_stat_change(STAT_DEX, dex, true,
-                    make_stringf("gaining the %s transformation",
-                                 tran_name).c_str());
-    }
+        notify_stat_change(STAT_DEX, dex, true);
 
     _extra_hp(form_hp_mod());
 
@@ -1306,16 +1282,13 @@ void untransform(bool skip_wielding, bool skip_move)
     {
     case TRAN_SPIDER:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_DEX, -5, true,
-                     "losing the spider transformation");
+        notify_stat_change(STAT_DEX, -5, true);
         break;
 
     case TRAN_BAT:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_DEX, -5, true,
-                     "losing the bat transformation");
-        notify_stat_change(STAT_STR, 5, true,
-                     "losing the bat transformation");
+        notify_stat_change(STAT_DEX, -5, true);
+        notify_stat_change(STAT_STR, 5, true);
         break;
 
     case TRAN_BLADE_HANDS:
@@ -1346,10 +1319,8 @@ void untransform(bool skip_wielding, bool skip_move)
         if (you.species != SP_LAVA_ORC)
 #endif
             mprf(MSGCH_DURATION, "You revert to your normal fleshy form.");
-        notify_stat_change(STAT_DEX, 2, true,
-                     "losing the statue transformation");
-        notify_stat_change(STAT_STR, -2, true,
-                     "losing the statue transformation");
+        notify_stat_change(STAT_DEX, 2, true);
+        notify_stat_change(STAT_STR, -2, true);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -1373,8 +1344,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_DRAGON:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
-        notify_stat_change(STAT_STR, -10, true,
-                    "losing the dragon transformation");
+        notify_stat_change(STAT_STR, -10, true);
         break;
 
     case TRAN_LICH:
@@ -1428,8 +1398,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_TREE:
         mprf(MSGCH_DURATION, "You feel less woody.");
-        notify_stat_change(STAT_STR, -10, true,
-                     "losing the tree transformation");
+        notify_stat_change(STAT_STR, -10, true);
         break;
 
     default:

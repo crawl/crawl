@@ -752,26 +752,26 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_FORTITUDE, delay,
                               "Your fortitude fades away."))
     {
-        notify_stat_change(STAT_STR, -10, true, "Fortitude card running out");
+        notify_stat_change(STAT_STR, -10, true);
     }
 
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {
-        notify_stat_change(STAT_STR, -5, true, "might running out");
+        notify_stat_change(STAT_STR, -5, true);
     }
 
     if (_decrement_a_duration(DUR_AGILITY, delay,
                               "You feel a little less agile now."))
     {
-        notify_stat_change(STAT_DEX, -5, true, "agility running out");
+        notify_stat_change(STAT_DEX, -5, true);
     }
 
     if (_decrement_a_duration(DUR_BRILLIANCE, delay,
                               "You feel a little less clever now."))
     {
-        notify_stat_change(STAT_INT, -5, true, "brilliance running out");
+        notify_stat_change(STAT_INT, -5, true);
     }
 
     if (you.duration[DUR_BERSERK]
@@ -822,7 +822,7 @@ static void _decrement_durations()
         // duration.
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
-        notify_stat_change(STAT_STR, -5, true, "berserk running out");
+        notify_stat_change(STAT_STR, -5, true);
 
         // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
