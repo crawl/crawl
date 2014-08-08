@@ -5620,6 +5620,36 @@ void ru_do_retribution(monster* mons, int damage)
 void ru_draw_out_power()
 {
     mpr("You are restored by drawing out deep reserves of power within.");
+
+    //Escape nets and webs
+    int net = get_trapping_net(you.pos());
+    if (net == NON_ITEM)
+    {
+        trap_def *trap = find_trap(you.pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+            destroy_trap(you.pos());
+            mpr("You burst free from the webs!");
+        }
+    }
+    else
+    {
+        destroy_item(net);
+        mpr("You burst free from the net!");
+    }
+
+    // Escape constriction
+    you.stop_being_constricted(false);
+
+    // cancel petrification/confusion/slow
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
+    you.duration[DUR_PETRIFYING] = 0;
+
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
+    you.redraw_evasion = true;
+
     inc_hp(div_rand_round(you.piety, 16)
         + roll_dice(div_rand_round(you.piety, 20), 5));
     inc_mp(div_rand_round(you.piety, 48)

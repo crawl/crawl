@@ -663,8 +663,10 @@ Blasts the entire area around you with powerful natural forces.
 # Ru
 Draw Out Power ability
 
-Restores health and magic points to you. The amount restored increases with
-piety.
+Tap into your inner power to restore health and magic, as well as freeing your
+body and mind from external constraints, including nets, webs, constriction,
+petrification, slowness, and confusion. The amount of health and magic restored
+increases with piety.
 
 Using this ability exhausts and slightly drains you.
 %%%%
