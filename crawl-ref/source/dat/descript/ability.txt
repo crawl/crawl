@@ -753,7 +753,7 @@ Sacrifices cannot be taken back.
 Sacrifice Love ability
 
 Adherents who choose to sacrifice love are despised by all. All creatures,
-even those summoned by the adherent, become hostile If you make this sacrifice,
+even those summoned by the adherent, become hostile. If you make this sacrifice,
 your powers granted by Ru will become stronger in proportion to the value
 of the sacrifice, and you may gain new powers as well.
 

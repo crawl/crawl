@@ -5334,7 +5334,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             piety_gain = 20 + _piety_for_skill(SK_STEALTH);
 
             if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
-                "sacrifice your ability to go unnoticed."))
+                "sacrifice your ability to go unnoticed"))
             {
                 return;
             }
