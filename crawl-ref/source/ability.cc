@@ -3163,7 +3163,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_RU_SACRIFICE_DURABILITY:
     case ABIL_RU_SACRIFICE_HAND:
         fail_check();
-        ru_do_sacrifice(abil.ability);
+        if (!ru_do_sacrifice(abil.ability))
+            return SPRET_ABORT;
         break;
 
     case ABIL_RU_DRAW_OUT_POWER:

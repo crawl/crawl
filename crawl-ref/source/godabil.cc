@@ -5226,7 +5226,7 @@ static void _ru_kill_skill(skill_type skill)
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
-void ru_do_sacrifice(ability_type sacrifice)
+bool ru_do_sacrifice(ability_type sacrifice)
 {
     skill_type mutation_skill;
     int arcane_mutations_size;
@@ -5272,7 +5272,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_READ, piety_gain,
                 "sacrifice your ability to read while threatened"))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_DRINK:
@@ -5280,7 +5280,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_DRINK, piety_gain,
                 "sacrifice your ability to drink while threatened"))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
@@ -5291,7 +5291,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 make_stringf("corrupt yourself with %s",
                     mutation_name(health_sacrifice)).c_str()))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_ESSENCE:
@@ -5308,7 +5308,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 make_stringf("corrupt yourself with %s",
                     mutation_name(essence_sacrifice)).c_str()))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_PURITY:
@@ -5333,7 +5333,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 make_stringf("corrupt yourself with %s",
                     mutation_name(purity_sacrifice)).c_str()))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_STEALTH:
@@ -5342,7 +5342,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
                 "sacrifice your ability to go unnoticed"))
             {
-                return;
+                return SPRET_ABORT;
             }
             _ru_kill_skill(SK_STEALTH);
             break;
@@ -5352,7 +5352,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
                 "sacrifice all use of magical tools"))
             {
-                return;
+                return SPRET_ABORT;
             }
             _ru_kill_skill(SK_EVOCATIONS);
             break;
@@ -5379,7 +5379,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_DODGING, piety_gain,
                 "sacrifice your ability to dodge"))
             {
-                return;
+                return SPRET_ABORT;
             }
             _ru_kill_skill(SK_DODGING);
             break;
@@ -5391,7 +5391,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_ARMOUR, piety_gain,
                 "sacrifice your ability to wear armour well"))
             {
-                return;
+                return SPRET_ABORT;
             }
             _ru_kill_skill(SK_ARMOUR);
             break;
@@ -5401,7 +5401,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_SANITY, piety_gain,
                 "sacrifice your sanity"))
             {
-                return;
+                return SPRET_ABORT;
             }
             break;
         case ABIL_RU_SACRIFICE_LOVE:
@@ -5413,7 +5413,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             if (!_execute_sacrifice(MUT_NO_LOVE, piety_gain,
                 "sacrifice your ability to be loved"))
             {
-                return;
+                return SPRET_ABORT;
             }
             add_daction(DACT_ALLY_SACRIFICE_LOVE);
             break;
@@ -5450,7 +5450,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                        false, 'n'))
             {
                 canned_msg(MSG_OK);
-                return;
+                return SPRET_ABORT;
             }
 
             arcane_mutations_size = current_arcane_sacrifices.size();
@@ -5487,7 +5487,7 @@ void ru_do_sacrifice(ability_type sacrifice)
                 make_stringf("sacrifice one of your %s",
                     you.hand_name(true).c_str()).c_str()))
             {
-                return;
+                return SPRET_ABORT;
             }
 
             // Drop your shield if there is one
@@ -5520,7 +5520,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             you.stop_train.insert(SK_SHIELDS);
             break;
         default:
-            return;
+            return SPRET_ABORT;
             break;
     }
     if (you.props.exists("num_sacrifice_muts"))
