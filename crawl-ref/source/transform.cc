@@ -157,6 +157,16 @@ string Form::transform_message(transformation_type previous_trans) const
 }
 
 /**
+ * Get a message for untransforming from this form.
+ *
+ * @return "Your transform has ended."
+ */
+string Form::get_untransform_message() const
+{
+    return "Your transformation has ended.";
+}
+
+/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -287,6 +297,19 @@ public:
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? " a" : "", singular ? "" : "s");
     }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const
+    {
+        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+
+        // XXX: a little ugly
+        return make_stringf("Your %s revert%s to %s normal proportions.",
+                            blade_parts().c_str(), singular ? "s" : "",
+                            singular ? "its" : "their");
+    }
 };
 
 class FormStatue : public Form
@@ -332,6 +355,30 @@ public:
     {
         return "a living statue of rough stone.";
     }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const
+    {
+        // This only handles lava orcs going statue -> stoneskin.
+        if (
+#if TAG_MAJOR_VERSION == 34
+            you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+            ||
+#endif
+            you.species == SP_GARGOYLE)
+        {
+            return "You revert to a slightly less stony form.";
+        }
+#if TAG_MAJOR_VERSION == 34
+        if (you.species != SP_LAVA_ORC)
+#endif
+            return "You revert to your normal fleshy form.";
+#if TAG_MAJOR_VERSION == 34
+        return Form::get_untransform_message();
+#endif
+    }
 };
 
 class FormIce : public Form
@@ -347,6 +394,19 @@ public:
            DEFAULT, ENABLE,     // can_fly, can_swim
            MONS_ICE_BEAST)       // equivalent monster
     { };
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+            return "Your icy form melts away into molten rock.";
+        else
+#endif
+            return "You warm up again.";
+    }
 };
 
 class FormDragon : public Form
@@ -404,6 +464,17 @@ public:
     string transform_message(transformation_type previous_trans) const
     {
         return "Your body is suffused with negative energy!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const
+    {
+        if (you.is_undead == US_ALIVE)
+            return "You feel yourself come back to life.";
+        return "You feel your undeath return to normal.";
+        // XXX: ^^^ can this happen?
     }
 };
 
@@ -532,6 +603,11 @@ public:
                  die("Unknown beastly appendage.");
         }
     }
+
+    /**
+     * Get a message for untransforming from this form. (Handled elsewhere.)
+     */
+    string get_untransform_message() const { return ""; }
 };
 
 class FormTree : public Form
@@ -547,6 +623,11 @@ public:
            FORBID, FORBID,     // can_fly, can_swim
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const { return "You feel less woody."; }
 };
 
 class FormPorcupine: public Form
@@ -577,6 +658,11 @@ public:
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const { return "You stop sporulating."; }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -624,6 +710,16 @@ public:
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const
+    {
+        if (you.invisible())
+            return "You feel less shadowy.";
+        return "You emerge from the shadows.";
+    }
 };
 
 static const FormNone FORM_NONE = FormNone();
@@ -1724,43 +1820,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     switch (old_form)
     {
-    case TRAN_SPIDER:
-        mprf(MSGCH_DURATION, "Your transformation has ended.");
-        break;
-
-    case TRAN_BAT:
-        mprf(MSGCH_DURATION, "Your transformation has ended.");
-        break;
-
-    case TRAN_BLADE_HANDS:
-        if (player_mutation_level(MUT_MISSING_HAND))
-        {
-            mprf(MSGCH_DURATION, "Your %s reverts to its normal proportions.",
-                blade_parts().c_str());
-        }
-        else
-            mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
-                blade_parts().c_str());
-        you.wield_change = true;
-        break;
-
     case TRAN_STATUE:
-        // This only handles lava orcs going statue -> stoneskin.
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-            ||
-#endif
-            you.species == SP_GARGOYLE)
-        {
-            mprf(MSGCH_DURATION, "You revert to a slightly less stony form.");
-        }
-        else
-#if TAG_MAJOR_VERSION == 34
-        if (you.species != SP_LAVA_ORC)
-#endif
-            mprf(MSGCH_DURATION, "You revert to your normal fleshy form.");
-
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_STONESKIN])
@@ -1768,41 +1828,14 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
-            mprf(MSGCH_DURATION, "Your icy form melts away into molten rock.");
-        else
-#endif
-        mprf(MSGCH_DURATION, "You warm up again.");
-
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
         break;
 
-    case TRAN_DRAGON:
-        mprf(MSGCH_DURATION, "Your transformation has ended.");
-        break;
-
     case TRAN_LICH:
         you.is_undead = get_undead_state(you.species);
-        if (you.is_undead == US_ALIVE)
-            mprf(MSGCH_DURATION, "You feel yourself come back to life.");
-        else
-            mprf(MSGCH_DURATION, "You feel your undeath return to normal.");
-        break;
-
-    case TRAN_PIG:
-    case TRAN_PORCUPINE:
-    case TRAN_WISP:
-        break;
-
-    case TRAN_SHADOW:
-        if (you.invisible())
-            mprf(MSGCH_DURATION, "You feel less shadowy.");
-        else
-            mprf(MSGCH_DURATION, "You emerge from the shadows.");
         break;
 
     case TRAN_APPENDAGE:
@@ -1830,17 +1863,13 @@ void untransform(bool skip_wielding, bool skip_move)
         }
         break;
 
-    case TRAN_FUNGUS:
-        mprf(MSGCH_DURATION, "You stop sporulating.");
-        break;
-
-    case TRAN_TREE:
-        mprf(MSGCH_DURATION, "You feel less woody.");
-        break;
-
     default:
         break;
     }
+
+    const string message = get_form(old_form)->get_untransform_message();
+    if (message != "")
+        mprf(MSGCH_DURATION, "%s", message.c_str());
 
     const int str_mod = get_form(old_form)->str_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
