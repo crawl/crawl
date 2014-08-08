@@ -32,7 +32,9 @@
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "quiver.h"
 #include "shopping.h"
@@ -41,9 +43,10 @@
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "throw.h"
 #include "transform.h"
+#include "unicode.h"
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -772,11 +775,13 @@ const char* jewellery_effect_name(int jeweltype)
 }
 
 // lua doesn't want "the" in gourmand, but we do, so...
-const char* _jewellery_effect_prefix(int jeweltype)
+static const char* _jewellery_effect_prefix(int jeweltype)
 {
-    if (jeweltype == AMU_THE_GOURMAND)
-        return "the ";
-    return "";
+    switch (static_cast<jewellery_type>(jeweltype))
+    {
+    case AMU_THE_GOURMAND: return "the ";
+    default:               return "";
+    }
 }
 
 /**
@@ -804,11 +809,11 @@ static const char* _jewellery_class_name(int jeweltype)
  * @param jeweltype     The jewellery_type of the item in question.
  * @return              The full name of the jewellery type in question.
  */
-static const char* jewellery_type_name(int jeweltype)
+static string jewellery_type_name(int jeweltype)
 {
     return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
                                    _jewellery_effect_prefix(jeweltype),
-                                    jewellery_effect_name(jeweltype)).c_str();
+                                    jewellery_effect_name(jeweltype));
 }
 
 
@@ -1359,7 +1364,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_pluses)
         {
-            if (is_unrandom_artefact(*this) && special == UNRAND_WOE)
+            if (is_unrandom_artefact(*this, UNRAND_WOE))
                 buff << "+∞ ";
             else
                 buff << make_stringf("%+d ", it_plus);
@@ -2209,12 +2214,26 @@ public:
                 name = "chunks";
                 break;
             case FOOD_MEAT_RATION:
-                name = "preserved meat";
+                name = "meat rations";
                 break;
+            case FOOD_BEEF_JERKY:
+                name = "beef jerky";
+                break;
+            case FOOD_BREAD_RATION:
+                name = "bread rations";
+                break;
+#if TAG_MAJOR_VERSION == 34
+            default:
+#endif
             case FOOD_FRUIT:
                 name = "fruit";
                 break;
-            default:
+            case FOOD_PIZZA:
+                name = "pizza";
+                break;
+            case FOOD_ROYAL_JELLY:
+                name = "royal jellies";
+                break;
                 name = "other food";
                 break;
             }
@@ -2469,13 +2488,13 @@ void check_item_knowledge(bool unknown_items)
         // Misc.
         static const object_class_type misc_list[] =
         {
-            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
+            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_FRUIT, FOOD_ROYAL_JELLY,
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
         };

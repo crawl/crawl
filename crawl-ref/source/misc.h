@@ -66,8 +66,6 @@ bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();
 void revive();
 
-coord_def pick_adjacent_free_square(const coord_def& p);
-
 int speed_to_duration(int speed);
 
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
@@ -101,8 +99,6 @@ void handle_real_time(time_t t = time(0));
 string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
-
-bool move_stairs(coord_def orig, coord_def dest);
 
 #define DISCONNECT_DIST (INT_MAX - 1000)
 

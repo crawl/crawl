@@ -6,6 +6,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "lang-fake.h"
+#include "strings.h"
 #include "unicode.h"
 #include "viewchar.h"
 

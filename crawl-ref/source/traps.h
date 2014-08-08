@@ -23,6 +23,7 @@ void free_stationary_net(int item_index);
 
 void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
+const char* held_status(actor *act = NULL);
 bool monster_caught_in_net(monster* mon, actor *agent);
 bool player_caught_in_net();
 void clear_trapping_net();

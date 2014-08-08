@@ -29,12 +29,15 @@
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "travel.h"
 #include "unwind.h"
 #include "env.h"
@@ -575,6 +578,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             {
                 _shop_print("I'm sorry, you don't seem to have enough money.",
                             1);
+                _shop_more();
             }
             else if (!total_purchase) // Nothing selected.
                 continue;

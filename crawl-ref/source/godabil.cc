@@ -39,6 +39,7 @@
 #include "items.h"
 #include "losglobal.h"
 #include "libutil.h"
+#include "macro.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
@@ -54,10 +55,12 @@
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
+#include "output.h"
 #include "place.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "skill_menu.h"
@@ -71,7 +74,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
@@ -2780,7 +2783,7 @@ int fedhas_check_corpse_spores(bool quiet)
     vector<stack_iterator> positions;
     int count = count_corpses_in_los(&positions);
 
-    if (count == 0)
+    if (quiet || count == 0)
         return count;
 
     viewwindow(false);
@@ -2801,8 +2804,7 @@ int fedhas_check_corpse_spores(bool quiet)
 #endif
     }
 
-    if (!quiet
-        && yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
@@ -3700,10 +3702,29 @@ void shadow_monster_reset(monster *mon)
     mon->reset();
 }
 
+/**
+ * Check if the player is in melee range of the target.
+ *
+ * Certain effects, e.g. distortion blink, can cause monsters to leave melee
+ * range between the initial hit & the shadow mimic.
+ *
+ * XXX: refactor this with attack/fight code!
+ *
+ * @param target    The creature to be struck.
+ * @return          Whether the player is melee range of the target, using
+ *                  their current weapon.
+ */
+static bool _in_melee_range(actor* target)
+{
+    const int dist = (you.pos() - target->pos()).abs();
+    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
+}
+
 void dithmenos_shadow_melee(actor* target)
 {
     if (!target
         || !target->alive()
+        || !_in_melee_range(target)
         || !_dithmenos_shadow_acts())
     {
         return;
@@ -4473,11 +4494,11 @@ bool gozag_check_bribe_branch(bool quiet)
     branch_type branch2 = NUM_BRANCHES;
     if (feat_is_branch_stairs(grd(you.pos())))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs == grd(you.pos())
-                && gozag_branch_bribable(static_cast<branch_type>(i)))
+        for (branch_iterator it; it; ++it)
+            if (it->entry_stairs == grd(you.pos())
+                && gozag_branch_bribable(it->id))
             {
-                branch2 = static_cast<branch_type>(i);
+                branch2 = it->id;
                 break;
             }
     }
@@ -4511,16 +4532,16 @@ bool gozag_bribe_branch()
     branch_type branch = you.where_are_you;
     if (feat_is_branch_stairs(grd(you.pos())))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs == grd(you.pos())
-                && gozag_branch_bribable(static_cast<branch_type>(i)))
+        for (branch_iterator it; it; ++it)
+            if (it->entry_stairs == grd(you.pos())
+                && gozag_branch_bribable(it->id))
             {
                 string prompt =
                     make_stringf("Do you want to bribe the denizens of %s?",
-                                 branches[i].longname);
+                                 it->longname);
                 if (yesno(prompt.c_str(), true, 'n'))
                 {
-                    branch = static_cast<branch_type>(i);
+                    branch = it->id;
                     prompted = true;
                 }
                 break;
@@ -5654,7 +5675,7 @@ void ru_draw_out_power()
         + roll_dice(div_rand_round(you.piety, 20), 5));
     inc_mp(div_rand_round(you.piety, 48)
         + roll_dice(div_rand_round(you.piety, 40), 3));
-    drain_exp(false, 20, true);
+    drain_player(20, false, true);
 }
 
 bool ru_power_leap()
@@ -5865,6 +5886,6 @@ bool ru_cataclysm()
     mpr("BWOOM! You release an incredible blast of power in all directions!");
     noisy(30, you.pos());
     apply_area_visible(_apply_cataclysm, you.piety, &you);
-    drain_exp(false, 100, true);
+    drain_player(100,false, true);
     return true;
 }

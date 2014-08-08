@@ -8,6 +8,7 @@
 
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 {{
     -- Call func num times around a circle of radius centered at (x, y)
@@ -232,6 +233,8 @@ ENDMAP
 # TODO: Use "layout_type_open_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
+# TODO: A better way of preventing small maps
+#
 NAME:   layout_big_octagon
 DEPTH:  D:9-, Depths, Pan
 WEIGHT: 3
@@ -421,6 +424,10 @@ TAGS:   uniq_open_layout
     end
 
     theme.level_material(_G)
+}}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN)
 }}
 MAP
 ENDMAP
@@ -843,7 +850,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 }}
 # Enforce minimum floor size - otherwise we get very tiny floors sometimes
 validate {{
-    return count_feature_in_box { feat="." } > 600
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.OPEN_CAVES)
 }}
 MAP
 ENDMAP
@@ -1466,7 +1473,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 }}
 # Enforce minimum floor size - this is important with the alt version
 validate {{
-    return count_feature_in_box { feat="." } > 1200
+    return minimum_map_area.is_map_big_enough(_G, minimum_map_area.DIVISIONS)
 }}
 COLOUR:  G : cyan
 TILE:    G = dngn_statue_iron_golem
@@ -1913,7 +1920,7 @@ TAGS:   no_rotate no_hmirror no_vmirror
 }}
 # Enforce minimum floor size - this is important
 validate {{
-  return count_feature_in_box { feat="." } > 600
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
 }}
 MAP
 ENDMAP

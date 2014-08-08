@@ -21,6 +21,7 @@
 #include "cluautil.h"
 #include "coordit.h"
 #include "dlua.h"
+#include "end.h"
 #include "errors.h"
 #include "files.h"
 #include "libutil.h"
@@ -30,7 +31,7 @@
 #include "mon-util.h"
 #include "ng-init.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "zotdef.h"
 
 #include <algorithm>

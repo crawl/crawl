@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "end.h"
 #include "externs.h"
 #include "food.h"
 #include "format.h"
@@ -35,18 +36,21 @@
 #include "macro.h"
 #include "message.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "species.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "target.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
 #include "transform.h"
+#include "unicode.h"
 
 #define SPELL_LIST_KEY "spell_list"
 
@@ -824,13 +828,6 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
     }
 
-    if (num_memable > 0 && you.spell_no >= MAX_KNOWN_SPELLS)
-    {
-        if (!just_check)
-            mpr("Your head is already too full of spells!");
-        return false;
-    }
-
     if (num_memable)
         return true;
 
@@ -1003,26 +1000,31 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    string more_str = make_stringf("<lightgreen>%d spell level%s left"
+    const bool shortmsg = num_unreadable > 0 && num_race > 0;
+    string more_str = make_stringf("<lightgreen>%d %slevel%s left"
                                    "<lightgreen>",
                                    player_spell_levels(),
+                                   shortmsg ? "" : "spell ",
                                    (player_spell_levels() > 1
                                     || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
     {
-        more_str += make_stringf(", <lightmagenta>%u overly difficult "
-                                 "spellbook%s</lightmagenta>",
+        more_str += make_stringf(", <lightmagenta>%u %sbook%s</lightmagenta>",
                                  num_unreadable,
+                                 shortmsg ? "difficult "
+                                          : "overly difficult spell",
                                  num_unreadable > 1 ? "s" : "");
     }
 
     if (num_race > 0)
     {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
+        more_str += make_stringf(", <lightred>%u%s%s unmemorisable"
                                  "</lightred>",
                                  num_race,
-                                 num_race > 1 ? "s" : "");
+                                 shortmsg ? "" : " spell",
+                                 // shorter message if we have both annotations
+                                 !shortmsg && num_race > 1 ? "s" : "");
     }
 
 #ifndef USE_TILE_LOCAL
@@ -1658,7 +1660,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (num_spells == -1)
     {
-        //555666421
+        // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+        // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
         num_spells = min(5 + (level - 1)/3, 18 - 2*level);
         num_spells = max(1, num_spells);
     }
@@ -2328,6 +2331,9 @@ bool make_book_theme_randart(item_def &book,
             owner = god_name(god, false);
         else if (god_gift && one_chance_in(3) || one_chance_in(5))
         {
+            bool highlevel = (highest_level >= 7 + random2(3)
+                              && (lowest_level > 1 || coinflip()));
+
             if (disc1 != disc2)
             {
                 string schools[2];
@@ -2336,7 +2342,11 @@ bool make_book_theme_randart(item_def &book,
                 sort(schools, schools + 2);
                 string lookup = schools[0] + " " + schools[1];
 
-                owner = getRandNameString(lookup + " owner");
+                if (highlevel)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
+
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
 
                 if (owner == "__NONE")
                     owner = "";
@@ -2345,8 +2355,11 @@ bool make_book_theme_randart(item_def &book,
             if (owner.empty() && all_spells_disc1)
             {
                 string lookup = spelltype_long_name(disc1);
+                if (highlevel && disc1 == disc2)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
 
-                owner = getRandNameString(lookup + " owner");
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
 
                 if (owner == "__NONE")
                     owner = "";

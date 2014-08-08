@@ -60,6 +60,7 @@
 #include "dlua.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "errors.h"
 #include "evoke.h"
@@ -107,6 +108,7 @@
 #include "player-reacts.h"
 #include "player-stats.h"
 #include "player.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -128,7 +130,7 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
@@ -258,20 +260,6 @@ int main(int argc, char *argv[])
 # else
     setlocale(LC_ALL, "");
 # endif
-#endif
-#ifdef TARGET_OS_WINDOWS
-    // No documentation about resetting this, nor about which versions of
-    // Windows is required.  Previous ones can't handle writing to the console
-    // outside ancient locales AT ALL via standard means.
-    // Even with _O_U8TEXT, output tends to fail unless the user manually
-    // switches the terminal to a truetype font.  And even that fails for
-    // anything not directly in the font, above U+FFFF, or within Arabic or
-    // any complex scripts.
-# ifndef _O_U8TEXT
-#  define _O_U8TEXT 0x40000
-# endif
-    _setmode(_fileno(stdout), _O_U8TEXT);
-    _setmode(_fileno(stderr), _O_U8TEXT);
 #endif
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
@@ -758,7 +746,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
     case '^': wizard_set_piety();                    break;
-    case '_': zotdef_create_altar(true);             break;
+    case '_': wizard_join_religion();                break;
     case '-': wizard_get_god_gift();                 break;
     case '\'': wizard_list_items();                  break;
     case 'd': wizard_level_travel(true);             break;
@@ -2541,17 +2529,17 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 
     if (find_trap(target) && grd(target) != DNGN_UNDISCOVERED_TRAP)
     {
-        if (!you.confused())
+        if (!form_can_wield())
         {
-            if (!form_can_wield())
-            {
-                mpr("You can't disarm traps in your present form.");
-                return true;
-            }
-
+            mpr("You can't disarm traps in your present form.");
+            return true;
+        }
+        else if (!you.confused())
+        {
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
-                && is_damaging_cloud(env.cloud[ cloud ].type, true))
+                && is_damaging_cloud(env.cloud[cloud].type, true)
+                && !actor_cloud_immune(&you, env.cloud[cloud]))
             {
                 mpr("You can't get to that trap right now.");
                 return true;

@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 #include <sstream>
 
+#include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
@@ -13,13 +14,15 @@
 #include "libutil.h"
 #include "los.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 
@@ -258,8 +261,8 @@ bool actor::res_corr(bool calc_unid, bool items) const
 
 // This is a bit confusing. This is not the function that determines whether or
 // not an actor is capable of teleporting, only whether they are specifically
-// under the influence of the "notele" effect. See item_blocks_teleport() in
-// item_use.cc for a superset of this function.
+// under the influence of the "notele" effect. See actor::no_tele() for a
+// superset of this function.
 bool actor::has_notele_item(bool calc_unid) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
@@ -798,4 +801,33 @@ string actor::describe_props() const
         }
     }
     return oss.str();
+}
+
+/**
+ * Is the actor currently being slowed by a torpor snail?
+ */
+bool actor::torpor_slowed() const
+{
+    if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
+        || is_stationary()
+        || (is_monster() && this->as_monster()->check_stasis(true))
+        || (!is_monster() && stasis()))
+    {
+        return false;
+    }
+
+    for (monster_near_iterator ri(pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        const monster *mons = *ri;
+        if (mons && mons->type == MONS_TORPOR_SNAIL
+            && !is_sanctuary(mons->pos())
+            && !mons_aligned(mons, this)
+            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
+            // friendly torpor snails are way too abusable otherwise :(
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

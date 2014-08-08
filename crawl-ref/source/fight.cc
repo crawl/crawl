@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "melee_attack.h"
+#include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -32,13 +33,13 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "prompt.h"
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
 #include "target.h"
 #include "terrain.h"
 #include "travel.h"
@@ -332,8 +333,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
 
             // On the first landing site, check the hit function for Devastator.
             if (!check_landing_only && !conduct_prompted
-                && weapon && is_unrandom_artefact(*weapon)
-                && weapon->special == UNRAND_DEVASTATOR)
+                && weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
             {
                 const char* verb = "jump-attack";
                 string junk1, junk2;
@@ -488,6 +488,8 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_STICKY_FLAME:
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
+    case BEAM_POISON:
+    case BEAM_POISON_ARROW:
         return true;
     default:
         return false;
@@ -521,21 +523,32 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
-// Adjusts damage for elemental resists, electricity and poison.
-//
-// FIXME: Does not (yet) handle life draining, player acid damage
-// (does handle monster acid damage), miasma, and other exotic
-// attacks.
-//
-// beam_type is just used to determine the damage flavour, it does not
-// necessarily imply that the attack is a beam attack.
-int resist_adjust_damage(actor *defender, beam_type flavour,
-                         int res, int rawdamage, bool ranged)
+/**
+ * Adjusts damage for elemental resists, electricity and poison.
+ *
+ * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
+ * XXX: which other attacks?
+ * Damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2, and 3,
+ * respectively.  For "boolean" attacks like electricity and sticky flame, the
+ * damage is instead reduced to 1/3, 1/4, and 1/6 at resist levels 1, 2, and 3
+ * respectively.
+ * @param defender      The victim of the attack.
+ * @param flavour       The type of attack having its damage adjusted.
+ *                      (Does not necessarily imply the attack is a beam.)
+ * @param res           The level of resistance that the defender possesses.
+ * @param rawdamage     The base damage, to be adjusted by resistance.
+ * @param ranged        Whether the attack is ranged, and therefore has a
+ *                      smaller damage multiplier against victims with negative
+ *                      resistances. (????)
+ * @return              The amount of damage done, after resists are applied.
+ */
+int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
+                         int rawdamage, bool ranged)
 {
     if (!res)
         return rawdamage;
 
-    const bool mons = (defender->is_monster());
+    const bool is_mon = defender->is_monster();
 
     const int resistible_fraction = get_resistible_fraction(flavour);
 
@@ -544,7 +557,9 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if (((mons || flavour == BEAM_NEG) && res >= 3) || res > 3)
+        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG
+                                            || flavour == BEAM_ACID;
+        if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
         {
@@ -556,12 +571,12 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
             // Use a new formula for players, but keep the old, more
             // effective one for monsters.
-            if (mons)
+            if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG)
                 resistible /= res * 2;
             else
-                resistible /= resist_fraction(res, bonus_res);
+                resistible /= (3 * res + 1) / 2 + bonus_res;
         }
     }
     else if (res < 0)

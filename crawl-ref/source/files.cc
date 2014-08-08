@@ -47,6 +47,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "errors.h"
 #include "fineff.h"
@@ -72,13 +73,14 @@
 #include "output.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "random.h"
 #include "show.h"
 #include "shopping.h"
 #include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
@@ -1827,6 +1829,8 @@ bool load_ghost(bool creating_level)
             mons->bind_spell_flags();
         if (mons->ghost->species == SP_DEEP_DWARF)
             mons->flags |= MF_NO_REGEN;
+        mark_interesting_monst(mons,
+                               attitude_creation_behavior(mons->attitude));
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS

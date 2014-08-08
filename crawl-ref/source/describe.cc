@@ -50,13 +50,15 @@
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "unicode.h"
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -2113,12 +2115,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     // Display branch descriptions on the entries to those branches.
     if (feat_is_stair(feat))
     {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
+        for (branch_iterator it; it; ++it)
         {
-            if (branches[i].entry_stairs == feat)
+            if (it->entry_stairs == feat)
             {
                 long_desc += "\n";
-                long_desc += getLongDescription(branches[i].shortname);
+                long_desc += getLongDescription(it->shortname);
                 break;
             }
         }
@@ -3603,10 +3605,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
     inf.quote += quote2;
 
-    // Except for draconians and player ghosts, I have to admit I find the
-    // following special descriptions rather pointless. I certainly can't
-    // say I like them, though "It has come for your soul!" and
-    // "It wants to drink your blood!" have something going for them. (jpeg)
     switch (mi.type)
     {
     case MONS_VAMPIRE:
@@ -4458,9 +4456,9 @@ static string _describe_branch_bribability()
     string ret = "You can bribe the following branches:\n";
     vector<branch_type> targets;
     size_t width = 0;
-    for (unsigned int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        const branch_type br = static_cast<branch_type>(i);
+        const branch_type br = it->id;
         if (!gozag_branch_bribable(br))
             continue;
 
@@ -4470,7 +4468,7 @@ static string _describe_branch_bribability()
             continue;
 
         targets.push_back(br);
-        width = max(width, strlen(branches[i].longname));
+        width = max(width, strlen(it->longname));
     }
 
     for (unsigned int i = 0; i < targets.size(); i++)

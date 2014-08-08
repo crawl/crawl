@@ -32,6 +32,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "spl-clouds.h"
@@ -40,7 +41,7 @@
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"
@@ -616,10 +617,10 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     }
 
     // Try to find a branch stair.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (branches[i].entry_stairs == feat)
-            return level_id(branches[i].id);
+        if (it->entry_stairs == feat)
+            return level_id(it->id);
     }
 
     return level_id();

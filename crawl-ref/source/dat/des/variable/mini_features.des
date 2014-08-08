@@ -3337,6 +3337,27 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
+NAME:  bh_chokoban
+TAGS:  extra decor no_exits
+TAGS:  no_rotate no_hmirror no_vmirror
+DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
+ITEM:  fruit q:1
+MAP
+cccccc  ccccc
+c....c  c...c
+c.d..cccc.d.c
+c.d......d..c
+c..ccc)cccd.c
+cccccccccc.ccc
+c.....(c.....c
+c..cccccd....c
+cc.c   c.d...c
+ c.ccccc.d...c
+ c......d.d..c
+ c%%cccccccccc
+ cccc
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.

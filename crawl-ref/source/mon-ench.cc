@@ -35,7 +35,8 @@
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
@@ -283,6 +284,20 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // clear any constrictions on/by you
         stop_constricting(MID_PLAYER, true);
         you.stop_constricting(mid, true);
+
+        if (invisible() && mons_near(this) && !you.can_see_invisible()
+            && !backlit() && !has_ench(ENCH_SUBMERGED))
+        {
+            if (!quiet)
+            {
+                mprf("You detect the %s %s.",
+                     ench.ench == ENCH_CHARM ? "charmed" : "bribed",
+                     name(DESC_PLAIN, true).c_str());
+            }
+
+            autotoggle_autopickup(false);
+            handle_seen_interrupt(this);
+        }
 
         // TODO -- and friends
 
@@ -582,7 +597,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // that they can properly have their invisibility removed just
         // before being polymorphed into a non-invisible monster.
         if (mons_near(this) && !you.can_see_invisible() && !backlit()
-            && !has_ench(ENCH_SUBMERGED))
+            && !has_ench(ENCH_SUBMERGED)
+            && !friendly() && !you.duration[DUR_TELEPATHY])
         {
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
@@ -593,12 +609,44 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CHARM:
-        if (!quiet)
+    case ENCH_BRIBED:
+    case ENCH_PERMA_BRIBED:
+        if (invisible() && mons_near(this) && !you.can_see_invisible()
+            && !backlit() && !has_ench(ENCH_SUBMERGED))
         {
-            if (props.exists("charmed_demon"))
-                simple_monster_message(this, " breaks free of your control!");
-            else
-                simple_monster_message(this, " is no longer charmed.");
+            if (!quiet)
+            {
+                if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
+                {
+                    mprf("%s breaks free of your control!",
+                         name(DESC_THE, true).c_str());
+                }
+                else
+                    mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
+                         me.ench == ENCH_CHARM ? "charmed" : "bribed");
+
+                mprf("You can no longer detect the %s.",
+                     name(DESC_PLAIN, true).c_str());
+            }
+
+            autotoggle_autopickup(true);
+        }
+        else
+        {
+            if (!quiet)
+            {
+                if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
+                {
+                    simple_monster_message(this,
+                                           " breaks free of your control!");
+                }
+                else
+                    simple_monster_message(this,
+                                        me.ench == ENCH_CHARM
+                                        ? " is no longer charmed."
+                                        : " is no longer bribed.");
+            }
+
         }
 
         if (you.can_see(this))
@@ -617,31 +665,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         mons_att_changed(this);
 
         // If a greater demon is breaking free, give the player time to respond
-        if (props.exists("charmed_demon"))
+        if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
         {
             speed_increment -= speed;
             props.erase("charmed_demon");
         }
-
-        // Reevaluate behaviour.
-        behaviour_event(this, ME_EVAL);
-        break;
-
-    case ENCH_BRIBED:
-    case ENCH_PERMA_BRIBED:
-        if (!quiet)
-            simple_monster_message(this, " is no longer bribed.");
-
-        if (you.can_see(this))
-        {
-            // and fire activity interrupts
-            interrupt_activity(AI_SEE_MONSTER,
-                               activity_interrupt_data(this, SC_UNCHARM));
-        }
-
-        if (is_patrolling())
-            patrol_point.reset();
-        mons_att_changed(this);
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -1097,11 +1125,12 @@ void monster::timeout_enchantments(int levels)
                 del_ench(i->first);
                 break;
             }
-            // Deliberate fall-through
+            lose_ench_levels(i->second, levels);
+            break;
 
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
-        case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
+        case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
@@ -1118,6 +1147,17 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
         case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
             lose_ench_levels(i->second, levels);
+            break;
+
+        case ENCH_SLOW:
+            if (torpor_slowed())
+                lose_ench_levels(i->second, min(levels, i->second.degree - 1));
+            else
+            {
+                lose_ench_levels(i->second, levels);
+                if (props.exists(TORPOR_SLOWED_KEY))
+                    props.erase(TORPOR_SLOWED_KEY);
+            }
             break;
 
         case ENCH_INVIS:

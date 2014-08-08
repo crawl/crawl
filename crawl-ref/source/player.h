@@ -22,6 +22,11 @@
 #include "tiledoll.h"
 #endif
 
+#define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+#define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
+#define STONESKIN_KEY "stoneskin_pow"
+#define TRANSFORM_POW_KEY "transform_pow"
+
 class targetter;
 
 int check_stealth();
@@ -53,13 +58,12 @@ public:
 
   int hp;
   int hp_max;
-  int hp_max_temp;            // temporary max HP loss (rotting)
-  int hp_max_perm;            // base HPs from background (and permanent loss)
+  int hp_max_adj_temp;        // temporary max HP loss (rotting)
+  int hp_max_adj_perm;        // base HPs from background (and permanent loss)
 
   int magic_points;
   int max_magic_points;
-  int mp_max_temp;            // temporary max MP loss? (currently unused)
-  int mp_max_perm;            // base MPs from background (and permanent loss)
+  int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
@@ -508,7 +512,8 @@ public:
     int         body_weight(bool base = false) const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
-    random_var  attack_delay(item_def *weapon, item_def *projectile = NULL,
+    random_var  attack_delay(const item_def *weapon, const
+                             item_def *projectile = NULL,
                              bool random = true, bool scaled = true) const;
     int         constriction_damage() const;
 
@@ -871,7 +876,6 @@ int player_regen();
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
-int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
 int player_kiku_res_torment();

@@ -36,7 +36,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tilepick.h"

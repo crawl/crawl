@@ -1166,6 +1166,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_CORROSIVE_BOLT,
+    "bolt of acid",
+    200,
+    new calcdice_calculator<1, 11, 3, 5>,
+    new tohit_calculator<10, 1, 25>,
+    YELLOW,
+    false,
+    BEAM_ACID,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},
+
+{
     ZAP_RANDOM_BOLT_TRACER,
     "random bolt tracer",
     200,

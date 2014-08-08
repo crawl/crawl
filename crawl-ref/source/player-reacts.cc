@@ -116,7 +116,7 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
@@ -501,6 +501,8 @@ static void _decrement_durations()
                               melted ? nullptr
                               : "Your icy armour starts to melt."))
     {
+        if (you.props.exists(ICY_ARMOUR_KEY))
+            you.props.erase(ICY_ARMOUR_KEY);
         you.redraw_armour_class = true;
     }
 
@@ -631,6 +633,8 @@ static void _decrement_durations()
                               coinflip(),
                               "Your icy shield starts to melt."))
     {
+        if (you.props.exists(CONDENSATION_SHIELD_KEY))
+            you.props.erase(CONDENSATION_SHIELD_KEY);
         you.redraw_armour_class = true;
     }
 
@@ -641,7 +645,11 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
+    {
+        if (you.props.exists(STONESKIN_KEY))
+            you.props.erase(STONESKIN_KEY);
         you.redraw_armour_class = true;
+    }
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {

@@ -350,8 +350,8 @@ ENDMAP
 # A map with many boxes for rooms, mostly inside each other.
 #
 NAME:   layout_onion_city
-DEPTH:  Elf, Pan
-WEIGHT: 20 (Elf), 5 (Pan)
+DEPTH:  Pan
+WEIGHT: 5
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   unrand no_rotate no_hmirror no_vmirror
@@ -519,12 +519,6 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
   -- the map is already connected in a tree, but more doors is nice
   connect_adjacent_rooms { max = crawl.random_range(100, 250),
                            min = 50, replace = '+', check_empty = true }
-
-  -- add windows in Elf
-  if (you.in_branch("elf")) then
-    connect_adjacent_rooms { max = 400, min = 100,
-                             replace = 'm', check_empty = false }
-  end
 }}
 MAP
 ENDMAP

@@ -33,7 +33,8 @@
 #include "species.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "unicode.h"
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -342,10 +343,17 @@ bool is_random_artefact(const item_def &item)
     return item.flags & ISFLAG_RANDART;
 }
 
-// returns true if item in an unrandart
-bool is_unrandom_artefact(const item_def &item)
+/** Is this an unrandart, and if so which one?
+ *
+ *  @param item The item to be checked.
+ *  @param which The unrand enum to be checked against (default 0).
+ *  @returns true if item is an unrand, and if which is not 0, if it is the unrand
+ *           specfied by enum in which.
+ */
+bool is_unrandom_artefact(const item_def &item, int which)
 {
-    return item.flags & ISFLAG_UNRANDART;
+    return item.flags & ISFLAG_UNRANDART
+           && (!which || which == item.special);
 }
 
 bool is_special_unrandom_artefact(const item_def &item)

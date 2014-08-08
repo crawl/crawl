@@ -242,6 +242,11 @@ int div_rand_round(int num, int den)
         return num / den;
 }
 
+int div_round_up(int num, int den)
+{
+    return num / den + (num % den != 0);
+}
+
 // [0, max)
 int bestroll(int max, int rolls)
 {

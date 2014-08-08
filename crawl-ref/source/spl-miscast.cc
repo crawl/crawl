@@ -36,7 +36,7 @@
 #include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "areas.h"
 #include "terrain.h"
 #include "transform.h"

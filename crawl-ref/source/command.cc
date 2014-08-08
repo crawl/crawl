@@ -36,7 +36,9 @@
 #include "message.h"
 #include "mon-util.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "skills2.h"
@@ -45,7 +47,9 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "unicode.h"
+
 #include "env.h"
 #include "syscalls.h"
 #include "terrain.h"
@@ -880,16 +884,13 @@ static vector<string> _get_branch_keys()
 {
     vector<string> names;
 
-    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        branch_type which_branch = static_cast<branch_type>(i);
-        const Branch &branch     = branches[which_branch];
-
         // Skip unimplemented branches
-        if (branch_is_unfinished(which_branch))
+        if (branch_is_unfinished(it->id))
             continue;
 
-        names.push_back(branch.shortname);
+        names.push_back(it->shortname);
     }
     return names;
 }

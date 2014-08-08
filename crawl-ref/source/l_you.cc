@@ -26,6 +26,7 @@
 #include "jobs.h"
 #include "ouch.h"
 #include "place.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -33,8 +34,9 @@
 #include "skills2.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "stuff.h"
+#include "strings.h"
 #include "transform.h"
+#include "traps.h"
 #include "travel.h"
 
 /*
@@ -624,21 +626,21 @@ LUAFN(you_in_branch)
 
     int br = NUM_BRANCHES;
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        if (strcasecmp(name, branches[i].shortname) == 0
-            || strcasecmp(name, branches[i].longname) == 0
-            || strcasecmp(name, branches[i].abbrevname) == 0)
+        if (strcasecmp(name, it->shortname) == 0
+            || strcasecmp(name, it->longname) == 0
+            || strcasecmp(name, it->abbrevname) == 0)
         {
             if (br != NUM_BRANCHES)
             {
                 string err = make_stringf(
                     "'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
-                    branches[i].abbrevname);
+                    it->abbrevname);
                 return luaL_argerror(ls, 1, err.c_str());
             }
-            br = i;
+            br = it->id;
         }
     }
 

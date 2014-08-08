@@ -5,8 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "end.h"
 #include "sqldbm.h"
-#include "stuff.h"
 #include "syscalls.h"
 #include <fcntl.h>
 #include <unistd.h>

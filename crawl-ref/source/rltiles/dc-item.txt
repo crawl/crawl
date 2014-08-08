@@ -162,8 +162,10 @@ blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_HUNTING_SLING
 sling2
-
 %rim 0
+greatsling WPN_GREATSLING
+greatsling2
+
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
@@ -278,6 +280,7 @@ effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
+%rim 0
 tomahawk1 MI_TOMAHAWK
 tomahawk2
 steel_tomahawk MI_TOMAHAWK_STEEL
@@ -292,6 +295,7 @@ effect/tomahawk5 MI_TOMAHAWK5
 effect/tomahawk6 MI_TOMAHAWK6
 effect/tomahawk7 MI_TOMAHAWK7
 
+%rim 1
 needle1 MI_NEEDLE
 needle2
 needle-p MI_NEEDLE_P
@@ -335,15 +339,19 @@ effect/throwing_net5 MI_THROWING_NET5
 effect/throwing_net6 MI_THROWING_NET6
 effect/throwing_net7 MI_THROWING_NET7
 
+%rim 0
 rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
 ######OBJ_ARMOUR
 %sdir item/armour
-robe1 ARM_ROBE
-robe2
-robe3
+robe1 ARM_ROBE ARM_ROBE_FIRST
+robe2 ARM_ROBE_LAST
+robe_ego1 ARM_ROBE_EGO_FIRST
+robe_ego2 ARM_ROBE_EGO_LAST
+robe_art1 ARM_ROBE_ART_FIRST
+robe_art2 ARM_ROBE_ART_LAST
 
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
@@ -369,6 +377,7 @@ crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
 
+%rim 1
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
 
@@ -957,11 +966,15 @@ misc_orb2
 misc_bottle MISC_BOTTLED_EFREET
 %rim 0
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
-%rim 1
-misc_fan MISC_AIR_ELEMENTAL_FAN
+misc_fan MISC_FAN_OF_GALES
+misc_fan_inert MISC_FAN_OF_GALES_INERT
 misc_lamp MISC_LAMP_OF_FIRE
-misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
+misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
+misc_stone MISC_STONE_OF_TREMORS
+misc_stone_inert MISC_STONE_OF_TREMORS_INERT
 misc_phial MISC_PHIAL_OF_FLOODS
+misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
+%rim 1
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS

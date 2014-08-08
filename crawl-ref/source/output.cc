@@ -32,6 +32,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "menu.h"
@@ -40,17 +41,19 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "jobs.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "throw.h"
 #include "transform.h"
 #include "travel.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "showsymb.h"
@@ -815,7 +818,7 @@ static void _print_stats_ac(int x, int y)
     if (you.wizard)
         ac += make_stringf("(%d%%) ", you.gdr_perc());
 #endif
-    CPRINTF("%s", ac.c_str());
+    CPRINTF("%-12s", ac.c_str());
 
     // SH: (two lines lower)
     CGOTOXY(x+4, y+2, GOTO_STAT);
@@ -825,7 +828,8 @@ static void _print_stats_ac(int x, int y)
         textcolor(LIGHTBLUE);
     else
         textcolor(HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", player_displayed_shield_class());
+    string sh = make_stringf("%2d ", player_displayed_shield_class());
+    CPRINTF("%-12s", sh.c_str());
 }
 
 static void _print_stats_ev(int x, int y)
@@ -838,10 +842,17 @@ static void _print_stats_ev(int x, int y)
     CPRINTF("%2d ", player_evasion());
 }
 
-static void _print_stats_wp(int y)
+/**
+ * Get the appropriate colour for the UI text describing the player's weapon.
+ * (Or hands/ice fists/etc, as appropriate.)
+ *
+ * @return     A colour enum for the player's weapon.
+ */
+static int _wpn_name_colour()
 {
-    int col;
-    string text;
+    if (you.duration[DUR_CORROSION])
+        return RED;
+
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
@@ -849,59 +860,62 @@ static void _print_stats_wp(int y)
         const string prefix = item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
-            col = prefcol;
-        else if (you.duration[DUR_CORROSION])
-            col = RED;
-        else
-            col = LIGHTGREY;
-
-        text = wpn.name(DESC_INVENTORY, true, false, true);
+            return prefcol;
+        return LIGHTGREY;
     }
-    else
+
+    switch (you.form)
     {
-        const string prefix = "-) ";
-        col = LIGHTGREY;
-        switch (you.form)
-        {
         case TRAN_SPIDER:
-            col = LIGHTGREEN;
-            break;
+            return LIGHTGREEN;
+
         case TRAN_BLADE_HANDS:
-            col = RED;
-            break;
-        case TRAN_STATUE:
-        case TRAN_WISP:
-            col = LIGHTGREY;
-            break;
+            return RED;
+
         case TRAN_ICE_BEAST:
-            col = WHITE;
-            break;
+            return WHITE;
+
         case TRAN_DRAGON:
-            col = GREEN;
-            break;
+            return GREEN;
+
         case TRAN_LICH:
         case TRAN_SHADOW:
-            col = MAGENTA;
-            break;
+            return MAGENTA;
+
+        case TRAN_FUNGUS:
+        case TRAN_TREE:
+            return BROWN;
+
+        case TRAN_STATUE:
+        case TRAN_WISP:
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
-            col = LIGHTGREY;
-            break;
-        case TRAN_FUNGUS:
-        case TRAN_TREE:
-            col = BROWN;
-            break;
         default:
-            break;
-        }
-        text = prefix + you.unarmed_attack_name();
+            return LIGHTGREY;
     }
+}
+
+/**
+ * Print a description of the player's weapon (or lack thereof) to the UI.
+ *
+ * @param y     The y-coordinate to print the description at.
+ */
+static void _print_stats_wp(int y)
+{
+    string text;
+    if (you.weapon())
+    {
+        const item_def& wpn = *you.weapon();
+        text = wpn.name(DESC_INVENTORY, true, false, true);
+    }
+    else
+        text = "-) " + you.unarmed_attack_name();
 
     CGOTOXY(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     CPRINTF("Wp: ");
-    textcolor(col);
+    textcolor(_wpn_name_colour());
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
@@ -1494,6 +1508,62 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
+void set_redraw_status(uint64_t flags)
+{
+    you.redraw_status_flags |= flags;
+}
+
+void redraw_screen()
+{
+    if (!crawl_state.need_save)
+    {
+        // If the game hasn't started, don't do much.
+        clrscr();
+        return;
+    }
+
+#ifdef USE_TILE_WEB
+    tiles.close_all_menus();
+#endif
+
+    draw_border();
+
+    you.redraw_title        = true;
+    you.redraw_hit_points   = true;
+    you.redraw_magic_points = true;
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
+#endif
+    you.redraw_stats.init(true);
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_experience   = true;
+    you.wield_change        = true;
+    you.redraw_quiver       = true;
+
+    set_redraw_status(
+                      REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+
+    print_stats();
+
+    bool note_status = notes_are_active();
+    activate_notes(false);
+    print_stats_level();
+#ifdef DGL_SIMPLE_MESSAGING
+    update_message_status();
+#endif
+    update_turn_count();
+    activate_notes(note_status);
+
+    viewwindow();
+
+    // Display the message window at the end because it places
+    // the cursor behind possible prompts.
+    display_message_window();
+    update_screen();
+}
+
 // ----------------------------------------------------------------------
 // Monster pane
 // ----------------------------------------------------------------------
@@ -1915,7 +1985,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname,
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 38 : sw - 31, false).c_str(),
+                                 melded ? sw - 43 : sw - 36, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }

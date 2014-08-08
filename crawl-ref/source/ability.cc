@@ -54,6 +54,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -70,7 +71,7 @@
 #include "spl-miscast.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "target.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -80,6 +81,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "uncancel.h"
+#include "unicode.h"
 #include "zotdef.h"
 
 enum ability_flag_type

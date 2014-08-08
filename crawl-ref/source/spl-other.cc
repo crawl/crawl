@@ -32,7 +32,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "spl-util.h"
-#include "stuff.h"
+
 #include "terrain.h"
 #include "transform.h"
 
@@ -312,9 +312,9 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    int shallow = 1 + you.skill(SK_EARTH_MAGIC) / 8;
-    int range = shallow + random2(pow) / 25;
-    int maxrange = shallow + pow / 25;
+    int shallow = 1 + min(pow / 30, 3);      // minimum penetrable depth
+    int range = shallow + random2(pow) / 25; // penetrable depth for this cast
+    int maxrange = shallow + pow / 25;       // max penetrable depth
 
     coord_def dest;
     for (dest = you.pos() + delta;
@@ -333,9 +333,10 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 
     // Below here, failing to cast yields information to the
     // player, so we don't make the spell abort (return true).
+    monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
-    else if (cell_is_solid(dest))
+    else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
         mpr("Something is blocking your path through the rock.");
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
@@ -426,6 +427,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
     else
         mpr("A crackling disc of dense vapour forms in the air!");
     you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
+    you.props[CONDENSATION_SHIELD_KEY] = pow;
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
@@ -444,7 +446,7 @@ spret_type cast_stoneskin(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
     {
-        mpr("This spell conflicts with another spell still in effect.");
+        mpr("Turning your skin into stone would shatter your icy armour.");
         return SPRET_ABORT;
     }
 
@@ -462,17 +464,14 @@ spret_type cast_stoneskin(int pow, bool fail)
 
     if (you.duration[DUR_STONESKIN])
         mpr("Your skin feels harder.");
+    else if (you.form == TRAN_STATUE)
+        mpr("Your stone body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("Your skin hardens.");
-
-        you.redraw_armour_class = true;
-    }
+        mpr("Your skin hardens.");
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+    you.props[STONESKIN_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }

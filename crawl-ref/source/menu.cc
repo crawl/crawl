@@ -23,6 +23,8 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
+#include "strings.h"
+#include "unicode.h"
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
@@ -312,13 +314,13 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     }
 
     // Reset offset to default.
-    mdisplay->set_offset(1 + !!title);
+    mdisplay->set_offset(1 + title_height());
 
     // Lose lines for the title + room for -more- line.
 #ifdef USE_TILE_LOCAL
-    pagesize = max_pagesize - !!title - 1;
+    pagesize = max_pagesize - title_height() - 1;
 #else
-    pagesize = get_number_of_lines() - !!title - 1;
+    pagesize = get_number_of_lines() - title_height() - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
 #endif
@@ -1272,7 +1274,7 @@ void Menu::draw_menu()
 
     draw_title();
     draw_select_count(sel.size());
-    y_offset = 1 + !!title;
+    y_offset = 1 + title_height();
 
     mdisplay->set_offset(y_offset);
 
@@ -1348,6 +1350,11 @@ void Menu::write_title()
     if (x > 1 || text.empty())
         cprintf("%-*s", get_number_of_cols() + 1 - x, "");
     cgotoxy(x, y);
+}
+
+int Menu::title_height() const
+{
+    return !!title;
 }
 
 bool Menu::in_page(int index) const

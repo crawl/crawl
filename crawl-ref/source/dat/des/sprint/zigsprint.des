@@ -785,7 +785,9 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
 KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
               shield unrand:shield_of_the_gong ident:all, \
               plate armour unrand:maxwells_patent_armour ident:all, \
-              great mace unrand:dark_maul ident:all
+              great mace unrand:dark_maul ident:all, \
+              triple crossbow unrand:sniper ident:all, \
+              quarterstaff unrand:majin-bo ident:all
 KITEM:    T = longbow unrand:piercer ident:all, \
               long sword unrand:singing_sword ident:all, \
               great mace unrand:mace_of_variability ident:all, \
@@ -794,7 +796,8 @@ KITEM:    T = longbow unrand:piercer ident:all, \
               bastard sword unrand:sword_of_zonguldrok ident:all, \
               spear unrand:wyrmbane ident:all, \
               claymore unrand:plutonium_sword ident:all, \
-              club unrand:devastator ident:all
+              club unrand:devastator ident:all, \
+              great mace unrand:firestarter ident:all
 KITEM:    S = disc of storms ident:all, \
               tome of destruction ident:all, tome of destruction ident:all
 KFEAT:    ^ = granite_statue

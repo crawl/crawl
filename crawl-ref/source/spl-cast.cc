@@ -41,7 +41,9 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -58,13 +60,15 @@
 #include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "target.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
 #include "transform.h"
+#include "unicode.h"
 #include "view.h"
 
 static int _spell_enhancement(unsigned int typeflags);

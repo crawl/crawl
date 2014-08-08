@@ -24,6 +24,7 @@
 #include "player.h"
 #include "random.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
 #include "unwind.h"

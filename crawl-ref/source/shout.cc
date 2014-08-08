@@ -10,6 +10,7 @@
 #include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "areas.h"
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
@@ -18,6 +19,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
+#include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "los.h"
@@ -36,9 +38,8 @@
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
-#include "areas.h"
-#include "hints.h"
 #include "view.h"
 
 #include <sstream>

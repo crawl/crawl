@@ -333,6 +333,14 @@ static const duration_def duration_data[] =
       false, RED, "-Scroll",
       "no scrolls", "",
       "You cannot read scrolls." },
+    { DUR_CONDENSATION_SHIELD,
+      false, 0, "",
+      "icy shield", "",
+      "You are shielded by a disc of ice." },
+    { DUR_DIVINE_SHIELD,
+      false, 0, "",
+      "divine shield", "",
+      "You are shielded by the power of the Shining One." },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -346,13 +354,11 @@ static const duration_def duration_data[] =
     { DUR_POISONING, false, 0, "", "", "poisoning", "" },
     { DUR_SURE_BLADE, false, 0, "", "", "sure blade", "" },
     { DUR_PIETY_POOL, false, 0, "", "", "piety pool", "" },
-    { DUR_DIVINE_SHIELD, false, 0, "", "", "divine shield", "" },
     { DUR_REGENERATION, false, 0, "", "", "regeneration", "" },
     { DUR_TRANSFORMATION, false, 0, "", "", "transformation", "" },
     { DUR_WEAPON_BRAND, false, 0, "", "", "weapon brand", "" },
     { DUR_DEMONIC_GUARDIAN, false, 0, "", "", "demonic guardian", "" },
     { DUR_POWERED_BY_DEATH, false, 0, "", "", "pbd", "" },
-    { DUR_CONDENSATION_SHIELD, false, 0, "", "", "condensation shield", "" },
     { DUR_GOURMAND, false, 0, "", "", "gourmand", "" },
     { DUR_REPEL_STAIRS_MOVE, false, 0, "", "", "repel stairs move", "" },
     { DUR_REPEL_STAIRS_CLIMB, false, 0, "", "", "repel stairs climb", "" },

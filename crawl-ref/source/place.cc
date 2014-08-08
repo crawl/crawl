@@ -8,9 +8,9 @@
 #include "externs.h"
 
 #include "branch.h"
-#include "libutil.h"
 #include "place.h"
 #include "player.h"
+#include "strings.h"
 #include "travel.h"
 
 string short_place_name(level_id id)
@@ -109,12 +109,10 @@ bool branch_allows_followers(branch_type branch)
 vector<level_id> all_dungeon_ids()
 {
     vector<level_id> out;
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        const Branch &branch = branches[i];
-
-        for (int depth = 1; depth <= brdepth[i]; depth++)
-            out.push_back(level_id(branch.id, depth));
+        for (int depth = 1; depth <= brdepth[it->id]; depth++)
+            out.push_back(level_id(it->id, depth));
     }
     return out;
 }

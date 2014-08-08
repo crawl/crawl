@@ -30,6 +30,7 @@
 #include "itemprop.h"
 #include "losglobal.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -53,7 +54,7 @@
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "env.h"
 #include "areas.h"
 #include "view.h"
@@ -1114,13 +1115,17 @@ static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
 
 static int _battle_cry(monster* chief, battlecry_type type)
 {
+    ASSERT(type != NUM_BATTLECRIES);
     const actor *foe = chief->get_foe();
     int affected = 0;
 
     enchant_type battlecry = (type == BATTLECRY_ORC ? ENCH_BATTLE_FRENZY
                                                     : ENCH_ROUSED);
 
-    const string messages[NUM_BATTLECRIES][4] =
+    // Columns 0 and 1 should have one instance of %s (for the monster),
+    // column 2 two (for a determiner and the monsters), and column 3 none.
+    enum { CRY, AFFECT_ONE, AFFECT_MANY, GENERIC_ALLIES };
+    static const char * const messages[][4] =
     {
         {
             "%s roars a battle-cry!",
@@ -1135,12 +1140,13 @@ static int _battle_cry(monster* chief, battlecry_type type)
             "holy creatures"
         },
         {
-            "%s plays a rousing melody on his pipes!",
+            "%s plays a rousing melody on its pipes!",
             "%s is stirred to greatness!",
             "%s %s are stirred to greatness!",
             "satyr's allies"
         },
     };
+    COMPILE_CHECK(ARRAYSZ(messages) == NUM_BATTLECRIES);
 
     if (foe
         && (!foe->is_player() || !chief->friendly())
@@ -1192,7 +1198,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
         {
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
-                mprf(MSGCH_SOUND, messages[type][0].c_str(),
+                mprf(MSGCH_SOUND, messages[type][CRY],
                      chief->name(DESC_THE).c_str());
             }
 
@@ -1210,7 +1216,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 if (seen_affected.size() == 1)
                 {
                     who = seen_affected[0]->name(DESC_THE);
-                    mprf(channel, messages[type][1].c_str(), who.c_str());
+                    mprf(channel, messages[type][AFFECT_ONE], who.c_str());
                 }
                 else
                 {
@@ -1227,10 +1233,10 @@ static int _battle_cry(monster* chief, battlecry_type type)
                     }
                     who = get_monster_data(mon_type)->name;
 
-                    mprf(channel, messages[type][2].c_str(),
+                    mprf(channel, messages[type][AFFECT_MANY],
                          chief->friendly() ? "Your" : "The",
                          (!generic ? pluralise(who).c_str()
-                                   : messages[type][3].c_str()));
+                                   : messages[type][GENERIC_ALLIES]));
                 }
             }
         }
@@ -3304,6 +3310,98 @@ void siren_song(monster* mons)
     }
 }
 
+/**
+ * Have a mermaid or siren attempt to mesmerize the player.
+ *
+ * @param mons  The singing monster.
+ * @param spl   The channel to print messages in.
+ * @return      Whether the ability was used.
+ */
+static bool _mermaid_sing(monster* mons, msg_channel_type spl)
+{
+    // Don't behold observer in the arena.
+    if (crawl_state.game_is_arena())
+        return false;
+
+    // Don't behold player already half down or up the stairs.
+    if (!you.delay_queue.empty())
+    {
+        const delay_queue_item delay = you.delay_queue.front();
+
+        if (delay.type == DELAY_ASCENDING_STAIRS
+            || delay.type == DELAY_DESCENDING_STAIRS)
+        {
+            dprf("Taking stairs, don't mesmerise.");
+            return false;
+        }
+    }
+
+    // Won't sing if either of you silenced, or it's friendly,
+    // confused, fleeing, or leaving the level.
+    if (mons->has_ench(ENCH_CONFUSION)
+        || mons_is_fleeing(mons)
+        || mons->pacified()
+        || mons->friendly()
+        || !player_can_hear(mons->pos()))
+    {
+        return false;
+    }
+
+    // Don't even try on berserkers. Mermaids know their limits.
+    // (Sirens should still sing since their song has other effects)
+    if (mons->type != MONS_SIREN && you.berserk())
+        return false;
+
+    const bool already_mesmerised = you.beheld_by(mons);
+
+    // If the mer is trying to mesmerize you anew, sing 60% of the time.
+    // Otherwise, only sing 20% of the time.
+    const bool can_mesm_you = !already_mesmerised && mons->foe == MHITYOU
+                              && you.can_see(mons);
+
+    if (x_chance_in_y(can_mesm_you ? 2 : 4, 5))
+        return false;
+
+    // Sing! Beyond this point, we should always return true.
+    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
+
+    if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
+        mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
+
+    if (you.can_see(mons))
+    {
+        const char * const song_adj = already_mesmerised ? "her luring"
+                                                         : "a haunting";
+        const string song_desc = make_stringf(" chants %s song.", song_adj);
+        simple_monster_message(mons, song_desc.c_str(), spl);
+    }
+    else
+    {
+        mprf(MSGCH_SOUND, "You hear %s.",
+                          already_mesmerised ? "a luring song" :
+                          coinflip()         ? "a haunting song"
+                                             : "an eerie melody");
+
+        // If you're already mesmerised by an invisible mermaid, she
+        // can still prolong the enchantment.
+        if (!already_mesmerised)
+            return true;
+    }
+
+    // Once mesmerised by a particular monster, you cannot resist anymore.
+    if (you.duration[DUR_MESMERISE_IMMUNE]
+        || !already_mesmerised
+           && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
+               || you.clarity()))
+    {
+        canned_msg(you.clarity() ? MSG_YOU_UNAFFECTED : MSG_YOU_RESIST);
+        return true;
+    }
+
+    you.add_beholder(mons);
+    return true;
+}
+
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -3775,97 +3873,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MERMAID:
     case MONS_SIREN:
     {
-        // Don't behold observer in the arena.
-        if (crawl_state.game_is_arena())
-            break;
-
-        // Don't behold player already half down or up the stairs.
-        if (!you.delay_queue.empty())
-        {
-            delay_queue_item delay = you.delay_queue.front();
-
-            if (delay.type == DELAY_ASCENDING_STAIRS
-                || delay.type == DELAY_DESCENDING_STAIRS)
-            {
-                dprf("Taking stairs, don't mesmerise.");
-                break;
-            }
-        }
-
-        // Won't sing if either of you silenced, or it's friendly,
-        // confused, fleeing, or leaving the level.
-        if (mons->has_ench(ENCH_CONFUSION)
-            || mons_is_fleeing(mons)
-            || mons->pacified()
-            || mons->friendly()
-            || !player_can_hear(mons->pos()))
-        {
-            break;
-        }
-
-        // Don't even try on berserkers. Mermaids know their limits.
-        // (Sirens should still sing since their song has other effects)
-        if (mons->type != MONS_SIREN && you.berserk())
-            break;
-
-        bool already_mesmerised = you.beheld_by(mons);
-
-        if (one_chance_in(5)
-            || mons->foe == MHITYOU && !already_mesmerised && coinflip())
-        {
-            noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
-
-            if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
-                mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
-
-            if (you.can_see(mons))
-            {
-                simple_monster_message(mons,
-                    make_stringf(" chants %s song.",
-                    already_mesmerised ? "her luring" : "a haunting").c_str(),
-                    spl);
-
-            }
-            else
-            {
-                // If you're already mesmerised by an invisible mermaid she
-                // can still prolong the enchantment; otherwise you "resist".
-                if (already_mesmerised)
-                    mprf(MSGCH_SOUND, "You hear a luring song.");
-                else
-                {
-                    if (one_chance_in(4)) // reduce spamminess
-                    {
-                        if (coinflip())
-                            mprf(MSGCH_SOUND, "You hear a haunting song.");
-                        else
-                            mprf(MSGCH_SOUND, "You hear an eerie melody.");
-
-                        canned_msg(MSG_YOU_RESIST); // flavour only
-                    }
-                    break;
-                }
-            }
-
-            // Once mesmerised by a particular monster, you cannot resist
-            // anymore.
-            if (!already_mesmerised
-                && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
-                    || you.clarity())
-                    || you.duration[DUR_MESMERISE_IMMUNE])
-            {
-                if (you.clarity())
-                    canned_msg(MSG_YOU_UNAFFECTED);
-                else
-                    canned_msg(MSG_YOU_RESIST);
-                used = true;
-                break;
-            }
-
-            you.add_beholder(mons);
-
-            used = true;
-        }
+        used = _mermaid_sing(mons, spl);
         break;
     }
 
@@ -4503,57 +4511,68 @@ void mon_nearby_ability(monster* mons)
     }
 }
 
-// When giant spores move maybe place a ballistomycete on the they move
-// off of.
+/**
+ * Possibly place mold & ballistomycetes in giant spores' wake.
+ *
+ * @param mons      The giant spore in question.
+ * @param position  Its last location. (Where to place the ballistomycete.)
+ */
 void ballisto_on_move(monster* mons, const coord_def& position)
 {
-    if (mons->type == MONS_GIANT_SPORE && !crawl_state.game_is_zotdef()
-        && !mons->is_summoned())
+    if (mons->type != MONS_GIANT_SPORE
+        || crawl_state.game_is_zotdef()
+        || mons->is_summoned())
     {
-        dungeon_feature_type ftype = env.grid(mons->pos());
-
-        if (ftype == DNGN_FLOOR)
-            env.pgrid(mons->pos()) |= FPROP_MOLD;
-
-        // The number field is used as a cooldown timer for this behavior.
-        if (mons->number <= 0)
-        {
-            if (one_chance_in(4))
-            {
-                beh_type attitude = attitude_creation_behavior(mons->attitude);
-                if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                        attitude,
-                                                        NULL,
-                                                        0,
-                                                        0,
-                                                        position,
-                                                        MHITNOT,
-                                                        MG_FORCE_PLACE)))
-                {
-                    if (mons_is_god_gift(mons, GOD_FEDHAS))
-                    {
-                        plant->flags |= MF_NO_REWARD;
-
-                        if (attitude == BEH_FRIENDLY)
-                        {
-                            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-                            mons_make_god_gift(plant, GOD_FEDHAS);
-                        }
-                    }
-
-                    // Don't leave mold on squares we place ballistos on
-                    remove_mold(position);
-                    if (you.can_see(plant))
-                        mpr("A ballistomycete grows in the wake of the spore.");
-                }
-
-                mons->number = 40;
-            }
-        }
-        else
-            mons->number--;
+        return;
     }
+
+    // place mold under the spore's current tile, if there isn't any now.
+    const dungeon_feature_type current_ftype = env.grid(mons->pos());
+    if (current_ftype == DNGN_FLOOR)
+        env.pgrid(mons->pos()) |= FPROP_MOLD;
+
+    // The number field is used as a cooldown timer for this behavior.
+    if (mons->number > 0)
+    {
+        mons->number--;
+        return;
+    }
+
+    if (!one_chance_in(4))
+        return;
+
+    // try to make a ballistomycete.
+    const beh_type attitude = attitude_creation_behavior(mons->attitude);
+    monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
+                                              NULL, 0, 0, position, MHITNOT,
+                                              MG_FORCE_PLACE));
+
+    if (!plant)
+        return;
+
+    if (mons_is_god_gift(mons, GOD_FEDHAS))
+    {
+        plant->flags |= MF_NO_REWARD; // XXX: is this needed?
+
+        if (attitude == BEH_FRIENDLY)
+        {
+            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            mons_make_god_gift(plant, GOD_FEDHAS);
+        }
+    }
+
+    // Don't leave mold on squares we place ballistos on
+    remove_mold(position);
+
+    if (you.can_see(plant))
+    {
+        mprf("%s grows in the wake of %s.",
+             plant->name(DESC_A).c_str(), mons->name(DESC_THE).c_str());
+    }
+
+    // reset the cooldown.
+    mons->number = 40;
 }
 
 static bool _ballisto_at(const coord_def & target)
@@ -4757,6 +4776,7 @@ void ancient_zyme_sicken(monster* mons)
 void torpor_snail_slow(monster* mons)
 {
     // XXX: might be nice to refactor together with ancient_zyme_sicken().
+    // XXX: also with torpor_slowed().... so many duplicated checks :(
 
     if (is_sanctuary(mons->pos())
         || mons->attitude != ATT_HOSTILE
@@ -4767,7 +4787,6 @@ void torpor_snail_slow(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
-        && you.can_see(mons)
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.duration[DUR_SLOW])
@@ -4776,20 +4795,19 @@ void torpor_snail_slow(monster* mons)
                  mons->name(DESC_THE).c_str());
         }
 
-        if (you.duration[DUR_SLOW] < 27)
-            you.set_duration(DUR_SLOW, 18 + random2(10), 27);
-        // can't set this much shorter, or you periodically 'speed up'
-        // for a turn in the middle of TORPOR COMBAT
+        if (you.duration[DUR_SLOW] <= 1)
+            you.set_duration(DUR_SLOW, 1);
+        you.props[TORPOR_SLOWED_KEY] = true;
     }
 
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
     {
-        monster *m = monster_at(*ri);
+        monster *m = *ri;
         if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
-            && !m->is_stationary() && !is_sanctuary(*ri)
-            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+            && !m->is_stationary() && !is_sanctuary(m->pos()))
         {
-            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 18 + random2(10)));
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
+            m->props[TORPOR_SLOWED_KEY] = true;
         }
     }
 }

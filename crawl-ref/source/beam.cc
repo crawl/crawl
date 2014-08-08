@@ -55,6 +55,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "potion.h"
+#include "prompt.h"
 #include "ranged_attack.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -66,7 +67,8 @@
 #include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -1007,7 +1009,7 @@ void bolt::destroy_wall_effect()
 
     if (feat == DNGN_ORCISH_IDOL)
     {
-        if (beam_source == NON_MONSTER)
+        if (beam_source == NON_MONSTER || beam_source == MHITYOU)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
     else if (feat_is_tree(feat))
@@ -1580,7 +1582,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_POISON_ARROW:
         hurted = resist_adjust_damage(mons, pbolt.flavour,
                                       mons->res_poison(),
-                                      hurted);
+                                      hurted, true);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1610,7 +1612,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         {
             hurted = resist_adjust_damage(mons, pbolt.flavour,
                                           mons->res_negative_energy(),
-                                          hurted);
+                                          hurted, true);
 
             // Early out if no side effects.
             if (!doFlavouredEffects)
@@ -3148,6 +3150,8 @@ bool bolt::is_harmless(const monster* mon) const
     }
 }
 
+// N.b. only called for player-originated beams; if that is changed,
+// be sure to adjust the Qazlal cloud immunities below.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
@@ -4186,7 +4190,7 @@ void bolt::update_hurt_or_helped(monster* mon)
         {
             foe_info.helped++;
             // Accidentally helped a foe.
-            if (!is_tracer && !effect_known)
+            if (!is_tracer && !effect_known && !mons_is_firewood(mon))
             {
                 const int interest =
                     (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
@@ -5563,6 +5567,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (simple_monster_message(mon, " is charmed."))
             obvious_effect = true;
         mon->add_ench(ENCH_CHARM);
+        if (you.can_see(mon))
+            obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_PORKALATOR:
@@ -6156,7 +6162,8 @@ bool bolt::explosion_draw_cell(const coord_def& p)
 #endif
 #ifndef USE_TILE_LOCAL
             cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-            put_colour_ch(colour == BLACK ? random_colour() : colour,
+            put_colour_ch(colour == BLACK ? random_colour()
+                                          : element_colour(colour, false, p),
                           dchar_glyph(DCHAR_EXPLOSION));
 #endif
             return true;
@@ -6377,7 +6384,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
-               special_explosion(NULL), animate(true),
+               special_explosion(NULL), was_missile(false), animate(true),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),

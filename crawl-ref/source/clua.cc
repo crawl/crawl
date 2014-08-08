@@ -6,10 +6,12 @@
 #include "dlua.h"
 #include "l_libs.h"
 
+#include "end.h"
 #include "files.h"
 #include "libutil.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+
 #include "syscalls.h"
 #include "unicode.h"
 
@@ -495,6 +497,11 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     return !err;
 }
 
+static maybe_bool _frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
+}
+
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
                                 va_list args)
 {
@@ -516,7 +523,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
-    maybe_bool r = frombool(lua_toboolean(ls, -1));
+    maybe_bool r = _frombool(lua_toboolean(ls, -1));
     CL_RESETSTACK_RETURN(ls, stacktop, r);
 }
 
@@ -527,12 +534,26 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
     return callmbooleanfn(fn, params, args);
 }
 
+static bool _tobool(maybe_bool mb, bool def)
+{
+    switch (mb)
+    {
+    case MB_TRUE:
+        return true;
+    case MB_FALSE:
+        return false;
+    case MB_MAYBE:
+    default:
+        return def;
+    }
+}
+
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
-    return tobool(r, def);
+    return _tobool(r, def);
 }
 
 bool CLua::proc_returns(const char *par) const

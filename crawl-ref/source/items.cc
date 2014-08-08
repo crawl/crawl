@@ -45,6 +45,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -52,9 +53,11 @@
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "rot.h"
@@ -63,7 +66,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "areas.h"
 #include "stash.h"
 #include "state.h"
@@ -2643,11 +2646,6 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_POTIONS:
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
-    case OBJ_FOOD:
-        return (item.sub_type == FOOD_CHUNK) ? item.sub_type
-             : food_is_meaty(item)           ? FOOD_MEAT_RATION
-             : is_fruit(item)                ? FOOD_FRUIT
-                                             : FOOD_ROYAL_JELLY;
     case OBJ_MISCELLANY:
         return (item.sub_type == MISC_RUNE_OF_ZOT) ? item.sub_type : max_type;
     case OBJ_BOOKS:
@@ -4027,6 +4025,10 @@ item_info get_item_info(const item_def& item)
 
         if (ii.sub_type == NUM_MISCELLANY)
             ii.special = item.special; // deck rarity
+
+        // Preserve inert/charged state but not the actual numbers.
+        if (is_xp_evoker(item))
+            ii.plus2 = !!item.plus2;
 
         if (is_deck(item))
         {

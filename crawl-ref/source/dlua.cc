@@ -9,7 +9,7 @@
 
 #include "dlua.h"
 #include "l_libs.h"
-#include "libutil.h"
+#include "strings.h"
 #include "tags.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,

@@ -28,6 +28,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
+#include "strings.h"
 #include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"

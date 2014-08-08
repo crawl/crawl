@@ -25,26 +25,33 @@
 #include "items.h"
 #include "invent.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "mapdef.h"
 #include "misc.h"
 #include "mon-death.h"
 #include "options.h"
 #include "output.h"
+#include "prompt.h"
 #include "player-equip.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
+#include "unicode.h"
 
 #ifdef WIZARD
 static void _make_all_books()
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (i == BOOK_WAR_CHANTS || i == BOOK_STALKING)
+            continue;
+#endif
         int thing = items(0, OBJ_BOOKS, i, true, 0, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;

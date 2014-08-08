@@ -360,7 +360,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
-                "ugly thing w:30 / w:15 very ugly thing / w:1 kirke",
+                "w:15 ugly thing / w:1 kirke",
                 "vampire mosquito / red wasp w:5 / yellow wasp",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
@@ -416,7 +416,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",
-                "ugly thing w:15 / w:15 very ugly thing / w:1 kirke",
+                "ugly thing w:15 / w:1 kirke",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
                 "hill giant / stone giant / w:5 frost giant / w:5 fire giant /\
@@ -486,7 +486,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
-                "very ugly thing",
+                "ugly thing",
                 "lich / w:5 ancient lich / w:5 unborn / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "fire dragon / ice dragon / storm dragon / shadow dragon /\

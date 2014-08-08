@@ -48,10 +48,12 @@
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skill_menu.h"
@@ -69,7 +71,7 @@
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -2913,7 +2915,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_SHAFT:            _shaft_card(); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
-    case CARD_WRAITH:           drain_exp(false, power / 4); break;
+    case CARD_WRAITH:           drain_player(power / 4, false); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;

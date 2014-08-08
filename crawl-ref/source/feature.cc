@@ -24,7 +24,7 @@ void init_fd(feature_def &fd)
 {
     fd.feat = DNGN_UNSEEN;
     fd.name = fd.vaultname = "";
-    fd.dchar = NUM_DCHAR_TYPES;
+    fd.dchar = fd.magic_dchar = NUM_DCHAR_TYPES;
     fd.symbol = fd.magic_symbol = 0;
     fd.colour = fd.seen_colour = fd.em_colour = fd.seen_em_colour = BLACK;
     fd.map_colour = DARKGREY;
@@ -57,8 +57,10 @@ static void _create_symbols(feature_def &f)
     if (!f.symbol && f.dchar != NUM_DCHAR_TYPES)
         f.symbol = Options.char_table[f.dchar];
 
-    if (!f.magic_symbol)
+    if (f.magic_dchar == NUM_DCHAR_TYPES)
         f.magic_symbol = f.symbol;
+    else
+        f.magic_symbol = Options.char_table[f.magic_dchar];
 }
 
 /** Put the feature overrides from the 'feature' option, stored in

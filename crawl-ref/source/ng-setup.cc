@@ -5,6 +5,7 @@
 #include "ability.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "end.h"
 #include "files.h"
 #include "food.h"
 #include "godcompanions.h"
@@ -21,6 +22,7 @@
 #include "ng-wanderer.h"
 #include "options.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "skills.h"
@@ -28,7 +30,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+
 #include "tutorial.h"
 
 #define MIN_START_STAT       3
@@ -176,8 +178,7 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_INT] += i;
     you.base_stats[STAT_DEX] += d;
 
-    you.hp_max_perm = 0;
-    you.mp_max_perm = 0;
+    you.hp_max_adj_perm = 0;
 }
 
 // Make sure no stats are unacceptably low
@@ -815,6 +816,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
+        // keep picking up sticks
+        autopickup_starting_ammo(MI_ARROW);
+
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
@@ -1065,8 +1069,8 @@ static void _setup_tutorial_miscs()
     // No gold to begin with.
     you.gold = 0;
 
-    // Give him some mana to play around with.
-    you.mp_max_perm += 2;
+    // Give them some mana to play around with.
+    you.mp_max_adj += 2;
 
     _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 

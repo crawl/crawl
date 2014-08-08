@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -52,8 +53,8 @@
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
-#include "areas.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "target.h"
 #include "teleport.h"
 #include "traps.h"
@@ -1073,6 +1074,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_DRAIN_MAGIC:
         beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.flavour    = BEAM_DRAIN_MAGIC;
+        break;
+
+    case SPELL_CORROSIVE_BOLT:
+        beam.colour   = YELLOW;
+        beam.name     = "bolt of acid";
+        beam.damage   = dice_def(3, 9 + power / 17);
+        beam.flavour  = BEAM_ACID;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
         break;
 
     default:
@@ -4513,7 +4523,7 @@ static const pop_entry _planerend_lair[] =
 { // Lair enemies
   {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
   {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,   1,   60, FLAT, MONS_DEATH_YAK },
+  {  1,   1,   60, FLAT, MONS_TORPOR_SNAIL },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4531,8 +4541,8 @@ static const pop_entry _planerend_spider[] =
   {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
   {  1,   1,   20, FLAT, MONS_RED_WASP },
-  {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
-  {  1,   1,   60, FLAT, MONS_WOLF_SPIDER },
+  {  1,   1,   60, FLAT, MONS_ORB_SPIDER },
+  {  1,   1,   20, FLAT, MONS_TARANTELLA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4568,7 +4578,7 @@ static const pop_entry _planerend_orc[] =
   {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
   {  1,   1,   80, FLAT, MONS_ORC_SORCERER },
   {  1,   1,   80, FLAT, MONS_ORC_HIGH_PRIEST },
-  {  1,   1,   40, FLAT, MONS_IRON_TROLL },
+  {  1,   1,   40, FLAT, MONS_STONE_GIANT },
   {  1,   1,   60, FLAT, MONS_OGRE_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };

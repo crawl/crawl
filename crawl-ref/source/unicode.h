@@ -6,6 +6,11 @@
 #ifndef UNICODE_H
 #define UNICODE_H
 
+int strwidth(const char *s);
+int strwidth(const string &s);
+string chop_string(const char *s, int width, bool spaces = true);
+string chop_string(const string &s, int width, bool spaces = true);
+
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS

@@ -19,12 +19,13 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "libutil.h"
+#include "libutil.h"    // testbits
 #include "player.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "travel.h"
 
@@ -222,11 +223,8 @@ void ash_check_bondage(bool msg)
                     else
                     {
                         cursed[s]++;
-                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item)
-                            && item.special == UNRAND_LEAR)
-                        {
+                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
                             cursed[s] += 3;
-                        }
                     }
                 }
             }

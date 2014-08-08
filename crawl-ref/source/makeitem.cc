@@ -29,7 +29,8 @@
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "stepdown.h"
 #include "travel.h"
 
 static armour_type _get_random_armour_type(int item_level);
@@ -122,8 +123,13 @@ static int _missile_colour(const item_def &item)
     switch (item.sub_type)
     {
     case MI_STONE:
-    case MI_SLING_BULLET:
         item_colour = BROWN;
+        break;
+#if TAG_MAJOR_VERSION == 34
+    case MI_DART:
+#endif
+    case MI_SLING_BULLET:
+        item_colour = CYAN;
         break;
     case MI_LARGE_ROCK:
         item_colour = LIGHTGREY;
@@ -137,11 +143,6 @@ static int _missile_colour(const item_def &item)
     case MI_BOLT:
         item_colour = LIGHTBLUE;
         break;
-#if TAG_MAJOR_VERSION == 34
-    case MI_DART:
-        item_colour = CYAN;
-        break;
-#endif
     case MI_JAVELIN:
         item_colour = RED;
         break;
@@ -1074,28 +1075,19 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_HUNTING_SLING:
             if (coinflip())
                 break;
-            // intentionally fallthrough to bow/xbow brands
+            // intentionally fallthrough to normal launcher brands
+        case WPN_GREATSLING:
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_HAND_CROSSBOW:
         case WPN_ARBALEST:
+        case WPN_TRIPLE_CROSSBOW:
             rc = random_choose_weighted(48, SPWPN_FLAMING,
                                         25, SPWPN_FREEZING,
                                         15, SPWPN_EVASION,
                                         11, SPWPN_VORPAL,
                                          1, SPWPN_NORMAL,
                                          0);
-            break;
-
-        case WPN_GREATSLING:
-        case WPN_TRIPLE_CROSSBOW:
-            // totally arbitrary, first draft for "rare ranged weapon" brands
-            rc = random_choose(SPWPN_SPEED,
-                               SPWPN_FREEZING,
-                               SPWPN_FLAMING,
-                               SPWPN_EVASION,
-                               SPWPN_VORPAL,
-                               -1);
             break;
 
         case WPN_BLOWGUN:

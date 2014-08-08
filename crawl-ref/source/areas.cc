@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "godconduct.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "mon-behv.h"
@@ -24,8 +25,7 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
-#include "godconduct.h"
-#include "stuff.h"
+#include "stepdown.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -607,7 +607,7 @@ int monster::halo_radius2() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && is_unrandom_artefact(*weap) && weap->special == UNRAND_BRILLIANCE)
+    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
         size = 10;
 
     if (holiness() != MH_HOLY)
@@ -757,7 +757,7 @@ int player::umbra_radius2() const
 int monster::umbra_radius2() const
 {
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
-    if (ring && is_unrandom_artefact(*ring) && ring->special == UNRAND_SHADOWS)
+    if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 10;
 
     if (holiness() != MH_UNDEAD)

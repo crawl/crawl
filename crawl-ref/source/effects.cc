@@ -49,6 +49,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -66,6 +67,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
@@ -78,7 +80,7 @@
 #include "spl-util.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -199,9 +201,6 @@ int torment_player(actor *attacker, int taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // [dshaligram] Switched to using ouch() instead of dec_hp() so that
-    // notes can also track torment and activities can be interrupted
-    // correctly.
     int hploss = 0;
 
     if (!player_res_torment(false))
@@ -2829,10 +2828,10 @@ void corrode_actor(actor *act)
         return;
     }
 
-    // Anti-corrosion items protect against 90% of corrosion.
-    if (act->res_corr() && !one_chance_in(10))
+    // rCorr protects against 50% of corrosion.
+    if (act->res_corr() && coinflip())
     {
-        dprf("Amulet protects.");
+        dprf("rCorr protects.");
         return;
     }
 

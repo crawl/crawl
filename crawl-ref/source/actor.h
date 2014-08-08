@@ -110,8 +110,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(item_def *weapon,
-                                    item_def *projectile = NULL,
+    virtual random_var attack_delay(const item_def *weapon,
+                                    const item_def *projectile = NULL,
                                     bool random = true, bool scaled = true)
                                    const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
@@ -241,6 +241,8 @@ public:
     virtual int  skill(skill_type sk, int scale = 1,
                        bool real = false, bool drained = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
+
+    bool torpor_slowed() const;
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;

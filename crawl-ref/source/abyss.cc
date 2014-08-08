@@ -48,6 +48,7 @@
 #include "shopping.h"
 #include "stash.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
@@ -181,8 +182,8 @@ static int _abyssal_rune_roll()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
-
-    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+    const int divisor = 2 * brdepth[BRANCH_ABYSS] - 2;
+    return (int) pow(100.0, depth/divisor);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -212,11 +213,19 @@ static bool _abyss_place_map(const map_def *mdef)
     // until after everything is done.
     unwind_bool gen(crawl_state.generating_level, true);
 
-    const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
-    if (did_place)
-        _abyss_fixup_vault(env.level_vaults.back());
-
-    return did_place;
+    try
+    {
+        if (dgn_safe_place_map(mdef, true, false, INVALID_COORD))
+        {
+            _abyss_fixup_vault(env.level_vaults.back());
+            return true;
+        }
+    }
+    catch (dgn_veto_exception &e)
+    {
+        dprf("Abyss map placement vetoed: %s", e.what());
+    }
+    return false;
 }
 
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
@@ -960,13 +969,13 @@ static bool _in_wastes(const coord_def &p)
 static level_id _get_random_level()
 {
     vector<level_id> levels;
-    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (i == BRANCH_ABYSS || i == BRANCH_SHOALS)
+        if (it->id == BRANCH_ABYSS || it->id == BRANCH_SHOALS)
             continue;
-        for (int j = 1; j <= brdepth[i]; ++j)
+        for (int j = 1; j <= brdepth[it->id]; ++j)
         {
-            const level_id id(static_cast<branch_type>(i), j);
+            const level_id id(it->id, j);
             if (is_existing_level(id))
                 levels.push_back(id);
         }
@@ -1255,7 +1264,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 2400, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, NULL, NULL,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }

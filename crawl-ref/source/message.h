@@ -24,6 +24,8 @@ void flush_prev_message();
 
 void more(bool user_forced = false);
 
+void canned_msg(canned_message_type which_message);
+
 class formatted_string;
 
 void formatted_mpr(const formatted_string& fs,

@@ -26,6 +26,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "monster.h"
 #include "mon-util.h" // for decline_pronoun
@@ -33,7 +34,6 @@
 #include "religion.h"
 #include "spl-damage.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -284,8 +284,21 @@ brand_type player::damage_brand(int)
     return ret;
 }
 
-random_var player::attack_delay(item_def *weap, item_def *projectile,
-                                bool random, bool scaled) const
+
+/**
+ * Return the delay caused by attacking with the provided weapon & projectile.
+ *
+ * @param weap          The weapon to be used; may be null.
+ * @param projectile    The projectile to be fired/thrown; may be null.
+ * @param random        Whether to randomize delay, or provide a fixed value
+ *                      for display.
+ * @param scaled        Whether to apply special delay modifiers (finesse)
+ * @return              The time taken by an attack with the given weapon &
+ *                      projectile, in aut.
+ */
+random_var player::attack_delay(const item_def *weap,
+                                const item_def *projectile, bool random,
+                                bool scaled) const
 {
     random_var attk_delay = constant(15);
     const int armour_penalty = adjusted_body_armour_penalty(20);

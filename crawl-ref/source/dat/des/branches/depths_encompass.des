@@ -658,7 +658,7 @@ MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
          rakshasa w:5 ; wand of flame | wand of frost . whip . robe
-MONS:    very ugly thing w:15 / shapeshifter / unseen horror w:15 / \
+MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
          chaos spawn / fire elemental / water elemental w:5 / \
          air elemental / earth elemental w:5 / mana viper w:5 / \
          insubstantial wisp / gargoyle w:5 / wolf spider simulacrum w:3 / \
@@ -732,7 +732,7 @@ MARKER:  T = lua:props_marker { portal=1 }
 : _G.set_random_mon_list("place:" .. you.where() .. " w:150 / " ..
 :   "fire giant / frost giant / rakshasa w:5 / deep elf knight w:5 / " ..
 :   "glowing shapeshifter w:8 / simulacrum w:5 / dancing weapon w:2 / " ..
-:   "fire crab w:5 / boulder beetle / mana viper w:5 / very ugly thing band w:5")
+:   "fire crab w:5 / boulder beetle / mana viper w:5 / ugly thing band w:5")
 TILE:    b = wall_emerald
 TILE:    c = wall_crystal_squares
 TILE:    v = dngn_metal_wall_darkgray

@@ -537,4 +537,10 @@ object_class_type item_class_by_sym(ucs_t c);
 #endif
 extern game_options  Options;
 
+static inline short macro_colour(short col)
+{
+    ASSERT(col < MAX_TERM_COLOUR);
+    return col < 0 ? col : Options.colour[ col ];
+}
+
 #endif

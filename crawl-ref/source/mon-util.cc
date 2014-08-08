@@ -50,7 +50,7 @@
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "tileview.h"
@@ -78,11 +78,7 @@ static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
-const mon_spellbook mspell_list[] =
-{
 #include "mon-spll.h"
-};
-
 #include "mon-data.h"
 
 #define MONDATASIZE ARRAYSZ(mondata)
@@ -1773,7 +1769,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
         {
             attack_flavour flavours[] =
                 {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
-                 AF_COLD, AF_ELEC, AF_ANTIMAGIC};
+                 AF_COLD, AF_ELEC, AF_ANTIMAGIC, AF_ACID};
 
             attk.flavour = RANDOM_ELEMENT(flavours);
         }
@@ -2295,6 +2291,9 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
 // or in the case of ghosts their actual spells.
 unique_books get_unique_spells(const monster_info &mi)
 {
+    // No entry for MST_GHOST
+    COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
+
     const vector<mon_spellbook_type> books = get_spellbooks(mi);
     const size_t num_books = books.size();
 
@@ -2302,6 +2301,12 @@ unique_books get_unique_spells(const monster_info &mi)
     for (size_t i = 0; i < num_books; ++i)
     {
         const mon_spellbook_type book = books[i];
+        // TODO: should we build an index to speed this reverse lookup?
+        unsigned int msidx;
+        for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
+            if (mspell_list[msidx].type == book)
+                break;
+
         vector<spell_type> spells;
 
         for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
@@ -2310,7 +2315,10 @@ unique_books get_unique_spells(const monster_info &mi)
             if (book == MST_GHOST)
                 spell = mi.spells[j];
             else
-                spell = mspell_list[book].spells[j];
+            {
+                ASSERT(msidx < ARRAYSZ(mspell_list));
+                spell = mspell_list[msidx].spells[j];
+            }
 
             bool match = false;
 
@@ -4835,8 +4843,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
 
     return targ->alive()
            && !mons_class_is_stationary(targ->type)
-           && !mons_is_conjured(targ->type)
-           && monster_habitable_grid(targ, DNGN_FLOOR); //XXX?
+           && !mons_is_conjured(targ->type);
 }
 
 vector<monster* > get_on_level_followers()

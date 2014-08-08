@@ -26,6 +26,7 @@
 #include "chardump.h"
 #include "files.h"
 #include "dungeon.h"
+#include "end.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -46,7 +47,7 @@
 #include "species.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "env.h"
 #include "tags.h"
 #include "unwind.h"
@@ -283,7 +284,7 @@ void hiscores_print_list(int display_count, int format)
 
     textcolor(LIGHTGREY);
 
-    int start = (newest_entry > 10) ? newest_entry - 10 : 0;
+    int start = newest_entry - display_count / 2;
 
     if (start + display_count > total_entries)
         start = total_entries - display_count;

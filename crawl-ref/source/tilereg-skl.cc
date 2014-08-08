@@ -8,9 +8,10 @@
 #include "cio.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
 #include "skills.h"
 #include "skills2.h"
-#include "stuff.h"
+
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"

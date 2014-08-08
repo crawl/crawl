@@ -10,7 +10,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "stuff.h"
+#include "output.h"
+
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
