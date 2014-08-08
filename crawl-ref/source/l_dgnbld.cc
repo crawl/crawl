@@ -312,7 +312,8 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
 static bool _wall_is_empty(map_lines &lines,
                            int x, int y,
                            const char* wall, const char* floor,
-                           bool horiz = false)
+                           bool horiz = false,
+                           int max_check = 9999)
 {
     coord_def normal(horiz ? 0 : 1, horiz ? 1 : 0);
     for (int d = 1; d >= -1; d-=2)
@@ -320,7 +321,7 @@ static bool _wall_is_empty(map_lines &lines,
         coord_def length(horiz ? d : 0, horiz ? 0 : d);
         int n = 1;
 
-        while (true)
+        while (n <= max_check)
         {
             coord_def pos(x + length.x*n,y + length.y*n);
             if (!lines.in_bounds(coord_def(pos.x + normal.x, pos.y + normal.y))
@@ -341,7 +342,7 @@ static bool _wall_is_empty(map_lines &lines,
         }
     }
 
-    // hit the edge of the map, so this is good
+    // hit the end of the wall, so this is good
     return true;
 }
 
@@ -1433,7 +1434,7 @@ LUAFN(dgn_connect_adjacent_rooms)
     TABLE_CHAR(ls, replace, '.');
     TABLE_INT(ls, max, 1);
     TABLE_INT(ls, min, max);
-    TABLE_BOOL(ls, check_empty, false);
+    TABLE_INT(ls, check_distance, 9999);
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
@@ -1450,10 +1451,10 @@ LUAFN(dgn_connect_adjacent_rooms)
         y2 = lines.height() - 2;
 
     if (min < 0)
-        return luaL_error(ls, "Invalid min connections: %i", min);
+        return luaL_error(ls, "Invalid min connections: %d", min);
     if (max < min)
     {
-        return luaL_error(ls, "Invalid max connections: %i (min is %i)",
+        return luaL_error(ls, "Invalid max connections: %d (min is %d)",
                           max, min);
     }
 
@@ -1474,17 +1475,15 @@ LUAFN(dgn_connect_adjacent_rooms)
         {
             if (strchr(floor, lines(x, y - 1))
                 && strchr(floor, lines(x, y + 1))
-                && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, true)
-                   : (strchr(wall, lines(x - 1, y))
-                      && strchr(wall, lines(x + 1, y)))))
+                && (_wall_is_empty(lines, x, y, wall, floor,
+                                   true, check_distance)))
             {
                 lines(*ri) = replace;
             }
             else if (strchr(floor, lines(x - 1, y))
                      && strchr(floor, lines(x + 1, y))
-                     && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, false)
-                        : (strchr(wall, lines(x, y - 1))
-                           && strchr(wall, lines(x, y + 1)))))
+                     && (_wall_is_empty(lines, x, y, wall, floor,
+                                        false, check_distance)))
             {
                 lines(*ri) = replace;
             }

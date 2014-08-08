@@ -223,9 +223,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
   end
 
   -- Create doors
-  connect_adjacent_rooms { replace = "+", min = 100, max = 400, check_empty = true }
+  connect_adjacent_rooms { replace = "+", min = 100, max = 400 }
   -- Create a small number of extra doors (allowing more than one door on some wall)
-  connect_adjacent_rooms { replace = "+", min = 0, max = 10 }
+  connect_adjacent_rooms { replace = "+", min = 0, max = 400,
+                           check_distance = 3 }
 
   -- Fill disconnects
   zonify.map_fill_zones(_G, 1, 'x')
@@ -517,8 +518,8 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
   end
 
   -- the map is already connected in a tree, but more doors is nice
-  connect_adjacent_rooms { max = crawl.random_range(100, 250),
-                           min = 50, replace = '+', check_empty = true }
+  connect_adjacent_rooms { min = 200, max = 500, replace = '+',
+                          check_distance = crawl.random_range(5, 8) }
 }}
 MAP
 ENDMAP
