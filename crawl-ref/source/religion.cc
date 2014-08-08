@@ -3725,7 +3725,7 @@ god_type choose_god()
     msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return GOD_NO_GOD;
+        return NUM_GODS;
 
     string spec = lowercase_string(specs);
 
