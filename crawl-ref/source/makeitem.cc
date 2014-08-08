@@ -2645,15 +2645,28 @@ void squash_plusses(int item_slot)
     item.special = 0;
 }
 
-// Returns item slot or NON_ITEM if it fails.
+/**
+ * Create an item. This function does too much.
+ *
+ * @param allow_uniques Can the item generated be an artefact?
+ * @param force_class The desired OBJECTS class (Example: OBJ_ARMOUR)
+ * @param force_type The desired SUBTYPE - enum varies by OBJ
+ * @param dont_place If this is false, the item is randomly placed on the level
+ * @param item_level How powerful the item is allowed to be
+ * @param uint32_t mapmask TODO: remove
+ * @param force_ego The desired ego/brand
+ * @param agent The agent creating the item (Example: Xom) or -1 if NA
+ *
+ * @return The generated item's item slot or NON_ITEM if it fails.
+ */
 int items(bool allow_uniques,
-          object_class_type force_class, // desired OBJECTS class {dlb}
-          int force_type,          // desired SUBTYPE - enum varies by OBJ
-          bool dont_place,         // don't randomly place item on level
-          int item_level,          // level of the item, can differ from global
+          object_class_type force_class,
+          int force_type,
+          bool dont_place,
+          int item_level,
           uint32_t mapmask,
-          int force_ego,           // desired ego/brand
-          int agent)               // acquirement agent, if not -1
+          int force_ego,
+          int agent)
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS
