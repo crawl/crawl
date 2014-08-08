@@ -4004,6 +4004,10 @@ static void _randomly_place_item(int item)
         move_item_to_grid(&item, itempos);
 }
 
+/**
+ * Randomly place items on a level. Does not place items in vaults,
+ * on monsters, etc. Only normal floor generated items.
+ */
 static void _builder_items()
 {
     int i = 0;
