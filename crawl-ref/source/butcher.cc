@@ -48,7 +48,9 @@ static void _create_monster_hide(const item_def corpse)
             die("an unknown hide drop");
     }
 
-    int o = items(0, OBJ_ARMOUR, type, true, 0, 0, 0, -1, true);
+    int o = items(0, OBJ_ARMOUR, type, true, 0);
+    squash_plusses(o);
+
     if (o == NON_ITEM)
         return;
     item_def& item = mitm[o];

@@ -2630,6 +2630,21 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     }
 }
 
+/**
+ * Alter the inputed item to have no "plusses" (mostly weapon/armour enchantment)
+ *
+ * @param[in,out] item_slot The item slot of the item to remove "plusses" from.
+ */
+void squash_plusses(int item_slot)
+{
+    item_def& item(mitm[item_slot]);
+
+    ASSERT(!is_deck(item));
+    item.plus    = 0;
+    item.plus2   = 0;
+    item.special = 0;
+}
+
 // Returns item slot or NON_ITEM if it fails.
 int items(bool allow_uniques,
           object_class_type force_class, // desired OBJECTS class {dlb}
@@ -2638,8 +2653,7 @@ int items(bool allow_uniques,
           int item_level,          // level of the item, can differ from global
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
-          int agent,               // acquirement agent, if not -1
-          bool mundane)            // no plusses
+          int agent)               // acquirement agent, if not -1
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS
@@ -2799,14 +2813,6 @@ int items(bool allow_uniques,
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
-    }
-
-    if (mundane)
-    {
-        ASSERT(!is_deck(item));
-        item.plus    = 0;
-        item.plus2   = 0;
-        item.special = 0;
     }
 
     if (item.base_type == OBJ_WEAPONS

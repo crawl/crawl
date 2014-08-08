@@ -4648,14 +4648,22 @@ int dgn_place_item(const item_spec &spec,
 
     while (true)
     {
-        const int item_made =
-            (acquire ?
-             acquirement_create_item(base_type, spec.acquirement_source,
-                                     true, where)
-             : spec.corpselike() ? _dgn_item_corpse(spec, where)
-             : items(spec.allow_uniques, base_type,
-                     spec.sub_type, true, level, 0, spec.ego, -1,
-                     spec.level == ISPEC_MUNDANE));
+        int item_made;
+
+        if (acquire)
+        {
+            item_made = acquirement_create_item(base_type,
+                                                spec.acquirement_source,
+                                                true, where);
+        }
+        else if (spec.corpselike())
+            item_made = _dgn_item_corpse(spec, where);
+        else
+            item_made = items(spec.allow_uniques, base_type,
+                              spec.sub_type, true, level, 0, spec.ego);
+
+        if (spec.level == ISPEC_MUNDANE)
+            squash_plusses(item_made);
 
         if (item_made == NON_ITEM || item_made == -1)
             return NON_ITEM;
@@ -4779,8 +4787,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, true, item_level, 0, spec.ego,
-                                  -1, spec.level == ISPEC_MUNDANE);
+                                  spec.sub_type, true, item_level, 0,
+                                  spec.ego);
+
+                if (spec.level == ISPEC_MUNDANE)
+                    squash_plusses(item_made);
             }
 
             if (!(item_made == NON_ITEM || item_made == -1))
