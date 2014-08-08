@@ -230,6 +230,7 @@ public:
            EQF_NONE,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
@@ -252,6 +253,7 @@ public:
            EQF_PHYSICAL,  // blocked slots
            0, 5,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
+           10,                 // spellcasting penalty
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
            animal_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
@@ -268,6 +270,7 @@ public:
            EQF_HANDS,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           20,                 // spellcasting penalty
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
            blade_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
@@ -336,6 +339,7 @@ public:
            EQF_STATUE,  // blocked slots
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
@@ -406,6 +410,7 @@ public:
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, ENABLE,     // can_fly, can_swim
@@ -435,6 +440,7 @@ public:
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
            dragon_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
@@ -471,6 +477,7 @@ public:
            EQF_NONE,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
@@ -506,6 +513,7 @@ public:
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
+           10,                 // spellcasting penalty
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            animal_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
@@ -571,6 +579,7 @@ public:
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            animal_attacks, // verbs used for uc
            DEFAULT, FORBID,  // can_fly (false for most pigs), can_swim
@@ -587,6 +596,7 @@ public:
            EQF_NONE,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
@@ -641,6 +651,7 @@ public:
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            tree_attacks, // verbs used for uc
            FORBID, FORBID,     // can_fly, can_swim
@@ -662,6 +673,7 @@ public:
            EQF_ALL,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            animal_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
@@ -678,6 +690,7 @@ public:
            EQF_ALL,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            wisp_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
@@ -700,6 +713,7 @@ public:
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
@@ -717,6 +731,7 @@ public:
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            fungus_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
@@ -733,6 +748,7 @@ public:
            EQF_NONE,  // blocked slots
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
+           0,                 // spellcasting penalty
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
