@@ -1230,7 +1230,9 @@ void wizard_load_dump_file()
 void wizard_join_religion()
 {
     god_type god = choose_god();
-    if (god == GOD_NO_GOD)
+    if (god == NUM_GODS)
+        mpr("That god doesn't seem to exist!");
+    else if (god == GOD_NO_GOD)
     {
         if (you_worship(GOD_NO_GOD))
             mpr("You already have no god!");
