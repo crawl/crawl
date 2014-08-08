@@ -926,10 +926,11 @@ bool zotdef_create_altar()
 
     god_type god = choose_god();
 
-    if (god == GOD_NO_GOD)
+    // "No god" or a bad god name (including pressing escape)
+    if (god == GOD_NO_GOD || god == NUM_GODS)
         return false;
 
-    if (god == NUM_GODS || !_can_make_altar(god))
+    if (!_can_make_altar(god))
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
