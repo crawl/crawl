@@ -367,23 +367,7 @@ int spell_fail(spell_type spell)
         if (chance < chance_breaks[i][0])
             chance2 = chance_breaks[i][1];
 
-    if (you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        switch (you.form)
-        {
-        case TRAN_BLADE_HANDS:
-            chance2 += 20;
-            break;
-
-        case TRAN_SPIDER:
-        case TRAN_BAT:
-            chance2 += 10;
-            break;
-
-        default:
-            break;
-        }
-    }
+    chance2 += get_form()->spellcasting_penalty;
 
     chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
