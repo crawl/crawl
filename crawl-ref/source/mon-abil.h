@@ -6,6 +6,8 @@
 #ifndef MONABIL_H
 #define MONABIL_H
 
+#define TORPOR_SLOWED_KEY "torpor_slowed"
+
 class monster;
 struct bolt;
 

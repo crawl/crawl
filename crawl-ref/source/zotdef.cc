@@ -30,7 +30,7 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
@@ -911,36 +911,26 @@ bool create_trap(trap_type spec_type)
     return result;
 }
 
-static bool _can_make_altar(god_type g, bool wizmode)
+static bool _can_make_altar(god_type g)
 {
-    return wizmode || !is_unavailable_god(g);
+    return !is_unavailable_god(g);
 }
 
 /**
  * Create an altar to the god of the player's choice.
- * @param wizmode if true, bypass some checks.
  */
-bool zotdef_create_altar(bool wizmode)
+bool zotdef_create_altar()
 {
-    char specs[80];
-
-    if (!wizmode && grd(you.pos()) != DNGN_FLOOR)
+    if (grd(you.pos()) != DNGN_FLOOR)
         return false;
 
-    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+    god_type god = choose_god();
 
-    if (specs[0] == '\0')
+    // "No god" or a bad god name (including pressing escape)
+    if (god == GOD_NO_GOD || god == NUM_GODS)
         return false;
 
-    string spec = lowercase_string(specs);
-
-    // Skip GOD_NO_GOD
-    god_type god = find_earliest_match(
-                       spec, (god_type) 1, NUM_GODS,
-                       bind2nd(ptr_fun(_can_make_altar), wizmode),
-                       bind2nd(ptr_fun(god_name), false));
-
-    if (god == NUM_GODS)
+    if (!_can_make_altar(god))
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
@@ -950,11 +940,8 @@ bool zotdef_create_altar(bool wizmode)
         dungeon_feature_type feat = altar_for_god(god);
         dungeon_terrain_changed(you.pos(), feat, false);
 
-        if (wizmode)
-            pray();
-        else
-            mprf("An altar to %s grows from the floor before you!",
-                 god_name(god).c_str());
+        mprf("An altar to %s grows from the floor before you!",
+             god_name(god).c_str());
 
         return true;
     }

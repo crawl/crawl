@@ -54,6 +54,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -64,6 +65,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -82,7 +84,8 @@
 #include "stash.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
@@ -117,12 +120,12 @@ static void _moveto_maybe_repel_stairs()
 
     if (x_chance_in_y(pct, 100))
     {
+        const string stair_str = feature_description_at(you.pos(), false,
+                                                        DESC_THE, false);
+        const string prep = feat_preposition(new_grid, true, &you);
+
         if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
         {
-            string stair_str = feature_description_at(you.pos(), false,
-                                                      DESC_THE, false);
-            string prep = feat_preposition(new_grid, true, &you);
-
             mprf("%s slides away as you move %s it!", stair_str.c_str(),
                  prep.c_str());
 
@@ -1832,7 +1835,10 @@ bool player::res_corr(bool calc_unid, bool items) const
         return true;
 
     if (form == TRAN_WISP)
-        return 1;
+        return true;
+
+    if (you.duration[DUR_RESISTANCE])
+        return true;
 
     if (items)
     {
@@ -1865,18 +1871,6 @@ int player_res_acid(bool calc_unid, bool items)
         return 3;
 
     return you.res_corr(calc_unid, items) ? 1 : 0;
-}
-
-// Returns a factor X such that post-resistance acid damage can be calculated
-// as pre_resist_damage * X / 100.
-int player_acid_resist_factor()
-{
-    int rA = player_res_acid();
-    if (rA >= 3)
-        return 0;
-    else if (rA >= 1)
-        return 50;
-    return 100;
 }
 
 int player_res_electricity(bool calc_unid, bool temp, bool items)
@@ -2580,9 +2574,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     evbonus += max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
     // transformation penalties/bonuses not covered by size alone:
-    if (you.form == TRAN_STATUE)
-        evbonus -= 10;               // stiff and slow
-
     if (player_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 3;
 
@@ -2754,7 +2745,7 @@ int player_shield_class()
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
-            shield += 800 + you.skill(SK_ICE_MAGIC, 60);
+            shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
@@ -3074,13 +3065,11 @@ static void _felid_extra_life()
  * @param aux                     A string describing the cause of the level
  *                                change.
  * @param skip_attribute_increase If true and XL has increased, don't process
- *                                stat gains.
+ *                                stat gains. Currently only used by wizmode
+ *                                commands.
  */
 void level_change(int source, const char* aux, bool skip_attribute_increase)
 {
-    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
-                      || crawl_state.repeat_cmd == CMD_WIZARD;
-
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
     you.redraw_experience = true;
@@ -3091,7 +3080,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))
     {
-        if (!skip_attribute_increase && !wiz_cmd)
+        if (!skip_attribute_increase)
         {
             crawl_state.cancel_cmd_all();
 
@@ -3149,12 +3138,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             switch (you.species)
             {
             case SP_HUMAN:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_HIGH_ELF:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3163,12 +3152,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_ELF:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3189,7 +3178,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat(coinflip() ? STAT_STR
                                            : STAT_INT, 1, false,
@@ -3198,12 +3187,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_HALFLING:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_DEX, 1, false, "level gain");
                 break;
 
             case SP_KOBOLD:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3215,7 +3204,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 #if TAG_MAJOR_VERSION == 34
             case SP_LAVA_ORC:
 #endif
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
@@ -3250,7 +3239,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (!(you.experience_level % 3))
@@ -3268,12 +3257,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_OGRE:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
@@ -3333,7 +3322,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     you.redraw_armour_class = true;
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 14)
@@ -3357,7 +3346,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_CENTAUR:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3366,12 +3355,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_DEMIGOD:
-                if (!(you.experience_level % 2))
+                if (!(you.experience_level % 2) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_SPRIGGAN:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3380,7 +3369,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_MINOTAUR:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -3436,18 +3425,18 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     }
                 }
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
             }
 
             case SP_GHOUL:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_TENGU:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 5)
@@ -3457,12 +3446,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_MERFOLK:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_FELID:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3478,19 +3467,19 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_OCTOPODE:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 5) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
 #if TAG_MAJOR_VERSION == 34
             case SP_DJINNI:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
 #endif
             case SP_FORMICID:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_INT), 1, false,
@@ -3499,7 +3488,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_GARGOYLE:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_INT), 1, false,
@@ -3514,7 +3503,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_VINE_STALKER:
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
                     modify_stat((coinflip() ? STAT_STR
                                             : STAT_DEX), 1, false,
@@ -4099,19 +4088,25 @@ static const char* _attack_delay_desc(int attack_delay)
                                    "blindingly fast";
 }
 
+/**
+ * Print a message indicating the player's attack delay with their current
+ * weapon & quivered ammo (if applicable).
+ *
+ * Uses melee attack delay for ranged weapons if no appropriate ammo is
+ * is quivered, purely for simplicity of implementation; XXX fix this
+ */
 static void _display_attack_delay()
 {
-    const int delay = you.attack_delay(you.weapon(), NULL, false, false);
+    const item_def* ammo = NULL;
+    you.m_quiver->get_desired_item(&ammo, NULL);
+    const bool uses_ammo = ammo && you.weapon()
+                           && ammo->sub_type == fires_ammo_type(*you.weapon());
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+                                       false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
-    int avg;
-    // FIXME for new ranged combat
-/*    const item_def* weapon = you.weapon();
-    if (weapon && is_range_weapon(*weapon))
-        avg = launcher_final_speed(*weapon, you.shield(), false);
-    else */
-        avg = 10 * delay;
+    int avg = 10 * delay;
 
     // Haste shouldn't be counted, but let's show finesse.
     if (you.duration[DUR_FINESSE])
@@ -4573,7 +4568,7 @@ void inc_hp(int hp_gain)
 
 void rot_hp(int hp_loss)
 {
-    you.hp_max_temp -= hp_loss;
+    you.hp_max_adj_temp -= hp_loss;
     calc_hp();
 
     // Kill the player if they reached 0 maxhp.
@@ -4587,9 +4582,9 @@ void rot_hp(int hp_loss)
 
 void unrot_hp(int hp_recovered)
 {
-    you.hp_max_temp += hp_recovered;
-    if (you.hp_max_temp > 0)
-        you.hp_max_temp = 0;
+    you.hp_max_adj_temp += hp_recovered;
+    if (you.hp_max_adj_temp > 0)
+        you.hp_max_adj_temp = 0;
 
     calc_hp();
 
@@ -4598,12 +4593,12 @@ void unrot_hp(int hp_recovered)
 
 int player_rotted()
 {
-    return -you.hp_max_temp;
+    return -you.hp_max_adj_temp;
 }
 
 void rot_mp(int mp_loss)
 {
-    you.mp_max_temp -= mp_loss;
+    you.mp_max_adj -= mp_loss;
     calc_mp();
 
     you.redraw_magic_points = true;
@@ -4612,7 +4607,7 @@ void rot_mp(int mp_loss)
 void inc_max_hp(int hp_gain)
 {
     you.hp += hp_gain;
-    you.hp_max_perm += hp_gain;
+    you.hp_max_adj_perm += hp_gain;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4621,7 +4616,7 @@ void inc_max_hp(int hp_gain)
 
 void dec_max_hp(int hp_loss)
 {
-    you.hp_max_perm -= hp_loss;
+    you.hp_max_adj_perm -= hp_loss;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4678,7 +4673,7 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = you.experience_level * 11 / 2 + 8;
-    hitp += you.hp_max_perm;
+    hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
     hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
           + (you.skill(SK_FIGHTING, 3, true) + 1) / 2;
@@ -4697,7 +4692,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp /= 100;
 
     if (!rotted)
-        hitp += you.hp_max_temp;
+        hitp += you.hp_max_adj_temp;
 
     if (trans)
         hitp += you.scan_artefacts(ARTP_HP);
@@ -4714,7 +4709,7 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    int enp = you.experience_level + you.mp_max_perm;
+    int enp = you.experience_level;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
     int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
@@ -4727,7 +4722,7 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_temp;
+    enp += you.mp_max_adj;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
@@ -4908,7 +4903,7 @@ bool curare_hits_player(int death_source, int levels, string name,
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_poison() >= 3
-        || player_res_poison() > 0 && !one_chance_in(5))
+        || player_res_poison() > 0 && !one_chance_in(3))
     {
         return false;
     }
@@ -4959,7 +4954,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         dprf("Cannot poison, you are immune!");
         return false;
     }
-    else if (!force && player_res_poison() > 0 && !one_chance_in(10))
+    else if (!force && player_res_poison() > 0 && !one_chance_in(3))
         return false;
 
     const int old_value = you.duration[DUR_POISONING];
@@ -5322,12 +5317,21 @@ void dec_slow_player(int delay)
     if (!you.duration[DUR_SLOW])
         return;
 
-    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
+    if (you.duration    [DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
             ? haste_mul(delay) : delay;
     }
+
+    if (you.torpor_slowed())
+    {
+        you.duration[DUR_SLOW] = 1;
+        return;
+    }
+    if (you.props.exists(TORPOR_SLOWED_KEY))
+        you.props.erase(TORPOR_SLOWED_KEY);
+
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
         mprf(MSGCH_DURATION, "You feel yourself speed up.");
@@ -5686,13 +5690,12 @@ void player::init()
 
     hp               = 0;
     hp_max           = 0;
-    hp_max_temp      = 0;
-    hp_max_perm      = 0;
+    hp_max_adj_temp  = 0;
+    hp_max_adj_perm  = 0;
 
     magic_points     = 0;
     max_magic_points = 0;
-    mp_max_temp      = 0;
-    mp_max_perm      = 0;
+    mp_max_adj       = 0;
 
     stat_loss.init(0);
     base_stats.init(0);
@@ -5923,10 +5926,10 @@ void player::init()
     constricting = 0;
 
     // Protected fields:
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        branch_info[i].branch = (branch_type)i;
-        branch_info[i].assert_validity();
+        branch_info[it->id].branch = it->id;
+        branch_info[it->id].assert_validity();
     }
 }
 
@@ -6387,7 +6390,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     {
         vector<skill_type> cross_skills = get_crosstrain_skills(sk);
         for (size_t i = 0; i < cross_skills.size(); ++i)
-            effective_points += skill_points[cross_skills[i]] / 5;
+            effective_points += skill_points[cross_skills[i]] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
@@ -6462,16 +6465,14 @@ static int _stoneskin_bonus()
     if (!player_stoneskin())
         return 0;
 
-    // Max +7.4 base
     int boost = 200;
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         boost += 20 * you.experience_level;
     else
 #endif
-    boost += you.skill(SK_EARTH_MAGIC, 20);
+    boost += you.props[STONESKIN_KEY].get_int() * 5;
 
-    // Max additional +7.75 from statue form
     if (you.form == TRAN_STATUE)
     {
         boost += 100;
@@ -6480,7 +6481,7 @@ static int _stoneskin_bonus()
             boost += 25 * you.experience_level;
         else
 #endif
-        boost += you.skill(SK_EARTH_MAGIC, 25);
+        boost += you.props[STONESKIN_KEY].get_int() * 6;
     }
 
     return boost;
@@ -6527,7 +6528,7 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
+        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
     AC += _stoneskin_bonus();
 
@@ -6570,8 +6571,8 @@ int player::armour_class() const
             case SP_GARGOYLE:
                 AC += 200 + 100 * experience_level * 2 / 5     // max 20
                           + 100 * (max(0, experience_level - 7) * 2 / 5);
-                if (form == TRAN_STATUE)
-                    AC += 1300 + skill(SK_EARTH_MAGIC, 50);
+                if (form == TRAN_STATUE)                       // max 28
+                    AC += 1300 + you.props[TRANSFORM_POW_KEY].get_int() * 10;
                 break;
 
             default:
@@ -6604,10 +6605,10 @@ int player::armour_class() const
             break;
 
         case TRAN_ICE_BEAST:
-            AC += 500 + skill(SK_ICE_MAGIC, 25) + 25;    // max 12
+            AC += 500 + you.props[TRANSFORM_POW_KEY].get_int() * 7; // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
+                AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
             break;
 
         case TRAN_WISP:
@@ -6621,7 +6622,7 @@ int player::armour_class() const
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
+            AC += 1700 + you.props[TRANSFORM_POW_KEY].get_int() * 10; // max 32
             // Stoneskin bonus already accounted for.
             break;
 
@@ -7247,7 +7248,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
 bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return ::drain_exp(!quiet, pow);
+    return drain_player(pow, !quiet);
 }
 
 void player::confuse(actor *who, int str)
@@ -7908,14 +7909,14 @@ vector<PlaceInfo> player::get_all_place_info(bool visited_only,
 {
     vector<PlaceInfo> list;
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        if (visited_only && branch_info[i].num_visits == 0
-            || dungeon_only && !is_connected_branch((branch_type)i))
+        if (visited_only && branch_info[it->id].num_visits == 0
+            || dungeon_only && !is_connected_branch(*it))
         {
             continue;
         }
-        list.push_back(branch_info[i]);
+        list.push_back(branch_info[it->id]);
     }
 
     return list;

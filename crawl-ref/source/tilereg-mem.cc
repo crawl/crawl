@@ -6,13 +6,13 @@
 
 #include "cio.h"
 #include "describe.h"
-#include "libutil.h"
 #include "macro.h"
+#include "output.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "stuff.h"
+#include "strings.h"
 #include "tilepick.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)

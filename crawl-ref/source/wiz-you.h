@@ -31,5 +31,6 @@ void wizard_god_mollify();
 void wizard_transform();
 void wizard_load_dump_file();
 void wizard_offer_new_ru_sacrifices();
+void wizard_join_religion();
 
 #endif

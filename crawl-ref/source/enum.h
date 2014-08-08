@@ -931,6 +931,8 @@ enum command_type
     CMD_MAP_GOTO_TARGET,
     CMD_MAP_ANNOTATE_LEVEL,
 
+    CMD_MAP_EXPLORE,
+
     CMD_MAP_WIZARD_TELEPORT,
 
     CMD_MAP_HELP,
@@ -1341,7 +1343,7 @@ enum dungeon_char_type
 //        docs/develop/levels/syntax.txt with the new symbol.
 // * Any: if its enumerator comes late in the list (as is likely for new
 //        feature types),_cell_feat_show_colour may need a special case to
-//        allow it to be recoloured.
+//        allow it to be recoloured by vaults/bloodspatters.
 // Also take note of MINMOVE and MINSEE above.
 //
 // Various pieces of code depend on the relative order of these enumerators,
@@ -4249,6 +4251,7 @@ enum spell_type
     SPELL_SUMMON_MANA_VIPER,
     SPELL_PHANTOM_MIRROR,
     SPELL_DRAIN_MAGIC,
+    SPELL_CORROSIVE_BOLT,
     NUM_SPELLS
 };
 
@@ -4414,6 +4417,7 @@ enum zap_type
     ZAP_CRYSTAL_BOLT,
     ZAP_TUKIMAS_DANCE,
     ZAP_QUICKSILVER_BOLT,
+    ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
 
     NUM_ZAPS

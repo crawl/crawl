@@ -14,20 +14,22 @@
 #include "godconduct.h"
 #include "hints.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "options.h"
+#include "output.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "stuff.h"
+
 #include "transform.h"
 #include "view.h"
 
 int allowed_deaths_door_hp()
 {
-    int hp = you.skill(SK_NECROMANCY) / 2;
+    int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
     if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
@@ -94,18 +96,16 @@ spret_type ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
+    else if (you.form == TRAN_ICE_BEAST)
+        mpr("Your icy body feels more resilient.");
     else
-    {
-        if (you.form == TRAN_ICE_BEAST)
-            mpr("Your icy body feels more resilient.");
-        else
-            mpr("A film of ice covers your body!");
+        mpr("A film of ice covers your body!");
 
-        you.redraw_armour_class = true;
-    }
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
+    you.props[ICY_ARMOUR_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }

@@ -32,6 +32,7 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "effects.h"
+#include "end.h"
 #include "env.h"
 #include "files.h"
 #include "fight.h"
@@ -54,9 +55,11 @@
 #include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -65,14 +68,12 @@
 #include "spl-selfench.h"
 #include "spl-other.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
-
-static NORETURN void _end_game(scorefile_entry &se);
 
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
@@ -229,10 +230,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_POISON_ARROW:
-        // [dshaligram] NOT importing uber-poison arrow from 4.1. Giving no
-        // bonus to poison resistant players seems strange and unnecessarily
-        // arbitrary.
-
         resist = player_res_poison();
 
         if (doEffects)
@@ -257,7 +254,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
-            drain_exp(true, min(75, 35 + original * 2 / 3));
+            drain_player(min(75, 35 + original * 2 / 3), true);
         break;
 
     case BEAM_ICE:
@@ -287,12 +284,10 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        if (player_res_acid())
-        {
-            if (doEffects)
-                canned_msg(MSG_YOU_RESIST);
-            hurted = hurted * player_acid_resist_factor() / 100;
-        }
+        hurted = resist_adjust_damage(&you, flavour, player_res_acid(),
+                                      hurted, true);
+        if (hurted < original && doEffects)
+            canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_MIASMA:
@@ -408,7 +403,8 @@ void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
     dam += 2;
     dam = roll_dice(dam, acid_strength);
 
-    const int post_res_dam = dam * player_acid_resist_factor() / 100;
+    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID,
+                                                  you.res_acid(), dam);
 
     if (post_res_dam > 0)
     {
@@ -506,7 +502,16 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int power, bool ignore_protection)
+/**
+ * Drain the player.
+ *
+ * @param power             The amount by which to drain the player.
+ * @param announce_full     Whether to print messages even when fully resisting
+ *                          the drain.
+ * @param ignore_protection Whether to ignore the player's rN.
+ * @return                  Whether draining occurred.
+ */
+bool drain_player(int power, bool announce_full, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
@@ -800,7 +805,7 @@ static void _wizard_restore_life()
     if (you.hp_max <= 0)
         unrot_hp(9999);
     while (you.hp_max <= 0)
-        you.hp_max_perm++, calc_hp();
+        you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
 }
@@ -989,7 +994,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
-                drain_exp(true, drain_amount, true);
+                drain_player(drain_amount, true, true);
         }
         if (you.hp > 0)
           return;
@@ -1127,7 +1132,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (!non_death && !crawl_state.game_is_tutorial() && !you.wizard)
         save_ghost();
 
-    _end_game(se);
+    end_game(se);
 }
 
 string morgue_name(string char_name, time_t when_crawl_got_even)
@@ -1139,184 +1144,6 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
         name += "-" + time;
 
     return name;
-}
-
-// Delete save files on game end.
-static void _delete_files()
-{
-    crawl_state.need_save = false;
-    you.save->unlink();
-    delete you.save;
-    you.save = 0;
-}
-
-NORETURN void screen_end_game(string text)
-{
-    crawl_state.cancel_cmd_all();
-    _delete_files();
-
-    if (!text.empty())
-    {
-        clrscr();
-        linebreak_string(text, get_number_of_cols());
-        display_tagged_block(text);
-
-        if (!crawl_state.seen_hups)
-            get_ch();
-    }
-
-    game_ended();
-}
-
-static NORETURN void _end_game(scorefile_entry &se)
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
-            add_inscription(you.inv[i], "unknown");
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (!you.inv[i].defined())
-            continue;
-        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-        set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-    }
-
-    _delete_files();
-
-    // death message
-    if (se.get_death_type() != KILLED_BY_LEAVING
-        && se.get_death_type() != KILLED_BY_QUITTING
-        && se.get_death_type() != KILLED_BY_WINNING)
-    {
-        canned_msg(MSG_YOU_DIE);
-        xom_death_message((kill_method_type) se.get_death_type());
-
-        switch (you.religion)
-        {
-        case GOD_FEDHAS:
-            simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.");
-            break;
-
-        case GOD_NEMELEX_XOBEH:
-            nemelex_death_message();
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-        {
-            const mon_holy_type holi = you.holiness();
-
-            if (holi == MH_NONLIVING || holi == MH_UNDEAD)
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... oblivion!\"");
-            }
-            else
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... death!\"");
-            }
-            break;
-        }
-
-        case GOD_YREDELEMNUL:
-            if (you.is_undead)
-                simple_god_message(" claims you as an undead slave.");
-            else if (se.get_death_type() != KILLED_BY_DISINT
-                     && se.get_death_type() != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless zombie.");
-            }
-            // No message if you're not undead and your corpse is lost.
-            break;
-
-        case GOD_GOZAG:
-            if (se.get_death_type() != KILLED_BY_DISINT
-                 && se.get_death_type() != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-            }
-            break;
-
-        default:
-            break;
-        }
-
-        flush_prev_message();
-        viewwindow(); // don't do for leaving/winning characters
-
-        if (crawl_state.game_is_hints())
-            hints_death_screen();
-    }
-
-    string fname = morgue_name(you.your_name, se.get_death_time());
-    if (!dump_char(fname, true, true, &se))
-    {
-        mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
-#ifdef USE_TILE_WEB
-    else
-        tiles.send_dump_info("morgue", fname);
-#endif
-
-#if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
-    string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
-                                                             : "dead";
-#ifdef DGL_WHEREIS
-    whereis_record(reason.c_str());
-#endif
-#endif
-
-    if (!crawl_state.seen_hups)
-        more();
-
-    if (!crawl_state.disables[DIS_CONFIRMATIONS])
-        get_invent(OSEL_ANY);
-    textcolor(LIGHTGREY);
-
-    // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
-        macro_save();
-
-    clrscr();
-    cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf("\n\n    "); // Space padding where # would go in list format
-
-    string hiscore = hiscores_format_single_long(se, true);
-
-    const int lines = count_occurrences(hiscore, "\n") + 1;
-
-    cprintf("%s", hiscore.c_str());
-
-    cprintf("\nBest Crawlers - %s\n",
-            crawl_state.game_type_name().c_str());
-
-    // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5);
-
-#ifndef DGAMELAUNCH
-    cprintf("\nYou can find your morgue file in the '%s' directory.",
-            morgue_directory().c_str());
-#endif
-
-    // just to pause, actual value returned does not matter {dlb}
-    if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
-        get_ch();
-
-    if (se.get_death_type() == KILLED_BY_WINNING)
-        crawl_state.last_game_won = true;
-
-#ifdef USE_TILE_WEB
-    tiles.send_exit_reason(reason, hiscore);
-#endif
-
-    game_ended();
 }
 
 int actor_to_death_source(const actor* agent)

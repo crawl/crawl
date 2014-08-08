@@ -28,15 +28,16 @@
 #include "macro.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"
+#include "unicode.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
@@ -1257,6 +1258,24 @@ bool show_map(level_pos &lpos,
                     do_annotate(lpos.id);
 
                 redraw_map = true;
+                break;
+
+            case CMD_MAP_EXPLORE:
+                if (on_level && !player_in_branch(BRANCH_LABYRINTH))
+                {
+                    travel_pathfind tp;
+                    tp.set_floodseed(you.pos(), true);
+
+                    coord_def whereto = tp.pathfind(Options.explore_greedy
+                                                    ? RMODE_EXPLORE_GREEDY
+                                                    : RMODE_EXPLORE);
+                    _reset_travel_colours(features, on_level);
+
+                    if (!whereto.zero()) {
+                        move_x = whereto.x - lpos.pos.x;
+                        move_y = whereto.y - lpos.pos.y;
+                    }
+                }
                 break;
 
 #ifdef WIZARD

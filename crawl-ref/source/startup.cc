@@ -18,6 +18,7 @@
 #include "defines.h"
 #include "dlua.h"
 #include "dungeon.h"
+#include "end.h"
 #include "env.h"
 #include "exclude.h"
 #include "files.h"
@@ -53,7 +54,7 @@
 #include "startup.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "view.h"
@@ -65,6 +66,8 @@
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
 #endif
+
+static void _cio_init();
 
 // Initialise a whole lot of stuff...
 static void _initialize()
@@ -175,7 +178,7 @@ static void _initialize()
     if (!crawl_state.test_list)
     {
         if (!crawl_state.io_inited)
-            cio_init();
+            _cio_init();
         clrscr();
     }
 
@@ -1045,4 +1048,15 @@ bool startup_step()
     _post_init(newchar);
 
     return newchar;
+}
+
+
+
+static void _cio_init()
+{
+    crawl_state.io_inited = true;
+    console_startup();
+    set_cursor_enabled(false);
+    crawl_view.init_geometry();
+    textbackground(0);
 }

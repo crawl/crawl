@@ -8,6 +8,7 @@
 
 #include "libutil.h"
 #include "options.h"
+#include "strings.h"
 #include "unicode.h"
 
 #define UPPER "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

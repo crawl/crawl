@@ -12,7 +12,6 @@
 #include "colour.h"
 #include "env.h"
 #include "itemname.h"
-#include "libutil.h"
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -21,6 +20,7 @@
 #include "show.h"
 #include "stash.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -192,6 +192,9 @@ static int _get_mons_colour(const monster_info& mi)
     monster_type stype = _show_mons_type(mi);
     if (stype != mi.type && mi.type != MONS_SENSED)
         col = mons_class_colour(stype);
+
+    if (mi.is(MB_ROLLING))
+        col = ETC_BONE;
 
     if (mi.is(MB_BERSERK))
         col = RED;

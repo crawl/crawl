@@ -9,6 +9,7 @@
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/hyper_caves.lua")
 : require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
 
 ##############################################################
 # layout_layer_cave
@@ -22,8 +23,6 @@ WEIGHT: 20, 15 (Snake)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
-  if is_validating() then return; end
-
   local gxm,gym = dgn.max_bounds()
 
   -- First pass
@@ -97,6 +96,12 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 
   theme.D.caves(_G)
 }}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
+}}
+MAP
+ENDMAP
 
 ##############################################################
 # layout_cave_shapes
@@ -308,6 +313,13 @@ TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
   remove_isolated_glyphs { find = "w", percent = 80 }
   remove_isolated_glyphs { find = "W", percent = 80 }
   zonify.grid_fill_water_zones(1,"t")
+}}
+# Enforce minimum floor size - otherwise we get very tiny floors sometimes
+validate {{
+  -- If we try to validate the map before without creating it,
+  --  we get a crash at start
+  if is_validating() then return end
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.SWAMP, ".W")
 }}
 
 ##############################################################

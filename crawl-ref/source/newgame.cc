@@ -10,6 +10,7 @@
 #include "cio.h"
 #include "command.h"
 #include "database.h"
+#include "end.h"
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
@@ -26,10 +27,11 @@
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"
+#include "prompt.h"
 #include "random.h"
 #include "species.h"
 #include "state.h"
-#include "stuff.h"
+
 
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"

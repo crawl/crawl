@@ -49,6 +49,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "state.h"
+#include "strings.h"
 #include "transform.h"
 #include "shout.h"
 #include "view.h"

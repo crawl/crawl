@@ -17,7 +17,7 @@
 #include "mon-death.h"
 #include "random.h"
 #include "rot.h"
-#include "stuff.h"
+#include "stepdown.h"
 
 static void _create_monster_hide(const item_def corpse)
 {

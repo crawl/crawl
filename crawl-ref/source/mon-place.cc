@@ -538,16 +538,16 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     }
 
     // Is it a branch stair?
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (branches[i].entry_stairs == feat)
+        if (it->entry_stairs == feat)
         {
-            place = static_cast<branch_type>(i);
+            place = it->id;
             break;
         }
-        else if (branches[i].exit_stairs == feat)
+        else if (it->exit_stairs == feat)
         {
-            place = brentry[i];
+            place = brentry[it->id];
             // This can happen on D:1 and in wizmode with random spawns on the
             // first floor of a branch that didn't generate naturally.
             if (!place.is_valid())
@@ -657,7 +657,8 @@ monster_type resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (!vault_mon_types.empty())
+        // Only use the vault list if the monster comes from this level.
+        if (!vault_mon_types.empty() && *place == level_id::current())
         {
             int i = 0;
             int tries = 0;
@@ -2163,8 +2164,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band = BAND_YAKS;
         band_size = 2 + random2(4);
         break;
-    case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
+        if (env.absdepth0 < 19)
+            break;
+        // fallthrough to ugly things...
+    case MONS_UGLY_THING:
+        if (env.absdepth0 < 13)
+            break;
         band = BAND_UGLY_THINGS;
         band_size = 2 + random2(4);
         break;
@@ -3479,6 +3485,12 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
+    // Hostile ghosts and illusions are always interesting.
+    else if (mons->type == MONS_PLAYER_GHOST
+             || mons->type == MONS_PLAYER_ILLUSION)
+    {
+        interesting = true;
+    }
     // Jellies are never interesting to Jiyva.
     else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
         interesting = false;

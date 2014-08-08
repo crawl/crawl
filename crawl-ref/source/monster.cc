@@ -51,11 +51,13 @@
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
+#include "shout.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "strings.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -63,7 +65,6 @@
 #endif
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 #include <algorithm>
@@ -442,7 +443,19 @@ int monster::damage_type(int which_attack)
     return get_vorpal_type(*mweap);
 }
 
-random_var monster::attack_delay(item_def *weap, item_def *projectile,
+/**
+ * Return the delay caused by attacking with the provided weapon & projectile.
+ *
+ * @param weap          The weapon to be used; may be null.
+ * @param projectile    The projectile to be fired/thrown; may be null.
+ * @param random        Whether to randomize delay, or provide a fixed value
+ *                      for display.
+ * @param scaled        Unused (interface parameter)
+ * @return              The time taken by an attack with the given weapon &
+ *                      projectile, in aut.
+ */
+random_var monster::attack_delay(const item_def *weap,
+                                 const item_def *projectile,
                                  bool random, bool scaled) const
 {
     const bool use_unarmed =
@@ -1524,8 +1537,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         {
             return weapon.base_type == OBJ_STAVES
                        && weapon.sub_type == STAFF_POISON
-                   || weapon.base_type == OBJ_WEAPONS
-                       && weapon.special == UNRAND_OLGREB;
+                   || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
         if (mons->type == MONS_FANNAR)
@@ -2965,7 +2977,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
 
     if (const item_def* w = weapon())
     {
-        if (is_unrandom_artefact(*w) && w->special == UNRAND_JIHAD)
+        if (is_unrandom_artefact(*w, UNRAND_JIHAD))
             for (actor_near_iterator mi(pos(), LOS_NO_TRANS); mi; ++mi)
                 if (mons_aligned(this, *mi))
                     mi->go_berserk(false);
@@ -4484,7 +4496,7 @@ void monster::ghost_init(bool need_pos)
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
-    flags           = MF_INTERESTING;
+    flags           = 0;
     foe             = MHITNOT;
     foe_memory      = 0;
     number          = MONS_NO_MONSTER;

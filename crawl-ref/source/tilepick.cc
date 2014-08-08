@@ -22,6 +22,7 @@
 #include "player.h"
 #include "shopping.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
@@ -2850,8 +2851,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             if (!mon.inv[MSLOT_SHIELD].get() && weapon
                 && (weapon->base_type == OBJ_STAVES
                       && weapon->sub_type == STAFF_POISON
-                    || weapon->base_type == OBJ_WEAPONS
-                      && weapon->special == UNRAND_OLGREB))
+                    || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return TILEP_MONS_ARACHNE;
             }
@@ -3101,6 +3101,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_EXECUTIONERS_AXE:      return TILE_WPN_EXECUTIONERS_AXE;
     case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
     case WPN_HUNTING_SLING:         return TILE_WPN_HUNTING_SLING;
+    case WPN_GREATSLING:            return TILE_WPN_GREATSLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
     case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
@@ -3993,16 +3994,20 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #endif
 
     case MISC_FAN_OF_GALES:
-        return TILE_MISC_AIR_ELEMENTAL_FAN;
+        return evoker_is_charged(item) ? TILE_MISC_FAN_OF_GALES
+                                       : TILE_MISC_FAN_OF_GALES_INERT;
 
     case MISC_LAMP_OF_FIRE:
-        return TILE_MISC_LAMP_OF_FIRE;
+        return evoker_is_charged(item) ? TILE_MISC_LAMP_OF_FIRE
+                                       : TILE_MISC_LAMP_OF_FIRE_INERT;
 
     case MISC_STONE_OF_TREMORS:
-        return TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
+        return evoker_is_charged(item) ? TILE_MISC_STONE_OF_TREMORS
+                                       : TILE_MISC_STONE_OF_TREMORS_INERT;
 
     case MISC_PHIAL_OF_FLOODS:
-        return TILE_MISC_PHIAL_OF_FLOODS;
+        return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
+                                       : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
@@ -5650,6 +5655,8 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     const int etype = enchant_to_int(item);
 
+    // XXX: only helmets and robes have variants, but it would be nice
+    // if this weren't hardcoded.
     if (tile == TILE_THELM_HELM)
     {
         switch (etype)
@@ -5664,6 +5671,24 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
                 break;
             default:
                 tile = _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
+        }
+        return tile;
+    }
+
+    if (tile == TILE_ARM_ROBE)
+    {
+        switch (etype)
+        {
+            case 1:
+            case 2:
+            case 3:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_EGO_FIRST, TILE_ARM_ROBE_EGO_LAST);
+                break;
+            case 4:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_ART_FIRST, TILE_ARM_ROBE_ART_LAST);
+                break;
+            default:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_FIRST, TILE_ARM_ROBE_LAST);
         }
         return tile;
     }

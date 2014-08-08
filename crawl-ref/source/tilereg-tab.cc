@@ -4,11 +4,12 @@
 
 #include "tilereg-tab.h"
 
-#include "libutil.h"
-#include "state.h"
-#include "tiledef-gui.h"
 #include "cio.h"
+#include "libutil.h"
 #include "macro.h"
+#include "state.h"
+#include "strings.h"
+#include "tiledef-gui.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),

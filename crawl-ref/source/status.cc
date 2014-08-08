@@ -16,10 +16,11 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-transloc.h"
+#include "strings.h"
 #include "terrain.h"
 #include "transform.h"
-#include "spl-transloc.h"
-#include "stuff.h"
+#include "traps.h"
 
 #include "duration-data.h"
 
@@ -649,10 +650,7 @@ static void _describe_glow(status_info* inf)
         if (cont > 1 || you.species != SP_DJINNI)
 #endif
         inf->light_text = "Contam";
-    }
 
-    if (cont > 0)
-    {
         inf->short_text =
                  (cont == 1) ? "very slightly " :
                  (cont == 2) ? "slightly " :

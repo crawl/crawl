@@ -15,6 +15,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
@@ -28,7 +29,6 @@
 #include "spl-summoning.h"
 #include "spl-wpnench.h"
 #include "state.h"
-#include "stuff.h"
 #include "transform.h"
 #include "xom.h"
 
@@ -152,7 +152,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
     if (slot >= r1 && slot <= r2)
         return;
     if (const item_def* amu = you.slot_item(EQ_AMULET, true))
-        if (amu->special == UNRAND_FINGER_AMULET && slot == EQ_RING_AMULET)
+        if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET)
             return;
     die("ring on invalid slot %d", slot);
 #endif

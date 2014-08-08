@@ -40,6 +40,7 @@
 #include "dbg-scan.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "end.h"
 #include "enum.h"
 #include "errors.h"
 #include "map_knowledge.h"
@@ -66,9 +67,9 @@
 #include "skills.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "spl-wpnench.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"
@@ -1340,10 +1341,9 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
 
-    marshallShort(th, you.hp_max_temp);
-    marshallShort(th, you.hp_max_perm);
-    marshallShort(th, you.mp_max_temp);
-    marshallShort(th, you.mp_max_perm);
+    marshallShort(th, you.hp_max_adj_temp);
+    marshallShort(th, you.hp_max_adj_perm);
+    marshallShort(th, you.mp_max_adj);
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
@@ -2214,13 +2214,17 @@ static void tag_read_you(reader &th)
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 
-    you.hp_max_temp               = unmarshallShort(th);
-    you.hp_max_perm               = unmarshallShort(th);
-    you.mp_max_temp               = unmarshallShort(th);
-    you.mp_max_perm               = unmarshallShort(th);
+    you.hp_max_adj_temp           = unmarshallShort(th);
+    you.hp_max_adj_perm           = unmarshallShort(th);
+    you.mp_max_adj                = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_BASE_MP)
+    {
+        int baseadj = unmarshallShort(th);
+        you.mp_max_adj += baseadj;
+    }
     if (th.getMinorVersion() < TAG_MINOR_CLASS_HP_0)
-        you.hp_max_perm -= 8;
+        you.hp_max_adj_perm -= 8;
 #endif
 
     const int x = unmarshallShort(th);
@@ -2666,6 +2670,15 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_FLAME_CLOUD_IMMUNITY] =
             you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_METABOLISM)
+    {
+        you.mutation[MUT_FAST_METABOLISM] =
+        you.innate_mutation[MUT_FAST_METABOLISM];
+
+        you.mutation[MUT_SLOW_METABOLISM] =
+        you.innate_mutation[MUT_SLOW_METABOLISM];
     }
 #endif
 

@@ -1,5 +1,4 @@
-#ifndef MON_SPLL_H
-#define MON_SPLL_H
+#include "mon-book.h"
 
 /* *********************************************************************
 
@@ -22,6 +21,8 @@
 
 ********************************************************************* */
 
+static const mon_spellbook mspell_list[] =
+{
     {  MST_ORC_WIZARD_I,
       {
        SPELL_MAGIC_DART,
@@ -123,7 +124,7 @@
 
     {  MST_LICH_III,
       {
-       SPELL_BOLT_OF_DRAINING,
+       SPELL_CORROSIVE_BOLT,
        SPELL_SLOW,
        SPELL_INVISIBILITY,
        SPELL_THROW_ICICLE,
@@ -662,7 +663,7 @@
 
     {  MST_DEEP_ELF_SORCERER,
       {
-       SPELL_BOLT_OF_DRAINING,
+       SPELL_CORROSIVE_BOLT,
        SPELL_BANISHMENT,
        SPELL_HASTE,
        SPELL_SUMMON_DEMON,
@@ -2040,7 +2041,7 @@
     {  MST_TENGU_REAVER_III,
       {
        SPELL_VENOM_BOLT,
-       SPELL_VENOM_BOLT,
+       SPELL_CORROSIVE_BOLT,
        SPELL_BATTLESPHERE,
        SPELL_POISONOUS_CLOUD,
        SPELL_BATTLESPHERE,
@@ -2103,6 +2104,7 @@
       }
     },
 
+    // deep elf ie
     {  MST_DEEP_ELF_MAGE_I,
       {
        SPELL_FREEZE,
@@ -2114,6 +2116,7 @@
       }
     },
 
+    // deep elf ee
     {  MST_DEEP_ELF_MAGE_II,
       {
        SPELL_BOLT_OF_MAGMA,
@@ -2125,6 +2128,7 @@
       }
     },
 
+    // deep elf wz
     {  MST_DEEP_ELF_MAGE_III,
       {
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
@@ -2136,6 +2140,7 @@
       }
     },
 
+    // deep elf --fe
     {  MST_DEEP_ELF_MAGE_IV,
       {
        SPELL_FLAME_TONGUE,
@@ -2147,6 +2152,7 @@
       }
     },
 
+    // deep elf cj
     {  MST_DEEP_ELF_MAGE_V,
       {
        SPELL_MAGIC_DART,
@@ -2464,4 +2470,4 @@
        SPELL_MASS_CONFUSION
       }
     },
-#endif
+};

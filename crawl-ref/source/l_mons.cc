@@ -14,6 +14,7 @@
 #include "mon-util.h"
 #include "mon-speak.h"
 #include "monster.h"
+#include "strings.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \
     MonsterWrap *___mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE); \

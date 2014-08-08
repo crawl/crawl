@@ -26,10 +26,11 @@
 #include "libutil.h"
 #include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "skills2.h"
 #include "spl-summoning.h"
 #include "stash.h"
-#include "stuff.h"
+#include "strings.h"
 #include "throw.h"
 
 /////////////////////////////////////////////////////////////////////

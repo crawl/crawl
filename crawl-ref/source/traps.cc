@@ -40,7 +40,9 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -48,7 +50,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "travel.h"
 #include "terrain.h"
 #include "transform.h"
@@ -287,6 +289,23 @@ int get_trapping_net(const coord_def& where, bool trapped)
         }
     }
     return NON_ITEM;
+}
+
+/**
+ * Return a string describing the reason a given actor is ensnared. (Since nets
+ * & webs use the same status.
+ *
+ * @param actor     The ensnared actor.
+ * @return          Either 'held in a net' or 'caught in a web'.
+ */
+const char* held_status(actor *act)
+{
+    act = act ? act : &you;
+
+    if (get_trapping_net(act->pos(), true) != NON_ITEM)
+        return "held in a net";
+    else
+        return "caught in a web";
 }
 
 // If there are more than one net on this square
@@ -1139,7 +1158,7 @@ trap_type get_trap_type(const coord_def& pos)
 static bool _disarm_is_deadly(trap_def& trap)
 {
     int dam = trap.max_damage(you);
-    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 0)
+    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 1)
         dam += 15; // arbitrary
 
     return you.hp <= dam;

@@ -15,15 +15,16 @@
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
-#include "libutil.h"
 #include "makeitem.h"
 #include "misc.h"
 #include "mon-death.h"
 #include "player.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
-#include "stuff.h"
+#include "strings.h"
+
 
 #define TIMER_KEY "timer"
 

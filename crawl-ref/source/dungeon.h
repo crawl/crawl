@@ -54,6 +54,19 @@ enum map_mask_type
 class dgn_region;
 typedef vector<dgn_region> dgn_region_list;
 
+class dgn_veto_exception : public exception
+{
+public:
+    dgn_veto_exception(const string& _msg) : msg(_msg) { }
+    ~dgn_veto_exception() throw () { }
+    const char *what() const throw ()
+    {
+        return msg.c_str();
+    }
+private:
+    string msg;
+};
+
 class dgn_region
 {
 public:
@@ -139,7 +152,7 @@ public:
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
-    void connect(bool spotty = false) const;
+    int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
     dungeon_feature_type feature_at(const coord_def &c);
     bool is_exit(const coord_def &c);

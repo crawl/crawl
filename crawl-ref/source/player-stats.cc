@@ -18,6 +18,7 @@
 #include "player.h"
 #include "religion.h"
 #include "state.h"
+#include "strings.h"
 #include "transform.h"
 #include "hints.h"
 

@@ -9,6 +9,7 @@ struct feature_def
     const char*          name;
     const char*          vaultname;       // used for KFEAT and &(
     dungeon_char_type    dchar;           // used for creating symbol
+    dungeon_char_type    magic_dchar;     // used for creating magic_symbol
     ucs_t                symbol;          // symbol used for seen terrain
     ucs_t                magic_symbol;    // symbol used for magic-mapped terrain
     unsigned short       colour;          // normal in LoS colour

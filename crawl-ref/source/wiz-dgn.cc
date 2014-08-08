@@ -30,10 +30,11 @@
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"
@@ -291,19 +292,19 @@ bool wizard_create_feature(const coord_def& pos)
 
 void wizard_list_branches()
 {
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (parent_branch((branch_type)i) == NUM_BRANCHES)
+        if (parent_branch(it->id) == NUM_BRANCHES)
             continue;
-        else if (brentry[i].is_valid())
+        else if (brentry[it->id].is_valid())
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
-                 i, branches[i].longname, brentry[i].describe().c_str());
+                 it->id, it->longname, brentry[it->id].describe().c_str());
         }
-        else if (is_random_subbranch((branch_type)i))
+        else if (is_random_subbranch(it->id))
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
-                 "this game", i, branches[i].longname);
+                 "this game", it->id, it->longname);
         }
     }
 

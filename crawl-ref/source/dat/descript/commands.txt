@@ -216,6 +216,14 @@ CMD_MAP_GOTO_TARGET verbose
 
 Start travelling to the cursor's current location.
 %%%%
+CMD_MAP_EXPLORE
+
+Find next autoexplore target
+%%%%
+CMD_MAP_EXPLORE verbose
+
+Move the map cursor to the next location that autoexplore will travel to.
+%%%%
 CMD_MAP_ADD_WAYPOINT
 
 Add waypoint

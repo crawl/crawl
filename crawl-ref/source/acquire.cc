@@ -27,8 +27,10 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
@@ -38,7 +40,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 
 static armour_type _random_nonbody_armour_type()
@@ -1257,9 +1259,8 @@ int acquirement_create_item(object_class_type class_wanted,
 
             int brand = get_weapon_brand(acq_item);
             if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(acq_item)
-                   && (acq_item.special == UNRAND_TROG
-                       || acq_item.special == UNRAND_WUCAD_MU))
+                || is_unrandom_artefact(acq_item, UNRAND_TROG)
+                || is_unrandom_artefact(acq_item, UNRAND_WUCAD_MU))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;

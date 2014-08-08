@@ -51,6 +51,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"
@@ -64,7 +65,8 @@
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "strings.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -3192,7 +3194,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, 100);
+            drain_player(100, true);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;

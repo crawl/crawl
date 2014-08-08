@@ -29,12 +29,15 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
+#include "output.h"
 #include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "stuff.h"
+#include "strings.h"
 #include "mon-util.h"
 #include "state.h"
 #include "throw.h"
@@ -1577,6 +1580,10 @@ bool check_old_item_warning(const item_def& item,
         if (!you.weapon())
             return true;
 
+        int equip = you.equip[EQ_WEAPON];
+        if (equip == -1 || item.link == equip)
+            return true;
+
         old_item = *you.weapon();
         if (!needs_handle_warning(old_item, OPER_WIELD))
             return true;
@@ -1589,7 +1596,8 @@ bool check_old_item_warning(const item_def& item,
             return true;
 
         equipment_type eq_slot = get_armour_slot(item);
-        if (you.equip[eq_slot] == -1)
+        int equip = you.equip[eq_slot];
+        if (equip == -1 || item.link == equip)
             return true;
 
         old_item = you.inv[you.equip[eq_slot]];
@@ -1675,7 +1683,7 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 }
 
-static bool _nasty_stasis(const item_def &item, operation_types oper)
+bool nasty_stasis(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON
            && (item.base_type == OBJ_JEWELLERY
@@ -1713,7 +1721,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return true;
     }
 
-    if (_nasty_stasis(item, oper))
+    if (nasty_stasis(item, oper))
         return true;
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
@@ -1766,6 +1774,11 @@ bool check_warning_inscriptions(const item_def& item,
             // a non-const item_def.
             if (!you.can_wield(item))
                 return true;
+
+            // Don't ask if item already wielded.
+            int equip = you.equip[EQ_WEAPON];
+            if (equip != -1 && item.link == equip)
+                return check_old_item_warning(item, oper);
         }
         else if (oper == OPER_WEAR)
         {
@@ -1812,7 +1825,7 @@ bool check_warning_inscriptions(const item_def& item,
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (_nasty_stasis(item, oper))
+        if (nasty_stasis(item, oper))
         {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :

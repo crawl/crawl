@@ -115,6 +115,8 @@ enum tag_minor_version
     TAG_MINOR_RU_RENAME,           // Fix up a property by changing the name.
     TAG_MINOR_RU_PIETY,            // Rescale Ru piety
     TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
+    TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
+    TAG_MINOR_METABOLISM,          // Remove random fast/slow meta mutations
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

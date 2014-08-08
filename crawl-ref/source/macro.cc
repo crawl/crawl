@@ -38,9 +38,10 @@
 #include "files.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
 #include "message.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "syscalls.h"
 #include "unicode.h"
 #include "version.h"
@@ -753,6 +754,20 @@ int getchm(KeymapContext mc, int (*rgetch)())
         macro_buf_add_long(keys, Keymaps[mc]);
 
     return macro_buf_get();
+}
+
+/**
+ * Get a character?
+ */
+int get_ch()
+{
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int gotched = getchm();
+
+    if (gotched == 0)
+        gotched = getchm();
+
+    return gotched;
 }
 
 /*

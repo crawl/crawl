@@ -34,7 +34,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "travel.h"
 #include "hiscores.h"
 #include "version.h"
@@ -151,10 +151,10 @@ static void _dump_player(FILE *file)
     fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
     fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
-            you.hp_max_temp, you.hp_max_perm);
-    fprintf(file, "MP: %d/%d; mods: %d/%d\n",
+            you.hp_max_adj_temp, you.hp_max_adj_perm);
+    fprintf(file, "MP: %d/%d; mod: %d\n",
             you.magic_points, you.max_magic_points,
-            you.hp_max_temp, you.mp_max_perm);
+            you.mp_max_adj);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
             you.strength(false), you.max_strength(),
             you.intel(false), you.max_intel(),

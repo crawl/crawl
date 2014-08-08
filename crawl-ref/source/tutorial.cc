@@ -13,7 +13,7 @@
 #include "player.h"
 #include "skills.h"
 #include "state.h"
-#include "stuff.h"
+
 
 void set_tutorial_hunger(int hunger)
 {

@@ -26,8 +26,8 @@ function bailey_portal(e, ptype)
       noisemaker = 'oriflamme',
         ranges = {
           { 5000, 'faint ' },  { 4000, '' },
-          { 2500, 'steady ' }, { 1500, 'rapid ' },
-          { 0, 'frantic ' }
+          { 2500, 'steady ' }, { 1500, 'quick ' },
+          { 0, 'loud ' }
       }
     }
 

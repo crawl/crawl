@@ -25,13 +25,16 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
+#include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "terrain.h"
 #include "travel.h"
+#include "unicode.h"
 
 typedef map<branch_type, set<level_id> > stair_map_type;
 typedef map<level_pos, shop_type> shop_map_type;
@@ -179,8 +182,7 @@ static string _portals_description_string()
 {
     string disp;
     level_id    last_id;
-    for (branch_type cur_portal = BRANCH_DUNGEON; cur_portal < NUM_BRANCHES;
-         cur_portal = static_cast<branch_type>(cur_portal + 1))
+    for (branch_iterator it; it; ++it)
     {
         last_id.depth = 10000;
         portal_map_type::const_iterator ci_portals;
@@ -191,7 +193,7 @@ static string _portals_description_string()
             // one line per region should be enough, they're all of
             // the form D:XX, except for labyrinth portals, of which
             // you would need 11 (at least) to have a problem.
-            if (ci_portals->second == cur_portal)
+            if (ci_portals->second == it->id)
             {
                 if (last_id.depth == 10000)
                     disp += coloured_branch(ci_portals->second)+ ":";
@@ -250,9 +252,9 @@ static string _get_seen_branches(bool display)
     }
     disp += "\n";
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        const branch_type branch = branches[i].id;
+        const branch_type branch = it->id;
 
         if (branch == BRANCH_ZIGGURAT)
             continue;
@@ -264,16 +266,16 @@ static string _get_seen_branches(bool display)
             lid = find_deepest_explored(lid);
 
             string entry_desc;
-            for (set<level_id>::iterator it = stair_level[branch].begin();
-                 it != stair_level[branch].end(); ++it)
+            for (set<level_id>::iterator lit = stair_level[branch].begin();
+                 lit != stair_level[branch].end(); ++lit)
             {
-                entry_desc += " " + it->describe(false, true);
+                entry_desc += " " + lit->describe(false, true);
             }
 
             // "D" is a little too short here.
             const char *brname = (branch == BRANCH_DUNGEON
-                                  ? branches[branch].shortname
-                                  : branches[branch].abbrevname);
+                                  ? it->shortname
+                                  : it->abbrevname);
 
             snprintf(buffer, sizeof buffer,
                 "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
@@ -300,39 +302,22 @@ static string _get_unseen_branches()
     char buffer[100];
     string disp;
 
-    /* see if we need to hide lair branches that don't exist */
-    int seen_lair_branches = 0;
-    int seen_vaults_branches = 0;
-    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        const branch_type branch = branches[i].id;
-
-        if (!is_random_subbranch(branch))
+        if (it->id < BRANCH_FIRST_NON_DUNGEON)
             continue;
 
-        if (stair_level.count(branch))
-        {
-            if (parent_branch((branch_type)i) == BRANCH_LAIR)
-                seen_lair_branches++;
-            else if (parent_branch((branch_type)i) == BRANCH_VAULTS)
-                seen_vaults_branches++;
-        }
-    }
+        const branch_type branch = it->id;
 
-    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
-    {
-        const branch_type branch = branches[i].id;
-
-        if (is_random_subbranch(branch)
-            && ((parent_branch((branch_type)i) == BRANCH_LAIR
-                 && seen_lair_branches >= 2)
-                || (parent_branch((branch_type)i) == BRANCH_VAULTS)
-                    && seen_vaults_branches >= 1))
+        if (branch == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+            || branch == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+            || branch == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+            || branch == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
         {
             continue;
         }
 
-        if (i == BRANCH_VESTIBULE || !is_connected_branch(branch))
+        if (branch == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;
 
         if (branch_is_unfinished(branch))
@@ -340,30 +325,30 @@ static string _get_unseen_branches()
 
         if (!stair_level.count(branch))
         {
-            const branch_type parent = branches[branch].parent_branch;
+            const branch_type parent = it->parent_branch;
             // Root branches.
             if (parent == NUM_BRANCHES)
                 continue;
             level_id lid(parent, 0);
             lid = find_deepest_explored(lid);
-            if (lid.depth >= branches[branch].mindepth)
+            if (lid.depth >= it->mindepth)
             {
-                if (branches[branch].mindepth != branches[branch].maxdepth)
+                if (it->mindepth != it->maxdepth)
                 {
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d-%d</darkgrey>",
-                            branches[branch].abbrevname,
+                            it->abbrevname,
                             branches[parent].abbrevname,
-                            branches[branch].mindepth,
-                            branches[branch].maxdepth);
+                            it->mindepth,
+                            it->maxdepth);
                 }
                 else
                 {
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d</darkgrey>",
-                            branches[branch].abbrevname,
+                            it->abbrevname,
                             branches[parent].abbrevname,
-                            branches[branch].mindepth);
+                            it->mindepth);
                 }
 
                 disp += buffer;
@@ -576,10 +561,10 @@ static string _get_notes()
 {
     string disp;
 
-    for (int br = 0 ; br < NUM_BRANCHES; ++br)
-        for (int d = 1; d <= brdepth[br]; ++d)
+    for (branch_iterator it; it; ++it)
+        for (int d = 1; d <= brdepth[it->id]; ++d)
         {
-            level_id i(static_cast<branch_type>(br), d);
+            level_id i(it->id, d);
             if (!get_level_annotation(i).empty())
                 disp += _get_coloured_level_annotation(i) + "\n";
         }
@@ -622,10 +607,10 @@ static bool _unnotice_stair(const level_pos &pos)
     if (!feat_is_branch_stairs(feat))
         return false;
 
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-        if (branches[i].entry_stairs == feat)
+    for (branch_iterator it; it; ++it)
+        if (it->entry_stairs == feat)
         {
-            const branch_type br = static_cast<branch_type>(i);
+            const branch_type br = it->id;
             if (stair_level.count(br))
             {
                 stair_level[br].erase(level_id::current());

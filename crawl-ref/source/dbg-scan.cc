@@ -21,6 +21,7 @@
 #include "dbg-util.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "end.h"
 #include "env.h"
 #include "godabil.h"
 #include "items.h"
@@ -35,7 +36,8 @@
 #include "ng-init.h"
 #include "shopping.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
+#include "stepdown.h"
 #include "terrain.h"
 #include "traps.h"
 #include "version.h"
@@ -1926,19 +1928,19 @@ void objstat_generate_stats()
     run_map_local_preludes();
 
     // Populate a vector of the levels ids we've made
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (brdepth[i] == -1)
+        if (brdepth[it->id] == -1)
             continue;
 
-        const branch_type br = static_cast<branch_type>(i);
+        const branch_type br = it->id;
 #if TAG_MAJOR_VERSION == 34
         // Don't want to include Forest since it doesn't generate
         if (br == BRANCH_FOREST)
             continue;
 #endif
         vector<level_id> levels;
-        for (int dep = 1; dep <= brdepth[i]; ++dep)
+        for (int dep = 1; dep <= brdepth[br]; ++dep)
         {
             const level_id lid(br, dep);
             if (SysEnv.map_gen_range.get()

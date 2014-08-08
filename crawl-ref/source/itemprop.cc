@@ -37,6 +37,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
+#include "strings.h"
 #include "terrain.h"
 #include "xom.h"
 
@@ -351,17 +352,17 @@ static const weapon_def Weapon_prop[] =
         SK_SLINGS,       SIZE_LITTLE,  SIZE_SMALL, MI_STONE,
         DAMV_NON_MELEE, 2, 2 },
 
-    { WPN_HAND_CROSSBOW,     "hand crossbow",      11,  5, 15,  50,  5,
+    { WPN_HAND_CROSSBOW,     "hand crossbow",      12,  5, 15,  50,  5,
         SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 7, 10 },
     { WPN_ARBALEST,          "arbalest",           18,  2, 19, 150,  8,
         SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10 },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23,  0, 23, 250,  9,
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    22,  0, 23, 250,  9,
         SK_CROSSBOWS,    SIZE_SMALL,  NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2 },
 
-    { WPN_SHORTBOW,          "shortbow",            8,  1, 13,  90,  2,
+    { WPN_SHORTBOW,          "shortbow",            9,  2, 13,  90,  2,
         SK_BOWS,         SIZE_LITTLE,  NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10 },
     { WPN_LONGBOW,           "longbow",            15,  0, 17, 120,  3,
@@ -1587,7 +1588,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
 // True if item is a staff that deals extra damage based on Evocations skill.
 static bool _staff_uses_evocations(const item_def &item)
 {
-    if (is_unrandom_artefact(item) && item.special == UNRAND_ELEMENTAL_STAFF)
+    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
         return true;
 
     if (!item_type_known(item) || item.base_type != OBJ_STAVES)

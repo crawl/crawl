@@ -13,6 +13,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "terrain.h"
+#include "strings.h"
 
 #define FEATF(name, val) \
     static int name(lua_State *ls) \

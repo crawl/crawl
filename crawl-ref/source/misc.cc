@@ -62,6 +62,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
@@ -71,7 +72,7 @@
 #include "skills2.h"
 #include "spl-clouds.h"
 #include "state.h"
-#include "stuff.h"
+#include "strings.h"
 #include "target.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -860,23 +861,6 @@ void run_environment_effects()
     run_cloud_spreaders(you.time_taken);
 }
 
-coord_def pick_adjacent_free_square(const coord_def& p)
-{
-    int num_ok = 0;
-    coord_def result(-1, -1);
-
-    for (adjacent_iterator ai(p); ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_FLOOR && monster_at(*ai) == NULL
-            && one_chance_in(++num_ok))
-        {
-            result = *ai;
-        }
-    }
-
-    return result;
-}
-
 // Converts a movement speed to a duration. i.e., answers the
 // question: if the monster is so fast, how much time has it spent in
 // its last movement?
@@ -1298,26 +1282,4 @@ string counted_monster_list::describe(description_level_type desc)
                              : cm.first->name(desc);
     }
     return out;
-}
-
-bool move_stairs(coord_def orig, coord_def dest)
-{
-    const dungeon_feature_type stair_feat = grd(orig);
-
-    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
-        return false;
-
-    // The player can't use shops to escape, so don't bother.
-    if (stair_feat == DNGN_ENTER_SHOP)
-        return false;
-
-    // Don't move around notable terrain the player is aware of if it's
-    // out of sight.
-    if (is_notable_terrain(stair_feat)
-        && env.map_knowledge(orig).known() && !you.see_cell(orig))
-    {
-        return false;
-    }
-
-    return slide_feature_over(orig, dest);
 }

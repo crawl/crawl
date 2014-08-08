@@ -2,10 +2,11 @@
 
 #include "viewgeom.h"
 
+#include "end.h"
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "stuff.h"
+
 
 // ----------------------------------------------------------------------
 // Layout helper classes

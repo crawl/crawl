@@ -16,12 +16,13 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-message.h"
 #include "monster.h"
 #include "player.h"
 #include "random.h"
-#include "stuff.h"
+#include "strings.h"
 #include "teleport.h"
 #include "traps.h"
 
@@ -193,7 +194,7 @@ bool ranged_attack::handle_phase_blocked()
     if (needs_message)
     {
         mprf("%s %s %s%s",
-             def_name(DESC_THE).c_str(),
+             defender_name(false).c_str(),
              defender->conj_verb(verb).c_str(),
              projectile->name(DESC_THE).c_str(),
              punctuation.c_str());
@@ -224,6 +225,9 @@ bool ranged_attack::handle_phase_dodged()
             }
             else
                 mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
+
+            if (defender == &you)
+                you.ablate_deflection();
         }
 
         return true;
@@ -252,7 +256,7 @@ bool ranged_attack::handle_phase_dodged()
         mprf("%s%s misses %s%s",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
-             defender_name().c_str(),
+             defender_name(false).c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 
@@ -401,7 +405,7 @@ bool ranged_attack::attack_ignores_shield(bool verbose)
         {
             mprf("%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
-                 apostrophise(defender_name()).c_str(),
+                 apostrophise(defender_name(false)).c_str(),
                  defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
                                  : "shielding");
         }
@@ -826,8 +830,7 @@ void ranged_attack::player_stab_check()
     {
         attack::player_stab_check();
         // Sometimes the blowgun of the Assassin lets you stab an aware target.
-        if (!stab_attempt && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_BLOWGUN_ASSASSIN
+        if (!stab_attempt && is_unrandom_artefact(*weapon, UNRAND_BLOWGUN_ASSASSIN)
             && one_chance_in(3))
         {
             stab_attempt = true;
@@ -870,8 +873,7 @@ void ranged_attack::announce_hit()
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
-         // Not defender_name because reflexive is bad here.
-         def_name(DESC_THE).c_str(),
+         defender_name(false).c_str(),
          damage_done > 0 && stab_attempt && stab_bonus > 0
              ? " in a vulnerable spot"
              : "",

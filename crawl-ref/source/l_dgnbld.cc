@@ -20,6 +20,7 @@
 #include "l_libs.h"
 #include "mapdef.h"
 #include "random.h"
+#include "strings.h"
 
 static const char *exit_glyphs = "{}()[]<>@";
 
@@ -344,6 +345,167 @@ static bool _wall_is_empty(map_lines &lines,
     return true;
 }
 
+// Only used for the join_the_dots command.
+struct join_the_dots_path
+{
+    vector<coord_def> cells;
+    int hit_vault_count;
+    int avoid_vault_count;
+};
+
+/**
+ * Calculates a possible path joining the provided coordinates.
+ *
+ * @param from              The start of the path to be calculated.
+ * @param to                The end of the path to be calculated.
+ * @param force_straight    Whether the path must be a straight line.
+ * @param allow_diagonals   Whether the path can travel diagonally.
+ * @return A data structure containing (1) the path, & (2) the number of times
+ * it hit or almost hit an existing vault.
+ */
+static join_the_dots_path _calculate_join_the_dots_path (const coord_def& from,
+                                                         const coord_def& to,
+                                                         bool force_straight,
+                                                         bool allow_diagonals)
+{
+    join_the_dots_path path;
+    path.hit_vault_count = 0;
+    path.avoid_vault_count = 0;
+
+    coord_def at = from;
+    while (true) // loop breaks below
+    {
+        // 1. Handle this position
+
+        path.cells.push_back(at);
+        if (env.level_map_mask(at) & MMT_VAULT)
+            path.hit_vault_count++;
+
+        // check done after recording position
+        if (at == to)
+            break;  // exit loop
+
+        // 2. Identify good moves
+
+        // possible next positions
+        int x_move = (at.x < to.x) ? 1 : ((at.x > to.x) ? -1 : 0);
+        int y_move = (at.y < to.y) ? 1 : ((at.y > to.y) ? -1 : 0);
+
+        coord_def next_x  = coord_def(at.x + x_move, at.y);
+        coord_def next_y  = coord_def(at.x,          at.y + y_move);
+        coord_def next_xy = coord_def(at.x + x_move, at.y + y_move);
+
+        // moves that get you closer
+        bool good_x  = (x_move != 0);
+        bool good_y  = (y_move != 0);
+        bool good_xy = (x_move != 0) && (y_move != 0) && allow_diagonals;
+
+        // avoid vaults if possible
+        bool vault_x  = env.level_map_mask(next_x)  & MMT_VAULT;
+        bool vault_y  = env.level_map_mask(next_y)  & MMT_VAULT;
+        bool vault_xy = env.level_map_mask(next_xy) & MMT_VAULT;
+        if (   (!vault_x  && good_x)
+            || (!vault_y  && good_y)
+            || (!vault_xy && good_xy))
+        {
+            // if there is a good path the doesn't hit a vault,
+            //  disable the otherwise-good paths that do
+
+            if (vault_x)  path.avoid_vault_count++;
+            if (vault_y)  path.avoid_vault_count++;
+            if (vault_xy) path.avoid_vault_count++;
+
+            // There is no &&= operator because short-circut
+            //  evaluation can do strange and terrible things
+            //  when combined with function calls.
+            good_x  &= !vault_x;
+            good_y  &= !vault_y;
+            good_xy &= !vault_xy;
+        }
+        else
+        {
+            // there is no way to avoid vaults, so hitting one is OK
+            path.avoid_vault_count += 3;
+        }
+
+        // 3. Choose the next move
+        if (force_straight)
+        {
+            if (good_xy)
+                at = next_xy;
+            else if (good_x)
+                at = next_x;
+            else
+                at = next_y;
+        }
+        else
+        {
+            // allow irregular paths
+
+            // used for movement ratios; our goal is to make a
+            //  path approximately straight in any direction
+            int x_diff = abs(at.x - to.x);
+            int y_diff = abs(at.y - to.y);
+            int sum_diff = x_diff + y_diff;
+            int min_diff = (x_diff < y_diff) ? x_diff : y_diff;
+            int max_diff = sum_diff - min_diff;
+
+            // halve chance because a diagonal is worth 2 other moves
+            if (good_xy && (x_chance_in_y(min_diff, max_diff * 2)
+                            || (!good_x && !good_y)))
+            {
+                at = next_xy;
+            }
+            else if (good_x && (x_chance_in_y(x_diff, sum_diff) || !good_y))
+                at = next_x;
+            else
+                at = next_y;
+        }
+    }
+
+    // path is finished
+    return path;
+}
+
+
+/**
+ * Calculates a possible path joining the provided coordinates.
+ *
+ * @param from              The start of the path to be calculated.
+ * @param to                The end of the path to be calculated.
+ * @param force_straight    Whether the path must be a straight line.
+ * @param allow_diagonals   Whether the path can travel diagonally.
+ * @return A data structure containing (1) the path, & (2) the number of times
+ * it hit or almost hit an existing vault.
+ */
+static void _draw_join_the_dots_path (map_lines &lines,
+                                      const join_the_dots_path& path,
+                                      const char* passable,
+                                      int thickness, char fill)
+{
+    int delta_min = -thickness / 2;
+    int delta_max = delta_min + thickness;
+    unsigned int count = path.cells.size();
+    for (unsigned int i = 0; i < count; i++)
+    {
+        coord_def center = path.cells[i];
+        for (int dx = delta_min; dx < delta_max; dx++)
+            for (int dy = delta_min; dy < delta_max; dy++)
+            {
+                int x = center.x + dx;
+                int y = center.y + dy;
+
+                // we never change the border
+                if (x >= 1 && x < lines.width()  - 1 &&
+                    y >= 1 && y < lines.height() - 1 &&
+                    !strchr(passable, lines(x, y)))
+                {
+                    lines(x, y) = fill;
+                }
+            }
+    }
+}
+
 
 LUAFN(dgn_count_feature_in_box)
 {
@@ -633,6 +795,9 @@ LUAFN(dgn_join_the_dots)
     TABLE_INT(ls, y2, -1);
     TABLE_STR(ls, passable, traversable_glyphs);
     TABLE_CHAR(ls, fill, '.');
+    TABLE_BOOL(ls, force_straight, false);
+    TABLE_BOOL(ls, allow_diagonals, false);
+    TABLE_INT(ls, thickness, 1);
 
     if (!_valid_coord(ls, lines, x1, y1))
         return 0;
@@ -645,45 +810,26 @@ LUAFN(dgn_join_the_dots)
     if (from == to)
         return 0;
 
-    coord_def at = from;
-    do
-    {
-        char glyph = lines(at);
+    // calculate possible paths
+    join_the_dots_path path1 =
+        _calculate_join_the_dots_path(from, to,
+                                      force_straight, allow_diagonals);
+    join_the_dots_path path2 =
+        _calculate_join_the_dots_path(to, from,
+                                      force_straight, allow_diagonals);
 
-        if (!strchr(passable, glyph))
-            lines(at) = fill;
-
-        if (at == to)
-            break;
-
-        if (at.y == to.y || coinflip())
-        {
-            if (at.x < to.x)
-            {
-                at.x++;
-                continue;
-            }
-
-            if (at.x > to.x)
-            {
-                at.x--;
-                continue;
-            }
-        }
-
-        if (at.y > to.y)
-        {
-            at.y--;
-            continue;
-        }
-
-        if (at.y < to.y)
-        {
-            at.y++;
-            continue;
-        }
-    }
-    while (true);
+    // add better path
+    // prefer fewer vaults hit, then fewer vaults avoided, then toss a coin
+    const bool first_path_better =
+        path1.hit_vault_count < path2.hit_vault_count
+        || (path1.hit_vault_count == path2.hit_vault_count
+            && (path1.avoid_vault_count < path2.avoid_vault_count
+                || path1.avoid_vault_count == path2.avoid_vault_count
+                   && coinflip()
+                )
+            );
+    _draw_join_the_dots_path(lines, first_path_better ? path1 : path2,
+                             passable, thickness, fill);
 
     return 0;
 }

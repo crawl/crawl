@@ -13,11 +13,12 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "los.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "ouch.h"
+#include "prompt.h"
 #include "shout.h"
 #include "spl-cast.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 
