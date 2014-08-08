@@ -3174,7 +3174,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("You're too exhausted to draw out your power.");
             return SPRET_ABORT;
         }
-        if (you.hp == you.hp_max && you.magic_points == you.max_magic_points)
+        if (you.hp == you.hp_max && you.magic_points == you.max_magic_points
+            && !you.duration[DUR_CONF]
+            && !you.duration[DUR_SLOW]
+            && !you.attribute[ATTR_HELD]
+            && !you.petrifying()
+            && !you.is_constricted())
             return SPRET_ABORT;
         ru_draw_out_power();
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
