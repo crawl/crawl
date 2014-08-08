@@ -1600,7 +1600,8 @@ static int _xom_random_stickable(const int HD)
     return arr[c];
 }
 
-// A near-inversion of sticks_to_snakes with the following limitations:
+// An effect similar to old sticks to snakes (which worked on "sticks" other
+// than arrows)
 //  * Transformations are permanent.
 //  * Weapons are always non-cursed.
 //  * HD influences the enchantment and type of the weapon.
