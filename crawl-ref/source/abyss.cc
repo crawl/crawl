@@ -292,7 +292,7 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
     if (places_found)
     {
         dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
-        int item_ind  = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
+        int item_ind  = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
         if (item_ind != NON_ITEM)
         {
             mitm[item_ind].plus = RUNE_ABYSSAL;
@@ -371,8 +371,8 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
         const coord_def place(chosen_item_places[i]);
         if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
         {
-            int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                      true, items_level, 250);
+            int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
+                                      items_level);
             move_item_to_grid(&thing_created, place);
             if (thing_created != NON_ITEM)
             {

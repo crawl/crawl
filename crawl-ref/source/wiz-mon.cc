@@ -76,7 +76,7 @@ void wizard_create_spec_monster()
 
 static int _make_mimic_item(object_class_type type)
 {
-    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
+    int it = items(false, OBJ_RANDOM, OBJ_RANDOM, 0);
 
     if (it == NON_ITEM)
         return NON_ITEM;
