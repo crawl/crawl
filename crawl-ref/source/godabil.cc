@@ -5284,7 +5284,7 @@ void ru_do_sacrifice(ability_type sacrifice)
             }
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
-            piety_gain = 24;
+            piety_gain = 20;
             health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
             if (!_execute_sacrifice(health_sacrifice, piety_gain,
@@ -5320,8 +5320,14 @@ void ru_do_sacrifice(ability_type sacrifice)
             {
                 piety_gain = 8;
             }
+            else if (purity_sacrifice == MUT_SLOW_HEALING
+                    && player_mutation_level(MUT_SLOW_HEALING))
+            {
+                piety_gain = 25;
+            }
             else
-                piety_gain = 20;
+                piety_gain = 16;
+
 
             if (!_execute_sacrifice(purity_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
@@ -5525,7 +5531,7 @@ void ru_do_sacrifice(ability_type sacrifice)
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
-    int new_piety = you.piety + piety_gain + random2(5);
+    int new_piety = you.piety + piety_gain + random2(4);
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
     set_piety(new_piety); // randomize it a bit.
