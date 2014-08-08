@@ -188,7 +188,7 @@ public:
   FixedVector<uint8_t, NUM_GODS>  worshipped;
   FixedVector<short,   NUM_GODS>  num_current_gifts;
   FixedVector<short,   NUM_GODS>  num_total_gifts;
-  FixedBitVector<   NUM_GODS>  one_time_ability_used;
+  FixedBitVector<      NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
