@@ -5743,7 +5743,7 @@ bool ru_power_leap()
     wave.source = you.pos();
     wave.target = you.pos();
     wave.hit = AUTOMATIC_HIT;
-    wave.loudness = 4;
+    wave.loudness = 2;
     wave.explode();
 
     // we need to exempt the player from damage.
