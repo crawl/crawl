@@ -1456,18 +1456,15 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    fill_area{fill = 'x'}
+    fill_area { fill = 'x' }
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
     fill(7, 7, gxm-8, gym-8, 0)
 
-    local border,fill = 'x','.'
-    local connection = crawl.random_element({[fill] = 1, ["+"] = 4})
-
     -- Alternate version, connect rooms at the end.
     if alt then
         connect_adjacent_rooms { max = crawl.random_range(500, 750),
-                                 min = 250, replace = '+', check_empty = true }
+                                 min = 250, replace = '+' }
         zonify.map_fill_zones(_G, 1, 'x')
     end
 }}
