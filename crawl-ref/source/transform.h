@@ -49,6 +49,7 @@ public:
     virtual string get_description(bool past_tense = false) const;
     virtual string transform_message(transformation_type previous_trans) const;
     virtual string get_transform_description() const { return description; }
+    virtual string get_untransform_message() const;
 
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
