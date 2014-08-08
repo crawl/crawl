@@ -402,9 +402,7 @@ static void _wizard_set_piety_to(int newpiety, bool force = false)
             newinterest = atoi(buf);
         }
         else
-        {
             newinterest = newpiety;
-        }
 
         if (newinterest >= 0 && newinterest < 256)
             you.gift_timeout = newinterest;
@@ -1240,7 +1238,5 @@ void wizard_join_religion()
             excommunication();
     }
     else
-    {
         join_religion(god, true);
-    }
 }
