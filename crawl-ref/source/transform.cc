@@ -228,6 +228,7 @@ public:
     : Form("", "", "none", // short name, long name, wizmode name
            "",  // description
            EQF_NONE,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -251,6 +252,7 @@ public:
     : Form("Spider", "spider-form", "spider", // short name, long name, wizmode name
            "a venomous arachnid creature.",  // description
            EQF_PHYSICAL,  // blocked slots
+           MR_VUL_POISON, // resists
            0, 5,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
@@ -268,6 +270,7 @@ public:
     : Form("Blade", "", "blade", // short name, long name, wizmode name
            "",  // description
            EQF_HANDS,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            20,                 // spellcasting penalty
@@ -337,6 +340,7 @@ public:
     : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
+           MR_RES_POISON | MR_RES_ELEC | MR_RES_NEG | mrd(MR_RES_ROTTING, 3), // resists
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -408,6 +412,7 @@ public:
     : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
            "a creature of crystalline ice.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -438,6 +443,7 @@ public:
     : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           MR_RES_POISON, // resists - handled in func
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -475,6 +481,7 @@ public:
     : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
            "a lich.",  // description
            EQF_NONE,  // blocked slots
+           MR_RES_COLD | mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -511,6 +518,7 @@ public:
     : Form("Bat", "bat-form", "bat", // short name, long name, wizmode name
            "",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           MR_NO_FLAGS, // resists
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
@@ -577,6 +585,7 @@ public:
     : Form("Pig", "pig-form", "pig", // short name, long name, wizmode name
            "a filthy swine.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -594,6 +603,7 @@ public:
     : Form("App", "appendage", "appendage", // short name, long name, wizmode name
            "",  // description
            EQF_NONE,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -649,6 +659,7 @@ public:
     : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
            "a tree.",  // description
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
+           MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -671,6 +682,7 @@ public:
     : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
            "a spiny porcupine.",  // description
            EQF_ALL,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -688,6 +700,7 @@ public:
     : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
+           mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | mrd(MR_RES_ROTTING, 3) | mrd(MR_RES_ACID, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -711,6 +724,7 @@ public:
     : Form("Jelly",  "jelly-form", "jelly", // short name, long name, wizmode name
            "a lump of jelly.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
+           MR_NO_FLAGS, // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -729,6 +743,7 @@ public:
     : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
            "a sentient fungus.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -746,6 +761,7 @@ public:
     : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
+           mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | mrd(MR_RES_ROTTING, 3), // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
