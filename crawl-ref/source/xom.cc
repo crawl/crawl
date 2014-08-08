@@ -1636,9 +1636,9 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                         (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
                             : _xom_random_stickable(mi->get_experience_level()));
 
-            int thing_created = items(0, base_type, sub_type, true,
+            int thing_created = items(false, base_type, sub_type, true,
                                       mi->get_experience_level() / 3 - 1,
-                                      0, 0, -1, -1);
+                                      0, 0, -1);
 
             if (thing_created == NON_ITEM)
                 continue;
