@@ -1010,32 +1010,19 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(12))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(10))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(8))
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(6))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(5))
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(6))
-                rc = SPWPN_VENOM;
+                                    // total weight 10,000
+            rc = random_choose_weighted(3329, rc,
+                                        1666, SPWPN_VENOM,
+                                        1666, SPWPN_ELECTROCUTION,
+                                         694, SPWPN_DRAINING,
+                                         556, SPWPN_FLAMING,
+                                         555, SPWPN_FREEZING,
+                                         486, SPWPN_VAMPIRISM,
+                                         420, SPWPN_PAIN,
+                                         315, SPWPN_HOLY_WRATH,
+                                         175, SPWPN_DISTORTION,
+                                         138, SPWPN_ANTIMAGIC,
+                                           0);
             break;
 
         case WPN_HALBERD:
