@@ -3977,6 +3977,33 @@ static void _builder_monsters()
     }
 }
 
+/**
+ * Randomly place a single item
+ *
+ * @param item   The item slot of the item being randomly placed
+ */
+static void _randomly_place_item(int item)
+{
+    coord_def itempos;
+    bool found = false;
+    for (int i = 0; i < 500 && !found; ++i)
+    {
+        itempos = random_in_bounds();
+        const monster* mon = monster_at(itempos);
+        found = grd(itempos) == DNGN_FLOOR
+                && !map_masked(itempos, MMT_NO_ITEM)
+                // oklobs or statues are ok
+                && (!mon || !mons_is_firewood(mon));
+    }
+    if (!found)
+    {
+        // Couldn't find a single good spot!
+        destroy_item(item);
+    }
+    else
+        move_item_to_grid(&item, itempos);
+}
+
 static void _builder_items()
 {
     int i = 0;
@@ -3993,7 +4020,12 @@ static void _builder_items()
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
 
     for (i = 0; i < items_wanted; i++)
-        items(1, specif_type, OBJ_RANDOM, false, items_levels, MMT_NO_ITEM);
+    {
+        int item = items(1, specif_type, OBJ_RANDOM, true, items_levels);
+
+        _randomly_place_item(item);
+    }
+
 }
 
 static bool _connect_vault_exit(const coord_def& exit)
