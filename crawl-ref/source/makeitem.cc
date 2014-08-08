@@ -2853,27 +2853,7 @@ int items(bool allow_uniques,
         item.link = NON_ITEM;
     }
     else
-    {
-        coord_def itempos;
-        bool found = false;
-        for (int i = 0; i < 500 && !found; ++i)
-        {
-            itempos = random_in_bounds();
-            const monster* mon = monster_at(itempos);
-            found = grd(itempos) == DNGN_FLOOR
-                    && !map_masked(itempos, mapmask)
-                    // oklobs or statues are ok
-                    && (!mon || !mons_is_firewood(mon));
-        }
-        if (!found)
-        {
-            // Couldn't find a single good spot!
-            destroy_item(p);
-            return NON_ITEM;
-        }
-        move_item_to_grid(&p, itempos);
-    }
-
+        die("dont_place is used outside dungeon.cc oops");
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
     return p;
