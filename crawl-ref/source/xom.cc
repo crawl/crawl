@@ -1637,24 +1637,24 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                         (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
                             : _xom_random_stickable(mi->get_experience_level()));
 
-            int thing_created = items(false, base_type, sub_type, true,
+            int item_slot = items(false, base_type, sub_type, true,
                                       mi->get_experience_level() / 3 - 1,
                                       0, 0, -1);
 
-            if (thing_created == NON_ITEM)
+            if (item_slot == NON_ITEM)
                 continue;
 
-            item_def &doodad(mitm[thing_created]);
+            item_def &item(mitm[item_slot]);
 
             // Always limit the quantity to 1.
-            doodad.quantity = 1;
+            item.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
             mprf("%s reforms as %s.", mi->name(DESC_THE).c_str(),
-                 doodad.name(DESC_A).c_str());
+                 item.name(DESC_A).c_str());
 
             // Dismiss monster silently.
-            move_item_to_grid(&thing_created, mi->pos());
+            move_item_to_grid(&item_slot, mi->pos());
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
         }
     }
