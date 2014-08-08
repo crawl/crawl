@@ -33,14 +33,14 @@ public:
          string _description,
          int _blocked_slots,
          int _str_mod, int _dex_mod,
-         size_type _size, int _stealth_mod,
+         size_type _size, int _hp_mod, int _stealth_mod,
          int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
          form_attack_verbs _uc_attack_verbs,
          form_capability _can_fly, form_capability _can_swim,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     str_mod(_str_mod), dex_mod(_dex_mod),
-    blocked_slots(_blocked_slots), size(_size),
+    blocked_slots(_blocked_slots), size(_size), hp_mod(_hp_mod),
     unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
     uc_attack_verbs(_uc_attack_verbs),
     long_name(_long_name), description(_description),
@@ -76,6 +76,7 @@ public:
 
     const int blocked_slots;
     const size_type size;
+    const int hp_mod;
 
     const int unarmed_hit_bonus;
     const int uc_colour;
