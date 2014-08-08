@@ -2454,6 +2454,11 @@ static bool _balance_demonic_guardian()
 // _balance_demonic_guardian()
 void check_demonic_guardian()
 {
+    // Players hated by all monsters don't get guardians, so that they aren't
+    // swarmed by hostile executioners whenever things get rough.
+    if (player_mutation_level(MUT_NO_LOVE))
+        return;
+
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
     if (!_balance_demonic_guardian() &&
