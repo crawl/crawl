@@ -1218,9 +1218,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                 mprf(MSGCH_DURATION, "You feel strangely stable.");
             if (you.duration[DUR_BERSERK])
                 mprf(MSGCH_DURATION, "You violently calm down.");
-            // my thesaurus says this usage is correct
             if (you.duration[DUR_FINESSE])
-                mprf(MSGCH_DURATION, "Your hands get arrested.");
+                mprf(MSGCH_DURATION, "You suddenly lose your finesse.");
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
