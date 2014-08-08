@@ -4021,7 +4021,7 @@ static void _builder_items()
 
     for (i = 0; i < items_wanted; i++)
     {
-        int item = items(1, specif_type, OBJ_RANDOM, true, items_levels);
+        int item = items(true, specif_type, OBJ_RANDOM, items_levels);
 
         _randomly_place_item(item);
     }
@@ -4692,7 +4692,7 @@ int dgn_place_item(const item_spec &spec,
             item_made = _dgn_item_corpse(spec, where);
         else
             item_made = items(spec.allow_uniques, base_type,
-                              spec.sub_type, true, level, 0, spec.ego);
+                              spec.sub_type, level, spec.ego);
 
         if (spec.level == ISPEC_MUNDANE)
             squash_plusses(item_made);
@@ -4819,7 +4819,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, true, item_level, 0,
+                                  spec.sub_type, item_level,
                                   spec.ego);
 
                 if (spec.level == ISPEC_MUNDANE)
@@ -5243,7 +5243,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '*')
             which_depth = 5 + which_depth * 2;
 
-        item_made = items(1, which_class, which_type, true, which_depth);
+        item_made = items(true, which_class, which_type, which_depth);
         if (item_made != NON_ITEM)
             mitm[item_made].pos = where;
     }
@@ -5753,7 +5753,7 @@ void place_spec_shop(const coord_def& where,
                 orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
             else
             {
-                orb = items(1, basetype, subtype, true,
+                orb = items(true, basetype, subtype,
                             one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
             }
 

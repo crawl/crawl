@@ -2651,9 +2651,7 @@ void squash_plusses(int item_slot)
  * @param allow_uniques Can the item generated be an artefact?
  * @param force_class The desired OBJECTS class (Example: OBJ_ARMOUR)
  * @param force_type The desired SUBTYPE - enum varies by OBJ
- * @param dont_place If this is false, the item is randomly placed on the level
  * @param item_level How powerful the item is allowed to be
- * @param uint32_t mapmask TODO: remove
  * @param force_ego The desired ego/brand
  * @param agent The agent creating the item (Example: Xom) or -1 if NA
  *
@@ -2662,9 +2660,7 @@ void squash_plusses(int item_slot)
 int items(bool allow_uniques,
           object_class_type force_class,
           int force_type,
-          bool dont_place,
           int item_level,
-          uint32_t mapmask,
           int force_ego,
           int agent)
 {
@@ -2847,13 +2843,10 @@ int items(bool allow_uniques,
     // Set brand appearance.
     item_set_appearance(item);
 
-    if (dont_place)
-    {
-        item.pos.reset();
-        item.link = NON_ITEM;
-    }
-    else
-        die("dont_place is used outside dungeon.cc oops");
+    // Don't place the item just yet.
+    item.pos.reset();
+    item.link = NON_ITEM;
+
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
     return p;

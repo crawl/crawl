@@ -52,7 +52,7 @@ static void _make_all_books()
         if (i == BOOK_WAR_CHANTS || i == BOOK_STALKING)
             continue;
 #endif
-        int thing = items(0, OBJ_BOOKS, i, true, 0, 0, 0, AQ_WIZMODE);
+        int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;
 
