@@ -95,7 +95,7 @@ bool attack::handle_phase_damaged()
         && in_bounds(defender->pos())
         && !simu)
     {
-        int blood = modify_blood_amount(damage_done, attacker->damage_type());
+        int blood = damage_done;
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
         if (blood)
@@ -1959,44 +1959,6 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
             defender_name(!what).c_str(),
             attack_strength_punctuation(special_damage).c_str());
     }
-}
-
-/* Scales the amount of blood sprayed around the room
- *
- * One could justify that blood amount varies based on the sharpness of the
- * weapon or some other arbitrary element of combat.
- */
-int attack::modify_blood_amount(const int damage, const int dam_type)
-{
-    int factor = 0; // DVORP_NONE
-
-    switch (dam_type)
-    {
-    case DVORP_CRUSHING: // flails, also unarmed
-    case DVORP_TENTACLE: // unarmed, tentacles
-        factor =  2;
-        break;
-    case DVORP_SLASHING: // whips
-        factor =  4;
-        break;
-    case DVORP_PIERCING: // pole-arms
-        factor =  5;
-        break;
-    case DVORP_STABBING: // knives, daggers
-        factor =  8;
-        break;
-    case DVORP_SLICING:  // other short/long blades, also blade hands
-        factor = 10;
-        break;
-    case DVORP_CHOPPING: // axes
-        factor = 17;
-        break;
-    case DVORP_CLAWING:  // unarmed, claws
-        factor = 24;
-        break;
-    }
-
-    return damage * factor / 10;
 }
 
 int attack::player_stab_weapon_bonus(int damage)
