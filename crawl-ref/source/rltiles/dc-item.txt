@@ -171,6 +171,7 @@ shortbow2
 shortbow3
 hand_crossbow WPN_HAND_CROSSBOW
 hand_crossbow2
+hand_crossbow3
 arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3
