@@ -1239,6 +1239,8 @@ void wizard_join_religion()
         else
             excommunication();
     }
+    else if (you_worship(god))
+        mpr("You already worship that god!");
     else
         join_religion(god, true);
 }
