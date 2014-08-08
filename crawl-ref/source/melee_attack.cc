@@ -1697,132 +1697,83 @@ void melee_attack::set_attack_verb()
         break;
 
     case -1: // unarmed
-        switch (you.form)
+    {
+        const form_attack_verbs verbs = get_form(you.form)->uc_attack_verbs;
+        if (verbs.weak != NULL)
         {
-        case TRAN_SPIDER:
-        case TRAN_BAT:
-        case TRAN_PIG:
-        case TRAN_PORCUPINE:
             if (damage_to_display < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_to_display < HIT_STRONG)
-                attack_verb = "bite";
-            else
-                attack_verb = "maul";
-            break;
-        case TRAN_BLADE_HANDS:
-            if (damage_to_display < HIT_WEAK)
-                attack_verb = "hit";
+                attack_verb = verbs.weak;
             else if (damage_to_display < HIT_MED)
-                attack_verb = "slash";
+                attack_verb = verbs.medium;
             else if (damage_to_display < HIT_STRONG)
-                attack_verb = "slice";
+                attack_verb = verbs.strong;
             else
-                attack_verb = "shred";
+                attack_verb = verbs.devastating;
             break;
-        case TRAN_TREE:
+        }
+
+        if (you.damage_type() == DVORP_CLAWING)
+        {
             if (damage_to_display < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_to_display < HIT_MED)
-                attack_verb = "smack";
-            else if (damage_to_display < HIT_STRONG)
-                attack_verb = "pummel";
-            else
-                attack_verb = "thrash";
-            break;
-        case TRAN_DRAGON:
-            if (damage_to_display < HIT_WEAK)
-                attack_verb = "hit";
+                attack_verb = "scratch";
             else if (damage_to_display < HIT_MED)
                 attack_verb = "claw";
             else if (damage_to_display < HIT_STRONG)
-                attack_verb = "bite";
+                attack_verb = "mangle";
             else
-                attack_verb = "maul";
-            break;
-        case TRAN_WISP:
+                attack_verb = "eviscerate";
+        }
+        else if (you.damage_type() == DVORP_TENTACLE)
+        {
             if (damage_to_display < HIT_WEAK)
-                attack_verb = "touch";
+                attack_verb = "tentacle-slap";
             else if (damage_to_display < HIT_MED)
+                attack_verb = "bludgeon";
+            else if (damage_to_display < HIT_STRONG)
+                attack_verb = "batter";
+            else
+                attack_verb = "thrash";
+        }
+        else
+        {
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "hit";
-            else
-                attack_verb = "engulf";
-            break;
-        case TRAN_FUNGUS:
-            attack_verb = "release spores at";
-            break;
-        case TRAN_STATUE:
-        case TRAN_LICH:
-        case TRAN_NONE:
-        case TRAN_APPENDAGE:
-        case TRAN_ICE_BEAST:
-        case TRAN_SHADOW:
-#if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY: // ?
-#endif
-            if (you.damage_type() == DVORP_CLAWING)
+            else if (damage_to_display < HIT_MED)
+                attack_verb = "punch";
+            else if (damage_to_display < HIT_STRONG)
+                attack_verb = "pummel";
+            else if (defender->is_monster()
+                     && (mons_genus(defender->type) == MONS_WORKER_ANT
+                         || mons_genus(defender->type) == MONS_FORMICID))
             {
-                if (damage_to_display < HIT_WEAK)
-                    attack_verb = "scratch";
-                else if (damage_to_display < HIT_MED)
-                    attack_verb = "claw";
-                else if (damage_to_display < HIT_STRONG)
-                    attack_verb = "mangle";
-                else
-                    attack_verb = "eviscerate";
-            }
-            else if (you.damage_type() == DVORP_TENTACLE)
-            {
-                if (damage_to_display < HIT_WEAK)
-                    attack_verb = "tentacle-slap";
-                else if (damage_to_display < HIT_MED)
-                    attack_verb = "bludgeon";
-                else if (damage_to_display < HIT_STRONG)
-                    attack_verb = "batter";
-                else
-                    attack_verb = "thrash";
+                attack_verb = "squash";
+                verb_degree = "like the proverbial ant";
             }
             else
             {
-                if (damage_to_display < HIT_WEAK)
-                    attack_verb = "hit";
-                else if (damage_to_display < HIT_MED)
-                    attack_verb = "punch";
-                else if (damage_to_display < HIT_STRONG)
-                    attack_verb = "pummel";
-                else if (defender->is_monster()
-                         && (mons_genus(defender->type) == MONS_WORKER_ANT
-                             || mons_genus(defender->type) == MONS_FORMICID))
+                const char* punch_desc[][2] =
+                {{"pound",     "into fine dust"},
+                    {"pummel",    "like a punching bag"},
+                    {"pulverise", ""},
+                    {"squash",    "like an ant"}};
+                const int choice = random2(ARRAYSZ(punch_desc));
+                // XXX: could this distinction work better?
+                if (choice == 0
+                    && defender->is_monster()
+                    && mons_has_blood(defender->type))
                 {
-                    attack_verb = "squash";
-                    verb_degree = "like the proverbial ant";
+                    attack_verb = "beat";
+                    verb_degree = "into a bloody pulp";
                 }
                 else
                 {
-                    const char* punch_desc[][2] =
-                        {{"pound",     "into fine dust"},
-                         {"pummel",    "like a punching bag"},
-                         {"pulverise", ""},
-                         {"squash",    "like an ant"}};
-                    const int choice = random2(ARRAYSZ(punch_desc));
-                    // XXX: could this distinction work better?
-                    if (choice == 0
-                        && defender->is_monster()
-                        && mons_has_blood(defender->type))
-                    {
-                        attack_verb = "beat";
-                        verb_degree = "into a bloody pulp";
-                    }
-                    else
-                    {
-                        attack_verb = punch_desc[choice][0];
-                        verb_degree = punch_desc[choice][1];
-                    }
+                    attack_verb = punch_desc[choice][0];
+                    verb_degree = punch_desc[choice][1];
                 }
             }
-            break;
-        } // transformations
+        }
         break;
+    }
 
     case WPN_UNKNOWN:
     default:

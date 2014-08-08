@@ -75,6 +75,18 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
 
+// can't declare these inline, because c++
+// XXX: organize the non-generic ones better, somehow?
+const form_attack_verbs default_attacks = { NULL, NULL, NULL, NULL };
+const form_attack_verbs animal_attacks = { "hit", "bite", "maul", "maul" };
+const form_attack_verbs blade_attacks = {"hit", "slash", "slice", "shred"};
+const form_attack_verbs dragon_attacks = {"hit", "claw", "bite", "maul"};
+const form_attack_verbs tree_attacks = {"hit", "smack", "pummel", "thrash"};
+const form_attack_verbs wisp_attacks = {"touch", "hit", "engulf", "engulf"};
+const char* const fungus_verb = "release spores at";
+const form_attack_verbs fungus_attacks = {fungus_verb, fungus_verb,
+                                          fungus_verb, fungus_verb};
+
 /**
  * Is the given equipment slot available for use in this form?
  *
@@ -219,6 +231,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -240,6 +253,7 @@ public:
            0, 5,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
+           animal_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_SPIDER)       // equivalent monster
     { };
@@ -255,6 +269,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
+           blade_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -322,6 +337,7 @@ public:
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_STATUE)       // equivalent monster
     { };
@@ -391,6 +407,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 15,    // size, stealth mod
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, ENABLE,     // can_fly, can_swim
            MONS_ICE_BEAST)       // equivalent monster
     { };
@@ -419,6 +436,7 @@ public:
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 6,    // size, stealth mod
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
+           dragon_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
@@ -454,6 +472,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_LICH)       // equivalent monster
     { };
@@ -488,6 +507,7 @@ public:
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 17,    // size, stealth mod
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           animal_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
@@ -552,6 +572,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 9,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           animal_attacks, // verbs used for uc
            DEFAULT, FORBID,  // can_fly (false for most pigs), can_swim
            MONS_HOG)       // equivalent monster
     { };
@@ -567,6 +588,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 0,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -620,6 +642,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 27,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
+           tree_attacks, // verbs used for uc
            FORBID, FORBID,     // can_fly, can_swim
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
@@ -640,6 +663,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 12,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           animal_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PORCUPINE)       // equivalent monster
     { };
@@ -655,6 +679,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 21,    // size, stealth mod
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           wisp_attacks, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
@@ -676,6 +701,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 21,    // size, stealth mod
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_JELLY)       // equivalent monster
     { };
@@ -692,6 +718,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_TINY, 30,    // size, stealth mod
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
+           fungus_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
@@ -707,6 +734,7 @@ public:
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 30,    // size, stealth mod
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
+           default_attacks, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
