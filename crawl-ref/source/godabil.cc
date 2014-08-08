@@ -5694,7 +5694,7 @@ bool ru_power_leap()
             mpr("You can't leap into the sea of lava!");
             continue;
         }
-        else if (!check_moveto(beam.target, "blink"))
+        else if (!check_moveto(beam.target, "leap"))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5711,7 +5711,7 @@ bool ru_power_leap()
         else
         {
             clear_messages();
-            mpr("You can only blink to visible locations.");
+            mpr("You can only jump to visible locations.");
         }
     }
 
