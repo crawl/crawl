@@ -41,13 +41,13 @@ public:
          form_capability _can_fly, form_capability _can_swim,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
-    str_mod(_str_mod), dex_mod(_dex_mod), resists(_resists),
+    str_mod(_str_mod), dex_mod(_dex_mod),
     blocked_slots(_blocked_slots), size(_size), hp_mod(_hp_mod),
     spellcasting_penalty(_spellcasting_penalty),
     unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
     uc_attack_verbs(_uc_attack_verbs),
     long_name(_long_name), description(_description),
-    stealth_mod(_stealth_mod),
+    resists(_resists), stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
     can_fly(_can_fly), can_swim(_can_swim),
     equivalent_mons(_equivalent_mons)
@@ -64,6 +64,15 @@ public:
     virtual string get_transform_description() const { return description; }
     virtual string get_untransform_message() const;
 
+    virtual int res_fire() const;
+    virtual int res_cold() const;
+    int res_neg() const;
+    bool res_elec() const;
+    int res_pois() const;
+    bool res_rot() const;
+    bool res_acid() const;
+    bool res_sticky_flame() const;
+
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
 
@@ -76,8 +85,6 @@ public:
 
     const int str_mod;
     const int dex_mod;
-
-    const int resists;
 
     const int blocked_slots;
     const size_type size;
@@ -92,6 +99,9 @@ public:
 protected:
     const string long_name;
     const string description;
+
+    const int resists;
+
     const int stealth_mod;
     const int base_unarmed_damage;
 
