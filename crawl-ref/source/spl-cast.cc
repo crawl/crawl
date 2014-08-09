@@ -1514,6 +1514,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SHATTER:
         return cast_shatter(powc, fail);
 
+    case SPELL_IRRADIATE:
+        return cast_irradiate(powc, &you, fail);
+
     case SPELL_LEDAS_LIQUEFACTION:
         return cast_liquefaction(powc, fail);
 

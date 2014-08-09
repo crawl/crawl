@@ -1448,6 +1448,75 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         _shatter_player(pow, wielder, true);
 }
 
+/**
+ * Irradiate the given cell. (Per the spell.)
+ *
+ * @param where     The cell in question.
+ * @param pow       The power with which the spell is being cast.
+ * @param aux       Not sure; seems to be always 0?
+ * @param agent     The agent (player or monster) doing the irradiating.
+ */
+static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
+{
+    monster *mons = monster_at(where);
+    if (!mons)
+        return 0; // XXX: handle damaging the player for mons casts...?
+
+    if (you.can_see(mons))
+    {
+        mprf("%s is blasted with magical radiation!",
+             mons->name(DESC_THE).c_str());
+    }
+
+    const int dice = 6;
+    const int max_dam = 15 + div_rand_round(pow * 3, 4);
+    const dice_def dam_dice = calc_dice(dice, max_dam);
+    const int dam = dam_dice.roll();
+    dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
+
+    if (agent->is_player())
+        _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+    else
+        mons->hurt(agent, dam, BEAM_MMISSILE);
+
+    if (mons->alive() && coinflip())
+        mons->malmutate("");
+
+    return 1;
+}
+
+/**
+ * Attempt to cast the spell "Irradiate", damaging & deforming enemies around
+ * the player.
+ *
+ * @param pow   The power at which the spell is being cast.
+ * @param who   The actor doing the irradiating.
+ * @param fail  Whether the player has failed to cast the spell.
+ * @return      The result of casting the spell. (Success or failure.)
+ */
+spret_type cast_irradiate(int powc, actor* who, bool fail)
+{
+    fail_check();
+
+    ASSERT(who);
+    if (who->is_player())
+        mpr("You erupt in a fountain of uncontrolled magic!");
+    else
+    {
+        simple_monster_message(who->as_monster(),
+                               " erupts in a fountain of uncontrolled magic!");
+    }
+
+    apply_random_around_square(_irradiate_cell, who->pos(), true, powc, 8, who);
+
+    if (who->is_player())
+        contaminate_player(1500 + random2(1500)); // on avg, a bit under 50% of
+                                                  // yellow contam
+                                                  // another cast might or
+                                                  // might not push you over
+    return SPRET_SUCCESS;
+}
+
 static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer = false)
 {
     int strength = 0;

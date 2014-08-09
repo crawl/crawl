@@ -965,6 +965,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && spell != SPELL_DISCHARGE
+        && spell != SPELL_IRRADIATE
         && spell != SPELL_GLACIATE)
     {
         maxrange++;

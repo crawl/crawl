@@ -4809,6 +4809,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
+    case SPELL_IRRADIATE:                return TILEG_IRRADIATE;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
     case SPELL_HYDRA_FORM:               return TILEG_HYDRA_FORM;
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;

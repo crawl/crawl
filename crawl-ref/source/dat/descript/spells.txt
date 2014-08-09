@@ -698,6 +698,13 @@ Iron Shot spell
 
 This spell hurls a large and heavy metal bolt at the caster's foe.
 %%%%
+Irradiate spell
+
+This spell transmutes a ultra-thin layer of the caster's skin (or equivalent)
+directly into pure magical energy, blasting and deforming adjacent creatures.
+The caster is not left entirely unaffected; some of the magic lingers, enough to
+leave them dangerously contaminated after just two or three castings.
+%%%%
 Iskenderun's Battlesphere spell
 
 This spell conjures a small globe of magical energy linked to the caster's own
