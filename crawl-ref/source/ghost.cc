@@ -854,7 +854,7 @@ vector<ghost_demon> ghost_demon::find_ghosts()
 {
     vector<ghost_demon> gs;
 
-    if (!you.is_undead)
+    if (you.undead_state(false) == US_ALIVE)
     {
         ghost_demon player;
         player.init_player_ghost();

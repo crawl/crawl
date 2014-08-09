@@ -202,7 +202,7 @@ public:
     virtual bool is_skeletal() const = 0;
     virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
-    virtual bool can_safely_mutate() const = 0;
+    virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool is_stationary() const = 0;

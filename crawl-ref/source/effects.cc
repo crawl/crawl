@@ -1782,7 +1782,7 @@ static void _magic_contamination_effects()
         // Undead enjoy extra contamination explosion damage because
         // the magical contamination has a harder time dissipating
         // through non-living flesh. :-)
-        if (you.is_undead)
+        if (you.undead_state() != US_ALIVE)
             beam.damage.size *= 2;
 
         beam.explode();

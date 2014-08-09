@@ -1692,7 +1692,7 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        if (!you.is_undead && !you_foodless()
+        if (you.undead_state() == US_ALIVE && !you_foodless()
             && you.hunger_state == HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);

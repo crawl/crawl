@@ -320,7 +320,7 @@ public:
     bool berserk_or_insane() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
-    bool can_safely_mutate() const;
+    bool can_safely_mutate(bool temp = true) const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool is_stationary() const;

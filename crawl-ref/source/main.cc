@@ -3303,7 +3303,7 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (you.hunger_state == HS_STARVING && !you.is_undead)
+        if (you.hunger_state == HS_STARVING && you.undead_state() == US_ALIVE)
         {
             you.digging = false;
             canned_msg(MSG_TOO_HUNGRY);

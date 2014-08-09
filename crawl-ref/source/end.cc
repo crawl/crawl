@@ -274,7 +274,7 @@ NORETURN void end_game(scorefile_entry &se)
             }
 
             case GOD_YREDELEMNUL:
-                if (you.is_undead)
+                if (you.undead_state() != US_ALIVE)
                     simple_god_message(" claims you as an undead slave.");
                 else if (se.get_death_type() != KILLED_BY_DISINT
                          && se.get_death_type() != KILLED_BY_LAVA)

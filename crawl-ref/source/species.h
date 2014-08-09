@@ -1,6 +1,8 @@
 #ifndef SPECIES_H
 #define SPECIES_H
 
+#include "enum.h"
+
 enum genus_type
 {
     GENPC_DRACONIAN,
@@ -11,6 +13,7 @@ enum genus_type
 
 genus_type species_genus(species_type species);
 int species_has_claws(species_type species, bool mut_level = false);
+undead_state_type species_undead_type(species_type species) PURE;
 bool species_is_undead(species_type species);
 bool species_is_unbreathing(species_type species);
 bool species_can_swim(species_type species);

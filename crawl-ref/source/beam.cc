@@ -3649,7 +3649,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_DISPEL_UNDEAD:
-        if (!you.is_undead)
+        if (you.undead_state() == US_ALIVE)
         {
             canned_msg(MSG_YOU_UNAFFECTED);
             break;
@@ -3660,7 +3660,8 @@ void bolt::affect_player_enchantment(bool resistible)
         if (aux_source.empty())
             aux_source = "by dispel undead";
 
-        if (you.is_undead == US_SEMI_UNDEAD)
+        // reduce damage for non-hungry vampires
+        if (you.undead_state() == US_SEMI_UNDEAD)
         {
             if (you.hunger_state == HS_ENGORGED)
                 damage.size /= 2;

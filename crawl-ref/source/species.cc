@@ -274,10 +274,36 @@ int species_has_claws(species_type species, bool mut_level)
     return 0;
 }
 
+/**
+ * Where does a given species fall on the Undead Spectrum?
+ *
+ * @param species   The species in question.
+ * @return          What class of undead the given species falls on, if any.
+ */
+undead_state_type species_undead_type(species_type species)
+{
+    switch (species)
+    {
+        case SP_MUMMY:
+            return US_UNDEAD;
+        case SP_GHOUL:
+            return US_HUNGRY_DEAD;
+        case SP_VAMPIRE:
+            return US_SEMI_UNDEAD;
+        default:
+            return US_ALIVE;
+    }
+}
+
+/**
+ * Is a given species undead?
+ *
+ * @param species   The species in question.
+ * @return          Whether that species is undead.
+ */
 bool species_is_undead(species_type species)
 {
-    return species == SP_MUMMY || species == SP_GHOUL
-    || species == SP_VAMPIRE;
+    return species_undead_type(species) != US_ALIVE;
 }
 
 bool species_is_unbreathing(species_type species)

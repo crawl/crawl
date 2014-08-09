@@ -5204,7 +5204,7 @@ bool monster::can_mutate() const
     return holi != MH_UNDEAD && holi != MH_NONLIVING;
 }
 
-bool monster::can_safely_mutate() const
+bool monster::can_safely_mutate(bool temp) const
 {
     return can_mutate();
 }

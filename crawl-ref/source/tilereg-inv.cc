@@ -375,7 +375,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             }
         }
         else if (item.base_type == OBJ_FOOD
-                 && you.is_undead != US_UNDEAD
+                 && you.undead_state() != US_UNDEAD
                  && you.species != SP_VAMPIRE)
         {
             tip += "\n[Shift + R-Click] Eat (e)";

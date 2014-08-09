@@ -39,7 +39,7 @@ int allowed_deaths_door_hp()
 
 spret_type cast_deaths_door(int pow, bool fail)
 {
-    if (you.is_undead)
+    if (you.undead_state())
         mpr("You're already dead!");
     else if (you.duration[DUR_EXHAUSTED])
         mpr("You are too exhausted to enter Death's door!");
