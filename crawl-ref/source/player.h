@@ -627,7 +627,7 @@ public:
     bool is_unholy(bool spells = true) const;
     bool is_evil(bool spells = true) const;
     int how_chaotic(bool check_spells_god) const;
-    bool is_artificial() const;
+    bool is_artificial(bool temp = true) const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_acid(bool calc_unid = true) const;

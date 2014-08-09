@@ -341,7 +341,7 @@ public:
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
     int how_chaotic(bool check_spells_god = false) const;
-    bool is_artificial() const;
+    bool is_artificial(bool temp = true) const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_hellfire() const;

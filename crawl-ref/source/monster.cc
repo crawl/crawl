@@ -3669,7 +3669,7 @@ int monster::how_chaotic(bool check_spells_god) const
         return is_shapeshifter() + known_chaos(check_spells_god);
 }
 
-bool monster::is_artificial() const
+bool monster::is_artificial(bool temp) const
 {
     return mons_class_flag(type, M_ARTIFICIAL);
 }
