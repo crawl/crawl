@@ -68,12 +68,12 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 },
 
 {   // Book of Ice
+    SPELL_ICE_FORM,
     SPELL_ENGLACIATION,
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_BOLT_OF_COLD,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
-    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
@@ -157,7 +157,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
 {   // Book of Transfigurations
     SPELL_STONESKIN,
-    SPELL_ICE_FORM,
+    SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
     SPELL_DRAGON_FORM,
@@ -441,7 +441,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
     SPELL_IGNITE_POISON,
-    SPELL_NO_SPELL,
+    SPELL_IRRADIATE,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
