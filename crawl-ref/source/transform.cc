@@ -179,6 +179,71 @@ string Form::get_untransform_message() const
 }
 
 /**
+ * How many levels of resistance against fire does this form provide?
+ */
+int Form::res_fire() const
+{
+    return get_resist(resists, MR_RES_FIRE);
+}
+
+/**
+ * How many levels of resistance against cold does this form provide?
+ */
+int Form::res_cold() const
+{
+    return get_resist(resists, MR_RES_COLD);
+}
+
+/**
+ * How many levels of resistance against negative energy does this form give?
+ */
+int Form::res_neg() const
+{
+    return get_resist(resists, MR_RES_NEG);
+}
+
+/**
+ * Does this form provide resistance to electricity?
+ */
+bool Form::res_elec() const
+{
+    return get_resist(resists, MR_RES_ELEC);
+}
+
+/**
+ * How many levels of resistance against poison does this form give?
+ */
+int Form::res_pois() const
+{
+    return get_resist(resists, MR_RES_POISON);
+}
+
+/**
+ * Does this form provide resistance to rotting?
+ */
+bool Form::res_rot() const
+{
+    return get_resist(resists, MR_RES_ROTTING);
+}
+
+/**
+ * Does this form provide resistance against acid?
+ */
+bool Form::res_acid() const
+{
+    return get_resist(resists, MR_RES_ACID);
+}
+
+/**
+ * Does this form provide resistance to sticky flame?
+ */
+bool Form::res_sticky_flame() const
+{
+    return get_resist(resists, MR_RES_STICKY_FLAME);
+}
+
+
+/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -340,7 +405,7 @@ public:
     : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
-           MR_RES_POISON | MR_RES_ELEC | MR_RES_NEG | mrd(MR_RES_ROTTING, 3), // resists
+           MR_RES_ELEC | MR_RES_NEG | mrd(MR_RES_ROTTING, 3), // resists - implied by holiness
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -443,7 +508,7 @@ public:
     : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
-           MR_RES_POISON, // resists - handled in func
+           MR_RES_POISON, // resists - most handled in functions
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -472,6 +537,38 @@ public:
     {
         return 12 + div_rand_round(you.strength() * 2, 3);
     }
+
+    /**
+     * How many levels of resistance against fire does this form provide?
+     */
+    int res_fire() const
+    {
+        switch (dragon_form_dragon_type())
+        {
+            case MONS_FIRE_DRAGON:
+                return 2;
+            case MONS_ICE_DRAGON:
+                return -1;
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * How many levels of resistance against cold does this form provide?
+     */
+    int res_cold() const
+    {
+        switch (dragon_form_dragon_type())
+        {
+            case MONS_ICE_DRAGON:
+                return 2;
+            case MONS_FIRE_DRAGON:
+                return -1;
+            default:
+                return 0;
+        }
+    }
 };
 
 class FormLich : public Form
@@ -481,7 +578,7 @@ public:
     : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
            "a lich.",  // description
            EQF_NONE,  // blocked slots
-           MR_RES_COLD | mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3), // resists
+           MR_RES_COLD | mrd(MR_RES_NEG, 3), // resists - rp & rrot implied
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -700,7 +797,7 @@ public:
     : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
-           mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | mrd(MR_RES_ROTTING, 3) | mrd(MR_RES_ACID, 3), // resists
+           mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING | MR_RES_ACID, // resists
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -761,7 +858,7 @@ public:
     : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
-           mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | mrd(MR_RES_ROTTING, 3), // resists
+           mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING, // resists
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty

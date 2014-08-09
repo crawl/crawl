@@ -1558,27 +1558,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_QAZLAL_FIRE_RES])
             rf++;
 
-        // transformations:
-        switch (you.form)
-        {
-        case TRAN_ICE_BEAST:
-            rf--;
-            break;
-        case TRAN_WISP:
-            rf += 2;
-            break;
-        case TRAN_DRAGON:
-        {
-            monster_type drag = dragon_form_dragon_type();
-            if (drag == MONS_FIRE_DRAGON)
-                rf += 2;
-            else if (drag == MONS_ICE_DRAGON)
-                rf--;
-            break;
-        }
-        default:
-            break;
-        }
+        rf += get_form()->res_fire();
     }
 
     if (rf > 3)
@@ -1629,30 +1609,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_QAZLAL_COLD_RES])
             rc++;
 
-        // transformations:
-        switch (you.form)
-        {
-        case TRAN_ICE_BEAST:
-            rc += 3;
-            break;
-        case TRAN_WISP:
-            rc += 2;
-            break;
-        case TRAN_DRAGON:
-        {
-            monster_type form = dragon_form_dragon_type();
-            if (form == MONS_FIRE_DRAGON)
-                rc--;
-            else if (form == MONS_ICE_DRAGON)
-                rc += 2;
-            break;
-        }
-        case TRAN_LICH:
-            rc++;
-            break;
-        default:
-            break;
-        }
+        rc += get_form()->res_cold();
 
         if (you.species == SP_VAMPIRE)
         {
@@ -1724,7 +1681,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
-    if (form == TRAN_WISP)
+    if (get_form()->res_acid())
         return true;
 
     if (you.duration[DUR_RESISTANCE])
@@ -1757,9 +1714,6 @@ bool player::res_corr(bool calc_unid, bool items) const
 
 int player_res_acid(bool calc_unid, bool items)
 {
-    if (you.form == TRAN_WISP)
-        return 3;
-
     return you.res_corr(calc_unid, items) ? 1 : 0;
 }
 
@@ -1801,12 +1755,12 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re++;
 
         // transformations:
-        if (you.form == TRAN_STATUE || you.form == TRAN_WISP)
-            re += 1;
-
-        if (re > 1)
-            re = 1;
+        if (get_form()->res_elec())
+            re++;
     }
+
+    if (re > 1)
+        re = 1;
 
     return re;
 }
@@ -1855,7 +1809,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     }
 
     if (you.is_artificial(temp)
-        || (temp && you.form == TRAN_SHADOW)
+        || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
     {
@@ -1904,22 +1858,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_RESISTANCE])
             rp++;
 
-        // transformations:
-        switch (you.form)
-        {
-        case TRAN_ICE_BEAST:
-        case TRAN_STATUE:
-        case TRAN_DRAGON:
-        case TRAN_FUNGUS:
-        case TRAN_TREE:
-        case TRAN_WISP:
-            rp++;
-            break;
-        default:
-            break;
-        }
-
-        if (you.petrified())
+        if (get_form()->res_pois() > 0)
             rp++;
     }
 
@@ -1929,7 +1868,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        if (you.form == TRAN_SPIDER)
+        if (get_form()->res_pois() < 0)
             rp--;
 
         if (you.duration[DUR_POISON_VULN])
@@ -1952,10 +1891,13 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
         rsf++;
 
     // dragonskin cloak: 0.5 to draconic resistances
-    if (items && calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+    if (items && calc_unid
+        && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+    {
         rsf++;
+    }
 
-    if (you.form == TRAN_WISP)
+    if (get_form()->res_sticky_flame())
         rsf++;
 
     if (rsf > 1)
@@ -2153,22 +2095,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        // Now, transformations could stop at any time.
-        switch (you.form)
-        {
-        case TRAN_STATUE:
-            pl++;
-            break;
-        case TRAN_FUNGUS:
-        case TRAN_TREE:
-        case TRAN_WISP:
-        case TRAN_LICH:
-        case TRAN_SHADOW:
-            pl += 3;
-            break;
-        default:
-           break;
-        }
+        pl += get_form()->res_neg();
 
         // completely stoned, unlike statue which has some life force
         if (you.petrified())
@@ -6794,14 +6721,8 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (temp
-        && (petrified() || form == TRAN_STATUE || form == TRAN_WISP
-            || form == TRAN_SHADOW))
-    {
-        return 3;
-    }
-
-    if (player_mutation_level(MUT_ROT_IMMUNITY))
+    if (player_mutation_level(MUT_ROT_IMMUNITY)
+        || temp && (is_artificial() || get_form()->res_rot()))
         return 3;
 
     switch (undead_state(temp))
