@@ -1934,13 +1934,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     {
     case OBJ_FOOD:
     {
-        if (you.species == SP_VAMPIRE)
-        {
-            if (!suppress_msg)
-                mpr("Blech - you need blood!");
-            return false;
-        }
-
         if (food_is_veggie(kindof_thing))
         {
             if (ur_carnivorous)
