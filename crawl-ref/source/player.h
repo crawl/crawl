@@ -28,6 +28,8 @@
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 
+static const int FASTEST_PLAYER_MOVE_SPEED = 6;
+
 class targetter;
 
 int check_stealth();

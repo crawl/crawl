@@ -553,8 +553,9 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         spell     = _xom_nontension_spells[random2(spellenum)];
     }
 
-    // Don't attempt to cast spells the undead cannot memorise.
-    if (you_cannot_memorise(spell))
+    // Don't attempt to cast spells that will do nothing, or that the player
+    // cannot memorise/cast.
+    if (spell_is_useless(spell))
         return XOM_DID_NOTHING;
 
     // Don't attempt to teleport the player if the teleportation will

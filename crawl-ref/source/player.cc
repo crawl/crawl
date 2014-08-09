@@ -2280,8 +2280,8 @@ int player_movement_speed()
     // which is a bit of a jump, and a bit too fast) -- bwr
     // Currently Haste takes 6 to 4, which is 2.5x as fast as delay 10
     // and still seems plenty fast. -- elliptic
-    if (mv < 6)
-        mv = 6;
+    if (mv < FASTEST_PLAYER_MOVE_SPEED)
+        mv = FASTEST_PLAYER_MOVE_SPEED;
 
     return mv;
 }

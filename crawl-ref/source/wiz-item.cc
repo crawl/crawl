@@ -1076,7 +1076,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (!is_valid_spell(spell))
                 continue;
 
-            if (you_cannot_memorise(spell))
+            if (!you_can_memorise(spell))
                 continue;
 
             // Only use spells available in books you might find lying about

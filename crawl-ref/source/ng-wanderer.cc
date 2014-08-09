@@ -665,8 +665,8 @@ static void _give_wanderer_spell(skill_type skill)
         break;
     }
 
-    if (!you_cannot_memorise(spell))
-        add_spell_to_memory(spell);
+    if (you_can_memorise(spell))
+        add_spell_to_memory(spell); // XXX: check spell slot available?
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
