@@ -283,7 +283,7 @@ public:
     virtual bool is_unholy(bool spells = true) const = 0;
     virtual bool is_evil(bool spells = true) const = 0;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
-    virtual bool is_artificial() const = 0;
+    virtual bool is_artificial(bool temp = true) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;

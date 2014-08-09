@@ -1235,10 +1235,9 @@ bool spell_is_useless(spell_type spell, bool temp)
 
     case SPELL_CURE_POISON:
         // no good for poison-immune species (ghoul, mummy, garg)
-        // XXX: call player_res_poison(false, temp, temp) (once that's fixed)
-        return you.undead_state(temp) == US_UNDEAD
-                || you.undead_state(temp) == US_HUNGRY_DEAD
-                || you.species == SP_GARGOYLE;
+        return player_res_poison(false, temp, temp)
+               && you.undead_state() != US_SEMI_UNDEAD;
+        // allow starving vampires to memorize cpois ^
 
     case SPELL_SUBLIMATION_OF_BLOOD:
         // XXX: write player_can_bleed(bool temp) & use that

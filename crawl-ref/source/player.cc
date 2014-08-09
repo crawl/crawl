@@ -1854,10 +1854,10 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             break;
     }
 
-    if (you.is_artificial()
+    if (you.is_artificial(temp)
         || (temp && you.form == TRAN_SHADOW)
-        || player_equip_unrand(UNRAND_OLGREB)
-        || you.duration[DUR_DIVINE_STAMINA])
+        || items && player_equip_unrand(UNRAND_OLGREB)
+        || temp && you.duration[DUR_DIVINE_STAMINA])
     {
         return 3;
     }
@@ -1894,6 +1894,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
 
     // Only thirsty vampires are naturally poison resistant.
+    // XXX: && temp?
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
 
@@ -6693,9 +6694,16 @@ int player::how_chaotic(bool /*check_spells_god*/) const
     return 0;
 }
 
-bool player::is_artificial() const
+/**
+ * Is the player currently 'artificial' (nonliving holiness)?
+ *
+ * @param temp  Whether to consider temporary effects (forms, status effects)
+ * @return      Whether the player should be considered an artificial lifeform.
+ */
+bool player::is_artificial(bool temp) const
 {
-    return species == SP_GARGOYLE || form == TRAN_STATUE || petrified();
+    return species == SP_GARGOYLE
+           || temp && (form == TRAN_STATUE || petrified());
 }
 
 bool player::is_unbreathing() const
