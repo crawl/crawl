@@ -1543,17 +1543,14 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             if (just_check)
                 return true;
 
-            if (which_trans == TRAN_PIG)
-                mpr("You feel you'll be a pig longer.");
-            else
-                mpr("You extend your transformation's duration.");
+            mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
             return true;
         }
         else
         {
-            if (!involuntary && which_trans != TRAN_PIG && which_trans != TRAN_NONE)
+            if (!involuntary && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
             return false;
         }
