@@ -1838,7 +1838,7 @@ string get_item_description(const item_def &item, bool verbose,
                     description << "In fact, it is rotting away before your "
                                    "eyes.";
 
-                    if (!you.is_undead
+                    if (you.undead_state() == US_ALIVE
                         && !player_mutation_level(MUT_SAPROVOROUS))
                     {
                         description << " Eating it is completely out of the "
@@ -2399,7 +2399,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (you.is_undead != US_UNDEAD) // mummies and lich form only
+        if (you.undead_state() != US_UNDEAD) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:
@@ -3596,12 +3596,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
-        if (you.is_undead == US_ALIVE && mi.attitude == ATT_HOSTILE)
+        if (you.undead_state() == US_ALIVE && mi.attitude == ATT_HOSTILE)
             inf.body << "\nIt wants to drink your blood!\n";
         break;
 
     case MONS_REAPER:
-        if (you.is_undead == US_ALIVE && mi.attitude == ATT_HOSTILE)
+        if (you.undead_state(false) == US_ALIVE && mi.attitude == ATT_HOSTILE)
             inf.body <<  "\nIt has come for your soul!\n";
         break;
 

@@ -501,7 +501,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.is_undead == US_ALIVE && !you_foodless())
+    if (you.undead_state() == US_ALIVE && !you_foodless())
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");

@@ -1536,7 +1536,7 @@ void MiscastEffect::_divination_you(int severity)
         case 0:
             if (_lose_stat(STAT_INT, 1 + random2(3)))
             {
-                if (you.is_undead)
+                if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
                 else
                     mpr("You have damaged your brain!");
@@ -1579,7 +1579,7 @@ void MiscastEffect::_divination_you(int severity)
         case 1:
             if (_lose_stat(STAT_INT, 3 + random2(3)))
             {
-                if (you.is_undead)
+                if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
                 else
                     mpr("You have damaged your brain!");

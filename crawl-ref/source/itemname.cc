@@ -3200,11 +3200,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case POT_MUTATION:
             // Non-vampire undead can't be mutated.
-            return !you.is_undead
-                   || you.is_undead == US_SEMI_UNDEAD;
+            return you.can_safely_mutate(temp);
         case POT_LIGNIFY:
             // Only living characters can change form.
-            return !you.is_undead
+            return you.undead_state() == US_ALIVE
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state >= HS_SATIATED;
         default:
@@ -3394,7 +3393,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // Mummies can't use potions.
-        if (you.species == SP_MUMMY)
+        if (you.undead_state(temp) == US_UNDEAD)
             return true;
 
         if (!item_type_known(item))
@@ -3407,7 +3406,7 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
-            return you.is_undead
+            return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
                    || you.species == SP_FORMICID;
@@ -3422,12 +3421,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-            if (you.form == TRAN_LICH)
-                return temp;
-            return you.is_undead && you.is_undead != US_SEMI_UNDEAD;
+            return you.can_safely_mutate(temp);
 
         case POT_LIGNIFY:
-            return you.is_undead
+            return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED);
 
@@ -3467,7 +3464,7 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case AMU_RAGE:
-            return you.is_undead
+            return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
                    || you.species == SP_FORMICID
@@ -3488,7 +3485,7 @@ bool is_useless_item(const item_def &item, bool temp)
                                                 // contaminated
                    || player_mutation_level(MUT_GOURMAND) > 0
                    || player_mutation_level(MUT_HERBIVOROUS) == 3
-                   || you.is_undead && you.species != SP_GHOUL;
+                   || you.undead_state(temp) && you.species != SP_GHOUL;
 
         case AMU_FAITH:
             return you.species == SP_DEMIGOD && !you.religion;
@@ -3583,8 +3580,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
             // See what would happen if we were in our normal state.
             unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
-            unwind_var<undead_state_type> lifesim(you.is_undead,
-                                              get_undead_state(you.species));
 
             if (!is_inedible(item))
                 return false;

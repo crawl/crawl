@@ -77,7 +77,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
-    if (crawl_state.game_is_zotdef() && you.is_undead != US_SEMI_UNDEAD)
+    if (crawl_state.game_is_zotdef() && you.undead_state() != US_SEMI_UNDEAD)
     {
         you.hunger = HUNGER_DEFAULT;
         you.hunger_state = HS_SATIATED;
@@ -153,7 +153,7 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 
 bool you_foodless(bool can_eat)
 {
-    return you.is_undead == US_UNDEAD
+    return you.undead_state() == US_UNDEAD
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI && !can_eat
 #endif
@@ -162,7 +162,7 @@ bool you_foodless(bool can_eat)
 
 bool you_foodless_normally()
 {
-    return you.is_undead == US_UNDEAD && you.form != TRAN_LICH
+    return you.undead_state(false)
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI
 #endif
@@ -469,7 +469,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             // * Mummies can't eat.
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
-            if (!you.is_undead)
+            if (you.undead_state() == US_ALIVE)
                 corpse_name = get_menu_colour_prefix_tags(*si, DESC_A);
 
             // Shall we butcher this corpse?
@@ -1241,7 +1241,8 @@ int prompt_eat_chunks(bool only_auto)
             // Allow undead to use easy_eat, but not auto_eat, since the player
             // might not want to drink blood as a vampire and might want to save
             // chunks as a ghoul.
-            if (easy_eat && !bad && i_feel_safe() && !(only_auto && you.is_undead))
+            if (easy_eat && !bad && i_feel_safe() && !(only_auto &&
+                                                       you.undead_state()))
             {
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
@@ -2164,7 +2165,7 @@ int you_min_hunger()
         return HUNGER_DEFAULT;
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
-    if (you.is_undead)
+    if (you.undead_state() != US_ALIVE)
         return 601;
 
     return 0;

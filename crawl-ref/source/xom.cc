@@ -1417,7 +1417,7 @@ static int _xom_swap_weapons(bool debug = false)
             && you.can_wield(weapon, true) && mi->can_wield(*wpn, true)
             && get_weapon_brand(weapon) != SPWPN_DISTORTION
             && (get_weapon_brand(weapon) != SPWPN_VAMPIRISM
-                || you.is_undead || you.hunger_state >= HS_FULL)
+                || you.undead_state() || you.hunger_state >= HS_FULL)
             && (!is_artefact(weapon) || _art_is_safe(weapon)))
         {
             mons_wpn.push_back(*mi);

@@ -398,10 +398,10 @@ static void _good_potion_or_scroll(int & slot)
 {
     int base_rand = 5;
     // No potions for mummies.
-    if (you.is_undead == US_UNDEAD)
+    if (you.undead_state(false) == US_UNDEAD)
         base_rand -= 3;
     // No berserk rage for ghouls.
-    else if (you.is_undead && you.is_undead != US_SEMI_UNDEAD)
+    else if (you.undead_state(false) == US_HUNGRY_DEAD)
         base_rand--;
 
     switch (random2(base_rand))
@@ -432,9 +432,12 @@ static void _good_potion_or_scroll(int & slot)
 static void _decent_potion_or_scroll(int & slot)
 {
     int base_rand = 3;
-    // No lignification for undead
-    if (you.is_undead)
+    // No lignification for non-vampire undead
+    if (you.undead_state(false) != US_ALIVE
+        && you.undead_state(false) != US_SEMI_UNDEAD)
+    {
         base_rand--;
+    }
 
     switch (random2(base_rand))
     {

@@ -1270,8 +1270,6 @@ static void _setup_generic(const newgame_def& ng)
 
     _species_stat_init(you.species);     // must be down here {dlb}
 
-    you.is_undead = get_undead_state(you.species);
-
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
     update_vision_range();

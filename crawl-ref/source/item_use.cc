@@ -159,7 +159,7 @@ bool can_wield(item_def *weapon, bool say_reason,
              && you.hunger_state < HS_FULL
              && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
              && !crawl_state.game_is_zotdef()
-             && !you.is_undead
+             && you.undead_state() == US_ALIVE
              && !you_foodless()
              && (item_type_known(*weapon) || !only_known))
     {
@@ -3162,7 +3162,7 @@ void tile_item_eat_floor(int idx)
     if (mitm[idx].base_type == OBJ_CORPSES
             && you.species == SP_VAMPIRE
         || mitm[idx].base_type == OBJ_FOOD
-            && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
+            && you.undead_state() != US_UNDEAD && you.species != SP_VAMPIRE)
     {
         if (can_ingest(mitm[idx], false))
             eat_item(mitm[idx]);

@@ -1472,7 +1472,7 @@ static bool _foe_should_res_negative_energy(const actor* foe)
 {
     if (foe->is_player())
     {
-        switch (you.is_undead)
+        switch (you.undead_state())
         {
         case US_ALIVE:
             // Demonspawn are not demons, and statue form grants only

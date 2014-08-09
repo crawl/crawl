@@ -745,7 +745,8 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", %d ZP", (int)_zp_cost(abil));
 
     if (abil.food_cost && !you_foodless(true)
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
+        && (you.undead_state() != US_SEMI_UNDEAD
+            || you.hunger_state > HS_STARVING))
     {
         ret += ", Hunger"; // randomised and exact amount hidden from player
     }
@@ -844,7 +845,8 @@ static const string _detailed_cost_description(ability_type ability)
     }
 
     if (abil.food_cost && !you_foodless(true)
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
+        && (you.undead_state() != US_SEMI_UNDEAD
+            || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
         ret << "\nHunger : ";
@@ -1542,7 +1544,7 @@ static bool _check_ability_possible(const ability_def& abil,
     }
     // Don't insta-starve the player.
     // (Losing consciousness possible from 400 downward.)
-    if (hungerCheck && !you.is_undead)
+    if (hungerCheck && !you.undead_state())
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
         if (!quiet)
@@ -1849,7 +1851,7 @@ bool activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && !you.is_undead && !you_foodless()
+    if (hungerCheck && !you.undead_state() && !you_foodless()
         && you.hunger_state == HS_STARVING)
     {
         canned_msg(MSG_TOO_HUNGRY);

@@ -1392,7 +1392,7 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
 // Vampires mutate as normal.
 bool undead_mutation_rot()
 {
-    return you.is_undead && you.is_undead != US_SEMI_UNDEAD;
+    return !you.can_safely_mutate();
 }
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,

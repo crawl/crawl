@@ -1294,7 +1294,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.opened_zot);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
-    marshallByte(th, you.is_undead);
     marshallByte(th, you.berserk_penalty);
     marshallInt(th, you.abyss_speed);
 
@@ -2111,9 +2110,9 @@ static void tag_read_you(reader &th)
     you.royal_jelly_dead = unmarshallBoolean(th);
     you.transform_uncancellable = unmarshallBoolean(th);
 
-    you.is_undead         = static_cast<undead_state_type>(unmarshallUByte(th));
-    ASSERT(you.is_undead <= US_SEMI_UNDEAD);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_IS_UNDEAD)
+        unmarshallUByte(th);
     if (th.getMinorVersion() < TAG_MINOR_CALC_UNRAND_REACTS)
       unmarshallShort(th);
 #endif
@@ -2147,9 +2146,6 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     // Fix the effects of #7668 (Vampire lose undead trait once coming back
     // from lich form).
-    if (you.species == SP_VAMPIRE && you.form != TRAN_LICH)
-        you.is_undead = US_SEMI_UNDEAD;
-
     if (you.form == TRAN_NONE)
         you.transform_uncancellable = false;
 #else

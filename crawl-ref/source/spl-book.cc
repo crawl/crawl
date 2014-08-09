@@ -511,7 +511,7 @@ bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
 {
     bool rc = false;
 
-    if (you.is_undead)
+    if (you.undead_state())
     {
         switch (spell)
         {
@@ -531,13 +531,13 @@ bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
             // Allowed for vampires (depending on hunger).
-            rc = (you.is_undead != US_SEMI_UNDEAD);
+            rc = (you.undead_state() != US_SEMI_UNDEAD);
             break;
 
         case SPELL_INTOXICATE:
         case SPELL_REGENERATION:
             // Only prohibited for liches and mummies.
-            rc = (you.is_undead == US_UNDEAD);
+            rc = (you.undead_state() == US_UNDEAD);
             break;
 
         default:
@@ -1439,11 +1439,11 @@ int rod_spell(int rod, bool check_range)
 
     int food = spell_hunger(spell, true);
 
-    if (you.is_undead == US_UNDEAD)
+    if (you.undead_state() == US_UNDEAD)
         food = 0;
 
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
-        && !you.is_undead)
+        && !you.undead_state())
     {
         canned_msg(MSG_NO_ENERGY);
         crawl_state.zero_turns_taken();

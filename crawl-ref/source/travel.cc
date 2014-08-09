@@ -2478,8 +2478,8 @@ bool travel_kill_monster(monster_type mons)
     {
         return you.stasis(false)
                || you.clarity(false)
-               || you.is_undead == US_UNDEAD
-               || you.is_undead == US_HUNGRY_DEAD;
+               || you.undead_state() == US_UNDEAD
+               || you.undead_state() == US_HUNGRY_DEAD;
     }
 
     return true;

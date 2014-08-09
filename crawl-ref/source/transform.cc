@@ -504,10 +504,10 @@ public:
      */
     string get_untransform_message() const
     {
-        if (you.is_undead == US_ALIVE)
+        if (you.undead_state() == US_ALIVE)
             return "You feel yourself come back to life.";
         return "You feel your undeath return to normal.";
-        // XXX: ^^^ can this happen?
+        // ^^^ vampires only, probably
     }
 };
 
@@ -1534,7 +1534,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         return false;
     }
 
-    // This must occur before the untransform() and the is_undead check.
+    // This must occur before the untransform() and the undead_state() check.
     if (previous_trans == which_trans)
     {
         int dur = _transform_duration(which_trans, pow);
@@ -1578,7 +1578,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // Catch some conditions which prevent transformation.
-    if (you.is_undead
+    if (you.undead_state()
         && which_trans != TRAN_SHADOW
         && (you.species != SP_VAMPIRE
             || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
@@ -1749,7 +1749,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             you.duration[DUR_REGENERATION] = 0;
         }
 
-        you.is_undead = US_UNDEAD;
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         set_redraw_status(REDRAW_HUNGER);
         break;
@@ -1878,10 +1877,6 @@ void untransform(bool skip_wielding, bool skip_move)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
-        break;
-
-    case TRAN_LICH:
-        you.is_undead = get_undead_state(you.species);
         break;
 
     case TRAN_APPENDAGE:

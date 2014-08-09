@@ -1471,7 +1471,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     {
         mpr("You sink like a stone!");
 
-        if (you.is_artificial() || you.is_undead)
+        if (you.is_artificial() || you.undead_state())
             mpr("You fall apart...");
         else
             mpr("You drown...");
