@@ -2274,7 +2274,8 @@ A hideous glowing apparition.
 %%%%
 spectral weapon
 
-A spirit drawn from a weapon — it never strikes on its own.
+A spirit drawn from a weapon — it never strikes on its own. Damage done to it
+will be partially mirrored onto the caster.
 %%%%
 spellforged servitor
 
