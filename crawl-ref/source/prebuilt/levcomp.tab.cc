@@ -1,19 +1,19 @@
-/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
-   
+
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,7 +26,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7.12-4996"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -62,19 +62,18 @@
 
 
 /* Copy the first part of user declarations.  */
-/* Line 371 of yacc.c  */
-#line 1 "levcomp.ypp"
+#line 1 "levcomp.ypp" /* yacc.c:339  */
 
 
 
 #include "AppHdr.h"
 #include <map>
 #include <algorithm>
+#include "end.h"
 #include "l_defs.h"
-#include "libutil.h"
 #include "mapdef.h"
 #include "maps.h"
-#include "stuff.h"
+#include "strings.h"
 
 #define YYERROR_VERBOSE 1
 #define YYENABLE_NLS 0
@@ -95,14 +94,13 @@ static NORETURN void yyerror(const char *e)
 }
 
 
-/* Line 371 of yacc.c  */
-#line 100 "levcomp.tab.cc"
+#line 98 "levcomp.tab.cc" /* yacc.c:339  */
 
-# ifndef YY_NULL
+# ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULL nullptr
+#   define YY_NULLPTR nullptr
 #  else
-#   define YY_NULL 0
+#   define YY_NULLPTR 0
 #  endif
 # endif
 
@@ -118,7 +116,7 @@ static NORETURN void yyerror(const char *e)
    by #include "levcomp.tab.h".  */
 #ifndef YY_YY_LEVCOMP_TAB_H_INCLUDED
 # define YY_YY_LEVCOMP_TAB_H_INCLUDED
-/* Enabling traces.  */
+/* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
 #endif
@@ -126,64 +124,63 @@ static NORETURN void yyerror(const char *e)
 extern int yydebug;
 #endif
 
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     DEFAULT_DEPTH = 258,
-     SHUFFLE = 259,
-     CLEAR = 260,
-     SUBST = 261,
-     TAGS = 262,
-     KFEAT = 263,
-     KITEM = 264,
-     KMONS = 265,
-     KMASK = 266,
-     KPROP = 267,
-     NAME = 268,
-     DEPTH = 269,
-     ORIENT = 270,
-     PLACE = 271,
-     CHANCE = 272,
-     WEIGHT = 273,
-     MONS = 274,
-     ITEM = 275,
-     MARKER = 276,
-     COLOUR = 277,
-     PRELUDE = 278,
-     MAIN = 279,
-     VALIDATE = 280,
-     VETO = 281,
-     EPILOGUE = 282,
-     NSUBST = 283,
-     WELCOME = 284,
-     LFLAGS = 285,
-     BFLAGS = 286,
-     LFLOORCOL = 287,
-     LROCKCOL = 288,
-     LFLOORTILE = 289,
-     LROCKTILE = 290,
-     FTILE = 291,
-     RTILE = 292,
-     TILE = 293,
-     SUBVAULT = 294,
-     FHEIGHT = 295,
-     DESC = 296,
-     ORDER = 297,
-     COMMA = 298,
-     COLON = 299,
-     PERC = 300,
-     DASH = 301,
-     CHARACTER = 302,
-     NUMBER = 303,
-     STRING = 304,
-     MAP_LINE = 305,
-     MONSTER_NAME = 306,
-     ITEM_INFO = 307,
-     LUA_LINE = 308
-   };
+  enum yytokentype
+  {
+    DEFAULT_DEPTH = 258,
+    SHUFFLE = 259,
+    CLEAR = 260,
+    SUBST = 261,
+    TAGS = 262,
+    KFEAT = 263,
+    KITEM = 264,
+    KMONS = 265,
+    KMASK = 266,
+    KPROP = 267,
+    NAME = 268,
+    DEPTH = 269,
+    ORIENT = 270,
+    PLACE = 271,
+    CHANCE = 272,
+    WEIGHT = 273,
+    MONS = 274,
+    ITEM = 275,
+    MARKER = 276,
+    COLOUR = 277,
+    PRELUDE = 278,
+    MAIN = 279,
+    VALIDATE = 280,
+    VETO = 281,
+    EPILOGUE = 282,
+    NSUBST = 283,
+    WELCOME = 284,
+    LFLAGS = 285,
+    BFLAGS = 286,
+    LFLOORCOL = 287,
+    LROCKCOL = 288,
+    LFLOORTILE = 289,
+    LROCKTILE = 290,
+    FTILE = 291,
+    RTILE = 292,
+    TILE = 293,
+    SUBVAULT = 294,
+    FHEIGHT = 295,
+    DESC = 296,
+    ORDER = 297,
+    COMMA = 298,
+    COLON = 299,
+    PERC = 300,
+    DASH = 301,
+    CHARACTER = 302,
+    NUMBER = 303,
+    STRING = 304,
+    MAP_LINE = 305,
+    MONSTER_NAME = 306,
+    ITEM_INFO = 307,
+    LUA_LINE = 308
+  };
 #endif
 /* Tokens.  */
 #define DEFAULT_DEPTH 258
@@ -238,50 +235,34 @@ extern int yydebug;
 #define ITEM_INFO 307
 #define LUA_LINE 308
 
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
 {
-/* Line 387 of yacc.c  */
-#line 34 "levcomp.ypp"
+#line 34 "levcomp.ypp" /* yacc.c:355  */
 
     int i;
     double f;
     const char *text;
     map_chance_pair chance;
 
-
-/* Line 387 of yacc.c  */
-#line 257 "levcomp.tab.cc"
-} YYSTYPE;
+#line 251 "levcomp.tab.cc" /* yacc.c:355  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE yylval;
 
-#ifdef YYPARSE_PARAM
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void *YYPARSE_PARAM);
-#else
-int yyparse ();
-#endif
-#else /* ! YYPARSE_PARAM */
-#if defined __STDC__ || defined __cplusplus
 int yyparse (void);
-#else
-int yyparse ();
-#endif
-#endif /* ! YYPARSE_PARAM */
 
 #endif /* !YY_YY_LEVCOMP_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-/* Line 390 of yacc.c  */
-#line 285 "levcomp.tab.cc"
+#line 266 "levcomp.tab.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -295,11 +276,8 @@ typedef unsigned char yytype_uint8;
 
 #ifdef YYTYPE_INT8
 typedef YYTYPE_INT8 yytype_int8;
-#elif (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-typedef signed char yytype_int8;
 #else
-typedef short int yytype_int8;
+typedef signed char yytype_int8;
 #endif
 
 #ifdef YYTYPE_UINT16
@@ -319,8 +297,7 @@ typedef short int yytype_int16;
 #  define YYSIZE_T __SIZE_TYPE__
 # elif defined size_t
 #  define YYSIZE_T size_t
-# elif ! defined YYSIZE_T && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+# elif ! defined YYSIZE_T
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
@@ -342,11 +319,30 @@ typedef short int yytype_int16;
 # endif
 #endif
 
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if (! defined __GNUC__ || __GNUC__ < 2 \
-      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
-#  define __attribute__(Spec) /* empty */
+#ifndef YY_ATTRIBUTE
+# if (defined __GNUC__                                               \
+      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
+     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
+#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+# else
+#  define YY_ATTRIBUTE(Spec) /* empty */
+# endif
+#endif
+
+#ifndef YY_ATTRIBUTE_PURE
+# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
+#endif
+
+#ifndef YY_ATTRIBUTE_UNUSED
+# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
+#endif
+
+#if !defined _Noreturn \
+     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
+# if defined _MSC_VER && 1200 <= _MSC_VER
+#  define _Noreturn __declspec (noreturn)
+# else
+#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
 # endif
 #endif
 
@@ -357,24 +353,25 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
+#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+/* Suppress an incorrect diagnostic about yylval being uninitialized.  */
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
+    _Pragma ("GCC diagnostic push") \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+    _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+    _Pragma ("GCC diagnostic pop")
+#else
+# define YY_INITIAL_VALUE(Value) Value
+#endif
+#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END
+#endif
+#ifndef YY_INITIAL_VALUE
+# define YY_INITIAL_VALUE(Value) /* Nothing. */
+#endif
 
-/* Identity function, used to suppress warnings about constant conditions.  */
-#ifndef lint
-# define YYID(N) (N)
-#else
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-static int
-YYID (int yyi)
-#else
-static int
-YYID (yyi)
-    int yyi;
-#endif
-{
-  return yyi;
-}
-#endif
 
 #if ! defined yyoverflow || YYERROR_VERBOSE
 
@@ -393,8 +390,7 @@ YYID (yyi)
 #    define alloca _alloca
 #   else
 #    define YYSTACK_ALLOC alloca
-#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
 #     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
       /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
 #     ifndef EXIT_SUCCESS
@@ -406,8 +402,8 @@ YYID (yyi)
 # endif
 
 # ifdef YYSTACK_ALLOC
-   /* Pacify GCC's `empty if-body' warning.  */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (YYID (0))
+   /* Pacify GCC's 'empty if-body' warning.  */
+#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
 #  ifndef YYSTACK_ALLOC_MAXIMUM
     /* The OS might guarantee only one guard page at the bottom of the stack,
        and a page size can be as small as 4096 bytes.  So we cannot safely
@@ -423,7 +419,7 @@ YYID (yyi)
 #  endif
 #  if (defined __cplusplus && ! defined EXIT_SUCCESS \
        && ! ((defined YYMALLOC || defined malloc) \
-	     && (defined YYFREE || defined free)))
+             && (defined YYFREE || defined free)))
 #   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
 #   ifndef EXIT_SUCCESS
 #    define EXIT_SUCCESS 0
@@ -431,15 +427,13 @@ YYID (yyi)
 #  endif
 #  ifndef YYMALLOC
 #   define YYMALLOC malloc
-#   if ! defined malloc && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#   if ! defined malloc && ! defined EXIT_SUCCESS
 void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 #  ifndef YYFREE
 #   define YYFREE free
-#   if ! defined free && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#   if ! defined free && ! defined EXIT_SUCCESS
 void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
@@ -449,7 +443,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -474,16 +468,16 @@ union yyalloc
    elements in the stack, and YYPTR gives the new location of the
    stack.  Advance YYPTR to a properly aligned location for the next
    stack.  */
-# define YYSTACK_RELOCATE(Stack_alloc, Stack)				\
-    do									\
-      {									\
-	YYSIZE_T yynewbytes;						\
-	YYCOPY (&yyptr->Stack_alloc, Stack, yysize);			\
-	Stack = &yyptr->Stack_alloc;					\
-	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-	yyptr += yynewbytes / sizeof (*yyptr);				\
-      }									\
-    while (YYID (0))
+# define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
+    do                                                                  \
+      {                                                                 \
+        YYSIZE_T yynewbytes;                                            \
+        YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
+        Stack = &yyptr->Stack_alloc;                                    \
+        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        yyptr += yynewbytes / sizeof (*yyptr);                          \
+      }                                                                 \
+    while (0)
 
 #endif
 
@@ -502,7 +496,7 @@ union yyalloc
           for (yyi = 0; yyi < (Count); yyi++)   \
             (Dst)[yyi] = (Src)[yyi];            \
         }                                       \
-      while (YYID (0))
+      while (0)
 #  endif
 # endif
 #endif /* !YYCOPY_NEEDED */
@@ -518,17 +512,19 @@ union yyalloc
 #define YYNNTS  96
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  178
-/* YYNRULES -- Number of states.  */
+/* YYNSTATES -- Number of states.  */
 #define YYNSTATES  214
 
-/* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
+/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
+   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   308
 
-#define YYTRANSLATE(YYX)						\
+#define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
-/* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
+/* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, without out-of-bounds checking.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -565,80 +561,7 @@ static const yytype_uint8 yytranslate[] =
 };
 
 #if YYDEBUG
-/* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
-   YYRHS.  */
-static const yytype_uint16 yyprhs[] =
-{
-       0,     0,     3,     5,     6,     9,    11,    13,    15,    17,
-      19,    22,    25,    26,    29,    31,    33,    36,    38,    40,
-      42,    44,    46,    48,    50,    52,    54,    56,    58,    60,
-      62,    64,    66,    68,    70,    72,    74,    76,    78,    80,
-      82,    84,    86,    88,    90,    92,    94,    96,    98,   100,
-     102,   104,   106,   108,   110,   112,   114,   117,   118,   121,
-     123,   126,   127,   130,   132,   135,   136,   139,   141,   144,
-     145,   148,   150,   153,   154,   157,   159,   162,   163,   166,
-     168,   170,   173,   175,   178,   180,   183,   185,   188,   190,
-     193,   196,   198,   202,   204,   207,   210,   211,   214,   216,
-     219,   222,   225,   228,   230,   233,   235,   238,   240,   243,
-     245,   248,   251,   253,   257,   259,   262,   264,   268,   270,
-     273,   275,   279,   281,   284,   286,   290,   292,   294,   298,
-     300,   303,   305,   309,   311,   314,   316,   320,   322,   324,
-     327,   331,   333,   335,   337,   340,   344,   346,   348,   351,
-     354,   357,   359,   362,   365,   367,   371,   373,   376,   378,
-     382,   384,   387,   389,   392,   396,   398,   401,   403,   405,
-     408,   411,   413,   416,   418,   420,   423,   425,   429
-};
-
-/* YYRHS -- A `-1'-separated list of the rules' RHS.  */
-static const yytype_int16 yyrhs[] =
-{
-      55,     0,    -1,    56,    -1,    -1,    56,    57,    -1,    59,
-      -1,    61,    -1,    47,    -1,    60,    -1,    66,    -1,     3,
-      49,    -1,    64,    62,    -1,    -1,    62,    63,    -1,    65,
-      -1,   144,    -1,    13,    49,    -1,   130,    -1,   131,    -1,
-     132,    -1,   133,    -1,   134,    -1,   139,    -1,   142,    -1,
-     143,    -1,   127,    -1,   124,    -1,    98,    -1,   121,    -1,
-     118,    -1,    99,    -1,   100,    -1,   101,    -1,   102,    -1,
-     103,    -1,   107,    -1,   110,    -1,   113,    -1,    89,    -1,
-      92,    -1,    93,    -1,    96,    -1,    97,    -1,    84,    -1,
-      86,    -1,    85,    -1,    87,    -1,    88,    -1,   104,    -1,
-     147,    -1,    69,    -1,    78,    -1,    72,    -1,    75,    -1,
-      81,    -1,    58,    -1,    24,    67,    -1,    -1,    67,    68,
-      -1,    53,    -1,    24,    70,    -1,    -1,    70,    71,    -1,
-      53,    -1,    25,    73,    -1,    -1,    73,    74,    -1,    53,
-      -1,    26,    76,    -1,    -1,    76,    77,    -1,    53,    -1,
-      23,    79,    -1,    -1,    79,    80,    -1,    53,    -1,    27,
-      82,    -1,    -1,    82,    83,    -1,    53,    -1,     8,    -1,
-       8,    49,    -1,    10,    -1,    10,    49,    -1,     9,    -1,
-       9,    49,    -1,    11,    -1,    11,    49,    -1,    12,    -1,
-      12,    49,    -1,     4,    90,    -1,    91,    -1,    90,    43,
-      91,    -1,    52,    -1,     5,    49,    -1,     7,    94,    -1,
-      -1,    94,    95,    -1,    49,    -1,    30,    49,    -1,    31,
-      49,    -1,    21,    49,    -1,    22,   116,    -1,    32,    -1,
-      32,    49,    -1,    33,    -1,    33,    49,    -1,    34,    -1,
-      34,    49,    -1,    35,    -1,    35,    49,    -1,    40,   105,
-      -1,   106,    -1,   105,    43,   106,    -1,    52,    -1,    36,
-     108,    -1,   109,    -1,   108,    43,   109,    -1,    52,    -1,
-      37,   111,    -1,   112,    -1,   111,    43,   112,    -1,    52,
-      -1,    38,   114,    -1,   115,    -1,   114,    43,   115,    -1,
-      52,    -1,   117,    -1,   116,    43,   117,    -1,    52,    -1,
-      28,   119,    -1,   120,    -1,   119,    43,   120,    -1,    52,
-      -1,     6,   122,    -1,   123,    -1,   123,    43,   122,    -1,
-      52,    -1,    20,    -1,    20,   125,    -1,   125,    43,   126,
-      -1,   126,    -1,    52,    -1,    19,    -1,    19,   128,    -1,
-     129,    43,   128,    -1,   129,    -1,    51,    -1,    16,    49,
-      -1,    41,    49,    -1,    42,    48,    -1,    14,    -1,    14,
-      49,    -1,    17,   135,    -1,    17,    -1,   135,    43,   138,
-      -1,   138,    -1,    48,    45,    -1,    48,    -1,    48,    44,
-     136,    -1,   136,    -1,   137,    49,    -1,   137,    -1,    18,
-     140,    -1,   140,    43,   141,    -1,   141,    -1,    48,    49,
-      -1,    48,    -1,    15,    -1,    15,    49,    -1,    29,    49,
-      -1,   145,    -1,   145,   146,    -1,   146,    -1,    50,    -1,
-      39,   148,    -1,   149,    -1,   148,    43,   149,    -1,    49,
-      -1
-};
-
-/* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
+  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
        0,    60,    60,    63,    64,    67,    68,    71,    77,    78,
@@ -694,13 +617,13 @@ static const char *const yytname[] =
   "depth", "chance", "chance_specifiers", "chance_roll", "chance_num",
   "chance_specifier", "weight", "weight_specifiers", "weight_specifier",
   "orientation", "welcome", "map_def", "map_lines", "map_line", "subvault",
-  "subvault_specifiers", "subvault_specifier", YY_NULL
+  "subvault_specifiers", "subvault_specifier", YY_NULLPTR
 };
 #endif
 
 # ifdef YYPRINT
-/* YYTOKNUM[YYLEX-NUM] -- Internal token number corresponding to
-   token YYLEX-NUM.  */
+/* YYTOKNUM[NUM] -- (External) token number corresponding to the
+   (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
@@ -712,99 +635,18 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-/* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const yytype_uint8 yyr1[] =
-{
-       0,    54,    55,    56,    56,    57,    57,    58,    59,    59,
-      60,    61,    62,    62,    63,    63,    64,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    66,    67,    67,    68,
-      69,    70,    70,    71,    72,    73,    73,    74,    75,    76,
-      76,    77,    78,    79,    79,    80,    81,    82,    82,    83,
-      84,    84,    85,    85,    86,    86,    87,    87,    88,    88,
-      89,    90,    90,    91,    92,    93,    94,    94,    95,    96,
-      97,    98,    99,   100,   100,   101,   101,   102,   102,   103,
-     103,   104,   105,   105,   106,   107,   108,   108,   109,   110,
-     111,   111,   112,   113,   114,   114,   115,   116,   116,   117,
-     118,   119,   119,   120,   121,   122,   122,   123,   124,   124,
-     125,   125,   126,   127,   127,   128,   128,   129,   130,   131,
-     132,   133,   133,   134,   134,   135,   135,   136,   136,   137,
-     137,   138,   138,   139,   140,   140,   141,   141,   142,   142,
-     143,   144,   145,   145,   146,   147,   148,   148,   149
-};
-
-/* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
-static const yytype_uint8 yyr2[] =
-{
-       0,     2,     1,     0,     2,     1,     1,     1,     1,     1,
-       2,     2,     0,     2,     1,     1,     2,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     2,     0,     2,     1,
-       2,     0,     2,     1,     2,     0,     2,     1,     2,     0,
-       2,     1,     2,     0,     2,     1,     2,     0,     2,     1,
-       1,     2,     1,     2,     1,     2,     1,     2,     1,     2,
-       2,     1,     3,     1,     2,     2,     0,     2,     1,     2,
-       2,     2,     2,     1,     2,     1,     2,     1,     2,     1,
-       2,     2,     1,     3,     1,     2,     1,     3,     1,     2,
-       1,     3,     1,     2,     1,     3,     1,     1,     3,     1,
-       2,     1,     3,     1,     2,     1,     3,     1,     1,     2,
-       3,     1,     1,     1,     2,     3,     1,     1,     2,     2,
-       2,     1,     2,     2,     1,     3,     1,     2,     1,     3,
-       1,     2,     1,     2,     3,     1,     2,     1,     1,     2,
-       2,     1,     2,     1,     1,     2,     1,     3,     1
-};
-
-/* YYDEFACT[STATE-NAME] -- Default reduction number in state STATE-NUM.
-   Performed when YYTABLE doesn't specify something else to do.  Zero
-   means the default is an error.  */
-static const yytype_uint8 yydefact[] =
-{
-       3,     0,     2,     1,     0,     0,    57,     4,     5,     8,
-       6,    12,     9,    10,    16,    56,    11,    59,    58,     0,
-       0,     0,    96,    80,    84,    82,    86,    88,   151,   168,
-       0,   154,     0,   143,   138,     0,     0,    73,    61,    65,
-      69,    77,     0,     0,     0,     0,   103,   105,   107,   109,
-       0,     0,     0,     0,     0,     0,     0,     7,   174,    55,
-      13,    14,    50,    52,    53,    51,    54,    43,    45,    44,
-      46,    47,    38,    39,    40,    41,    42,    27,    30,    31,
-      32,    33,    34,    48,    35,    36,    37,    29,    28,    26,
-      25,    17,    18,    19,    20,    21,    22,    23,    24,    15,
-     171,   173,    49,    93,    90,    91,    94,   137,   134,   135,
-      95,    81,    85,    83,    87,    89,   152,   169,   148,   158,
-     153,   160,   162,   156,   167,   163,   165,   147,   144,   146,
-     142,   139,   141,   101,   129,   102,   127,    72,    60,    64,
-      68,    76,   133,   130,   131,   170,    99,   100,   104,   106,
-     108,   110,   118,   115,   116,   122,   119,   120,   126,   123,
-     124,   178,   175,   176,   114,   111,   112,   149,   150,   172,
-       0,     0,    98,    97,     0,   157,     0,   161,   166,     0,
-       0,     0,     0,    75,    74,    63,    62,    67,    66,    71,
-      70,    79,    78,     0,     0,     0,     0,     0,     0,    92,
-     136,   158,   159,   155,   164,   145,   140,   128,   132,   117,
-     121,   125,   177,   113
-};
-
-/* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int16 yydefgoto[] =
-{
-      -1,     1,     2,     7,    59,     8,     9,    10,    16,    60,
-      11,    61,    12,    15,    18,    62,   138,   186,    63,   139,
-     188,    64,   140,   190,    65,   137,   184,    66,   141,   192,
-      67,    68,    69,    70,    71,    72,   104,   105,    73,    74,
-     110,   173,    75,    76,    77,    78,    79,    80,    81,    82,
-      83,   165,   166,    84,   153,   154,    85,   156,   157,    86,
-     159,   160,   135,   136,    87,   143,   144,    88,   108,   109,
-      89,   131,   132,    90,   128,   129,    91,    92,    93,    94,
-      95,   120,   121,   122,   123,    96,   125,   126,    97,    98,
-      99,   100,   101,   102,   162,   163
-};
-
-/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-   STATE-NUM.  */
 #define YYPACT_NINF -132
+
+#define yypact_value_is_default(Yystate) \
+  (!!((Yystate) == (-132)))
+
+#define YYTABLE_NINF -1
+
+#define yytable_value_is_error(Yytable_value) \
+  0
+
+  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+     STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
     -132,     9,    36,  -132,    -9,    -5,  -132,  -132,  -132,  -132,
@@ -831,7 +673,36 @@ static const yytype_int16 yypact[] =
     -132,  -132,  -132,  -132
 };
 
-/* YYPGOTO[NTERM-NUM].  */
+  /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+     Performed when YYTABLE does not specify something else to do.  Zero
+     means the default is an error.  */
+static const yytype_uint8 yydefact[] =
+{
+       3,     0,     2,     1,     0,     0,    57,     4,     5,     8,
+       6,    12,     9,    10,    16,    56,    11,    59,    58,     0,
+       0,     0,    96,    80,    84,    82,    86,    88,   151,   168,
+       0,   154,     0,   143,   138,     0,     0,    73,    61,    65,
+      69,    77,     0,     0,     0,     0,   103,   105,   107,   109,
+       0,     0,     0,     0,     0,     0,     0,     7,   174,    55,
+      13,    14,    50,    52,    53,    51,    54,    43,    45,    44,
+      46,    47,    38,    39,    40,    41,    42,    27,    30,    31,
+      32,    33,    34,    48,    35,    36,    37,    29,    28,    26,
+      25,    17,    18,    19,    20,    21,    22,    23,    24,    15,
+     171,   173,    49,    93,    90,    91,    94,   137,   134,   135,
+      95,    81,    85,    83,    87,    89,   152,   169,   148,   158,
+     153,   160,   162,   156,   167,   163,   165,   147,   144,   146,
+     142,   139,   141,   101,   129,   102,   127,    72,    60,    64,
+      68,    76,   133,   130,   131,   170,    99,   100,   104,   106,
+     108,   110,   118,   115,   116,   122,   119,   120,   126,   123,
+     124,   178,   175,   176,   114,   111,   112,   149,   150,   172,
+       0,     0,    98,    97,     0,   157,     0,   161,   166,     0,
+       0,     0,     0,    75,    74,    63,    62,    67,    66,    71,
+      70,    79,    78,     0,     0,     0,     0,     0,     0,    92,
+     136,   158,   159,   155,   164,   145,   140,   128,   132,   117,
+     121,   125,   177,   113
+};
+
+  /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
     -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
@@ -846,10 +717,24 @@ static const yytype_int16 yypgoto[] =
     -132,  -132,    21,  -132,  -132,   -79
 };
 
-/* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
-   positive, shift that token.  If negative, reduce the rule which
-   number is the opposite.  If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -1
+  /* YYDEFGOTO[NTERM-NUM].  */
+static const yytype_int16 yydefgoto[] =
+{
+      -1,     1,     2,     7,    59,     8,     9,    10,    16,    60,
+      11,    61,    12,    15,    18,    62,   138,   186,    63,   139,
+     188,    64,   140,   190,    65,   137,   184,    66,   141,   192,
+      67,    68,    69,    70,    71,    72,   104,   105,    73,    74,
+     110,   173,    75,    76,    77,    78,    79,    80,    81,    82,
+      83,   165,   166,    84,   153,   154,    85,   156,   157,    86,
+     159,   160,   135,   136,    87,   143,   144,    88,   108,   109,
+      89,   131,   132,    90,   128,   129,    91,    92,    93,    94,
+      95,   120,   121,   122,   123,    96,   125,   126,    97,    98,
+      99,   100,   101,   102,   162,   163
+};
+
+  /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+     positive, shift that token.  If negative, reduce the rule whose
+     number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
       19,    20,    21,    22,    23,    24,    25,    26,    27,     3,
@@ -866,12 +751,6 @@ static const yytype_uint8 yytable[] =
      211,   208,   200,   206,   205,   203,   202,   204,   212,     0,
        0,   169
 };
-
-#define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-132)))
-
-#define yytable_value_is_error(Yytable_value) \
-  YYID (0)
 
 static const yytype_int16 yycheck[] =
 {
@@ -890,8 +769,8 @@ static const yytype_int16 yycheck[] =
       -1,   100
 };
 
-/* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-   symbol of state STATE-NUM.  */
+  /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
+     symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
        0,    55,    56,     0,     3,    13,    24,    57,    59,    60,
@@ -918,30 +797,62 @@ static const yytype_uint8 yystos[] =
      112,   115,   149,   106
 };
 
-#define yyerrok		(yyerrstatus = 0)
-#define yyclearin	(yychar = YYEMPTY)
-#define YYEMPTY		(-2)
-#define YYEOF		0
+  /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
+static const yytype_uint8 yyr1[] =
+{
+       0,    54,    55,    56,    56,    57,    57,    58,    59,    59,
+      60,    61,    62,    62,    63,    63,    64,    65,    65,    65,
+      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
+      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
+      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
+      65,    65,    65,    65,    65,    65,    66,    67,    67,    68,
+      69,    70,    70,    71,    72,    73,    73,    74,    75,    76,
+      76,    77,    78,    79,    79,    80,    81,    82,    82,    83,
+      84,    84,    85,    85,    86,    86,    87,    87,    88,    88,
+      89,    90,    90,    91,    92,    93,    94,    94,    95,    96,
+      97,    98,    99,   100,   100,   101,   101,   102,   102,   103,
+     103,   104,   105,   105,   106,   107,   108,   108,   109,   110,
+     111,   111,   112,   113,   114,   114,   115,   116,   116,   117,
+     118,   119,   119,   120,   121,   122,   122,   123,   124,   124,
+     125,   125,   126,   127,   127,   128,   128,   129,   130,   131,
+     132,   133,   133,   134,   134,   135,   135,   136,   136,   137,
+     137,   138,   138,   139,   140,   140,   141,   141,   142,   142,
+     143,   144,   145,   145,   146,   147,   148,   148,   149
+};
 
-#define YYACCEPT	goto yyacceptlab
-#define YYABORT		goto yyabortlab
-#define YYERROR		goto yyerrorlab
+  /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
+static const yytype_uint8 yyr2[] =
+{
+       0,     2,     1,     0,     2,     1,     1,     1,     1,     1,
+       2,     2,     0,     2,     1,     1,     2,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     2,     0,     2,     1,
+       2,     0,     2,     1,     2,     0,     2,     1,     2,     0,
+       2,     1,     2,     0,     2,     1,     2,     0,     2,     1,
+       1,     2,     1,     2,     1,     2,     1,     2,     1,     2,
+       2,     1,     3,     1,     2,     2,     0,     2,     1,     2,
+       2,     2,     2,     1,     2,     1,     2,     1,     2,     1,
+       2,     2,     1,     3,     1,     2,     1,     3,     1,     2,
+       1,     3,     1,     2,     1,     3,     1,     1,     3,     1,
+       2,     1,     3,     1,     2,     1,     3,     1,     1,     2,
+       3,     1,     1,     1,     2,     3,     1,     1,     2,     2,
+       2,     1,     2,     2,     1,     3,     1,     2,     1,     3,
+       1,     2,     1,     2,     3,     1,     2,     1,     1,     2,
+       2,     1,     2,     1,     1,     2,     1,     3,     1
+};
 
 
-/* Like YYERROR except do call yyerror.  This remains here temporarily
-   to ease the transition to the new meaning of YYERROR, for GCC.
-   Once GCC version 2 has supplanted version 1, this can go.  However,
-   YYFAIL appears to be in use.  Nevertheless, it is formally deprecated
-   in Bison 2.4.2's NEWS entry, where a plan to phase it out is
-   discussed.  */
+#define yyerrok         (yyerrstatus = 0)
+#define yyclearin       (yychar = YYEMPTY)
+#define YYEMPTY         (-2)
+#define YYEOF           0
 
-#define YYFAIL		goto yyerrlab
-#if defined YYFAIL
-  /* This is here to suppress warnings from the GCC cpp's
-     -Wunused-macros.  Normally we don't worry about that warning, but
-     some users do, and we want to make it easy for users to remove
-     YYFAIL uses, which will produce warnings from Bison 2.5.  */
-#endif
+#define YYACCEPT        goto yyacceptlab
+#define YYABORT         goto yyabortlab
+#define YYERROR         goto yyerrorlab
+
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
@@ -958,27 +869,15 @@ do                                                              \
   else                                                          \
     {                                                           \
       yyerror (YY_("syntax error: cannot back up")); \
-      YYERROR;							\
-    }								\
-while (YYID (0))
+      YYERROR;                                                  \
+    }                                                           \
+while (0)
 
 /* Error token number */
-#define YYTERROR	1
-#define YYERRCODE	256
+#define YYTERROR        1
+#define YYERRCODE       256
 
 
-/* This macro is provided for backward compatibility. */
-#ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-#endif
-
-
-/* YYLEX -- calling `yylex' with the right arguments.  */
-#ifdef YYLEX_PARAM
-# define YYLEX yylex (YYLEX_PARAM)
-#else
-# define YYLEX yylex ()
-#endif
 
 /* Enable debugging if requested.  */
 #if YYDEBUG
@@ -988,40 +887,36 @@ while (YYID (0))
 #  define YYFPRINTF fprintf
 # endif
 
-# define YYDPRINTF(Args)			\
-do {						\
-  if (yydebug)					\
-    YYFPRINTF Args;				\
-} while (YYID (0))
+# define YYDPRINTF(Args)                        \
+do {                                            \
+  if (yydebug)                                  \
+    YYFPRINTF Args;                             \
+} while (0)
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)			  \
-do {									  \
-  if (yydebug)								  \
-    {									  \
-      YYFPRINTF (stderr, "%s ", Title);					  \
-      yy_symbol_print (stderr,						  \
-		  Type, Value); \
-      YYFPRINTF (stderr, "\n");						  \
-    }									  \
-} while (YYID (0))
+/* This macro is provided for backward compatibility. */
+#ifndef YY_LOCATION_PRINT
+# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+#endif
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
+do {                                                                      \
+  if (yydebug)                                                            \
+    {                                                                     \
+      YYFPRINTF (stderr, "%s ", Title);                                   \
+      yy_symbol_print (stderr,                                            \
+                  Type, Value); \
+      YYFPRINTF (stderr, "\n");                                           \
+    }                                                                     \
+} while (0)
 
-/*ARGSUSED*/
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+
+/*----------------------------------------.
+| Print this symbol's value on YYOUTPUT.  |
+`----------------------------------------*/
+
 static void
 yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
-#else
-static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
-    FILE *yyoutput;
-    int yytype;
-    YYSTYPE const * const yyvaluep;
-#endif
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
@@ -1030,8 +925,6 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
-# else
-  YYUSE (yyoutput);
 # endif
   YYUSE (yytype);
 }
@@ -1041,22 +934,11 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 | Print this symbol on YYOUTPUT.  |
 `--------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
-#else
-static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
-    FILE *yyoutput;
-    int yytype;
-    YYSTYPE const * const yyvaluep;
-#endif
 {
-  if (yytype < YYNTOKENS)
-    YYFPRINTF (yyoutput, "token %s (", yytname[yytype]);
-  else
-    YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
+  YYFPRINTF (yyoutput, "%s %s (",
+             yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
   yy_symbol_value_print (yyoutput, yytype, yyvaluep);
   YYFPRINTF (yyoutput, ")");
@@ -1067,16 +949,8 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
 | TOP (included).                                                   |
 `------------------------------------------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
-#else
-static void
-yy_stack_print (yybottom, yytop)
-    yytype_int16 *yybottom;
-    yytype_int16 *yytop;
-#endif
 {
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
@@ -1087,49 +961,42 @@ yy_stack_print (yybottom, yytop)
   YYFPRINTF (stderr, "\n");
 }
 
-# define YY_STACK_PRINT(Bottom, Top)				\
-do {								\
-  if (yydebug)							\
-    yy_stack_print ((Bottom), (Top));				\
-} while (YYID (0))
+# define YY_STACK_PRINT(Bottom, Top)                            \
+do {                                                            \
+  if (yydebug)                                                  \
+    yy_stack_print ((Bottom), (Top));                           \
+} while (0)
 
 
 /*------------------------------------------------.
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
-#else
-static void
-yy_reduce_print (yyvsp, yyrule)
-    YYSTYPE *yyvsp;
-    int yyrule;
-#endif
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
 {
+  unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  unsigned long int yylno = yyrline[yyrule];
   YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
-	     yyrule - 1, yylno);
+             yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
-      yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
-		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+      yy_symbol_print (stderr,
+                       yystos[yyssp[yyi + 1 - yynrhs]],
+                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                                              );
       YYFPRINTF (stderr, "\n");
     }
 }
 
-# define YY_REDUCE_PRINT(Rule)		\
-do {					\
-  if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
-} while (YYID (0))
+# define YY_REDUCE_PRINT(Rule)          \
+do {                                    \
+  if (yydebug)                          \
+    yy_reduce_print (yyssp, yyvsp, Rule); \
+} while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
@@ -1143,7 +1010,7 @@ int yydebug;
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
-#ifndef	YYINITDEPTH
+#ifndef YYINITDEPTH
 # define YYINITDEPTH 200
 #endif
 
@@ -1166,15 +1033,8 @@ int yydebug;
 #   define yystrlen strlen
 #  else
 /* Return the length of YYSTR.  */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static YYSIZE_T
 yystrlen (const char *yystr)
-#else
-static YYSIZE_T
-yystrlen (yystr)
-    const char *yystr;
-#endif
 {
   YYSIZE_T yylen;
   for (yylen = 0; yystr[yylen]; yylen++)
@@ -1190,16 +1050,8 @@ yystrlen (yystr)
 #  else
 /* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
    YYDEST.  */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static char *
 yystpcpy (char *yydest, const char *yysrc)
-#else
-static char *
-yystpcpy (yydest, yysrc)
-    char *yydest;
-    const char *yysrc;
-#endif
 {
   char *yyd = yydest;
   const char *yys = yysrc;
@@ -1229,27 +1081,27 @@ yytnamerr (char *yyres, const char *yystr)
       char const *yyp = yystr;
 
       for (;;)
-	switch (*++yyp)
-	  {
-	  case '\'':
-	  case ',':
-	    goto do_not_strip_quotes;
+        switch (*++yyp)
+          {
+          case '\'':
+          case ',':
+            goto do_not_strip_quotes;
 
-	  case '\\':
-	    if (*++yyp != '\\')
-	      goto do_not_strip_quotes;
-	    /* Fall through.  */
-	  default:
-	    if (yyres)
-	      yyres[yyn] = *yyp;
-	    yyn++;
-	    break;
+          case '\\':
+            if (*++yyp != '\\')
+              goto do_not_strip_quotes;
+            /* Fall through.  */
+          default:
+            if (yyres)
+              yyres[yyn] = *yyp;
+            yyn++;
+            break;
 
-	  case '"':
-	    if (yyres)
-	      yyres[yyn] = '\0';
-	    return yyn;
-	  }
+          case '"':
+            if (yyres)
+              yyres[yyn] = '\0';
+            return yyn;
+          }
     do_not_strip_quotes: ;
     }
 
@@ -1272,11 +1124,11 @@ static int
 yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 yytype_int16 *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULL, yytname[yytoken]);
+  YYSIZE_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
   YYSIZE_T yysize = yysize0;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
-  const char *yyformat = YY_NULL;
+  const char *yyformat = YY_NULLPTR;
   /* Arguments of yyformat. */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
   /* Number of reported tokens (one for the "unexpected", one per
@@ -1284,10 +1136,6 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
   int yycount = 0;
 
   /* There are many possibilities here to consider:
-     - Assume YYFAIL is not used.  It's too flawed to consider.  See
-       <http://lists.gnu.org/archive/html/bison-patches/2009-12/msg00024.html>
-       for details.  YYERROR is fine as it does not invoke this
-       function.
      - If this state is a consistent state with a default action, then
        the only way this function was invoked is if the default action
        is an error action.  In that case, don't check for expected
@@ -1337,7 +1185,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                   }
                 yyarg[yycount++] = yytname[yyx];
                 {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULL, yytname[yyx]);
+                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
                   if (! (yysize <= yysize1
                          && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
                     return 2;
@@ -1404,26 +1252,17 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
-/*ARGSUSED*/
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
-#else
-static void
-yydestruct (yymsg, yytype, yyvaluep)
-    const char *yymsg;
-    int yytype;
-    YYSTYPE *yyvaluep;
-#endif
 {
   YYUSE (yyvaluep);
-
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
@@ -1432,18 +1271,8 @@ yydestruct (yymsg, yytype, yyvaluep)
 /* The lookahead symbol.  */
 int yychar;
 
-
-#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END
-#endif
-#ifndef YY_INITIAL_VALUE
-# define YY_INITIAL_VALUE(Value) /* Nothing. */
-#endif
-
 /* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval YY_INITIAL_VALUE(yyval_default);
-
+YYSTYPE yylval;
 /* Number of syntax errors so far.  */
 int yynerrs;
 
@@ -1452,35 +1281,16 @@ int yynerrs;
 | yyparse.  |
 `----------*/
 
-#ifdef YYPARSE_PARAM
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-int
-yyparse (void *YYPARSE_PARAM)
-#else
-int
-yyparse (YYPARSE_PARAM)
-    void *YYPARSE_PARAM;
-#endif
-#else /* ! YYPARSE_PARAM */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 int
 yyparse (void)
-#else
-int
-yyparse ()
-
-#endif
-#endif
 {
     int yystate;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
     /* The stacks and their tools:
-       `yyss': related to states.
-       `yyvs': related to semantic values.
+       'yyss': related to states.
+       'yyvs': related to semantic values.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1548,23 +1358,23 @@ yyparse ()
 
 #ifdef yyoverflow
       {
-	/* Give user a chance to reallocate the stack.  Use copies of
-	   these so that the &'s don't force the real ones into
-	   memory.  */
-	YYSTYPE *yyvs1 = yyvs;
-	yytype_int16 *yyss1 = yyss;
+        /* Give user a chance to reallocate the stack.  Use copies of
+           these so that the &'s don't force the real ones into
+           memory.  */
+        YYSTYPE *yyvs1 = yyvs;
+        yytype_int16 *yyss1 = yyss;
 
-	/* Each stack pointer address is followed by the size of the
-	   data in use in that stack, in bytes.  This used to be a
-	   conditional around just the two extra args, but that might
-	   be undefined if yyoverflow is a macro.  */
-	yyoverflow (YY_("memory exhausted"),
-		    &yyss1, yysize * sizeof (*yyssp),
-		    &yyvs1, yysize * sizeof (*yyvsp),
-		    &yystacksize);
+        /* Each stack pointer address is followed by the size of the
+           data in use in that stack, in bytes.  This used to be a
+           conditional around just the two extra args, but that might
+           be undefined if yyoverflow is a macro.  */
+        yyoverflow (YY_("memory exhausted"),
+                    &yyss1, yysize * sizeof (*yyssp),
+                    &yyvs1, yysize * sizeof (*yyvsp),
+                    &yystacksize);
 
-	yyss = yyss1;
-	yyvs = yyvs1;
+        yyss = yyss1;
+        yyvs = yyvs1;
       }
 #else /* no yyoverflow */
 # ifndef YYSTACK_RELOCATE
@@ -1572,22 +1382,22 @@ yyparse ()
 # else
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-	goto yyexhaustedlab;
+        goto yyexhaustedlab;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
-	yystacksize = YYMAXDEPTH;
+        yystacksize = YYMAXDEPTH;
 
       {
-	yytype_int16 *yyss1 = yyss;
-	union yyalloc *yyptr =
-	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
-	if (! yyptr)
-	  goto yyexhaustedlab;
-	YYSTACK_RELOCATE (yyss_alloc, yyss);
-	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
+        yytype_int16 *yyss1 = yyss;
+        union yyalloc *yyptr =
+          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+        if (! yyptr)
+          goto yyexhaustedlab;
+        YYSTACK_RELOCATE (yyss_alloc, yyss);
+        YYSTACK_RELOCATE (yyvs_alloc, yyvs);
 #  undef YYSTACK_RELOCATE
-	if (yyss1 != yyssa)
-	  YYSTACK_FREE (yyss1);
+        if (yyss1 != yyssa)
+          YYSTACK_FREE (yyss1);
       }
 # endif
 #endif /* no yyoverflow */
@@ -1596,10 +1406,10 @@ yyparse ()
       yyvsp = yyvs + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-		  (unsigned long int) yystacksize));
+                  (unsigned long int) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
-	YYABORT;
+        YYABORT;
     }
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
@@ -1628,7 +1438,7 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
-      yychar = YYLEX;
+      yychar = yylex ();
     }
 
   if (yychar <= YYEOF)
@@ -1693,7 +1503,7 @@ yyreduce:
   yylen = yyr2[yyn];
 
   /* If YYLEN is nonzero, implement the default value of the action:
-     `$$ = $1'.
+     '$$ = $1'.
 
      Otherwise, the following line sets YYVAL to garbage.
      This behavior is undocumented and Bison
@@ -1707,70 +1517,69 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-/* Line 1787 of yacc.c  */
-#line 60 "levcomp.ypp"
+#line 60 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1523 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 3:
-/* Line 1787 of yacc.c  */
-#line 63 "levcomp.ypp"
+#line 63 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1529 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 4:
-/* Line 1787 of yacc.c  */
-#line 64 "levcomp.ypp"
+#line 64 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1535 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 5:
-/* Line 1787 of yacc.c  */
-#line 67 "levcomp.ypp"
+#line 67 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1541 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 6:
-/* Line 1787 of yacc.c  */
-#line 68 "levcomp.ypp"
+#line 68 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1547 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 7:
-/* Line 1787 of yacc.c  */
-#line 72 "levcomp.ypp"
+#line 72 "levcomp.ypp" /* yacc.c:1646  */
     {
                     yyerror("Unexpected character sequence.");
                 }
+#line 1555 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 8:
-/* Line 1787 of yacc.c  */
-#line 77 "levcomp.ypp"
+#line 77 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1561 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 9:
-/* Line 1787 of yacc.c  */
-#line 78 "levcomp.ypp"
+#line 78 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1567 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 10:
-/* Line 1787 of yacc.c  */
-#line 82 "levcomp.ypp"
+#line 82 "levcomp.ypp" /* yacc.c:1646  */
     {
                     dgn_reset_default_depth();
-                    string err = dgn_set_default_depth((yyvsp[(2) - (2)].text));
+                    string err = dgn_set_default_depth((yyvsp[0].text));
                     if (!err.empty())
                         yyerror(make_stringf("Bad default-depth: %s (%s)",
-                                (yyvsp[(2) - (2)].text), err.c_str()).c_str());
+                                (yyvsp[0].text), err.c_str()).c_str());
                 }
+#line 1579 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 11:
-/* Line 1787 of yacc.c  */
-#line 92 "levcomp.ypp"
+#line 92 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.set_file(lc_desfile);
 
@@ -1789,381 +1598,381 @@ yyreduce:
                         yyerror(err.c_str());
                     add_parsed_map(lc_map);
                 }
+#line 1602 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 12:
-/* Line 1787 of yacc.c  */
-#line 112 "levcomp.ypp"
+#line 112 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1608 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 13:
-/* Line 1787 of yacc.c  */
-#line 113 "levcomp.ypp"
+#line 113 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1614 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 14:
-/* Line 1787 of yacc.c  */
-#line 116 "levcomp.ypp"
+#line 116 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1620 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 15:
-/* Line 1787 of yacc.c  */
-#line 117 "levcomp.ypp"
+#line 117 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1626 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 16:
-/* Line 1787 of yacc.c  */
-#line 121 "levcomp.ypp"
+#line 121 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.init();
-                    lc_map.name = (yyvsp[(2) - (2)].text);
+                    lc_map.name = (yyvsp[0].text);
 
                     map_load_info_t::const_iterator i =
-                        lc_loaded_maps.find((yyvsp[(2) - (2)].text));
+                        lc_loaded_maps.find((yyvsp[0].text));
 
                     if (i != lc_loaded_maps.end())
                     {
                         yyerror(
                             make_stringf(
                                 "Map named '%s' already loaded at %s:%d",
-                                (yyvsp[(2) - (2)].text),
+                                (yyvsp[0].text),
                                 i->second.filename.c_str(),
                                 i->second.lineno).c_str() );
                     }
 
                     lc_map.place_loaded_from =
                         map_file_place(lc_desfile, yylineno);
-                    lc_loaded_maps[(yyvsp[(2) - (2)].text)] = lc_map.place_loaded_from;
+                    lc_loaded_maps[(yyvsp[0].text)] = lc_map.place_loaded_from;
                 }
+#line 1652 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 55:
-/* Line 1787 of yacc.c  */
-#line 182 "levcomp.ypp"
+#line 182 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1658 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 56:
-/* Line 1787 of yacc.c  */
-#line 185 "levcomp.ypp"
+#line 185 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1664 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 57:
-/* Line 1787 of yacc.c  */
-#line 187 "levcomp.ypp"
+#line 187 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1670 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 58:
-/* Line 1787 of yacc.c  */
-#line 188 "levcomp.ypp"
+#line 188 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1676 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 59:
-/* Line 1787 of yacc.c  */
-#line 192 "levcomp.ypp"
+#line 192 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_global_prelude.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_global_prelude.add(yylineno, (yyvsp[0].text));
                 }
+#line 1684 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 60:
-/* Line 1787 of yacc.c  */
-#line 196 "levcomp.ypp"
+#line 196 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1690 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 61:
-/* Line 1787 of yacc.c  */
-#line 198 "levcomp.ypp"
+#line 198 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1696 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 62:
-/* Line 1787 of yacc.c  */
-#line 199 "levcomp.ypp"
+#line 199 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1702 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 63:
-/* Line 1787 of yacc.c  */
-#line 203 "levcomp.ypp"
+#line 203 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_map.main.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_map.main.add(yylineno, (yyvsp[0].text));
                 }
+#line 1710 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 64:
-/* Line 1787 of yacc.c  */
-#line 207 "levcomp.ypp"
+#line 207 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1716 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 65:
-/* Line 1787 of yacc.c  */
-#line 209 "levcomp.ypp"
+#line 209 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1722 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 66:
-/* Line 1787 of yacc.c  */
-#line 210 "levcomp.ypp"
+#line 210 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1728 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 67:
-/* Line 1787 of yacc.c  */
-#line 214 "levcomp.ypp"
+#line 214 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_map.validate.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_map.validate.add(yylineno, (yyvsp[0].text));
                 }
+#line 1736 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 68:
-/* Line 1787 of yacc.c  */
-#line 218 "levcomp.ypp"
+#line 218 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1742 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 69:
-/* Line 1787 of yacc.c  */
-#line 220 "levcomp.ypp"
+#line 220 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1748 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 70:
-/* Line 1787 of yacc.c  */
-#line 221 "levcomp.ypp"
+#line 221 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1754 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 71:
-/* Line 1787 of yacc.c  */
-#line 225 "levcomp.ypp"
+#line 225 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_map.veto.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_map.veto.add(yylineno, (yyvsp[0].text));
                 }
+#line 1762 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 72:
-/* Line 1787 of yacc.c  */
-#line 229 "levcomp.ypp"
+#line 229 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1768 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 73:
-/* Line 1787 of yacc.c  */
-#line 231 "levcomp.ypp"
+#line 231 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1774 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 74:
-/* Line 1787 of yacc.c  */
-#line 232 "levcomp.ypp"
+#line 232 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1780 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 75:
-/* Line 1787 of yacc.c  */
-#line 236 "levcomp.ypp"
+#line 236 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_map.prelude.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_map.prelude.add(yylineno, (yyvsp[0].text));
                 }
+#line 1788 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 76:
-/* Line 1787 of yacc.c  */
-#line 240 "levcomp.ypp"
+#line 240 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1794 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 77:
-/* Line 1787 of yacc.c  */
-#line 242 "levcomp.ypp"
+#line 242 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1800 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 78:
-/* Line 1787 of yacc.c  */
-#line 243 "levcomp.ypp"
+#line 243 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1806 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 79:
-/* Line 1787 of yacc.c  */
-#line 247 "levcomp.ypp"
+#line 247 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    lc_map.epilogue.add(yylineno, (yyvsp[(1) - (1)].text));
+                    lc_map.epilogue.add(yylineno, (yyvsp[0].text));
                 }
+#line 1814 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 80:
-/* Line 1787 of yacc.c  */
-#line 251 "levcomp.ypp"
+#line 251 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1820 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 81:
-/* Line 1787 of yacc.c  */
-#line 253 "levcomp.ypp"
+#line 253 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kfeat(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1831 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 82:
-/* Line 1787 of yacc.c  */
-#line 260 "levcomp.ypp"
+#line 260 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1837 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 83:
-/* Line 1787 of yacc.c  */
-#line 262 "levcomp.ypp"
+#line 262 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kmons(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1848 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 84:
-/* Line 1787 of yacc.c  */
-#line 269 "levcomp.ypp"
+#line 269 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1854 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 85:
-/* Line 1787 of yacc.c  */
-#line 271 "levcomp.ypp"
+#line 271 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kitem(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1865 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 86:
-/* Line 1787 of yacc.c  */
-#line 278 "levcomp.ypp"
+#line 278 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1871 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 87:
-/* Line 1787 of yacc.c  */
-#line 280 "levcomp.ypp"
+#line 280 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kmask(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1882 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 88:
-/* Line 1787 of yacc.c  */
-#line 287 "levcomp.ypp"
+#line 287 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 1888 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 89:
-/* Line 1787 of yacc.c  */
-#line 289 "levcomp.ypp"
+#line 289 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kprop(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1899 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 90:
-/* Line 1787 of yacc.c  */
-#line 296 "levcomp.ypp"
+#line 296 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1905 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 93:
-/* Line 1787 of yacc.c  */
-#line 304 "levcomp.ypp"
+#line 304 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("shuffle(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1916 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 94:
-/* Line 1787 of yacc.c  */
-#line 312 "levcomp.ypp"
+#line 312 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("clear(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1927 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 95:
-/* Line 1787 of yacc.c  */
-#line 320 "levcomp.ypp"
+#line 320 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 1933 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 98:
-/* Line 1787 of yacc.c  */
-#line 328 "levcomp.ypp"
+#line 328 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("tags(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1944 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 99:
-/* Line 1787 of yacc.c  */
-#line 337 "levcomp.ypp"
+#line 337 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lflags(\"%s\")",
-                                     quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                                     quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1955 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 100:
-/* Line 1787 of yacc.c  */
-#line 346 "levcomp.ypp"
+#line 346 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("bflags(\"%s\")",
-                                     quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                                     quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 1966 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 101:
-/* Line 1787 of yacc.c  */
-#line 355 "levcomp.ypp"
+#line 355 "levcomp.ypp" /* yacc.c:1646  */
     {
                     string key, arg;
                     int sep(0);
 
                     const string err =
-                      mapdef_split_key_item((yyvsp[(2) - (2)].text), &key, &sep, &arg);
+                      mapdef_split_key_item((yyvsp[0].text), &key, &sep, &arg);
 
                     if (!err.empty())
                       yyerror(err.c_str());
@@ -2185,436 +1994,436 @@ yyreduce:
                        lc_map.main.add(
                          yylineno,
                          make_stringf("marker(\"%s\")",
-                                      quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                                      quote_lua_string((yyvsp[0].text)).c_str()));
                     }
                 }
+#line 2001 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 102:
-/* Line 1787 of yacc.c  */
-#line 387 "levcomp.ypp"
+#line 387 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2007 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 103:
-/* Line 1787 of yacc.c  */
-#line 390 "levcomp.ypp"
+#line 390 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2013 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 104:
-/* Line 1787 of yacc.c  */
-#line 392 "levcomp.ypp"
+#line 392 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lfloorcol(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2024 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 105:
-/* Line 1787 of yacc.c  */
-#line 399 "levcomp.ypp"
+#line 399 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2030 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 106:
-/* Line 1787 of yacc.c  */
-#line 401 "levcomp.ypp"
+#line 401 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lrockcol(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2041 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 107:
-/* Line 1787 of yacc.c  */
-#line 408 "levcomp.ypp"
+#line 408 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2047 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 108:
-/* Line 1787 of yacc.c  */
-#line 410 "levcomp.ypp"
+#line 410 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lfloortile(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2058 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 109:
-/* Line 1787 of yacc.c  */
-#line 418 "levcomp.ypp"
+#line 418 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2064 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 110:
-/* Line 1787 of yacc.c  */
-#line 420 "levcomp.ypp"
+#line 420 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lrocktile(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2075 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 114:
-/* Line 1787 of yacc.c  */
-#line 435 "levcomp.ypp"
+#line 435 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("fheight(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2086 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 118:
-/* Line 1787 of yacc.c  */
-#line 451 "levcomp.ypp"
+#line 451 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("ftile(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2097 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 122:
-/* Line 1787 of yacc.c  */
-#line 467 "levcomp.ypp"
+#line 467 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("rtile(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2108 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 126:
-/* Line 1787 of yacc.c  */
-#line 483 "levcomp.ypp"
+#line 483 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("tile(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2119 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 127:
-/* Line 1787 of yacc.c  */
-#line 492 "levcomp.ypp"
+#line 492 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2125 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 128:
-/* Line 1787 of yacc.c  */
-#line 493 "levcomp.ypp"
+#line 493 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2131 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 129:
-/* Line 1787 of yacc.c  */
-#line 497 "levcomp.ypp"
+#line 497 "levcomp.ypp" /* yacc.c:1646  */
     {
                       lc_map.main.add(
                           yylineno,
                           make_stringf("colour(\"%s\")",
-                              quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                              quote_lua_string((yyvsp[0].text)).c_str()));
                   }
+#line 2142 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 130:
-/* Line 1787 of yacc.c  */
-#line 505 "levcomp.ypp"
+#line 505 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2148 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 131:
-/* Line 1787 of yacc.c  */
-#line 508 "levcomp.ypp"
+#line 508 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2154 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 132:
-/* Line 1787 of yacc.c  */
-#line 509 "levcomp.ypp"
+#line 509 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2160 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 133:
-/* Line 1787 of yacc.c  */
-#line 513 "levcomp.ypp"
+#line 513 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("nsubst(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2171 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 134:
-/* Line 1787 of yacc.c  */
-#line 521 "levcomp.ypp"
+#line 521 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2177 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 137:
-/* Line 1787 of yacc.c  */
-#line 529 "levcomp.ypp"
+#line 529 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("subst(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2188 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 138:
-/* Line 1787 of yacc.c  */
-#line 537 "levcomp.ypp"
+#line 537 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2194 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 139:
-/* Line 1787 of yacc.c  */
-#line 538 "levcomp.ypp"
+#line 538 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2200 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 142:
-/* Line 1787 of yacc.c  */
-#line 546 "levcomp.ypp"
+#line 546 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("item(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2211 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 143:
-/* Line 1787 of yacc.c  */
-#line 553 "levcomp.ypp"
+#line 553 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2217 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 144:
-/* Line 1787 of yacc.c  */
-#line 554 "levcomp.ypp"
+#line 554 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2223 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 147:
-/* Line 1787 of yacc.c  */
-#line 562 "levcomp.ypp"
+#line 562 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("mons(\"%s\")",
-                            quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2234 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 148:
-/* Line 1787 of yacc.c  */
-#line 571 "levcomp.ypp"
+#line 571 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("place(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2245 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 149:
-/* Line 1787 of yacc.c  */
-#line 580 "levcomp.ypp"
+#line 580 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("desc(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2256 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 150:
-/* Line 1787 of yacc.c  */
-#line 589 "levcomp.ypp"
+#line 589 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("order(%d)", int((yyvsp[(2) - (2)].f))));
+                        make_stringf("order(%d)", int((yyvsp[0].f))));
                 }
+#line 2266 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 151:
-/* Line 1787 of yacc.c  */
-#line 596 "levcomp.ypp"
+#line 596 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2272 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 152:
-/* Line 1787 of yacc.c  */
-#line 598 "levcomp.ypp"
+#line 598 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("depth(\"%s\")",
-                            quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                            quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2283 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 153:
-/* Line 1787 of yacc.c  */
-#line 606 "levcomp.ypp"
+#line 606 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2289 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 154:
-/* Line 1787 of yacc.c  */
-#line 607 "levcomp.ypp"
+#line 607 "levcomp.ypp" /* yacc.c:1646  */
     { }
+#line 2295 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 157:
-/* Line 1787 of yacc.c  */
-#line 614 "levcomp.ypp"
+#line 614 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    (yyval.i) = (yyvsp[(1) - (2)].f) * 100;
+                    (yyval.i) = (yyvsp[-1].f) * 100;
                 }
+#line 2303 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 158:
-/* Line 1787 of yacc.c  */
-#line 618 "levcomp.ypp"
+#line 618 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    (yyval.i) = (yyvsp[(1) - (1)].f);
+                    (yyval.i) = (yyvsp[0].f);
                 }
+#line 2311 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 159:
-/* Line 1787 of yacc.c  */
-#line 623 "levcomp.ypp"
+#line 623 "levcomp.ypp" /* yacc.c:1646  */
     {
-                    (yyval.chance).priority = (yyvsp[(1) - (3)].f);
-                    (yyval.chance).chance   = (yyvsp[(3) - (3)].i);
+                    (yyval.chance).priority = (yyvsp[-2].f);
+                    (yyval.chance).chance   = (yyvsp[0].i);
                 }
+#line 2320 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 160:
-/* Line 1787 of yacc.c  */
-#line 628 "levcomp.ypp"
+#line 628 "levcomp.ypp" /* yacc.c:1646  */
     {
                     (yyval.chance).priority = DEFAULT_CHANCE_PRIORITY;
-                    (yyval.chance).chance   = (yyvsp[(1) - (1)].i);
+                    (yyval.chance).chance   = (yyvsp[0].i);
                 }
+#line 2329 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 161:
-/* Line 1787 of yacc.c  */
-#line 635 "levcomp.ypp"
+#line 635 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("depth_chance(\"%s\", %d, %d)",
-                                     quote_lua_string((yyvsp[(2) - (2)].text)).c_str(),
-                                     (yyvsp[(1) - (2)].chance).priority, (yyvsp[(1) - (2)].chance).chance));
+                                     quote_lua_string((yyvsp[0].text)).c_str(),
+                                     (yyvsp[-1].chance).priority, (yyvsp[-1].chance).chance));
                 }
+#line 2341 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 162:
-/* Line 1787 of yacc.c  */
-#line 643 "levcomp.ypp"
+#line 643 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("chance(%d, %d)",
-                                     (yyvsp[(1) - (1)].chance).priority, (yyvsp[(1) - (1)].chance).chance));
+                                     (yyvsp[0].chance).priority, (yyvsp[0].chance).chance));
                 }
+#line 2352 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 166:
-/* Line 1787 of yacc.c  */
-#line 657 "levcomp.ypp"
+#line 657 "levcomp.ypp" /* yacc.c:1646  */
     {
                      lc_map.main.add(
                          yylineno,
                          make_stringf("depth_weight(\"%s\", %d)",
-                                      quote_lua_string((yyvsp[(2) - (2)].text)).c_str(), (int)(yyvsp[(1) - (2)].f)));
+                                      quote_lua_string((yyvsp[0].text)).c_str(), (int)(yyvsp[-1].f)));
                  }
+#line 2363 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 167:
-/* Line 1787 of yacc.c  */
-#line 664 "levcomp.ypp"
+#line 664 "levcomp.ypp" /* yacc.c:1646  */
     {
                      lc_map.main.add(
                          yylineno,
-                         make_stringf("weight(%d)", (int)(yyvsp[(1) - (1)].f)));
+                         make_stringf("weight(%d)", (int)(yyvsp[0].f)));
                  }
+#line 2373 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 168:
-/* Line 1787 of yacc.c  */
-#line 671 "levcomp.ypp"
+#line 671 "levcomp.ypp" /* yacc.c:1646  */
     {}
+#line 2379 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 169:
-/* Line 1787 of yacc.c  */
-#line 673 "levcomp.ypp"
+#line 673 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("orient(\"%s\")",
-                                     quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                                     quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2390 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 170:
-/* Line 1787 of yacc.c  */
-#line 682 "levcomp.ypp"
+#line 682 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("welcome(\"%s\")",
-                                     quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
+                                     quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2401 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 174:
-/* Line 1787 of yacc.c  */
-#line 698 "levcomp.ypp"
+#line 698 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.mapchunk.add(
                         yylineno,
                         make_stringf("map(\"%s\")",
-                                     quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                                     quote_lua_string((yyvsp[0].text)).c_str()));
                 }
+#line 2412 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 178:
-/* Line 1787 of yacc.c  */
-#line 714 "levcomp.ypp"
+#line 714 "levcomp.ypp" /* yacc.c:1646  */
     {
                        lc_map.main.add(
                            yylineno,
                            make_stringf("subvault(\"%s\")",
-                               quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
+                               quote_lua_string((yyvsp[0].text)).c_str()));
                    }
+#line 2423 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
 
-/* Line 1787 of yacc.c  */
-#line 2618 "levcomp.tab.cc"
+#line 2427 "levcomp.tab.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2636,7 +2445,7 @@ yyreduce:
 
   *++yyvsp = yyval;
 
-  /* Now `shift' the result of the reduction.  Determine what state
+  /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
 
@@ -2651,9 +2460,9 @@ yyreduce:
   goto yynewstate;
 
 
-/*------------------------------------.
-| yyerrlab -- here on detecting error |
-`------------------------------------*/
+/*--------------------------------------.
+| yyerrlab -- here on detecting error.  |
+`--------------------------------------*/
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
@@ -2704,20 +2513,20 @@ yyerrlab:
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
-	 error, discard it.  */
+         error, discard it.  */
 
       if (yychar <= YYEOF)
-	{
-	  /* Return failure if at end of input.  */
-	  if (yychar == YYEOF)
-	    YYABORT;
-	}
+        {
+          /* Return failure if at end of input.  */
+          if (yychar == YYEOF)
+            YYABORT;
+        }
       else
-	{
-	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
-	  yychar = YYEMPTY;
-	}
+        {
+          yydestruct ("Error: discarding",
+                      yytoken, &yylval);
+          yychar = YYEMPTY;
+        }
     }
 
   /* Else will try to reuse lookahead token after shifting the error
@@ -2736,7 +2545,7 @@ yyerrorlab:
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
 
-  /* Do not reclaim the symbols of the rule which action triggered
+  /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
   YYPOPSTACK (yylen);
   yylen = 0;
@@ -2749,29 +2558,29 @@ yyerrorlab:
 | yyerrlab1 -- common code for both syntax error and YYERROR.  |
 `-------------------------------------------------------------*/
 yyerrlab1:
-  yyerrstatus = 3;	/* Each real token shifted decrements this.  */
+  yyerrstatus = 3;      /* Each real token shifted decrements this.  */
 
   for (;;)
     {
       yyn = yypact[yystate];
       if (!yypact_value_is_default (yyn))
-	{
-	  yyn += YYTERROR;
-	  if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
-	    {
-	      yyn = yytable[yyn];
-	      if (0 < yyn)
-		break;
-	    }
-	}
+        {
+          yyn += YYTERROR;
+          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
+            {
+              yyn = yytable[yyn];
+              if (0 < yyn)
+                break;
+            }
+        }
 
       /* Pop the current state because it cannot handle the error token.  */
       if (yyssp == yyss)
-	YYABORT;
+        YYABORT;
 
 
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+                  yystos[yystate], yyvsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -2822,14 +2631,14 @@ yyreturn:
       yydestruct ("Cleanup: discarding lookahead",
                   yytoken, &yylval);
     }
-  /* Do not reclaim the symbols of the rule which action triggered
+  /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
   YYPOPSTACK (yylen);
   YY_STACK_PRINT (yyss, yyssp);
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+                  yystos[*yyssp], yyvsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2840,11 +2649,7 @@ yyreturn:
   if (yymsg != yymsgbuf)
     YYSTACK_FREE (yymsg);
 #endif
-  /* Make sure YYID is used.  */
-  return YYID (yyresult);
+  return yyresult;
 }
-
-
-/* Line 2050 of yacc.c  */
-#line 722 "levcomp.ypp"
+#line 722 "levcomp.ypp" /* yacc.c:1906  */
 
