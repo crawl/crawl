@@ -620,7 +620,7 @@ bool eat_food(int slot)
         {
             if (you.visible_igrd(you.pos()) != NON_ITEM)
             {
-                result = eat_from_floor();
+                result = eat_from_floor(true);
                 if (result == 1)
                     return true;
                 if (result == -1)
@@ -628,9 +628,6 @@ bool eat_food(int slot)
             }
         }
     }
-
-    if (you.species == SP_VAMPIRE)
-        mpr("There's nothing here to drain!");
 
     return prompt_eat_inventory_item(slot);
 }
@@ -892,7 +889,7 @@ static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
 #endif
 
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
-int eat_from_floor()
+int eat_from_floor(bool skip_chunks)
 {
     if (!_eat_check())
         return false;
@@ -902,7 +899,7 @@ int eat_from_floor()
         return 0;
 
     bool need_more = false;
-    int unusable_corpse = 0;
+    int rotten_food = 0;
     int inedible_food = 0;
     item_def wonteat;
     bool found_valid = false;
@@ -913,10 +910,20 @@ int eat_from_floor()
         if (si->base_type != OBJ_FOOD)
             continue;
 
+        // Chunks should have been handled before.
+        if (skip_chunks && si->sub_type == FOOD_CHUNK)
+            continue;
+
         if (is_bad_food(*si))
             continue;
 
-        if (!can_ingest(*si, true))
+        if (!skip_chunks && food_is_rotten(*si)
+            && !_player_can_eat_rotten_meat())
+        {
+            rotten_food++;
+            continue;
+        }
+        else if (!can_ingest(*si, true))
         {
             if (!inedible_food)
             {
@@ -945,7 +952,8 @@ int eat_from_floor()
 #ifdef TOUCH_UI
         vector<SelItem> selected =
             select_items(food_items,
-                         "Eat", false, MT_SELONE, _floor_eat_menu_title);
+                         "Eat",
+                         false, MT_SELONE, _floor_eat_menu_title);
         redraw_screen();
         for (int i = 0, count = selected.size(); i < count; ++i)
         {
@@ -998,7 +1006,7 @@ int eat_from_floor()
     else
     {
         // Give a message about why these food items can not actually be eaten.
-        if (unusable_corpse)
+        if (rotten_food)
         {
             _player_can_eat_rotten_meat(true);
             need_more = true;
@@ -1036,7 +1044,7 @@ bool eat_from_inventory()
     if (you.species == SP_VAMPIRE)
         return 0;
 
-    int unusable_corpse = 0;
+    int rotten_food = 0;
     int inedible_food = 0;
     item_def *wonteat = NULL;
     bool found_valid = false;
@@ -1048,7 +1056,6 @@ bool eat_from_inventory()
             continue;
 
         item_def *item = &you.inv[i];
-
         // Chunks should have been handled before.
         if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
             continue;
@@ -1058,7 +1065,7 @@ bool eat_from_inventory()
 
         if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
         {
-            unusable_corpse++;
+            rotten_food++;
             continue;
         }
         else if (!can_ingest(*item, true))
@@ -1118,7 +1125,7 @@ bool eat_from_inventory()
     else
     {
         // Give a message about why these food items can not actually be eaten.
-        if (unusable_corpse)
+        if (rotten_food)
             _player_can_eat_rotten_meat(true);
         else if (inedible_food)
         {
@@ -1199,9 +1206,9 @@ int prompt_eat_chunks(bool only_auto)
 
         // Vampires can't eat anything in their inventory.
         if (you.species == SP_VAMPIRE)
-           continue;
+            continue;
 
-        else if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
+        if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
             continue;
 
         if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
