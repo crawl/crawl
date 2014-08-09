@@ -2773,7 +2773,7 @@ static int _get_spell_description(const spell_type spell,
         description += "The spell is scrawled in ancient runes that are beyond "
                        "your current level of understanding.\n";
     }
-    if (spell_is_useless(spell))
+    if (spell_is_useless(spell) && you_can_memorise(spell))
         description += "This spell will have no effect right now.\n";
 
     _append_spell_stats(spell, description, rod);
@@ -2785,9 +2785,8 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    bool form = false;
-    if (you_cannot_memorise(spell, form))
-        description += "\n" + desc_cannot_memorise_reason(spell, form) + "\n";
+    if (!you_can_memorise(spell))
+        description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
@@ -2799,7 +2798,7 @@ static int _get_spell_description(const spell_type spell,
             return BOOK_FORGET;
         }
         else if (player_can_memorise_from_spellbook(*item)
-                 && !you_cannot_memorise(spell, form))
+                 && you_can_memorise(spell))
         {
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;

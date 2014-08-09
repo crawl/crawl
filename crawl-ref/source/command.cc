@@ -1078,12 +1078,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
 
-    bool form = false;
-    if (you_cannot_memorise(type, form))
-    {
-        desc += "\n";
-        desc += desc_cannot_memorise_reason(type, form);
-    }
+    if (!you_can_memorise(type))
+        desc += "\n" + desc_cannot_memorise_reason(type);
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     vector<string> books;

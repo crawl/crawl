@@ -975,12 +975,14 @@ bool is_prevented_teleport(spell_type spell, bool quiet)
 
 bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
 {
-    // Normally undead can't memorise these spells, so this check is
-    // to catch those in Lich form.  As such, we allow the Lich form
-    // to be extended here. - bwr
-    bool temp;
-    if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell,
-            temp, evoked))
+    // XXX: refactor me
+    if (you.undead_state() == US_UNDEAD
+        && (spell == SPELL_BORGNJORS_REVIVIFICATION
+            || spell == SPELL_DEATHS_DOOR
+            || spell == SPELL_SUBLIMATION_OF_BLOOD
+            || spell == SPELL_INTOXICATE
+            || spell == SPELL_REGENERATION
+            || spell_is_form(spell) && spell != SPELL_NECROMUTATION))
     {
         msg = "You cannot cast that spell in your current form!";
         return true;
@@ -989,6 +991,19 @@ bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
     if (_vampire_cannot_cast(spell))
     {
         msg = "Your current blood level is not sufficient to cast that spell.";
+        return true;
+    }
+
+    if (player_mutation_level(MUT_NO_LOVE) && spell == SPELL_ENSLAVEMENT)
+    {
+        msg = "Allies are forbidden to you!";
+        return true;
+    }
+
+    // Check for banned schools (Currently just Ru sacrifices)
+    if (cannot_use_spell_school(spell, evoked))
+    {
+        msg = "You cannot use spells of this school!";
         return true;
     }
 

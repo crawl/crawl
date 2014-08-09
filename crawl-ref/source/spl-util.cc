@@ -1080,17 +1080,58 @@ static bool _spell_is_empowered(spell_type spell)
     return false;
 }
 
-// This function attempts to determine if 'spell' is useless to
-// the player. if 'transient' is true, then it will include checks
-// for volatile or temporary states (such as status effects, mana, etc.)
-//
-// its notably used by 'spell_highlight_by_utility'
-bool spell_is_useless(spell_type spell, bool transient)
+/**
+ * Does the given spell map to a player transformation?
+ *
+ * @param spell     The spell in question.
+ * @return          Whether the spell, when cast, sets a TRAN_ on the player.
+ */
+bool spell_is_form(spell_type spell)
 {
-    if (you_cannot_memorise(spell))
-        return true;
+    switch (spell)
+    {
+        case SPELL_BEASTLY_APPENDAGE:
+        case SPELL_BLADE_HANDS:
+        case SPELL_DRAGON_FORM:
+        case SPELL_ICE_FORM:
+        case SPELL_SPIDER_FORM:
+        case SPELL_STATUE_FORM:
+        case SPELL_NECROMUTATION:
+            return true;
+        default:
+            return false;
+    }
+}
 
-    if (transient)
+/**
+ * This function attempts to determine if a given spell is useless to the
+ * player.
+ *
+ * @param spell     The spell in question.
+ * @param temp      Include checks for volatile or temporary states
+ *                  (status effects, mana, gods, items, etc.)
+ * @return          Whether the given spell has no chance of being useful.
+ */
+bool spell_is_useless(spell_type spell, bool temp)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_DJINNI
+        && (spell == SPELL_ICE_FORM
+            || spell == SPELL_OZOCUBUS_ARMOUR
+            || spell == SPELL_LEDAS_LIQUEFACTION))
+    {
+        return true;
+    }
+
+    if (you.species == SP_LAVA_ORC
+        && (spell == SPELL_STONESKIN
+            || spell == SPELL_OZOCUBUS_ARMOUR))
+    {
+        return true;
+    }
+#endif
+
+    if (temp)
     {
         if (you.duration[DUR_CONF] > 0
             || !enough_mp(spell_mana(spell), true, false)
@@ -1107,7 +1148,6 @@ bool spell_is_useless(spell_type spell, bool transient)
             case SPELL_STATUE_FORM: // Stony self is too melty
             // Too hot for these ice spells:
             case SPELL_ICE_FORM:
-            case SPELL_OZOCUBUS_ARMOUR:
             case SPELL_CONDENSATION_SHIELD:
                 return true;
             default:
@@ -1119,82 +1159,97 @@ bool spell_is_useless(spell_type spell, bool transient)
 
     switch (spell)
     {
-    case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
-    case SPELL_TELEPORT_SELF:
-        if (you.no_tele(false, false, spell != SPELL_TELEPORT_SELF))
-            return true;
-        break;
-    case SPELL_SWIFTNESS:
-        if (transient && you.is_stationary())
-            return true;
-        // looking at player_movement_speed, this should be correct ~DMB
-        if (player_movement_speed() <= 6)
-            return true;
-        break;
-    case SPELL_FLY:
-        if (transient && you.form == TRAN_TREE)
-            return true;
-        if (you.racial_permanent_flight())
-            return true;
-        if (transient && you.permanent_flight())
-            return true;
-        break;
-    case SPELL_INVISIBILITY:
-        if (transient && you.backlit())
-            return true;
-        break;
     case SPELL_CONTROL_TELEPORT:
-        // Can be cast in advance in most places with -cTele,
-        // but useless once the orb is picked up.
         if (player_has_orb())
             return true;
-        break;
+        // fallthrough to blink/cblink
+    case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
+        return you.species == SP_FORMICID
+               || temp && you.no_tele(false, false, true);
+    case SPELL_SWIFTNESS:
+        return you.species == SP_SPRIGGAN // too fast already to get benefit
+                || temp
+                    && (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED
+                        || you.is_stationary());
+    case SPELL_FLY:
+        return you.racial_permanent_flight()
+               || temp && (you.form == TRAN_TREE
+                           || you.permanent_flight());
+    case SPELL_INVISIBILITY:
+        return temp && you.backlit();
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
-        if (transient && you.haloed())
-            return true;
-        if (in_good_standing(GOD_SHINING_ONE))
-            return true;
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_INSULATION:
-        if (player_res_electricity(false, transient, transient))
-            return true;
-        break;
-#endif
+        return temp && (you.haloed() || in_good_standing(GOD_SHINING_ONE));
     case SPELL_REPEL_MISSILES:
-        if (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-            || you.scan_artefacts(ARTP_RMSL, true))
-        {
-            return true;
-        }
-        break;
+        return temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                        || you.scan_artefacts(ARTP_RMSL, true));
 
-#if TAG_MAJOR_VERSION == 34
     case SPELL_STONESKIN:
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC)
             return true;
-        break;
+        // fallthrough to other transforms
 #endif
+    case SPELL_BEASTLY_APPENDAGE:
+    case SPELL_BLADE_HANDS:
+    case SPELL_DRAGON_FORM:
+    case SPELL_ICE_FORM:
+    case SPELL_SPIDER_FORM:
+    case SPELL_STATUE_FORM:
+        // Allowed for vampires (depending on hunger), but not other undead.
+        return you.undead_state(temp) == US_UNDEAD
+               || you.undead_state(temp) == US_HUNGRY_DEAD
+               || temp && you.is_lifeless_undead();
+        break;
+
+    case SPELL_INTOXICATE:
+        // Only prohibited for liches and mummies.
+        return you.undead_state(temp) == US_UNDEAD;
+    case SPELL_REGENERATION:
+        return you.undead_state(temp) == US_UNDEAD
+               || you.species == SP_DEEP_DWARF;
+
+    case SPELL_PORTAL_PROJECTILE:
+    case SPELL_WARP_BRAND:
+    case SPELL_EXCRUCIATING_WOUNDS:
+    case SPELL_SURE_BLADE:
+    case SPELL_SPECTRAL_WEAPON:
+        return you.species == SP_FELID;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (!you.stand_on_solid_ground()
-            || you.duration[DUR_LIQUEFYING]
-            || liquefied(you.pos()))
-        {
-            return true;
-        }
-        break;
+        return temp && (!you.stand_on_solid_ground()
+                        || you.duration[DUR_LIQUEFYING]
+                        || liquefied(you.pos()));
 
     case SPELL_DELAYED_FIREBALL:
-        return transient && you.attribute[ATTR_DELAYED_FIREBALL];
+        return temp && you.attribute[ATTR_DELAYED_FIREBALL];
+
+    case SPELL_BORGNJORS_REVIVIFICATION:
+    case SPELL_DEATHS_DOOR:
+        // Prohibited to all undead.
+        return you.undead_state(temp);
+    case SPELL_NECROMUTATION:
+        // only prohibted to actual undead, not lichformed players
+        return you.undead_state(false);
+
+    case SPELL_CURE_POISON:
+        // no good for poison-immune species (ghoul, mummy, garg)
+        // XXX: call player_res_poison(false, temp, temp) (once that's fixed)
+        return you.undead_state(temp) == US_UNDEAD
+                || you.undead_state(temp) == US_HUNGRY_DEAD
+                || you.species == SP_GARGOYLE;
+
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        // XXX: write player_can_bleed(bool temp) & use that
+        return you.species == SP_GARGOYLE
+            || you.species == SP_GHOUL
+            || you.species == SP_MUMMY
+            || (temp && !form_can_bleed(you.form));
 
     default:
-        break; // quash unhandled constants warnings
+        return false;
     }
-
-    return false;
 }
 
 /**
