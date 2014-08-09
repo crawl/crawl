@@ -1122,11 +1122,11 @@ snack like you with those tentacles.
 Spectral Weapon spell
 
 This spell draws out the spirit within a wielded weapon to fight for you, with
-its power dependent on your skill with said weapon. Never striking on its own,
-it only attacks when you do. You can only ever have one spectral weapon at a
-time.
+its power dependent on your skill with said weapon. It only attacks when you
+do, and its kills count as your own.
 
-Kills by a spectral weapon count as your own when singing a Song of Slaying.
+If the weapon is damaged, part of the injury will be echoed on your own body.
+You can only ever have one spectral weapon at a time.
 
 Certain powerful named artefacts possess too strong a spirit for this spell to
 be able to draw them out.
