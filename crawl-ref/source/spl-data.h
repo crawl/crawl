@@ -1041,7 +1041,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUBLIMATION_OF_BLOOD, "Sublimation of Blood",
      SPTYP_NECROMANCY,
-     SPFLAG_CORPSE_VIOLATING,
+     SPFLAG_NONE,
      2,
      200,
      -1, -1,
