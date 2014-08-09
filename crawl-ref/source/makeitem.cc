@@ -2643,6 +2643,7 @@ void squash_plusses(int item_slot)
     item.plus    = 0;
     item.plus2   = 0;
     item.special = 0;
+    set_equip_desc(item, ISFLAG_NO_DESC);
 }
 
 /**
