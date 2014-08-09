@@ -629,6 +629,9 @@ bool eat_food(int slot)
         }
     }
 
+    if (you.species == SP_VAMPIRE)
+        mpr("There's nothing here to drain!");
+
     return prompt_eat_inventory_item(slot);
 }
 
