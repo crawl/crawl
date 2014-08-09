@@ -251,8 +251,7 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
              && (can_bottle_blood_from_corpse(corpse.mon_type)
-                 || mons_has_blood(corpse.mon_type) && !is_bad_food(corpse))
-             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+                 || mons_has_blood(corpse.mon_type) && !is_bad_food(corpse)))
     {
         bool can_bottle = can_bottle_blood_from_corpse(corpse.mon_type);
         const string msg = make_stringf("You could drain this corpse's blood with <w>%s</w> instead%s. Continue anyway?",
