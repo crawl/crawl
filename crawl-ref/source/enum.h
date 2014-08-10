@@ -2833,7 +2833,7 @@ enum monster_type                      // menv[].type
     MONS_ICE_DEVIL,
     MONS_BLUE_DEVIL,
     MONS_HELL_BEAST,
-    MONS_IRON_DEVIL,
+    MONS_RUST_DEVIL,
     MONS_EXECUTIONER,
     MONS_GREEN_DEATH,
     MONS_BLIZZARD_DEMON,

@@ -63,7 +63,7 @@ function base_monster_setup(e)
            vampire knight / vampire mage / large abomination /\
            spriggan druid / spriggan rider / death cob /\
            hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
-           chaos spawn / ice devil / sun demon / iron devil /\
+           chaos spawn / ice devil / sun demon / rust devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = fire dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            ugly thing band w:5 / sphinx / iron troll /\
@@ -137,7 +137,7 @@ function base_monster_setup(e)
            vampire mage band")
   e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
            red devil / sixfirhy / chaos spawn / ice devil / sun demon /\
-           iron devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
+           rust devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
            balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater /\
            lorocyproca")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\

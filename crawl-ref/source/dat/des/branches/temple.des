@@ -283,7 +283,7 @@ SUBST:  . = .:900 3:30
 SUBST:  ' = .:400 3:30
 SUBST:  ! = .:100 3:30
 SUBST:  ? = .:50  3:30 G:5 T:10 U:1 V:4
-MONS:   angel, iron devil, plant
+MONS:   angel, rust devil, plant
 KFEAT:  O = enter_temple
 MAP
             ............................xxxxxxxx

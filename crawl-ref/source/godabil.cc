@@ -4392,7 +4392,7 @@ bribability mons_bribability[] =
 
     // Demons
     { MONS_IRON_IMP,        BRANCH_DIS, 1 },
-    { MONS_IRON_DEVIL,      BRANCH_DIS, 2 },
+    { MONS_RUST_DEVIL,      BRANCH_DIS, 2 },
     { MONS_HELL_SENTINEL,   BRANCH_DIS, 5 },
     { MONS_CRIMSON_IMP,     BRANCH_GEHENNA, 1 },
     { MONS_RED_DEVIL,       BRANCH_GEHENNA, 2 },

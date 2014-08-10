@@ -1879,8 +1879,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_TORMENTOR;
     case MONS_BLUE_DEVIL:
         return TILEP_MONS_BLUE_DEVIL;
-    case MONS_IRON_DEVIL:
-        return TILEP_MONS_IRON_DEVIL;
+    case MONS_RUST_DEVIL:
+        return TILEP_MONS_RUST_DEVIL;
     case MONS_NEQOXEC:
         return TILEP_MONS_NEQOXEC;
     case MONS_ORANGE_DEMON:

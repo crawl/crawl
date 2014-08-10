@@ -119,7 +119,7 @@ NAME: grunt_dis_stairs_iron_hall
 TAGS: transparent patrolling
 MONS: iron dragon / quicksilver dragon, reaper w:7 / tormentor w:6
 MONS: iron troll
-MONS: iron devil / nothing, iron imp / nothing
+MONS: rust devil / nothing, iron imp / nothing
 {{
     dgn.persist.grunt_iron_hall_animated = false
     local trap_marker = TriggerableFunction:new {
@@ -187,7 +187,7 @@ KMONS:   AB = dancing weapon ; great sword good_item | battleaxe good_item | \
 KMONS:   CD = war gargoyle
 KMONS:   E = lich
 KMONS:   F = executioner
-KMONS:   ! = iron devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15
+KMONS:   ! = rust devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15
 KMONS:   ? = patrolling iron imp
 : dgn.delayed_decay(_G, '%', 'human corpse / human skeleton, \
 :                             human corpse / human skeleton')
@@ -250,7 +250,7 @@ ORIENT:  float
 MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
          patrolling executioner
 MONS:    patrolling hell sentinel
-MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
+MONS:    rust devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
          iron dragon zombie w:5 / iron troll skeleton w:5 / \
          iron troll zombie w:5 / hell knight w:15
 MONS:    hellion / tormentor / reaper / ancient champion / \
@@ -578,7 +578,7 @@ TAGS:    transparent no_pool_fixup layout_type_city layout_type_passages
 DEPTH:   Dis, !Dis:$
 ORIENT:  float
 MONS:    skeletal warrior / vampire w:6 / wight w:2          / \
-         zombie / skeleton / hell hound / iron devil w:14    / \
+         zombie / skeleton / hell hound / rust devil w:14    / \
          red devil / blue devil / sun demon w:6              / \
          ice devil w:6 / hellwing / soul eater w:6
 MONS:    reaper / hellion / tormentor / executioner w:2      / \
@@ -684,7 +684,7 @@ ENDMAP
 
 NAME:    dis_old
 MONS:    patrolling Dispater, brimstone fiend, Ice Fiend
-MONS:    iron devil, war gargoyle, iron dragon
+MONS:    rust devil, war gargoyle, iron dragon
 KMONS:   7 = hell sentinel
 KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
@@ -726,7 +726,7 @@ ENDMAP
 
 NAME:    dis_mu
 KFEAT:   o = granite_statue
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, rust devil
 MONS:    war gargoyle, iron dragon, iron troll
 KMONS:   8 = iron golem
 KMONS:   9 = hell sentinel
@@ -784,7 +784,7 @@ ENDMAP
 
 NAME:   dis_grunt
 MONS:   patrolling Dispater, Hell Sentinel, iron dragon
-MONS:   iron devil / iron imp w:20
+MONS:   rust devil / iron imp w:20
 MONS:   iron troll, quicksilver dragon, cacodemon
 NSUBST: G = 4:8 / *:G
 TILE:   G = dngn_statue_iron_golem
@@ -1051,7 +1051,7 @@ ENDMAP
 NAME:    dis_hangedman
 TAGS:    no_monster_gen
 ORIENT:  encompass
-MONS:    iron devil w:40 / skeletal warrior
+MONS:    rust devil w:40 / skeletal warrior
 MONS:    war gargoyle, brimstone fiend, ice fiend, hell sentinel
 MONS:    patrolling iron dragon w:15 / patrolling quicksilver dragon
 MONS:    patrolling Dispater

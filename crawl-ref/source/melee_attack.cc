@@ -3384,6 +3384,10 @@ void melee_attack::mons_apply_attack_flavour()
         splash_defender_with_acid(3);
         break;
 
+    case AF_CORRODE:
+        corrode_actor(defender, atk_name(DESC_THE).c_str());
+        break;
+
     case AF_DISTORT:
         distortion_affects_defender();
         break;

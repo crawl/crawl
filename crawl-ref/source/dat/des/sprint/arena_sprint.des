@@ -258,7 +258,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:20 / w:5 queen bee",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",
-                "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 /\
+                "w:7 blue devil / rust devil w:5 / orange demon / red devil w:5 /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
@@ -266,7 +266,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
-                    w:15 iron devil / w:15 iron imp",
+                    w:15 rust devil / w:15 iron imp",
                 "w:20 ice beast / w:20 simulacrum / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
@@ -308,7 +308,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
                 "earth elemental w:15 / gargoyle w:5 / boulder beetle /\
-                    iron devil / iron imp / w:5 iron troll",
+                    rust devil / iron imp / w:5 iron troll",
                 "ice beast / ogre simulacrum / water elemental",
                 "wraith w:20 / w:5 eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
@@ -353,7 +353,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
                     insubstantial wisp",
                 "earth elemental w:20 / boulder beetle /\
-                    iron devil / w:5 iron troll / w:1 roxanne /\
+                    rust devil / w:5 iron troll / w:1 roxanne /\
                     w:2 iron dragon / w:3 iron elemental",
                 "ice beast / hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental",
@@ -406,7 +406,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "storm dragon / air elemental / w:5 wind drake / spriggan air mage /\
                     insubstantial wisp / w:3 titan / w:1 nikola",
                 "earth elemental / w:5 iron golem / stone giant /\
-                    iron devil / w:5 iron troll / w:1 the iron giant /\
+                    rust devil / w:5 iron troll / w:1 the iron giant /\
                     w:2 iron dragon / w:3 iron elemental / w:2 quicksilver dragon",
                 "hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental /\
