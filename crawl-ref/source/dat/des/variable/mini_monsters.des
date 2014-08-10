@@ -2186,7 +2186,7 @@ ENDMAP
 
 NAME:   minmay_metal_thing
 DEPTH:  Depths
-MONS:   iron dragon, iron devil
+MONS:   iron dragon, rust devil
 KPROP:  .1$| = no_rtele_into
 NSUBST: ? = 1:+ / *:v
 MAP
@@ -5663,7 +5663,7 @@ SUBST:   ~ = G
 FTILE:   F = floor_crystal_squares
 COLOUR:  F = lightmagenta
 : elseif you.branch() == "Dis" then
-KMONS:   9 = ynoxinul / iron devil w:5 / vampire knight w:5 / \
+KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
              phantasmal warrior / skeletal warrior ; mundane arbalest . \
              mundane bolt . mace good_item
 KMONS:   8 = war gargoyle / iron dragon /  \
@@ -5983,7 +5983,7 @@ MONS:   silver statue
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
-MONS:   blue devil / iron devil / orange demon / red devil / hellwing / \
+MONS:   blue devil / rust devil / orange demon / red devil / hellwing / \
         sixfirhy
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb

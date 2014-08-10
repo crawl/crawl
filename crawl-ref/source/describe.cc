@@ -3146,6 +3146,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
     case AF_DROWN:           return "deal drowning damage";
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
+    case AF_CORRODE:         return "corrode armour";
     default:                 return "";
     }
 }

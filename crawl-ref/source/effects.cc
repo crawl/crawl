@@ -2856,7 +2856,7 @@ void recharge_rods(int aut, bool level_only)
 /**
  * Applies a temporary corrosion debuff to an actor.
  */
-void corrode_actor(actor *act)
+void corrode_actor(actor *act, const char* corrosion_source)
 {
     // Don't corrode spectral weapons.
     if (act->is_monster()
@@ -2872,11 +2872,14 @@ void corrode_actor(actor *act)
         return;
     }
 
+    const string csrc = uppercase_first(corrosion_source);
+
     if (act->is_player())
     {
         // always increase duration, but...
         you.increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
-                              "The acid corrodes your equipment!");
+                              make_stringf("%s corrodes your equipment!",
+                                           csrc.c_str()).c_str());
 
         // the more corrosion you already have, the lower the odds of more
         const int prev_corr = you.props["corrosion_amount"].get_int();
@@ -2896,12 +2899,14 @@ void corrode_actor(actor *act)
     {
         if (act->type == MONS_DANCING_WEAPON)
         {
-            mprf("The acid corrodes %s!",
+            mprf("%s corrodes %s!",
+                 csrc.c_str(),
                  act->name(DESC_THE).c_str());
         }
         else
         {
-            mprf("The acid corrodes %s equipment!",
+            mprf("%s corrodes %s equipment!",
+                 csrc.c_str(),
                  apostrophise(act->name(DESC_THE)).c_str());
         }
     }

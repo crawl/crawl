@@ -1922,7 +1922,7 @@ MARKER:     h = lua:fog_machine { \
 KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
 KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
-            iron devil w:5 / ynoxinul / sun demon
+            rust devil w:5 / ynoxinul / sun demon
 KMONS:      4 = kobold demonologist
 KMONS:      5 = deep elf demonologist
 KMONS:      6 = balrug / cacodemon / blizzard demon / hellion

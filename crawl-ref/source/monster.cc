@@ -368,7 +368,7 @@ int monster::body_weight(bool /*base*/) const
             weight += 450;
             break;
 
-        case MONS_IRON_DEVIL:
+        case MONS_RUST_DEVIL:
             weight += 550;
             break;
 

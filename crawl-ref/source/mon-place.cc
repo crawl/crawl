@@ -3978,7 +3978,7 @@ monster_type summon_any_demon(monster_type dct)
             // tier 4
             return random_choose(
                 MONS_BLUE_DEVIL,
-                MONS_IRON_DEVIL,
+                MONS_RUST_DEVIL,
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
                 MONS_SIXFIRHY,

@@ -316,7 +316,7 @@ chaos_spawn3
 chaos_spawn4
 chaos_spawn5
 hellion MONS_HELLION
-iron_devil MONS_IRON_DEVIL
+rust_devil MONS_RUST_DEVIL
 neqoxec MONS_NEQOXEC
 orange_demon MONS_ORANGE_DEMON
 shadow_demon MONS_SHADOW_DEMON

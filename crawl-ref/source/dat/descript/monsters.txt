@@ -1489,11 +1489,6 @@ insubstantial wisp
 A thin wisp of floating gas, flickering, disappearing and reforming in a
 disconcertingly random fashion.
 %%%%
-iron devil
-
-A hideous humanoid figure with metal skin. While it lacks magical attacks and
-is slow of foot, it makes up for these failings with brute strength.
-%%%%
 iron dragon
 
 A very heavy, slow and apparently flightless dragon. It is named for its
@@ -2034,6 +2029,11 @@ the royal jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
+%%%%
+rust devil
+
+A hideous humanoid figure with rust-spotted metal skin. Its touch causes armour
+and weapons to rust and decay, crumbling into uselessness.
 %%%%
 salamander
 

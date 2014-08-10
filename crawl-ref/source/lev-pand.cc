@@ -74,7 +74,7 @@ void init_pandemonium()
                             20938, MONS_ICE_DEVIL,
                             20938, MONS_BLUE_DEVIL,
                             20938, MONS_HELL_BEAST,
-                            20938, MONS_IRON_DEVIL,
+                            20938, MONS_RUST_DEVIL,
                                 0);
 
         // The last three slots have a good chance of big badasses.

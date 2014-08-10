@@ -2561,7 +2561,7 @@ KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
 KMONS: C = skeletal warrior / bone dragon / vampire / lich w:5
 KMONS: T = mummy priest w:5 / guardian mummy / sphinx / mummy / reaper
 KMONS: H = balrug w:5 / blizzard demon w:5 / shadow demon w:5 / \
-           hell beast w:5 / sun demon / ice devil / iron devil / soul eater / \
+           hell beast w:5 / sun demon / ice devil / rust devil / soul eater / \
            hell knight w:5
 KMONS: D = giant newt / kobold / hobgoblin w:5 / goblin / adder
 MAP
@@ -3337,7 +3337,7 @@ DEPTH:   D:6-10
 ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST:   X=x, Y:x.
-MONS:    ogre, iron devil, nothing
+MONS:    ogre, rust devil, nothing
 ITEM:    potion of heal wounds / potion of haste / potion of berserk rage /\
          scroll of blinking
 MAP

@@ -1502,14 +1502,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                0);
         break;
 
-        case MONS_IRON_DEVIL:
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type = random_choose_weighted(1, WPN_MORNINGSTAR,
-                                                   1, WPN_DIRE_FLAIL,
-                                                   2, WPN_BATTLEAXE,
-                                                   1, WPN_GREAT_SWORD,
-                                                   0);
-
     default:
         break;
     }

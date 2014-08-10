@@ -559,7 +559,7 @@ NAME: grunt_profane_temple_dis
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = iron devil
+KMONS: 4 = rust devil
 KMONS: 5 = skeletal warrior / iron troll w:1
 KMONS: 6 = iron dragon / war gargoyle
 KFEAT: A = stone_arch
