@@ -1088,29 +1088,17 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         // Staves
         case WPN_QUARTERSTAFF:
-            if (one_chance_in(30))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(30))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(30))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(10))
-                rc = SPWPN_SPEED;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VORPAL;
-
-            if (one_chance_in(10))
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(6))
-                rc = SPWPN_PROTECTION;
+                                  // Total weight 10,000
+        rc = random_choose_weighted(5271, rc,
+                                    1666, SPWPN_PROTECTION,
+                                     833, SPWPN_DRAINING,
+                                     750, SPWPN_VORPAL,
+                                     675, SPWPN_SPEED,
+                                     243, SPWPN_DISTORTION,
+                                     194, SPWPN_PAIN,
+                                     187, SPWPN_HOLY_WRATH,
+                                     181, SPWPN_ANTIMAGIC,
+                                       0);
             break;
 
         case WPN_LAJATANG:
