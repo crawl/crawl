@@ -275,6 +275,27 @@ bool Form::res_sticky_flame() const
 
 
 /**
+ * Does this form enable flight?
+ *
+ * @return Whether this form allows flight for characters which don't already
+ *         have access to it.
+ */
+bool Form::enables_flight() const
+{
+    return can_fly == FC_ENABLE;
+}
+
+/**
+ * Does this form disable flight?
+ *
+ * @return Whether flight is always impossible while in this form.
+ */
+bool Form::forbids_flight() const
+{
+    return can_fly == FC_FORBID;
+}
+
+/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -282,8 +303,8 @@ bool Form::res_sticky_flame() const
  */
 bool Form::player_can_fly() const
 {
-    return can_fly != FC_FORBID
-           && (can_fly == FC_ENABLE
+    return !forbids_flight()
+           && (enables_flight()
                || you.racial_permanent_flight() && you.permanent_flight());
 }
 
@@ -1417,7 +1438,7 @@ int form_hp_mod()
 
 static bool _flying_in_new_form(transformation_type which_trans)
 {
-    if (which_trans == TRAN_TREE)
+    if (get_form(which_trans)->forbids_flight())
         return false;
 
     // If our flight is uncancellable (or tenguish) then it's not from evoking

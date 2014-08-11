@@ -104,7 +104,7 @@ static void _set_tornado_durations(int powc)
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
-    if (you.form != TRAN_TREE)
+    if (!get_form()->forbids_flight())
     {
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
@@ -138,7 +138,7 @@ spret_type cast_tornado(int powc, bool fail)
     fail_check();
 
     mprf("A great vortex of raging winds %s.",
-         (you.airborne() || you.form == TRAN_TREE) ?
+         (you.airborne() || get_form()->forbids_flight()) ?
          "appears around you" : "appears and lifts you up");
 
     if (you.fishtail)
@@ -314,7 +314,7 @@ void tornado_damage(actor *caster, int dur)
                     // really complex.  Let's not go there.
                     continue;
                 }
-                if (victim->is_player() && you.form == TRAN_TREE)
+                if (victim->is_player() && get_form()->forbids_flight())
                     continue;
 
                 leda = victim->liquefied_ground()

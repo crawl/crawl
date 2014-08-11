@@ -109,6 +109,9 @@ public:
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
 
+    bool enables_flight() const;
+    bool forbids_flight() const;
+
     bool player_can_fly() const;
     bool player_can_swim() const;
 
