@@ -569,8 +569,7 @@ kills they make, so you get less). You can command your allies using the 't'
 key, which lets you shout to attract them or tell them who to attack, or else
 tell them to stay where they are or to follow you again. You can also shout to
 get the attention of all monsters in range if, for some reason, you want to do
-that. Your allied monsters may or may not pick up items from the ground - you
-can set their behaviour with the 'Ctrl-T' command.
+that.
 
 Some special monsters are Uniques. You can identify a unique because he or she
 will have a name and personality. Many of these come up with very nasty ideas
@@ -580,8 +579,6 @@ meet one of them for the first time.
 Other, even rarer, obstacles are statues. A variety of statues can appear,
 ranging from harmless granite ones (who still often signify something of
 interest) to really dreadful ones. Be alert whenever seeing such a statue.
-Some (but not all) statues can be instantly destroyed by using a wand of
-disintegration; you can also bash statues into pieces by brute force.
 
 When playing Crawl, you will undoubtedly want to develop a feeling for the
 different monster types. For example, some monsters leave edible corpses and
@@ -772,9 +769,7 @@ lowers your evasion if you do not have sufficient skill, and you obviously
 cannot wield a two-handed weapon while wearing a shield. Shields are most
 effective on the first attack on you each turn and become less useful on
 every one after that. There are three types: bucklers, shields, and large
-shields. While it is possible to use bows or crossbows while wearing a shield,
-you'll be much less effective at doing so. Slings can be used with a shield
-without penalty, however.
+shields.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -805,9 +800,8 @@ the 'c' command. Being hungry helps you choke down the raw flesh. Cutting off th
 best parts will take some turns and produce a number of 'chunks' eventually.
 These can be eaten with the 'e' command as above.
 
-Some species are less fastidious about their food. Orcs, Ogres, Kobolds,
-Trolls and Ghouls care less (in different degrees) about the quality of the
-corpse. Kobolds, Trolls and Ghouls are happy to eat raw meat at any time.
+Kobolds, Trolls and Ghouls care less than others about the quality of the corpse,
+and are happy to eat raw meat at any time.
 
 Vampires are a special case. Members of this species can try to drink blood from
 a fresh corpse (use the 'e' command). Once they have reached experience level 6,
@@ -819,10 +813,10 @@ they can also bottle potions of blood from corpses. This is done using the
 
 Scrolls have many different magical spells inscribed on them, some good and some
 bad. One of the most useful scrolls is the scroll of identify, which will tell
-you the function of any item you have in your inventory; save these up for the
-more powerful and inscrutable magic items, such as rings or amulets, or for
-items that are dangerous to use when unidentified, such as potions. You can read
-scrolls (and by doing so invoke their magic) with the 'r' command.
+you the function of any item you have in your inventory; you might want to save
+these up for items that are dangerous or wasteful to use when unidentified, such
+as potions or other scrolls. You can read scrolls (and by doing so invoke their
+magic) with the 'r' command.
 
 ! Magical Potions
 ========================================
@@ -932,10 +926,6 @@ $ Gold
 
 Gold can be used to buy items should you run across shops. There are also a
 few more esoteric uses for gold.
-
-Whenever you pick up gold, your total wealth is shown as well. Should you want
-to have a glance at your finances at some other opportunity, pressing '$' (or
-'%') allows you to do so.
 
 Artefacts
 ========================================
@@ -1066,13 +1056,7 @@ of '.', Enter, etc. - except if you want to heal or haste someone else. If you
 target yourself while firing something harmful (which can be sensible at times),
 you will be asked for confirmation.
 
-Finally, there are some more targeting related commands:
-
-- '(' and ')' allow to change the ammunition. This is useful when you have
-  several types of appropriate ammunition, say poisoned needles and curare
-  needles. Your last usage will be remembered. Note that you can use '(' for
-  changing the quiver ammunition even outside of targeting.
-- The ':' key allows you to hide the path of your spell/wand/missile.
+Finally, the ':' key allows you to hide the path of your spell/wand/missile.
 
 ****************************************
 J. Religion
@@ -2222,7 +2206,7 @@ o
   Auto-explore. Setting the option explore_greedy to true makes auto-explore run
   to interesting items (those that get picked up automatically) or piles
   (checking the contents). Autoexploration will open doors on its own except if
-  you set easy_open to false.
+  you set travel_open_doors to false.
 
 G or Ctrl-G
   Interlevel travel (to arbitrary dungeon levels or waypoints). Remembers old
@@ -2249,8 +2233,7 @@ Dungeon interaction
 ----------------------------------------
 
 O
-  Open door. This is usually done automatically by walking into the door, unless
-  you set the option easy_open to false.
+  Open door. This is also done automatically by walking into the door.
 
 C
   Close door.
@@ -2792,38 +2775,65 @@ Engorged
   You can't eat any more for now.
 
 Fast
-  All of your actions are faster (this can cause magic contamination).
+  All of your actions are 50% faster. This causes magical contamination
+  over time, and may cause dangerous levels of contamination if you were
+  already contaminated before gaining this status.
 
 Invis
-  You are invisible. This can cause glowing if used too much.
+  You are invisible. Most enemies will be unable to see you &amp; will
+  suffer penalties to hit, though they may be able to guess at your
+  general location. Invis causes magical contamination over time, and
+  may cause dangerous levels of contamination if you were already
+  contaminated before gaining this status. If this effect is greyed out,
+  it is active (and causing contamination) but ineffective for some
+  reason (e.g. you are glowing, lit an angel's halo, etc).
 
 Tele
   You are about to teleport, i.e. feeling "unstable". If you are about to
-  teleport, another teleport (by any source) will cancel it.
+  teleport, another effect that applies Tele (a scroll, wand, etc) will
+  cancel it.
 
 cTele
   The next translocation you make will be semi-controlled (if a blink) or
   fully controlled (if a teleport). Beware that even a controlled teleport is
-  not totally reliable.
+  not totally reliable; it is likely to land you adjacent to your chosen
+  destination, or, if that would place you inside a wall, somewhere completely
+  random.
 
 Fly
-  You fly above the ground, and are able to cross water and lava. Most types of
-  flight will time out - be sure you're not above deadly liquids when that
-  happens.
+  You fly above the ground, and are able to cross water and lava, or fight
+  above shallow water without penalties. Most types of flight will time out
+  - be sure you're not above deadly liquids when that happens!
+
+Agi
+  You are unnaturally agile. This provides bonuses to your dexterity, evasion,
+  and stealth.
+
+Brill
+  You are unnaturally smart. This provides bonuses to your intelligence,
+  spellcasting success, &amp; spellpower.
+
+Might
+  You are unnaturally strong. This provides bonuses to your strength &amp; damage
+  in physical combat.
 
 Regen
   You regenerate hit points at an unnaturally fast rate. This is only shown for
   temporary regeneration.
 
 RMsl
-  You repel missiles, i.e. there's a good chance to evade them.
+  You repel missiles, i.e. there's a good chance to evade them. This effect, if
+  provided by a spell, has a chance to expire with every projectile it repels;
+  it otherwise lasts indefinitely.
 
 DMsl
-  You deflect missiles, i.e. there's a great chance to evade them. Still, this
-  protection is not bulletproof.
+  You deflect missiles, i.e. there's a great chance to evade them. This effect,
+  if provided by a spell, has a chance to expire with every projectile it
+  deflects; it otherwise lasts indefinitely.
 
 Touch
-  Any monster you touch might become confused.
+  Your unarmed attacks no longer deal damage, but have a chance of confusing
+  monsters that they hit.
 
 MR
   You are more resistant to hostile enchantments.
@@ -2855,26 +2865,38 @@ Pois
   health will be partially recoloured to display the eventual poison damage that
   will be dealt. Cure with potions of curing or by waiting it out.
 
+Conf
+  You are confused. Actions may not work properly, or may be targeted in a
+  random direction. Spellcasting and scroll use are completely impossible.
+  Wait it out, or drink a potion of curing for immediate relief.
+
+Contam
+  You glow with mutagenic radiation. This can mutate you over time, usually with
+  a bad outcome. The colour indicates the severity: the first level (darkgrey)
+  is only a warning, and no mutation or loss of stealth will occur from it.
+
 Drain
   Your skills have been drained by negative energy, and are less effective.
   This status will not wear off by waiting, but will expire as you gain
   experience. This status has multiple levels, and you can see just how much you
   have been drained by looking at the skills screen.
 
-Conf
-  You are confused. Actions may not work properly, or may be targeted in a
-  random direction. Wait it out or drink a potion of curing for immediate cure.
-
 Breath
   Some abilities (like breath weapons or Zin's recite invocation) require you to
   catch your breath in between uses. These abilities cannot be re-used until the
   Breath status disappears.
 
-Slow
-  All actions are slowed. Note: ending berserking will slow you.
-
 Exh
-  You are too exhausted to use certain tiring abilities.
+  You are too exhausted to use certain tiring abilities; notably, Berserk.
+
+Slow
+  All your actions take 50% longer.
+
+Para
+  You are paralysed, and completely unable to act.
+
+Sleep
+  You are asleep, and completely unable to act. Attacks will wake you.
 
 Held
   You are held in a net or a spider web. You cannot move freely and will instead
@@ -2894,24 +2916,19 @@ Fear
   fear in you.
 
 -cTele
-  You may not gain the cTele status if you have this status.
+  You may not gain the cTele status if you have this status, and effects that
+  provide controlled blinking (e.g. the spell or scroll) are unreliable.
 
 -Tele
-  A monster is preventing you from teleporting at all.
+  Some effect is preventing you from teleporting or blinking.
 
 Mark
   Due to the effects of a trap or a spell, monsters will now hunt you down more
   precisely, and will be able to detect you even if you are not in their vision.
 
 Fire
-  You are covered with sticky fire. It will hurt you for a few turns, probably
-  burning scrolls in the process. Drop the most important ones! Taking a bath
-  should handily extinguish these flames.
-
-Contam
-  You glow with mutagenic radiation. This can mutate you over time, usually with
-  a bad outcome. The colour indicates the severity: the first level (darkgrey)
-  is only a warning, and no mutation or loss of stealth will occur from it.
+  You are covered with sticky fire, which causes damage over the next few turns.
+  Entering water will extinguish the flames.
 
 Corona
   You are surrounded by light; this ruins your stealth and makes you easier to
@@ -2933,8 +2950,30 @@ Rot
   these, once lost. The rotting status itself is cured with potions of curing
   or by waiting it out.
 
-\-MR
-  You are more vulnerable to hostile enchantments.
+Corr
+  Your equipment is covered with noxious acid! Both your effectiveness in
+  physical combat and defenses (AC) are reduced; the displayed number indicates
+  the former. After some time passes, the effect will disappear.
+
+Flay
+  You are covered in illusionary - but nonetheless deadly! - wounds. Destroying
+  the source of the illusion will restore the health that was 'flayed' away.
+
+Weak
+  Your physical attacks do less damage.
+
+Roots
+  You are held to the ground by animated roots. Your movement speed is slower,
+  your evasion is reduced, and you are unable to fly.
+
+Frozen
+  You are covered in ice, and your movement speed is reduced.
+
+Sap
+  Some demonic force is inhibiting your spellcasting; every spell that you cast
+  while this status is in effect will reduce your chances of casting more spells
+  successfuly. Casting stronger spells will reduce your success chances more than
+  casting weak spells will.
 
 Brainless, Clumsy, Collapse
   One of your attributes (Intelligence, Dexterity, or Strength, respectively)
