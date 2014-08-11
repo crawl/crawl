@@ -13,9 +13,9 @@
 
 enum form_capability
 {
-    DEFAULT,
-    ENABLE,
-    FORBID
+    FC_DEFAULT,
+    FC_ENABLE,
+    FC_FORBID
 };
 
 class FormAttackVerbs
