@@ -26,6 +26,21 @@ struct form_attack_verbs
     const char * const devastating;
 };
 
+enum duration_power_scaling
+{
+    PS_NONE,                // no bonus
+    PS_SINGLE,              // bonus based on rand2(power)
+    PS_ONE_AND_A_HALF,      // bonus based on r(power) + r(power/2)
+    PS_DOUBLE               // bonus based on r(power) + r(power)
+};
+
+struct form_duration
+{
+    const int base;
+    const duration_power_scaling scaling_type;
+    const int max;
+};
+
 class Form
 {
 public:
@@ -33,6 +48,7 @@ public:
          string _description,
          int _blocked_slots,
          int _resists,
+         form_duration _duration,
          int _str_mod, int _dex_mod,
          size_type _size, int _hp_mod, int _stealth_mod,
          int _spellcasting_penalty,
@@ -41,6 +57,7 @@ public:
          form_capability _can_fly, form_capability _can_swim,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
+    duration(_duration),
     str_mod(_str_mod), dex_mod(_dex_mod),
     blocked_slots(_blocked_slots), size(_size), hp_mod(_hp_mod),
     spellcasting_penalty(_spellcasting_penalty),
@@ -55,6 +72,8 @@ public:
 
     bool slot_available(int slot) const;
     bool can_wear_item(const item_def& item) const;
+
+    int get_duration(int pow) const;
 
     virtual monster_type get_equivalent_mons() const { return equivalent_mons; }
 
@@ -82,6 +101,8 @@ public:
 public:
     const string short_name;
     const string wiz_name;
+
+    const form_duration duration;
 
     const int str_mod;
     const int dex_mod;
