@@ -2440,7 +2440,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
         fail_check();
-        ASSERT(you.form != TRAN_TREE);
+        ASSERT(!get_form()->forbids_flight());
         if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
         {
             bool standing = !you.airborne();
