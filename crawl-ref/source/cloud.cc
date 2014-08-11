@@ -1022,24 +1022,23 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_MUTAGENIC:
-        if (coinflip())
+        if (player)
         {
-            if (player)
-            {
-                mpr("The mutagenic energy flows into you.");
-                // It's possible that you got trampled into the mutagenic cloud and it's not your fault...
-                contaminate_player(1000, false);
-                return true;
-            }
-            else if (mons->malmutate("mutagenic cloud"))
-            {
-                if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
-                    did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
-                return true;
-            }
-            return false;
+            mpr("The mutagenic energy flows into you.");
+            // It's possible that you got trampled into the mutagenic cloud
+            // and it's not your fault... so we'll say it's not intentional.
+            // (it's quite bad in any case, so players won't scum, probably.)
+            contaminate_player(1300 + random2(1250), false);
+            // min 2 turns to yellow, max 4
+            return true;
         }
-        break;
+        else if (coinflip() && mons->malmutate("mutagenic cloud"))
+        {
+            if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
+                did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
+            return true;
+        }
+        return false;
 
     case CLOUD_CHAOS:
         if (coinflip())

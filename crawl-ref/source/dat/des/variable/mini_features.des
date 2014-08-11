@@ -3648,10 +3648,6 @@ ccccccccccccccccccccccc
 ENDMAP
 
 # A poor man's Radiant Cavern (1KB)
-#
-# Without an amulet of rMut, in my tests, the cost was 4-6 bad
-# mutations -- certainly not worth most of the loot. With rMut,
-# it's still a gamble.
 NAME:  kilobyte_mutagenic_chamber
 DEPTH: Depths, Elf, Abyss
 TAGS:  ruin_abyss
