@@ -74,26 +74,14 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
+static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(NULL, NULL,
+                                                             NULL, NULL);
+static const FormAttackVerbs ANIMAL_VERBS = FormAttackVerbs("hit", "bite",
+                                                            "maul", "maul");
 
-// can't declare these inline, because c++
-// XXX: organize the non-generic ones better, somehow?
-const form_attack_verbs default_attacks = { NULL, NULL, NULL, NULL };
-const form_attack_verbs animal_attacks = { "hit", "bite", "maul", "maul" };
-const form_attack_verbs blade_attacks = {"hit", "slash", "slice", "shred"};
-const form_attack_verbs dragon_attacks = {"hit", "claw", "bite", "maul"};
-const form_attack_verbs tree_attacks = {"hit", "smack", "pummel", "thrash"};
-const form_attack_verbs wisp_attacks = {"touch", "hit", "engulf", "engulf"};
-const char* const fungus_verb = "release spores at";
-const form_attack_verbs fungus_attacks = {fungus_verb, fungus_verb,
-                                          fungus_verb, fungus_verb};
-
-// this would, again, be better inline (& with better names?)
-const form_duration no_duration = {0, PS_NONE, 0};
-const form_duration simple_duration = {20, PS_DOUBLE, 100};
-const form_duration bad_duration = {15, PS_ONE_AND_A_HALF, 100};
-const form_duration weak_scaling_duration = {10, PS_SINGLE, 100};
-const form_duration low_max_duration = {10, PS_DOUBLE, 60};
-const form_duration high_base_duration = {30, PS_DOUBLE, 100};
+static const FormDuration DEFAULT_DURATION = FormDuration(20, PS_DOUBLE, 100);
+static const FormDuration BAD_DURATION = FormDuration(15, PS_ONE_AND_A_HALF,
+                                                      100);
 
 /**
  * Is the given equipment slot available for use in this form?
@@ -140,14 +128,12 @@ bool Form::can_wear_item(const item_def& item) const
 }
 
 /**
- * Get the bonus to form duration implied by a given power & power scaling.
+ * Get the bonus to form duration granted for a given (spell)power.
  *
- * @param scaling_type      How to apply the power.
  * @param pow               The spellpower/equivalent of the form.
  * @return                  A bonus to form duration.
  */
-static int _get_duration_power_bonus(duration_power_scaling scaling_type,
-                                     int pow)
+int FormDuration::power_bonus(int pow) const
 {
     switch (scaling_type)
     {
@@ -173,9 +159,7 @@ static int _get_duration_power_bonus(duration_power_scaling scaling_type,
  */
 int Form::get_duration(int pow) const
 {
-    const int power_bonus = _get_duration_power_bonus(duration.scaling_type,
-                                                      pow);
-    return min(duration.base + power_bonus, duration.max);
+    return min(duration.base + duration.power_bonus(pow), duration.max);
 }
 
 /**
@@ -341,12 +325,12 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            MR_NO_FLAGS, // resists
-           no_duration, // duration
+           FormDuration(0, PS_NONE, 0), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -366,12 +350,12 @@ public:
            "a venomous arachnid creature.",  // description
            EQF_PHYSICAL,  // blocked slots
            MR_VUL_POISON, // resists
-           low_max_duration, // duration
+           FormDuration(10, PS_DOUBLE, 60), // duration
            0, 5,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
-           animal_attacks, // verbs used for uc
+           ANIMAL_VERBS, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_SPIDER)       // equivalent monster
     { };
@@ -385,12 +369,12 @@ public:
            "",  // description
            EQF_HANDS,  // blocked slots
            MR_NO_FLAGS, // resists
-           weak_scaling_duration, // duration
+           FormDuration(10, PS_SINGLE, 100), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            20,                 // spellcasting penalty
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
-           blade_attacks, // verbs used for uc
+           FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -456,12 +440,12 @@ public:
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
            MR_RES_ELEC | MR_RES_NEG, // resists - rrot implied by holiness
-           simple_duration, // duration
+           DEFAULT_DURATION, // duration
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_STATUE)       // equivalent monster
     { };
@@ -529,12 +513,12 @@ public:
            "a creature of crystalline ice.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3), // resists
-           high_base_duration, // duration
+           FormDuration(30, PS_DOUBLE, 100), // duration
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, ENABLE,     // can_fly, can_swim
            MONS_ICE_BEAST)       // equivalent monster
     { };
@@ -561,12 +545,12 @@ public:
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON, // resists - most handled in functions
-           simple_duration, // duration
+           DEFAULT_DURATION, // duration
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
-           dragon_attacks, // verbs used for uc
+           FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
@@ -632,12 +616,12 @@ public:
            "a lich.",  // description
            EQF_NONE,  // blocked slots
            MR_RES_COLD | mrd(MR_RES_NEG, 3), // resists - rp & rrot implied
-           simple_duration, // duration
+           DEFAULT_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_LICH)       // equivalent monster
     { };
@@ -670,12 +654,12 @@ public:
            "",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
-           simple_duration, // duration
+           DEFAULT_DURATION, // duration
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           animal_attacks, // verbs used for uc
+           ANIMAL_VERBS, // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
@@ -738,12 +722,12 @@ public:
            "a filthy swine.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           animal_attacks, // verbs used for uc
+           ANIMAL_VERBS, // verbs used for uc
            DEFAULT, FORBID,  // can_fly (false for most pigs), can_swim
            MONS_HOG)       // equivalent monster
     { };
@@ -757,12 +741,12 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            MR_NO_FLAGS, // resists
-           low_max_duration, // duration
+           FormDuration(10, PS_DOUBLE, 60), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
@@ -814,12 +798,12 @@ public:
            "a tree.",  // description
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
-           tree_attacks, // verbs used for uc
+           FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
            FORBID, FORBID,     // can_fly, can_swim
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
@@ -838,12 +822,12 @@ public:
            "a spiny porcupine.",  // description
            EQF_ALL,  // blocked slots
            MR_NO_FLAGS, // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           animal_attacks, // verbs used for uc
+           ANIMAL_VERBS, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PORCUPINE)       // equivalent monster
     { };
@@ -857,12 +841,12 @@ public:
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
            mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING | MR_RES_ACID, // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           wisp_attacks, // verbs used for uc
+           FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
            ENABLE, FORBID,     // can_fly, can_swim
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
@@ -882,12 +866,12 @@ public:
            "a lump of jelly.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_JELLY)       // equivalent monster
     { };
@@ -902,12 +886,12 @@ public:
            "a sentient fungus.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
-           bad_duration, // duration
+           BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
-           fungus_attacks, // verbs used for uc
+           FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
@@ -921,12 +905,12 @@ public:
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
            mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING, // resists
-           simple_duration, // duration
+           DEFAULT_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
-           default_attacks, // verbs used for uc
+           DEFAULT_VERBS, // verbs used for uc
            DEFAULT, FORBID,     // can_fly, can_swim
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };

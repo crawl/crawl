@@ -18,8 +18,15 @@ enum form_capability
     FORBID
 };
 
-struct form_attack_verbs
+class FormAttackVerbs
 {
+public:
+    FormAttackVerbs(const char *_weak, const char *_medium,
+                    const char *_strong, const char *_devastating) :
+    weak(_weak), medium(_medium), strong(_strong), devastating(_devastating)
+    { };
+
+public:
     const char * const weak;
     const char * const medium;
     const char * const strong;
@@ -34,8 +41,15 @@ enum duration_power_scaling
     PS_DOUBLE               // bonus based on r(power) + r(power)
 };
 
-struct form_duration
+class FormDuration
 {
+public:
+    FormDuration(int _base, duration_power_scaling _scaling_type, int _max) :
+    base(_base), scaling_type(_scaling_type), max(_max) { };
+
+    int power_bonus(int pow) const;
+
+public:
     const int base;
     const duration_power_scaling scaling_type;
     const int max;
@@ -48,12 +62,12 @@ public:
          string _description,
          int _blocked_slots,
          int _resists,
-         form_duration _duration,
+         FormDuration _duration,
          int _str_mod, int _dex_mod,
          size_type _size, int _hp_mod, int _stealth_mod,
          int _spellcasting_penalty,
          int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
-         form_attack_verbs _uc_attack_verbs,
+         FormAttackVerbs _uc_attack_verbs,
          form_capability _can_fly, form_capability _can_swim,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
@@ -102,7 +116,7 @@ public:
     const string short_name;
     const string wiz_name;
 
-    const form_duration duration;
+    const FormDuration duration;
 
     const int str_mod;
     const int dex_mod;
@@ -115,7 +129,7 @@ public:
 
     const int unarmed_hit_bonus;
     const int uc_colour;
-    const form_attack_verbs uc_attack_verbs;
+    const FormAttackVerbs uc_attack_verbs;
 
 protected:
     const string long_name;
