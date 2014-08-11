@@ -98,6 +98,7 @@ static void _wizard_change_species_to(species_type sp)
 
     species_type old_sp = you.species;
     you.species = sp;
+    you.species_name = species_name(sp);
     you.is_undead = get_undead_state(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
