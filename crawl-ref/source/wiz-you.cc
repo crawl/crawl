@@ -18,6 +18,7 @@
 #include "food.h"
 #include "godprayer.h"
 #include "godwrath.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -49,6 +50,34 @@ static void _swap_equip(equipment_type a, equipment_type b)
     bool tmp = you.melded[a];
     you.melded.set(a, you.melded[b]);
     you.melded.set(b, tmp);
+}
+
+static job_type _find_job(string job)
+{
+    string spec = lowercase_string(job);
+
+    job_type j = JOB_UNKNOWN;
+
+    for (int i = 0; i < NUM_JOBS; ++i)
+    {
+        const job_type ji = static_cast<job_type>(i);
+        const string name = lowercase_string(get_job_name(ji));
+
+        string::size_type pos = name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                j = ji;
+                break;
+            }
+            else
+                j = ji;
+        }
+    }
+
+    return j;
 }
 
 static species_type _find_species(string species)
@@ -229,6 +258,12 @@ static void _wizard_change_species_to(species_type sp)
     init_player_doll();
 #endif
     redraw_screen();
+}
+
+static void _wizard_change_job_to(job_type job)
+{
+    you.char_class = job;
+    you.class_name = get_job_name(job);
 }
 
 void wizard_change_species()
@@ -1162,7 +1197,7 @@ static bool _chardump_check_char(const vector<string> &tokens)
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
             _wizard_change_species_to(_find_species(race));
-            // XXX role
+            _wizard_change_job_to(_find_job(role));
             return true;
         }
     }
