@@ -363,9 +363,9 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
 
-bool decimal_chance(double percent)
+bool decimal_chance(double chance)
 {
-    return random_real() < percent;
+    return random_real() < chance;
 }
 
 // This is used when the front-end randomness is inconclusive.  There are
