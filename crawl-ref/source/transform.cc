@@ -87,6 +87,14 @@ const char* const fungus_verb = "release spores at";
 const form_attack_verbs fungus_attacks = {fungus_verb, fungus_verb,
                                           fungus_verb, fungus_verb};
 
+// this would, again, be better inline (& with better names?)
+const form_duration no_duration = {0, PS_NONE, 0};
+const form_duration simple_duration = {20, PS_DOUBLE, 100};
+const form_duration bad_duration = {15, PS_ONE_AND_A_HALF, 100};
+const form_duration weak_scaling_duration = {10, PS_SINGLE, 100};
+const form_duration low_max_duration = {10, PS_DOUBLE, 60};
+const form_duration high_base_duration = {30, PS_DOUBLE, 100};
+
 /**
  * Is the given equipment slot available for use in this form?
  *
@@ -129,6 +137,45 @@ bool Form::can_wear_item(const item_def& item) const
         return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
 
     return slot_available(get_armour_slot(item));
+}
+
+/**
+ * Get the bonus to form duration implied by a given power & power scaling.
+ *
+ * @param scaling_type      How to apply the power.
+ * @param pow               The spellpower/equivalent of the form.
+ * @return                  A bonus to form duration.
+ */
+static int _get_duration_power_bonus(duration_power_scaling scaling_type,
+                                     int pow)
+{
+    switch (scaling_type)
+    {
+        case PS_NONE:
+            return 0;
+        case PS_SINGLE:
+            return random2(pow);
+        case PS_ONE_AND_A_HALF:
+            return random2(pow) + random2(pow/2);
+        case PS_DOUBLE:
+            return random2(pow) + random2(pow);
+        default:
+            die("Unknown scaling type!");
+            return -1;
+    }
+}
+
+/**
+ * Get the duration for this form, when newly entered.
+ *
+ * @param pow   The power of the effect creating this form. (Spellpower, etc.)
+ * @return      The duration of the form. (XXX: in turns...?)
+ */
+int Form::get_duration(int pow) const
+{
+    const int power_bonus = _get_duration_power_bonus(duration.scaling_type,
+                                                      pow);
+    return min(duration.base + power_bonus, duration.max);
 }
 
 /**
@@ -294,6 +341,7 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            MR_NO_FLAGS, // resists
+           no_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -318,6 +366,7 @@ public:
            "a venomous arachnid creature.",  // description
            EQF_PHYSICAL,  // blocked slots
            MR_VUL_POISON, // resists
+           low_max_duration, // duration
            0, 5,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
@@ -336,6 +385,7 @@ public:
            "",  // description
            EQF_HANDS,  // blocked slots
            MR_NO_FLAGS, // resists
+           weak_scaling_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            20,                 // spellcasting penalty
@@ -405,7 +455,8 @@ public:
     : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
            "a stone statue.",  // description
            EQF_STATUE,  // blocked slots
-           MR_RES_ELEC | MR_RES_NEG | mrd(MR_RES_ROTTING, 3), // resists - implied by holiness
+           MR_RES_ELEC | MR_RES_NEG, // resists - rrot implied by holiness
+           simple_duration, // duration
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -478,6 +529,7 @@ public:
            "a creature of crystalline ice.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3), // resists
+           high_base_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -509,6 +561,7 @@ public:
            "a fearsome dragon!",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON, // resists - most handled in functions
+           simple_duration, // duration
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -579,6 +632,7 @@ public:
            "a lich.",  // description
            EQF_NONE,  // blocked slots
            MR_RES_COLD | mrd(MR_RES_NEG, 3), // resists - rp & rrot implied
+           simple_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -616,6 +670,7 @@ public:
            "",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
+           simple_duration, // duration
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
@@ -683,6 +738,7 @@ public:
            "a filthy swine.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -701,6 +757,7 @@ public:
            "",  // description
            EQF_NONE,  // blocked slots
            MR_NO_FLAGS, // resists
+           low_max_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -757,6 +814,7 @@ public:
            "a tree.",  // description
            EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -780,6 +838,7 @@ public:
            "a spiny porcupine.",  // description
            EQF_ALL,  // blocked slots
            MR_NO_FLAGS, // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -798,6 +857,7 @@ public:
            "an insubstantial wisp.",  // description
            EQF_ALL,  // blocked slots
            mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING | MR_RES_ACID, // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -822,6 +882,7 @@ public:
            "a lump of jelly.",  // description
            EQF_PHYSICAL | EQF_RINGS,  // blocked slots
            MR_NO_FLAGS, // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -841,6 +902,7 @@ public:
            "a sentient fungus.",  // description
            EQF_PHYSICAL | EQF_OCTO,  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
+           bad_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -859,6 +921,7 @@ public:
            "a swirling mass of dark shadows.",  // description
            EQF_NONE,  // blocked slots
            mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING, // resists
+           simple_duration, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
@@ -1557,35 +1620,7 @@ bool check_form_stat_safety(transformation_type new_form)
 
 static int _transform_duration(transformation_type which_trans, int pow)
 {
-    switch (which_trans)
-    {
-    case TRAN_BLADE_HANDS:
-        return min(10 + random2(pow), 100);
-    case TRAN_APPENDAGE:
-    case TRAN_SPIDER:
-        return min(10 + random2(pow) + random2(pow), 60);
-    case TRAN_STATUE:
-    case TRAN_DRAGON:
-    case TRAN_LICH:
-    case TRAN_SHADOW:
-    case TRAN_BAT:
-        return min(20 + random2(pow) + random2(pow), 100);
-    case TRAN_ICE_BEAST:
-        return min(30 + random2(pow) + random2(pow), 100);
-    case TRAN_FUNGUS:
-    case TRAN_PIG:
-    case TRAN_PORCUPINE:
-#if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:
-#endif
-    case TRAN_TREE:
-    case TRAN_WISP:
-        return min(15 + random2(pow) + random2(pow / 2), 100);
-    case TRAN_NONE:
-        return 0;
-    default:
-        die("unknown transformation: %d", which_trans);
-    }
+    return get_form(which_trans)->get_duration(pow);
 }
 
 static int _beastly_appendage_level(int appendage)
