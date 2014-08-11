@@ -282,8 +282,8 @@ bool Form::res_sticky_flame() const
  */
 bool Form::player_can_fly() const
 {
-    return can_fly != FORBID
-           && (can_fly == ENABLE
+    return can_fly != FC_FORBID
+           && (can_fly == FC_ENABLE
                || you.racial_permanent_flight() && you.permanent_flight());
 }
 
@@ -298,8 +298,8 @@ bool Form::player_can_swim() const
     const size_type player_size = size == SIZE_CHARACTER ?
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
-    return can_swim == ENABLE
-           || species_can_swim(you.species) && can_swim != FORBID
+    return can_swim == FC_ENABLE
+           || species_can_swim(you.species) && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 
@@ -331,7 +331,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -356,7 +356,7 @@ public:
            10,                 // spellcasting penalty
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -375,7 +375,7 @@ public:
            20,                 // spellcasting penalty
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
-           DEFAULT, DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -446,7 +446,7 @@ public:
            0,                 // spellcasting penalty
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_STATUE)       // equivalent monster
     { };
 
@@ -519,7 +519,7 @@ public:
            0,                 // spellcasting penalty
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, ENABLE,     // can_fly, can_swim
+           FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
            MONS_ICE_BEAST)       // equivalent monster
     { };
 
@@ -551,7 +551,7 @@ public:
            0,                 // spellcasting penalty
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
-           ENABLE, FORBID,     // can_fly, can_swim
+           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -622,7 +622,7 @@ public:
            0,                 // spellcasting penalty
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            MONS_LICH)       // equivalent monster
     { };
 
@@ -660,7 +660,7 @@ public:
            10,                 // spellcasting penalty
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
-           ENABLE, FORBID,     // can_fly, can_swim
+           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -728,7 +728,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
-           DEFAULT, FORBID,  // can_fly (false for most pigs), can_swim
+           FC_DEFAULT, FC_FORBID,  // can_fly (false for most pigs), can_swim
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -747,7 +747,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -804,7 +804,7 @@ public:
            0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
-           FORBID, FORBID,     // can_fly, can_swim
+           FC_FORBID, FC_FORBID,     // can_fly, can_swim
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
@@ -828,7 +828,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -847,7 +847,7 @@ public:
            0,                 // spellcasting penalty
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
-           ENABLE, FORBID,     // can_fly, can_swim
+           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
@@ -872,7 +872,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -892,7 +892,7 @@ public:
            0,                 // spellcasting penalty
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -911,7 +911,7 @@ public:
            0,                 // spellcasting penalty
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
-           DEFAULT, FORBID,     // can_fly, can_swim
+           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 
