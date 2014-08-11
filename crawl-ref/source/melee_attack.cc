@@ -1698,7 +1698,7 @@ void melee_attack::set_attack_verb()
 
     case -1: // unarmed
     {
-        const form_attack_verbs verbs = get_form(you.form)->uc_attack_verbs;
+        const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
         if (verbs.weak != NULL)
         {
             if (damage_to_display < HIT_WEAK)
