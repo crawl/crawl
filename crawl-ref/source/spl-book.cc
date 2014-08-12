@@ -508,7 +508,7 @@ int read_book(item_def &book, read_book_action_type action)
  */
 bool you_can_memorise(spell_type spell)
 {
-    return !spell_is_useless(spell, false);
+    return !spell_is_useless(spell, false, true);
 }
 
 bool cannot_use_spell_school(spell_type spell, bool evoked)

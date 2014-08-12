@@ -555,7 +555,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
 
     // Don't attempt to cast spells that will do nothing, or that the player
     // cannot memorise/cast.
-    if (spell_is_useless(spell))
+    if (spell_is_useless(spell, true, true))
         return XOM_DID_NOTHING;
 
     // Don't attempt to teleport the player if the teleportation will

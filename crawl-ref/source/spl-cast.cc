@@ -917,7 +917,7 @@ bool is_prevented_teleport(spell_type spell, bool quiet)
 
 bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
 {
-    msg = spell_uselessness_reason(spell);
+    msg = spell_uselessness_reason(spell, true, true, evoked);
     return msg != "";
 }
 
@@ -1000,28 +1000,6 @@ static bool _spellcasting_aborted(spell_type spell,
     if (!wiz_cast && spell_is_uncastable(spell, msg, evoked))
     {
         mprf("%s", msg.c_str());
-        return true;
-    }
-
-    if (is_prevented_teleport(spell, false))
-        return true;
-
-    if (spell == SPELL_MALIGN_GATEWAY && !can_cast_malign_gateway())
-    {
-        mpr("The dungeon can only cope with one malign gateway at a time!");
-        return true;
-    }
-
-    if (spell == SPELL_TORNADO
-        && (you.duration[DUR_TORNADO] || you.duration[DUR_TORNADO_COOLDOWN]))
-    {
-        mpr("You need to wait for the winds to calm down.");
-        return true;
-    }
-
-    if (spell == SPELL_SUMMON_FOREST && you.duration[DUR_FORESTED])
-    {
-        mpr("This spell is already ongoing.");
         return true;
     }
 
