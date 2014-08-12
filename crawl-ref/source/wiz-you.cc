@@ -1116,6 +1116,55 @@ static item_def _item_from_string(string s)
     ret.quantity = 1;
     item_colour(ret);
 
+    while (end < s.length())
+    {
+        size_t begin_brand = s.find_first_not_of("{(, ", end);
+        if (begin_brand == string::npos)
+            break;
+        size_t end_brand = s.find_first_of("}), ", begin_brand);
+        if (end_brand == begin_brand)
+            break;
+        else if (end_brand == string::npos)
+            end_brand = s.length();
+        string brand_name = s.substr(begin_brand, end_brand - begin_brand);
+
+        bool found = false;
+        switch (ret.base_type)
+        {
+        case OBJ_WEAPONS:
+            for (int i = SPWPN_NORMAL; i < NUM_SPECIAL_WEAPONS; ++i)
+            {
+                ret.special = i;
+                if (brand_name == weapon_brand_name(ret, true))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                ret.special = SPWPN_NORMAL;
+            break;
+        case OBJ_ARMOUR:
+            for (int i = SPARM_NORMAL; i < NUM_SPECIAL_ARMOURS; ++i)
+            {
+                ret.special = i;
+                if (brand_name == armour_ego_name(ret, true))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                ret.special = SPARM_NORMAL;
+        break;
+        // XXX
+        default:
+            break;
+        }
+
+        end = end_brand;
+    }
+
     return ret;
 }
 
