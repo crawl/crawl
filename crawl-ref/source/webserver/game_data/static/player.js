@@ -177,8 +177,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("icemail depleted"))
-            elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)
             elem.addClass("boosted_defense");
