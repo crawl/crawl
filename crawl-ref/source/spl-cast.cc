@@ -907,64 +907,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
     alert_nearby_monsters();
 }
 
-static bool _vampire_cannot_cast(spell_type spell)
-{
-    if (you.species != SP_VAMPIRE)
-        return false;
-
-    if (you.hunger_state > HS_SATIATED)
-        return false;
-
-    // Satiated or less
-    switch (spell)
-    {
-    case SPELL_BEASTLY_APPENDAGE:
-    case SPELL_BLADE_HANDS:
-    case SPELL_DRAGON_FORM:
-    case SPELL_ICE_FORM:
-    case SPELL_SPIDER_FORM:
-    case SPELL_STATUE_FORM:
-    case SPELL_STONESKIN:
-        return true;
-    case SPELL_CURE_POISON:
-        // You can become poisoned at any state but bloodless; allow curing
-        // it under the same conditions.
-        return you.hunger_state <= HS_STARVING;
-    default:
-        return false;
-    }
-}
-
-#if TAG_MAJOR_VERSION == 34
-static bool _too_hot_to_cast(spell_type spell)
-{
-    if (you.species != SP_LAVA_ORC)
-        return false;
-
-    // Lava orcs can never benefit from casting stoneskin.
-    if (spell == SPELL_STONESKIN)
-        return true;
-
-    // Lava orcs have no restrictions if their skin is
-    // non-molten.
-    if (temperature_effect(LORC_STONESKIN))
-        return false;
-
-    // If it is, though, they lose out on these spells:
-    switch (spell)
-    {
-    case SPELL_STATUE_FORM: // Stony self is too melty
-    // Too hot for these ice spells:
-    case SPELL_ICE_FORM:
-    case SPELL_OZOCUBUS_ARMOUR:
-    case SPELL_CONDENSATION_SHIELD:
-        return true;
-    default:
-        return false;
-    }
-}
-#endif
-
 bool is_prevented_teleport(spell_type spell, bool quiet)
 {
     return (spell == SPELL_BLINK
@@ -975,52 +917,8 @@ bool is_prevented_teleport(spell_type spell, bool quiet)
 
 bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
 {
-    // XXX: refactor me
-    if (you.undead_state() == US_UNDEAD
-        && (spell == SPELL_BORGNJORS_REVIVIFICATION
-            || spell == SPELL_DEATHS_DOOR
-            || spell == SPELL_SUBLIMATION_OF_BLOOD
-            || spell == SPELL_INTOXICATE
-            || spell == SPELL_REGENERATION
-            || spell_is_form(spell) && spell != SPELL_NECROMUTATION))
-    {
-        msg = "You cannot cast that spell in your current form!";
-        return true;
-    }
-
-    if (_vampire_cannot_cast(spell))
-    {
-        msg = "Your current blood level is not sufficient to cast that spell.";
-        return true;
-    }
-
-    if (player_mutation_level(MUT_NO_LOVE) && spell == SPELL_ENSLAVEMENT)
-    {
-        msg = "Allies are forbidden to you!";
-        return true;
-    }
-
-    // Check for banned schools (Currently just Ru sacrifices)
-    if (cannot_use_spell_school(spell, evoked))
-    {
-        msg = "You cannot use spells of this school!";
-        return true;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    if (_too_hot_to_cast(spell))
-    {
-        if (spell == SPELL_STONESKIN && temperature_effect(LORC_STONESKIN))
-            msg = "Your skin is already made of stone.";
-        else if (spell == SPELL_STONESKIN && !temperature_effect(LORC_STONESKIN))
-            msg = "Your skin is already made of molten stone.";
-        else
-            msg = "Your temperature is too high to benefit from that spell.";
-        return true;
-    }
-#endif
-
-    return false;
+    msg = spell_uselessness_reason(spell);
+    return msg != "";
 }
 
 #ifdef WIZARD

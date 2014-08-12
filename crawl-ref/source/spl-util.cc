@@ -1114,141 +1114,217 @@ bool spell_is_form(spell_type spell)
  */
 bool spell_is_useless(spell_type spell, bool temp)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI
-        && (spell == SPELL_ICE_FORM
-            || spell == SPELL_OZOCUBUS_ARMOUR
-            || spell == SPELL_LEDAS_LIQUEFACTION))
-    {
-        return true;
-    }
+    return spell_uselessness_reason(spell, temp) != "";
+}
 
-    if (you.species == SP_LAVA_ORC
-        && (spell == SPELL_STONESKIN
-            || spell == SPELL_OZOCUBUS_ARMOUR))
-    {
-        return true;
-    }
-#endif
-
+/**
+ * This function gives the reason that a spell is currently useless to the
+ * player, if it is.
+ *
+ * @param spell     The spell in question.
+ * @param temp      Include checks for volatile or temporary states
+ *                  (status effects, mana, gods, items, etc.)
+ * @return          The reason a spell is useless to the player, if it is;
+ *                  "" otherwise;
+ */
+string spell_uselessness_reason(spell_type spell, bool temp)
+{
     if (temp)
     {
-        if (you.duration[DUR_CONF] > 0
-            || !enough_mp(spell_mana(spell), true, false)
-            || spell_no_hostile_in_range(spell))
-        {
-            return true;
-        }
+        if (you.duration[DUR_CONF] > 0)
+            return "You're too confused!";
+        if (!enough_mp(spell_mana(spell), true, false))
+            return "You don't have enough mp!";
+        if (spell_no_hostile_in_range(spell))
+            return "You can't see any valid targets!";
+    }
+
+    // Check for banned schools (Currently just Ru sacrifices)
+    if (cannot_use_spell_school(spell))
+        return "You cannot use spells of this school!";
+
 
 #if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+    if (you.species == SP_DJINNI)
+    {
+        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
+            return "You're too hot!";
+
+        if (spell == SPELL_LEDAS_LIQUEFACTION)
+            return "You can't cast this while perpetually flying!";
+    }
+
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (spell == SPELL_OZOCUBUS_ARMOUR)
+            return "Your stony body would shatter the ice!";
+        if (spell == SPELL_STONESKIN)
+            return "Your skin is already made of stone!";
+
+        if (temp && !temperature_effect(LORC_STONESKIN))
         {
             switch (spell)
             {
-            case SPELL_STATUE_FORM: // Stony self is too melty
-            // Too hot for these ice spells:
-            case SPELL_ICE_FORM:
-            case SPELL_CONDENSATION_SHIELD:
-                return true;
-            default:
-                break;
+                case SPELL_STATUE_FORM:
+                case SPELL_ICE_FORM:
+                case SPELL_CONDENSATION_SHIELD:
+                    return "You're too hot!";
+                default:
+                    break;
             }
         }
-#endif
+
     }
+#endif
 
     switch (spell)
     {
     case SPELL_CONTROL_TELEPORT:
         if (player_has_orb())
-            return true;
+            return "The orb interferes with controlled teleportation!";
         // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
-        return you.species == SP_FORMICID
-               || temp && you.no_tele(false, false, true);
+        if (you.species == SP_FORMICID)
+            return "You can't teleport!";
+        if (temp && you.no_tele(false, false, true))
+            return "You can't teleport right now!";
+        break;
+
     case SPELL_SWIFTNESS:
-        return you.species == SP_SPRIGGAN // too fast already to get benefit
-                || temp
-                    && (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED
-                        || you.is_stationary());
+        if (temp)
+        {
+            if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
+                return "You're already traveling as fast as you can!";
+            if (you.is_stationary())
+                return "You can't move!";
+        }
+        break;
+
     case SPELL_FLY:
-        return you.racial_permanent_flight()
-               || temp && (you.form == TRAN_TREE
-                           || you.permanent_flight());
+        if (you.racial_permanent_flight())
+            return "You can already fly whenever you want!";
+        if (temp)
+        {
+            if (get_form()->forbids_flight())
+                return "Your current form prevents flight!";
+            if (you.permanent_flight())
+                return "You can already fly indefinitely!";
+        }
+        break;
+
     case SPELL_INVISIBILITY:
-        return temp && you.backlit();
+        if (temp && you.backlit())
+            return "Invisibility won't help you when you glow in the dark!";
+        break;
+
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
-        return temp && (you.haloed() || in_good_standing(GOD_SHINING_ONE));
+        if (temp && (you.haloed() || in_good_standing(GOD_SHINING_ONE)))
+            return "Darkness is useless against divine light!";
+        break;
+
     case SPELL_REPEL_MISSILES:
-        return temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                        || you.scan_artefacts(ARTP_RMSL, true));
+        if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                        || you.scan_artefacts(ARTP_RMSL, true)))
+        {
+            return "You're already repelling missiles!";
+        }
+        break;
 
     case SPELL_STONESKIN:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC)
-            return true;
-        // fallthrough to other transforms
-#endif
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
-        // Allowed for vampires (depending on hunger), but not other undead.
-        return you.undead_state(temp) == US_UNDEAD
-               || you.undead_state(temp) == US_HUNGRY_DEAD
-               || temp && you.is_lifeless_undead();
+        if (you.undead_state(temp) == US_UNDEAD
+            || you.undead_state(temp) == US_HUNGRY_DEAD)
+        {
+            return "Your undead flesh cannot be transformed!";
+        }
+        if (temp && you.is_lifeless_undead())
+            return "Your current blood level is not sufficient!";
+        break;
+
+    case SPELL_REGENERATION:
+        if (you.species == SP_DEEP_DWARF)
+            return "You can't regenerate without divine aid!";
+        if (you.undead_state(temp) == US_UNDEAD)
+            return "You're too dead to regenerate!";
         break;
 
     case SPELL_INTOXICATE:
-        // Only prohibited for liches and mummies.
-        return you.undead_state(temp) == US_UNDEAD;
-    case SPELL_REGENERATION:
-        return you.undead_state(temp) == US_UNDEAD
-               || you.species == SP_DEEP_DWARF;
+        if (you.undead_state(temp) == US_UNDEAD)
+            return "Your brain is too dead to use!";
+        break;
 
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
     case SPELL_SURE_BLADE:
     case SPELL_SPECTRAL_WEAPON:
-        return you.species == SP_FELID;
+        if (you.species == SP_FELID)
+            return "This spell is useless without hands!";
+        break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        return temp && (!you.stand_on_solid_ground()
+        if (temp && (!you.stand_on_solid_ground()
                         || you.duration[DUR_LIQUEFYING]
-                        || liquefied(you.pos()));
+                        || liquefied(you.pos())))
+        {
+            return "You must stand on solid ground to cast this!";
+        }
+        break;
 
     case SPELL_DELAYED_FIREBALL:
-        return temp && you.attribute[ATTR_DELAYED_FIREBALL];
+        if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
+            return "You are already charged!";
 
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_DEATHS_DOOR:
         // Prohibited to all undead.
-        return you.undead_state(temp);
+        if (you.undead_state(temp))
+            return "You're too dead!";
+        break;
     case SPELL_NECROMUTATION:
         // only prohibted to actual undead, not lichformed players
-        return you.undead_state(false);
+        if (you.undead_state(false))
+            return "You're too dead!";
+        break;
 
     case SPELL_CURE_POISON:
         // no good for poison-immune species (ghoul, mummy, garg)
-        return player_res_poison(false, temp, temp)
-               && you.undead_state() != US_SEMI_UNDEAD;
-        // allow starving vampires to memorize cpois ^
+        if (player_res_poison(false, temp, temp)
+             && you.undead_state() != US_SEMI_UNDEAD)
+        {
+            // allow starving vampires to memorize cpois ^
+            return "You can't be poisoned!";
+        }
+        break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
         // XXX: write player_can_bleed(bool temp) & use that
-        return you.species == SP_GARGOYLE
+        if (you.species == SP_GARGOYLE
             || you.species == SP_GHOUL
             || you.species == SP_MUMMY
-            || (temp && !form_can_bleed(you.form));
+            || (temp && !form_can_bleed(you.form)))
+        {
+            return "You have no blood to sublime!";
+        }
+        break;
+
+    case SPELL_ENSLAVEMENT:
+        if (player_mutation_level(MUT_NO_LOVE))
+            return "You cannot make allies!";
+        break;
 
     default:
-        return false;
+        break;
     }
+
+    return "";
 }
 
 /**
