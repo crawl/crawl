@@ -4672,24 +4672,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         switch (mons->type)
         {
         case MONS_SERPENT_OF_HELL:
-            real_breaths[0] = SPELL_HELLFIRE;
-            real_breaths[1] = SPELL_FIRE_BREATH;
-            real_breaths[2] = SPELL_FIREBALL;
+            real_breaths[0] = SPELL_FIRE_BREATH;
+            real_breaths[1] = SPELL_FIREBALL;
+            real_breaths[2] = SPELL_HELLFIRE;
             break;
         case MONS_SERPENT_OF_HELL_COCYTUS:
-            real_breaths[0] = SPELL_FREEZING_CLOUD;
-            real_breaths[1] = SPELL_COLD_BREATH;
+            real_breaths[0] = SPELL_COLD_BREATH;
+            real_breaths[1] = SPELL_FREEZING_CLOUD;
             real_breaths[2] = SPELL_GLACIATE;
             break;
         case MONS_SERPENT_OF_HELL_DIS:
             real_breaths[0] = SPELL_METAL_SPLINTERS;
             real_breaths[1] = SPELL_QUICKSILVER_BOLT;
-            real_breaths[2] = SPELL_IRON_SHOT;
+            real_breaths[2] = SPELL_LEHUDIBS_CRYSTAL_SPEAR;
             break;
         case MONS_SERPENT_OF_HELL_TARTARUS:
             real_breaths[0] = SPELL_BOLT_OF_DRAINING;
             real_breaths[1] = SPELL_MIASMA_BREATH;
-            real_breaths[2] = SPELL_SPIT_ACID;
+            real_breaths[2] = SPELL_CORROSIVE_BOLT;
             break;
         default:
             ASSERT(false);
