@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1-gcad5565)
+Stone Soup 0.16 (up to 0.16-a0-123-g3c51aac)
 --------------------------------------------
 * New god: Gozag Ym Sagoz the Greedy.
 
@@ -108,6 +108,7 @@ Monsters
 * Curse skulls are now immobile, again.
 * Lost souls now make enemies into ghosts instead of specters.
 * Spriggan riders now ride wasps.
+* Ugly & very ugly things are now dramatically nastier.
 * Cherub's hymns can buff any allies, not just those with higher HDs.
 * Killing holy monsters no longer invokes cleansing flame on the perpetrator.
 * Ghouls and necrophages can no longer equip weapons or armour.
@@ -133,7 +134,7 @@ Spells
   entirely when it successfully confuses an enemy. While it's in effect, your
   attacks do no damage. It's been moved to level 2.
 * Sublimation of Blood no longer uses chunks; it now only draws from the
-  caster's HP.
+  caster's HP. Fedhas now permits its use.
 * Simulacrum now works on a single corpse at the caster's feet, creating
   several simulacra from it.
 * Monsters casting Simulacrum now affect all corpses in LOS, producing half as
@@ -233,6 +234,7 @@ Items
 * Gloves of archery no longer penalise melee.
 * Sustain abilities effects no longer stack.
 * Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
+* Potions of resistance now grant corrosion resistance.
 * Staves of air now activate extra melee damage as often as other elemental staves.
 * Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
