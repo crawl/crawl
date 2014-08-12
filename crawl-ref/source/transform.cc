@@ -49,7 +49,7 @@
 #define SLOTF(s) (1 << s)
 
 static const int EQF_NONE = 0;
-// "hand" slots
+// "hand" slots (not rings)
 static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
                              | SLOTF(EQ_GLOVES);
 // core body slots (statue form)
@@ -353,6 +353,7 @@ public:
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, true,        // can_bleed, keeps_mutations
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -378,6 +379,7 @@ public:
            10, 5, LIGHTGREEN,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -397,6 +399,7 @@ public:
            12, -1, RED,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, true,        // can_bleed, keeps_mutations
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -468,6 +471,7 @@ public:
            9, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, true,        // can_bleed, keeps_mutations
            MONS_STATUE)       // equivalent monster
     { };
 
@@ -541,6 +545,7 @@ public:
            10, 12, WHITE,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_ICE_BEAST)       // equivalent monster
     { };
 
@@ -573,6 +578,7 @@ public:
            10, -1, GREEN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
+           FC_ENABLE, false,        // can_bleed, keeps_mutations
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -644,6 +650,7 @@ public:
            10, 5, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
+           FC_FORBID, true,        // can_bleed, keeps_mutations
            MONS_LICH)       // equivalent monster
     { };
 
@@ -682,6 +689,7 @@ public:
            12, -1, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
+           FC_ENABLE, false,        // can_bleed, keeps_mutations
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -750,6 +758,7 @@ public:
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,  // can_fly (false for most pigs), can_swim
+           FC_ENABLE, false,        // can_bleed, keeps_mutations
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -769,6 +778,7 @@ public:
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
+           FC_DEFAULT, true,        // can_bleed, keeps_mutations
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -826,6 +836,7 @@ public:
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
            FC_FORBID, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
@@ -850,6 +861,7 @@ public:
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_ENABLE, false,        // can_bleed, keeps_mutations
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -869,6 +881,7 @@ public:
            10, 5, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
@@ -894,6 +907,7 @@ public:
            0, 3, LIGHTGREY,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -914,6 +928,7 @@ public:
            10, 12, BROWN,  // unarmed acc bonus, damage, & ui colour
            FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, false,        // can_bleed, keeps_mutations
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 };
@@ -933,6 +948,7 @@ public:
            0, 3, MAGENTA,  // unarmed acc bonus, damage, & ui colour
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
+           FC_FORBID, true,        // can_bleed, keeps_mutations
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 
@@ -1127,12 +1143,15 @@ bool form_changed_physiology(transformation_type form)
            && form != TRAN_BLADE_HANDS;
 }
 
+/**
+ * Does this form have blood?
+ *
+ * @param form      The form in question.
+ * @return          Whether the form can bleed, sublime, etc.
+ */
 bool form_can_bleed(transformation_type form)
 {
-    return form != TRAN_STATUE && form != TRAN_ICE_BEAST
-           && form != TRAN_SPIDER && form != TRAN_TREE
-           && form != TRAN_FUNGUS && form != TRAN_PORCUPINE
-           && form != TRAN_SHADOW && form != TRAN_LICH;
+    return get_form(form)->can_bleed != FC_FORBID;
 }
 
 bool form_can_use_wand(transformation_type form)
@@ -1143,18 +1162,7 @@ bool form_can_use_wand(transformation_type form)
 // Used to mark forms which keep most form-based mutations.
 bool form_keeps_mutations(transformation_type form)
 {
-    switch (form)
-    {
-    case TRAN_NONE:
-    case TRAN_BLADE_HANDS:
-    case TRAN_STATUE:
-    case TRAN_LICH:
-    case TRAN_SHADOW:
-    case TRAN_APPENDAGE:
-        return true;
-    default:
-        return false;
-    }
+    return get_form(form)->keeps_mutations;
 }
 
 static set<equipment_type>
