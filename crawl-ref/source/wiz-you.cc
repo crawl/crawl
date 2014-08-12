@@ -1301,7 +1301,8 @@ static bool _chardump_check_char(const vector<string> &tokens)
     return false;
 }
 
-static bool _chardump_check_equipment(const vector<string> &tokens)
+static bool _chardump_check_equipment(const vector<string> &tokens,
+                                      bool in_equipment)
 {
     size_t size = tokens.size();
 
@@ -1327,9 +1328,8 @@ static bool _chardump_check_equipment(const vector<string> &tokens)
         offset = 9;
     else if (tokens[0] == "MR")
         offset = 5;
-    // XXX the last inventory item is just on its own
-    // else if (tokens[0] == ???)
-    //     offset = ???;
+    else if (in_equipment)
+        offset = 3;
     else
         return false;
 
@@ -1364,6 +1364,7 @@ static bool _chardump_check_equipment(const vector<string> &tokens)
 static void _wizard_modify_character(string inputdata)
 {
     vector<string> tokens = split_string(" ", inputdata);
+    static bool in_equipment = false;
 
     if (_chardump_check_skill(tokens))
         return;
@@ -1375,8 +1376,16 @@ static void _wizard_modify_character(string inputdata)
         return;
     if (_chardump_check_char(tokens))
         return;
-    if (_chardump_check_equipment(tokens))
+
+    if (_chardump_check_equipment(tokens, in_equipment))
+    {
+        in_equipment = true;
         return;
+    }
+    else
+    {
+        in_equipment = false;
+    }
 }
 
 /**
