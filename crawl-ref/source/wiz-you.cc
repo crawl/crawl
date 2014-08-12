@@ -15,12 +15,16 @@
 #include "chardump.h"
 #include "cio.h"
 #include "dbg-util.h"
+#include "env.h"
 #include "food.h"
 #include "godprayer.h"
 #include "godwrath.h"
+#include "itemname.h"
+#include "items.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "message.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -1072,6 +1076,49 @@ void wizard_transform()
         mpr("Transformation failed.");
 }
 
+static item_def _item_from_string(string s)
+{
+    item_def ret;
+    if (s.length() == 0)
+        return ret;
+
+    if (s[0] == '+' || s[0] == '-')
+    {
+        size_t space = s.find(' ');
+        if (space == string::npos)
+            return ret;
+
+        ret.plus = atoi(s.substr(1).c_str());
+        if (s[0] == '-')
+            ret.plus = -ret.plus;
+
+        s = s.substr(space + 1);
+        if (s.length() == 0)
+            return ret;
+    }
+
+    size_t end = s.find_first_of("({");
+    if (end == string::npos)
+        end = s.length();
+    else
+        end--;
+
+    string base_name = s.substr(0, end);
+    item_kind parsed = item_kind_by_name(base_name);
+    if (parsed.base_type != OBJ_UNASSIGNED)
+    {
+        ret.base_type = parsed.base_type;
+        ret.sub_type  = parsed.sub_type;
+        /* pluses for item_kinds are only valid for manuals and runes
+         * so we can skip them here for now */
+    }
+
+    ret.quantity = 1;
+    item_colour(ret);
+
+    return ret;
+}
+
 static bool _chardump_check_skill(const vector<string> &tokens)
 {
     size_t size = tokens.size();
@@ -1205,6 +1252,66 @@ static bool _chardump_check_char(const vector<string> &tokens)
     return false;
 }
 
+static bool _chardump_check_equipment(const vector<string> &tokens)
+{
+    size_t size = tokens.size();
+
+    if (size <= 0)
+        return false;
+
+    size_t offset;
+    if (tokens[0] == "rFire")
+        offset = 9;
+    else if (tokens[0] == "rCold")
+        offset = 9;
+    else if (tokens[0] == "rNeg")
+        offset = 9;
+    else if (tokens[0] == "rPois")
+        offset = 7;
+    else if (tokens[0] == "rElec")
+        offset = 7;
+    else if (tokens[0] == "SustAb")
+        offset = 8;
+    else if (tokens[0] == "rMut")
+        offset = 7;
+    else if (tokens[0] == "Saprov")
+        offset = 9;
+    else if (tokens[0] == "MR")
+        offset = 5;
+    // XXX the last inventory item is just on its own
+    // else if (tokens[0] == ???)
+    //     offset = ???;
+    else
+        return false;
+
+    if (size < offset)
+        return false;
+
+    string item_desc = tokens[offset - 1];
+    for (vector<string>::const_iterator it = tokens.begin() + offset;
+         it != tokens.end();
+         ++it)
+    {
+        item_desc.append(" ");
+        item_desc.append(*it);
+    }
+
+    item_def item = _item_from_string(item_desc);
+    if (item.base_type == OBJ_UNASSIGNED)
+        mprf("unknown item: %s", item_desc.c_str());
+    else
+    {
+        int mitm_slot = get_mitm_slot();
+        if (mitm_slot != NON_ITEM)
+        {
+            mitm[mitm_slot] = item;
+            move_item_to_grid(&mitm_slot, you.pos());
+        }
+    }
+
+    return true;
+}
+
 static void _wizard_modify_character(string inputdata)
 {
     vector<string> tokens = split_string(" ", inputdata);
@@ -1218,6 +1325,8 @@ static void _wizard_modify_character(string inputdata)
     if (_chardump_check_stats3(tokens))
         return;
     if (_chardump_check_char(tokens))
+        return;
+    if (_chardump_check_equipment(tokens))
         return;
 }
 
