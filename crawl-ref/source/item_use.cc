@@ -3143,66 +3143,16 @@ void tile_item_drop(int idx, bool partdrop)
     drop_item(idx, quantity);
 }
 
-static bool _prompt_eat_bad_food(const item_def food)
-{
-    if (food.base_type != OBJ_CORPSES
-        && (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK))
-    {
-        return true;
-    }
-
-    if (!is_bad_food(food))
-        return true;
-
-    const string food_colour = item_prefix(food);
-    string colour            = "";
-    string colour_off        = "";
-
-    const int col = menu_colour(food.name(DESC_A), food_colour, "pickup");
-    if (col != -1)
-        colour = colour_to_str(col);
-
-    if (!colour.empty())
-    {
-        // Order is important here.
-        colour_off  = "</" + colour + ">";
-        colour      = "<" + colour + ">";
-    }
-
-    const string qualifier = colour
-                             + (is_poisonous(food)      ? "poisonous" :
-                                is_mutagenic(food)      ? "mutagenic" :
-                                causes_rot(food)        ? "rot-inducing" :
-                                is_forbidden_food(food) ? "forbidden" : "")
-                             + colour_off;
-
-    string prompt  = "Really ";
-           prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
-           prompt += " this " + qualifier;
-           prompt += (food.base_type == OBJ_CORPSES ? " corpse"
-                                                    : " chunk of meat");
-           prompt += "?";
-
-    if (!yesno(prompt.c_str(), false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    return true;
-}
-
 void tile_item_eat_floor(int idx)
 {
+    // XXX: refactor this
     if (mitm[idx].base_type == OBJ_CORPSES
             && you.species == SP_VAMPIRE
         || mitm[idx].base_type == OBJ_FOOD
             && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
     {
-        if (can_ingest(mitm[idx], false)
-            && _prompt_eat_bad_food(mitm[idx]))
-        {
+        if (can_ingest(mitm[idx], false))
             eat_item(mitm[idx]);
-        }
     }
 }
 
@@ -3310,11 +3260,8 @@ void tile_item_use(int idx)
             }
             // intentional fall-through for Vampires
         case OBJ_FOOD:
-            if (check_warning_inscriptions(item, OPER_EAT)
-                && _prompt_eat_bad_food(item))
-            {
+            if (check_warning_inscriptions(item, OPER_EAT))
                 eat_food(idx);
-            }
             return;
 
         case OBJ_BOOKS:
