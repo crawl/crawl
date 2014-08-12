@@ -131,6 +131,7 @@ spell_type zap_type_to_spell(zap_type zap);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true) PURE;
+string spell_uselessness_reason(spell_type spell, bool temp = true) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,
