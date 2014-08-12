@@ -2774,7 +2774,10 @@ static int _get_spell_description(const spell_type spell,
                        "your current level of understanding.\n";
     }
     if (spell_is_useless(spell) && you_can_memorise(spell))
-        description += "This spell will have no effect right now.\n";
+    {
+        description += "This spell will have no effect right now: "
+                        + spell_uselessness_reason(spell) + "\n";
+    }
 
     _append_spell_stats(spell, description, rod);
 
