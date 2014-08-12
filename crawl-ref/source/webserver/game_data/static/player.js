@@ -115,18 +115,27 @@ function ($, comm, enums, map_knowledge, messages, options) {
         var item = player.inv[index];
         var elem = $("<span>");
         elem.text(index_to_letter(index) + ") " + item.name);
-        if (item.col != -1)
+        if (item.col != -1 && item.col != null)
             elem.addClass("fg" + item.col);
         return elem;
     }
 
     function wielded_weapon()
     {
+        var elem;
         var wielded = player.equip[enums.equip.WEAPON];
         if (wielded == -1)
-            return "-) " + player.unarmed_attack;
+        {
+            elem = $("<span>");
+            elem.text("-) " + player.unarmed_attack);
+        }
         else
-            return inventory_item_desc(wielded);
+            elem = inventory_item_desc(wielded);
+
+        if (player.has_status("corroded equipment"))
+            elem.addClass("corroded_weapon");
+
+        return elem;
     }
 
     function quiver()
@@ -177,6 +186,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
+        else if (type == "ac" && player.has_status("corroded equipment"))
+            elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)
             elem.addClass("boosted_defense");
