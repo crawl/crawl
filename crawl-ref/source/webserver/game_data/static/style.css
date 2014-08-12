@@ -79,6 +79,9 @@ body {
 .boosted_defense {
     color: #729fcf; /* lightblue */
 }
+#stats_weapon .corroded_weapon {
+    color: #a40000; /* red */
+}
 
 .bar span {
     display: inline-block;
