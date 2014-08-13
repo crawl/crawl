@@ -160,6 +160,9 @@ void player::update_fearmonger(const monster* mon)
         if (fearmongers[i] == mon->mindex())
         {
             fearmongers.erase(fearmongers.begin() + i);
+            // Do this dance to clear the duration before printing messages
+            // (#8844), but still print all messages in the right order.
+            _removed_fearmonger(true);
             _removed_fearmonger_msg(mon);
             _removed_fearmonger();
             return;
