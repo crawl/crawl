@@ -564,8 +564,6 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;        // No uniques here!
         if (mons_class_is_stationary(mon_type))
             continue;        // Must be able to move!
-        if (mons_is_mimic(mon_type))
-            continue;
 
         int strength = _mon_strength(mon_type);
 

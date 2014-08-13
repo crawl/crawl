@@ -14,6 +14,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
@@ -938,23 +939,50 @@ bool mons_is_statue(monster_type mc)
            || mc == MONS_ROXANNE;
 }
 
-bool mons_is_mimic(monster_type mc)
+/**
+ * The mimic [(cackles|chortles...) and ]vanishes in[ a puff of smoke]!
+ *
+ * @param pos       The mimic's location.
+ * @param name      The mimic's name.
+ */
+static void _mimic_vanish(const coord_def& pos, const string& name)
 {
-    return mons_is_item_mimic(mc) || mons_is_feat_mimic(mc);
+    const bool can_place_smoke = env.cgrid(pos) == EMPTY_CLOUD;
+    if (can_place_smoke)
+        place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), NULL);
+    if (!you.see_cell(pos))
+        return;
+
+    const char* const smoke_str = can_place_smoke ? " in a puff of smoke" : "";
+
+    const bool can_cackle = !silenced(pos) && !silenced(you.pos());
+    const string db_cackle = getSpeakString("_laughs_");
+    const string cackle = db_cackle != "" ? db_cackle : "cackles";
+    const string cackle_str = can_cackle ? cackle + " and " : "";
+
+    mprf("The %s mimic %svanishes%s!",
+         name.c_str(), cackle_str.c_str(), smoke_str);
 }
 
-bool mons_is_item_mimic(monster_type mc)
+/**
+ * Clean up a "feature" that a mimic was pretending to be.
+ *
+ * @param pos   The location of the 'feature'.
+ */
+static void _destroy_mimic_feature(const coord_def &pos)
 {
+    const dungeon_feature_type feat = grd(pos);
+
+    unnotice_feature(level_pos(level_id::current(), pos));
+    grd(pos) = DNGN_FLOOR;
+    env.level_map_mask(pos) &= !MMT_MIMIC;
+    set_terrain_changed(pos);
+    remove_markers_and_listeners_at(pos);
+
 #if TAG_MAJOR_VERSION == 34
-    return mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_MONSTROUS_ITEM_MIMIC;
-#else
-    return mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_RAVENOUS_ITEM_MIMIC;
+    if (feat_is_door(feat))
+        env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
 #endif
-}
-
-bool mons_is_feat_mimic(monster_type mc)
-{
-    return mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_RAVENOUS_FEATURE_MIMIC;
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -974,122 +1002,22 @@ void discover_mimic(const coord_def& pos, bool wake)
         return;
     }
 
-    const feature_def feat_d = get_feature_def(feat);
     const string name = feature_mimic ? feat_type_name(feat) :
           item->base_type == OBJ_GOLD ? "pile of gold coins"
                                       : item->name(DESC_BASENAME);
 
-    tileidx_t tile = tileidx_feature(pos);
 #ifdef USE_TILE
+    tileidx_t tile = tileidx_feature(pos);
     apply_variations(env.tile_flv(pos), &tile, pos);
 #endif
 
-    // If a monster is standing on top of the mimic, move it out of the way.
-    actor* act = actor_at(pos);
-    if (act && !act->shove(name.c_str()))
-    {
-        // Not a single habitable place left on the level.  Possible in a Zig
-        // or if a paranoid player covers a small Trove with summons.
-        mpr("There is some commotion, and a hidden mimic gets squished!");
-        if (item)
-            destroy_item(*item, true);
-        else
-        {
-            unnotice_feature(level_pos(level_id::current(), pos));
-            grd(pos) = DNGN_FLOOR;
-            env.level_map_mask(pos) &= !MMT_MIMIC;
-            set_terrain_changed(pos);
-            remove_markers_and_listeners_at(pos);
-        }
-        return;
-    }
-
-    if (feature_mimic)
-    {
-        // If we took a note of this feature, then note that it was a mimic.
-        if (!is_boring_terrain(feat))
-        {
-            string desc = feature_description_at(pos, false, DESC_THE, false);
-            take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
-        }
-
-        // Remove the feature and clear the flag.
-        unnotice_feature(level_pos(level_id::current(), pos));
-        grd(pos) = DNGN_FLOOR;
-        env.level_map_mask(pos) &= !MMT_MIMIC;
-        set_terrain_changed(pos);
-        remove_markers_and_listeners_at(pos);
-
-#if TAG_MAJOR_VERSION == 34
-        if (feat_is_door(feat))
-            env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
-#endif
-    }
-
-    // Generate and place the monster.
-    mgen_data mg;
-    mg.behaviour = wake ? BEH_WANDER : BEH_LURK;
-    mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
-    mg.pos = pos;
-    if (wake)
-        mg.flags |= MG_DONT_COME;
-
-    const int level = env.absdepth0 + 1;
-
-    // Early levels get inept mimics instead
-    if (!x_chance_in_y(level - 6, 6))
-        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
-    // Deeper, you get ravenous mimics
-    else if (x_chance_in_y(level - 15, 6))
-        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
-
-    if (feature_mimic)
-    {
-        if (feat_is_stone_stair(feat))
-            mg.colour = feat_d.em_colour;
-        else
-            mg.colour = feat_d.colour;
-
-        mg.props["feat_type"] = static_cast<short>(feat);
-        mg.props["glyph"] = static_cast<int>(get_feat_symbol(feat));
-
-        mg.props["tile_idx"] = static_cast<int>(tile);
-    }
-    else
-    {
-        const cglyph_t glyph = get_item_glyph(item);
-        mg.colour = glyph.col;
-        mg.props["glyph"] = static_cast<int>(glyph.ch);
-    }
-
-    monster *mimic = place_monster(mg, true, true);
-    if (!mimic)
-    {
-        mprf(MSGCH_ERROR, "Too many monsters on level, can't place mimic.");
-        if (item)
-            destroy_item(*item, true);
-        return;
-    }
-
-    if (item && !mimic->pickup_misc(*item, 0))
-        die("Mimic failed to pickup its item.");
-
-    if (!mimic->move_to_pos(pos))
-        die("Moving mimic into position failed.");
-
-    if (wake)
-        behaviour_event(mimic, ME_ALERT, &you);
-
-    // Friendly monsters don't appreciate being pushed away.
-    if (act && !act->is_player() && act->as_monster()->friendly())
-        behaviour_event(act->as_monster(), ME_WHACK, mimic);
-
-    // Announce the mimic.
-    if (mons_near(mimic))
-    {
+    if (you.see_cell(pos))
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
-        mimic->seen_context = SC_JUST_SEEN;
-    }
+    _mimic_vanish(pos, name);
+    if (item)
+        destroy_item(item->index(), true);
+    else
+        _destroy_mimic_feature(pos);
 
     // Just in case there's another one.
     if (mimic_at(pos))

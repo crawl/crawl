@@ -1263,9 +1263,6 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_STONE_WALL_VAULT;
     }
 
-
-    const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
-
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
@@ -1276,7 +1273,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                                                         env.grid_colours(gc)),
                                      flv.special);
     }
-    else if (is_door_tile(orig) && !mimic)
+    else if (is_door_tile(orig))
     {
         tileidx_t override = flv.feat;
         /*

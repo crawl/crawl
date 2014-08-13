@@ -681,23 +681,18 @@ void seen_monster(monster* mons)
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
 
-    if (!mons_is_mimic(mons->type))
-    {
-        if (crawl_state.game_is_hints())
-            hints_monster_seen(*mons);
+    if (crawl_state.game_is_hints())
+        hints_monster_seen(*mons);
 
-        if (MONST_INTERESTING(mons))
+    if (MONST_INTERESTING(mons))
+    {
+        string name = mons->name(DESC_A, true);
+        if (mons->type == MONS_PLAYER_GHOST)
         {
-            string name = mons->name(DESC_A, true);
-            if (mons->type == MONS_PLAYER_GHOST)
-            {
-                name += make_stringf(" (%s)",
-                        short_ghost_description(mons, true).c_str());
-            }
-            take_note(
-                      Note(NOTE_SEEN_MONSTER, mons->type, 0,
-                           name.c_str()));
+            name += make_stringf(" (%s)",
+                                 short_ghost_description(mons, true).c_str());
         }
+        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name.c_str()));
     }
 
     if (!(mons->flags & MF_TSO_SEEN))

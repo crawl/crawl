@@ -3506,15 +3506,11 @@ static string _monster_stat_description(const monster_info& mi)
     };
     COMPILE_CHECK(ARRAYSZ(sizes) == NUM_SIZE_LEVELS);
 
-    if (mons_is_feat_mimic(mi.type))
+    if (sizes[mi.body_size()])
     {
-        result << uppercase_first(pronoun) << " is as big as "
-               << thing_do_grammar(DESC_A, true, false,
-                                   feat_type_name(mi.get_mimic_feature()))
-               << "\n";
+        result << uppercase_first(pronoun) << " is "
+        << sizes[mi.body_size()] << ".\n";
     }
-    else if (sizes[mi.body_size()])
-        result << uppercase_first(pronoun) << " is " << sizes[mi.body_size()] << ".\n";
 
     result << _monster_attacks_description(mi);
     result << _monster_spells_description(mi);

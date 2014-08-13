@@ -245,9 +245,6 @@ struct monster_info : public monster_info_base
 
     string db_name() const;
     bool has_proper_name() const;
-    dungeon_feature_type get_mimic_feature() const;
-    const item_def* get_mimic_item() const;
-    string mimic_name() const;
     string pluralised_name(bool fullname = true) const;
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;

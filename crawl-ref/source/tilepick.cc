@@ -481,10 +481,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
     if (override && can_override)
         return override;
 
-    const monster_info* mimic = env.map_knowledge(gc).monsterinfo();
-    if (mimic && mons_is_feat_mimic(mimic->type))
-        return mimic->props["tile_idx"].get_int();
-
     // Any grid-specific tiles.
     switch (feat)
     {
@@ -1844,15 +1840,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_HALFLING;
 
     // mimics
-    case MONS_ITEM_MIMIC:
-        return 0;
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
-
-    // Feature mimics actually get drawn with the dungeon code.
-    // See tileidx_feature.
-    case MONS_FEATURE_MIMIC:
-        return 0;
 
     // demonspawn ('6')
     case MONS_DEMONSPAWN:
@@ -2734,21 +2723,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return mon.is(MB_ROLLING)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
                    : TILEP_MONS_BOULDER_BEETLE;
-
-        case MONS_INEPT_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_INEPT;
-        case MONS_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC;
-        case MONS_RAVENOUS_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_RAVEN;
-
-        // Feature mimics get drawn with the dungeon, see tileidx_feature.
-        case MONS_INEPT_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC_INEPT;
-        case MONS_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC;
-        case MONS_RAVENOUS_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC_RAVEN;
 
         case MONS_DANCING_WEAPON:
         {

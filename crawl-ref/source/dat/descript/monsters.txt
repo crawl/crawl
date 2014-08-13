@@ -1098,10 +1098,6 @@ A hybrid with the torso of a human atop the forelegs of a goat. They are fabled
 for their ability to play with the minds of those who intrude into their
 domains.
 %%%%
-feature mimic
-
-A vicious beast masquerading as an ordinary dungeon feature.
-%%%%
 felid
 
 A feline creature that has been granted sentience by magical means. It uses the
@@ -1488,14 +1484,6 @@ infernal demonspawn
 
 <demonspawn>
 %%%%
-inept feature mimic
-
-A predator masquerading as an ordinary dungeon feature.
-%%%%
-inept item mimic
-
-An apparently abandoned item, actually a small beast in disguise.
-%%%%
 insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
@@ -1546,10 +1534,6 @@ ironheart preserver
 
 Towering figures sheathed in heavy armour, preservers safeguard their allies by
 selflessly accepting a portion of the injuries inflicted upon them.
-%%%%
-item mimic
-
-An apparently abandoned item, actually a vicious little beast in disguise.
 %%%%
 jackal
 
@@ -2021,18 +2005,6 @@ raven
 An opportunistic scavenger bird that is quite proactive in the production of
 carrion. It has a particularly unhealthy fascination with eyeballs and things
 resembling eyeballs, such as pickled onions, walnuts and olives.
-%%%%
-ravenous feature mimic
-
-A deadly venomous tentacled predator with an ability to shapeshift and
-masquerade as an ordinary-looking dungeon feature, in order to catch foolish
-passers-by and crush them in its deadly grasp.
-%%%%
-ravenous item mimic
-
-A deadly venomous tentacled predator with an ability to shapeshift into a small
-item. While not of a formidable size, it is not a living creature and its
-tentacles are harder than steel.
 %%%%
 reaper
 

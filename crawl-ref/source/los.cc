@@ -893,20 +893,6 @@ opacity_type mons_opacity(const monster* mon, los_type how)
         return OPC_HALF;
     }
 
-    if (mons_is_feat_mimic(mon->type))
-    {
-        dungeon_feature_type feat = get_mimic_feat(mon);
-        if (how == LOS_SOLID)
-            return feat_is_solid(feat) ? OPC_OPAQUE : OPC_CLEAR;
-        if (how == LOS_NO_TRANS
-            && (feat_is_wall(feat) || feat_is_tree(feat)))
-        {
-            return OPC_OPAQUE;
-        }
-        if (feat_is_opaque(get_mimic_feat(mon)))
-            return OPC_OPAQUE;
-    }
-
     return OPC_CLEAR;
 }
 
