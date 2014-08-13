@@ -4318,9 +4318,11 @@ int slaying_bonus(bool ranged)
 
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
-// possible.
+// possible. If `matches' is non-NULL, items with nonzero property are
+// pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
-                           bool calc_unid) const
+                           bool calc_unid,
+                           vector<item_def> *matches) const
 {
     int retval = 0;
 
@@ -4340,8 +4342,11 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
         bool known;
         int val = artefact_wpn_property(inv[eq], which_property, known);
-        if (calc_unid || known)
+        if (calc_unid || known) {
             retval += val;
+            if (matches && val)
+                matches->push_back(inv[eq]);
+        }
     }
 
     return retval;
@@ -7042,20 +7047,130 @@ int player_res_magic(bool calc_unid, bool temp)
     return rm;
 }
 
-bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
+bool player::no_tele_print_reason(bool calc_unid, bool permit_id, bool blinking, bool quiet) const
 {
-    if (duration[DUR_DIMENSION_ANCHOR])
-        return true;
-
     if (crawl_state.game_is_sprint() && !blinking)
+    {
+        if (!quiet)
+            mpr("Long-range teleportation is disallowed in Dungeon Sprint.");
         return true;
+    }
+
+    if (you.species == SP_FORMICID)
+    {
+        if (!quiet)
+            mpr("You cannot teleport.");
+        return true;
+    }
+
+    vector<string> problems;
+    bool found_any = false;
+
+    if (duration[DUR_DIMENSION_ANCHOR])
+    {
+        problems.push_back("locked down by Dimension Anchor");
+        found_any = true;
+    }
 
     if (form == TRAN_TREE)
-        return true;
+    {
+        problems.push_back("held in place by your roots");
+        found_any = true;
+    }
 
-    return has_notele_item(calc_unid)
-           || stasis_blocks_effect(calc_unid, NULL)
-           || crawl_state.game_is_zotdef() && orb_haloed(pos());
+    if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
+    {
+        problems.push_back("in the halo of the Orb");
+        found_any = true;
+    }
+
+    bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
+    vector<item_def> notele_items;
+    if (has_notele_item(calc_unid, &notele_items) || stasis_block)
+    {
+        found_any = true;
+        if (!quiet) {
+            vector<string> worn_notele;
+            bool amulet_handled = false;
+            bool found_nonartefact = false;
+            bool found_stasis = false;
+
+            for (vector<item_def>::iterator it=notele_items.begin();
+                 it < notele_items.end(); ++it)
+            {
+                if (it->base_type == OBJ_WEAPONS)
+                {
+                    problems.push_back(make_stringf("wielding %s",
+                                       it->name(DESC_A).c_str()));
+                }
+                else
+                {
+                    worn_notele.push_back(it->name(DESC_A).c_str());
+                }
+
+                if (it->base_type == OBJ_JEWELLERY
+                    && it->sub_type >= AMU_FIRST_AMULET)
+                {
+                    amulet_handled = true;
+                }
+            }
+
+            if (wearing(EQ_AMULET, AMU_STASIS, calc_unid))
+            {
+                //We don't want to report amulet of stasis with -Tele twice...
+                if (!amulet_handled)
+                {
+                    item_def *amulet = slot_item(EQ_AMULET);
+                    if (!amulet)
+                    {
+                        die("wearing(EQ_AMULET,...) is true but"
+                            " slot_item(EQ_AMULET) is NULL");
+                    }
+                    worn_notele.push_back(amulet->name(DESC_A).c_str());
+                    found_nonartefact = is_artefact(*amulet);
+                }
+                //...but we also don't want to report "buggy stasis" from it.
+                found_stasis = true;
+            }
+
+            if (worn_notele.size()>(problems.empty() ? 3 : 1))
+            {
+                problems.push_back(
+                    make_stringf("wearing %s %s preventing teleportation",
+                                 number_in_words(worn_notele.size()).c_str(),
+                                 found_nonartefact ? "items": "artefacts"));
+            }
+            else if (!worn_notele.empty())
+            {
+                problems.push_back(
+                    make_stringf("wearing %s",
+                                 comma_separated_line(worn_notele.begin(),
+                                 worn_notele.end()).c_str()));
+            }
+
+            if (stasis_block && !found_stasis)
+            {
+                // Formicids and AMU_STASIS are handled above, other sources
+                // of stasis will display this message:
+                problems.push_back("affected by a buggy stasis");
+            }
+        }
+    }
+
+    if (found_any && !quiet) {
+        if (problems.empty())
+            problems.push_back("affected by something buggy");
+
+        mprf("You cannot teleport because you are %s.", comma_separated_line(
+             problems.begin(), problems.end()).c_str());
+    }
+
+    return found_any;
+}
+
+bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
+{
+    return no_tele_print_reason(calc_unid, permit_id, blinking, true);
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)

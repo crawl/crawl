@@ -237,7 +237,8 @@ public:
     int wearing(equipment_type slot, int type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
-                       bool calc_unid = true) const;
+                       bool calc_unid = true,
+                       vector<item_def> *_unused_matches = NULL) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
     item_def *mslot_item(mon_inv_type sl) const;

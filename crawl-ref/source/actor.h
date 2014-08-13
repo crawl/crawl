@@ -123,7 +123,8 @@ public:
     virtual int wearing_ego(equipment_type slot, int sub_type,
                             bool calc_unid = true) const = 0;
     virtual int scan_artefacts(artefact_prop_type which_property,
-                               bool calc_unid = true) const = 0;
+                               bool calc_unid = true,
+                               vector<item_def> *matches = NULL) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item) const;
 
@@ -310,7 +311,7 @@ public:
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
 
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
-    bool has_notele_item(bool calc_unid = true) const;
+    bool has_notele_item(bool calc_unid = true, vector<item_def> *matches = NULL) const;
     virtual bool stasis(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
