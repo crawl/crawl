@@ -2700,7 +2700,7 @@ static bool _should_tornado(monster* agent)
 static bool _torment_vulnerable(actor* victim)
 {
     if (victim->is_player())
-        return !player_res_torment(true, false);
+        return !player_res_torment(false);
 
     return !victim->res_torment();
 }

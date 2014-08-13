@@ -3206,7 +3206,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     else
     {
         // Torment effect (25%).
-        if (!player_res_torment())
+        if (!player_res_torment(false))
         {
             if (debug)
                 return XOM_BAD_TORMENT;
