@@ -1383,9 +1383,7 @@ static void _wizard_modify_character(string inputdata)
         return;
     }
     else
-    {
         in_equipment = false;
-    }
 }
 
 /**
