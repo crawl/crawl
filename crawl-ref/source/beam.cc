@@ -4069,10 +4069,6 @@ void bolt::affect_player()
             you.attribute[ATTR_BARBS_POW] = 4;
     }
 
-    // Acid.
-    if (flavour == BEAM_ACID)
-        splash_with_acid(5, beam_source, affects_items);
-
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
 
@@ -4112,6 +4108,10 @@ void bolt::affect_player()
     }
 
     internal_ouch(hurted);
+
+    // Acid. (Apply this afterward, to avoid bad message ordering.)
+    if (flavour == BEAM_ACID)
+        splash_with_acid(5, beam_source, affects_items);
 
     extra_range_used += range_used_on_hit();
 
