@@ -1771,18 +1771,32 @@ bool player_control_teleport(bool temp)
            || crawl_state.game_is_zotdef();
 }
 
-int player_res_torment(bool, bool temp)
+/**
+ * Is the player character immune to torment?
+ *
+ * @param random    Whether to include unreliable effects (stochastic resist)
+ * @param temp      Whether to include temporary effects (forms, statuses...)
+ * @return          Whether the player resists a given instance of torment; if
+ *                  random is passed, the result may vary from call to call.
+ */
+int player_res_torment(bool random, bool temp)
 {
-    return player_mutation_level(MUT_TORMENT_RESISTANCE)
-           || you.form == TRAN_LICH
-           || you.form == TRAN_FUNGUS
-           || you.form == TRAN_TREE
-           || you.form == TRAN_WISP
-           || you.form == TRAN_SHADOW
+    if (player_mutation_level(MUT_TORMENT_RESISTANCE))
+        return true;
+
+    if (random
+        && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
+        && coinflip())
+    {
+        return true;
+    }
+
+    if (!temp)
+        return false;
+
+    return get_form()->res_neg() == 3
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-           || you.petrified()
-           || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-               && coinflip());
+           || you.petrified();
 }
 
 // Kiku protects you from torment to a degree.
