@@ -475,24 +475,24 @@ An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
-A huge red glowing dragon, burning with hellfire. It seems to be possessed by
-the very essence of Gehenna and its eternal fire.
+A huge red glowing three-headed dragon, burning with hellfire. It seems to be
+possessed by the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
 
-A massive white dragon, covered with shards of gleaming ice, wholly possessed
-by the nightmarish cold of Cocytus.
+A massive white three-headed dragon, covered with shards of gleaming ice,
+wholly possessed by the nightmarish cold of Cocytus.
 %%%%
 the Serpent of Hell dis
 
-A towering beast with an army's worth of swords for teeth. Each of its scales
-is a shield with a razored edge.
+A towering three-headed beast with an army's worth of swords for teeth. Each of
+its scales is a shield with a razored edge.
 %%%%
 the Serpent of Hell tartarus
 
-Seemingly a pair of lurid magenta eyes hanging in the darkness, the outline of
-a vast, sinuous dragon is just barely perceptible behind. Its malice is
-palpable.
+Seemingly three pairs of lurid magenta eyes hanging in the darkness, the
+outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
+is palpable.
 %%%%
 # Non-unique monsters
 acid blob
