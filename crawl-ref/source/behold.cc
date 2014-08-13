@@ -233,6 +233,9 @@ void player::update_beholder(const monster* mon)
         if (beholders[i] == mon->mindex())
         {
             beholders.erase(beholders.begin() + i);
+            // Do this dance to clear the duration before printing messages
+            // (#8844), but still print all messages in the right order.
+            _removed_beholder(true);
             _removed_beholder_msg(mon);
             _removed_beholder();
             return;
