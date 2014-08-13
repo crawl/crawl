@@ -1029,7 +1029,7 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_FLY:
-        failure = 45 - (3 * you.experience_level);
+        failure = 42 - (3 * you.experience_level);
         break;
 
     case ABIL_TRAN_BAT:
