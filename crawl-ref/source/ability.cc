@@ -1716,15 +1716,8 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
-        if (you.no_tele(false, false, true))
+        if (you.no_tele_print_reason(false, false, true, quiet))
         {
-            if (!quiet)
-            {
-                if (you.species == SP_FORMICID)
-                    mpr("You cannot teleport.");
-                else
-                    mpr("You cannot teleport right now.");
-            }
             return false;
         }
         return true;

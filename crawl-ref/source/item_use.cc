@@ -1787,20 +1787,15 @@ void zap_wand(int slot)
 
     if (alreadyknown && zap_wand.target == you.pos())
     {
-        if (wand.sub_type == WAND_TELEPORTATION && you.no_tele(false, false))
+        if (wand.sub_type == WAND_TELEPORTATION
+            && you.no_tele_print_reason(false, false))
         {
-            if (you.species == SP_FORMICID)
-                mpr("You cannot teleport.");
-            else
-                mpr("You cannot teleport right now.");
             return;
         }
-        else if (wand.sub_type == WAND_HASTING && you.stasis(false))
+        else if (wand.sub_type == WAND_HASTING
+                 && stasis_blocks_effect(false, "%s prevents hasting.",
+                                         0, NULL, "You cannot haste."))
         {
-            if (you.species == SP_FORMICID)
-                mpr("You cannot haste.");
-            else
-                mpr("You cannot haste right now.");
             return;
         }
         else if (wand.sub_type == WAND_INVISIBILITY && _dont_use_invis())
@@ -2726,12 +2721,9 @@ void read_scroll(int slot)
         {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            if (you.no_tele(false, false, which_scroll == SCR_BLINKING))
+            if (you.no_tele_print_reason(false, false,
+                which_scroll == SCR_BLINKING))
             {
-                if (you.species == SP_FORMICID)
-                    mpr("You cannot teleport.");
-                else
-                    mpr("You cannot teleport right now.");
                 return;
             }
             break;
@@ -3075,7 +3067,8 @@ void read_scroll(int slot)
 
 bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
-                          const char *silenced_msg)
+                          const char *silenced_msg,
+                          const char *formicid_msg)
 {
     if (you.stasis(calc_unid))
     {
@@ -3089,7 +3082,8 @@ bool stasis_blocks_effect(bool calc_unid,
         {
             // Override message for formicids
             if (you.species == SP_FORMICID)
-                mpr("Your stasis keeps you stable.");
+                mpr(formicid_msg ? formicid_msg :
+                                   "Your stasis keeps you stable.");
             else
             {
                 const string name(amulet? amulet->name(DESC_YOUR) : "Something");

@@ -29,6 +29,7 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -980,12 +981,12 @@ static bool _too_hot_to_cast(spell_type spell)
 }
 #endif
 
-bool is_prevented_teleport(spell_type spell)
+bool is_prevented_teleport(spell_type spell, bool quiet)
 {
     return (spell == SPELL_BLINK
              || spell == SPELL_CONTROLLED_BLINK
              || spell == SPELL_TELEPORT_SELF)
-            && you.no_tele(false, false, spell != SPELL_TELEPORT_SELF);
+            && you.no_tele_print_reason(false, false, spell != SPELL_TELEPORT_SELF, quiet);
 }
 
 bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
@@ -1105,14 +1106,8 @@ static bool _spellcasting_aborted(spell_type spell,
         return true;
     }
 
-    if (is_prevented_teleport(spell))
-    {
-        if (you.species == SP_FORMICID)
-            mpr("You cannot teleport.");
-        else
-            mpr("You cannot teleport right now.");
+    if (is_prevented_teleport(spell, false))
         return true;
-    }
 
     if (spell == SPELL_MALIGN_GATEWAY && !can_cast_malign_gateway())
     {
@@ -1342,13 +1337,10 @@ spret_type your_spells(spell_type spell, int powc,
             return SPRET_ABORT;
         }
 
-        if (spell == SPELL_HASTE && spd.isMe() && you.stasis(false))
+        if (spell == SPELL_HASTE && spd.isMe()
+            && stasis_blocks_effect(false, "%s prevents hasting.",
+                                    0, NULL, "You cannot haste."))
         {
-            if (you.species == SP_FORMICID)
-                mpr("You cannot haste.");
-            else
-                mpr("You cannot haste right now.");
-
             return SPRET_ABORT;
         }
     }

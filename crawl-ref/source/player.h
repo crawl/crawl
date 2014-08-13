@@ -537,7 +537,8 @@ public:
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
-                       bool calc_unid = true) const;
+                       bool calc_unid = true,
+                       vector<item_def> *matches = NULL) const;
 
     item_def *weapon(int which_attack = -1) const;
     item_def *shield() const;
@@ -647,6 +648,8 @@ public:
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;
+    bool no_tele_print_reason(bool calc_unid = true, bool permit_id = true,
+                 bool blink = false, bool quiet = false) const;
 
     bool gourmand(bool calc_unid = true, bool items = true) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;
