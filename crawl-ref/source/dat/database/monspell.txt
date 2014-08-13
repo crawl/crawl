@@ -320,6 +320,10 @@ unseen Ensnare Arachne cast
 
 A stream of webbing shoots out from thin air.
 %%%%
+Lehudib's Crystal Spear the Serpent of Hell cast
+
+@The_monster@ spits crystal @at@ @target@.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
