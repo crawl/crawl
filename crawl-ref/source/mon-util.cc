@@ -1322,8 +1322,7 @@ bool mons_is_ghost_demon(monster_type mc)
 {
     return mc == MONS_UGLY_THING
             || mc == MONS_VERY_UGLY_THING
-            || mc == MONS_PLAYER_GHOST
-            || mc == MONS_PLAYER_ILLUSION
+            || mons_is_pghost(mc)
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
             || mons_class_is_chimeric(mc)
