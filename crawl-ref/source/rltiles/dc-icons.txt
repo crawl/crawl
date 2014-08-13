@@ -32,9 +32,6 @@ neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 summoned SUMMONED
 summoned_durable PERM_SUMMON
-mimic MIMIC
-inept_mimic INEPT_MIMIC
-ravenous_mimic RAVENOUS_MIMIC
 %rim 0
 poison POISON
 %rim 1

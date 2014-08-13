@@ -1376,8 +1376,8 @@ KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
 KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
          whip not_cursed w:2 / hat not_cursed mundane w:5
-KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
-KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot
+KITEM:   f = abyssal rune of zot mimic
+KITEM:   g = abyssal rune of zot
 SHUFFLE: 14 / 23
 NSUBST:  f = 1:g / *:f, d = 2:e / 2 = de / *:d
 SUBST:   x = xxxxc, c = cccvb

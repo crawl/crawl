@@ -238,9 +238,6 @@ bool mons_class_flag(monster_type mc, uint64_t bf);
 
 mon_holy_type mons_class_holiness(monster_type mc);
 
-bool mons_is_mimic(monster_type mc);
-bool mons_is_item_mimic(monster_type mc);
-bool mons_is_feat_mimic(monster_type mc);
 void discover_mimic(const coord_def& pos, bool wake = true);
 void discover_shifter(monster* shifter);
 

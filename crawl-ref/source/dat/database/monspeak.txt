@@ -1531,6 +1531,7 @@ w:5
 dragon
 %%%%
 _laughs_
+# also used by mimics
 
 snickers
 

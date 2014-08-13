@@ -2510,8 +2510,6 @@ int monster_die(monster* mons, killer_type killer,
              && !mons->pacified() && (!summoned || duration > 0) && !wizard
              && mons_bennu_can_revive(mons))
         mons_bennu_revive(mons);
-    else if (mons_is_mimic(mons->type))
-        drop_items = false;
     else if (!mons->is_summoned())
     {
         if (mons_genus(mons->type) == MONS_MUMMY)

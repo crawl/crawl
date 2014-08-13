@@ -734,12 +734,10 @@ ENDMAP
 
 # Things aren't always what they seem (Lemuel)
 #
-# Intentionally moved this deeper because explore will gladly run into the
-# room, and being hit by multiple mimics is un-fun.
 # Slight tweak by having a fraction (unknown to the player) of items be
 # real. (dp)
 NAME:   fake_guardian_serpent_vault
-DEPTH:  Depths, Elf, Snake
+DEPTH:  D:12-, Depths, Elf, Snake
 WEIGHT: 5
 MONS:  patrolling guardian serpent
 : local b = crawl.random2(10)

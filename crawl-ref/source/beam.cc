@@ -5529,8 +5529,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_INVISIBILITY:
     {
-        // Mimic or already glowing.
-        if (mons_is_mimic(mon->type) || mon->glows_naturally())
+        // Already glowing.
+        if (mon->glows_naturally())
             return MON_UNAFFECTED;
 
         if (enchant_monster_invisible(mon, "flickers and vanishes"))

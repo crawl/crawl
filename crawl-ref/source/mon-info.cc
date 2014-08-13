@@ -574,12 +574,6 @@ monster_info::monster_info(const monster* m, int milev)
             inv[MSLOT_WEAPON].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
         }
-        if (mons_is_item_mimic(type))
-        {
-            ASSERT(m->inv[MSLOT_MISCELLANY] != NON_ITEM);
-            inv[MSLOT_MISCELLANY].reset(
-                new item_def(get_item_info(mitm[m->inv[MSLOT_MISCELLANY]])));
-        }
         return;
     }
 
@@ -730,7 +724,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->inv[i] == NON_ITEM)
             ok = false;
         else if (i == MSLOT_MISCELLANY)
-            ok = mons_is_mimic(type);
+            ok = false;
         else if (attitude == ATT_FRIENDLY)
             ok = true;
         else if (i == MSLOT_WAND)
@@ -861,8 +855,6 @@ string monster_info::_core_name() const
         s = "royal jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
-    else if (mons_is_mimic(nametype))
-        s = mimic_name();
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -1076,55 +1068,6 @@ string monster_info::common_name(description_level_type desc) const
     return s;
 }
 
-dungeon_feature_type monster_info::get_mimic_feature() const
-{
-    if (!props.exists("feat_type"))
-        return DNGN_UNSEEN;
-    return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
-}
-
-const item_def* monster_info::get_mimic_item() const
-{
-    ASSERT(mons_is_item_mimic(type));
-
-    return inv[MSLOT_MISCELLANY].get();
-}
-
-string monster_info::mimic_name() const
-{
-    string s;
-    if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
-        s = "inept ";
-    if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
-        s = "ravenous ";
-#if TAG_MAJOR_VERSION == 34
-    if (type == MONS_MONSTROUS_ITEM_MIMIC)
-        s = "monstrous ";
-#endif
-
-    if (props.exists("feat_type"))
-        s += feat_type_name(get_mimic_feature());
-    else if (item_def* item = inv[MSLOT_MISCELLANY].get())
-    {
-        if (item->base_type == OBJ_GOLD)
-            s += "pile of gold";
-        else if (item->base_type == OBJ_MISCELLANY
-                 && item->sub_type == MISC_RUNE_OF_ZOT)
-        {
-            s += "rune";
-        }
-        else if (item->base_type == OBJ_ORBS)
-            s += "orb";
-        else
-            s += item->name(DESC_DBNAME);
-    }
-
-    if (!s.empty())
-        s += " ";
-
-    return s + "mimic";
-}
-
 bool monster_info::has_proper_name() const
 {
     return !mname.empty() && !mons_is_ghost_demon(type)
@@ -1201,10 +1144,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (diff_delta > 0)
         return true;
     else if (diff_delta < 0)
-        return false;
-
-    // Force mimics of different types to be treated like the same one.
-    if (mons_is_mimic(m1.type) && mons_is_mimic(m2.type))
         return false;
 
     if (m1.type < m2.type)
@@ -1352,10 +1291,6 @@ string monster_info::pluralised_name(bool fullname) const
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
-    // Specialcase mimics, so they don't get described as piles of gold
-    // when that would be inappropriate. (HACK)
-    else if (mons_is_mimic(type))
-        return "mimics";
     else if (mons_genus(type) == MONS_DRACONIAN)
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if (mons_genus(type) == MONS_DEMONSPAWN)
@@ -1807,18 +1742,6 @@ size_type monster_info::body_size() const
             ret = SIZE_BIG;
         else if (number == 5)
             ret = SIZE_GIANT;
-    }
-    else if (mons_is_item_mimic(type))
-    {
-        const int mass = item_mass(*inv[MSLOT_MISCELLANY].get());
-        if (mass < 50)
-            ret = SIZE_TINY;
-        else if (mass < 100)
-            ret = SIZE_LITTLE;
-        else if (mass < 200)
-            ret = SIZE_SMALL;
-        else
-            ret = SIZE_MEDIUM;
     }
 
     return ret;

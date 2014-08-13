@@ -1786,7 +1786,7 @@ static void _pre_monster_move(monster* mons)
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.
-    if (!mons_is_mimic(mons->type) && testbits(mons->flags, MF_JUST_SUMMONED))
+    if (testbits(mons->flags, MF_JUST_SUMMONED))
     {
         mons->flags &= ~MF_JUST_SUMMONED;
         return;
@@ -1794,14 +1794,7 @@ static void _pre_monster_move(monster* mons)
 
     mon_acting mact(mons);
 
-    // Mimics get enough energy to act immediately when revealed.
-    if (mons_is_mimic(mons->type) && testbits(mons->flags, MF_JUST_SUMMONED))
-    {
-        mons->speed_increment = 80;
-        mons->flags &= ~MF_JUST_SUMMONED;
-    }
-    else
-        _monster_add_energy(mons);
+    _monster_add_energy(mons);
 
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)

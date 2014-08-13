@@ -1305,7 +1305,8 @@ bool monster::pickup(item_def &item, int slot, int near)
         return false;
     }
 
-    if (item.flags & ISFLAG_MIMIC && !mons_is_item_mimic(type))
+    // don't try to pick up mimics
+    if (item.flags & ISFLAG_MIMIC)
         return false;
 
     dungeon_events.fire_position_event(
@@ -1321,8 +1322,7 @@ bool monster::pickup(item_def &item, int slot, int near)
     item.set_holding_monster(mindex());
 
     pickup_message(item, near);
-    if (!mons_is_item_mimic(type))
-        equip(item, slot, near);
+    equip(item, slot, near);
     lose_pickup_energy();
     return true;
 }
@@ -5362,11 +5362,7 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
             view_update_at(old);
 #ifdef USE_TILE
             if (clear_tiles && !see_old)
-            {
                 tile_reset_fg(old);
-                if (mons_is_feat_mimic(type))
-                    tile_reset_feat(old);
-            }
 #endif
         }
         update_screen();

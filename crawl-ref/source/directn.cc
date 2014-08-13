@@ -2373,7 +2373,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return false;
 
     if (mon->type != monl->type)
-        return mons_is_mimic(mon->type) && mons_is_mimic(monl->type);
+        return false;
 
     if (mlist_full_info)
     {

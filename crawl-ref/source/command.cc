@@ -1177,7 +1177,7 @@ static int _do_description(string key, string type, const string &suffix,
         // will cause a crash.  Similarly for zombified monsters, since
         // they require a base monster.
         if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-            && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
+            && !mons_class_is_zombified(mon_num))
         {
             monster_info mi(mon_num);
             // Avoid slime creature being described as "buggy"
@@ -1578,11 +1578,6 @@ static void _find_description(bool *again, string *error_inout)
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
             monster_type m_type = get_monster_by_name(str);
-
-            // Not worth the effort handling the item; also, it would
-            // puzzle the players.  Thus, only unique matches work.
-            if (mons_is_mimic(m_type))
-                continue;
 
             // No proper monster, and causes crashes in Tiles.
             if (mons_is_tentacle_segment(m_type))

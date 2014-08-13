@@ -90,8 +90,6 @@ void set_auto_exclude(const monster* mon)
         int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             rad = 2;
-        else if (mons_is_mimic(mon->type))
-            rad = 1;
         set_exclude(mon->pos(), rad, true);
         // FIXME: If this happens for several monsters in the same turn
         //        (as is possible for some vaults), this could be really

@@ -799,7 +799,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
-        || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
+        || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))
     {
@@ -1099,7 +1099,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
     else if (player_in_branch(BRANCH_ABYSS) && you.can_see(mon)
              && !crawl_state.generating_level
-             && !mg.summoner && !mons_is_mimic(mon->type)
+             && !mg.summoner
              && !crawl_state.is_god_acting()
              && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
     {
@@ -1238,8 +1238,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         fpos.reset();
     else if (leader == 0 && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY ||
-            (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype))
-            || mons_is_mimic(montype))
+            (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype)))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
@@ -1604,9 +1603,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5) && !summoned)
         mon->add_ench(ENCH_SUBMERGED);
-
-    if (mons_is_mimic(mg.cls))
-        mon->props = mg.props;
 
     // Set attitude, behaviour and target.
     mon->attitude  = ATT_HOSTILE;

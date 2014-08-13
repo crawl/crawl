@@ -984,21 +984,6 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         if (job)
             tileset.push_back(tile_def(job, TEX_PLAYER));
     }
-    else if (mons_is_mimic(m->type))
-    {
-        tileidx_t idx;
-        if (mons_is_feat_mimic(m->type))
-        {
-            idx = m->props["tile_idx"].get_int();
-            tileset.push_back(tile_def(idx, TEX_FEAT));
-        }
-        else
-        {
-            idx = tileidx_monster(*m) & TILE_FLAG_MASK;
-            tileset.push_back(tile_def(idx, TEX_DEFAULT));
-        }
-        tileset.push_back(tile_def(TILEI_MIMIC, TEX_ICONS));
-    }
     else
     {
         tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
