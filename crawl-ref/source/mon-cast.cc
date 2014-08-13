@@ -4679,7 +4679,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case MONS_SERPENT_OF_HELL_COCYTUS:
             real_breaths[0] = SPELL_COLD_BREATH;
             real_breaths[1] = SPELL_FREEZING_CLOUD;
-            real_breaths[2] = SPELL_GLACIATE;
+            real_breaths[2] = SPELL_FLASH_FREEZE;
             break;
         case MONS_SERPENT_OF_HELL_DIS:
             real_breaths[0] = SPELL_METAL_SPLINTERS;
