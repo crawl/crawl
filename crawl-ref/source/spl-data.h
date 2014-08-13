@@ -222,9 +222,7 @@ static const struct spell_desc spelldata[] =
     SPELL_HASTE, "Haste",
      SPTYP_CHARMS,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY,
-     6,  // lowered to 6 from 8, since it's easily available from various items
-         // and Swiftness is level 2 (and gives a similar effect).  It's also
-         // not that much better than Invisibility. - bwr
+     6,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -1807,7 +1805,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STONESKIN, "Stoneskin",
-     SPTYP_EARTH | SPTYP_TRANSMUTATION, // was ench -- bwr
+     SPTYP_EARTH | SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL,
      2,
      100,
