@@ -311,6 +311,7 @@ struct counted_monster_list
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    string describe(description_level_type desc = DESC_THE);
+    string describe(description_level_type desc = DESC_THE,
+                    bool force_article = false);
 };
 #endif

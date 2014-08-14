@@ -554,7 +554,8 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const;
 
-    string name(description_level_type type, bool force_visible = false) const;
+    string name(description_level_type type, bool force_visible = false,
+                bool force_article = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
     string hand_name(bool plural, bool *can_plural = NULL) const;
