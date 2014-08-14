@@ -4138,13 +4138,21 @@ void display_char_status()
     _display_attack_delay();
 
     // magic resistance
-    mprf("You are %s to hostile enchantments.",
-         magic_res_adjective(player_res_magic(false)).c_str());
-    dprf("MR: %d", you.res_magic());
+    if (you.wizard)
+        mprf("You are %s to hostile enchantments (%d).",
+             magic_res_adjective(player_res_magic(false)).c_str(),
+             you.res_magic());
+    else
+        mprf("You are %s to hostile enchantments.",
+             magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
-    mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
-    dprf("Stealth: %d", check_stealth());
+    if (you.wizard)
+        mprf("You feel %s (%d).",
+             stealth_desc(check_stealth()).c_str(),
+             check_stealth());
+    else
+        mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
 }
 
 bool player::clarity(bool calc_unid, bool items) const
