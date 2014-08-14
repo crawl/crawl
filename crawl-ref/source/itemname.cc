@@ -31,6 +31,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
+#include "newgame.h" // get_undead_state
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -47,6 +48,7 @@
 #include "throw.h"
 #include "transform.h"
 #include "unicode.h"
+#include "unwind.h"
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -3521,7 +3523,15 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         if (!temp && you.form == TRAN_LICH)
-            return false;
+        {
+            // See what would happen if we were in our normal state.
+            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<undead_state_type> lifesim(you.is_undead,
+                                              get_undead_state(you.species));
+
+            if (!is_inedible(item))
+                return false;
+        }
 
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
