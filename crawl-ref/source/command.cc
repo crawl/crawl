@@ -2525,6 +2525,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>#</w>      load character from a dump file\n"
                        "<w>Z</w>      gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
+                       "<w>=</w>      show info about skill points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
