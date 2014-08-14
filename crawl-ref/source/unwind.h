@@ -1,10 +1,10 @@
 #ifndef UNWIND_H
 #define UNWIND_H
 
-/** Type that gives an lvalue dynamically-scoped temporary value.  An
- * unwind_var remembers the old value of a variable or other writable lvalue,
- * and restores the original (or a specified) value when the unwind_var goes
- * out of scope or is otherwise destroyed.
+/** Type that gives an lvalue a dynamically-scoped temporary value.  An
+ *  unwind_var wraps a variable or other writable lvalue, assigns it a
+ *  temporary value, and restores the original (or a specified) value when
+ *  the unwind_var goes out of scope or is otherwise destroyed.
  */
 template <typename T>
 class unwind_var
