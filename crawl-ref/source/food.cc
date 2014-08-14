@@ -1795,11 +1795,24 @@ bool is_inedible(const item_def &item)
         return true;
     }
 
-    if (item.base_type == OBJ_CORPSES
-        && (item.sub_type == CORPSE_SKELETON
-            || you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type)))
+    if (item.base_type == OBJ_CORPSES)
     {
-        return true;
+        if (item.sub_type == CORPSE_SKELETON)
+            return true;
+
+        if (you.species == SP_VAMPIRE)
+        {
+            if (!mons_has_blood(item.mon_type))
+                return true;
+        }
+        else
+        {
+            item_def chunk = item;
+            chunk.base_type = OBJ_FOOD;
+            chunk.sub_type  = FOOD_CHUNK;
+            if (is_inedible(chunk))
+                return true;
+        }
     }
 
     return false;
