@@ -509,7 +509,7 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-string player::name(description_level_type dt, bool) const
+string player::name(description_level_type dt, bool, bool) const
 {
     switch (dt)
     {
