@@ -2864,7 +2864,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_MAGIC_MAPPING:
-        magic_mapping(500, 90 + random2(11), false);
+        magic_mapping(500, 100, false);
         break;
 
     case SCR_TORMENT:
