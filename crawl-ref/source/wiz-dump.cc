@@ -29,6 +29,46 @@
 #include "unicode.h"
 #include "wiz-you.h"
 
+static int _find_ego_type(object_class_type type, const string &s)
+{
+    size_t begin_brand = s.find_first_not_of("{(, ");
+    if (begin_brand == string::npos)
+        return 0;
+    size_t end_brand = s.find_first_of("}), ", begin_brand);
+    if (end_brand == begin_brand)
+        return 0;
+    else if (end_brand == string::npos)
+        end_brand = s.length();
+    string brand_name = s.substr(begin_brand, end_brand - begin_brand);
+
+    item_def item;
+    item.base_type = type;
+
+    switch (type)
+    {
+    case OBJ_WEAPONS:
+        for (int i = SPWPN_NORMAL; i < NUM_SPECIAL_WEAPONS; ++i)
+        {
+            item.special = i;
+            if (brand_name == weapon_brand_name(item, true))
+                return i;
+        }
+        break;
+    case OBJ_ARMOUR:
+        for (int i = SPARM_NORMAL; i < NUM_SPECIAL_ARMOURS; ++i)
+        {
+            item.special = i;
+            if (brand_name == armour_ego_name(item, true))
+                return i;
+        }
+    break;
+    default:
+        break;
+    }
+
+    return 0;
+}
+
 static item_def _item_from_string(string s)
 {
     item_def ret;
@@ -58,65 +98,22 @@ static item_def _item_from_string(string s)
 
     string base_name = s.substr(0, end);
     item_kind parsed = item_kind_by_name(base_name);
-    if (parsed.base_type != OBJ_UNASSIGNED)
+    if (parsed.base_type == OBJ_UNASSIGNED)
+    {
+        // maybe a randart?
+    }
+    else
     {
         ret.base_type = parsed.base_type;
         ret.sub_type  = parsed.sub_type;
         /* pluses for item_kinds are only valid for manuals and runes
          * so we can skip them here for now */
+
+        ret.special = _find_ego_type(ret.base_type, s.substr(end));
     }
 
     ret.quantity = 1;
     item_colour(ret);
-
-    while (end < s.length())
-    {
-        size_t begin_brand = s.find_first_not_of("{(, ", end);
-        if (begin_brand == string::npos)
-            break;
-        size_t end_brand = s.find_first_of("}), ", begin_brand);
-        if (end_brand == begin_brand)
-            break;
-        else if (end_brand == string::npos)
-            end_brand = s.length();
-        string brand_name = s.substr(begin_brand, end_brand - begin_brand);
-
-        bool found = false;
-        switch (ret.base_type)
-        {
-        case OBJ_WEAPONS:
-            for (int i = SPWPN_NORMAL; i < NUM_SPECIAL_WEAPONS; ++i)
-            {
-                ret.special = i;
-                if (brand_name == weapon_brand_name(ret, true))
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                ret.special = SPWPN_NORMAL;
-            break;
-        case OBJ_ARMOUR:
-            for (int i = SPARM_NORMAL; i < NUM_SPECIAL_ARMOURS; ++i)
-            {
-                ret.special = i;
-                if (brand_name == armour_ego_name(ret, true))
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                ret.special = SPARM_NORMAL;
-        break;
-        // XXX
-        default:
-            break;
-        }
-
-        end = end_brand;
-    }
 
     return ret;
 }
