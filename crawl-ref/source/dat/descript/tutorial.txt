@@ -183,7 +183,8 @@ Don't forget about chopping corpses for food (with
 tutorial2 wait
 
 Rather than storm the room and get swarmed by monsters, you can also step back
-and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input>) for them to come to you.
+and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input><localtiles> or by
+<input>clicking</input> on your character</localtiles>) for them to come to you.
 %%%%
 tutorial2 resting_reminder
 
