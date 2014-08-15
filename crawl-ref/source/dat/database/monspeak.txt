@@ -3997,29 +3997,43 @@ w:1
 
 @The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
 %%%%
-############ FREDERICK ### A mercenary guarding the dungeon
+############ FREDERICK ### An extremely smug (& powerful) demigod
 Frederick
+
+w:50000
+@_Frederick_godbotherer_@
+
+@_Frederick_generic_@
+%%%%
+No God Frederick
+
+# might be nice to have some unique lines here for demigods & other atheists
+
+@_Frederick_generic_@
+%%%%
+_Frederick_generic_
 
 @_Frederick_common_@
 
 w:5
 @_Frederick_rare_@
 %%%%
-Beogh Frederick
+_Frederick_godbotherer_
 
-w:2
-@The_monster@ says, "You didn't bring enough reinforcements. Come back later!"
-
-w:30
-@Frederick@
-%%%%
-Okawaru Frederick
-
-w:2
 @The_monster@ says, "Pah! Those who rely on gods for strength get nowhere in life."
 
-w:30
-@Frederick@
+@The_monster@ says, "Do you think your god will save you from me?" @player_only@
+
+@The_monster@ says, "Praying to your god? Ha! It won't help." @player_only@
+
+@The_monster@ says, "Of all the petty fools that call themselves 'gods', {{ return you.god() }} may be the most useless."
+
+# uppercase first char (for eg the Shining One)
+"{{ return (you.god():gsub("^%l", string.upper)) }}?" @The_monster@ laughs.
+
+# might be a little too aggressive
+w:5
+@The_monster@ says, "Why bend the knee? I'd rather toss the gods from their thrones, and accept THEIR worship instead!"
 %%%%
 _Frederick_common_
 
@@ -4032,8 +4046,6 @@ VISUAL:@The_monster@ yawns in an exaggerated manner.
 @The_monster@ says, "Adventurers these days do not know how to walk, let alone fight."
 
 @The_monster@ says, "In my day, to be a hero meant something. Now, it just means you die quicker."
-
-@The_monster@ says, "You are rather slow, aren't you? Would you like a potion?"
 
 @The_monster@ says, "You call yourself an adventurer? Hah!"
 
@@ -4055,6 +4067,8 @@ VISUAL:@The_monster@ sighs.
 
 @The_monster@ says, "All of you adventurers look the same to me! Bumbling weaklings, the lot!" @player_only@
 
+# extra-silly
+w:5
 @The_monster@ says, "For you, today is the most challenging fight of your life. For me... well, I will have lunch shortly." @player_only@
 
 @The_monster@ says, "Perhaps I should have been a lumberjack. The trees might put up more of a fight."
