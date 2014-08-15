@@ -29,7 +29,8 @@ ORIENT:  encompass
 KFEAT:   ABC = .
 COLOUR:  defgABC = lightblue
 FTILE:   defgABC = tutorial_pad
-ITEM:    pair of boots mundane not_cursed
+# "useful" is for keeping the boots from turning into bardings
+ITEM:    pair of boots mundane not_cursed useful
 ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
 ITEM:    scimitar ego:venom not_cursed
