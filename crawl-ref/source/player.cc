@@ -3940,6 +3940,21 @@ static void _output_expiring_message(duration_type dur, const char* msg)
     }
 }
 
+static void _display_char_status(int value, const char *fmt, ...)
+{
+    va_list argp;
+    va_start(argp, fmt);
+
+    string msg = vmake_stringf(fmt, argp);
+
+    if (you.wizard)
+        mprf("%s (%d).", msg.c_str(), value);
+    else
+        mprf("%s.", msg.c_str());
+
+    va_end(argp);
+}
+
 static void _display_vampire_status()
 {
     string msg = "At your current hunger state you ";
@@ -4009,7 +4024,7 @@ static void _display_movement_speed()
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
                             && you.attribute[ATTR_SWIFTNESS] < 0);
 
-    mprf("Your %s speed is %s%s%s.",
+    _display_char_status(move_cost, "Your %s speed is %s%s%s",
           // order is important for these:
           (swim)    ? "swimming" :
           (water)   ? "wading" :
@@ -4082,10 +4097,8 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    if (you.wizard)
-        mprf("Your attack speed is %s (%d).", _attack_delay_desc(avg), avg);
-    else
-        mprf("Your attack speed is %s.", _attack_delay_desc(avg));
+    _display_char_status(avg, "Your attack speed is %s",
+                         _attack_delay_desc(avg));
 }
 
 // forward declaration
@@ -4138,21 +4151,14 @@ void display_char_status()
     _display_attack_delay();
 
     // magic resistance
-    if (you.wizard)
-        mprf("You are %s to hostile enchantments (%d).",
-             magic_res_adjective(player_res_magic(false)).c_str(),
-             you.res_magic());
-    else
-        mprf("You are %s to hostile enchantments.",
-             magic_res_adjective(player_res_magic(false)).c_str());
+    _display_char_status(you.res_magic(),
+                         "You are %s to hostile enchantments",
+                         magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
-    if (you.wizard)
-        mprf("You feel %s (%d).",
-             stealth_desc(check_stealth()).c_str(),
-             check_stealth());
-    else
-        mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
+    _display_char_status(check_stealth(),
+                         "You feel %s",
+                         stealth_desc(check_stealth()).c_str());
 }
 
 bool player::clarity(bool calc_unid, bool items) const
