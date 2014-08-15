@@ -359,6 +359,10 @@ bool chardump_parser::_parse_from_file(const string &full_filename)
     if (f.eof())
         return false;
 
+    string first_line = f.get_line();
+    if (first_line.substr(0, 34) != " Dungeon Crawl Stone Soup version ")
+        return false;
+
     while (!f.eof())
         _modify_character(f.get_line());
 
