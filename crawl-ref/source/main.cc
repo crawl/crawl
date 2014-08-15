@@ -760,9 +760,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'O': debug_test_explore(); break;
     // case CONTROL('O'): break;
 
-    case 'p': wizard_list_props(); break;
+    case 'p': wizard_transform(); break;
     case 'P': debug_place_map(true); break;
-    case CONTROL('P'): wizard_transform(); break;
+    case CONTROL('P'): wizard_list_props(); break;
 
     // case 'q': break;
     // case 'Q': break;
