@@ -128,6 +128,12 @@ bool chardump_parser::_check_skill(const vector<string> &tokens)
     if (size <= 3 || tokens[1] != "Level")
         return false;
 
+    if (!seen_skills)
+    {
+        you.init_skills();
+        seen_skills = true;
+    }
+
     skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
     double amount = atof(tokens[2].c_str());
     set_skill_level(skill, amount);
@@ -353,15 +359,17 @@ bool chardump_parser::_parse_from_file(const string &full_filename)
     if (f.eof())
         return false;
 
-    you.init_skills();
-
     while (!f.eof())
         _modify_character(f.get_line());
 
-    init_skill_order();
-    init_can_train();
-    init_train();
-    init_training();
+    if (seen_skills)
+    {
+        init_skill_order();
+        init_can_train();
+        init_train();
+        init_training();
+    }
+
     return true;
 }
 
