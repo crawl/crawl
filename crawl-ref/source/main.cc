@@ -145,6 +145,7 @@
 #include "viewgeom.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
+#include "wiz-dump.h"
 #include "wiz-fsim.h"
 #include "wiz-item.h"
 #include "wiz-mon.h"

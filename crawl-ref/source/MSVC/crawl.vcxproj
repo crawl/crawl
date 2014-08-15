@@ -596,6 +596,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\wcwidth.cc" />
     <ClCompile Include="..\windowmanager-sdl.cc" />
     <ClCompile Include="..\wiz-dgn.cc" />
+    <ClCompile Include="..\wiz-dump.cc" />
     <ClCompile Include="..\wiz-fsim.cc" />
     <ClCompile Include="..\wiz-item.cc" />
     <ClCompile Include="..\wiz-mon.cc" />
@@ -921,6 +922,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\windowmanager-sdl.h" />
     <ClInclude Include="..\windowmanager.h" />
     <ClInclude Include="..\wiz-dgn.h" />
+    <ClInclude Include="..\wiz-dump.h" />
     <ClInclude Include="..\wiz-fsim.h" />
     <ClInclude Include="..\wiz-item.h" />
     <ClInclude Include="..\wiz-mon.h" />
