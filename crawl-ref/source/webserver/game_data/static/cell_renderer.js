@@ -140,7 +140,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 return;
             }
 
+            // track whether this cell overlaps to the top or left
             this.current_sy = 0;
+            this.current_left_overlap = 0;
 
             cell.fg = enums.prepare_fg_flags(cell.fg || 0);
             cell.bg = enums.prepare_bg_flags(cell.bg || 0);
@@ -339,6 +341,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
 
             cell.sy = this.current_sy;
+            cell.left_overlap = this.current_left_overlap;
         },
 
         // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
@@ -958,11 +961,17 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             if (sy >= ey) return;
 
+            var total_x_offset = ((ofsx || 0) + info.ox + size_ox);
+
+            if (total_x_offset < this.current_left_overlap)
+                this.current_left_overlap = total_x_offset;
+
             if (sy < this.current_sy)
                 this.current_sy = sy;
 
             var w = info.ex - info.sx;
             var h = info.ey - info.sy;
+
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
             this.ctx.webkitImageSmoothingEnabled =
                 options.get("tile_filter_scaling");
@@ -971,7 +980,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
-                               x + ((ofsx || 0) + info.ox + size_ox) * this.x_scale,
+                               x + total_x_offset * this.x_scale,
                                y + sy * this.y_scale,
                                w * this.x_scale,
                                (h + ey - pos_ey_adjust) * this.y_scale)
