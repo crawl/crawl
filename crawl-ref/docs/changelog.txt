@@ -258,7 +258,7 @@ Cards
     speeding up the player.
   - Potion card has a new list of effects.
 * The Mercenary card can generate base demonspawn instead of spriggan riders.
-* Decks of war now contain the Drowsing and Potion cards.
+* Decks of war now contain the Dowsing and Potion cards.
 * Decks of dungeon are no more.
 * Removed cards: Experience, Sage, Water, Vitrification, Trowel, Minefield,
   Shuffle, Warp, Portal, Frost, Flame, Spark, Flight, Battlelust, and Genie.
