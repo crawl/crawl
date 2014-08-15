@@ -727,8 +727,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '\\': debug_make_shop();                    break;
     case 'f': wizard_quick_fsim();                   break;
     case 'F': wizard_fight_sim(false);               break;
-    case 'm': wizard_create_spec_monster();          break;
-    case 'M': wizard_create_spec_monster_name();     break;
+    case 'm': wizard_create_spec_monster_name();     break;
+    case 'M': wizard_create_spec_monster();          break;
     case 'R': wizard_spawn_control();                break;
     case 'r': wizard_change_species();               break;
     case '>': wizard_place_stairs(true);             break;
