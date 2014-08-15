@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "dlua.h"
 #include "env.h"
+#include "files.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "jobs.h"
@@ -647,7 +648,12 @@ void do_crash_dump()
 
     if (!crawl_state.test && !_assert_msg.empty())
         fprintf(stderr, "\n%s", _assert_msg.c_str());
-    fprintf(stderr, "\nWriting crash info to %s\n", name);
+    fprintf(stderr,
+            "\n\nWe crashed! This is likely due to a bug in Crawl. "
+            "Please submit a bug report at https://crawl.develz.org/mantis/ "
+            "and include the crash report (%s), your save file (%s), and a "
+            "description of what you were doing when this crash occurred.\n\n",
+            name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
 
