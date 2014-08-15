@@ -8,7 +8,8 @@
 
 class chardump_parser {
 public:
-    chardump_parser(const string &f) : filename(f), in_equipment(false) { }
+    chardump_parser(const string &f)
+        : filename(f), in_equipment(false), seen_skills(false) { }
 
     bool parse();
 
@@ -26,6 +27,7 @@ private:
 
     string filename;
     bool in_equipment;
+    bool seen_skills;
 };
 
 void wizard_load_dump_file();
