@@ -693,13 +693,13 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'b': blink(1000, true, true); break;
-    case 'B':
+    case 'B': you.teleport(true, true); break;
+    case CONTROL('B'):
         if (!player_in_branch(BRANCH_ABYSS))
             banished("wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
         break;
-    case CONTROL('B'): you.teleport(true, true); break;
 
     case 'c': wizard_draw_card(); break;
     case 'C': wizard_uncurse_item(); break;
@@ -709,7 +709,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'D': wizard_detect_creatures(); break;
     case CONTROL('D'): wizard_edit_durations(); break;
 
-    // case 'e': break;
+    case 'e': wizard_set_hunger_state(); break;
     // case 'E': break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
@@ -725,7 +725,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'h': wizard_heal(false); break;
     case 'H': wizard_heal(true); break;
-    case CONTROL('H'): wizard_set_hunger_state(); break;
+    // case CONTROL('H'): break;
 
     case 'i': wizard_identify_pack(); break;
     case 'I': wizard_unidentify_pack(); break;
@@ -744,13 +744,13 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     // case 'K': break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
-    // case 'l': break;
+    case 'l': wizard_set_xl(); break;
     case 'L': debug_place_map(false); break;
-    case CONTROL('L'): wizard_set_xl(); break;
+    // case CONTROL('L'): break;
 
     case 'm': wizard_create_spec_monster_name(); break;
     case 'M': wizard_create_spec_monster(); break;
-    case CONTROL('M'): wizard_memorise_spec_spell(); break;
+    // case CONTROL('M'): break; // XXX do not use, menu command
 
     // case 'n': break;
     // case 'N': break;
@@ -784,17 +784,17 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'T': debug_make_trap(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
 
-    case 'u':
-    case 'U': wizard_level_travel(false); break;
+    case 'u': wizard_level_travel(false); break;
+    // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
     case 'v': wizard_value_artefact(); break;
-    // case 'V': break;
-    case CONTROL('V'): wizard_toggle_xray_vision(); break;
+    case 'V': wizard_toggle_xray_vision(); break;
+    // case CONTROL('V'): break;
 
     case 'w': wizard_god_mollify(); break;
     case 'W': wizard_god_wrath(); break;
-    // case CONTROL('W'): break;
+    case CONTROL('W'): wizard_mod_tide(); break;
 
     case 'x':
         you.experience = 1 + exp_needed(1 + you.experience_level);
@@ -820,7 +820,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     // case CONTROL('Y'): break;
 
     case 'z': wizard_cast_spec_spell(); break;
-    case 'Z':
+    // case 'Z': break;
     case CONTROL('Z'):
         if (crawl_state.game_is_zotdef())
         {
@@ -831,7 +831,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("But you're not in Zot Defence!");
         break;
 
-    // case '!': break;
+    case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
     case '$': you.add_gold(1000); break;
@@ -840,7 +840,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '&': wizard_list_companions(); break;
     // case '*': break;
     case '(': wizard_create_feature(); break;
-    case ')': wizard_mod_tide(); break;
+    // case ')': break;
 
     // case '`': break;
     case '~': wizard_interlevel_travel(); break;
@@ -874,11 +874,11 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '\'': wizard_list_items(); break;
     case '"': debug_list_monsters(); break;
 
-    // case ',': break;
-    case '>': wizard_place_stairs(true); break;
+    case ',': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
 
-    // case '.': break;
-    case '<': wizard_place_stairs(false); break;
+    case '.': wizard_place_stairs(false); break;
+    // case '<': break; // XXX do not use, menu command
 
     // case '/': break;
 
@@ -959,14 +959,12 @@ static void _handle_wizard_command()
         case 'm':
         case 'M':
         case 'X':
-        case '!':
-        case '[':
         case ']':
         case '^':
         case '%':
         case 'o':
         case 'z':
-        case 'Z':
+        case CONTROL('Z'):
             break;
 
         default:
