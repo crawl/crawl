@@ -3059,19 +3059,36 @@ void start_explore(bool grab_items)
             else if (Options.auto_sacrifice == AS_PROMPT_IGNORE)
             {
                 // Make Escape => 'n' and stop run.
-                explicit_keymap map;
-                map[ESCAPE] = 'n';
-                map[CONTROL('G')] = 'n';
-                if (yesno("There are sacrificable items here, ignore them?",
-                          true, 'y', true, false, false, &map))
+                bool repeat_prompt = false;
+                do
                 {
-                    mark_items_non_visit_at(you.pos());
+                    mprf(MSGCH_PROMPT,
+                         "There are sacrificable items here, ignore them? "
+                         "[(Y)es/(p)ray/(n)o]");
+                    repeat_prompt = false;
+
+                    switch (getchm(KMC_CONFIRM))
+                    {
+                    case 'Y':
+                        mark_items_non_visit_at(you.pos());
+                        break;
+
+                    case 'p':
+                        pray();
+                        //fallthrough
+                    case 'n':
+                    case 'N':
+                    case ESCAPE:
+                    case CONTROL('G'):
+                        you.running = 0; // Abort explore.
+                        return;
+
+                    default:
+                        repeat_prompt = true;
+                        break;
+                    }
                 }
-                else
-                {
-                    you.running = 0; // Abort explore.
-                    return;
-                }
+                while (repeat_prompt);
             }
             else
                 mark_items_non_visit_at(you.pos());
