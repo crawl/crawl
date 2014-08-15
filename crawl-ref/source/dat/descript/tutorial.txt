@@ -42,7 +42,7 @@ tutorial1 downstairs
 
 When standing on a staircase leading downwards, you can enter the next level
 with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or with
-<input>left click</input> on your character</localtiles>.
+a <input>left click</input> on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
@@ -207,7 +207,8 @@ Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><no
 tutorial2 downstairs
 
 Well done! After resting to full health continue to the next level with
-<input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
+<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or by <input>clicking</input>
+on your character</localtiles>.
 %%%%
 tutorial2 newlevel
 
@@ -346,7 +347,7 @@ tutorial3 downstairs
 
 Well fought! If necessary, rest up with <input>$cmd[CMD_REST]</input>, the
 continue downwards with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or
-with <input>Shift-Click</input> on your character</localtiles>.
+with a <input>click</input> on your character</localtiles>.
 %%%%
 tutorial3 command_help
 
@@ -419,7 +420,7 @@ tutorial3 enter_shop
 # TODO: Everything else except how to enter the shop should be told in the
 #       shopping screen.
 To enter this shop, press <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or
-<input>Shift-leftclick</input> on your character</localtiles>. To buy items,
+<input>click</input> on your character</localtiles>. To buy items,
 select them with their hotkey, hit <input>Enter</input> and confirm with
 <input>y</input>es. You can switch to description mode with <input>!</input>.
 %%%%
