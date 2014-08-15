@@ -4207,6 +4207,15 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     mons_spec base_monster = mons_by_name(s);
     if (base_monster.type < 0)
         base_monster.type = MONS_PROGRAM_BUG;
+
+    monster_type dummy_mons = MONS_PROGRAM_BUG;
+    coord_def dummy_pos;
+    dungeon_char_type dummy_feat;
+    level_id place = level_id::current();
+    base_monster.type = resolve_monster_type(base_monster.type, dummy_mons,
+                                             PROX_ANYWHERE, &dummy_pos, 0,
+                                             &dummy_feat, &place);
+
     spec.monbase = static_cast<monster_type>(base_monster.type);
     spec.number = base_monster.number;
 
