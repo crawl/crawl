@@ -8,7 +8,7 @@
 
 class chardump_parser {
 public:
-    chardump_parser(const string &f) : filename(f) { }
+    chardump_parser(const string &f) : filename(f), in_equipment(false) { }
 
     bool parse();
 
@@ -22,9 +22,10 @@ private:
     bool _check_stats2(const vector<string> &tokens);
     bool _check_stats3(const vector<string> &tokens);
     bool _check_char(const vector<string> &tokens);
-    bool _check_equipment(const vector<string> &tokens, bool in_equipment);
+    bool _check_equipment(const vector<string> &tokens);
 
     string filename;
+    bool in_equipment;
 };
 
 void wizard_load_dump_file();

@@ -254,8 +254,7 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
     return false;
 }
 
-bool chardump_parser::_check_equipment(const vector<string> &tokens,
-                                       bool in_equipment)
+bool chardump_parser::_check_equipment(const vector<string> &tokens)
 {
     size_t size = tokens.size();
 
@@ -317,7 +316,6 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens,
 void chardump_parser::_modify_character(const string &inputdata)
 {
     vector<string> tokens = split_string(" ", inputdata);
-    static bool in_equipment = false;
 
     if (_check_skill(tokens))
         return;
@@ -330,7 +328,7 @@ void chardump_parser::_modify_character(const string &inputdata)
     if (_check_char(tokens))
         return;
 
-    if (_check_equipment(tokens, in_equipment))
+    if (_check_equipment(tokens))
     {
         in_equipment = true;
         return;
