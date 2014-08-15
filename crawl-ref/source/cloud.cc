@@ -478,6 +478,8 @@ void move_cloud_to(coord_def src, coord_def dst)
 // that clouds get moved along with the rest of the map.
 void move_cloud(int cloud, const coord_def& newpos)
 {
+    ASSERT(!cell_is_solid(newpos));
+
     if (cloud != EMPTY_CLOUD)
     {
         const coord_def oldpos = env.cloud[cloud].pos;
