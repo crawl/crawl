@@ -472,8 +472,10 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 8;
     else if (tokens[0] == "rMut")
         offset = 7;
-    else if (tokens[0] == "Saprov")
+    else if (tokens[0] == "Saprov") // older dump files
         offset = 9;
+    else if (tokens[0] == "Gourm")
+        offset = 5;
     else if (tokens[0] == "MR")
         offset = 5;
     else if (in_equipment)
