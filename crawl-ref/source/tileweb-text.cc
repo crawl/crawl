@@ -3,7 +3,7 @@
 
 #ifdef USE_TILE_WEB
 
-#include "libutil.h"
+#include "strings.h"
 #include "tileweb-text.h"
 #include "tileweb.h"
 #include "unicode.h"
