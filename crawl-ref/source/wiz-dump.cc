@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -95,6 +96,9 @@ static item_def _item_from_string(string s)
         end = s.length();
     else
         end--;
+
+    set_ident_type(ret, ID_KNOWN_TYPE);
+    set_ident_flags(ret, ISFLAG_IDENT_MASK);
 
     string base_name = s.substr(0, end);
     item_kind parsed = item_kind_by_name(base_name);
