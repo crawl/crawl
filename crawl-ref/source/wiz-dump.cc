@@ -10,9 +10,11 @@
 #include <algorithm>
 #include <functional>
 
+#include "artefact.h"
 #include "chardump.h"
 #include "dbg-util.h"
 #include "defines.h"
+#include "describe.h"
 #include "enum.h"
 #include "env.h"
 #include "externs.h"
@@ -29,6 +31,183 @@
 #include "strings.h"
 #include "unicode.h"
 #include "wiz-you.h"
+
+static uint8_t _jewellery_type_from_artefact_prop(const string &s)
+{
+    if (s == "+Rage")
+        return AMU_RAGE;
+    if (s == "Clar")
+        return AMU_CLARITY;
+    if (s == "Ward")
+        return AMU_WARDING;
+    if (s == "rCorr")
+        return AMU_RESIST_CORROSION;
+    if (s == "Gourm")
+        return AMU_THE_GOURMAND;
+    if (s == "Inacc")
+        return AMU_INACCURACY;
+    if (s == "rMut")
+        return AMU_RESIST_MUTATION;
+    if (s == "Spirit")
+        return AMU_GUARDIAN_SPIRIT;
+    if (s == "Faith")
+        return AMU_FAITH;
+    if (s == "Stasis")
+        return AMU_STASIS;
+
+    if (s == "Fire")
+        return RING_FIRE;
+    if (s == "Ice")
+        return RING_ICE;
+    if (s == "+/*Tele")
+        return RING_TELEPORTATION;
+    if (s == "+cTele")
+        return RING_TELEPORT_CONTROL;
+    if (s == "SustAb")
+        return RING_SUSTAIN_ABILITIES;
+    if (s == "Wiz")
+        return RING_WIZARDRY;
+    if (s == "Regen")
+        return RING_REGENERATION;
+    if (s == "SInv")
+        return RING_SEE_INVISIBLE;
+    if (s == "+Inv")
+        return RING_INVISIBILITY;
+    if (s == "Noisy")
+        return RING_LOUDNESS;
+    if (s == "+Fly")
+        return RING_FLIGHT;
+    if (s == "rPois")
+        return RING_POISON_RESISTANCE;
+
+    if (s.substr(0, 2) == "AC")
+        return RING_PROTECTION;
+    if (s.substr(0, 2) == "MP")
+        return RING_MAGICAL_POWER;
+    if (s.substr(0, 4) == "Slay")
+        return RING_SLAYING;
+    if (s.substr(0, 3) == "Str")
+        return RING_STRENGTH;
+    if (s.substr(0, 3) == "Dex")
+        return RING_DEXTERITY;
+    if (s.substr(0, 3) == "Int")
+        return RING_INTELLIGENCE;
+    if (s.substr(0, 2) == "EV")
+        return RING_EVASION;
+    if (s.substr(0, 5) == "Stlth")
+        return RING_STEALTH;
+    if (s.substr(0, 2) == "MR")
+        return RING_PROTECTION_FROM_MAGIC;
+
+    if (s.substr(0, 2) == "rF")
+        return RING_PROTECTION_FROM_FIRE;
+    if (s.substr(0, 2) == "rC")
+        return RING_PROTECTION_FROM_COLD;
+    if (s.substr(0, 2) == "rN")
+        return RING_LIFE_PROTECTION;
+
+    return NUM_JEWELLERY;
+}
+
+static item_kind _find_real_item_kind(string &s)
+{
+    if (s.substr(0, 7) == "amulet ")
+    {
+        item_kind amulet = {OBJ_JEWELLERY, NUM_JEWELLERY, 0, 0};
+        return amulet;
+    }
+    else if (s.substr(0, 5) == "ring ")
+    {
+        item_kind ring = {OBJ_JEWELLERY, NUM_JEWELLERY, 0, 0};
+        return ring;
+    }
+
+    for (size_t end = s.length();
+         end > 0 && end != string::npos;
+         end = s.rfind(' ', end - 1))
+    {
+        item_kind kind = item_kind_by_name(s.substr(0, end));
+        if (kind.base_type != OBJ_UNASSIGNED)
+        {
+            end = s.rfind(' ', end - 1);
+            if (end == string::npos)
+                end = 0;
+            else
+                end = end + 1;
+            s = s.substr(end);
+            return kind;
+        }
+    }
+
+    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
+    return err;
+}
+
+static void _apply_randart_properties(item_def &item,
+                                      const string &name,
+                                      const string &props)
+{
+    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
+        rap[i] = static_cast<short>(0);
+
+    set_artefact_name(item, name);
+
+    size_t idx = 0;
+    while (idx < props.length())
+    {
+        size_t begin_brand = props.find_first_not_of("{(, ", idx);
+        if (begin_brand == string::npos)
+            break;
+        size_t end_brand = props.find_first_of("}), ", begin_brand);
+        if (end_brand == begin_brand)
+            break;
+        else if (end_brand == string::npos)
+            end_brand = props.length();
+        string brand_name = props.substr(begin_brand, end_brand - begin_brand);
+
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == NUM_JEWELLERY)
+        {
+            item.sub_type = _jewellery_type_from_artefact_prop(brand_name);
+        }
+
+        string ins = artefact_inscription(item);
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
+        {
+            for (short j = 1; j < 8; j++)
+            {
+                item_def copy = item;
+                copy.props[ARTEFACT_PROPS_KEY].get_vector()[i] = j;
+                string ins_with_prop = ins.length()
+                    ? ins + " " + brand_name
+                    : brand_name;
+                if (artefact_inscription(copy) == ins_with_prop)
+                {
+                    rap[i] = j;
+                    break;
+                }
+            }
+            for (short j = -1; j > -8; j--)
+            {
+                item_def copy = item;
+                copy.props[ARTEFACT_PROPS_KEY].get_vector()[i] = j;
+                string ins_with_prop = ins.length()
+                    ? ins + " " + brand_name
+                    : brand_name;
+                if (artefact_inscription(copy) == ins_with_prop)
+                {
+                    rap[i] = j;
+                    break;
+                }
+            }
+        }
+
+        idx = end_brand;
+    }
+
+    if (item.base_type == OBJ_JEWELLERY)
+        ASSERT(item.sub_type != NUM_JEWELLERY);
+}
 
 static int _find_ego_type(object_class_type type, const string &s)
 {
@@ -105,6 +284,16 @@ static item_def _item_from_string(string s)
     if (parsed.base_type == OBJ_UNASSIGNED)
     {
         // maybe a randart?
+        parsed = _find_real_item_kind(base_name);
+        if (parsed.base_type != OBJ_UNASSIGNED)
+        {
+            ret.base_type = parsed.base_type;
+            ret.sub_type  = parsed.sub_type;
+
+            make_item_randart(ret, true);
+
+            _apply_randart_properties(ret, base_name, s.substr(end));
+        }
     }
     else
     {
