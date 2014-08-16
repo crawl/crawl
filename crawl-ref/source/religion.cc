@@ -2791,6 +2791,7 @@ void excommunication(god_type new_god, bool immediate)
 
     case GOD_MAKHLEB:
         _set_penance(old_god, 25);
+        add_daction(DACT_ALLY_MAKHLEB);
         break;
 
     case GOD_TROG:
