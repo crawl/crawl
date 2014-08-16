@@ -72,13 +72,11 @@
 #include "unicode.h"
 #include "view.h"
 
-static int _spell_enhancement(unsigned int typeflags);
+static int _spell_enhancement(spell_type spell);
 
 static void _surge_power(spell_type spell)
 {
-    int enhanced = 0;
-
-    enhanced += _spell_enhancement(get_spell_disciplines(spell));
+    int enhanced = _spell_enhancement(spell);
 
     if (enhanced)               // one way or the other {dlb}
     {
@@ -395,8 +393,6 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         power = 5 + you.skill(SK_EVOCATIONS, 3);
     else
     {
-        int enhanced = 0;
-
         unsigned int disciplines = get_spell_disciplines(spell);
 
         int skillcount = count_bits(disciplines);
@@ -423,8 +419,9 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
-        if (!fail_rate_check)
-            enhanced = _spell_enhancement(disciplines);
+        const int enhanced = fail_rate_check
+            ? 0
+            : _spell_enhancement(spell);
 
         if (enhanced > 0)
         {
@@ -471,8 +468,9 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     return power;
 }
 
-static int _spell_enhancement(unsigned int typeflags)
+static int _spell_enhancement(spell_type spell)
 {
+    unsigned int typeflags = get_spell_disciplines(spell);
     int enhanced = 0;
 
     if (typeflags & SPTYP_CONJURATION)
@@ -509,6 +507,9 @@ static int _spell_enhancement(unsigned int typeflags)
         enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
+
+    if (you.form == TRAN_DRAGON && spell == SPELL_DRAGON_CALL)
+        enhanced++;
 
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
