@@ -3182,7 +3182,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             && !you.attribute[ATTR_HELD]
             && !you.petrifying()
             && !you.is_constricted())
+        {
+            mpr("You have no need to draw out power.");
             return SPRET_ABORT;
+        }
         ru_draw_out_power();
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
