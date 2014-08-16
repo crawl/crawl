@@ -281,7 +281,9 @@ bool add_spell_to_memory(spell_type spell)
                 break;
         }
 
-    mprf("Spell assigned to '%c'.", index_to_letter(j));
+    if (you.num_turns)
+        mprf("Spell assigned to '%c'.", index_to_letter(j));
+
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
