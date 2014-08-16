@@ -960,6 +960,16 @@ void wizard_get_god_gift()
         return;
     }
 
+    if (you_worship(GOD_RU))
+    {
+        ru_offer_new_sacrifices();
+        simple_god_message(" believes you are ready to make a new sacrifice.");
+        more();
+        you.props["ru_sacrifice_delay"] = 70;
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+        return;
+    }
+
     if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
@@ -1231,20 +1241,6 @@ void wizard_load_dump_file()
     {
         canned_msg(MSG_NOTHING_THERE);
     }
-}
-
-void wizard_offer_new_ru_sacrifices()
-{
-    if (you_worship(GOD_RU))
-    {
-        ru_offer_new_sacrifices();
-        simple_god_message(" believes you are ready to make a new sacrifice.");
-        more();
-        you.props["ru_sacrifice_delay"] = 70;
-        you.props["ru_progress_to_next_sacrifice"] = 0;
-    }
-    else
-        mpr("You don't worship Ru, so no sacrifices for you.");
 }
 
 void wizard_join_religion()
