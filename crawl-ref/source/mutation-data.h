@@ -1557,7 +1557,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
-  "inability to dodging",
+  "inability to train dodging",
 
   {"You cannot train Dodging.", "", ""},
   {"You can no longer train Dodging.", "", ""},
