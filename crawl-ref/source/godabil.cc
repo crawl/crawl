@@ -5061,21 +5061,17 @@ void ru_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_HEALTH
         || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_HEALTH)
     {
-        switch (random2(3))
-        {
-        case 0:
-            current_health_sacrifice.push_back(
-                static_cast<int>(MUT_PHYSICAL_VULNERABILITY));
-            break;
-        case 1:
-            current_health_sacrifice.push_back(
-                static_cast<int>(MUT_SLOW_REFLEXES));
-            break;
-        case 2:
-            current_health_sacrifice.push_back(
-                static_cast<int>(MUT_FRAIL));
-            break;
-        }
+        vector<mutation_type> possible_health_mutations;
+        if (player_mutation_level(MUT_FRAIL) <= 2)
+            possible_health_mutations.push_back(MUT_FRAIL);
+        if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
+            possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
+        if (player_mutation_level(MUT_SLOW_REFLEXES) <= 2)
+            possible_health_mutations.push_back(MUT_SLOW_REFLEXES);
+        int num_health_mutations = possible_health_mutations.size();
+        current_health_sacrifice.push_back(
+            static_cast<int>(possible_health_mutations[
+                random2(num_health_mutations)]));
     }
 
     ASSERT(you.props.exists("current_essence_sacrifice"));
@@ -5086,21 +5082,18 @@ void ru_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
         || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE)
     {
-        switch (random2(3))
-        {
-        case 0:
-            current_essence_sacrifice.push_back(
-                static_cast<int>(MUT_ANTI_WIZARDRY));
-            break;
-        case 1:
-            current_essence_sacrifice.push_back(
-                static_cast<int>(MUT_MAGICAL_VULNERABILITY));
-            break;
-        case 2:
-            current_essence_sacrifice.push_back(
-                static_cast<int>(MUT_LOW_MAGIC));
-            break;
-        }
+        vector<mutation_type> possible_essence_mutations;
+        if (player_mutation_level(MUT_ANTI_WIZARDRY) <= 2)
+            possible_essence_mutations.push_back(MUT_ANTI_WIZARDRY);
+        if (player_mutation_level(MUT_MAGICAL_VULNERABILITY) <= 2)
+            possible_essence_mutations.push_back(MUT_MAGICAL_VULNERABILITY);
+        if (player_mutation_level(MUT_LOW_MAGIC) <= 2)
+            possible_essence_mutations.push_back(MUT_LOW_MAGIC);
+
+        int num_essence_mutations = possible_essence_mutations.size();
+        current_essence_sacrifice.push_back(
+            static_cast<int>(possible_essence_mutations[
+                random2(num_essence_mutations)]));
     }
 
     ASSERT(you.props.exists("current_purity_sacrifice"));
@@ -5111,37 +5104,25 @@ void ru_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_PURITY
         || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_PURITY)
     {
-        switch (random2(7))
-        {
-        case 0:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_DETERIORATION));
-            break;
-        case 1:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_SCREAM));
-            break;
-        case 2:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_DEFORMED));
-            break;
-        case 3:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_SLOW_HEALING));
-            break;
-        case 4:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_DOPEY));
-            break;
-        case 5:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_CLUMSY));
-            break;
-        case 6:
-            current_purity_sacrifice.push_back(
-                static_cast<int>(MUT_WEAK));
-            break;
-        }
+        vector<mutation_type> possible_purity_mutations;
+        if (player_mutation_level(MUT_DETERIORATION) <= 2)
+            possible_purity_mutations.push_back(MUT_DETERIORATION);
+        if (player_mutation_level(MUT_SCREAM) <= 2)
+            possible_purity_mutations.push_back(MUT_SCREAM);
+        if (player_mutation_level(MUT_SLOW_HEALING) <= 2
+            && !player_mutation_level(MUT_NO_DEVICE_HEAL))
+            possible_purity_mutations.push_back(MUT_SLOW_HEALING);
+        if (player_mutation_level(MUT_NO_DEVICE_HEAL) <= 2
+            && !player_mutation_level(MUT_SLOW_HEALING))
+            possible_purity_mutations.push_back(MUT_NO_DEVICE_HEAL);
+        possible_purity_mutations.push_back(MUT_DOPEY);
+        possible_purity_mutations.push_back(MUT_CLUMSY);
+        possible_purity_mutations.push_back(MUT_WEAK);
+
+        int num_purity_mutations = possible_purity_mutations.size();
+        current_purity_sacrifice.push_back(
+            static_cast<int>(possible_purity_mutations[
+                random2(num_purity_mutations)]));
     }
 
     ASSERT(you.props.exists("current_arcane_sacrifices"));
@@ -5341,13 +5322,14 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 piety_gain = 8;
             }
-            else if (purity_sacrifice == MUT_SLOW_HEALING
-                    && player_mutation_level(MUT_SLOW_HEALING))
-            {
-                piety_gain = 25;
-            }
+            // the other sacrifices get sharply worse if you already
+            // have levels of them.
+            else if (player_mutation_level(purity_sacrifice) == 2)
+                piety_gain = 28;
+            else if (player_mutation_level(purity_sacrifice) == 1)
+                piety_gain = 20;
             else
-                piety_gain = 16;
+                piety_gain = 12;
 
 
             if (!_execute_sacrifice(purity_sacrifice, piety_gain,
@@ -5551,10 +5533,11 @@ bool ru_do_sacrifice(ability_type sacrifice)
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
-    int new_piety = you.piety + piety_gain + random2(4);
+    // Randomize piety gain very slightly to prevent counting.
+    int new_piety = you.piety + piety_gain + random2(3);
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
-    set_piety(new_piety); // randomize it a bit.
+    set_piety(new_piety);
 
     // reset delay to 70.
     you.props["ru_sacrifice_delay"] = div_rand_round(70 * (3 + you.faith()), 3);
