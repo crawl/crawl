@@ -331,6 +331,7 @@ void player_reacts_to_monsters()
                 || mons_is_projectile(mon->type)
                 || mon->friendly()
                 || mons_is_firewood(mon)
+                || mon->submerged()
                 || !you.see_cell(mon->pos())
                 || (mon->invisible() && !you.can_see_invisible()))
             {
