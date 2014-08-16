@@ -3584,7 +3584,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case MISC_SACK_OF_SPIDERS:
         case MISC_BOX_OF_BEASTS:
-            return player_mutation_level(MUT_NO_LOVE);
+            return player_mutation_level(MUT_NO_LOVE)
+                || player_mutation_level(MUT_NO_ARTIFICE);
 
         default:
             return player_mutation_level(MUT_NO_ARTIFICE);
