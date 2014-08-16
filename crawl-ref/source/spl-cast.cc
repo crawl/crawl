@@ -73,6 +73,7 @@
 #include "view.h"
 
 static int _spell_enhancement(spell_type spell);
+static int _apply_enhancement(spell_type spell, const int initial_power);
 
 static void _surge_power(spell_type spell)
 {
@@ -419,23 +420,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
-        const int enhanced = fail_rate_check
-            ? 0
-            : _spell_enhancement(spell);
-
-        if (enhanced > 0)
-        {
-            for (int i = 0; i < enhanced; i++)
-            {
-                power *= 15;
-                power /= 10;
-            }
-        }
-        else if (enhanced < 0)
-        {
-            for (int i = enhanced; i < 0; i++)
-                power /= 2;
-        }
+        if (!fail_rate_check)
+            power = _apply_enhancement(spell, power);
 
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
@@ -529,6 +515,35 @@ static int _spell_enhancement(spell_type spell)
         enhanced = -3;
 
     return enhanced;
+}
+
+/**
+ * Apply the effects of spell enhancers (and de-enhancers) on spellpower.
+ *
+ * @param spell             The spell in question.
+ * @param initial_power     The power of the spell before enhancers are added.
+ * @return                  The power of the spell with enhancers considered.
+ */
+static int _apply_enhancement(spell_type spell, const int initial_power)
+{
+    const int enhancer_levels = _spell_enhancement(spell);
+    int power = initial_power;
+
+    if (enhancer_levels > 0)
+    {
+        for (int i = 0; i < enhancer_levels; i++)
+        {
+            power *= 15;
+            power /= 10;
+        }
+    }
+    else if (enhancer_levels < 0)
+    {
+        for (int i = enhancer_levels; i < 0; i++)
+            power /= 2;
+    }
+
+    return power;
 }
 
 void inspect_spells()
