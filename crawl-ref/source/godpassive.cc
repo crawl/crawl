@@ -849,6 +849,11 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
 bool does_ru_wanna_redirect(monster* mon)
 {
-    return you_worship(GOD_RU) && you.piety >= piety_breakpoint(0)
-           && !mon->friendly();
+    return you_worship(GOD_RU)
+            && you.piety >= piety_breakpoint(0)
+            && !mon->friendly()
+            && you.see_cell(mon->pos())
+            && !mons_is_firewood(mon)
+            && !mon->submerged()
+            && !mons_is_projectile(mon->type);
 }
