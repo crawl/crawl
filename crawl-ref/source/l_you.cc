@@ -410,6 +410,13 @@ LUAFN(you_skill)
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
+LUAFN(you_base_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+
+    PLUARET(number, you.skill(sk, 10, true) * 0.1);
+}
+
 LUAFN(you_train_skill)
 {
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
@@ -450,6 +457,7 @@ static const struct luaL_reg you_clib[] =
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
+    { "base_skill"  , you_base_skill },
     { "skill_progress", you_skill_progress },
     { "can_train_skill", you_can_train_skill },
     { "train_skill", you_train_skill },
