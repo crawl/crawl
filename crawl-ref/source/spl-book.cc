@@ -797,6 +797,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     unsigned int num_known      = 0;
                  num_race       = 0;
+    unsigned int num_restricted = 0;
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
@@ -810,7 +811,12 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (spell == current_spell || you.has_spell(spell))
             num_known++;
         else if (you_cannot_memorise(spell, form))
-            num_race++;
+        {
+            if (cannot_use_spell_school(spell))
+                num_restricted++;
+            else
+                num_race++;
+        }
         else
         {
             mem_spells.push_back(spell);
@@ -835,11 +841,18 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (just_check)
         return num_low_levels > 0 || num_low_xl > 0;
 
-    unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
+    unsigned int total = num_known + num_race + num_low_xl + num_low_levels
+            + num_restricted;
 
     if (num_known == total)
         mprf(MSGCH_PROMPT, "You already know all available spells.");
-    else if (num_race == total || (num_known + num_race) == total)
+    else if (num_restricted == total || num_restricted + num_known == total)
+    {
+        mpr("You cannot currently memorise any of the available "
+             "spells because you cannot use those schools of magic.");
+    }
+    else if (num_race == total || (num_known + num_race) == total
+            || num_race + num_known + num_restricted == total)
     {
         if (form)
         {
