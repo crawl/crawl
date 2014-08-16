@@ -580,9 +580,9 @@ An enormous metal war club, of great cumbrousness.
 %%%%
 greatsling
 
-A large piece of cloth and reinforced leather, meant for launching stones. Does
-more damage when launching purpose-made projectiles, rather than rocks found on
-the floor.
+A large piece of cloth and leather, reinforced with a rigid frame for extra
+rock-lobbing power. Does more damage when launching purpose-made projectiles,
+rather than stones found on the floor.
 %%%%
 great sword
 
