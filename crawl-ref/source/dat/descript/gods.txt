@@ -369,9 +369,9 @@ sacrifices, you will be able to draw on this power to restore your health and
 magic and make a lightning-fast explosive leap. Exceptional sacrificiants can
 unleash their power in a massive strike against all their foes.
 
-Once you begin worship, Ru will monitor your progress and you explore the
+Once you begin worship, Ru will monitor your progress as you explore the
 dungeon and defeat its inhabitants. When Ru judges you ready, it will offer
-you three sacrifices you can make in order to achieve greater power.
+you three sacrifices which you can make in order to achieve greater power.
 %%%%
 Gozag powers
 
