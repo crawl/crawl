@@ -2657,6 +2657,7 @@ DEPTH: D:2-9
 TAGS:  temple_overflow_2 temple_overflow_xom temple_overflow_zin transparent
 KPROP: _1 = no_rtele_into
 KMASK: _1 = opaque
+KMASK: _1 = no_trap_gen
 KFEAT: A = altar_xom
 KFEAT: B = altar_zin
 FTILE: n_1 = floor_limestone
