@@ -76,10 +76,8 @@ static void _initialize()
 
     you.symbol = MONS_PLAYER;
 
-    if (Options.seed)
-        seed_rng(Options.seed);
-    else
-        seed_rng();
+    seed_rng();
+
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
@@ -159,6 +157,9 @@ static void _initialize()
         tiles.hide_title();
     }
 #endif
+
+    if (Options.seed)
+        seed_rng(Options.seed);
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
