@@ -2368,6 +2368,17 @@ static void _travel_depth_munge(int munge_method, const string &s,
         lid = find_deepest_explored(lid);
         break;
     case '^': {
+        if (targ.pos.x != -1)
+        {
+            LevelInfo &li = travel_cache.get_level_info(lid);
+            stair_info *si = li.get_stair(targ.pos);
+            if (si && si->destination.id.branch != lid.branch)
+            {
+                targ = si->destination;
+                targ.pos.x = targ.pos.y = -1;
+                return;
+            }
+        }
         branch_type target_branch = lid.branch;
         lid.depth = 1;
         lid = find_up_level(lid);
