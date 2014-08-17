@@ -1704,8 +1704,8 @@ android:
 # Canned tests
 #
 
-test: test-test test-all
-nonwiztest: test-test test-nonwiz
+test: test-test test-all test-qw
+nonwiztest: test-test test-nonwiz test-qw
 
 test-%: $(GAME) util/fake_pty builddb
 	util/fake_pty test/stress/run $*
