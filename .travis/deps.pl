@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+exit 0 if $ENV{BUILD_ALL};
+
 my @deps = qw(
     liblua5.1-0-dev
 );
