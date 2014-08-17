@@ -34,7 +34,7 @@ run_one()
         $CRAWL -rc test/stress/abyss_short_run.rc
     ;;
     10|qw)
-        $CRAWL -rc test/stress/qw.rc
+        $CRAWL -rc test/stress/qw.rc -name qw
     ;;
     test) # Not in "all".
         $CRAWL -test
@@ -48,6 +48,11 @@ run_one()
 if [ "$*" = "all" ]
   then
     for x in 1 2 3 4 5 6 7 8 9 10; do run_one "$x";done
+    exit $?
+elif [ "$*" = "nonwiz" ]
+  then
+    # only run the tests that don't require wizmode (dgl builds, for instance)
+    for x in 4 5 6 7 10; do run_one "$x";done
     exit $?
 fi
 

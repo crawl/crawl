@@ -1704,8 +1704,8 @@ android:
 # Canned tests
 #
 
-TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken qw
-test: $(foreach i, $(TESTS), test-$(i))
+test: test-test test-all
+nonwiztest: test-test test-nonwiz
 
 test-%: $(GAME) util/fake_pty builddb
 	util/fake_pty test/stress/run $*
