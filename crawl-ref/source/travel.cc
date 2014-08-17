@@ -2379,7 +2379,10 @@ static level_pos _parse_travel_target(string s, level_pos &targ)
     trim_string(s);
 
     if (!s.empty())
+    {
         targ.id.depth = atoi(s.c_str());
+        targ.pos.x = targ.pos.y = -1;
+    }
 
     if (!targ.id.depth)
         targ = _find_entrance(targ);
