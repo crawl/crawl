@@ -2334,12 +2334,37 @@ static int _travel_depth_keyfilter(int &c)
     }
 }
 
+static level_pos _find_entrance(const level_pos &from)
+{
+    level_id lid(from.id);
+    coord_def pos(-1, -1);
+    branch_type target_branch = lid.branch;
+    lid.depth = 1;
+    lid = find_up_level(lid);
+
+    LevelInfo &li = travel_cache.get_level_info(lid);
+    vector<stair_info> &stairs = li.get_stairs();
+    for (vector<stair_info>::const_iterator sit = stairs.begin();
+            sit != stairs.end();
+            ++sit)
+        if (sit->destination.id.branch == target_branch)
+        {
+            pos = sit->position;
+            break;
+        }
+
+    return level_pos(lid, pos);
+}
+
 static level_pos _parse_travel_target(string s, level_pos &targ)
 {
     trim_string(s);
 
     if (!s.empty())
         targ.id.depth = atoi(s.c_str());
+
+    if (!targ.id.depth)
+        targ = _find_entrance(targ);
 
     return targ;
 }
@@ -2379,19 +2404,8 @@ static void _travel_depth_munge(int munge_method, const string &s,
                 return;
             }
         }
-        branch_type target_branch = lid.branch;
-        lid.depth = 1;
-        lid = find_up_level(lid);
-        LevelInfo &li = travel_cache.get_level_info(lid);
-        vector<stair_info> &stairs = li.get_stairs();
-        for (vector<stair_info>::const_iterator sit = stairs.begin();
-             sit != stairs.end();
-             ++sit)
-            if (sit->destination.id.branch == target_branch)
-            {
-                targ.pos = sit->position;
-                break;
-            }
+        targ = _find_entrance(targ);
+        return;
         break;
     }
     }
