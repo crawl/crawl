@@ -2339,21 +2339,39 @@ static level_pos _find_entrance(const level_pos &from)
     level_id lid(from.id);
     coord_def pos(-1, -1);
     branch_type target_branch = lid.branch;
+
     lid.depth = 1;
-    lid = find_up_level(lid);
+    level_id new_lid = find_up_level(lid);
 
-    LevelInfo &li = travel_cache.get_level_info(lid);
-    vector<stair_info> &stairs = li.get_stairs();
-    for (vector<stair_info>::const_iterator sit = stairs.begin();
-            sit != stairs.end();
-            ++sit)
-        if (sit->destination.id.branch == target_branch)
-        {
-            pos = sit->position;
-            break;
-        }
+    if (new_lid.is_valid()) {
+        LevelInfo &li = travel_cache.get_level_info(new_lid);
+        vector<stair_info> &stairs = li.get_stairs();
+        for (vector<stair_info>::const_iterator sit = stairs.begin();
+                sit != stairs.end();
+                ++sit)
+            if (sit->destination.id.branch == target_branch)
+            {
+                pos = sit->position;
+                break;
+            }
 
-    return level_pos(lid, pos);
+        return level_pos(new_lid, pos);
+    }
+    else
+    {
+        LevelInfo &li = travel_cache.get_level_info(lid);
+        vector<stair_info> &stairs = li.get_stairs();
+        for (vector<stair_info>::const_iterator sit = stairs.begin();
+                sit != stairs.end();
+                ++sit)
+            if (!sit->destination.id.is_valid())
+            {
+                pos = sit->position;
+                break;
+            }
+
+        return level_pos(lid, pos);
+    }
 }
 
 static level_pos _parse_travel_target(string s, level_pos &targ)
