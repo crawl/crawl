@@ -22,7 +22,9 @@ static void slurp_output()
     char buf[1024];
 
     signal(SIGALRM, sigalrm);
-    alarm(3600); // a hard limit of an hour (big tests on a Raspberry...)
+    // a hard limit of an hour (big tests on a Raspberry...), or 9 minutes on
+    // Travis
+    alarm(TIMEOUT * 60);
 
     pfd.fd     = crawl;
     pfd.events = POLLIN;
