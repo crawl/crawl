@@ -3864,7 +3864,8 @@ enum commandline_option_type
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
-    CLO_NOTHROTTLE,
+    CLO_THROTTLE,
+    CLO_NO_THROTTLE,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3882,7 +3883,7 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
-    "gdb", "no-gdb", "nogdb", "nothrottle",
+    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4715,7 +4716,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             end(0);
             break;
 
-        case CLO_NOTHROTTLE:
+        case CLO_THROTTLE:
+            crawl_state.throttle = true;
+            break;
+
+        case CLO_NO_THROTTLE:
             crawl_state.throttle = false;
             break;
 

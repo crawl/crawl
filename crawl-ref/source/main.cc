@@ -497,7 +497,11 @@ static void _show_commandline_options_help()
 #ifdef WIZARD
     puts("  -wizard               allow access to wizard mode");
 #endif
-    puts("  -nothrottle           disable throttling of user Lua scripts");
+#ifdef DGAMELAUNCH
+    puts("  -no-throttle          disable throttling of user Lua scripts");
+#else
+    puts("  -throttle             enable throttling of user Lua scripts");
+#endif
 
     puts("");
 
