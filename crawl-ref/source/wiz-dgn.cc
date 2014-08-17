@@ -179,7 +179,7 @@ void wizard_interlevel_travel()
 {
     string name;
     const level_pos pos =
-        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name).p;
+        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name);
 
     if (pos.id.depth < 1 || pos.id.depth > brdepth[pos.id.branch])
     {
