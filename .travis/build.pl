@@ -20,13 +20,7 @@ $ENV{FORCE_CXX} = $ENV{CXX};
 try("make -j2");
 
 if ($ENV{FULLDEBUG} && !$ENV{TILES}) {
-    # dgl disables wizmode
-    if ($ENV{USE_DGAMELAUNCH}) {
-        try("make nonwiztest");
-    }
-    else {
-        try("make test");
-    }
+    try("make test");
 }
 
 sub try {
