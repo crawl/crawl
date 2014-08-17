@@ -1271,7 +1271,7 @@ static void _roll_weapon_type(item_def& item, int item_level)
             break;
     }
     if (i == 1000)
-        item.sub_type = SPWPN_NORMAL; // fall back to no brand
+        item.special = SPWPN_NORMAL; // fall back to no brand
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
