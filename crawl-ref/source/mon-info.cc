@@ -475,7 +475,9 @@ monster_info::monster_info(const monster* m, int milev)
         || type == MONS_KRAKEN_TENTACLE_SEGMENT
         || type == MONS_ELDRITCH_TENTACLE_SEGMENT
         || type == MONS_STARSPAWN_TENTACLE
-        || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+        || type == MONS_STARSPAWN_TENTACLE_SEGMENT
+        || type == MONS_MNOLEG_TENTACLE
+        || type == MONS_MNOLEG_TENTACLE_SEGMENT)
     {
         number = 0;
     }

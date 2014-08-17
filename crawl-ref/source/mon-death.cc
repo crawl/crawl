@@ -2405,6 +2405,8 @@ int monster_die(monster* mons, killer_type killer,
                 mpr("The dead kraken's tentacles slide back into the water.");
             else if (mons->type == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
+            else if (mons->type == MONS_MNOLEG)
+                mpr("Mnoleg's tentacles wither and die.");
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons->type)

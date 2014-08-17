@@ -63,9 +63,10 @@
 
 #include <algorithm>
 
-// kraken stuff
+// tentacle stuff
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
+const int MAX_ACTIVE_MNOLEG_TENTACLES = 2;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
@@ -4263,6 +4264,8 @@ static int _max_tentacles(const monster* mon)
         return MAX_ACTIVE_KRAKEN_TENTACLES;
     else if (mon->type == MONS_TENTACLED_STARSPAWN)
         return MAX_ACTIVE_STARSPAWN_TENTACLES;
+    else if (mon->type == MONS_MNOLEG)
+        return MAX_ACTIVE_MNOLEG_TENTACLES;
     else
         return 0;
 }
@@ -4345,7 +4348,13 @@ static void _mons_create_tentacles(monster* head)
         else if (visible_count > 1)
             mpr("Tentacles burst from the starspawn's body!");
     }
-
+    else if (head->type == MONS_MNOLEG)
+    {
+        if (visible_count == 1)
+            mpr("A tentacle flies out from Mnoleg's body!");
+        else if (visible_count > 1)
+            mpr("Tentacles burst from Mnoleg's body!");
+    }
     return;
 }
 
