@@ -842,6 +842,7 @@ struct map_flags
 
     map_flags();
     void clear();
+    map_flags &operator |= (const map_flags &o);
 
     static map_flags parse(const string flag_list[],
                            const string &s) throw(string);
