@@ -19,8 +19,13 @@ $ENV{FORCE_CXX} = $ENV{CXX};
 
 try("make -j2");
 
-if ($ENV{FULLDEBUG} && !$ENV{TILES}) {
-    try("make test");
+if (!$ENV{TILES}) {
+    if ($env{FULLDEBUG}) {
+        try("make test");
+    }
+    else {
+        try("make nondebugtest");
+    }
 }
 
 sub try {
