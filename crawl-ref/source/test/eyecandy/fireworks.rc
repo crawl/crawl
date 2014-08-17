@@ -24,7 +24,7 @@ show_more = false
 :     bot_start = false
 :     crawl.enable_more(false)
 :     crawl.sendkeys("&Y" .. esc)
-:     crawl.sendkeys("&_nemelex" .. eol .. eol .. "Y" .. eol .. eol .. eol)
+:     crawl.sendkeys("&_nemelex" .. eol)
 :     crawl.sendkeys("&~T")
 :     crawl.sendkeys("&Lcircular_temple_12" .. eol)
 :     crawl.sendkeys("&" .. string.char(20) ..
@@ -33,7 +33,7 @@ show_more = false
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
-:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
+:     crawl.sendkeys("&l27" .. eol .. "N")
 :     crawl.sendkeys("&A27" .. eol)
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
