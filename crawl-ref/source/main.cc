@@ -497,6 +497,7 @@ static void _show_commandline_options_help()
 #ifdef WIZARD
     puts("  -wizard               allow access to wizard mode");
 #endif
+    puts("  -nothrottle           disable throttling of user Lua scripts");
 
     puts("");
 

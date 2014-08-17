@@ -184,6 +184,9 @@ void CLua::init_throttle()
     if (!managed_vm)
         return;
 
+    if (!crawl_state.throttle)
+        return;
+
     if (throttle_unit_lines <= 0)
         throttle_unit_lines = 500;
 
