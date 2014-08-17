@@ -3409,8 +3409,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return !can_ingest(item, true, false);
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
-            // Spriggans could argue, but it's too small of a gain for
-            // possible player confusion.
             return player_res_poison(false, temp) > 0;
         case POT_SLOWING:
             return you.species == SP_FORMICID;
