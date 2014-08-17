@@ -336,7 +336,7 @@ static bool _check_stairs(const dungeon_feature_type ftype, bool down = false)
     return true;
 }
 
-void up_stairs(dungeon_feature_type force_stair)
+void up_stairs(dungeon_feature_type force_stair, bool wizard)
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
                                        : orig_terrain(you.pos()));
@@ -464,7 +464,8 @@ void up_stairs(dungeon_feature_type force_stair)
 
     new_level();
 
-    _update_travel_cache(old_level, stair_pos);
+    if (!wizard)
+        _update_travel_cache(old_level, stair_pos);
 
     // Preventing obvious finding of stairs at your position.
     env.map_seen.set(you.pos());
@@ -644,7 +645,8 @@ static void _maybe_destroy_trap(const coord_def &p)
 }
 
 // TODO(Zannick): Fully merge with up_stairs into take_stairs.
-void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
+void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
+                 bool wizard)
 {
     const level_id old_level = level_id::current();
     const dungeon_feature_type old_feat = orig_terrain(you.pos());
@@ -1068,7 +1070,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
 
     trackers_init_new_level(true);
-    _update_travel_cache(old_level, stair_pos);
+    if (!wizard)
+        _update_travel_cache(old_level, stair_pos);
 
     // Preventing obvious finding of stairs at your position.
     env.map_seen.set(you.pos());
