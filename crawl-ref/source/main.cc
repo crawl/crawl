@@ -3147,7 +3147,9 @@ static void _move_player(coord_def move)
             {
                 string suffix, adj;
                 monster *mons = monster_at(*ai);
-                if (mons && bad_attack(mons, adj, suffix, penance))
+                if (mons
+                    && !fedhas_passthrough(mons)
+                    && bad_attack(mons, adj, suffix, penance))
                 {
                     bad_mons = mons;
                     bad_suff = suffix;
