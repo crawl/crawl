@@ -5792,6 +5792,18 @@ void map_flags::clear()
     flags_set = flags_unset = 0;
 }
 
+map_flags &map_flags::operator |= (const map_flags &o)
+{
+    flags_set |= o.flags_set;
+    flags_unset |= o.flags_unset;
+
+    // In the event of conflict, the later flag set (o here) wins.
+    flags_set &= ~o.flags_unset;
+    flags_unset &= ~o.flags_set;
+
+    return *this;
+}
+
 typedef map<string, unsigned long> flag_map;
 
 map_flags map_flags::parse(const string flag_list[],
@@ -6059,7 +6071,7 @@ string keyed_mapspec::set_mask(const string &s, bool garbage)
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
              "UNUSED",
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
-        map_mask = map_flags::parse(flag_list, s);
+        map_mask |= map_flags::parse(flag_list, s);
     }
     catch (const string &error)
     {
