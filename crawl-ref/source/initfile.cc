@@ -3864,6 +3864,7 @@ enum commandline_option_type
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
+    CLO_NOTHROTTLE,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3881,7 +3882,7 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
-    "gdb", "no-gdb", "nogdb",
+    "gdb", "no-gdb", "nogdb", "nothrottle",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4712,6 +4713,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             printf("This option is for DGL use only.\n");
 #endif
             end(0);
+            break;
+
+        case CLO_NOTHROTTLE:
+            crawl_state.throttle = false;
             break;
 
         case CLO_EXTRA_OPT_FIRST:
