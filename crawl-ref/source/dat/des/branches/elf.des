@@ -1020,9 +1020,7 @@ KMONS:   1 = crystal guardian
 SHUFFLE: @ABC, QRST, n1' / n1' / xxx
 SUBST:   A : b:8 .:1 @:1, BC = b, x : b:8 x:1
 SUBST:   Q : b:8 .:1, R : b.., S : b:1 .:8, T = .
-KMASK:   1' = no_trap_gen
-KMASK:   1' = no_item_gen
-KMASK:   1' = no_monster_gen
+KMASK:   1' = no_trap_gen / no_item_gen / no_monster_gen / opaque
 KPROP:   1' = no_rtele_into
 TILE:    1' = floor_pebble_green
 COLOUR:  1' = green

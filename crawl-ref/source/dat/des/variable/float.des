@@ -2245,8 +2245,7 @@ MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
 MONS:    generate_awake golden eye, slime creature, jelly
 KFEAT:   > = known shaft trap
 KFEAT:   n = iron_grate
-KMASK:   ' = !no_monster_gen
-KMASK:   ' = !no_item_gen
+KMASK:   ' = !no_monster_gen / !no_item_gen
 SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP

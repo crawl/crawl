@@ -285,8 +285,8 @@ KFEAT:   2 = alarm trap / . w:30
 SHUFFLE: AB, CD, EF, GH, ab
 SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX
 SUBST:   X = x', Y = x., } = {} .:30, 0 : 00'''
-KMASK:   ' = !no_monster_gen
-KMASK:   '0x = opaque
+KMASK:   ' = !no_monster_gen / opaque
+KMASK:   0x = opaque
 KPROP:   '0 = no_rtele_into
 MAP
   X'            'X
