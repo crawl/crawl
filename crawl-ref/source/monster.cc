@@ -6525,13 +6525,15 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
 
 bool monster::is_child_tentacle() const
 {
-    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE;
+    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
+        || type == MONS_MNOLEG_TENTACLE;
 }
 
 bool monster::is_child_tentacle_segment() const
 {
     return type == MONS_KRAKEN_TENTACLE_SEGMENT
-           || type == MONS_STARSPAWN_TENTACLE_SEGMENT;
+           || type == MONS_STARSPAWN_TENTACLE_SEGMENT
+           || type == MONS_MNOLEG_TENTACLE_SEGMENT;
 }
 
 bool monster::is_child_monster() const

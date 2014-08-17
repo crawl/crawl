@@ -2604,7 +2604,8 @@ string melee_attack::mons_attack_verb()
 
     if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
-            || attacker->type == MONS_ELDRITCH_TENTACLE))
+            || attacker->type == MONS_ELDRITCH_TENTACLE
+            || attacker->type == MONS_MNOLEG_TENTACLE))
     {
         return "slap";
     }

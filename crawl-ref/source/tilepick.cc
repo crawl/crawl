@@ -2403,6 +2403,8 @@ static tentacle_type _get_tentacle_type(const int mtype)
             return TYPE_KRAKEN;
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
+        case MONS_MNOLEG_TENTACLE:
+        case MONS_MNOLEG_TENTACLE_SEGMENT:
             return TYPE_ELDRITCH;
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
@@ -2790,6 +2792,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_KRAKEN_TENTACLE_SEGMENT:
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
+        case MONS_MNOLEG_TENTACLE:
+        case MONS_MNOLEG_TENTACLE_SEGMENT:
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
         case MONS_SNAPLASHER_VINE:
