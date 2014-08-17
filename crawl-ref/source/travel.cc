@@ -2323,7 +2323,7 @@ static int _travel_depth_keyfilter(int &c)
 {
     switch (c)
     {
-    case '<': case '>': case '?': case '$':
+    case '<': case '>': case '?': case '$': case '^':
         return -1;
     case '-':
     case CONTROL('P'): case 'p':
@@ -2367,6 +2367,22 @@ static void _travel_depth_munge(int munge_method, const string &s,
     case '$':
         lid = find_deepest_explored(lid);
         break;
+    case '^': {
+        branch_type target_branch = lid.branch;
+        lid.depth = 1;
+        lid = find_up_level(lid);
+        LevelInfo &li = travel_cache.get_level_info(lid);
+        vector<stair_info> &stairs = li.get_stairs();
+        for (vector<stair_info>::const_iterator sit = stairs.begin();
+             sit != stairs.end();
+             ++sit)
+            if (sit->destination.id.branch == target_branch)
+            {
+                targ.pos = sit->position;
+                break;
+            }
+        break;
+    }
     }
     targ.id = lid;
     if (targ.id.depth < 1)
