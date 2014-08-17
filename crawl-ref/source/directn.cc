@@ -2063,7 +2063,9 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-#ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_LOCAL
+    UNUSED(may_target_monster);
+#else
     if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
         _update_mlist(true);
 #endif
