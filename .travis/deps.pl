@@ -2,15 +2,18 @@
 use strict;
 use warnings;
 
-exit 0 if $ENV{BUILD_ALL};
+if ($ENV{BUILD_ALL}) {
+    exec "git submodule update --init --recursive";
+}
+else {
+    my @deps = qw(
+        liblua5.1-0-dev
+    );
 
-my @deps = qw(
-    liblua5.1-0-dev
-);
+    push @deps, qw(
+        libsdl1.2-dev
+        libsdl-image1.2-dev
+    ) if $ENV{TILES} || $ENV{WEBTILES};
 
-push @deps, qw(
-    libsdl1.2-dev
-    libsdl-image1.2-dev
-) if $ENV{TILES} || $ENV{WEBTILES};
-
-exec "sudo apt-get install @deps";
+    exec "sudo apt-get install @deps";
+}
