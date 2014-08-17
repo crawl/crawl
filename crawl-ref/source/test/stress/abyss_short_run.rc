@@ -8,7 +8,7 @@ name = Abyss_runner
 species = mu
 background = be
 # CK is slowed down by constant tension checks.
-weapon = flail
+weapon = mace
 restart_after_game = false
 show_more = false
 autofight_stop = 0
