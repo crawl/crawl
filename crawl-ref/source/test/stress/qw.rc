@@ -774,7 +774,6 @@ local resistance_monsters = {
 -----------------------------
 -- some global variables:
 
-local dump_count = you.turns() + 100 - (you.turns() % 100)
 local skill_count = you.turns() - (you.turns() % 100)
 local danger
 local where = you.where()
@@ -867,11 +866,6 @@ end
 function ready()
   if not automatic then
     initialize()
-  end
-  --if you.turns() >= 7463 then stop() return end
-  if you.turns() >= dump_count then
-    dump_count = dump_count+100
-    crawl.dump_char()
   end
   if you.turns() >= skill_count then
     skill_count = skill_count+100
