@@ -483,7 +483,6 @@ static void _show_commandline_options_help()
     puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
     puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
     puts("  -plain                don't use IBM extended characters");
-    puts("  -seed <num>           init the rng to a given sequence (a hex number > 0)");
     puts("  -dir <path>           crawl directory");
     puts("  -rc <file>            init file name");
     puts("  -rcdir <dir>          directory that contains (included) rc files");
