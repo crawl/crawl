@@ -188,7 +188,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.logger.info("Socket opened from ip %s (fd%s, compression: %s).",
                          self.request.remote_ip,
-                         self.request.connection.stream.socket.fileno(),
+                         self.ws_connection.stream.socket.fileno(),
                          compression)
         sockets.add(self)
 
@@ -207,6 +207,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_lobby()
             else:
                 self.start_crawl(None)
+
+    def check_origin(self, origin):
+        return True
 
     def idle_time(self):
         return self.process.idle_time()
