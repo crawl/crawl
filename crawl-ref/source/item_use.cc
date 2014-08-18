@@ -767,6 +767,7 @@ bool do_wear_armour(int item, bool quiet)
         return false;
     }
 
+    bool swapping = false;
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -777,17 +778,17 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!takeoff_armour(you.equip[slot]))
             return false;
+        swapping = true;
     }
 
     you.turn_is_over = true;
-    you.time_taken = 0; // will be handled by equip delay
 
     if (!_safe_to_remove_or_wear(invitem, false))
         return false;
 
     const int delay = armour_equip_delay(invitem);
     if (delay)
-        start_delay(DELAY_ARMOUR_ON, delay, item);
+        start_delay(DELAY_ARMOUR_ON, delay - (swapping ? 0 : 1), item);
 
     return true;
 }
@@ -858,10 +859,9 @@ bool takeoff_armour(int item)
     }
 
     you.turn_is_over = true;
-    you.time_taken = 0; // will be handled by unequip delay
 
     const int delay = armour_equip_delay(invitem);
-    start_delay(DELAY_ARMOUR_OFF, delay, item);
+    start_delay(DELAY_ARMOUR_OFF, delay - 1, item);
 
     return true;
 }
