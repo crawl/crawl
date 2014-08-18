@@ -41,8 +41,10 @@ void flash_view_delay(colour_t colour, int delay, targetter *where = NULL);
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
 #endif
+void shake_viewport();
 
-void viewwindow(bool show_updates = true, bool tiles_only = false);
+void viewwindow(bool show_updates = true, bool tiles_only = false,
+                const coord_def &offset = coord_def(0, 0));
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 

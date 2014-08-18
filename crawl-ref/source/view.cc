@@ -1030,6 +1030,23 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 }
 
+void shake_viewport()
+{
+    viewwindow();
+
+    coord_def offset(0, 0);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        viewwindow(false, false, offset);
+        delay(50);
+        offset.x = random2(3) - 1;
+        offset.y = random2(3) - 1;
+    }
+
+    viewwindow();
+}
+
 //---------------------------------------------------------------
 //
 // Draws the main window using the character set returned
@@ -1041,7 +1058,7 @@ static void _draw_los(screen_cell_t *cell,
 // If tiles_only is set, only the tile view will be updated. This
 // is only relevant for Webtiles.
 //---------------------------------------------------------------
-void viewwindow(bool show_updates, bool tiles_only)
+void viewwindow(bool show_updates, bool tiles_only, const coord_def &offset)
 {
     // The player could be at (0,0) if we are called during level-gen; this can
     // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
@@ -1108,9 +1125,9 @@ void viewwindow(bool show_updates, bool tiles_only)
         const coord_def gc = view2grid(*ri);
 
         if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-            draw_cell(cell, gc, anim_updates, 0);
+            draw_cell(cell, gc + offset, anim_updates, 0);
         else
-            draw_cell(cell, gc, anim_updates, flash_colour);
+            draw_cell(cell, gc + offset, anim_updates, flash_colour);
 
         cell++;
     }
