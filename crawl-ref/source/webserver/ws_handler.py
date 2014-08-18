@@ -199,7 +199,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.logger.info("Socket opened from ip %s (fd%s, compression: %s). UA: %s.",
                          self.request.remote_ip,
-                         self.request.connection.stream.socket.fileno(),
+                         self.ws_connection.stream.socket.fileno(),
                          compression, self.request.headers.get("User-Agent"))
         sockets.add(self)
 
@@ -228,6 +228,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.token_login(url_unescape(self.get_cookie("login")))
             elif config.get("autologin"):
                 self.do_login(config.autologin)
+
+    def check_origin(self, origin):
+        return True
 
     def idle_time(self):
         return self.process.idle_time()
