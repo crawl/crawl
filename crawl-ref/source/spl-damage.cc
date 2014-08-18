@@ -1312,6 +1312,8 @@ spret_type cast_shatter(int pow, bool fail)
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
+    shake_viewport();
+
     return SPRET_SUCCESS;
 }
 
@@ -1388,6 +1390,9 @@ bool mons_shatter(monster* caster, bool actual)
 
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
+
+    if (actual)
+        shake_viewport();
 
     if (!caster->wont_attack())
         foes *= -1;
