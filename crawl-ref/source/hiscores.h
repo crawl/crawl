@@ -117,6 +117,9 @@ private:
     int         zigs;               // Ziggurats completed.
     int         zigmax;             // Max level reached in a ziggurat.
 
+    int         scrolls_used;       // Number of scrolls used.
+    int         potions_used;       // Number of potions used.
+
     mutable unique_ptr<xlog_fields> fields;
 
 public:
