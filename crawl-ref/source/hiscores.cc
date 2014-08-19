@@ -2127,8 +2127,15 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_WATER:
-        if (race == SP_MUMMY)
-            desc += terse? "fell apart" : "Soaked and fell apart";
+        if (you.undead_state())
+        {
+            if (terse)
+                desc = "fell apart";
+            else if (race == SP_MUMMY)
+                desc = "Soaked and fell apart";
+            else
+                desc = "Sank and fell apart";
+        }
         else
         {
             if (!death_source_name.empty())
