@@ -649,12 +649,12 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
     int result;
     do
         result = random2(NUM_RODS);
-#if TAG_MAJOR_VERSION == 34
-    while (result == ROD_WARDING || result == ROD_VENOM);
-#else
     while (player_mutation_level(MUT_NO_LOVE)
-        && (result == ROD_SWARM || result == ROD_SHADOWS));
+              && (result == ROD_SWARM || result == ROD_SHADOWS)
+#if TAG_MAJOR_VERSION == 34
+           || result == ROD_WARDING || result == ROD_VENOM
 #endif
+          );
     return result;
 }
 
