@@ -3198,7 +3198,7 @@ bool bolt::harmless_to_player() const
     // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
         return is_big_cloud
-               && (you.mutation[MUT_ICEMAIL]
+               && (you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]
                    || you_worship(GOD_QAZLAL) && !player_under_penance());
 
     case BEAM_ACID:
