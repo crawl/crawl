@@ -616,7 +616,7 @@ DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_rtele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool col:random
-KITEM:   d = fruit / nothing
+KITEM:   d = fruit q:3 / fruit q:2 / fruit q:1 / nothing
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
@@ -691,7 +691,7 @@ NSUBST: f = 4:A/*:.
 NSUBST: w = 2:4 / *:w
 KFEAT:  C = altar_fedhas
 KFEAT:  A = .
-KITEM:  A = fruit
+KITEM:  A = fruit q:3 / fruit q:2 / fruit q:1 / nothing
 FTILE:  .tfCA = floor_moss
 FTILE:  d = floor_hall
 COLOUR: fd = brown
