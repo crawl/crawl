@@ -74,7 +74,7 @@ static inline int player_under_penance(god_type god = you.religion)
 /** Is the player in good (enough) standing with a particular god?
  *
  * @param god    The religion being asked about.
- * @param pbreak The minimum piety breakpoint (number of stars minus one)
+ * @param pbreak The minimum piety breakpoint (number of stars minus one) to
  *               consider "enough"; a negative number (the default) checks
  *               only for worship and not for piety.
  * @return true if the player worships the given god, is not under penance,
