@@ -1214,6 +1214,9 @@ static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     if (you.max_magic_points)
         _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+    if (!unmeld && !you.is_undead)
+        make_hungry(4500, false, false); // standard vamp hunger cost
+                                         // XXX: refactor me!
 }
 
 static void _MAJIN_unequip(item_def *item, bool *show_msgs)
