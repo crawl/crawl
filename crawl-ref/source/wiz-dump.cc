@@ -167,9 +167,7 @@ static void _apply_randart_properties(item_def &item,
         string brand_name = props.substr(begin_brand, end_brand - begin_brand);
 
         if (item.base_type == OBJ_JEWELLERY && item.sub_type == NUM_JEWELLERY)
-        {
             item.sub_type = _jewellery_type_from_artefact_prop(brand_name);
-        }
 
         string ins = artefact_inscription(item);
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
