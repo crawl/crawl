@@ -592,7 +592,7 @@ local scary_monsters = {
   {12, "Nergalle"},
   {12, "jelly"},
   {12, "manticore"},
-  {12, "guardian mummy"}, 
+  {12, "guardian mummy"},
   {12, "Psyche"},
 
   {13, "blink frog"},
@@ -1008,7 +1008,7 @@ function count_bia(r)
   for x = -r,r do
     for y = -r,r do
       m = monster_array[x][y]
-      if m and m:is_safe() and string.find(m:desc(),"berserk") 
+      if m and m:is_safe() and string.find(m:desc(),"berserk")
        and contains_string_in(m:desc(), {"ogre","giant","bear","troll"}) then
         i = i+1
       end
@@ -1514,7 +1514,7 @@ function plan_water_step()
   end
   return false
 end
-              
+
 function plan_berserk()
   if can_berserk() and want_to_berserk() and not you.have_orb() then
     say("INVOKING BERSERK.")
@@ -1883,7 +1883,7 @@ function plan_use_id_scrolls()
       if oldslots[j] == items.letter_to_index(newslots[i]) then
         oldslots[j] = oldslots[i]
       end
-    end 
+    end
   end
   if count > 0 then
     for it in inventory() do
@@ -2475,7 +2475,7 @@ function plan_continue_travel()
   return false
 end
 
-function choose_lair_rune_branch() 
+function choose_lair_rune_branch()
   --if crawl.random2(2) == 0 then
     --branch_options = { "A", "P", "S", "N" }
   --else
@@ -2585,7 +2585,7 @@ function plan_find_downstairs()
     end
     magic(c .. "\r")
     return true
-  end 
+  end
   magic("X>\r")
   return true
 end
