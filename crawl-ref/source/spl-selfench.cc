@@ -31,7 +31,7 @@ int allowed_deaths_door_hp()
 {
     int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
-    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
+    if (in_good_standing(GOD_KIKUBAAQUDGHA))
         hp += you.piety / 15;
 
     return max(hp, 1);

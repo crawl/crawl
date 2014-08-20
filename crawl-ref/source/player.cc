@@ -1921,9 +1921,7 @@ int player_res_torment(bool, bool temp)
 // Kiku protects you from torment to a degree.
 int player_kiku_res_torment()
 {
-    return you_worship(GOD_KIKUBAAQUDGHA)
-           && !player_under_penance()
-           && you.piety >= piety_breakpoint(3)
+    return in_good_standing(GOD_KIKUBAAQUDGHA, 3)
            && !you.gift_timeout; // no protection during pain branding weapon
 }
 
@@ -2424,7 +2422,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 
     int bonus = 0;
 
-    if (you_worship(GOD_BEOGH) && !player_under_penance())
+    if (in_good_standing(GOD_BEOGH))
     {
         if (you.piety >= piety_breakpoint(5))
             bonus = 10;
@@ -3846,8 +3844,7 @@ int check_stealth()
         stealth *= umbra_multiplier;
     }
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
-    if (you_worship(GOD_QAZLAL) && !player_under_penance()
-        && you.piety >= piety_breakpoint(0))
+    if (in_good_standing(GOD_QAZLAL, 0))
     {
         stealth = stealth
                   * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
@@ -4166,11 +4163,8 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (religion == GOD_ASHENZARI && piety >= piety_breakpoint(2)
-        && !player_under_penance())
-    {
+    if (in_good_standing(GOD_ASHENZARI, 2))
         return true;
-    }
 
     return actor::clarity(calc_unid, items);
 }
@@ -6266,9 +6260,7 @@ int player::missile_deflection() const
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true)
-        || you_worship(GOD_QAZLAL)
-           && !player_under_penance(GOD_QAZLAL)
-           && you.piety >= piety_breakpoint(3))
+        || in_good_standing(GOD_QAZLAL, 3))
     {
         return 1;
     }
@@ -7571,11 +7563,8 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (religion == GOD_ASHENZARI && piety >= piety_breakpoint(2)
-        && !player_under_penance())
-    {
+    if (in_good_standing(GOD_ASHENZARI, 2))
         return true;
-    }
 
     return false;
 }
@@ -8250,7 +8239,7 @@ int player_monster_detect_radius()
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);
 }

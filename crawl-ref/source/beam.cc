@@ -869,13 +869,11 @@ void bolt::fire_wall_effect()
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
-    // Trees do not burn so readily in a wet environment
-    if (player_in_branch(BRANCH_SWAMP)
-        // And you shouldn't get tons of penance from an unid'd wand of fire
-        || (you_worship(GOD_DITHMENOS) && !player_under_penance()))
-    {
+
+    // Trees do not burn so readily in a wet environment, and you shouldn't get
+    // tons of penance from an unid'd wand of fire.
+    if (player_in_branch(BRANCH_SWAMP) || in_good_standing(GOD_DITHMENOS))
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
-    }
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
@@ -3154,11 +3152,8 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (you_worship(GOD_QAZLAL) && !player_under_penance()
-        && is_big_cloud)
-    {
+    if (in_good_standing(GOD_QAZLAL) && is_big_cloud)
         return true;
-    }
 
     switch (flavour)
     {
@@ -4448,10 +4443,9 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
-            if (you_worship(GOD_BEOGH)
+            if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
-                && mon->asleep() && !player_under_penance()
-                && you.piety >= piety_breakpoint(2) && mons_near(mon))
+                && mon->asleep() && mons_near(mon))
             {
                 hit_woke_orc = true;
             }

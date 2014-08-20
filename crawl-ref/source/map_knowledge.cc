@@ -87,7 +87,7 @@ static int _map_quality()
     int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
     // the explanation of this 51 vs max_piety of 200 is left as
     // an exercise to the reader
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         passive = max(passive, you.piety / 51);
     return passive;
 }
