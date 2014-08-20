@@ -3148,10 +3148,17 @@ bool bolt::is_harmless(const monster* mon) const
 }
 
 // N.b. only called for player-originated beams; if that is changed,
-// be sure to adjust the Qazlal cloud immunities below.
+// be sure to adjust the Qazlal cloud immunity below, and various other
+// assumptions based on the spells/abilities available to the player.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
+
+    if (you_worship(GOD_QAZLAL) && !player_under_penance()
+        && is_big_cloud)
+    {
+        return true;
+    }
 
     switch (flavour)
     {
@@ -3168,7 +3175,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return is_good_god(you.religion);
+        return you.res_holy_energy(&you);
 
     case BEAM_STEAM:
         return player_res_steam(false) >= 3;
@@ -3181,9 +3188,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_POISON:
         return player_res_poison(false) >= 3
-               || is_big_cloud
-                  && (player_res_poison(false) > 0
-                      || you_worship(GOD_QAZLAL) && !player_under_penance());
+               || is_big_cloud && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
         return player_res_poison(false) > 0 || you.clarity(false)
@@ -3195,14 +3200,8 @@ bool bolt::harmless_to_player() const
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
 
-    // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
-        return is_big_cloud
-               && (you.mutation[MUT_ICEMAIL]
-                   || you_worship(GOD_QAZLAL) && !player_under_penance());
-
-    case BEAM_ACID:
-        return false;
+        return is_big_cloud && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
