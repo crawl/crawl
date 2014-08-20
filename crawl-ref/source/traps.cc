@@ -261,7 +261,7 @@ bool trap_def::is_safe(actor* act) const
     #ifdef CLUA_BINDINGS
     // Prompt for any trap where you might not have enough hp
     // as defined in init.txt (see trapwalk.lua)
-    if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(type).c_str()))
         return true;
 
 #endif
