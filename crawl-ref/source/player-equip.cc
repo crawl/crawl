@@ -465,7 +465,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
     case OBJ_WEAPONS:
     {
-        // Call unrandart equip func before item is identified.
+        // Note that if the unrand equip prints a message, it will
+        // generally set showMsgs to false.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
@@ -543,18 +544,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_VAMPIRISM:
                     if (you.species == SP_VAMPIRE)
-                    {
                         mpr("You feel a bloodthirsty glee!");
-                        break;
-                    }
-
-                    if (you.is_undead == US_ALIVE && !you_foodless())
-                    {
+                    else if (you.is_undead == US_ALIVE && !you_foodless())
                         mpr("You feel a dreadful hunger.");
-                        // takes player from Full to Hungry
-                        if (!unmeld)
-                            make_hungry(4500, false, false);
-                    }
                     else
                         mpr("You feel an empty sense of dread.");
                     break;
@@ -591,6 +583,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     mpr("You feel magic leave you.");
                     break;
 
+                case SPWPN_DISTORTION:
+                    mpr("Space warps around you for a moment!");
+                    break;
+
                 default:
                     break;
                 }
@@ -607,9 +603,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 you.redraw_evasion = true;
                 break;
 
-            case SPWPN_DISTORTION:
-                mpr("Space warps around you for a moment!");
+            case SPWPN_VAMPIRISM:
+                if (you.species != SP_VAMPIRE
+                    && you.is_undead == US_ALIVE
+                    && !you_foodless()
+                    && !unmeld)
+                {
+                    make_hungry(4500, false, false);
+                }
+                break;
 
+            case SPWPN_DISTORTION:
                 if (!was_known)
                 {
                     // Xom loves it when you ID a distortion weapon this way,
