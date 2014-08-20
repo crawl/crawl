@@ -942,10 +942,7 @@ static void _describe_missiles(status_info* inf)
 
     if (level > 1)
     {
-        bool perm = false;
-                    /* you_worship(GOD_QAZLAL)
-                       && !player_under_penance(GOD_QAZLAL)
-                       && you.piety >= piety_breakpoint(4); */
+        bool perm = false; /* in_good_standing(GOD_QAZLAL, 4) */
         inf->light_colour = perm ? WHITE : LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
@@ -955,9 +952,7 @@ static void _describe_missiles(status_info* inf)
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.scan_artefacts(ARTP_RMSL)
-                    || you_worship(GOD_QAZLAL)
-                       && !player_under_penance(GOD_QAZLAL)
-                       && you.piety >= piety_breakpoint(3);
+                    || in_good_standing(GOD_QAZLAL, 3);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";

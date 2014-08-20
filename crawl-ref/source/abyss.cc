@@ -177,9 +177,7 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool lugonu_favoured =
-        (you_worship(GOD_LUGONU) && !player_under_penance()
-         && you.piety >= piety_breakpoint(4));
+    const bool lugonu_favoured = in_good_standing(GOD_LUGONU, 4);
 
     const double depth = you.depth + lugonu_favoured;
     const int divisor = 2 * brdepth[BRANCH_ABYSS] - 2;

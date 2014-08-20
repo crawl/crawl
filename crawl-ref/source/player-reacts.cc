@@ -273,11 +273,8 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
-        || you.mutation[MUT_JELLY_GROWTH])
-    {
+    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
-    }
 
     if (you.duration[DUR_TELEPATHY])
     {
@@ -720,8 +717,7 @@ static void _decrement_durations()
         {
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (you_worship(GOD_TROG)
-                && !player_under_penance()
+            if (in_good_standing(GOD_TROG)
                 && x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 mpr("Trog's vigour flows through your veins.");

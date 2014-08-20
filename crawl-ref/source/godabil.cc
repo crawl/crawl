@@ -1496,8 +1496,7 @@ void trog_remove_trogs_hand()
 
 bool beogh_water_walk()
 {
-    return you_worship(GOD_BEOGH) && !player_under_penance()
-           && you.piety >= piety_breakpoint(4);
+    return in_good_standing(GOD_BEOGH, 4);
 }
 
 /**
@@ -1710,16 +1709,14 @@ bool jiyva_remove_bad_mutation()
 
 bool yred_injury_mirror()
 {
-    return you_worship(GOD_YREDELEMNUL) && !player_under_penance()
-           && you.piety >= piety_breakpoint(1)
+    return in_good_standing(GOD_YREDELEMNUL, 1)
            && you.duration[DUR_MIRROR_DAMAGE]
            && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
 }
 
 bool yred_can_animate_dead()
 {
-    return you_worship(GOD_YREDELEMNUL) && !player_under_penance()
-           && you.piety >= piety_breakpoint(2);
+    return in_good_standing(GOD_YREDELEMNUL, 2);
 }
 
 void yred_animate_remains_or_dead()

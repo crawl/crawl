@@ -928,13 +928,11 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && you_worship(GOD_VEHUMET)
+        && in_good_standing(GOD_VEHUMET, 3)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && spell != SPELL_DISCHARGE
-        && spell != SPELL_GLACIATE
-        && !player_under_penance()
-        && you.piety >= piety_breakpoint(3))
+        && spell != SPELL_GLACIATE)
     {
         maxrange++;
         minrange++;
@@ -1134,7 +1132,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you_worship(GOD_SHINING_ONE) && !player_under_penance())
+        if (in_good_standing(GOD_SHINING_ONE))
             return true;
         break;
 #if TAG_MAJOR_VERSION == 34

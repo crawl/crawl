@@ -1172,7 +1172,7 @@ void search_around()
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
     + (base_skill/200.0) + 15;
 
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         skill += you.piety * 2;
 
     int max_dist = div_rand_round(skill, 32);

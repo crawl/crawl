@@ -66,6 +66,21 @@ static inline bool you_worship(god_type god)
     return you.religion == god;
 }
 
+/** Is the player in good (enough) standing with a particular god?
+ *
+ * @param god    The religion being asked about.
+ * @param pbreak The minimum piety breakpoint (number of stars minus one)
+ *               consider "enough"; a negative number (the default) checks
+ *               only for worship and not for piety.
+ * @return true if the player worships the given god, is not under penance,
+ *         and has at least (pbreak + 1) stars of piety.
+ */
+static inline int in_good_standing(god_type god, int pbreak = -1)
+{
+    return you_worship(god) && !player_under_penance(god)
+           && (pbreak < 0 || you.piety >= piety_breakpoint(pbreak));
+}
+
 int had_gods();
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);

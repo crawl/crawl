@@ -204,9 +204,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
 static bool _god_will_brand_weapon(god_type god)
 {
-   return you_worship(god) && !player_under_penance()
-          && you.piety >= piety_breakpoint(5)
-          && !you.one_time_ability_used[god];
+   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
 static bool _altar_prayer()
@@ -273,8 +271,8 @@ static bool _altar_prayer()
         return true;
     }
 
-    else if (you_worship(GOD_GOZAG) && !player_under_penance()
-        && !you.one_time_ability_used[GOD_GOZAG])
+    else if (in_good_standing(GOD_GOZAG)
+             && !you.one_time_ability_used[GOD_GOZAG])
     {
         bool found = false;
         bool prompted = false;
