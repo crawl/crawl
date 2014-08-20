@@ -163,7 +163,8 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _CURSES_world_reacts(item_def *item)
 {
-    if (one_chance_in(30))
+    // don't spam messages for ash worshippers
+    if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
         curse_an_item();
 }
 
