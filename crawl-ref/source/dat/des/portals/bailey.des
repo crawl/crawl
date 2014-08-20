@@ -20,7 +20,7 @@ function bailey_portal(e, ptype)
       initmsg = { "You hear the roar of battle.",
                   "There is an entrance to a bailey on this level. "
                   .. "Hurry and find it before the portal closes forever!" },
-      finalmsg = "$F{The} is probably going to close soon.",
+      finalmsg = "$F{The} has been lowered almost to the ground.",
 
       verb = 'creaking',
       noisemaker = 'oriflamme',
