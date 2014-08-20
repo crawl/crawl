@@ -1707,19 +1707,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // pay with mana and hunger if you already untransformed.
     if (!just_check && previous_trans != TRAN_NONE)
     {
-        bool skip_wielding = false;
-        switch (which_trans)
-        {
-        case TRAN_STATUE:
-        case TRAN_LICH:
-        case TRAN_SHADOW:
-            break;
-        default:
-            skip_wielding = true;
-            break;
-        }
-        // Skip wielding weapon if it gets unwielded again right away.
-        untransform(skip_wielding, true);
+        // Skip wielding weapon if it gets melded again right away.
+        // (in the extremely rare case of a weapon swap being interrupted by
+        // a form change... do we really need to support this at all?)
+        untransform(!form_can_wield(which_trans), true);
     }
 
     // Catch some conditions which prevent transformation.
