@@ -846,11 +846,6 @@ bool player_is_shapechanged();
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
-static inline int player_under_penance(god_type god = you.religion)
-{
-    return you.penance[god];
-}
-
 int player_energy();
 
 int player_raw_body_armour_evasion_penalty();

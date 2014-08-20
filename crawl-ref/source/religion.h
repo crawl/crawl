@@ -66,6 +66,11 @@ static inline bool you_worship(god_type god)
     return you.religion == god;
 }
 
+static inline int player_under_penance(god_type god = you.religion)
+{
+    return you.penance[god];
+}
+
 /** Is the player in good (enough) standing with a particular god?
  *
  * @param god    The religion being asked about.
