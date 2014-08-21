@@ -286,7 +286,7 @@ bool feat_is_gate(dungeon_feature_type feat)
  */
 command_type feat_stair_direction(dungeon_feature_type feat)
 {
-    if(feat_is_portal_entrance(feat)
+    if (feat_is_portal_entrance(feat)
         || feat_is_branch_entrance(feat))
     {
         return CMD_GO_DOWNSTAIRS;

@@ -632,24 +632,16 @@ void blood_smell(int strength, const coord_def& where)
 static int _noise_attenuation_millis(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    switch (feat)
-    {
-    // Closed doors are excellent at cutting off sound.
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
-        return BASE_NOISE_ATTENUATION_MILLIS * 8;
-    case DNGN_TREE:
-        return BASE_NOISE_ATTENUATION_MILLIS * 3;
-    default:
-        if (feat_is_statue_or_idol(feat))
-            return BASE_NOISE_ATTENUATION_MILLIS * 2;
-        if (feat_is_permarock(feat))
-            return NOISE_ATTENUATION_COMPLETE;
-        if (feat_is_wall(feat))
-            return BASE_NOISE_ATTENUATION_MILLIS * 12;
-        return BASE_NOISE_ATTENUATION_MILLIS;
-    }
+
+    if (feat_is_permarock(feat))
+        return NOISE_ATTENUATION_COMPLETE;
+
+    return BASE_NOISE_ATTENUATION_MILLIS *
+            feat_is_wall(feat)           ? 12 :
+            feat_is_closed_door(feat)    ?  8 :
+            feat_is_tree(feat)           ?  3 :
+            feat_is_statue_or_idol(feat) ?  2 :
+                                            1;
 }
 
 noise_cell::noise_cell()

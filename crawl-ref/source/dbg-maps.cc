@@ -109,14 +109,9 @@ static bool _do_build_level()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            switch (grd[x][y])
-            {
-            case DNGN_RUNED_DOOR:
+            if (grd[x][y] == DNGN_RUNED_DOOR)
                 grd[x][y] = DNGN_CLOSED_DOOR;
-                break;
-            default:
-                break;
-            }
+
             if (crawl_state.obj_stat_gen)
             {
                 coord_def pos(x, y);

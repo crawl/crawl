@@ -163,82 +163,13 @@ bool is_feature(ucs_t feature, const coord_def& where)
         return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP
                || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
-        switch (grid)
-        {
-        case DNGN_ENTER_HELL:
-            return player_in_hell();
-        case DNGN_ESCAPE_HATCH_UP:
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-        case DNGN_EXIT_DUNGEON:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARF:
-        case DNGN_RETURN_FROM_FOREST:
-        case DNGN_RETURN_FROM_BLADE:
-#endif
-        case DNGN_RETURN_FROM_ORC:
-        case DNGN_RETURN_FROM_LAIR:
-        case DNGN_RETURN_FROM_SLIME:
-        case DNGN_RETURN_FROM_VAULTS:
-        case DNGN_RETURN_FROM_CRYPT:
-        case DNGN_RETURN_FROM_TEMPLE:
-        case DNGN_RETURN_FROM_SNAKE:
-        case DNGN_RETURN_FROM_ELF:
-        case DNGN_RETURN_FROM_TOMB:
-        case DNGN_RETURN_FROM_SWAMP:
-        case DNGN_RETURN_FROM_SHOALS:
-        case DNGN_RETURN_FROM_SPIDER:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_EXIT_PORTAL_VAULT:
-#endif
-            return true;
-        default:
-            return false;
-        }
+        return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
+                && !feat_is_portal_exit(grid);
     case '>':
-        switch (grid)
-        {
-        case DNGN_ESCAPE_HATCH_DOWN:
-        case DNGN_STONE_STAIRS_DOWN_I:
-        case DNGN_STONE_STAIRS_DOWN_II:
-        case DNGN_STONE_STAIRS_DOWN_III:
-        case DNGN_ABYSSAL_STAIR:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARF:
-        case DNGN_ENTER_FOREST:
-        case DNGN_ENTER_BLADE:
-#endif
-        case DNGN_ENTER_ORC:
-        case DNGN_ENTER_LAIR:
-        case DNGN_ENTER_SLIME:
-        case DNGN_ENTER_VAULTS:
-        case DNGN_ENTER_CRYPT:
-        case DNGN_ENTER_TEMPLE:
-        case DNGN_ENTER_SNAKE:
-        case DNGN_ENTER_ELF:
-        case DNGN_ENTER_TOMB:
-        case DNGN_ENTER_SWAMP:
-        case DNGN_ENTER_SHOALS:
-        case DNGN_ENTER_SPIDER:
-            return true;
-        default:
-            return false;
-        }
+        return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
+                && !feat_is_portal_entrance(grid);
     case '^':
-        switch (grid)
-        {
-        case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_TELEPORT:
-        case DNGN_TRAP_ALARM:
-        case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_SHAFT:
-        case DNGN_TRAP_WEB:
-        case DNGN_PASSAGE_OF_GOLUBRIA:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_trap(grid);
     default:
         return get_cell_glyph(where).ch == feature;
     }
@@ -254,37 +185,15 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        if (feat_is_portal_exit(grd(where)))
-            return true;
-        switch (grd(where))
-        {
-        case DNGN_EXIT_HELL:
-        case DNGN_EXIT_ABYSS:
-        case DNGN_EXIT_PANDEMONIUM:
-        case DNGN_RETURN_FROM_DEPTHS:
-        case DNGN_RETURN_FROM_ZOT:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_portal_exit(grd(where))
+               || grd(where) == DNGN_EXIT_ABYSS
+               || grd(where) == DNGN_EXIT_PANDEMONIUM
+               || grd(where) == DNGN_ENTER_HELL && player_in_hell();
     }
     else if (glyph == '>')
     {
-        if (feat_is_portal_entrance(grd(where)))
-            return true;
-        switch (grd(where))
-        {
-        case DNGN_ENTER_DIS:
-        case DNGN_ENTER_GEHENNA:
-        case DNGN_ENTER_COCYTUS:
-        case DNGN_ENTER_TARTARUS:
-        case DNGN_TRANSIT_PANDEMONIUM:
-        case DNGN_ENTER_DEPTHS:
-        case DNGN_ENTER_ZOT:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_portal_entrance(grd(where))
+               || grd(where) == DNGN_TRANSIT_PANDEMONIUM;
     }
 
     return false;

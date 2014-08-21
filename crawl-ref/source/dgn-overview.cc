@@ -675,35 +675,14 @@ static void _seen_shop(const coord_def& pos)
 
 static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
 {
-    switch (which_thing)
-    {
-    case DNGN_ENTER_HELL:
-        // hell upstairs are never interesting
-        if (player_in_hell())
-            break;
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_PORTAL_VAULT:
-#endif
-    case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_ABYSS:
-    case DNGN_ENTER_PANDEMONIUM:
-    case DNGN_ENTER_ZIGGURAT:
-    case DNGN_ENTER_BAZAAR:
-    case DNGN_ENTER_TROVE:
-    case DNGN_ENTER_SEWER:
-    case DNGN_ENTER_OSSUARY:
-    case DNGN_ENTER_BAILEY:
-    case DNGN_ENTER_ICE_CAVE:
-    case DNGN_ENTER_VOLCANO:
-    case DNGN_ENTER_WIZLAB:
+    if (feat_is_portal_entrance(which_thing)
+        || which_thing == DNGN_ENTER_ABYSS
+        || which_thing == DNGN_ENTER_PANDEMONIUM)
     {
         level_pos where(level_id::current(), pos);
         portals_present[where] = stair_destination(pos).branch;
         portal_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");
-        break;
-    }
-    default:;
     }
 }
 
