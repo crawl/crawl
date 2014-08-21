@@ -2281,6 +2281,16 @@ static void _add_tentacle_overlay(const coord_def pos,
                                   const main_dir dir,
                                   tentacle_type type)
 {
+    /* This adds the corner overlays; e.g. in the following situation:
+         .#
+         #.
+        we need to add corners to the floor tiles since the tentacle
+        will otherwise look weird. So when placing the upper tentacle
+        tile, this function is called with dir WEST, so the upper
+        floor tile gets a corner in the south-east; and similarly,
+        when placing the lower tentacle tile, we get called with dir
+        EAST to give the lower floor tile a NW overlay.
+     */
     coord_def next = pos;
     switch (dir)
     {
@@ -2439,6 +2449,45 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         }
     }
 
+    // Is there a connection to the given direction?
+    // (either through head or next)
+    bool north = false, east = false,
+        south = false, west = false,
+        north_east = false, south_east = false,
+        south_west = false, north_west = false;
+
+    if (!no_head_connect)
+    {
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
     // Tentacle only requires checking of head position.
     if (mons_is_tentacle(mon.type))
     {
@@ -2450,34 +2499,22 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         }
 
         // Different handling according to relative positions.
-        if (h_pos.x == t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_N;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_S;
-        }
-        else if (h_pos.y == t_pos.y)
-        {
-            if (h_pos.x < t_pos.x)
-                return TILEP_MONS_KRAKEN_TENTACLE_W;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_E;
-        }
-        else if (h_pos.x < t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NW;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SW;
-        }
-        else if (h_pos.x > t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NE;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SE;
-        }
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SE;
         die("impossible kraken direction");
     }
     // Only tentacle segments from now on.
@@ -2495,40 +2532,59 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
     }
 
+    if (!no_next_connect)
+    {
+        if (n_pos.x == t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (n_pos.y == t_pos.y)
+        {
+            if (n_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (n_pos.x < t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (n_pos.x > t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
     if (no_head_connect || no_next_connect)
     {
         // One segment end goes into water, the other
         // into the direction of head or next.
-        const coord_def s_pos = (no_head_connect ? n_pos : h_pos);
 
-        if (s_pos.x == t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
-        }
-        else if (s_pos.y == t_pos.y)
-        {
-            if (s_pos.x < t_pos.x)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
-        }
-        else if (s_pos.x < t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
-        }
-        else if (s_pos.x > t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
-        }
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
         die("impossible kraken direction");
     }
 
@@ -2536,143 +2592,70 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     // Compare all three positions.
 
     // Straight lines first: Vertical.
-    if (h_pos.x == t_pos.x && t_pos.x == n_pos.x)
+    if (north && south)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
     // Horizontal.
-    if (h_pos.y == t_pos.y && t_pos.y == n_pos.y)
+    if (east && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
     // Diagonals.
-    if (h_pos.x < t_pos.x && t_pos.x < n_pos.x
-           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && t_pos.x < h_pos.x
-           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
-    {
+    if (north_west && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
-    }
-    if (n_pos.x < t_pos.x && t_pos.x < h_pos.x
-           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
-        || h_pos.x < t_pos.x && t_pos.x < n_pos.x
-           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
-    {
+    if (north_east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
-    }
 
     // Curved segments.
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (east && north)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (east && south)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (south && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (north && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (north_east && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (south_east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north_west && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north_east && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE;
-    }
 
     // Connect corners and edges.
-    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
-        _add_tentacle_overlay(t_pos, WEST, _get_tentacle_type(mon.type));
+    if (north && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (south && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (south && north_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (west && north_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (west && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (east && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
-    }
+
+    // Connections at acute angles; can currently only happen for vines.
+    if (north && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NW;
+    if (north && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NE;
+    if (east && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NE;
+    if (east && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SE;
+    if (south && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SE;
+    if (south && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SW;
+    if (west && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SW;
+    if (west && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW;
 
     return TILEP_MONS_PROGRAM_BUG;
 }
@@ -2817,7 +2800,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
             if (!_mons_is_kraken_tentacle(mon.type)
                 && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
-                && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
+                && (tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE
+                    || tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW &&
+                       mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
             {
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
