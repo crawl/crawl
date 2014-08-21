@@ -108,6 +108,8 @@ bool Form::slot_available(int slot) const
 /**
  * Can the player wear the given item while in this form?
  *
+ * Does not take mutations into account.
+ *
  * @param item  The item in question
  * @return      Whether this form prevents the player from wearing the
  *              item. (Other things may also prevent it, of course)
@@ -929,7 +931,7 @@ public:
     FormFungus()
     : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
            "a sentient fungus.",  // description
-           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           (EQF_PHYSICAL & ~SLOTF(EQ_HELMET)) | EQF_OCTO,  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
@@ -941,6 +943,22 @@ public:
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
+
+    /**
+     * Can the player wear the given item while in this form?
+     *
+     * Does not take mutations into account.
+     *
+     * @param item  The item in question
+     * @return      Whether this form prevents the player from wearing the
+     *              item. (Other things may also prevent it, of course)
+     */
+    bool can_wear_item(const item_def& item) const
+    {
+        if (is_helmet(item) && !is_hard_helmet(item))
+            return true; // mushroom caps!
+        return Form::can_wear_item(item);
+    }
 };
 
 class FormShadow: public Form
@@ -1196,8 +1214,11 @@ _init_equipment_removal(transformation_type form)
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
 
-        if (pitem && get_form(form)->blocked_slots & SLOTF(i))
+        if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
+                      || !get_form(form)->can_wear_item(*pitem)))
+        {
             result.insert(eq);
+        }
     }
     return result;
 }
