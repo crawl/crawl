@@ -113,6 +113,7 @@ public:
 
     bool enables_flight() const;
     bool forbids_flight() const;
+    bool forbids_swimming() const;
 
     bool player_can_fly() const;
     bool player_can_swim() const;

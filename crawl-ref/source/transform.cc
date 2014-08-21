@@ -296,6 +296,16 @@ bool Form::forbids_flight() const
 }
 
 /**
+ * Does this form disable swimming?
+ *
+ * @return Whether swimming is always impossible while in this form.
+ */
+bool Form::forbids_swimming() const
+{
+    return can_swim == FC_FORBID;
+}
+
+/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -1104,21 +1114,26 @@ bool form_can_swim(transformation_type form)
     return get_form(form)->player_can_swim();
 }
 
+/**
+ * Can the player survive in deep water when in the given form?
+ *
+ * Doesn't count flight or beogh water-walking.
+ *
+ * @param form      The form in question.
+ * @return          Whether the player won't be killed when entering deep water
+ *                  in that form.
+ */
 bool form_likes_water(transformation_type form)
 {
     // Grey dracs can't swim, so can't statue form merfolk/octopodes
     // -- yet they can still survive in water.
-    if (species_likes_water(you.species))
+    if (species_likes_water(you.species)
+        && (form == TRAN_STATUE || !get_form(form)->forbids_swimming()))
     {
-        if (form == TRAN_NONE
-            || form == TRAN_BLADE_HANDS
-            || form == TRAN_APPENDAGE
-            || form == TRAN_LICH
-            || form == TRAN_STATUE)
-        {
-            return true;
-        }
+        return true;
     }
+
+    // otherwise, you gotta swim to survive!
     return form_can_swim(form);
 }
 
