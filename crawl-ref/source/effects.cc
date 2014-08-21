@@ -2280,14 +2280,6 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->shift(pos))
         mon->shift(mon->pos());
 
-    // Submerge monsters that fell asleep, as on placement.
-    if (changed && mon->behaviour == BEH_SLEEP
-        && monster_can_submerge(mon, grd(mon->pos()))
-        && !one_chance_in(5))
-    {
-        mon->add_ench(ENCH_SUBMERGED);
-    }
-
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
 
