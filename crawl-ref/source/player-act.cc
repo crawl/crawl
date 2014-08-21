@@ -243,45 +243,25 @@ int player::damage_type(int)
     return DVORP_CRUSHING;
 }
 
+/**
+ * What weapon brand does the player attack with in melee?
+ */
 brand_type player::damage_brand(int)
 {
-    brand_type ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
-
     if (wpn != -1 && !melded[EQ_WEAPON])
     {
-        if (!is_range_weapon(inv[wpn]))
-            ret = get_weapon_brand(inv[wpn]);
-    }
-    else if (duration[DUR_CONFUSING_TOUCH] || form == TRAN_FUNGUS)
-        ret = SPWPN_CONFUSE;
-    else
-    {
-        switch (form)
-        {
-        case TRAN_SPIDER:
-            ret = SPWPN_VENOM;
-            break;
-
-        case TRAN_ICE_BEAST:
-            ret = SPWPN_FREEZING;
-            break;
-
-        case TRAN_LICH:
-            ret = SPWPN_DRAINING;
-            break;
-
-        case TRAN_BAT:
-            if (species == SP_VAMPIRE && one_chance_in(8))
-                ret = SPWPN_VAMPIRISM;
-            break;
-
-        default:
-            break;
-        }
+        if (is_range_weapon(inv[wpn]))
+            return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
+        return get_weapon_brand(inv[wpn]);
     }
 
-    return ret;
+    // unarmed
+
+    if (duration[DUR_CONFUSING_TOUCH])
+        return SPWPN_CONFUSE;
+
+    return get_form()->get_uc_brand();
 }
 
 
