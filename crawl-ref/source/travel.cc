@@ -1814,7 +1814,9 @@ void find_travel_pos(const coord_def& youpos,
     run_mode_type rmode = (move_x && move_y) ? RMODE_TRAVEL
                                              : RMODE_NOT_RUNNING;
 
-    const coord_def dest = tp.pathfind(rmode, true);
+    coord_def dest = tp.pathfind(rmode, false);
+    if (dest == coord_def())
+        dest = tp.pathfind(rmode, true);
     coord_def new_dest = dest;
 
     if (grd(dest) == DNGN_RUNED_DOOR)
