@@ -416,17 +416,8 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
     }
 
     // Fixup exits from the Hell branches.
-    if (player_in_branch(BRANCH_VESTIBULE))
-    {
-        switch (old_level.branch)
-        {
-        case BRANCH_COCYTUS:  stair_find = DNGN_ENTER_COCYTUS;  break;
-        case BRANCH_DIS:      stair_find = DNGN_ENTER_DIS;      break;
-        case BRANCH_GEHENNA:  stair_find = DNGN_ENTER_GEHENNA;  break;
-        case BRANCH_TARTARUS: stair_find = DNGN_ENTER_TARTARUS; break;
-        default: break;
-        }
-    }
+    if (player_in_branch(BRANCH_VESTIBULE) && is_hell_subbranch(old_level.branch))
+        stair_find = branches[old_level.branch].entry_stairs;
 
     const dungeon_feature_type stair_taken = stair_find;
 

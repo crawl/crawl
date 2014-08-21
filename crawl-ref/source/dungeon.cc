@@ -832,30 +832,14 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     if (feature_mimic_at(c))
         return false;
 
+    if (feat_is_stone_stair_up(grd(c))
+        || feat_is_branch_exit(grd(c)))
+    {
+        return true;
+    }
+
     switch (grd(c))
     {
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_EXIT_HELL:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_RETURN_FROM_BLADE:
-    case DNGN_RETURN_FROM_FOREST:
-#endif
-    case DNGN_RETURN_FROM_ORC:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE:
-    case DNGN_RETURN_FROM_ELF:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_FROM_SPIDER:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
@@ -873,35 +857,15 @@ static bool _is_exit_stair(const coord_def &c)
     // Branch entries, portals, and abyss entries are not considered exit
     // stairs here, as they do not provide an exit (in a transitive sense) from
     // the current level.
+    if (feat_is_stone_stair(grd(c))
+        || feat_is_escape_hatch(grd(c))
+        || feat_is_branch_exit(grd(c)))
+    {
+        return true;
+    }
+
     switch (grd(c))
     {
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_EXIT_HELL:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_RETURN_FROM_BLADE:
-    case DNGN_RETURN_FROM_FOREST:
-#endif
-    case DNGN_RETURN_FROM_ORC:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE:
-    case DNGN_RETURN_FROM_ELF:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_FROM_SPIDER:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
