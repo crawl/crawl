@@ -66,7 +66,8 @@ public:
          int _str_mod, int _dex_mod,
          size_type _size, int _hp_mod, int _stealth_mod,
          int _spellcasting_penalty,
-         int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
+         int _unarmed_hit_bonus, int _base_unarmed_damage,
+         brand_type _uc_brand, int _uc_colour,
          FormAttackVerbs _uc_attack_verbs,
          form_capability _can_fly, form_capability _can_swim,
          form_capability _can_bleed, bool _breathes, bool _keeps_mutations,
@@ -84,6 +85,7 @@ public:
     resists(_resists), stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
     can_fly(_can_fly), can_swim(_can_swim),
+    uc_brand(_uc_brand),
     equivalent_mons(_equivalent_mons)
     { };
 
@@ -111,6 +113,7 @@ public:
 
     virtual int get_stealth_mod() const { return stealth_mod; }
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
+    virtual brand_type get_uc_brand() const { return uc_brand; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -157,6 +160,8 @@ private:
 private:
     const form_capability can_fly;
     const form_capability can_swim;
+
+    const brand_type uc_brand;
 
     const monster_type equivalent_mons;
 };
