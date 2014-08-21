@@ -88,7 +88,7 @@ public:
     { };
 
     bool slot_available(int slot) const;
-    bool can_wear_item(const item_def& item) const;
+    virtual bool can_wear_item(const item_def& item) const;
 
     int get_duration(int pow) const;
 
