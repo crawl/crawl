@@ -212,6 +212,22 @@ string Form::get_untransform_message() const
 }
 
 /**
+ * What name should be used for the player's means of unarmed attack while
+ * in this form?
+ *
+ * (E.g. for display in the top-right of the UI.)
+ *
+ * @param   The player's UC weapon when not in a form (claws, etc)
+ * @return  A string describing the form's UC attack 'weapon'.
+ */
+string Form::get_uc_attack_name(string default_name) const
+{
+    if (uc_attack == "")
+        return default_name;
+    return uc_attack;
+}
+
+/**
  * How many levels of resistance against fire does this form provide?
  */
 int Form::res_fire() const
@@ -363,6 +379,7 @@ public:
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
@@ -389,6 +406,7 @@ public:
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
            10, 5, SPWPN_VENOM, LIGHTGREEN,  // unarmed acc bonus, damage, brand, & ui colour
+           "Fangs (venom)",             // name of unarmed-combat "weapon" (in UI)
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
@@ -409,6 +427,7 @@ public:
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            20,                 // spellcasting penalty
            12, -1, SPWPN_NORMAL, RED,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
@@ -466,6 +485,14 @@ public:
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? "its" : "their");
     }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string default_name) const
+    {
+        return "Blade " + blade_parts(true);
+    }
 };
 
 class FormStatue : public Form
@@ -481,6 +508,7 @@ public:
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            9, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
@@ -540,6 +568,20 @@ public:
         return Form::get_untransform_message();
 #endif
     }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string default_name) const
+    {
+        if (you.has_usable_claws(true))
+            return "Stone claws";
+        if (you.has_usable_tentacles(true))
+            return "Stone tentacles";
+
+        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        return make_stringf("Stone fist%s", singular ? "" : "s");
+    }
 };
 
 class FormIce : public Form
@@ -555,6 +597,7 @@ public:
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, SPWPN_FREEZING, WHITE,  // unarmed acc bonus, damage, brand, & ui colour
+           "Ice fists (freeze)",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
@@ -588,6 +631,7 @@ public:
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
+           "Teeth and claws",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
@@ -660,6 +704,7 @@ public:
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 5, SPWPN_DRAINING, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
@@ -684,6 +729,14 @@ public:
         return "You feel your undeath return to normal.";
         // ^^^ vampires only, probably
     }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string default_name) const
+    {
+        return default_name + " (drain)";
+    }
 };
 
 class FormBat : public Form
@@ -699,6 +752,7 @@ public:
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
            12, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "Teeth",             // name of unarmed-combat "weapon" (in UI)
            ANIMAL_VERBS, // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
@@ -779,6 +833,7 @@ public:
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "Teeth",             // name of unarmed-combat "weapon" (in UI)
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,  // can_fly (false for most pigs), can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
@@ -799,6 +854,7 @@ public:
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
@@ -857,6 +913,7 @@ public:
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, SPWPN_NORMAL, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
+           "Branches",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
            FC_FORBID, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
@@ -882,6 +939,7 @@ public:
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "Teeth",             // name of unarmed-combat "weapon" (in UI)
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
@@ -902,6 +960,7 @@ public:
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 5, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
@@ -928,6 +987,7 @@ public:
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
@@ -949,6 +1009,7 @@ public:
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, SPWPN_CONFUSE, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
+           "Spores (confuse)",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
@@ -985,6 +1046,7 @@ public:
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            0, 3, SPWPN_NORMAL, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, true, true,        // can_bleed, breathes, keeps_mutations

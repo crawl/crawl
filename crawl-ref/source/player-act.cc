@@ -658,64 +658,25 @@ string player::arm_name(bool plural, bool *can_plural) const
     return str;
 }
 
+/**
+ * What name should be used for the player's means of unarmed attack?
+ *
+ * (E.g. for display in the top-right of the UI.)
+ *
+ * @return  A string describing the player's UC attack 'weapon'.
+ */
 string player::unarmed_attack_name() const
 {
-    string text = "Nothing wielded"; // Default
+    string default_name = "Nothing wielded";
 
     if (species == SP_FELID)
-        text = "Teeth and claws";
+        default_name = "Teeth and claws";
     else if (has_usable_claws(true))
-        text = "Claws";
+        default_name = "Claws";
     else if (has_usable_tentacles(true))
-        text = "Tentacles";
+        default_name = "Tentacles";
 
-    switch (form)
-    {
-    case TRAN_SPIDER:
-        text = "Fangs (venom)";
-        break;
-    case TRAN_BLADE_HANDS:
-        text = "Blade " + blade_parts(true);
-        break;
-    case TRAN_STATUE:
-        if (has_usable_claws(true))
-            text = "Stone claw";
-        else if (has_usable_tentacles(true))
-        {
-            text = "Stone tentacles";
-            break;
-        }
-        else
-            text = "Stone fist";
-        if (!player_mutation_level(MUT_MISSING_HAND))
-            text = pluralise(text);
-        break;
-    case TRAN_ICE_BEAST:
-        if (player_mutation_level(MUT_MISSING_HAND))
-            text = "Ice fist (freeze)";
-        else
-            text = "Ice fists (freeze)";
-        break;
-    case TRAN_DRAGON:
-        text = "Teeth and claws";
-        break;
-    case TRAN_LICH:
-        text += " (drain)";
-        break;
-    case TRAN_BAT:
-    case TRAN_PIG:
-    case TRAN_PORCUPINE:
-        text = "Teeth";
-        break;
-    case TRAN_TREE:
-        text = "Branches";
-        break;
-    case TRAN_NONE:
-    case TRAN_APPENDAGE:
-    default:
-        break;
-    }
-    return text;
+    return get_form()->get_uc_attack_name(default_name);
 }
 
 bool player::fumbles_attack(bool verbose)
