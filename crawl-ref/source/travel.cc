@@ -1798,7 +1798,7 @@ void find_travel_pos(const coord_def& youpos,
                                              : RMODE_NOT_RUNNING;
 
     coord_def dest = tp.pathfind(rmode, false);
-    if (dest == coord_def())
+    if (dest.origin())
         dest = tp.pathfind(rmode, true);
     coord_def new_dest = dest;
 
