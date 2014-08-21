@@ -727,6 +727,7 @@ LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
 LUARET1(you_skill_cost_level, number, you.skill_cost_level);
 LUARET1(you_skill_points, number,
         you.skill_points[str_to_skill(luaL_checkstring(ls, 1))]);
+LUARET1(you_zigs_completed, number, you.zigs_completed);
 
 static const struct luaL_reg you_dlib[] =
 {
@@ -755,6 +756,7 @@ static const struct luaL_reg you_dlib[] =
 { "exercise",           you_exercise },
 { "skill_cost_level",   you_skill_cost_level },
 { "skill_points",       you_skill_points },
+{ "zigs_completed",     you_zigs_completed },
 
 { NULL, NULL }
 };
