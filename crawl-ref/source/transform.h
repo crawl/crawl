@@ -69,7 +69,7 @@ public:
          int _unarmed_hit_bonus, int _base_unarmed_damage, int _uc_colour,
          FormAttackVerbs _uc_attack_verbs,
          form_capability _can_fly, form_capability _can_swim,
-         form_capability _can_bleed, bool _keeps_mutations,
+         form_capability _can_bleed, bool _breathes, bool _keeps_mutations,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     duration(_duration),
@@ -78,7 +78,8 @@ public:
     spellcasting_penalty(_spellcasting_penalty),
     unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
     uc_attack_verbs(_uc_attack_verbs),
-    can_bleed(_can_bleed), keeps_mutations(_keeps_mutations),
+    can_bleed(_can_bleed), breathes(_breathes),
+    keeps_mutations(_keeps_mutations),
     long_name(_long_name), description(_description),
     resists(_resists), stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
@@ -138,6 +139,7 @@ public:
     const FormAttackVerbs uc_attack_verbs;
 
     const form_capability can_bleed;
+    const bool breathes;
     const bool keeps_mutations;
 
 protected:

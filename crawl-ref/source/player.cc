@@ -6648,24 +6648,17 @@ bool player::is_artificial(bool temp) const
            || temp && (form == TRAN_STATUE || petrified());
 }
 
+/**
+ * Does the player need to breathe?
+ *
+ * Pretty much only matters for mephitic clouds, & confusing spores, & curare.
+ *
+ * @return  Whether the player has no need to breathe.
+ */
 bool player::is_unbreathing() const
 {
-    switch (form)
-    {
-    case TRAN_LICH:
-    case TRAN_STATUE:
-    case TRAN_FUNGUS:
-    case TRAN_TREE:
-    case TRAN_WISP:
-        return true;
-    default:
-        break;
-    }
-
-    if (petrified())
-        return true;
-
-    return player_mutation_level(MUT_UNBREATHING);
+    return !get_form()->breathes || petrified()
+        || player_mutation_level(MUT_UNBREATHING);
 }
 
 bool player::is_insubstantial() const
