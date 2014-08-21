@@ -2743,7 +2743,7 @@ static string _status_mut_abilities(int sw)
         mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
             "8 rings",
-            !form_keeps_mutations() && you.form != TRAN_SPIDER));
+            !get_form()->slot_available(EQ_RING_EIGHT)));
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", you.has_tentacles(false)),
             !form_keeps_mutations()));

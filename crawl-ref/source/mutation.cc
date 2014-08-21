@@ -457,7 +457,7 @@ string describe_mutations(bool center_title)
         result += "You are amphibious.\n";
         result += _annotate_form_based(
             "You can wear up to eight rings at the same time.",
-            !form_keeps_mutations() && you.form != TRAN_SPIDER);
+            !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
             !form_keeps_mutations());
