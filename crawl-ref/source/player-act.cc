@@ -669,10 +669,13 @@ string player::unarmed_attack_name() const
 {
     string default_name = "Nothing wielded";
 
-    if (species == SP_FELID)
-        default_name = "Teeth and claws";
-    else if (has_usable_claws(true))
-        default_name = "Claws";
+    if (has_usable_claws(true))
+    {
+        if (species == SP_FELID)
+            default_name = "Teeth and claws";
+        else
+            default_name = "Claws";
+    }
     else if (has_usable_tentacles(true))
         default_name = "Tentacles";
 
