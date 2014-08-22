@@ -389,17 +389,14 @@ types.
 tutorial3 amulet
 
 Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
-or with <input>mouseclick</input> in the inventory panel</localtiles>. Some
-types of jewellery are identified when you put them on. For others, you'll need
-another way of identifying them.
+or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
-tutorial3 scroll_id
+tutorial3 scroll_remove_curse
 
-An important way to identify unknown items is by reading scrolls of identify.
-Try this scroll on your amulet by reading it with <input>$cmd[CMD_READ]</input>
-<localtiles> or by <input>clicking</input> it in the inventory
-panel</localtiles>, and then choosing the amulet from the item list with its
-assigned letter<localtiles> or by <input>mouseclick</input></localtiles>.
+The amulet is cursed and will not come off on its own. This scroll will remove
+all curses that are placed upon you. Try reading it with
+<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
+the inventory panel</localtiles>.
 %%%%
 tutorial3 drop
 
