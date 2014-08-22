@@ -1352,7 +1352,11 @@ enum dungeon_feature_type
     DNGN_GRANITE_STATUE,
     DNGN_MALIGN_GATEWAY,
 
+#if TAG_MAJOR_VERSION == 34
     DNGN_LAVA            = 30,
+#else
+    DNGN_LAVA,
+#endif
     DNGN_DEEP_WATER,
 
     DNGN_SHALLOW_WATER,
