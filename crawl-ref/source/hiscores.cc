@@ -1603,14 +1603,16 @@ void scorefile_entry::init(time_t dt)
 
     scrolls_used = 0;
     pair<caction_type, int> p(CACT_USE, OBJ_SCROLLS);
+
+    const int maxlev = min<int>(you.max_level, 27);
     if (you.action_count.count(p))
-        for (int i = 0; i < you.max_level; i++)
+        for (int i = 0; i < maxlev; i++)
             scrolls_used += you.action_count[p][i];
 
     potions_used = 0;
     p = pair<caction_type, int>(CACT_USE, OBJ_POTIONS);
     if (you.action_count.count(p))
-        for (int i = 0; i < you.max_level; i++)
+        for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
 
     wiz_mode = (you.wizard ? 1 : 0);
