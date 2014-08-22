@@ -2450,8 +2450,8 @@ F
   Directly choose an item and fire. Contrary to fi this does not change the
   quiver.
 
-(, )
-  Cycle quiver to next/previous suitable missile.
+( and )
+  Cycle quiver to next/previous suitable missile, respectively.
 
 Q
   Quiver item from a menu.
@@ -2745,7 +2745,7 @@ f
 :
   Toggle display of the beam path.
 
-(, )
+( and )
   These two commands allow you to change ammunition while targeting. The choice
   is subject to the fire_order option. Usually, you change missiles according to
   your launcher; i.e. when wielding a bow, ( and ) will cycle through all stacks
