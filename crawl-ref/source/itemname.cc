@@ -522,6 +522,24 @@ static const char* _vorpal_brand_name(const item_def &item, bool terse)
 
 
 /**
+ * What's the name of a weapon brand brand?
+ *
+ * @param brand             The type of brand in question.
+ * @param bool              Whether to use a terse or verbose name.
+ * @return                  The name of the given brand.
+ */
+const char* brand_type_name(int brand, bool terse)
+{
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+
+    if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
+        return terse ? "buggy" : "bugginess";
+
+    return (terse ? weapon_brands_terse : weapon_brands_verbose)[brand];
+}
+
+/**
  * What's the name of a given weapon's brand?
  *
  * @param item              The weapon with the brand.
@@ -533,17 +551,12 @@ static const char* _vorpal_brand_name(const item_def &item, bool terse)
 const char* weapon_brand_name(const item_def& item, bool terse,
                               int override_brand)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     const int brand = override_brand ? override_brand : get_weapon_brand(item);
+
     if (brand == SPWPN_VORPAL)
         return _vorpal_brand_name(item, terse);
 
-    if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
-        return terse ? "buggy" : "bugginess";
-
-    return (terse ? weapon_brands_terse : weapon_brands_verbose)[brand];
+    return brand_type_name(brand, terse);
 }
 
 const char* armour_ego_name(const item_def& item, bool terse)
