@@ -50,7 +50,7 @@ giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
 %rim 1
 
-##Edged
+##Short Blades
 dagger WPN_DAGGER
 dagger2
 dagger3
@@ -60,25 +60,6 @@ short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
 
-long_sword1 WPN_LONG_SWORD
-long_sword2
-long_sword3
-%rim 1
-
-greatsword1 WPN_GREAT_SWORD
-greatsword2
-
-
-%rim 0
-falchion1 WPN_FALCHION
-falchion2
-falchion3
-%rim 1
-scimitar1 WPN_SCIMITAR
-scimitar2
-scimitar3
-
-%rim 0
 cutlass1 WPN_CUTLASS
 cutlass2
 cutlass3
@@ -87,19 +68,38 @@ quickblade1 WPN_QUICK_BLADE
 quickblade2
 quickblade3
 
+##Long Blades
+falchion1 WPN_FALCHION
+falchion2
+falchion3
+
+scimitar1 WPN_SCIMITAR
+scimitar2
+scimitar3
+
+long_sword1 WPN_LONG_SWORD
+long_sword2
+long_sword3
+
+greatsword1 WPN_GREAT_SWORD
+greatsword2
+greatsword3
+
 bastard_sword WPN_BASTARD_SWORD
 bastard_sword2
 bastard_sword3
 bastard_sword_blessed WPN_BLESSED_BASTARD_SWORD
+
 claymore WPN_CLAYMORE
 claymore2
-claymore3 WPN_BLESSED_CLAYMORE
+claymore3
+claymore_blessed WPN_BLESSED_CLAYMORE
+
 demon_blade WPN_DEMON_BLADE
-%rim 0
 blessed_blade WPN_BLESSED_BLADE
-%rim 1
 
 ##Axe
+%rim 1
 hand_axe1 WPN_HAND_AXE
 hand_axe2
 hand_axe3
