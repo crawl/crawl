@@ -443,65 +443,107 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
     }
 }
 
-const char* weapon_brand_name(const item_def& item, bool terse, int override_brand)
+static const char *weapon_brands_terse[] =
 {
-    switch (override_brand ? override_brand : get_weapon_brand(item))
-    {
-    case SPWPN_NORMAL: return "";
-    case SPWPN_FLAMING: return terse ? "flame" : "flaming";
-    case SPWPN_FREEZING: return terse ? "freeze" : "freezing";
-    case SPWPN_HOLY_WRATH: return terse ? "holy" : "holy wrath";
-    case SPWPN_ELECTROCUTION: return terse ? "elec" : "electrocution";
-    case SPWPN_VENOM: return terse ? "venom" : "venom";
-    case SPWPN_PROTECTION: return terse ? "protect" : "protection";
-    case SPWPN_DRAINING: return terse ? "drain" : "draining";
-    case SPWPN_SPEED: return terse ? "speed" : "speed";
-    case SPWPN_PAIN: return terse ? "pain" : "pain";
-    case SPWPN_DISTORTION: return terse ? "distort" : "distortion";
-    case SPWPN_REAPING: return terse ? "reap" : "reaping";
-
-    case SPWPN_VAMPIRISM:
-        return terse ? "vamp" : ""; // non-terse already handled
-
-    case SPWPN_VORPAL:
-        if (is_range_weapon(item))
-            return terse ? "velocity" : "velocity";
-        else
-        {
-            switch (get_vorpal_type(item))
-            {
-            case DVORP_CRUSHING: return terse ? "crush" :"crushing";
-            case DVORP_SLICING:  return terse ? "slice" : "slicing";
-            case DVORP_PIERCING: return terse ? "pierce" : "piercing";
-            case DVORP_CHOPPING: return terse ? "chop" : "chopping";
-            case DVORP_SLASHING: return terse ? "slash" :"slashing";
-            case DVORP_STABBING: return terse ? "stab" : "stabbing";
-            default:             return terse ? "buggy vorpal"
-                                              : "buggy destruction";
-            }
-        }
-    case SPWPN_ANTIMAGIC: return terse ? "antimagic" : ""; // non-terse
-                                                      // handled elsewhere
-
-    // ranged
-    case SPWPN_PENETRATION: return terse ? "penet" : "penetration";
-    case SPWPN_EVASION: return terse ? "evade" : "evasion";
-
-    // both ranged and non-ranged
-    case SPWPN_CHAOS: return terse ? "chaos" : "chaos";
-
-    // obsolete and buggy brands
+    "", "flame", "freeze", "holy", "elec",
 #if TAG_MAJOR_VERSION == 34
-    case SPWPN_DRAGON_SLAYING: return terse ? "obsolete" : "dragon slaying";
-    case SPWPN_ORC_SLAYING: return terse ? "obsolete" : "orc slaying";
-    case SPWPN_REACHING: return terse ? "obsolete" : "reaching";
-    case SPWPN_RETURNING: return terse ? "obsolete" : "returning";
-    case SPWPN_CONFUSE: return terse ? "confuse" : "confusion";
-    case SPWPN_FLAME: return terse ? "obsolete" : "flame";
-    case SPWPN_FROST: return terse ? "obsolete" : "frost";
+    "obsolete", "obsolete",
 #endif
-    default: return terse ? "buggy" : "bugginess";
+    "venom", "protect", "drain", "speed", "buggy-vorpal",
+#if TAG_MAJOR_VERSION == 34
+    "obsolete", "obsolete",
+#endif
+    "vamp", "pain", "antimagic", "distort",
+#if TAG_MAJOR_VERSION == 34
+    "obsolete", "obsolete",
+#endif
+    "chaos", "evade",
+#if TAG_MAJOR_VERSION == 34
+    "confuse",
+#endif
+    "penet", "reap", "buggy-num", "acid",
+#if TAG_MAJOR_VERSION > 34
+    "confuse",
+#endif
+    "debug",
+};
+
+static const char *weapon_brands_verbose[] =
+{
+    "", "flaming", "freezing", "holy wrath", "electrocution",
+#if TAG_MAJOR_VERSION == 34
+    "orc slaying", "dragon slaying",
+#endif
+    "venom", "protection", "draining", "speed", "buggy-vorpal",
+#if TAG_MAJOR_VERSION == 34
+    "flame", "frost",
+#endif
+    "", "pain", "", "distortion",
+#if TAG_MAJOR_VERSION == 34
+    "reaching", "returning",
+#endif
+    "chaos", "evasion",
+#if TAG_MAJOR_VERSION == 34
+    "confusion",
+#endif
+    "penetration", "reaping", "buggy-num", "acid",
+#if TAG_MAJOR_VERSION > 34
+    "confusion",
+#endif
+    "debug",
+};
+
+/**
+ * What's the name of a type of vorpal brand?
+ *
+ * @param item      The weapon with the vorpal brand.
+ * @param bool      Whether to use a terse or verbose name.
+ * @return          The name of the given item's brand.
+ */
+static const char* _vorpal_brand_name(const item_def &item, bool terse)
+{
+    if (is_range_weapon(item))
+        return terse ? "velocity" : "velocity";
+
+    // Would be nice to implement this as an array (like other brands), but
+    // mapping the DVORP flags to array entries seems very fragile.
+    switch (get_vorpal_type(item))
+    {
+        case DVORP_CRUSHING: return terse ? "crush" :"crushing";
+        case DVORP_SLICING:  return terse ? "slice" : "slicing";
+        case DVORP_PIERCING: return terse ? "pierce" : "piercing";
+        case DVORP_CHOPPING: return terse ? "chop" : "chopping";
+        case DVORP_SLASHING: return terse ? "slash" :"slashing";
+        case DVORP_STABBING: return terse ? "stab" : "stabbing";
+        default:             return terse ? "buggy vorpal"
+                                          : "buggy destruction";
     }
+}
+
+
+/**
+ * What's the name of a given weapon's brand?
+ *
+ * @param item              The weapon with the brand.
+ * @param bool              Whether to use a terse or verbose name.
+ * @param override_brand    A brand type to use, instead of the weapon's actual
+ *                          brand.
+ * @return                  The name of the given item's brand.
+ */
+const char* weapon_brand_name(const item_def& item, bool terse,
+                              int override_brand)
+{
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+
+    const int brand = override_brand ? override_brand : get_weapon_brand(item);
+    if (brand == SPWPN_VORPAL)
+        return _vorpal_brand_name(item, terse);
+
+    if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
+        return terse ? "buggy" : "bugginess";
+
+    return (terse ? weapon_brands_terse : weapon_brands_verbose)[brand];
 }
 
 const char* armour_ego_name(const item_def& item, bool terse)
