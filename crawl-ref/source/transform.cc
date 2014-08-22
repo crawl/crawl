@@ -20,6 +20,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "item_use.h"
+#include "itemname.h" // brand_type_name
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -212,6 +213,16 @@ string Form::get_untransform_message() const
 }
 
 /**
+ * (freeze)
+ */
+static string _brand_suffix(int brand)
+{
+    if (brand == SPWPN_NORMAL)
+        return "";
+    return make_stringf(" (%s)", brand_type_name(brand, true));
+}
+
+/**
  * What name should be used for the player's means of unarmed attack while
  * in this form?
  *
@@ -222,9 +233,10 @@ string Form::get_untransform_message() const
  */
 string Form::get_uc_attack_name(string default_name) const
 {
+    const string brand_suffix = _brand_suffix(get_uc_brand());
     if (uc_attack == "")
-        return default_name;
-    return uc_attack;
+        return default_name + brand_suffix;
+    return uc_attack + brand_suffix;
 }
 
 /**
@@ -406,7 +418,7 @@ public:
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            10,                 // spellcasting penalty
            10, 5, SPWPN_VENOM, LIGHTGREEN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Fangs (venom)",             // name of unarmed-combat "weapon" (in UI)
+           "Fangs",             // name of unarmed-combat "weapon" (in UI)
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
@@ -597,7 +609,7 @@ public:
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, SPWPN_FREEZING, WHITE,  // unarmed acc bonus, damage, brand, & ui colour
-           "Ice fists (freeze)",             // name of unarmed-combat "weapon" (in UI)
+           "Ice fists",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
@@ -728,14 +740,6 @@ public:
             return "You feel yourself come back to life.";
         return "You feel your undeath return to normal.";
         // ^^^ vampires only, probably
-    }
-
-    /**
-     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
-     */
-    string get_uc_attack_name(string default_name) const
-    {
-        return default_name + " (drain)";
     }
 };
 
@@ -1009,7 +1013,7 @@ public:
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 12, SPWPN_CONFUSE, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Spores (confuse)",             // name of unarmed-combat "weapon" (in UI)
+           "Spores",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations

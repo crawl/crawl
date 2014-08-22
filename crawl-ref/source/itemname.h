@@ -108,7 +108,8 @@ bool is_useless_item(const item_def &item, bool temp = false);
 
 string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
 
-const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0);
+const char* brand_type_name(int brand, bool terse) PURE;
+const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0) PURE;
 const char* armour_ego_name(const item_def& item, bool terse);
 const char* missile_brand_name(const item_def& item, mbn_type t);
 
