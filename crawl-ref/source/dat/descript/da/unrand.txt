@@ -402,18 +402,3 @@ stadig af virkningerne af de resterende forbandelser og magiske energier, som
 det engang blev udsat for på daglig basis. Trolddomsbrugere, som formår at
 tøjle dets kræfter, vil dog opdage, at den øger deres besværgelsers kraft.
 %%%%
-milk chocolate
-
-Det her er en hjælp til at rette fejl, og den giver en lang række hovedsagligt
-gavnlige artefakt-egenskaber.
-
-Hvis du ser den i det rigtige spil, er det en fejl.
-%%%%
-dark chocolate
-
-Det her er en hjælp til at rette fejl, og den giver en lang række hovedsagligt
-gavnlige artefakt-egenskaber. Den adskiller sig fra sit mælkede modstykke ved
-at visse egenskaber modstrider hinanden.
-
-Hvis du ser den i det rigtige spil, er det en fejl.
-%%%%

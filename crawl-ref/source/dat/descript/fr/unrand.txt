@@ -538,18 +538,3 @@ En plus de ses pouvoirs évidents, cette arme protège les possessions de son
 porteur du feu, et allume une flamme intérieure chez les monstres qu'elle
 blesse.
 %%%%
-milk chocolate
-
-Cet objet est une aide au debuggage, et octroi d'une vaste gamme d'artefacts
-aux propriétés principalement bénéfique.
-
-Si vous le voyez en jeu, c'est un bug.
-%%%%
-dark chocolate
-
-Cet objet est une aide au debuggage, et octroi une vaste gamme d'artefacts aux
-propriétés principalement nuisibles. Il est distinct de son homologue par un
-conflit d'accessoires les uns avec les autres.
-
-Si vous le voyez en jeu, c'est un bug.
-%%%%

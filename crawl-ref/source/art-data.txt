@@ -1172,50 +1172,6 @@ INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
-# This is the first of two amulets used to test suppression aura.
-# Together, they confer every randart effect except for a few that are
-# determined explicitly by checking whether a certain amulet is worn
-# (such as stasis is).
-# The first amulet tests all properties, but since some properties can have
-# either positive or negative levels (or some properties are mutually
-# exclusive), the second amulet tests negative and exclusive effects.
-# Obviously, because it contains every positive property in the game,
-# this should never be randomly generated!
-NAME:    milk chocolate
-OBJ:     OBJ_JEWELLERY/AMU_STASIS
-COLOUR:  BROWN
-TILE:    urand_air
-ANGRY:   100
-COLD:    3
-SLAY:    60
-DEX:     3
-EV:      3
-FIRE:    3
-INT:     3
-MAGIC:   3
-HP:      10
-MP:      10
-STEALTH: 2
-STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, fly, life, nospell, notelep, poison, seeinv, mutate
-
-# This is the second of two amulets used to test suppression. See above.
-NAME:    dark chocolate
-OBJ:     OBJ_JEWELLERY/AMU_RESIST_CORROSION
-COLOUR:  DARKGREY
-TILE:    urand_bloodlust
-COLD:    -3
-SLAY:    -60
-DEX:     -3
-EV:      -3
-FIRE:    -3
-INT:     -3
-HP:      -10
-MP:      -10
-STEALTH: -2
-STR:     -3
-BOOL:    nogen, rnd_tele
-
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
