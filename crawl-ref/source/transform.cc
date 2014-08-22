@@ -788,8 +788,8 @@ public:
      */
     brand_type get_uc_brand() const
     {
-        // XXX: why does this exist? will it ever, ever matter?
-        if (you.species == SP_VAMPIRE && one_chance_in(8))
+        // thematic but probably irrelevant
+        if (you.species == SP_VAMPIRE)
             return SPWPN_VAMPIRISM;
         return Form::get_uc_brand();
     }
