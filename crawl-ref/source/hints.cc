@@ -2025,9 +2025,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             cmd.push_back(CMD_SEARCH_STASHES);
             cmd.push_back(CMD_SEARCH_STASHES);
         }
-
-        text << "\n\nBe warned that items that you leave on the floor can "
-                "be picked up and used by monsters.";
         break;
 
     case HINT_ROTTEN_FOOD:
