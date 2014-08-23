@@ -1415,9 +1415,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "it. You can view its properties from your <w>%</w>nventory</console>"
              << "<tiles>. You can click on it to put it on, and click a second time "
                 "remove it again. By clicking on it with your <w>right mouse "
-                "button</w> you can view its properties</tiles>"
-             << ", though often magic is necessary to reveal its true "
-                "nature.";
+                "button</w> you can view its properties</tiles>.";
         cmd.push_back(CMD_WEAR_JEWELLERY);
         cmd.push_back(CMD_REMOVE_JEWELLERY);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
