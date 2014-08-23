@@ -428,6 +428,7 @@ bool ranged_attack::apply_damage_brand(const char *what)
     if (attacker->type != MONS_NESSOS
         && projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) != SPMSL_NORMAL
+        && get_ammo_brand(*projectile) != SPMSL_PENETRATION
         && (brand == SPWPN_FLAMING
             || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH
