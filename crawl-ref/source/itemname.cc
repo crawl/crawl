@@ -3452,7 +3452,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_THE_GOURMAND:
             return player_likes_chunks(true) == 3
-                     && player_mutation_level(MUT_SAPROVOROUS) == 3
                      && you.species != SP_GHOUL // makes clean chunks
                                                 // contaminated
                    || player_mutation_level(MUT_GOURMAND) > 0
