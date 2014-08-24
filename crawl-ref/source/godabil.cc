@@ -2493,8 +2493,11 @@ static bool _prompt_amount(int max, int& selected, const string& prompt)
         }
 
         // Default is max
-        if (keyin == '\n'  || keyin == '\r')
+        if (keyin == '\n' || keyin == '\r')
+        {
+            selected = max;
             return true;
+        }
 
         // Otherwise they should enter a digit
         if (isadigit(keyin))
@@ -2506,7 +2509,7 @@ static bool _prompt_amount(int max, int& selected, const string& prompt)
         // else they entered some garbage?
     }
 
-    return max;
+    return false;
 }
 
 static int _collect_fruit(vector<pair<int,int> >& available_fruit)
