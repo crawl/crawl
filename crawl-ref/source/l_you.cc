@@ -98,6 +98,7 @@ LUARET1(you_god_likes_fresh_corpses, boolean,
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_poison_survival, number, poison_survival())
+LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
@@ -494,6 +495,7 @@ static const struct luaL_reg you_clib[] =
     { "rooted",       you_rooted },
     { "poisoned",     you_poisoned },
     { "poison_survival", you_poison_survival },
+    { "corrosion",    you_corrosion },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
     { "on_fire",      you_on_fire },
