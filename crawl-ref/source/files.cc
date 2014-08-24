@@ -52,6 +52,7 @@
 #include "errors.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "godcompanions.h"
 #include "godpassive.h"
 #include "initfile.h"
@@ -1228,13 +1229,16 @@ static void _place_player(dungeon_feature_type stair_taken,
         }
 
     // This should fix the "monster occurring under the player" bug.
-    if (monster* mon = monster_at(you.pos()))
+    monster *mon = monster_at(you.pos());
+    if (mon && !fedhas_passthrough(mon))
+    {
         for (distance_iterator di(you.pos()); di; ++di)
             if (!monster_at(*di) && mon->is_habitable(*di))
             {
                 mon->move_to_pos(*di);
                 break;
             }
+    }
 }
 
 
