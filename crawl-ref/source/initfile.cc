@@ -1153,7 +1153,8 @@ void game_options::clear_cset_overrides()
 
 void game_options::clear_feature_overrides()
 {
-    feature_overrides.clear();
+    feature_colour_overrides.clear();
+    feature_symbol_overrides.clear();
 }
 
 ucs_t get_glyph_override(int c)
@@ -1320,22 +1321,24 @@ void game_options::add_feature_override(const string &text)
 
     for (int i = 0, size = feats.size(); i < size; ++i)
     {
-        if (feats[i] >= NUM_FEATURES)
+        dungeon_feature_type feat = feats[i];
+        if (feat >= NUM_FEATURES)
             continue; // TODO: handle other object types.
-        feature_def &fov(feature_overrides[feats[i]]);
-        init_fd(fov);
+
 #define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
-                          fov.field = s;
-#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
-                          fov.field = c;
+                          feature_symbol_overrides[feat][n] = s;
         SYM(0, symbol);
         SYM(1, magic_symbol);
+#undef SYM
+        feature_def &fov(feature_colour_overrides[feat]);
+        init_fd(fov);
+#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
+                          fov.field = c;
         COL(2, colour);
         COL(3, map_colour);
         COL(4, seen_colour);
         COL(5, em_colour);
         COL(6, seen_em_colour);
-#undef SYM
 #undef COL
     }
 }

@@ -3031,7 +3031,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     beam.range   = INFINITE_DISTANCE;
     beam.flavour = BEAM_VISUAL;
-    beam.glyph   = feat_def.symbol;
+    beam.glyph   = feat_def.symbol();
     beam.colour  = feat_def.colour;
     beam.source  = stair_pos;
     beam.target  = ray.pos();

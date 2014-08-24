@@ -1027,7 +1027,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
             if (you.pos() == coord_def(x, y))
                 write_cell(outf, p, '@');
             else
-                write_cell(outf, p, get_feature_def(grd[x][y]).symbol);
+                write_cell(outf, p, get_feature_def(grd[x][y]).symbol());
         }
         fprintf(outf, "<br>\n");
     }

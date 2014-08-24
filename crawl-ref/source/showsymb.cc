@@ -477,7 +477,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
-        g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
+        g.ch = cell.seen() ? fdef.symbol() : fdef.magic_symbol();
     }
 
     if (g.col)
@@ -499,19 +499,19 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
 
 ucs_t get_feat_symbol(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).symbol;
+    return get_feature_def(feat).symbol();
 }
 
 ucs_t get_item_symbol(show_item_type it)
 {
-    return get_feature_def(show_type(it)).symbol;
+    return get_feature_def(show_type(it)).symbol();
 }
 
 cglyph_t get_item_glyph(const item_def *item)
 {
     cglyph_t g = _get_item_override(*item);
     if (!g.ch)
-        g.ch = get_feature_def(show_type(*item)).symbol;
+        g.ch = get_feature_def(show_type(*item)).symbol();
     if (!g.col)
         g.col = item->colour;
     return g;
