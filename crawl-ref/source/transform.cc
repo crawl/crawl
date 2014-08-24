@@ -1795,6 +1795,15 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // This must occur before the untransform() and the undead_state() check.
     if (previous_trans == which_trans)
     {
+        // update power
+        if (!just_check && which_trans != TRAN_NONE)
+        {
+            you.props[TRANSFORM_POW_KEY] = pow;
+            you.redraw_armour_class = true;
+            // ^ could check more carefully for the exact cases, but I'm
+            // worried about making the code too fragile
+        }
+
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
