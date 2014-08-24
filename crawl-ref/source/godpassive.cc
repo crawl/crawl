@@ -660,6 +660,9 @@ int ash_skill_boost(skill_type sk, int scale)
     // high bonus   -> factor = 7
 
     unsigned int skill_points = you.skill_points[sk];
+    vector<skill_type> cross_skills = get_crosstrain_skills(sk);
+    for (size_t i = 0; i < cross_skills.size(); ++i)
+        skill_points += you.skill_points[cross_skills[i]] * 2 / 5;
     skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
