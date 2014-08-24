@@ -123,12 +123,12 @@ static bool _is_explore_horizon(const coord_def& c)
 #ifndef USE_TILE_LOCAL
 static ucs_t _get_sightmap_char(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).symbol;
+    return get_feature_def(feat).symbol();
 }
 
 static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).magic_symbol;
+    return get_feature_def(feat).magic_symbol();
 }
 #endif
 
@@ -343,7 +343,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (show == SH_NOTHING && _is_explore_horizon(c))
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
-                    cell->glyph = fd.symbol;
+                    cell->glyph = fd.symbol();
                     cell->colour = fd.colour;
                 }
 
@@ -1288,7 +1288,7 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     const bool terrain_seen = env.map_knowledge(gc).seen();
     const feature_def &fdef = get_feature_def(feat);
     cglyph_t g;
-    g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
+    g.ch  = terrain_seen ? fdef.symbol() : fdef.magic_symbol();
     unsigned col;
     if (_travel_colour_override(gc))
         col = _get_travel_colour(gc);

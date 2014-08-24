@@ -1434,7 +1434,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
                 else
                 {
                     fputs(OUTS(stringize_glyph(
-                               get_feature_def(grd[x][y]).symbol)), fp);
+                               get_feature_def(grd[x][y]).symbol())), fp);
                 }
             }
             fputc('\n', fp);

@@ -8,10 +8,8 @@ struct feature_def
     dungeon_feature_type feat;
     const char*          name;
     const char*          vaultname;       // used for KFEAT and &(
-    dungeon_char_type    dchar;           // used for creating symbol
-    dungeon_char_type    magic_dchar;     // used for creating magic_symbol
-    ucs_t                symbol;          // symbol used for seen terrain
-    ucs_t                magic_symbol;    // symbol used for magic-mapped terrain
+    dungeon_char_type    dchar;           // the symbol
+    dungeon_char_type    magic_dchar;     // the symbol shown when magic mapped
     unsigned short       colour;          // normal in LoS colour
     unsigned short       map_colour;      // colour when out of LoS on display
     unsigned short       seen_colour;     // map_colour when env.map_knowledge().seen()
@@ -21,6 +19,8 @@ struct feature_def
     map_feature          minimap;         // mini-map categorization
 
     bool is_notable() const { return flags & FFT_NOTABLE; }
+    ucs_t symbol() const;
+    ucs_t magic_symbol() const;
 };
 
 void init_fd(feature_def& fd);
