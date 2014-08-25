@@ -65,7 +65,7 @@ public:
          FormDuration _duration,
          int _str_mod, int _dex_mod,
          size_type _size, int _hp_mod, int _stealth_mod,
-         int _spellcasting_penalty,
+         bool _can_cast, int _spellcasting_penalty,
          int _unarmed_hit_bonus, int _base_unarmed_damage,
          brand_type _uc_brand, int _uc_colour,
          string _uc_attack,
@@ -78,7 +78,7 @@ public:
     duration(_duration),
     str_mod(_str_mod), dex_mod(_dex_mod),
     blocked_slots(_blocked_slots), size(_size), hp_mod(_hp_mod),
-    spellcasting_penalty(_spellcasting_penalty),
+    can_cast(_can_cast), spellcasting_penalty(_spellcasting_penalty),
     unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
     uc_attack_verbs(_uc_attack_verbs),
     can_bleed(_can_bleed), breathes(_breathes),
@@ -139,6 +139,7 @@ public:
     const size_type size;
     const int hp_mod;
 
+    const bool can_cast;
     const int spellcasting_penalty;
 
     const int unarmed_hit_bonus;
