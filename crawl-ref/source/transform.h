@@ -72,6 +72,7 @@ public:
          FormAttackVerbs _uc_attack_verbs,
          form_capability _can_fly, form_capability _can_swim,
          form_capability _can_bleed, bool _breathes, bool _keeps_mutations,
+         string _hand_name, string _foot_name,
          monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     duration(_duration),
@@ -82,6 +83,7 @@ public:
     uc_attack_verbs(_uc_attack_verbs),
     can_bleed(_can_bleed), breathes(_breathes),
     keeps_mutations(_keeps_mutations),
+    hand_name(_hand_name), foot_name(_foot_name),
     long_name(_long_name), description(_description),
     resists(_resists), stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
@@ -146,6 +148,9 @@ public:
     const form_capability can_bleed;
     const bool breathes;
     const bool keeps_mutations;
+
+    const string hand_name;
+    const string foot_name;
 
 protected:
     const string long_name;

@@ -524,6 +524,35 @@ string player::conj_verb(const string &verb) const
     return verb;
 }
 
+/**
+ * What's the singular form of a name for the player's current hands?
+ *
+ * @return A string describing the player's current hand or hand-equivalents.
+ */
+static string _hand_name_singular()
+{
+    if (!get_form()->hand_name.empty())
+        return get_form()->hand_name;
+
+    if (you.species == SP_FELID)
+        return "paw";
+
+    if (you.has_usable_claws())
+        return "claw";
+
+    if (you.has_usable_tentacles())
+        return "tentacle";
+
+    return "hand";
+}
+
+/**
+ * What's the the name for the player's hands?
+ *
+ * @param plural                Whether to use the plural, if possible.
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current hand or hand-equivalents.
+ */
 string player::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
@@ -531,46 +560,61 @@ string player::hand_name(bool plural, bool *can_plural) const
         can_plural = &_can_plural;
     *can_plural = true;
 
-    string str;
+    const string singular = _hand_name_singular();
+    if (plural && *can_plural && !player_mutation_level(MUT_MISSING_HAND))
+        return pluralise(singular);
 
-    if (form == TRAN_BAT || form == TRAN_DRAGON)
-        str = "foreclaw";
-    else if (form == TRAN_PIG)
-        str = "front trotter";
-    else if (form == TRAN_SPIDER || form == TRAN_PORCUPINE)
-        str = "front leg";
-    else if (form == TRAN_ICE_BEAST)
-        str = "paw";
-    else if (form == TRAN_BLADE_HANDS)
-        str = "scythe-like blade";
-    else if (form == TRAN_TREE)
-        str = "branch";
-    else if (form == TRAN_WISP)
-        str = "misty tendril";
-    else if (form == TRAN_LICH || form == TRAN_STATUE
-             || form == TRAN_SHADOW
-             || !form_changed_physiology())
-    {
-        if (species == SP_FELID)
-            str = "paw";
-        else if (has_usable_claws())
-            str = "claw";
-        else if (has_usable_tentacles())
-            str = "tentacle";
-    }
-
-    if (str.empty())
-        return plural ? "hands" : "hand";
-
-    if (player_mutation_level(MUT_MISSING_HAND))
-        *can_plural = false;
-
-    if (plural && *can_plural)
-        str = pluralise(str);
-
-    return str;
+    return singular;
 }
 
+/**
+ * What's the singular form of a name for the player's current feet?
+ *
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current feet or feet-equivalents.
+ */
+static string _foot_name_singular(bool *can_plural)
+{
+    if (!get_form()->foot_name.empty())
+        return get_form()->foot_name;
+
+    if (player_mutation_level(MUT_HOOVES) >= 3)
+        return "hoof";
+
+    if (you.has_usable_talons())
+        return "talon";
+
+    if (you.has_usable_tentacles())
+    {
+        *can_plural = false;
+        return "tentacles";
+    }
+
+    if (you.species == SP_NAGA)
+    {
+        *can_plural = false;
+        return "underbelly";
+    }
+
+    if (you.species == SP_FELID)
+        return "paw";
+
+    if (you.fishtail)
+    {
+        *can_plural = false;
+        return "tail";
+    }
+
+    return "foot";
+}
+
+/**
+ * What's the the name for the player's feet?
+ *
+ * @param plural                Whether to use the plural, if possible.
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current feet or feet-equivalents.
+ */
 string player::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
@@ -578,50 +622,11 @@ string player::foot_name(bool plural, bool *can_plural) const
         can_plural = &_can_plural;
     *can_plural = true;
 
-    string str;
-
-    if (form == TRAN_SPIDER)
-        str = "hind leg";
-    else if (form == TRAN_PIG)
-        str = "trotter";
-    else if (form == TRAN_TREE)
-        str = "root";
-    else if (form == TRAN_WISP)
-        str = "strand";
-    else if (form == TRAN_LICH || form == TRAN_STATUE
-             || form == TRAN_SHADOW
-             || !form_changed_physiology())
-    {
-        if (player_mutation_level(MUT_HOOVES) >= 3)
-            str = "hoof";
-        else if (has_usable_talons())
-            str = "talon";
-        else if (has_usable_tentacles())
-        {
-            str         = "tentacles";
-            *can_plural = false;
-        }
-        else if (species == SP_NAGA)
-        {
-            str         = "underbelly";
-            *can_plural = false;
-        }
-        else if (species == SP_FELID)
-            str = "paw";
-        else if (fishtail)
-        {
-            str         = "tail";
-            *can_plural = false;
-        }
-    }
-
-    if (str.empty())
-        return plural ? "feet" : "foot";
-
+    const string singular = _foot_name_singular(can_plural);
     if (plural && *can_plural)
-        str = pluralise(str);
+        return pluralise(singular);
 
-    return str;
+    return singular;
 }
 
 string player::arm_name(bool plural, bool *can_plural) const
