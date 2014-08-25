@@ -395,6 +395,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -422,6 +423,7 @@ public:
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
+           "front leg", "",          // hand name, foot name
            MONS_SPIDER)       // equivalent monster
     { };
 };
@@ -443,6 +445,7 @@ public:
            FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
+           "scythe-like blade", "",          // hand name, foot name
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -524,6 +527,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_STATUE)       // equivalent monster
     { };
 
@@ -613,6 +617,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
+           "front paw", "paw",          // hand name, foot name
            MONS_ICE_BEAST)       // equivalent monster
     { };
 
@@ -647,6 +652,7 @@ public:
            FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
+           "foreclaw", "",          // hand name, foot name
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -720,6 +726,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_LICH)       // equivalent monster
     { };
 
@@ -760,6 +767,7 @@ public:
            ANIMAL_VERBS, // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
+           "foreclaw", "",          // hand name, foot name
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -841,6 +849,7 @@ public:
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,  // can_fly (false for most pigs), can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
+           "front trotter", "trotter",          // hand name, foot name
            MONS_HOG)       // equivalent monster
     { };
 };
@@ -862,6 +871,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -921,6 +931,7 @@ public:
            FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
            FC_FORBID, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
+           "branch", "root",          // hand name, foot name
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
@@ -947,6 +958,7 @@ public:
            ANIMAL_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
+           "front leg", "",          // hand name, foot name
            MONS_PORCUPINE)       // equivalent monster
     { };
 };
@@ -964,10 +976,11 @@ public:
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
            0,                 // spellcasting penalty
            10, 5, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
+           "Misty tendrils",             // name of unarmed-combat "weapon" (in UI)
            FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
            FC_ENABLE, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
+           "misty tendril", "strand",          // hand name, foot name
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
@@ -995,6 +1008,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_JELLY)       // equivalent monster
     { };
 };
@@ -1017,6 +1031,7 @@ public:
            FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
+           "hypha", "",          // hand name, foot name
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 
@@ -1054,6 +1069,7 @@ public:
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
            FC_FORBID, true, true,        // can_bleed, breathes, keeps_mutations
+           "", "",          // hand name, foot name
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 
