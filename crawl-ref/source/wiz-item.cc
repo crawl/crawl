@@ -1200,7 +1200,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "intelligence",
             "ponderous",
             "flight",
-            "magic reistance",
+            "magic resistance",
             "protection",
             "stealth",
             "resistance",
