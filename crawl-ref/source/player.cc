@@ -5962,67 +5962,39 @@ bool player::cannot_speak() const
     return false;
 }
 
+static const string shout_verbs[] = {"shout", "yell", "scream"};
+static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
+
+/**
+ * What verb should be used to describe the player's shouting?
+ *
+ * @return  A shouty kind of verb.
+ */
 string player::shout_verb() const
 {
-    switch (form)
-    {
-    case TRAN_DRAGON:
-        return "roar";
-    case TRAN_SPIDER:
-        return "hiss";
-    case TRAN_BAT:
-    case TRAN_PORCUPINE:
-        return "squeak";
-    case TRAN_PIG:
-        return coinflip() ? "squeal" : "oink";
-    case TRAN_FUNGUS:
-        return "sporulate";
-    case TRAN_TREE:
-        return "creak";
-    case TRAN_WISP:
-        return "whoosh"; // any wonder why?
+    if (!get_form()->shout_verb.empty())
+        return get_form()->shout_verb;
 
-    default:
-        if (species == SP_FELID)
-            return coinflip() ? "meow" : "yowl";
-        // depends on SCREAM mutation
-        int level = player_mutation_level(MUT_SCREAM);
-        if (level <= 1)
-            return "shout";
-        else if (level == 2)
-            return "yell";
-        else // level == 3
-            return "scream";
-    }
+    const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
+
+    if (species == SP_FELID)
+        return felid_shout_verbs[screaminess];
+    return shout_verbs[screaminess];
 }
 
+/**
+ * How loud are the player's shouts?
+ *
+ * @return The noise produced by a single player shout.
+ */
 int player::shout_volume() const
 {
-    int noise = 12;
-
-    switch (form)
-    {
-    case TRAN_DRAGON:
-        noise = 18;
-        break;
-    case TRAN_SPIDER:
-        noise = 8;
-        break;
-    case TRAN_BAT:
-    case TRAN_PORCUPINE:
-    case TRAN_FUNGUS:
-    case TRAN_WISP:
-        noise = 4;
-        break;
-
-    default:
-        break;
-    }
+    const int base_noise = 12 + get_form()->shout_volume_modifier;
 
     if (player_mutation_level(MUT_SCREAM))
-        noise += 2 * (player_mutation_level(MUT_SCREAM) - 1);
+        return base_noise + 2 * (player_mutation_level(MUT_SCREAM) - 1);
 
-    return noise;
+    return base_noise;
 }
 
 void player::god_conduct(conduct_type thing_done, int level)
