@@ -1501,9 +1501,6 @@ void scorefile_entry::init(time_t dt)
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
 
-        // Players will have a hard time getting 1/10 of this (see XP cap):
-        if (pt > 99999999)
-            pt = 99999999;
         points = pt;
     }
 
