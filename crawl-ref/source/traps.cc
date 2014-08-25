@@ -1528,6 +1528,7 @@ void free_stationary_net(int item_index)
         // Make sure we don't leave a bad trapping net in the stash
         // FIXME: may leak info if a monster escapes an out-of-sight net.
         StashTrack.update_stash(pos);
+        StashTrack.unmark_trapping_nets(pos);
     }
 }
 
