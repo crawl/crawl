@@ -284,6 +284,15 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
     return count > 1;
 }
 
+bool Stash::unmark_trapping_nets()
+{
+    bool changed = false;
+    for (vector<item_def>::iterator i = items.begin(); i != items.end(); i++)
+        if (item_is_stationary_net(*i))
+            i->plus2 = 0, changed = true;
+    return changed;
+}
+
 void Stash::update()
 {
     coord_def p(x,y);
@@ -1272,6 +1281,14 @@ bool LevelStashes::update_stash(const coord_def& c)
     return true;
 }
 
+bool LevelStashes::unmark_trapping_nets(const coord_def &c)
+{
+    if (Stash *s = find_stash(c))
+        return s->unmark_trapping_nets();
+    else
+        return false;
+}
+
 void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
 {
     ASSERT(from != to);
@@ -1555,6 +1572,14 @@ void StashTracker::move_stash(const coord_def& from, const coord_def& to)
     LevelStashes *lev = find_current_level();
     if (lev)
         lev->move_stash(from, to);
+}
+
+bool StashTracker::unmark_trapping_nets(const coord_def &c)
+{
+    if (LevelStashes *lev = find_current_level())
+        return lev->unmark_trapping_nets(c);
+    else
+        return false;
 }
 
 void StashTracker::remove_level(const level_id &place)
