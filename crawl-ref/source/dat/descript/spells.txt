@@ -1107,10 +1107,9 @@ Song of Slaying spell
 
 This spell conjures ancient verses of battle within the caster's mind, which
 the caster then recites — quite loudly! Each non-summoned enemy the caster
-slays in combat during this recitation temporarily enhances their melee skills.
-Their effectiveness will only be enhanced for the duration of the song; casting
-this spell while already singing will start a new song, not extend an existing
-one.
+slays in combat during this recitation temporarily enhances their melee &
+ranged skills. The bonus only lasts for the duration of the song; casting this
+spell while already singing will start a new song, not extend an existing one.
 %%%%
 Spawn Tentacles spell
 
