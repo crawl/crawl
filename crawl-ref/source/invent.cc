@@ -654,8 +654,10 @@ static int compare_item_str(const InvEntry *a, const InvEntry *b)
     return (a->*method)().compare((b->*method)());
 }
 
+// Would call this just compare_item, but MSVC mistakenly thinks the next
+// one is a specialization rather than an overload.
 template <typename T, T (*proc)(const InvEntry *a)>
-static int compare_item(const InvEntry *a, const InvEntry *b)
+static int compare_item_fn(const InvEntry *a, const InvEntry *b)
 {
     return int(proc(a)) - int(proc(b));
 }
@@ -753,10 +755,10 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },
           { "art",       compare_item_rev<bool, &InvEntry::is_item_art> },
           { "equipped",  compare_item_rev<bool, &InvEntry::is_item_equipped> },
-          { "identified",compare_item<bool, sort_item_identified> },
-          { "charged",   compare_item<bool, sort_item_charged>},
-          { "qty",       compare_item<int, sort_item_qty> },
-          { "slot",      compare_item<int, sort_item_slot> },
+          { "identified",compare_item_fn<bool, sort_item_identified> },
+          { "charged",   compare_item_fn<bool, sort_item_charged>},
+          { "qty",       compare_item_fn<int, sort_item_qty> },
+          { "slot",      compare_item_fn<int, sort_item_slot> },
           { "freshness", compare_item<int, &InvEntry::item_freshness> }
       };
 
