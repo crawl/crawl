@@ -2179,19 +2179,14 @@ static void _catchup_monster_moves(monster* mon, int turns)
     const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
 
     bool changed = false;
-    for (int i = 0; i < range/forgetfulness_time; i++)
+    if (mon->behaviour != BEH_SLEEP
+        && bernoulli(range/forgetfulness_time, 0.5))
     {
-        if (mon->behaviour == BEH_SLEEP)
-            break;
+        changed = true;
 
-        if (coinflip())
-        {
-            changed = true;
-
-            mon->behaviour = BEH_WANDER;
-            mon->foe = MHITNOT;
-            mon->target = random_in_bounds();
-        }
+        mon->behaviour = BEH_WANDER;
+        mon->foe = MHITNOT;
+        mon->target = random_in_bounds();
     }
 
     const beh_type old_behaviour = mon->behaviour;
