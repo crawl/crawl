@@ -2194,6 +2194,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         }
     }
 
+    const beh_type old_behaviour = mon->behaviour;
+
     if (mons_has_ranged_attack(mon) && !changed)
     {
         // If we're doing short time movement and the monster has a
@@ -2289,6 +2291,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
     }
 
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
+
+    mon->behaviour = old_behaviour; // restore it in case we started fleeing
 }
 
 //---------------------------------------------------------------
