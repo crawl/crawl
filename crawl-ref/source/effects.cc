@@ -2116,132 +2116,80 @@ static int _mon_forgetfulness_time(mon_intel_type intelligence)
     }
 }
 
-// Move monsters around to fake them walking around while player was
-// off-level.
-static void _catchup_monster_moves(monster* mon, int turns)
+/**
+ * Make monsters forget about the player after enough time passes off-level.
+ *
+ * @param mon           The monster in question.
+ * @param mon_turns     Monster turns. (Turns * monster speed)
+ * @return              Whether the monster forgot about the player.
+ */
+static bool _monster_forget(monster* mon, int mon_turns)
 {
-    // Summoned monsters might have disappeared.
-    if (!mon->alive())
-        return;
-
-    // Expire friendly summons
-    if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
-    {
-        // You might still see them disappear if you were quick
-        if (turns > 2)
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
-        else
-        {
-            mon_enchant abj  = mon->get_ench(ENCH_ABJ);
-            abj.duration = 0;
-            mon->update_ench(abj);
-        }
-        return;
-    }
-
-    // Don't move non-land or stationary monsters around.
-    if (mons_primary_habitat(mon) != HT_LAND
-        || mons_is_zombified(mon)
-           && mons_class_primary_habitat(mon->base_monster) != HT_LAND
-        || mon->is_stationary())
-    {
-        return;
-    }
-
-    // Don't shift giant spores since that would disrupt their trail.
-    if (mon->type == MONS_GIANT_SPORE)
-        return;
-
-    if (mon->is_projectile())
-    {
-        iood_catchup(mon, turns);
-        return;
-    }
-
-    // Let sleeping monsters lie.
-    if (mon->asleep() || mon->paralysed())
-        return;
-
-    const int range = (turns * mon->speed) / 10;
-    const int moves = (range > 50) ? 50 : range;
-
-    // probably too annoying even for DEBUG_DIAGNOSTICS
-    dprf("mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %" PRIx64,
-         mon->mindex(), range, mon->pos().x, mon->pos().y,
-         mon->foe, mon->target.x, mon->target.y, mon->flags);
-
-    if (range <= 0)
-        return;
-
     // After x turns, half of the monsters will have forgotten about the
     // player. A given monster has a 95% chance of forgetting the player after
     // 4*x turns.
     const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
+    const int forget_chances = mon_turns / forgetfulness_time;
+    // n.b. this is an integer division, so if range < forgetfulness_time
+    // nothing happens
 
-    bool changed = false;
-    if (mon->behaviour != BEH_SLEEP
-        && bernoulli(range/forgetfulness_time, 0.5))
+    if (bernoulli(forget_chances, 0.5))
     {
-        changed = true;
-
         mon->behaviour = BEH_WANDER;
         mon->foe = MHITNOT;
         mon->target = random_in_bounds();
+        return true;
     }
 
-    // restore it later if we start fleeing
-    unwind_var<beh_type> saved_beh(mon->behaviour);
+    return false;
+}
 
-    if (mons_has_ranged_attack(mon) && !changed)
+/**
+ * Make ranged monsters flee from the player during their time offlevel.
+ *
+ * @param mon           The monster in question.
+ */
+static void _monster_flee(monster *mon)
+{
+    mon->behaviour = BEH_FLEE;
+    dprf("backing off...");
+
+    if (mon->pos() != mon->target)
+        return;
+    // If the monster is on the target square, fleeing won't work.
+
+    if (in_bounds(env.old_player_pos) && env.old_player_pos != mon->pos())
     {
-        // If we're doing short time movement and the monster has a
-        // ranged attack (missile or spell), then the monster will
-        // flee to gain distance if it's "too close", else it will
-        // just shift its position rather than charge the player. -- bwr
-        if (grid_distance(mon->pos(), mon->target) < 3)
-        {
-            mon->behaviour = BEH_FLEE;
-
-            // If the monster is on the target square, fleeing won't
-            // work.
-            if (mon->pos() == mon->target)
-            {
-                if (in_bounds(env.old_player_pos)
-                    && env.old_player_pos != mon->pos())
-                {
-                    // Flee from player's old position if different.
-                    mon->target = env.old_player_pos;
-                }
-                else
-                {
-                    coord_def mshift(random2(3) - 1, random2(3) - 1);
-
-                    // Bounds check: don't let fleeing monsters try to
-                    // run off the grid.
-                    const coord_def s = mon->target + mshift;
-                    if (!in_bounds_x(s.x))
-                        mshift.x = 0;
-                    if (!in_bounds_y(s.y))
-                        mshift.y = 0;
-
-                    // Randomise the target so we have a direction to
-                    // flee.
-                    mon->target.x += mshift.x;
-                    mon->target.y += mshift.y;
-                }
-            }
-
-            dprf("backing off...");
-        }
-        else
-        {
-            mon->shift(mon->pos());
-            dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
-            return;
-        }
+        // Flee from player's old position if different.
+        mon->target = env.old_player_pos;
+        return;
     }
 
+    // Randomise the target so we have a direction to flee.
+    coord_def mshift(random2(3) - 1, random2(3) - 1);
+
+    // Bounds check: don't let fleeing monsters try to run off the grid.
+    const coord_def s = mon->target + mshift;
+    if (!in_bounds_x(s.x))
+        mshift.x = 0;
+    if (!in_bounds_y(s.y))
+        mshift.y = 0;
+
+    mon->target.x += mshift.x;
+    mon->target.y += mshift.y;
+
+    return;
+}
+
+/**
+ * Make a monster take a number of moves toward (or away from, if fleeing)
+ * their current target, very crudely.
+ *
+ * @param mon       The mon in question.
+ * @param moves     The number of moves to take.
+ */
+static void _catchup_monster_move(monster* mon, int moves)
+{
     coord_def pos(mon->pos());
 
     // Dirt simple movement.
@@ -2278,6 +2226,102 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     if (!mon->shift(pos))
         mon->shift(mon->pos());
+}
+
+/**
+ * Move monsters around to fake them walking around while player was
+ * off-level.
+ *
+ * Does not account for monster move speeds.
+ *
+ * Also make them forget about the player over time.
+ *
+ * @param mon       The monster under consideration
+ * @param turns     The number of offlevel player turns to simulate.
+ */
+static void _catchup_monster_moves(monster* mon, int turns)
+{
+    // Summoned monsters might have disappeared.
+    if (!mon->alive())
+        return;
+
+    // Expire friendly summons
+    if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
+    {
+        // You might still see them disappear if you were quick
+        if (turns > 2)
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        else
+        {
+            mon_enchant abj  = mon->get_ench(ENCH_ABJ);
+            abj.duration = 0;
+            mon->update_ench(abj);
+        }
+        return;
+    }
+
+    // Don't move non-land or stationary monsters around.
+    if (mons_primary_habitat(mon) != HT_LAND
+        || mons_is_zombified(mon)
+           && mons_class_primary_habitat(mon->base_monster) != HT_LAND
+        || mon->is_stationary())
+    {
+        return;
+    }
+
+    // Don't shift giant spores since that would disrupt their trail.
+    if (mon->type == MONS_GIANT_SPORE)
+        return;
+
+    // special movement code for ioods, boulder beetles...
+    if (mon->is_projectile())
+    {
+        iood_catchup(mon, turns);
+        return;
+    }
+
+    // Let sleeping monsters lie.
+    if (mon->asleep() || mon->paralysed())
+        return;
+
+
+
+    const int mon_turns = (turns * mon->speed) / 10;
+    const int moves = min(mon_turns, 50);
+
+    // probably too annoying even for DEBUG_DIAGNOSTICS
+    dprf("mon #%d: range %d; "
+         "pos (%d,%d); targ %d(%d,%d); flags %" PRIx64,
+         mon->mindex(), mon_turns, mon->pos().x, mon->pos().y,
+         mon->foe, mon->target.x, mon->target.y, mon->flags);
+
+    if (mon_turns <= 0)
+        return;
+
+
+    // did the monster forget about the player?
+    const bool forgot = _monster_forget(mon, mon_turns);
+
+    // restore behaviour later if we start fleeing
+    unwind_var<beh_type> saved_beh(mon->behaviour);
+
+    if (!forgot && mons_has_ranged_attack(mon))
+    {
+        // If we're doing short time movement and the monster has a
+        // ranged attack (missile or spell), then the monster will
+        // flee to gain distance if it's "too close", else it will
+        // just shift its position rather than charge the player. -- bwr
+        if (grid_distance(mon->pos(), mon->target) >= 3)
+        {
+            mon->shift(mon->pos());
+            dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
+            return;
+        }
+
+        _monster_flee(mon);
+    }
+
+    _catchup_monster_move(mon, moves);
 
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
