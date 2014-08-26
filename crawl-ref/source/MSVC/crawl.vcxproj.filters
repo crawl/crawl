@@ -362,7 +362,7 @@
     <ClInclude Include="..\dlua.h" />
     <ClInclude Include="..\dungeon.h" />
     <ClInclude Include="..\effects.h" />
-    <ClCompile Include="..\end.h" />
+    <ClInclude Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
     <ClInclude Include="..\enum.h" />
     <ClInclude Include="..\env.h" />
@@ -542,9 +542,9 @@
     <ClInclude Include="..\stash.h" />
     <ClInclude Include="..\state.h" />
     <ClInclude Include="..\status.h" />
-    <ClCompile Include="..\stepdown.h" />
+    <ClInclude Include="..\stepdown.h" />
     <ClInclude Include="..\store.h" />
-    <ClCompile Include="..\strings.cc" />
+    <ClInclude Include="..\strings.h" />
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
