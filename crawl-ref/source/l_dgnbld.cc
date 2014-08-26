@@ -1560,8 +1560,8 @@ LUAFN(dgn_remove_disconnected_doors)
                 //
                 if (!south && !north
                     && (east || west)
-                    && (east || southeast or northeast)
-                    && (west || southwest or northwest))
+                    && (east || southeast || northeast)
+                    && (west || southwest || northwest))
                 {
                     continue;
                 }
@@ -1575,8 +1575,8 @@ LUAFN(dgn_remove_disconnected_doors)
                 //
                 if (!east && !west
                     && (south || north)
-                    && (south || northeast or northwest)
-                    && (north || southeast or southwest))
+                    && (south || northeast || northwest)
+                    && (north || southeast || southwest))
                 {
                     continue;
                 }
