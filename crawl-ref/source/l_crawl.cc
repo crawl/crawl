@@ -1151,43 +1151,52 @@ static string _crawl_make_name(lua_State *ls)
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
-// FIXME: factor out the duplicated code in the next two functions.
+/** Check that a Lua argument is a god name, and store that god's enum in
+ *  a variable.
+ *
+ *  @param argno  The Lua argument number of the god name. Evaluated once.
+ *  @param godvar An existing writable lvalue to hold the enumeration value
+ *                of the god. Evaluated once.
+ *  @param fn     The identifier to use as the function name in an error
+ *                message. Should generally be the Lua name of the calling
+ *                function. Stringified, not evaluated.
+ *
+ *  @post If argument (argno) was not a string containing a valid god name,
+ *        we returned from the calling function with a Lua argument error.
+ *  @post If argument (argno) was a valid god name, godvar was assigned
+ *        that god's enum value.
+ *  @post godvar was assigned to at most once; exactly once if we did not
+ *        return from the function.
+ */
+#define CHECK_GOD_ARG(argno, godvar, fn) do                              \
+    {                                                                    \
+        int _cg_arg = (argno);                                           \
+        const char *_cg_name = luaL_checkstring(ls, _cg_arg);            \
+        if (!_cg_name)                                                   \
+            return luaL_argerror(ls, _cg_arg, #fn " requires a god!");   \
+        if (((godvar) = str_to_god(_cg_name)) == GOD_NO_GOD)             \
+        {                                                                \
+            return luaL_argerror(ls, _cg_arg,                            \
+                       make_stringf("'%s' matches no god.",              \
+                                    _cg_name).c_str());                  \
+        }                                                                \
+    } while (0)
+
 LUAFN(_crawl_unavailable_god)
 {
-    const char *god_name = luaL_checkstring(ls, 1);
-    if (!god_name)
-    {
-        string err = "unavailable_god requires a god!";
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-    god_type god = str_to_god(god_name);
-    if (god == GOD_NO_GOD)
-    {
-        string err = make_stringf("'%s' matches no god.", god_name);
-        return luaL_argerror(ls, 1, err.c_str());
-    }
+    god_type god = GOD_NO_GOD;
+    CHECK_GOD_ARG(1, god, unavailable_god);
     lua_pushboolean(ls, is_unavailable_god(god));
     return 1;
 }
 
-static int _crawl_god_speaks(lua_State *ls)
+LUAFN(_crawl_god_speaks)
 {
     if (!crawl_state.io_inited)
         return 0;
 
-    const char *god_name = luaL_checkstring(ls, 1);
-    if (!god_name)
-    {
-        string err = "god_speaks requires a god!";
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-
-    god_type god = str_to_god(god_name);
-    if (god == GOD_NO_GOD)
-    {
-        string err = make_stringf("'%s' matches no god.", god_name);
-        return luaL_argerror(ls, 1, err.c_str());
-    }
+    god_type god = GOD_NO_GOD;
+    CHECK_GOD_ARG(1, god, god_speaks);
 
     const char *message = luaL_checkstring(ls, 2);
     if (!message)
