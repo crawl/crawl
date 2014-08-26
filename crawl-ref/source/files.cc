@@ -104,6 +104,10 @@
 #include <android/log.h>
 #endif
 
+#ifndef F_OK // MSVC for example
+#define F_OK 0
+#endif
+
 static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
