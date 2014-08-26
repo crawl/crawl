@@ -625,9 +625,10 @@ TILE_EQ:  crystal_spear
 INT:      3
 BOOL:     nogen
 
+ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
-PLUS:     +10
+PLUS:     +5
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass

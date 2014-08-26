@@ -683,7 +683,25 @@ bool melee_attack::handle_phase_end()
     if (defender->is_player() && defender->alive() && attacker != defender)
     {
         mons_do_eyeball_confusion();
-        tendril_disarm();
+
+        monster* mon = attacker->as_monster();
+        // some rounding errors here, but not significant
+        const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3/2
+                                                 : mon->get_hit_dice();
+
+        if (player_mutation_level(MUT_TENDRILS)
+            && one_chance_in(5)
+            && (random2(you.dex()) > adj_mon_hd
+                || random2(you.strength()) > adj_mon_hd))
+        {
+            item_def* mons_wpn = mon->disarm();
+            if (mons_wpn)
+            {
+                mprf("Your tendrils lash around %s %s and pull it to the ground!",
+                     apostrophise(mon->name(DESC_THE)).c_str(),
+                     mons_wpn->name(DESC_PLAIN).c_str());
+            }
+        }
     }
 
     return attack::handle_phase_end();
@@ -3519,59 +3537,6 @@ void melee_attack::mons_do_eyeball_confusion()
                                           30 + random2(100)));
             }
         }
-    }
-}
-
-void melee_attack::tendril_disarm()
-{
-    monster *mon = attacker->as_monster();
-    item_def *mons_wpn = mon->mslot_item(MSLOT_WEAPON);
-
-    // is it ok to move the weapon into your tile (w/o destroying it?)
-    const bool your_tile_ok = (grd(you.pos()) != DNGN_DEEP_WATER
-                                || species_likes_water(you.species))
-                               && grd(you.pos()) != DNGN_LAVA;
-    // what about their tile?
-    const bool mon_tile_ok = grd(mon->pos()) != DNGN_LAVA
-                             && (your_tile_ok
-                                 || grd(mon->pos()) != DNGN_DEEP_WATER
-                                 || species_likes_water(you.species));
-    // XXX: refactor the above to use player.cc functions
-
-    if (!you.mutation[MUT_TENDRILS]
-        || !mons_wpn
-        || mons_wpn->cursed()
-        || !attacker->alive()
-        || mons_class_is_animated_weapon(mon->type)
-        || !adjacent(you.pos(), mon->pos())
-        || !you.can_see(mon)
-        || !mon_tile_ok
-        || !one_chance_in(5))
-    {
-        return;
-    }
-
-    const int mon_hd = mon->get_hit_dice();
-    const int adj_mon_hd = mons_class_flag(mon->type, M_FIGHTER) ? mon_hd * 3/2
-                                                                 : mon_hd;
-    // some rounding errors here, but not significant
-
-    if (random2(you.dex()) <= adj_mon_hd
-        && random2(you.strength()) <= adj_mon_hd)
-    {
-        return;
-    }
-
-    mprf("Your tendrils lash around %s %s and pull it to the ground!",
-        apostrophise(mon->name(DESC_THE)).c_str(),
-         mons_wpn->name(DESC_PLAIN).c_str());
-
-    mon->drop_item(MSLOT_WEAPON, false);
-    if (your_tile_ok)
-    {
-        move_top_item(mon->pos(), you.pos());
-        // assumes nothing's re-ordering items - e.g. gozag gold
-        // (but that shouldn't interact with jiyva tendrils...?)
     }
 }
 

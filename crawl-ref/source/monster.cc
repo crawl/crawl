@@ -6342,6 +6342,43 @@ item_def* monster::take_item(int steal_what, int mslot)
     return &new_item;
 }
 
+/** Disarm this monster, and preferably pull the weapon into your tile.
+ *
+ *  @returns a pointer to the weapon disarmed, or NULL if unsuccessful.
+ */
+item_def* monster::disarm()
+{
+    item_def *mons_wpn = mslot_item(MSLOT_WEAPON);
+
+    // is it ok to move the weapon into your tile (w/o destroying it?)
+    const bool your_tile_ok = !feat_virtually_destroys_item(grd(you.pos()), *mons_wpn)
+                               || grd(you.pos()) == DNGN_DEEP_WATER
+                                  && species_likes_water(you.species);
+    // what about their tile?
+    const bool mon_tile_ok = !feat_destroys_item(grd(pos()), *mons_wpn)
+                             && (your_tile_ok
+                                 || grd(pos()) != DNGN_DEEP_WATER
+                                 || species_likes_water(you.species));
+
+    if (!mons_wpn
+        || mons_wpn->cursed()
+        || mons_class_is_animated_weapon(type)
+        || !adjacent(you.pos(), pos())
+        || !you.can_see(this)
+        || !mon_tile_ok)
+    {
+        return NULL;
+    }
+
+    drop_item(MSLOT_WEAPON, false);
+
+    // XXX: assumes nothing's re-ordering items - e.g. gozag gold
+    if (your_tile_ok)
+        move_top_item(pos(), you.pos());
+
+    return mons_wpn;
+}
+
 /**
  * Checks if the monster can pass through webs freely.
  *

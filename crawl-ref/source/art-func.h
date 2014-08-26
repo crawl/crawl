@@ -1255,3 +1255,26 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 {
     item->plus = 8 + _octorings_worn();
 }
+
+///////////////////////////////////////////////////
+
+static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    // Player disarming sounds like a bad idea; monster-on-monster might
+    // work but would be complicated.
+    if (!attacker->is_player() || !defender->is_monster() || mondied)
+        return;
+
+    if (x_chance_in_y(dam, 75))
+    {
+        item_def *wpn = defender->as_monster()->disarm();
+        if (wpn)
+        {
+            mprf("You knock %s %s to the ground with your cutlass!",
+                 apostrophise(defender->name(DESC_THE)).c_str(),
+                 wpn->name(DESC_PLAIN).c_str());
+        }
+    }
+
+}
