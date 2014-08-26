@@ -1156,17 +1156,16 @@ LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
  *
  *  @param argno  The Lua argument number of the god name. Evaluated once.
  *  @param godvar An existing writable lvalue to hold the enumeration value
- *                of the god. Evaluated once.
+ *                of the god. Evaluated zero or one times.
  *  @param fn     The identifier to use as the function name in an error
  *                message. Should generally be the Lua name of the calling
  *                function. Stringified, not evaluated.
  *
  *  @post If argument (argno) was not a string containing a valid god name,
  *        we returned from the calling function with a Lua argument error.
- *  @post If argument (argno) was a valid god name, godvar was assigned
- *        that god's enum value.
- *  @post godvar was assigned to at most once; exactly once if we did not
- *        return from the function.
+ *        godvar may or may not have been evaluated and/or assigned to.
+ *  @post If argument (argno) was a valid god name, godvar was evaluated
+ *        exactly once and assigned that god's enum value.
  */
 #define CHECK_GOD_ARG(argno, godvar, fn) do                              \
     {                                                                    \
