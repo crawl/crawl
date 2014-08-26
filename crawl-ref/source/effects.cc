@@ -85,6 +85,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -2189,7 +2190,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         mon->target = random_in_bounds();
     }
 
-    const beh_type old_behaviour = mon->behaviour;
+    // restore it later if we start fleeing
+    unwind_var<beh_type> saved_beh(mon->behaviour);
 
     if (mons_has_ranged_attack(mon) && !changed)
     {
@@ -2278,8 +2280,6 @@ static void _catchup_monster_moves(monster* mon, int turns)
         mon->shift(mon->pos());
 
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
-
-    mon->behaviour = old_behaviour; // restore it in case we started fleeing
 }
 
 //---------------------------------------------------------------
