@@ -1952,7 +1952,7 @@ string game_options::expand_vars(const string &field) const
             continue;
 
         string::size_type end_pos;
-        for (end_pos = start_pos; end_pos < field_out.size(); end_pos++)
+        for (end_pos = start_pos; end_pos + 1 < field_out.size(); end_pos++)
         {
             if (!IS_VAR_CHAR(field_out[end_pos + 1]))
                 break;
