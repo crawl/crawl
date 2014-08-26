@@ -95,7 +95,6 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
-    void tendril_disarm();
     /* Race Effects */
     void do_minotaur_retaliation();
 

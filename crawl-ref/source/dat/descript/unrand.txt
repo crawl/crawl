@@ -282,6 +282,9 @@ captain's cutlass
 This infamous weapon was used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
 cutlass was thought to be lost with him.
+
+This weapon is perfectly suited for relieving opponents of their weapons, just
+before it relieves them of their lives.
 %%%%
 storm bow
 
