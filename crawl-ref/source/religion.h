@@ -80,7 +80,7 @@ static inline int player_under_penance(god_type god = you.religion)
  * @return true if the player worships the given god, is not under penance,
  *         and has at least (pbreak + 1) stars of piety.
  */
-static inline int in_good_standing(god_type god, int pbreak = -1)
+static inline bool in_good_standing(god_type god, int pbreak = -1)
 {
     return you_worship(god) && !player_under_penance(god)
            && (pbreak < 0 || you.piety >= piety_breakpoint(pbreak));
