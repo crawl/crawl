@@ -618,6 +618,32 @@ static string _describe_branch_bribability()
     return ret;
 }
 
+/**
+ * Print a guide to toggling between description screens, and check if the
+ * player does so.
+ *
+ * @return Whether the player chose to toggle to the other description screen.
+ */
+static bool _check_description_toggle()
+{
+    const int bottom_line = min(30, get_number_of_lines());
+
+    cgotoxy(1, bottom_line);
+    formatted_string::parse_string(
+                                   "Press '<w>!</w>' or '<w>^</w>'"
+#ifdef USE_TILE_LOCAL
+                                   " or <w>Right-click</w>"
+#endif
+                                   " to toggle between the overview and the"
+                                   " detailed description.").display();
+
+    mouse_control mc(MOUSE_MODE_MORE);
+
+    const int keyin = getchm();
+    return keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^';
+
+}
+
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
@@ -716,21 +742,7 @@ static void _detailed_god_description(god_type which_god)
         }
     }
 
-    const int bottom_line = min(30, get_number_of_lines());
-
-    cgotoxy(1, bottom_line);
-    formatted_string::parse_string(
-                                   "Press '<w>!</w>' or '<w>^</w>'"
-#ifdef USE_TILE_LOCAL
-                                   " or <w>Right-click</w>"
-#endif
-                                   " to toggle between the overview and the"
-                                   " detailed description.").display();
-
-    mouse_control mc(MOUSE_MODE_MORE);
-
-    const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
+    if (_check_description_toggle())
         describe_god(which_god, true);
 }
 
@@ -1036,20 +1048,6 @@ void describe_god(god_type which_god, bool give_title)
             cprintf("None.\n");
     }
 
-    const int bottom_line = min(30, get_number_of_lines());
-
-    cgotoxy(1, bottom_line);
-    textcolor(LIGHTGREY);
-    formatted_string::parse_string(
-                                   "Press '<w>!</w>' or '<w>^</w>'"
-#ifdef USE_TILE_LOCAL
-                                   " or <w>Right-click</w>"
-#endif
-                                   " to toggle between the overview and the"
-                                   " detailed description.").display();
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
+    if (_check_description_toggle())
         _detailed_god_description(which_god);
 }
