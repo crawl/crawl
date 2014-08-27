@@ -5111,10 +5111,14 @@ void ru_offer_new_sacrifices()
             possible_purity_mutations.push_back(MUT_SCREAM);
         if (player_mutation_level(MUT_SLOW_HEALING) <= 2
             && !player_mutation_level(MUT_NO_DEVICE_HEAL))
+        {
             possible_purity_mutations.push_back(MUT_SLOW_HEALING);
+        }
         if (player_mutation_level(MUT_NO_DEVICE_HEAL) <= 2
             && !player_mutation_level(MUT_SLOW_HEALING))
+        {
             possible_purity_mutations.push_back(MUT_NO_DEVICE_HEAL);
+        }
         possible_purity_mutations.push_back(MUT_DOPEY);
         possible_purity_mutations.push_back(MUT_CLUMSY);
         possible_purity_mutations.push_back(MUT_WEAK);
