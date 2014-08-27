@@ -644,6 +644,68 @@ static bool _check_description_toggle()
 
 }
 
+/**
+ * Describe miscellaneous information about the given god.
+ *
+ * @param which_god     The god in question.
+ * @return              Info about gods which isn't covered by their powers,
+ *                      likes, or dislikes.
+ */
+static string _get_god_misc_info(god_type which_god)
+{
+    switch (which_god)
+    {
+        case GOD_ASHENZARI:
+        case GOD_JIYVA:
+        case GOD_TROG:
+        {
+            const string piety_only = "Note that " + god_name(which_god) +
+                                      " does not demand training of the"
+                                      " Invocations skill. All abilities are"
+                                      " purely based on piety.";
+
+            if (which_god == GOD_ASHENZARI
+                && which_god == you.religion
+                && piety_rank() > 1)
+            {
+                return piety_only + "\n\n" + _describe_ash_skill_boost();
+            }
+
+            return piety_only;
+        }
+
+        case GOD_KIKUBAAQUDGHA:
+            return "The power of Kikubaaqudgha's abilities is governed by "
+                   "Necromancy skill instead of Invocations.";
+
+        case GOD_ELYVILON:
+            return "Healing hostile monsters may pacify them, turning them "
+                   "neutral. Pacification works best on natural beasts, "
+                   "worse on monsters of your species, worse on other "
+                   "species, worst of all on demons and undead, and not at "
+                   "all on sleeping or mindless monsters. If it succeeds, "
+                   "you gain half of the monster's experience value and "
+                   "possibly some piety. Pacified monsters try to leave the "
+                   "level.";
+
+        case GOD_NEMELEX_XOBEH:
+            return "The power of Nemelex Xobeh's abilities and of the "
+                   "cards' effects is governed by Evocations skill "
+                   "instead of Invocations.";
+
+        case GOD_GOZAG:
+            return _describe_branch_bribability();
+
+        default:
+            return "";
+    }
+}
+
+/**
+ * Print a detailed description of the given god's likes, dislikes, and powers.
+ *
+ * @param god       The god in question.
+ */
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
@@ -657,89 +719,44 @@ static void _detailed_god_description(god_type which_god)
     textcolor(LIGHTGREY);
     cprintf("\n");
 
-    string broken = get_god_powers(which_god);
-    if (!broken.empty())
+    string power_description = get_god_powers(which_god);
+    if (!power_description.empty())
     {
-        linebreak_string(broken, width);
-        display_tagged_block(broken);
+        linebreak_string(power_description, width);
+        display_tagged_block(power_description);
         cprintf("\n");
         cprintf("\n");
     }
 
-    if (which_god != GOD_XOM)
+    // nothing more to say about xom; bail out early.
+    if (which_god == GOD_XOM)
     {
-        broken = get_god_likes(which_god, true);
-        linebreak_string(broken, width);
-        display_tagged_block(broken);
+        if (_check_description_toggle())
+            describe_god(which_god, true);
+        return;
+    }
 
-        broken = get_god_dislikes(which_god, true);
-        if (!broken.empty())
-        {
-            cprintf("\n");
-            cprintf("\n");
-            linebreak_string(broken, width);
-            display_tagged_block(broken);
-        }
-        // Some special handling.
-        broken = "";
-        switch (which_god)
-        {
-            case GOD_ASHENZARI:
-            case GOD_JIYVA:
-            case GOD_TROG:
-                broken = "Note that " + god_name(which_god) + " does not demand "
-                "training of the Invocations skill. All abilities are "
-                "purely based on piety.";
+    string likes_description = get_god_likes(which_god, true);
+    linebreak_string(likes_description, width);
+    display_tagged_block(likes_description);
 
-                if (which_god == GOD_ASHENZARI
-                    && which_god == you.religion
-                    && piety_rank() > 1)
-                {
-                    broken += "\n\n";
-                    broken += _describe_ash_skill_boost();
-                }
-                break;
+    string dislikes_description = get_god_dislikes(which_god, true);
+    if (!dislikes_description.empty())
+    {
+        cprintf("\n");
+        cprintf("\n");
+        linebreak_string(dislikes_description, width);
+        display_tagged_block(dislikes_description);
+    }
 
-            case GOD_KIKUBAAQUDGHA:
-                broken = "The power of Kikubaaqudgha's abilities is governed by "
-                "Necromancy skill instead of Invocations.";
-                break;
-
-            case GOD_ELYVILON:
-                broken = "Healing hostile monsters may pacify them, turning them "
-                "neutral. Pacification works best on natural beasts, "
-                "worse on monsters of your species, worse on other "
-                "species, worst of all on demons and undead, and not at "
-                "all on sleeping or mindless monsters. If it succeeds, "
-                "you gain half of the monster's experience value and "
-                "possibly some piety. Pacified monsters try to leave the "
-                "level.";
-                break;
-
-            case GOD_NEMELEX_XOBEH:
-                if (which_god == you.religion)
-                {
-                    broken = "The power of Nemelex Xobeh's abilities and of the "
-                    "cards' effects is governed by Evocations skill "
-                    "instead of Invocations.";
-                }
-                break;
-
-            case GOD_GOZAG:
-                broken = _describe_branch_bribability();
-                break;
-
-            default:
-                break;
-        }
-
-        if (!broken.empty())
-        {
-            cprintf("\n");
-            cprintf("\n");
-            linebreak_string(broken, width);
-            display_tagged_block(broken);
-        }
+    // Some special handling.
+    string misc_description = _get_god_misc_info(which_god);
+    if (!misc_description.empty())
+    {
+        cprintf("\n");
+        cprintf("\n");
+        linebreak_string(misc_description, width);
+        display_tagged_block(misc_description);
     }
 
     if (_check_description_toggle())
