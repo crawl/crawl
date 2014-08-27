@@ -4488,8 +4488,8 @@ enum daction_type
     DACT_BRIBE_TIMEOUT,
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
-    DACT_ALLY_MAKHLEB,
     DACT_ALLY_SACRIFICE_LOVE,
+    DACT_ALLY_MAKHLEB,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]
