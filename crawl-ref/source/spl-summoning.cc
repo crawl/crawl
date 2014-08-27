@@ -2749,8 +2749,8 @@ void end_battlesphere(monster* mons, bool killed)
         else if (you.can_see(mons))
             simple_monster_message(mons, " dissipates.");
 
-        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(),
-                    3 + random2(3), mons);
+        if (!cell_is_solid(mons->pos()))
+            place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
         monster_die(mons, KILL_RESET, NON_MONSTER);
     }
@@ -3418,8 +3418,8 @@ void end_grand_avatar(monster* mons, bool killed)
 
     if (!killed)
     {
-        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(),
-                    3 + random2(3), mons);
+        if (!cell_is_solid(mons->pos()))
+            place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
         monster_die(mons, KILL_RESET, NON_MONSTER);
     }
 }

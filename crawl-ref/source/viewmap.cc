@@ -34,6 +34,7 @@
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
+#include "strings.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"
@@ -1084,7 +1085,7 @@ bool show_map(level_pos &lpos,
 
                 string name;
                 const level_pos pos
-                    = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
+                    = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name);
 
                 if (pos.id.depth < 1
                     || pos.id.depth > brdepth[pos.id.branch]

@@ -66,6 +66,8 @@ struct game_state
     vector<string> tests_selected; // Tests to be run.
     vector<string> script_args;    // Arguments to scripts.
 
+    bool throttle;
+
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
     string sprint_map;      // Sprint map set on command line, if any.

@@ -42,7 +42,7 @@ tutorial1 downstairs
 
 When standing on a staircase leading downwards, you can enter the next level
 with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or with
-<input>left click</input> on your character</localtiles>.
+a <input>left click</input> on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
@@ -183,7 +183,8 @@ Don't forget about chopping corpses for food (with
 tutorial2 wait
 
 Rather than storm the room and get swarmed by monsters, you can also step back
-and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input>) for them to come to you.
+and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input><localtiles> or by
+<input>clicking</input> on your character</localtiles>) for them to come to you.
 %%%%
 tutorial2 resting_reminder
 
@@ -206,7 +207,8 @@ Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><no
 tutorial2 downstairs
 
 Well done! After resting to full health continue to the next level with
-<input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
+<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or by <input>clicking</input>
+on your character</localtiles>.
 %%%%
 tutorial2 newlevel
 
@@ -345,7 +347,7 @@ tutorial3 downstairs
 
 Well fought! If necessary, rest up with <input>$cmd[CMD_REST]</input>, the
 continue downwards with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or
-with <input>Shift-Click</input> on your character</localtiles>.
+with a <input>click</input> on your character</localtiles>.
 %%%%
 tutorial3 command_help
 
@@ -387,17 +389,14 @@ types.
 tutorial3 amulet
 
 Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
-or with <input>mouseclick</input> in the inventory panel</localtiles>. Some
-types of jewellery are identified when you put them on. For others, you'll need
-another way of identifying them.
+or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
-tutorial3 scroll_id
+tutorial3 scroll_remove_curse
 
-An important way to identify unknown items is by reading scrolls of identify.
-Try this scroll on your amulet by reading it with <input>$cmd[CMD_READ]</input>
-<localtiles> or by <input>clicking</input> it in the inventory
-panel</localtiles>, and then choosing the amulet from the item list with its
-assigned letter<localtiles> or by <input>mouseclick</input></localtiles>.
+The amulet is cursed and will not come off on its own. This scroll will remove
+all curses that are placed upon you. Try reading it with
+<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
+the inventory panel</localtiles>.
 %%%%
 tutorial3 drop
 
@@ -418,7 +417,7 @@ tutorial3 enter_shop
 # TODO: Everything else except how to enter the shop should be told in the
 #       shopping screen.
 To enter this shop, press <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or
-<input>Shift-leftclick</input> on your character</localtiles>. To buy items,
+<input>click</input> on your character</localtiles>. To buy items,
 select them with their hotkey, hit <input>Enter</input> and confirm with
 <input>y</input>es. You can switch to description mode with <input>!</input>.
 %%%%

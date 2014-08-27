@@ -1632,8 +1632,7 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && you_worship(GOD_KIKUBAAQUDGHA)
-        && !player_under_penance() && you.piety >= piety_breakpoint(1))
+    if (target->is_player() && in_good_standing(GOD_KIKUBAAQUDGHA, 1))
     {
         const bool death_curse = (cause.find("death curse") != string::npos);
 

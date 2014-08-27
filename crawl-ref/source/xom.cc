@@ -727,7 +727,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     god_acting gdact(GOD_XOM);
 
-    int thing_created = items(true, base, subtype, true, power, 0, 0, GOD_XOM);
+    int thing_created = items(true, base, subtype, power, 0, GOD_XOM);
 
     if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
                            !silenced(you.pos())))
@@ -1600,7 +1600,8 @@ static int _xom_random_stickable(const int HD)
     return arr[c];
 }
 
-// A near-inversion of sticks_to_snakes with the following limitations:
+// An effect similar to old sticks to snakes (which worked on "sticks" other
+// than arrows)
 //  * Transformations are permanent.
 //  * Weapons are always non-cursed.
 //  * HD influences the enchantment and type of the weapon.
@@ -1636,24 +1637,24 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                         (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
                             : _xom_random_stickable(mi->get_experience_level()));
 
-            int thing_created = items(0, base_type, sub_type, true,
+            int item_slot = items(false, base_type, sub_type,
                                       mi->get_experience_level() / 3 - 1,
-                                      0, 0, -1, -1);
+                                      0, -1);
 
-            if (thing_created == NON_ITEM)
+            if (item_slot == NON_ITEM)
                 continue;
 
-            item_def &doodad(mitm[thing_created]);
+            item_def &item(mitm[item_slot]);
 
             // Always limit the quantity to 1.
-            doodad.quantity = 1;
+            item.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
             mprf("%s reforms as %s.", mi->name(DESC_THE).c_str(),
-                 doodad.name(DESC_A).c_str());
+                 item.name(DESC_A).c_str());
 
             // Dismiss monster silently.
-            move_item_to_grid(&thing_created, mi->pos());
+            move_item_to_grid(&item_slot, mi->pos());
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
         }
     }

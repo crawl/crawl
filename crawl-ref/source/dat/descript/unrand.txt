@@ -604,18 +604,3 @@ tiny portion of the caster’s life essence, taken alongside the magic used ever
 time its wielder casts a spell. Of course - the demon is more than happy to
 suck the life from others, as well.
 %%%%
-milk chocolate
-
-This item is a debugging aid, granting a vast array of mostly beneficial
-artefact properties.
-
-If you see this in a real game, it's a bug.
-%%%%
-dark chocolate
-
-This item is a debugging aid, granting a vast array of mostly harmful artefact
-properties. It's distinct from its milky counterpart as some props conflict
-with each other.
-
-If you see this in a real game, it's a bug.
-%%%%

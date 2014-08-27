@@ -3977,6 +3977,37 @@ static void _builder_monsters()
     }
 }
 
+/**
+ * Randomly place a single item
+ *
+ * @param item   The item slot of the item being randomly placed
+ */
+static void _randomly_place_item(int item)
+{
+    coord_def itempos;
+    bool found = false;
+    for (int i = 0; i < 500 && !found; ++i)
+    {
+        itempos = random_in_bounds();
+        const monster* mon = monster_at(itempos);
+        found = grd(itempos) == DNGN_FLOOR
+                && !map_masked(itempos, MMT_NO_ITEM)
+                // oklobs or statues are ok
+                && (!mon || !mons_is_firewood(mon));
+    }
+    if (!found)
+    {
+        // Couldn't find a single good spot!
+        destroy_item(item);
+    }
+    else
+        move_item_to_grid(&item, itempos);
+}
+
+/**
+ * Randomly place items on a level. Does not place items in vaults,
+ * on monsters, etc. Only normal floor generated items.
+ */
 static void _builder_items()
 {
     int i = 0;
@@ -3993,7 +4024,12 @@ static void _builder_items()
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
 
     for (i = 0; i < items_wanted; i++)
-        items(1, specif_type, OBJ_RANDOM, false, items_levels, MMT_NO_ITEM);
+    {
+        int item = items(true, specif_type, OBJ_RANDOM, items_levels);
+
+        _randomly_place_item(item);
+    }
+
 }
 
 static bool _connect_vault_exit(const coord_def& exit)
@@ -4648,14 +4684,24 @@ int dgn_place_item(const item_spec &spec,
 
     while (true)
     {
-        const int item_made =
-            (acquire ?
-             acquirement_create_item(base_type, spec.acquirement_source,
-                                     true, where)
-             : spec.corpselike() ? _dgn_item_corpse(spec, where)
-             : items(spec.allow_uniques, base_type,
-                     spec.sub_type, true, level, 0, spec.ego, -1,
-                     spec.level == ISPEC_MUNDANE));
+        int item_made;
+
+        if (acquire)
+        {
+            item_made = acquirement_create_item(base_type,
+                                                spec.acquirement_source,
+                                                true, where);
+        }
+        else if (spec.corpselike())
+            item_made = _dgn_item_corpse(spec, where);
+        else
+        {
+            item_made = items(spec.allow_uniques, base_type,
+                              spec.sub_type, level, spec.ego);
+
+            if (spec.level == ISPEC_MUNDANE)
+                squash_plusses(item_made);
+        }
 
         if (item_made == NON_ITEM || item_made == -1)
             return NON_ITEM;
@@ -4779,8 +4825,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, true, item_level, 0, spec.ego,
-                                  -1, spec.level == ISPEC_MUNDANE);
+                                  spec.sub_type, item_level,
+                                  spec.ego);
+
+                if (spec.level == ISPEC_MUNDANE)
+                    squash_plusses(item_made);
             }
 
             if (!(item_made == NON_ITEM || item_made == -1))
@@ -5200,7 +5249,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '*')
             which_depth = 5 + which_depth * 2;
 
-        item_made = items(1, which_class, which_type, true, which_depth);
+        item_made = items(true, which_class, which_type, which_depth);
         if (item_made != NON_ITEM)
             mitm[item_made].pos = where;
     }
@@ -5710,7 +5759,7 @@ void place_spec_shop(const coord_def& where,
                 orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
             else
             {
-                orb = items(1, basetype, subtype, true,
+                orb = items(true, basetype, subtype,
                             one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
             }
 

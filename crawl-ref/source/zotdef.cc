@@ -1005,7 +1005,7 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
+                int ip = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {

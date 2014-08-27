@@ -4207,6 +4207,15 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     mons_spec base_monster = mons_by_name(s);
     if (base_monster.type < 0)
         base_monster.type = MONS_PROGRAM_BUG;
+
+    monster_type dummy_mons = MONS_PROGRAM_BUG;
+    coord_def dummy_pos;
+    dungeon_char_type dummy_feat;
+    level_id place = level_id::current();
+    base_monster.type = resolve_monster_type(base_monster.type, dummy_mons,
+                                             PROX_ANYWHERE, &dummy_pos, 0,
+                                             &dummy_feat, &place);
+
     spec.monbase = static_cast<monster_type>(base_monster.type);
     spec.number = base_monster.number;
 
@@ -5783,6 +5792,18 @@ void map_flags::clear()
     flags_set = flags_unset = 0;
 }
 
+map_flags &map_flags::operator |= (const map_flags &o)
+{
+    flags_set |= o.flags_set;
+    flags_unset |= o.flags_unset;
+
+    // In the event of conflict, the later flag set (o here) wins.
+    flags_set &= ~o.flags_unset;
+    flags_unset &= ~o.flags_set;
+
+    return *this;
+}
+
 typedef map<string, unsigned long> flag_map;
 
 map_flags map_flags::parse(const string flag_list[],
@@ -6050,7 +6071,7 @@ string keyed_mapspec::set_mask(const string &s, bool garbage)
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
              "UNUSED",
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
-        map_mask = map_flags::parse(flag_list, s);
+        map_mask |= map_flags::parse(flag_list, s);
     }
     catch (const string &error)
     {

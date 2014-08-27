@@ -463,7 +463,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         return -1;
     }
 
-    if (!force && you_worship(GOD_GOZAG) && !player_under_penance())
+    if (!force && in_good_standing(GOD_GOZAG))
     {
         const monsterentry* me = get_monster_data(corpse_class);
         const int base_gold = max(3, (me->weight - 200) / 27);
@@ -719,10 +719,9 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
 static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
                                         int i)
 {
-    if (you_worship(GOD_BEOGH)
+    if (in_good_standing(GOD_BEOGH, 2)
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned() && !mons->is_shapeshifter()
-        && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(mons) && !mons_is_god_gift(mons))
     {
         bool convert = false;
@@ -926,8 +925,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         && target->is_player())
     {
         // Kiku protects you from ordinary mummy curses.
-        if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
-            && you.piety >= piety_breakpoint(1))
+        if (in_good_standing(GOD_KIKUBAAQUDGHA, 1))
         {
             simple_god_message(" averts the curse.");
             return;
@@ -1578,8 +1576,7 @@ int monster_die(monster* mons, killer_type killer,
     // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
-        if (you_worship(GOD_TROG)
-            && !player_under_penance() && you.piety > random2(1000))
+        if (in_good_standing(GOD_TROG) && you.piety > random2(1000))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
@@ -1719,8 +1716,11 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_BATTLESPHERE)
     {
-        if (!wizard && !mons_reset && !was_banished)
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons->pos()))
+        {
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
+        }
         end_battlesphere(mons, true);
     }
     else if (mons->type == MONS_BRIAR_PATCH)
@@ -2003,10 +2003,9 @@ int monster_die(monster* mons, killer_type killer,
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp
-                && (you_worship(GOD_BEOGH)
-                    && random2(you.piety) >= piety_breakpoint(2))
-                && !mons_is_object(mons->type)
-                && !player_under_penance())
+                && in_good_standing(GOD_BEOGH)
+                && random2(you.piety) >= piety_breakpoint(2)
+                && !mons_is_object(mons->type))
             {
                 bless_follower();
             }
@@ -2218,9 +2217,8 @@ int monster_die(monster* mons, killer_type killer,
                     }
                 }
 
-                if (you_worship(GOD_SHINING_ONE)
+                if (in_good_standing(GOD_SHINING_ONE)
                     && (mons->is_evil() || mons->is_unholy())
-                    && !player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)
                     && !invalid_monster_index(killer_index))
                 {
@@ -2240,9 +2238,8 @@ int monster_die(monster* mons, killer_type killer,
                     }
                 }
 
-                if (you_worship(GOD_BEOGH)
+                if (in_good_standing(GOD_BEOGH)
                     && random2(you.piety) >= piety_breakpoint(2)
-                    && !player_under_penance()
                     && !one_chance_in(3)
                     && !invalid_monster_index(killer_index))
                 {

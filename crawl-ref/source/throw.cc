@@ -151,7 +151,7 @@ void fire_target_behaviour::set_prompt()
                                                     *active_item());
         switch (projected)
         {
-        case LRET_FUMBLED:  msg << "Awkwardly throwing "; break;
+        case LRET_FUMBLED:  msg << "Tossing away "; break;
         case LRET_LAUNCHED: msg << "Firing ";             break;
         case LRET_THROWN:   msg << "Throwing ";           break;
         }
@@ -897,10 +897,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     you.time_taken = you.attack_delay(you.weapon(), &item);
 
     // Create message.
-    mprf("%s %s%s %s.",
-          teleport  ? "Magically, you" : "You",
-          projected ? "" : "awkwardly ",
-          projected == LRET_LAUNCHED ? "shoot" : "throw",
+    mprf("You %s%s %s.",
+          teleport ? "magically " : "",
+          (projected == LRET_FUMBLED ? "toss away" :
+           projected == LRET_LAUNCHED ? "shoot" : "throw"),
           ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
@@ -1086,7 +1086,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    string msg = ((teleport) ? "Magically, " : "") + mons->name(DESC_THE);
+    string msg = mons->name(DESC_THE);
+    if (teleport)
+        msg += " magically";
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!beam.name.empty() && projected == LRET_LAUNCHED)

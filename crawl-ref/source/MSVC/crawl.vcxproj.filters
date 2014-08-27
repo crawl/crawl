@@ -287,6 +287,7 @@
     <ClCompile Include="..\wcwidth.cc" />
     <ClCompile Include="..\windowmanager-sdl.cc" />
     <ClCompile Include="..\wiz-dgn.cc" />
+    <ClCompile Include="..\wiz-dump.cc" />
     <ClCompile Include="..\wiz-fsim.cc" />
     <ClCompile Include="..\wiz-item.cc" />
     <ClCompile Include="..\wiz-mon.cc" />
@@ -362,7 +363,7 @@
     <ClInclude Include="..\dlua.h" />
     <ClInclude Include="..\dungeon.h" />
     <ClInclude Include="..\effects.h" />
-    <ClCompile Include="..\end.h" />
+    <ClInclude Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
     <ClInclude Include="..\enum.h" />
     <ClInclude Include="..\env.h" />
@@ -542,9 +543,9 @@
     <ClInclude Include="..\stash.h" />
     <ClInclude Include="..\state.h" />
     <ClInclude Include="..\status.h" />
-    <ClCompile Include="..\stepdown.h" />
+    <ClInclude Include="..\stepdown.h" />
     <ClInclude Include="..\store.h" />
-    <ClCompile Include="..\strings.cc" />
+    <ClInclude Include="..\strings.h" />
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
@@ -611,6 +612,7 @@
     <ClInclude Include="..\windowmanager.h" />
     <ClInclude Include="..\winhdr.h" />
     <ClInclude Include="..\wiz-dgn.h" />
+    <ClInclude Include="..\wiz-dump.h" />
     <ClInclude Include="..\wiz-fsim.h" />
     <ClInclude Include="..\wiz-item.h" />
     <ClInclude Include="..\wiz-mon.h" />

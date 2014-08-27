@@ -152,6 +152,7 @@
     Vambola Kotkas
     Ryan Kusnery
     Jukka Kuusisto
+    Lorenzo Lami
     Lantier
     Maciej Lapinski
     Jordan Lewis

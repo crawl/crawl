@@ -26,6 +26,7 @@
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define STONESKIN_KEY "stoneskin_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
+#define BARBS_MOVE_KEY "moved_with_barbs_status"
 
 class targetter;
 
@@ -188,7 +189,7 @@ public:
   FixedVector<uint8_t, NUM_GODS>  worshipped;
   FixedVector<short,   NUM_GODS>  num_current_gifts;
   FixedVector<short,   NUM_GODS>  num_total_gifts;
-  FixedBitVector<   NUM_GODS>  one_time_ability_used;
+  FixedBitVector<      NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
@@ -553,7 +554,8 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const;
 
-    string name(description_level_type type, bool force_visible = false) const;
+    string name(description_level_type type, bool force_visible = false,
+                bool force_article = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
     string hand_name(bool plural, bool *can_plural = NULL) const;
@@ -843,11 +845,6 @@ bool player_is_shapechanged();
 
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
-
-static inline int player_under_penance(god_type god = you.religion)
-{
-    return you.penance[god];
-}
 
 int player_energy();
 

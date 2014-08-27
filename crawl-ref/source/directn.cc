@@ -2063,7 +2063,9 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-#ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_LOCAL
+    UNUSED(may_target_monster);
+#else
     if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
         _update_mlist(true);
 #endif
@@ -3676,9 +3678,10 @@ static void _debug_describe_feature_at(const coord_def &where)
                              vp.size.x, vp.size.y);
     }
 
+    ucs_t ch = get_cell_glyph(where).ch;
     dprf("(%d,%d): %s - %s (%d/%s)%s%s%s%s map: %x",
          where.x, where.y,
-         stringize_glyph(get_cell_glyph(where).ch).c_str(),
+         ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),

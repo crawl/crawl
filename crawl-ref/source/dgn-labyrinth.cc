@@ -110,7 +110,7 @@ static void _labyrinth_place_items(const coord_def &end)
                                        0);
 
         const int treasure_item =
-            items(1, glopop, OBJ_RANDOM, true,
+            items(true, glopop, OBJ_RANDOM,
                   one_chance_in(3) ? env.absdepth0 * 3 : MAKE_GOOD_ITEM);
 
         if (treasure_item != NON_ITEM)

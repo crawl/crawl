@@ -1010,32 +1010,19 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(12))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(10))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(8))
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(6))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(5))
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(6))
-                rc = SPWPN_VENOM;
+                                    // total weight 10,000
+            rc = random_choose_weighted(3329, rc,
+                                        1666, SPWPN_VENOM,
+                                        1666, SPWPN_ELECTROCUTION,
+                                         694, SPWPN_DRAINING,
+                                         556, SPWPN_FLAMING,
+                                         555, SPWPN_FREEZING,
+                                         486, SPWPN_VAMPIRISM,
+                                         420, SPWPN_PAIN,
+                                         315, SPWPN_HOLY_WRATH,
+                                         175, SPWPN_DISTORTION,
+                                         138, SPWPN_ANTIMAGIC,
+                                           0);
             break;
 
         case WPN_HALBERD:
@@ -1284,7 +1271,7 @@ static void _roll_weapon_type(item_def& item, int item_level)
             break;
     }
     if (i == 1000)
-        item.sub_type = SPWPN_NORMAL; // fall back to no brand
+        item.special = SPWPN_NORMAL; // fall back to no brand
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
@@ -2630,16 +2617,40 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     }
 }
 
-// Returns item slot or NON_ITEM if it fails.
+/**
+ * Alter the inputed item to have no "plusses" (mostly weapon/armour enchantment)
+ *
+ * @param[in,out] item_slot The item slot of the item to remove "plusses" from.
+ */
+void squash_plusses(int item_slot)
+{
+    item_def& item(mitm[item_slot]);
+
+    ASSERT(!is_deck(item));
+    item.plus    = 0;
+    item.plus2   = 0;
+    item.special = 0;
+    set_equip_desc(item, ISFLAG_NO_DESC);
+}
+
+/**
+ * Create an item. This function does too much.
+ *
+ * @param allow_uniques Can the item generated be an artefact?
+ * @param force_class The desired OBJECTS class (Example: OBJ_ARMOUR)
+ * @param force_type The desired SUBTYPE - enum varies by OBJ
+ * @param item_level How powerful the item is allowed to be
+ * @param force_ego The desired ego/brand
+ * @param agent The agent creating the item (Example: Xom) or -1 if NA
+ *
+ * @return The generated item's item slot or NON_ITEM if it fails.
+ */
 int items(bool allow_uniques,
-          object_class_type force_class, // desired OBJECTS class {dlb}
-          int force_type,          // desired SUBTYPE - enum varies by OBJ
-          bool dont_place,         // don't randomly place item on level
-          int item_level,          // level of the item, can differ from global
-          uint32_t mapmask,
-          int force_ego,           // desired ego/brand
-          int agent,               // acquirement agent, if not -1
-          bool mundane)            // no plusses
+          object_class_type force_class,
+          int force_type,
+          int item_level,
+          int force_ego,
+          int agent)
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS
@@ -2801,14 +2812,6 @@ int items(bool allow_uniques,
         break;
     }
 
-    if (mundane)
-    {
-        ASSERT(!is_deck(item));
-        item.plus    = 0;
-        item.plus2   = 0;
-        item.special = 0;
-    }
-
     if (item.base_type == OBJ_WEAPONS
           && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
         || item.base_type == OBJ_ARMOUR
@@ -2828,32 +2831,9 @@ int items(bool allow_uniques,
     // Set brand appearance.
     item_set_appearance(item);
 
-    if (dont_place)
-    {
-        item.pos.reset();
-        item.link = NON_ITEM;
-    }
-    else
-    {
-        coord_def itempos;
-        bool found = false;
-        for (int i = 0; i < 500 && !found; ++i)
-        {
-            itempos = random_in_bounds();
-            const monster* mon = monster_at(itempos);
-            found = grd(itempos) == DNGN_FLOOR
-                    && !map_masked(itempos, mapmask)
-                    // oklobs or statues are ok
-                    && (!mon || !mons_is_firewood(mon));
-        }
-        if (!found)
-        {
-            // Couldn't find a single good spot!
-            destroy_item(p);
-            return NON_ITEM;
-        }
-        move_item_to_grid(&p, itempos);
-    }
+    // Don't place the item just yet.
+    item.pos.reset();
+    item.link = NON_ITEM;
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());

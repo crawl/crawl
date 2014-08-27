@@ -286,9 +286,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     const int wizardry = player_wizardry();
     int fail_reduce = 100;
 
-    if (you_worship(GOD_VEHUMET)
-        && !player_under_penance() && you.piety >= piety_breakpoint(2)
-        && vehumet_supports_spell(spell))
+    if (in_good_standing(GOD_VEHUMET, 2) && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
         // back to 67%.
@@ -1209,12 +1207,9 @@ static double _chance_miscast_prot()
 {
     double miscast_prot = 0;
 
-    if (you_worship(GOD_SIF_MUNA)
-        && !player_under_penance()
-        && you.piety >= piety_breakpoint(3))
-    {
+    if (in_good_standing(GOD_SIF_MUNA, 3))
         miscast_prot = (double) you.piety/piety_breakpoint(5);
-    }
+
     return min(1.0, miscast_prot);
 }
 

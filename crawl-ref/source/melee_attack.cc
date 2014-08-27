@@ -477,11 +477,10 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (you_worship(GOD_BEOGH)
+        if (in_good_standing(GOD_BEOGH, 2)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
-            && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(defender->as_monster()) && defender->asleep())
         {
             hit_woke_orc = true;

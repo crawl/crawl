@@ -90,7 +90,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
         const int hd = mons->get_experience_level();
 
-        if (you.piety >= piety_breakpoint(2) && !player_under_penance()
+        if (in_good_standing(GOD_BEOGH, 2)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
@@ -119,11 +119,10 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (you_worship(GOD_FEDHAS)
+    if (in_good_standing(GOD_FEDHAS)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !player_under_penance())
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         _fedhas_neutralise_plant(mons);
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;

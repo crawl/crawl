@@ -737,6 +737,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold_found        = se.gold_found;
     zigs              = se.zigs;
     zigmax            = se.zigmax;
+    scrolls_used      = se.scrolls_used;
+    potions_used      = se.potions_used;
     fixup_char_name();
 
     // We could just reset raw_line to "" instead.
@@ -961,6 +963,9 @@ void scorefile_entry::init_with_fields()
     zigs       = fields->int_field("zigscompleted");
     zigmax     = fields->int_field("zigdeepest");
 
+    scrolls_used = fields->int_field("scrollsused");
+    potions_used = fields->int_field("potionsused");
+
     fixup_char_name();
 }
 
@@ -1046,6 +1051,8 @@ void scorefile_entry::set_base_xlog_fields() const
         fields->add_field("zigscompleted", "%d", zigs);
     if (zigmax)
         fields->add_field("zigdeepest", "%d", zigmax);
+    fields->add_field("scrollsused", "%d", scrolls_used);
+    fields->add_field("potionsused", "%d", potions_used);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -1384,6 +1391,8 @@ void scorefile_entry::reset()
     gold_spent           = 0;
     zigs                 = 0;
     zigmax               = 0;
+    scrolls_used         = 0;
+    potions_used         = 0;
 }
 
 static int _award_modified_experience()
@@ -1492,9 +1501,6 @@ void scorefile_entry::init(time_t dt)
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
 
-        // Players will have a hard time getting 1/10 of this (see XP cap):
-        if (pt > 99999999)
-            pt = 99999999;
         points = pt;
     }
 
@@ -1591,6 +1597,20 @@ void scorefile_entry::init(time_t dt)
 
     zigs       = you.zigs_completed;
     zigmax     = you.zig_max;
+
+    scrolls_used = 0;
+    pair<caction_type, int> p(CACT_USE, OBJ_SCROLLS);
+
+    const int maxlev = min<int>(you.max_level, 27);
+    if (you.action_count.count(p))
+        for (int i = 0; i < maxlev; i++)
+            scrolls_used += you.action_count[p][i];
+
+    potions_used = 0;
+    p = pair<caction_type, int>(CACT_USE, OBJ_POTIONS);
+    if (you.action_count.count(p))
+        for (int i = 0; i < maxlev; i++)
+            potions_used += you.action_count[p][i];
 
     wiz_mode = (you.wizard ? 1 : 0);
 }

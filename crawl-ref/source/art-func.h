@@ -45,10 +45,9 @@
 static void _equip_mpr(bool* show_msgs, const char* msg,
                        msg_channel_type chan = MSGCH_PLAIN)
 {
-    bool def_show = true;
-
+    bool do_show = true;
     if (show_msgs == NULL)
-        show_msgs = &def_show;
+        show_msgs = &do_show;
 
     if (*show_msgs)
         mprf(chan, "%s", msg);
@@ -163,7 +162,8 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _CURSES_world_reacts(item_def *item)
 {
-    if (one_chance_in(30))
+    // don't spam messages for ash worshippers
+    if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
         curse_an_item();
 }
 
@@ -501,17 +501,14 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.is_undead == US_ALIVE)
+    if (you.is_undead == US_ALIVE && !you_foodless())
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
-        if (!unmeld)
-            make_hungry(4500, false, false);
     }
-    else if (you.species == SP_VAMPIRE)
-        _equip_mpr(show_msgs, "You feel a bloodthirsty glee!");
-    else
+    else if (you.species != SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel strangely empty.");
+    // else let player-equip.cc handle message
 }
 
 ///////////////////////////////////////////////////

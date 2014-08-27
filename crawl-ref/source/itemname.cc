@@ -31,6 +31,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
+#include "newgame.h" // get_undead_state
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -47,6 +48,7 @@
 #include "throw.h"
 #include "transform.h"
 #include "unicode.h"
+#include "unwind.h"
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -3126,7 +3128,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_DEGENERATION:
             return true;
         case POT_DECAY:
-            return !you.res_rotting(false);
+            return you.res_rotting(temp) <= 0;
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
@@ -3413,10 +3415,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return !can_ingest(item, true, false);
+        case POT_DECAY:
+            return you.res_rotting(temp) > 0;
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
-            // Spriggans could argue, but it's too small of a gain for
-            // possible player confusion.
             return player_res_poison(false, temp) > 0;
         case POT_SLOWING:
             return you.species == SP_FORMICID;
@@ -3548,7 +3550,15 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         if (!temp && you.form == TRAN_LICH)
-            return false;
+        {
+            // See what would happen if we were in our normal state.
+            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<undead_state_type> lifesim(you.is_undead,
+                                              get_undead_state(you.species));
+
+            if (!is_inedible(item))
+                return false;
+        }
 
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;

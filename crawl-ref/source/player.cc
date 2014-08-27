@@ -1944,9 +1944,7 @@ int player_res_torment(bool, bool temp)
 // Kiku protects you from torment to a degree.
 int player_kiku_res_torment()
 {
-    return you_worship(GOD_KIKUBAAQUDGHA)
-           && !player_under_penance()
-           && you.piety >= piety_breakpoint(3)
+    return in_good_standing(GOD_KIKUBAAQUDGHA, 3)
            && !you.gift_timeout; // no protection during pain branding weapon
 }
 
@@ -2447,7 +2445,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 
     int bonus = 0;
 
-    if (you_worship(GOD_BEOGH) && !player_under_penance())
+    if (in_good_standing(GOD_BEOGH))
     {
         if (you.piety >= piety_breakpoint(5))
             bonus = 10;
@@ -3876,8 +3874,7 @@ int check_stealth()
         stealth *= umbra_multiplier;
     }
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
-    if (you_worship(GOD_QAZLAL) && !player_under_penance()
-        && you.piety >= piety_breakpoint(0))
+    if (in_good_standing(GOD_QAZLAL, 0))
     {
         stealth = stealth
                   * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
@@ -3970,6 +3967,21 @@ static void _output_expiring_message(duration_type dur, const char* msg)
     }
 }
 
+static void _display_char_status(int value, const char *fmt, ...)
+{
+    va_list argp;
+    va_start(argp, fmt);
+
+    string msg = vmake_stringf(fmt, argp);
+
+    if (you.wizard)
+        mprf("%s (%d).", msg.c_str(), value);
+    else
+        mprf("%s.", msg.c_str());
+
+    va_end(argp);
+}
+
 static void _display_vampire_status()
 {
     string msg = "At your current hunger state you ";
@@ -4039,7 +4051,7 @@ static void _display_movement_speed()
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
                             && you.attribute[ATTR_SWIFTNESS] < 0);
 
-    mprf("Your %s speed is %s%s%s.",
+    _display_char_status(move_cost, "Your %s speed is %s%s%s",
           // order is important for these:
           (swim)    ? "swimming" :
           (water)   ? "wading" :
@@ -4112,10 +4124,8 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    if (you.wizard)
-        mprf("Your attack speed is %s (%d).", _attack_delay_desc(avg), avg);
-    else
-        mprf("Your attack speed is %s.", _attack_delay_desc(avg));
+    _display_char_status(avg, "Your attack speed is %s",
+                         _attack_delay_desc(avg));
 }
 
 // forward declaration
@@ -4168,13 +4178,14 @@ void display_char_status()
     _display_attack_delay();
 
     // magic resistance
-    mprf("You are %s to hostile enchantments.",
-         magic_res_adjective(player_res_magic(false)).c_str());
-    dprf("MR: %d", you.res_magic());
+    _display_char_status(you.res_magic(),
+                         "You are %s to hostile enchantments",
+                         magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
-    mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
-    dprf("Stealth: %d", check_stealth());
+    _display_char_status(check_stealth(),
+                         "You feel %s",
+                         stealth_desc(check_stealth()).c_str());
 }
 
 bool player::clarity(bool calc_unid, bool items) const
@@ -4182,11 +4193,8 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (religion == GOD_ASHENZARI && piety >= piety_breakpoint(2)
-        && !player_under_penance())
-    {
+    if (in_good_standing(GOD_ASHENZARI, 2))
         return true;
-    }
 
     return actor::clarity(calc_unid, items);
 }
@@ -6285,9 +6293,7 @@ int player::missile_deflection() const
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true)
-        || you_worship(GOD_QAZLAL)
-           && !player_under_penance(GOD_QAZLAL)
-           && you.piety >= piety_breakpoint(3))
+        || in_good_standing(GOD_QAZLAL, 3))
     {
         return 1;
     }
@@ -7596,11 +7602,8 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (religion == GOD_ASHENZARI && piety >= piety_breakpoint(2)
-        && !player_under_penance())
-    {
+    if (in_good_standing(GOD_ASHENZARI, 2))
         return true;
-    }
 
     return false;
 }
@@ -8275,7 +8278,7 @@ int player_monster_detect_radius()
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);
 }

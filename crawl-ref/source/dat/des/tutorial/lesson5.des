@@ -26,10 +26,9 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 5: Gods and Divine Abilities"
 ORDER:   5
 ORIENT:  encompass
-KFEAT:   bABCDEHIJ = .
-KFEAT:   F = +
-COLOUR:  ABCDEHIJ = lightblue
-FTILE:   ABCDEHIJ = tutorial_pad
+KFEAT:   bABCDEFHIJ = .
+COLOUR:  ABCDEFHIJ = lightblue
+FTILE:   ABCDEFHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
 ITEM:    mace mundane not_cursed
@@ -89,7 +88,7 @@ x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
 x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
 xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxIxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
-xxxxxxAxxxxxxxxxx............F.....3.H.....xxxxxxx
+xxxxxxAxxxxxxxxxx...........F+.....3.H.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

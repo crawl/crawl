@@ -37,7 +37,13 @@ game_state::game_state()
       last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
       generating_level(false),
       dump_maps(false), test(false), script(false), build_db(false),
-      tests_selected(), show_more_prompt(true),
+      tests_selected(),
+#ifdef DGAMELAUNCH
+      throttle(true),
+#else
+      throttle(false),
+#endif
+      show_more_prompt(true),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),

@@ -832,11 +832,13 @@ static bool _handle_potion(monster* mons, bolt & beem)
             identify_healing_pots();
         }
 
+        // Remove the oldest blood timer.
+        if (is_blood_potion(potion))
+            remove_oldest_blood_potion(potion);
+
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion_idx, 1))
             mons->inv[MSLOT_POTION] = NON_ITEM;
-        else if (is_blood_potion(potion))
-            remove_oldest_blood_potion(potion);
 
         mons->lose_energy(EUT_ITEM);
         rc = true;
