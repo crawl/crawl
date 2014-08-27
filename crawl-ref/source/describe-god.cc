@@ -527,11 +527,14 @@ static const char* const bribe_susceptibility_adjectives[] =
     "very high  "
 };
 
-static string _describe_branch_bribability()
+/**
+ * Populate a provided vector with a list of bribable branches which are known
+ * to the player.
+ *
+ * @param[out] targets      A list of bribable branches.
+ */
+static void _list_bribable_branches(vector<branch_type> &targets)
 {
-    string ret = "You can bribe the following branches:\n";
-    vector<branch_type> targets;
-    size_t width = 0;
     for (branch_iterator it; it; ++it)
     {
         const branch_type br = it->id;
@@ -544,8 +547,23 @@ static string _describe_branch_bribability()
             continue;
 
         targets.push_back(br);
-        width = max(width, strlen(it->longname));
     }
+}
+
+/**
+ * Describe the current options for Gozag's bribe branch ability.
+ *
+ * @return      A description of branches' bribe status.
+ */
+static string _describe_branch_bribability()
+{
+    string ret = "You can bribe the following branches:\n";
+    vector<branch_type> targets;
+    _list_bribable_branches(targets);
+
+    size_t width = 0;
+    for (unsigned int i = 0; i < targets.size(); i++)
+        width = max(width, strlen(branches[targets[i]].longname));
 
     for (unsigned int i = 0; i < targets.size(); i++)
     {
