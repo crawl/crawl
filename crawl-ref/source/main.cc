@@ -55,6 +55,7 @@
 #include "dbg-util.h"
 #include "delay.h"
 #include "describe.h"
+#include "describe-god.h"
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"

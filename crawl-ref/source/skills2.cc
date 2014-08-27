@@ -17,7 +17,7 @@
 #include <ctype.h>
 
 #include "artefact.h"
-#include "describe.h"
+#include "describe-god.h"
 #include "evoke.h"
 #include "externs.h"
 #include "godabil.h"

@@ -30,7 +30,7 @@
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
-#include "describe.h"
+#include "describe-god.h"
 #include "dactions.h"
 #include "dgnevent.h"
 #include "dlua.h"
