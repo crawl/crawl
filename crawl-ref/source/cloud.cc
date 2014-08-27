@@ -337,13 +337,11 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
     }
 
     monster* agent = monster_by_mid(cloud.source);
-    monster *mon = create_monster(mgen_data(MONS_SPECTRAL_THING,
+    create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY),
-                             NULL, 1, SPELL_GHOSTLY_FLAMES, cloud.pos,
+                             actor_by_mid(cloud.source), 1, SPELL_GHOSTLY_FLAMES, cloud.pos,
                              (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
                              GOD_NO_GOD, basetype));
-    if (mon)
-        mon->summoner = cloud.source;
 }
 
 void manage_clouds()
