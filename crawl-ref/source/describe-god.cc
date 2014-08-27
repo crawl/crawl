@@ -516,6 +516,17 @@ string get_skill_description(skill_type skill, bool need_title)
 // from dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;
 
+// XXX: apply padding programmatically?
+static const char* const bribe_susceptibility_adjectives[] =
+{
+    "none       ",
+    "very low   ",
+    "low        ",
+    "moderate   ",
+    "high       ",
+    "very high  "
+};
+
 static string _describe_branch_bribability()
 {
     string ret = "You can bribe the following branches:\n";
@@ -571,29 +582,13 @@ static string _describe_branch_bribability()
                 line += "(buggy)             ";
                 break;
         }
+
         line += "Susceptibility: ";
-        switch (gozag_branch_bribe_susceptibility(targets[i]))
-        {
-            case 0:
-                line += "none       ";
-                break;
-            case 1:
-                line += "very low   ";
-                break;
-            case 2:
-                line += "low        ";
-                break;
-            case 3:
-                line += "moderate   ";
-                break;
-            case 4:
-                line += "high       ";
-                break;
-            case 5:
-            default:
-                line += "very high  ";
-                break;
-        }
+        const int suscept = gozag_branch_bribe_susceptibility(targets[i]);
+        ASSERT(suscept >= 0
+               && suscept < ARRAYSZ(bribe_susceptibility_adjectives));
+        line += bribe_susceptibility_adjectives[suscept];
+
         if (!branch_bribe[targets[i]])
             line += "not bribed";
         else
