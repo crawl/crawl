@@ -44,7 +44,7 @@ function pan_lord_setup(_G, name)
                  "tentacled monstrosity w:5 / brain worm / " ..
                  "giant eyeball / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
-                 "monstrous corrupter",
+                 "monstrous corrupter / killer klown w:100",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / giant orange brain / rakshasa / " ..
@@ -488,8 +488,9 @@ ORIENT:    northeast
 TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec, cacodemon, tentacled monstrosity
-NSUBST:    2 = 4:3 / 3 = 234 / *:2
+MONS:      patrolling Mnoleg, neqoxec, cacodemon, killer klown
+MONS:	   tentacled monstrosity
+NSUBST:    2 = 4:3 / 3 = 2345 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -532,15 +533,15 @@ ORIENT:    southwest
 TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec
-MONS:      patrolling cacodemon, patrolling tormentor
-MONS:      large abomination, tentacled monstrosity
-KMONS:     w = brain worm
-KMONS:     u = very ugly thing
-KMONS:     U = ugly thing
-NSUBST:    q = 2:u / *:.
-NSUBST:    e = 2:u / *:.
-NSUBST:    p = 3:u / *:.
+MONS:      patrolling Mnoleg
+MONS:      brain worm, ugly thing, large abomination, neqoxec
+MONS:      very ugly thing, tormentor
+KMONS:     A = cacodemon / killer klown
+KMONS:     B = tentacled monstrosity
+SUBST:     D = 5:20 6 7 A B
+NSUBST:    q = 2:6 / *:.
+NSUBST:    e = 2:6 / *:.
+NSUBST:    p = 3:6 / *:.
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -549,32 +550,32 @@ xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx
 xc...........................cx
 xc..ccccccc..c..c.c.c.c.c.c.ccx
 xc...ccccc..ccc..c.........c.cx
-xc.c2.ccc.2ccccc..c.2.2.2.c..cx
-xc.cc..c..ccccccc..c.w.w.c...cx
-xc.ccc...ccccccccc..c.w.c..c.cx
+xc.c5.ccc.5ccccc..c.5.5.5.c..cx
+xc.cc..c..ccccccc..c.2.2.c...cx
+xc.ccc...ccccccccc..c.2.c..c.cx
 xc.cccc...ccccccccc..c.c..cc.cx
 xc.cc.cc...ccccccccc..c..ccc.cx
 xc.ccqqcc...ccccccccc...cccc.cx
 xc.ccqqqcc...ccccccccc.ccccc.cx
 xc.ccqqq..c...ccccc..ccccccc.cx
 xc.ccqq...cc...ccc....c...c..cx
-xc2cc......cc...c...cc.....cccx
-xc.ccU......cc..2..cc...5...ccx
-xc..cc....eeecc...ccc..565..ccx
-xc...ccU.eeecc...ccccc..5..cccx
+xc5cc......cc...c...cc.....cccx
+xc.cc3......cc..5..cc...4...ccx
+xc..cc....eeecc...ccc..4B4..ccx
+xc...cc3.eeecc...ccccc..4..cccx
 xcc...cceeecc...cc..ccc...ccccx
 xccc...ccecc...cc....cccccccccx
 xc.cc...ccc...cc......ccccccccx
-xcp.cc...c............2cccccccx
+xcp.cc...c............5cccccccx
 xc.pp.c.....c...........ccccccx
 xcppppcc...cc............cccccx
-xc.ppppcc2cc..............ccccx
-xcp.pp.pccc........1....4..cccx
-xc....wccc.................cccx
-xcw...cccc...............3.cccx
-xc..wcccccc..........cc....cccx
+xc.ppppcc4cc..............ccccx
+xcp.pp.pccc........1....7..cccx
+xc....3ccc.................cccx
+xc3...cccc...............A.cccx
+xc..3cccccc..........cc....cccx
 xc..cccccccc.........cOc..ccccx
-xc.cccccccccc2....3...cc.cccccx
+xc.cccccccccc5....A...cc.cccccx
 xccccccccccccc..........ccccccx
 xcccccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -591,7 +592,7 @@ MONS:       patrolling mnoleg
 MONS:       giant eyeball / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
-MONS:       cacodemon
+MONS:       cacodemon / killer klown
 MONS:       neqoxec / brain worm
 NSUBST:     C = 1:4 / *:N
 NSUBST:     N = 2:4 / *:5
@@ -651,8 +652,8 @@ TILE:    c = dngn_stone_wall_yellow
 SHUFFLE: Od, 1e
 KFEAT:   d = .
 KFEAT:   e = .
-MONS:    patrolling Mnoleg, patrolling cacodemon, neqoxec
-MONS:    tentacled monstrosity, large abomination, very ugly thing band
+MONS:    patrolling Mnoleg, patrolling cacodemon / patrolling killer klown
+MONS:    neqoxec, tentacled monstrosity, large abomination, very ugly thing band
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
