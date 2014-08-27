@@ -746,6 +746,43 @@ static void _detailed_god_description(god_type which_god)
         describe_god(which_god, true);
 }
 
+/**
+ * Describe the given god's level of irritation at the player.
+ *
+ * Player may or may not be currently under penance.
+ *
+ * @param which_god     The god in question.
+ * @return              A description of the god's ire (or lack thereof).
+ */
+static string _god_penance_message(god_type which_god)
+{
+    int which_god_penance = you.penance[which_god];
+
+    // Give more appropriate message for the good gods.
+    // XXX: ^ this is a hack
+    if (which_god_penance > 0 && is_good_god(which_god))
+    {
+        if (is_good_god(you.religion))
+            which_god_penance = 0;
+        else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
+            which_god_penance = 2; // == "Come back to the one true church!"
+    }
+
+    const string penance_message =
+        (which_god == GOD_NEMELEX_XOBEH
+         && which_god_penance > 0 && which_god_penance <= 100)
+            ? "%s doesn't play fair with you." :
+        (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
+        (which_god_penance >= 20)   ? "%s is annoyed with you." :
+        (which_god_penance >=  5)   ? "%s well remembers your sins." :
+        (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
+        (you.worshipped[which_god]) ? "%s is ambivalent towards you."
+                                    : "%s is neutral towards you.";
+
+    return make_stringf(penance_message.c_str(),
+                        uppercase_first(god_name(which_god)).c_str());
+}
+
 void describe_god(god_type which_god, bool give_title)
 {
     int colour;              // Colour used for some messages.
@@ -805,27 +842,7 @@ void describe_god(god_type which_god, bool give_title)
     if (!you_worship(which_god))
     {
         textcolor(colour);
-        int which_god_penance = you.penance[which_god];
-
-        // Give more appropriate message for the good gods.
-        if (which_god_penance > 0 && is_good_god(which_god))
-        {
-            if (is_good_god(you.religion))
-                which_god_penance = 0;
-            else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
-                which_god_penance = 2; // == "Come back to the one true church!"
-        }
-
-        cprintf((which_god == GOD_NEMELEX_XOBEH
-                 && which_god_penance > 0 && which_god_penance <= 100)
-                ? "%s doesn't play fair with you." :
-                (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
-                (which_god_penance >= 20)   ? "%s is annoyed with you." :
-                (which_god_penance >=  5)   ? "%s well remembers your sins." :
-                (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
-                (you.worshipped[which_god]) ? "%s is ambivalent towards you."
-                : "%s is neutral towards you.",
-                uppercase_first(god_name(which_god)).c_str());
+        cprintf(_god_penance_message(which_god).c_str());
     }
     else
     {
