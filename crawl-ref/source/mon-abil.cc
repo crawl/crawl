@@ -3845,7 +3845,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             setup_mons_cast(mons, beem, spell);
 
-            if (mons_genus(mons->type) == MONS_CRAB)
+            if (mons_genus(mons->type) == MONS_CRAB
+                // Already got damage set to 0 just above
+                && mons->type != MONS_GHOST_CRAB)
             {
                 beem.is_big_cloud = true;
                 beem.damage       = dice_def(1, (mons->get_hit_dice()*3)/2);
