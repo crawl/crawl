@@ -51,9 +51,6 @@ bool is_dumpable_artefact(const item_def &item, bool verbose);
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool noquote = false);
 
-string god_title(god_type which_god, species_type which_species, int piety);
-void describe_god(god_type which_god, bool give_title);
-
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
