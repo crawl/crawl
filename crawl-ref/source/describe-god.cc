@@ -855,9 +855,9 @@ static void _describe_god_powers(god_type which_god, int numcols)
         {
             have_any = true;
             const char *how =
-            (you.piety >= piety_breakpoint(5)) ? "carefully" :
-            (you.piety >= piety_breakpoint(3)) ? "often" :
-                                                 "sometimes";
+            (you.piety >= piety_breakpoint(5)) ? "completely" :
+            (you.piety >= piety_breakpoint(3)) ? "mostly" :
+                                                 "partially";
 
             cprintf("%s %s shields you from negative energy.\n",
                     uppercase_first(god_name(which_god)).c_str(), how);
