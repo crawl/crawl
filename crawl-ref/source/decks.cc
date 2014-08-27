@@ -1720,7 +1720,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     // Calculate how many extra banishments you get.
     const int power_level = _get_power_level(power, rarity);
     int nemelex_bonus = 0;
-    if (you_worship(GOD_NEMELEX_XOBEH) && !player_under_penance())
+    if (in_good_standing(GOD_NEMELEX_XOBEH))
         nemelex_bonus = you.piety;
 
     int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)

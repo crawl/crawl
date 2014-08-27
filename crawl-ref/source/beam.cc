@@ -869,13 +869,11 @@ void bolt::fire_wall_effect()
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
-    // Trees do not burn so readily in a wet environment
-    if (player_in_branch(BRANCH_SWAMP)
-        // And you shouldn't get tons of penance from an unid'd wand of fire
-        || (you_worship(GOD_DITHMENOS) && !player_under_penance()))
-    {
+
+    // Trees do not burn so readily in a wet environment, and you shouldn't get
+    // tons of penance from an unid'd wand of fire.
+    if (player_in_branch(BRANCH_SWAMP) || in_good_standing(GOD_DITHMENOS))
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
-    }
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
@@ -3151,10 +3149,14 @@ bool bolt::is_harmless(const monster* mon) const
 }
 
 // N.b. only called for player-originated beams; if that is changed,
-// be sure to adjust the Qazlal cloud immunities below.
+// be sure to adjust the Qazlal cloud immunity below, and various other
+// assumptions based on the spells/abilities available to the player.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
+
+    if (in_good_standing(GOD_QAZLAL) && is_big_cloud)
+        return true;
 
     switch (flavour)
     {
@@ -3171,7 +3173,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return is_good_god(you.religion);
+        return you.res_holy_energy(&you);
 
     case BEAM_STEAM:
         return player_res_steam(false) >= 3;
@@ -3184,9 +3186,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_POISON:
         return player_res_poison(false) >= 3
-               || is_big_cloud
-                  && (player_res_poison(false) > 0
-                      || you_worship(GOD_QAZLAL) && !player_under_penance());
+               || is_big_cloud && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
         return player_res_poison(false) > 0 || you.clarity(false)
@@ -3198,14 +3198,8 @@ bool bolt::harmless_to_player() const
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
 
-    // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
-        return is_big_cloud
-               && (you.mutation[MUT_ICEMAIL]
-                   || you_worship(GOD_QAZLAL) && !player_under_penance());
-
-    case BEAM_ACID:
-        return false;
+        return is_big_cloud && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
@@ -4072,10 +4066,6 @@ void bolt::affect_player()
             you.attribute[ATTR_BARBS_POW] = 4;
     }
 
-    // Acid.
-    if (flavour == BEAM_ACID)
-        splash_with_acid(5, beam_source, affects_items);
-
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
 
@@ -4115,6 +4105,10 @@ void bolt::affect_player()
     }
 
     internal_ouch(hurted);
+
+    // Acid. (Apply this afterward, to avoid bad message ordering.)
+    if (flavour == BEAM_ACID)
+        splash_with_acid(5, beam_source, affects_items);
 
     extra_range_used += range_used_on_hit();
 
@@ -4452,10 +4446,9 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
-            if (you_worship(GOD_BEOGH)
+            if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
-                && mon->asleep() && !player_under_penance()
-                && you.piety >= piety_breakpoint(2) && mons_near(mon))
+                && mon->asleep() && mons_near(mon))
             {
                 hit_woke_orc = true;
             }

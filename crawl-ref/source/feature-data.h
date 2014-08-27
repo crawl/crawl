@@ -470,7 +470,7 @@ BRANCH_EXIT(DNGN_RETURN_FROM_DEPTHS, "staircase back to the Dungeon", "return_fr
     FFT_NOTABLE, MF_FEATURE,\
 }
 
-ALTAR(DNGN_UNKNOWN_ALTAR, "detected altar", "unknown_altar", BLACK),
+ALTAR(DNGN_UNKNOWN_ALTAR, "detected altar", "unknown_altar", DARKGREY),
 ALTAR(DNGN_ALTAR_ZIN, "glowing silver altar of Zin", "altar_zin", LIGHTGREY),
 ALTAR(DNGN_ALTAR_SHINING_ONE, "glowing golden altar of the Shining One", "altar_the_shining_one", YELLOW),
 ALTAR(DNGN_ALTAR_KIKUBAAQUDGHA, "ancient bone altar of Kikubaaqudgha", "altar_kikubaaqudgha", DARKGREY),

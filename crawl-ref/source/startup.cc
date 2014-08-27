@@ -76,10 +76,8 @@ static void _initialize()
 
     you.symbol = MONS_PLAYER;
 
-    if (Options.seed)
-        seed_rng(Options.seed);
-    else
-        seed_rng();
+    seed_rng();
+
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
@@ -159,6 +157,9 @@ static void _initialize()
         tiles.hide_title();
     }
 #endif
+
+    if (Options.seed)
+        seed_rng(Options.seed);
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -243,9 +244,6 @@ static void _zap_los_monsters(bool items_also)
 static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= kNameLen);
-
-    // Sanitize skills, init can_train[].
-    fixup_skills();
 
     // Load macros
     macro_init();
@@ -370,6 +368,9 @@ static void _post_init(bool newc)
     // be here.
     if (newc)
         run_map_epilogues();
+
+    // Sanitize skills, init can_train[].
+    fixup_skills();
 }
 
 #ifndef DGAMELAUNCH

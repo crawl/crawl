@@ -261,7 +261,7 @@ bool trap_def::is_safe(actor* act) const
     #ifdef CLUA_BINDINGS
     // Prompt for any trap where you might not have enough hp
     // as defined in init.txt (see trapwalk.lua)
-    if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(type).c_str()))
         return true;
 
 #endif
@@ -695,7 +695,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             {
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = you.apply_ac(48 + random2avg(29, 2));
-                string n = name(DESC_A) + " trap";
+                string n = name(DESC_A);
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
@@ -1172,7 +1172,7 @@ void search_around()
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
     + (base_skill/200.0) + 15;
 
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         skill += you.piety * 2;
 
     int max_dist = div_rand_round(skill, 32);
@@ -1528,6 +1528,7 @@ void free_stationary_net(int item_index)
         // Make sure we don't leave a bad trapping net in the stash
         // FIXME: may leak info if a monster escapes an out-of-sight net.
         StashTrack.update_stash(pos);
+        StashTrack.unmark_trapping_nets(pos);
     }
 }
 
@@ -1674,7 +1675,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         {
             mprf("%s shoots out and hits you!", shot.name(DESC_A).c_str());
 
-            string n = name(DESC_A) + " trap";
+            string n = name(DESC_A);
 
             // Needle traps can poison.
             if (poison)

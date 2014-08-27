@@ -432,10 +432,7 @@ string apostrophise(const string &name)
         return "its own";
 
     if (name == "himself")
-        return "its own";
-
-    if (name == "himself")
-        return "its own";
+        return "his own";
 
     if (name == "herself")
         return "her own";

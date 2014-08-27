@@ -793,6 +793,7 @@ bool do_wear_armour(int item, bool quiet)
         return false;
     }
 
+    bool swapping = false;
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -803,17 +804,17 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!takeoff_armour(you.equip[slot]))
             return false;
+        swapping = true;
     }
 
     you.turn_is_over = true;
-    you.time_taken = 0; // will be handled by equip delay
 
     if (!_safe_to_remove_or_wear(invitem, false))
         return false;
 
     const int delay = armour_equip_delay(invitem);
     if (delay)
-        start_delay(DELAY_ARMOUR_ON, delay, item);
+        start_delay(DELAY_ARMOUR_ON, delay - (swapping ? 0 : 1), item);
 
     return true;
 }
@@ -884,10 +885,9 @@ bool takeoff_armour(int item)
     }
 
     you.turn_is_over = true;
-    you.time_taken = 0; // will be handled by unequip delay
 
     const int delay = armour_equip_delay(invitem);
-    start_delay(DELAY_ARMOUR_OFF, delay, item);
+    start_delay(DELAY_ARMOUR_OFF, delay - 1, item);
 
     return true;
 }
@@ -2905,7 +2905,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_MAGIC_MAPPING:
-        magic_mapping(500, 90 + random2(11), false);
+        magic_mapping(500, 100, false);
         break;
 
     case SCR_TORMENT:
@@ -3184,66 +3184,16 @@ void tile_item_drop(int idx, bool partdrop)
     drop_item(idx, quantity);
 }
 
-static bool _prompt_eat_bad_food(const item_def food)
-{
-    if (food.base_type != OBJ_CORPSES
-        && (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK))
-    {
-        return true;
-    }
-
-    if (!is_bad_food(food))
-        return true;
-
-    const string food_colour = item_prefix(food);
-    string colour            = "";
-    string colour_off        = "";
-
-    const int col = menu_colour(food.name(DESC_A), food_colour, "pickup");
-    if (col != -1)
-        colour = colour_to_str(col);
-
-    if (!colour.empty())
-    {
-        // Order is important here.
-        colour_off  = "</" + colour + ">";
-        colour      = "<" + colour + ">";
-    }
-
-    const string qualifier = colour
-                             + (is_poisonous(food)      ? "poisonous" :
-                                is_mutagenic(food)      ? "mutagenic" :
-                                causes_rot(food)        ? "rot-inducing" :
-                                is_forbidden_food(food) ? "forbidden" : "")
-                             + colour_off;
-
-    string prompt  = "Really ";
-           prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
-           prompt += " this " + qualifier;
-           prompt += (food.base_type == OBJ_CORPSES ? " corpse"
-                                                    : " chunk of meat");
-           prompt += "?";
-
-    if (!yesno(prompt.c_str(), false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    return true;
-}
-
 void tile_item_eat_floor(int idx)
 {
+    // XXX: refactor this
     if (mitm[idx].base_type == OBJ_CORPSES
             && you.species == SP_VAMPIRE
         || mitm[idx].base_type == OBJ_FOOD
             && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
     {
-        if (can_ingest(mitm[idx], false)
-            && _prompt_eat_bad_food(mitm[idx]))
-        {
+        if (can_ingest(mitm[idx], false))
             eat_item(mitm[idx]);
-        }
     }
 }
 
@@ -3351,11 +3301,8 @@ void tile_item_use(int idx)
             }
             // intentional fall-through for Vampires
         case OBJ_FOOD:
-            if (check_warning_inscriptions(item, OPER_EAT)
-                && _prompt_eat_bad_food(item))
-            {
+            if (check_warning_inscriptions(item, OPER_EAT))
                 eat_food(idx);
-            }
             return;
 
         case OBJ_BOOKS:

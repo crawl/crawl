@@ -331,7 +331,8 @@ function choose_mset_3(e)
   elseif rnd < 49 then
     e.kmons("1 = place:Shoals:3 / place:Shoals:$ w:45 / merfolk javelineer /\
                  merfolk impaler / merfolk aquamancer")
-    e.subst(". = W.., 1 = W")
+    e.subst(". = W..")
+    e.kfeat("1 = shallow_water")
 -- Cocytus
   elseif rnd < 54 then
     e.kmons("1 = place:Coc:1")

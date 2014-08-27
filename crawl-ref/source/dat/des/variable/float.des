@@ -1939,7 +1939,7 @@ ENDMAP
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
 DEPTH:   D:5-, Depths
-TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
+TAGS:    no_item_gen no_monster_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
 SHUFFLE: Bb/Mm/Mm/Mm

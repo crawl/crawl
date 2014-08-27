@@ -437,9 +437,8 @@ daring leaps! But watch out for her knives!
 Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
-forced into hiding after a botched job, and can't really afford to risk letting
-anyone who has seen him leave the dungeon alive — there is a price on his head,
-after all.
+forced into hiding after a botched job. There's a price on his head, and he
+can't afford to leave anyone who sees him alive!
 %%%%
 Tiamat
 
@@ -2274,7 +2273,8 @@ A hideous glowing apparition.
 %%%%
 spectral weapon
 
-A spirit drawn from a weapon — it never strikes on its own.
+A spirit drawn from a weapon — it never strikes on its own. Damage done to it
+will be partially mirrored onto the caster.
 %%%%
 spellforged servitor
 
@@ -2469,7 +2469,7 @@ able to inflict torturous agony on those foolish enough to gaze upon it.
 %%%%
 torpor snail
 
-A huge gastropod with a lime-green shell. Torpor snails are said to be in some
+A huge gastropod with a rock-hard shell. Torpor snails are said to be in some
 way connected with the god Cheibriados; just being near them is enough to slow
 the movements of unwary adventurers, leaving them easy prey for the snails'
 terrifying, ever-gnashing radulae.

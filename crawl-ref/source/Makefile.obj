@@ -240,6 +240,7 @@ viewgeom.o \
 viewmap.o \
 wcwidth.o \
 wiz-dgn.o \
+wiz-dump.o \
 wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \

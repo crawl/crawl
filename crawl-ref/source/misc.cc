@@ -1263,7 +1263,8 @@ int counted_monster_list::count()
     return nmons;
 }
 
-string counted_monster_list::describe(description_level_type desc)
+string counted_monster_list::describe(description_level_type desc,
+                                      bool force_article)
 {
     string out;
 
@@ -1278,7 +1279,7 @@ string counted_monster_list::describe(description_level_type desc)
         else
             ++i;
 
-        out += cm.second > 1 ? pluralise(cm.first->name(desc))
+        out += cm.second > 1 ? pluralise(cm.first->name(desc, false, true))
                              : cm.first->name(desc);
     }
     return out;

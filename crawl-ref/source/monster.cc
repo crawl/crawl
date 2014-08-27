@@ -2486,13 +2486,17 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
     return "";
 }
 
-string monster::name(description_level_type desc, bool force_vis) const
+string monster::name(description_level_type desc, bool force_vis,
+                     bool force_article) const
 {
     string s = _mon_special_name(*this, desc, force_vis);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
     monster_info mi(this, MILEV_NAME);
+    // i.e. to produce "the Maras" instead of just "Maras"
+    if (force_article)
+        mi.mb.set(MB_NAME_UNQUALIFIED, false);
     return mi.proper_name(desc)
 #ifdef DEBUG_MONSTERS
     // This is incredibly spammy, too bad for regular debug builds, but
@@ -6223,7 +6227,7 @@ void monster::steal_item_from_player()
         else
         {
             // Else create a new item for this pile of gold.
-            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0);
+            const int idx = items(false, OBJ_GOLD, OBJ_RANDOM, 0);
             if (idx == NON_ITEM)
                 return;
 

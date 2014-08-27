@@ -69,9 +69,9 @@ Banishment spell
 %%%%
 Beastly Appendage spell
 
-This spell makes you temporarily replace one or a pair of appendages with an
-animal counterpart, giving you an extra attack. It is not powerful enough to
-meld armour.
+This spell makes the caster temporarily replace one or a pair of appendages
+with an animal counterpart, giving them an extra attack. It is not powerful
+enough to meld armour.
 %%%%
 Berserker Rage spell
 
@@ -188,9 +188,9 @@ Call Lost Soul spell
 This spell summons a necromantic spectre, and gives it a temporary material
 form. Such spectres, or “lost souls”, can enter the bodies of more powerful
 undead to bring them back from brink of demise, or turn dying living creatures
-into spectral versions of themselves. While the soul's material form is only
-temporary, the effect of such repair is not. At least, until you kill the
-repairee again.
+into ghostly versions of themselves. While the soul's material form is only
+temporary, the effect of such repair is not - at least, until someone kills the
+repairee again!
 %%%%
 Call Tide spell
 
@@ -202,10 +202,8 @@ normally.
 Cantrip spell
 
 Cantrips are minor spells, aimed at trying to scare ignorant enemies or bolster
-the caster's morale. They have no real effect otherwise, and an adventurer of
-your stature has neither need for, nor fear of, such tricks. Or perhaps, just
-to be safe, you should knock thrice on unpainted wood to ward off their evil
-eye.
+the caster's morale. They have no real effect otherwise, and an adventurer has
+neither need for, nor fear of, such tricks.
 %%%%
 Cause Fear spell
 
@@ -404,9 +402,9 @@ used to cause severe damage, or remove a chunk of rock.
 %%%%
 Disjunction spell
 
-This spell destabilizes the space in a sphere around you for a while, causing
-anyone nearby to be randomly blinked. The chance of blinking depends on the
-distance from you, being nearly certain when directly adjacent.
+This spell destabilizes the space in a sphere around the caster for a while,
+causing anyone nearby to be randomly blinked. The chance of blinking depends on
+the distance from the caster, being nearly certain when directly adjacent.
 %%%%
 Dispel Undead spell
 
@@ -458,8 +456,8 @@ pieces.
 %%%%
 Enslavement spell
 
-This spell causes an otherwise hostile creature to fight on your side for a
-while.
+This spell causes an otherwise hostile creature to fight on the caster's side
+for a while.
 %%%%
 Ensnare spell
 
@@ -1067,10 +1065,10 @@ This spell throws a bouncing bolt of electricity.
 %%%%
 Shroud of Golubria spell
 
-This spell bends space along a shroud covering your body, protecting you from
-some blows by redirecting their force to the air around you. Ranged attacks
-move too quickly to be diverted in this way. The shroud is highly unstable and
-may fall apart unexpectedly under stress.
+This spell bends space along a shroud covering the caster's body, protecting
+them from some blows by redirecting their force to the air nearby. Ranged
+attacks move too quickly to be diverted in this way. The shroud is highly
+unstable, and may fall apart unexpectedly under stress.
 %%%%
 Silence spell
 
@@ -1107,26 +1105,27 @@ Smiting spell
 %%%%
 Song of Slaying spell
 
-This spell conjures ancient verses of battle within your mind and makes you
-recite them — quite loudly! Each non-summoned enemy you slay in combat during
-this recitation temporarily enhances your melee skills. Your effectiveness will
-only be enhanced for the duration of the song; casting this spell while already
-singing will start a new song, not extend an existing one.
+This spell conjures ancient verses of battle within the caster's mind, which
+the caster then recites — quite loudly! Each non-summoned enemy the caster
+slays in combat during this recitation temporarily enhances their melee &
+ranged skills. The bonus only lasts for the duration of the song; casting this
+spell while already singing will start a new song, not extend an existing one.
 %%%%
 Spawn Tentacles spell
 
-Monstrous creatures who possess large tentacles may use extend them far from
-their main body, for purposes which nearly always involve smacking some uppity
-snack like you with those tentacles.
+Monstrous creatures who possess large tentacles may extend them far from their
+main body, for purposes which nearly always involve smacking some uppity snack.
 %%%%
 Spectral Weapon spell
 
-This spell draws out the spirit within a wielded weapon to fight for you, with
-its power dependent on your skill with said weapon. Never striking on its own,
-it only attacks when you do. You can only ever have one spectral weapon at a
-time.
+This spell draws out the spirit within a wielded weapon to fight for the
+caster, with its power dependent on their skill with said weapon. It only
+attacks when the caster does, and its kills count as the caster's own.
 
-Kills by a spectral weapon count as your own when singing a Song of Slaying.
+If the weapon is damaged, part of the injury will be echoed on the caster's
+body. A weapon can only have its spirit drawn into one spectral weapon at a
+time, and the spectral weapon will dissipate if the caster no longer holds the
+original.
 
 Certain powerful named artefacts possess too strong a spirit for this spell to
 be able to draw them out.
@@ -1246,7 +1245,7 @@ This spell summons one or more earth elementals.
 Summon Eyeballs spell
 
 This spell summons floating eyeballs that may be able to paralyse, drain,
-confuse, mutate or damage you.
+confuse, mutate or disintegrate.
 %%%%
 Summon Fire Elementals spell
 
@@ -1273,7 +1272,7 @@ significant amounts of damage. It will gain more health at high power.
 %%%%
 Summon Hell Beast spell
 
-Using his horn, Geryon can summon a deadly hell beast against you.
+Using his horn, Geryon can summon a deadly hell beast against his foes.
 %%%%
 Summon Horrible Things spell
 
@@ -1335,8 +1334,7 @@ This spell summons forth a pestilential swarm.
 %%%%
 Summon Ufetubus spell
 
-This spell summons multiple ufetubi, small annoying demons who flock around
-you.
+This spell summons multiple ufetubi; small, annoying demons.
 %%%%
 Summon Undead spell
 

@@ -478,6 +478,8 @@ void move_cloud_to(coord_def src, coord_def dst)
 // that clouds get moved along with the rest of the map.
 void move_cloud(int cloud, const coord_def& newpos)
 {
+    ASSERT(!cell_is_solid(newpos));
+
     if (cloud != EMPTY_CLOUD)
     {
         const coord_def oldpos = env.cloud[cloud].pos;
@@ -811,11 +813,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     }
 
     // Qazlalites get immunity to their own clouds.
-    if (player && cloud.whose == KC_YOU
-        && you_worship(GOD_QAZLAL) && !player_under_penance())
-    {
+    if (player && cloud.whose == KC_YOU && in_good_standing(GOD_QAZLAL))
         return true;
-    }
 #if TAG_MAJOR_VERSION == 34
 
     if (player && you.species == SP_DJINNI
@@ -1022,24 +1021,23 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_MUTAGENIC:
-        if (coinflip())
+        if (player)
         {
-            if (player)
-            {
-                mpr("The mutagenic energy flows into you.");
-                // It's possible that you got trampled into the mutagenic cloud and it's not your fault...
-                contaminate_player(1000, false);
-                return true;
-            }
-            else if (mons->malmutate("mutagenic cloud"))
-            {
-                if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
-                    did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
-                return true;
-            }
-            return false;
+            mpr("The mutagenic energy flows into you.");
+            // It's possible that you got trampled into the mutagenic cloud
+            // and it's not your fault... so we'll say it's not intentional.
+            // (it's quite bad in any case, so players won't scum, probably.)
+            contaminate_player(1300 + random2(1250), false);
+            // min 2 turns to yellow, max 4
+            return true;
         }
-        break;
+        else if (coinflip() && mons->malmutate("mutagenic cloud"))
+        {
+            if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
+                did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
+            return true;
+        }
+        return false;
 
     case CLOUD_CHAOS:
         if (coinflip())

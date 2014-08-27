@@ -1704,15 +1704,16 @@ android:
 # Canned tests
 #
 
-TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
-test: $(foreach i, $(TESTS), test-$(i))
+test: test-test test-all test-qw
+nonwiztest: test-test test-nonwiz test-qw
+nondebugtest: test-all test-qw
 
 test-%: $(GAME) util/fake_pty builddb
 	util/fake_pty test/stress/run $*
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
-	$(QUIET_HOSTCC)$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
+	$(QUIET_HOSTCC)$(if $(HOSTCC),$(HOSTCC),$(CC)) $(if $(TRAVIS),-DTIMEOUT=9,-DTIMEOUT=60) -Wall $< -o $@ -lutil
 
 # Should be not needed, but the race condition in bug #6509 is hard to fix.
 builddb: $(GAME)

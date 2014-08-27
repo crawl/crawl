@@ -2661,10 +2661,9 @@ static int _autopickup_subtype(const item_def &item)
     }
 }
 
-static bool _is_option_autopickup(const item_def &item, string &iname)
+static bool _is_option_autopickup(const item_def &item)
 {
-    if (iname.empty())
-        iname = _autopickup_item_name(item);
+    string iname = _autopickup_item_name(item);
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
@@ -2724,8 +2723,7 @@ bool item_needs_autopickup(const item_def &item)
     if (item.props.exists("needs_autopickup"))
         return true;
 
-    string itemname;
-    return _is_option_autopickup(item, itemname);
+    return _is_option_autopickup(item);
 }
 
 bool can_autopickup()

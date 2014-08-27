@@ -1,0 +1,3232 @@
+# Set this to true when playing online.
+: DELAYED = false
+# Set this to 100 or so when playing online.
+: DELAY_TIME = 100
+# imposes the delay for Zot:5 at least
+: DELAYEDZOT = false
+
+name = qw
+restart_after_game = false
+
+# GrBe with hand axe is classic qw.
+species = Gr
+background = Be
+weapon = hand axe
+
+# * don't try to sacrifice plague shambler corpses
+
+# * don't unwield vamp as much
+
+# * do more waiting for monsters to come to melee range, like xw
+#   - might be able to use the thing that Grunt added to lua recently
+
+# * handle shafting better
+
+# * plan_stuck_clear_exclusions is ugly, so disabled for now
+
+# * should look over the monster lists at some point for good removals
+#   or regex issues
+
+# * better hydra strats would still be good
+
+# * 8 starvation deaths in Depths (out of 172 games) is weird
+# * 16 DT deaths in Depths in those games...
+# * 10 to spriggans, 14 to giants
+
+# * failure to swap with BiA is the main reason it gets stuck now
+
+# * doesn't panic soon enough when surrounded?
+
+# * ctrl-f corpses while very hungry after teleport is sort of bad
+
+# * maybe generally be more careful about AF_FIRE/AF_COLD stuff?
+
+# * still slow when tons of monsters/plants are in sight
+
+# * maybe do second lair branch before depths?
+
+# * maybe teleport away if too many summons are in sight (or other conditions,
+#   like player illusion or triple mara)
+
+# * shoals mesm is scary because no berserk, but it seems to handle it okay
+# * also it doesn't list any merfolk on scary_monsters...
+# * maybe swap with BiA sometimes, or don't push past it
+# * Mara is terrifying
+# * tab shouldn't open runed doors
+# * be more careful about hitting jellies with good weapons at under +5
+# * Joseph more dangerous?
+# * evilmike suggested pre-buffing before entering v:5
+# * mute more messages (e.g. "Sorry, I don't know how to get there")
+# * improve orbrun more - use haste?
+# * enter lair immediately instead of waiting until clearing the level?
+
+# known issues:
+# major:
+# * it doesn't use haste
+# * enter ziggurats
+# * could use some optimization for non-Gr
+
+# minor:
+# * could enter and do labs I guess
+# * say more interesting things after pressing _
+# * should use holy word, might, cure mut
+# * can conceivably get burdened (less likely without hive)
+#   - qw-nostalgia.rc has something for this
+# * can also conceivably run out of slots (less likely)
+# * it could try going upstairs and down a different stairs when stuck
+# * it likes to leave Depths:5 early before finishing exploring, not sure why
+#   - I know why now, it happened online on V:4
+# * maybe should handle starving status better (eat something)
+# * armour upgrading code could be better
+# * brand valuation could be improved maybe
+# * enchant weapon/brand weapon read-IDing isn't optimal (needs crawl change?)
+
+#####################################
+# miscellaneous simple options
+
+view_delay = 0
+clear_messages = false
+travel_delay = -1
+explore_delay = -1
+travel_key_stop = false
+default_manual_training = true
+autopickup_no_burden = false
+auto_exclude =
+hp_warning = 0
+show_more = false
+show_inventory_weights = true
+show_newturn_mark = false
+list_rotten = false
+force_more_message =
+show_travel_trail = false
+skill_focus = false
+autoinscribe += slaying:mikee
+flush.failure = false
+char_set = ascii
+cset = cloud:xa4
+cset_ascii=item_orb:0
+use_fake_player_cursor = true
+equip_unequip = true
+
+# most of these don't generate normally any more I guess
+trapwalk_safe_hp = net:1,dart:1,needle:1,arrow:1,bolt:1,spear:1,blade:1,alarm:1
+
+dump_order = header,hiscore,stats,misc,mutations,skills,spells,inventory
+dump_order += overview
+dump_order += messages,screenshot,monlist,kills,notes,vaults,action_counts
+ood_interesting = 6
+note_hp_percent = 25
+note_skill_levels = 1,3,6,9,12,15,18,21,24,27
+note_all_spells = true
+
+####################################
+# not sure exactly how important or correct these settings are
+
+explore_stop =
+explore_stop += branches,portals,stairs,altars
+explore_stop += greedy_visited_item_stack,greedy_pickup_smart
+
+stop := runrest_stop_message
+ignore := runrest_ignore_message
+stop =
+ignore =
+ignore += .*
+
+runrest_ignore_poison = 3:15
+runrest_ignore_monster += butterfly:1
+runrest_ignore_monster += orb of destruction:1
+
+####################################
+# These keys are useful to answer prompts and aren't critical for manual play
+
+bindkey = [Y] CMD_NO_CMD_DEFAULT
+bindkey = [N] CMD_NO_CMD_DEFAULT
+bindkey = [B] CMD_NO_CMD_DEFAULT
+bindkey = [.] CMD_NO_CMD_DEFAULT
+
+####################################
+# autopickup/drop_filter stuff, just used for scrolls/potions/wands
+
+autopickup = ?!/%
+
+ae := autopickup_exceptions
+df := drop_filter
+ae =
+df =
+ae += scrolls? of (summoning|vulnerability|brand weapon)
+ae += scrolls? of (magic mapping|fog|fear|silence)
+ae += scrolls? of (blinking|holy word|amnesia)
+ae += scrolls? of (curse armour|curse jewellery|curse weapon)
+ae += scrolls? of (immolation|noise|random uselessness|torment)
+df += scrolls? of (summoning|vulnerability|brand weapon)
+df += scrolls? of (magic mapping|fog|fear|silence)
+df += scrolls? of (blinking|holy word|amnesia)
+df += scrolls? of (curse armour|curse jewellery|curse weapon)
+df += scrolls? of (immolation|noise|random uselessness|torment)
+ae += potions? of (brilliance|magic|berserk rage)
+ae += potions? of (flight|invisibility|blood|coagulated blood)
+ae += potions? of (agility|cure mutation|might|porridge)
+ae += potions? of (confusion|decay|degeneration|mutation|paralysis)
+ae += potions? of (poison|lignification|strong poison)
+df += potions? of (brilliance|magic|berserk rage)
+df += potions? of (flight|invisibility|blood|coagulated blood)
+df += potions? of (agility|cure mutation|might|porridge)
+df += potions? of (confusion|decay|degeneration|mutation|paralysis)
+df += potions? of (poison|lignification|strong poison)
+ae += wand of (random effects|slowing|magic darts|flame|frost|confusion)
+ae += wand of (enslavement|paralysis|invisibility|lightning|fireball)
+ae += wand of (cold|digging|disintegration|draining|fire|polymorph)
+df += wand of (random effects|slowing|magic darts|flame|frost|confusion)
+df += wand of (enslavement|paralysis|invisibility|lightning|fireball)
+df += wand of (cold|digging|disintegration|draining|fire|polymorph)
+
+########################################
+# now the lua, beginning with autopickup code
+
+{
+-- We assign a numerical value to all armour/weapon/jewellery, which
+-- is used both for autopickup (so it has to work for unIDed items) and
+-- for equipment selection. A negative value means we never want to use the
+-- item.
+
+good_slots = {cloak="Cloak", helmet="Helmet",
+              gloves="Gloves", boots="Boots", body="Armour"}
+
+function armour_value(it, name, with_resists)
+  local value = 100
+  if it.artefact then
+    if it.fully_identified then
+      value = value + 100 -- random stuff is good on average
+    else
+      value = value + 400 -- it might be very good
+    end
+    if name:find("rF%+") then
+      if not with_resists or you.res_fire() < 2 then
+        value = value + 400 -- we like this a lot
+      end
+    end
+    if name:find("SInv") then
+      if not with_resists or not you.see_invisible() then
+        value = value + 400 -- we like this a lot
+      end
+    end
+    if name:find("%-Tele") then
+      return -1
+    end
+    if name:find("Pondering") or name:find("hauberk")
+       or name:find("lightning scales") then
+      return -1
+    end
+  elseif name:find("runed") or name:find("glowing") or name:find("dyed") or
+         name:find("embroidered") or name:find("shiny") then
+    value = value + 400 -- it might be very good
+  elseif it.fully_identified then
+    if name:find("fire resistance") then
+      if not with_resists or you.res_fire() < 2 then
+        value = value + 400 -- we like this a lot
+      end
+    end
+    if name:find("see invisible") then
+      if not with_resists or not you.see_invisible() then
+        value = value + 400 -- we like this a lot
+      end
+    end
+    if name:find("preservation") then
+      value = value + 250 -- and this
+    end
+    if name:find("ponderous") then
+      return -1
+    end
+    if name:find("archery") then
+      value = value - 100
+    end
+  end
+  if it.plus then
+    value = value + 50*it.plus
+  end
+  if name:find("barding") then
+    return -1
+  end
+  st, _ = it.subtype()
+  if good_slots[st] == "Helmet" and not name:find("helmet") then
+    value = value - 100
+  end
+  if good_slots[st] == "Armour" then
+    if name:find("hide") then
+      return -1
+    end
+    if name:find("robe") then
+      value = value + 200
+    elseif name:find("animal skin") then
+      value = value + 200
+    elseif name:find("troll leather") then
+      value = value + 400
+    elseif name:find("leather") then
+      value = value + 300
+    elseif name:find("ring mail") then
+      value = value + 500
+    elseif name:find("scale mail") then
+      value = value + 600
+    elseif name:find("chain mail") then
+      value = value + 800
+    elseif name:find("crystal plate") then
+      value = value + 1400
+    elseif name:find("plate") then
+      value = value + 1000
+    elseif name:find("storm dragon") then
+      value = value + 1000
+    elseif name:find("steam dragon") then
+      value = value + 500
+    elseif name:find("mottled dragon") then
+      value = value + 600
+    elseif name:find("swamp dragon") then
+      value = value + 700
+    elseif name:find("fire dragon") then
+      value = value + 800
+    elseif name:find("ice dragon") then
+      value = value + 600 -- less because rF-
+    elseif name:find("pearl dragon") then
+      value = value + 1000
+    elseif name:find("gold dragon") then
+      value = value + 1400 -- more because resists
+    end
+  end
+  return value
+end
+
+function weapon_value(it, name, with_resists)
+  if you.race() == "Troll" then
+    return -1
+  end
+  local value = 1000
+  if not name:find("axe") then
+    return -1
+  end
+  if name:find("distort") then
+    return -1
+  end
+  if name:find("%-Tele") then
+    return -1
+  end
+  if it.artefact and not it.fully_identified or
+     name:find("runed") or name:find("glowing") then
+    value = value + 500 -- it might be very good
+  end
+  if name:find("vamp") then
+    value = value + 500 -- this is what we want
+  elseif name:find("speed") then
+    value = value + 300 -- this is good too
+  elseif name:find("elec") then
+    value = value + 150 -- not bad
+  elseif name:find("flam") or name:find("freez") or
+         name:find("chop") or name:find("anti") then
+    value = value + 75
+  end
+  if it.plus then
+    value = value + 30*it.plus
+  end
+  if name:find("hand axe") then
+    value = value + 700
+  elseif name:find("war axe") then
+    value = value + 1000
+  elseif name:find("broad axe") then
+    value = value + 1300
+  elseif name:find("battleaxe") then
+    value = value + 1600
+  elseif name:find("executioner") then
+    value = value + 1550 -- requires too much skill
+  end
+  return value
+end
+
+function amulet_value(it, name, with_resists)
+  if it.artefact then return -1 end -- should parse inscription instead
+  if not name:find("amulet of") then return 100 end
+  if name:find("conservation") then
+    if with_resists and you.conservation() then
+      return -1
+    else
+      return 10
+    end
+  end
+  if name:find("resist corrosion") then
+    if with_resists and you.res_corr() then
+      return -1
+    else
+      return 9
+    end
+  end
+  if name:find("faith") then return 8 end
+  if name:find("resist mutation") then return 7 end
+  if name:find("clarity") then return 6 end
+  if name:find("guardian spirit") then return 5 end -- not enough MP
+  if name:find("warding") then return 4 end
+  if name:find("rage") then return 3 end
+  return -1
+end
+
+function ring_value(it, name, with_resists)
+  if it.artefact then return -1 end -- should parse inscription instead
+  if not name:find("ring of") then return 100 end
+  if it.plus and it.plus < 0 then return -1 end
+  local plus = 0
+  if it.plus then plus = plus + it.plus end
+  if not it.fully_identified then plus = 6 end
+  if name:find("see invisible") then
+    if with_resists and you.see_invisible() then
+      return -1
+    else
+      return 50
+    end
+  end
+  if name:find("protection from fire") then
+    if with_resists and you.res_fire() >= 2 then
+      return 16
+    else
+      return 49
+    end
+  end
+  if name:find("protection from cold") then
+    if with_resists and you.res_cold() >= 1 then
+      return 15
+    else
+      return 48
+    end
+  end
+  if name:find("slaying") then return 20 + plus end
+  if name:find("protection from magic") then return 14 end
+  if name:find("protection") then return 19 + plus end
+  if name:find("evasion") then return 18 + plus end
+  if name:find("positive energy") then return 13 end
+  if name:find("regeneration") then return 12 end
+  if name:find("strength") then return 7 + plus end
+  if name:find("dexterity") then return 4 + plus end
+  if name:find("sustenance") then return 3 end
+  if name:find("sustain abilities") then return 2 end
+  return -1
+end
+
+function equip_value(it, name, with_resists)
+  local class = it.class(true)
+  if class == "armour" then
+    return armour_value(it, name, with_resists)
+  elseif class == "weapon" then
+    return weapon_value(it, name, with_resists)
+  elseif class == "jewellery" then
+    if name:find("amulet") then
+      return amulet_value(it, name, with_resists)
+    else
+      return ring_value(it, name, with_resists)
+    end
+  end
+  return -1
+end
+
+function autopickup(it, name)
+  if name:find("of Zot") then
+    return true
+  end
+  if it.is_useless then
+    return false
+  end
+  local class = it.class(true)
+  old_value = 0
+  new_value = 0
+  ring = false
+  if class == "armour" then
+    st, _ = it.subtype()
+    if good_slots[st] == nil then
+      return false
+    end
+    it2 = items.equipped_at(good_slots[st])
+  elseif class == "weapon" then
+    it2 = items.equipped_at("Weapon")
+  elseif class == "jewellery" then
+    if name:find("amulet") then
+      it2 = items.equipped_at("Amulet")
+    else
+      it2 = items.equipped_at("Left Ring")
+      it3 = items.equipped_at("Right Ring")
+      ring = true
+    end
+  else
+    return false
+  end
+  new_value = equip_value(it, name)
+  if new_value < 0 then return false end
+  if it2 == nil or ring and it3 == nil then
+    return true
+  else
+    old_value = equip_value(it2, it2:name())
+    if ring then
+      old_value2 = equip_value(it3, it3:name())
+      if old_value > old_value2 then old_value = old_value2 end
+    end
+    return (new_value > old_value)
+  end
+end
+
+add_autopickup_func(autopickup)
+
+--------------------------------------------
+-- options that we switch on/off with the bot
+
+-- maybe should add more mutes for watchability
+
+function set_options()
+  --crawl.setopt("auto_list = false")
+  crawl.setopt("confirm_butcher = always")
+  crawl.setopt("pickup_mode = multi")
+  crawl.setopt("message_colour += mute:Search for what")
+  crawl.setopt("message_colour += mute:Can't find anything")
+  crawl.setopt("message_colour += mute:Drop what")
+  crawl.setopt("message_colour += mute:Okay, then")
+  crawl.setopt("message_colour += mute:Use which ability")
+  crawl.setopt("message_colour += mute:Read which item")
+  crawl.setopt("message_colour += mute:Drink which item")
+  crawl.setopt("message_colour += mute:not good enough")
+  crawl.setopt("message_colour ^= mute:Unknown command")
+  crawl.enable_more(false)
+end
+
+function unset_options()
+  --crawl.setopt("auto_list = true")
+  crawl.setopt("always_confirm_butcher = auto")
+  crawl.setopt("pickup_mode = auto")
+  crawl.setopt("message_colour -= mute:Search for what")
+  crawl.setopt("message_colour -= mute:Can't find anything")
+  crawl.setopt("message_colour -= mute:Drop what")
+  crawl.setopt("message_colour -= mute:Okay, then")
+  crawl.setopt("message_colour -= mute:Use which ability")
+  crawl.setopt("message_colour -= mute:Read which item")
+  crawl.setopt("message_colour -= mute:Drink which item")
+  crawl.setopt("message_colour -= mute:not good enough")
+  crawl.setopt("message_colour -= mute:Unknown command")
+  crawl.enable_more(true)
+end
+
+-----------------------------------------------
+-- now we have actual non-option lua, beginning with some tables
+
+-- branch data: code, full name, where name
+local branch_data = {
+  {"T", "the Ecumenical Temple", "Temple"},
+  {"O", "the Orcish Mines", "Orc"},
+  --{"E", "the Elven Halls", "Elf"},
+  {"L", "the Lair", "Lair"},
+  {"S", "the Swamp", "Swamp"},
+  {"A", "the Shoals", "Shoals"},
+  {"P", "the Snake Pit", "Snake"},
+  {"N", "the Spider Nest", "Spider"},
+  --{"M", "the Slime Pits", "Slime"},
+  {"V", "the Vaults", "Vaults"},
+  --{"B", "the Hall of Blades", "Blade"},
+  --{"C", "the Crypt", "Crypt"},
+  --{"W", "the Tomb", "Tomb"},
+  {"D", "the Dungeon", "D:"},
+  {"U", "the Depths", "Depths"},
+  {"Z", "Zot", "Zot"},
+} -- hack
+
+-- portal data: where name, full name, feature name
+local portal_data = {
+  --{"Bailey", "a flagged portal", "bailey"},
+  --{"Bazaar", "gateway to a bazaar", "bazaar"},
+  --{"IceCv", "a frozen archway", "ice_cave"},
+  {"Ossuary", "covered staircase", "ossuary"},
+  {"Sewer", "a glowing drain", "sewer"},
+  --{"Volcano", "a dark tunnel", "volcano"},
+  --{"WizLab", "a magical portal", "wizlab"},
+  --{"Zig", "gateway to a ziggurat", "ziggurat"},
+  --{"Lab", "labyrinth entrance", "labyrinth"},
+} -- hack
+
+------------------------------------------------------
+-- now some tables of monsters, with XL cutoffs
+
+-- berserk these
+local scary_monsters = {
+  {3, "worm"},
+  {3, "Terence"},
+
+  {5, "gnoll"},
+  {5, "Ijyb"},
+  {5, "ice beast"},
+  {5, "iguana"},
+  {5, "Natasha"},
+
+  {7, "orc wizard"},
+  {7, "Grinder"},
+  {7, "Prince Ribbit"},
+  {7, "Dowan"},
+  {7, "Duvessa"},
+  {7, "Menkaure"},
+  {7, "Edmund"},
+  {7, "Blork"},
+  {7, "Eustachio"},
+  {7, "gnoll sergeant"},
+
+  {10, "Pikel"},
+  {10, "Crazy Yiuf"},
+  {10, "Sigmund"},
+  {10, "ogre"},
+  {10, "goliath beetle"},
+
+  {12, "orc priest"},
+  {12, "orc warrior"},
+  {12, "troll"},
+  {12, "cyclops"},
+  {12, "hill giant"},
+  {12, "spiny frog"},
+  {12, "black mamba"},
+  {12, "Snorg"},
+  {12, "fire drake"},
+  {12, "Harold"},
+  {12, "komodo dragon"},
+  {12, "Gastronok"},
+  {12, "snapping turtle"},
+  {12, "Urug"},
+  {12, "boring beetle"},
+  {12, "Grum"},
+  {12, "electric eel"},
+  {12, "Nergalle"},
+  {12, "jelly"},
+  {12, "manticore"},
+  {12, "guardian mummy"},
+  {12, "Psyche"},
+
+  {13, "blink frog"},
+
+  {15, "death yak"},
+  {15, "Maud"},
+  {15, "Erica"},
+  {15, "catoblepas"},
+  {15, "orc knight"},
+  {15, "boulder beetle"},
+  {15, "shark"},
+
+  {17, "fire dragon"},
+  {17, "ice dragon"},
+  {17, "storm dragon"},
+  {17, "ogre mage"},
+  {17, "orc sorcerer"},
+  {17, "orc high priest"},
+  {17, "orc warlord"},
+  {17, "dire elephant"},
+  {17, "very large slime creature"},
+  {17, "spiny worm"},
+  {17, "skeletal warrior"},
+  {17, "greater naga"},
+  {17, "naga sharpshooter"},
+  {17, "Arachne"},
+  {17, "deep troll"},
+  {17, "thorn hunter"},
+  {17, "sun demon"},
+
+  {20, "greater naga"},
+  {20, "naga sharpshooter"},
+  {20, "Wiglaf"},
+  {20, "Rupert"},
+  {20, "Aizul"},
+  {20, "hydra"},
+  {20, "Azrael"},
+  {20, "Frances"},
+  {20, "Saint Roka"},
+  {20, "Agnes"},
+  {20, "Jory"},
+  {20, "Nikola"},
+  {20, "stone giant"},
+  {20, "fire giant"},
+  {20, "frost giant"},
+  {20, "acid blob"},
+  {20, "azure jelly"},
+  {20, "Asterion"},
+  {20, "spriggan defender"},
+  {20, "spriggan air mage"},
+  {20, "spriggan druid"},
+  {20, "deep troll shaman"},
+  {20, "Xtahua"},
+  {20, "tengu reaver"},
+
+  {100, "deep elf annihilator"},
+  {100, "deep elf sorcerer"},
+  {100, "Enchantress"},
+  {100, "Vashnia"},
+  {100, "Sojobo"},
+  {100, "berserk"},
+  {100, "Roxanne"},
+  {100, "Norris"},
+  {100, "Erolcha"},
+  {100, "statue"},
+  {100, "Nessos"},
+  {100, "Sonja"},
+  {100, "Louise"},
+  {100, "Mennas"},
+  {100, "Margery"},
+  {100, "Frederick"},
+  {100, "Boris"},
+  {100, "Mara"},
+  {100, "boggart"},
+  {100, "lich"},
+  {100, "'s ghost"},
+  {100, "' ghost"},
+  {100, "'s illusion"},
+  {100, "' illusion"},
+  {100, "oklob"},
+  {100, "hellion"},
+  {100, "tormentor"},
+  {100, "hell sentinel"},
+  {100, "fiend"},
+  {100, "curse toe"},
+  {100, "curse skull"},
+  {100, "Tiamat"},
+  {100, "titanic slime creature"},
+  {100, "enormous slime creature"},
+  {100, "titan"},
+  {100, "orb of fire"},
+} -- hack
+
+-- BiA these
+local bia_monsters = {
+  {15, "Rupert"},
+  {15, "hydra"},
+  {15, "Azrael"},
+  {15, "fire dragon"},
+  {15, "ice dragon"},
+  {15, "Snorg"},
+  {15, "death yak"},
+
+  {20, "orc warlord"},
+  {20, "Aizul"},
+  {20, "Frances"},
+  {20, "Saint Roka"},
+  {20, "Agnes"},
+  {20, "Jory"},
+  {20, "Norris"},
+  {20, "Arachne"},
+  {20, "Nikola"},
+  {20, "Vashnia"},
+  {20, "Asterion"},
+  {20, "orb spider"},
+  {20, "thorn hunter"},
+  {20, "sun demon"},
+
+  {100, "deep troll shaman"},
+  {100, "spriggan air mage"},
+  {100, "Enchantress"},
+  {100, "Sojobo"},
+  {100, "Roxanne"},
+  {100, "Erolcha"},
+  {100, "statue"},
+  {100, "Nessos"},
+  {100, "Sonja"},
+  {100, "Louise"},
+  {100, "Mennas"},
+  {100, "Margery"},
+  {100, "Frederick"},
+  {100, "Boris"},
+  {100, "Mara"},
+  {100, "boggart"},
+  {100, "lich"},
+  {100, "'s ghost"},
+  {100, "' ghost"},
+  {100, "oklob"},
+  {100, "hell sentinel"},
+  {100, "fiend"},
+  {100, "Tiamat"},
+  {100, "orb of fire"},
+} -- hack
+
+-- Trog's Hand these
+local hand_monsters = {
+  {10, "Grinder"},
+
+  {17, "orc sorcerer"},
+  {17, "^wizard"},
+
+  {100, "ogre mage"},
+  {100, "Rupert"},
+  {100, "Aizul"},
+  {100, "Norris"},
+  {100, "Erolcha"},
+  {100, "Louise"},
+  {100, "lich"},
+  {100, "Kirke"},
+  {100, "golden eye"},
+  {100, "deep elf sorcerer"},
+  {100, "deep elf demonologist"},
+  {100, "sphinx"},
+  {100, "great orb of eyes"},
+  {100, "vault sentinel"},
+  {100, "Enchantress"},
+  {100, "satyr"},
+  {100, "vampire knight"},
+} -- hack
+
+-- potion of resistance these
+local resistance_monsters = {
+  {100, "Margery"},
+  {100, "orb of fire"},
+  {100, "hellephant"},
+  {100, "Xtahua"},
+} -- hack
+
+-----------------------------
+-- some global variables:
+
+local skill_count = you.turns() - (you.turns() % 100)
+local danger
+local where = you.where()
+local expect_new_location
+local expect_portal
+
+local automatic = false
+
+local ignore_list = { }
+local failed_move = { }
+local invisi_count = 0
+local next_delay = 100
+
+local sigmund_dx = 0
+local sigmund_dy = 0
+local invisi_sigmund = false
+
+local stuck_turns = 0
+
+local stepped_on_lair = false
+local kill_plant_mode = false
+
+-- are these still necessary?
+local did_move = false
+local move_count = 0
+local old_turn_count = you.turns()
+
+-- commented out because this messes up loading them from saves
+-- local branches_entered
+-- local portals_found
+
+local travel_destination = nil
+
+local have_message = false
+local read_message = true
+
+local monster_array
+
+local upgrade_phase = false
+
+-- a couple enums from crawl
+local ATT_NEUTRAL = 1
+local ATT_HOSTILE = 0
+
+---------------------------------------
+-- initialization and control
+
+function initialize()
+  automatic = true
+  where = you.where()
+  expect_new_location = false
+  if branches_entered == nil then
+    branches_entered = { "D" }
+  end
+  if portals_found == nil then
+    portals_found = { }
+  end
+  set_options()
+  initialize_monster_array()
+end
+
+function stop()
+  automatic = false
+  unset_options()
+  crawl.enable_more(true)
+end
+
+function start()
+  initialize()
+  ready()
+end
+
+function panic(msg)
+  crawl.mpr("<lightred>" .. msg .. "</lightred>")
+  stop()
+end
+
+function startstop()
+  if automatic then
+    stop()
+  else
+    start()
+  end
+end
+
+function hit_closest()
+  startstop()
+end
+
+function ready()
+  if not automatic then
+    initialize()
+  end
+  if you.turns() >= skill_count then
+    skill_count = skill_count+100
+    handle_skills()
+  end
+  if you.turns() > old_turn_count then
+    if did_move then
+      move_count = move_count + 1
+    else
+      move_count = 0
+    end
+    old_turn_count = you.turns()
+    did_move = false
+  end
+  if you.where() ~= where then
+    clear_ignores()
+    where = you.where()
+    if not expect_new_location then
+      say("Shafted?")
+    end
+    if cur_branch() and not util.contains(branches_entered, cur_branch()) then
+      say("Entered " .. cur_branch() .. ".")
+      table.insert(branches_entered, cur_branch())
+    end
+    if expect_portal and in_portal() then
+      say("Entered " .. where .. ".")
+    end
+    portals_found = { }
+  end
+  expect_new_location = false
+  expect_portal = false
+  check_messages()
+  if automatic then
+    crawl.flush_input()
+    crawl.more_autoclear(true)
+    update_monster_array()
+    danger = sense_danger(8)
+    sense_sigmund()
+    if have_message then
+      plan_message()
+    elseif you.where():find("Abyss") then
+      plan_abyss_move()
+    elseif you.have_orb() then
+      plan_orbrun_move()
+    else
+      plan_move()
+    end
+  end
+end
+
+function plan_message()
+  if read_message then
+    crawl.setopt("clear_messages = false")
+    magic("_")
+    read_message = false
+  else
+    crawl.setopt("clear_messages = true")
+    magic(":qwqwqw\r")
+    read_message = true
+    have_message = false
+    crawl.delay(2500)
+  end
+end
+
+---------------------------------------------
+-- general status-checking functions
+
+function hp_is_low(percentage)
+  local hp, mhp = you.hp()
+  return (100*hp <= percentage*mhp)
+end
+
+function sense_danger(r, no_ignored)
+  local x,y
+  for x = -r,r do
+    for y = -r,r do
+      if is_candidate_for_attack(x,y,no_ignored) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function sense_sigmund()
+  local x,y
+  for x = -8,8 do
+    for y = -8,8 do
+      m = monster_array[x][y]
+      if m and string.find(m:desc(), "Sigmund") then
+        sigmund_dx = x
+        sigmund_dy = y
+        return
+      end
+    end
+  end
+end
+
+function initialize_monster_array()
+  monster_array = {}
+  local x
+  for x = -8,8 do
+    monster_array[x] = {}
+  end
+end
+
+function update_monster_array()
+  local x,y
+  for x = -8,8 do
+    for y = -8,8 do
+      monster_array[x][y] = monster.get_monster_at(x, y)
+    end
+  end
+end
+
+function check_monsters(r, mlist)
+  local x,y
+  local xl = you.xl()
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and (m:attitude() == 0) and
+          not contains_string_in(m:desc(), {"skeleton", "zombie",
+          "simulacrum", "spectral"}) then
+        desc = m:desc()
+        for _, value in ipairs(mlist) do
+          if xl < value[1] and string.find(desc, value[2]) then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
+end
+
+function count_bia(r)
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and m:is_safe() and string.find(m:desc(),"berserk")
+       and contains_string_in(m:desc(), {"ogre","giant","bear","troll"}) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function on_corpses()
+  local fl = you.floor_items()
+  for it in iter.invent_iterator:new(fl) do
+    if string.find(it.name(), "corpse")
+        and not string.find(it.name(), "rotting")
+        and not string.find(it.name(), "plague") then
+      return true
+    end
+  end
+  return false
+end
+
+function on_dangerous_corpse()
+  local fl = you.floor_items()
+  for it in iter.invent_iterator:new(fl) do
+    if string.find(it.name(), "corpse") then
+      return food.dangerous(it)
+    end
+  end
+  return false
+end
+
+function bad_food(it)
+  return (food.dangerous(it) or string.find(it.name(), "rotting"))
+end
+
+function inventory()
+  return iter.invent_iterator:new(items.inventory())
+end
+
+function check_messages()
+  local recent_messages = crawl.messages(20)
+  local very_recent_messages = crawl.messages(5)
+  if very_recent_messages:find("Sigmund flickers and vanishes") then
+    invisi_sigmund = true
+  end
+  if very_recent_messages:find("Your surroundings suddenly seem different") then
+    invisi_sigmund = false
+  end
+  str1 = "Your pager goes off"
+  str2 = "qwqwqw"
+  if recent_messages:find(str1) then
+    a = recent_messages:reverse():find(str1:reverse())
+    b = recent_messages:reverse():find(str2:reverse())
+    if (not b) or a < b then
+      have_message = true
+    end
+  end
+  if in_portal() then
+    return false
+  end
+  if recent_messages:find("Found") then
+    for _, value in ipairs(portal_data) do
+      if recent_messages:find(value[2]) then
+        record_portal_found(value[1])
+      end
+    end
+  end
+end
+
+function in_portal()
+  for _, value in ipairs(portal_data) do
+    if value[1] == where then
+      return true
+    end
+  end
+  return false
+end
+
+function record_portal_found(por)
+  if not util.contains(portals_found, por) then
+    say("Found " .. por .. ".")
+    table.insert(portals_found, por)
+  end
+end
+
+function can_swap(equip_slot)
+  local it = items.equipped_at(equip_slot)
+  if it and it.cursed then return false end
+  return true
+end
+
+function cur_branch()
+  for _, value in ipairs(branch_data) do
+    if where:find(value[3]) then
+      return value[1]
+    end
+  end
+end
+
+function found_branch(br)
+  if br == "D" then
+    return true
+  end
+  for _, value in ipairs(branch_data) do
+    if value[1] == br then
+      if travel.find_deepest_explored(value[3]) > 0 then
+        return true
+      else
+        return false
+      end
+    end
+  end
+  return false
+end
+
+function in_branch(br)
+  for _, value in ipairs(branch_data) do
+    if value[1] == br then
+      if where:find(value[3]) then
+        return true
+      else
+        return false
+      end
+    end
+  end
+  return false
+end
+
+function find_item(cls,name)
+  if cls == "wand" then return find_wand(name) end
+  for it in inventory() do
+    if it.class(true) == cls and it.name():find(name) then
+      return items.index_to_letter(it.slot)
+    end
+  end
+end
+
+function find_wand(name)
+  for it in inventory() do
+    if it.class(true) == "wand" and it.name():find(name) and
+       not it.name():find("empty") and (it.plus == nil or it.plus > 0) then
+      return items.index_to_letter(it.slot)
+    end
+  end
+end
+
+function have_reaching()
+  local wp = items.equipped_at("weapon")
+  return wp and wp.reach_range == 8 and not wp.is_melded
+end
+
+function monster_in_way(dx,dy)
+  m = monster_array[dx][dy]
+  return (m and (m:attitude() <= ATT_NEUTRAL and not kill_plant_mode or
+                 m:is_constricted() or m:is_caught()))
+end
+
+function try_move(dx, dy)
+  if view.is_safe_square(dx, dy) and not view.withheld(dx, dy) and
+     not monster_in_way(dx,dy) then
+    return delta_to_vi(dx, dy)
+  else
+    return nil
+  end
+end
+
+function tabbable_square(x,y)
+  if view.feature_at(x,y) ~= "unseen" and view.is_safe_square(x,y) then
+    local m = monster_array[x][y]
+    if not m or not m:is_firewood() then
+      return true
+    end
+  end
+  return false
+end
+
+function will_tab(cx, cy, ex, ey)
+  local dx = ex - cx
+  local dy = ey - cy
+  if abs(dx) <= 1 and abs(dy) <= 1 then
+    return true
+  end
+  local function attempt_move(fx, fy)
+    if fx == 0 and fy == 0 then return end
+    if abs(cx+fx) > 8 or abs(cy+fy) > 8 then return end
+    if tabbable_square(cx+fx, cy+fy) then
+      return will_tab(cx+fx, cy+fy, ex, ey)
+    end
+  end
+  local move = nil
+  if abs(dx) > abs(dy) then
+    if abs(dy) == 1 then move = attempt_move(sign(dx), 0) end
+    if move == nil then move = attempt_move(sign(dx), sign(dy)) end
+    if move == nil then move = attempt_move(sign(dx), 0) end
+    if move == nil and abs(dx) > abs(dy)+1 then
+         move = attempt_move(sign(dx), 1) end
+    if move == nil and abs(dx) > abs(dy)+1 then
+         move = attempt_move(sign(dx), -1) end
+    if move == nil then move = attempt_move(0, sign(dy)) end
+  elseif abs(dx) == abs(dy) then
+    move = attempt_move(sign(dx), sign(dy))
+    if move == nil then move = attempt_move(sign(dx), 0) end
+    if move == nil then move = attempt_move(0, sign(dy)) end
+  else
+    if abs(dx) == 1 then move = attempt_move(0, sign(dy)) end
+    if move == nil then move = attempt_move(sign(dx), sign(dy)) end
+    if move == nil then move = attempt_move(0, sign(dy)) end
+    if move == nil and abs(dy) > abs(dx)+1 then
+         move = attempt_move(1, sign(dy)) end
+    if move == nil and abs(dy) > abs(dx)+1 then
+         move = attempt_move(-1, sign(dy)) end
+    if move == nil then move = attempt_move(sign(dx), 0) end
+  end
+  if move == nil then return false end
+  return move
+end
+
+function get_monster_info(dx, dy)
+  m = monster_array[dx][dy]
+  if not m then return nil end
+  name = m:name()
+  info = {}
+  info.distance = (abs(dx) > abs(dy)) and -abs(dx) or -abs(dy)
+  if not have_reaching() then
+    info.attack_type = (-info.distance < 2) and 2 or 0
+  else
+    if -info.distance > 2 then info.attack_type = 0
+    elseif -info.distance < 2 then info.attack_type = 2
+    else info.attack_type = view.can_reach(dx, dy) and 1 or 0 end
+  end
+  info.can_attack = (info.attack_type > 0) and 1 or 0
+  info.safe = m:is_safe() and -1 or 0
+  info.constricting_you = m:is_constricting_you() and 1 or 0
+  info.very_stabbable = (m:stabbability() >= 1) and 1 or 0
+  -- info.stabbable = m:is(0) and 1 or 0
+  info.injury = m:damage_level()
+  info.threat = m:threat()
+  info.orc_priest_wizard = (name == "orc priest" or
+                            name == "orc wizard") and 1 or 0
+  return info
+end
+
+function compare_monster_info(m1, m2)
+  flag_order = {"can_attack", "safe", "distance", "constricting_you",
+                "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+  for i, flag in ipairs(flag_order) do
+    if m1[flag] > m2[flag] then return true end
+    if m1[flag] < m2[flag] then return false end
+  end
+  return false
+end
+
+function is_candidate_for_attack(x, y, no_untabbable)
+  m = monster_array[x][y]
+  if not m or m:attitude() > ATT_NEUTRAL then
+    return false
+  end
+  if m:name() == "butterfly"
+      or m:name() == "orb of destruction" then
+    return false
+  end
+  if m:is_firewood() then
+    if not string.find(m:name(), "ballistomycete") then
+      return false
+    end
+  end
+  if no_untabbable then
+    if will_tab(0,0,x,y) then
+      remove_ignore(x,y)
+    else
+      add_ignore(x,y)
+      return false
+    end
+  end
+  return true
+end
+
+function get_target()
+  local x, y, bestx, besty, best_info, new_info
+  bestx = 0
+  besty = 0
+  best_info = nil
+  for x = -8, 8 do
+    for y = -8, 8 do
+      if not util.contains(failed_move, 20*x+y) then
+        if is_candidate_for_attack(x, y, true) then
+          new_info = get_monster_info(x, y)
+          if (not best_info) or
+             compare_monster_info(new_info, best_info) then
+            bestx = x
+            besty = y
+            best_info = new_info
+          end
+        end
+      end
+    end
+  end
+  return bestx, besty, best_info
+end
+
+function is_traversable(x,y)
+  local feat = view.feature_at(x,y)
+  return feat ~= "unseen" and travel.feature_traversable(feat)
+end
+
+---------------------------------------------
+-- plans (+ auxiliary functions)
+-- plans should return: true if they tried to do something,
+--                      false if they didn't do anything,
+--                      nil if they should be rerun (only used currently by
+--                       cascades, be careful of loops... this is
+--                       poorly tested)
+
+function should_rest()
+  if you.confused() or you.berserk() or transformed() then
+    return true
+  end
+  if dangerous_to_rest() then
+    return false
+  end
+  return (hp_is_low(90) or you.slowed() or you.exhausted() or you.teleporting()
+                        or you.silencing())
+end
+
+function dangerous_to_rest()
+  if danger then
+    return true
+  end
+  for x = -1,1 do
+    for y = -1,1 do
+      if view.feature_at(x,y):find("slimy_wall") then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function want_permafood()
+  return ((you.hunger_name() == "near starving" or
+           you.hunger_name() == "very hungry" and you.xl() >= 18) or
+           you.hunger_name() == "starving")
+end
+
+function want_chunk()
+  return you.hunger_name() == "hungry" or
+         you.hunger_name() == "very hungry" or want_permafood()
+end
+
+function rest()
+ magic("s")
+ next_delay = 10
+end
+
+function attack()
+  local success = false
+  failed_move = { }
+  while not success do
+    bestx, besty, best_info = get_target()
+    if best_info == nil then
+      return false
+    end
+    success = make_attack(bestx, besty, best_info)
+  end
+  return true
+end
+
+function pray()
+  magic("p")
+end
+
+function chop()
+  magic("ccq")
+end
+
+function berserk()
+  use_ability("Berserk")
+  --magic("aa")
+end
+
+function hand()
+  use_ability("Trog's Hand")
+  --magic("ab")
+end
+
+function bia()
+  use_ability("Brothers in Arms")
+  --magic("ac")
+end
+
+function plan_bia()
+  if can_bia() and want_to_bia() then
+    say("INVOKING BIA.")
+    bia()
+    return true
+  end
+  return false
+end
+
+function transformed()
+  return (you.transform() ~= "")
+end
+
+function plan_resistance()
+  if not you.berserk() and not you.extra_resistant() and
+     not you.teleporting() and want_resistance() and not transformed() then
+    local c = find_item("potion","resistance")
+    if c then
+      say("DRINKING RESISTANCE.")
+      quaff_helper(c)
+      return true
+    end
+  end
+  return false
+end
+
+function quaff_helper(c)
+  magic("q" .. c)
+end
+
+function plan_hand()
+  if can_hand() and want_to_hand() and not you.teleporting() then
+    say("INVOKING TROG'S HAND.")
+    hand()
+    return true
+  end
+  return false
+end
+
+function plan_abyss_hand()
+  local hp,mhp = you.hp()
+  if mhp - hp >= 30 and can_hand() then
+    say("INVOKING TROG'S HAND.")
+    hand()
+    return true
+  end
+  return false
+end
+
+function plan_orbrun_hand()
+  local hp,mhp = you.hp()
+  if mhp - hp >= 30 and can_hand() then
+    say("INVOKING TROG'S HAND.")
+    hand()
+    return true
+  end
+  return false
+end
+
+function plan_heal_wounds()
+  if not you.berserk() and want_to_heal_wounds() then
+    return heal_wounds()
+  end
+  return false
+end
+
+function heal_wounds()
+  if transformed() or you.berserk() then
+    return false
+  end
+  local c = find_item("potion","heal wounds")
+  if c then
+    say("DRINKING HEAL WOUNDS.")
+    quaff_helper(c)
+    return true
+  end
+  c = find_item("wand","heal wounds")
+  if c and not you.confused() then
+    say("ZAPPING HEAL WOUNDS.")
+    magic("V" .. c .. ".")
+    return true
+  end
+  return false
+end
+
+function plan_water_step()
+  if you.confused() or you.berserk() or you.flying() then
+    return false
+  end
+  if not sense_danger(2) then
+    return false
+  end
+  if not view.feature_at(0,0):find("shallow_water") then
+    return false
+  end
+  local x,y
+  for x = -1,1 do
+    for y = -1,1 do
+      if view.is_safe_square(x,y) and not view.withheld(x, y) and
+         (not view.feature_at(x,y):find("shallow_water")) and
+         not monster_in_way(x,y) then
+        for x2 = -1,1 do
+          for y2 = -1,1 do
+            m2 = monster_array[x+x2][y+y2]
+            if m2 and (m2:attitude() == 0) then
+              say("Stepping out of shallow water.")
+              magic(delta_to_vi(x,y))
+              return true
+            end
+          end
+        end
+      end
+    end
+  end
+  return false
+end
+
+function plan_berserk()
+  if can_berserk() and want_to_berserk() and not you.have_orb() then
+    say("INVOKING BERSERK.")
+    berserk()
+    return true
+  end
+  return false
+end
+
+function can_bia()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.hunger_name() == "starving" or you.piety_rank() < 4 or
+          you.god() ~= "Trog"))
+end
+
+function too_hungry_to_berserk()
+  return (you.hunger_name() == "starving" or
+          you.hunger_name() == "near starving" or
+          you.hunger_name() == "very hungry")
+end
+
+function can_berserk()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.exhausted() or you.mesmerised() or
+          too_hungry_to_berserk() or
+          you.piety_rank() < 1 or
+          you.god() ~= "Trog" or
+          you.transform() == "tree" or
+          you.transform() == "wisp"))
+end
+
+function want_to_bia()
+  if (want_to_berserk() and not can_berserk()) or
+     check_monsters(8, bia_monsters) then
+    if count_bia(4) == 0 and not you.teleporting() then
+      return true
+    end
+  end
+  return false
+end
+
+function want_to_teleport()
+  return ((you.slowed() or too_hungry_to_berserk()) and want_to_berserk()
+          and not can_berserk() and
+          count_bia(4) == 0)
+end
+
+function want_to_heal_wounds()
+  return (danger and hp_is_low(25))
+end
+
+function want_resistance()
+  return check_monsters(8, resistance_monsters) and you.res_fire() < 3
+end
+
+function want_to_hand()
+  return check_monsters(8, hand_monsters)
+end
+
+function want_to_berserk()
+  return (hp_is_low(50) and sense_danger(2) or
+          check_monsters(2, scary_monsters) or
+        --  check_monsters(3, scary_monsters) and sense_danger(2) or
+          (invisi_sigmund and not options.autopick_on))
+end
+
+function plan_zot_wait()
+  if (not danger) or (where ~= "Zot:5") or sense_danger(1) or
+     you.berserk() or you.have_orb() then
+    return false
+  end
+  count = 0
+  for x = -8,8 do
+    for y = -8,8 do
+      m = monster_array[x][y]
+      if m and not (m:name():find("Orb Guardian") or
+                    m:name():find("Killer Klown") or
+                    m:name():find("moth of wrath") or
+                    m:name():find("bone dragon") or
+                    m:name():find("tentacled monstrosity")) then
+        return false
+      end
+      if m and will_tab(0,0,x,y) then
+        count = count + 1
+      end
+    end
+  end
+  if count == 0 then
+    return false
+  end
+  -- say "Waiting for Orb Guardians."
+  magic("s")
+  return true
+end
+
+function plan_attack()
+  if danger then
+    if attack() then
+      return true
+    end
+  end
+  return false
+end
+
+function plan_eat_chunk()
+  if want_chunk() then
+    for it in inventory() do
+      if string.find(it.name(), "chunk") and
+         not bad_food(it) then
+        magic("ee")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_eat_permafood()
+  if where == "Zot:5" then
+    return plan_orbrun_eat_permafood()
+  end
+  if want_permafood() then
+    if eat_permafood() then
+      return true
+    end
+  end
+  return false
+end
+
+function plan_orbrun_eat_permafood()
+  if you.hunger_name() ~= "completely stuffed" and
+     you.hunger_name() ~= "very full" then
+    if eat_permafood() then
+      return true
+    end
+  end
+  return false
+end
+
+function plan_eat_anyway()
+  if you.hunger_name() == "very hungry" then
+    if eat_permafood() then
+      return true
+    end
+  end
+  return false
+end
+
+function eat_permafood()
+  local l
+  local max_prefer = 0
+  local food_name
+  for it in inventory() do
+    if it.class(true) == "food" and not bad_food(it) then
+      local name = it.name()
+      local prefer
+      if name:find("ration") or name:find("royal") then
+        prefer = 1
+      elseif name:find("honey") then
+        prefer = 2
+      elseif name:find("chunk") then
+        prefer = 0
+      else
+        prefer = 3
+      end
+      if prefer > max_prefer then
+        l = items.index_to_letter(it.slot)
+        max_prefer = prefer
+        food_name = it.name()
+      end
+    end
+  end
+  if max_prefer > 0 then
+    items.swap_slots(items.letter_to_index(l), items.letter_to_index('e'),
+                     false)
+    say("EATING " .. food_name .. ".")
+    magic("ee")
+    return true
+  end
+end
+
+function plan_rest()
+  if should_rest() then
+    rest()
+    return true
+  end
+  return false
+end
+
+function plan_orbrun_rest()
+  if you.confused() or you.slowed() or
+     you.berserk() or you.teleporting() or you.silencing() or
+     transformed() then
+    rest()
+    return true
+  end
+  return false
+end
+
+function plan_abyss_rest()
+  local hp,mhp = you.hp()
+  if you.confused() or you.slowed() or
+     you.berserk() or you.teleporting() or you.silencing() or
+     transformed() or (hp < mhp) and you.regenerating() then
+    rest()
+    return true
+  end
+  return false
+end
+
+function want_pray()
+  return (you.god() == "Trog")
+end
+
+function plan_handle_corpses()
+  if on_corpses() then
+    if want_pray() and (not want_chunk() or on_dangerous_corpse())
+        and not string.find(view.feature_at(0, 0), "altar")
+        and not you.silenced() then
+      pray()
+    else
+      chop()
+    end
+    return true
+  end
+  return false
+end
+
+function plan_find_altar()
+  if you.god() == "Trog" then
+    return false
+  end
+  magic(control('f') .. "@altar&&trog" .. "\ra\r")
+  return true
+end
+
+function plan_abandon_god()
+  if you.god() ~= "No God" and you.god() ~= "Trog" then
+    magic("aXYY")
+    return true
+  end
+  return false
+end
+
+function plan_unwield_weapon()
+  if you.race() ~= "Troll" then
+    return false
+  end
+  if not items.equipped_at("Weapon") then
+    return false
+  end
+  magic("w-")
+  return true
+end
+
+function plan_join_god()
+  if you.god() == "Trog" then
+    return false
+  end
+  if string.find(view.feature_at(0, 0), "altar_trog") then
+    if you.silenced() then
+      rest()
+    else
+      magic("pYY")
+    end
+    return true
+  end
+  return false
+end
+
+function plan_find_corpses()
+  magic(control('f') .. "@corpse$&&!!rott&&!!skel" .. "\ra\r")
+  return true
+end
+
+function plan_autoexplore()
+  magic("o")
+  return true
+end
+
+function plan_drop_filtered_items()
+  magic("d,,\r")
+  upgrade_phase = false
+  return true
+end
+
+function plan_quaff_id()
+  for it in inventory() do
+    if it.class(true) == "potion" and it.quantity > 1 and
+       not it.fully_identified then
+      l = items.index_to_letter(it.slot)
+      quaff_helper(l)
+      return true
+    end
+  end
+  return false
+end
+
+function plan_read_id()
+  if you.silenced() or you.confused() then
+    return false
+  end
+  for it in inventory() do
+    if it.class(true) == "scroll" and
+       not it.fully_identified then
+      items.swap_slots(it.slot, items.letter_to_index('Y'), false)
+      weap = items.equipped_at("Weapon")
+      scroll_letter = 'Y'
+      if weap and not weap:name():find("vamp") then
+        scroll_letter = items.index_to_letter(weap.slot)
+        items.swap_slots(weap.slot, items.letter_to_index('Y'), false)
+      end
+      magic("r" .. scroll_letter .. ".Y" ..
+            string.char(27) .. "YB") -- hack
+      return true
+    end
+  end
+  return false
+end
+
+function plan_use_id_scrolls()
+  if you.silenced() or you.confused() then
+    return false
+  end
+  local id_scroll
+  for it in inventory() do
+    if it.class(true) == "scroll" and it.name():find("identify") then
+      id_scroll = it
+    end
+  end
+  if not id_scroll then
+    return false
+  end
+  local oldslots = { }
+  local newslots = {[0] = 'B', [1] = 'N', [2] = 'Y'} -- harmless keys
+  local count = 0
+  for it in inventory() do
+    if it.class(true) == "jewellery" and not it.fully_identified
+       and count < 3 then
+      oldslots[count] = it.slot
+      count = count + 1
+    end
+  end
+  for it in inventory() do
+    if it.class(true) == "wand" and not it.fully_identified and
+       (it.name():find("empty") or it.name():find("teleportation") or
+        it.name():find("heal wounds") or it.name():find("hasting")) and
+       count < 3 then
+      oldslots[count] = it.slot
+      count = count + 1
+    end
+  end
+  if count == 0 then
+    return false
+  end
+  for it in inventory() do
+    if it.class(true) == "potion" and not it.fully_identified and
+       count < 3 then
+      oldslots[count] = it.slot
+      count = count + 1
+    end
+  end
+  for i = 0,count-1 do
+    items.swap_slots(oldslots[i], items.letter_to_index(newslots[i]), false)
+    for j = i+1,count-1 do
+      if oldslots[j] == items.letter_to_index(newslots[i]) then
+        oldslots[j] = oldslots[i]
+      end
+    end
+  end
+  if count > 0 then
+    for it in inventory() do
+      if it.class(true) == "scroll" and it.name():find("identify") then
+        id_scroll = it
+      end
+    end
+    say("READING IDENTIFY.")
+    magic("r" .. items.index_to_letter(id_scroll.slot) .. "B N Y")
+    return true
+  end
+  return false
+end
+
+function plan_use_good_consumables()
+  for it in inventory() do
+    if it.class(true) == "scroll" and not you.silenced() then
+      if it.name():find("acquirement") then
+        say("READING ACQUIREMENT.")
+        magic("r" .. items.index_to_letter(it.slot) .. " b")
+        return true
+      elseif it.name():find("enchant weapon") then
+        weapon = items.equipped_at("weapon")
+        if weapon and not weapon.artefact and
+           weapon.plus < 9 then
+          say("ENCHANTING WEAPON.")
+          magic("r" .. items.index_to_letter(it.slot) ..
+                       items.index_to_letter(weapon.slot))
+          return true
+        end
+      elseif it.name():find("enchant armour") then
+        body = items.equipped_at("armour")
+        if body and not body.artefact and
+           (body.name():find("gold dragon") and body.plus < 12
+            or body.name():find("plate armour of fire") and body.plus < 10
+            or body.name():find("crystal plate")
+            and body.plus < 14) then
+          say("ENCHANTING BODY ARMOUR.")
+          magic("r" .. items.index_to_letter(it.slot)
+                    .. items.index_to_letter(body.slot))
+          return true
+        end
+        for _,slotname in pairs(good_slots) do
+          if slotname ~= "Armour" then
+            it2 = items.equipped_at(slotname)
+            if it2 and not it2.artefact and it2.plus < 2 and it2.plus >= 0
+               then
+              say("ENCHANTING " .. slotname .. ".")
+              say("ENCHANTING BODY ARMOUR.")
+              magic("r" .. items.index_to_letter(it.slot)
+                        .. items.index_to_letter(it2.slot))
+              return true
+            end
+          end
+        end
+        if body and not body.artefact and
+           (body.name():find("pearl dragon") or body.name():find("plate"))
+           and body.plus < 10 then
+          say("ENCHANTING BODY ARMOUR.")
+          magic("r" .. items.index_to_letter(it.slot)
+                    .. items.index_to_letter(body.slot))
+          return true
+        end
+      elseif it.name():find("recharging") then
+        for it2 in inventory() do
+          if it2.class(true) == "wand" and
+             (it2.name():find("heal wounds") or
+              it2.name():find("teleportation"))
+             and not (it2.name():find("recharged") or
+                      it2.plus and it2.plus > 6) then
+            say("RECHARGING WAND.")
+            magic("r" .. items.index_to_letter(it.slot)
+                      .. items.index_to_letter(it2.slot))
+            return true
+          end
+        end
+      elseif it.name():find("remove curse") then
+        for it2 in inventory() do
+          if it2.cursed and it2.equipped then
+            say("READING REMOVE CURSE.")
+            magic("r" .. items.index_to_letter(it.slot))
+            return true
+          end
+        end
+      end
+    elseif it.class(true) == "potion" then
+      if it.name():find("beneficial") or it.name():find("experience") then
+        say("DRINKING " .. it.name() .. ".")
+        quaff_helper(items.index_to_letter(it.slot))
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_zap_id()
+  for it in inventory() do
+    if it.class(true) == "wand" and
+       not (it.name():find("wand of") or it.name():find("empty")) then
+      l = items.index_to_letter(it.slot)
+      magic("V" .. l .. "YY")
+      return true
+    end
+  end
+  return false
+end
+
+function plan_wield_weapon()
+  if items.equipped_at("Weapon") or you.berserk() or transformed() then
+    return false
+  end
+  if you.race() == "Troll" then
+    return false
+  end
+  for it in inventory() do
+    if it and it.class(true) == "weapon" then
+      if equip_value(it, it:name()) >= 0 and not it:name():find("vamp") then
+        l = items.index_to_letter(it.slot)
+        say("Wielding weapon " .. it:name() .. ".")
+        magic("w" .. l .. "YY")
+        return true
+      end
+    end
+  end
+  say("Failed to find a weapon to wield.")
+  return false
+end
+
+function plan_upgrade_weapon()
+  if you.race() == "Troll" then
+    return false
+  end
+  it_old = items.equipped_at("Weapon")
+  swappable = can_swap("Weapon")
+  for it in inventory() do
+    if it and it.class(true) == "weapon" and not it.equipped then
+      local equip = false
+      local drop = false
+      local new_value = equip_value(it, it:name())
+      if new_value < 0 then
+        drop = true
+      elseif not it_old then
+        equip = true
+      elseif new_value > equip_value(it_old, it_old:name()) then
+        equip = true
+      else
+        drop = true
+      end
+      if equip and swappable then
+        if it.name():find("vamp") and not
+           (you.hunger_name() == "full" or you.hunger_name() == "very full" or
+            you.hunger_name() == "completely stuffed") then
+          say("Eating in order to wield vampiric weapon.")
+          if eat_permafood() then
+            return true
+          end
+        else
+          l = items.index_to_letter(it.slot)
+          say("Upgrading to " .. it:name() .. " (value " .. new_value .. ").")
+          magic("w" .. l .. "YY")
+          -- this might have a 0-turn fail because of vamp, so return nil
+          return nil
+        end
+      end
+      if drop then
+        l = items.index_to_letter(it.slot)
+        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        magic("d" .. l .. "\r")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_upgrade_amulet()
+  it_old = items.equipped_at("Amulet")
+  swappable = can_swap("Amulet")
+  for it in inventory() do
+    if it and it.class(true) == "jewellery" and it:name():find("amulet of") and
+       not it.equipped then
+      local equip = false
+      local drop = false
+      local new_value = equip_value(it, it:name())
+      local new_value_with_resists = equip_value(it, it:name(), true)
+      if new_value < 0 then
+        drop = true
+      elseif not it_old then
+        if new_value_with_resists >= 0 then
+          equip = true
+        end
+      elseif new_value_with_resists > equip_value(it_old, it_old:name()) then
+        equip = true
+      elseif new_value <= equip_value(it_old, it_old:name()) then
+        drop = true
+      end
+      if equip and swappable then
+        l = items.index_to_letter(it.slot)
+        say("Upgrading to " .. it:name() .. " (value " ..
+            new_value_with_resists .. ").")
+        magic("P" .. l .. "YY")
+        return true
+      end
+      if drop then
+        l = items.index_to_letter(it.slot)
+        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        magic("d" .. l .. "\r")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_upgrade_rings()
+  it_old1 = items.equipped_at("Left Ring")
+  it_old2 = items.equipped_at("Right Ring")
+  swappable = can_swap("Left Ring")
+  for it in inventory() do
+    if it and it.class(true) == "jewellery" and it:name():find("ring of") and
+       it.fully_identified and not it.equipped then
+      local equip = false
+      local drop = false
+      local swap = nil
+      local new_value = equip_value(it, it:name())
+      local new_value_with_resists = equip_value(it, it:name(), true)
+      if new_value < 0 then
+        drop = true
+      elseif (not it_old1 or not it_old2) then
+        if new_value_with_resists >= 0 then
+          equip = true
+        end
+      elseif new_value_with_resists > equip_value(it_old1, it_old1:name()) then
+        equip = true
+        swap = it_old1.slot
+      elseif new_value_with_resists > equip_value(it_old2, it_old2:name()) then
+        equip = true
+        swap = it_old2.slot
+      elseif new_value <= equip_value(it_old1, it_old1:name()) and
+             new_value <= equip_value(it_old2, it_old2:name()) then
+        drop = true
+      end
+      if equip and swappable then
+        l = items.index_to_letter(it.slot)
+        say("Upgrading to " .. it:name() .. " (value " ..
+            new_value_with_resists .. ").")
+        if swap then
+          items.swap_slots(swap, items.letter_to_index('Y'), false)
+          if l == 'Y' then
+            l = items.index_to_letter(swap)
+          end
+        end
+        magic("P" .. l .. "YY")
+        return true
+      end
+      if drop then
+        l = items.index_to_letter(it.slot)
+        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        magic("d" .. l .. "\r")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_maybe_upgrade_armour()
+  if not upgrade_phase then
+    return false
+  end
+  return plan_upgrade_armour()
+end
+
+function plan_upgrade_armour()
+  for it in inventory() do
+    if it and it.class(true) == "armour" and not it.equipped then
+      local st, _ = it.subtype()
+      local equip = false
+      local drop = false
+      local swappable
+      it_old = items.equipped_at(good_slots[st])
+      swappable = can_swap(good_slots[st])
+      local new_value = equip_value(it, it:name())
+      local new_value_with_resists = equip_value(it, it:name(), true)
+      if new_value < 0 then
+        drop = true
+      elseif not it_old then
+        if new_value_with_resists >= 0 then
+          equip = true
+        end
+      elseif new_value_with_resists > equip_value(it_old, it_old:name()) then
+        equip = true
+      elseif new_value <= equip_value(it_old, it_old:name()) then
+        drop = true
+      end
+      if it:name():find("helmet") and (you.mutation("horns") > 0
+         or you.mutation("beak") > 0 or you.mutation("antennae") > 0) then
+        equip = false
+        drop = true
+      end
+      if it:name():find("boots") and you.mutation("talons") >= 3 then
+        equip = false
+        drop = true
+      end
+      if equip and swappable then
+        l = items.index_to_letter(it.slot)
+        say("Upgrading to " .. it:name() .. " (value " ..
+            new_value_with_resists .. ").")
+        magic("W" .. l .. "YN")
+        upgrade_phase = true
+        return true
+      end
+      if drop then
+        l = items.index_to_letter(it.slot)
+        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        magic("d" .. l .. "\r")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_remove_redundant_jewels()
+  it = items.equipped_at("Amulet")
+  if it and (it:name():find("conservation") or
+             it:name():find("resist corrosion")) then
+    it2 = items.equipped_at("Cloak")
+    if it2 and it2:name():find("preservation") and can_swap("Amulet") then
+      say("Removing redundant " .. it:name() .. ".")
+      magic("P" .. items.index_to_letter(it.slot) .. "YY")
+      return true
+    end
+  end
+  it = items.equipped_at("Left Ring")
+  if it and it:name():find("see invisible") then
+    it2 = items.equipped_at("Helmet")
+    if it2 and it2:name():find("see invisible") and can_swap("Left Ring") then
+      say("Removing redundant " .. it:name() .. ".")
+      magic("P" .. items.index_to_letter(it.slot) .. "YY")
+      return true
+    end
+    for _,slotname in pairs(good_slots) do
+      it2 = items.equipped_at(slotname)
+      if it2 and it2:name():find("SInv") and can_swap("Left Ring") then
+        say("Removing redundant " .. it:name() .. ".")
+        magic("P" .. items.index_to_letter(it.slot) .. "YY")
+        return true
+      end
+    end
+  end
+  it = items.equipped_at("Right Ring")
+  if it and it:name():find("see invisible") then
+    it2 = items.equipped_at("Helmet")
+    if it2 and it2:name():find("see invisible") and can_swap("Right Ring") then
+      say("Removing redundant " .. it:name() .. ".")
+      magic("P" .. items.index_to_letter(it.slot) .. "YY")
+      return true
+    end
+    for _,slotname in pairs(good_slots) do
+      it2 = items.equipped_at(slotname)
+      if it2 and it2:name():find("SInv") and can_swap("Right Ring") then
+        say("Removing redundant " .. it:name() .. ".")
+        magic("P" .. items.index_to_letter(it.slot) .. "YY")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_go_up()
+  local feat = view.feature_at(0,0)
+  if feat:find("stone_stairs_up") or feat:find("escape_hatch_up")
+     or feat:find("return_from_zot") or feat:find("exit_dungeon")
+     or feat:find("return_from_depths") then
+    expect_new_location = true
+    magic("<")
+    return true
+  end
+  return false
+end
+
+function plan_go_down()
+  local feat = view.feature_at(0,0)
+  if feat:find("stone_stairs_down") then
+    expect_new_location = true
+    magic(">")
+    return true
+  end
+  return false
+end
+
+function plan_simple_go_down()
+  if travel_destination then
+    return false
+  end
+  if found_branch("L") and not
+     util.contains(branches_entered, "L") then
+    return false
+  end
+  if where == "Orc:3" then
+    return false
+  end
+  if where == "Vaults:4" and you.num_runes() < 2 then
+    return false
+  end
+  expect_new_location = true
+  magic("G>")
+  return true
+end
+
+function plan_go_to_temple()
+  if found_branch("T") and you.god() ~= "Trog" and not
+     util.contains(branches_entered, "T") and in_branch("D") then
+    expect_new_location = true
+    magic("GTY")
+    return true
+  end
+  return false
+end
+
+function plan_go_to_lair()
+  if found_branch("L") and not
+     util.contains(branches_entered, "T") and in_branch("D") then
+    expect_new_location = true
+    magic("GL\rY")
+    return true
+  end
+  return false
+end
+
+function plan_enter_branch()
+  local br
+  if found_branch("L") and not
+     util.contains(branches_entered, "L") and in_branch("D") then
+    br = "L"
+  elseif found_branch("O") and not
+         util.contains(branches_entered, "O") and in_branch("D") and
+         util.contains(branches_entered, "L") then
+    br = "O"
+  end
+  if br then
+    expect_new_location = true
+    magic("G" .. br .. "\rY")
+    return true
+  end
+  return false
+end
+
+function plan_go_to_portal_entrance()
+  for _, por in ipairs(portals_found) do
+    for _, val in ipairs(portal_data) do
+      if val[1] == por then
+        magic(control('f') .. "@" .. val[2] .. "\ra\r")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_go_to_zig()
+  if you.num_runes() < 3 then
+    return false
+  end
+  magic(control('f') .. "gateway to a ziggurat" .. "\ra\r")
+  return true
+end
+
+function plan_go_to_portal_exit()
+  if in_portal() then
+    magic("X<\r")
+    return true
+  end
+  return false
+end
+
+function plan_go_to_abyss_exit()
+  magic("X<\r")
+  return true
+end
+
+function get_feat_name(where_name)
+  for _, value in ipairs(portal_data) do
+    if where_name == value[1] then
+      return value[3]
+    end
+  end
+end
+
+function plan_enter_zig()
+  if you.num_runes() < 3 then
+    return false
+  end
+  if string.find(view.feature_at(0,0), "enter_ziggurat") then
+    expect_new_location = true
+    magic(">")
+    return true
+  end
+  return false
+end
+
+function plan_enter_portal()
+  for _, por in ipairs(portals_found) do
+    if string.find(view.feature_at(0,0), "enter_" .. get_feat_name(por)) then
+      expect_portal = true
+      expect_new_location = true
+      magic(">")
+      return true
+    end
+    return false
+  end
+  return false
+end
+
+function plan_exit_portal()
+  if not in_portal() then
+    return false
+  end
+  if string.find(view.feature_at(0,0), "exit_" .. get_feat_name(where)) then
+    expect_new_location = true
+    magic("<")
+    return true
+  end
+  return false
+end
+
+function plan_zig_leave_level()
+  if not where:find("Zig") then
+    return false
+  end
+  if where:find("10") and string.find(view.feature_at(0,0), "exit_ziggurat")
+     then
+    magic("<Y")
+    return true
+  elseif string.find(view.feature_at(0,0), "stone_stairs_down") then
+    magic(">")
+    return true
+  end
+  return false
+end
+
+function plan_exit_abyss()
+  if string.find(view.feature_at(0,0), "exit_abyss") then
+    expect_new_location = true
+    magic("<")
+    return true
+  end
+  return false
+end
+
+function plan_step_towards_lair()
+  local x, y
+  if stepped_on_lair then
+    return false
+  end
+  for x = -8,8 do
+    for y = -8,8 do
+      if view.feature_at(x,y) == "enter_lair"
+         and you.see_cell_no_trans(x,y) then
+        if x == 0 and y == 0 then
+          stepped_on_lair = true
+          return false
+        else
+          kill_plant_mode = true
+          local result = move_towards(x,y)
+          kill_plant_mode = false
+          return result
+        end
+      end
+    end
+  end
+  return false
+end
+
+function plan_continue_travel()
+  if travel_destination then
+    if in_branch(travel_destination) or
+       not found_branch(travel_destination) then
+      travel_destination = nil
+      return false
+    end
+    expect_new_location = true
+    magic("G" .. travel_destination .. "\rY")
+    return true
+  end
+  return false
+end
+
+function choose_lair_rune_branch()
+  --if crawl.random2(2) == 0 then
+    --branch_options = { "A", "P", "S", "N" }
+  --else
+    --branch_options = { "P", "A", "N", "S" }
+    --branch_options = { "N", "S", "P", "A" }
+  --end
+  branch_options = { "P", "N", "S", "A" }
+  for _, branch_code in ipairs(branch_options) do
+    if found_branch(branch_code) and
+       not util.contains(branches_entered, branch_code) then
+      return branch_code
+    end
+  end
+  --tries = 0
+  --while tries < 100 do
+  --  i = 1 + crawl.random2(4)
+  --  branch_code = branch_options[i]
+  --  if found_branch(branch_code) and
+  --     not util.contains(branches_entered, branch_code) then
+  --    return branch_code
+  --  end
+  --  tries = tries + 1
+  --end
+  return nil
+end
+
+function plan_new_travel()
+  local back_to_D_places = { "Temple", "Lair:8", "Orc:3", "Orc:4", "Vaults:4"}
+  if util.contains(back_to_D_places, where) then
+    travel_destination = "D"
+  end
+  if where == "Snake:5" and you.have_rune("serpentine") then
+    travel_destination = "D"
+  end
+  if where == "Swamp:5" and you.have_rune("decaying") then
+    travel_destination = "D"
+  end
+  if where == "Spider:5" and you.have_rune("gossamer") then
+    travel_destination = "D"
+  end
+  if where == "Shoals:5" and you.have_rune("barnacled") then
+    travel_destination = "D"
+  end
+  if where == "Vaults:5" and you.have_rune("silver") then
+    travel_destination = "D"
+  end
+  if where == "D:15" then
+    if you.num_runes() == 1 and not util.contains(branches_entered, "V")
+       or you.num_runes() == 2 then
+      travel_destination = "V"
+    elseif you.num_runes() == 1 and not util.contains(branches_entered, "U")
+           or you.num_runes() >= 3 then
+      travel_destination = "U"
+    else
+      travel_destination = choose_lair_rune_branch()
+    end
+  end
+  if where == "Depths:5" then
+    if you.num_runes() >= 3 then
+      travel_destination = "Z"
+    else
+      travel_destination = "D"
+    end
+  end
+  return plan_continue_travel()
+end
+
+function plan_fly()
+  if you.xl() >= 14 and not you.flying() then
+    local a,b = you.mp()
+    if a >= 3 and not you.rooted() then
+      if use_ability("Fly") then
+        say("FLYING.")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_find_upstairs()
+  magic("X<\r")
+  return true
+end
+
+function plan_zig_go_to_stairs()
+  if not where:find("Zig") then
+    return false
+  end
+  if where:find("10") then
+    magic("X<\r")
+  else
+    magic("X>\r")
+  end
+  return true
+end
+
+function plan_find_downstairs()
+  -- try to avoid branch entrances by going to a random > from them
+  local feat = view.feature_at(0,0)
+  if feat:find("enter_") or feat:find("escape_hatch_down") then
+    local i,j
+    local c = "X"
+    j = crawl.roll_dice(1,12)
+    for i = 1,j do
+      c = (c .. ">")
+    end
+    magic(c .. "\r")
+    return true
+  end
+  magic("X>\r")
+  return true
+end
+
+function plan_stuck()
+  if you.hunger_name() == "starving" then
+    return random_step("starving")
+  end
+  stuck_turns = stuck_turns + 1
+  if stuck_turns > 5000 then
+    magic(control('q') .. "yes\r")
+    return true
+  end
+  return random_step("stuck")
+  -- panic("Stuck!")
+end
+
+function plan_not_coded()
+  panic("Need to code this!")
+  return true
+end
+
+function random_step(reason)
+  if you.mesmerised() then
+    say("Waiting to end mesmerise (" .. reason .. ").")
+    magic("s")
+    return true
+  end
+  local i,j
+  local dx,dy
+  local count = 0
+  for i = -1,1 do
+    for j = -1,1 do
+      if not (i == 0 and j == 0) and is_traversable(i,j)
+         and not monster_in_way(i,j) then
+        count = count + 1
+        if crawl.one_chance_in(count) then
+          dx = i
+          dy = j
+        end
+      end
+    end
+  end
+  if count > 0 then
+    say("Stepping randomly (" .. reason .. ").")
+    magic(delta_to_vi(dx,dy) .. "YY")
+    return true
+  else
+    say("Standing still (" .. reason .. ").")
+    magic("s")
+    return true
+  end
+  -- return false
+end
+
+function plan_disturbance_random_step()
+  if crawl.messages(5):find("There is a strange disturbance nearby!") then
+    return random_step("disturbance")
+  end
+  return false
+end
+
+function plan_wait()
+  rest()
+  return true
+end
+
+function plan_flail_at_invis()
+  if options.autopick_on then
+    invisi_count = 0
+    invisi_sigmund = false
+    return false
+  end
+  if invisi_count > 100 then
+    say("Invisible monster not found???")
+    invisi_count = 0
+    invisi_sigmund = false
+    magic(control('a'))
+    return true
+  end
+  invisi_count = invisi_count + 1
+  local x,y
+  if invisi_sigmund and (sigmund_dx ~= 0 or sigmund_dy ~= 0) then
+    x = sigmund_dx
+    y = sigmund_dy
+    if adjacent(x,y) and is_traversable(x,y) then
+      magic(control(delta_to_vi(x,y)))
+      return true
+    elseif x == 0 and is_traversable(0,sign(y)) then
+      magic(delta_to_vi(0,sign(y)))
+      return true
+    elseif y == 0 and is_traversable(sign(x),0) then
+      magic(delta_to_vi(sign(x),0))
+      return true
+    end
+  end
+
+  local success = false
+  local tries = 0
+  while not success and tries < 100 do
+    x = -1 + crawl.random2(3)
+    y = -1 + crawl.random2(3)
+    tries = tries + 1
+    if (x ~= 0 or y ~= 0) and is_traversable(x,y) then
+      success = true
+    end
+  end
+  if tries >= 100 then
+    magic("s")
+  else
+    magic(control(delta_to_vi(x,y)))
+  end
+  return true
+end
+
+function plan_cure_confusion()
+  if you.confused() and not you.berserk() and
+     (danger or not options.autopick_on) and not transformed() then
+    local c = find_item("potion","curing")
+    if c then
+      say("CURING CONFUSION.")
+      quaff_helper(c)
+      return true
+    end
+  end
+  return false
+end
+
+function plan_cure_statzero()
+  if you.berserk() or transformed() then
+    return false
+  end
+  local str, mstr = you.strength()
+  local int, mint = you.intelligence()
+  local dex, mdex = you.dexterity()
+  if str <= 0 and mstr > 0 or int <= 0 and mint > 0 or dex <= 0 and mdex > 0
+     then
+    local c = find_item("potion","restore abilities")
+    if c then
+      say("DRINKING RESTORE ABILITIES.")
+      quaff_helper(c)
+      return true
+    end
+  end
+  return false
+end
+
+function plan_cure_bad_statdrain()
+  if you.berserk() or transformed() then
+    return false
+  end
+  local str, mstr = you.strength()
+  local int, mint = you.intelligence()
+  local dex, mdex = you.dexterity()
+  if str <= mstr - 3 or str <= 3 and str < mstr or
+     int <= mint - 3 or int <= 3 and int < mint or
+     dex <= mint - 3 or dex <= 3 and dex < mdex then
+    local c = find_item("potion","restore abilities")
+    if c then
+      say("DRINKING RESTORE ABILITIES.")
+      quaff_helper(c)
+      return true
+    end
+  end
+  return false
+end
+
+function plan_teleport()
+  if can_teleport() and want_to_teleport() then
+    -- return false
+    return teleport()
+  end
+  return false
+end
+
+function plan_stuck_clear_exclusions()
+  magic("X" .. control('e'))
+  return true
+end
+
+function plan_stuck_teleport()
+  if can_teleport() then
+    return teleport()
+  end
+  return false
+end
+
+function can_teleport()
+  return (not you.berserk() and not you.teleporting() and not you.anchored()
+          and not you.confused() and you.transform() ~= "wisp"
+          and you.transform() ~= "tree"
+          and you.transform() ~= "porcupine")
+end
+
+function teleport()
+  local c = find_item("scroll","teleportation")
+  if c and not you.silenced() and not you.confused() then
+    say("READING TELEPORTATION.")
+    magic("r" .. c)
+    return true
+  end
+  c = find_item("wand","teleportation")
+  if c and not you.confused() then
+    say("ZAPPING TELEPORTATION.")
+    magic("V" .. c .. ".")
+    return true
+  end
+  return false
+end
+
+function plan_cure_poison_rotting()
+  local hp, mhp = you.hp()
+  local c
+  if you.berserk() or transformed() then
+    return false
+  end
+  if (you.poisoned() and hp < 10) or you.rotting() then
+    c = find_item("potion","curing")
+    if c then
+      say("DRINKING CURING.")
+      quaff_helper(c)
+      return true
+    end
+  end
+  if (you.poisoned() and hp < 10) and can_hand() then
+    say("INVOKING TROG'S HAND.")
+    hand()
+    return true
+  end
+  return false
+end
+
+function can_hand()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.regenerating() or
+          you.hunger_name() == "starving" or you.piety_rank() < 2 or
+          you.god() ~= "Trog"))
+end
+
+function move_towards(dx, dy)
+  if you.transform() == "tree" or you.transform() == "fungus" then
+    magic("s")
+    return true
+  end
+  local move = nil
+  if abs(dx) > abs(dy) then
+    if abs(dy) == 1 then move = try_move(sign(dx), 0) end
+    if move == nil then move = try_move(sign(dx), sign(dy)) end
+    if move == nil then move = try_move(sign(dx), 0) end
+    if move == nil and abs(dx) > abs(dy)+1 then
+         move = try_move(sign(dx), 1) end
+    if move == nil and abs(dx) > abs(dy)+1 then
+         move = try_move(sign(dx), -1) end
+    if move == nil then move = try_move(0, sign(dy)) end
+  elseif abs(dx) == abs(dy) then
+    move = try_move(sign(dx), sign(dy))
+    if move == nil then move = try_move(sign(dx), 0) end
+    if move == nil then move = try_move(0, sign(dy)) end
+  else
+    if abs(dx) == 1 then move = try_move(0, sign(dy)) end
+    if move == nil then move = try_move(sign(dx), sign(dy)) end
+    if move == nil then move = try_move(0, sign(dy)) end
+    if move == nil and abs(dy) > abs(dx)+1 then
+         move = try_move(1, sign(dy)) end
+    if move == nil and abs(dy) > abs(dx)+1 then
+         move = try_move(-1, sign(dy)) end
+    if move == nil then move = try_move(sign(dx), 0) end
+  end
+  if move == nil or move_count >= 10 then
+    add_ignore(dx,dy)
+    table.insert(failed_move, 20*dx+dy)
+    return false
+  else
+    if (abs(dx) > 1 or abs(dy) > 1) and not kill_plant_mode then
+      did_move = true
+    end
+    magic(move .. "Y")
+    return true
+  end
+end
+
+function add_ignore(dx,dy)
+  m = monster_array[dx][dy]
+  if not m then
+    return
+  end
+  name = m:name()
+  if not util.contains(ignore_list, name) then
+    table.insert(ignore_list, name)
+    crawl.setopt("runrest_ignore_monster ^= " .. name .. ":1")
+    say("Ignoring " .. name .. ".")
+  end
+end
+
+function remove_ignore(dx,dy)
+  m = monster_array[dx][dy]
+  name = m:name()
+  for i,mname in ipairs(ignore_list) do
+    if mname == name then
+      table.remove(ignore_list, i)
+      crawl.setopt("runrest_ignore_monster -= " .. name .. ":1")
+      say("Unignoring " .. name .. ".")
+      return
+    end
+  end
+end
+
+function clear_ignores()
+  local size = #ignore_list
+  local mname
+  local i
+  if size > 0 then
+    for i = 1, size do
+      mname = table.remove(ignore_list)
+      crawl.setopt("runrest_ignore_monster -= " .. mname .. ":1")
+      say("Unignoring " .. mname .. ".")
+    end
+  end
+end
+
+function attack_reach(x, y)
+  magic('vr' .. vector_move(x, y) .. '.')
+end
+
+function attack_melee(x, y)
+  if you.transform() == "tree" or you.transform() == "fungus" then
+    magic(control(delta_to_vi(x, y)) .. "Y")
+  else
+    magic(delta_to_vi(x, y) .. "Y")
+  end
+end
+
+function make_attack(x, y, info)
+  if info.attack_type == 2 then attack_melee(x, y)
+  elseif info.attack_type == 1 then attack_reach(x, y)
+  else
+    return move_towards(x, y)
+  end
+  return true
+end
+
+function use_ability(name)
+  for letter, abil in pairs(you.ability_table()) do
+    if abil == name then
+      magic("a" .. letter)
+      return true
+    end
+  end
+end
+
+---------------------------------------------
+-- cascading plans: this is the bot's flowchart
+
+function cascade(plans)
+  local plan_turns = {}
+  local plan_result = {}
+  return function ()
+    for i, plandata in ipairs(plans) do
+      plan = plandata[1]
+      if you.turns() ~= plan_turns[plan] or plan_result[plan] == nil then
+        --say(plandata[2])
+        result = plan()
+        if not automatic then
+          return true
+        end
+        plan_turns[plan] = you.turns()
+        plan_result[plan] = result
+        if result == nil or result == true then
+          if (DELAYED or DELAYEDZOT and where == "Zot:5") and
+             result == true then
+            crawl.delay(next_delay)
+          end
+          next_delay = DELAY_TIME
+          return nil
+        end
+      elseif plan_turns[plan] and plan_result[plan] == true then
+        if not plandata[2]:find("^try") then
+          panic(plandata[2] .. " failed despite returning true.")
+        end
+      end
+    end
+    return false
+  end
+end
+
+plan_pre_explore = cascade {
+  {plan_fly, "fly"},
+  {plan_upgrade_weapon, "upgrade_weapon"},
+  {plan_maybe_upgrade_armour, "maybe_upgrade_armour"},
+  {plan_use_good_consumables, "use_good_consumables"},
+} -- hack
+
+plan_pre_explore2 = cascade {
+  {plan_disturbance_random_step, "disturbance_random_step"},
+  {plan_remove_redundant_jewels, "remove_redundant_jewels"},
+  {plan_upgrade_armour, "upgrade_armour"},
+  {plan_upgrade_amulet, "upgrade_amulet"},
+  {plan_upgrade_rings, "upgrade_rings"},
+  {plan_read_id, "read_id"},
+  {plan_zap_id, "zap_id"},
+  {plan_use_id_scrolls, "use_id_scrolls"},
+  {plan_quaff_id, "quaff_id"},
+  {plan_drop_filtered_items, "try_drop_filtered_items"},
+} -- hack
+
+plan_emergency = cascade {
+  {plan_cure_statzero, "cure_statzero"},
+  {plan_cure_confusion, "cure_confusion"},
+  {plan_teleport, "teleport"},
+  {plan_heal_wounds, "heal_wounds"},
+  {plan_hand, "hand"},
+  {plan_resistance, "resistance"},
+  {plan_bia, "bia"},
+  {plan_wield_weapon, "wield_weapon"},
+  {plan_water_step, "water_step"},
+  {plan_berserk, "berserk"},
+} -- hack
+
+plan_eatrest = cascade {
+  {plan_eat_chunk, "eat_chunk"},
+  {plan_eat_permafood, "eat_permafood"},
+  {plan_rest, "rest"},
+  {plan_handle_corpses, "handle_corpses"},
+  {plan_find_corpses, "try_find_corpses"},
+  {plan_eat_anyway, "eat_anyway"},
+} -- hack
+
+plan_abyss_eatrest = cascade {
+  {plan_eat_chunk, "eat_chunk"},
+  {plan_eat_permafood, "eat_permafood"},
+  {plan_go_to_abyss_exit, "try_go_to_abyss_exit"},
+  {plan_abyss_hand, "abyss_hand"},
+  {plan_abyss_rest, "rest"},
+  {plan_handle_corpses, "handle_corpses"},
+  {plan_find_corpses, "try_find_corpses"},
+  {plan_eat_anyway, "eat_anyway"},
+} -- hack
+
+plan_orbrun_eatrest = cascade {
+  {plan_orbrun_eat_permafood, "orbrun_eat_permafood"},
+  {plan_orbrun_rest, "orbrun_rest"},
+  {plan_orbrun_hand, "orbrun_hand"},
+} -- hack
+
+plan_explore = cascade {
+  {plan_enter_zig, "enter_zig"},
+  {plan_continue_travel, "try_continue_travel"},
+  {plan_enter_portal, "enter_portal"},
+  {plan_go_to_portal_entrance, "try_go_to_portal_entrance"},
+  {plan_autoexplore, "try_autoexplore"},
+} -- hack
+
+plan_explore2 = cascade {
+  {plan_zig_leave_level, "zig_leave_level"},
+  {plan_zig_go_to_stairs, "try_zig_go_to_stairs"},
+  {plan_exit_portal, "exit_portal"},
+  {plan_go_to_portal_exit, "try_go_to_portal_exit"},
+  {plan_enter_branch, "try_enter_branch"},
+  {plan_go_to_zig, "try_go_to_zig"},
+  {plan_simple_go_down, "try_simple_go_down"},
+  {plan_new_travel, "try_new_travel"},
+} -- hack
+
+plan_move = cascade {
+  {plan_emergency, "emergency"},
+  {plan_zot_wait, "zot_wait"},
+  {plan_attack, "attack"},
+  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_bad_statdrain, "cure_bad_statdrain"},
+  {plan_flail_at_invis, "try_flail_at_invis"},
+  {plan_eatrest, "eatrest"},
+  {plan_pre_explore, "pre_explore"},
+  {plan_step_towards_lair, "step_towards_lair"},
+  --{plan_abandon_god, "abandon_god"},
+  --{plan_unwield_weapon, "unwield_weapon"},
+  --{plan_join_god, "join_god"},
+  --{plan_find_altar, "try_find_altar"},
+  --{plan_go_to_temple, "try_go_to_temple"},
+  --{plan_go_to_lair, "try_go_to_lair"},
+  {plan_explore, "explore"},
+  {plan_pre_explore2, "pre_explore2"},
+  {plan_explore2, "explore2"},
+  --{plan_stuck_clear_exclusions, "try_stuck_clear_exclusions"},
+  {plan_stuck_teleport, "stuck_teleport"},
+  {plan_stuck, "stuck"},
+} -- hack
+
+plan_orbrun_move = cascade {
+  {plan_emergency, "emergency"},
+  {plan_attack, "attack"},
+  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_bad_statdrain, "cure_bad_statdrain"},
+  {plan_orbrun_eatrest, "orbrun_eatrest"},
+  {plan_go_up, "go_up"},
+  {plan_fly, "fly"},
+  {plan_find_upstairs, "try_find_upstairs"},
+  {plan_disturbance_random_step, "disturbance_random_step"},
+  --{plan_stuck_clear_exclusions, "try_stuck_clear_exclusions"},
+  {plan_stuck_teleport, "stuck_teleport"},
+  {plan_autoexplore, "try_autoexplore"},
+  {plan_stuck, "stuck"},
+} -- hack
+
+plan_abyss_move = cascade {
+  {plan_exit_abyss, "exit_abyss"},
+  {plan_emergency, "emergency"},
+  {plan_attack, "attack"},
+  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_bad_statdrain, "cure_bad_statdrain"},
+  {plan_flail_at_invis, "try_flail_at_invis"},
+  {plan_abyss_eatrest, "abyss_eatrest"},
+  {plan_pre_explore, "pre_explore"},
+  {plan_autoexplore, "try_autoexplore"},
+  {plan_pre_explore2, "pre_explore2"},
+  {plan_wait, "wait"},
+} -- hack
+
+---------------------------------------------
+-- "abstract" functions that have very little to do with playing crawl
+
+function magic(command)
+  crawl.enable_more(false)
+  crawl.process_keys(command .. string.char(27) .. string.char(27) ..
+                     string.char(27))
+end
+
+function note(x)
+  crawl.take_note(you.turns() .. " ||| " .. x)
+end
+
+function say(x)
+  crawl.mpr(you.turns() .. " ||| " .. x)
+  note(x)
+end
+
+function contains_string_in(name,t)
+  for _, value in ipairs(t) do
+    if string.find(name, value) then
+      return true
+    end
+  end
+  return false
+end
+
+function handle_skills()
+  weapon_skill = "Axes"
+  if you.race() == "Troll" then
+    weapon_skill = "Unarmed Combat"
+  end
+  train_weapon = you.base_skill(weapon_skill) <= 27 and 1 or 0
+  train_fight_armour = you.base_skill(weapon_skill) >= 18 and 1 or 0
+  train_dodge = you.base_skill("Fighting") >= 26 and 1 or 0
+  you.train_skill(weapon_skill, train_weapon)
+  you.train_skill("Fighting", train_fight_armour)
+  you.train_skill("Armour", train_fight_armour)
+  you.train_skill("Dodging", train_dodge) -- this is just to not get stuck
+  you.train_skill("Throwing", 0)
+  you.train_skill("Spellcasting", 0)
+  you.train_skill("Charms", 0)
+  you.train_skill("Hexes", 0)
+  you.train_skill("Stealth", 0)
+  you.train_skill("Shields", 0)
+  you.train_skill("Short Blades", 0)
+  you.train_skill("Maces & Flails", 0)
+end
+
+function control(c)
+  return string.char(string.byte(c) - string.byte('a') + 1)
+end
+
+function delta_to_vi(dx, dy)
+  local d2v = {
+    [-1] = { [-1] = 'y', [0] = 'h', [1] = 'b'},
+    [0]  = { [-1] = 'k',            [1] = 'j'},
+    [1]  = { [-1] = 'u', [0] = 'l', [1] = 'n'},
+  } -- hack
+  return d2v[dx][dy]
+end
+
+function sign(a)
+  return a > 0 and 1 or a < 0 and -1 or 0
+end
+
+function abs(a)
+  return a * sign(a)
+end
+
+function vector_move(dx, dy)
+  local str = ''
+  for i = 1, abs(dx) do
+    str = str .. delta_to_vi(sign(dx), 0)
+  end
+  for i = 1, abs(dy) do
+    str = str .. delta_to_vi(0, sign(dy))
+  end
+  return str
+end
+
+function supdist(dx, dy)
+  if abs(dx) <= abs(dy) then
+    return abs(dx)
+  else
+    return abs(dy)
+  end
+end
+
+function adjacent(dx, dy)
+  return abs(dx) <= 1 and abs(dy) <= 1
+end
+
+function choose_stat_gain()
+  return "s"
+end
+
+function auto_experience()
+  return true
+end
+
+function write_string_array(arr, aname)
+  local res = aname .. " = { "
+  for i, v in ipairs(arr) do
+    res = res .. '"' .. v .. '"' .. ", "
+  end
+  return res .. "}\n"
+end
+
+function qw_save()
+  local res = ""
+  if branches_entered then
+    res = res .. write_string_array(branches_entered, "branches_entered")
+  end
+  if portals_found then
+    res = res .. write_string_array(portals_found, "portals_found")
+  end
+  return res
+end
+
+table.insert(chk_lua_save, qw_save)
+
+-- for testing random stuff
+function ttt()
+  say(view.feature_at(0,0))
+end
+}

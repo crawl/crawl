@@ -723,7 +723,8 @@ static void _give_items_skills(const newgame_def& ng)
         // One free escape.
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 5);
-        set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
+        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_DISPERSAL);
+        autopickup_starting_ammo(MI_TOMAHAWK);
 
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;

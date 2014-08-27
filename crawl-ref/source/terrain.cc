@@ -867,7 +867,14 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (move_items)
         move_item_stack_to_grid(src, dst);
 
-    move_cloud_to(src, dst);
+    if (cell_is_solid(dst))
+    {
+        int cl = env.cgrid(dst);
+        if (cl != EMPTY_CLOUD)
+            delete_cloud(cl);
+    }
+    else
+        move_cloud_to(src, dst);
 
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);

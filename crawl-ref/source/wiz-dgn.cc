@@ -126,9 +126,9 @@ void wizard_level_travel(bool down)
     }
 
     if (down)
-        down_stairs(stairs);
+        down_stairs(stairs, false, true);
     else
-        up_stairs(stairs);
+        up_stairs(stairs, true);
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -179,7 +179,7 @@ void wizard_interlevel_travel()
 {
     string name;
     const level_pos pos =
-        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name).p;
+        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name);
 
     if (pos.id.depth < 1 || pos.id.depth > brdepth[pos.id.branch])
     {
@@ -465,9 +465,10 @@ bool debug_make_trap(const coord_def& pos)
     bool success = place_specific_trap(you.pos(), trap);
     if (success)
     {
-        mprf("Created a %s, marked it undiscovered.",
-             (trap == TRAP_RANDOM) ? "random trap"
-                                   : full_trap_name(trap).c_str());
+        mprf("Created %s, marked it undiscovered.",
+             (trap == TRAP_RANDOM)
+                ? "a random trap"
+                : env.trap[env.tgrid(you.pos())].name(DESC_A).c_str());
     }
     else
         mpr("Could not create trap - too many traps on level.");

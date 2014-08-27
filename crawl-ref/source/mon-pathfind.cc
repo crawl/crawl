@@ -11,6 +11,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"

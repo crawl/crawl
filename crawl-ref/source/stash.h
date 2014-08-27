@@ -30,6 +30,7 @@ public:
 
     static string stash_item_name(const item_def &item);
     void update();
+    bool unmark_trapping_nets();
     void save(writer&) const;
     void load(reader&);
 
@@ -239,9 +240,11 @@ public:
     void get_matching_stashes(const base_pattern &search,
                               vector<stash_search_result> &results) const;
 
-    // Update stash at (x,y) on current level, defaulting to player's current
-    // location if no parameters are supplied.
+    // Update stash at (x,y).
     bool  update_stash(const coord_def& c);
+
+    // Mark nets at (x,y) as no longer trapping an actor.
+    bool unmark_trapping_nets(const coord_def &c);
 
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
@@ -324,11 +327,13 @@ public:
 
     void update_visible_stashes();
 
-    // Update stash at (x,y) on current level, defaulting to player's current
-    // location if no parameters are supplied, return true if a stash was
+    // Update stash at (x,y) on current level, returning true if a stash was
     // updated.
     bool update_stash(const coord_def& c);
     void move_stash(const coord_def& from, const coord_def& to);
+
+    // Mark nets at (x,y) on current level as no longer trapping an actor.
+    bool unmark_trapping_nets(const coord_def &c);
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied.

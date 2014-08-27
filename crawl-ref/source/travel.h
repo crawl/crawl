@@ -85,12 +85,11 @@ void do_explore_cmd();
 
 struct level_pos;
 class level_id;
-struct travel_target;
 
 level_id find_up_level(level_id curr, bool up_branch = false);
 level_id find_down_level(level_id curr);
 
-void start_translevel_travel(const travel_target &pos);
+void start_translevel_travel(const level_pos &pos);
 
 void start_travel(const coord_def& p);
 
@@ -124,7 +123,7 @@ enum translevel_prompt_flags
                                                 | TPF_REMEMBER_TARGET,
 };
 
-travel_target prompt_translevel_target(int prompt_flags, string& dest_name);
+level_pos prompt_translevel_target(int prompt_flags, string& dest_name);
 
 // Magic numbers for point_distance:
 
@@ -203,34 +202,6 @@ enum explore_stop_type
 
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
-
-struct travel_target
-{
-    level_pos p;
-    bool      entrance_only;
-
-    travel_target(const level_pos &_pos, bool entry = false)
-        : p(_pos), entrance_only(entry)
-    {
-    }
-    travel_target()
-        : p(), entrance_only(false)
-    {
-    }
-    void clear()
-    {
-        p.clear();
-        entrance_only = false;
-    }
-    bool operator == (const travel_target &other) const
-    {
-        return p == other.p && entrance_only == other.entrance_only;
-    }
-    bool operator != (const travel_target &other) const
-    {
-        return !operator == (other);
-    }
-};
 
 // Tracks items discovered by explore in this turn.
 class LevelStashes;

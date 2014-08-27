@@ -98,6 +98,7 @@ LUARET1(you_god_likes_fresh_corpses, boolean,
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_poison_survival, number, poison_survival())
+LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
@@ -410,6 +411,13 @@ LUAFN(you_skill)
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
+LUAFN(you_base_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+
+    PLUARET(number, you.skill(sk, 10, true) * 0.1);
+}
+
 LUAFN(you_train_skill)
 {
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
@@ -450,6 +458,7 @@ static const struct luaL_reg you_clib[] =
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
+    { "base_skill"  , you_base_skill },
     { "skill_progress", you_skill_progress },
     { "can_train_skill", you_can_train_skill },
     { "train_skill", you_train_skill },
@@ -486,6 +495,7 @@ static const struct luaL_reg you_clib[] =
     { "rooted",       you_rooted },
     { "poisoned",     you_poisoned },
     { "poison_survival", you_poison_survival },
+    { "corrosion",    you_corrosion },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
     { "on_fire",      you_on_fire },
@@ -719,6 +729,7 @@ LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
 LUARET1(you_skill_cost_level, number, you.skill_cost_level);
 LUARET1(you_skill_points, number,
         you.skill_points[str_to_skill(luaL_checkstring(ls, 1))]);
+LUARET1(you_zigs_completed, number, you.zigs_completed);
 
 static const struct luaL_reg you_dlib[] =
 {
@@ -747,6 +758,7 @@ static const struct luaL_reg you_dlib[] =
 { "exercise",           you_exercise },
 { "skill_cost_level",   you_skill_cost_level },
 { "skill_points",       you_skill_points },
+{ "zigs_completed",     you_zigs_completed },
 
 { NULL, NULL }
 };

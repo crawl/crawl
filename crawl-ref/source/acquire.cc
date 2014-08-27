@@ -1160,8 +1160,8 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG && !one_chance_in(3))
             want_arts = false;
 
-        thing_created = items(want_arts, class_wanted, type_wanted, true,
-                              ITEM_LEVEL, 0, 0, agent);
+        thing_created = items(want_arts, class_wanted, type_wanted,
+                              ITEM_LEVEL, 0, agent);
 
         if (thing_created == NON_ITEM)
             continue;
@@ -1224,8 +1224,8 @@ int acquirement_create_item(object_class_type class_wanted,
                 if (at != NUM_ARMOURS)
                 {
                     destroy_item(thing_created, true);
-                    thing_created = items(true, OBJ_ARMOUR, at, true,
-                                          ITEM_LEVEL, 0, 0, agent);
+                    thing_created = items(true, OBJ_ARMOUR, at,
+                                          ITEM_LEVEL, 0, agent);
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
                 {

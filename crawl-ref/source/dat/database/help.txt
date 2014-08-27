@@ -191,7 +191,6 @@ interlevel-travel.branch.prompt
  <w><<</w>      : Go up the nearest stairs.
  <w>></w>      : Go down the nearest stairs.
  <w>Ctrl-P</w> : Travel to a level in the branch above this one.
- <w>^</w>      : Travel to the entrance of the branch you select.
  <w>*</w>      : Show available waypoints (if any are set).
  <w>0</w>-<w>9</w>    : Go to the numbered waypoint.
 %%%%
@@ -200,11 +199,12 @@ interlevel-travel.depth.prompt
 <h>Interlevel Travel (go to a specific level in the selected branch)
  Type in the level number you want to go to and press Enter, or use:
  <w>Enter</w>  : Go to the default level.
+ <w>0</w>      : Go to the entrance to the current branch.
  <w><<</w>      : Change the default to one level above the current.
  <w>></w>      : Change default to one level below the current.
  <w>-</w> or <w>p</w> : Change default to the branch above this one.
  <w>$</w>      : Change default to deepest visited level in this branch.
- <w>^</w>      : Change default to the entrance to the current level.
+ <w>^</w>      : Change default to the entrance to the current branch.
 %%%%
 butchering
 

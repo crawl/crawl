@@ -435,6 +435,7 @@ void debuff_monster(monster* mon)
         ENCH_HASTE,
         ENCH_SWIFT,
         ENCH_MIGHT,
+        ENCH_AGILE,
         ENCH_FEAR,
         ENCH_CONFUSION,
         ENCH_INVIS,

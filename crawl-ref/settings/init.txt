@@ -83,13 +83,12 @@
 # drop_filter += useless_item
 
 # default_autopickup = false
-# autopickup_no_burden = false
 # pickup_thrown = false
 # chunks_autopickup = false
 # assign_item_slot = (forward | backward)
 #
 # pickup_menu_limit = 1
-# drop_filter += skeleton, corpse, useless_item
+# drop_filter += useless_item
 
 ##### 3-b       Targeting ############################
 #

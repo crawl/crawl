@@ -23,8 +23,8 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, pickup_menu_limit, drop_filter
+                pickup_thrown, chunks_autopickup, assign_item_slot,
+                pickup_menu_limit, drop_filter
 3-b     Targeting.
                 darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
@@ -454,11 +454,6 @@ default_autopickup = true
         When set to false, the game starts with autopickup turned off.
         You can still toggle autopickup in-game with Ctrl-A.
 
-autopickup_no_burden = true
-        When set, autopickup will not pick up items which would increase
-        your burden status (from unencumbered to burdened, or from
-        encumbered to overloaded).
-
 pickup_thrown = true
         pickup_thrown = true causes autopickup to pick up thrown/fired
         missiles, which can make life much easier for hunter types. Be
@@ -501,16 +496,15 @@ drop_filter += <regex>, <regex>, ...
         '-') in a multidrop menu, you can choose to select only items
         that match a search regex using this option.
 
-        For instance, to quickly select carrion and rotting chunks of
-        meat, you could use:
-             drop_filter += skeleton, rotting, corpse
+        For instance, to quickly select rotting chunks of meat, you could use:
+             drop_filter += rotting
         Other choices can come in handy as well, e.g. if you want to
         regularly sacrifice all weapons except axes, use:
              drop_filter += axe, broadaxe
 
         drop_filter will match against the same keywords menu_colour uses,
-        except that it lacks identification status and corpse/chunk
-        information. It defaults to useless_item.
+        except that it lacks identification status and chunk information. It
+        defaults to useless_item.
 
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
@@ -1474,7 +1468,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
           menu_colour ^= inventory:cyan:emergency_item
           menu_colour ^= inventory:lightcyan:wand of (fire|cold|draining)
 
-        If you'd like to see rotting chunks and corpses at a glance, use
+        If you'd like to see rotting chunks at a glance, use
           menu_colour ^= inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to

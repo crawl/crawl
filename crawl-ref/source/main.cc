@@ -145,6 +145,7 @@
 #include "viewgeom.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
+#include "wiz-dump.h"
 #include "wiz-fsim.h"
 #include "wiz-item.h"
 #include "wiz-mon.h"
@@ -482,7 +483,6 @@ static void _show_commandline_options_help()
     puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
     puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
     puts("  -plain                don't use IBM extended characters");
-    puts("  -seed <num>           init the rng to a given sequence (a hex number > 0)");
     puts("  -dir <path>           crawl directory");
     puts("  -rc <file>            init file name");
     puts("  -rcdir <dir>          directory that contains (included) rc files");
@@ -496,6 +496,11 @@ static void _show_commandline_options_help()
     puts("  -zotdef               select Zot Defence");
 #ifdef WIZARD
     puts("  -wizard               allow access to wizard mode");
+#endif
+#ifdef DGAMELAUNCH
+    puts("  -no-throttle          disable throttling of user Lua scripts");
+#else
+    puts("  -throttle             enable throttling of user Lua scripts");
 #endif
 
     puts("");
@@ -682,107 +687,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         return;
     }
 
-    case CONTROL('B'): you.teleport(true, true); break;
-    case CONTROL('D'): wizard_edit_durations(); break;
-    case CONTROL('E'): debug_dump_levgen(); break;
-    case CONTROL('F'): wizard_fight_sim(true); break;
-#ifdef DEBUG_BONES
-    case CONTROL('G'): debug_ghosts(); break;
-#endif
-    case CONTROL('H'): wizard_set_hunger_state(); break;
-    case CONTROL('I'): debug_item_statistics(); break;
-    case CONTROL('K'): wizard_clear_used_vaults(); break;
-    case CONTROL('L'): wizard_set_xl(); break;
-    case CONTROL('M'): wizard_memorise_spec_spell(); break;
-    case CONTROL('P'): wizard_transform(); break;
-    case CONTROL('Q'): wizard_toggle_dprf(); break;
-    case CONTROL('R'): wizard_recreate_level(); break;
-    case CONTROL('S'): wizard_abyss_speed(); break;
-    case CONTROL('T'): debug_terp_dlua(); break;
-    case CONTROL('U'): debug_terp_dlua(clua); break;
-    case CONTROL('V'): wizard_toggle_xray_vision(); break;
-    case CONTROL('X'): debug_xom_effects(); break;
-
-    case CONTROL('C'): die("Intentional crash");
-
-    case 'O': debug_test_explore();                  break;
-    case 'S': wizard_set_skill_level();              break;
-    case 'A': wizard_set_all_skills();               break;
-    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE);   break;
-    case 'v': wizard_value_artefact();               break;
-    case '+': wizard_make_object_randart();          break;
-    case '|': wizard_create_all_artefacts();         break;
-    case 'C': wizard_uncurse_item();                 break;
-    case 'g': wizard_exercise_skill();               break;
-    case 'G': wizard_dismiss_all_monsters();         break;
-    case 'c': wizard_draw_card();                    break;
-    case 'H': wizard_heal(true);                     break;
-    case 'h': wizard_heal(false);                    break;
-    case 'b': blink(1000, true, true);               break;
-    case '~': wizard_interlevel_travel();            break;
-    case '"': debug_list_monsters();                 break;
-    case 't': wizard_tweak_object();                 break;
-    case 'T': debug_make_trap();                     break;
-    case '\\': debug_make_shop();                    break;
-    case 'f': wizard_quick_fsim();                   break;
-    case 'F': wizard_fight_sim(false);               break;
-    case 'm': wizard_create_spec_monster();          break;
-    case 'M': wizard_create_spec_monster_name();     break;
-    case 'R': wizard_spawn_control();                break;
-    case 'r': wizard_change_species();               break;
-    case '>': wizard_place_stairs(true);             break;
-    case '<': wizard_place_stairs(false);            break;
-    case 'L': debug_place_map(false);                break;
-    case 'P': debug_place_map(true);                 break;
-    case 'i': wizard_identify_pack();                break;
-    case 'I': wizard_unidentify_pack();              break;
-    case 'z': wizard_cast_spec_spell();              break;
-    case '(': wizard_create_feature();               break;
-    case ')': wizard_mod_tide();                     break;
-    case ':': wizard_list_branches();                break;
-    case ';': wizard_list_levels();                  break;
-    case '{': wizard_map_level();                    break;
-    case '}': wizard_reveal_traps();                 break;
-    case '@': wizard_set_stats();                    break;
-    case '^': wizard_set_piety();                    break;
-    case '_': wizard_join_religion();                break;
-    case '-': wizard_get_god_gift();                 break;
-    case '\'': wizard_list_items();                  break;
-    case 'd': wizard_level_travel(true);             break;
-    case 'D': wizard_detect_creatures();             break;
-    case 'u': case 'U': wizard_level_travel(false);  break;
-    case 'o': wizard_create_spec_object();           break;
-    case '%': wizard_create_spec_object_by_name();   break;
-    case 'J': jiyva_eat_offlevel_items();            break;
-    case 'W': wizard_god_wrath();                    break;
-    case 'w': wizard_god_mollify();                  break;
-    case '#': wizard_load_dump_file();               break;
-    case '&': wizard_list_companions();              break;
-    case 'p': wizard_list_props();                   break;
-    case 'y': wizard_identify_all_items();           break;
-    case 'Y': wizard_unidentify_all_items();         break;
-    case 'x':
-        you.experience = 1 + exp_needed(1 + you.experience_level);
-        level_change();
-        break;
-
-    case 's':
-        you.exp_available += HIGH_EXP_POOL;
-        level_change();
-        you.redraw_experience = true;
-        break;
-
-    case '$':
-        you.add_gold(1000);
-        break;
-
-    case 'B':
-        if (!player_in_branch(BRANCH_ABYSS))
-            banished("wizard command");
-        else
-            down_stairs(DNGN_EXIT_ABYSS);
-        break;
-
+    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE); break;
+    case 'A': wizard_set_all_skills(); break;
     case CONTROL('A'):
         if (player_in_branch(BRANCH_ABYSS))
             wizard_set_abyss();
@@ -790,18 +696,114 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("You can only abyss_teleport() inside the Abyss.");
         break;
 
-    case ']':
-        if (!wizard_add_mutation())
-            mpr("Failure to give mutation.");
+    case 'b': blink(1000, true, true); break;
+    case 'B': you.teleport(true, true); break;
+    case CONTROL('B'):
+        if (!player_in_branch(BRANCH_ABYSS))
+            banished("wizard command");
+        else
+            down_stairs(DNGN_EXIT_ABYSS);
         break;
 
-    case '=':
-        mprf("Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d",
-              you.skill_cost_level, you.total_experience,
-              skill_cost_needed(you.skill_cost_level + 1),
-              calc_skill_cost(you.skill_cost_level));
-        break;
+    case 'c': wizard_draw_card(); break;
+    case 'C': wizard_uncurse_item(); break;
+    case CONTROL('C'): die("Intentional crash");
 
+    case 'd': wizard_level_travel(true); break;
+    case 'D': wizard_detect_creatures(); break;
+    case CONTROL('D'): wizard_edit_durations(); break;
+
+    case 'e': wizard_set_hunger_state(); break;
+    // case 'E': break;
+    case CONTROL('E'): debug_dump_levgen(); break;
+
+    case 'f': wizard_quick_fsim(); break;
+    case 'F': wizard_fight_sim(false); break;
+    case CONTROL('F'): wizard_fight_sim(true); break;
+
+    case 'g': wizard_exercise_skill(); break;
+    case 'G': wizard_dismiss_all_monsters(); break;
+#ifdef DEBUG_BONES
+    case CONTROL('G'): debug_ghosts(); break;
+#endif
+
+    case 'h': wizard_heal(false); break;
+    case 'H': wizard_heal(true); break;
+    // case CONTROL('H'): break;
+
+    case 'i': wizard_identify_pack(); break;
+    case 'I': wizard_unidentify_pack(); break;
+    case CONTROL('I'): debug_item_statistics(); break;
+
+    // case 'j': break;
+    case 'J': jiyva_eat_offlevel_items(); break;
+    // case CONTROL('J'): break;
+
+    case 'k':
+        if (player_in_branch(BRANCH_LABYRINTH))
+            change_labyrinth(true);
+        else
+            mpr("This only makes sense in a labyrinth!");
+        break;
+    // case 'K': break;
+    case CONTROL('K'): wizard_clear_used_vaults(); break;
+
+    case 'l': wizard_set_xl(); break;
+    case 'L': debug_place_map(false); break;
+    // case CONTROL('L'): break;
+
+    case 'm': wizard_create_spec_monster_name(); break;
+    case 'M': wizard_create_spec_monster(); break;
+    // case CONTROL('M'): break; // XXX do not use, menu command
+
+    // case 'n': break;
+    // case 'N': break;
+    // case CONTROL('N'): break;
+
+    case 'o': wizard_create_spec_object(); break;
+    case 'O': debug_test_explore(); break;
+    // case CONTROL('O'): break;
+
+    case 'p': wizard_transform(); break;
+    case 'P': debug_place_map(true); break;
+    case CONTROL('P'): wizard_list_props(); break;
+
+    // case 'q': break;
+    // case 'Q': break;
+    case CONTROL('Q'): wizard_toggle_dprf(); break;
+
+    case 'r': wizard_change_species(); break;
+    case 'R': wizard_spawn_control(); break;
+    case CONTROL('R'): wizard_recreate_level(); break;
+
+    case 's':
+        you.exp_available += HIGH_EXP_POOL;
+        level_change();
+        you.redraw_experience = true;
+        break;
+    case 'S': wizard_set_skill_level(); break;
+    case CONTROL('S'): wizard_abyss_speed(); break;
+
+    case 't': wizard_tweak_object(); break;
+    case 'T': debug_make_trap(); break;
+    case CONTROL('T'): debug_terp_dlua(); break;
+
+    case 'u': wizard_level_travel(false); break;
+    // case 'U': break;
+    case CONTROL('U'): debug_terp_dlua(clua); break;
+
+    case 'v': wizard_value_artefact(); break;
+    case 'V': wizard_toggle_xray_vision(); break;
+    // case CONTROL('V'): break;
+
+    case 'w': wizard_god_mollify(); break;
+    case 'W': wizard_god_wrath(); break;
+    case CONTROL('W'): wizard_mod_tide(); break;
+
+    case 'x':
+        you.experience = 1 + exp_needed(1 + you.experience_level);
+        level_change();
+        break;
     case 'X':
     {
         int result = 0;
@@ -815,15 +817,14 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         while (result == 0);
         break;
     }
+    case CONTROL('X'): debug_xom_effects(); break;
 
-    case 'k':
-        if (player_in_branch(BRANCH_LABYRINTH))
-            change_labyrinth(true);
-        else
-            mpr("This only makes sense in a labyrinth!");
-        break;
+    case 'y': wizard_identify_all_items(); break;
+    case 'Y': wizard_unidentify_all_items(); break;
+    // case CONTROL('Y'): break;
 
-    case 'Z':
+    case 'z': wizard_cast_spec_spell(); break;
+    // case 'Z': break;
     case CONTROL('Z'):
         if (crawl_state.game_is_zotdef())
         {
@@ -833,6 +834,57 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         else
             mpr("But you're not in Zot Defence!");
         break;
+
+    case '!': wizard_memorise_spec_spell(); break;
+    case '@': wizard_set_stats(); break;
+    case '#': wizard_load_dump_file(); break;
+    case '$': you.add_gold(1000); break;
+    case '%': wizard_create_spec_object_by_name(); break;
+    case '^': wizard_set_piety(); break;
+    case '&': wizard_list_companions(); break;
+    // case '*': break;
+    case '(': wizard_create_feature(); break;
+    // case ')': break;
+
+    // case '`': break;
+    case '~': wizard_interlevel_travel(); break;
+
+    case '-': wizard_get_god_gift(); break;
+    case '_': wizard_join_religion(); break;
+
+    case '=':
+        mprf("Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d",
+              you.skill_cost_level, you.total_experience,
+              skill_cost_needed(you.skill_cost_level + 1),
+              calc_skill_cost(you.skill_cost_level));
+        break;
+    case '+': wizard_make_object_randart(); break;
+
+    // case '[': break;
+    case '{': wizard_map_level(); break;
+
+    case ']':
+        if (!wizard_add_mutation())
+            mpr("Failure to give mutation.");
+        break;
+    case '}': wizard_reveal_traps(); break;
+
+    case '\\': debug_make_shop(); break;
+    case '|': wizard_create_all_artefacts(); break;
+
+    case ';': wizard_list_levels(); break;
+    case ':': wizard_list_branches(); break;
+
+    case '\'': wizard_list_items(); break;
+    case '"': debug_list_monsters(); break;
+
+    case ',': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
+
+    case '.': wizard_place_stairs(false); break;
+    // case '<': break; // XXX do not use, menu command
+
+    // case '/': break;
 
     default:
         if (!silent_fail)
@@ -911,14 +963,12 @@ static void _handle_wizard_command()
         case 'm':
         case 'M':
         case 'X':
-        case '!':
-        case '[':
         case ']':
         case '^':
         case '%':
         case 'o':
         case 'z':
-        case 'Z':
+        case CONTROL('Z'):
             break;
 
         default:
@@ -3101,7 +3151,9 @@ static void _move_player(coord_def move)
             {
                 string suffix, adj;
                 monster *mons = monster_at(*ai);
-                if (mons && bad_attack(mons, adj, suffix, penance))
+                if (mons
+                    && !fedhas_passthrough(mons)
+                    && bad_attack(mons, adj, suffix, penance))
                 {
                     bad_mons = mons;
                     bad_suff = suffix;
@@ -3373,6 +3425,20 @@ static void _move_player(coord_def move)
             stop_running();
             you.turn_is_over = false;
             return;
+        }
+
+        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+        {
+            string prompt = "The barbs in your skin will harm you if you move."
+                            " Continue?";
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                you.turn_is_over = false;
+                return;
+            }
+
+            you.props[BARBS_MOVE_KEY] = true;
         }
 
         if (!you.attempt_escape()) // false means constricted and did not escape
