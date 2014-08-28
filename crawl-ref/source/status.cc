@@ -56,6 +56,11 @@ const char *duration_name(duration_type dur)
     return _lookup_duration(dur)->name();
 }
 
+bool duration_dispellable(duration_type dur)
+{
+    return _lookup_duration(dur)->dispellable;
+}
+
 static void _reset_status_info(status_info* inf)
 {
     inf->light_colour = 0;
