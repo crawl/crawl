@@ -16,6 +16,11 @@
 #include "strings.h"
 #include "viewchar.h"
 
+#ifdef TOUCH_UI
+#include "menu.h"
+#include "tiledef-gui.h"
+#endif
+
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.
@@ -80,8 +85,8 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             }
 
             tmp = getchm(KMC_CONFIRM);
-        }
 #endif
+        }
 
         // If no safe answer exists, we still need to abort when a HUP happens.
         // The caller must handle this case, preferably by issuing an uncancel

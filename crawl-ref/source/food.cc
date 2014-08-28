@@ -907,7 +907,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    vector<item_def*> food_items;
+    vector<const item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_FOOD)
@@ -960,7 +960,7 @@ int eat_from_floor(bool skip_chunks)
         redraw_screen();
         for (int i = 0, count = selected.size(); i < count; ++i)
         {
-            const item_def *item = selected[i].item;
+            item_def *item = const_cast<item_def *>(selected[i].item);
             if (!check_warning_inscriptions(*item, OPER_EAT))
                 break;
 
@@ -971,7 +971,7 @@ int eat_from_floor(bool skip_chunks)
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
-            item_def *item = food_items[i];
+            item_def *item = const_cast<item_def *>(food_items[i]);
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",

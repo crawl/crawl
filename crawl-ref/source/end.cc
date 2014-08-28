@@ -33,6 +33,10 @@
 #include "view.h"
 #include "xom.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 void cio_cleanup()
 {
     if (!crawl_state.io_inited)
