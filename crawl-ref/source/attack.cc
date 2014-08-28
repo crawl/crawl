@@ -1867,21 +1867,25 @@ bool attack::apply_damage_brand(const char *what)
         break;
     }
 
-    if (damage_brand == SPWPN_CHAOS && brand != SPWPN_CHAOS && !ret
-        && miscast_level == -1 && one_chance_in(20))
+    if (damage_brand == SPWPN_CHAOS)
     {
-        miscast_level  = 0;
-        miscast_type   = SPTYP_RANDOM;
-        miscast_target = coinflip() ? attacker : defender;
+        if (brand != SPWPN_CHAOS && !ret
+            && miscast_level == -1 && one_chance_in(20))
+        {
+            miscast_level  = 0;
+            miscast_type   = SPTYP_RANDOM;
+            miscast_target = coinflip() ? attacker : defender;
+        }
+
+        if (responsible->is_player())
+        {
+            // If your god objects to using chaos, then it makes the
+            // brand obvious.
+            if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
+                obvious_effect = true;
+        }
     }
 
-    if (responsible->is_player() && damage_brand == SPWPN_CHAOS)
-    {
-        // If your god objects to using chaos, then it makes the
-        // brand obvious.
-        if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
-            obvious_effect = true;
-    }
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
 
