@@ -1,5 +1,5 @@
-Stone Soup 0.15 (up to 0.15-b1-62-ga497131)
---------------------------------------------
+Stone Soup 0.15 (20140828)
+--------------------------
 * New god: Qazlal Stormbringer.
 * Nemelex Xobeh and decks in general have had many changes.
 * Ranged combat has been rewritten from the ground up.
