@@ -65,7 +65,7 @@
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "transform.h"
 #include "traps.h"

@@ -29,7 +29,7 @@
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "stepdown.h"
 #include "travel.h"
 

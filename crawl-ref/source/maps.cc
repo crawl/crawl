@@ -34,7 +34,7 @@
 #include "coord.h"
 #include "random.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"

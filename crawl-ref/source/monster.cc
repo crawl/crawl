@@ -57,7 +57,7 @@
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE

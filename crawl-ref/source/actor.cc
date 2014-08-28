@@ -22,7 +22,7 @@
 #include "random.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
 

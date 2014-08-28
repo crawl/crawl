@@ -19,7 +19,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "env.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"

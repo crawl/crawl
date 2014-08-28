@@ -26,7 +26,7 @@
 #include "tags.h"
 #include "travel.h"
 #include "shout.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewgeom.h"

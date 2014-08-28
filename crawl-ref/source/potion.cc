@@ -31,7 +31,7 @@
 #include "skill_menu.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "xom.h"

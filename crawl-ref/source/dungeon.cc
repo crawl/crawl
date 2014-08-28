@@ -76,7 +76,7 @@
 #include "spl-util.h"
 #include "stairs.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"

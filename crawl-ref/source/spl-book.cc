@@ -44,7 +44,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #ifdef USE_TILE
  #include "tilepick.h"

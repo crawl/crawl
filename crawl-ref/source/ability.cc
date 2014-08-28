@@ -71,7 +71,7 @@
 #include "spl-miscast.h"
 #include "stairs.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "tilepick.h"
 #include "traps.h"

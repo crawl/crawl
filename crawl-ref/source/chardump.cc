@@ -56,7 +56,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "transform.h"
 #include "travel.h"
 #include "unicode.h"

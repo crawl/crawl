@@ -41,7 +41,7 @@
 #include "output.h"
 #include "message.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "unicode.h"
 #include "version.h"

@@ -13,7 +13,7 @@
 #include "files.h"
 #include "message.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
 #include "viewgeom.h"

@@ -6,7 +6,7 @@
 #include "l_libs.h"
 #include "libutil.h"
 #include "files.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 
 ///////////////////////////////////////////////////////////

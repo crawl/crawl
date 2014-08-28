@@ -34,7 +34,7 @@
 #include "skills2.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

@@ -76,7 +76,7 @@
 #include "spl-selfench.h"
 #include "sprint.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "hints.h"

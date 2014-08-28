@@ -7,7 +7,7 @@
 #include <cwctype>
 
 #include "random.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unicode.h"
 
 #ifndef CRAWL_HAVE_STRLCPY

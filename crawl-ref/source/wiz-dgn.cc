@@ -34,7 +34,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"

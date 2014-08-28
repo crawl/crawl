@@ -23,7 +23,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
-#include "strings.h"
+#include "stringutil.h"
 
 
 #define TIMER_KEY "timer"

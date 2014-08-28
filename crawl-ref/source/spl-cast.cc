@@ -61,7 +61,7 @@
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #ifdef USE_TILE

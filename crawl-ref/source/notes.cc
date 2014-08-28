@@ -24,7 +24,7 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "unicode.h"
 

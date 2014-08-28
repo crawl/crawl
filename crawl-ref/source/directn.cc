@@ -53,7 +53,7 @@
 #include "env.h"
 #include "areas.h"
 #include "stash.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #ifdef USE_TILE
  #include "tileview.h"

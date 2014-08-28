@@ -39,7 +39,7 @@
 #include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-zap.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"

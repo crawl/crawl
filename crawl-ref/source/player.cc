@@ -85,7 +85,7 @@
 #include "state.h"
 #include "status.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE

@@ -8,7 +8,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tiledef-gui.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :

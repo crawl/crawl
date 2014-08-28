@@ -45,7 +45,7 @@
 #include "shopping.h"
 #include "spl-util.h"
 #include "spl-book.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"

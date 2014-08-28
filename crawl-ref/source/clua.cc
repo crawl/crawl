@@ -10,7 +10,7 @@
 #include "files.h"
 #include "libutil.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #include "syscalls.h"
 #include "unicode.h"

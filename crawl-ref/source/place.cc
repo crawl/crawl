@@ -10,7 +10,7 @@
 #include "branch.h"
 #include "place.h"
 #include "player.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "travel.h"
 
 string short_place_name(level_id id)
