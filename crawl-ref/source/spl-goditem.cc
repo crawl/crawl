@@ -36,6 +36,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
+#include "status.h"
 
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -343,52 +344,7 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
  */
 void debuff_player()
 {
-    duration_type dur_list[] =
-    {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_SLOW,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_CONFUSING_TOUCH,
-        DUR_SURE_BLADE, DUR_CORONA, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
-        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL,
-        DUR_PHASE_SHIFT, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
-        DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING,
-        DUR_DARKNESS, DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION,
-        DUR_SENTINEL_MARK, DUR_ANTIMAGIC /*!*/, DUR_REGENERATION,
-        DUR_TOXIC_RADIANCE, DUR_FIRE_VULN, DUR_POISON_VULN,
-        DUR_SAP_MAGIC, DUR_MAGIC_SAPPED,
-        DUR_PORTAL_PROJECTILE, DUR_DIMENSION_ANCHOR,
-    };
-
-    bool need_msg = false;
-
-    // don't instakill the player by removing flight
-    if (!you.permanent_flight())
-    {
-        if (you.duration[DUR_FLIGHT] > 11)
-        {
-            you.duration[DUR_FLIGHT] = 11;
-            need_msg = true;
-        }
-
-        // too many forms; confusing to players & devs both to special case.
-        if (you.duration[DUR_TRANSFORMATION] > 11)
-        {
-            you.duration[DUR_TRANSFORMATION] = 11;
-            need_msg = true;
-        }
-    }
-
-    if (you.duration[DUR_TELEPORT] > 0)
-    {
-        you.duration[DUR_TELEPORT] = 0;
-        mprf(MSGCH_DURATION, "You feel strangely stable.");
-    }
-
-    if (you.duration[DUR_PETRIFYING] > 0)
-    {
-        you.duration[DUR_PETRIFYING] = 0;
-        mprf(MSGCH_DURATION, "You feel limber!");
-    }
+    bool need_msg = false, danger = false;
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
     {
@@ -397,24 +353,52 @@ void debuff_player()
     }
 
     if (you.attribute[ATTR_REPEL_MISSILES])
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
-
-    if (you.attribute[ATTR_DEFLECT_MISSILES])
-        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-
-    if (you.attribute[ATTR_SWIFTNESS] > 0)
-        you.attribute[ATTR_SWIFTNESS] = 0;
-
-    for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
     {
-        if (you.duration[dur_list[i]] > 1)
-        {
-            you.duration[dur_list[i]] = 1;
-            need_msg = true;
-        }
+        you.attribute[ATTR_REPEL_MISSILES] = 0;
+        need_msg = true;
     }
 
-    bool danger = need_expiration_warning(you.pos());
+    if (you.attribute[ATTR_DEFLECT_MISSILES])
+    {
+        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+        need_msg = true;
+    }
+
+    if (you.attribute[ATTR_SWIFTNESS] > 0)
+    {
+        you.attribute[ATTR_SWIFTNESS] = 0;
+        need_msg = true;
+    }
+
+    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        int& dur = you.duration[i];
+        if (duration_dispellable((duration_type) i) && dur > 0)
+        {
+            if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
+            {
+                dur = 11;
+                need_msg = true;
+                danger = need_expiration_warning(you.pos());
+            }
+            else if (i == DUR_TELEPORT)
+            {
+                dur = 0;
+                mprf(MSGCH_DURATION, "You feel strangely stable.");
+            }
+            else if (i == DUR_PETRIFYING)
+            {
+                dur = 0;
+                mprf(MSGCH_DURATION, "You feel limber!");
+                you.redraw_evasion = true;
+            }
+            else if (dur > 1)
+            {
+                dur = 1;
+                need_msg = true;
+            }
+        }
+    }
 
     if (need_msg)
     {

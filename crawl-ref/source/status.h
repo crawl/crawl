@@ -61,6 +61,7 @@ struct status_info
 bool fill_status_info(int status, status_info* info);
 
 const char *duration_name(duration_type dur);
+bool duration_dispellable(duration_type dur);
 void init_duration_index();
 
 #endif
