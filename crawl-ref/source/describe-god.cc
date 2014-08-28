@@ -619,12 +619,12 @@ static string _describe_branch_bribability()
 }
 
 /**
- * Print a guide to toggling between description screens, and check if the
+ * Print a guide to cycling between description screens, and check if the
  * player does so.
  *
- * @return Whether the player chose to toggle to the other description screen.
+ * @return Whether the player chose to cycle to the next description screen.
  */
-static bool _check_description_toggle()
+static bool _check_description_cycle()
 {
     const int bottom_line = min(30, get_number_of_lines());
 
@@ -634,14 +634,126 @@ static bool _check_description_toggle()
 #ifdef USE_TILE_LOCAL
                                    " or <w>Right-click</w>"
 #endif
-                                   " to toggle between the overview and the"
-                                   " detailed description.").display();
+                                   " to get more information.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
     return keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^';
 
+}
+
+/**
+ * Linewrap & print a provided string, if non-empty.
+ *
+ * Also adds a pair of newlines, if the string is non-empty. (Ugly hack...)
+ *
+ * @param str       The string in question. (May be empty.)
+ * @param width     The width to wrap to.
+ */
+static void _print_string_wrapped(string str, int width)
+{
+    if (!str.empty())
+    {
+        linebreak_string(str, width);
+        display_tagged_block(str);
+        cprintf("\n");
+        cprintf("\n");
+    }
+}
+
+/**
+ * Turn a list of gods into a nice, comma-separated list of their names, with
+ * an 'and' at the end if appropriate.
+ *
+ * XXX: this can almost certainly be templatized and put somewhere else; it
+ * might already exist? (the dubiously named comma_separated_line?)
+ *
+ * @param gods[in]  The enums of the gods in question.
+ * @return          A comma-separated list of the given gods' names.
+ */
+static string _comma_separate_gods(const vector<god_type> &gods)
+{
+    // ugly special case to prevent foo, and bar
+    if (gods.size() == 2)
+        return god_name(gods[0]) + " and " + god_name(gods[1]);
+
+    string names = "";
+    for (int i = 0; i < gods.size() - 1; i++)
+        names += god_name(gods[i]) + ", ";
+    if (gods.size() > 1)
+        names += "and ";
+    if (gods.size() > 0)
+        names += god_name(gods[gods.size()-1]);
+    return names;
+}
+
+/**
+ * Describe the causes of the given god's wrath.
+ *
+ * @param which_god     The god in question.
+ * @return              A description of the actions that cause this god's
+ *                      wrath.
+ */
+static string _describe_god_wrath_causes(god_type which_god)
+{
+    vector<god_type> evil_gods;
+    vector<god_type> chaotic_gods;
+    for (int i = 0; i < NUM_GODS; i++)
+    {
+        god_type god = (god_type)i;
+        if (is_evil_god(god))
+            evil_gods.push_back(god);
+        else if (is_chaotic_god(god)) // intentionally not including evil!
+            chaotic_gods.push_back(god);
+        // XXX: refactor this if any god hates chaotic but not evil gods
+    }
+
+    switch (which_god)
+    {
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+            return uppercase_first(god_name(which_god)) +
+                   " forgives followers who leave " + god_name(which_god)+"'s"
+                   " service; however, those who take up the worship of evil"
+                   " gods will be punished. (" +
+                   _comma_separate_gods(evil_gods) + " are evil gods.)";
+
+        case GOD_ZIN:
+            return uppercase_first(god_name(which_god)) +
+                   " does not punish followers who leave "+god_name(which_god)+
+                   "'s service; however, those who take up the worship of evil"
+                   " or chaotic gods will be scourged. (" +
+                   _comma_separate_gods(evil_gods) + " are evil, and " +
+                   _comma_separate_gods(chaotic_gods) + " are chaotic.)";
+        // XXX: handle Ru here
+        default:
+            return uppercase_first(god_name(which_god)) +
+                   " does not appreciate abandonment, and will call down"
+                   " fearful punishments on disloyal followers!";
+    }
+}
+
+/**
+ * Print a description of the given god's dislikes & wrath effects.
+ *
+ * @param which_god     The god in question.
+ */
+static void _god_wrath_description(god_type which_god)
+{
+    clrscr();
+    textcolor(WHITE);
+    cprintf("                                  Wrath\n");
+
+    const int width = min(80, get_number_of_cols());
+
+    _print_string_wrapped(get_god_dislikes(which_god, true), width);
+     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
+    _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
+                          width);
+
+    if (_check_description_cycle())
+        describe_god(which_god, true);
 }
 
 /**
@@ -702,7 +814,7 @@ static string _get_god_misc_info(god_type which_god)
 }
 
 /**
- * Print a detailed description of the given god's likes, dislikes, and powers.
+ * Print a detailed description of the given god's likes and powers.
  *
  * @param god       The god in question.
  */
@@ -719,48 +831,29 @@ static void _detailed_god_description(god_type which_god)
     textcolor(LIGHTGREY);
     cprintf("\n");
 
-    string power_description = get_god_powers(which_god);
-    if (!power_description.empty())
-    {
-        linebreak_string(power_description, width);
-        display_tagged_block(power_description);
-        cprintf("\n");
-        cprintf("\n");
-    }
+    _print_string_wrapped(get_god_powers(which_god), width);
 
     // nothing more to say about xom; bail out early.
     if (which_god == GOD_XOM)
     {
-        if (_check_description_toggle())
+        // let's talk about his wrath here.
+        _print_string_wrapped("Unfaithful ex-followers will find themselves "
+                              "suffering through Xom's bad moods for so long "
+                              "as Xom can be bothered to remember about them. "
+                              "Still, Xom's caprice remains; the unfaithful "
+                              "are rewarded just as the faithful are punished."
+                              , width);
+
+        if (_check_description_cycle())
             describe_god(which_god, true);
         return;
     }
 
-    string likes_description = get_god_likes(which_god, true);
-    linebreak_string(likes_description, width);
-    display_tagged_block(likes_description);
+    _print_string_wrapped(get_god_likes(which_god, true), width);
+    _print_string_wrapped(_get_god_misc_info(which_god), width);
 
-    string dislikes_description = get_god_dislikes(which_god, true);
-    if (!dislikes_description.empty())
-    {
-        cprintf("\n");
-        cprintf("\n");
-        linebreak_string(dislikes_description, width);
-        display_tagged_block(dislikes_description);
-    }
-
-    // Some special handling.
-    string misc_description = _get_god_misc_info(which_god);
-    if (!misc_description.empty())
-    {
-        cprintf("\n");
-        cprintf("\n");
-        linebreak_string(misc_description, width);
-        display_tagged_block(misc_description);
-    }
-
-    if (_check_description_toggle())
-        describe_god(which_god, true);
+    if (_check_description_cycle())
+        _god_wrath_description(which_god);
 }
 
 /**
@@ -1087,6 +1180,6 @@ void describe_god(god_type which_god, bool give_title)
         _describe_god_powers(which_god, numcols);
     }
 
-    if (_check_description_toggle())
+    if (_check_description_cycle())
         _detailed_god_description(which_god);
 }
