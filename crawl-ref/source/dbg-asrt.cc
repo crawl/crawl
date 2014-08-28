@@ -35,7 +35,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "travel.h"
 #include "hiscores.h"
 #include "version.h"

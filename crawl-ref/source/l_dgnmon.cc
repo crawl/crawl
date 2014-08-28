@@ -16,7 +16,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 

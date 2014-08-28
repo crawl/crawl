@@ -32,7 +32,7 @@
 #include "skills2.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
 

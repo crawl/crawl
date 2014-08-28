@@ -16,7 +16,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #include "mon-pick-data.h"
 

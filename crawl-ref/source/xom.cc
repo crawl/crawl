@@ -66,7 +66,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"

@@ -36,7 +36,7 @@
 #include "ng-init.h"
 #include "shopping.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "stepdown.h"
 #include "terrain.h"
 #include "traps.h"

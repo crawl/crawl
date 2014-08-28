@@ -47,7 +47,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unicode.h"
 
 #include "env.h"

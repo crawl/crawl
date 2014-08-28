@@ -49,7 +49,7 @@
 #include "skills2.h"
 #include "state.h"
 #include "status.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
 #include "travel.h"

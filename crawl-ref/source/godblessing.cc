@@ -19,7 +19,7 @@
 #include "mon-place.h"  // create_monster()
 #include "mon-util.h"   // give_monster_proper_name()
 #include "religion.h"
-#include "strings.h"    // make_stringf
+#include "stringutil.h"    // make_stringf
 #include "view.h"       // flash_monster_colour
 
 /**

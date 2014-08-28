@@ -3,7 +3,7 @@
 #include "jobs.h"
 
 #include "libutil.h"
-#include "strings.h"
+#include "stringutil.h"
 
 static const char * Job_Abbrev_List[] =
     { "Fi", "Wz",

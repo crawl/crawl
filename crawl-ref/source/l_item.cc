@@ -30,7 +30,7 @@
 #include "skills2.h"
 #include "spl-summoning.h"
 #include "stash.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "throw.h"
 
 /////////////////////////////////////////////////////////////////////

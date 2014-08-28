@@ -12,7 +12,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tilepick.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)

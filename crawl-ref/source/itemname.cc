@@ -44,7 +44,7 @@
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
 #include "unicode.h"

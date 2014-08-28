@@ -41,7 +41,7 @@
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"

@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "strings.h"
+#include "stringutil.h"
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>

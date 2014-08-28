@@ -38,7 +38,7 @@
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "stepdown.h"
 
 #include "xom.h"

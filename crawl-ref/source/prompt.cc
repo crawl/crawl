@@ -13,7 +13,7 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "viewchar.h"
 
 #ifdef TOUCH_UI

@@ -24,7 +24,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "store.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "version.h"
 #include "unicode.h"
 

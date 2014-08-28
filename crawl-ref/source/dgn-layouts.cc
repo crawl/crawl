@@ -11,7 +11,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "libutil.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
 

@@ -23,7 +23,7 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unicode.h"
 
 #ifdef USE_TILE_LOCAL

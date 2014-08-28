@@ -62,7 +62,7 @@
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"

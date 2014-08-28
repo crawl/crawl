@@ -492,7 +492,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\status.cc" />
     <ClCompile Include="..\stepdown.cc" />
     <ClCompile Include="..\store.cc" />
-    <ClCompile Include="..\strings.cc" />
+    <ClCompile Include="..\stringutil.cc" />
     <ClCompile Include="..\syscalls.cc" />
     <ClCompile Include="..\tags.cc" />
     <ClCompile Include="..\target.cc" />
@@ -856,7 +856,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\status.h" />
     <ClInclude Include="..\stepdown.h" />
     <ClInclude Include="..\store.h" />
-    <ClInclude Include="..\strings.h" />
+    <ClInclude Include="..\stringutil.h" />
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />

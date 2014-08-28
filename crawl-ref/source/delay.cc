@@ -59,7 +59,7 @@
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "env.h"
 #include "teleport.h"
 #include "transform.h"

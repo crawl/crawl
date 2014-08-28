@@ -26,7 +26,7 @@
 #include "species.h"
 #include "skills.h"
 #include "skill_menu.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unwind.h"
 
 typedef string (*string_fn)();

@@ -13,7 +13,7 @@
 #include "mon-message.h"
 #include "mon-util.h"
 #include "religion.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "spl-other.h"
 #include "branch.h"
 

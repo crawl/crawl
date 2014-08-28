@@ -13,7 +13,7 @@
 #include "los.h"
 #include "losglobal.h"
 #include "ray.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #define RAY_METATABLE "dgn.ray"
 

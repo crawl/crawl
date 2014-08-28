@@ -72,7 +72,7 @@
 #include "skills2.h"
 #include "spl-clouds.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "tileview.h"

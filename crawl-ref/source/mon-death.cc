@@ -63,7 +63,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"

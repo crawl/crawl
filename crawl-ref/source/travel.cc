@@ -48,7 +48,7 @@
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
 #include "traps.h"

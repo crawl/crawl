@@ -17,7 +17,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-transloc.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"

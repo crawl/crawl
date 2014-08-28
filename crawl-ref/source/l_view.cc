@@ -17,7 +17,7 @@
 #include "religion.h"
 #include "terrain.h"
 #include "travel.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "view.h"
 
 LUAFN(view_feature_at)

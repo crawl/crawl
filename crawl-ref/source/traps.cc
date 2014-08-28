@@ -50,7 +50,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "travel.h"
 #include "terrain.h"
 #include "transform.h"
