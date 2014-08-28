@@ -288,6 +288,15 @@ Interface
 * Ability and spell icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.
 
+Stone Soup 0.14.2 (20140827)
+----------------------------
+* More crash fixes.
+* Some text fixes.
+* Transformations no longer allow the character to wield too-large weapons.
+* The tutorial skill screen now allows skills to be toggled again.
+* Artefact and non-artefact rings are now distinguished properly when swapping
+  rings.
+
 Stone Soup 0.14.1 (20140428)
 ----------------------------
 * Several crash fixes.
