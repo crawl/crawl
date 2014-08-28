@@ -1669,14 +1669,12 @@ bool attack::apply_damage_brand(const char *what)
         calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
-        defender->expose_to_element(BEAM_FIRE);
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
                                     what);
-        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1900,6 +1898,20 @@ bool attack::apply_damage_brand(const char *what)
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
+
+    if (defender->alive())
+        switch (brand)
+        {
+        case SPWPN_FLAMING:
+            defender->expose_to_element(BEAM_FIRE);
+            break;
+
+        case SPWPN_FREEZING:
+            defender->expose_to_element(BEAM_COLD, 2);
+            break;
+        default:
+            break;
+        }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {
