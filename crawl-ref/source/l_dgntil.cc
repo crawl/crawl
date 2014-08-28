@@ -16,7 +16,7 @@
 #include "env.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
-#include "strings.h"
+#include "stringutil.h"
 
 tileidx_t get_tile_idx(lua_State *ls, int arg)
 {

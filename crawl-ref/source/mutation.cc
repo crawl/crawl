@@ -48,7 +48,7 @@
 #include "random.h"
 #include "skills2.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "transform.h"
 #include "unicode.h"
 #include "viewchar.h"

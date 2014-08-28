@@ -31,7 +31,7 @@
 #include "shopping.h"
 #include "stairs.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"
 #include "unicode.h"

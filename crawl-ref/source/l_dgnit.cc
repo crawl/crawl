@@ -14,7 +14,7 @@
 #include "items.h"
 #include "mapdef.h"
 #include "stash.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #define ITEMLIST_METATABLE "crawldgn.item_list"
 

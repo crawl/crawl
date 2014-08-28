@@ -22,7 +22,7 @@
 #include "monster.h"
 #include "player.h"
 #include "random.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "traps.h"
 

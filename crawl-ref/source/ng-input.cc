@@ -9,7 +9,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "options.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
 

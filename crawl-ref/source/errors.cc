@@ -9,7 +9,7 @@
 
 #include "AppHdr.h"
 #include "errors.h"
-#include "strings.h"
+#include "stringutil.h"
 
 NORETURN void fail(const char *msg, ...)
 {

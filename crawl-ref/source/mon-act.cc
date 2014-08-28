@@ -59,7 +59,7 @@
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"

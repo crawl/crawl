@@ -66,7 +66,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "areas.h"
 #include "stash.h"
 #include "state.h"

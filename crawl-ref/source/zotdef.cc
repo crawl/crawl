@@ -30,7 +30,7 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"

@@ -22,7 +22,7 @@
 #include "player.h"
 #include "shopping.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"

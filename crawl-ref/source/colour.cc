@@ -14,7 +14,7 @@
 #include "options.h"
 #include "player.h"
 #include "random.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #include <utility>
 #include <math.h>

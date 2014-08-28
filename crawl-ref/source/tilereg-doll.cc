@@ -6,7 +6,7 @@
 
 #include "macro.h"
 #include "player.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tiledef-player.h"
 #include "tilefont.h"
 #include "tilepick-p.h"

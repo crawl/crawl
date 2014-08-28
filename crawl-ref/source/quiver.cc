@@ -18,7 +18,7 @@
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "throw.h"
 

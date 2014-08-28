@@ -40,7 +40,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"

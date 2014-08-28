@@ -221,7 +221,7 @@ state.o \
 status.o \
 stepdown.o \
 store.o \
-strings.o \
+stringutil.o \
 syscalls.o \
 tags.o \
 target.o \

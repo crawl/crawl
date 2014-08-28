@@ -53,7 +53,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "target.h"
 #include "teleport.h"
 #include "traps.h"

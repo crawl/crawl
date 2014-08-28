@@ -54,7 +54,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "transform.h"
 #include "travel.h"
 #include "xom.h"

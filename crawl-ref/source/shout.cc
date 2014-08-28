@@ -38,7 +38,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "view.h"
 

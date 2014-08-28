@@ -30,7 +30,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "view.h"
 
 // Try the exact key lookup along with the entire prefix list.

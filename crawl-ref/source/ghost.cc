@@ -21,7 +21,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "player.h"

@@ -37,7 +37,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stepdown.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "travel.h"
 #include "unwind.h"
 #include "env.h"

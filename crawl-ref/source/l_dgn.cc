@@ -23,7 +23,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
 #include "unwind.h"

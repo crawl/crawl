@@ -20,7 +20,7 @@
 #include "show.h"
 #include "stash.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"
 #include "viewchar.h"

@@ -31,7 +31,7 @@
 #include "mon-util.h"
 #include "ng-init.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "zotdef.h"
 
 #include <algorithm>
