@@ -395,3 +395,149 @@ elementals whose loyalty depends on the origin of the cloud. Followers can
 gain temporary resistances against the elements on taking damage from that
 element.
 %%%%
+Zin wrath
+
+Those under Zin's wrath will find their beneficial mutations stripped away,
+their bellies empty, their enemies alerted, and their senses confounded by the
+axioms of Law; confusion, fainting and complete paralysis will be their lot.
+%%%%
+the Shining One wrath
+
+The Shining One's wrath is straightforward and unmistakable. Its victims find
+themselves smote with holy fire, beset with holy warriors, and alternately
+shouted at and silenced.
+%%%%
+Kikubaaqudgha wrath
+
+Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
+are wracked with torment, assailed by the undead, smothered in miasma, and
+afflicted with a host of other necromantic ailments. Further, Kikubaaqudgha's
+gifts become tainted; those that attempt to use necromantic magic to fend off
+wrath will find it backfiring on them when least expected.
+%%%%
+Yredelemnul wrath
+
+Those who anger Yredelemnul find themselves beset by legions of the dead.
+Novice adventurers will be assaulted by wights and zombified trolls; veterans
+by profane servitors and skeletal dragons. The victims' own undead servants
+desert them and crumble into dust. A variety of necromantic maladies also
+afflict those stricken by Yredremnul's wrath.
+%%%%
+Vehumet wrath
+
+Those that anger Vehumet find destruction amply heaped upon them. Novices are
+struck by flame and frost; archmages by firestorms and hellfire. Their own
+conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Okawaru wrath
+
+Okawaru's most vicious warriors are sent against rebellious servants. Novices
+find themselves swarmed by packs of ogres and gnolls, while champions are
+surrounded by titans and elvish blademasters.
+%%%%
+Makhleb wrath
+
+Those who invite the fury of Makhleb are buried in demons and destruction.
+The greatest punishments are reserved for the strongest sinners; crystal spears
+and Executioners are hurled with abandon only at those Makhleb finds truly
+deserving!
+%%%%
+Sif Muna wrath
+
+Those in Sif Muna's ill graces find the very forces of magic rebelling against
+them. They are confused and stupefied, their magical reserves drained, their
+enchantments unravelled. Casting spells, too, becomes unreliable - and even
+dangerous.
+%%%%
+Trog wrath
+
+Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
+by berserkers - from packs of bears to, for the most powerful, mobs of giants
+and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
+just blasted by Trog's fiery rage directly.
+%%%%
+Nemelex Xobeh wrath
+
+Nemelex Xobeh forces sinners to rely on the luck of the draw. Stacked decks are
+immediately shuffled, and offenders are regularly forced to draw from the Deck
+of Punishment, inflicting almost every unpleasant effect imaginable. Further,
+attempting to draw from other decks may instead lead to drawing from the Deck
+of Punishment.
+%%%%
+Elyvilon wrath
+
+Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
+find themselves irritated in various ways; their weapons will be blunted, their
+blows blocked, their thoughts confused, and, occasionally, they'll be lightly
+poisoned, to cap it all off.
+%%%%
+Lugonu wrath
+
+Lugonu's ire renders the barrier between reality and the Abyss weak and
+permeable. Space warps, hurling victims across the dungeon, or even directly
+into the Abyss; and when that's not enough, Lugonu reaches out and sends
+minions out from the Abyss to assault the offender directly. Inexperienced
+adventurers face small abominations and thrashing horrors; veterans fight
+tentacled starspawn and starcursed masses.
+%%%%
+Beogh wrath
+
+Blasphemers against the word of Beogh find themselves confronted with direct
+and physical opposition. Those who still worship Beogh find their followers
+regularly deserting them; they, and others, are further assaulted by waves of
+orcish warriors. When working through intermediaries fails, Beogh hurls
+dancing electric weapons at offenders, or simply smites them - and when smiting
+true sinners, Beogh has a heavy hand indeed!
+%%%%
+Fedhas wrath
+
+It is Fedhas's considered opinion that offenders against the natural order
+(Fedhas) simply need more exposure to nature to realize the error of their
+ways. Accordingly, Fedhas provides said nature, in the form of pure elemental
+destruction, waves of giant spores rising from nearby corpses, and, for the
+truly incorrigible, surrounding rings of animate mushrooms and acid-spitting
+oklobs.
+%%%%
+Cheibriados wrath
+
+Offenders against Cheibriados are given one last chance to take it easy. They
+may find themselves slowed and exhausted, or stepping from time at unexpected
+moments. In dangerous moments, Chei provides them with refreshing naps. And in
+very dangerous situations... in the full depth of time, almost anything can
+happen. (But for those who offend Cheibriados, probably not anything good!)
+%%%%
+Ashenzari wrath
+
+Ashenzari's wrath is not like other gods'; it is constant and unrelenting for
+its duration. Victims find their skills impaired, and their enemies divinely
+guided - never losing track of them, never ending the hunt.
+%%%%
+Jiyva wrath
+
+Jiyva's vengeance is swift and gurgling. All slimes turn against those who
+offend Jiyva, and Jiyva ensures a plentiful supply of slimes, both by calling
+jellies to ooze from the cracks in the walls and floor, and turning other
+nearby enemies into dangerous slimes. Victims, too, will find their own bodies
+becoming unstable; regularly transmuting into strange forms and acquiring
+debilitating mutations.
+%%%%
+Dithmenos wrath
+
+When angered, Dithmenos turns the shadows against victims. Monsters emerge
+from the darkness, both illusions woven from shadow and the very shadows
+themselves turning against sinners. Novices are swarmed by flitting shadows and
+illusionary trolls; experts by shadow fiends and illusionary dragons.
+Dithmenos's subtle punishments are, if anything, more dangerous: victims find
+the shadows ripped away from them, hunted with nowhere to hide; or find
+themselves smothered in shadow and sleeping, perhaps forever.
+%%%%
+Gozag wrath
+
+#TBD
+%%%%
+Qazlal wrath
+
+Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
+resistances, assaulted by furious elementals, and surrounded by waves of
+molten lava.
+%%%%
