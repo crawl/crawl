@@ -20,7 +20,7 @@
 #include "player.h"
 #include "religion.h"
 #include "state.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #include "skills2.h"
 #include "tiledef-dngn.h"

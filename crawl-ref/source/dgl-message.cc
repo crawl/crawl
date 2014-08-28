@@ -12,7 +12,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
-#include "strings.h"
+#include "stringutil.h"
 #include "syscalls.h"
 
 #include <errno.h>
