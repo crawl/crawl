@@ -18,8 +18,8 @@ Gods
     temporarily neutral or incite them to join you.
   - Duplication: one non-artefact item can be duplicated at an altar.
 
-Stone Soup 0.15
---------------------------------------------
+Stone Soup 0.15 (20140828)
+--------------------------
 * New god: Qazlal Stormbringer.
 * Nemelex Xobeh and decks in general have had many changes.
 * Ranged combat has been rewritten from the ground up.
