@@ -224,7 +224,6 @@ COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
 VALUE:   1000
-BOOL:    special
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
@@ -235,7 +234,6 @@ TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
 VALUE:   1000
-BOOL:    special
 
 NAME:    Scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -290,7 +288,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    special, unholy, nogen
+BOOL:    unholy, nogen
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -300,7 +298,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    special, unholy, nogen
+BOOL:    unholy, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
