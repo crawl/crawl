@@ -560,8 +560,7 @@ bool attack::distortion_affects_defender()
     {
         if (defender->is_player() && attacker_visible
             && using_weapon()
-            && !is_unrandom_artefact(*weapon)
-            && !is_special_unrandom_artefact(*weapon))
+            && !is_unrandom_artefact(*weapon))
         {
             // If the player is being sent to the Abyss by being attacked
             // with a distortion weapon, then we have to ID it before

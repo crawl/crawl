@@ -3858,7 +3858,7 @@ void xom_check_lost_item(const item_def& item)
 {
     if (item.base_type == OBJ_ORBS)
         xom_is_stimulated(200, "Xom laughs nastily.", true);
-    else if (is_special_unrandom_artefact(item))
+    else if (is_unrandom_artefact(item))
         xom_is_stimulated(100, "Xom snickers.", true);
     // you can't be made lose unique runes anymore, it was voluntary -- not so funny
     else if (item_is_rune(item) && item_is_unique_rune(item))
@@ -3874,7 +3874,7 @@ void xom_check_destroyed_item(const item_def& item, int cause)
         xom_is_stimulated(200, "Xom laughs nastily.", true);
         return;
     }
-    else if (is_special_unrandom_artefact(item))
+    else if (is_unrandom_artefact(item))
         xom_is_stimulated(100, "Xom snickers.", true);
     else if (item_is_rune(item))
     {

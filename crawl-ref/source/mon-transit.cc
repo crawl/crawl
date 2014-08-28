@@ -90,8 +90,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
-        if (is_unrandom_artefact(*finger)
-            && !is_special_unrandom_artefact(*finger))
+        if (is_unrandom_artefact(*finger))
         {
             ilist.erase(finger);
 

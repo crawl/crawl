@@ -952,7 +952,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
 
         if (message_given)
         {
-            if (is_artefact(item) && !is_special_unrandom_artefact(item))
+            if (is_artefact(item) && !is_unrandom_artefact(item))
                 artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -1109,7 +1109,7 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
         }
         if (message_given)
         {
-            if (is_artefact(item) && !is_special_unrandom_artefact(item))
+            if (is_artefact(item) && !is_unrandom_artefact(item))
                 artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
