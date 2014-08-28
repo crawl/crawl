@@ -2412,7 +2412,10 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
-    damage = victim->hurt(agent, damage, BEAM_NEG);
+    if (victim->is_player())
+        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by a malign offering");
+    else
+        damage = victim->hurt(agent, damage, BEAM_NEG);
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
     // even if they couldn't actually see each other because of blindness
