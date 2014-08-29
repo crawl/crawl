@@ -258,13 +258,19 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
-    #ifdef CLUA_BINDINGS
-    // Prompt for any trap where you might not have enough hp
-    // as defined in init.txt (see trapwalk.lua)
-    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(type).c_str()))
-        return true;
-
-#endif
+    if (Options.trapwalk_safe_hp)
+    {
+        if (type == TRAP_NEEDLE)
+            return you.hp > 15;
+        else if (type == TRAP_ARROW)
+            return you.hp > 35;
+        else if (type == TRAP_BOLT)
+            return you.hp > 45;
+        else if (type == TRAP_SPEAR)
+            return you.hp > 40;
+        else if (type == TRAP_BLADE)
+            return you.hp > 95;
+    }
 
     return false;
 }

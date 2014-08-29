@@ -107,9 +107,7 @@ cset = cloud:xa4
 cset_ascii=item_orb:0
 use_fake_player_cursor = true
 equip_unequip = true
-
-# most of these don't generate normally any more I guess
-trapwalk_safe_hp = net:1,dart:1,needle:1,arrow:1,bolt:1,spear:1,blade:1,alarm:1
+trapwalk_safe_hp = false
 
 dump_order = header,hiscore,stats,misc,mutations,skills,spells,inventory
 dump_order += overview

@@ -896,18 +896,10 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         and resting as long as the distance is at least 3. If a monster matches
         multiple expressions, its distance is compared with the first match.
 
-trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
-        Any square containing one of the listed trap types will be
-        considered safe for travel if your hp is greater than or
-        equal to the number connected to the trap in question.
-        Note that this is not a list option: setting this option always
-        overrides any previous setting.
-
-        All the existing trap types can be used, but in practice only
-        the mechanical traps (bolt, arrow, needle, spear, blade)
-        make sense. Note that travel tries to avoid traps if this is
-        easily possible. Defaults to none. For example,
-              trapwalk_safe_hp = needle:25, spear:50
+trapwalk_safe_hp = true
+        If set to false, mechanical traps will be considered safe for travel
+        at any HP. Otherwise, you will get a prompt when walking onto one and
+        autotravel will avoid them.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
