@@ -182,8 +182,8 @@ static int _abyssal_rune_roll()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
-    const int divisor = 2 * brdepth[BRANCH_ABYSS] - 2;
-    return (int) pow(100.0, depth/divisor);
+
+    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
