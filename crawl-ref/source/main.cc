@@ -842,7 +842,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '%': wizard_create_spec_object_by_name(); break;
     case '^': wizard_set_piety(); break;
     case '&': wizard_list_companions(); break;
-    // case '*': break;
+    // case '*': break; // XXX do not use, this is the alternate control prefix
     case '(': wizard_create_feature(); break;
     // case ')': break;
 
