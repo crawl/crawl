@@ -1346,25 +1346,7 @@ void game_options::add_feature_override(const string &text)
     }
 }
 
-void game_options::add_cset_override(char_set_type set, const string &overrides)
-{
-    vector<string> overs = split_string(",", overrides);
-    for (int i = 0, size = overs.size(); i < size; ++i)
-    {
-        vector<string> mapping = split_string(":", overs[i]);
-        if (mapping.size() != 2)
-            continue;
-
-        dungeon_char_type dc = dchar_by_name(mapping[0]);
-        if (dc == NUM_DCHAR_TYPES)
-            continue;
-
-        add_cset_override(set, dc, read_symbol(mapping[1]));
-    }
-}
-
-void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
-                                     int symbol)
+void game_options::add_cset_override(dungeon_char_type dc, int symbol)
 {
     cset_override[dc] = get_glyph_override(symbol);
 }
@@ -2380,9 +2362,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
-        && key.find("cset") != 0 && key != "dungeon"
-        && key != "feature" && key != "fire_items_start"
+        && key != "display_char" && key.find("cset") != 0 // compatibility
+        && key != "dungeon" && key != "feature"
         && key != "mon_glyph" && key != "item_glyph"
+        && key != "fire_items_start"
         && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
@@ -2569,19 +2552,22 @@ void game_options::read_option_line(const string &str, bool runscript)
                                plus_equal || caret_equal,
                                minus_equal);
     }
-    else if (key.find("cset") == 0)
+    else if (key == "display_char"
+             || key.find("cset") == 0) // compatibility with old rcfiles
     {
-        string cset = key.substr(4);
-        if (!cset.empty() && cset[0] == '_')
-            cset = cset.substr(1);
+        vector<string> overs = split_string(",", field);
+        for (int i = 0, size = overs.size(); i < size; ++i)
+        {
+            vector<string> mapping = split_string(":", overs[i]);
+            if (mapping.size() != 2)
+                continue;
 
-        char_set_type cs = NUM_CSET;
-        if (cset == "ibm")
-            cs = CSET_IBM;
-        else if (cset == "dec")
-            cs = CSET_DEC;
+            dungeon_char_type dc = dchar_by_name(mapping[0]);
+            if (dc == NUM_DCHAR_TYPES)
+                continue;
 
-        add_cset_override(cs, field);
+            add_cset_override(dc, read_symbol(mapping[1]));
+        }
     }
     else if (key == "feature" || key == "dungeon")
         split_parse(field, ";", &game_options::add_feature_override);
