@@ -803,6 +803,7 @@ void game_options::reset_options()
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = is_tiles();
+    trapwalk_safe_hp       = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -1433,7 +1434,6 @@ static const char* lua_builtins[] =
     "clua/wield.lua",
     "clua/runrest.lua",
     "clua/gearset.lua",
-    "clua/trapwalk.lua",
     "clua/autofight.lua",
     "clua/automagic.lua",
     "clua/kills.lua",

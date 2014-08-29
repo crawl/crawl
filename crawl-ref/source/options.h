@@ -362,6 +362,9 @@ public:
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
 
+    bool        trapwalk_safe_hp; // Whether to prompt when walking onto mechanical
+                                  // traps at low hp.
+
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
