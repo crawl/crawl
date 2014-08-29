@@ -1314,7 +1314,8 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < NUM_EQUIP; ++i)
         marshallBoolean(th, you.melded[i]);
 
-    marshallByte(th, you.magic_points);
+    ASSERT_RANGE(you.magic_points, 0, you.max_magic_points + 1);
+    marshallUByte(th, you.magic_points);
     marshallByte(th, you.max_magic_points);
 
     COMPILE_CHECK(NUM_STATS == 3);
@@ -2184,7 +2185,7 @@ static void tag_read_you(reader &th)
     for (i = count; i < NUM_EQUIP; ++i)
         you.melded.set(i, false);
 
-    you.magic_points              = unmarshallByte(th);
+    you.magic_points              = unmarshallUByte(th);
     you.max_magic_points          = unmarshallByte(th);
 
     for (i = 0; i < NUM_STATS; ++i)
