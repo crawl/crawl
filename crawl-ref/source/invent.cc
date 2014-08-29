@@ -37,6 +37,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "spl-summoning.h"
 #include "stringutil.h"
 #include "mon-util.h"
 #include "state.h"
@@ -1109,7 +1110,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-static bool _item_class_selected(const item_def &i, int selector)
+bool is_item_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
@@ -1227,23 +1228,6 @@ static bool _item_class_selected(const item_def &i, int selector)
     default:
         return false;
     }
-}
-
-static bool _userdef_item_selected(const item_def &i, int selector)
-{
-#if defined(CLUA_BINDINGS)
-    const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable"
-                                               : NULL;
-    return luafn && clua.callbooleanfn(false, luafn, "i", &i);
-#else
-    return false;
-#endif
-}
-
-bool is_item_selected(const item_def &i, int selector)
-{
-    return _item_class_selected(i, selector)
-           || _userdef_item_selected(i, selector);
 }
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
@@ -2040,10 +2024,29 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    const int type = item.base_type;
-    return is_weapon(item) || is_deck(item)
-           || type == OBJ_MISCELLANY
-              && item.sub_type == MISC_LANTERN_OF_SHADOWS;
+    if (is_weapon(item))
+        return you.species != SP_FELID;
+
+    // Some misc. items need to be wielded to be evoked.
+    if (is_deck(item) || item.base_type == OBJ_MISCELLANY
+                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
+    {
+        return true;
+    }
+
+    if (item.base_type == OBJ_MISSILES
+        && (item.sub_type == MI_STONE
+            || item.sub_type == MI_LARGE_ROCK
+               && you.could_wield(item, true, true)))
+    {
+        return you.has_spell(SPELL_SANDBLAST);
+    }
+
+    // Snakable missiles; weapons were already handled above.
+    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
+        return true;
+
+    return false;
 }
 
 /**
