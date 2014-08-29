@@ -2116,7 +2116,7 @@ char_set = (default | ascii | ibm | dec | unicode)
         encoding anymore.
 
         Setting char_set = ibm or dec has a side effect of making numeric
-        codes inside cset, feature and mon_glyph lines interpreted as,
+        codes inside display_char, feature and mon_glyph lines interpreted as,
         respectively, CP437 codes or VT100 line-drawing characters + 128.
 
         Has negligible effect in the Tiles build.
@@ -2138,7 +2138,7 @@ colour.OLDCOLOUR = NEWCOLOUR
           colour.lightcyan = cyan
           colour.yellow    = brown
 
-cset = <dungeon_character_name : symbol>
+display_char = <dungeon_character_name : symbol>
         a list of these is allowed, as well.
 
         The possible entries for dungeon_character_name are:
@@ -2161,13 +2161,6 @@ cset = <dungeon_character_name : symbol>
 
         Symbols can be specified using a letter, or by its ASCII/Unicode
         code: a decimal number or a hexadecimal one (prefixed with x).
-        For compatibility with old config files, you can use cset_ibm or
-        cset_dec to use IBM code page 437 or vt100 graphic characters.
-
-        For an example on IBM displays,
-             cset_ibm = wall:219, arch:0, wavy:x7E
-        shows walls as solid blocks, shops and portals as '0', and water
-        as '~'.
 
 feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour>,

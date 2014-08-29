@@ -498,8 +498,7 @@ private:
 
     void clear_feature_overrides();
     void clear_cset_overrides();
-    void add_cset_override(char_set_type set, const string &overrides);
-    void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
+    void add_cset_override(dungeon_char_type dc, int symbol);
     void add_feature_override(const string &);
 
     void add_message_colour_mappings(const string &, bool, bool);
