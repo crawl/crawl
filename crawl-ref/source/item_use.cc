@@ -208,33 +208,6 @@ bool can_wield(item_def *weapon, bool say_reason,
 #undef SAY
 }
 
-static bool _valid_weapon_swap(const item_def &item)
-{
-    if (is_weapon(item))
-        return you.species != SP_FELID;
-
-    // Some misc. items need to be wielded to be evoked.
-    if (is_deck(item) || item.base_type == OBJ_MISCELLANY
-                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
-    {
-        return true;
-    }
-
-    if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE
-            || item.sub_type == MI_LARGE_ROCK
-               && you.could_wield(item, true, true)))
-    {
-        return you.has_spell(SPELL_SANDBLAST);
-    }
-
-    // Snakable missiles; weapons were already handled above.
-    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
-        return true;
-
-    return false;
-}
-
 /**
  * @param force If true, don't check weapon inscriptions.
  * (Assuming the player was already prompted for that.)
@@ -259,7 +232,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     {
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
-               && !_valid_weapon_swap(you.inv[item_slot]))
+               && !item_is_wieldable(you.inv[item_slot]))
         {
             item_slot = 1;      // backup is 'b'
         }
@@ -271,7 +244,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
     const bool good_swap = (item_slot == SLOT_BARE_HANDS
-                            || _valid_weapon_swap(you.inv[item_slot]));
+                            || item_is_wieldable(you.inv[item_slot]));
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
@@ -3208,7 +3181,7 @@ void tile_item_use_secondary(int idx)
     }
     else if (you.equip[EQ_WEAPON] == idx)
         wield_weapon(true, SLOT_BARE_HANDS);
-    else if (_valid_weapon_swap(item))
+    else if (item_is_wieldable(item))
     {
         // secondary wield for several spells and such
         wield_weapon(true, idx); // wield

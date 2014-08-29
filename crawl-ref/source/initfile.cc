@@ -1431,7 +1431,6 @@ static string _find_crawlrc()
 static const char* lua_builtins[] =
 {
     "clua/stash.lua",
-    "clua/wield.lua",
     "clua/runrest.lua",
     "clua/gearset.lua",
     "clua/autofight.lua",
