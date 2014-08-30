@@ -3215,6 +3215,8 @@ static void _move_player(coord_def move)
             move.x = random2(3) - 1;
             move.y = random2(3) - 1;
             you.reset_prev_move();
+            if (move.origin())
+                mpr("You're too confused to move!");
         }
 
         const coord_def& new_targ = you.pos() + move;
@@ -3223,9 +3225,16 @@ static void _move_player(coord_def move)
             you.walking = move.abs();
             you.turn_is_over = true;
             if (you.digging) // no actual damage
-                mpr("You hurt your mandibles, ouch!"), you.digging = false;
+            {
+                mpr("Your mandibles retract as you bump into the wall.");
+                you.digging = false;
+            }
             else
-                mpr("Ouch!");
+            {
+                mprf("You bump into %s",
+                     feature_description_at(new_targ, false,
+                                            DESC_THE).c_str());
+            }
             apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
