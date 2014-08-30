@@ -42,15 +42,6 @@ struct tracer_info
     const tracer_info &operator += (const tracer_info &other);
 };
 
-struct bolt;
-
-typedef bool (*range_used_func)(const bolt& beam, int &used);
-typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
-                                 string &dmg_msg);
-typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
-typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
-typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
-
 struct bolt
 {
     // INPUT parameters set by caller
@@ -113,16 +104,6 @@ struct bolt
 #ifdef DEBUG_DIAGNOSTICS
     bool        quiet_debug;           // Disable any debug spam.
 #endif
-
-    // Various callbacks.
-    vector<range_used_func>  range_funcs;
-    vector<beam_damage_func> damage_funcs;
-    vector<beam_hit_func>    hit_funcs;
-    vector<explosion_aoe_func> aoe_funcs; // Function for if the explosion only
-                                          // affects certain grid positions.
-
-    // Test if the beam can affect a particular actor.
-    beam_affect_func affect_func;
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -238,8 +219,6 @@ private:
     void step();
     bool hit_wall();
 
-    bool apply_hit_funcs(actor* victim, int dmg);
-    bool apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages);
     int apply_AC(const actor* victim, int hurted);
 
     cloud_type get_cloud_type();
