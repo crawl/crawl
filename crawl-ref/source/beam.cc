@@ -490,10 +490,6 @@ bool bolt::can_affect_actor(const actor *act) const
 #endif
         return false;
     }
-    // If there's a function that checks whether an actor is affected,
-    // bypass any generic beam-affects-X logic:
-    if (affect_func)
-        return (*affect_func)(*this, act);
 
     return !act->submerged();
 }
@@ -1202,29 +1198,6 @@ void bolt::affect_cell()
 
     if (!cell_is_solid(pos()))
         affect_ground();
-}
-
-bool bolt::apply_hit_funcs(actor* victim, int dmg)
-{
-    bool affected = false;
-    for (unsigned int i = 0; i < hit_funcs.size(); ++i)
-        affected = (*hit_funcs[i])(*this, victim, dmg) || affected;
-
-    return affected;
-}
-
-bool bolt::apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages)
-{
-    for (unsigned int i = 0; i < damage_funcs.size(); ++i)
-    {
-        string dmg_msg;
-
-        if ((*damage_funcs[i])(*this, victim, dmg, dmg_msg))
-            return false;
-        if (!dmg_msg.empty())
-            messages.push_back(dmg_msg);
-    }
-    return true;
 }
 
 static void _undo_tracer(bolt &orig, bolt &copy)
@@ -3302,15 +3275,6 @@ void bolt::tracer_affect_player()
         }
     }
 
-    vector<string> messages;
-    int dummy = 0;
-
-    apply_dmg_funcs(&you, dummy, messages);
-
-    for (unsigned int i = 0; i < messages.size(); ++i)
-        mprf(MSGCH_WARN, "%s", messages[i].c_str());
-
-    apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
 
     if (_is_explosive_bolt(this))
@@ -3853,8 +3817,6 @@ void bolt::affect_player_enchantment(bool resistible)
         }
     }
 
-    apply_hit_funcs(&you, 0);
-
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
     extra_range_used += range_used_on_hit();
@@ -3953,12 +3915,6 @@ void bolt::affect_player()
 
 #ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
-#endif
-
-    vector<string> messages;
-    apply_dmg_funcs(&you, hurted, messages);
-
-#ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
 
@@ -4074,8 +4030,6 @@ void bolt::affect_player()
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
 
-    was_affected = apply_hit_funcs(&you, hurted) || was_affected;
-
     if (hurted > 0 || old_hp < you.hp || was_affected)
     {
         if (mons_att_wont_attack(attitude))
@@ -4095,12 +4049,6 @@ void bolt::affect_player()
         }
         else
             foe_info.hurt++;
-    }
-
-    if (hurted > 0)
-    {
-        for (unsigned int i = 0; i < messages.size(); ++i)
-            mprf(MSGCH_WARN, "%s", messages[i].c_str());
     }
 
     internal_ouch(hurted);
@@ -4226,10 +4174,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
 
     handle_stop_attack_prompt(mon);
     if (!beam_cancelled)
-    {
-        apply_hit_funcs(mon, 0);
         extra_range_used += range_used_on_hit();
-    }
 }
 
 // Return false if we should skip handling this monster.
@@ -4282,9 +4227,6 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     }
     else if (!freeze_immune)
         preac = damage.roll();
-
-    if (!apply_dmg_funcs(mon, preac, messages))
-        return false;
 
     int tracer_postac_max = preac_max_damage;
 
@@ -4385,8 +4327,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         for (unsigned int i = 0; i < messages.size(); ++i)
             mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
     }
-
-    apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
@@ -4504,7 +4444,6 @@ void bolt::enchantment_affect_monster(monster* mon)
             beogh_follower_convert(mon, true);
     }
 
-    apply_hit_funcs(mon, 0);
     extra_range_used += range_used_on_hit();
 }
 
@@ -4764,10 +4703,7 @@ void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead monsters.
     if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
-    {
-        apply_hit_funcs(mon, 0);
         return;
-    }
 
     hit_count[mon->mid]++;
 
@@ -4792,10 +4728,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (ignores_monster(mon))
-    {
-        apply_hit_funcs(mon, 0);
         return;
-    }
 
     // Handle tracers separately.
     if (is_tracer)
@@ -4808,7 +4741,6 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_VISUAL)
     {
         behaviour_event(mon, ME_DISTURB, agent(), source);
-        apply_hit_funcs(mon, 0);
         return;
     }
 
@@ -5039,10 +4971,8 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (mon->alive())
-    {
-        apply_hit_funcs(mon, final);
         monster_post_hit(mon, final);
-    }
+
     // The monster (e.g. a spectral weapon) might have self-destructed in its
     // behaviour_event called from mon->hurt() above. If that happened, it
     // will have been cleaned up already (and is therefore invalid now).
@@ -5803,10 +5733,6 @@ int bolt::range_used_on_hit() const
     if (in_explosion_phase)
         return used;
 
-    for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ((*range_funcs[i])(*this, used))
-            break;
-
     return used;
 }
 
@@ -6237,16 +6163,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         return;
     }
 
-    // Check if it passes the callback functions.
-    bool hits = true;
-    for (unsigned int i = 0; i < aoe_funcs.size(); ++i)
-        hits = (*aoe_funcs[i])(*this, loc) && hits;
-
-    if (hits)
-    {
-        // Hmm, I think we're OK.
-        m(delta + centre) = min(count, m(delta + centre));
-    }
+    m(delta + centre) = min(count, m(delta + centre));
 
     // Now recurse in every direction.
     for (int i = 0; i < 8; ++i)
@@ -6268,7 +6185,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
         int cadd = 5;
         // Circling around the center is always free.
-        if (hits && delta.rdist() == 1 && new_delta.rdist() == 1)
+        if (delta.rdist() == 1 && new_delta.rdist() == 1)
             cadd = 0;
         // Otherwise changing direction (e.g. looking around a wall) costs more.
         else if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
@@ -6399,8 +6316,6 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
 #endif
-               range_funcs(),
-               damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                is_targeting(false), aimed_at_feet(false), msg_generated(false),
