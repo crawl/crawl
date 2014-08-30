@@ -3364,6 +3364,7 @@ void melee_attack::mons_apply_attack_flavour()
             special_damage = attacker->get_hit_dice() * 3 / 4
                             + random2(attacker->get_hit_dice() * 3 / 4);
             special_damage_flavour = BEAM_WATER;
+            kill_type = KILLED_BY_WATER;
 
             if (needs_message)
             {
