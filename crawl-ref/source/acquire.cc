@@ -712,7 +712,9 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
             w = (you.species == SP_FORMICID ? 5 : 25); break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-            w = (you.species == SP_FORMICID ? 1 : 15); break;
+            w = you.species == SP_FORMICID || crawl_state.game_is_sprint()
+                ? 1 : 15;
+            break;
         case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
         case WAND_COLD:
         case WAND_LIGHTNING:
