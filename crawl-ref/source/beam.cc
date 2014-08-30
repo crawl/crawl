@@ -4477,9 +4477,14 @@ void bolt::enchantment_affect_monster(monster* mon)
                         mon, effect_known);
     }
 
-    // Try to hit the monster with the enchantment.
+    // Try to hit the monster with the enchantment. The behaviour_event above
+    // may have caused a pacified monster to leave the level, so only try to
+    // enchant it if it's still here. If the monster did leave the level, set
+    // obvious_effect so we don't get "Nothing appears to happen".
     int res_margin = 0;
-    const mon_resist_type ench_result = try_enchant_monster(mon, res_margin);
+    const mon_resist_type ench_result = mon->alive()
+                                      ? try_enchant_monster(mon, res_margin)
+                                      : (obvious_effect = true, MON_OTHER);
 
     if (mon->alive())           // Aftereffects.
     {
