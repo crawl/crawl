@@ -1904,6 +1904,7 @@ bool attack::apply_damage_brand(const char *what)
         inflict_damage(special_damage, special_damage_flavour);
 
     if (defender->alive())
+    {
         switch (brand)
         {
         case SPWPN_FLAMING:
@@ -1916,6 +1917,7 @@ bool attack::apply_damage_brand(const char *what)
         default:
             break;
         }
+    }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {
