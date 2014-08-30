@@ -3226,7 +3226,9 @@ static void _move_player(coord_def move)
             you.turn_is_over = true;
             if (you.digging) // no actual damage
             {
-                mpr("Your mandibles retract as you bump into the wall.");
+                mprf("Your mandibles retract as you bump into %s",
+                     feature_description_at(new_targ, false,
+                                            DESC_THE).c_str());
                 you.digging = false;
             }
             else
