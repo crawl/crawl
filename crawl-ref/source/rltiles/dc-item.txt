@@ -107,14 +107,10 @@ battle_axe3
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
 executioner_axe3
-%rim 1
 
-##Polearm
-%rim 0
+##Polearms
 spear1 WPN_SPEAR
-%rim 1
 spear2
-%rim 0
 spear3
 trident1 WPN_TRIDENT
 trident2
@@ -122,10 +118,9 @@ trident3
 halberd1 WPN_HALBERD
 halberd2
 halberd3
-%rim 1
 scythe1 WPN_SCYTHE
 scythe2
-%rim 0
+scythe3
 glaive1 WPN_GLAIVE
 glaive2
 glaive3
