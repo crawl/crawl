@@ -91,12 +91,10 @@ claymore_blessed WPN_BLESSED_CLAYMORE
 demon_blade WPN_DEMON_BLADE
 blessed_blade WPN_BLESSED_BLADE
 
-##Axe
-%rim 1
+##Axes
 hand_axe1 WPN_HAND_AXE
 hand_axe2
 hand_axe3
-%rim 0
 war_axe1 WPN_WAR_AXE
 war_axe2
 war_axe3
@@ -137,13 +135,11 @@ bardiche3
 demon_trident WPN_DEMON_TRIDENT
 trishula WPN_TRISHULA
 
-##Staff
+##Staves
 staff WPN_STAFF
-%rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
 quarterstaff3
-%rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
 lajatang3
