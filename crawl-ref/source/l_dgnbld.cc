@@ -729,7 +729,9 @@ LUAFN(dgn_height)
 
 LUAFN(dgn_primary_vault_dimensions)
 {
-    LINES(ls, 1, lines);
+    // we don't need this because this function doesn't use the
+    //  current map
+    // LINES(ls, 1, lines);
 
     static const int NO_PRIMARY_VAULT = 99999;
 
@@ -738,8 +740,8 @@ LUAFN(dgn_primary_vault_dimensions)
     int y_min =  NO_PRIMARY_VAULT;
     int y_max = -NO_PRIMARY_VAULT;
 
-    for (int y = 0; y < lines.height(); y++)
-        for (int x = 0; x < lines.width(); x++)
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
         {
             if (env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
             {
