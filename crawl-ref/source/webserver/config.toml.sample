@@ -51,6 +51,10 @@ watch_socket_dirs = false
 milestone_files = ["./milestones"]
 list_savegames = false
 
+# scoring config
+max_score_list_length = 1000
+
+
 # Set to a URL with %s where lowercased player name should go in order to
 # hyperlink WebTiles spectator names to their player pages.
 # Leave out to disable player page hyperlinks

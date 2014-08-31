@@ -18,6 +18,9 @@ from conf import config
 import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
+
+from score_handler import ScoreTopNHandler
+
 import process_handler
 import userdb
 
@@ -175,10 +178,14 @@ def purge_login_tokens_timeout():
 
 
 def bind_server():
+    class ForbiddenHandler(tornado.web.RequestHandler):
+        def get(self):
+            raise tornado.web.HTTPError(403)
+
     settings = {
         "static_path": config.static_path,
         "template_loader": util.DynamicTemplateLoader.get(config.template_path)
-        }
+    }
 
     if config.get("no_cache"):
         settings["static_handler_class"] = NoCacheHandler
@@ -187,9 +194,9 @@ def bind_server():
         (r"/", MainHandler, {"action": "lobby"}),
         (r"/play/(.*)", MainHandler, {"action": "play"}),
         (r"/watch/(.*)", MainHandler, {"action": "watch"}),
+        (r"/scores/(.*)", MainHandler, {"action": "scores"}),
         (r"/socket", CrawlWebSocket),
-        (r"/gamedata/(.*)/(.*)", GameDataHandler)
-        ], gzip=True, **settings)
+        (r"/gamedata/(.*)/(.*)", GameDataHandler)], gzip=True, **settings)
 
     kwargs = {}
     if config.get("http_connection_timeout") is not None:

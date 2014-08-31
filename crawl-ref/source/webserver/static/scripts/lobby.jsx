@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
-define(["react", "comm", "pubsub", "user", "jsx!misc", "jsx!login", "jquery"],
-function (React, comm, pubsub, user, misc, login, $) {
+define(["react", "comm", "pubsub", "user", "jsx!misc", "jsx!login",
+        "jsx!scorenav", "jquery"],
+function (React, comm, pubsub, user, misc, login, scorenav, $) {
     "use strict";
 
     var extend = $.extend;
@@ -10,6 +11,7 @@ function (React, comm, pubsub, user, misc, login, $) {
     var LoginForm = login.LoginForm;
     var PasswordChangeLink = login.PasswordChangeLink;
     var LogoutLink = login.LogoutLink;
+    var ScoreNavigation = scorenav.ScoreNavigation;
 
     // RC file editor form
     var RcEditor = React.createClass({
@@ -18,10 +20,12 @@ function (React, comm, pubsub, user, misc, login, $) {
                 contents: null
             };
         },
+
         componentDidMount: function () {
             comm.register_handler("rcfile_contents", this.receive_rc_contents);
             comm.send_message("get_rc", { game_id: this.props.game_id });
         },
+
         componentWillUnmount: function () {
             comm.unregister_handler("rcfile_contents", this.receive_rc_contents);
         },
@@ -34,9 +38,11 @@ function (React, comm, pubsub, user, misc, login, $) {
         handle_change: function (ev) {
             this.setState({contents: ev.target.value});
         },
+
         handle_cancel: function (ev) {
             this.props.on_finished();
         },
+
         handle_save: function (ev) {
             comm.send_message("set_rc", {
                 game_id: this.props.game_id,
@@ -44,15 +50,18 @@ function (React, comm, pubsub, user, misc, login, $) {
             });
             this.props.on_finished();
         },
+
         handle_reset: function (ev) {
             comm.send_message("reset_rc", {game_id: this.props.game_id});
             this.setState({contents: null});
         },
+
         handle_drag_over: function (ev) {
             ev.stopPropagation();
             ev.preventDefault();
             ev.dataTransfer.dropEffect = "copy";
         },
+
         handle_drop: function (ev) {
             var file = ev.dataTransfer.files[0];
             if (file)
@@ -134,6 +143,7 @@ function (React, comm, pubsub, user, misc, login, $) {
             else
                 location.href = "/play/" + g.id;
         },
+
         start_game: function (ev) {
             if (history)
             {
@@ -142,18 +152,21 @@ function (React, comm, pubsub, user, misc, login, $) {
                 pubsub.publish("url_change");
             }
         },
+
         edit_rc: function (ev) {
             var game_id = this.state.selected_game.id;
             this.setState({editing_rc: game_id});
             ev.preventDefault();
         },
+
         stop_editing: function () {
             this.setState({editing_rc: null});
         },
+
         select_version: function (v) {
             var game;
             if (v !== this.more_versions_text())
-                game = collect_version_games(this.props.games, v)[0];
+                game = user.collect_version_games(this.props.games, v)[0];
             else
             {
                 game = this.props.games.filter(function (g) {
@@ -162,6 +175,7 @@ function (React, comm, pubsub, user, misc, login, $) {
             }
             this.setState({selected_game: game});
         },
+
         select_game: function (g) {
             this.setState({selected_game: g});
         },
@@ -199,7 +213,7 @@ function (React, comm, pubsub, user, misc, login, $) {
             var sel_ver = sel.version || sel.name;
             // show all hidden versions as long as one is selected
             var show_hidden = this.is_hidden_version(sel_ver);
-            var versions = collect_versions(this.props.games);
+            var versions = user.collect_versions(this.props.games);
             if (!show_hidden)
             {
                 var total_length = versions.length;
@@ -220,7 +234,7 @@ function (React, comm, pubsub, user, misc, login, $) {
                 </ol>
               </div>
             );
-            var games = collect_version_games(this.props.games, sel_ver);
+            var games = user.collect_version_games(this.props.games, sel_ver);
             var mode_select = games.length <= 1 ? null : (
               <div>Mode:
                 <ol className="select">
@@ -269,22 +283,6 @@ function (React, comm, pubsub, user, misc, login, $) {
         }
     });
 
-    function collect_versions(games)
-    {
-        var versions = [];
-        for (var i = 0; i < games.length; ++i)
-        {
-            if (versions.indexOf(games[i].version || games[i].name) === -1)
-                versions.push(games[i].version || games[i].name);
-        }
-        return versions;
-    }
-    function collect_version_games(games, v)
-    {
-        return games.filter(function (g) {
-            return (g.version || g.name) === v;
-        });
-    }
 
 
     // One line in the list of running games
@@ -318,7 +316,8 @@ function (React, comm, pubsub, user, misc, login, $) {
                 idle_time = null;
             var title = user.nerd_description(g.username, g.nerdtype, g.devname);
             var watch = <a href={"/watch/" + g.username} className={g.nerdtype}
-                           onClick={this.handle_click} title={title}>{g.username}</a>;
+                           onClick={this.handle_click}
+                           title={title}>{g.username}</a>;
             return <tr>
                      <td>{watch}</td>
                      <td className="game_id">{g.game_id}</td>
@@ -342,9 +341,11 @@ function (React, comm, pubsub, user, misc, login, $) {
                 sort: [{field: "username", down: false}]
             };
         },
+
         componentDidMount: function () {
             this.interval = setInterval(this.forceUpdate.bind(this), 1000);
         },
+
         componentWillUnmount: function () {
             clearInterval(this.interval);
         },
@@ -435,6 +436,7 @@ function (React, comm, pubsub, user, misc, login, $) {
         }
     });
 
+
     // Root component for the lobby
     //
     // Handles lobby events and stores the relevant data as state.
@@ -450,11 +452,14 @@ function (React, comm, pubsub, user, misc, login, $) {
                 footer: null
             };
         },
+
         componentDidMount: function () {
             comm.register_handler("lobby", this.lobby);
             comm.register_handler("lobby_html", this.lobby_html);
             comm.register_handler("game_info", this.game_info);
+            comm.send_message("get_game_info");
         },
+
         componentWillUnmount: function () {
             comm.unregister_handler("lobby", this.lobby);
             comm.unregister_handler("lobby_html", this.lobby_html);
@@ -497,12 +502,14 @@ function (React, comm, pubsub, user, misc, login, $) {
             }
             this.setState({running_games: rg});
         },
+
         lobby_html: function (data) {
             this.setState({
                 banner: data.banner,
                 footer: data.footer
             });
         },
+
         game_info: function (data) {
             this.setState({games: data.games,
                            game_link_settings: data.settings || {},
@@ -534,10 +541,16 @@ function (React, comm, pubsub, user, misc, login, $) {
                              </div>;
             }
             var links = null;
+            var score_nav = null;
             if (this.state.games)
+                score_nav = <ScoreNavigation games={this.state.games} />;
+            if (this.state.games && this.state.username)
+            {
                 links = <GameSelector games={this.state.games}
                                       settings={this.state.game_link_settings}
                                       saved_games={this.state.saved_games} />;
+            }
+
             var running_games = null;
             if (this.state.running_games.length)
                 running_games = <RunningGamesList games={this.state.running_games} />;
@@ -548,6 +561,7 @@ function (React, comm, pubsub, user, misc, login, $) {
                      {banner}
                      {links}
                      {running_games}
+                     {score_nav}
                      {footer}
                    </div>;
         }

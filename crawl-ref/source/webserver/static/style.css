@@ -485,3 +485,23 @@ ol.select li:hover {
 #minimap, #minimap_overlay {
     position: absolute;
 }
+
+select {
+    background-color: inherit;
+    color: inherit;
+    font: inherit;
+    border: 1px solid #666;
+}
+
+select option {
+    background-color: black;
+    color: white;
+}
+
+input {
+    font: inherit;
+}
+
+form {
+    margin: 0px;
+}

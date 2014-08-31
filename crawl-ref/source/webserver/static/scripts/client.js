@@ -1,6 +1,6 @@
-define(["exports", "jquery", "react", "comm",
-        "jsx!lobby", "jsx!loader", "pubsub", "keyboard"],
-function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
+define(["exports", "jquery", "react", "comm", "user",
+        "jsx!lobby", "jsx!loader", "jsx!scores", "pubsub", "keyboard"],
+function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
     "use strict";
 
     window.debug_mode = false;
@@ -25,6 +25,8 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
             case "play":
             case "watch":
                 return Loader();
+            case "scores":
+                return Scores();
             case "closed":
                 return React.DOM.div({}, "The connection was closed:",
                                      React.DOM.br(),
@@ -105,6 +107,24 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
                 username: watch_user
             });
             update({state: "watch"});
+        }
+
+        var scores_re = new RegExp("^/scores/top([\\d]+)/([^/]+)/" +
+                                   "([^/]+)(/([^/]+))?");
+        var scores = scores_re.exec(location.pathname);
+        if (scores)
+        {
+            var game_mode = user.full_mode_name(scores[3]);
+            var game_map = null;
+            if (scores[5] !== undefined)
+                game_map = scores[5];
+            comm.send_message("get_scores", {
+                num_scores: scores[1],
+                game_version: scores[2],
+                game_mode: game_mode,
+                game_map: game_map
+            });
+            update({state: "scores"});
         }
         else if (location.pathname == "/")
         {

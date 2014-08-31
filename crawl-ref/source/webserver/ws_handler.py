@@ -1,17 +1,20 @@
+import codecs
+import datetime
+import locale
+import logging
+import os
+import random
+import re
+import signal
+import time
+import subprocess
+import urlparse
+import zlib
+
 from tornado.escape import json_encode, json_decode, utf8, url_unescape
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
-
-import os
-import subprocess
-import logging
-import signal
-import time, datetime
-import codecs
-import random
-import zlib
-import urlparse
 
 from conf import config
 import checkoutput, userdb
@@ -167,9 +170,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "set_rc": self.set_rc,
             "reset_rc": self.reset_rc,
             "change_password": self.change_password,
+            "get_game_info": self.get_game_info,
+            "get_scores": self.get_scores,
         }
 
-    client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
+    client_closed = property(lambda self: (not self.ws_connection) \
+                             or self.ws_connection.client_terminated)
 
     def _process_log_msg(self, msg, kwargs):
         return "#%-5s %s" % (self.id, msg), kwargs
@@ -192,7 +198,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def open(self):
         compression = "on"
-        if isinstance(self.ws_connection, getattr(tornado.websocket, "WebSocketProtocol76", ())):
+        if isinstance(self.ws_connection,
+                      getattr(tornado.websocket, "WebSocketProtocol76", ())):
             # Old Websocket versions don't support binary messages
             self.deflate = False
             compression = "off, old websockets"
@@ -204,27 +211,31 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 compression = "deflate-frame extension"
 
         if config.get("logging_config", {}).get('enable_access_log'):
-            self.logger.info("Socket opened from ip %s (fd%s, compression: %s). UA: %s.",
-                            self.request.remote_ip,
-                            self.ws_connection.stream.socket.fileno(),
-                            compression, self.request.headers.get("User-Agent"))
+            msg = ("Socket opened from ip {0} (fd{1}, compression: {2}). "
+                   "UA: {3}.".format(self.request.remote_ip,
+                                     self.ws_connection.stream.socket.fileno(),
+                                     compression,
+                                     self.request.headers.get("User-Agent")))
+            self.logger.info(msg)
         sockets.add(self)
 
         self.reset_timeout()
 
         if config.max_connections < len(sockets):
             self.send_message("close", reason="The maximum number of "
-                              + "connections has been reached, sorry :(")
+                              "connections has been reached, sorry :(")
             self.close()
         else:
             # don't allow cookie authentication from cross-site requests
             # (protocol mismatch is fine)
-            origin_host = urlparse.urlsplit(self.request.headers.get("Origin", '')).netloc
+            header = self.request.headers.get("Origin", '')
+            origin_host = urlparse.urlsplit(header).netloc
             if origin_host != self.request.host:
-                logging.warning("Cross-site cookie authentication attempt from"
-                                " %s (origin: %s) (host: %s)" % (self.request.remote_ip,
-                                                                 origin_host,
-                                                                 self.request.host))
+                msg = ("Cross-site cookie authentication attempt from {0} "
+                       "(origin: {1}, host: {2})".format(self.request.remote_ip,
+                                                         origin_host,
+                                                         self.request.host))
+                logging.warning(msg)
                 return
 
             if self.get_cookie("sid"):
@@ -232,8 +243,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 sid = url_unescape(self.get_cookie("sid"))
                 session = userdb.session_info(sid)
                 if session and session.get("username"):
-                    self.logger.info("Session user: %s.",
-                                     session["username"])
+                    self.logger.info("Session user: " + session["username"])
                     self.do_login(session["username"], sid=sid)
             if self.username is None and self.get_cookie("login"):
                 # long-lived saved login
@@ -258,21 +268,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_lobby(self):
         from process_handler import processes
+        self.send_lobby_html()
         data = [p.lobby_entry() for p in processes.values()]
-        banner_html = self.render_string("banner.html", username=self.username)
-        footer_html = self.render_string("footer.html", username=self.username)
-        self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
         self.send_message("lobby", entries=data)
 
-    def send_game_links(self):
-        if config.get("list_savegames"):
-            saved_games = list(find_player_savegames(self.username))
-        else:
-            saved_games = []
-        # Rerender Banner and Footer
+    def send_lobby_html(self):
         banner_html = self.render_string("banner.html", username=self.username)
         footer_html = self.render_string("footer.html", username=self.username)
         self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
+
+    def get_game_info(self):
+        saved_games = []
+        if config.get("list_savegames") and self.username is not None:
+            saved_games = list(find_player_savegames(self.username))
         self.send_message("game_info", games=config.get("games"),
                           saved_games=saved_games,
                           settings=config.get("game_link_settings"))
@@ -283,7 +291,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.received_pong = False
         self.send_message("ping")
-        self.timeout = self.ioloop.add_timeout(time.time() + config.connection_timeout,
+        self.timeout = self.ioloop.add_timeout(time.time() \
+                                               + config.connection_timeout,
                                                self.check_connection)
 
     def check_connection(self):
@@ -293,7 +302,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Connection timed out.")
             self.close()
         else:
-            if self.is_running() and self.process.idle_time() > config.max_idle_time:
+            if self.is_running() \
+               and self.process.idle_time() > config.max_idle_time:
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.go_lobby()
 
@@ -436,7 +446,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.watched_game:
             self.watched_game.update_watcher_description()
         else:
-            self.send_game_links()
+            self.send_lobby_html()
+            self.get_game_info()
 
     def login(self, username, password, rememberme):
         real_username = userdb.user_passwd_match(username, password)
@@ -448,7 +459,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_message("login_cookie", cookie=cookie,
                                   expires=expires+time.timezone)
         else:
-            self.logger.warning("Failed login for user %s.", username)
+            self.logger.warning("Failed login for user {0}.".format(username))
             self.send_message("login_fail")
 
     def token_login(self, cookie):
@@ -577,8 +588,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = self.rcfile_path(game_id)
         os.remove(rcfile_path)
         if not self.init_user():
-            self.logger.warning("User initialization returned an error for user %s!",
-                                self.username)
+            self.logger.warning("User initialization returned an error for "
+                                "user {0}!".format(self.username))
         try:
             with open(rcfile_path, 'r') as f:
                 contents = f.read()
@@ -589,13 +600,93 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def change_password(self, old_password, new_password):
         if self.username is None: return
         if userdb.user_passwd_match(self.username, old_password):
-            self.logger.info("Changed password for user %s.", self.username)
+            self.logger.info("Changed password for user "
+                             "{0}.".format(self.username))
             success = userdb.set_password(self.username, new_password)
         else:
-            self.logger.warning("Failed password change attempt for user %s.",
-                                self.username)
+            self.logger.warning("Failed password change attempt for "
+                                "user {0}.".format(self.username))
             success = False
         self.send_message("password_change", success=success)
+
+    def parse_scores(self, num_scores, score_file, game_map = None,
+                     morgue_url = None):
+        try:
+            fh = open(score_file, 'rU')
+        except EnvironmentError as e:
+            logging.error("Unable to open score file {0} "
+                          "({1})".format(score_file, e.strerror))
+            return None
+        scores = []
+        for line in fh:
+            score = {}
+            for token in line.strip().split(':'):
+                if token.count('=') == 1:
+                    attr, value = token.split('=')
+                    score[attr] = value
+
+            if game_map is not None and score["map"] != game_map:
+                continue
+            score["rank"] = len(scores) + 1
+            # convert to comma-separated digits.
+            score["score"] = locale.format("%d", int(score["sc"]),
+                                           grouping = True)
+            score["turns"] = locale.format("%d", int(score["turn"]),
+                                          grouping = True)
+            score["place"] = "{0}:{1}".format(score["br"], score["lvl"])
+            # if the game ended properly, we can give a morgue file.
+            if "end" in score:
+                # fix 0-origin month to 1-origin
+                timestamp = str(int(score['end'].rstrip("DS")) + 100000000)
+                ptn = re.compile(r'(\d{2})(\d{2})(\d{2})(\d{2})(\d{6})')
+                score["date"] = ptn.sub(r'\2/\3/\4', timestamp)
+                if morgue_url is not None and 'name' in score:
+                    fstamp = ptn.sub(r'\1\2\3\4-\5', timestamp)
+                    url = "{0}morgue-{1}-{2}.txt".format(morgue_url,
+                                                         score["name"], fstamp)
+                    score["morgue_url"] = url.replace("%n", score["name"])
+            if "name" in score:
+                score["nerdtype"] = config.get_nerdtype(score["name"])
+            scores.append(score)
+            if len(scores) == num_scores:
+                break
+        fh.close()
+
+        if not len(scores):
+            scores = None
+        return scores
+
+    def get_scores(self, num_scores, game_version, game_mode, game_map):
+        game_desc = None
+        game = None
+        scores = None
+        num_scores = int(num_scores)
+        if config.get("max_score_list_length"):
+            num_scores = max(min(config.max_score_list_length, num_scores), 50)
+            game = config.get_game(game_version, game_mode)
+        else:
+            logging.warning("max_score_list_length must be set to return "
+                            "scores")
+        if game is not None and "score_path" in game:
+            valid_entry = True
+            morgue_url = None
+            score_file = game["score_path"]
+            if "morgue_url" in game:
+                morgue_url = game["morgue_url"]
+            if game_map is None:
+                game_desc = game["name"]
+            else:
+                map_entry = config.game_map(game["id"], game_map)
+                if map_entry:
+                    score_file = score_file.replace("%m", game_map)
+                    game_desc = "{0}, {1}".format(game["name"],
+                                                  map_entry["description"])
+
+        ## The requested game and map is valid and we can get scores
+        if game_desc is not None:
+            scores = self.parse_scores(num_scores, score_file, game_map,
+                                       morgue_url)
+        self.send_message("scores", game_desc = game_desc, scores = scores)
 
     def on_message(self, message):
         if self.sid:
@@ -639,12 +730,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
                 compressed = compressed[:-4]
                 self.compressed_bytes_sent += len(compressed)
-                super(CrawlWebSocket, self).write_message(compressed, binary=True)
+                super(CrawlWebSocket, self).write_message(compressed,
+                                                          binary=True)
             else:
                 self.uncompressed_bytes_sent += len(msg)
                 super(CrawlWebSocket, self).write_message(msg)
         except:
-            self.logger.warning("Exception trying to send message.", exc_info = True)
+            self.logger.warning("Exception trying to send message.",
+                                exc_info = True)
             if self.ws_connection != None:
                 self.ws_connection._abort()
 
@@ -684,5 +777,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
 
         if config.get("logging_config", {}).get('enable_access_log'):
-            self.logger.info("Socket closed. (%s bytes sent, compression ratio %s%%)",
-                            self.total_message_bytes, comp_ratio)
+            self.logger.info("Socket closed. ({0} bytes sent, compression "
+                             "ratio {1}%%)".format(self.total_message_bytes,
+                                                  comp_ratio))

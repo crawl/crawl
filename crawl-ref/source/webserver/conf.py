@@ -1,5 +1,6 @@
 import csv
 import glob
+import locale
 import os
 import toml
 import logging
@@ -8,11 +9,11 @@ import sys
 from util import TornadoFilter
 
 
-if os.environ.get('WEBTILES_DEBUG'):
+if os.environ.get("WEBTILES_DEBUG"):
     logging.getLogger().setLevel(logging.DEBUG)
 
 class Conf(object):
-    def __init__(self, path=''):
+    def __init__(self, path=""):
         self.data = None
         self.dev_team = None
         self.player_titles = None
@@ -26,8 +27,8 @@ class Conf(object):
             if os.path.exists("./config.toml"):
                 self.path = "./config.toml"
             else:
-                self.path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                    "config.toml")
+                dirname = os.path.dirname(os.path.abspath(__file__))
+                self.path = os.path.join(dirname, "config.toml")
 
         if not os.path.exists(self.path):
             errmsg = "Could not find the config file (config.toml)!"
@@ -59,6 +60,11 @@ class Conf(object):
             finally:
                 fh.close()
 
+        if self.get("locale"):
+            locale.setlocale(locale.LC_ALL, self.locale)
+        else:
+            locale.setlocale(locale.LC_ALL, '')
+
         devteam_file = self.get("devteam_file")
         if devteam_file:
             try:
@@ -83,7 +89,7 @@ class Conf(object):
         self.games = {}
         # Load any games specified in main config file first
         if self.data.get('games'):
-            for game in  self.data["games"]:
+            for game in self.data["games"]:
                 try:
                     self.load_game_data(game)
                 except ValueError:
@@ -91,11 +97,11 @@ class Conf(object):
                                     "in {1}".format(game["id"], self.path))
         self.load_game_conf_dir()
 
-
     def load_game_data(self, game):
         if game["id"] in self.games:
             raise ValueError
         else:
+            self.load_game_map(game)
             self.games[game["id"]] = game
             logging.info("Loaded game '{0}'".format(game["id"]))
 
@@ -110,6 +116,7 @@ class Conf(object):
             return
 
         for f in sorted(glob.glob(conf_dir + "/*.toml")):
+            logging.info("file {0}".format(f))
             if not os.path.isfile(f):
                 logging.warning("Skipping non-file {0}".format(f))
                 continue
@@ -136,10 +143,12 @@ class Conf(object):
             for game in data["games"]:
                 try:
                     self.load_game_data(game)
+                    ## Add game entry the TOML of the main config so it can be
+                    ## sent to the client.
+                    self.data["games"].append(game)
                 except ValueError:
                     logging.warning("Skipping duplicate definition '{0}' in "
                                     "game config file {1}".format(game["id"], f))
-
 
     def init_logging(self):
         logging_config = self.logging_config
@@ -164,7 +173,7 @@ class Conf(object):
         logging.addLevelName(logging.WARNING, "WARN")
 
         if not logging_config.get("enable_access_log"):
-            logging.getLogger('tornado.access').setLevel(logging.FATAL)
+            logging.getLogger("tornado.access").setLevel(logging.FATAL)
 
     def load_player_titles(self):
         # Don't bother loading titles if we don't have the title sets defined.
@@ -183,7 +192,7 @@ class Conf(object):
                           "({1})".format(title_file, e.strerror))
             sys.exit(1)
 
-        title_r = csv.reader(title_fh, delimiter=' ', quoting=csv.QUOTE_NONE)
+        title_r = csv.reader(title_fh, delimiter=" ", quoting=csv.QUOTE_NONE)
         self.player_titles = {}
         for row in title_r:
             self.player_titles[row[0]] = row[1:]
@@ -232,25 +241,16 @@ class Conf(object):
             return [title, None]
         return ["normal", None]
 
+    def get_game(self, game_version, game_mode):
+        if not self.games:
+            return None
 
-    def get_score_file(self, mode, version, map_name):
-        score_file = None
-        for game in self.games.keys():
+        for id, game in self.games.iteritems():
             if "mode" not in game or "version" not in game:
                 continue
-            if game["mode"] == mode and game["version"] == version:
-                try:
-                    score_file = self.games[game]["score_path"]
-                except:
-                    logging.error("No score file configured for game entry "
-                                  "for {0}".format(game))
-                if map_id is not None:
-                    score_file = score_file.sub("%m", map_id)
-                break
-        if score_file is None:
-            logging.error("Could not find game entry for mode {0} and "
-                          "version {1}".format(mode, version))
-        return score_file
+            if game["mode"] == game_mode and game["version"] == game_version:
+                return game
+        return None
 
     def load_game_map(self, game):
         if not "map_path" in game:
@@ -271,6 +271,15 @@ class Conf(object):
             sys.exit(1)
         game["game_maps"] = data["maps"]
 
+    def game_map(self, game_id, map_name):
+        if not "game_maps" in self.games[game_id]:
+            return None
+        for m in self.games[game_id]["game_maps"]:
+            if m["name"] == map_name:
+                valid_map = True
+                return m
+        return None
+
     def __getattr__(self, name):
         try:
             return self.data[name]
@@ -279,5 +288,6 @@ class Conf(object):
 
     def get(self, *args):
         return self.data.get(*args)
+
 
 config = Conf()
