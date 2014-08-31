@@ -51,6 +51,8 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 giant_spiked_club2
 giant_spiked_club3
 demon_whip WPN_DEMON_WHIP
+demon_whip2
+demon_whip3
 sacred_scourge WPN_SACRED_SCOURGE
 
 ##Short Blades
@@ -89,6 +91,8 @@ claymore2
 claymore3
 claymore_blessed WPN_BLESSED_CLAYMORE
 demon_blade WPN_DEMON_BLADE
+demon_blade2
+demon_blade3
 blessed_blade WPN_BLESSED_BLADE
 
 ##Axes
@@ -128,6 +132,8 @@ bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
 demon_trident WPN_DEMON_TRIDENT
+demon_trident2
+demon_trident3
 trishula WPN_TRISHULA
 
 ##Staves
