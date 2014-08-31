@@ -16,38 +16,42 @@
 
 #####NORMAL
 %sdir item/weapon
-%rim 1
-##Blunt
+%rim 0
+##Maces and Flails
 club WPN_CLUB
+club2
 mace1 WPN_MACE
 mace2
 mace3
 mace_large1 WPN_GREAT_MACE
 mace_large2
+mace_large3
 flail1 WPN_FLAIL
 flail2
 flail3
 dire_flail1 WPN_DIRE_FLAIL
 dire_flail2
 dire_flail3
-%rim 0
 morningstar1 WPN_MORNINGSTAR
 morningstar2
 morningstar3
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-%rim 1
 hammer1 WPN_HAMMER
 hammer2
+hammer3
 bullwhip WPN_WHIP
 bullwhip2
-%rim 0
-sacred_scourge WPN_SACRED_SCOURGE
-trishula WPN_TRISHULA
-demon_whip WPN_DEMON_WHIP
+bullwhip3
 giant_club WPN_GIANT_CLUB
+giant_club2
+giant_club3
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
+giant_spiked_club2
+giant_spiked_club3
+demon_whip WPN_DEMON_WHIP
+sacred_scourge WPN_SACRED_SCOURGE
 
 ##Short Blades
 dagger WPN_DAGGER
@@ -117,7 +121,6 @@ spear3
 trident1 WPN_TRIDENT
 trident2
 trident3
-demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
 halberd3
@@ -131,6 +134,8 @@ glaive3
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
+demon_trident WPN_DEMON_TRIDENT
+trishula WPN_TRISHULA
 
 ##Staff
 staff WPN_STAFF
