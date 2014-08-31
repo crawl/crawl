@@ -39,7 +39,8 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self, arg=None):
         self.render("client.html", title_img=random.choice(title_imgs),
-                    username=None, config=config, action=self.action,
+                    username=None, config=config, filename="scores",
+                    version="trunk", action=self.action,
                     maybe_minified=maybe_minified,
                     use_cdn=config.get("use_cdn", True))
 

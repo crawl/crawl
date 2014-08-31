@@ -1,0 +1,18 @@
+<div class="scores">
+  <form method="get" action="/scoring/top-100.html">
+    <select name="filename">
+{% import mapping %}
+{% for fname, ttl in mapping.scores.items() %}
+{%     set selected = ' selected' if (fname == filename) else '' %}
+      <option value="{{ fname }}"{{ selected }}>{{ ttl }}</option>
+{% end %}
+    </select>
+    <select name="version">
+{% for ver in mapping.version_path.keys() %}
+{%     set selected = ' selected' if (ver == version) else '' %}
+      <option value="{{ ver }}"{{ selected }}>{{ ver }}</option>
+{% end %}
+    </select>
+    <input type="submit" value="View">
+  </form>
+</div>

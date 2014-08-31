@@ -3,45 +3,68 @@
     <title>WebTiles/Top Scores - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script type="text/javascript" src="/static/scripts/contrib/jquery.js"></script>
+    <script type="text/javascript" src="/static/scripts/contrib/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#scores').tablesorter({
+          sortList: [[0, 0]],
+          headers: { 11: { sorter: "text" } },
+        });
+      });
+    </script>
   </head>
   <body>
+    <div style="float: right; margin-top: -7px">
+{% include scoreform.html %}
+    </div>
+    <div style="margin-left: 2px">
     <a href="../../">Back to lobby</a>
-    <h2>Top {{ num }} Scores</h2>
-
-    <table style="font-size: medium">
+    </div>
+{% import mapping %}
+{% set title = mapping.scores[filename] %}
+    <h2>Top {{ score_list_length }} Scores of {{ title }} ({{ version }})</h2>
+{% if not scores %}
+    <p>N/A</p>
+{% else %}
+    <table id="scores" class="tablesorter">
+      <thead>
       <tr>
-       <th></th>
-       <th>Score</th>
-       <th>Player</th>
-       <th>Char</th>
-       <th>God</th>
-       <th>Title</th>
-       <th>Place</th>
-       <th>End</th>
-       <th>XL</th>
-       <th>Turns</th>
-       <th>Runes</th>
-       <th>Ver</th>
+        <th></th>
+        <th>Score</th>
+        <th>Player</th>
+        <th>Char</th>
+        <th>God</th>
+        <th>Title</th>
+        <th>Place</th>
+        <th>End</th>
+        <th>XL</th>
+        <th>Turns</th>
+        <th>Runes</th>
+        <th>Date</th>
+        <th>Ver</th>
       </tr>
-    {% for i, score in enumerate(scores) %}
-    {% if score.sc is not None %}
+      </thead>
+      <tbody>
+{% for i, score in enumerate(scores) %}
       <tr>
-       <td class="rank">{{ i+1 }}</td>
-       <td class="score"><a href="{{ score.dumpURL }}">{{ score.sc }}</a></td>
-       <td class="name">{{ score.name }}</td>
-       <td class="char">{{ score.char }}</td>
-       <td class="god">{{ score.god }}</td>
-       <td class="title">{{ score.title }}</td>
-       <td class="place">{{ score.place }}</td>
-       <td class="tmsg">{{ score.tmsg }}</td>
-       <td class="xl">{{ score.xl }}</td>
-       <td class="turns">{{ score.turn }}</td>
-       <td class="runes">{{ score.urune }}</td>
-       <td class="version">{{ score.v }} </td>
+        <td class="rank">{{ i+1 }}</td>
+        <td class="score"><a href="{{ score.dumpURL }}">{{ score.sc }}</a></td>
+        <td class="name"><a href="../morgue/{{ score.name }}/">{{ score.name }}</a></td>
+        <td class="char">{{ score.char }}</td>
+        <td class="god">{{ score.god }}</td>
+        <td class="title">{{ score.title }}</td>
+        <td class="place">{{ score.place }}</td>
+        <td class="tmsg">{{ score.tmsg }}</td>
+        <td class="xl">{{ score.xl }}</td>
+        <td class="turns">{{ score.turn }}</td>
+        <td class="runes">{{ score.urune }}</td>
+        <td class="date">{{ score.date }}</td>
+        <td class="version">{{ score.v }}</td>
       </tr>
-    {% end %}
-    {% end %}
+{% end %}
+      </tbody>
     </table>
-
+{% end %}
   </body>
 </html>

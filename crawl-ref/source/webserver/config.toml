@@ -54,6 +54,7 @@ list_savegames = false
 
 # Max games to list on server score list
 max_score_list_length = 1000
+min_score_list_length = 100
 
 # Detach from session after startup?
 daemon = false

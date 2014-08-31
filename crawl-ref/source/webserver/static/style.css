@@ -464,6 +464,27 @@ table {
     border-collapse: collapse;
 }
 
+table#scores {
+    font-size: medium;
+}
+
+table#scores th.header {
+    cursor: pointer;
+    margin-right: 15px;
+}
+table#scores th.headerSortDown {
+    background-image: url("asc.gif");
+    background-repeat: no-repeat;
+    background-position: center right;
+    margin-right: 15px;
+}
+table#scores th.headerSortUp {
+    background-image: url("desc.gif");
+    background-repeat: no-repeat;
+    background-position: center right;
+    margin-right: 15px;
+}
+
 td {
     padding-right: 5px;
 }
@@ -477,8 +498,10 @@ td.score {
     text-align: right;
 }
 
-td.score > a {
+td.score > a, td.name > a {
     font-weight: normal;
+    font: inherit;
+    color: inherit;
 }
 
 td.xl {
@@ -491,4 +514,28 @@ td.turns {
 
 td.runes {
     text-align: right
+}
+
+div.scores {
+    margin-left: 8px;
+}
+
+select {
+    background-color: inherit;
+    color: inherit;
+    font: inherit;
+    border: 1px solid #666;
+}
+
+select option {
+    background-color: black;
+    color: white;
+}
+
+input {
+    font: inherit;
+}
+
+form {
+    margin: 0px;
 }
