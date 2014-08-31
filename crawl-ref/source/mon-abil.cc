@@ -2190,11 +2190,14 @@ void shock_serpent_discharge(monster* serpent, coord_def pos, int pow,
     else if (you.see_cell(pos))
         mpr("The air sparks with electricity!");
 
+    // FIXME: should merge the messages.
     for (unsigned int i = 0; i < targets.size(); ++i)
     {
         int amount = roll_dice(3, 4 + pow * 3 / 2);
         amount = targets[i]->apply_ac(amount, 0, AC_HALF);
-        mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
+
+        if (you.see_cell(targets[i]->pos()))
+            mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
         targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
     }
 }
