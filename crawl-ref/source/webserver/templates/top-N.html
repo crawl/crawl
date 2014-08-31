@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>WebTiles/Top Scores - Dungeon Crawl Stone Soup</title>
+    <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+  </head>
+  <body>
+    <a href="../../">Back to lobby</a>
+    <h2>Top {{ num }} Scores</h2>
+
+    <table style="font-size: medium">
+      <tr>
+       <th></th>
+       <th>Score</th>
+       <th>Player</th>
+       <th>Char</th>
+       <th>God</th>
+       <th>Title</th>
+       <th>Place</th>
+       <th>End</th>
+       <th>XL</th>
+       <th>Turns</th>
+       <th>Runes</th>
+       <th>Ver</th>
+      </tr>
+    {% for i, score in enumerate(scores) %}
+    {% if score.sc is not None %}
+      <tr>
+       <td class="rank">{{ i+1 }}</td>
+       <td class="score"><a href="{{ score.dumpURL }}">{{ score.sc }}</a></td>
+       <td class="name">{{ score.name }}</td>
+       <td class="char">{{ score.char }}</td>
+       <td class="god">{{ score.god }}</td>
+       <td class="title">{{ score.title }}</td>
+       <td class="place">{{ score.place }}</td>
+       <td class="tmsg">{{ score.tmsg }}</td>
+       <td class="xl">{{ score.xl }}</td>
+       <td class="turns">{{ score.turn }}</td>
+       <td class="runes">{{ score.urune }}</td>
+       <td class="version">{{ score.v }} </td>
+      </tr>
+    {% end %}
+    {% end %}
+    </table>
+
+  </body>
+</html>

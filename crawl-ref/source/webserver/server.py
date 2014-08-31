@@ -11,6 +11,7 @@ import logging, logging.handlers
 from conf import config
 from util import *
 from ws_handler import *
+from score_handler import ScoreTopNHandler
 from game_data_handler import GameDataHandler
 import process_handler, userdb
 
@@ -146,7 +147,7 @@ def bind_server():
         "static_path": config.static_path,
         "template_loader": DynamicTemplateLoader.get(config.template_path)
         }
-
+    
     if config.get("no_cache"):
         settings["static_handler_class"] = NoCacheHandler
 
@@ -155,7 +156,8 @@ def bind_server():
             (r"/play/(.*)", MainHandler, {"action": "play"}),
             (r"/watch/(.*)", MainHandler, {"action": "watch"}),
             (r"/socket", CrawlWebSocket),
-            (r"/gamedata/(.*)/(.*)", GameDataHandler)
+            (r"/gamedata/(.*)/(.*)", GameDataHandler),
+            (r"/scoring/top-(\d+).html", ScoreTopNHandler),
             ], gzip=True, **settings)
 
     kwargs = {}

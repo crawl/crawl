@@ -52,6 +52,9 @@ list_savegames = false
 # Leave out to disable player page hyperlinks
 # player_url = "http://crawl.akrasiac.org/scoring/players/%s.html"
 
+# Max games to list on server score list
+max_score_list_length = 1000
+
 # Detach from session after startup?
 daemon = false
 # pidfile = "server.pid"
