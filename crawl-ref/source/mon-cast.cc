@@ -4620,15 +4620,18 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
             mons->props["invitation_branch"].get_byte() = which;
     }
 
-    string msg = getSpeakString("branch summon cast prefix");
-    if (!msg.empty())
+    if (you.see_cell(mons->pos()))
     {
-        msg  = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
-        msg += " ";
-        msg += branches[summon_list[which].origin].longname;
-        msg += "!";
-        mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
-            : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
+        string msg = getSpeakString("branch summon cast prefix");
+        if (!msg.empty())
+        {
+            msg  = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+            msg += " ";
+            msg += branches[summon_list[which].origin].longname;
+            msg += "!";
+            mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+                 : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
+        }
     }
 
     for (int i = 0; i < count; i++)
