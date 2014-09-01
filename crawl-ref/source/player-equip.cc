@@ -34,10 +34,6 @@
 
 #include <cmath>
 
-static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
-                          bool msg);
-static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
-                            bool msg);
 static void _mark_unseen_monsters();
 
 /**
@@ -71,7 +67,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 
     you.equip[slot] = item_slot;
 
-    _equip_effect(slot, item_slot, false, msg);
+    equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
         auto_id_inventory();
@@ -91,7 +87,7 @@ bool unequip_item(equipment_type slot, bool msg)
         you.equip[slot] = -1;
 
         if (!you.melded[slot])
-            _unequip_effect(slot, item_slot, false, msg);
+            unequip_effect(slot, item_slot, false, msg);
         else
             you.melded.set(slot, false);
         ash_check_bondage();
@@ -100,6 +96,8 @@ bool unequip_item(equipment_type slot, bool msg)
 }
 
 // Meld a slot (if equipped).
+// Does not handle unequip effects, since melding should be simultaneous (so
+// you should call all unequip effects after all melding is done)
 bool meld_slot(equipment_type slot, bool msg)
 {
     ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
@@ -108,12 +106,13 @@ bool meld_slot(equipment_type slot, bool msg)
     if (you.equip[slot] != -1 && !you.melded[slot])
     {
         you.melded.set(slot);
-        _unequip_effect(slot, you.equip[slot], true, msg);
         return true;
     }
     return false;
 }
 
+// Does not handle equip effects, since unmelding should be simultaneous (so
+// you should call all equip effects after all unmelding is done)
 bool unmeld_slot(equipment_type slot, bool msg)
 {
     ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
@@ -122,7 +121,6 @@ bool unmeld_slot(equipment_type slot, bool msg)
     if (you.equip[slot] != -1 && you.melded[slot])
     {
         you.melded.set(slot, false);
-        _equip_effect(slot, you.equip[slot], true, msg);
         return true;
     }
     return false;
@@ -158,8 +156,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #endif
 }
 
-static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
-                          bool msg)
+void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 {
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);
@@ -180,8 +177,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
         _equip_jewellery_effect(item, unmeld, slot);
 }
 
-static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
-                            bool msg)
+void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 {
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);

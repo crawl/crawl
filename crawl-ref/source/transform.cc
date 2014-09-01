@@ -323,6 +323,11 @@ static void _remove_equipment(const set<equipment_type>& removed,
         else
             meld_slot(e);
     }
+
+    if (meld)
+        for (iter = removed.begin(); iter != removed.end(); ++iter)
+            if (you.slot_item(*iter, true) != NULL)
+                unequip_effect(*iter, you.equip[*iter], true, true);
 }
 
 // FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
@@ -414,6 +419,10 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
 
         _unmeld_equipment_type(e);
     }
+
+    for (iter = melded.begin(); iter != melded.end(); ++iter)
+        if (you.equip[*iter] != -1)
+            equip_effect(*iter, you.equip[*iter], true, true);
 }
 
 void unmeld_one_equip(equipment_type eq)
