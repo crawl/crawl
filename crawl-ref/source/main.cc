@@ -2522,6 +2522,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
+        apply_berserk_penalty = false;
 
         return true;
     }
