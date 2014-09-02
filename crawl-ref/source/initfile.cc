@@ -967,9 +967,6 @@ void game_options::reset_options()
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
     tile_monster_col      = str_to_tile_colour("#660000");
-    tile_neutral_col      = str_to_tile_colour("#660000");
-    tile_peaceful_col     = str_to_tile_colour("#664400");
-    tile_friendly_col     = str_to_tile_colour("#664400");
     tile_plant_col        = str_to_tile_colour("#446633");
     tile_item_col         = str_to_tile_colour("#005544");
     tile_unseen_col       = str_to_tile_colour("black");
@@ -3562,10 +3559,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
         tile_monster_col = str_to_tile_colour(field);
-    else if (key == "tile_neutral_col")
-        tile_neutral_col = str_to_tile_colour(field);
-    else if (key == "tile_friendly_col")
-        tile_friendly_col = str_to_tile_colour(field);
     else if (key == "tile_plant_col")
         tile_plant_col = str_to_tile_colour(field);
     else if (key == "tile_item_col")
@@ -4337,9 +4330,6 @@ static void _write_minimap_colours()
 {
     _write_vcolour("tile_player_col", Options.tile_player_col);
     _write_vcolour("tile_monster_col", Options.tile_monster_col);
-    _write_vcolour("tile_neutral_col", Options.tile_neutral_col);
-    _write_vcolour("tile_peaceful_col", Options.tile_peaceful_col);
-    _write_vcolour("tile_friendly_col", Options.tile_friendly_col);
     _write_vcolour("tile_plant_col", Options.tile_plant_col);
     _write_vcolour("tile_item_col", Options.tile_item_col);
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
