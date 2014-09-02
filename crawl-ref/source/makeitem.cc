@@ -2218,6 +2218,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              0);
         }
         while (stype == POT_POISON && item_level < 1
+               // Too dangerous on monsters early on
                || stype == POT_BERSERK_RAGE && item_level < 2
                || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
                    && --tries > 0));
