@@ -389,9 +389,6 @@ public:
     // minimap colours
     VColour     tile_player_col;
     VColour     tile_monster_col;
-    VColour     tile_neutral_col;
-    VColour     tile_peaceful_col;
-    VColour     tile_friendly_col;
     VColour     tile_plant_col;
     VColour     tile_item_col;
     VColour     tile_unseen_col;
