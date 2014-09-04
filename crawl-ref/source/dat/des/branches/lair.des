@@ -2079,7 +2079,7 @@ MONS:    plant / bush, wolf
 MONS:    black bear / polar bear, spriggan / centaur w:4
 KMONS:   9 = 9
 KMONS:   * = spriggan rider / faun w:4
-ITEM:    fruit
+ITEM:    fruit q:1
 KITEM:   9* = *
 KFEAT:   9 = W
 SHUFFLE: wW'"^~-_9 / ''GG''''* / '''0''''% / ``````22G
