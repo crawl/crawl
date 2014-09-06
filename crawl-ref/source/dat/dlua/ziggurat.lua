@@ -205,7 +205,8 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "guardian serpent w:1 / deep troll shaman w:1 / " ..
                 "raiju w:1 / hell beast w:1", { weight = 5 }),
      with_props("place:Shoals:$ w:125 / merfolk aquamancer / water nymph w:5 / " ..
-                "merfolk impaler w:5 / merfolk javelineer", { weight = 5 }),
+                "merfolk impaler w:5 / merfolk javelineer / " ..
+                "octopode crusher w:12", { weight = 5 }),
      "place:Spider:$ w:115 / ghost moth w:15 / red wasp / " ..
                 "orb spider",
      "place:Crypt:$ w:260 / curse skull w:5 / profane servitor w:5 / " ..
@@ -333,8 +334,10 @@ mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
                       "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
                       "swamp dragon w:5 / tentacled monstrosity / " ..
                       "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
-                      "alligator snapping turtle w:6 / ghost moth w:8 / " ..
-                      "emperor scorpion w:8 / moth of wrath w:4", { weight = 5 }))
+                      "alligator snapping turtle w:6 / " ..
+                      "octopode crusher / ghost moth w:8 / " ..
+                      "emperor scorpion w:8 / moth of wrath w:4",
+                      { weight = 5 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
