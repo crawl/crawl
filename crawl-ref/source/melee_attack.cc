@@ -1182,9 +1182,6 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
         uc_attack = UNAT_NO_ATTACK;
     }
 
-    if (_tran_forbid_aux_attack(uc_attack))
-        uc_attack = UNAT_NO_ATTACK;
-
     return uc_attack;
 }
 
@@ -3746,37 +3743,13 @@ void melee_attack::chaos_affect_actor(actor *victim)
     }
 }
 
-bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
-{
-    switch (atk)
-    {
-    case UNAT_KICK:
-    case UNAT_PECK:
-    case UNAT_HEADBUTT:
-    case UNAT_PUNCH:
-        return you.form == TRAN_ICE_BEAST
-               || you.form == TRAN_DRAGON
-               || you.form == TRAN_SPIDER
-               || you.form == TRAN_BAT;
-
-    case UNAT_CONSTRICT:
-        return !form_keeps_mutations();
-
-    default:
-        return false;
-    }
-}
-
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 {
-    // No extra unarmed attacks for disabled mutations.
-    if (_tran_forbid_aux_attack(atk))
-        return false;
-
     if (atk == UNAT_CONSTRICT)
     {
         return is_uc
                 || you.species == SP_NAGA && you.experience_level > 12
+                   && form_keeps_mutations()
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
     }
 
@@ -3824,7 +3797,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
                || you.mutation[MUT_ANTIMAGIC_BITE];
 
     case UNAT_PUNCH:
-        return is_uc && !one_chance_in(3);
+        // form_can_wield() used as a proxy for 'has usable hands'
+        return is_uc && form_can_wield() && !one_chance_in(3);
 
     default:
         return false;
