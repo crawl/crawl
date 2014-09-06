@@ -793,7 +793,11 @@ static string _hair_str(actor* target, bool &plural)
     }
 }
 
-// Severe bad mutation
+/**
+ * Malmutate the player.
+ *
+ * Significantly worse than the spell. (Gives 1-2 muts, never pure-random.)
+ */
 void MiscastEffect::_malmutate()
 {
     you_msg = "Your body is distorted in a weirdly horrible way!";
