@@ -3072,7 +3072,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             monster *attkmon = attacker->as_monster();
             attkmon->set_hit_dice(attkmon->get_experience_level() - 1);
-            if (attkmon->get_hit_dice() <= 0)
+            if (attkmon->get_experience_level() <= 0)
                 attacker->as_monster()->suicide();
 
             if (defender_visible)
