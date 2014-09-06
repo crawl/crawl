@@ -906,7 +906,8 @@ A filling potion of sludge, high in cereal fibre.
 %%%%
 potion of resistance
 
-A potion which grants you temporary resistance to the elements and poison.
+A potion which grants you temporary resistance to a variety of harmful effects:
+fire, cold, electricity, poison, and acid.
 %%%%
 potion of restore abilities
 
