@@ -3980,7 +3980,7 @@ spret_type _jump_player(int jump_range, int exh_red, bool fail)
                    tgt.landing_site, tgt.additional_sites,
                    tgt.jump_is_blocked))
     {
-        return SPRET_FAIL;
+        return SPRET_ABORT;
     }
 
     you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
