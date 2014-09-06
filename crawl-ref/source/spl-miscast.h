@@ -119,6 +119,7 @@ private:
     bool _send_to_abyss();
     bool _malign_gateway();
     void _do_poison(int amount);
+    void _malmutate();
 
     bool avoid_lethal(int dam);
 

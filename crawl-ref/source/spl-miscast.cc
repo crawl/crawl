@@ -793,6 +793,17 @@ static string _hair_str(actor* target, bool &plural)
     }
 }
 
+// Severe bad mutation
+void MiscastEffect::_malmutate()
+{
+    you_msg = "Your body is distorted in a weirdly horrible way!";
+    // We don't need messages when the mutation fails, because we give our
+    // own (which is justified anyway as you take damage).
+    mutate(RANDOM_BAD_MUTATION, cause, false, false);
+    if (coinflip())
+        mutate(RANDOM_BAD_MUTATION, cause, false, false);
+}
+
 void MiscastEffect::_conjuration(int severity)
 {
     int num;
@@ -2042,13 +2053,7 @@ void MiscastEffect::_transmutation(int severity)
                     return;
                 }
 
-                you_msg = "Your body is distorted in a weirdly horrible way!";
-                // We don't need messages when the mutation fails,
-                // because we give our own (which is justified anyway as
-                // you take damage).
-                mutate(RANDOM_BAD_MUTATION, cause, false, false);
-                if (coinflip())
-                    mutate(RANDOM_BAD_MUTATION, cause, false, false);
+                _malmutate();
             }
             else
                 target->malmutate(cause);
@@ -3023,10 +3028,7 @@ void MiscastEffect::_zot()
             }
             else
             {
-                you_msg = "Your body is distorted in a weirdly horrible way!";
-                mutate(RANDOM_BAD_MUTATION, cause, false, false);
-                if (coinflip())
-                    mutate(RANDOM_BAD_MUTATION, cause, false, false);
+                _malmutate();
                 do_msg();
             }
             break;
