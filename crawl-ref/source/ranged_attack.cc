@@ -654,6 +654,7 @@ bool ranged_attack::apply_missile_brand()
     if (projectile->base_type != OBJ_MISSILES)
         return false;
 
+    special_damage = 0;
     special_missile_type brand = get_ammo_brand(*projectile);
     if (brand == SPMSL_CHAOS)
         brand = random_chaos_missile_brand();
