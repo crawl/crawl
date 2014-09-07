@@ -3836,17 +3836,19 @@ int check_stealth()
     // makes you extremely unstealthy.
     if (you.backlit())
         stealth = stealth * 2 / 5;
+
     // On the other hand, shrouding has the reverse effect, if you know
     // how to make use of it:
     if (you.umbra())
     {
-        int umbra_multiplier = 1;
+        double umbra_multiplier = 1;
         if (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL))
-            umbra_multiplier = (you.piety + MAX_PIETY) / MAX_PIETY;
+            umbra_multiplier = double(you.piety + MAX_PIETY) / MAX_PIETY;
         if (player_equip_unrand(UNRAND_SHADOWS))
-            umbra_multiplier = max(umbra_multiplier, 3 / 2);
+            umbra_multiplier = max(umbra_multiplier, 1.5);
         stealth *= umbra_multiplier;
     }
+
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (you_worship(GOD_QAZLAL) && !player_under_penance()
         && you.piety >= piety_breakpoint(0))
