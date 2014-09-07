@@ -1011,6 +1011,211 @@ bool melee_attack::check_unrand_effects()
     return false;
 }
 
+
+
+class AuxConstrict: public AuxAttackType
+{
+public:
+    AuxConstrict()
+    : AuxAttackType(0, 10, "grab") { };
+};
+
+class AuxKick: public AuxAttackType
+{
+public:
+    AuxKick()
+    : AuxAttackType(-1, 100, "kick") { };
+
+    int get_damage() const
+    {
+        if (you.has_usable_hooves())
+        {
+            // Max hoof damage: 10.
+            return player_mutation_level(MUT_HOOVES) * 5 / 3;
+        }
+
+        if (you.has_usable_talons())
+        {
+            // Max talon damage: 9.
+            return 1 + player_mutation_level(MUT_TALONS);
+        }
+
+        // Max spike damage: 8.
+        // ... yes, apparently tentacle spikes are "kicks".
+        return player_mutation_level(MUT_TENTACLE_SPIKE);
+    }
+
+    string get_verb() const
+    {
+        if (you.has_usable_talons())
+            return "claw";
+        if (player_mutation_level(MUT_TENTACLE_SPIKE))
+            return "pierce";
+        return name;
+    }
+
+    string get_name() const
+    {
+        if (player_mutation_level(MUT_TENTACLE_SPIKE))
+            return "tentacle spike";
+        return name;
+    }
+};
+
+class AuxHeadbutt: public AuxAttackType
+{
+public:
+    AuxHeadbutt()
+    : AuxAttackType(5, 100, "headbutt") { };
+
+    int get_damage() const
+    {
+        return damage + player_mutation_level(MUT_HORNS) * 3;
+    }
+};
+
+class AuxPeck: public AuxAttackType
+{
+public:
+    AuxPeck()
+    : AuxAttackType(6, 75, "peck") { };
+};
+
+class AuxTailslap: public AuxAttackType
+{
+public:
+    AuxTailslap()
+    : AuxAttackType(6, 125, "tail-slap") { };
+
+    int get_damage() const
+    {
+        return damage + max(0, player_mutation_level(MUT_STINGER) * 2 - 1);
+    }
+
+    int get_brand() const
+    {
+        return player_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
+    }
+};
+
+class AuxPunch: public AuxAttackType
+{
+public:
+    AuxPunch()
+    : AuxAttackType(5, 100, "punch") { };
+
+    int get_damage() const
+    {
+        const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
+
+        if (you.form == TRAN_BLADE_HANDS)
+            return base_dam + 6;
+
+        if (you.has_usable_claws())
+            return base_dam + roll_dice(you.has_claws(), 3);
+
+        return base_dam;
+    }
+
+    string get_name() const
+    {
+        if (you.form == TRAN_BLADE_HANDS)
+            return "slash";
+
+        if (you.has_usable_claws())
+            return "claw";
+
+        if (you.has_usable_tentacles())
+            return "tentacle-slap";
+
+        return name;
+    }
+
+    int get_noise_factor() const
+    {
+        if (you.form == TRAN_BLADE_HANDS)
+            return 75;
+
+        if (you.has_usable_tentacles())
+            return 125;
+
+        return noise_factor;
+    }
+};
+
+class AuxBite: public AuxAttackType
+{
+public:
+    AuxBite()
+    : AuxAttackType(0, 75, "bite") { };
+
+    int get_damage() const
+    {
+        const int fang_damage = you.has_usable_fangs() * 2;
+        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
+            return fang_damage + div_rand_round(2 * you.get_hit_dice(), 3);
+
+        const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
+
+        if (player_mutation_level(MUT_ACIDIC_BITE))
+            return fang_damage + str_damage + roll_dice(2,4);
+
+        return fang_damage + str_damage;
+    }
+
+    int get_brand() const
+    {
+        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
+            return SPWPN_ANTIMAGIC;
+
+        if (player_mutation_level(MUT_ACIDIC_BITE))
+            return SPWPN_ACID;
+
+        return SPWPN_NORMAL;
+    }
+};
+
+class AuxPseudopods: public AuxAttackType
+{
+public:
+    AuxPseudopods()
+    : AuxAttackType(4, 125, "bludgeon") { };
+
+    int get_damage() const { return damage * you.has_usable_pseudopods(); }
+};
+
+class AuxTentacles: public AuxAttackType
+{
+public:
+    AuxTentacles()
+    : AuxAttackType(12, 100, "squeeze") { };
+};
+
+
+static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
+static const AuxKick        AUX_KICK = AuxKick();
+static const AuxPeck        AUX_PECK = AuxPeck();
+static const AuxHeadbutt    AUX_HEADBUTT = AuxHeadbutt();
+static const AuxTailslap    AUX_TAILSLAP = AuxTailslap();
+static const AuxPunch       AUX_PUNCH = AuxPunch();
+static const AuxBite        AUX_BITE = AuxBite();
+static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
+static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
+
+static const AuxAttackType* const aux_attack_types[] =
+{
+    &AUX_CONSTRICT,
+    &AUX_KICK,
+    &AUX_HEADBUTT,
+    &AUX_PECK,
+    &AUX_TAILSLAP,
+    &AUX_PUNCH,
+    &AUX_BITE,
+    &AUX_PSEUDOPODS,
+    &AUX_TENTACLES,
+};
+
+
 /* Setup all unarmed (non attack_type) variables
  *
  * Clears any previous unarmed attack information and sets everything from
@@ -1018,148 +1223,31 @@ bool melee_attack::check_unrand_effects()
  */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
 {
-    noise_factor = 100;
-    aux_attack.clear();
-    aux_verb.clear();
-    damage_brand = SPWPN_NORMAL;
-    aux_damage = 0;
-    int str_bite_damage = 0;
+    const int num_aux_objs = ARRAYSZ(aux_attack_types);
+    const int num_aux_atks = UNAT_LAST_ATTACK - UNAT_FIRST_ATTACK + 1;
+    COMPILE_CHECK(num_aux_objs == num_aux_atks);
 
-    switch (atk)
+    ASSERT(atk >= UNAT_FIRST_ATTACK);
+    ASSERT(atk <= UNAT_LAST_ATTACK);
+    const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
+
+    aux_damage = aux->get_damage();
+    damage_brand = (brand_type)aux->get_brand();
+    noise_factor = aux->get_noise_factor();
+    aux_attack = aux->get_name();
+    aux_verb = aux->get_verb();
+
+
+    // prob of vampiric bite:
+    // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
+    // bloodless
+    if (atk == UNAT_BITE
+        && _vamp_wants_blood_from_monster(defender->as_monster())
+        && (you.hunger_state == HS_STARVING
+            || you.hunger_state < HS_SATIATED && coinflip()
+            || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
     {
-    case UNAT_CONSTRICT:
-        aux_attack = aux_verb = "grab";
-        aux_damage = 0;
-        noise_factor = 10; // extremely quiet?
-        break;
-
-    case UNAT_KICK:
-        aux_attack = aux_verb = "kick";
-        aux_damage = 5;
-
-        if (you.has_usable_hooves())
-        {
-            // Max hoof damage: 10.
-            aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
-        }
-        else if (you.has_usable_talons())
-        {
-            aux_verb = "claw";
-
-            // Max talon damage: 9.
-            aux_damage += 1 + player_mutation_level(MUT_TALONS);
-        }
-        else if (player_mutation_level(MUT_TENTACLE_SPIKE))
-        {
-            aux_attack = "tentacle spike";
-            aux_verb = "pierce";
-
-            // Max spike damage: 8.
-            aux_damage += player_mutation_level(MUT_TENTACLE_SPIKE);
-        }
-
-        break;
-
-    case UNAT_PECK:
-        aux_damage = 6;
-        noise_factor = 75;
-        aux_attack = aux_verb = "peck";
-        break;
-
-    case UNAT_HEADBUTT:
-        aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
-        aux_attack = aux_verb = "headbutt";
-        break;
-
-    case UNAT_TAILSLAP:
-        aux_attack = aux_verb = "tail-slap";
-
-        aux_damage = 6 * you.has_usable_tail();
-
-        noise_factor = 125;
-
-        if (player_mutation_level(MUT_STINGER) > 0)
-        {
-            aux_damage += player_mutation_level(MUT_STINGER) * 2 - 1;
-            damage_brand = SPWPN_VENOM;
-        }
-
-        break;
-
-    case UNAT_PUNCH:
-        aux_attack = aux_verb = "punch";
-        aux_damage = 5 + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
-
-        if (you.form == TRAN_BLADE_HANDS)
-        {
-            aux_verb = "slash";
-            aux_damage += 6;
-            noise_factor = 75;
-        }
-        else if (you.has_usable_claws())
-        {
-            aux_verb = "claw";
-            aux_damage += roll_dice(you.has_claws(), 3);
-        }
-        else if (you.has_usable_tentacles())
-        {
-            aux_attack = aux_verb = "tentacle-slap";
-            noise_factor = 125;
-        }
-
-        break;
-
-    case UNAT_BITE:
-        aux_attack = aux_verb = "bite";
-        aux_damage += you.has_usable_fangs() * 2;
-        str_bite_damage += div_rand_round(max(you.strength()-10, 0), 5);
-        aux_damage += str_bite_damage;
-        noise_factor = 75;
-
-        // prob of vampiric bite:
-        // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
-        // bloodless
-        if (_vamp_wants_blood_from_monster(defender->as_monster())
-            && (you.hunger_state == HS_STARVING
-                || you.hunger_state < HS_SATIATED && coinflip()
-                || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
-        {
-            damage_brand = SPWPN_VAMPIRISM;
-        }
-
-        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
-        {
-            //Change formula to fangs_level*2 + 2*XL/3
-            aux_damage -= str_bite_damage;
-            aux_damage += div_rand_round(2 * you.get_hit_dice(), 3);
-            damage_brand = SPWPN_ANTIMAGIC;
-        }
-
-        if (player_mutation_level(MUT_ACIDIC_BITE))
-        {
-            damage_brand = SPWPN_ACID;
-            aux_damage += roll_dice(2,4);
-        }
-
-        break;
-
-    case UNAT_PSEUDOPODS:
-        aux_attack = aux_verb = "bludgeon";
-        aux_damage += 4 * you.has_usable_pseudopods();
-        noise_factor = 125;
-        break;
-
-        // Tentacles give you both a main attack (replacing punch)
-        // and this secondary, high damage attack.
-    case UNAT_TENTACLES:
-        aux_attack = aux_verb = "squeeze";
-        aux_damage += you.has_usable_tentacles() ? 12 : 0;
-        noise_factor = 100; // quieter than slapping
-        break;
-
-    default:
-        die("unknown aux attack type");
-        break;
+        damage_brand = SPWPN_VAMPIRISM;
     }
 }
 
