@@ -3980,6 +3980,7 @@ spret_type _jump_player(int jump_range, int exh_red, bool fail)
                    tgt.landing_site, tgt.additional_sites,
                    tgt.jump_is_blocked))
     {
+        you.turn_is_over = false;
         return SPRET_ABORT;
     }
 

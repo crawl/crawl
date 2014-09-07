@@ -268,26 +268,19 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
 
         // Can't damage orbs this way.
         if (defender && mons_is_projectile(defender->type) && !you.confused())
-        {
-            you.turn_is_over = false;
             return false;
-        }
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
         if (defender && you.can_see(defender)
             && !wielded_weapon_check(first_attk.weapon))
-        {
             you.turn_is_over = false;
-            return false;
-        }
         else if (!defender || !you.can_see(defender))
         {
             prompt = "Really jump-attack where there is no visible monster?";
             if (!yesno(prompt.c_str(), true, 'n'))
             {
                 canned_msg(MSG_OK);
-                you.turn_is_over = false;
                 return false;
             }
         }
@@ -311,7 +304,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                     else
                     {
                         canned_msg(MSG_OK);
-                        you.turn_is_over = false;
                         return false;
                     }
                 }
@@ -326,7 +318,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                                        false, &conduct_prompted, *site,
                                        check_landing_only))
                 {
-                    you.turn_is_over = false;
                     return false;
                 }
             }
@@ -352,7 +343,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 if (stop_attack_prompt(hitfunc, verb, nullptr,
                                        &conduct_prompted))
                 {
-                    you.turn_is_over = false;
                     return false;
                 }
             }
@@ -361,7 +351,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
             if (!cloud_prompted
                 && !check_moveto_cloud(*site, "jump-attack", &cloud_prompted))
             {
-                you.turn_is_over = false;
                 return false;
             }
 
@@ -376,7 +365,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                     if (!check_moveto_trap(*site, "jump-attack",
                                            &trap_prompted))
                     {
-                        you.turn_is_over = false;
                         return false;
                     }
                     zot_trap_prompted = true;
@@ -385,7 +373,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                          && !check_moveto_trap(*site, "jump-attack",
                                                &trap_prompted))
                 {
-                    you.turn_is_over = false;
                     return false;
                 }
             }
@@ -395,7 +382,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 && !check_moveto_exclusion(*site, "jump-attack",
                                            &exclusion_prompted))
             {
-                you.turn_is_over = false;
                 return false;
             }
 
@@ -405,17 +391,15 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 && !check_moveto_terrain(*site, "jump-attack", "",
                                          &terrain_prompted))
             {
-                you.turn_is_over = false;
                 return false;
             }
             check_landing_only = true;
         }
     }
+
     if (!first_attk.attack() && first_attk.cancel_attack)
-    {
-        you.turn_is_over = false;
         return false;
-    }
+
     if (did_hit)
         *did_hit = first_attk.did_hit;
     return true;
