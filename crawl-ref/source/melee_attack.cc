@@ -1163,26 +1163,34 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-/* Selects the unarmed attack type given by Unarmed Combat skill
+/**
+ * Decide whether the player gets a bonus punch attack.
  *
- * Currently the only possibility is an offhand punch. Other auxes are linked
- * directly to mutations and just depend on stats.
+ * Partially random.
+ *
+ * @return  Whether the player gets a bonus punch aux attack on this attack.
  */
-unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
+bool melee_attack::player_gets_aux_punch()
 {
-    unarmed_attack_type uc_attack = coinflip() ? UNAT_PUNCH : UNAT_NO_ATTACK;
-    // Octopodes get more tentacle-slaps.
-    if (you.species == SP_OCTOPODE && coinflip())
-        uc_attack = UNAT_PUNCH;
-    // No punching with a shield or 2-handed wpn.
-    // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
-        && !you.has_usable_offhand())
+    // form_can_wield() used as a proxy for 'has usable hands'
+    if (!form_can_wield())
+        return false;
+
+    // roll for punch chance based on uc skill & armour penalty
+    if (!attacker->fights_well_unarmed(attacker_armour_tohit_penalty
+                                       + attacker_shield_tohit_penalty))
     {
-        uc_attack = UNAT_NO_ATTACK;
+        return false;
     }
 
-    return uc_attack;
+    // No punching with a shield or 2-handed wpn.
+    // Octopodes aren't affected by this, though!
+    if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
+        return false;
+
+    // Octopodes get more tentacle-slaps.
+    return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
+                         6);
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1237,20 +1245,6 @@ bool melee_attack::player_aux_unarmed()
 {
     unwind_var<brand_type> save_brand(damage_brand);
 
-    /*
-     * uc_attack is the auxiliary unarmed attack the player gets
-     * for unarmed combat skill, which doesn't require a mutation to use
-     * but still needs to pass the other checks in _extra_aux_attack().
-     */
-    unarmed_attack_type uc_attack = UNAT_NO_ATTACK;
-    // Unarmed skill gives a chance at getting an aux even without the
-    // corresponding mutation.
-    if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty))
-    {
-        uc_attack = player_aux_choose_uc_attack();
-    }
-
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
         if (!defender->alive())
@@ -1258,7 +1252,7 @@ bool melee_attack::player_aux_unarmed()
 
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
-        if (!_extra_aux_attack(atk, (uc_attack == atk)))
+        if (!_extra_aux_attack(atk))
             continue;
 
         // Determine and set damage and attack words.
@@ -3743,62 +3737,56 @@ void melee_attack::chaos_affect_actor(actor *victim)
     }
 }
 
-bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
+/**
+ * Does the player get to use the given aux attack during this melee attack?
+ *
+ * Partially random.
+ *
+ * @param atk   The type of aux attack being considered.
+ * @return      Whether the player may use the given aux attack.
+ */
+bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
-    if (atk == UNAT_CONSTRICT)
+    if (atk != UNAT_CONSTRICT
+        && you.strength() + you.dex() <= random2(50))
     {
-        return is_uc
-                || you.species == SP_NAGA && you.experience_level > 12
-                   && form_keeps_mutations()
-                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
-    }
-
-    if (you.strength() + you.dex() <= random2(50))
         return false;
+    }
 
     switch (atk)
     {
+    case UNAT_CONSTRICT:
+        return you.species == SP_NAGA && you.experience_level > 12
+                    && form_keeps_mutations()
+                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
     case UNAT_KICK:
-        return is_uc
-                || you.has_usable_hooves()
-                || you.has_usable_talons()
-                || player_mutation_level(MUT_TENTACLE_SPIKE);
+        return you.has_usable_hooves()
+               || you.has_usable_talons()
+               || player_mutation_level(MUT_TENTACLE_SPIKE);
 
     case UNAT_PECK:
-        return (is_uc
-                || player_mutation_level(MUT_BEAK))
-               && !one_chance_in(3);
+        return player_mutation_level(MUT_BEAK) && !one_chance_in(3);
 
     case UNAT_HEADBUTT:
-        return (is_uc
-                || player_mutation_level(MUT_HORNS))
-               && !one_chance_in(3);
+        return player_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
-        return (is_uc
-                || you.has_usable_tail())
-               && coinflip();
+        return you.has_usable_tail() && coinflip();
 
     case UNAT_PSEUDOPODS:
-        return (is_uc
-                || you.has_usable_pseudopods())
-               && !one_chance_in(3);
+        return you.has_usable_pseudopods() && !one_chance_in(3);
 
     case UNAT_TENTACLES:
-        return (is_uc
-                || you.has_usable_tentacles())
-               && !one_chance_in(3);
+        return you.has_usable_tentacles() && !one_chance_in(3);
 
     case UNAT_BITE:
-        return ((is_uc
-                 || you.has_usable_fangs()
-                 || player_mutation_level(MUT_ACIDIC_BITE))
-                && x_chance_in_y(2, 5))
-               || you.mutation[MUT_ANTIMAGIC_BITE];
+        return you.mutation[MUT_ANTIMAGIC_BITE]
+               || (you.has_usable_fangs()
+                   || player_mutation_level(MUT_ACIDIC_BITE))
+                   && x_chance_in_y(2, 5);
 
     case UNAT_PUNCH:
-        // form_can_wield() used as a proxy for 'has usable hands'
-        return is_uc && form_can_wield() && !one_chance_in(3);
+        return player_gets_aux_punch();
 
     default:
         return false;
