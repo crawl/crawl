@@ -115,7 +115,7 @@ KPROP:   T = no_rtele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
-KFEAT:   X : malign_gateway
+KFEAT:   X : stone_arch
 MAP
 nnn nnn
 nTn.nTn
