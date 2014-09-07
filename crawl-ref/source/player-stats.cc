@@ -104,10 +104,12 @@ bool attribute_increase()
     if (you.base_stats[STAT_STR] != you.strength()
         || you.base_stats[STAT_INT] != you.intel()
         || you.base_stats[STAT_DEX] != you.dex())
+    {
         mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
              you.base_stats[STAT_STR],
              you.base_stats[STAT_INT],
              you.base_stats[STAT_DEX]);
+    }
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
