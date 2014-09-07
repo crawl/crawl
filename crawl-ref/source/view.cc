@@ -1199,6 +1199,26 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #endif
         }
     }
+    else if (crawl_state.flash_monsters)
+    {
+        vector<monster *> *monsters = crawl_state.flash_monsters;
+        bool found = gc == you.pos();
+
+        if (!found)
+            for (vector<monster *>::const_iterator it = monsters->begin();
+                it != monsters->end();
+                ++it)
+            {
+                if (gc == (*it)->pos())
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+        if (!found)
+            cell->colour = DARKGREY;
+    }
 #ifdef USE_TILE_LOCAL
     // Grey out grids that cannot be reached due to beholders.
     else if (you.get_beholder(gc))

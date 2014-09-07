@@ -19,6 +19,13 @@ public:
     virtual ~range_view_annotator();
 };
 
+class monster_view_annotator
+{
+public:
+    monster_view_annotator(vector<monster *> *monsters);
+    virtual ~monster_view_annotator();
+};
+
 // An object that modifies the behaviour of the direction prompt.
 class targeting_behaviour
 {
