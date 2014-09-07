@@ -107,6 +107,9 @@ struct game_state
     // Area beyond which view should be darkened,  0 = disabled.
     targetter *darken_range;
 
+    // Monsters to highlight on the screen, 0 = disabled.
+    vector<monster *> *flash_monsters;
+
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
 

@@ -964,6 +964,24 @@ range_view_annotator::~range_view_annotator()
     }
 }
 
+monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
+{
+    if (monsters->size())
+    {
+        crawl_state.flash_monsters = monsters;
+        viewwindow(false);
+    }
+}
+
+monster_view_annotator::~monster_view_annotator()
+{
+    if (crawl_state.flash_monsters)
+    {
+        crawl_state.flash_monsters = NULL;
+        viewwindow(false);
+    }
+}
+
 bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
