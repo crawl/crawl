@@ -274,7 +274,9 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
         // or someone unsuitable.
         if (defender && you.can_see(defender)
             && !wielded_weapon_check(first_attk.weapon))
+        {
             you.turn_is_over = false;
+        }
         else if (!defender || !you.can_see(defender))
         {
             prompt = "Really jump-attack where there is no visible monster?";
