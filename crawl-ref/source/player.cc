@@ -3843,12 +3843,12 @@ int check_stealth()
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
         }
-        if (player_equip_unrand(UNRAND_SHADOWS) && 2*umbra_mul < 3*umbra_div)
-        {
-            if (umbra_div == 1)
+        if (player_equip_unrand(UNRAND_SHADOWS))
+            if (2 * umbra_mul < 3 * umbra_div)
+            {
+                umbra_mul = 3;
                 umbra_div = 2;
-            umbra_mul = 3 * umbra_div / 2;
-        }
+            }
         stealth *= umbra_mul;
         stealth /= umbra_div;
     }
