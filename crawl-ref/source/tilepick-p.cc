@@ -329,7 +329,8 @@ tileidx_t tilep_equ_armour(const item_def &item)
 
     case ARM_LEATHER_ARMOUR:
         return tileidx_enchant_equ(item, TILEP_BODY_LEATHER_ARMOUR, true);
-    case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
+    case ARM_RING_MAIL:
+        return tileidx_enchant_equ(item, TILEP_BODY_RINGMAIL, true);
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
     case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
