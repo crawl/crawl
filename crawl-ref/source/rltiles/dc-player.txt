@@ -395,6 +395,8 @@ bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
 armour_blue_gold
 ringmail RINGMAIL
+ringmail2
+ringmail3
 chainmail3 CHAINMAIL
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
