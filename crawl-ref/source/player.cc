@@ -3841,12 +3841,20 @@ int check_stealth()
     // how to make use of it:
     if (you.umbra())
     {
-        double umbra_multiplier = 1;
+        int umbra_mul = 1, umbra_div = 1;
         if (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL))
-            umbra_multiplier = double(you.piety + MAX_PIETY) / MAX_PIETY;
-        if (player_equip_unrand(UNRAND_SHADOWS))
-            umbra_multiplier = max(umbra_multiplier, 1.5);
-        stealth *= umbra_multiplier;
+        {
+            umbra_mul = you.piety + MAX_PIETY;
+            umbra_div = MAX_PIETY;
+        }
+        if (player_equip_unrand(UNRAND_SHADOWS) && 2*umbra_mul < 3*umbra_div)
+        {
+            if (umbra_div == 1)
+                umbra_div = 2;
+            umbra_mul = 3 * umbra_div / 2;
+        }
+        stealth *= umbra_mul;
+        stealth /= umbra_div;
     }
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
