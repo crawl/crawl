@@ -17,6 +17,16 @@ enum mutation_activity_type
     MUTACT_FULL,     // other mutations
 };
 
+enum mutation_class_type
+{
+    // Temporary mutations wear off after awhile
+    MUTCLASS_TEMPORARY,
+    // Normal mutations, permanent unless cured
+    MUTCLASS_NORMAL,
+    // Innate, permanent traits, like draconian breath
+    MUTCLASS_INNATE
+};
+
 struct body_facet_def
 {
     equipment_type eq;
@@ -90,9 +100,9 @@ bool undead_mutation_rot();
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool beneficial = false, bool demonspawn = false,
-            bool no_rot = false,
-            bool temporary = false);
+            bool beneficial = false,
+            mutation_class_type mutclass = MUTCLASS_NORMAL,
+            bool no_rot = false);
 
 void display_mutations();
 mutation_activity_type mutation_activity_level(mutation_type mut);

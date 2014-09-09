@@ -1788,17 +1788,17 @@ static void _magic_contamination_effects()
         beam.explode();
     }
 
+#if TAG_MAJOR_VERSION == 34
+    const mutation_class_type mutclass = you.species == SP_DJINNI
+        ? MUTCLASS_TEMPORARY
+        : MUTCLASS_NORMAL;
+#else
+    const mutation_class_type mutclass = MUTCLASS_NORMAL;
+#endif
+
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true,
-           coinflip(),
-           false, false, false, false,
-#if TAG_MAJOR_VERSION == 34
-           you.species == SP_DJINNI
-#else
-           false
-#endif
-           );
+           "mutagenic glow", true, coinflip(), false, false, mutclass, false);
 
     // we're meaner now, what with explosions and whatnot, but
     // we dial down the contamination a little faster if its actually
@@ -1986,7 +1986,8 @@ static void _evolve(int time_delta)
             bool evol = one_chance_in(5) ?
                 delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
                 mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
-                       "evolution", false, false, false, false, false, true);
+                       "evolution", false, false, false, false, MUTCLASS_NORMAL,
+                       true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
                 && (!you.rmut_from_item()
