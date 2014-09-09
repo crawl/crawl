@@ -695,6 +695,7 @@ public:
     {
 #ifdef USE_TILE_WEB
         client_rollback = max(0, temp - unsent);
+        unsent = max(0, unsent - temp);
 #endif
         msgs.roll_back(temp);
         temp = 0;
