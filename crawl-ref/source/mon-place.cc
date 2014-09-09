@@ -3813,7 +3813,7 @@ conduct_type player_will_anger_monster(monster* mon)
     }
     if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())
         return DID_SPELL_CASTING;
-    if (you_worship(GOD_DITHMENOS) && mon->is_fiery())
+    if (you_worship(GOD_DITHMENOS) && mons_is_fiery(mon))
         return DID_FIRE;
 
     return DID_NOTHING;
