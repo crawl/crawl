@@ -3815,6 +3815,8 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_SPELL_CASTING;
     if (you_worship(GOD_DITHMENOS) && mons_is_fiery(mon))
         return DID_FIRE;
+    if (you_worship(GOD_DITHMENOS) && mons_is_illuminating(mon))
+        return DID_ILLUMINATE;
 
     return DID_NOTHING;
 }
@@ -3853,6 +3855,7 @@ bool player_angers_monster(monster* mon)
                 mprf("%s is enraged by your magic-hating god!", mname.c_str());
                 break;
             case DID_FIRE:
+            case DID_ILLUMINATE:
                 mprf("%s is enraged by your darkness!", mname.c_str());
                 break;
             default:
