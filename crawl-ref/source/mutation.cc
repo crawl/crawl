@@ -1354,6 +1354,24 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
+// Returns true if a mutation is successfully resisted, false otherwise.
+// Does not include divine intervention!
+static bool _resist_mutation(mutation_class_type mutclass, bool beneficial)
+{
+    const int item_chance = mutclass == MUTCLASS_TEMPORARY
+        ? 3
+        : 10;
+    const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY
+        ? 2
+        : 3;
+
+    // To be nice, beneficial mutations go through removable sources of rMut.
+    return (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
+        || (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+        || (player_mutation_level(MUT_MUTATION_RESISTANCE)
+                && !one_chance_in(mut_resist_chance));
+}
+
 // Undead can't be mutated, and fall apart instead.
 // Vampires mutate as normal.
 bool undead_mutation_rot()
@@ -1363,9 +1381,10 @@ bool undead_mutation_rot()
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
-            bool demonspawn, bool no_rot, bool temporary)
+            mutation_class_type mutclass, bool no_rot)
 {
-    if (which_mutation == RANDOM_BAD_MUTATION && !temporary
+    if (which_mutation == RANDOM_BAD_MUTATION
+        && mutclass == MUTCLASS_NORMAL
         && crawl_state.disables[DIS_AFFLICTIONS])
     {
         return true; // no fallbacks
@@ -1381,7 +1400,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             god_gift = true;
     }
 
-    if (demonspawn)
+    if (mutclass == MUTCLASS_INNATE)
         force_mutation = true;
 
     mutation_type mutat = which_mutation;
@@ -1389,16 +1408,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (!force_mutation)
     {
         // God gifts override all sources of mutation resistance other
-        // than divine protection, and stat gain potions override all
-        // sources of mutation resistance other than the mutation
-        // resistance mutation.
-        if (!god_gift)
+        // than divine protection.
+        if (!god_gift && _resist_mutation(mutclass, beneficial))
         {
-            if ((you.rmut_from_item()
-                 && !one_chance_in(temporary ? 3 : 10) && !beneficial)
-                || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                || (player_mutation_level(MUT_MUTATION_RESISTANCE)
-                    && !one_chance_in(temporary ? 2 : 3)))
+            if (_resist_mutation(mutclass, beneficial))
             {
                 if (failMsg)
                     mprf(MSGCH_MUTATION, "You feel odd for a moment.");
@@ -1417,16 +1430,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (undead_mutation_rot() && !demonspawn)
+    if (undead_mutation_rot())
     {
-        if (no_rot)
-            return false;
-
-        if (temporary)
+        switch (mutclass) {
+        case MUTCLASS_TEMPORARY:
             lose_stat(STAT_RANDOM, 1, false, reason);
-        else
-        {
+            return true;
+        case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
 
             if (coinflip())
@@ -1438,17 +1448,22 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             }
 
             xom_is_stimulated(50);
+            return true;
+        case MUTCLASS_INNATE:
+            // You can't miss out on innate mutations just because you're
+            // temporarily undead.
+            break;
+        default:
+            die("bad fall through");
+            return false;
         }
-
-        return true;
     }
 
-    if (which_mutation == RANDOM_MUTATION
-        || which_mutation == RANDOM_XOM_MUTATION)
+    if (mutclass == MUTCLASS_NORMAL
+        && (which_mutation == RANDOM_MUTATION || which_mutation == RANDOM_XOM_MUTATION))
     {
         // If already heavily mutated, remove a mutation instead.
-        if (x_chance_in_y(how_mutated(false, true), 15)
-            && !temporary)
+        if (x_chance_in_y(how_mutated(false, true), 15))
         {
             // God gifts override mutation loss due to being heavily
             // mutated.
@@ -1513,7 +1528,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
-    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation, reason, temporary);
+    int rc = _handle_conflicting_mutations(
+            mutat, god_gift || force_mutation, reason,
+            mutclass == MUTCLASS_TEMPORARY);
     if (rc == 1)
         return true;
     if (rc == -1)
@@ -1663,7 +1680,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
-        if (!temporary)
+        if (mutclass != MUTCLASS_TEMPORARY)
         {
             take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat],
                            reason.c_str()));
@@ -2355,7 +2372,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
                            you.mutation[which_mut], reason.c_str()));
         }
         else if (you.mutation[which_mut] < cap
-            && !mutate(which_mut, reason, false, true, false, false, true))
+            && !mutate(which_mut, reason, false, true, false, false, MUTCLASS_INNATE))
         {
             return levels; // a partial success was still possible
         }
@@ -2368,8 +2385,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 
 bool temp_mutate(mutation_type which_mut, const string &reason)
 {
-    return mutate(which_mut, reason, false, false, false, false, false,
-                  false, true);
+    return mutate(which_mut, reason, false, false, false, false,
+                  MUTCLASS_TEMPORARY, false);
 }
 
 /**

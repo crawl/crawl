@@ -1561,7 +1561,7 @@ static bool _qazlal_retribution()
     }
     case 2:
         if (mutate(RANDOM_QAZLAL_MUTATION, "the adversity of Qazlal", false,
-                   false, true, false, false, false, true))
+                   false, true, false, MUTCLASS_TEMPORARY, false))
         {
             simple_god_message(" strips away your elemental protection.",
                                god);
