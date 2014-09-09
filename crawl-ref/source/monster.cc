@@ -1556,6 +1556,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         // Donald kept dropping his shield. I hate that.
         if (mons->type == MONS_DONALD)
             return mons->hands_reqd(weapon) == HANDS_ONE;
+
+        // What kind of assassin would forget her blowgun or dagger somewhere else?
+        if (mons->type == MONS_SONJA)
+            return melee_skill(weapon) == SK_SHORT_BLADES || wtype == WPN_BLOWGUN;
     }
 
     if (mons->is_holy())
