@@ -91,13 +91,9 @@ A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling water.
 %%%%
-A gate leading back out of here
-
-This gate lets you return whence you came.
-%%%%
 A gate leading back out of this place
 
-This gate leads back to the dungeon.
+This gate lets you return whence you came.
 %%%%
 A gate leading out of Pandemonium
 
@@ -641,7 +637,7 @@ A huge sealed gate
 ### Vault redefinitions
 ########################
 # wizlabs
-A portal leading out of here
+A portal leading out of this place
 
 This shimmering magical gate leads back to the place you came from. You will be
 unable to return here once you pass through it.
@@ -856,7 +852,7 @@ An ice choked empty arch of ancient stone
 
 This portal is inoperative, and nearly completely encased in a mass of ice.
 %%%%
-An ice covered gate leading back out of here
+An ice covered gate leading back out of this place
 
 This portal leads back to the place you came from. Its magic is holding the ice
 at bay, preventing it from blocking the gate. You will be unable to return here
