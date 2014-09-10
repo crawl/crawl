@@ -60,6 +60,7 @@
 #           | trident | unarmed | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
+# combo   = (HuFi . short sword | Human Monk | ...)
 # random_pick = true
 # good_random = false
 # restart_after_game = true

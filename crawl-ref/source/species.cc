@@ -87,6 +87,9 @@ species_type get_species_by_abbrev(const char *abbrev)
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
     for (i = 0; i < NUM_SPECIES; i++)
     {
+        // XXX: this is so Dr works
+        if (i == SP_RED_DRACONIAN)
+            i = SP_BASE_DRACONIAN;
         // This assumes untranslated abbreviations.
         if (toalower(abbrev[0]) == toalower(Species_Abbrev_List[i][0])
             && toalower(abbrev[1]) == toalower(Species_Abbrev_List[i][1]))
