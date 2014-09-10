@@ -45,9 +45,7 @@ LUAFN(view_is_safe_square)
     }
     cloud_type c = env.map_knowledge(p).cloud();
     if (c != CLOUD_NONE
-        && is_damaging_cloud(c, true)
-        && (!in_good_standing(GOD_QAZLAL)
-            || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
+        && is_damaging_cloud(c, true, !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
     {
         PLUARET(boolean, false);
         return 1;

@@ -138,42 +138,37 @@ static void _moveto_maybe_repel_stairs()
 bool check_moveto_cloud(const coord_def& p, const string &move_verb,
                         bool *prompted)
 {
-    const int cloud = env.cgrid(p);
-    if (cloud != EMPTY_CLOUD && !you.confused())
+    if (you.confused())
+        return true;
+    const cloud_type ctype = cloud_type_at(p);
+    // Don't prompt if already in a cloud of the same type.
+    if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
+        && ctype != cloud_type_at(you.pos())
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        const cloud_type ctype = env.cloud[ cloud ].type;
-        // Don't prompt if already in a cloud of the same type.
-        if (is_damaging_cloud(ctype, true)
-            && (env.cgrid(you.pos()) == EMPTY_CLOUD
-                || ctype != env.cloud[ env.cgrid(you.pos()) ].type)
-            && (!YOU_KILL(env.cloud[ cloud ].killer)
-                || !in_good_standing(GOD_QAZLAL))
-            && !crawl_state.disables[DIS_CONFIRMATIONS])
+        // Don't prompt for steam unless we're at uncomfortably low hp.
+        if (ctype == CLOUD_STEAM)
         {
-            // Don't prompt for steam unless we're at uncomfortably low hp.
-            if (ctype == CLOUD_STEAM)
-            {
-                int threshold = 20;
-                if (player_res_steam() < 0)
-                    threshold = threshold * 3 / 2;
-                threshold = threshold * you.time_taken / BASELINE_DELAY;
-                // Do prompt if we'd lose icemail, though.
-                if (you.hp > threshold && !you.mutation[MUT_ICEMAIL])
-                    return true;
-            }
+            int threshold = 20;
+            if (player_res_steam() < 0)
+                threshold = threshold * 3 / 2;
+            threshold = threshold * you.time_taken / BASELINE_DELAY;
+            // Do prompt if we'd lose icemail, though.
+            if (you.hp > threshold && !you.mutation[MUT_ICEMAIL])
+                return true;
+        }
 
-            if (prompted)
-                *prompted = true;
-            string prompt = make_stringf("Really %s into that cloud of %s?",
-                                         move_verb.c_str(),
-                                         cloud_name_at_index(cloud).c_str());
-            learned_something_new(HINT_CLOUD_WARNING);
+        if (prompted)
+            *prompted = true;
+        string prompt = make_stringf("Really %s into that cloud of %s?",
+                                     move_verb.c_str(),
+                                     cloud_type_name(ctype).c_str());
+        learned_something_new(HINT_CLOUD_WARNING);
 
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
         }
     }
     return true;
