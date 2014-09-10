@@ -756,7 +756,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'M': wizard_create_spec_monster(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    // case 'n': break;
+    case 'n': you.set_gold(0); break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
