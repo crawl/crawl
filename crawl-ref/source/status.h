@@ -43,7 +43,8 @@ enum status_type
     STATUS_GOLDEN,
 #endif
     STATUS_BRIBE,
-    STATUS_LAST_STATUS = STATUS_BRIBE
+    STATUS_CLOUD,
+    STATUS_LAST_STATUS = STATUS_CLOUD
 };
 
 struct status_info

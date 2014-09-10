@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "branch.h"
+#include "cloud.h"
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
@@ -12,6 +13,7 @@
 #include "libutil.h"
 #include "misc.h"
 #include "mutation.h"
+#include "options.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
@@ -586,6 +588,20 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You are horrified!";
         }
         break;
+
+    case STATUS_CLOUD:
+    {
+        cloud_type cloud = cloud_type_at(you.pos());
+        if (Options.cloud_status && cloud != CLOUD_NONE)
+        {
+            inf->light_text = "Cloud";
+            // TODO: make the colour based on the cloud's color; requires elemental
+            // status lights, though.
+            inf->light_colour =
+                is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
+        }
+        break;
+    }
 
     default:
         if (!found)
