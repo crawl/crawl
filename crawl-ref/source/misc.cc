@@ -304,22 +304,19 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     if (!just_monsters)
     {
         // check clouds
-        if (in_bounds(you.pos()) && env.cgrid(you.pos()) != EMPTY_CLOUD)
+        if (in_bounds(you.pos()))
         {
-            const int cloudidx = env.cgrid(you.pos());
-            const cloud_type type = env.cloud[cloudidx].type;
+            const cloud_type type = cloud_type_at(you.pos());
 
             // Temporary immunity allows travelling through a cloud but not
             // resting in it.
             // Qazlal immunity will allow for it, however.
-            if (is_damaging_cloud(type, want_move)
-                && !(env.cloud[cloudidx].whose == KC_YOU
-                     && in_good_standing(GOD_QAZLAL)))
+            if (is_damaging_cloud(type, want_move, cloud_is_yours_at(you.pos())))
             {
                 if (announce)
                 {
                     mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
-                         cloud_name_at_index(cloudidx).c_str());
+                         cloud_type_name(type).c_str());
                 }
                 return false;
             }

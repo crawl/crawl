@@ -27,6 +27,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -690,6 +691,12 @@ cloud_type cloud_type_at(const coord_def &c)
                                   : env.cloud[cloudno].type;
 }
 
+bool cloud_is_yours_at(const coord_def &pos)
+{
+    const int cloudidx = env.cgrid(pos);
+    return cloudidx != EMPTY_CLOUD && YOU_KILL(env.cloud[ cloudidx ].killer);
+}
+
 cloud_type random_smoke_type()
 {
     // including black to keep variety
@@ -1257,7 +1264,15 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
                    maximum_negligible_damage));
 }
 
-bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
+/**
+ * Is this cloud type dangerous to you?
+ *
+ * @param type the type of cloud to look at.
+ * @param accept_temp_resistances whether to look at resistances from your form
+ *        or durations; items and gods are used regardless of this parameter's value.
+ * @param yours whether to treat this cloud as being made by you.
+ */
+bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours)
 {
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
     if (type == CLOUD_TORNADO)
@@ -1268,6 +1283,8 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
         cloud_struct cloud;
         cloud.type = type;
         cloud.decay = 100;
+        if (yours)
+            cloud.whose = KC_YOU;
         return _cloud_is_harmful(&you, cloud, 0);
     }
     else
@@ -1277,7 +1294,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
         unwind_var<durations_t> old_durations(you.duration);
         unwind_var<transformation_type> old_form(you.form, TRAN_NONE);
         you.duration.init(0);
-        return is_damaging_cloud(type, true);
+        return is_damaging_cloud(type, true, yours);
     }
 }
 
@@ -1494,19 +1511,6 @@ bool is_harmless_cloud(cloud_type type)
     default:
         return _cloud_is_cosmetic(type);
     }
-}
-
-bool in_what_cloud(cloud_type type)
-{
-    int cl = env.cgrid(you.pos());
-
-    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
-        return false;
-
-    if (env.cloud[cl].type == type)
-        return true;
-
-    return false;
 }
 
 string cloud_name_at_index(int cloudno)
