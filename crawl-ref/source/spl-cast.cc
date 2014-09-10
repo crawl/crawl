@@ -602,6 +602,15 @@ static bool _can_cast()
         return false;
     }
 
+    if (!you.is_undead && !you_foodless()
+        && you.hunger_state == HS_STARVING)
+    {
+        canned_msg(MSG_NO_ENERGY);
+        more();
+        return false;
+    }
+
+
     return true;
 }
 
@@ -754,8 +763,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     if (!you.is_undead && !you_foodless()
-        && (you.hunger_state == HS_STARVING
-            || you.hunger <= spell_hunger(spell)))
+        && you.hunger <= spell_hunger(spell))
     {
         canned_msg(MSG_NO_ENERGY);
         crawl_state.zero_turns_taken();
