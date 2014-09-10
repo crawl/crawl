@@ -674,7 +674,7 @@ int ash_skill_boost(skill_type sk, int scale)
 
 int gozag_gold_in_los(actor *who)
 {
-    if (!you_worship(GOD_GOZAG) || player_under_penance())
+    if (!in_good_standing(GOD_GOZAG))
         return 0;
 
     int gold_count = 0;
@@ -694,24 +694,16 @@ int gozag_gold_in_los(actor *who)
 
 int qazlal_sh_boost(int piety)
 {
-    if (!you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || piety < piety_breakpoint(0))
-    {
+    if (!in_good_standing(GOD_QAZLAL, 0))
         return 0;
-    }
 
     return min(piety, piety_breakpoint(5)) / 10;
 }
 
 void qazlal_storm_clouds()
 {
-    if (!you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || you.piety < piety_breakpoint(0))
-    {
+    if (!in_good_standing(GOD_QAZLAL, 0))
         return;
-    }
 
     // You are a *storm*. You are pretty loud!
     noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
@@ -767,9 +759,7 @@ void qazlal_storm_clouds()
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
-        || !you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || you.piety < piety_breakpoint(4)
+        || !in_good_standing(GOD_QAZLAL, 4)
         || !x_chance_in_y(strength, 12 - piety_rank()))
     {
         return;

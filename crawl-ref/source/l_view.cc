@@ -46,8 +46,7 @@ LUAFN(view_is_safe_square)
     cloud_type c = env.map_knowledge(p).cloud();
     if (c != CLOUD_NONE
         && is_damaging_cloud(c, true)
-        && (!you_worship(GOD_QAZLAL)
-            || player_under_penance()
+        && (!in_good_standing(GOD_QAZLAL)
             || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
     {
         PLUARET(boolean, false);

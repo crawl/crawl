@@ -313,8 +313,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             // resting in it.
             // Qazlal immunity will allow for it, however.
             if (is_damaging_cloud(type, want_move)
-                && (!you_worship(GOD_QAZLAL)
-                    || player_under_penance()))
+                && !in_good_standing(GOD_QAZLAL))
             {
                 if (announce)
                 {

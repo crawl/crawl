@@ -3604,12 +3604,8 @@ bool dithmenos_shadow_step()
 
 static bool _dithmenos_shadow_acts()
 {
-    if (!you_worship(GOD_DITHMENOS)
-        || you.piety < piety_breakpoint(3)
-        || player_under_penance())
-    {
+    if (!in_good_standing(GOD_DITHMENOS, 3))
         return false;
-    }
 
     // 10% chance at 4* piety; 50% chance at 200 piety.
     const int range = MAX_PIETY - piety_breakpoint(3);

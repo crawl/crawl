@@ -147,8 +147,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
             && (env.cgrid(you.pos()) == EMPTY_CLOUD
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type)
             && (!YOU_KILL(env.cloud[ cloud ].killer)
-                || !you_worship(GOD_QAZLAL)
-                || player_under_penance())
+                || !in_good_standing(GOD_QAZLAL))
             && !crawl_state.disables[DIS_CONFIRMATIONS])
         {
             // Don't prompt for steam unless we're at uncomfortably low hp.

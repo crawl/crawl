@@ -202,7 +202,10 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return true;
 }
 
-static bool _god_will_brand_weapon(god_type god)
+/** Would a god currently allow using a one-time six-star ability?
+ * Does not check whether the god actually grants such an ability.
+ */
+bool can_do_capstone_ability(god_type god)
 {
    return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
@@ -220,7 +223,7 @@ static bool _altar_prayer()
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
-    else if (_god_will_brand_weapon(GOD_SHINING_ONE))
+    else if (can_do_capstone_ability(GOD_SHINING_ONE))
     {
         simple_god_message(" will bless one of your weapons.");
         more();
@@ -228,7 +231,7 @@ static bool _altar_prayer()
     }
 
     // Lugonu blesses weapons with distortion.
-    else if (_god_will_brand_weapon(GOD_LUGONU))
+    else if (can_do_capstone_ability(GOD_LUGONU))
     {
         simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
         more();
@@ -236,7 +239,7 @@ static bool _altar_prayer()
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    else if (_god_will_brand_weapon(GOD_KIKUBAAQUDGHA))
+    else if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
     {
         if (you.species != SP_FELID)
         {

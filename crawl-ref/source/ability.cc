@@ -34,6 +34,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "godprayer.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -3914,12 +3915,8 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
         }
     }
 
-    if (you_worship(GOD_ZIN)
-        && you.piety >= piety_breakpoint(5)
-        && !you.one_time_ability_used[GOD_ZIN])
-    {
+    if (can_do_capstone_ability(GOD_ZIN))
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
-    }
 
     return abilities;
 }
