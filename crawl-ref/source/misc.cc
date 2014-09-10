@@ -160,7 +160,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     const int range = mons_tracking_range(mon);
     // Use a large safety margin.  x4 should be ok.
     if (range > 0)
-        mp.set_range(range * 4);
+        mp.set_range(range * 2);
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return true;
