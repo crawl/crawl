@@ -16,7 +16,7 @@ The contents of this text are:
 0-e     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
-                random_pick, good_random, restart_after_game,
+                combo, random_pick, good_random, restart_after_game,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
@@ -311,7 +311,8 @@ remember_name = true
         initial name prompt - hitting Enter at the name prompt will
         simply reuse your old name if remember_name is set.
 
-weapon = (short sword | falchion | quarterstaff |...| unarmed | random | viable)
+weapon += (short sword |...| unarmed | random | viable), <weapon>, ...
+        (List option)
         Specifying the weapon option allows you to bypass the weapon
         selection screen. Tridents, flails, cutlasses, long swords, and war
         axes are restricted to fighters and gladiators only, quarterstaves
@@ -319,18 +320,34 @@ weapon = (short sword | falchion | quarterstaff |...| unarmed | random | viable)
         with claws. The standard weapon prompt will be shown if an illegal
         choice for the selected background is specified. The "viable" option
         makes a random choice from among the "good" weapons for the chosen
-        character.
+        character. Specifying more than one option causes the game to
+        randomly select a weapon from the given list. The combo option
+        overrides (and is overriden by) this option.
 
-species = (Human |...| Vampire | random | viable)
-        The usual abbreviations (Hu, HE, etc.) work. Because species and
-        background selections from options are applied before player choices,
-        "viable" is essentially the same as "random" unless the background
-        option is also set.
+species += (Human |...| Vampire | random | viable), <species>, ...
+        (List option)
+        The usual abbreviations (Hu, HE, etc.) work. "viable" will choose a
+        viable species for a given background if the background is chosen
+        first. Specifying multiple species causes one to be selected at
+        random from the given species. The combo option overrides (and is
+        overridden by) this option.
 
-background = (Fighter |...| Wanderer | random | viable)
+background += (Fighter |...| Wanderer | random | viable), <background>, ...
+        (List option)
         Here again the abbreviations (Fi, Wz, AK, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
-        species option is also set.
+        species option is also set. Specifying multiple backgrounds causes
+        one to be selected at random from the given species. The combo option
+        overrides (and is overridden by) this option.
+
+combo += (HuFi . short sword | Human Monk | ...), <combo>, ...
+        (List option)
+        Specifies a complete set of species, background, and (where
+        applicable) weapon. If a combo requires a weapon choice and one isn't
+        specified, it is prompted for. Combos may be abbreviated or specified
+        in full. If multiple combos are specified, one is selected randomly
+        from the specified combos. The weapon, species, and background
+        options are overriden by (and override) this option.
 
 random_pick = false
         The random_pick option will randomly generate a character.

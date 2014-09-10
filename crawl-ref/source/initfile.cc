@@ -396,7 +396,7 @@ static string _job_to_str(job_type job)
         return get_job_name(job);
 }
 
-static job_type _str_to_job(const string &str)
+job_type str_to_job(const string &str)
 {
     if (str == "random")
         return JOB_RANDOM;
@@ -2241,6 +2241,22 @@ void game_options::read_option_line(const string &str, bool runscript)
         _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
     } while (false)
 #define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt)
+#define NEWGAME_OPTION(_opt, _conv, _type)                                     \
+    if (plain)                                                                 \
+        _opt.clear();                                                          \
+    vector<string> parts = split_string(",", field);                           \
+    for (vector<string>::iterator it = parts.begin(); it != parts.end(); it++) \
+    {                                                                          \
+        if (minus_equal)                                                       \
+        {                                                                      \
+            vector<_type>::iterator it2 =                                      \
+                find(_opt.begin(), _opt.end(), _conv(*it));                    \
+            if (it2 != _opt.end())                                             \
+                _opt.erase(it2);                                               \
+        }                                                                      \
+        else                                                                   \
+            _opt.push_back(_conv(*it));                                        \
+    }
     string key    = "";
     string subkey = "";
     string field  = "";
@@ -2316,6 +2332,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     const string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
+        && key != "combo"
         && key != "species" && key != "background" && key != "job"
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
@@ -2553,14 +2570,29 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.type = _str_to_gametype(field);
 #endif
     }
+    else if (key == "combo")
+    {
+        game.allowed_species.clear();
+        game.allowed_jobs.clear();
+        game.allowed_weapons.clear();
+        NEWGAME_OPTION(game.allowed_combos, string, string);
+    }
     else if (key == "species" || key == "race")
-        game.species = _str_to_species(field);
+    {
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_species, _str_to_species,
+                       species_type);
+    }
     else if (key == "background" || key == "job" || key == "class")
-        game.job = _str_to_job(field);
+    {
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_jobs, str_to_job, job_type);
+    }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        game.weapon = str_to_weapon(field);
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_weapons, str_to_weapon, weapon_type);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
@@ -4575,7 +4607,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     Options.game.species = _str_to_species(string(next_arg));
 
                 if (o == 3)
-                    Options.game.job = _str_to_job(string(next_arg));
+                    Options.game.job = str_to_job(string(next_arg));
             }
             nextUsed = true;
             break;

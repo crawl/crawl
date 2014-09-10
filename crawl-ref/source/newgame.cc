@@ -31,7 +31,7 @@
 #include "random.h"
 #include "species.h"
 #include "state.h"
-
+#include "stringutil.h"
 
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
@@ -427,6 +427,79 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 
     while (true)
     {
+        if (choice->allowed_combos.size())
+        {
+            choice->species = SP_UNKNOWN;
+            choice->job = JOB_UNKNOWN;
+            choice->weapon = WPN_UNKNOWN;
+            string combo =
+                choice->allowed_combos[random2(choice->allowed_combos.size())];
+
+            vector<string> parts = split_string(".", combo);
+            if (parts.size() > 0)
+            {
+                string character = trim_string(parts[0]);
+
+                if (character.length() == 4)
+                {
+                    choice->species =
+                        get_species_by_abbrev(
+                            character.substr(0, 2).c_str());
+                    choice->job =
+                        get_job_by_abbrev(
+                            character.substr(2, 2).c_str());
+                }
+                else
+                {
+                    species_type sp = SP_UNKNOWN;;
+                    // XXX: This is awkward; find a better way?
+                    for (int i = 0; i < NUM_SPECIES; ++i)
+                    {
+                        sp = static_cast<species_type>(i);
+                        if (character.length() >= species_name(sp).length()
+                            && character.substr(0, species_name(sp).length())
+                               == species_name(sp))
+                        {
+                            choice->species = sp;
+                            break;
+                        }
+                    }
+                    if (sp != SP_UNKNOWN)
+                    {
+                        string temp =
+                            character.substr(species_name(sp).length());
+                        choice->job = str_to_job(trim_string(temp));
+                    }
+                }
+
+                if (parts.size() > 1)
+                {
+                    string weapon = trim_string(parts[1]);
+                    choice->weapon = str_to_weapon(weapon);
+                }
+            }
+        }
+        else
+        {
+            if (choice->allowed_species.size())
+            {
+                choice->species =
+                    choice->allowed_species[
+                        random2(choice->allowed_species.size())];
+            }
+            if (choice->allowed_jobs.size())
+            {
+                choice->job =
+                    choice->allowed_jobs[random2(choice->allowed_jobs.size())];
+            }
+            if (choice->allowed_weapons.size())
+            {
+                choice->weapon =
+                    choice->allowed_weapons[
+                        random2(choice->allowed_weapons.size())];
+            }
+        }
+
         _choose_species_job(ng, choice, defaults);
 
         if (choice->fully_random && _reroll_random(ng))
@@ -1705,7 +1778,16 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
 static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
                             const vector<weapon_choice>& weapons)
 {
-    switch (ng_choice->weapon)
+    int weapon = ng_choice->weapon;
+
+    if (ng_choice->allowed_weapons.size())
+    {
+        weapon =
+            ng_choice->allowed_weapons[
+                random2(ng_choice->allowed_weapons.size())];
+    }
+
+    switch (weapon)
     {
     case WPN_VIABLE:
     {
