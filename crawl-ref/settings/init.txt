@@ -1,9 +1,9 @@
-# Crawl Init file
-#
+##### Crawl Init file ###############################################
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
 # init.txt to ~/.crawlrc or ~/.crawl/init.txt as:
 #   cp init.txt ~/.crawlrc
-#
+
+##### Some basic explanation of option syntax #######################
 # Lines beginning with '#' are comments.  The basic syntax is:
 #
 # field = value         or      field.subfield = value
@@ -20,29 +20,50 @@
 # autopickup_exceptions), all whitespace around the separator is also
 # trimmed. All other whitespace is left intact.
 #
-# For descriptions concerning an option consult the file
+# There are three broad types of Crawl options: true/false values (booleans),
+# arbitrary values, and lists of values. The first two types use only the
+# simple =, with later options - which includes your options that are different
+# from the defaults - overriding earlier ones. List options allow using +=, ^=,
+# -=, and = to append, prepend, remove, and reset, respectively. Usually you will
+# want to use += to add to a list option. Lastly, there is := which you can use
+# to create an alias, like so:
+#   ae := autopickup_exceptions
+# From there on, 'ae' will be treated as if it you typed autopickup_exceptions,
+# so you can save time typing it.
+#
+# For descriptions of all options, as well as some more in-depth information
+# on setting them, consult the file
 #    options_guide.txt
-# in your /docs directory. Also note that the ordering of the options
-# is taken from that file; this is for presentational reasons only.
-#
-# Note that all boolean options (i.e. values of 'true' or 'false') have
-# their non-default value commented out. You can toggle these by just
-# uncommenting.
-# Options with several values, e.g.
-#   confirm_butcher = (auto | always | never),
-# usually have the first value as default.
-#
-# The options for monster glyphs and item colours don't matter for Tiles.
-# Similarily, tile options are ignored in console games.
+# in your /docs directory. If you can't find it, the file is also available online at
+# https://gitorious.org/crawl/crawl/source/HEAD:crawl-ref/docs/options_guide.txt
+
+##### Other files ###################################################
+# You can include other files from your options file using the 'include'
+# option. Crawl will treat it as if you copied the whole text of that file
+# into your options file in that spot. You can uncomment some of the following
+# lines by removing the beginning '#' to include some of the other files in
+# this folder.
+
+# Some useful, more advanced options, implemented in LUA.
+# include = advanced_optioneering.txt
+
+# Alternative vi bindings for Dvorak users.
+# include = dvorak_command_keys.txt
+
+# Alternative vi bindings for Colemak users.
+# include = colemak_command_keys.txt
+
+# Override the vi movement keys with a non-command.
+# include = no_vi_command_keys.txt
 
 ##### Ancient versions ##############################################
 # If you're used to the interface of ancient versions of Crawl, you may
 # get back parts of it by uncommenting the following options:
 
 # include                 = 034_command_keys.txt
-# clear_messages          = true
-#
+
 # And to revert monster glyph and colouring changes:
+
 # include                 = 034_monster_glyphs.txt
 # include                 = 052_monster_glyphs.txt
 # include                 = 060_monster_glyphs.txt
@@ -51,410 +72,4 @@
 # include                 = 0.9_monster_glyphs.txt
 # include                 = 0.12_monster_glyphs.txt
 # include                 = 0.13_monster_glyphs.txt
-
-##### 1- Starting Screen ############################################
-#
-# name = Delilah
-# remember_name = false
-# weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
-#           | trident | unarmed | random)
-# species = (Human |...| Vampire | random)
-# job     = (Fighter |...| Wanderer | random)
-# combo   = (HuFi . short sword | Human Monk | ...)
-# random_pick = true
-# good_random = false
-# restart_after_game = true
-# default_manual_training = true
-
-##### 2-  File System ###############################################
-#
-# crawl_dir  = <path>
-# morgue_dir = morgue
-# save_dir   = saves
-# macro_dir  = settings/
-# sound = <regex>:<path to sound file>
-
-##### 3-  Interface #################################################
-#
-##### 3-a       Picking up and Dropping ###############
-#
-# Rods are \ here.
-# autopickup = $?!:"/%
-
-# drop_filter += useless_item
-
-# default_autopickup = false
-# pickup_thrown = false
-# chunks_autopickup = false
-# assign_item_slot = (forward | backward)
-#
-# pickup_menu_limit = 1
-# drop_filter += useless_item
-
-##### 3-b       Passive Sightings #####################
-#
-# detected_monster_colour = lightred
-# detected_item_colour = green
-# remembered_monster_colour = darkgrey
-
-##### 3-c       Branding ##############################
-#
-# friend_brand       = hi:green
-# neutral_brand      = hi:lightgrey
-# stab_brand         = hi:blue
-# may_stab_brand     = hi:yellow
-# heap_brand         = reverse
-# feature_item_brand = reverse
-# trap_item_brand    = reverse
-
-##### 3-d       Level Map Functions ###################
-#
-# level_map_cursor_step = 7
-# show_waypoints = false
-
-##### 3-e       Viewport Options  ###################
-#
-# view_max_width   = 33
-# view_max_height  = 21
-# view_lock_x      = false
-# view_lock_y      = false
-# view_lock        = false
-# center_on_scroll = true
-# symmetric_scroll = false
-# scroll_margin_x  = 2
-# scroll_margin_y  = 2
-# scroll_margin    = 2
-
-##### 3-f       Travel and Exploration #################
-#
-# travel_delay = 20 (or -1 online)
-# explore_delay = -1
-# rest_delay = 0 (or -1 online)
-# travel_avoid_terrain = shallow water
-#
-# explore_greedy   = false
-# explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
-# explore_stop += greedy_pickup_smart,greedy_visited_item_stack
-# explore_stop += greedy_sacrificeable
-# sacrifice_before_explore = true
-# explore_improved = true
-# explore_wall_bias = 0
-# travel_key_stop = false
-# auto_sacrifice = true
-#
-# explore_stop_pickup_ignore += curare
-# auto_exclude += oklob,statue,curse skull,roxanne,hyperactive,lightning spire
-# auto_exclude += mimic
-
-# tc_reachable      = blue
-# tc_dangerous      = cyan
-# tc_disconnected   = darkgrey
-# tc_excluded       = lightmagenta
-# tc_exclude_circle = red
-
-# Interrupting run and rest compound commands:
-# runrest_safe_poison  = 80:100
-# runrest_ignore_monster ^= butterfly:1
-# runrest_ignore_monster ^= swamp worm:3
-# runrest_stop_message += You hear a.* slurping noise
-# runrest_ignore_message += Jiyva's power touches on your attributes
-
-# A good number of runrest_messages are defined by default; you may want to
-# clear them or override some.
-
-# trapwalk_safe_hp = false
-
-# rest_wait_both = true
-
-##### 3-g       Command Enhancements ##################
-#
-# auto_switch   = true
-# travel_open_doors      = false
-# easy_unequip  = false
-# equip_unequip = true
-# jewellery_prompt = true
-# easy_confirm  = (none | safe | all)
-# allow_self_target      = (yes | no | prompt)
-# confirm_butcher        = (auto | always | never)
-# easy_eat_chunks        = true
-# auto_eat_chunks        = true
-# auto_drop_chunks       = (never | rotten | yes)
-# prompt_for_swap        = false
-# easy_quit_item_prompts = false
-# easy_exit_menu         = true
-# sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
-# sort_menus = inv: true : equipped, freshness, charged
-
-# autofight_stop = 30
-# automagic_enable = false
-# automagic_fight = false
-# automagic_stop = 0
-
-##### 3-h       Messages and Display Enhancements #####
-#
-# hp_warning = 30
-# mp_warning = 0
-# hp_colour = 50:yellow, 25:red
-# mp_colour = 50:yellow, 25:red
-# stat_colour = 1:lightred, 3:red
-
-# status_caption_colour        = yellow
-# clear_messages               = true
-# small_more                   = true
-# show_more                    = false
-# show_newturn_mark            = false
-# show_game_turns              = false
-# item_stack_summary_minimum   = 4
-# mlist_min_height             = 4
-# mlist_allow_alternate_layout = true
-# mlist_targeting              = true
-# msg_min_height               = 7
-# msg_max_height               = 10
-# messages_at_top              = true
-# msg_condense_repeats         = false
-# msg_condense_short           = false
-# skill_focus                  = false
-# show_travel_trail            = false (true for online)
-# view_delay                   = 600
-# use_animations              -=
-
-# You can also enforce a --more-- prompt for messages
-
-## Avoid wasting turns with aborted actions:
-# force_more_message += There are no visible monsters within range
-# force_more_message += This wand has no charges
-
-##### 3-i       Colours (messages and menus) ##########
-#
-# Items are colour coded by default as follows:
-#
-#   yellow     = useful escape item / preferred food
-#   darkgrey   = cannot be used
-#   lightred   = harmful / cursed and in use
-#   magenta    = dangerous to use / mutagenic
-#   red        = disliked by your deity
-#   lightgreen = poisonous (food only)
-#   brown      = less nutritious (food only)
-#   cyan       = useful non-combat item
-#   white      = artefact
-#   lightblue  = unidentified magic item
-#
-# You can change colours by using something like
-# menu_colour ^= inventory:magenta:shillelagh
-# or ones in pick-up dialogs:
-# menu_colour ^= pickup:green:god gift
-
-# Colouring of messages
-# Messages are colour coded as follows:
-#
-#   lightred   = really important messages
-#   yellow     = significant messages
-#   lightred   = item damaged/destroyed
-#   darkgrey   = boring, message clutter
-#
-
-# Notes also use, quite misnamed, menu_colour:
-# menu_colour ^= notes:white:Reached XP level
-
-# These lines will suppress extra feedback messages from travel/shift-running.
-#
-# message_colour ^= mute:monster_warning:
-# message_colour ^= mute:You start resting
-# message_colour ^= mute:(HP|Magic) restored
-# message_colour ^= mute:warning:Not with.*(in view|monsters around)
-
-##### 3-j       Firing Commands #######################
-#
-# fire_items_start = a
-# fire_order = launcher, return
-# fire_order += javelin / tomahawk / stone / rock / net
-# fire_order += inscribed
-
-##### 3-k       Channels ##############################
-#
-# channel.multiturn = mute
-
-##### 3-l       Inscriptions ##########################
-#
-# autoinscribe += bad_item.*potion:!q
-# autoinscribe += potion.*mutation:!q
-# autoinscribe_cursed = false
-# autoinscribe += fruit:!e
-# show_god_gift = yes|unident|no
-
-##### 3-m       Macro related Options #################
-#
-# flush.failure = false
-# flush.command = true
-# flush.message = true
-
-##### 3-n       Tile related Options ##################
-#
-# tile_show_items = !?/%=([)x}:|\
-
-# tile_skip_title = true
-# tile_menu_icons = false
-
-### The following lines define the colours of various objects within the
-### tiles minimap. See options_guide.txt for more details.
-
-# tile_player_col       = white
-# tile_monster_col      = #660000
-# tile_neutral_col      = #660000
-# tile_peaceful_col     = #664400
-# tile_friendly_col     = #664400
-# tile_plant_col        = #446633
-# tile_item_col         = #005544
-# tile_unseen_col       = black
-# tile_floor_col        = #333333
-# tile_wall_col         = #666666
-# tile_mapped_floor_col = #222266
-# tile_mapped_wall_col  = #444499
-# tile_door_col         = #775544
-# tile_downstairs_col   = #ff00ff
-# tile_upstairs_col     = cyan
-# tile_branchstairs_col = #ff7788
-# tile_portal_col       = #ffdd00
-# tile_feature_col      = #997700
-# tile_trap_col         = #aa6644
-# tile_water_col        = #114455
-# tile_deep_water_col   = #001122
-# tile_lava_col         = #552211
-# tile_excluded_col     = #552266
-# tile_excl_centre_col  = #552266
-# tile_window_col       = #558855
-
-# If Crawl's response rate is too slow, try increasing the update rate.
-# tile_update_rate      = 1000
-
-# If Crawl is lagging when running or resting, try increasing this number.
-# tile_runrest_rate = 100
-
-# tile_key_repeat_delay = 200
-# tile_tooltip_ms       = 500
-
-# tile_tag_pref = enemy
-
-### Note: setting window, map or font sizes to '0' implies auto-sizing.
-
-# tile_full_screen      = true
-# tile_window_width     = 1024
-# tile_window_height    = 768
-# tile_use_small_layout = true
-# tile_map_pixels       = 3
-# tile_cell_pixels      = 32
-# tile_filter_scaling   = true
-# tile_force_overlay    = true
-# tile_layout_priority  = minimap, inventory, gold_turn, command, spell
-# tile_layout_priority += ability, monster
-
-# tile_font_crt_file  = VeraMono.ttf
-# tile_font_stat_file = VeraMono.ttf
-# tile_font_msg_file  = VeraMono.ttf
-# tile_font_tip_file  = VeraMono.ttf
-# tile_font_lbl_file  = Vera.ttf
-# tile_font_ft_light  = false
-
-# tile_font_crt_size  = 15
-# tile_font_stat_size = 16
-# tile_font_msg_size  = 14
-# tile_font_tip_size  = 15
-# tile_font_lbl_size  = 14
-
-# tile_show_minihealthbar = false
-# tile_show_minimagicbar  = false
-# tile_show_demon_tier  = false
-
-# tile_water_anim = false
-# tile_misc_anim = false
-
-### WebTiles only
-
-# tile_font_crt_family  = monospace
-# tile_font_stat_family = monospace
-# tile_font_msg_family  = monospace
-# tile_font_lbl_family  = monospace
-
-# tile_realtime_anim = true
-# tile_display_mode = glyph
-# tile_level_map_hide_messages = false
-# tile_level_map_hide_sidebar = true
-
-##### 4-  Dump File #################################################
-#
-##### 4-a       Saving ################################
-#
-# dump_on_save = false
-
-##### 4-b       Items and Kill List ###################
-#
-# kill_map = friend:you, other:you
-# dump_kill_places = (single | all | none)
-# dump_kill_breakdowns = true
-# dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
-# dump_item_origin_price = -1
-# dump_message_count = 20
-# dump_order  = header, hiscore, stats, misc, notes, inventory,
-# dump_order += turns_by_place, skills, spells, overview, mutations,
-# dump_order += messages, screenshot, monlist, kills_by_place, kills
-# dump_order += action_counts
-# dump_book_spells = false
-
-##### 4-c       Notes #################################
-#
-# user_note_prefix=@@@
-# note_hp_percent = 5
-# note_skill_levels = 1,5,10,15,27
-# note_all_skill_levels = true
-# note_skill_max  = false
-# note_xom_effects = false
-# note_chat_messages = false
-# note_items    += rod of, acquirement, running, of Zot
-# note_monsters += orb of fire, ancient lich, Sigmund
-
-##### 5-  Miscellaneous #############################################
-#
-##### 5-a       All OS ################################
-#
-# mouse_input      = true
-# wiz_mode         = no
-# char_set         = ascii
-# use_fake_player_cursor = false
-#
-# Translation to use (descriptions only for now).
-# language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
-#
-# Joke translations (complete!).
-# language = dwarven|jagerkin|kraut|runes|wide|grunt
-#
-# colour.lightgray = black
-# colour.lightcyan = cyan
-# colour.yellow    = brown
-#
-# show_player_species = true
-
-# See options_guide.txt for the options
-# display_char, feature, mon_glyph, item_glyph
-
-## Highlight the edge of unexplored terrain.
-# feature = explore horizon {',,green}
-
-##### 5-b   Windows console #######################
-#
-# dos_use_background_intensity = true
-# background = black
-
-##### 5-c   Unix console ##########################
-#
-# use_fake_cursor = false
-
-##### 5-d   Alternative keybinding files ##########
-#
-# Alternative vi bindings for Dvorak users.
-# include = dvorak_command_keys.txt
-#
-# Alternative vi bindings for Colemak users.
-# include = colemak_command_keys.txt
-#
-# Override the vi movement keys with a non-command.
-# include = no_vi_command_keys.txt
+# include                 = 0.14_monster_glyphs.txt

@@ -195,11 +195,6 @@ it is. Each option should have some remarks on how it's typically used
 - but keep in mind that the options you want to use depend on your
 playing style and sometimes also on your operating system.
 
-The standard init.txt distributed with Crawl includes all boolean
-options, commented out. The commented-out values are always the
-_non-defaults_, so you can toggle boolean options by uncommenting
-them.
-
 There are two styles you can use to set options. The classic
 name=value syntax, one option per-line:
     remember_name  = true
