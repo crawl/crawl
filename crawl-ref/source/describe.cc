@@ -34,6 +34,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
+#include "godprayer.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemname.h"
@@ -4152,12 +4153,8 @@ static string _religion_help(god_type god)
     switch (god)
     {
     case GOD_ZIN:
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
-        {
+        if (can_do_capstone_ability(god))
             result += "You can have all your mutations cured.\n";
-        }
         result += "You can pray at an altar to donate money.";
         break;
 
@@ -4181,9 +4178,7 @@ static string _religion_help(god_type god)
             result += "righteous aura, and all beings within it are "
                       "easier to hit.";
         }
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
+        if (can_do_capstone_ability(god))
         {
             if (!result.empty())
                 result += " ";
@@ -4202,19 +4197,12 @@ static string _religion_help(god_type god)
         break;
 
     case GOD_LUGONU:
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
-        {
-            result += "You can pray at an altar to have your weapon "
-                      "corrupted.";
-        }
+        if (can_do_capstone_ability(god))
+            result += "You can pray at an altar to have your weapon corrupted.";
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        if (!player_under_penance()
-            && you.piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[god])
+        if (can_do_capstone_ability(god))
         {
             result += "You can pray at an altar to have your necromancy "
                       "enhanced.";
@@ -4235,8 +4223,7 @@ static string _religion_help(god_type god)
         break;
 
     case GOD_GOZAG:
-        if (!player_under_penance()
-            && !you.one_time_ability_used[god])
+        if (!player_under_penance() && !you.one_time_ability_used[god])
         {
             result += "You can place a non-artefact item on an altar and pray "
                       "to duplicate that item.";

@@ -2418,8 +2418,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     }
 
     //jmf: Kiku sometimes deflects this
-    if (!you_worship(GOD_KIKUBAAQUDGHA)
-        || player_under_penance() || you.piety < piety_breakpoint(3)
+    if (!in_good_standing(GOD_KIKUBAAQUDGHA, 3)
         || !x_chance_in_y(you.piety, MAX_PIETY))
     {
         you.sicken(25 + random2(50));

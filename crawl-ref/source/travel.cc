@@ -4123,8 +4123,7 @@ bool runrest::run_should_stop() const
     const map_cell& tcell = env.map_knowledge(targ);
 
     if (tcell.cloud() != CLOUD_NONE
-        && (!you_worship(GOD_QAZLAL)
-            || player_under_penance()
+        && (!in_good_standing(GOD_QAZLAL)
             || !YOU_KILL(tcell.cloudinfo()->killer)))
     {
         return true;
