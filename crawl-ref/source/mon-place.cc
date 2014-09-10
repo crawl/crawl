@@ -3785,7 +3785,7 @@ conduct_type player_will_anger_monster(monster_type type)
 
     // no spellcasting/etc zombies currently; pick something that always works
     if (mons_class_is_zombified(type))
-        dummy.base_monster = MONS_ORC;
+        dummy.base_monster = MONS_GOBLIN;
 
     define_monster(&dummy);
 
