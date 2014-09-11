@@ -8,6 +8,8 @@
 
 #define NEVER_HIDE_KEY "never_hide"
 
+bool butchery(int which_corpse = -1, bool bottle_blood = false);
+
 void maybe_drop_monster_hide(const item_def corpse);
 int get_max_corpse_chunks(monster_type mons_class);
 bool turn_corpse_into_skeleton(item_def &item);
