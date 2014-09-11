@@ -1137,11 +1137,10 @@ public:
         const int min = range * range;
         const int max = (range + 2) * (range  + 2);
         if (dist >= min && dist < max)
-#ifdef USE_TILE
-            colour = MAGENTA;
-#else
-            colour = DARKGREY;
-#endif
+            if (is_tiles())
+                colour = MAGENTA;
+            else
+                colour = DARKGREY;
         else
             colour = 0;
 
