@@ -44,6 +44,9 @@ void flash_monster_colour(const monster* mon, colour_t fmc_colour,
 
 enum animation_type {
     ANIMATION_SHAKE_VIEWPORT,
+    ANIMATION_CHECKERBOARD,
+    ANIMATION_MAPROT,
+    ANIMATION_SLIDEOUT,
     NUM_ANIMATIONS
 };
 

@@ -1046,10 +1046,90 @@ private:
     coord_def offset;
 };
 
+class checkerboard_animation: public animation {
+public:
+    checkerboard_animation() { frame_delay = 100; frames = 5; }
+    void init_frame(int frame)
+    {
+        current_frame = frame;
+    }
+
+    coord_def cell_cb(const coord_def &pos)
+    {
+        if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
+            return coord_def(-1, -1);
+        else
+            return pos;
+    }
+
+    int current_frame;
+};
+
+class maprot_animation: public animation {
+public:
+    void init_frame(int frame)
+    {
+        if (!frame)
+            hidden.clear();
+    }
+
+    coord_def cell_cb(const coord_def &pos)
+    {
+        if (pos == you.pos())
+            return pos;
+
+        map<coord_def, bool>::iterator found = hidden.find(pos);
+        if (found != hidden.end() && found->second)
+            return coord_def(-1, -1);
+
+        if (!random2(10))
+        {
+            hidden.insert(std::pair<coord_def, bool>(pos, true));
+            return coord_def(-1, -1);
+        }
+
+        return pos;
+    }
+
+    map<coord_def, bool> hidden;
+};
+
+class slideout_animation: public animation {
+public:
+    void init_frame(int frame)
+    {
+        current_frame = frame;
+    }
+
+    coord_def cell_cb(const coord_def &pos)
+    {
+        coord_def ret;
+        if (pos.y % 2)
+            ret = coord_def(pos.x + current_frame * 4, pos.y);
+        else
+            ret = coord_def(pos.x - current_frame * 4, pos.y);
+
+        coord_def view = grid2view(ret);
+        const coord_def max = crawl_view.viewsz;
+        if (view.x < 1 || view.y < 1 || view.x > max.x || view.y > max.y)
+            return coord_def(-1, -1);
+        else
+            return ret;
+    }
+
+    int current_frame;
+};
+
 static shake_viewport_animation shake_viewport;
+static checkerboard_animation checkerboard;
+static maprot_animation maprot;
+static slideout_animation slideout;
 
 static animation *animations[NUM_ANIMATIONS] = {
-    &shake_viewport
+    &shake_viewport,
+    &checkerboard,
+    &maprot,
+    &slideout
 };
 
 void run_animation(animation_type anim)
