@@ -850,11 +850,11 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_blessed(item))
         return false;
 
-    // God gifts are protected.
+    // God gifts are protected -- but not his own!
     if (item.orig_monnum < 0)
     {
         god_type iorig = static_cast<god_type>(-item.orig_monnum);
-        if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
+        if (iorig > GOD_NO_GOD && iorig < NUM_GODS && iorig != GOD_XOM)
             return false;
     }
 
