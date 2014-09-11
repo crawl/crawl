@@ -41,10 +41,27 @@ void flash_view_delay(colour_t colour, int delay, targetter *where = NULL);
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
 #endif
-void shake_viewport();
 
+enum animation_type {
+    ANIMATION_SHAKE_VIEWPORT,
+    NUM_ANIMATIONS
+};
+
+class animation {
+public:
+    animation(): frames(10), frame_delay(50) { }
+    virtual ~animation() { }
+
+    virtual void init_frame(int frame) { }
+    virtual coord_def cell_cb(const coord_def &pos) = 0;
+
+    int frames;
+    int frame_delay;
+};
+
+void run_animation(animation_type anim);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
-                const coord_def &offset = coord_def(0, 0));
+                animation *a = NULL);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
