@@ -456,17 +456,31 @@ LUAFN(you_train_skill)
 
 LUAFN(you_status)
 {
+    const char* which = NULL;
+    if (lua_gettop(ls) >= 1)
+        which = luaL_checkstring(ls, 1);
+
     string status_effects = "";
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
         if (fill_status_info(i, &inf) && !inf.short_text.empty())
         {
-            if (!status_effects.empty())
-                status_effects += ",";
-            status_effects += inf.short_text;
+            if (which)
+            {
+                if (inf.short_text == which)
+                    PLUARET(boolean, true);
+            }
+            else
+            {
+                if (!status_effects.empty())
+                    status_effects += ",";
+                status_effects += inf.short_text;
+            }
         }
     }
+    if (which)
+        PLUARET(boolean, false);
     PLUARET(string, status_effects.c_str());
 }
 
