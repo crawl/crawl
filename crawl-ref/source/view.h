@@ -57,7 +57,7 @@ public:
     virtual ~animation() { }
 
     virtual void init_frame(int frame) { }
-    virtual coord_def cell_cb(const coord_def &pos) = 0;
+    virtual coord_def cell_cb(const coord_def &pos, int &colour) = 0;
 
     int frames;
     int frame_delay;

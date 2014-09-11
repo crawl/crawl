@@ -1037,7 +1037,7 @@ public:
         offset = coord_def(random2(3) - 1, random2(3) - 1);
     }
 
-    coord_def cell_cb(const coord_def &pos)
+    coord_def cell_cb(const coord_def &pos, int &colour)
     {
         return pos + offset;
     }
@@ -1054,7 +1054,7 @@ public:
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos)
+    coord_def cell_cb(const coord_def &pos, int &colour)
     {
         if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
             return coord_def(-1, -1);
@@ -1073,7 +1073,7 @@ public:
             hidden.clear();
     }
 
-    coord_def cell_cb(const coord_def &pos)
+    coord_def cell_cb(const coord_def &pos, int &colour)
     {
         if (pos == you.pos())
             return pos;
@@ -1101,7 +1101,7 @@ public:
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos)
+    coord_def cell_cb(const coord_def &pos, int &colour)
     {
         coord_def ret;
         if (pos.y % 2)
@@ -1128,7 +1128,7 @@ public:
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos)
+    coord_def cell_cb(const coord_def &pos, int &colour)
     {
         const int dist = distance2(pos, you.pos());
         const int min = current_frame * current_frame;
@@ -1248,7 +1248,9 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
         // in grid coords
-        const coord_def gc = a ? a->cell_cb(view2grid(*ri)) : view2grid(*ri);
+        const coord_def gc = a
+            ? a->cell_cb(view2grid(*ri), flash_colour)
+            : view2grid(*ri);
 
         if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
             draw_cell(cell, gc, anim_updates, 0);
