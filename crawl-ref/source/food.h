@@ -6,6 +6,8 @@
 #ifndef FOOD_H
 #define FOOD_H
 
+#include "mon-enum.h"
+
 #define BERSERK_NUTRITION     700
 
 #define HUNGER_FAINTING       400
@@ -20,8 +22,6 @@
 
 #define HUNGER_DEFAULT       5900
 #define HUNGER_MAXIMUM      11900
-
-bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
 bool eat_food(int slot = -1);
 
@@ -39,6 +39,9 @@ bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
+corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
+                                                  bool rotten_chunk);
+int contamination_ratio(corpse_effect_type chunk_effect);
 
 bool can_ingest(const item_def &food, bool suppress_msg,
                 bool check_hunger = true);
@@ -72,5 +75,6 @@ void handle_starvation();
 int hunger_bars(const int hunger);
 string hunger_cost_string(const int hunger);
 
+int corpse_badness(corpse_effect_type ce, const item_def &item);
 bool drop_spoiled_chunks();
 #endif

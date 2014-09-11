@@ -40,6 +40,7 @@
 #include "beam.h"
 #include "bloodspatter.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "cio.h"
 #include "cloud.h"
