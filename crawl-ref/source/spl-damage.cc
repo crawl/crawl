@@ -1298,6 +1298,8 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
+    run_animation(ANIMATION_SHAKE_VIEWPORT);
+
     int dest = 0;
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
@@ -1311,8 +1313,6 @@ spret_type cast_shatter(int pow, bool fail)
 
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
-
-    run_animation(ANIMATION_SHAKE_VIEWPORT);
 
     return SPRET_SUCCESS;
 }
