@@ -1441,8 +1441,6 @@ static int _xom_swap_weapons(bool debug = false)
     ASSERT(monwpn != NON_ITEM);
     ASSERT(mywpn  != -1);
 
-    unwield_item();
-
     item_def &myweapon = you.inv[mywpn];
 
     int index = get_mitm_slot(10);
@@ -1462,9 +1460,11 @@ static int _xom_swap_weapons(bool debug = false)
         mon->equip(mitm[monwpn], MSLOT_WEAPON, 0);
         unlink_item(index);
         destroy_item(mitm[index]);
-        equip_item(EQ_WEAPON, mywpn);
         return XOM_DID_NOTHING;
     }
+
+    unwield_item();
+
     // Mark the weapon as thrown, so that we'll autograb it once the
     // monster is dead.
     mitm[index].flags |= ISFLAG_THROWN;
