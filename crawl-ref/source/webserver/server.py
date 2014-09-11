@@ -135,6 +135,7 @@ def bind_server():
         except NameError:
             listens = ( (bind_address, bind_port), )
         for (addr, port) in listens:
+            logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
     if ssl_options:
@@ -146,6 +147,7 @@ def bind_server():
         except NameError:
             listens = ( (ssl_address, ssl_port), )
         for (addr, port) in listens:
+            logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
 
