@@ -903,12 +903,12 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     case DNGN_SEALED_DOOR:
-        // XXX: When silenced, features disappear without message.
-        // XXX: For doors, we only issue a sound where the beam hit.
-        //      If someone wants to improve on the door messaging,
-        //      probably best to merge _destroy_wall_msg back into
-        //      destroy_wall_effect. [rob]
-        if (hear)
+        if (see)
+        {
+            msg = (feature_description_at(p, false, DESC_THE, false)
+                   + " explodes into countless fragments.").c_str();
+        }
+        else if (hear)
         {
             msg = "You hear a grinding noise.";
             chan = MSGCH_SOUND;
