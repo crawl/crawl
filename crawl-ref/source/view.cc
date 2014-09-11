@@ -1188,7 +1188,7 @@ void run_animation(animation_type anim, bool cleanup)
 {
 #ifdef USE_TILE_WEB
     // XXX this doesn't work in webtiles yet
-    if (is_tiles() && Options.tile_display_mode != "glyphs")
+    if (is_tiles())
         return;
 #endif
     if (Options.use_animations)
