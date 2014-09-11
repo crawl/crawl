@@ -2122,6 +2122,10 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         }
     }
 
+    // mention the ability to pray at altars
+    if (feat_is_altar(feat))
+        long_desc += "(Pray here to learn more.)";
+
     inf.body << long_desc;
 
     inf.quote = getQuoteString(db_name);
