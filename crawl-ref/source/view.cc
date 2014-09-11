@@ -1130,9 +1130,9 @@ public:
 
     coord_def cell_cb(const coord_def &pos)
     {
-        int dist = distance2(pos, you.pos());
-        int min = current_frame * current_frame;
-        int max = (current_frame + 1) * (current_frame + 1);
+        const int dist = distance2(pos, you.pos());
+        const int min = current_frame * current_frame;
+        const int max = (current_frame + 1) * (current_frame + 1);
         if (dist >= min && dist < max)
             return coord_def(-1, -1);
         else
