@@ -32,6 +32,7 @@
 #include "species.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -181,6 +182,7 @@ LUARET1(you_taking_stairs, boolean,
         || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
+LUARET1(you_spell_levels, number, player_spell_levels())
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
@@ -262,6 +264,27 @@ static int l_you_spell_table(lua_State *ls)
 
         lua_pushstring(ls, buf);
         lua_pushstring(ls, spell_title(spell));
+        lua_rawset(ls, -3);
+    }
+    return 1;
+}
+
+static int l_you_mem_spells(lua_State *ls)
+{
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+
+    vector<int> books;
+    vector<spell_type> mem_spells = get_mem_spell_list(books);
+
+    for (size_t i = 0; i < mem_spells.size(); ++i)
+    {
+        buf[0] = index_to_letter(i);
+
+        lua_pushstring(ls, buf);
+        lua_pushstring(ls, spell_title(mem_spells[i]));
         lua_rawset(ls, -3);
     }
     return 1;
@@ -438,6 +461,8 @@ static const struct luaL_reg you_clib[] =
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
+    { "spell_levels", you_spell_levels },
+    { "mem_spells", l_you_mem_spells },
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
