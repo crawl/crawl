@@ -166,10 +166,6 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
     delay.parm3    = parm3;
     delay.started  = false;
 
-    // Paranoia
-    if (type == DELAY_WEAPON_SWAP)
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-
     if (delay_is_run(type))
         clear_travel_trail();
 
@@ -366,7 +362,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         }
         break;
 
-    case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
     case DELAY_UNINTERRUPTIBLE:   // never stoppable
@@ -383,65 +378,6 @@ static bool _is_butcher_delay(int delay)
     return delay == DELAY_BUTCHER
            || delay == DELAY_BOTTLE_BLOOD
            || delay == DELAY_FEED_VAMPIRE;
-}
-
-void handle_interrupted_swap()
-{
-    if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
-    {
-        return;
-    }
-
-    // Decrease value by 1. (0 means attribute is false, 1 = a, 2 = b, ...)
-    int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
-    if (weap == ENDOFPACK)
-        weap = -1;
-
-    const bool       safe   = i_feel_safe();
-    const bool       prompt = Options.prompt_for_swap && !safe;
-    const delay_type delay  = current_delay_action();
-
-    const char* prompt_str  = "Switch back to main weapon?";
-
-    // If we're going to prompt then update the window so the player can
-    // see what the monsters are.
-    if (prompt)
-        viewwindow();
-
-    if (delay == DELAY_WEAPON_SWAP)
-        die("handle_interrupted_swap() called while already swapping weapons");
-    else if (!you.turn_is_over
-             && (delay == DELAY_ASCENDING_STAIRS
-                 || delay == DELAY_DESCENDING_STAIRS))
-    {
-        // We just arrived on the level, let rest of function do its stuff.
-        ;
-    }
-    else if (you.turn_is_over && delay == DELAY_NOT_DELAYED)
-    {
-        // Turn is over, set up a delay to do swapping next turn.
-        if (prompt && yesno(prompt_str, true, 'n', true, false)
-            || safe)
-        {
-            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
-                start_delay(DELAY_WEAPON_SWAP, 1, weap);
-            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-        }
-        return;
-    }
-    else if (delay != DELAY_NOT_DELAYED)
-        return;
-
-    if (!safe && (!prompt || !yesno(prompt_str, true, 'n', true, false)))
-        return;
-
-    if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
-    {
-        weapon_switch(weap);
-        print_stats();
-    }
-    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
 bool you_are_delayed()
@@ -792,8 +728,7 @@ void handle_delay()
             break;
 
         case DELAY_JEWELLERY_ON:
-        case DELAY_WEAPON_SWAP:
-            // These are 1-turn delays where the time cost is handled
+            // This is a 1-turn delay where the time cost is handled
             // in _finish_delay().
             // FIXME: get rid of this hack!
             you.time_taken = 0;
@@ -858,11 +793,6 @@ static void _finish_delay(const delay_queue_item &delay)
 {
     switch (delay.type)
     {
-    case DELAY_WEAPON_SWAP:
-        weapon_switch(delay.parm1);
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-        break;
-
     case DELAY_JEWELLERY_ON:
     {
         const item_def &item = you.inv[delay.parm1];
@@ -1411,9 +1341,8 @@ void run_macro(const char *macroname)
 
 bool is_delay_interruptible(delay_type delay)
 {
-    return !(delay == DELAY_EAT || delay == DELAY_WEAPON_SWAP
-             || delay == DELAY_DROP_ITEM || delay == DELAY_JEWELLERY_ON
-             || delay == DELAY_UNINTERRUPTIBLE);
+    return !(delay == DELAY_EAT || delay == DELAY_DROP_ITEM
+             || delay == DELAY_JEWELLERY_ON || delay == DELAY_UNINTERRUPTIBLE);
 }
 
 // Returns TRUE if the delay should be interrupted, MAYBE if the user function
@@ -1863,7 +1792,10 @@ activity_interrupt_type get_activity_interrupt(const string &name)
 static const char *delay_names[] =
 {
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
-    "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
+    "jewellery_on", "memorise", "butcher", "bottle_blood",
+#if TAG_MAJOR_VERSION == 34
+    "weapon_swap",
+#endif
     "passwall", "drop_item", "multidrop", "ascending_stairs",
     "descending_stairs",
 #if TAG_MAJOR_VERSION == 34

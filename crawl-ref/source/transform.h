@@ -204,7 +204,7 @@ bool transform(int pow, transformation_type which_trans,
                bool involuntary = false, bool just_check = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_wielding = false, bool skip_move = false);
+void untransform(bool skip_move = false);
 
 size_type transform_size(int psize = PSIZE_BODY,
                          transformation_type form = you.form);

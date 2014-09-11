@@ -633,8 +633,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     default:
         break;
     }
-
-    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
@@ -1393,7 +1391,6 @@ bool unwield_item(bool showMsgs)
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
-    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
     return true;
 }

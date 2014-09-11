@@ -172,8 +172,6 @@ public:
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
-    bool        prompt_for_swap; // Prompt to switch back from butchering
-                                 // tool if hostile monsters are around.
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling

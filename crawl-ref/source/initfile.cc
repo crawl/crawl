@@ -796,7 +796,6 @@ void game_options::reset_options()
     jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
-    prompt_for_swap        = true;
     auto_drop_chunks       = ADC_NEVER;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
@@ -2566,7 +2565,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = CONFIRM_AUTO;
     }
     else BOOL_OPTION(chunks_autopickup);
-    else BOOL_OPTION(prompt_for_swap);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "auto_drop_chunks")
