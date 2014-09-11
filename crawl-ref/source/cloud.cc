@@ -818,7 +818,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     }
 
     // Qazlalites get immunity to their own clouds.
-    if (player && cloud.whose == KC_YOU && in_good_standing(GOD_QAZLAL))
+    if (player && YOU_KILL(cloud.killer) && in_good_standing(GOD_QAZLAL))
         return true;
 #if TAG_MAJOR_VERSION == 34
 
@@ -1284,7 +1284,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         cloud.type = type;
         cloud.decay = 100;
         if (yours)
-            cloud.whose = KC_YOU;
+            cloud.set_killer(KILL_YOU);
         return _cloud_is_harmful(&you, cloud, 0);
     }
     else
