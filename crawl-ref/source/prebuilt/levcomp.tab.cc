@@ -73,7 +73,7 @@
 #include "l_defs.h"
 #include "mapdef.h"
 #include "maps.h"
-#include "strings.h"
+#include "stringutil.h"
 
 #define YYERROR_VERBOSE 1
 #define YYENABLE_NLS 0
