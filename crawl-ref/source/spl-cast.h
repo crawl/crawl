@@ -72,9 +72,12 @@ void do_cast_spell_cmd(bool force);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
+int fail_severity(spell_type spell);
 int failure_rate_colour(spell_type spell);
 int failure_rate_to_int(int fail);
 char* failure_rate_to_string(int fail);
+
+int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell, bool rod = false);
 string spell_range_string(spell_type spell, bool rod = false);

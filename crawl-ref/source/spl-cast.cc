@@ -2050,16 +2050,25 @@ static double _get_miscast_chance_with_miscast_prot(spell_type spell)
     return chance;
 }
 
+int fail_severity(spell_type spell)
+{
+    const double chance = _get_miscast_chance_with_miscast_prot(spell);
+
+    return (chance < 0.001) ? 0 :
+           (chance < 0.005) ? 1 :
+           (chance < 0.025) ? 2
+                            : 3;
+}
+
 // Chooses a colour for the failure rate display for a spell. The colour is
 // based on the chance of getting a severity >= 2 miscast.
 int failure_rate_colour(spell_type spell)
 {
-    double chance = _get_miscast_chance_with_miscast_prot(spell);
-
-    return (chance < 0.001) ? LIGHTGREY :
-           (chance < 0.005) ? YELLOW    :
-           (chance < 0.025) ? LIGHTRED  :
-                              RED;
+    const int severity = fail_severity(spell);
+    return severity == 0 ? LIGHTGREY :
+           severity == 1 ? YELLOW :
+           severity == 2 ? LIGHTRED
+                         : RED;
 }
 
 //Converts the raw failure rate into a number to be displayed.
@@ -2169,7 +2178,7 @@ string spell_noise_string(spell_type spell)
         return desc;
 }
 
-static int _power_to_barcount(int power)
+int power_to_barcount(int power)
 {
     if (power == -1)
         return -1;
@@ -2184,7 +2193,7 @@ static int _spell_power_bars(spell_type spell, bool rod)
     if (cap == 0)
         return -1;
     const int power = min(calc_spell_power(spell, true, false, false, rod), cap);
-    return _power_to_barcount(power);
+    return power_to_barcount(power);
 }
 
 #ifdef WIZARD
@@ -2206,7 +2215,7 @@ string spell_power_string(spell_type spell, bool rod)
 #endif
 
     const int numbars = _spell_power_bars(spell, rod);
-    const int capbars = _power_to_barcount(spell_power_cap(spell));
+    const int capbars = power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
     if (numbars < 0)
         return "N/A";

@@ -2195,6 +2195,14 @@ void handle_starvation()
     }
 }
 
+static const int hunger_breakpoints[] = { 1, 21, 61, 121, 201, 301, 421 };
+
+int hunger_bars(const int hunger)
+{
+    return breakpoint_rank(hunger, hunger_breakpoints,
+                           ARRAYSZ(hunger_breakpoints));
+}
+
 string hunger_cost_string(const int hunger)
 {
     if (you_foodless(true))
@@ -2205,11 +2213,13 @@ string hunger_cost_string(const int hunger)
         return make_stringf("%d", hunger);
 #endif
 
-    const int breakpoints[] = { 1, 21, 61, 121, 201, 301, 421 };
-    const int numbars = breakpoint_rank(hunger, breakpoints, ARRAYSZ(breakpoints));
+    const int numbars = hunger_bars(hunger);
 
     if (numbars > 0)
-        return string(numbars, '#') + string(ARRAYSZ(breakpoints) - numbars, '.');
+    {
+        return string(numbars, '#')
+               + string(ARRAYSZ(hunger_breakpoints) - numbars, '.');
+    }
     else
         return "None";
 }
