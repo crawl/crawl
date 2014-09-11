@@ -35,6 +35,7 @@
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "status.h"
 #include "stringutil.h"
 #include "transform.h"
 #include "traps.h"
@@ -453,6 +454,22 @@ LUAFN(you_train_skill)
     PLUARET(number, you.train[sk]);
 }
 
+LUAFN(you_status)
+{
+    string status_effects = "";
+    status_info inf;
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
+    {
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+        {
+            if (!status_effects.empty())
+                status_effects += ",";
+            status_effects += inf.short_text;
+        }
+    }
+    PLUARET(string, status_effects.c_str());
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -543,6 +560,7 @@ static const struct luaL_reg you_clib[] =
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
     { "antimagic",    you_antimagic },
+    { "status",       you_status },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
