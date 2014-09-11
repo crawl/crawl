@@ -1120,16 +1120,40 @@ public:
     int current_frame;
 };
 
+class ring_animation: public animation {
+public:
+    ring_animation() { frame_delay = 30; }
+    void init_frame(int frame)
+    {
+        current_frame = frame;
+    }
+
+    coord_def cell_cb(const coord_def &pos)
+    {
+        int dist = distance2(pos, you.pos());
+        int min = current_frame * current_frame;
+        int max = (current_frame + 1) * (current_frame + 1);
+        if (dist >= min && dist < max)
+            return coord_def(-1, -1);
+        else
+            return pos;
+    }
+
+    int current_frame;
+};
+
 static shake_viewport_animation shake_viewport;
 static checkerboard_animation checkerboard;
 static maprot_animation maprot;
 static slideout_animation slideout;
+static ring_animation ring;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
     &checkerboard,
     &maprot,
-    &slideout
+    &slideout,
+    &ring
 };
 
 void run_animation(animation_type anim, bool cleanup)
