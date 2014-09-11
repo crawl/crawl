@@ -1032,6 +1032,8 @@ static void _draw_los(screen_cell_t *cell,
 
 class shake_viewport_animation: public animation {
 public:
+    shake_viewport_animation() { frames = 5; frame_delay = 40; }
+
     void init_frame(int frame)
     {
         offset = coord_def(random2(3) - 1, random2(3) - 1);
