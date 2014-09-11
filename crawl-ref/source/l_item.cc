@@ -28,7 +28,9 @@
 #include "player.h"
 #include "prompt.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "stash.h"
 #include "stringutil.h"
 #include "throw.h"
@@ -640,6 +642,27 @@ IDEF(plus2)
     return 1;
 }
 
+IDEF(spells)
+{
+    if (!item || !item->defined() || !item->has_spells())
+        return 0;
+
+    int index = 0;
+    lua_newtable(ls);
+
+    for (size_t i = 0; i < SPELLBOOK_SIZE; ++i)
+    {
+        const spell_type stype = which_spell_in_book(*item, i);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+
+        lua_pushstring(ls, spell_title(stype));
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1098,6 +1121,9 @@ static ItemAccessor item_attrs[] =
     { "is_preferred_food", l_item_is_preferred_food },
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },
+    { "spells",            l_item_spells },
+
+    // dlua only past this point
     { "pluses",            l_item_pluses },
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },

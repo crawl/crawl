@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Boolean feat-related functions lua library "feat".
+ * @brief Spell-related functions lua library "spells".
 **/
 
 #include "AppHdr.h"
@@ -13,6 +13,12 @@
 #include "spl-damage.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+
+LUAFN(l_spells_level)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    PLUARET(number, spell_difficulty(spell));
+}
 
 LUAFN(l_spells_mana_cost)
 {
@@ -34,6 +40,7 @@ LUAFN(l_spells_fail)
 
 static const struct luaL_reg spells_clib[] =
 {
+    { "level"         , l_spells_level },
     { "mana_cost"     , l_spells_mana_cost },
     { "range"         , l_spells_range },
     { "fail"          , l_spells_fail },
