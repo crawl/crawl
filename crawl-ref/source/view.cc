@@ -1030,18 +1030,39 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 }
 
-void shake_viewport()
+class shake_viewport_animation: public animation {
+public:
+    void init_frame(int frame)
+    {
+        offset = coord_def(random2(3) - 1, random2(3) - 1);
+    }
+
+    coord_def cell_cb(const coord_def &pos)
+    {
+        return pos + offset;
+    }
+
+private:
+    coord_def offset;
+};
+
+static shake_viewport_animation shake_viewport;
+
+static animation *animations[NUM_ANIMATIONS] = {
+    &shake_viewport
+};
+
+void run_animation(animation_type anim)
 {
+    animation *a = animations[anim];
+
     viewwindow();
 
-    coord_def offset(0, 0);
-
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < a->frames; ++i)
     {
-        viewwindow(false, false, offset);
-        delay(50);
-        offset.x = random2(3) - 1;
-        offset.y = random2(3) - 1;
+        a->init_frame(i);
+        viewwindow(false, false, a);
+        delay(a->frame_delay);
     }
 
     viewwindow();
@@ -1058,7 +1079,7 @@ void shake_viewport()
 // If tiles_only is set, only the tile view will be updated. This
 // is only relevant for Webtiles.
 //---------------------------------------------------------------
-void viewwindow(bool show_updates, bool tiles_only, const coord_def &offset)
+void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
     // The player could be at (0,0) if we are called during level-gen; this can
     // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
@@ -1122,12 +1143,12 @@ void viewwindow(bool show_updates, bool tiles_only, const coord_def &offset)
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
         // in grid coords
-        const coord_def gc = view2grid(*ri);
+        const coord_def gc = a ? a->cell_cb(view2grid(*ri)) : view2grid(*ri);
 
         if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-            draw_cell(cell, gc + offset, anim_updates, 0);
+            draw_cell(cell, gc, anim_updates, 0);
         else
-            draw_cell(cell, gc + offset, anim_updates, flash_colour);
+            draw_cell(cell, gc, anim_updates, flash_colour);
 
         cell++;
     }
