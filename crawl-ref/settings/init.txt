@@ -220,6 +220,7 @@
 # skill_focus                  = false
 # show_travel_trail            = false (true for online)
 # view_delay                   = 600
+# use_animations               = false
 
 # You can also enforce a --more-- prompt for messages
 
