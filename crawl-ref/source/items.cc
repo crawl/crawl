@@ -1760,6 +1760,8 @@ static void _get_rune(const item_def& it, bool quiet)
  */
 static void _get_orb(const item_def &it, bool quiet)
 {
+    run_animation(ANIMATION_RING);
+
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
     you.char_direction = GDT_ASCENDING;
 
