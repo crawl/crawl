@@ -1461,7 +1461,8 @@ static int _xom_swap_weapons(bool debug = false)
         mon->inv[MSLOT_WEAPON] = monwpn;
         mon->equip(mitm[monwpn], MSLOT_WEAPON, 0);
         unlink_item(index);
-        destroy_item(myweapon);
+        destroy_item(mitm[index]);
+        equip_item(EQ_WEAPON, mywpn);
         return XOM_DID_NOTHING;
     }
     // Mark the weapon as thrown, so that we'll autograb it once the
