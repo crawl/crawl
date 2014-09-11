@@ -49,7 +49,7 @@ bool beogh_gift_item();
 
 bool yred_injury_mirror();
 bool yred_can_animate_dead();
-void yred_animate_remains_or_dead();
+bool yred_animate_remains_or_dead();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
