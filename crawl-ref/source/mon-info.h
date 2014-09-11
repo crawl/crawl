@@ -294,6 +294,8 @@ struct monster_info : public monster_info_base
         return mbase_speed;
     }
 
+    string speed_description() const;
+
     bool wields_two_weapons() const;
     bool can_regenerate() const;
     reach_type reach_range() const;

@@ -3409,17 +3409,7 @@ static string _monster_stat_description(const monster_info& mi)
     if (speed != 10 && speed != 0)
     {
         did_speed = true;
-        result << uppercase_first(pronoun) << " is ";
-        if (speed < 7)
-            result << "very slow";
-        else if (speed < 10)
-            result << "slow";
-        else if (speed > 20)
-            result << "extremely fast";
-        else if (speed > 15)
-            result << "very fast";
-        else if (speed > 10)
-            result << "fast";
+        result << uppercase_first(pronoun) << " is " << mi.speed_description();
     }
     const mon_energy_usage def = DEFAULT_ENERGY;
     if (!(mi.menergy == def))

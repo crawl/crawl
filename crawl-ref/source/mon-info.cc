@@ -1735,6 +1735,23 @@ int monster_info::res_magic() const
     return mr;
 }
 
+string monster_info::speed_description() const
+{
+    if (mbase_speed < 7)
+        return "very slow";
+    else if (mbase_speed < 10)
+        return "slow";
+    else if (mbase_speed > 20)
+        return "extremely fast";
+    else if (mbase_speed > 15)
+        return "very fast";
+    else if (mbase_speed > 10)
+        return "fast";
+
+    // This only ever displays through Lua.
+    return "normal";
+}
+
 bool monster_info::wields_two_weapons() const
 {
     return is(MB_TWO_WEAPONS);
