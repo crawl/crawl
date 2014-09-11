@@ -1065,12 +1065,27 @@ public:
     int current_frame;
 };
 
-class maprot_animation: public animation {
+class banish_animation: public animation {
 public:
+    banish_animation(): remaining(false) { }
+
     void init_frame(int frame)
     {
+        current_frame = frame;
+
         if (!frame)
+        {
+            frames = 10;
             hidden.clear();
+            remaining = true;
+        }
+
+        if (remaining)
+            frames = frame + 2;
+        else
+            frames = frame;
+
+        remaining = false;
     }
 
     coord_def cell_cb(const coord_def &pos, int &colour)
@@ -1082,16 +1097,19 @@ public:
         if (found != hidden.end() && found->second)
             return coord_def(-1, -1);
 
-        if (!random2(10))
+        if (!random2(10 - current_frame))
         {
             hidden.insert(std::pair<coord_def, bool>(pos, true));
             return coord_def(-1, -1);
         }
 
+        remaining = true;
         return pos;
     }
 
+    bool remaining;
     map<coord_def, bool> hidden;
+    int current_frame;
 };
 
 class slideout_animation: public animation {
@@ -1152,14 +1170,14 @@ public:
 
 static shake_viewport_animation shake_viewport;
 static checkerboard_animation checkerboard;
-static maprot_animation maprot;
+static banish_animation banish;
 static slideout_animation slideout;
 static orb_animation orb;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
     &checkerboard,
-    &maprot,
+    &banish,
     &slideout,
     &orb
 };
