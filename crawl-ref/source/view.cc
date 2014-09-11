@@ -1132,7 +1132,7 @@ static animation *animations[NUM_ANIMATIONS] = {
     &slideout
 };
 
-void run_animation(animation_type anim)
+void run_animation(animation_type anim, bool cleanup)
 {
     animation *a = animations[anim];
 
@@ -1145,7 +1145,8 @@ void run_animation(animation_type anim)
         delay(a->frame_delay);
     }
 
-    viewwindow();
+    if (cleanup)
+        viewwindow();
 }
 
 //---------------------------------------------------------------

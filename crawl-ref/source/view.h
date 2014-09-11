@@ -62,7 +62,7 @@ public:
     int frame_delay;
 };
 
-void run_animation(animation_type anim);
+void run_animation(animation_type anim, bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
                 animation *a = NULL);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
