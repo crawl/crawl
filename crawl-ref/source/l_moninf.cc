@@ -15,6 +15,7 @@
 #include "libutil.h"
 #include "mon-info.h"
 #include "mon-book.h"
+#include "mon-util.h"
 #include "player.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -58,6 +59,22 @@ MIRET1(number, number, number)
 MIRET1(number, colour, colour)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 MIRET1(string, speed_description, speed_description().c_str())
+
+#define MIRES1(field, resist) \
+    static int moninf_get_##field(lua_State *ls) \
+    { \
+        MONINF(ls, 1, mi); \
+        lua_pushnumber(ls, get_resist(mi->resists(), resist)); \
+        return 1; \
+    }
+
+// Named for consistency with the player resists.
+MIRES1(res_poison, MR_RES_POISON)
+MIRES1(res_fire, MR_RES_FIRE)
+MIRES1(res_cold, MR_RES_COLD)
+MIRES1(res_draining, MR_RES_NEG)
+MIRES1(res_shock, MR_RES_ELEC)
+MIRES1(res_corr, MR_RES_ACID)
 
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code.  We have
@@ -297,6 +314,12 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(has_known_ranged_attack),
     MIREG(speed_description),
     MIREG(spells),
+    MIREG(res_poison),
+    MIREG(res_fire),
+    MIREG(res_cold),
+    MIREG(res_draining),
+    MIREG(res_shock),
+    MIREG(res_corr),
 
     { NULL, NULL }
 };
