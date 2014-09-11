@@ -1170,31 +1170,18 @@ public:
     int current_frame;
 };
 
-class low_hitpoint_animation: public animation {
-public:
-    low_hitpoint_animation() { frames = 1; frame_delay = 30; }
-
-    coord_def cell_cb(const coord_def &pos, int &colour)
-    {
-        colour = RED;
-        return pos;
-    }
-};
-
 static shake_viewport_animation shake_viewport;
 static checkerboard_animation checkerboard;
 static banish_animation banish;
 static slideout_animation slideout;
 static orb_animation orb;
-static low_hitpoint_animation low_hitpoint;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
     &checkerboard,
     &banish,
     &slideout,
-    &orb,
-    &low_hitpoint
+    &orb
 };
 
 void run_animation(animation_type anim, bool cleanup)

@@ -924,7 +924,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100
                 && (death_type != KILLED_BY_POISON || poison_is_lethal()))
             {
-                run_animation(ANIMATION_LOW_HITPOINT);
+                flash_view_delay(RED, 50);
                 mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
