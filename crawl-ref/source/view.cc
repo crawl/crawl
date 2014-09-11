@@ -1186,19 +1186,22 @@ static animation *animations[NUM_ANIMATIONS] = {
 
 void run_animation(animation_type anim, bool cleanup)
 {
-    animation *a = animations[anim];
-
-    viewwindow();
-
-    for (int i = 0; i < a->frames; ++i)
+    if (Options.use_animations)
     {
-        a->init_frame(i);
-        viewwindow(false, false, a);
-        delay(a->frame_delay);
-    }
+        animation *a = animations[anim];
 
-    if (cleanup)
         viewwindow();
+
+        for (int i = 0; i < a->frames; ++i)
+        {
+            a->init_frame(i);
+            viewwindow(false, false, a);
+            delay(a->frame_delay);
+        }
+
+        if (cleanup)
+            viewwindow();
+    }
 }
 
 //---------------------------------------------------------------

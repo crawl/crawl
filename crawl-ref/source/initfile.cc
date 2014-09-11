@@ -897,6 +897,7 @@ void game_options::reset_options()
     auto_sacrifice         = AS_NO;
 
     darken_beyond_range    = true;
+    use_animations         = true;
 
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
@@ -3429,6 +3430,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(dump_book_spells);
     else if (key == "darken_beyond_range")
         darken_beyond_range = _read_bool(field, darken_beyond_range);
+    else BOOL_OPTION(use_animations);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {

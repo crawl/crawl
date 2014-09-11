@@ -194,6 +194,7 @@ public:
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targeting is out of range
+    bool        use_animations; // whether to show run_animation stuff
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning

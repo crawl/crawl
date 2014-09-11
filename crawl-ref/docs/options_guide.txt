@@ -1391,6 +1391,10 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
+use_animations = true
+        Controls whether or not to run special animations, such as when being
+        banished.
+
 force_more_message += <regex>, <regex>
         (List option)
         Any message that contains a regex specified here, will enforce a
