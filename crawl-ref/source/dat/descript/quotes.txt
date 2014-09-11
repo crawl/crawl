@@ -2946,6 +2946,16 @@ very ugly thing
  And yet I needs must curse. ”
     -William Shakespeare, _The Tempest_, II, 2. 1611.
 %%%%
+vine stalker
+
+“The monstrous plant bud . . . had grown again with preternatural rapidity,
+from Falmer's head. A loathsome pale-green stem was mounting thickly, and had
+started to branch like antlers after attaining a height of six or seven inches.
+ “More dreadful than this, if possible, similar growths had issued from the
+eyes; and their stems, climbing vertically across the forehead, had entirely
+displaced the eyeballs.”
+    -Clark Ashton Smith, “The Seed from the Sepulcher”. 1933.
+%%%%
 wand
 
 “[The principle of selection] is the magician’s wand, by means of which he may
