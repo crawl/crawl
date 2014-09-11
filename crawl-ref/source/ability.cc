@@ -2563,7 +2563,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
         fail_check();
-        yred_animate_remains_or_dead();
+        if (!yred_animate_remains_or_dead())
+            return SPRET_ABORT;
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:

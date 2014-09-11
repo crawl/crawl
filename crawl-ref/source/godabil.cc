@@ -1720,7 +1720,12 @@ bool yred_can_animate_dead()
     return in_good_standing(GOD_YREDELEMNUL, 2);
 }
 
-void yred_animate_remains_or_dead()
+/**
+ * Animates corpses/skeletons where you are or in LOS, depending on piety.
+ *
+ * @returns false if it did nothing and you could have known so.
+ */
+bool yred_animate_remains_or_dead()
 {
     if (yred_can_animate_dead())
     {
@@ -1737,8 +1742,10 @@ void yred_animate_remains_or_dead()
                             MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
         {
             mpr("There are no remains here to animate!");
+            return false;
         }
     }
+    return true;
 }
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
