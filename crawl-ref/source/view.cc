@@ -1137,7 +1137,11 @@ public:
         const int min = range * range;
         const int max = (range + 2) * (range  + 2);
         if (dist >= min && dist < max)
-            colour = coinflip() ? MAGENTA : LIGHTMAGENTA;
+#ifdef USE_TILE
+            colour = MAGENTA;
+#else
+            colour = DARKGREY;
+#endif
         else
             colour = 0;
 
