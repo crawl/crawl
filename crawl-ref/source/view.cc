@@ -1120,9 +1120,9 @@ public:
     int current_frame;
 };
 
-class ring_animation: public animation {
+class orb_animation: public animation {
 public:
-    ring_animation() { frame_delay = 30; }
+    orb_animation() { frame_delay = 30; }
     void init_frame(int frame)
     {
         current_frame = frame;
@@ -1131,12 +1131,17 @@ public:
     coord_def cell_cb(const coord_def &pos, int &colour)
     {
         const int dist = distance2(pos, you.pos());
-        const int min = current_frame * current_frame;
-        const int max = (current_frame + 1) * (current_frame + 1);
+        const int range = current_frame > 5
+            ? (10 - current_frame)
+            : current_frame;
+        const int min = range * range;
+        const int max = (range + 2) * (range  + 2);
         if (dist >= min && dist < max)
-            return coord_def(-1, -1);
+            colour = coinflip() ? MAGENTA : LIGHTMAGENTA;
         else
-            return pos;
+            colour = 0;
+
+        return pos;
     }
 
     int current_frame;
@@ -1146,14 +1151,14 @@ static shake_viewport_animation shake_viewport;
 static checkerboard_animation checkerboard;
 static maprot_animation maprot;
 static slideout_animation slideout;
-static ring_animation ring;
+static orb_animation orb;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
     &checkerboard,
     &maprot,
     &slideout,
-    &ring
+    &orb
 };
 
 void run_animation(animation_type anim, bool cleanup)
