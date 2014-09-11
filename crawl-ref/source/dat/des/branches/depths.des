@@ -159,7 +159,7 @@ TAGS:    no_pool_fixup
 MONS:    hydra / ugly thing w:2, salamander / naga mage w:2
 MONS:    wolf spider / very ugly thing w:2 / emperor scorpion w:2, manticore /\
          merfolk w:2
-MONS:    large slime creature / giant eyeball w:2
+MONS:    large slime creature / great orb of eyes w:2
 KMONS:   O = dire elephant / glowing shapeshifter w:4
 SHUFFLE: 12345, +'X / XX'
 SUBST:   XY = x, '" = .
