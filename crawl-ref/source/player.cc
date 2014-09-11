@@ -6164,6 +6164,8 @@ void player::banish(actor *agent, const string &who)
 
     banished    = true;
     banished_by = who;
+
+    run_animation(ANIMATION_MAPROT, false);
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities
