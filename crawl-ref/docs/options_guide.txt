@@ -51,12 +51,11 @@ The contents of this text are:
                 auto_switch, easy_open, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
-                prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
-                autofight_caught, automagic_enable, automagic_slot,
-                automagic_fight, automagic_stop
-3-h     Message and Display Improvements.
+                easy_quit_item_prompts, easy_exit_menu, sort_menus, spell_slot,
+                autofight_stop, autofight_throw, autofight_throw_nomove,
+                autofight_fire_stop, autofight_caught, automagic_enable,
+                automagic_slot, automagic_fight, automagic_stop
+3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark,
@@ -981,11 +980,6 @@ auto_drop_chunks = (never | rotten | yes)
         spoiled chunks will be considered useless, and only if you are not
         a saprovore. If fully enabled, chunks that would spoil before you
         would need them will be dropped as well, ordered by quality and age.
-
-prompt_for_swap = true
-        If true then you will be prompted to rewield your weapon when
-        untransforming in sight of a monster, if your transformation caused
-        your weapon to fall away.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing

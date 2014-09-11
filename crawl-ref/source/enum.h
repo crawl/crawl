@@ -309,7 +309,9 @@ enum attribute_type
     ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
     ATTR_DIVINE_STAMINA,        // strength of Zin's Divine Stamina
     ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
+#if TAG_MAJOR_VERSION == 34
     ATTR_WEAPON_SWAP_INTERRUPTED,
+#endif
     ATTR_GOLD_FOUND,
     ATTR_PURCHASES,            // Gold amount spent at shops.
     ATTR_DONATIONS,            // Gold amount donated to Zin.
@@ -1161,7 +1163,9 @@ enum delay_type
     DELAY_MEMORISE,
     DELAY_BUTCHER,
     DELAY_BOTTLE_BLOOD,
+#if TAG_MAJOR_VERSION == 34
     DELAY_WEAPON_SWAP,
+#endif
     DELAY_PASSWALL,
     DELAY_DROP_ITEM,
     DELAY_MULTIDROP,

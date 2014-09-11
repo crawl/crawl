@@ -576,53 +576,28 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
-    bool weapon_warning  = false;
-    bool unarmed_warning = false;
-
-    if (weapon)
+    if (!weapon
+        || (!needs_handle_warning(*weapon, OPER_ATTACK)
+             && is_melee_weapon(*weapon))
+        || you.received_weapon_warning)
     {
-        if (needs_handle_warning(*weapon, OPER_ATTACK)
-            || !is_melee_weapon(*weapon))
-        {
-            weapon_warning = true;
-        }
-    }
-    else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-             && you_tran_can_wear(EQ_WEAPON))
-    {
-        const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
-        const item_def &wpn = you.inv[weap];
-        if (is_melee_weapon(wpn)
-            && you.skill(melee_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
-        {
-            unarmed_warning = true;
-        }
+        return true;
     }
 
-    if (!you.received_weapon_warning && !you.confused()
-        && (weapon_warning || unarmed_warning))
-    {
-        if (no_message)
-            return false;
+    if (no_message)
+        return false;
 
-        string prompt  = "Really attack while ";
-        if (unarmed_warning)
-            prompt += "unarmed?";
-        else
-            prompt += "wielding " + weapon->name(DESC_YOUR) + "? ";
+    string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
 
-        const bool result = yesno(prompt.c_str(), true, 'n');
+    const bool result = yesno(prompt.c_str(), true, 'n');
 
-        learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
+    learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
 
-        // Don't warn again if you decide to continue your attack.
-        if (result)
-            you.received_weapon_warning = true;
+    // Don't warn again if you decide to continue your attack.
+    if (result)
+        you.received_weapon_warning = true;
 
-        return result;
-    }
-
-    return true;
+    return result;
 }
 
 // Used by cleave and jump attack to determine if multi-hit targets will be

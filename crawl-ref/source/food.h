@@ -31,8 +31,6 @@ void lessen_hunger(int statiated_amount, bool suppress_msg);
 
 void set_hunger(int new_hunger_level, bool suppress_msg);
 
-void weapon_switch(int targ);
-
 bool is_bad_food(const item_def &food);
 bool is_poisonous(const item_def &food);
 bool is_mutagenic(const item_def &food);
