@@ -343,6 +343,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->mname = name;
     mons->props["original_name"] = name;
     mons->props["original_was_unique"] = old_mon_unique;
+    mons->props["no_annotate"] = slimified && old_mon_unique;
     mons->god   = god;
     mons->props.erase("dbname");
 
@@ -621,6 +622,8 @@ void slimify_monster(monster* mon, bool hostile)
         simple_monster_message(mon, " quivers momentarily.");
         return;
     }
+
+    remove_unique_annotation(mon);
 
     monster_polymorph(mon, target);
 
