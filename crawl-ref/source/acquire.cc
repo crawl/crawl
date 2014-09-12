@@ -1260,7 +1260,8 @@ int acquirement_create_item(object_class_type class_wanted,
             if (brand == SPWPN_PAIN
                 || is_unrandom_artefact(acq_item)
                    && (acq_item.special == UNRAND_TROG
-                       || acq_item.special == UNRAND_WUCAD_MU))
+                       || acq_item.special == UNRAND_WUCAD_MU
+                       || acq_item.special == UNRAND_MAJIN))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
