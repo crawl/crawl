@@ -2158,9 +2158,9 @@ bool StashTracker::display_search_results(
     }
 
     if (sort_by_dist)
-        sort(results->begin(), results->end(), _compare_by_distance);
+        stable_sort(results->begin(), results->end(), _compare_by_distance);
     else
-        sort(results->begin(), results->end(), _compare_by_name);
+        stable_sort(results->begin(), results->end(), _compare_by_name);
 
     StashSearchMenu stashmenu(show_as_stacks ? "hide" : "show",
                               sort_by_dist ? "dist" : "name",
