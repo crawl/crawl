@@ -410,7 +410,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
 {
     if (you.shield())
     {
-        canned_msg(MSG_SPELL_FIZZLES);
+        mpr("You can't cast this spell while wearing a shield.");
         return SPRET_ABORT;
     }
 
