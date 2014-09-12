@@ -820,6 +820,8 @@ deep_troll_earth_mage MONS_DEEP_TROLL_EARTH_MAGE
 deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
 vault/deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
+## From moon base wizlab
+vault/moon_troll MONS_MOON_TROLL
 
 ## Vampires ('V')
 %sdir mon/undead

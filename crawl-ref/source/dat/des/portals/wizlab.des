@@ -32,6 +32,14 @@
 #--------------------------------------------------------------------
 #Hellbinder|demons, summoners,      |fire/summoning/         |17000
 #          |Hellbinder              |demonic items           |
+#--------------------------------------------------------------------
+#Lehudib   |earth-themed monsters,  |Moon Troll Leather Armour
+#          |"space" themed abyss    |random loot and         |20000+
+#          |monsters, eyes          |randbook of             |
+#          |                        |earth/transmutations,   |
+#          |                        |earth/translocations, or|
+#          |                        |earth/conjurations
+
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
 #---------------------------------------------------------------
@@ -62,8 +70,11 @@
 #---------------------------------------------------------------
 #Hellbinder's Lair        |triangles and circles|red, darkgray,
 #                         |sigils               |yellow sigils
+#---------------------------------------------------------------
+#Lehudib's Moon Base      |Circular and alien   |blue/lightblue/magenta
+#                         |base-like structure  |colour-shifting crystal
 ##
-#
+
 # TO-DO:
 #
 # Actual portals need quite a bit of editing, and some unique tiles.
@@ -2015,6 +2026,160 @@ cccccccccccci...W..G.xxxxx.H..V...iccccccccccc
 ccccccccccccii...NP.........NP...iiccccccccccc
 cccccccccccciii.................iiiccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Lehudib's Moon Base (on the moon) by gammafunk
+
+# Lehudib, whose famous writings on earth magic left few personal details, is
+# said to have studied the power of magical crystal with single-minded devotion
+# and in the most distant location imaginable. After traveling to some
+# forgotten Moon and carving a fortress into its very surface, the wizard
+# somehow convinced the bizarre surface creatures there to stand guard. Who can
+# say what other knowledge this self-described Lunar Mage learned in such
+# isolation? Adventurers who manage to reach the remote Moon Base of Lehudib
+# may indeed find powers beyond their comprehension.
+
+NAME:       wizlab_lehudib
+## XXX - Updweighted for testing
+WEIGHT:     20
+## The substitutions/shuffles below give 1/3 chance each of both paths
+## open, E-path open, or F-path open, and gives 1/4 chance for the
+## portal being in any of the 4 locations.
+SHUFFLE:    EFPRSTL / HFUVRRZ / FHRRWYZ
+## For both paths open, 50% each of South or East portals. For E-path,
+## 1/4 chance of East, 3/4 chance of North, For F-path, 1/4 chance of
+## South, 3/4 chance of West.
+SHUFFLE:    PT / TP, UV / VU / VU / VU, YW / WY / WY / WY
+SUBST:      EF = ., H = c, L = n, RSTVY = G, UW = P, Z = .
+## Remaining level randomization
+SHUFFLE:    Jep / Odo
+SUBST:      o = 1, ' = llc, I = .KKKKK, N = .NN, ep = .
+NSUBST:     g = 2:1 / *:., h = 2:1 / *:., i = 2:1 / *:., j = 2:1 / *:.
+NSUBST:     k = 2:1 / *:., q = 3:1 / *:., r = 3:1 / *:., s = 1:1 / *:.
+NSUBST:     " = 5:K / *:.
+KMONS:      MNO = col:random name:demonic name_adjective plant \
+                tile:mons_demonic_plant
+MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
+MONS:       great orb of eyes / golden eye band, giant orange brain
+MONS:       starcursed mass / very ugly thing band col:brown, neqoxec
+KMONS:      6 = cacodemon
+KMONS:      7 = quicksilver dragon / war gargoyle / crystal guardian \
+                / wretched star
+KMONS:      y = orange crystal statue name:Lunar_Statue n_rpl \
+                spells:brain_feed.40.natural;draining_gaze.40.natural;\
+                       lehudib's_crystal_spear.40.natural;\
+                       shadow_creatures.80.natural \
+                col:lightmagenta tile:mons_zot_statue
+ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
+            / randbook owner:Lehudib disc:earth disc2:translocation \
+            / randbook owner:Lehudib disc:earth disc2:conjuration
+KITEM:      y = acquire any
+KITEM:      6 = potion of cure mutation / potion of beneficial mutation
+KFEAT:      PQ = teleporter
+KFEAT:      K = crystal_wall
+TILE:       c = wall_volcanic_blue
+TILE:       v = dngn_metal_wall_magenta
+TILE:       m = dngn_transparent_wall_magenta
+TILE:       n = dngn_transparent_stone_blue
+LFLOORTILE: floor_pebble_lightblue
+LFLOORCOL:  lightblue
+LROCKTILE:  wall_volcanic_blue
+COLOUR:     b = silver
+COLOUR:     K = disjunction
+COLOUR:     cn = blue
+COLOUR:     m = magenta
+{{
+if you.unrands("moon troll leather armour") then
+    kmons("z = patrolling moon troll ; troll leather armour randart")
+else
+    kmons("z = patrolling moon troll ; troll leather armour " ..
+          "unrand:moon_troll_leather_armour")
+end
+set_random_mon_list ("rust devil w:20 / eye of devastation / neqoxec " ..
+                     "/ stone giant / golden eye / great orb of eyes " ..
+                     "/ tentacled starspawn  / starcursed mass w:5 " ..
+                     "/ cacodemon w:5 ")
+-- Uses the same teleporter lua as from golubria
+local teleporter_glyph = "PQ"
+local teleport_spot_glyph = "J&"
+local tele_marker = {}
+for i = 1, #teleporter_glyph do
+    tele_marker[i] = TriggerableFunction:new {
+                     func="teleporter_golubria_switch_fn",
+                     data = {teleport_spot=i},
+                     repeated=true }
+    tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
+    lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
+    lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
+end
+wizlab_setup(_G, "Lehudib's Moon Base")
+}}
+epilogue {{
+            wizlab_milestone(_G, "Lehudib's Moon Base")
+}}
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc*bSb*cccccccccccccccccccccccccccc
+cccccccccccccccccccccccccc.......ccccccccccccccccccccccccccc
+cccccccccccccccccccccccccc...7...ccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccc...ccccccccccc..cccccccccccccccc
+cccccccc.A.cccccccccccci............ccccc.....cccccccccccccc
+ccccccc.....cccccccci....v...v..iv.....cc......ccccccccccccc
+cccccc.......ccccccc.....v.......v........qKK...cccccccccccc
+cccccc...&...cccccccc.....iccccc......cc..KKK....ccccccccccc
+cccccc.......cccccccc.iccccccccccccc......KKK.....cccccccccc
+ccccccc......cccccccccccccccccccccccccc...KK..KK...ccccccccc
+cccccccc.<....cccccccccccccccccccccccc......2KKK....cccccccc
+cccccccccccc...ccccccccccccc...ccccccc..KK..KKK......ccccccc
+ccccccccccccc...ccccccF................KKK..KK4.KKK..ccccccc
+cccccccccccccc...ccc.kF......K.........KKK.q...KKKK...cccccc
+ccccccccccccccc.......Fc..K.....K..c...KK......KKKq...cccccc
+cccccccccccccccc.......cc....v....cc.......KKK.......ccccccc
+cccvvbbbvvcccccc.......kc..vvvvv..c.......KKKK.....ccccccccc
+ccvv*bRb*vvccccc...KK...cc..vvv2.cc...KK..KKKq...ccccccccccc
+ccv.......vcccc....KKK...c....3..c...KKK.......ccccccccccccc
+ccv...7...vcccck....KKK..cc.....cc..KKKq.....ccccccccccccccc
+ccv.......vcccEEE....KK..kcccccccq..KK.......ccccccccccccccc
+ccv.v...v.vccc..cck......ccc|Q|ccc.......cc..ccccccccc.jcccc
+ccv..hvh..vcc....ccc....cc%%|||%%cc....ccc....ccccccc...Mccc
+ccv..vvv..vccc.....ccckcc.%bbbbb%.ccqccc.....cc.jc......cccc
+ccvh..v..hvccc.v...cJccc..bb...bb..cccOc...v.cM..cj.vv..cccc
+ccvv.....vvccc....cce.bb...........bb.dcc....cc..cc.v*.ccccc
+cccv.....vccc..v..c...b.............b...c..v..+.........bbcc
+cccv.vhv.vccc..v..c...b......z......b...c..v..+.......7.Tbcc
+cccv.....vccc..v..cp..b.............b..oc..v..+.........bbcc
+ccvv.....vvccc....cc..bb...........bb..cc....cc..cc.v*.ccccc
+ccv..hvh..vccc.v..3c...b...........b...c3..v.cM..cj.vv..cccc
+ccv..vvv..vccc.....c...bb.........bb...c.....cc.jc......cccc
+ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Mccc
+ccv.v...v.vccc..cc..c....bbb...bbb....c.4cc..ccNNNNNcc.jcccc
+ccv.......vccc......cc...............cc...c++cN.....Nc++cccc
+ccvv.....vvcccc......cc.............cc3...c..mN..6..Nm..cccc
+ccccc....cccccc.......ccc.........ccc.....c..mN5...5Nm..cccc
+cccccc...ccccccc..v.....cccc...cccc....s..c..ccNNNNNcc..cccc
+ccccccc...ccccccc..........ccccc......KK..c...cmmmmmc...cccc
+cccccccc...cccccc..vv.v...................cc...........ccccc
+ccccccccc...ccccc..vvr.................K...ccM.......Mcccccc
+cccccccccc...cccr.....cccccc...cccccc....Ks.ccc.....ccc'cccc
+cccc.cccccc........v..cccccc.g.ccccccs..KK....cnLnLnc..''ccc
+ccc...cccccc....vv...ccccccc+++ccccccc..................''cc
+cc.....ccccc..v.vv..rccccccc...ccccccc...................'cc
+ccc..v..cccc........cccccg.G...G.gccccc....sI.."".""..I..''c
+cccc..2.......rv....cccc...........ccccs...II.".....".II..'c
+ccccc..vv.v.vv.....ccccc...........ccccc...I.."....."..I..'c
+cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...I.....y.....I..'c
+cccccc..r......vv.ccccc...cc...cc...ccccc..I.."....."..I..'c
+ccccccc..v.4......cccc....c.....c....cccc..II.".....".II..'c
+cccccccc...v.vv..ccccc...............ccccc..I.."".""..I..''c
+ccccccccc....vv..ccccM.g.....7.....g.Mccc'..II.......II..'cc
+ccccccccccc.....cccccc....c*...*c....cccc''..III...III..''cc
+ccccccccccccc.rcccccccccccccbPbccccccccccc''...IIIII...''ccc
+ccccccccccccccccccccccccccccbbbcccccccccccc'''.......'''cccc
+ccccccccccccccccccccccccccccccccccccccccccccc''.....''cccccc
+cccccccccccccccccccccccccccccccccccccccccccccc'''''''ccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
