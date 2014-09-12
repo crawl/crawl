@@ -786,7 +786,10 @@ void set_unique_annotation(monster* mons, const level_id level)
     if (!mons_is_unique(mons->type)
         && !(mons->props.exists("original_was_unique")
             && mons->props["original_was_unique"].get_bool())
-        && mons->type != MONS_PLAYER_GHOST)
+        && mons->type != MONS_PLAYER_GHOST
+        || mons->props.exists("no_annotate")
+            && mons->props["no_annotate"].get_bool())
+
     {
         return;
     }
