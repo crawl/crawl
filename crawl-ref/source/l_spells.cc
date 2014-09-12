@@ -11,6 +11,7 @@
 
 #include "env.h"
 #include "food.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-damage.h"
@@ -21,6 +22,20 @@ LUAFN(l_spells_memorised)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(boolean, is_memorised(spell));
+}
+
+LUAFN(l_spells_letter)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    if (!is_memorised(spell))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    char buf[2];
+    buf[0] = get_spell_letter(spell);
+    buf[1] = 0;
+    PLUARET(string, buf);
 }
 
 LUAFN(l_spells_level)
@@ -156,6 +171,7 @@ LUAFN(l_spells_god_loathes)
 static const struct luaL_reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
+    { "letter"        , l_spells_letter },
     { "level"         , l_spells_level },
     { "mana_cost"     , l_spells_mana_cost },
     { "range"         , l_spells_range },
