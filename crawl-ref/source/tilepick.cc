@@ -2180,6 +2180,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_PURGY;
     case MONS_SNORG:
         return TILEP_MONS_SNORG;
+    case MONS_MOON_TROLL:
+        return TILEP_MONS_MOON_TROLL;
 
     // elephants etc
     case MONS_NELLIE:
