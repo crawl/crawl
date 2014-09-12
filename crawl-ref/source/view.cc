@@ -1142,18 +1142,19 @@ public:
 
 class orb_animation: public animation {
 public:
-    orb_animation() { frame_delay = 30; }
     void init_frame(int frame)
     {
         current_frame = frame;
+        range = current_frame > 5
+            ? (10 - current_frame)
+            : current_frame;
+        frame_delay = 3 * (6 - range) * (6 - range);
     }
 
     coord_def cell_cb(const coord_def &pos, int &colour)
     {
-        const int dist = distance2(pos, you.pos());
-        const int range = current_frame > 5
-            ? (10 - current_frame)
-            : current_frame;
+        const coord_def diff = pos - you.pos();
+        const int dist = diff.x * diff.x * 4 / 9 + diff.y * diff.y;
         const int min = range * range;
         const int max = (range + 2) * (range  + 2);
         if (dist >= min && dist < max)
@@ -1167,6 +1168,7 @@ public:
         return pos;
     }
 
+    int range;
     int current_frame;
 };
 
