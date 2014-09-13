@@ -663,6 +663,80 @@ IDEF(spells)
     return 1;
 }
 
+IDEF(damage)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
+        || item->base_type == OBJ_RODS || item->base_type == OBJ_MISSILES)
+    {
+        lua_pushnumber(ls, property(*item, PWPN_DAMAGE));
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(accuracy)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
+        || item->base_type == OBJ_RODS)
+    {
+        lua_pushnumber(ls, property(*item, PWPN_HIT));
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(delay)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
+        || item->base_type == OBJ_RODS)
+    {
+        lua_pushnumber(ls, property(*item, PWPN_SPEED));
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(ac)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item->base_type == OBJ_ARMOUR)
+        lua_pushnumber(ls, property(*item, PARM_AC));
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(encumbrance)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item->base_type == OBJ_ARMOUR)
+        lua_pushnumber(ls, -property(*item, PARM_EVASION));
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1122,6 +1196,11 @@ static ItemAccessor item_attrs[] =
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
+    { "damage",            l_item_damage },
+    { "accuracy",          l_item_accuracy },
+    { "delay",             l_item_delay },
+    { "ac",                l_item_ac },
+    { "encumbrance",       l_item_encumbrance },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },
