@@ -107,7 +107,7 @@ bool targetter_beam::set_aim(coord_def a)
         for (vector<coord_def>::const_iterator i = path_taken.begin();
              i != path_taken.end(); ++i)
         {
-            if (cell_is_solid(*i) && tempbeam.affects_wall(grd(*i)) != MB_TRUE)
+            if (cell_is_solid(*i) && !tempbeam.can_affect_wall(grd(*i)))
                 break;
             tempbeam2.target = *i;
             if (anyone_there(*i) && !tempbeam.ignores_monster(monster_at(*i)))
@@ -152,7 +152,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
          i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i)
-            && beam.affects_wall(grd(*i)) != MB_TRUE
+            && !beam.can_affect_wall(grd(*i))
             && max_expl_rad > 0)
         {
             break;
@@ -165,11 +165,9 @@ aff_type targetter_beam::is_affected(coord_def loc)
                 on_path = true;
             else if (cell_is_solid(*i))
             {
-                maybe_bool res = beam.affects_wall(grd(*i));
-                if (res == MB_TRUE)
+                bool res = beam.can_affect_wall(grd(*i));
+                if (res)
                     return current;
-                else if (res == MB_MAYBE)
-                    return AFF_MAYBE;
                 else
                     return AFF_NO;
 
@@ -189,13 +187,13 @@ aff_type targetter_beam::is_affected(coord_def loc)
     }
     if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
     {
-        maybe_bool aff_wall = beam.affects_wall(grd(loc));
-        if (!cell_is_solid(loc) || aff_wall != MB_FALSE)
+        bool aff_wall = beam.can_affect_wall(grd(loc));
+        if (!cell_is_solid(loc) || aff_wall)
         {
             coord_def centre(9,9);
             if (exp_map_min(loc - c + centre) < INT_MAX)
             {
-                return (!cell_is_solid(loc) || aff_wall == MB_TRUE)
+                return (!cell_is_solid(loc) || aff_wall)
                        ? AFF_YES : AFF_MAYBE;
             }
             if (exp_map_max(loc - c + centre) < INT_MAX)
