@@ -280,7 +280,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     // Special cases so that tracers behave properly.
     if (pbolt.name != "orb of energy"
         && pbolt.name != "orb of electricity"
-        && pbolt.affects_wall(DNGN_TREE) == MB_FALSE)
+        && !pbolt.can_affect_wall(DNGN_TREE))
     {
         pbolt.name = "unimportant";
     }
@@ -2790,55 +2790,41 @@ bool bolt::is_superhot() const
               && in_explosion_phase;
 }
 
-maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
+bool bolt::can_affect_wall(dungeon_feature_type wall) const
 {
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
     {
-        return MB_TRUE;
+        return true;
     }
 
     if (is_fiery() && feat_is_tree(wall))
-        return is_superhot() ? MB_TRUE : is_beam ? MB_MAYBE : MB_FALSE;
+        return is_superhot();
 
     if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
-        return is_superhot() ? MB_TRUE : MB_MAYBE;
+        return is_superhot();
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
         || flavour == BEAM_DEVASTATION)
     {
-        if (feat_is_tree(wall))
-            return MB_TRUE;
-
-        if (wall == DNGN_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL
-            || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_GRATE
-            || wall == DNGN_GRANITE_STATUE
-            || wall == DNGN_ORCISH_IDOL
-            || wall == DNGN_CLOSED_DOOR
-            || wall == DNGN_RUNED_DOOR)
-        {
-            return MB_TRUE;
-        }
+        return wall == DNGN_ROCK_WALL
+               || wall == DNGN_SLIMY_WALL
+               || wall == DNGN_CLEAR_ROCK_WALL
+               || wall == DNGN_GRATE
+               || wall == DNGN_GRANITE_STATUE
+               || wall == DNGN_ORCISH_IDOL
+               || wall == DNGN_CLOSED_DOOR
+               || wall == DNGN_RUNED_DOOR
+               || feat_is_tree(wall);
     }
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
-        return MB_TRUE; // smite targeting, we don't care
+        return true; // smite targeting, we don't care
 
-    return MB_FALSE;
-}
-
-bool bolt::can_affect_wall(dungeon_feature_type feat) const
-{
-    maybe_bool ret = affects_wall(feat);
-
-    return (ret == MB_TRUE)  ? true :
-           (ret == MB_MAYBE) ? is_tracer || coinflip()
-                            : false;
+    return false;
 }
 
 void bolt::affect_place_clouds()

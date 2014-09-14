@@ -204,9 +204,8 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
+    bool can_affect_wall(dungeon_feature_type feat) const;
     bool ignores_monster(const monster* mon) const;
-
-    maybe_bool affects_wall(dungeon_feature_type wall) const;
 
     int range_used_on_hit() const;
 
@@ -219,7 +218,6 @@ private:
     bool is_blockable() const;
     bool is_fiery() const;
     bool is_superhot() const;
-    bool can_affect_wall(dungeon_feature_type feat) const;
     bool can_affect_wall_actor(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
