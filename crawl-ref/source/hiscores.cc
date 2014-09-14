@@ -708,6 +708,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     final_hp          = se.final_hp;
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
+    final_mp          = se.final_mp;
+    final_max_mp      = se.final_max_mp;
+    final_base_max_mp = se.final_base_max_mp;
     damage            = se.damage;
     source_damage     = se.source_damage;
     turn_damage       = se.turn_damage;
@@ -924,6 +927,9 @@ void scorefile_entry::init_with_fields()
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");
     final_max_max_hp = fields->int_field("mmhp");
+    final_mp          = fields->int_field("mp");
+    final_max_mp      = fields->int_field("mmp");
+    final_base_max_mp = fields->int_field("bmmp");
 
     damage        = fields->int_field("dam");
     source_damage = fields->int_field("sdam");
@@ -1012,6 +1018,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("hp",   "%d", final_hp);
     fields->add_field("mhp",  "%d", final_max_hp);
     fields->add_field("mmhp", "%d", final_max_max_hp);
+    fields->add_field("mp",   "%d", final_mp);
+    fields->add_field("mmp",  "%d", final_max_mp);
+    fields->add_field("bmmp", "%d", final_base_max_mp);
     fields->add_field("str", "%d", str);
     fields->add_field("int", "%d", intel);
     fields->add_field("dex", "%d", dex);
@@ -1362,6 +1371,9 @@ void scorefile_entry::reset()
     final_hp             = -1;
     final_max_hp         = -1;
     final_max_max_hp     = -1;
+    final_mp             = -1;
+    final_max_mp         = -1;
+    final_base_max_mp    = -1;
     str                  = -1;
     intel                = -1;
     dex                  = -1;
@@ -1551,6 +1563,10 @@ void scorefile_entry::init(time_t dt)
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
     final_max_max_hp = get_real_hp(true, true);
+
+    final_mp          = you.magic_points;
+    final_max_mp      = you.max_magic_points;
+    final_base_max_mp = get_real_mp(false);
 
     source_damage    = you.source_damage;
     turn_damage      = you.turn_damage;
