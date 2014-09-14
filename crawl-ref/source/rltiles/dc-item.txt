@@ -7,7 +7,7 @@
 #    weapon_glowing
 #    weapon_randart
 #
-# If only the first line has a define on it, then the following images will be
+# If only the first linrune has a define on it, then the following images will be
 # considered as variations.  If you don't have five, images will be reused for
 # multiple types. See tilepick.cc for more details.
 
@@ -1088,7 +1088,6 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose i-deck_defense
 %finish
 misc_quad MISC_QUAD_DAMAGE
-%rim 1
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus MISC_RUNE_TARTARUS
