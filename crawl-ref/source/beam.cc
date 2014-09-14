@@ -1038,6 +1038,9 @@ void bolt::affect_wall()
     {
         if (!can_affect_wall(grd(pos())))
             finish_beam();
+        // The only thing that doesn't stop at walls.
+        if (flavour != BEAM_DIGGING)
+            finish_beam();
         return;
     }
 
