@@ -88,7 +88,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             if (you.is_undead == US_SEMI_UNDEAD)
                 food += 15;
 
-            for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
+            for (int i = 0; i < (you.hp > minhp ? 3 : 0); ++i)
                 if (x_chance_in_y(6, pow))
                     dec_hp(1, false);
 

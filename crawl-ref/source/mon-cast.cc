@@ -3045,7 +3045,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             const bolt orig_beem = beem;
             // Up to five tries to pick a spell,
             // with the last try being a self-enchantment.
-            for (int loopy = 0; loopy < 5; ++loopy)
+            for (int attempt = 0; attempt < 5; ++attempt)
             {
                 beem = orig_beem;
 
@@ -3053,7 +3053,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                 // Setup spell.
                 // If we're in the last attempt, try the self-enchantment.
-                if (loopy == 4 && coinflip())
+                if (attempt == 4 && coinflip())
                     spell_cast = hspell_pass[2];
                 // Monsters that are fleeing or pacified and leaving the
                 // level will always try to choose their emergency spell.
