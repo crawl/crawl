@@ -72,7 +72,7 @@ const int kFileNameLen = 250;
 const int kPathLen = 256;
 
 // This value is used to mark that the current berserk is free from
-// penalty (Xom's granted or from a deck of cards).
+// penalty (used for Xom's special berserk).
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
