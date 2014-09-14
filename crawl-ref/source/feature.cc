@@ -21,8 +21,8 @@ static feature_def invis_fd, cloud_fd;
 ucs_t feature_def::symbol() const
 {
     typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::iterator i;
+    const fso_t &fso = Options.feature_symbol_overrides;
+    fso_t::const_iterator i;
     if (feat && (i = fso.find(feat)) != fso.end() && i->second[0])
         return get_glyph_override(i->second[0]);
     else
@@ -38,8 +38,8 @@ ucs_t feature_def::symbol() const
 ucs_t feature_def::magic_symbol() const
 {
     typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::iterator i;
+    const fso_t &fso = Options.feature_symbol_overrides;
+    fso_t::const_iterator i;
     if (feat && (i = fso.find(feat)) != fso.end() && i->second[1])
         return get_glyph_override(i->second[1]);
     else if (magic_dchar != NUM_DCHAR_TYPES)
