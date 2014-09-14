@@ -1535,6 +1535,12 @@ newgame_def read_startup_prefs()
     game_options temp;
     temp.read_options(fl, false);
 
+    if (!temp.game.allowed_species.empty())
+        temp.game.species = temp.game.allowed_species[0];
+    if (!temp.game.allowed_jobs.empty())
+        temp.game.job = temp.game.allowed_jobs[0];
+    if (!temp.game.allowed_weapons.empty())
+        temp.game.weapon = temp.game.allowed_weapons[0];
     return temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
