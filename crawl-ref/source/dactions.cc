@@ -69,8 +69,8 @@ static const char *daction_names[] =
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
-    "make all monsters hate you",
     "Makhleb's servants go hostile",
+    "make all monsters hate you",
 };
 #endif
 
