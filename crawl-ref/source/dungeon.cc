@@ -6904,8 +6904,9 @@ dungeon_feature_type vault_placement::feature_at(const coord_def &c)
 
     const int feat = map.map.glyph(c);
 
+    //XXX: perhaps this should really be NUM_FEATURES, but there are crashes.
     if (feat == ' ')
-        return NUM_FEATURES;
+        return DNGN_FLOOR;
 
     keyed_mapspec *mapsp = map.mapspec_at(c);
     return _vault_inspect(*this, feat, mapsp);
