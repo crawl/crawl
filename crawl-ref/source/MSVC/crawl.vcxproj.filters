@@ -195,7 +195,6 @@
     <ClCompile Include="..\rltiles\tiledef-floor.cc" />
     <ClCompile Include="..\rltiles\tiledef-icons.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
-    <ClCompile Include="..\rng.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
     <ClCompile Include="..\show.cc" />
@@ -231,7 +230,6 @@
     <ClCompile Include="..\stringutil.cc" />
     <ClCompile Include="..\syscalls.cc" />
     <ClCompile Include="..\tags.cc" />
-    <ClCompile Include="..\tagstring.cc" />
     <ClCompile Include="..\target.cc" />
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
@@ -299,6 +297,7 @@
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
+    <ClCompile Include="..\hash.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h" />
@@ -511,7 +510,6 @@
     <ClInclude Include="..\rltiles\tiledef-icons.h" />
     <ClInclude Include="..\rltiles\tiledef-wall.h" />
     <ClInclude Include="..\rltiles\tiledef_defines.h" />
-    <ClInclude Include="..\rng.h" />
     <ClInclude Include="..\SDLMain.h" />
     <ClInclude Include="..\shopping.h" />
     <ClInclude Include="..\shout.h" />
@@ -549,7 +547,6 @@
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
-    <ClInclude Include="..\tagstring.h" />
     <ClInclude Include="..\target.h" />
     <ClInclude Include="..\teleport.h" />
     <ClInclude Include="..\terrain.h" />
@@ -626,5 +623,6 @@
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\data-index.h" />
+    <ClInclude Include="..\mon-book.h" />
   </ItemGroup>
 </Project>
