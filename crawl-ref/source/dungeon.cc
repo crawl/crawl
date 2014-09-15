@@ -2157,7 +2157,7 @@ static void _ruin_level(Iterator iter,
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
                 if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
-                    && !feat_is_statue_or_idol(grd(*ai))
+                    && !feat_is_statuelike(grd(*ai))
                     // Shouldn't happen, but just in case.
                     && grd(*ai) != DNGN_MALIGN_GATEWAY)
                 {

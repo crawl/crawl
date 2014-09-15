@@ -637,11 +637,11 @@ static int _noise_attenuation_millis(const coord_def &pos)
         return NOISE_ATTENUATION_COMPLETE;
 
     return BASE_NOISE_ATTENUATION_MILLIS *
-            (feat_is_wall(feat)           ? 12 :
-             feat_is_closed_door(feat)    ?  8 :
-             feat_is_tree(feat)           ?  3 :
-             feat_is_statue_or_idol(feat) ?  2 :
-                                             1);
+            (feat_is_wall(feat)        ? 12 :
+             feat_is_closed_door(feat) ?  8 :
+             feat_is_tree(feat)        ?  3 :
+             feat_is_statuelike(feat)  ?  2 :
+                                          1);
 }
 
 noise_cell::noise_cell()

@@ -4340,7 +4340,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     // Would checking for a marker for all discovered cells slow things
     // down too much?
-    else if (feat_is_statue_or_idol(feat))
+    else if (feat_is_statuelike(feat))
     {
         const string feat_stop_msg =
             env.markers.property_at(pos, MAT_ANY, "stop_explore_msg");

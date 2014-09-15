@@ -386,9 +386,9 @@ bool feat_is_sealed(dungeon_feature_type feat)
            || feat == DNGN_SEALED_DOOR;
 }
 
-/** Is this feature a statue or an idol?
+/** Is this feature a type of statue, i.e., granite or an idol?
  */
-bool feat_is_statue_or_idol(dungeon_feature_type feat)
+bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
@@ -1753,7 +1753,7 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "grate";
     if (feat_is_tree(feat))
         return "tree";
-    if (feat_is_statue_or_idol(feat))
+    if (feat_is_statuelike(feat))
         return "statue";
     if (feat_is_water(feat))
         return "water";
