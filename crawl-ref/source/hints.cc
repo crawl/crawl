@@ -3838,29 +3838,12 @@ bool hints_pos_interesting(int x, int y)
 static bool _hints_feat_interesting(dungeon_feature_type feat)
 {
     // Altars and branch entrances are always interesting.
-    if (feat_is_altar(feat)
-        || feat_is_branch_entrance(feat)
-        || feat_is_stone_stair(feat)
-        || feat_is_escape_hatch(feat))
-    {
-        return true;
-    }
-
-    switch (feat)
-    {
-    // So are statues and traps.
-    case DNGN_ORCISH_IDOL:
-    case DNGN_GRANITE_STATUE:
-    case DNGN_TRAP_TELEPORT:
-    case DNGN_TRAP_ALARM:
-    case DNGN_TRAP_ZOT:
-    case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_SHAFT:
-    case DNGN_TRAP_WEB:
-        return true;
-    default:
-        return false;
-    }
+    return feat_is_altar(feat)
+           || feat_is_branch_entrance(feat)
+           || feat_is_stone_stair(feat)
+           || feat_is_escape_hatch(feat)
+           || feat_is_trap(feat)
+           || feat_is_statue_or_idol(feat);
 }
 
 void hints_describe_pos(int x, int y)
