@@ -205,7 +205,6 @@ const deck_archetype deck_of_punishment[] =
     { CARD_XOM,        {5, 5, 5} },
     { CARD_FAMINE,     {5, 5, 5} },
     { CARD_CURSE,      {5, 5, 5} },
-    { CARD_TOMB,       {5, 5, 5} },
     { CARD_DAMNATION,  {3, 3, 3} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
