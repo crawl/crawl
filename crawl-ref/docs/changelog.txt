@@ -1,6 +1,18 @@
-Stone Soup 0.16 (up to 0.16-a0-123-g3c51aac)
+Stone Soup 0.16 (up to 0.16-a0-603-g12f7cf7)
 --------------------------------------------
-* New god: Gozag Ym Sagoz the Greedy.
+* New gods: Gozag Ym Sagoz the Greedy and Ru the Insubstantial.
+
+Monsters
+--------
+* Mnoleg now has a pair of tentacles, acting similarly to eldritch tentacles;
+  as such Mnoleg no longer has Malign Gateway.
+* The Serpent of Hell is considerably tougher; it now has three heads which
+  can attack and/or breathe separately and can also summon backup.
+
+Items
+-----
+* Scrolls of magic mapping now show 100% of the map.
+* The captain's cutlass is now +5 (was +10) and can disarm enemies.
 
 Gods
 ----
@@ -17,6 +29,30 @@ Gods
   - Bribe Branch: send money to the inhabitants of a branch to turn them
     temporarily neutral or incite them to join you.
   - Duplication: one non-artefact item can be duplicated at an altar.
+* New god: Ru the Insubstantial. Ru is a temple god, with an altar either in
+  Temple or on D:2-9.
+  - Periodically offers the player a choice of three permanent sacrifices in
+    exchange for piety; all abilities scale with piety; piety never decreases.
+  - Leaving Ru leaves all your sacrifices in place, but incurs no wrath.
+  - Enemies may fail to attack you or even attack each other instead.
+  - Enemies that hurt you may be punished with status effects.
+  - Draw Out Power: restore health and mana to yourself, break free of webs and
+    constriction, and cure confusion and petrification. Inflicts minor
+    self-drain and exhaustion.
+  - Power Leap: Blinks you three tiles and deals high AOE damage at your
+    destination. Costs exhaustion.
+  - Cataclysm: Deals very high damage to all monsters in LOS and inflicts
+    statuses. Costs heavy drain and exhaustion.
+* Dithmenos worshippers are now rejected by fiery/illuminating summons.
+
+Interface
+---------
+* Some effects (Shatter, banishment, etc.) now display animations.
+* The screen now flashes on attempting to autoexplore with monsters in view,
+  indicating where the relevant monsters are.
+* Multiple species/backgrounds/weapons can be specified in the init file,
+  causing one to be randomly selected; a new "combo" option allows entire sets
+  of the above to be specified, again with one being randomly selected.
 
 Stone Soup 0.15 (20140828)
 --------------------------
