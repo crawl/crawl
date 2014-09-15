@@ -1989,6 +1989,17 @@ int monster_die(monster* mons, killer_type killer,
                 }
             }
 
+            if (good_kill && you_worship(GOD_RU) && you.piety < 200
+                    && one_chance_in(2))
+            {
+                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
+                int current_progress =
+                        you.props["ru_progress_to_next_sacrifice"]
+                            .get_int();
+                    you.props["ru_progress_to_next_sacrifice"] =
+                        current_progress + 1;
+            }
+
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp

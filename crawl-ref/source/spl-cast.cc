@@ -384,8 +384,9 @@ int spell_fail(spell_type spell)
         }
     }
 
-    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
+    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
@@ -466,6 +467,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         {
             power *= 10 + 4 * augmentation_amount();
             power /= 10;
+        }
+
+        // Each level of horror reduces spellpower by 10%
+        if (you.duration[DUR_HORROR] && !fail_rate_check)
+        {
+            power *= 10;
+            power /= 10 + (you.props["horror_penalty"].get_int() * 3) / 2 ;
         }
 
         power = stepdown_value(power / 100, 50, 50, 150, 200);
@@ -980,12 +988,14 @@ bool is_prevented_teleport(spell_type spell)
             && you.no_tele(false, false, spell != SPELL_TELEPORT_SELF);
 }
 
-bool spell_is_uncastable(spell_type spell, string &msg)
+bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
 {
     // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
     // to be extended here. - bwr
-    if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell))
+    bool temp;
+    if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell,
+            temp, evoked))
     {
         msg = "You cannot cast that spell in your current form!";
         return true;
@@ -1085,10 +1095,11 @@ static spret_type _do_cast(spell_type spell, int powc,
                            bool fail);
 
 static bool _spellcasting_aborted(spell_type spell,
-                                  bool wiz_cast)
+                                  bool wiz_cast,
+                                  bool evoked)
 {
     string msg;
-    if (!wiz_cast && spell_is_uncastable(spell, msg))
+    if (!wiz_cast && spell_is_uncastable(spell, msg, evoked))
     {
         mprf("%s", msg.c_str());
         return true;
@@ -1242,7 +1253,7 @@ static void _spellcasting_corruption(spell_type spell)
  * the casting.
  **/
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail)
+                       bool allow_fail, bool evoked)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1254,7 +1265,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (_spellcasting_aborted(spell, wiz_cast))
+    if (_spellcasting_aborted(spell, wiz_cast, evoked))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);

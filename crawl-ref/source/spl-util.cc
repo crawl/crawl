@@ -857,6 +857,28 @@ skill_type spell_type2skill(unsigned int spelltype)
     }
 }
 
+unsigned int skill2spell_type(skill_type spell_skill)
+{
+    switch (spell_skill)
+    {
+    case SK_CONJURATIONS:    return SPTYP_CONJURATION;
+    case SK_HEXES:           return SPTYP_HEXES;
+    case SK_CHARMS:          return SPTYP_CHARMS;
+    case SK_FIRE_MAGIC:      return SPTYP_FIRE;
+    case SK_ICE_MAGIC:       return SPTYP_ICE;
+    case SK_TRANSMUTATIONS:  return SPTYP_TRANSMUTATION;
+    case SK_NECROMANCY:      return SPTYP_NECROMANCY;
+    case SK_SUMMONINGS:      return SPTYP_SUMMONING;
+    case SK_TRANSLOCATIONS:  return SPTYP_TRANSLOCATION;
+    case SK_POISON_MAGIC:    return SPTYP_POISON;
+    case SK_EARTH_MAGIC:     return SPTYP_EARTH;
+    case SK_AIR_MAGIC:       return SPTYP_AIR;
+
+    default:
+        return SPTYP_NONE;
+    }
+}
+
 /*
  **************************************************
  *                                                *

@@ -11,6 +11,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "ability.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "branch.h"
@@ -56,6 +57,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -64,6 +66,7 @@
 #include "skill_menu.h"
 #include "shopping.h"
 #include "shout.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
@@ -4898,5 +4901,982 @@ bool qazlal_disaster_area()
     }
     scaled_delay(100);
 
+    return true;
+}
+
+vector<ability_type> get_possible_sacrifices()
+{
+    vector<ability_type> possible_sacrifices;
+
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HEALTH);
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ESSENCE);
+    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_PURITY);
+
+    if (player_mutation_level(MUT_NO_AIR_MAGIC)
+        + player_mutation_level(MUT_NO_CHARM_MAGIC)
+        + player_mutation_level(MUT_NO_CONJURATION_MAGIC)
+        + player_mutation_level(MUT_NO_EARTH_MAGIC)
+        + player_mutation_level(MUT_NO_FIRE_MAGIC)
+        + player_mutation_level(MUT_NO_HEXES_MAGIC)
+        + player_mutation_level(MUT_NO_ICE_MAGIC)
+        + player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        + player_mutation_level(MUT_NO_POISON_MAGIC)
+        + player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
+        < 6)
+    {
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARCANA);
+    }
+    if (!player_mutation_level(MUT_NO_READ))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_WORDS);
+    if (!player_mutation_level(MUT_NO_DRINK))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DRINK);
+    if (!player_mutation_level(MUT_NO_STEALTH))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_STEALTH);
+    if (!player_mutation_level(MUT_NO_ARTIFICE))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARTIFICE);
+    if (!player_mutation_level(MUT_NO_LOVE))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_LOVE);
+    if (!player_mutation_level(MUT_NO_SANITY))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
+    if (!player_mutation_level(MUT_NO_DODGING))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
+    if (!player_mutation_level(MUT_NO_ARMOUR) && you_can_wear(EQ_BODY_ARMOUR))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
+    if (!player_mutation_level(MUT_MISSING_HAND))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
+
+    return possible_sacrifices;
+}
+
+const char* arcane_mutation_to_school_name(mutation_type mutation)
+{
+    switch (mutation)
+    {
+        case MUT_NO_AIR_MAGIC:
+            return "Air Magic";
+        case MUT_NO_CHARM_MAGIC:
+            return "Charms";
+        case MUT_NO_CONJURATION_MAGIC:
+            return "Conjurations";
+        case MUT_NO_EARTH_MAGIC:
+            return "Earth Magic";
+        case MUT_NO_FIRE_MAGIC:
+            return "Fire Magic";
+        case MUT_NO_HEXES_MAGIC:
+            return "Hexes";
+        case MUT_NO_ICE_MAGIC:
+            return "Ice Magic";
+        case MUT_NO_NECROMANCY_MAGIC:
+            return "Necromancy";
+        case MUT_NO_POISON_MAGIC:
+            return "Poison Magic";
+        case MUT_NO_SUMMONING_MAGIC:
+            return "Summoning";
+        case MUT_NO_TRANSLOCATION_MAGIC:
+            return "Translocations";
+        case MUT_NO_TRANSMUTATION_MAGIC:
+            return "Transmutations";
+        default:
+            return "N/A";
+    }
+}
+
+const skill_type arcane_mutation_to_skill(mutation_type mutation)
+{
+    switch (mutation)
+    {
+        case MUT_NO_AIR_MAGIC:
+            return SK_AIR_MAGIC;
+        case MUT_NO_CHARM_MAGIC:
+            return SK_CHARMS;
+        case MUT_NO_CONJURATION_MAGIC:
+            return SK_CONJURATIONS;
+        case MUT_NO_EARTH_MAGIC:
+            return SK_EARTH_MAGIC;
+        case MUT_NO_FIRE_MAGIC:
+            return SK_FIRE_MAGIC;
+        case MUT_NO_HEXES_MAGIC:
+            return SK_HEXES;
+        case MUT_NO_ICE_MAGIC:
+            return SK_ICE_MAGIC;
+        case MUT_NO_NECROMANCY_MAGIC:
+            return SK_NECROMANCY;
+        case MUT_NO_POISON_MAGIC:
+            return SK_POISON_MAGIC;
+        case MUT_NO_SUMMONING_MAGIC:
+            return SK_SUMMONINGS;
+        case MUT_NO_TRANSLOCATION_MAGIC:
+            return SK_TRANSLOCATIONS;
+        case MUT_NO_TRANSMUTATION_MAGIC:
+            return SK_TRANSMUTATIONS;
+        default:
+            return SK_NONE;
+    }
+}
+
+// Pick three new sacrifices to offer to the player. They should be distinct
+// from one another and not offer duplicates of some options. Ideally we'll
+// offer three "tiers" of sacrifices, but right now we mostly have two tiers.
+// Since these sacrifices will be abilities, we also need to set up those
+// abilities and the descriptions of them, so players know what they're
+// getting into.
+void ru_offer_new_sacrifices()
+{
+    ru_expire_sacrifices();
+
+    vector<ability_type> possible_sacrifices = get_possible_sacrifices();
+
+    //for now we'll just pick three at random
+    int num_sacrifices = possible_sacrifices.size();
+
+    // try to get three distinct sacrifices
+    int lesser_sacrifice = random2(num_sacrifices);
+    int sacrifice = -1;
+    int greater_sacrifice = -1;
+
+    do
+        sacrifice = random2(num_sacrifices);
+    while (sacrifice == -1 || sacrifice == lesser_sacrifice);
+
+    do
+        greater_sacrifice = random2(num_sacrifices);
+    while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
+           || greater_sacrifice == sacrifice);
+
+    ASSERT(you.props.exists("available_sacrifices"));
+    CrawlVector &available_sacrifices
+        = you.props["available_sacrifices"].get_vector();
+
+    // set the new abilities
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[lesser_sacrifice]));
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[sacrifice]));
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[greater_sacrifice]));
+
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_HEALTH
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_HEALTH
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_HEALTH)
+    {
+        vector<mutation_type> possible_health_mutations;
+        if (player_mutation_level(MUT_FRAIL) <= 2)
+            possible_health_mutations.push_back(MUT_FRAIL);
+        if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
+            possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
+        if (player_mutation_level(MUT_SLOW_REFLEXES) <= 2)
+            possible_health_mutations.push_back(MUT_SLOW_REFLEXES);
+        int num_health_mutations = possible_health_mutations.size();
+        current_health_sacrifice.push_back(
+            static_cast<int>(possible_health_mutations[
+                random2(num_health_mutations)]));
+    }
+
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE)
+    {
+        vector<mutation_type> possible_essence_mutations;
+        if (player_mutation_level(MUT_ANTI_WIZARDRY) <= 2)
+            possible_essence_mutations.push_back(MUT_ANTI_WIZARDRY);
+        if (player_mutation_level(MUT_MAGICAL_VULNERABILITY) <= 2)
+            possible_essence_mutations.push_back(MUT_MAGICAL_VULNERABILITY);
+        if (player_mutation_level(MUT_LOW_MAGIC) <= 2)
+            possible_essence_mutations.push_back(MUT_LOW_MAGIC);
+
+        int num_essence_mutations = possible_essence_mutations.size();
+        current_essence_sacrifice.push_back(
+            static_cast<int>(possible_essence_mutations[
+                random2(num_essence_mutations)]));
+    }
+
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_PURITY
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_PURITY
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_PURITY)
+    {
+        vector<mutation_type> possible_purity_mutations;
+        if (player_mutation_level(MUT_DETERIORATION) <= 2)
+            possible_purity_mutations.push_back(MUT_DETERIORATION);
+        if (player_mutation_level(MUT_SCREAM) <= 2)
+            possible_purity_mutations.push_back(MUT_SCREAM);
+        if (player_mutation_level(MUT_SLOW_HEALING) <= 2
+            && !player_mutation_level(MUT_NO_DEVICE_HEAL))
+        {
+            possible_purity_mutations.push_back(MUT_SLOW_HEALING);
+        }
+        if (player_mutation_level(MUT_NO_DEVICE_HEAL) <= 2
+            && !player_mutation_level(MUT_SLOW_HEALING))
+        {
+            possible_purity_mutations.push_back(MUT_NO_DEVICE_HEAL);
+        }
+        possible_purity_mutations.push_back(MUT_DOPEY);
+        possible_purity_mutations.push_back(MUT_CLUMSY);
+        possible_purity_mutations.push_back(MUT_WEAK);
+
+        int num_purity_mutations = possible_purity_mutations.size();
+        current_purity_sacrifice.push_back(
+            static_cast<int>(possible_purity_mutations[
+                random2(num_purity_mutations)]));
+    }
+
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ARCANA
+        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ARCANA
+        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ARCANA)
+    {
+        vector<mutation_type> possible_minor_mutations;
+        vector<mutation_type> possible_medium_mutations;
+        vector<mutation_type> possible_major_mutations;
+        int num_major_mutations;
+        int num_medium_mutations;
+        int num_minor_mutations;
+
+        if (!player_mutation_level(MUT_NO_CHARM_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
+        if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
+        if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
+        if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
+        num_major_mutations = possible_major_mutations.size();
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_major_mutations[
+                random2(num_major_mutations)]));
+
+        if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
+        if (!player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_NECROMANCY_MAGIC);
+        if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
+        num_medium_mutations = possible_medium_mutations.size();
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_medium_mutations[
+                random2(num_medium_mutations)]));
+
+        if (!player_mutation_level(MUT_NO_AIR_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
+        if (!player_mutation_level(MUT_NO_EARTH_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_EARTH_MAGIC);
+        if (!player_mutation_level(MUT_NO_FIRE_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_FIRE_MAGIC);
+        if (!player_mutation_level(MUT_NO_ICE_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_ICE_MAGIC);
+        if (!player_mutation_level(MUT_NO_POISON_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
+        num_minor_mutations = possible_minor_mutations.size();
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_minor_mutations[
+                random2(num_minor_mutations)]));
+    }
+}
+
+static const char* _describe_sacrifice_piety_gain(int piety_gain)
+{
+    if (piety_gain >= 40)
+        return "an incredible";
+    else if (piety_gain >= 29)
+        return "a major";
+    else if (piety_gain >= 21)
+        return "a significant";
+    else if (piety_gain >= 13)
+        return "a modest";
+    else
+        return "a trivial";
+}
+
+static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
+        const char* message)
+{
+    mprf("Ru asks you to %s.", message);
+    mprf("This is %s sacrifice.",
+        _describe_sacrifice_piety_gain(piety_gain));
+    if (!yesno("Do you really want to make this sacrifice?",
+               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    return true;
+}
+
+static int _piety_for_skill(skill_type skill)
+{
+    int divisor = 500;
+    return div_rand_round(skill_exp_needed(you.skills[skill], skill,
+        you.species), divisor);
+}
+
+static void _ru_kill_skill(skill_type skill)
+{
+    change_skill_points(skill,
+        -you.skill_points[skill], true);
+    you.stop_train.insert(skill);
+}
+
+#define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
+
+bool ru_do_sacrifice(ability_type sacrifice)
+{
+    skill_type mutation_skill;
+    int arcane_mutations_size;
+
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &current_health_sacrifice =
+        you.props["current_health_sacrifice"].get_vector();
+    CrawlVector &current_essence_sacrifice =
+        you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice =
+        you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    mutation_type health_sacrifice;
+    mutation_type essence_sacrifice;
+    mutation_type purity_sacrifice;
+
+    // set these up for Sac Hand
+    equipment_type ring_slot;
+
+    if (you.species == SP_OCTOPODE)
+        ring_slot = EQ_RING_EIGHT;
+    else
+        ring_slot = EQ_LEFT_RING;
+
+    item_def* const shield = you.slot_item(EQ_SHIELD, true);
+    item_def* const weapon = you.slot_item(EQ_WEAPON, true);
+    item_def* const ring = you.slot_item(ring_slot, true);
+
+    int piety_gain;
+    // by the time we apply this, we'll have either 1 or 3 (arcane).
+    int num_sacrifices = 1;
+
+    switch (sacrifice)
+    {
+        case ABIL_RU_SACRIFICE_WORDS:
+            piety_gain = 28;
+            if (!_execute_sacrifice(MUT_NO_READ, piety_gain,
+                "sacrifice your ability to read while threatened"))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_DRINK:
+            piety_gain = 28;
+            if (!_execute_sacrifice(MUT_NO_DRINK, piety_gain,
+                "sacrifice your ability to drink while threatened"))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_HEALTH:
+            piety_gain = 20;
+            health_sacrifice = AS_MUT(current_health_sacrifice[0]);
+
+            if (!_execute_sacrifice(health_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(health_sacrifice)).c_str()))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_ESSENCE:
+            essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
+
+            if (essence_sacrifice == MUT_LOW_MAGIC)
+                piety_gain = 12;
+            else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
+                piety_gain = 28;
+            else
+                piety_gain = 16;
+
+            if (!_execute_sacrifice(essence_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(essence_sacrifice)).c_str()))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_PURITY:
+            purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
+
+            if (purity_sacrifice == MUT_WEAK
+                || purity_sacrifice == MUT_CLUMSY
+                || purity_sacrifice == MUT_DOPEY)
+            {
+                piety_gain = 8;
+            }
+            // the other sacrifices get sharply worse if you already
+            // have levels of them.
+            else if (player_mutation_level(purity_sacrifice) == 2)
+                piety_gain = 28;
+            else if (player_mutation_level(purity_sacrifice) == 1)
+                piety_gain = 20;
+            else
+                piety_gain = 12;
+
+
+            if (!_execute_sacrifice(purity_sacrifice, piety_gain,
+                make_stringf("corrupt yourself with %s",
+                    mutation_name(purity_sacrifice)).c_str()))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_STEALTH:
+            piety_gain = 20 + _piety_for_skill(SK_STEALTH);
+
+            if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
+                "sacrifice your ability to go unnoticed"))
+            {
+                return false;
+            }
+            _ru_kill_skill(SK_STEALTH);
+            break;
+        case ABIL_RU_SACRIFICE_ARTIFICE:
+            piety_gain = 45 + _piety_for_skill(SK_EVOCATIONS);
+
+            if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
+                "sacrifice all use of magical tools"))
+            {
+                return false;
+            }
+            _ru_kill_skill(SK_EVOCATIONS);
+            break;
+        case ABIL_RU_SACRIFICE_NIMBLENESS:
+            piety_gain = 20 + _piety_for_skill(SK_DODGING);
+            if (player_mutation_level(MUT_NO_ARMOUR))
+                piety_gain += 20;
+            else if (you.species == SP_OCTOPODE
+                    || you.species == SP_FELID
+                    || you.species == SP_RED_DRACONIAN
+                    || you.species == SP_WHITE_DRACONIAN
+                    || you.species == SP_GREEN_DRACONIAN
+                    || you.species == SP_YELLOW_DRACONIAN
+                    || you.species == SP_GREY_DRACONIAN
+                    || you.species == SP_BLACK_DRACONIAN
+                    || you.species == SP_PURPLE_DRACONIAN
+                    || you.species == SP_MOTTLED_DRACONIAN
+                    || you.species == SP_PALE_DRACONIAN
+                    || you.species == SP_BASE_DRACONIAN)
+            {
+                piety_gain += 28; // this sacrifice is worse for these races
+            }
+
+            if (!_execute_sacrifice(MUT_NO_DODGING, piety_gain,
+                "sacrifice your ability to dodge"))
+            {
+                return false;
+            }
+            _ru_kill_skill(SK_DODGING);
+            break;
+        case ABIL_RU_SACRIFICE_DURABILITY:
+            piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
+            if (player_mutation_level(MUT_NO_DODGING))
+                piety_gain += 20;
+
+            if (!_execute_sacrifice(MUT_NO_ARMOUR, piety_gain,
+                "sacrifice your ability to wear armour well"))
+            {
+                return false;
+            }
+            _ru_kill_skill(SK_ARMOUR);
+            break;
+        case ABIL_RU_SACRIFICE_SANITY:
+            piety_gain = 25;
+
+            if (!_execute_sacrifice(MUT_NO_SANITY, piety_gain,
+                "sacrifice your sanity"))
+            {
+                return false;
+            }
+            break;
+        case ABIL_RU_SACRIFICE_LOVE:
+            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+                piety_gain = 3;
+            else
+                piety_gain = 20 + _piety_for_skill(SK_SUMMONINGS);
+
+            if (!_execute_sacrifice(MUT_NO_LOVE, piety_gain,
+                "sacrifice your ability to be loved"))
+            {
+                return false;
+            }
+            add_daction(DACT_ALLY_SACRIFICE_LOVE);
+            break;
+        case ABIL_RU_SACRIFICE_ARCANA:
+            piety_gain = 25;
+            arcane_mutations_size = current_arcane_sacrifices.size();
+            for (int i = 0; i < arcane_mutations_size; ++i)
+            {
+                mutation_type arcane_sacrifice =
+                    AS_MUT(current_arcane_sacrifices[i]);
+                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
+                if (player_mutation_level(MUT_NO_LOVE)
+                        && arcane_sacrifice == MUT_NO_SUMMONING_MAGIC)
+                    // nothing in the summoning school helps so substact piety
+                    piety_gain -= 8;
+                else
+                    piety_gain += _piety_for_skill(mutation_skill);
+            }
+
+            mprf("Ru asks you to sacrifice all use of %s, %s, and %s.",
+                arcane_mutation_to_school_name(
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[0].get_int())),
+                arcane_mutation_to_school_name(
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[1].get_int())),
+                arcane_mutation_to_school_name(
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[2].get_int()))
+                );
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
+            if (!yesno("Do you really want to make this sacrifice?",
+                       false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+
+            arcane_mutations_size = current_arcane_sacrifices.size();
+            for (int i = 0; i < arcane_mutations_size; ++i)
+            {
+                mutation_type arcane_sacrifice =
+                    AS_MUT(current_arcane_sacrifices[i]);
+                perma_mutate(arcane_sacrifice, 1, "Ru sacrifice");
+
+                // gain one piety for every 50 skill points
+                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
+
+                // zero out useless skills
+                _ru_kill_skill(mutation_skill);
+
+                for (int j = 0; j < MAX_KNOWN_SPELLS; ++j)
+                {
+                    const spell_type spell = you.spells[j];
+                    if (!is_valid_spell(spell))
+                        continue;
+                    if (spell_typematch(spell,
+                                        skill2spell_type(mutation_skill)))
+                    {
+                        del_spell_from_memory_by_slot(j);
+                    }
+                }
+            }
+            num_sacrifices = 3;
+            break;
+        case ABIL_RU_SACRIFICE_HAND:
+            piety_gain = 70 + _piety_for_skill(SK_SHIELDS);
+
+            if (!_execute_sacrifice(MUT_MISSING_HAND, piety_gain,
+                make_stringf("sacrifice one of your %s",
+                    you.hand_name(true).c_str()).c_str()))
+            {
+                return false;
+            }
+
+            // Drop your shield if there is one
+            if (shield != NULL)
+            {
+                mprf("You can no longer hold %s!",
+                    shield->name(DESC_YOUR).c_str());
+                unequip_item(EQ_SHIELD);
+            }
+
+            // And your two-handed weapon
+            if (weapon != NULL)
+            {
+                if (you.hands_reqd(*weapon) == HANDS_TWO)
+                {
+                    mprf("You can no longer hold %s!",
+                        weapon->name(DESC_YOUR).c_str());
+                    unequip_item(EQ_WEAPON);
+                }
+            }
+
+            // And one ring
+            if (ring != NULL )
+            {
+                mprf("You can no longer wear %s!",
+                    ring->name(DESC_YOUR).c_str());
+                unequip_item(ring_slot);
+            }
+
+            you.stop_train.insert(SK_SHIELDS);
+            break;
+        default:
+            return false;
+    }
+    if (you.props.exists("num_sacrifice_muts"))
+    {
+        you.props["num_sacrifice_muts"] = num_sacrifices +
+            you.props["num_sacrifice_muts"].get_int();
+    }
+    else
+        you.props["num_sacrifice_muts"] = num_sacrifices;
+
+    // Randomize piety gain very slightly to prevent counting.
+    int new_piety = you.piety + piety_gain + random2(3);
+    if (new_piety > piety_breakpoint(5))
+        new_piety = piety_breakpoint(5);
+    set_piety(new_piety);
+
+    // reset delay to 70.
+    you.props["ru_sacrifice_delay"] = div_rand_round(70 * (3 + you.faith()), 3);
+
+    ru_expire_sacrifices();
+    redraw_screen(); // pretty much everything could have changed
+    return true;
+}
+
+// Remove the offer of sacrifices after they've been offered for sufficient
+// time or it's time to offer something new.
+void ru_expire_sacrifices()
+{
+    ASSERT(you.props.exists("available_sacrifices"));
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &available_sacrifices
+        = you.props["available_sacrifices"].get_vector();
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    available_sacrifices.clear();
+    current_health_sacrifice.clear();
+    current_essence_sacrifice.clear();
+    current_purity_sacrifice.clear();
+    current_arcane_sacrifices.clear();
+}
+
+
+// Check to see if you're eligible to retaliate.
+//Your chance of eligiblity scales with piety.
+bool will_ru_retaliate()
+{
+    // Scales up to a 33% chance of retribution
+    return you_worship(GOD_RU)
+           && you.piety >= piety_breakpoint(1)
+           && crawl_state.which_god_acting() != GOD_RU
+           && one_chance_in(div_rand_round(480, you.piety));
+}
+
+// Power of retribution increases with damage, decreases with monster HD.
+void ru_do_retribution(monster* mons, int damage)
+{
+    int power = max(0, random2(div_rand_round(you.piety * 10, 32))
+        + damage - (2 * mons->get_hit_dice()));
+    const actor* act = &you;
+
+    if (power > 50)
+    {
+        simple_monster_message(mons, " is silenced in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_MUTE, 1, act, power+random2(120)));
+    }
+    else if (power > 35)
+    {
+        simple_monster_message(mons, " is paralyzed in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
+    }
+    else if (power > 25)
+    {
+        simple_monster_message(mons, " is slowed in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
+    }
+    else if (power > 15)
+    {
+        simple_monster_message(mons, " is blinded in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
+    }
+    else if (power > 0)
+    {
+        simple_monster_message(mons, " is illuminated in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
+    }
+}
+
+void ru_draw_out_power()
+{
+    mpr("You are restored by drawing out deep reserves of power within.");
+
+    //Escape nets and webs
+    int net = get_trapping_net(you.pos());
+    if (net == NON_ITEM)
+    {
+        trap_def *trap = find_trap(you.pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+            destroy_trap(you.pos());
+            mpr("You burst free from the webs!");
+        }
+    }
+    else
+    {
+        destroy_item(net);
+        mpr("You burst free from the net!");
+    }
+
+    // Escape constriction
+    you.stop_being_constricted(false);
+
+    // cancel petrification/confusion/slow
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
+    you.duration[DUR_PETRIFYING] = 0;
+
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
+    you.redraw_evasion = true;
+
+    inc_hp(div_rand_round(you.piety, 16)
+        + roll_dice(div_rand_round(you.piety, 20), 5));
+    inc_mp(div_rand_round(you.piety, 48)
+        + roll_dice(div_rand_round(you.piety, 40), 3));
+    drain_player(20, false, true);
+}
+
+bool ru_power_leap()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    dist beam;
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat power leaps.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+
+    // query for location:
+    while (1)
+    {
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.needs_path = false;
+        args.may_target_monster = false;
+        args.top_prompt = "Leap to where?";
+        args.range = 3;
+        direction(beam, args);
+
+        if (crawl_state.seen_hups)
+        {
+            clear_messages();
+            mpr("Cancelling jump due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+            return false;         // early return
+
+        monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            clear_messages();
+            mprf("You cannot leap away from %s!",
+                beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            clear_messages();
+            mprf("You cannot leap closer to %s!",
+                fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons && you.can_see(mons))
+        {
+            clear_messages();
+            mpr("You can't leap on top of the monster!");
+            continue;
+        }
+
+        if (grd(beam.target) == DNGN_OPEN_SEA)
+        {
+            clear_messages();
+            mpr("You can't leap into the sea!");
+            continue;
+        }
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        {
+            clear_messages();
+            mpr("You can't leap into the sea of lava!");
+            continue;
+        }
+        else if (!check_moveto(beam.target, "leap"))
+        {
+            // try again (messages handled by check_moveto)
+        }
+        else if (you.see_cell_no_trans(beam.target))
+        {
+            // Grid in los, no problem.
+            break;
+        }
+        else if (you.trans_wall_blocking(beam.target))
+        {
+            clear_messages();
+            mpr("There's something in the way!");
+        }
+        else
+        {
+            clear_messages();
+            mpr("You can only jump to visible locations.");
+        }
+    }
+
+    bool return_val = false;
+
+    if (you.attempt_escape(2)) // I'm hoping this returns true if not constrict
+    {
+        if (cell_is_solid(beam.target) || monster_at(beam.target))
+            mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        else
+            move_player_to_grid(beam.target, false);
+    }
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    return_val = true;
+
+    bolt wave;
+    wave.thrower = KILL_YOU;
+    wave.name = "power leap";
+    wave.source_name = "you";
+    wave.beam_source = you.mindex();
+    wave.flavour = BEAM_VISUAL;
+    wave.colour = BROWN;
+    wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    wave.range = 1;
+    wave.ex_size = 1;
+    wave.is_explosion = true;
+    wave.source = you.pos();
+    wave.target = you.pos();
+    wave.hit = AUTOMATIC_HIT;
+    wave.loudness = 2;
+    wave.explode();
+
+    // we need to exempt the player from damage.
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+            continue;
+        ASSERT(mon);
+
+        //damage scales with XL amd piety
+        mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
+            (54 + you.experience_level), 777), 3),
+            BEAM_ENERGY, true);
+    }
+
+    return return_val;
+}
+
+static int _cataclysmable(coord_def where, int pow, int, actor* agent)
+{
+    monster* mon = monster_at(where);
+    if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+        return 0;
+    return 1;
+}
+
+static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
+{
+    if (!_cataclysmable(where, pow, dummy, agent))
+        return 0;
+    monster* mons = monster_at(where);
+    ASSERT(mons);
+
+    int dmg;
+    //damage scales with XL amd piety
+    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
+    int effect = random2(6);
+
+    if (mons_is_firewood(mons))
+        effect = 99; // > 2 is just damage -- no slowed toadstools
+
+    switch (effect)
+    {
+        case 0:
+            simple_monster_message(mons, " silenced by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(120)));
+            dmg = roll_dice(die_size, 4);
+            break;
+
+        case 1:
+            simple_monster_message(mons, " is paralyzed by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
+            dmg = roll_dice(die_size, 4);
+            break;
+
+        case 2:
+            simple_monster_message(mons, " is slowed by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
+            dmg = roll_dice(die_size, 5);
+            break;
+
+        default:
+            dmg = roll_dice(die_size, 6);
+            break;
+    }
+    mons->hurt(agent, dmg, BEAM_ENERGY, true);
+
+    return 1;
+}
+
+bool ru_cataclysm()
+{
+    int count = apply_area_visible(_cataclysmable, you.piety, &you);
+    if (!count)
+    {
+        if (!yesno("There are no visible enemies. Unleash your cataclysm anyway?",
+            true, 'n'))
+        {
+            return false;
+        }
+    }
+    mpr("BWOOM! You release an incredible blast of power in all directions!");
+    noisy(30, you.pos());
+    apply_area_visible(_apply_cataclysm, you.piety, &you);
+    drain_player(100,false, true);
     return true;
 }

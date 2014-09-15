@@ -109,8 +109,11 @@ enum tag_minor_version
     TAG_MINOR_FRIENDLY_PICKUP,     // Remove the friendly_pickup setting.
     TAG_MINOR_STICKY_FLAME,        // Change the name of you.props "napalmer" & "napalm_aux"
     TAG_MINOR_SLAYRING_PLUSES,     // Combine Acc/Dam on rings of slaying and artefacts.
+    TAG_MINOR_RU_DATA,             // Restructuring persistent Ru data to allow saving.
     TAG_MINOR_MERGE_EW,            // Combine enchant weapons scrolls.
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
+    TAG_MINOR_RU_RENAME,           // Fix up a property by changing the name.
+    TAG_MINOR_RU_PIETY,            // Rescale Ru piety
     TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
     TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
     TAG_MINOR_METABOLISM,          // Remove random fast/slow meta mutations

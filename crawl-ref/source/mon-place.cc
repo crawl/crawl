@@ -3794,6 +3794,15 @@ conduct_type player_will_anger_monster(monster_type type)
 
 conduct_type player_will_anger_monster(monster* mon)
 {
+    if (player_mutation_level(MUT_NO_LOVE)
+        && mon->type != MONS_BALL_LIGHTNING
+        && mon->type != MONS_BATTLESPHERE
+        && mon->type != MONS_SPECTRAL_WEAPON
+        && mon->type != MONS_FULMINANT_PRISM)
+    {
+        // Player angers all real monsters
+        return DID_SACRIFICE_LOVE;
+    }
     if (is_good_god(you.religion) && mon->is_unholy())
         return DID_UNHOLY;
     if (is_good_god(you.religion) && mon->is_evil())
@@ -3859,6 +3868,9 @@ bool player_angers_monster(monster* mon)
             case DID_FIRE:
             case DID_ILLUMINATE:
                 mprf("%s is enraged by your darkness!", mname.c_str());
+                break;
+            case DID_SACRIFICE_LOVE:
+                mprf("%s can only feel hate for you!", mname.c_str());
                 break;
             default:
                 mprf("%s is enraged by a buggy thing about you!", mname.c_str());

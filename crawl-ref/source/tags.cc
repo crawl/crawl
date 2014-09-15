@@ -3046,8 +3046,34 @@ static void tag_read_you(reader &th)
         if (you.props.exists("napalm_aux"))
             you.props["sticky_flame_aux"] = you.props["napalm_aux"];
     }
+
     if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists(ORIGINAL_BRAND_KEY))
         you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
+
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_DATA)
+    {
+        you.props["available_sacrifices"].new_vector(SV_INT);
+        you.props["current_health_sacrifice"].new_vector(SV_INT);
+        you.props["current_essence_sacrifice"].new_vector(SV_INT);
+        you.props["current_purity_sacrifice"].new_vector(SV_INT);
+        you.props["current_arcane_sacrifices"].new_vector(SV_INT);
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+    }
+
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_RENAME)
+    {
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props["ru_sacrifice_delay"] = 70;
+    }
+
+    if (you_worship(GOD_RU) && th.getMinorVersion() < TAG_MINOR_RU_PIETY)
+    {
+        you.piety = div_rand_round(you.piety * 10, 8);
+        if (you.piety > piety_breakpoint(5))
+            you.piety = piety_breakpoint(5);
+        else if (you.piety < 10)
+            you.piety = 10;
+    }
 #endif
 }
 

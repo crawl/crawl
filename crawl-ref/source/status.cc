@@ -331,7 +331,7 @@ bool fill_status_info(int status, status_info* inf)
     case DUR_SURE_BLADE:
     {
         inf->light_colour = BLUE;
-        inf->light_text   = "Blade";
+        inf->light_text   = "SBlade";
         inf->short_text   = "bonded with blade";
         string desc;
         if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
@@ -557,6 +557,30 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
     }
+
+    case DUR_HORROR:
+        if (you.props["horror_penalty"].get_int() > 4)
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "Horr";
+            inf->short_text   = "overwhelmed with horror";
+            inf->long_text    = "Horror overwhelms you!";
+        }
+        else if (you.props["horror_penalty"].get_int() > 2)
+        {
+            inf->light_colour = LIGHTRED;
+            inf->light_text   = "Horr";
+            inf->short_text   = "extremely horrified";
+            inf->long_text    = "You are extremely horrified!";
+        }
+        else if (you.props["horror_penalty"].get_int())
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "Horr";
+            inf->short_text   = "horrified";
+            inf->long_text    = "You are horrified!";
+        }
+        break;
 
     default:
         if (!found)
@@ -819,7 +843,7 @@ static void _describe_transform(status_info* inf)
         inf->long_text     += "bat-form.";
         break;
     case TRAN_BLADE_HANDS:
-        inf->light_text = "Blades";
+        inf->light_text = "Blade";
         inf->short_text = "blade " + blade_parts(true);
         inf->long_text  = "You have blades for " + blade_parts() + ".";
         break;

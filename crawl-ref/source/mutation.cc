@@ -1063,35 +1063,36 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     const int conflict[][3] =
     {
 #if TAG_MAJOR_VERSION == 34
-        { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,        1},
+        { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
 #endif
-        { MUT_STRONG,              MUT_WEAK,                 1},
-        { MUT_CLEVER,              MUT_DOPEY,                1},
-        { MUT_AGILE,               MUT_CLUMSY,               1},
-        { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,       1},
-        { MUT_ROBUST,              MUT_FRAIL,                1},
-        { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,            1},
-        { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,         1},
-        { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,          1},
-        { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,      1},
-        { MUT_REGENERATION,        MUT_SLOW_HEALING,         1},
-        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,        1},
-        { MUT_FAST,                MUT_SLOW,                 1},
-        { MUT_REGENERATION,        MUT_SLOW_METABOLISM,      0},
-        { MUT_REGENERATION,        MUT_SLOW_HEALING,         0},
-        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,        0},
-        { MUT_FAST,                MUT_SLOW,                 0},
-        { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,       0},
-        { MUT_UNBREATHING,         MUT_BREATHE_POISON,       0},
-        { MUT_FANGS,               MUT_BEAK,                -1},
-        { MUT_ANTENNAE,            MUT_HORNS,               -1},
-        { MUT_HOOVES,              MUT_TALONS,              -1},
-        { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,          -1},
-        { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,           -1},
-        { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,         -1},
-        { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,  -1},
-        { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,  -1},
-        { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY, -1},
+        { MUT_STRONG,              MUT_WEAK,                   1},
+        { MUT_CLEVER,              MUT_DOPEY,                  1},
+        { MUT_AGILE,               MUT_CLUMSY,                 1},
+        { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
+        { MUT_ROBUST,              MUT_FRAIL,                  1},
+        { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
+        { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,           1},
+        { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
+        { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
+        { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
+        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
+        { MUT_FAST,                MUT_SLOW,                   1},
+        { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
+        { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
+        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
+        { MUT_FAST,                MUT_SLOW,                   0},
+        { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
+        { MUT_UNBREATHING,         MUT_BREATHE_POISON,         0},
+        { MUT_FANGS,               MUT_BEAK,                  -1},
+        { MUT_ANTENNAE,            MUT_HORNS,                 -1},
+        { MUT_HOOVES,              MUT_TALONS,                -1},
+        { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
+        { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
+        { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},
+        { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,    -1},
+        { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
+        { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
+        { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
         };
 
     // If we have one of the pair, delete all levels of the other,
@@ -1554,6 +1555,22 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 mprf(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
                                  arms).c_str());
+                gain_msg = false;
+            }
+            break;
+
+        case MUT_MISSING_HAND:
+            {
+                const char *hands;
+                if (you.species == SP_FELID)
+                    hands = "front paws";
+                else if (you.species == SP_OCTOPODE)
+                    hands = "tentacles";
+                else
+                    break;
+                mprf(MSGCH_MUTATION, "%s",
+                     replace_all(mdef.gain[you.mutation[mutat]-1], "hands",
+                                 hands).c_str());
                 gain_msg = false;
             }
             break;
@@ -2355,7 +2372,15 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
                   false, true);
 }
 
-int how_mutated(bool all, bool levels)
+/**
+ * How mutated is the player?
+ *
+ * @param innate Whether to count innate mutations.
+ * @param levels Whether to add up mutation levels.
+ * @return Either the number of matching mutations, or the sum of their
+ *         levels, depending on \c levels
+ */
+int how_mutated(bool innate, bool levels)
 {
     int j = 0;
 
@@ -2363,21 +2388,26 @@ int how_mutated(bool all, bool levels)
     {
         if (you.mutation[i])
         {
-            if (!all && you.innate_mutation[i] >= you.mutation[i])
+            if (!innate && you.innate_mutation[i] >= you.mutation[i])
                 continue;
 
             if (levels)
             {
                 j += you.mutation[i];
-                if (!all)
+                if (!innate)
                     j -= you.innate_mutation[i];
             }
             else
                 j++;
         }
+        if (you.species == SP_DEMONSPAWN
+            && you.props.exists("num_sacrifice_muts"))
+        {
+            j -= you.props["num_sacrifice_muts"].get_int();
+        }
     }
 
-    dprf("how_mutated(): all = %u, levels = %u, j = %d", all, levels, j);
+    dprf("how_mutated(): innate = %u, levels = %u, j = %d", innate, levels, j);
 
     return j;
 }
@@ -2423,6 +2453,11 @@ static bool _balance_demonic_guardian()
 // _balance_demonic_guardian()
 void check_demonic_guardian()
 {
+    // Players hated by all monsters don't get guardians, so that they aren't
+    // swarmed by hostile executioners whenever things get rough.
+    if (player_mutation_level(MUT_NO_LOVE))
+        return;
+
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
     if (!_balance_demonic_guardian() &&

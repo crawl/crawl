@@ -549,7 +549,12 @@ void list_jewellery()
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
+        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
+                player_mutation_level(MUT_MISSING_HAND))
+        {
+            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+        }
+        else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
             mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
@@ -1077,7 +1082,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     if (you_cannot_memorise(type, form))
     {
         desc += "\n";
-        desc += desc_cannot_memorise_reason(form);
+        desc += desc_cannot_memorise_reason(type, form);
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2522,6 +2527,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>]</w>      get a mutation\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
+                       "<w>Ctrl-W</w> force Ru to offer sacrifices\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
                        "<w>Ctrl-Z</w> gain lots of Zot Points\n"

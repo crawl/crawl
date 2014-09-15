@@ -204,6 +204,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Qazlal
     { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
+    // Ru
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
+      ABIL_RU_POWER_LEAP, ABIL_RU_CATACLYSM }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -417,6 +420,41 @@ static const ability_def Ability_List[] =
       4, 0, 0, 4, 0, ABFLAG_NONE },
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
       9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
+
+    // Ru
+    { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
+      0, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
+    { ABIL_RU_POWER_LEAP, "Power Leap",
+      5, 0, 0, 0, 0, ABFLAG_EXHAUSTION },
+    { ABIL_RU_CATACLYSM, "Cataclysm",
+      8, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
+
+    { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_WORDS, "Sacrifice Words",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_DRINK, "Sacrifice Drink",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_ESSENCE, "Sacrifice Essence",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_HEALTH, "Sacrifice Health",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_STEALTH, "Sacrifice Stealth",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_SANITY, "Sacrifice Sanity",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
 
     // Gozag
     { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
@@ -1108,6 +1146,22 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_GOZAG_POTION_PETITION:
     case ABIL_GOZAG_CALL_MERCHANT:
     case ABIL_GOZAG_BRIBE_BRANCH:
+    case ABIL_RU_DRAW_OUT_POWER:
+    case ABIL_RU_POWER_LEAP:
+    case ABIL_RU_CATACLYSM:
+    case ABIL_RU_SACRIFICE_PURITY:
+    case ABIL_RU_SACRIFICE_WORDS:
+    case ABIL_RU_SACRIFICE_DRINK:
+    case ABIL_RU_SACRIFICE_ESSENCE:
+    case ABIL_RU_SACRIFICE_HEALTH:
+    case ABIL_RU_SACRIFICE_STEALTH:
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+    case ABIL_RU_SACRIFICE_LOVE:
+    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_ARCANA:
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+    case ABIL_RU_SACRIFICE_DURABILITY:
+    case ABIL_RU_SACRIFICE_HAND:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -3099,6 +3153,72 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_RU_SACRIFICE_PURITY:
+    case ABIL_RU_SACRIFICE_WORDS:
+    case ABIL_RU_SACRIFICE_DRINK:
+    case ABIL_RU_SACRIFICE_ESSENCE:
+    case ABIL_RU_SACRIFICE_HEALTH:
+    case ABIL_RU_SACRIFICE_STEALTH:
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+    case ABIL_RU_SACRIFICE_LOVE:
+    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_ARCANA:
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+    case ABIL_RU_SACRIFICE_DURABILITY:
+    case ABIL_RU_SACRIFICE_HAND:
+        fail_check();
+        if (!ru_do_sacrifice(abil.ability))
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_RU_DRAW_OUT_POWER:
+        fail_check();
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to draw out your power.");
+            return SPRET_ABORT;
+        }
+        if (you.hp == you.hp_max && you.magic_points == you.max_magic_points
+            && !you.duration[DUR_CONF]
+            && !you.duration[DUR_SLOW]
+            && !you.attribute[ATTR_HELD]
+            && !you.petrifying()
+            && !you.is_constricted())
+        {
+            mpr("You have no need to draw out power.");
+            return SPRET_ABORT;
+        }
+        ru_draw_out_power();
+        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        break;
+
+    case ABIL_RU_POWER_LEAP:
+        fail_check();
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to power leap.");
+            return SPRET_ABORT;
+        }
+        if (!ru_power_leap())
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        break;
+
+    case ABIL_RU_CATACLYSM:
+        fail_check();
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to unleash your cataclysmic power.");
+            return SPRET_ABORT;
+        }
+        if (!ru_cataclysm())
+            return SPRET_ABORT;
+        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3613,16 +3733,23 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
 
     // Evocations from items.
-    if (you.scan_artefacts(ARTP_BLINK))
+    if (you.scan_artefacts(ARTP_BLINK)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+    }
 
-    if (you.scan_artefacts(ARTP_FOG))
+    if (you.scan_artefacts(ARTP_FOG)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
+    }
 
-    if (you.evokable_berserk())
+    if (you.evokable_berserk() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
+        && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Now you can only turn invisibility off if you have an
         // activatable item.  Wands and potions will have to time
@@ -3633,7 +3760,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
-    if (you.evokable_flight())
+    if (you.evokable_flight() && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Has no effect on permanently flying Tengu.
         if (!you.permanent_flight() || !you.racial_permanent_flight())
@@ -3653,17 +3780,21 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-    if (you.evokable_jump())
+    if (you.evokable_jump() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
 
     if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+        && !player_mutation_level(MUT_NO_ARTIFICE)
         && !crawl_state.game_is_sprint())
     {
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
 
-    if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL))
+    if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_TELEPORT_CONTROL, check_confused);
+    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
@@ -3838,6 +3969,23 @@ static int _find_ability_slot(const ability_def &abil)
         first_slot = letter_to_index('W');
     if (abil.ability == ABIL_CONVERT_TO_BEOGH)
         first_slot = letter_to_index('Y');
+    if (abil.ability == ABIL_RU_SACRIFICE_PURITY
+      || abil.ability == ABIL_RU_SACRIFICE_WORDS
+      || abil.ability == ABIL_RU_SACRIFICE_DRINK
+      || abil.ability == ABIL_RU_SACRIFICE_ESSENCE
+      || abil.ability == ABIL_RU_SACRIFICE_HEALTH
+      || abil.ability == ABIL_RU_SACRIFICE_STEALTH
+      || abil.ability == ABIL_RU_SACRIFICE_ARTIFICE
+      || abil.ability == ABIL_RU_SACRIFICE_LOVE
+      || abil.ability == ABIL_RU_SACRIFICE_SANITY
+      || abil.ability == ABIL_RU_SACRIFICE_ARCANA
+      || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
+      || abil.ability == ABIL_RU_SACRIFICE_DURABILITY
+      || abil.ability == ABIL_RU_SACRIFICE_HAND)
+    {
+        first_slot = letter_to_index('P');
+    }
+
 
     for (int slot = first_slot; slot < 52; ++slot)
     {
@@ -3874,6 +4022,20 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
                                                    || player_under_penance())))
     {
         abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
+    }
+    else if (you_worship(GOD_RU))
+    {
+
+        ASSERT(you.props.exists("available_sacrifices"));
+        CrawlVector &available_sacrifices
+            = you.props["available_sacrifices"].get_vector();
+
+        int num_sacrifices = available_sacrifices.size();
+        for (int i = 0; i < num_sacrifices; ++i)
+        {
+            abilities.push_back(
+                static_cast<ability_type>(available_sacrifices[i].get_int()));
+        }
     }
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);

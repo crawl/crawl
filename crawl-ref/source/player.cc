@@ -756,13 +756,21 @@ bool you_can_wear(int eq, bool special_armour)
         return true;
 
     if (you.species == SP_FELID)
-        return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
+    {
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
+        else
+            return eq == EQ_RIGHT_RING || eq == EQ_AMULET;
+    }
 
     // Octopodes can wear soft helmets, eight rings, and an amulet.
     if (you.species == SP_OCTOPODE)
     {
         if (special_armour && eq == EQ_HELMET)
             return true;
+        else if (player_mutation_level(MUT_MISSING_HAND))
+            return eq >= EQ_RING_ONE && eq <= EQ_RING_SEVEN
+                   || eq == EQ_AMULET || eq == EQ_WEAPON;
         else
             return eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
                    || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON;
@@ -771,6 +779,11 @@ bool you_can_wear(int eq, bool special_armour)
     switch (eq)
     {
     case EQ_LEFT_RING:
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return false;
+        else
+            return true;
+
     case EQ_RIGHT_RING:
     case EQ_AMULET:
     case EQ_CLOAK:
@@ -823,6 +836,8 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return false;
         }
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return false;
         return true;
 
     case EQ_HELMET:
@@ -953,6 +968,14 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         {
             return false;
         }
+    }
+
+    if (player_mutation_level(MUT_MISSING_HAND)
+            && (eq == EQ_LEFT_RING
+                || eq == EQ_SHIELD
+                || eq == EQ_RING_EIGHT))
+    {
+        return false;
     }
 
     // No further restrictions.
@@ -2542,6 +2565,10 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
         evbonus--;
     evbonus += max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
+    // transformation penalties/bonuses not covered by size alone:
+    if (player_mutation_level(MUT_SLOW_REFLEXES))
+        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 3;
+
     return evbonus;
 }
 
@@ -3653,8 +3680,11 @@ int check_stealth()
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX])
+    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX]
+        || player_mutation_level(MUT_NO_STEALTH))
+    {
         return 0;
+    }
 
     int stealth = you.dex() * 3;
 
@@ -4279,6 +4309,9 @@ int slaying_bonus(bool ranged)
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         ret += you.props["song_of_slaying_bonus"].get_int();
+
+    if (you.duration[DUR_HORROR])
+        ret += you.props["horror_penalty"].get_int();
 
     return ret;
 }
@@ -6636,7 +6669,8 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
-
+    AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
+          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;       // +3, +6, +9
     return AC / 100;
 }
  /**
@@ -6988,6 +7022,7 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Mutations
     rm += 40 * player_mutation_level(MUT_MAGIC_RESISTANCE);
+    rm -= 40 * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
     if (you.form == TRAN_LICH && temp)
@@ -7449,6 +7484,8 @@ int player::has_usable_tail(bool allow_tran) const
 // purpose of punching.
 bool player::has_usable_offhand() const
 {
+    if (player_mutation_level(MUT_MISSING_HAND))
+        return false;
     if (player_wearing_slot(EQ_SHIELD))
         return false;
 
@@ -7502,7 +7539,9 @@ int player::has_tentacles(bool allow_tran) const
             return 0;
     }
 
-    if (species == SP_OCTOPODE)
+    if (species == SP_OCTOPODE && player_mutation_level(MUT_MISSING_HAND))
+        return 7;
+    else if (species == SP_OCTOPODE)
         return 8;
 
     return 0;

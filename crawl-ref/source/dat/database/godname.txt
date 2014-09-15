@@ -63,6 +63,10 @@ Qazlal lastname
 
 Qazlal Stormbringer
 %%%%
+Ru lastname
+
+Ru the Awakened
+%%%%
 Xom lastname
 
 w:280

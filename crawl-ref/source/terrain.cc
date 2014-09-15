@@ -461,6 +461,7 @@ static int _god_altars[][2] =
     { GOD_DITHMENOS, DNGN_ALTAR_DITHMENOS },
     { GOD_GOZAG, DNGN_ALTAR_GOZAG },
     { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
+    { GOD_RU, DNGN_ALTAR_RU },
 };
 
 /** Whose altar is this feature?

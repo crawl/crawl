@@ -502,7 +502,7 @@ void tome_of_power(int slot)
              (temp_rand >  0) ? SPELL_THROW_FROST
                               : SPELL_MAGIC_DART);
 
-        your_spells(spell_casted, powc, false);
+        your_spells(spell_casted, powc, false, true);
     }
 }
 
@@ -690,15 +690,25 @@ static bool _box_of_beasts(item_def &box)
         monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
                                               _box_of_beasts_veto_mon);
 
-        mgen_data mg = mgen_data(MONS_CHIMERA,
-                                 BEH_FRIENDLY, &you,
-                                 3 + random2(3), 0,
-                                 you.pos(),
-                                 MHITYOU, MG_AUTOFOE);
-        mg.define_chimera(mon, mon2, mon3);
-        mons = create_monster(mg);
-        if (mons)
-            success = true;
+        if (mon && mon2 && mon3)
+        {
+            mgen_data mg = mgen_data(MONS_CHIMERA,
+                                     BEH_FRIENDLY, &you,
+                                     3 + random2(3), 0,
+                                     you.pos(),
+                                     MHITYOU, MG_AUTOFOE);
+            mg.define_chimera(mon, mon2, mon3);
+            mons = create_monster(mg);
+            if (mons)
+                success = true;
+        }
+        else
+        {
+            // we weren't able to come up with acceptable monsters
+            mpr("...but nothing happens.");
+            return false;
+        }
+
     }
 
     if (success)
@@ -1076,9 +1086,12 @@ static bool _lamp_of_fire()
             beams[n].fire();
         }
 
+        beh_type attitude = BEH_FRIENDLY;
+        if (player_will_anger_monster(MONS_FIRE_ELEMENTAL))
+            attitude = BEH_HOSTILE;
         for (unsigned int n = 0; n < elementals.size(); ++n)
         {
-            mgen_data mg(MONS_FIRE_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+            mgen_data mg(MONS_FIRE_ELEMENTAL, attitude, &you, 3,
                          SPELL_NO_SPELL, elementals[n], 0,
                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                          MONS_FIRE_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
@@ -1331,9 +1344,12 @@ static void _fan_of_gales_elementals()
     int num_elementals = _num_evoker_elementals();
 
     bool created = false;
+    beh_type attitude = BEH_FRIENDLY;
+    if (player_will_anger_monster(MONS_AIR_ELEMENTAL))
+        attitude = BEH_HOSTILE;
     for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
     {
-        mgen_data mg (MONS_AIR_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
+        mgen_data mg (MONS_AIR_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
                       elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
                       GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, BLACK,
                       PROX_CLOSE_TO_PLAYER);
@@ -1454,13 +1470,17 @@ static bool _stone_of_tremors()
 
     // Create elementals.
     bool created = false;
+    beh_type attitude = BEH_FRIENDLY;
+    if (player_will_anger_monster(MONS_EARTH_ELEMENTAL))
+        attitude = BEH_HOSTILE;
+
     for (int n = 0; n < min(num_elementals, (int)rubble_pos.size()); ++n)
     {
         // Skip occupied positions
         if (actor_at(rubble_pos[n]))
             continue;
 
-        mgen_data mg(MONS_EARTH_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
+        mgen_data mg(MONS_EARTH_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
                      rubble_pos[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                      MONS_EARTH_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
         mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
@@ -1524,9 +1544,12 @@ static bool _phial_of_floods()
         bool created = false;
         num = min(num_elementals,
                   min((int)elementals.size(), (int)elementals.size() / 5 + 1));
+        beh_type attitude = BEH_FRIENDLY;
+        if (player_will_anger_monster(MONS_WATER_ELEMENTAL))
+            attitude = BEH_HOSTILE;
         for (int n = 0; n < num; ++n)
         {
-            mgen_data mg (MONS_WATER_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, &you, 3,
                           SPELL_NO_SPELL, elementals[n], 0,
                           MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                           MONS_WATER_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
@@ -1562,6 +1585,12 @@ bool evoke_item(int slot, bool check_range)
     {
         canned_msg(MSG_TOO_BERSERK);
         return false;
+    }
+    else if (player_mutation_level(MUT_NO_ARTIFICE)
+             && (slot == -1 || slot != you.equip[EQ_WEAPON]
+                            || weapon_reach(*you.weapon()) <= 2))
+    {
+        return mpr("You cannot evoke magical items."), false;
     }
 
     if (slot == -1)
@@ -1691,6 +1720,9 @@ bool evoke_item(int slot, bool check_range)
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
+
+        if (player_mutation_level(MUT_NO_ARTIFICE))
+            return mpr("You cannot evoke magical items."), false;
 
         if (is_deck(item))
         {

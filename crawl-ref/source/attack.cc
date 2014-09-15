@@ -229,6 +229,10 @@ int attack::calc_to_hit(bool random)
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
 
+        // horror penalty
+        if (you.duration[DUR_HORROR])
+            mhit -= you.props["horror_penalty"].get_int();
+
         // hunger penalty
         if (you.hunger_state == HS_STARVING)
             mhit -= 3;
@@ -236,7 +240,7 @@ int attack::calc_to_hit(bool random)
         // armour penalty
         mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
-        //mutation
+        // mutation
         if (player_mutation_level(MUT_EYEBALLS))
             mhit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
 
