@@ -2816,10 +2816,9 @@ bool bolt::can_affect_wall(dungeon_feature_type wall) const
                || wall == DNGN_SLIMY_WALL
                || wall == DNGN_CLEAR_ROCK_WALL
                || wall == DNGN_GRATE
-               || wall == DNGN_GRANITE_STATUE
-               || wall == DNGN_ORCISH_IDOL
                || wall == DNGN_CLOSED_DOOR
                || wall == DNGN_RUNED_DOOR
+               || feat_is_statuelike(wall)
                || feat_is_tree(wall);
     }
 

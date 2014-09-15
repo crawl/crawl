@@ -3843,7 +3843,7 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
            || feat_is_stone_stair(feat)
            || feat_is_escape_hatch(feat)
            || feat_is_trap(feat)
-           || feat_is_statue_or_idol(feat);
+           || feat_is_statuelike(feat);
 }
 
 void hints_describe_pos(int x, int y)
