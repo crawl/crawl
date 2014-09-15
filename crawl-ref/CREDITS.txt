@@ -128,6 +128,7 @@
     Chris Hamons
     Taylor Hedberg
     Anders Heggestøyl
+    Alex Henry
     R. Dan Henry
     Chris Honey
     Sylvia 'Onia' Hörnke
