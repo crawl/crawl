@@ -2355,11 +2355,12 @@ void handle_monster_move(monster* mons)
                         if (r < chance)
                         {
                             simple_monster_message(mons,
-                                " is stunned by your will and fails to attack.");
+                                " is stunned by your will and fails to attack.",
+                                MSGCH_GOD);
                             mons->speed_increment -= non_move_energy;
                             return;
                         }
-                        // redirect maxes at 3%, given the above
+                        // redirect maxes at 5%, given the above
                         else if (r < chance + div_rand_round(chance, 2))
                         {
                             // get a target
@@ -2386,7 +2387,7 @@ void handle_monster_move(monster* mons)
                     // attack that target
                     mons->target = new_target->pos();
                     mons->foe = new_target->mindex();
-                    mprf("You redirect %s's attack!",
+                    mprf(MSGCH_GOD, "You redirect %s's attack!",
                     mons->name(DESC_THE, true).c_str());
                     fight_melee(mons, new_target);
                 }
