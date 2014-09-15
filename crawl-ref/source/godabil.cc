@@ -1219,7 +1219,7 @@ bool zin_sanctuary()
     else
         mpr("You are suddenly bathed in radiance!");
 
-    flash_view(WHITE);
+    flash_view(UA_PLAYER, WHITE);
 
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 
@@ -3338,7 +3338,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     const coord_def old_pos = you.pos();
 
     mpr("You step out of the flow of time.");
-    flash_view(LIGHTBLUE);
+    flash_view(UA_PLAYER, LIGHTBLUE);
     you.moveto(coord_def(0, 0));
     you.duration[DUR_TIME_STEP] = pow;
 
@@ -3369,7 +3369,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
 
-    flash_view(0);
+    flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
 }
 

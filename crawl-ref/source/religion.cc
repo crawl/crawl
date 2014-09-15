@@ -3277,7 +3277,7 @@ static void _god_welcome_handle_gear()
     if (amulet && amulet->sub_type == AMU_FAITH)
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
-        flash_view_delay(god_colour(you.religion), 300);
+        flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
     }
 
     if (you_worship(GOD_ASHENZARI))

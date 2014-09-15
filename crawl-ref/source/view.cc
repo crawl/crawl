@@ -783,7 +783,7 @@ void view_update_at(const coord_def &pos)
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
-    if (you.can_see(mon))
+    if ((Options.use_animations & UA_PLAYER) && you.can_see(mon))
     {
         colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
@@ -811,18 +811,25 @@ bool view_update()
     return false;
 }
 
-void flash_view(colour_t colour, targetter *where)
+void flash_view(use_animation_type a, colour_t colour, targetter *where)
 {
-    you.flash_colour = colour;
-    you.flash_where = where;
-    viewwindow(false);
+    if (Options.use_animations & a)
+    {
+        you.flash_colour = colour;
+        you.flash_where = where;
+        viewwindow(false);
+    }
 }
 
-void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
+void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
+                      targetter *where)
 {
-    flash_view(colour, where);
-    scaled_delay(flash_delay);
-    flash_view(0);
+    if (Options.use_animations & a)
+    {
+        flash_view(a, colour, where);
+        scaled_delay(flash_delay);
+        flash_view(a, 0);
+    }
 }
 
 static void _debug_pane_bounds()
@@ -1186,14 +1193,14 @@ static animation *animations[NUM_ANIMATIONS] = {
     &orb
 };
 
-void run_animation(animation_type anim, bool cleanup)
+void run_animation(animation_type anim, use_animation_type type, bool cleanup)
 {
 #ifdef USE_TILE_WEB
     // XXX this doesn't work in webtiles yet
     if (is_tiles())
         return;
 #endif
-    if (Options.use_animations)
+    if (Options.use_animations & type)
     {
         animation *a = animations[anim];
 

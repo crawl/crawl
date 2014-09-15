@@ -2218,7 +2218,7 @@ static void _brand_weapon(item_def &wpn)
         you.redraw_evasion = true;
         // Might be removing antimagic.
         calc_mp();
-        flash_view_delay(flash_colour, 300);
+        flash_view_delay(UA_PLAYER, flash_colour, 300);
     }
     return;
 }

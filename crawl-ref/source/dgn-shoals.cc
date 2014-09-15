@@ -1265,7 +1265,7 @@ void shoals_release_tide(monster* mons)
             mprf(MSGCH_SOUND, "The tide is released from %s call.",
                  apostrophise(mons->name(DESC_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
-                flash_view_delay(ETC_WATER, 150);
+                flash_view_delay(UA_MONSTER, ETC_WATER, 150);
         }
         shoals_apply_tides(0, true, true);
     }

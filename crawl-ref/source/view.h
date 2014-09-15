@@ -35,8 +35,9 @@ static inline void scaled_delay(unsigned int ms)
 }
 
 // beware, flash_view is broken for USE_TILE_LOCAL
-void flash_view(colour_t colour, targetter *where = NULL);
-void flash_view_delay(colour_t colour, int delay, targetter *where = NULL);
+void flash_view(use_animation_type a, colour_t colour, targetter *where = NULL);
+void flash_view_delay(use_animation_type a, colour_t colour, int delay,
+                      targetter *where = NULL);
 #ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
@@ -63,7 +64,8 @@ public:
     int frame_delay;
 };
 
-void run_animation(animation_type anim, bool cleanup = true);
+void run_animation(animation_type anim, use_animation_type type,
+                   bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
                 animation *a = NULL);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,

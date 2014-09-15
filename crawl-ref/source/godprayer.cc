@@ -166,7 +166,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
 
-    flash_view(colour);
+    flash_view(UA_PLAYER, colour);
 
     simple_god_message(" booms: Use this gift wisely!");
 

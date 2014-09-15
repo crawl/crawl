@@ -1723,7 +1723,7 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (!quiet)
     {
-        flash_view_delay(rune_colour(it.plus), 300);
+        flash_view_delay(UA_PICKUP, rune_colour(it.plus), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.plus));
         int nrunes = runes_in_pack();
@@ -1760,7 +1760,7 @@ static void _get_rune(const item_def& it, bool quiet)
  */
 static void _get_orb(const item_def &it, bool quiet)
 {
-    run_animation(ANIMATION_ORB);
+    run_animation(ANIMATION_ORB, UA_PICKUP);
 
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
     you.char_direction = GDT_ASCENDING;

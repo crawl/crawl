@@ -948,7 +948,7 @@ char mlist_index_to_letter(int index)
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (Options.darken_beyond_range && range)
+    if ((Options.use_animations & UA_RANGE) && range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -957,7 +957,7 @@ range_view_annotator::range_view_annotator(targetter *range)
 
 range_view_annotator::~range_view_annotator()
 {
-    if (Options.darken_beyond_range && crawl_state.darken_range)
+    if ((Options.use_animations & UA_RANGE) && crawl_state.darken_range)
     {
         crawl_state.darken_range = NULL;
         viewwindow(false);
@@ -966,7 +966,7 @@ range_view_annotator::~range_view_annotator()
 
 monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
 {
-    if (monsters->size())
+    if ((Options.use_animations & UA_MONSTER_IN_SIGHT) && monsters->size())
     {
         crawl_state.flash_monsters = monsters;
         viewwindow(false);
@@ -975,7 +975,8 @@ monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
 
 monster_view_annotator::~monster_view_annotator()
 {
-    if (crawl_state.flash_monsters)
+    if ((Options.use_animations & UA_MONSTER_IN_SIGHT)
+        && crawl_state.flash_monsters)
     {
         crawl_state.flash_monsters = NULL;
         viewwindow(false);

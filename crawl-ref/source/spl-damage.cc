@@ -682,10 +682,10 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         fail_check();
 
         mpr(player_msg);
-        flash_view(flash_colour, &hitfunc);
+        flash_view(UA_PLAYER, flash_colour, &hitfunc);
         more();
         clear_messages();
-        flash_view(0);
+        flash_view(UA_PLAYER, 0);
     }
     else if (actual)
     {
@@ -696,7 +696,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
 
-        flash_view_delay(flash_colour, 300);
+        flash_view_delay(UA_MONSTER, flash_colour, 300);
     }
 
     bool affects_you = false;
@@ -1298,7 +1298,7 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
-    run_animation(ANIMATION_SHAKE_VIEWPORT);
+    run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
 
     int dest = 0;
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
@@ -1392,7 +1392,7 @@ bool mons_shatter(monster* caster, bool actual)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
     if (actual)
-        run_animation(ANIMATION_SHAKE_VIEWPORT);
+        run_animation(ANIMATION_SHAKE_VIEWPORT, UA_MONSTER);
 
     if (!caster->wont_attack())
         foes *= -1;
@@ -1828,7 +1828,11 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
     }
 
     targetter_los hitfunc(agent, LOS_NO_TRANS);
-    flash_view_delay(RED, 100, &hitfunc);
+    flash_view_delay(
+        agent->is_player()
+            ? UA_PLAYER
+            : UA_MONSTER,
+        RED, 100, &hitfunc);
 
     mprf("%s %s the poison in %s surroundings!", agent->name(DESC_THE).c_str(),
          agent->conj_verb("ignite").c_str(),
@@ -2788,7 +2792,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
 
         you.increase_duration(DUR_TOXIC_RADIANCE, 3 + random2(pow/20), 15);
 
-        flash_view_delay(GREEN, 300, &hitfunc);
+        flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
 
         return SPRET_SUCCESS;
     }
@@ -2815,7 +2819,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
                                         (5 + random2avg(pow/15, 2)) * BASELINE_DELAY));
 
         targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
-        flash_view_delay(GREEN, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
 
         return SPRET_SUCCESS;
     }
