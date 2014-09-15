@@ -3014,25 +3014,30 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             int r = random2(100);
             int chance = div_rand_round(you.piety, 16);
+            // 10% chance of stopping any attack
             if (r < chance)
             {
                 if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
                 {
                     simple_monster_message(mons,
-                        " begins to cast a spell, but is stunned by your will!");
+                        " begins to cast a spell, but is stunned by your will!",
+                        MSGCH_GOD);
                 }
                 else if (mons_class_flag(mons->type, M_PRIEST))
                     simple_monster_message(mons,
-                        " begins to pray, but is stunned by your will!");
+                        " begins to pray, but is stunned by your will!",
+                        MSGCH_GOD);
                 else
                     simple_monster_message(mons,
-                        " begins to attack, but is stunned by your will!");
+                        " begins to attack, but is stunned by your will!",
+                        MSGCH_GOD);
                 mons->lose_energy(EUT_SPELL);
                 return true;
             }
+            // 5% chance of redirect
             else if (r < chance + div_rand_round(chance, 2))
             {
-                mprf("You redirect %s's attack!",
+                mprf(MSGCH_GOD, "You redirect %s's attack!",
                         mons->name(DESC_THE, true).c_str());
                 int pfound = 0;
                 for (radius_iterator ri(you.pos(),
