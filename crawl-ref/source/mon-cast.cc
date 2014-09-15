@@ -23,6 +23,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -3008,6 +3009,57 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
         }
 
+        bool ignore_good_idea = false;
+        if (does_ru_wanna_redirect(mons))
+        {
+            int r = random2(100);
+            int chance = div_rand_round(you.piety, 16);
+            if (r < chance)
+            {
+                if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+                {
+                    simple_monster_message(mons,
+                        " begins to cast a spell, but is stunned by your will!");
+                }
+                else if (mons_class_flag(mons->type, M_PRIEST))
+                    simple_monster_message(mons,
+                        " begins to pray, but is stunned by your will!");
+                else
+                    simple_monster_message(mons,
+                        " begins to attack, but is stunned by your will!");
+                mons->lose_energy(EUT_SPELL);
+                return true;
+            }
+            else if (r < chance + div_rand_round(chance, 2))
+            {
+                mprf("You redirect %s's attack!",
+                        mons->name(DESC_THE, true).c_str());
+                int pfound = 0;
+                for (radius_iterator ri(you.pos(),
+                    LOS_DEFAULT); ri; ++ri)
+                {
+                    monster* new_target = monster_at(*ri);
+
+                    if (new_target == NULL
+                        || mons_is_projectile(new_target->type)
+                        || mons_is_firewood(new_target))
+                    {
+                        continue;
+                    }
+
+                    ASSERT(new_target);
+
+                    if (one_chance_in(++pfound))
+                    {
+                        mons->target = new_target->pos();
+                        mons->foe = new_target->mindex();
+                        beem.target = mons->target;
+                        ignore_good_idea = true;
+                    }
+                }
+            }
+        }
+
         if (!finalAnswer)
         {
             // If nothing found by now, safe friendlies and good
@@ -3181,7 +3233,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spell_is_direct_explosion(spell_cast);
                     fire_tracer(mons, beem, explode);
                     // Good idea?
-                    if (mons_should_fire(beem))
+                    if (mons_should_fire(beem, ignore_good_idea))
                         spellOK = true;
                 }
                 else

@@ -2505,7 +2505,7 @@ string monster::name(description_level_type desc, bool force_vis,
 #ifdef DEBUG_MONSTERS
     // This is incredibly spammy, too bad for regular debug builds, but
     // I keep re-adding this over and over during debugging.
-           + make_stringf("«%d:%d»", mindex(), mid)
+           + make_stringf("Â«%d:%dÂ»", mindex(), mid)
 #endif
     ;
 }

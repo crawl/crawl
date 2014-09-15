@@ -2788,7 +2788,7 @@ static int _get_spell_description(const spell_type spell,
 
     bool form = false;
     if (you_cannot_memorise(spell, form))
-        description += "\n" + desc_cannot_memorise_reason(form) + "\n";
+        description += "\n" + desc_cannot_memorise_reason(spell, form) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
@@ -4328,6 +4328,10 @@ static const char *divine_title[NUM_GODS][8] =
     // Qazlal -- natural disaster theme
     {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
      "Eye of the Storm",   "%s Catastrophe",        "%s Cataclysm",             "End of an Era"},
+
+    // Ru -- enlightenment theme
+    {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
+     "Walker of the Path","Lifter of the Veil",     "Drinker of Unreality",     "Transcendent"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)

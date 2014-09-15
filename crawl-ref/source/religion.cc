@@ -232,6 +232,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " is consumed by the earth.",
         " is consumed by a violent tear in the earth.",
     },
+    // Ru
+    {
+        " disappears in a small burst of power.",
+        " disappears in a burst of power",
+        " disappears in an immense burst of power",
+    },
 };
 
 /**
@@ -370,6 +376,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "You adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
+    //Ru
+    { "You exude an aura of power that intimidates your foes.",
+      "Your aura of power can strike those that harm you.",
+      "heal your body and restore your magic",
+      "gather your power into a mighty leap",
+      "wreak a terrible wrath on your foes"
+    },
 };
 
 /**
@@ -507,6 +520,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "give life to nearby clouds",
       "You no longer adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
+    },
+    //Ru
+    { "You no longer exude an aura of power that intimidates your foes.",
+      "Your aura of power no longer strikes those that harm you.",
+      "use your power to heal your body and restore your magic",
+      "gather your power into a mighty leap",
+      "wreak a terrible wrath on all visible foes"
     },
 };
 
@@ -654,6 +674,10 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_GOZAG:
         likes.push_back("you collect gold");
         break;
+
+    case GOD_RU:
+      likes.push_back("you make personal sacrifices");
+      break;
 
     default:
         break;
@@ -1045,6 +1069,7 @@ bool active_penance(god_type god)
            && !is_unavailable_god(god)
            && god != GOD_ASHENZARI
            && god != GOD_GOZAG
+           && god != GOD_RU
            && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
@@ -2055,6 +2080,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
+    case GOD_RU:        return "Ru";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -2294,6 +2320,10 @@ void set_piety(int piety)
     ASSERT(piety >= 0);
     ASSERT(piety <= MAX_PIETY);
 
+    // Ru max piety is 6*
+    if (you_worship(GOD_RU) && piety > piety_breakpoint(5))
+        piety = piety_breakpoint(5);
+
     // We have to set the exact piety value this way, because diff may
     // be decreased to account for things like penance and gift timeout.
     int diff;
@@ -2338,7 +2368,7 @@ static void _gain_piety_point()
     }
 
     // slow down gain at upper levels of piety
-    if (!you_worship(GOD_SIF_MUNA))
+    if (!you_worship(GOD_SIF_MUNA) && !you_worship(GOD_RU))
     {
         if (you.piety >= MAX_PIETY
             || you.piety >= piety_breakpoint(5) && one_chance_in(3)
@@ -2348,7 +2378,7 @@ static void _gain_piety_point()
             return;
         }
     }
-    else
+    else if (you_worship(GOD_SIF_MUNA))
     {
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
@@ -2358,6 +2388,13 @@ static void _gain_piety_point()
             do_god_gift();
             return;
         }
+    }
+    else
+    {
+      // Ru piety doesn't modulate or taper and Ru doesn't give gifts.
+      // Ru max piety is 160 (6*)
+      if (you.piety >= piety_breakpoint(5))
+          return;
     }
 
     int old_piety = you.piety;
@@ -3313,6 +3350,25 @@ static void _god_welcome_handle_gear()
     }
 }
 
+/* Make a CrawlStoreValue an empty vector with the requested item type.
+ * It is an error if the value already had a different type.
+ */
+static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
+{
+    const store_val_type currtype = v.get_type();
+    ASSERT(currtype == SV_NONE || currtype == SV_VEC);
+
+    if (currtype == SV_NONE)
+        v.new_vector(vectype);
+    else
+    {
+        CrawlVector &vec = v.get_vector();
+        const store_val_type old_vectype = vec.get_type();
+        ASSERT(old_vectype == SV_NONE || old_vectype == vectype);
+        vec.clear();
+    }
+}
+
 void join_religion(god_type which_god, bool immediate)
 {
     redraw_screen();
@@ -3332,6 +3388,19 @@ void join_religion(god_type which_god, bool immediate)
         // Xom uses piety and gift_timeout differently.
         you.piety = HALF_MAX_PIETY;
         you.gift_timeout = random2(40) + random2(40);
+    }
+    else if (you_worship(GOD_RU))
+    {
+        you.piety = 10; // one moderate sacrifice should get you to *.
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+        _make_empty_vec(you.props["available_sacrifices"], SV_INT);
+        _make_empty_vec(you.props["current_health_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_essence_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_purity_sacrifice"], SV_INT);
+        _make_empty_vec(you.props["current_arcane_sacrifices"], SV_INT);
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props["ru_sacrifice_delay"] = 50; // offer the first sacrifice fast
     }
     else
     {
@@ -3512,7 +3581,10 @@ void join_religion(god_type which_god, bool immediate)
     if (you.char_class == JOB_MONK && had_gods() <= 1)
     {
         // monks get bonus piety for first god
-        gain_piety(35, 1, false);
+        if (you_worship(GOD_RU))
+            you.props["ru_progress_to_next_sacrifice"] = 100;
+        else
+            gain_piety(35, 1, false);
     }
 
     if (you_worship(GOD_LUGONU) && you.worshipped[GOD_LUGONU] == 1)
@@ -3750,6 +3822,10 @@ bool god_likes_your_god(god_type god, god_type your_god)
 
 bool god_hates_your_god(god_type god, god_type your_god)
 {
+    // Ru doesn't care.
+    if (god == GOD_RU)
+        return false;
+
     // Gods do not hate themselves.
     if (god == your_god)
         return false;
@@ -3979,6 +4055,8 @@ void handle_god_time(int time_delta)
     // Update the god's opinion of the player.
     if (!you_worship(GOD_NO_GOD))
     {
+        int added_delay;
+        int delay;
         switch (you.religion)
         {
         case GOD_OKAWARU:
@@ -4035,6 +4113,34 @@ void handle_god_time(int time_delta)
             // These gods do not lose piety  over time but we need a case here
             // to avoid the error message below.
             break;
+
+        case GOD_RU:
+            ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
+            ASSERT(you.props.exists("ru_sacrifice_delay"));
+
+            delay = you.props["ru_sacrifice_delay"].get_int();
+            if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
+            {
+                if (you.piety < piety_breakpoint(5)) // 6* is max piety for Ru
+                {
+                    ru_offer_new_sacrifices();
+
+                    simple_god_message(" believes you are ready to make a new sacrifice.");
+                    more();
+
+                    // raise the delay if there's an active sacrifice, and more
+                    // so the more often you pass on a sacrifice and the more
+                    // piety you have.
+                    added_delay = div_rand_round((90 + max(100,
+                        static_cast<int>(you.piety))
+                        - 100) * (3 + you.faith()), 9);
+                    you.props["ru_sacrifice_delay"] = delay + added_delay;
+
+                }
+                you.props["ru_progress_to_next_sacrifice"] = 0;
+            }
+            break;
+            return;
 
         case GOD_GOZAG:
         case GOD_XOM:
@@ -4101,6 +4207,7 @@ int god_colour(god_type god) // mv - added
         return MAGENTA;
 
     case GOD_QAZLAL:
+    case GOD_RU:
         return BROWN;
 
     case GOD_NO_GOD:
@@ -4184,6 +4291,7 @@ colour_t god_message_altar_colour(god_type god)
         return coinflip() ? YELLOW : BROWN;
 
     case GOD_QAZLAL:
+    case GOD_RU:
         return BROWN;
 
     default:

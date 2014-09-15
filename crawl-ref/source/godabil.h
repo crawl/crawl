@@ -109,4 +109,16 @@ spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
+
+const skill_type arcane_mutation_to_skill(mutation_type mutation);
+const char* arcane_mutation_to_school_name(mutation_type mutation);
+vector<ability_type> get_possible_sacrifices();
+void ru_offer_new_sacrifices();
+bool ru_do_sacrifice(ability_type sacrifice);
+void ru_expire_sacrifices();
+bool will_ru_retaliate();
+void ru_do_retribution(monster* mons, int damage);
+void ru_draw_out_power();
+bool ru_power_leap();
+bool ru_cataclysm();
 #endif

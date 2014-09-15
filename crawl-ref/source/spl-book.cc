@@ -507,7 +507,7 @@ bool you_cannot_memorise(spell_type spell)
 
 // form is set to true if a form (lich) prevents us from
 // memorising the spell.
-bool you_cannot_memorise(spell_type spell, bool &form)
+bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
 {
     bool rc = false;
 
@@ -593,25 +593,48 @@ bool you_cannot_memorise(spell_type spell, bool &form)
         rc = true, form = false;
     }
 
-    if (spell == SPELL_SUBLIMATION_OF_BLOOD)
-    {
-        // XXX: Using player::cannot_bleed will incorrectly
-        // catch statue- or lich-formed players.
-        if (you.species == SP_GARGOYLE
-            || you.species == SP_GHOUL
-            || you.species == SP_MUMMY)
-        {
-            rc = true;
-            form = false;
-        }
-        else if (!form_can_bleed(you.form))
-        {
-            rc = true;
-            form = true;
-        }
-    }
+    // Check for banned schools (Currently just Ru sacrifices)
+    if (cannot_use_spell_school(spell, evoked))
+        return true;
 
     return rc;
+}
+
+bool cannot_use_spell_school(spell_type spell, bool evoked)
+{
+    if (evoked)
+        return false;
+
+    if (
+           (spell_typematch(spell, SPTYP_AIR)
+            && player_mutation_level(MUT_NO_AIR_MAGIC))
+        || (spell_typematch(spell, SPTYP_CHARMS)
+            && player_mutation_level(MUT_NO_CHARM_MAGIC))
+        || (spell_typematch(spell, SPTYP_CONJURATION)
+            && player_mutation_level(MUT_NO_CONJURATION_MAGIC))
+        || (spell_typematch(spell, SPTYP_EARTH)
+            && player_mutation_level(MUT_NO_EARTH_MAGIC))
+        || (spell_typematch(spell, SPTYP_FIRE)
+            && player_mutation_level(MUT_NO_FIRE_MAGIC))
+        || (spell_typematch(spell, SPTYP_HEXES)
+            && player_mutation_level(MUT_NO_HEXES_MAGIC))
+        || (spell_typematch(spell, SPTYP_ICE)
+            && player_mutation_level(MUT_NO_ICE_MAGIC))
+        || (spell_typematch(spell, SPTYP_NECROMANCY)
+            && player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        || (spell_typematch(spell, SPTYP_POISON)
+            && player_mutation_level(MUT_NO_POISON_MAGIC))
+        || (spell_typematch(spell, SPTYP_SUMMONING)
+            && player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+        || (spell_typematch(spell, SPTYP_TRANSLOCATION)
+            && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
+        || (spell_typematch(spell, SPTYP_TRANSMUTATION)
+            && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
+        )
+    {
+        return true;
+    }
+    return false;
 }
 
 bool player_can_memorise(const item_def &book)
@@ -774,6 +797,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     unsigned int num_known      = 0;
                  num_race       = 0;
+    unsigned int num_restricted = 0;
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
@@ -787,7 +811,12 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (spell == current_spell || you.has_spell(spell))
             num_known++;
         else if (you_cannot_memorise(spell, form))
-            num_race++;
+        {
+            if (cannot_use_spell_school(spell))
+                num_restricted++;
+            else
+                num_race++;
+        }
         else
         {
             mem_spells.push_back(spell);
@@ -812,11 +841,18 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (just_check)
         return num_low_levels > 0 || num_low_xl > 0;
 
-    unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
+    unsigned int total = num_known + num_race + num_low_xl + num_low_levels
+            + num_restricted;
 
     if (num_known == total)
         mprf(MSGCH_PROMPT, "You already know all available spells.");
-    else if (num_race == total || (num_known + num_race) == total)
+    else if (num_restricted == total || num_restricted + num_known == total)
+    {
+        mpr("You cannot currently memorise any of the available "
+             "spells because you cannot use those schools of magic.");
+    }
+    else if (num_race == total || (num_known + num_race) == total
+            || num_race + num_known + num_restricted == total)
     {
         if (form)
         {
@@ -1146,19 +1182,17 @@ bool learn_spell()
 }
 
 // Returns a string about why a character can't memorise a spell.
-string desc_cannot_memorise_reason(bool form)
+string desc_cannot_memorise_reason(spell_type spell, bool form)
 {
-    string desc = "You cannot ";
-    if (form)
-        desc += "currently ";
-    desc += "memorise or cast this spell because you are ";
-
-    if (form)
-        desc += "in " + uppercase_first(transform_name()) + " form";
+    string desc;
+    if (cannot_use_spell_school(spell))
+        desc = "You cannot memorise or cast this type of magic.";
     else
+    {
         desc += article_a(species_name(you.species));
 
-    desc += ".";
+        desc += ".";
+    }
 
     return desc;
 }
@@ -1181,7 +1215,7 @@ static bool _learn_spell_checks(spell_type specspell)
     bool form = false;
     if (you_cannot_memorise(specspell, form))
     {
-        mpr(desc_cannot_memorise_reason(form).c_str());
+        mpr(desc_cannot_memorise_reason(specspell, form).c_str());
         return false;
     }
 
@@ -1427,8 +1461,7 @@ int rod_spell(int rod, bool check_range)
     // All checks passed, we can cast the spell.
     if (you.confused())
         random_uselessness();
-    else if (your_spells(spell, power, false)
-                == SPRET_ABORT)
+    else if (your_spells(spell, power, false, true) == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return -1;

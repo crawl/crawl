@@ -2339,14 +2339,59 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->withdrawn())
             {
+                monster* new_target = 0;
                 if (!mons->wont_attack())
                 {
-                    // If it steps into you, cancel other targets.
+                    // Otherwise, if it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
+
+                    // Check to see if your religion redirects the attack
+                    if (does_ru_wanna_redirect(mons))
+                    {
+                        int r = random2(100);
+                        int chance = div_rand_round(you.piety, 16);
+                        // stun chance maxes at 10%
+                        if (r < chance)
+                        {
+                            simple_monster_message(mons,
+                                " is stunned by your will and fails to attack.");
+                            mons->speed_increment -= non_move_energy;
+                            return;
+                        }
+                        // redirect maxes at 3%, given the above
+                        else if (r < chance + div_rand_round(chance, 2))
+                        {
+                            // get a target
+                            int pfound = 0;
+                            for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+                            {
+                                monster* candidate = monster_at(*ai);
+                                if (candidate == NULL
+                                    || mons_is_projectile(candidate->type)
+                                    || mons_is_firewood(candidate))
+                                {
+                                    continue;
+                                }
+                                ASSERT(candidate);
+                                if (one_chance_in(++pfound))
+                                    new_target = candidate;
+                            }
+                        }
+                    }
                 }
 
-                fight_melee(mons, &you);
+                if (new_target)
+                {
+                    // attack that target
+                    mons->target = new_target->pos();
+                    mons->foe = new_target->mindex();
+                    mprf("You redirect %s's attack!",
+                    mons->name(DESC_THE, true).c_str());
+                    fight_melee(mons, new_target);
+                }
+                else
+                    fight_melee(mons, &you);
 
                 if (mons_is_batty(mons))
                 {

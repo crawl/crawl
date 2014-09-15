@@ -648,6 +648,22 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
+static void _maybe_ru_retribution(int dam, int death_source)
+{
+    if (will_ru_retaliate())
+    {
+        // Cap damage to what was enough to kill you.  Can matter if
+        // you have an extra kitty.
+        if (you.hp < 0)
+            dam += you.hp;
+
+        if (dam <= 0 || invalid_monster_index(death_source))
+            return;
+        (new ru_retribution_fineff(
+            &menv[death_source], &you, dam))->schedule();
+    }
+}
+
 static void _maybe_spawn_jellies(int dam, const char* aux,
                                   kill_method_type death_type, int death_source)
 {
@@ -867,7 +883,33 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     interrupt_activity(AI_HP_LOSS, &hpl);
 
     if (dam > 0 && death_type != KILLED_BY_POISON)
+    {
         you.check_awaken(500);
+
+        if (player_mutation_level(MUT_NO_READ))
+        {
+            // chance of status increases with low hp
+            // guaranteed at under 15% hp
+            if (random2(100) < max(0, 115 -
+                div_rand_round(you.hp * 100, you.hp_max)))
+            {
+                you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
+                mpr("You feel threatened and lose the ability to read scrolls!");
+            }
+        }
+
+        if (player_mutation_level(MUT_NO_DRINK))
+        {
+            // chance of status increases with low hp
+            // guaranteed at under 15% hp
+            if (random2(100) < max(0, 115 -
+                div_rand_round(you.hp * 100, you.hp_max)))
+            {
+                you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
+                mpr("You feel threatened and lose the ability to drink potions!");
+            }
+        }
+    }
 
     const bool non_death = death_type == KILLED_BY_QUITTING
         || death_type == KILLED_BY_WINNING
@@ -948,6 +990,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                            damage_desc.c_str()));
 
             _yred_mirrors_injury(dam, death_source);
+            _maybe_ru_retribution(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
             _maybe_fog(dam);
             _powered_by_pain(dam);

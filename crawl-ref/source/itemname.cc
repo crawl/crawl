@@ -3313,7 +3313,8 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
 
     case OBJ_ARMOUR:
-        return !can_wear_armour(item, false, true);
+        return !can_wear_armour(item, false, true)
+                || (is_shield(item) && player_mutation_level(MUT_MISSING_HAND));
 
     case OBJ_SCROLLS:
 #if TAG_MAJOR_VERSION == 34
@@ -3345,11 +3346,18 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;
+        case SCR_SUMMONING:
+            return player_mutation_level(MUT_NO_LOVE) > 0;
+        case SCR_RECHARGING:
+            return player_mutation_level(MUT_NO_ARTIFICE) > 0;
         default:
             return false;
         }
 
     case OBJ_WANDS:
+        if (player_mutation_level(MUT_NO_ARTIFICE))
+            return true;
+
         if (item.sub_type == WAND_INVISIBILITY
             && item_type_known(item)
                 && _invisibility_is_useless(temp))
@@ -3439,7 +3447,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
-                   || you.species == SP_FORMICID;
+                   || you.species == SP_FORMICID
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         case AMU_STASIS:
             return you.stasis(false, false);
@@ -3484,25 +3493,43 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_TELEPORT_CONTROL:
             return you.species == SP_FORMICID
-                   || crawl_state.game_is_zotdef();
+                   || crawl_state.game_is_zotdef()
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_TELEPORTATION:
             return you.species == SP_FORMICID
-                   || crawl_state.game_is_sprint();
+                   || crawl_state.game_is_sprint()
+                   || player_mutation_level(MUT_NO_ARTIFICE) ;
 
         case RING_INVISIBILITY:
-            return _invisibility_is_useless(temp);
+            return _invisibility_is_useless(temp)
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_FLIGHT:
-            return you.permanent_flight();
+            return you.permanent_flight()
+                   || player_mutation_level(MUT_NO_ARTIFICE);
+
+        case RING_STEALTH:
+            return player_mutation_level(MUT_NO_STEALTH);
 
         default:
             return false;
         }
 
     case OBJ_RODS:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID
+            || player_mutation_level(MUT_NO_ARTIFICE))
+        {
             return true;
+        }
+        switch (item.sub_type)
+        {
+            case ROD_SHADOWS:
+            case ROD_SWARM:
+                return player_mutation_level(MUT_NO_LOVE);
+            default:
+                return false;
+        }
         break;
 
     case OBJ_STAVES:
@@ -3559,8 +3586,18 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BUGGY_EBONY_CASKET:
             return item_type_known(item);
 #endif
-        default:
+        // These can always be used.
+        case MISC_LANTERN_OF_SHADOWS:
+        case MISC_RUNE_OF_ZOT:
             return false;
+
+        case MISC_SACK_OF_SPIDERS:
+        case MISC_BOX_OF_BEASTS:
+            return player_mutation_level(MUT_NO_LOVE)
+                || player_mutation_level(MUT_NO_ARTIFICE);
+
+        default:
+            return player_mutation_level(MUT_NO_ARTIFICE);
         }
 
     case OBJ_BOOKS:

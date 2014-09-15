@@ -308,6 +308,78 @@ void player_reacts_to_monsters()
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
+
+    // If the player is insane, horrify them in proportion
+    // to the scariness of monsters they can see.
+    if (player_mutation_level(MUT_NO_SANITY))
+    {
+        const coord_def& center = you.pos();
+        const int radius = 8;
+        int horror_level = 0;
+        int old_horror_level = 0;
+        if (you.duration[DUR_HORROR])
+            old_horror_level = you.props["horror_penalty"].get_int();
+
+        for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+        {
+            monster* mon = monster_at(*ri);
+
+            if (mon == NULL
+                || mons_is_projectile(mon->type)
+                || mon->friendly()
+                || mons_is_firewood(mon)
+                || mon->submerged()
+                || !you.see_cell(mon->pos())
+                || (mon->invisible() && !you.can_see_invisible()))
+            {
+                continue;
+            }
+
+            ASSERT(mon);
+
+            mon_threat_level_type threat_level = mons_threat_level(mon);
+            if (threat_level == MTHRT_NASTY)
+                horror_level += 3;
+            else if (threat_level == MTHRT_TOUGH)
+                horror_level += 1;
+        }
+
+        // Subtract one from the horror level so that you don't get a message
+        // when a single tough monster appears.
+        horror_level = max(0, horror_level - 1);
+
+        if (horror_level > 0)
+        {
+            if (horror_level > old_horror_level)
+            {
+                if (horror_level > old_horror_level)
+                {
+                    // only show a message on increase
+
+                    if (horror_level > 4)
+                        mpr("Monsters! Monsters everywhere! You have to get out of here!");
+                    else if (horror_level > 2)
+                        mpr("You reel with horror at the sight of these foes!");
+                    else
+                        mpr("You feel a twist of horror at the sight of this foe.");
+                }
+            }
+            // as long as there's still scary enemies, keep the horror going
+            you.props["horror_penalty"] = horror_level;
+            you.set_duration(DUR_HORROR, 1);
+        }
+        else if (you.duration[DUR_HORROR])
+        {
+            you.props["horror_penalty"] = 0;
+            you.set_duration(DUR_HORROR, 0);
+        }
+    }
+    else if (you.duration[DUR_HORROR])
+    {
+        // If the player somehow becomes sane again, we need to handle that too
+        you.props["horror_penalty"] = 0;
+        you.set_duration(DUR_HORROR, 0);
+    }
 }
 
 static bool _check_recite()
@@ -658,6 +730,10 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_NO_POTIONS, delay,
                           you_foodless(true) ? NULL
                                              : "You can drink potions again.",
+                          0, NULL, MSGCH_RECOVERY);
+
+    _decrement_a_duration(DUR_NO_SCROLLS, delay,
+                          "You can read scrolls again.",
                           0, NULL, MSGCH_RECOVERY);
 
     dec_slow_player(delay);

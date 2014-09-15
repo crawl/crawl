@@ -482,6 +482,9 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
 
         const bool two_handed = you.hands_reqd(item_considered) == HANDS_TWO;
 
+        if (two_handed && player_mutation_level(MUT_MISSING_HAND))
+            continue;
+
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
         {
@@ -643,15 +646,16 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 
 static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
 {
-#if TAG_MAJOR_VERSION == 34
     int result;
     do
         result = random2(NUM_RODS);
-    while (result == ROD_WARDING || result == ROD_VENOM);
-    return result;
-#else
-    return random2(NUM_RODS);
+    while (player_mutation_level(MUT_NO_LOVE)
+              && (result == ROD_SWARM || result == ROD_SHADOWS)
+#if TAG_MAJOR_VERSION == 34
+           || result == ROD_WARDING || result == ROD_VENOM
 #endif
+          );
+    return result;
 }
 
 /**
@@ -674,8 +678,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
                                                    // These have charges, so
                                                    // give them a constant
                                                    // weight.
-                                                   8, MISC_BOX_OF_BEASTS,
-                                                   8, MISC_SACK_OF_SPIDERS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  8), MISC_BOX_OF_BEASTS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  8), MISC_SACK_OF_SPIDERS,
                                                    // The player never needs
                                                    // more than one.
     (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
@@ -725,8 +729,9 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
         case WAND_DISINTEGRATION:
         case WAND_POLYMORPH:
-        case WAND_ENSLAVEMENT:
             w = 5; break;
+        case WAND_ENSLAVEMENT:      // useless under Sacrifice Love
+            w = (player_mutation_level(MUT_NO_LOVE) ? 0 : 5); break;
         case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
         case WAND_FROST:
         case WAND_CONFUSION:
@@ -1268,6 +1273,17 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
+        // Pain brand is useless if you've sacrificed Necromacy.
+        if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        {
+            if (get_weapon_brand(acq_item) == SPWPN_PAIN)
+            {
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
+        }
+
         // MT - Check: god-gifted weapons and armour shouldn't kill you.
         // Except Xom.
         if ((agent == GOD_TROG || agent == GOD_OKAWARU)
@@ -1459,6 +1475,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
+    if (player_mutation_level(MUT_NO_ARTIFICE))
+    {
+        bad_class.set(OBJ_MISCELLANY);
+        bad_class.set(OBJ_WANDS);
+    }
+
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
     static struct { object_class_type type; const char* name; } acq_classes[] =

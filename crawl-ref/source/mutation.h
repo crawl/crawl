@@ -51,6 +51,7 @@ enum mut_use_type // Which gods/effects use these mutations?
     MU_USE_QAZLAL,   // qazlal wrath
     MU_USE_XOM,      // xom being xom
     MU_USE_CORRUPT,  // wretched stars
+    MU_USE_RU,   // Ru sacrifice muts
     NUM_MU_USE
 };
 
@@ -62,6 +63,7 @@ enum mut_use_type // Which gods/effects use these mutations?
 #define MUTFLAG_QAZLAL  MFLAG(MU_USE_QAZLAL)
 #define MUTFLAG_XOM     MFLAG(MU_USE_XOM)
 #define MUTFLAG_CORRUPT MFLAG(MU_USE_CORRUPT)
+#define MUTFLAG_RU  MFLAG(MU_USE_RU)
 
 struct mutation_def
 {
@@ -110,7 +112,7 @@ void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
-int how_mutated(bool all = false, bool levels = false);
+int how_mutated(bool innate = false, bool levels = false);
 
 void check_demonic_guardian();
 void check_monster_detect();

@@ -17,6 +17,7 @@
 #include "dbg-util.h"
 #include "env.h"
 #include "food.h"
+#include "godabil.h"
 #include "godprayer.h"
 #include "godwrath.h"
 #include "itemname.h"
@@ -416,6 +417,11 @@ void wizard_set_piety_to(int newpiety, bool force)
     if (newpiety < 0 || newpiety > MAX_PIETY)
     {
         mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
+        return;
+    }
+    if (newpiety > piety_breakpoint(5) && you_worship(GOD_RU))
+    {
+        mprf("Ru piety can't be greater than %d.", piety_breakpoint(5));
         return;
     }
 
@@ -991,6 +997,16 @@ void wizard_get_god_gift()
     if (you_worship(GOD_NO_GOD))
     {
         mpr("You are not religious!");
+        return;
+    }
+
+    if (you_worship(GOD_RU))
+    {
+        ru_offer_new_sacrifices();
+        simple_god_message(" believes you are ready to make a new sacrifice.");
+        more();
+        you.props["ru_sacrifice_delay"] = 70;
+        you.props["ru_progress_to_next_sacrifice"] = 0;
         return;
     }
 

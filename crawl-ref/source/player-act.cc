@@ -428,8 +428,12 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item) == HANDS_TWO;
 
-    if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
+    if (two_handed && (
+        (!ignore_shield && player_wearing_slot(EQ_SHIELD))
+        || player_mutation_level(MUT_MISSING_HAND)))
+    {
         return false;
+    }
 
     return could_wield(item, ignore_brand, ignore_transform);
 }
@@ -481,6 +485,12 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     {
         if (!quiet)
             mpr("That's too large for you to wield.");
+        return false;
+    }
+
+    if (player_mutation_level(MUT_MISSING_HAND)
+        && you.hands_reqd(item) == HANDS_TWO)
+    {
         return false;
     }
 
@@ -571,6 +581,9 @@ string player::hand_name(bool plural, bool *can_plural) const
 
     if (str.empty())
         return plural ? "hands" : "hand";
+
+    if (player_mutation_level(MUT_MISSING_HAND))
+        *can_plural = false;
 
     if (plural && *can_plural)
         str = pluralise(str);
@@ -686,14 +699,22 @@ string player::unarmed_attack_name() const
         break;
     case TRAN_STATUE:
         if (has_usable_claws(true))
-            text = "Stone claws";
+            text = "Stone claw";
         else if (has_usable_tentacles(true))
+        {
             text = "Stone tentacles";
+            break;
+        }
         else
-            text = "Stone fists";
+            text = "Stone fist";
+        if (!player_mutation_level(MUT_MISSING_HAND))
+            text = pluralise(text);
         break;
     case TRAN_ICE_BEAST:
-        text = "Ice fists (freeze)";
+        if (player_mutation_level(MUT_MISSING_HAND))
+            text = "Ice fist (freeze)";
+        else
+            text = "Ice fists (freeze)";
         break;
     case TRAN_DRAGON:
         text = "Teeth and claws";

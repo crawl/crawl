@@ -249,6 +249,11 @@ A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes and open
 it like any other door (i.e., by walking into it or pressing ‘O’).
 %%%%
+A sacrificial altar of Ru
+
+This altar to Ru the Awakened is engraved with an open eye and a sacrificial
+knife.
+%%%%
 A sealed door
 
 A door sealed tightly by arcane runes. It refuses to open for any creature not

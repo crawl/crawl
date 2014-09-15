@@ -184,9 +184,15 @@ void ash_check_bondage(bool msg)
             s = ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
+        // Missing hands mean fewer rings
+        else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING &&
+                    player_mutation_level(MUT_MISSING_HAND))
+            continue;
         // Octopodes don't count these slots:
         else if (you.species == SP_OCTOPODE &&
-                 (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+                 ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
+                    || (i == EQ_RING_EIGHT
+                        && player_mutation_level(MUT_MISSING_HAND))))
         {
             continue;
         }
@@ -208,7 +214,8 @@ void ash_check_bondage(bool msg)
                 const item_def& item = you.inv[you.equip[i]];
                 if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
                 {
-                    if (s == ET_WEAPON && _two_handed())
+                    if (s == ET_WEAPON && (_two_handed() ||
+                        player_mutation_level(MUT_MISSING_HAND)))
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;
@@ -827,4 +834,15 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
+}
+
+bool does_ru_wanna_redirect(monster* mon)
+{
+    return you_worship(GOD_RU)
+            && you.piety >= piety_breakpoint(0)
+            && !mon->friendly()
+            && you.see_cell(mon->pos())
+            && !mons_is_firewood(mon)
+            && !mon->submerged()
+            && !mons_is_projectile(mon->type);
 }

@@ -970,6 +970,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level;
                 retval = true;
             }
+            else if (you_worship(GOD_RU))
+            {
+                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
+                if (one_chance_in(100))
+                {
+                    int current_progress =
+                        you.props["ru_progress_to_next_sacrifice"]
+                            .get_int();
+                    you.props["ru_progress_to_next_sacrifice"] =
+                        current_progress + 1;
+                }
+            }
             break;
 
         case DID_SEE_MONSTER:
@@ -1043,6 +1055,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_SACRIFICE_LOVE:
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1114,6 +1127,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
                 "Illuminate", "Kill Illuminating", "Fire", "Kill Fiery",
+                "Sacrificed Love"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

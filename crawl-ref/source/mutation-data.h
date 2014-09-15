@@ -198,7 +198,7 @@ static const mutation_def mut_data[] =
    "Your rate of healing slows."},
 },
 
-{ MUT_SLOW_HEALING,                   3,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
+{ MUT_SLOW_HEALING,                   3,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
   "slow healing",
 
   {"You heal slowly when monsters are visible.",
@@ -246,7 +246,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_WEAK,                          8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
+{ MUT_WEAK,                          8, 2,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
   "weak",
   {"You are weak. (Str -2)",
    "You are very weak. (Str -4)", ""},
@@ -254,7 +254,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_DOPEY,                         8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
+{ MUT_DOPEY,                         8, 2,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
   "dopey",
   {"You are dopey. (Int -2)",
    "You are very dopey. (Int -4)", ""},
@@ -262,7 +262,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_CLUMSY,                        8, 2,  MUTFLAG_BAD | MUTFLAG_XOM, false,
+{ MUT_CLUMSY,                        8, 2,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
   "clumsy",
   {"You are clumsy. (Dex -2)",
    "You are very clumsy. (Dex -4)", ""},
@@ -358,7 +358,7 @@ static const mutation_def mut_data[] =
    "Your vision seems duller."},
 },
 
-{ MUT_DEFORMED,                       8,  1,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL, true,
+{ MUT_DEFORMED,                       8,  1,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL | MUTFLAG_RU, true,
   "deformed body",
 
   {"Armour fits poorly on your strangely shaped body.", "", ""},
@@ -464,7 +464,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM,                         6,  3,  MUTFLAG_BAD | MUTFLAG_XOM, false,
+{ MUT_SCREAM,                         6,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
@@ -504,7 +504,7 @@ static const mutation_def mut_data[] =
    "You feel a little less angry."},
 },
 
-{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
+{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
   "deterioration",
 
   {"Your body is slowly deteriorating.",
@@ -568,7 +568,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_FRAIL,                         10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
+{ MUT_FRAIL,                         10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
   "frail",
 
   {"You are frail (-10% HP).",
@@ -858,7 +858,7 @@ static const mutation_def mut_data[] =
    "You feel less energetic."},
 },
 
-{ MUT_LOW_MAGIC,                      9,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
+{ MUT_LOW_MAGIC,                      9,  3,  MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
   "low mp",
 
   {"Your magical capacity is low (-10% MP).",
@@ -1498,6 +1498,230 @@ static const mutation_def mut_data[] =
   {"You are immune to freezing clouds.", "", ""},
   {"You feel less concerned about cold.", "", ""},
   {"", "", ""},
+},
+
+{ MUT_NO_DRINK,                0,  1, MUTFLAG_RU, false,
+  "inability to drink while threatened",
+
+  {"You cannot drink potions while threatened.", "", ""},
+  {"You no longer can drink potions while threatened.", "", ""},
+  {"You can once more drink potions while threatened.", "", ""},
+},
+
+{ MUT_NO_READ,                0,  1, MUTFLAG_RU, false,
+  "inability to read while threatened",
+
+  {"You cannot read scrolls while threatened.", "", ""},
+  {"You can no longer read scrolls while threatened.", "", ""},
+  {"You can once more read scrolls while threatened.", "", ""},
+},
+
+{ MUT_MISSING_HAND,                0,  1, MUTFLAG_RU, false,
+  "missing a hand",
+
+  {"You are missing a hand.", "", ""},
+  {"One of your hands has vanished, leaving only a stump!", "", ""},
+  {"Your stump has regrown into a hand!", "", ""},
+},
+
+{ MUT_NO_STEALTH,                0,  1, MUTFLAG_RU, false,
+  "no stealth",
+
+  {"You cannot be stealthy.", "", ""},
+  {"You can no longer be stealthy.", "", ""},
+  {"You can once more be stealthy.", "", ""},
+},
+
+{ MUT_NO_ARTIFICE,                0,  1, MUTFLAG_RU, false,
+  "inability to use devices",
+
+  {"You cannot study or use magical devices.", "", ""},
+  {"You can no longer study or use magical devices.", "", ""},
+  {"You can once more study and use magical devices.", "", ""},
+},
+
+{ MUT_NO_LOVE,                0,  1, MUTFLAG_RU, false,
+  "hated by all",
+
+  {"You are hated by all.", "", ""},
+  {"You are now hated by all.", "", ""},
+  {"You are no longer hated by all.", "", ""},
+},
+
+{ MUT_NO_SANITY,                0,  1, MUTFLAG_RU, false,
+  "insanity",
+
+  {"You have lost your grip on sanity.", "", ""},
+  {"You have lost your grip on sanity.", "", ""},
+  {"You have regained your grip on sanity.", "", ""},
+},
+
+{ MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
+  "inability to train dodging",
+
+  {"You cannot train Dodging.", "", ""},
+  {"You can no longer train Dodging.", "", ""},
+  {"You can once more train Dodging.", "", ""},
+},
+
+{ MUT_NO_ARMOUR,                0,  1, MUTFLAG_RU, false,
+  "inability to train armour",
+
+  {"You cannot train your Armour skill.", "", ""},
+  {"You can no longer train your Armour skill.", "", ""},
+  {"You can once more train your Armour skill.", "", ""},
+},
+
+{ MUT_NO_AIR_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no air magic",
+
+  {"You cannot study or cast Air magic.", "", ""},
+  {"You can no longer study or cast Air magic.", "", ""},
+  {"You can once more study and cast Air magic.", "", ""},
+},
+
+{ MUT_NO_CHARM_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no charms magic",
+
+  {"You cannot study or cast Charms magic.", "", ""},
+  {"You can no longer study or cast Charms magic.", "", ""},
+  {"You can once more study and cast Charms magic.", "", ""},
+},
+
+{ MUT_NO_CONJURATION_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no conjurations magic",
+
+  {"You cannot study or cast Conjurations magic.", "", ""},
+  {"You can no longer study or cast Conjurations magic.", "", ""},
+  {"You can once more study and cast Conjurations magic.", "", ""},
+},
+
+{ MUT_NO_EARTH_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no earth magic",
+
+  {"You cannot study or cast Earth magic.", "", ""},
+  {"You can no longer study or cast Earth magic.", "", ""},
+  {"You can once more study and cast Earth magic.", "", ""},
+},
+
+{ MUT_NO_FIRE_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no fire magic",
+
+  {"You cannot study or cast Fire magic.", "", ""},
+  {"You can no longer study or cast Fire magic.", "", ""},
+  {"You can once more study and cast Fire magic.", "", ""},
+},
+
+{ MUT_NO_HEXES_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no hexes magic",
+
+  {"You cannot study or cast Hexes magic.", "", ""},
+  {"You can no longer study or cast Hexes magic.", "", ""},
+  {"You can once more study and cast Hexes magic.", "", ""},
+},
+
+{ MUT_NO_ICE_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no ice magic",
+
+  {"You cannot study or cast Ice magic.", "", ""},
+  {"You can no longer study or cast Ice magic.", "", ""},
+  {"You can once more study and cast Ice magic.", "", ""},
+},
+
+{ MUT_NO_NECROMANCY_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no necromancy magic",
+
+  {"You cannot study or cast Necromancy magic.", "", ""},
+  {"You can no longer study or cast Necromancy magic.", "", ""},
+  {"You can once more study and cast Necromancy magic.", "", ""},
+},
+
+{ MUT_NO_POISON_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no poison magic",
+
+  {"You cannot study or cast Poison magic.", "", ""},
+  {"You can no longer study or cast Poison magic.", "", ""},
+  {"You can once more study and cast Poison magic.", "", ""},
+},
+
+{ MUT_NO_SUMMONING_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "cannot use summoning magic",
+
+  {"You cannot study or cast Summoning magic.", "", ""},
+  {"You can no longer study or cast Summoning magic.", "", ""},
+  {"You can once more study and cast Summoning magic.", "", ""},
+},
+
+{ MUT_NO_TRANSLOCATION_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no translocations magic",
+
+  {"You cannot study or cast Translocations magic.", "", ""},
+  {"You can no longer study or cast Translocations magic.", "", ""},
+  {"You can once more study and cast Translocations magic.", "", ""},
+},
+
+{ MUT_NO_TRANSMUTATION_MAGIC,                0,  1, MUTFLAG_RU, false,
+  "no transmutations magic",
+
+  {"You cannot study or cast Transmutations magic.", "", ""},
+  {"You can no longer study or cast Transmutations magic.", "", ""},
+  {"You can once more study and cast Transmutations magic.", "", ""},
+},
+
+{ MUT_PHYSICAL_VULNERABILITY,                0,  3, MUTFLAG_RU, false,
+  "vulnerability to harm",
+
+  {"You take slightly more damage. (-3 AC)",
+    "You take more damage. (-6 AC)",
+    "You take considerably more damage. (-9 AC)"},
+  {"You feel more vulnerable to harm.",
+    "You feel more vulnerable to harm.",
+    "You feel more vulnerable to harm."},
+  {"You no longer feel extra vulnerable to harm.",
+    "You feel less vulnerable to harm.",
+    "You feel less vulnerable to harm."},
+},
+
+{ MUT_SLOW_REFLEXES,                0,  3, MUTFLAG_RU, false,
+  "slow reflexes",
+
+  {"You have somewhat slow reflexes. (-3 EV)",
+    "You have slow reflexes. (-6 EV)",
+    "You have very slow reflexes. (-9 EV)"},
+  {"Your reflexes slow.",
+    "Your reflexes slow further.",
+    "Your reflexes slow further."},
+  {"You reflexes return to normal.",
+    "You reflexes speed back up.",
+    "You reflexes speed back up."},
+},
+
+{ MUT_MAGICAL_VULNERABILITY,                0,  3, MUTFLAG_RU, false,
+  "magic vulnerability",
+
+  {"You are slightly vulnerable to magic.",
+    "You are vulnerable to magic.",
+    "You are extremely vulnerable to magic."},
+  {"You feel vulnerable to magic.",
+    "You feel more vulnerable to magic.",
+    "You feel more vulnerable to magic."},
+  {"You no longer feel vulnerable to magic.",
+    "You feel less vulnerable to magic.",
+    "You feel less vulnerable to magic."},
+},
+
+{ MUT_ANTI_WIZARDRY,                0,  3, MUTFLAG_RU, false,
+  "disrupted magic",
+
+  {"Your casting is slightly disrupted.",
+    "Your casting is disrupted.",
+    "Your casting is seriously disrupted."},
+  {"Your ability to control magic is disrupted.",
+    "Your ability to control magic is more disrupted.",
+    "Your ability to control magic is more disrupted."},
+  {"Your ability to control magic is no longer disrupted.",
+    "Your ability to control magic is less disrupted.",
+    "Your ability to control magic is less disrupted."},
 },
 
 };

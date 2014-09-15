@@ -81,7 +81,6 @@ bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
-
     if (!ignore_temporary_disability && you.berserk())
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
@@ -113,6 +112,13 @@ bool can_wield(item_def *weapon, bool say_reason,
     // If we don't have an actual weapon to check, return now.
     if (!weapon)
         return true;
+
+    if (player_mutation_level(MUT_MISSING_HAND)
+            && you.hands_reqd(*weapon) == HANDS_TWO)
+    {
+        SAY(mpr("You can't wield that without your missing limb."));
+        return false;
+    }
 
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
     {
@@ -548,8 +554,11 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
                 // No strange race can wear this.
-                static const char * const parts[] = { "head", "hands", "feet" };
+                const char* parts[] = { "head", "hands", "feet" };
                 COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
+                if (player_mutation_level(MUT_MISSING_HAND))
+                    parts[1] = "hand";
+
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
                 {
@@ -611,7 +620,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.has_claws(false) == 3)
         {
             if (verbose)
-                mpr("You can't wear gloves with your huge claws!");
+            {
+                if (player_mutation_level(MUT_MISSING_HAND))
+                    mpr("You can't wear a glove with your huge claw!");
+                else
+                    mpr("You can't wear gloves with your huge claws!");
+            }
             return false;
         }
     }
@@ -751,6 +765,18 @@ bool do_wear_armour(int item, bool quiet)
         }
     }
 
+    if (player_mutation_level(MUT_MISSING_HAND) && is_shield(invitem))
+    {
+        if (!quiet)
+        {
+            if (you.species == SP_OCTOPODE)
+                mpr("You need the rest of your tentacles for walking.");
+            else
+                mprf("You'd need another %s to do that!", you.hand_name(true).c_str());
+        }
+        return false;
+    }
+
     // if you're wielding something,
     if (you.weapon()
         // attempting to wear a shield,
@@ -872,14 +898,17 @@ static vector<equipment_type> _current_ring_types()
     vector<equipment_type> ret;
     if (you.species == SP_OCTOPODE)
     {
-        const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
+        int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
                                ? 8 : 2);
+        if (player_mutation_level(MUT_MISSING_HAND))
+            num_rings -= 1;
         for (int i = 0; i != num_rings; ++i)
             ret.push_back((equipment_type)(EQ_RING_ONE + i));
     }
     else
     {
-        ret.push_back(EQ_LEFT_RING);
+        if (player_mutation_level(MUT_MISSING_HAND) == 0)
+            ret.push_back(EQ_LEFT_RING);
         ret.push_back(EQ_RIGHT_RING);
     }
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
@@ -1674,6 +1703,12 @@ void zap_wand(int slot)
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        return;
+    }
+
+    if (player_mutation_level(MUT_NO_ARTIFICE))
+    {
+        mpr("You cannot evoke magical items.");
         return;
     }
 
@@ -2650,6 +2685,12 @@ void read_scroll(int slot)
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
         mpr("You cannot read scrolls while unable to breathe!");
+        return;
+    }
+
+    if (you.duration[DUR_NO_SCROLLS])
+    {
+        mpr("You cannot read scrolls in your current state!");
         return;
     }
 

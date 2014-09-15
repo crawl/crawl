@@ -11,6 +11,7 @@
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
+#include "godabil.h"
 #include "libutil.h"
 #include "mgen_data.h"
 #include "mon-abil.h"
@@ -42,6 +43,13 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
 {
     const mirror_damage_fineff *o =
         dynamic_cast<const mirror_damage_fineff *>(&fe);
+    return o && att == o->att && def == o->def;
+}
+
+bool ru_retribution_fineff::mergeable(const final_effect &fe) const
+{
+    const ru_retribution_fineff *o =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
     return o && att == o->att && def == o->def;
 }
 
@@ -117,6 +125,14 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
+void ru_retribution_fineff::merge(const final_effect &fe)
+{
+    const ru_retribution_fineff *mdfe =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
+    ASSERT(mdfe);
+    ASSERT(mergeable(*mdfe));
+}
+
 void trj_spawn_fineff::merge(const final_effect &fe)
 {
     const trj_spawn_fineff *trjfe =
@@ -183,6 +199,15 @@ void mirror_damage_fineff::fire()
         simple_monster_message(monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
+}
+
+void ru_retribution_fineff::fire()
+{
+    actor *attack = attacker();
+    if (!attack || attack == defender() || !attack->alive())
+        return;
+    if (def == MID_PLAYER)
+        ru_do_retribution(monster_by_mid(att), damage);
 }
 
 void trample_follow_fineff::fire()
