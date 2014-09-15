@@ -34,6 +34,25 @@ LUAFN(view_feature_at)
     return 1;
 }
 
+LUAFN(view_cloud_at)
+{
+    COORDSHOW(s, 1, 2)
+    const coord_def p = player2grid(s);
+    if (!map_bounds(p))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    cloud_type c = env.map_knowledge(p).cloud();
+    if (c == CLOUD_NONE)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    lua_pushstring(ls, cloud_type_name(c).c_str());
+    return 1;
+}
+
 LUAFN(view_is_safe_square)
 {
     COORDSHOW(s, 1, 2)
@@ -119,6 +138,7 @@ LUAFN(view_update_monsters)
 static const struct luaL_reg view_lib[] =
 {
     { "feature_at", view_feature_at },
+    { "cloud_at", view_cloud_at },
     { "is_safe_square", view_is_safe_square },
     { "can_reach", view_can_reach },
     { "withheld", view_withheld },
