@@ -1946,7 +1946,7 @@ bool lugonu_corrupt_level(int power)
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
 
-    flash_view(MAGENTA);
+    flash_view(UA_PLAYER, MAGENTA);
 
     _initialise_level_corrupt_seeds(power);
 

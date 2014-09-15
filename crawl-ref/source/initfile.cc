@@ -896,9 +896,6 @@ void game_options::reset_options()
     travel_key_stop        = true;
     auto_sacrifice         = AS_NO;
 
-    darken_beyond_range    = true;
-    use_animations         = true;
-
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 20;
@@ -1082,6 +1079,9 @@ void game_options::reset_options()
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
                     "screenshot,monlist,kills,notes,action_counts");
+
+    use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
+                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
 
     hp_colour.clear();
     hp_colour.push_back(pair<int,int>(50, YELLOW));
@@ -1861,6 +1861,35 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
+int game_options::read_use_animations(const string &field) const
+{
+    int animations = 0;
+    vector<string> types = split_string(",", field);
+    for (vector<string>::const_iterator it = types.begin();
+         it != types.end();
+         ++it)
+    {
+        if (*it == "beam")
+            animations |= UA_BEAM;
+        else if (*it == "range")
+            animations |= UA_RANGE;
+        else if (*it == "hp")
+            animations |= UA_HP;
+        else if (*it == "monster_in_sight")
+            animations |= UA_MONSTER_IN_SIGHT;
+        else if (*it == "pickup")
+            animations |= UA_PICKUP;
+        else if (*it == "monster")
+            animations |= UA_MONSTER;
+        else if (*it == "player")
+            animations |= UA_PLAYER;
+        else if (*it == "branch_entry")
+            animations |= UA_BRANCH_ENTRY;
+    }
+
+    return animations;
+}
+
 int game_options::read_explore_stop_conditions(const string &field) const
 {
     int conditions = 0;
@@ -2523,6 +2552,17 @@ void game_options::read_option_line(const string &str, bool runscript)
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
     else COLOUR_OPTION(remembered_monster_colour);
+    else if (key == "use_animations")
+    {
+        if (plain)
+            use_animations = UA_NONE;
+
+        const int new_animations = read_use_animations(field);
+        if (minus_equal)
+            use_animations &= ~new_animations;
+        else
+            use_animations |= new_animations;
+    }
     else if (key.find(interrupt_prefix) == 0)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
@@ -3428,9 +3468,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             dump_item_origin_price = -1;
     }
     else BOOL_OPTION(dump_book_spells);
-    else if (key == "darken_beyond_range")
-        darken_beyond_range = _read_bool(field, darken_beyond_range);
-    else BOOL_OPTION(use_animations);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {

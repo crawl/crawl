@@ -25,22 +25,20 @@ The contents of this text are:
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, chunks_autopickup, assign_item_slot,
                 pickup_menu_limit, drop_filter
-3-b     Targeting.
-                darken_beyond_range
-3-c     Passive Sightings (detected and remembered entities).
+3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
-3-d     Branding (Item and Monster Highlighting).
+3-c     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
                 heap_brand, feature_item_brand, trap_item_brand
-3-e     Level Map Functions.
+3-d     Level Map Functions.
                 level_map_cursor_step, show_waypoints
-3-f     Viewport Display Options.
+3-e     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin
-3-g     Travel and Exploration.
+3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_wall_bias, explore_improved, auto_sacrifice,
@@ -49,7 +47,7 @@ The contents of this text are:
                 runrest_ignore_message, runrest_stop_message,
                 runrest_safe_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
-3-h     Command Enhancements.
+3-g     Command Enhancements.
                 auto_switch, easy_open, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
@@ -58,7 +56,7 @@ The contents of this text are:
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, automagic_enable, automagic_slot,
                 automagic_fight, automagic_stop
-3-i     Message and Display Improvements.
+3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark,
@@ -67,12 +65,12 @@ The contents of this text are:
                 mlist_targeting, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
-                view_delay, force_more_message
-3-j     Colours (messages and menus)
+                view_delay, force_more_message, use_animations
+3-i     Colours (messages and menus)
                 menu_colour, message_colour
-3-k     Missiles.
+3-j     Missiles.
                 fire_items_start, fire_order
-3-l     Message Channels.
+3-k     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, timed_portal, sound,
                 intrinsic_gain, mutation, monster_spell, monster_enchant,
@@ -80,12 +78,12 @@ The contents of this text are:
                 monster_target, banishment, rotten_meat, equipment, floor,
                 multiturn, examine, examine_filter, diagnostics, error,
                 tutorial, orb, hell_effect
-3-m     Inscriptions.
+3-l     Inscriptions.
                 autoinscribe, autoinscribe_cursed
-3-n     Macro related Options.
+3-m     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
-3-o     Tiles Options.
+3-n     Tiles Options.
                 tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
@@ -527,16 +525,7 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
-3-b     Targeting.
--------------------
-
-darken_beyond_range = true
-        If set to true, everything beyond range when targeting will be
-        coloured grey. Setting this to false will also suppress the brief
-        flash if there are no visible monsters within range, both for
-        ASCII and the Tiles version.
-
-3-c     Passive Sightings (detected or remembered entities).
+3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
 detected_monster_colour = lightred
@@ -548,7 +537,7 @@ detected_item_colour = green
 remembered_monster_colour = darkgrey
         The colour for monsters you have seen before.
 
-3-d     Branding (Item and monster highlighting).
+3-c     Branding (Item and monster highlighting).
 -------------------------------------------------
 
 Branding refers to displaying particular monsters (e.g. summons) or
@@ -611,7 +600,7 @@ trap_item_brand = reverse
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.
 
-3-e     Level Map Functions.
+3-d     Level Map Functions.
 ----------------------------
 
 level_map_cursor_step = 7
@@ -622,7 +611,7 @@ show_waypoints = true
         Whether to display a number on the level map to indicate
         waypoints (placed with the Ctrl-W command).
 
-3-f     Viewport Display Options.
+3-e     Viewport Display Options.
 ---------------------------------
 
 The viewport is the portion of the map that is displayed during normal
@@ -698,7 +687,7 @@ scroll_margin = 2
         An aliased option that sets both scroll_margin_x and
         scroll_margin_y.
 
-3-g     Travel and Exploration.
+3-f     Travel and Exploration.
 -------------------------------
 
 travel_delay = 20 (defaults to -1 for online servers)
@@ -933,7 +922,7 @@ auto_exclude += <monster name>, <monster name>, ...
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
 
-3-h     Command Enhancements.
+3-g     Command Enhancements.
 -----------------------------
 
 auto_switch = false
@@ -1219,7 +1208,7 @@ automagic_stop = 0
         (percentage of total), casting is prevented. What happens depends
         on automagic_fight setting.
 
-3-i     Messages and Display Enhancements.
+3-h     Messages and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -1391,9 +1380,35 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
-use_animations = true
+use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
+                  branch_entry
         Controls whether or not to run special animations, such as when being
-        banished.
+        banished. All animations are enabled by default, and the categories
+        that can be enabled/disabled independently are:
+
+          beam             - Animation for casting a beam spell or throwing a
+                             ranged weapon.
+          range            - Flashes the screen with an overlay indicating the
+                             actual range of an attempted spell, if there are
+                             no monsters within the spell's range. Also
+                             controls whether areas outside of the range of the
+                             spell are darkened while targeting.
+          hp               - Flashes the screen red whenever you take damage
+                             below the level indicated by the hp_warning
+                             option.
+          monster_in_sight - When attempting to rest, run, travel, or explore
+                             with dangerous monsters in view, flashes the parts
+                             of the screen where monsters aren't, in order to
+                             help make the monsters themselves more visible.
+          pickup           - Various animations that occur when picking up
+                             items. Currently only runes and the orb have
+                             animations.
+          monster          - Animations that run when a monster uses an ability
+                             or casts a spell.
+          player           - Animations that run when the player uses an
+                             ability or casts a spell.
+          branch_entry     - Animations that run when you enter a new branch.
+                             Currently only the Abyss and Zot have animations.
 
 force_more_message += <regex>, <regex>
         (List option)
@@ -1402,7 +1417,7 @@ force_more_message += <regex>, <regex>
         events.
         The syntax is identical to that of runrest_ignore_message (3-g).
 
-3-j     Colours (messages and menus)
+3-i     Colours (messages and menus)
 -----------------
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
@@ -1508,7 +1523,7 @@ message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         If you don't want to see a message at all, you can mute it:
              message_colour += mute:You start resting
 
-3-k     Missiles.
+3-j     Missiles.
 -----------------
 
 fire_items_start = a
@@ -1540,7 +1555,7 @@ fire_order += inscribed
 
 (See also pickup_thrown in 3-a.)
 
-3-l     Message Channels.
+3-k     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -1600,7 +1615,7 @@ COLOUR can be any of the colours described in section 5-a (colour option).
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
 
-3-m     Inscriptions.
+3-l     Inscriptions.
 ---------------------
 
 See the "Inscriptions" section of the crawl manual for more information
@@ -1634,7 +1649,7 @@ show_god_gift = unident|yes|no
         fully known. Regardless of this setting, you can see the item's
         origin in its description.
 
-3-n     Macro related Options.
+3-m     Macro related Options.
 ------------------------------
 
 flush.failure = true
@@ -1666,7 +1681,7 @@ bindkey = [^D] CMD_BUTCHER
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
-3-o     Tiles Options.
+3-n     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
 

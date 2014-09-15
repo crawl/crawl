@@ -361,17 +361,20 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     {
         mprf(MSGCH_WARN, "%s", msg.c_str());
 
-        static bool tried = false;
-
-        if (visible.size() && tried)
+        if (Options.use_animations & UA_MONSTER_IN_SIGHT)
         {
-            monster_view_annotator flasher(&visible);
-            delay(100);
+            static bool tried = false;
+
+            if (visible.size() && tried)
+            {
+                monster_view_annotator flasher(&visible);
+                delay(100);
+            }
+            else if (visible.size())
+                tried = true;
+            else
+                tried = false;
         }
-        else if (visible.size())
-            tried = true;
-        else
-            tried = false;
     }
 
     return false;

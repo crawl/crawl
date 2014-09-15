@@ -752,7 +752,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         mpr("You can't see any susceptible monsters within range! "
             "(Use <w>Z</w> to cast anyway.)");
 
-        if (Options.darken_beyond_range)
+        if (Options.use_animations & UA_RANGE)
         {
             targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
             range_view_annotator show_range(&range);

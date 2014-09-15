@@ -776,7 +776,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         tiles.add_overlay(you.pos(), tileidx_zap(rune_colour(runes[0])));
         update_screen();
 #else
-        flash_view(rune_colour(runes[0]));
+        flash_view(UA_BRANCH_ENTRY, rune_colour(runes[0]));
 #endif
         mpr("The lock glows eerily!");
         more();

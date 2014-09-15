@@ -3965,7 +3965,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         if (!already_mesmerised)
         {
             simple_monster_message(mons, " attempts to bespell you!");
-            flash_view(LIGHTMAGENTA);
+            flash_view(UA_MONSTER, LIGHTMAGENTA);
         }
         else
         {
@@ -4087,7 +4087,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
     }
 
     if (actual && retval == 1 && you.see_cell(mons->pos()))
-        flash_view_delay(DARKGREY, 300);
+        flash_view_delay(UA_MONSTER, DARKGREY, 300);
 
     return retval;
 }
@@ -4871,7 +4871,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                     mons,
                     " sings a water chant to call the tide!"))
             {
-                flash_view_delay(ETC_WATER, 300);
+                flash_view_delay(UA_MONSTER, ETC_WATER, 300);
             }
         }
         return;
@@ -5257,7 +5257,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
                  mons->pronoun(PRONOUN_REFLEXIVE).c_str());
-            flash_view_delay(BROWN, 80);
+            flash_view_delay(UA_MONSTER, BROWN, 80);
         }
 
         mons->add_ench(ENCH_LIQUEFYING);

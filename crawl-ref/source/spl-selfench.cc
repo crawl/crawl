@@ -382,9 +382,9 @@ spret_type cast_liquefaction(int pow, bool fail)
     }
 
     fail_check();
-    flash_view_delay(BROWN, 80);
-    flash_view_delay(YELLOW, 80);
-    flash_view_delay(BROWN, 140);
+    flash_view_delay(UA_PLAYER, BROWN, 80);
+    flash_view_delay(UA_PLAYER, YELLOW, 80);
+    flash_view_delay(UA_PLAYER, BROWN, 140);
 
     mpr("The ground around you becomes liquefied!");
 

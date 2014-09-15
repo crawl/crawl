@@ -30,10 +30,10 @@ static bool _orb_noise(const coord_def& where, int loudness)
 
     if (silenced(where))
     {
-        flash_view_delay(MAGENTA, 100);
-        flash_view_delay(LIGHTMAGENTA, 100);
-        flash_view_delay(MAGENTA, 100);
-        flash_view_delay(LIGHTMAGENTA, 100);
+        flash_view_delay(UA_MONSTER, MAGENTA, 100);
+        flash_view_delay(UA_MONSTER, LIGHTMAGENTA, 100);
+        flash_view_delay(UA_MONSTER, MAGENTA, 100);
+        flash_view_delay(UA_MONSTER, LIGHTMAGENTA, 100);
 
         return false;
     }

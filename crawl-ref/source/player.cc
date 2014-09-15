@@ -6165,7 +6165,7 @@ void player::banish(actor *agent, const string &who)
     banished    = true;
     banished_by = who;
 
-    run_animation(ANIMATION_BANISH, false);
+    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities
@@ -7835,7 +7835,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     stop_constricting_all();
     end_searing_ray();
     stop_delay();
-    flash_view(DARKGREY);
+    flash_view(UA_MONSTER, DARKGREY);
 
     // As above, do this after redraw.
     const int dur = hibernate ? 3 + random2avg(5, 2) :
@@ -7850,7 +7850,7 @@ void player::awake()
     duration[DUR_SLEEP] = 0;
     duration[DUR_SLEEP_IMMUNITY] = 1;
     mpr("You wake up.");
-    flash_view(BLACK);
+    flash_view(UA_MONSTER, BLACK);
 }
 
 void player::check_awaken(int disturbance)

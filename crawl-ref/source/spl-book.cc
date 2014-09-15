@@ -1414,7 +1414,7 @@ int rod_spell(int rod, bool check_range)
         mpr("You can't see any susceptible monsters within range! "
             "(Use <w>V</w> to cast anyway.)");
 
-        if (Options.darken_beyond_range)
+        if (Options.use_animations & UA_RANGE)
         {
             targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);

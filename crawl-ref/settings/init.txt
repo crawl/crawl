@@ -91,17 +91,13 @@
 # pickup_menu_limit = 1
 # drop_filter += useless_item
 
-##### 3-b       Targeting ############################
-#
-# darken_beyond_range = false
-
-##### 3-c       Passive Sightings #####################
+##### 3-b       Passive Sightings #####################
 #
 # detected_monster_colour = lightred
 # detected_item_colour = green
 # remembered_monster_colour = darkgrey
 
-##### 3-d       Branding ##############################
+##### 3-c       Branding ##############################
 #
 # friend_brand       = hi:green
 # neutral_brand      = hi:lightgrey
@@ -111,12 +107,12 @@
 # feature_item_brand = reverse
 # trap_item_brand    = reverse
 
-##### 3-e       Level Map Functions ###################
+##### 3-d       Level Map Functions ###################
 #
 # level_map_cursor_step = 7
 # show_waypoints = false
 
-##### 3-f       Viewport Options  ###################
+##### 3-e       Viewport Options  ###################
 #
 # view_max_width   = 33
 # view_max_height  = 21
@@ -129,7 +125,7 @@
 # scroll_margin_y  = 2
 # scroll_margin    = 2
 
-##### 3-g       Travel and Exploration #################
+##### 3-f       Travel and Exploration #################
 #
 # travel_delay = 20 (or -1 online)
 # explore_delay = -1
@@ -170,7 +166,7 @@
 
 #rest_wait_both = true
 
-##### 3-h       Command Enhancements ##################
+##### 3-g       Command Enhancements ##################
 #
 # auto_switch   = true
 # travel_open_doors      = false
@@ -194,7 +190,7 @@
 # automagic_fight = false
 # automagic_stop = 0
 
-##### 3-i       Messages and Display Enhancements #####
+##### 3-h       Messages and Display Enhancements #####
 #
 # hp_warning = 30
 # mp_warning = 0
@@ -220,7 +216,7 @@
 # skill_focus                  = false
 # show_travel_trail            = false (true for online)
 # view_delay                   = 600
-# use_animations               = false
+# use_animations              -=
 
 # You can also enforce a --more-- prompt for messages
 
@@ -228,7 +224,7 @@
 # force_more_message += There are no visible monsters within range
 # force_more_message += This wand has no charges
 
-##### 3-j       Colours (messages and menus) ##########
+##### 3-i       Colours (messages and menus) ##########
 #
 # Items are colour coded by default as follows:
 #
@@ -267,18 +263,18 @@
 # message_colour ^= mute:(HP|Magic) restored
 # message_colour ^= mute:warning:Not with.*(in view|monsters around)
 
-##### 3-k       Firing Commands #######################
+##### 3-j       Firing Commands #######################
 #
 # fire_items_start = a
 # fire_order = launcher, return
 # fire_order += javelin / tomahawk / stone / rock / net
 # fire_order += inscribed
 
-##### 3-l       Channels ##############################
+##### 3-k       Channels ##############################
 #
 # channel.multiturn = mute
 
-##### 3-m       Inscriptions ##########################
+##### 3-l       Inscriptions ##########################
 #
 # autoinscribe += bad_item.*potion:!q
 # autoinscribe += potion.*mutation:!q
@@ -286,13 +282,13 @@
 # autoinscribe += fruit:!e
 # show_god_gift = yes|unident|no
 
-##### 3-n       Macro related Options #################
+##### 3-m       Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
 
-##### 3-o       Tile related Options ##################
+##### 3-n       Tile related Options ##################
 #
 # tile_show_items = !?/%=([)x}:|\
 

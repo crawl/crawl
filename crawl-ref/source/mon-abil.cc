@@ -636,7 +636,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
                  merge_to->name(DESC_A).c_str());
         }
 
-        flash_view_delay(LIGHTGREEN, 150);
+        flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
     else if (you.can_see(initial_slime))
         mpr("A slime creature suddenly disappears!");
@@ -1930,7 +1930,7 @@ bool lost_soul_revive(monster* mons)
                 continue;
 
             targetter_los hitfunc(*mi, LOS_SOLID);
-            flash_view_delay(GREEN, 200, &hitfunc);
+            flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
             mons->heal(mons->max_hit_points);
             mons->del_ench(ENCH_CONFUSION, true);
@@ -3891,7 +3891,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
             {
                 targetter_los hitfunc(mons, LOS_SOLID);
-                flash_view_delay(MAGENTA, 300, &hitfunc);
+                flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
                 simple_monster_message(mons, " pulses with an eldritch light!");
 
                 if (!is_sanctuary(you.pos())

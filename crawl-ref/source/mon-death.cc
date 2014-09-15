@@ -1140,7 +1140,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (type == MONS_LURKING_HORROR)
     {
         targetter_los hitfunc(mons, LOS_SOLID);
-        flash_view_delay(DARKGRAY, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
         beam.explode();
