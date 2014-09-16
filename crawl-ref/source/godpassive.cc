@@ -528,7 +528,7 @@ static bool _check_portal(coord_def where)
     if (feat != env.map_knowledge(where).feat() && is_ash_portal(feat))
     {
         env.map_knowledge(where).set_feature(feat);
-        env.map_knowledge(where).flags |= MAP_MAGIC_MAPPED_FLAG;
+        set_terrain_mapped(where);
 
         if (!testbits(env.pgrid(where), FPROP_SEEN_OR_NOEXP))
         {

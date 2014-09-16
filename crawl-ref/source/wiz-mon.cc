@@ -725,6 +725,9 @@ void wizard_detect_creatures()
     {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
         env.map_knowledge(mi->pos()).set_detected_monster(mi->type);
+#ifdef USE_TILE
+        tiles.update_minimap(mi->pos());
+#endif
     }
 }
 
