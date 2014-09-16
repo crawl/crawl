@@ -143,7 +143,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
 
     case DACT_ALLY_SACRIFICE_LOVE:
-        return true;
+        return (mon->attitude != ATT_HOSTILE);
 
     default:
         return false;
