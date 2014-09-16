@@ -131,6 +131,8 @@ LUAFN(view_withheld)
 
 LUAFN(view_update_monsters)
 {
+    ASSERT_DLUA;
+
     update_monsters_in_view();
     return 0;
 }
