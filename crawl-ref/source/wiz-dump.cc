@@ -388,7 +388,12 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
                                                _always_true<god_type>,
                                                bind2nd(ptr_fun(god_name),
                                                        false));
-            join_religion(god, true);
+            if (!you_worship(god))
+            {
+                if (god == GOD_GOZAG)
+                    you.gold += gozag_service_fee();
+                join_religion(god, true);
+            }
 
             string piety = tokens[k+2];
             int piety_levels = std::count(piety.begin(), piety.end(), '*');
@@ -436,7 +441,11 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
     {
         if (tokens[k] == "Turns:")
         {
-            string race = tokens[k-2].substr(1);
+            string race;
+            if (tokens[k-2][0] == '(')
+                race = tokens[k-2].substr(1);
+            else
+                race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
             wizard_change_species_to(find_species_from_string(race));
