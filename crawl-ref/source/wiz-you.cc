@@ -1107,5 +1107,9 @@ void wizard_join_religion()
     else if (you_worship(god))
         mpr("You already worship that god!");
     else
+    {
+        if (god == GOD_GOZAG)
+            you.gold = max(you.gold, gozag_service_fee());
         join_religion(god, true);
+    }
 }
