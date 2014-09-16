@@ -3375,6 +3375,7 @@ void join_religion(god_type which_god, bool immediate)
 
     const god_type old_god = you.religion;
     const int old_piety = you.piety;
+    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
@@ -3622,9 +3623,9 @@ void join_religion(god_type which_god, bool immediate)
     if (you_worship(GOD_GOZAG))
     {
         bool needs_redraw = false;
-        const int fee = gozag_service_fee();
         if (fee > 0)
         {
+            ASSERT(you.gold >= fee);
             mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
             you.gold -= fee;
             you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
