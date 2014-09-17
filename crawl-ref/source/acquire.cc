@@ -572,10 +572,13 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
     {
-        // 1/3 amulets, 2/3 rings.
-        result = (one_chance_in(you.species == SP_OCTOPODE ? 9 : 3)
-                                   ? get_random_amulet_type()
-                                   : get_random_ring_type());
+        // Rings are (number of usable rings) times as common as amulets.
+        // XXX: unify this with the actual check for ring slots
+        int ring_num = you.species == SP_OCTOPODE ? 8 : 2;
+        if (player_mutation_level(MUT_MISSING_HAND))
+            --ring_num;
+        result = (one_chance_in(ring_num + 1 ? get_random_amulet_type()
+                                             : get_random_ring_type()));
 
         // If we haven't seen this yet, we're done.
         if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
