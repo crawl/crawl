@@ -728,7 +728,7 @@ Sacrifice Health ability
 Adherents who choose to sacrifice their health may have their health pool
 decreased, suffer penalties to Evasion, or suffer penalties to AC. If you make
 this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new  powers as well.
+proportion to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
 %%%%

@@ -2527,7 +2527,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>]</w>      get a mutation\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
-                       "<w>Ctrl-W</w> force Ru to offer sacrifices\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
                        "<w>Ctrl-Z</w> gain lots of Zot Points\n"
