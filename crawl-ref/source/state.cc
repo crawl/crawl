@@ -330,11 +330,12 @@ void god_act_state::reset()
 bool game_state::is_god_acting() const
 {
     ASSERT(god_act.depth >= 0);
-    ASSERT(!(god_act.depth > 0 && god_act.which_god == GOD_NO_GOD));
-    ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
-    ASSERT(!(god_act.depth == 0 && !god_act_stack.empty()));
+    bool god_is_acting = god_act.depth > 0;
+    ASSERT(!(god_is_acting && god_act.which_god == GOD_NO_GOD));
+    ASSERT(!(!god_is_acting && god_act.which_god != GOD_NO_GOD));
+    ASSERT(!(!god_is_acting && !god_act_stack.empty()));
 
-    return god_act.depth > 0;
+    return god_is_acting;
 }
 
 bool game_state::is_god_retribution() const
