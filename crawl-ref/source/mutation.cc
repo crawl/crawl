@@ -1390,15 +1390,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         return true; // no fallbacks
     }
 
-    if (!god_gift)
-    {
-        const god_type god =
-            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                          : GOD_NO_GOD;
-
-        if (god != GOD_NO_GOD)
-            god_gift = true;
-    }
+    god_gift |= crawl_state.is_god_acting();
 
     if (mutclass == MUTCLASS_INNATE)
         force_mutation = true;
@@ -1798,15 +1790,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                      bool force_mutation, bool god_gift,
                      bool disallow_mismatch)
 {
-    if (!god_gift)
-    {
-        const god_type god =
-            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                          : GOD_NO_GOD;
-
-        if (god != GOD_NO_GOD)
-            god_gift = true;
-    }
+    god_gift |= crawl_state.is_god_acting();
 
     mutation_type mutat = which_mutation;
 
