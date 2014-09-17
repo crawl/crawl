@@ -4930,7 +4930,7 @@ vector<ability_type> get_possible_sacrifices()
     }
     if (!player_mutation_level(MUT_NO_READ))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_WORDS);
-    if (!player_mutation_level(MUT_NO_DRINK))
+    if (!player_mutation_level(MUT_NO_DRINK) && you.species != SP_MUMMY)
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DRINK);
     if (!player_mutation_level(MUT_NO_STEALTH))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_STEALTH);
