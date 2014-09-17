@@ -423,7 +423,7 @@ static const ability_def Ability_List[] =
 
     // Ru
     { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
-      0, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
+      0, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN|ABFLAG_CONF_OK },
     { ABIL_RU_POWER_LEAP, "Power Leap",
       5, 0, 0, 0, 0, ABFLAG_EXHAUSTION },
     { ABIL_RU_CATACLYSM, "Cataclysm",
