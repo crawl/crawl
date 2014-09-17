@@ -321,7 +321,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             // You can't turn invisible while haloed or glowing
             // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
-            return true;
+            break;
         }
         else if (you.backlit())
         {
