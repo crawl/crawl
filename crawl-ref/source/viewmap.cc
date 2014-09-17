@@ -164,10 +164,12 @@ bool is_feature(ucs_t feature, const coord_def& where)
                || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
-                && !feat_is_portal_exit(grid);
+                && !feat_is_portal_exit(grid)
+                && grid != DNGN_ENTER_SHOP;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
-                && !feat_is_portal_entrance(grid);
+                && !feat_is_portal_entrance(grid)
+                && grid != DNGN_ENTER_SHOP;
     case '^':
         return feat_is_trap(grid);
     default:
