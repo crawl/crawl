@@ -5837,7 +5837,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     switch (effect)
     {
         case 0:
-            simple_monster_message(mons, " silenced by your wave of power!");
+            simple_monster_message(mons, " is silenced by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(120)));
             dmg = roll_dice(die_size, 4);
             break;
