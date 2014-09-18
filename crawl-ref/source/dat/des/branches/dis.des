@@ -4,8 +4,9 @@
 #          (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
-{{
+: require('dlua/vault.lua')
 
+{{
 function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
@@ -19,26 +20,6 @@ end
 function dis_rune(e)
    e.kmask('O = no_item_gen')
    e.kitem('O = iron rune of Zot')
-end
-
--- the Serpent should appear in exactly one hell end
--- XXX: are things like shafts going to break this?
-function hell_branches_remaining()
-   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
-   local ret = #hell_branches
-   for _, branch in pairs(hell_branches) do
-      if travel.find_deepest_explored(branch) == 7 then
-         ret = ret - 1
-      end
-   end
-   return ret
-end
-
-function serpent_of_hell_setup(e)
-   if not you.uniques("the Serpent of Hell") and
-      crawl.one_chance_in(hell_branches_remaining()) then
-      e.kmons('D = the Serpent of Hell')
-   end
 end
 
 function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
@@ -79,7 +60,6 @@ function dis_statues(e)
     e.tile("G = dngn_statue_iron")
     e.set_feature_name("granite_statue", "iron statue")
 end
-
 }}
 
 ##############################################################################
