@@ -1822,9 +1822,9 @@ static const mon_spellbook mspell_list[] =
       {
        SPELL_SHADOW_CREATURES,
        SPELL_SHADOW_CREATURES,
-       SPELL_SHADOW_CREATURES,
-       SPELL_SHADOW_CREATURES,
-       SPELL_SHADOW_CREATURES,
+       SPELL_PLANEREND,
+       SPELL_PLANEREND,
+       SPELL_PHANTOM_MIRROR,
        SPELL_SHADOW_CREATURES
       }
     },
@@ -2204,17 +2204,6 @@ static const mon_spellbook mspell_list[] =
        SPELL_TELEPORT_OTHER,
        SPELL_FIREBALL,
        SPELL_TELEPORT_OTHER
-      }
-    },
-
-    {  MST_NAGA_ENCHANTER,
-      {
-       SPELL_NO_SPELL,
-       SPELL_CONFUSE,
-       SPELL_HASTE,
-       SPELL_INVISIBILITY_OTHER,
-       SPELL_HASTE_OTHER,
-       SPELL_NO_SPELL
       }
     },
 

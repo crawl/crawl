@@ -3414,7 +3414,7 @@ static const struct spell_desc spelldata[] =
     SPELL_EPHEMERAL_INFUSION, "Ephemeral Infusion",
      SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_MONSTER,
-     8,
+     6,
      200,
      -1, -1,
      0,
@@ -3778,15 +3778,15 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CORROSIVE_BOLT, "Corrosive Bolt",
-    SPTYP_CONJURATION,
-    SPFLAG_DIR_OR_TARGET,
-    6,
-    200,
-    6, 6,
-    0,
-    NULL,
-    true,
-    false
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
 },
 
 {
