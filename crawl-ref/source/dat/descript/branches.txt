@@ -208,6 +208,11 @@ faint of heart: even the bravest and most skilled adventurers have met their
 ends in one. While a portal to safety will be present on every level, once
 left, a ziggurat cannot be re-entered.
 
+One ziggurat is guaranteed in the Depths, and further ones can be found
+in Pandemonium. These towers and their contents will react violently to
+those that can conquer them, and scale up according to how many ziggurats
+an adventurer has completed.
+
 It can only be entered when carrying at least three runes of Zot.
 %%%%
 Labyrinth

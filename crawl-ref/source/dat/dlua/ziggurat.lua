@@ -385,7 +385,9 @@ end
 local dgn_passable = dgn.passable_excluding("closed_door")
 
 local function ziggurat_create_monsters(p, mfn)
-  local hd_pool = you.depth() * (you.depth() + 8) + 10
+  local depth = you.depth()
+  local completed = you.zigs_completed() + 1
+  local hd_pool = math.floor(10 + completed * completed + (depth * (depth + 8 * completed )) * math.max(1, completed * 0.75))
 
   local nth = 1
 
@@ -419,10 +421,14 @@ local function ziggurat_create_monsters(p, mfn)
 end
 
 local function ziggurat_create_loot_at(c)
-  -- Basically, loot grows linearly with depth.
+  -- Basically, loot grows linearly with depth finished zigs.
   local depth = you.depth()
-  local nloot = depth
-  local nloot = depth + crawl.random2(math.floor(nloot * 0.5))
+  local completed = you.zigs_completed()
+  local nloot = depth + crawl.random2(math.floor(depth * 0.5))
+
+  if completed > 0 then
+    nloot = math.min(nloot + crawl.random2(math.floor(completed * depth / 4)), map_area() / 9)
+  end
 
   local function find_free_space(nspaces)
     local spaces = { }
