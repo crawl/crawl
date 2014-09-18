@@ -1558,8 +1558,10 @@ NAME:   forest_paths
 DEPTH:  D, Depths, Lair
 ORIENT: float
 FTILE:  .t0@*123 = floor_moss
-: if you.absdepth()>15 then
-:   if you.branch()=="Lair" then
+: if you.absdepth() < 5 then
+SUBST:  12 = ., 3 = 0
+: elseif you.absdepth() > 15 then
+:   if you.branch() == "Lair" then
 MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
 :   else
 MONS:   spriggan, spriggan druid, spriggan rider
@@ -4096,7 +4098,7 @@ ENDMAP
 NAME:    hangedman_cross_stitches
 ORIENT:  float
 TAGS:    transparent no_monster_gen
-DEPTH:   D:5-, !D:$, Depths, !Depths:$, Elf, Snake
+DEPTH:   D:6-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   " = 0
 KMONS:   ` = 9
@@ -6191,6 +6193,9 @@ NAME:   kennysheep_big_flooded_room
 ORIENT: float
 DEPTH:  D:2-, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
+: if you.absdepths() < 5 then
+SUBST:  9 = 0, * = %
+: end
 MAP
      ccccFFcccc
     ccwwwHHwwwcc
