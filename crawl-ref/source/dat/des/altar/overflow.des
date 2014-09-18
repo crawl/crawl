@@ -716,7 +716,7 @@ ENDMAP
 NAME:  fedhas_bush_and_centaur_altar
 TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 TAGS:  transparent
-DEPTH: D:3-15
+DEPTH: D:4-15
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 : interest_check(_G)
@@ -1949,7 +1949,7 @@ ENDMAP
 NAME:  vehumet_altar_wand_db
 TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
-DEPTH: D:2-9
+DEPTH: D:3-9
 KFEAT: _ = altar_vehumet
 MONS:  goblin; wand of flame | wand of frost | wand of magic darts /\
        hobgoblin; wand of flame | wand of frost | wand of magic darts /\
