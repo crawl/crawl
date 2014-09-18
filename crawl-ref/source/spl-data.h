@@ -3803,6 +3803,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_EMPEROR_SCORPIONS, "Summon Emperor Scorpions",
+     SPTYP_SUMMONING | SPTYP_POISON,
+     SPFLAG_NONE,
+     7,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

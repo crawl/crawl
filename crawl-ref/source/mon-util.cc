@@ -2055,6 +2055,7 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SUMMON_DRAGON:
             case SPELL_SUMMON_HORRIBLE_THINGS:
             case SPELL_PLANEREND:
+            case SPELL_SUMMON_EMPEROR_SCORPIONS:
                 diff += 7;
                 break;
 
@@ -2265,6 +2266,12 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_FAUN_I);
         books.push_back(MST_FAUN_II);
         books.push_back(MST_FAUN_III);
+        break;
+
+    case MONS_GREATER_MUMMY:
+        books.push_back(MST_MUMMY);
+        books.push_back(MST_GREATER_MUMMY_I);
+        books.push_back(MST_GREATER_MUMMY_II);
         break;
 
     default:

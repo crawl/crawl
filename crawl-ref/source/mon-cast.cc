@@ -1300,6 +1300,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
     case SPELL_PHANTOM_MIRROR:
+    case SPELL_SUMMON_MANA_VIPER:
+    case SPELL_SUMMON_EMPEROR_SCORPIONS:
         return true;
     default:
         if (check_validity)
@@ -6119,6 +6121,37 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             monster* targ = targets[random2(targets.size())];
             if (cast_phantom_mirror(mons, targ))
                 simple_monster_message(targ, " shimmers and seems to become two!");
+        }
+        return;
+    }
+
+
+    case SPELL_SUMMON_MANA_VIPER:
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+        create_monster(mgen_data(MONS_MANA_VIPER, SAME_ATTITUDE(mons),
+                                 mons, 2, spell_cast, mons->pos(),
+                                 mons->foe, 0, god));
+        }
+        return;
+
+    case SPELL_SUMMON_EMPEROR_SCORPIONS:
+    {
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(mgen_data(MONS_EMPEROR_SCORPION, SAME_ATTITUDE(mons),
+                                     mons, 5, spell_cast, mons->pos(),
+                                     mons->foe, 0, god));
         }
         return;
     }
