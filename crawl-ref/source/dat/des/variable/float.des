@@ -6393,3 +6393,65 @@ cc%..c.9..c....c..9.c..*cc
       cc$.c....c.$cc
        cccc.@@.cccc
 ENDMAP
+
+# Originally a rather long D encompass vault, cropped, shrunk,
+# and re-arranged to preserve the idea with less of the problems.
+# (The monsters do wander a little too easily now, but the vault
+# hardly sticks out compared to the rest of Depths.)
+NAME: hangedman_grunt_twisty_little_passages
+TAGS: no_monster_gen
+DEPTH: Depths, !Depths:$
+ORIENT: float
+SHUFFLE: defghijk
+SUBST: def = c, ghi = v, jk = b
+KMONS: 8 = 8 band
+KMONS: 9 = 9 band
+KMONS: 0 = 0 band
+KITEM: J = acquire any
+NSUBST: | = 1:J / 2:* / *:|
+SUBST: % = %., O = %
+MAP
+eeeeeeeeeffffffffffffffffffffffffffffffffkk
+eeeeeeeeecfffffffffffffffffffffffffffffffkk
+ee0......ecff%%.....................%Oxxxkk
+ee........ecf%%.....................%%xxxkk
+.ee...ee...ecf...0fffffffffffffff0...fcxxkk
+@.ee...ee...ecf...fffffffffffffff...fci%Okk
+...ee...ee...ecf...fff|%....8fff...fci.%%kk
+e...ee...ee..0ecf...ff*%....9ff...fci....kk
+ce...e...ee...eecf...ff...ffff...fci.....kk
+dce.....ee...eeeecf...ff...ff...fci...0..kk
+ddce...ee...ee0..ecf...ff...0..fci...ii..kk
+ddgce0ee...ee.....ecf...ff....fci...iii..kk
+ddggcee0..ee...e...ecf...ff..fci...iiii..kk
+dd%%gce...ee0..ee...ecf..0fffci...iiiii..kk
+dd%%.gce...ee...ee...ecf...cci...ii98ii..kk
+dd....gce...ee...ee...ee...0ci..0ii..ii..kk
+dd.....gce...ee...ee.........ii...i..ii..kk
+dd..0...gce...ee...ee........8ii.....ii..kk
+dd..gg...gce...ee...ee9...ci...ii....ii..kk
+dd..ggg...gce...e..0ee...jjci...ii.%%ii..kk
+dd..gggg...gce.....ee%..jj0jci...ii*|ii..kk
+dd..ggggg...gce...ee%O%jj...jci...iiiii..kk
+dd..gg*|gg...gce0ee..%jj.....jci...iiii..kk
+dd..gg%%.gg...gcee...jj0..j...jci...iii..kk
+dd..gg....gg...gc...9jj...jj...jci...ii..kk
+dd..gg.....gg8........jj...jj...jci...0..kk
+dd..gg..g...gg.........jj...jj...jci.....kk
+dd..gg..gg0..gc0...jj...jj...jj...jci....kk
+dd..gg89gg...gcc...ccj...jj...jj...jci.%%kk
+dd..ggggg...gchhh0..hcj...jj..0jj...jci%%kk
+dd..gggg...gch..hh...hcj...j...jj..0jjciikk
+dd..ggg...gch....hh...hcj.....jj...jj0jcikk
+dd..gg...gch...0..hh...hcj..0jj...jj...jckk
+dd..0...gch...hh...hh...hcjjjj...jj.....jck
+dd.....gch...hhhh...hh...hcjj...jj...j...jc
+dd....gch...hh9....%|hh...hcj0..jj...jj...j
+dd%%.gch...hhh8....%*hhh...hcj...jj...jj...
+ddO%gch...hhhhhhhhhhhhhhh...hcj...jj...jj.@
+ddxxch...0hhhhhhhhhhhhhhh0...hcj...jj...jj.
+ddxxx%%.....................%%hcj........jj
+ddxxxO%.....................%%hhcj......0jj
+ddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjj
+ddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjj
+ENDMAP

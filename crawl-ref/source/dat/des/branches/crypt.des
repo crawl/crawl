@@ -1091,6 +1091,56 @@ MAP
 ......................................
 ENDMAP
 
+NAME:    hangedman_crypt_dual_shrines
+TAGS:    no_monster_gen no_item_gen patrolling
+DEPTH:   Crypt
+# Choose two of the following:
+# Yred nearly-all-melee set, Kiku necro-casters set, ghosts set, tomb set.
+MONS:    minotaur zombie / ettin zombie / skeletal warrior w:20
+MONS:    death knight, bone dragon w:14 / profane servitor
+MONS:    necromancer / vampire w:6 / soul eater w:2
+MONS:    vampire mage / deep elf death mage, lich / reaper w:2
+MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
+KMONS:   8 = eidolon / flayed ghost
+KMONS:   9 = revenant / unborn
+KMONS:   A = guardian mummy / skeleton w:8 / flying skull band w:6
+KMONS:   B = ancient champion
+KMONS:   C = mummy priest
+KMONS:   0 = zombie
+ITEM:    any weapon good_item ego:draining, any weapon ego:pain
+ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
+ITEM:    lantern of shadows, staff of death ident:type
+ITEM:    amulet of warding randart good_item
+KITEM:   $ = $ no_pickup
+KFEAT:   D = altar_yredelemnul
+KFEAT:   E = altar_kikubaaqudgha
+SHUFFLE: 123D / 456E / 789D / ABCE, defghijk
+SUBST:   * = * |:2, F = c..
+MAP
+        ccccccccccccc
+        c0.v$$1cccccc
+        cc0v...ccc*cccc
+        c..v.c.cc2dDccc
+        cc.v.c.....d*cc
+        c..+.....F.3ccc
+        cc.v....F..cccc
+  ccccccc..+.c.....cccc
+ .c.c.c....v..V......1c
+@..........v.c.c..cc.$c
+cvvvvvvvvvvv1........$c
+c$........4vvvvvvvvvvvc
+c$.cc..c.c.v..........@
+c4......V..+....c.c.c.
+cccc.....c.v..ccccccc
+cccc..F....+.cc
+ccc6.F.....v..c
+cc*e.....c.v.cc
+cccEe5cc.c.v..c
+cccc*ccc...v0cc
+  cccccc4$$v.0c
+  ccccccccccccc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################

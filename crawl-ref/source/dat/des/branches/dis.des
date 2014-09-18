@@ -592,6 +592,61 @@ MAP
              .....
 ENDMAP
 
+# The rent rates are ridiculous.
+NAME:    hangedman_iron_city_apartments
+TAGS:    transparent no_pool_fixup layout_type_city layout_type_passages
+DEPTH:   Dis, !Dis:$
+ORIENT:  float
+MONS:    skeletal warrior / vampire w:6 / wight w:2          / \
+         zombie / skeleton / hell hound / iron devil w:14    / \
+         red devil / blue devil / sun demon w:6              / \
+         ice devil w:6 / hellwing / soul eater w:6
+MONS:    reaper / hellion / tormentor / executioner w:2      / \
+         bone dragon / lich / ancient champion               / \
+         balrug w:2 / blizzard demon w:2 / shadow demon w:2  / \
+         iron dragon w:2 / quicksilver dragon w:2
+KFEAT:   Z = known zot trap
+# Standard floor spawn equipment drops, not real loot.
+KITEM:   d = battleaxe no_pickup / great mace no_pickup      / \
+             great sword no_pickup / glaive no_pickup        / \
+             scythe good_item no_pickup w:5
+: dgn.delayed_decay(_G, 'e', 'human skeleton')
+NSUBST:  > = 1 = ((<d / 1 = ))>e / 2 = >:1 .:49 / * = ...de
+# Always place at least one door per room, possibly wider or multiplied.
+# Variation provided across either half of the vault and per-room.
+NSUBST:  A = 1:+ / *:-, B = 1:+ / *:-, C = 1:+ / *:-, D = 1:+ / *:-
+NSUBST:  E = 1:+ / *:-, F = 1:+ / *:-, G = 1:+ / *:~, H = 1:+ / *:~
+NSUBST:  I = 1:+ / *:~, J = 1:+ / *:~, K = 1:+ / *:~, L = 1:+ / *:~
+NSUBST:  ! = 1 : +:1 v:9 / * : +:1 v:49
+SUBST:   - : -_, ~ : -_, - = vv+, _ = v++
+SUBST:   V = vvGwlZ...
+NSUBST:  Z = 2:Z / *:.
+# No more than two bosses per room, and always have some of each extreme.
+SHUFFLE: MNOPQRSTUWXY
+NSUBST:  M = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, N = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
+NSUBST:  O = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, P = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
+NSUBST:  Q = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, R = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
+NSUBST:  S = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, T = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
+NSUBST:  U = 1:. / 1:1 / * = 1:4 .:1, W = 2:. / 1:1 / 1 = 1:4 .:1
+NSUBST:  X = 1:2 / 1 = 1:3 2:1 .:1 / * = 1:4 .:1, Y = 2:2 / * = 1:4 .:1
+KMASK:   wl = no_monster_gen
+# : dis_statues(_G)
+MAP
+ ...............................................
+ v..V...vvvBBBvvv...V...vvvDDDvvv...V...vvvFFFvv
+.v......vN.....Nv.......vP.....Pv.......vR....Rv.
+.vvAAAvvv...V...vvvCCCvvv...V...vvvEEEvvv...V..v.
+.vM....MvN..>..NvO.....OvP..>..PvQ.....QvR..>.Rv.
+.v..V...vvvvvvvvv...V...vvvvvvvvv...V...vvvvvvvv.
+.vM.>..M!T..>..T!O..>..O!W..>..W!Q..>..Q!Y..>.Yv.
+.vvvvvvvv...V...vvvvvvvvv...V...vvvvvvvvv...V..v.
+.vS.>..SvT.....TvU..>..UvW.....WvX..>..XvY....Yv.
+.v..V...vvvHHHvvv...V...vvvJJJvvv...V...vvvLLLvv.
+.vS....Sv.......vU.....Uv.......vX.....Xv......v.
+ vvGGGvvv...V...vvvIIIvvv...V...vvvKKKvvv...V..v
+ ...............................................
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions

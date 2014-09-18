@@ -2402,6 +2402,30 @@ MAP
  ...    .....E
 ENDMAP
 
+NAME:    hangedman_lair_generics_rect
+TAGS:    no_monster_gen
+DEPTH:   Lair
+MONS:    plant / fungus w:6
+NSUBST:  ' = 2:c / 2:. / * = c+....
+SHUFFLE: yY / yY / Yy
+SUBST:   y = ., Yz = xxxx1., Z = xx`
+CLEAR:   `
+MAP
+.............xZZ
+.c'c'c'c'c'cxxxZZ
+.'...........zxxZ
+.c..0.....0..zxxx
+.'...Wxxxx...xx%x
+.c...xxxxx...x9.x
+.'...xxxxW..xx.9x
+.c..0......Y.x..x
+.x........x.y.xxx
+xxzzzzzzxxxx..%xx
+Zxxxxxxxx9..x%0xx
+ZZxxxxxx%.9.xxxzx
+ ZZZZZxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################
