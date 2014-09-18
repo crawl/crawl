@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-import json
+import toml
 import config
 import re
 from collections import OrderedDict
-
-json.encoder.c_make_encoder = None # http://bugs.python.org/issue6105
 
 VERSION_RE = r"trunk$|\d.\d\d$"
 
@@ -47,7 +45,7 @@ def convert_game(**data):
                 "crawl_binary", "options", "pre_options", "inprogress_path",
                 "rcfile_path", "socket_path", "morgue_path", "client_path",
                 "macro_path", "ttyrec_path", "send_json_options"]:
-        if key in data: d[key] = data[key]
+        if key in data and data[key] is not None: d[key] = data[key]
     return d
 
 def games():
@@ -62,17 +60,8 @@ def milestones():
         return [config.milestone_file]
 
 conf = OrderedDict([
-    ("binds", binds()),
-    ("ssl_options", config.ssl_options),
-    ("ssl_binds", sslbinds()),
     ("daemon", config.daemon),
-    ("uid", config.uid),
-    ("gid", config.gid),
-    ("umask", config.umask),
-    ("chroot", config.chroot),
-    ("pidfile", config.pidfile),
     ("logging_config", config.logging_config),
-    ("http_connection_timeout", config.http_connection_timeout),
     ("max_connections", config.max_connections),
     ("dgl_status_file", config.dgl_status_file),
     ("server_id", config.server_id),
@@ -86,24 +75,36 @@ conf = OrderedDict([
 
     ("static_path", config.static_path),
     ("template_path", config.template_path),
-    ("server_socket_path", config.server_socket_path),
 
     ("max_idle_time", config.max_idle_time),
     ("connection_timeout", config.connection_timeout),
     ("kill_timeout", config.kill_timeout),
 
-    ("recording_term_size", config.recording_term_size),
+    ("recording_term_size", list(config.recording_term_size)),
 
     ("watch_socket_dirs", config.watch_socket_dirs),
     ("status_file_update_rate", config.status_file_update_rate),
-    ("player_url", config.player_url),
     ("milestone_files", milestones()),
 
     ("games", games())
 ])
 
+binds_list = binds()
+ssl_binds_list = sslbinds()
+
+if binds_list: conf["binds"] = binds_list
+if config.ssl_options: conf["ssl_options"] = config.ssl_options
+if ssl_binds_list: conf["ssl_binds"] = ssl_binds_list
+if config.uid: conf["uid"] = config.uid
+if config.gid: conf["gid"] = config.gid
+if config.umask: conf["umask"] = config.umask
+if config.chroot: conf["chroot"] = config.chroot
+if config.pidfile: conf["pidfile"] = config.pidfile
+if config.http_connection_timeout: conf["http_connection_timeout"] = config.http_connection_timeout
+if config.server_socket_path: conf["server_socket_path"] = config.server_socket_path
+if config.player_url: conf["player_url"] = config.player_url
 if config.game_data_no_cache: conf["game_data_no_cache"] = True
 if config.no_cache: conf["no_cache"] = True
 if config.autologin: conf["no_cache"] = config.autologin
 
-print json.dumps(conf, indent=4, separators=(',', ': '))
+print toml.dumps(conf)

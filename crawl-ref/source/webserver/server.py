@@ -164,7 +164,7 @@ def bind_server():
 
     servers = []
 
-    if config.binds:
+    if config.get("binds"):
         server = tornado.httpserver.HTTPServer(application, **kwargs)
         for bind in config.binds:
             server.listen(bind["port"], bind["address"])
@@ -173,7 +173,7 @@ def bind_server():
         # TODO: allow different ssl_options per bind pair
         server = tornado.httpserver.HTTPServer(application,
                                                ssl_options = config.ssl_options, **kwargs)
-        for bind in config.ssl_binds:
+        for bind in config.get("ssl_binds", []):
             server.listen(bind["port"], bind["address"])
         servers.append(server)
 

@@ -43,7 +43,8 @@ class WebtilesSocketConnection(object):
         # the bind call fails)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self.socketpath = os.tempnam(config.server_socket_path, "crawl")
+            self.socketpath = os.tempnam(config.get("server_socket_path", None),
+                                         "crawl")
         self.socket.bind(self.socketpath)
 
         # Install handler

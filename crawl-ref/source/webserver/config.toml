@@ -1,0 +1,157 @@
+# Server name, so far only used in the ttyrec metadata
+server_id = ""
+
+# Script to initialize a user, e.g. make sure the paths
+# and the rc file exist. This is not done by the server
+# at the moment.
+init_player_program = "./util/webtiles-init-player.sh"
+
+password_db = "./webserver/passwd.db3"
+# crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
+# false, use traditional DES (but then only the first eight characters of the
+# password are significant). If set to "broken", use traditional DES with
+# the password itself as the salt; this is necessary for compatibility with
+# dgamelaunch, but should be avoided if possible because it leaks the first
+# two characters of the password's plaintext.
+crypt_algorithm = "6"
+# The length of the salt string to use. If crypt_algorithm is false, this
+# setting is ignored and the salt is two characters.
+crypt_salt_length = 16
+
+nick_regex = "^[a-zA-Z0-9]{3,20}$"
+max_passwd_length = 20
+
+login_token_lifetime = 7
+
+static_path = "./webserver/static"
+template_path = "./webserver/templates/"
+# Path for server-side unix sockets (to be used to communicate with crawl)
+# By default, the system temp dir is used
+# server_socket_path = ""
+
+max_idle_time = 18000
+connection_timeout = 600
+kill_timeout = 10
+
+max_connections = 100
+
+recording_term_size = [80, 24]
+
+# Watch socket dirs for games not started by the server
+watch_socket_dirs = false
+
+# Status file containing information about the currently running games
+dgl_status_file = "./rcs/status"
+status_file_update_rate = 5
+
+milestone_files = ["./milestones"]
+list_savegames = false
+
+# Set to a URL with %s where lowercased player name should go in order to
+# hyperlink WebTiles spectator names to their player pages.
+# Leave out to disable player page hyperlinks
+# player_url = "http://crawl.akrasiac.org/scoring/players/%s.html"
+
+# Detach from session after startup?
+daemon = false
+# pidfile = "server.pid"
+
+# uid =
+# gid =
+# umask =
+# chroot =
+
+no_cache = false
+game_data_no_cache = true
+use_minified = true
+use_cdn = true
+
+# Non-SSL bindings
+[[binds]]
+port = 8080
+address = ""
+
+# SSL
+# [ssl_options]
+# certfile = "./webserver/localhost.crt"
+# keyfile = "./webserver/localhost.key"
+
+# [[ssl_binds]]
+# port = 8081
+# address = "localhost"
+
+[[games]]
+id = "dcss-web-trunk"
+name = "DCSS trunk"
+version = "trunk"
+mode = "Dungeon Crawl"
+comment = "Start a standard game of Crawl."
+crawl_binary = "./crawl"
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+# morgue_url = ""
+
+[[games]]
+id = "sprint-web-trunk"
+name = "Sprint trunk"
+version = "trunk"
+mode = "Dungeon Sprint"
+comment = "Start one of several single-map challenge mode games of Crawl."
+crawl_binary = "./crawl"
+options = ["-sprint"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+
+[[games]]
+id = "zd-web-trunk"
+name = "Zot Defense trunk"
+version = "trunk"
+mode = "Zot Defence"
+comment = "Start one of several \"tower defence\"-style games of Crawl."
+crawl_binary = "./crawl"
+options = ["-zotdef"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+
+[[games]]
+id = "tut-web-trunk"
+name = "Tutorial trunk"
+version = "trunk"
+mode = "Tutorial"
+comment = "Start one of several specialised tutorials to learn how to play."
+crawl_binary = "./crawl"
+options = ["-tutorial"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+
+[game_link_settings]
+hide_versions = []
+
+[logging_config]
+# filename = "webtiles.log"
+format = "%(asctime)s %(levelname)s: %(message)s"
+level = 20
