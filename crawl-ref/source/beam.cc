@@ -5896,7 +5896,6 @@ void bolt::refine_for_explosion()
         glyph      = dchar_glyph(DCHAR_FIRED_BURST);
         flavour    = BEAM_ELECTRICITY;
         colour     = LIGHTCYAN;
-        damage.num = 1;
         ex_size    = 2;
     }
 
