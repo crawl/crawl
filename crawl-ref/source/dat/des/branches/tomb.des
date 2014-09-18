@@ -437,8 +437,8 @@ ENDMAP
 NAME:    tomb_1_centre_grunt_parallel
 TAGS:    tomb_1_centre unrand no_hmirror
 MONS:    mummy / skeletal warrior w:1 / nothing w:11
-MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
-         ancient champion / nothing w:250
+MONS:    guardian mummy w:198 / mummy w:28 / ancient champion w:8 / \
+         skeletal warrior w:8 / bennu / nothing w:248
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
 MONS:    silver statue / orange crystal statue / ice statue
@@ -475,8 +475,8 @@ ENDMAP
 NAME:    tomb_1_centre_grunt_layered
 TAGS:    tomb_1_centre unrand no_hmirror
 MONS:    mummy / skeletal warrior w:1 / nothing w:11
-MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
-         ancient champion / nothing w:250
+MONS:    guardian mummy w:198 / mummy w:28 / ancient champion w:8 / \
+         skeletal warrior w:8 / bennu / nothing w:248
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
 MONS:    silver statue / orange crystal statue / ice statue
@@ -520,7 +520,8 @@ SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST: AEIMR = +, a = ), ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
 MONS: mummy / guardian mummy w:3 / nothing
-MONS: guardian mummy w:233 / ancient champion w:50 / mummy / nothing w:233
+MONS: guardian mummy w:270 / ancient champion w:40 / \
+      bennu w:20 / mummy / nothing w:275
 MONS: mummy priest / lich w:1 / nothing w:11
 MONS: greater mummy / ancient lich w:1 / nothing w:11
 MAP
@@ -577,8 +578,8 @@ SHUFFLE: EFGH / EGFH / EGHF / GEFH / GEHF / GHEF
 SUBST:   ABEF = c, CDGH = '
 SUBST:   ' = 3 .:200
 NSUBST:  < = } / ., > = ] / .
-MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
-         ancient champion / nothing w:250
+MONS:    guardian mummy w:198 / mummy w:28 / ancient champion w:8 / \
+         skeletal warrior w:8 / bennu / nothing w:248
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy
 MAP
@@ -600,8 +601,8 @@ NAME:    tomb_1_hall_stairs_grunt_snakey
 TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST:   ' = 3 .:200
-MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
-         ancient champion / nothing w:250
+MONS:    guardian mummy w:198 / mummy w:28 / ancient champion w:8 / \
+         skeletal warrior w:8 / bennu / nothing w:248
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy
 MAP
@@ -802,7 +803,7 @@ ENDMAP
 NAME:    tomb_2_ambush_grunt_patterns
 TAGS:    tomb_2_ambush unrand
 MONS:    mummy / skeletal warrior w:2
-MONS:    guardian mummy / ancient champion w:2
+MONS:    guardian mummy w:14 / ancient champion w:2 / bennu w:2
 MONS:    mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:    greater mummy / ancient lich w:1
 SHUFFLE: AB / Ad / dA, CD / Ce / eC, EF / Ef / fE
@@ -835,7 +836,7 @@ ENDMAP
 NAME: tomb_2_ambush_grunt_arcs
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
-MONS: guardian mummy / ancient champion w:2
+MONS: guardian mummy w:14 / ancient champion w:2 / bennu w:2
 MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS: greater mummy / ancient lich w:1
 MAP
@@ -986,7 +987,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_curves
 TAGS:  tomb_3_rune unrand
-MONS:  guardian mummy / ancient champion w:2
+MONS:  guardian mummy w:14 / ancient champion w:2 / bennu w:2
 MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:  greater mummy / ancient lich w:1
 KMASK: O = no_item_gen
@@ -1017,7 +1018,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_snapback
 TAGS:  tomb_3_rune unrand
-MONS:  guardian mummy / ancient champion w:2
+MONS:  guardian mummy w:14 / ancient champion w:2 / bennu w:2
 MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:  greater mummy / ancient lich w:1
 KMASK: O = no_item_gen
