@@ -1161,6 +1161,45 @@ x...xxxxxx
 x..xx
 ENDMAP
 
+NAME:    hangedman_elven_crosses_minicolossus
+TAGS:    no_monster_gen transparent misc_elf_vault
+DEPTH:   Elf
+MONS:    deep elf conjurer, deep elf knight / deep elf priest w:6
+MONS:    deep elf fighter / deep elf mage
+MONS:    dancing weapon ; short sword ego:flaming | short sword ego:freezing | \
+                          short sword ego:venom | short sword ego:electrocution
+# Some basic excessive pillar randomization work,
+# with spokes per-cross and centers in mirrored / half pairs.
+SUBST:   A : xxcb..., B : xxcb..., C : xxcb..., D : xxcb...
+SHUFFLE: EFGHIJKL / EFIJGHKL, EFGH / FEHG
+SHUFFLE: IJKL / JILK, MNOP / MONP, +Q
+SUBST:   EG : xxcb, IK : xxcb, FHJL = .
+SUBST:   MN : x., OP : x., Q = x
+MAP
+    .@.xxxxxx
+    @x.+...xx
+    ..3x.A.xxxxx
+   xx+xx...xxxxxxxx
+   xx...EFE..*xxxxx.@.
+   xx.A.FMF.A2x...+.x@
+  xxx...EFE..*x.B.x3..
+  xxxxxx.4.xxxx...xx+x
+  xx*2*x.A.Q...IJI...x
+xxxx.D.x..1+.B4JNJ.B.x
+xxxx...xQ+cc1..IJI...x
+x...KLK..1cc+Qx...xxxx
+x.D.LPL4D.+1..x.B.xxxx
+x...KLK...Q.C.x*2*xx
+x+xx...xxxx.4.xxxxxx
+..3x.D.x*..GHG...xxx
+@x.+...x2C.HOH.C.xx
+.@.xxxxx*..GHG...xx
+   xxxxxxxx...xx+xx
+      xxxxx.C.x3..
+         xx...+.x@
+         xxxxxx.@.
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

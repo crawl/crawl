@@ -1287,6 +1287,98 @@ xxWWWxxWxxx
   xxxxxxx
 ENDMAP
 
+NAME:   hangedman_spider_mandibles
+TAGS:   extra transparent decor
+DEPTH:  Spider
+# 59 inside blocks, 59 outside blocks.
+NSUBST: x = 6:. / 9 = xx. / *:x
+NSUBST: z = 4:. / 4:' / 9 = xxx''. / *:x
+CLEAR:  '
+MAP
+      zzzzzzz
+     zz.....zz
+    zz...x...zz
+    z...xxx...z
+   zzx...x...xzz
+  @z.x.......x.z@
+ @z...xx...xx...z@
+ z.....xx.xx.....z
+ zx..xxx...xxx..xz
+zz.x.x.......x.x.zz
+z..xxx.......xxx..z
+z..xx....x....xx..z
+ z.x....xxx....x.z
+z..x....xxx....x..z
+z..xx....x....xx..z
+zz..xx.......xx..zz
+ zz.............zz
+  zzzz..@.@..zzzz
+ENDMAP
+
+# Bah, bu bah, bu ba-ba-ba ba-ba-ba baa, bu ba-ba-ba buh.
+NAME:    hangedman_spider_tarantella_strand
+TAGS:    extra transparent decor
+DEPTH:   Spider
+ORIENT:  north
+MONS:    tarantella
+# The size of the vault means this upped weight is actually akin
+# to the usual vault weight. The vault is highly random and ends
+# up being very unobtrusive for most Spider layouts, anyway.
+WEIGHT:  25
+# Very selectively, partially ruin the edge of the beats.
+NSUBST:  A = 1:. / 2 = X / *:x, B = 1:. / 2 = X / *:x
+NSUBST:  C = 1:. / 2 = X / *:x, D = 4:. / 4 = X / *:x
+NSUBST:  E = 1:X / *:x, F = 1:X / *:x, G = 1:X / *:x
+NSUBST:  H = 1:X / *:x, I = 1:X / *:x, J = 1:X / *:x
+NSUBST:  K = 1:X / *:x, L = 1:X / *:x, M = 1:X / *:x
+NSUBST:  N = 1:X / *:x, O = 1:X / *:x, P = 1:X / *:x
+# Even random trimming can have weighed styles to it.
+SUBST:   z : ^<>, ^ = xx', < = xx''', > = x'
+SUBST:   y : XYZ, X = xx., Y = xx..., Z = x.
+SUBST:   X : %*|, % = xxx.., * = x., | = xx...
+SUBST:   " : "`;, " = ..', ` = ...', ; = .'
+CLEAR:   '
+# The string here pushes the vault from the level border.
+MAP
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+xzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx
+xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................yzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................xyyyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzz
+.AAAA....BBBB.............1.........yzzzzzzzzzzzzzzzzzzzzzzzzz
+"AxxA.EE.BxxB.FF....................xyyyyyyyyyyyyyyyyyxzzzzzzz
+"AxxA.EE.BxxB.FF..GG.......JJ.........................yzzzzzzz
+.AAAA....BBBB.....GG.HH....JJ.KK......................xyyyyyyx
+.....................HH.II....KK.LL..CCCC....NN...............
+ .""..""..""..""........II.......LL..CxxC.MM.NN.OO.....DDDDDD.
+                 ....................CxxC.MM....OO.PP..DxxxxD.
+                 @"".""."".""."".""..CCCC..........PP..DxxxxD"
+                                    ...................DxxxxD"
+                                    @."".."".""."".""..DxxxxD.
+                                                      .DDDDDD.
+                                                      ...""..
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
