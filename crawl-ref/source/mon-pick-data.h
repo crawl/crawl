@@ -1324,6 +1324,7 @@ static const pop_entry pop_water_hell[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+// Shoals, Abyss, Pan, Zot, D:1-5 liquid monsters are blocked in dungeon.cc
 static const struct { const pop_entry *pop; int count; } population_water[] =
 {
     POP(water_d),
@@ -1335,7 +1336,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
 #endif
     POP(water_generic),
     POP(water_swamp),
-    POP(water_generic), // Shoals isn't actually used
+    POP(water_generic),
     POP(water_snake),
     POP(water_generic),
     POP(water_generic),

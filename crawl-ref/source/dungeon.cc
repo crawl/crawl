@@ -3818,15 +3818,16 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
 
 static void _place_aquatic_monsters()
 {
-    // [ds] Shoals relies on normal monster generation to place its monsters.
-    // Given the amount of water area in the Shoals, placing water creatures
-    // explicitly explodes the Shoals' xp budget.
-    //
-    // Also disallow water creatures below D:6.
+    // Shoals relies on normal monster generation to place its monsters.
+    // Abyss's nature discourages random movement-inhibited monsters.
+    // Default liquid creatures are harmless in Pan or Zot, and
+    // threatening ones are distracting from their sets.
+    // Random liquid monster placement is too vicious before D:6.
     //
     if (player_in_branch(BRANCH_SHOALS)
         || player_in_branch(BRANCH_ABYSS)
         || player_in_branch(BRANCH_PANDEMONIUM)
+        || player_in_branch(BRANCH_ZOT)
         || player_in_branch(BRANCH_DUNGEON) && you.depth < 6)
     {
         return;
