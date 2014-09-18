@@ -566,24 +566,23 @@ bool fill_status_info(int status, status_info* inf)
     }
 
     case DUR_HORROR:
+        inf->light_text = make_stringf("Horr(%d)",
+                          (-1 * you.props["horror_penalty"].get_int()));
         if (you.props["horror_penalty"].get_int() > 4)
         {
             inf->light_colour = RED;
-            inf->light_text   = "Horr";
             inf->short_text   = "overwhelmed with horror";
             inf->long_text    = "Horror overwhelms you!";
         }
         else if (you.props["horror_penalty"].get_int() > 2)
         {
             inf->light_colour = LIGHTRED;
-            inf->light_text   = "Horr";
             inf->short_text   = "extremely horrified";
             inf->long_text    = "You are extremely horrified!";
         }
         else if (you.props["horror_penalty"].get_int())
         {
             inf->light_colour = YELLOW;
-            inf->light_text   = "Horr";
             inf->short_text   = "horrified";
             inf->long_text    = "You are horrified!";
         }
