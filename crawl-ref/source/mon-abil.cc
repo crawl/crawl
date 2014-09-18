@@ -1940,7 +1940,7 @@ bool lost_soul_revive(monster* mons)
             if (mons->holiness() == MH_NATURAL)
             {
                 mons->move_to_pos(newpos);
-                mons->flags |= MF_SPECTRALISED;
+                mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
             }
 
             // check if you can see the monster *after* it maybe moved

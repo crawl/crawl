@@ -561,6 +561,9 @@ monster_info::monster_info(const monster* m, int milev)
         ghost_demon& ghost = *m->ghost;
         u.ghost.acting_part = ghost.acting_part;
     }
+    // As is ghostliness
+    if (testbits(m->flags, MF_SPECTRALISED))
+        mb.set(MB_SPECTRALISED);
 
     if (milev <= MILEV_NAME)
     {
@@ -683,9 +686,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->submerged())
         mb.set(MB_SUBMERGED);
-
-    if (testbits(m->flags, MF_SPECTRALISED))
-        mb.set(MB_SPECTRALISED);
 
     if (mons_is_pghost(type))
     {
@@ -969,6 +969,11 @@ string monster_info::common_name(description_level_type desc) const
 
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
+
+    if (is(MB_SPECTRALISED))
+    {
+        ss << "ghostly ";
+    }
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";
@@ -1615,8 +1620,6 @@ vector<string> monster_info::attributes() const
         v.push_back("shrouded");
     if (is(MB_CORROSION))
         v.push_back("covered in acid");
-    if (is(MB_SPECTRALISED))
-        v.push_back("ghostly");
     if (is(MB_SLOW_MOVEMENT))
         v.push_back("covering ground slowly");
     if (is(MB_LIGHTLY_DRAINED))
