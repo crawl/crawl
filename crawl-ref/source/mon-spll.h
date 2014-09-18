@@ -237,7 +237,7 @@ static const mon_spellbook mspell_list[] =
        SPELL_PARALYSE,
        SPELL_DISINTEGRATE,
        SPELL_NO_SPELL,
-       SPELL_SLOW,
+       SPELL_DRAIN_MANA,
        SPELL_CONFUSE,
        SPELL_TELEPORT_OTHER
       }
@@ -2311,7 +2311,7 @@ static const mon_spellbook mspell_list[] =
        SPELL_BOLT_OF_COLD,
        SPELL_BOLT_OF_DRAINING,
        SPELL_INVISIBILITY,
-       SPELL_ANIMATE_DEAD,
+       SPELL_SIMULACRUM,
        SPELL_THROW_ICICLE,
        SPELL_NO_SPELL
       }
@@ -2333,7 +2333,7 @@ static const mon_spellbook mspell_list[] =
        SPELL_BOLT_OF_COLD,
        SPELL_THROW_ICICLE,
        SPELL_HASTE,
-       SPELL_SIMULACRUM,
+       SPELL_ANIMATE_DEAD,
        SPELL_OZOCUBUS_ARMOUR,
        SPELL_NO_SPELL
       }
