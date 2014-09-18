@@ -820,8 +820,28 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     const menu_sort_condition *cond = NULL;
     if (sort) cond = find_menu_sort_condition();
 
-    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
+        OBJ_WEAPONS,
+        OBJ_MISSILES,
+        OBJ_ARMOUR,
+        OBJ_STAVES,
+        OBJ_RODS,
+        OBJ_WANDS,
+        OBJ_SCROLLS,
+        OBJ_JEWELLERY,
+        OBJ_POTIONS,
+        OBJ_BOOKS,
+        OBJ_MISCELLANY,
+        OBJ_FOOD,
+        // These two can't actually be in your inventory.
+        OBJ_CORPSES,
+        OBJ_ORBS,
+        OBJ_GOLD);
+
+    for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
+        int i = inv_order[obj];
+
         if (!inv_class[i])
             continue;
 
