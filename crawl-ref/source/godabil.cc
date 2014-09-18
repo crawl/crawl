@@ -5663,9 +5663,9 @@ void ru_draw_out_power()
     you.redraw_evasion = true;
 
     inc_hp(div_rand_round(you.piety, 16)
-        + roll_dice(div_rand_round(you.piety, 20), 5));
+        + roll_dice(div_rand_round(you.piety, 20), 7));
     inc_mp(div_rand_round(you.piety, 48)
-        + roll_dice(div_rand_round(you.piety, 40), 3));
+        + roll_dice(div_rand_round(you.piety, 40), 5));
     drain_player(20, false, true);
 }
 
