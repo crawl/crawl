@@ -489,7 +489,7 @@ TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg, neqoxec, cacodemon, killer klown
-MONS:	   tentacled monstrosity
+MONS:      tentacled monstrosity
 NSUBST:    2 = 4:3 / 3 = 2345 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')
