@@ -1301,7 +1301,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_KHUFU,
       {
-       SPELL_SUMMON_DEMON,
+       SPELL_SUMMON_EMPEROR_SCORPIONS,
        SPELL_SMITING,
        SPELL_SMITING,
        SPELL_SYMBOL_OF_TORMENT,
@@ -2446,6 +2446,28 @@ static const mon_spellbook mspell_list[] =
        SPELL_PRIMAL_WAVE,
        SPELL_PRIMAL_WAVE,
        SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_GREATER_MUMMY_I,
+      {
+       SPELL_SUMMON_MANA_VIPER,
+       SPELL_SMITING,
+       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_SUMMON_UNDEAD,
+       SPELL_SUMMON_UNDEAD
+      }
+    },
+
+    {  MST_GREATER_MUMMY_II,
+      {
+       SPELL_SUMMON_DEMON,
+       SPELL_SMITING,
+       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_SUMMON_EMPEROR_SCORPIONS,
+       SPELL_SUMMON_EMPEROR_SCORPIONS
       }
     },
 
