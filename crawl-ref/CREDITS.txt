@@ -94,7 +94,6 @@
     Mike Boutin
     Daniel Mark Brownrigg
     Andre Bubel
-    Corin Buchanan-Howland
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
@@ -241,6 +240,7 @@ The Dungeon Crawl Stone Soup development team is:
     Adam Borowski
     Samuel Bronson
     Jude Brown
+    Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
     Chris Campbell
