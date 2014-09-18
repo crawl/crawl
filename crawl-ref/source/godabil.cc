@@ -5816,7 +5816,7 @@ bool ru_power_leap()
     return return_val;
 }
 
-static int _cataclysmable(coord_def where, int pow, int, actor* agent)
+static int _apocalypseable(coord_def where, int pow, int, actor* agent)
 {
     monster* mon = monster_at(where);
     if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
@@ -5824,9 +5824,9 @@ static int _cataclysmable(coord_def where, int pow, int, actor* agent)
     return 1;
 }
 
-static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
+static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
 {
-    if (!_cataclysmable(where, pow, dummy, agent))
+    if (!_apocalypseable(where, pow, dummy, agent))
         return 0;
     monster* mons = monster_at(where);
     ASSERT(mons);
@@ -5834,7 +5834,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     int dmg = 10;
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
-    int effect = random2(6);
+    int effect = random2(5);
 
     if (mons_is_firewood(mons))
         effect = 99; // > 2 is just damage -- no slowed toadstools
@@ -5859,11 +5859,11 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
         case 2:
             simple_monster_message(mons, " is slowed by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
-            dmg += roll_dice(die_size, 5);
+            dmg += roll_dice(die_size, 6);
             break;
 
         default:
-            dmg += roll_dice(die_size, 6);
+            dmg += roll_dice(die_size, 8);
             break;
     }
     mons->hurt(agent, dmg, BEAM_ENERGY, true);
@@ -5871,20 +5871,20 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     return 1;
 }
 
-bool ru_cataclysm()
+bool ru_apocalypse()
 {
-    int count = apply_area_visible(_cataclysmable, you.piety, &you);
+    int count = apply_area_visible(_apocalypseable, you.piety, &you);
     if (!count)
     {
-        if (!yesno("There are no visible enemies. Unleash your cataclysm anyway?",
+        if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
             true, 'n'))
         {
             return false;
         }
     }
-    mpr("BWOOM! You release an incredible blast of power in all directions!");
+    mpr("You reveal the great annihilating truth to your foes!");
     noisy(30, you.pos());
-    apply_area_visible(_apply_cataclysm, you.piety, &you);
+    apply_area_visible(_apply_apocalypse, you.piety, &you);
     drain_player(100,false, true);
     return true;
 }

@@ -206,7 +206,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
     // Ru
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
-      ABIL_RU_POWER_LEAP, ABIL_RU_CATACLYSM }
+      ABIL_RU_POWER_LEAP, ABIL_RU_APOCALYPSE }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -426,7 +426,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN|ABFLAG_CONF_OK },
     { ABIL_RU_POWER_LEAP, "Power Leap",
       5, 0, 0, 0, 0, ABFLAG_EXHAUSTION },
-    { ABIL_RU_CATACLYSM, "Cataclysm",
+    { ABIL_RU_APOCALYPSE, "Apocalypse",
       8, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
 
     { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
@@ -1148,7 +1148,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_RU_DRAW_OUT_POWER:
     case ABIL_RU_POWER_LEAP:
-    case ABIL_RU_CATACLYSM:
+    case ABIL_RU_APOCALYPSE:
     case ABIL_RU_SACRIFICE_PURITY:
     case ABIL_RU_SACRIFICE_WORDS:
     case ABIL_RU_SACRIFICE_DRINK:
@@ -3208,14 +3208,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-    case ABIL_RU_CATACLYSM:
+    case ABIL_RU_APOCALYPSE:
         fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
-            mpr("You're too exhausted to unleash your cataclysmic power.");
+            mpr("You're too exhausted to unleash your apocalyptic power.");
             return SPRET_ABORT;
         }
-        if (!ru_cataclysm())
+        if (!ru_apocalypse())
             return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;

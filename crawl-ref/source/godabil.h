@@ -120,5 +120,5 @@ bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
-bool ru_cataclysm();
+bool ru_apocalypse();
 #endif
