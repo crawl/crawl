@@ -1321,6 +1321,7 @@ static const pop_entry pop_water_hell[] =
   {  1,  7,   230, FLAT, MONS_HYDRA },
   {  1,  7,   115, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  7,    37, FLAT, MONS_KRAKEN },
+  {  0,  8,    74,   UP, MONS_ELEMENTAL_WELLSPRING },
   { 0,0,0,FLAT,MONS_0 }
 };
 

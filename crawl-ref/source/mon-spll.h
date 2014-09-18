@@ -2437,4 +2437,16 @@ static const mon_spellbook mspell_list[] =
        SPELL_BLACK_MARK
       }
     },
+
+    {  MST_ELEMENTAL_WELLSPRING,
+      {
+       SPELL_PRIMAL_WAVE,
+       SPELL_PRIMAL_WAVE,
+       SPELL_NO_SPELL,
+       SPELL_PRIMAL_WAVE,
+       SPELL_PRIMAL_WAVE,
+       SPELL_NO_SPELL
+      }
+    },
+
 };
