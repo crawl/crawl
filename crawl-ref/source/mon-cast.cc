@@ -4575,8 +4575,8 @@ static const pop_entry _planerend_swamp[] =
 };
 
 static const pop_entry _planerend_shoals[] =
-{ // Swamp enemies
-  {  1,   1,   50, FLAT, MONS_SIREN },
+{ // Shoals enemies
+  {  1,   1,   50, FLAT, MONS_WATER_NYMPH },
   {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
   {  1,   1,  100, FLAT, MONS_MERFOLK_AQUAMANCER },
   {  1,   1,   80, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
@@ -4614,7 +4614,7 @@ static const pop_entry _planerend_elf[] =
 static const pop_entry _planerend_vaults[] =
 { // Vaults enemies
   {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
-  {  1,   1,   80, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,   1,   80, FLAT, MONS_DANCING_WEAPON },
   {  1,   1,   60, FLAT, MONS_IRONBRAND_CONVOKER },
   {  1,   1,  100, FLAT, MONS_WAR_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
@@ -4624,14 +4624,14 @@ static const pop_entry _planerend_crypt[] =
 { // Crypt enemies
   {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
   {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
-  {  1,   1,  100, FLAT, MONS_ANCIENT_CHAMPION },
+  {  1,   1,   80, FLAT, MONS_REVENANT },
   {  1,   1,   80, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_tomb[] =
 { // Tomb enemies
-  {  1,   1,   80, FLAT, MONS_GUARDIAN_MUMMY },
+  {  1,   1,   60, FLAT, MONS_ANCIENT_CHAMPION },
   {  1,   1,  100, FLAT, MONS_SPHINX },
   {  1,   1,  100, FLAT, MONS_MUMMY_PRIEST },
   { 0,0,0,FLAT,MONS_0 }
@@ -4642,7 +4642,7 @@ static const pop_entry _planerend_abyss[] =
   {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
   {  1,   1,   80, FLAT, MONS_APOCALYPSE_CRAB },
   {  1,   1,   50, FLAT, MONS_THRASHING_HORROR },
-  {  1,   1,   50, FLAT, MONS_WORLDBINDER },
+  {  1,   1,   50, FLAT, MONS_VERY_UGLY_THING },
   { 0,0,0,FLAT,MONS_0 }
 };
 
