@@ -1523,7 +1523,8 @@ static bool _check_ability_possible(const ability_def& abil,
         return false;
     }
 
-    if (silenced(you.pos()) && !you_worship(GOD_NEMELEX_XOBEH))
+    if (silenced(you.pos()) && !you_worship(GOD_NEMELEX_XOBEH)
+          && !you_worship(GOD_RU))
     {
         talent tal = get_talent(abil.ability, false);
         if (tal.is_invocation)
@@ -4043,7 +4044,9 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     // Remaining abilities are unusable if under penance, or if silenced if not
     // Nemelex abilities.
     if (!include_unusable && (player_under_penance()
-                              || silenced(you.pos()) && !you_worship(GOD_NEMELEX_XOBEH)))
+                              || silenced(you.pos())
+                              && !you_worship(GOD_NEMELEX_XOBEH)
+                              && !you_worship(GOD_RU)))
     {
         return abilities;
     }
