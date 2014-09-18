@@ -2642,7 +2642,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
 static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
 {
     bolt tracer;
-    tracer.foe_ratio = 80;
+    tracer.foe_ratio = 0;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (agent == *ai || !agent->can_see(*ai) || !vulnerable(*ai))
