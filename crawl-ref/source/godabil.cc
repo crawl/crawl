@@ -5598,33 +5598,38 @@ bool will_ru_retaliate()
 // Power of retribution increases with damage, decreases with monster HD.
 void ru_do_retribution(monster* mons, int damage)
 {
-    int power = max(0, random2(div_rand_round(you.piety * 10, 32))
+    int power = max(0, random2(div_rand_round(you.piety*10, 32))
         + damage - (2 * mons->get_hit_dice()));
     const actor* act = &you;
 
-    if (power > 50)
+    if (power > 50 && (mons->can_use_spells() || mons->is_actual_spellcaster()))
     {
-        simple_monster_message(mons, " is silenced in retribution by your aura!");
+        simple_monster_message(mons, " is muted in retribution by your aura!",
+            MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_MUTE, 1, act, power+random2(120)));
     }
     else if (power > 35)
     {
-        simple_monster_message(mons, " is paralyzed in retribution by your aura!");
+        simple_monster_message(mons, " is paralyzed in retribution by your aura!",
+            MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        simple_monster_message(mons, " is slowed in retribution by your aura!");
+        simple_monster_message(mons, " is slowed in retribution by your aura!",
+            MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
-    else if (power > 15)
+    else if (power > 10)
     {
-        simple_monster_message(mons, " is blinded in retribution by your aura!");
+        simple_monster_message(mons, " is blinded in retribution by your aura!",
+            MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        simple_monster_message(mons, " is illuminated in retribution by your aura!");
+        simple_monster_message(mons, " is illuminated in retribution by your aura!",
+            MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
 }
@@ -5839,7 +5844,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
         case 0:
             if (mons->can_use_spells() || mons->is_actual_spellcaster())
             {
-                simple_monster_message(mons, " is silenced by your wave of power!");
+                simple_monster_message(mons, " is muted by your wave of power!");
                 mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));
                 dmg += roll_dice(die_size, 4);
                 break;
