@@ -237,7 +237,7 @@ static const mon_spellbook mspell_list[] =
        SPELL_PARALYSE,
        SPELL_DISINTEGRATE,
        SPELL_NO_SPELL,
-       SPELL_DRAIN_MANA,
+       SPELL_DRAIN_MAGIC,
        SPELL_CONFUSE,
        SPELL_TELEPORT_OTHER
       }
