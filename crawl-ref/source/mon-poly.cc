@@ -129,6 +129,15 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         return false;
     }
 
+    // [hm] Lower base draconian chances since there are nine of them,
+    // and they shouldn't each count for a full chance.
+    if (mons_genus(new_mclass) == MONS_DRACONIAN
+        && new_mclass != MONS_DRACONIAN
+        && !one_chance_in(9))
+    {
+        return false;
+    }
+
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
