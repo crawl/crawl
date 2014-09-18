@@ -300,7 +300,9 @@ static string _get_speak_string(const vector<string> &prefixes,
         //separate death/permadeath lines for resurrection monsters
         if (mons_is_natasha(mons) && !mons_felid_can_revive(mons) ||
            (mons->type == MONS_BENNU) && !mons_bennu_can_revive(mons))
+        {
             key += " permanently";
+        }
         key += " killed";
     }
     else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))

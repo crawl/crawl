@@ -971,9 +971,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << "spectral ";
 
     if (is(MB_SPECTRALISED))
-    {
         ss << "ghostly ";
-    }
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";
