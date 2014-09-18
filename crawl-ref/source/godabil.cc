@@ -5826,7 +5826,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    int dmg;
+    int dmg = 10;
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(6);
@@ -5837,25 +5837,28 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
     switch (effect)
     {
         case 0:
-            simple_monster_message(mons, " is silenced by your wave of power!");
-            mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(120)));
-            dmg = roll_dice(die_size, 4);
-            break;
+            if (mons->can_use_spells() || mons->is_actual_spellcaster())
+            {
+                simple_monster_message(mons, " is silenced by your wave of power!");
+                mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));
+                dmg += roll_dice(die_size, 4);
+                break;
+            } // if not a spellcaster, fall through to paralysis.
 
         case 1:
             simple_monster_message(mons, " is paralyzed by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
-            dmg = roll_dice(die_size, 4);
+            dmg += roll_dice(die_size, 4);
             break;
 
         case 2:
             simple_monster_message(mons, " is slowed by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
-            dmg = roll_dice(die_size, 5);
+            dmg += roll_dice(die_size, 5);
             break;
 
         default:
-            dmg = roll_dice(die_size, 6);
+            dmg += roll_dice(die_size, 6);
             break;
     }
     mons->hurt(agent, dmg, BEAM_ENERGY, true);
