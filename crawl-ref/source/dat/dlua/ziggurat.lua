@@ -302,7 +302,7 @@ mset(spec_fn(function ()
 
 mset(spec_fn(function ()
                local d = you.depth() + 5
-               return "place:Tomb:$ w:200 / greater mummy w:" .. d
+               return "place:Tomb:$ 9 w:195 / bennu w:5 / greater mummy w:" .. d
              end))
 
 mset(spec_fn(function ()

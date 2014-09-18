@@ -297,8 +297,9 @@ static string _get_speak_string(const vector<string> &prefixes,
     int duration = 1;
     if (mons->hit_points <= 0)
     {
-        //let her have separate death/permadeath lines
-        if (mons_is_natasha(mons) && !mons_felid_can_revive(mons))
+        //separate death/permadeath lines for resurrection monsters
+        if (mons_is_natasha(mons) && !mons_felid_can_revive(mons) ||
+           (mons->type == MONS_BENNU) && !mons_bennu_can_revive(mons))
             key += " permanently";
         key += " killed";
     }

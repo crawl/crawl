@@ -6298,6 +6298,34 @@ _Xtahua_rare_
 ##########################################
 # Specific non-unique monsters
 ##########################################
+################## Bennu ###################################
+%%%%
+bennu
+
+VISUAL:@The_monster@'s plumage briefly flares with an otherwordly flame.
+
+VISUAL:@The_monster@ jubilantly flits about.
+%%%%
+Bennu killed
+
+@_Bennu_death_@
+%%%%
+_Bennu_death_
+
+VISUAL:@The_monster@ renews itself in a burst of flame!
+%%%%
+Bennu permanently killed
+
+VISUAL:@The_monster@, emptied of spiritual energy, fades out from this realm.
+%%%%
+confused Bennu killed
+
+@Bennu killed@
+%%%%
+confused Bennu permanently killed
+
+@Bennu permanently killed@
+%%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.

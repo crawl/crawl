@@ -2430,6 +2430,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_HARPY,
     MONS_RAVEN,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BENNU,
+#endif
     MONS_FIRE_CRAB,
 #if TAG_MAJOR_VERSION == 34
     MONS_HOMUNCULUS,
@@ -3218,6 +3221,7 @@ enum monster_type                      // menv[].type
     MONS_TORPOR_SNAIL,
     MONS_MNOLEG_TENTACLE,
     MONS_MNOLEG_TENTACLE_SEGMENT,
+    MONS_BENNU,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

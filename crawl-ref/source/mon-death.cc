@@ -1007,6 +1007,17 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.ex_size = origin.number;
 }
 
+static void _setup_bennu_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_GHOSTLY_FLAME;
+    beam.damage  = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
+    beam.name    = "pyre of ghostly fire";
+    beam.noise_msg = "You hear an otherworldly crackling!";
+    beam.colour  = CYAN;
+    beam.ex_size = 2;
+}
+
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
@@ -1059,6 +1070,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
         _setup_prism_explosion(beam, *mons);
         sanct_msg = "By Zin's power, the prism's explosion is contained.";
     }
+    else if (type == MONS_BENNU)
+    {
+        _setup_bennu_explosion(beam, *mons);
+        sanct_msg = "By Zin's power, the bennu's fires are quelled.";
+    }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
@@ -1086,10 +1102,20 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
     if (beam.aux_source.empty())
     {
-        if (YOU_KILL(killer))
-            beam.aux_source = "set off by themself";
-        else if (pet_kill)
-            beam.aux_source = "set off by their pet";
+        if (type == MONS_BENNU)
+        {
+            if (YOU_KILL(killer))
+                beam.aux_source = "ignited by themself";
+            else if (pet_kill)
+                beam.aux_source = "ignited by their pet";
+        }
+        else
+        {
+            if (YOU_KILL(killer))
+                beam.aux_source = "set off by themself";
+            else if (pet_kill)
+                beam.aux_source = "set off by their pet";
+        }
     }
 
     bool saw = false;
@@ -1099,6 +1125,9 @@ static bool _explode_monster(monster* mons, killer_type killer,
         viewwindow();
         if (is_sanctuary(mons->pos()))
             mprf(MSGCH_GOD, "%s", sanct_msg);
+        else if (type == MONS_BENNU)
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s blazes out!",
+                 mons->full_name(DESC_THE).c_str());
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
                  mons->full_name(DESC_THE).c_str());
@@ -1122,9 +1151,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
+    // Unless it's a phoenix, where this isn't much of a concern.
     mgrd(mons->pos()) = NON_MONSTER;
 
-    // The explosion might cause a monster to be placed where the spore
+    // The explosion might cause a monster to be placed where the bomb
     // used to be, so make sure that mgrd() doesn't get cleared a second
     // time (causing the new monster to become floating) when
     // mons->reset() is called.
@@ -1610,6 +1640,7 @@ int monster_die(monster* mons, killer_type killer,
         || mons->type == MONS_BALL_LIGHTNING
         || mons->type == MONS_LURKING_HORROR
         || (mons->type == MONS_FULMINANT_PRISM && mons->number > 0)
+        || mons->type == MONS_BENNU
         || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
@@ -2469,6 +2500,10 @@ int monster_die(monster* mons, killer_type killer,
     {
         treant_release_fauna(mons);
     }
+    else if (mons->type == MONS_BENNU && !in_transit && !was_banished
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard
+             && mons_bennu_can_revive(mons))
+        mons_bennu_revive(mons);
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())
@@ -3387,5 +3422,42 @@ void mons_felid_revive(monster* mons)
             }
 
         newmons->props["felid_revives"].get_byte() = revives;
+    }
+}
+
+bool mons_bennu_can_revive(const monster* mons)
+{
+    return !mons->props.exists("bennu_revives")
+           || mons->props["bennu_revives"].get_byte() < 1;
+}
+
+void mons_bennu_revive(monster* mons)
+{
+    // Bennu only resurrect once and immediately in the same spot,
+    // so this is rather abbreviated compared to felids.
+    // XXX: Maybe generalize felid_revives and merge the two anyway?
+    monster_type type = MONS_BENNU;
+    monsterentry* me = get_monster_data(type);
+    ASSERT(me);
+
+    const int revives = (mons->props.exists("bennu_revives"))
+                        ? mons->props["bennu_revives"].get_byte() + 1
+                        : 1;
+    bool res_visible = you.see_cell(mons->pos());
+
+    mgen_data mg(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
+                        : SAME_ATTITUDE(mons)),
+                        0, 0, 0, (mons->pos()), mons->foe,
+                        (res_visible ? MG_DONT_COME : 0), GOD_NO_GOD,
+                        MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                        level_id::current());
+
+    mons->set_position(coord_def(0,0));
+
+    monster *newmons = create_monster(mg);
+    if (newmons)
+    {
+        newmons->props["bennu_revives"].get_byte() = revives;
+
     }
 }

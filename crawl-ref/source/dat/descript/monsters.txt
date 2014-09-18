@@ -605,6 +605,13 @@ A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, yet it will provide fire support, assaulting whatever its conjurer
 casts at with magical missiles that never miss.
 %%%%
+bennu
+
+Sacred, self-created sunbirds, representative of rebirth. They have ascended
+past the cycles of life and death, and readily call upon aspects of both.
+Famously, they may rise forth from death in a burst of flame, though common
+portrayals leaves out how unholy these flames are.
+%%%%
 big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.

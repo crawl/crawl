@@ -60,6 +60,7 @@ butterfly10
 fire_bat MONS_FIRE_BAT
 %rim 1
 raven MONS_RAVEN
+bennu MONS_BENNU
 %sdir mon/vault
 %rim 0
 microbat MONS_MICROBAT
