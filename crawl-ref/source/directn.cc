@@ -395,6 +395,7 @@ void direction_chooser::print_key_hints() const
             break;
         case DIR_TARGET:
         case DIR_JUMP:
+        case DIR_LEAP:
             prompt += ", Dir - move target cursor";
             prompt += hint_string;
             break;
@@ -1354,7 +1355,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     if (restricts == DIR_JUMP && !valid_jump)
         return false;
 
-    if ((restricts == DIR_JUMP || !allow_out_of_range) && !in_range(target()))
+    if ((restricts == DIR_LEAP || restricts == DIR_JUMP || !allow_out_of_range)
+            && !in_range(target()))
     {
         mprf(MSGCH_EXAMINE_FILTER, "%s",
              hitfunc? hitfunc->why_not.c_str() : "That is beyond the maximum range.");
