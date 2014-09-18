@@ -1978,8 +1978,6 @@ void handle_monster_move(monster* mons)
 #endif
     coord_def old_pos = mons->pos();
 
-    coord_def kraken_last_update = mons->pos();
-
     if (!mons->has_action_energy())
         return;
 
@@ -1988,12 +1986,8 @@ void handle_monster_move(monster* mons)
     if (!mons->alive())
         return;
 
-    if (old_pos != mons->pos()
-        && mons_is_tentacle_head(mons_base_type(mons)))
-    {
+    if (mons_is_tentacle_head(mons_base_type(mons)))
         move_child_tentacles(mons);
-        kraken_last_update = mons->pos();
-    }
 
     old_pos = mons->pos();
 
@@ -2487,8 +2481,7 @@ void handle_monster_move(monster* mons)
 
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
-        if (mons->pos() != kraken_last_update)
-            move_child_tentacles(mons);
+        move_child_tentacles(mons);
 
         mons->number += (old_energy - mons->speed_increment)
                         * _tentacle_move_speed(mons_base_type(mons));
