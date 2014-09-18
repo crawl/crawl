@@ -2811,12 +2811,13 @@ WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
 MONS:     oklob plant / silver statue / orange crystal statue / ice statue /\
           w:1 Roxanne
 : elseif you.branch() == "Dungeon" or you.branch() == "Lair" then
-MONS:     oklob plant / burning bush
+MONS:     oklob plant, electric eel
+SHUFFLE:  1" / 22
 : elseif you.branch() == "Vaults" then
 MONS:     silver statue / orange crystal statue / ice statue / w:1 Roxanne
 : elseif you.branch() == "Depths" then
-MONS:     silver statue / orange crystal statue / ice statue / w:3 Roxanne /\
-          curse skull w:25
+MONS:     silver statue / orange crystal statue / ice statue / w:3 Roxanne
+SUBST:    " = 1
 : end
 #
 # Sometimes add some additional rock walls
@@ -2834,7 +2835,7 @@ SHUFFLE:  abc
 : end
 #
 NSUBST:   a = 1:{ / *:.
-SUBST:    'bc = .
+SUBST:    "'bc = .
 #
 # 50% chance for nearby >
 SUBST:    x : xy
@@ -2843,7 +2844,7 @@ MAP
  ......x
  ....cbxx
  '''''cbaxx
-@'1'''''aa@
+@"1'''''aa@
  '''''cbaxx
  ....cbxx
  ......x

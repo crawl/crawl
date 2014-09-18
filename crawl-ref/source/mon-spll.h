@@ -2426,4 +2426,15 @@ static const mon_spellbook mspell_list[] =
        SPELL_MASS_CONFUSION
       }
     },
+
+    {  MST_MURRAY,
+      {
+       SPELL_SUMMON_UNDEAD,
+       SPELL_SUMMON_UNDEAD,
+       SPELL_BLACK_MARK,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_SUMMON_UNDEAD,
+       SPELL_BLACK_MARK
+      }
+    },
 };

@@ -201,7 +201,8 @@ KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
 : end
 KMONS:   0 = soul eater
-KMONS:   Z = curse skull
+KMONS:   Z = silver statue
+KFEAT:   Z = known zot trap
 SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
 SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
@@ -242,12 +243,12 @@ ENDMAP
 NAME:    hangedman_restless_catacombs
 TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
-MONS:    soul eater, curse skull
+MONS:    soul eater, patrolling curse skull
 MONS:    skeletal warrior / phantasmal warrior w:6 / \
-         shadow wraith w:4 / guardian mummy
+         shadow wraith w:4 / guardian mummy w:6 / death ooze w:4
 KMONS:   45 = vampire knight
 KMONS:   67 = vampire mage
-KMONS:   89 = ghoul
+KMONS:   89 = flayed ghost
 KMONS:   AB = mummy priest
 KMONS:   CD = lich
 NSUBST:  0 = 1:( / 1 : ):9 >:1 / 1 : 3:9 [:1 / 1:4 / 1:5 / 1:6 / 1:7 / *:3

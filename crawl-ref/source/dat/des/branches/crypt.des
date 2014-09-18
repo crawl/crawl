@@ -111,7 +111,8 @@ NAME: crypt_curse_skull
 TAGS: allow_dup luniq extra
 DEPTH: Crypt
 CHANCE: 3333
-MONS: curse skull
+KMONS: 1 = curse skull
+KITEM: 1 = *, %, % / $, % / nothing, % / nothing
 MAP
 1
 ENDMAP
@@ -120,7 +121,8 @@ NAME: crypt_curse_skull_rare
 TAGS: allow_dup luniq extra
 DEPTH: Crypt
 CHANCE: 1429
-MONS: curse skull
+KMONS: 1 = curse skull
+KITEM: 1 = *, %, % / $, % / nothing, % / nothing
 MAP
 1
 ENDMAP
@@ -297,16 +299,14 @@ ENDMAP
 
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
-MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
-SHUFFLE: 1X/2Y
-SUBST:   X=., Y=x
+MONS:    bone dragon w:25 / lich / shadow dragon w:5
 : crypt_entry(_G)
 MAP
 .........
 .x.....x.
 .xx...xx.
 ..x.1.x..
-..x.X.x..
+..x.x.x..
 .xx...xx.
 .x.....x.
 .x..O..x.
@@ -753,7 +753,7 @@ oppc..ccccc..cpp..
 opcc+cc|4|cc+cc...
 opcc3c*|||*c..+1.@
 opcc+ccc3cccccc...
-oppc...c.c...cpp..
+oppc...cPc...cpp..
 oppcc.......ccppo
 ooppccc.2.cccppoo
  oopppcccccpppoo
@@ -1141,6 +1141,71 @@ cccc*ccc...v0cc
   ccccccccccccc
 ENDMAP
 
+NAME: cheibrodos_crypt_down_in_the_bonehoard
+DEPTH: Crypt, !Crypt:$
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: lich, mummy priest, freezing wraith / w:5 flayed ghost
+KITEM: 1 = %
+KFEAT: A = altar_kikubaaqudgha
+SHUFFLE: 12
+NSUBST: . = 8:0
+NSUBST: " = 1:| / 5=*$ / *:%
+MAP
+          ccccc       ccccc
+         cc.G.cc     cc.G.cc
+        cc.....ccccccc.....cc
+        c..0....c...c....0..c
+        cG..9...+.0.+...0..Gc
+  ccccccc....0..c...c..0....c
+ cc.....cc.....ccccccc.....cc
+cc.ccccc.cc...ccWWWWW+c...cc
+c.cc"""cc.cc+ccWWwwwWWccccc
+c.c""""1c.c...cWww3wwWc....
+c.+""A""c.+.0GcWw3V3wWcG0.@
+c.c""""1c.c...cWww3wwWc....
+c.cc"""cc.cccccWWwwwWWcc+cc
+cc.ccccc.cc...c+WWWWWcc...cc
+ cc.....cc.....ccccccc.....cc
+  ccccccc....0..c...c..0....c
+        cG..9...+.0.+...0..Gc
+        c..0....c...c....0..c
+        cc.....ccccccc.....cc
+         cc.G.cc     cc.G.cc
+          ccccc       ccccc
+ENDMAP
+
+NAME: cheibrodos_crypt_eye_of_stone
+DEPTH: Crypt, !Crypt:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: giant eyeball / curse skull, silver statue / orange crystal statue
+MONS: ancient champion, skeletal warrior
+SHUFFLE: AB / CD
+SUBST: A = G, B = 1, C = ., D = 2
+KFEAT: - = altar_kikubaaqudgha
+SUBST: * = *%
+MAP
+          cccc
+         cc$*cc
+      cccc..$*c
+   cccc......$c
+  cc.4.......cc
+ cc.3.......ccc
+ c..4......ccVcc
+cc.4.cAc...cV...
+c-3..ABA...+...@
+cc.4.cAc...cV...
+ c..4......ccVcc
+ cc.3.......ccc
+  cc.4.......cc
+   cccc......$c
+      cccc..$*c
+         cc$*cc
+          cccc
+ENDMAP
+
+
 ##############################################################################
 # Crypt ends
 ##############################################################################
@@ -1463,12 +1528,12 @@ KMONS:  P = skeleton / mummy
 : end
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
 : if crawl.coinflip() then
-KMONS:  Z = curse skull
+KMONS:  Z = patrolling curse skull
 KMONS:  Q = bone dragon
 KMONS:  R = skeletal warrior
 KMONS:  S = zombie / skeleton
 : else
-KMONS:  Z = curse skull
+KMONS:  Z = patrolling curse skull
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
 KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
@@ -1530,10 +1595,10 @@ v....ffff....ffff.......f.ffff..v.......v...+.............v
 v......f.f....ffff..............v.......v...v.....I.......v
 vvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvv....v??llv??llv??llvvvvvvo.ovvvWWWWWWW.......v
-vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWWZ.mmmm.v
+vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWW%.mmmm.v
 vvv.......vvv....v....v....v....vvv.........vvWWWWWWWm*|m.v
-vv.........vv....v....v....v....vv...........vWWWWWWWW*|m.v
-v..ccc.ccc..vv++vvv++vvv++vvv++vvv...R.Q.R...vvWWWWmWW%|m.v
+vv.........vv....v....v....v....vv...........vWWWWWmWW*|m.v
+v..ccc.ccc..vv++vvv++vvv++vvv++vvv...R.Q.R...vvWWWWmWWZ|m.v
 v...lc.cl...v...................vo...........ovWWWWmmmmmm.v
 v..t.c.c.t..+...................+......U......+...........v
 v...........v...................vo...........ov...........v
@@ -1580,7 +1645,7 @@ NAME:   evilmike_haunted_forest
 ORIENT: encompass
 PLACE:  Crypt:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
-SUBST:  T = t., w = Wwww
+SUBST:  T = t.
 SUBST:  v = cccc.-
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 COLOUR: x'D = white
@@ -1605,7 +1670,7 @@ MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 no
 MONS:   raven skeleton / w:30 nothing
 MONS:   w:3 guardian mummy / w:1 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
-KMONS:  z = curse skull
+KMONS:  z = patrolling curse skull
 SHUFFLE: 9H
 : if crawl.coinflip() then
 # Temple of yred
@@ -1641,8 +1706,8 @@ NSUBST: *| = 1:d / 1:h
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTT...Tttttwwzttttt<tttz.??ttt
-tt""("ttttttttv%--v-4v.....TtttttttttTTTTtttttttT....TTT..ttwwwwWttWWwtwW..?Tttt
+ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTTpp.Tttttwwzttttt<tttz.??ttt
+tt""("ttttttttv%--v-4v.....TtttttttttTTTTtttttttT...pTTT..ttwwwwWttWWwtwW..?Tttt
 ttT""ttttTTTttv4-4v4-v..T.t..TTTtttTT...TTTT.ttTT.TTttttT..WWWwwwWWwwwwwwwwW.Ttt
 ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
 tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
@@ -1659,7 +1724,7 @@ tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
 ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
 tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
 ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
-tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tTcccnnnccctt
+tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tpcccnnnccctt
 ttttT..t..cc----+---------c-+-''x''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
 ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
 ttttT..T..ccEEE-ccc00cc-----cc--'--cc-----cc00ccc-EEEcc....v--v....t.Ttttttttttt
@@ -2001,68 +2066,4 @@ cc7V7cc  cc++cc  cc7V7cc
 cc.7.cc  Gc..cG  cc.7.cc
 ccccccc  ..@@..  ccccccc
 ccccccc          ccccccc
-ENDMAP
-
-NAME: cheibrodos_crypt_down_in_the_bonehoard
-DEPTH: Crypt, !Crypt:$
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-ORIENT: float
-MONS: lich, mummy priest, freezing wraith / w:5 flayed ghost
-KITEM: 1 = %
-KFEAT: A = altar_kikubaaqudgha
-SHUFFLE: 12
-NSUBST: . = 8:0
-NSUBST: " = 1:| / 5=*$ / *:%
-MAP
-          ccccc       ccccc
-         cc.G.cc     cc.G.cc
-        cc.....ccccccc.....cc
-        c..0....c...c....0..c
-        cG..9...+.0.+...0..Gc
-  ccccccc....0..c...c..0....c
- cc.....cc.....ccccccc.....cc
-cc.ccccc.cc...ccWWWWW+c...cc
-c.cc"""cc.cc+ccWWwwwWWccccc
-c.c""""1c.c...cWww3wwWc....
-c.+""A""c.+.0GcWw3V3wWcG0.@
-c.c""""1c.c...cWww3wwWc....
-c.cc"""cc.cccccWWwwwWWcc+cc
-cc.ccccc.cc...c+WWWWWcc...cc
- cc.....cc.....ccccccc.....cc
-  ccccccc....0..c...c..0....c
-        cG..9...+.0.+...0..Gc
-        c..0....c...c....0..c
-        cc.....ccccccc.....cc
-         cc.G.cc     cc.G.cc
-          ccccc       ccccc
-ENDMAP
-
-NAME: cheibrodos_crypt_eye_of_stone
-DEPTH: Crypt, !Crypt:$
-TAGS: no_item_gen no_monster_gen
-ORIENT: float
-MONS: giant eyeball, silver statue / orange crystal statue / curse skull
-MONS: ancient champion, skeletal warrior
-SHUFFLE: AB / CD
-SUBST: A = G, B = 1, C = ., D = 2
-KFEAT: - = altar_kikubaaqudgha
-SUBST: * = *%
-MAP
-          cccc
-         cc$*cc
-      cccc..$*c
-   cccc......$c
-  cc.4.......cc
- cc.3.......ccc
- c..4......ccVcc
-cc.4.cAc...cV...
-c-3..ABA...+...@
-cc.4.cAc...cV...
- c..4......ccVcc
- cc.3.......ccc
-  cc.4.......cc
-   cccc......$c
-      cccc..$*c
-         cc$*cc
-          cccc
 ENDMAP
