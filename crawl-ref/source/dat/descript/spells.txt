@@ -1242,7 +1242,7 @@ Summon Earth Elementals spell
 
 This spell summons one or more earth elementals.
 %%%%
-Summon Earth Elementals spell
+Summon Emperor Scorpions spell
 
 This spell summons multiple noble and monstrous emperor scorpions.
 %%%%
