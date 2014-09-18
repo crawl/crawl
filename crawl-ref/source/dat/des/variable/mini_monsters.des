@@ -3741,6 +3741,7 @@ MAP
 ENDMAP
 
 NAME:    evilmike_minifort
+TAGS:    misc_elf_vault
 DEPTH:   D:9-, Depths, !Depths:$, Elf
 TILE:    x = wall_marble
 COLOUR:  x = white
@@ -3814,7 +3815,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_corner_corridor
-TAGS:    transparent
+TAGS:    transparent misc_elf_vault
 WEIGHT:  5 (Snake, Elf), 10
 DEPTH:   D:9-, Depths, Snake, Elf
 SHUFFLE: 9* / 9* / *8, 098%* / 098%* / 098%* / !!!!$, y'Y" / 'y"Y, Y" / ??
@@ -5084,7 +5085,7 @@ MAP
 ENDMAP
 
 NAME:   kennysheep_underground_church
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup misc_elf_vault
 DEPTH:  Depths, Elf, Zot
 : if you.branch() ~= "Zot" then
 MONS:   deep elf high priest, deep elf priest
@@ -6321,7 +6322,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_28
-TAGS:  allow_dup ruin_abyss
+TAGS:  allow_dup ruin_abyss misc_elf_vault
 DEPTH: D:9-, Elf, Abyss
 MAP
 ...........

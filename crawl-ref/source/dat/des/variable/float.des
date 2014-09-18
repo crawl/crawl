@@ -1776,9 +1776,9 @@ ENDMAP
 # Elemental Laboratory (by Mu.)
 #
 NAME:   mu_elemental_laboratory
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
 DEPTH:  Depths, Elf, !Elf:$
 ORIENT: float
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 5, \
@@ -2597,7 +2597,7 @@ ENDMAP
 NAME:    hangedman_staggered_hall
 TAGS:    transparent allow_dup no_monster_gen
 ORIENT:  float
-DEPTH:   Elf, Crypt
+DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
 : if you.branch() == "Crypt" then
 TAGS:    patrolling
 MONS:    skeletal warrior / eidolon, necromancer

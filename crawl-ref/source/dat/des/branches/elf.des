@@ -6,8 +6,17 @@
 ##############################################################################
 
 #############################################################
-# Lua functions to simplify Elf:$
+: require('dlua/vault.lua')
+
 {{
+function elven_blade_entry(e)
+  e.tags("blade_entry no_monster_gen unrand")
+  e.mons("patrolling dancing weapon ; dagger good_item | mundane falchion w:6")
+  e.ftile("- = floor_vault")
+  e.colour("- = lightgrey")
+end
+
+-- Lua functions to simplify Elf:$
 function elf_setup(e)
   e.lflags("no_tele_control")
   e.tags("no_rotate")
@@ -35,12 +44,11 @@ end
 
 -- The standard item defense squad
 function elf_loot_defenders(e)
-  e.kmons("$ = weight:450 nothing / deep elf sorcerer / deep elf annihilator")
-  e.kmons("* = weight:300 nothing / deep elf annihilator / deep elf death mage")
-  e.kmons("| = weight:600 nothing / deep elf demonologist / deep elf death mage")
+  e.kmons("$ = w:450 nothing / deep elf sorcerer / deep elf annihilator")
+  e.kmons("* = w:300 nothing / deep elf annihilator / deep elf death mage")
+  e.kmons("| = w:600 nothing / deep elf demonologist / deep elf death mage")
 end
 }}
-
 
 ##############################################################################
 ##############################################################################
@@ -229,10 +237,10 @@ ENDMAP
 # A nice scenic altar
 
 NAME:    eino_elf_arrival_altar
+TAGS:    patrolling
 ORIENT:  west
 PLACE:   Elf:1
-TAGS:    patrolling
-SHUFFLE: 1/2
+SHUFFLE: 12
 KFEAT:   C = altar_vehumet
 MONS:    deep elf fighter, deep elf mage
 MONS:    deep elf priest
@@ -281,9 +289,9 @@ xx...BbB...BbB...xx
 ENDMAP
 
 NAME:   minmay_elf_arrival_plus
+TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-TAGS:   patrolling
 MONS:   deep elf fighter w:15 / deep elf mage / \
         deep elf summoner / deep elf priest / deep elf conjurer / nothing w:40
 MAP
@@ -307,9 +315,9 @@ xxxxxmmm+mmmxxxxx
 ENDMAP
 
 NAME:   minmay_elf_arrival_summoners
+TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-TAGS:   patrolling
 MONS:   deep elf summoner / deep elf mage / deep elf priest
 KFEAT:  m = iron_grate
 MAP
@@ -327,14 +335,23 @@ xxx.....xxx
   x@...@x
 ENDMAP
 
+##############################################################################
+##############################################################################
+#
+# Elf mini/vaults
+#
+##############################################################################
+##############################################################################
 
-##############################################################################
-##############################################################################
-#
-# Elf minivaults
-#
-##############################################################################
-##############################################################################
+NAME:    elven_spread
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+PLACE:   Elf:1
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="misc_elf_vault", count=c}
+  end)
+}}
 
 # Total weight of minmay's crystal vaults is 30.
 NAME:   minmay_elf_crystal_square
@@ -388,7 +405,8 @@ bb..bbbb...1b...1bb
 ENDMAP
 
 NAME:   minmay_elf_crystal_hexagon
-DEPTH:  Elf:2-
+TAGS:   misc_elf_vault
+DEPTH:  Elf
 ORIENT: float
 WEIGHT: 6
 MONS:   deep elf mage / deep elf summoner / deep elf conjurer / nothing w:45
@@ -413,7 +431,8 @@ bb...bb1.U.1bb...bb
 ENDMAP
 
 NAME:   minmay_elf_crystal_heptagon
-DEPTH:  Elf:2-
+TAGS:   misc_elf_vault
+DEPTH:  Elf
 ORIENT: float
 WEIGHT: 4
 MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
@@ -439,7 +458,7 @@ bb..1.....11b..bb
 ENDMAP
 
 NAME:   minmay_elf_crystal_octagon
-DEPTH:  Elf:2-
+DEPTH:  Elf
 ORIENT: float
 WEIGHT: 2
 MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
@@ -465,8 +484,10 @@ b...bb.1b1.bb...b
 ENDMAP
 
 NAME:  minmay_elf_necromancy
+TAGS:  misc_elf_vault
 DEPTH: Elf
-MONS:  elf zombie / necromancer w:1 / nothing
+MONS:  elf zombie w:4 / large abomination w:4 / \
+       necromancer w:3 / nothing
 KMONS: 2 = deep elf death mage
 KITEM: 2 = randbook disc:necromancy slevels:16
 MAP
@@ -482,7 +503,8 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_elf_sorcery
-DEPTH: Elf:2-
+TAGS:  misc_elf_vault
+DEPTH: Elf
 MONS:  deep elf summoner / deep elf conjurer / deep elf mage / nothing
 KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
@@ -498,18 +520,19 @@ MAP
  ..mmmm......1...mmmm.1
   ..mmmmm......mmmmm..
    ...mmxxx++xxxmm...
-     1..xx....xx...
+     1..xx%..%xx...
       ..x......x..
        .x......x1
        .x......x.
        .x......x.
-       .xx2...xx.
+       .xx2..%xx.
        .xxxxxxxx.
        ...1......
 ENDMAP
 
 NAME:  minmay_elf_annihilation
-DEPTH: Elf:2-
+TAGS:  misc_elf_vault
+DEPTH: Elf
 MONS:  deep elf conjurer / nothing
 KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
 KITEM: 2 = randbook disc:conjuration slevels:16
@@ -523,9 +546,9 @@ MAP
   .xxx1x...x.xxx.
   .x....1......x.
   .x.x..b+b..x.x.
-...x1..bb.bb1..x...
+...x1..bb%bb1..x...
 .x.+...+.2.+...+.x.
-...x...bb.bb..1x...
+...x...bb%bb..1x...
   .x.x1.b+b..x.x.
   .x.......1...x.
   .xxx.x...x.xxx.
@@ -537,7 +560,8 @@ MAP
 ENDMAP
 
 NAME:  minmay_elf_demonology
-DEPTH: Elf:2-
+TAGS:  misc_elf_vault
+DEPTH: Elf
 MONS:  deep elf summoner / nothing
 KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
 KITEM: 2 = randbook disc:summoning slevels:16
@@ -552,7 +576,7 @@ MAP
  ..xx.....1..xx1.
 ..xxxx..xx..xxxx..
 ..xxxx1x.2x.xxxx..
- ..xx..x..x..xx..
+ ..xx..x%.x..xx..
   ..1...xx....1.
    ..xx....xx1.
    .xxxx..xxxx.
@@ -574,13 +598,13 @@ MONS:   deep elf master archer
 MONS:   training dummy tile:mons_training_dummy
 MAP
 x+xxxxxxxxxxxxxx
-x...1..........x
+x...1.........%x
 x.1....1......3x
 .....1.........x
 @2............3x
 ...1...........x
 x1....1.......3x
-x...1..........x
+x...1.........%x
 x+xxxxxxxxxxxxxx
 ENDMAP
 
@@ -616,7 +640,8 @@ ENDMAP
 # Some orcs on a diplomatic mission (Shiori)
 # They have brought some gold from their mines as a gift
 NAME:    orc_legates
-DEPTH:   Elf:1-2
+TAGS:    misc_elf_vault
+DEPTH:   Elf, !Elf:$
 SHUFFLE: AB , 34 , 12
 SUBST:   6 = 4
 SUBST:   0 = 0 .:9 9:1
@@ -651,6 +676,7 @@ ENDMAP
 
 # A high-level negotiation between orc and deep elf leaders (Shiori)
 NAME:     elf_orc_summit_meeting
+TAGS:     misc_elf_vault
 DEPTH:    Elf:$
 SHUFFLE: 12 , 45
 NSUBST:  7= 1=7 / *= 7:1 .
@@ -915,8 +941,8 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   nicolae_elf_m_pinch
-DEPTH:  Elf
 TAGS:   transparent extra allow_dup luniq_pinch
+DEPTH:  Elf
 SUBST:  b : bc
 NSUBST: L = @ / ., R = @ / .
 MAP
@@ -938,8 +964,8 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_1
-DEPTH:   Elf
 TAGS:    transparent decor extra allow_dup
+DEPTH:   Elf
 SHUFFLE: abcdf
 SUBST:   a : .
 SHUFFLE: bcdef
@@ -957,8 +983,8 @@ MAP
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_2
-DEPTH:   Elf
 TAGS:    transparent decor extra allow_dup luniq
+DEPTH:   Elf
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
 SUBST:   l : .v, m : .v, v : vbcx
@@ -981,8 +1007,8 @@ MAP
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_3
-DEPTH:   Elf
 TAGS:    transparent extra decor allow_dup luniq
+DEPTH:   Elf
 : if crawl.coinflip() then
 SHUFFLE: bcegh
 SUBST:   b = .
@@ -1199,6 +1225,396 @@ x+xx...xxxx.4.xxxxxx
          xx...+.x@
          xxxxxx.@.
 ENDMAP
+
+NAME:    hangedman_elf_represent
+TAGS:    no_monster_gen misc_elf_vault
+DEPTH:   Elf
+# Place two pairings of obvious descendents / ascendents.
+MONS:    deep elf mage, deep elf sorcerer
+MONS:    deep elf priest, deep elf high priest
+MONS:    deep elf conjurer, deep elf annihilator
+MONS:    deep elf summoner
+KMONS:   8 = deep elf demonologist
+NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
+SHUFFLE: 12 / 34 / 56 / 78
+SUBST:   ' : x., " : X., - : x++
+MAP
+xxxxxxxxxxx'........
+xxx%.xxxxxx'x.x.x.x.
+xx2..1xx1...x.x.x.x.
+x%.....-............
+x......+.."...xxxxxx
+xx1..1xx....3xx..xxx
+xxx..xx.....xx3..3xx
+xxxxxx1.."..+......x
+............-.....%x
+.x.x.x.x...3xx3..4xx
+.x.x.x.x'xxxxxx.%xxx
+........'xxxxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_elf_disciples
+TAGS:    no_monster_gen misc_elf_vault
+DEPTH:   Elf
+MONS:    deep elf fighter, deep elf mage
+# Some other fledgling miscellaneous magic casters.
+MONS:    wizard, tengu conjurer, boggart, kobold demonologist
+MONS:    deep elf sorcerer / deep elf annihilator w:2
+NSUBST:  1 = 1:1 / 1:2 / 1:. / * = 122
+NSUBST:  3 = 1:3 / 1:5 / 1:. / * = 334556
+NSUBST:  - = 1:+ / *:c, _ = 1:+ / *:c
+NSUBST:  X = 1:x / *:., Y = 1:x / *:.
+SUBST:   Z : x.
+MAP
+      Z......
+      .....xxx
+    Z....xx.1x
+    ...xx.1..x
+  Z..xx......x
+  ..x3..XXXX.x
+Z...x.......3x
+...x...cc---cx
+...x.Y.c3...cx
+..x..Y._.1..cx
+..x1.Y._..7.cx
+.x...Y._...%cx
+.x1...3ccccc%x
+ xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+##############################################################################
+#
+# Elf:2 Hall of Blades.
+#
+# An attempt to salvage the lost branch.
+##############################################################################
+##############################################################################
+
+NAME:     elven_hall_of_blades_hangedman_original
+TAGS:     no_dump no_item_gen no_monster_gen
+PLACE:    Elf:2
+ORIENT:   north
+MONS:     deep elf fighter / deep elf priest w:4
+MONS:     deep elf knight w:11 / deep elf conjurer w:1
+MONS:     deep elf blademaster, dancing weapon
+: halls_of_blades_weapon(_G)
+SHUFFLE:  CD / CD / DC / DC / DD
+SUBST:    C = c, D = ., E : c--, F : c--, c : cv
+FTILE:    - = floor_vault
+COLOUR:   - = lightgrey
+SUBST:    - = .
+# Previously for Blade: NSUBST:  . : 6:0 / 6 = 0. / 6 = 0... / *:.
+NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
+SUBVAULT: A : blade_entry
+SUBST:    A : x"", ' = .
+CLEAR:    "
+veto {{
+  return crawl.game_started()
+         and (dgn.br_exists("Blade"))
+}}
+MAP
+                                "
+                                "
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
+xcccc---cccc-cccc-cccc-cccc-F-ccccc-F-cccc-cccc-cccc-cccc---ccccx
+xccF-....cc-.-cc-.-cc-.-cc-...-ccc-...-cc-.-cc-.-cc-.-cc-...-Fccx
+xcc-.........................................................-ccx
+xc-....c............--c--................-c--............c....-cx
+xc-...ccc...........-ccc-...............-ccc-...........ccc...-cx
+xcE..ccccc..........ccccc...............ccccc..........ccccc..Ecx
+xcE..ccccc..........-ccc-...............-ccc-..........ccccc..Ecx
+xc-..4ccc...........--c--...............--c--...........ccc4..-cx
+xcE...ccc...............................................ccc...Ecx
+xcE....c.................................................c....Ecx
+xc-............................D.D............................-cx
+xc-...........CC..............DDDDD..............CC...........-cx
+xcE5..2......CCCC.............DDDDD.............CCCC......2..6Ecx
+xc-...........CC..............DDDDD..............CC...........-cx
+xc-............................D.D............................-cx
+xcE....c.................................................c....Ecx
+xcE...ccc...............................................ccc...Ecx
+xc-..4ccc...........--c--...............--c--...........ccc4..-cx
+xc-..ccccc..........-ccc-...............-ccc-..........ccccc..-cx
+xcE..ccccc..........ccccc...............ccccc..........ccccc..Ecx
+xcE...ccc...........-ccc-...............-ccc-...........ccc...Ecx
+xc-....c............--c--...............--c--............c....-cx
+xcc-.........................................................-ccx
+xccF-...-cc-.-cc-.-cc-.-cc'''''ccc'''''cc-.-cc-.-cc-.-cc-...-Fccx
+xcccc---cccc-cccc-cccc-cccc'F'++c++'F'cccc-cccc-cccc-cccc---ccccx
+xcccccccccccccccccccccccccccccc'''cccccccccccccccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=A=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                          AAAAAAAAAAAAA
+                                @
+ENDMAP
+
+NAME:     elven_hall_of_blades_hangedman_alternative
+TAGS:     no_dump no_item_gen no_monster_gen
+PLACE:    Elf:2
+WEIGHT:   5
+ORIENT:   north
+MONS:     deep elf fighter / deep elf priest w:4
+MONS:     deep elf knight w:11 / deep elf conjurer w:1
+MONS:     deep elf blademaster, dancing weapon
+: halls_of_blades_weapon(_G)
+SHUFFLE:  CD / CD / DC / DC / DD
+SUBST:    C = c, D = ., E : c--, F : c--, c : cv
+FTILE:    - = floor_vault
+COLOUR:   - = lightgrey
+SUBST:    - = .
+NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
+SUBVAULT: A : blade_entry
+SUBST:    A : x"", ' = .
+CLEAR:    "
+veto {{
+  return crawl.game_started()
+         and (dgn.br_exists("Blade"))
+}}
+MAP
+                                  "
+                                  "
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
+xcccc-F-cccc-cccc-cccc-cccc--cccc-F-cccc--cccc-cccc-cccc-cccc-F-ccccx
+xccF-...-cc-.-cc-.-cc-.-cc-..-cc-...-cc-..-cc-.-cc-.-cc-.-cc-...-Fccx
+xcc-..............................D..............................-ccx
+xccc........................''''DDDDD''''........................cccx
+xcc-..--c--.......--c--....'''''''D'''''''....--c--.......--c--..-ccx
+xc-...-ccc-.......-ccc-....c'''''''''''''c....-ccc-.......-ccc-...-cx
+xcc-..ccccc.......ccccc...ccc'''''''''''ccc...ccccc.......ccccc..-ccx
+xccc..-ccc-.......-ccc-..ccccccc==A==ccccccc..-ccc-.......-ccc-..cccx
+xccc..--c--.......--c--..cccAAAAAAAAAAAAAccc..--c--.......--c--..cccx
+xcc-.....................-ccAAAAAAAAAAAAAcc-.....................-ccx
+xc-.......................-cAAAAAAAAAAAAAc-.......................-cx
+xcc-..........C..........-ccAAAAAAAAAAAAAcc-..........C..........-ccx
+xccc.........CCC.........cccAAAAAAAAAAAAAccc.........CCC.........cccx
+xccc.........CCC.........cccAAAAAAAAAAAAAccc.........CCC.........cccx
+xcc-..........C..........-ccAAAAAAAAAAAAAcc-..........C..........-ccx
+xc-.......................-cAAAAAAAAAAAAAc-.......................-cx
+xcc-.....................-ccAAAAAAAAAAAAAcc-.....................-ccx
+xccc...cc...........cc...cccAAAAAAAAAAAAAccc...cc...........cc...cccx
+xccc..ccccc.......ccccc..cccAAAAAAAAAAAAAccc..ccccc.......ccccc..cccx
+xcc-.ccccccc.....ccccccc.-ccAAAAAAAAAAAAAcc-.ccccccc.....ccccccc.-ccx
+xc-...ccccc...2...ccccc...-cAAAAAAAAAAAAAc-...ccccc...2...ccccc...-cx
+xc-....cc4.........4cc....-c     @@@     c-....cc4.........4cc....-cx
+xcc-.....................-cc             cc-.....................-ccx
+xccF-.........5.........-Fcc             ccF-.........6.........-Fccx
+xcccc--EE-EE--E--EE--EE-cccc             cccc-EE--EE--E--EE-EE--ccccx
+xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   mumra_blade_entry_bloodbath
+TAGS:   no_item_gen
+SUBST:  d = ..', e = .'', f = .'''
+KPROP:  ' = bloody
+SUBST:  ' = ...'
+KITEM:  ' = short sword / long sword / morningstar / mace / \
+            scimitar / dagger / bardiche / battleaxe / war axe
+: elven_blade_entry(_G)
+MAP
+      =
+xx.1.x-xd1.xx
+x.d...xdd...x
+..dd..ded....
+..deeeeee..dd
+...eefffeeed.
+x..efffffee.x
+.xeeffGffe.x.
+xdeefffffe..x
+dddeefffeee..
+....eee.edd..
+....dd...dd..
+x...d.x...ddx
+xx..dx.x..dxx
+ENDMAP
+
+# Sorry for the shape mangling,
+# but the subvaulting needs it.
+NAME:     mumra_blade_entry_dagger
+TAGS:     no_item_gen
+SUBST:    ' : ll.
+FTILE:    1 = floor_vault
+SUBST:    . : ..W, @ : @xx
+: elven_blade_entry(_G)
+MAP
+      =
+    xx-xx
+   xx'-'xx
+   xx'-'xx
+   xx'-'xx
+   x''-''x
+   x''-''x
+xxxx''-''xxxx
+.-----1-----.
+xx....-....xx
+xxxxx.-.xxxxx
+   xx.-.xx
+   xx.-.xx
+   xxx-xxx
+ENDMAP
+
+NAME:     infiniplex_blade_entry_pillars
+SUBST:    y : x...
+SUBST:    1 = 1.
+: elven_blade_entry(_G)
+MAP
+      =
+   xy---yx
+   y..c..y
+.  ..1.1..  .
+....c...c....
+.  ..1.1..  .
+   y..c..y
+   xy...yx
+      .
+      .
+      .
+      .
+      .
+     ...
+ENDMAP
+
+NAME:     grunt_blade_entry_basic
+TAGS:     no_item_gen
+NSUBST:   1 = 2:1 / *:.
+: elven_blade_entry(_G)
+MAP
+      =
+....c---c....
+....c...c....
+..ccc...ccc..
+..c.......c..
+..c.1...1.c..
+..c.......c..
+..+.......+..
+..c.......c..
+..c.1...1.c..
+..c.......c..
+..cccc+cccc..
+.............
+.............
+ENDMAP
+
+NAME: nicolae_vaults_blade_armed_guards
+KMONS: 2 = deep elf knight ; battleaxe | broad axe | flail | glaive | great mace | \
+   halberd | hand axe | long sword | morningstar | scimitar | short sword | \
+   trident | war axe . chain mail | plate armour . \
+   shield | buckler w:20 | nothing w:60
+: elven_blade_entry(_G)
+MAP
+      =
+    xx-xx
+    x---x
+  xxx...xxx
+  x...c...x
+  x.c.c.c.x
+ ....2.2....
+...cc...cc...
+ ....2.2....
+  x.c.c.c.x
+  x...c...x
+  xxx...xxx
+     ...
+     ...
+ENDMAP
+
+NAME:    nicolae_blade_entry_hurt_lockers
+SHUFFLE: Aa/Bb/Dd, TG
+SUBST:   BD = x, bd = 1, A = +, a = ., T : T., G : G.
+: elven_blade_entry(_G)
+MAP
+      =
+ xccc---cccx
+ xc-------cx
+ xc-------cx
+ xcAxxBxxDcx
+xxcaxxbxxdcxx
+xxc+xx+xx+cxx
+xxc.GT.TG.cxx
+ xc.......cx
+ xcc.....ccx
+ xccc...cccx
+ xxxxx+xxxxx
+.............
+     ...
+ENDMAP
+
+NAME:  nicolae_blade_entry_crossed_weapons
+: elven_blade_entry(_G)
+MAP
+      =
+v.v..---..v.v
+.v...v-v...v.
+v.v..vvv..v.v
+...v..c..v...
+....1.c.1....
+.vv...c...vv.
+..vcccccccv..
+.vv...c...vv.
+....1.c.1....
+...v..c..v...
+v.v..vvv..v.v
+.v...v.v...v.
+v.v.......v.v
+ENDMAP
+
+NAME:   nooodl_blade_entry_preview
+TAGS:   no_item_gen
+SUBST:  C : cc.
+NSUBST: 1 = 2:1 / *:.
+FTILE:  . = floor_vault
+: elven_blade_entry(_G)
+MAP
+      =
+ xcC-----Ccx
+ xcC.c.c.Ccx
+ xcC.1.1.Ccx
+ xcC.....Ccx
+ xcC.c.c.Ccx
+ xcC.1.1.Ccx
+xxcC.....Ccxx
+ xcC.1.1.Ccx
+ xcC.c.c.Ccx
+ xcC.....Ccx
+ xcC.1.1.Ccx
+ xcC.c.c.Ccx
+ xcc.....ccx
+ENDMAP
+
+# Even more mangled. Sorry...
+NAME: nicolae_blade_entry_pointy_end
+: elven_blade_entry(_G)
+MAP
+      =
+xxxx-----x
+x..xx++xxx
+x....xxx
+xx.1...xxx
+ x.......xxx
+ xx..1.....x
+  x........xx
+  xx...1....x
+   x.........
+   xx....1...
+    x........
+    xxx......
+      xx.....
+ENDMAP
+
 
 ##############################################################################
 ##############################################################################
