@@ -686,10 +686,10 @@ Using this ability exhausts and severely drains you.
 %%%%
 Sacrifice Purity ability
 
-Adherents who choose to sacrifice their purity of body become twisted by
-mutation, and may begin to rot, have their body deformed, shout uncontrollably,
-heal slowly, or lose dexterity, strength, or intelligence. If you make this
-sacrifice, your powers granted by Ru will become stronger in proportion to
+Adherents who choose to sacrifice their purity will be offered a single
+mutation. The mutation can be one of deterioration, deformed body, uncontrolled
+shouting, worse device healing, clumsiness, weakness or dopiness. If you make
+this sacrifice, your powers granted by Ru will become stronger in proportion to
 the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
@@ -714,20 +714,21 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice Essence ability
 
-Adherents who choose to sacrifice their essence give up a part of their magical
-essence, which may lessen their magic pool, reduce their ability to resist
-hostile magic, or make it more difficult to successfully cast spells. If you
-make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
+Adherents who choose to sacrifice their essence will be given the choice to
+agree to one of three sacrifices: reduced magic pool, MR-, or increased
+spellcasting difficulty. If you make this sacrifice, your powers granted by Ru
+will become stronger in proportion to the value of the sacrifice, and you may
+gain new powers as well.
 
 Sacrifices cannot be taken back.
 %%%%
 Sacrifice Health ability
 
-Adherents who choose to sacrifice their health may have their health pool
-decreased, suffer penalties to Evasion, or suffer penalties to AC. If you make
-this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
+Adherents who choose to sacrifice their health will be given the choice to agree
+to one of three sacrifices: reduced health, penalties to Evasion, or penalties
+to AC. If you make this sacrifice, your powers granted by Ru will become
+stronger in proportion to the value of the sacrifice, and you may gain new
+powers as well.
 
 Sacrifices cannot be taken back.
 %%%%
