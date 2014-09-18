@@ -1043,6 +1043,12 @@ electric eel
 Despite its name, the electric eel is actually a variety of fish. This breed,
 however, generates far more voltage than its seagoing siblings.
 %%%%
+elemental wellspring
+
+A swirling conflux of elemental water streaming from the elemental plane into
+this one. Floods and the spirits who dwell within them seem to issue from it,
+at the expense of the gateway's stability itself.
+%%%%
 elephant
 
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with

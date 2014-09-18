@@ -231,6 +231,7 @@ fire_elemental MONS_FIRE_ELEMENTAL
 water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
+wellspring MONS_ELEMENTAL_WELLSPRING
 %rim 0
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2

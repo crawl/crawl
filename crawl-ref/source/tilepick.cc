@@ -1383,6 +1383,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_WATER_ELEMENTAL;
     case MONS_IRON_ELEMENTAL:
         return TILEP_MONS_IRON_ELEMENTAL;
+    case MONS_ELEMENTAL_WELLSPRING:
+        return TILEP_MONS_ELEMENTAL_WELLSPRING;
 
     // worms ('w')
     case MONS_WORM:

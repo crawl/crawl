@@ -421,6 +421,11 @@ Stone Arrow gargoyle cast
 Bolt of Magma molten gargoyle cast
 
 @The_monster@ blasts magma @at@ @target@!
+
+%%%%
+Primal Wave elemental wellspring cast
+
+A great wave of water rises up through @The_monster@!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
