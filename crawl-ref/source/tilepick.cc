@@ -5397,8 +5397,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_DRAW_OUT_POWER;
     case ABIL_RU_POWER_LEAP:
         return TILEG_ABILITY_RU_POWER_LEAP;
-    case ABIL_RU_CATACLYSM:
-        return TILEG_ABILITY_RU_CATACLYSM;
+    case ABIL_RU_APOCALYPSE:
+        return TILEG_ABILITY_RU_APOCALYPSE;
 
     case ABIL_RU_SACRIFICE_PURITY:
         return TILEG_ABILITY_RU_SACRIFICE_PURITY;

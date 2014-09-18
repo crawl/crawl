@@ -676,12 +676,11 @@ damage done increases with your piety and experience level.
 
 Using this ability exhausts you.
 %%%%
-Cataclysm ability
+Apocalypse ability
 
-You unleash your hard-won power in a terrifying cataclysm. All enemies in your
-line of sight are dealt severe damage and may be rendered permanently mute or
-paralyzed or slowed. The damage dealt by this power increases with your piety
-and experience level.
+You reveal Ru's truth to your enemies. All enemies in your line of sight are
+dealt severe damage and may be rendered mute or paralyzed or slowed. The damage
+dealt by this power increases with your piety and experience level.
 
 Using this ability exhausts and severely drains you.
 %%%%
