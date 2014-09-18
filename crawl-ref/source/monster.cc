@@ -4100,7 +4100,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
-    if (mons_class_is_stationary(type) && type != MONS_CURSE_SKULL)
+    if (mons_class_is_stationary(type))
         return true;
 
     if (mons_is_projectile(type))

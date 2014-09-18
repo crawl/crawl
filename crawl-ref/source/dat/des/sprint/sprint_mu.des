@@ -1155,7 +1155,7 @@ KMONS: 1 = patrolling vampire knight
 KMONS: 2 = patrolling mara
 KMONS: 3 = molten gargoyle
 KMONS: 4 = patrolling titanic slime creature
-KMONS: 5 = generate_awake curse skull
+KMONS: 5 = mummy priest
 KMONS: f = skeletal warrior ; longbow ego:flaming . arrow q:30
 KMONS: 6 = shadow wraith
 KMONS: g = ball lightning / giant spore
@@ -1229,7 +1229,7 @@ vC.Fvvvv.vvvv!!v.ww.vvvcccc+ccc
 vD.Evvv...vvvzzv.6w.vgg+WT...J8
 #...+...y...+..+..WW+ggcWW.J.J7
 vE.Dvvv...vvv..vwww.vggc.J.J.J.
-vF.Cvvvv.vv!v..vff5.vggc...J...
+vF.Cvvvv.vv!v..vffp5vggc...J...
 vvvvvvvv.v.Gv..vvvv+vvvcccc+ccc
 v......v+v+nv..v.v.v.v.v.v.v.v.
 v.I.I..v.+..+..+v.vqv.vqv.vqv.v

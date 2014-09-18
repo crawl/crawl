@@ -901,7 +901,7 @@ TILE:   c = DNGN_STONE_WALL_DARKGRAY
 # This is to mark the wall clearly diggable.
 TILE:   y = WALL_NORMAL
 MONS:   patrolling silent spectre
-MONS:   curse skull, soul eater
+MONS:   patrolling curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
 MONS:   ogre mage / deep elf mage / wizard / necromancer / \
         merfolk aquamancer / spriggan air mage / orc sorcerer / \
@@ -1284,14 +1284,14 @@ MONS:    oklob plant
 MONS:    jelly
 MONS:    trapdoor spider / wolf spider
 MONS:    guardian serpent
-MONS:    curse skull
+MONS:    silver statue
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
 KFEAT:   = = closed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .
-# With 25% chance, have lava and curse skull instead of water and oklobs:
+# With 25% chance, have lava and silver statue instead of water and oklobs:
 SUBST:   w : Ww.
 SUBST:   w = W.
 SHUFFLE: wU3 / wU3 / wU3 / l7L
