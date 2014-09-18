@@ -2919,7 +2919,8 @@ KITEM:   R = royal jelly
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
 ITEM:    stone of tremors
-ITEM:    scroll of teleportation q:2 w:20 / dagger ego:distortion
+ITEM:    scroll of teleportation q:2 w:20 / \
+         dagger ego:distortion ident:type
 SUBST:   J = 1111111123
 SUBST:   m : xxxm
 SHUFFLE: %!'"
@@ -2990,13 +2991,13 @@ MONS:   acid blob
 KPROP:  | = no_tele_into
 MAP
   ...........
- ..mmmmmmmmm..
-..mm1112111mm..
-.mm11mmmmm11mm.
-.m11mm|||mm11m.
-.mm11mmmmm11mm.
-..mm1112111mm..
- ..mmmmmmmmm..
+ ..nnnnnnnnn..
+..nn1112111nn..
+.nn11nnnnn11nn.
+.=====|||nn11n.
+.nn11nnnnn11nn.
+..nn1112111nn..
+ ..nnnnnnnnn..
   ...........
 ENDMAP
 
@@ -3325,14 +3326,14 @@ MAP
 .xx.00.xx.
 .x0xxxx0x.
 .x.0.x0xx........
-.x0x.xx.+.xx==xx..
-.x0xx9xxxxxG..Gxx.
-.xx*x.|xxxG....Gx.
-..xxxxxx.x*.9..|x.
-..xxxxxx.x|..9.*x.
-.xx0.9|xxxG....Gx.
-.x..xxxxxxxG..Gxx.
-.x0xx0x.+.xx==xx..
+.x0x.xx.+.cc==cc..
+.x0xx9xxxccG..Gcc.
+.xx*x.|xxcG....Gc.
+..xxxxxxcc*.9..|c.
+..xxxxxxcc|..9.*c.
+.xx0.9|xxcG....Gc.
+.x..xxxxxccG..Gcc.
+.x0xx0x.+.cc==cc..
 .x0x*x0.x........
 .x.xxxx0x.
 .xx.00.xx.
@@ -4887,8 +4888,7 @@ ENDMAP
 NAME:    minmay_multi_spiral
 SHUFFLE: AC
 DEPTH:   Depths
-SUBST:   A : ., C : x
-SUBST:   x : xcvb
+SUBST:   A : ., Cx : ccvb
 SUBST:   8 = . 0:1 9:1 8:1
 MAP
          ......
@@ -6208,16 +6208,16 @@ NAME:  minivault_12
 DEPTH: D:8-, Depths, !Depths:$
 MAP
 ............
-.mxxxxxxxxm.
-.x>9$9$9$<x.
-.x.$9$9$.$x.
-.x$.****$.x.
-.x.$*||*.$x.
-.x$.*||*$.x.
-.x.$****.$x.
-.x$9$9$9$.x.
-.x<$9$9$9>x.
-.mxxxxxxxxm.
+.nccccxcccn.
+.c>9$9$9$<c.
+.c.$9$9$.$c.
+.c$.****$.c.
+.c.$*||*.$x.
+.x$.*||*$.c.
+.c.$****.$c.
+.c$9$9$9$.c.
+.c<$9$9$9>c.
+.ncccxccccn.
 ............
 ENDMAP
 

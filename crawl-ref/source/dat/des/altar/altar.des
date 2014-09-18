@@ -289,7 +289,7 @@ DEPTH: D:3-, Vaults
 TAGS:  no_trap_gen
 : if you.absdepth() > 12 then
 MONS: patrolling Daeva / patrolling Angel
-KFEAT:  m = iron_grate
+KFEAT:  n = iron_grate
 : else
 MONS:  patrolling Angel
 : end
@@ -298,15 +298,15 @@ KPROP: >"1_ = no_rtele_into
 SUBST: " = .
 MAP
    .....
-  ..xmx..
- ..xx>xx..
-..xxx"xxx..
-.xxxx1xxxx.
-.m>""_"">m.
-.xxxx"xxxx.
-..xxx"xxx..
- ..xx>xx..
-  ..xmx..
+  ..cnc..
+ ..xc>cx..
+..xxc"cxx..
+.ccc=1cccc.
+.n>""_"">n.
+.cccc"cccc.
+..xxc"cxx..
+ ..xc>cx..
+  ..cnc..
    .....
 ENDMAP
 
