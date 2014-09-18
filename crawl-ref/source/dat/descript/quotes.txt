@@ -553,8 +553,19 @@ Psyche
 %%%%
 Shoals
 
-“No man is island, except Lo Wang.”
-    -Shadow Warrior
+“I often think about that old metaphor, the one that says we are all islands on
+a wide sea. Especially these days, now that things are more difficult than
+before and the world appears to be harsher than we once imagined it to be.
+
+We are all like islands, the philosopher said. Perhaps it’s true. Yet I cannot
+help but remember an older saying scratched on a cave wall somewhere by a long-
+forgotten prophet: In the end the sea will claim everything.
+
+The ancient words crash into my mind like waves, waking me from sleep, filling
+me with feelings I cannot fully understand. We are like islands. Does it mean
+we are connected? Do we share a common origin? Or just the common fate of
+sinking?”
+    -“The Sea Will Claim Everything”. 2012.
 %%%%
 Sigmund
 
@@ -576,8 +587,7 @@ Sticky Flame spell
 
 “Give a man a fire and he's warm for a day, but set fire to him and he's warm
 for the rest of his life.”
-
-    -Terry Pratchett, “Jingo”
+    -Terry Pratchett, “Jingo”. 1997.
 %%%%
 Summon Demon spell
 
@@ -1049,6 +1059,23 @@ dire flail
 “‘Ah! ah! ah!’ laughed his two men, ‘how the Norman villains will be humbled
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
+%%%%
+Dragon's Call spell
+
+ “This is where the dragons went.
+ They lie...
+ Not dead, not asleep. Not waiting, because waiting implies expectation.
+ Possibly the word we're looking for here is...
+ ...dormant.
+ And although the space they occupy isn't like normal space, nevertheless
+   they are packed in tightly. Not a cubic inch there but is filled by a claw,
+   a talon, a scale, the tip of a tail, so the effect is like one of those
+   trick drawings and your eyeballs eventually realise that the space between
+   each dragon is, in fact, another dragon.
+ They could put you in mind of a can of sardines, if you thought sardines
+   were huge and scaly and proud and arrogant.
+ And presumably, somewhere, there's the key.”
+    -Terry Pratchett, “Guards! Guards!”. 1990.
 %%%%
 dryad
 
@@ -1561,6 +1588,22 @@ kobold
 
 “Kobolds are harmless.”
     -Bearand the Bold, epitaph (Magic: the Gathering)
+
+%%%%
+komodo dragon
+
+“The three of us were sitting ashen faced as if we had just witnessed a foul
+and malignant murder. At least if we had been watching a murder the murderer
+wouldn't have been looking us impassively in the eye as he did it. Maybe it was
+the feeling of cold unflinching arrogance that so disturbed us. But whatever
+malign emotions we tried to pin on to the lizard, we knew that they weren't the
+lizard's emotions at all, only ours. The lizard was simply going about its
+lizardly business in a simple, straightforward lizardly way. It didn't know
+anything about the horror, the guilt, the shame, the ugliness that we,
+uniquely guilty and ashamed animals, were trying to foist on it. So we got it
+all straight back at us, as if reflected in the mirror of its single
+unwavering and disinterested eye.”
+    -Douglas Adams, “Last Chance to See”. 1990.
 %%%%
 kraken
 
