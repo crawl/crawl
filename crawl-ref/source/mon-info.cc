@@ -516,6 +516,12 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_NAME_THE);
         }
     }
+    else if (type == MONS_MNOLEG_TENTACLE
+             || type == MONS_MNOLEG_TENTACLE_SEGMENT)
+    {
+        mb.set(MB_NAME_UNQUALIFIED);
+        mb.set(MB_NAME_THE);
+    }
 
     mname = m->mname;
 
