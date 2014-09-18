@@ -6193,7 +6193,7 @@ NAME:   kennysheep_big_flooded_room
 ORIENT: float
 DEPTH:  D:2-, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
-: if you.absdepths() < 5 then
+: if you.absdepth() < 5 then
 SUBST:  9 = 0, * = %
 : end
 MAP
