@@ -204,12 +204,12 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "catoblepas w:12 / hellephant w:6 / spriggan druid w:1 / " ..
                 "guardian serpent w:1 / deep troll shaman w:1 / " ..
                 "raiju w:1 / hell beast w:1", { weight = 5 }),
-     with_props("place:Shoals:$ w:125 / merfolk aquamancer / water nymph w:5 / " ..
-                "merfolk impaler w:5 / merfolk javelineer / " ..
-                "octopode crusher w:12", { weight = 5 }),
+     with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
+                "water nymph w:5 / merfolk impaler w:5 / " ..
+                "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
      "place:Spider:$ w:115 / ghost moth w:15 / red wasp / " ..
                 "orb spider",
-     "place:Crypt:$ w:260 / curse skull w:5 / profane servitor w:5 / " ..
+     "place:Crypt:$ 9 w:260 / curse skull w:5 / profane servitor w:5 / " ..
                 "bone dragon / ancient lich / revenant",
      "place:Abyss:$ w:1990 / corrupter",
      with_props("place:Slime:$", { jelly_protect = true }),
@@ -218,7 +218,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
                  "balrug w:30", { weight = 5 }),
      with_props("place:Dis:$ w:460 / Hell Sentinel / " ..
-                 "dancing weapon / iron dragon w:20", { weight = 5 }),
+                 "dancing weapon / war gargoyle w:20", { weight = 5 }),
      with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
                  "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / " ..
@@ -233,10 +233,13 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
-     with_props("spectral thing / shadow wraith / eidolon w:4 / shadow dragon / " ..
-                "deep elf death mage w:6 / death knight w:4 / " ..
-                "revenant w:4 / profane servitor w:6 / soul eater / " ..
-                "shadow fiend / black sun", { weight = 2 }),
+     with_props("gargoyle / earth elemental / torpor snail / boulder beetle / " ..
+                "stone giant / iron dragon / crystal guardian / " ..
+                "war gargoyle / iron golem / hell sentinel", { weight = 2 }),
+     with_props("spectral thing / shadow wraith / eidolon w:4 / " ..
+                "shadow dragon / deep elf death mage w:6 / " ..
+                "death knight w:4 / revenant w:4 / profane servitor w:6 / " ..
+                "soul eater / shadow fiend / black sun", { weight = 2 }),
      with_props("swamp drake / fire drake / wind drake w:2 / death drake / " ..
                 "wyvern w:5 / hydra w:5 / steam dragon / mottled dragon / " ..
                 "swamp dragon / fire dragon / ice dragon / storm dragon / " ..
@@ -274,23 +277,25 @@ mset(spec_fn(function ()
              end))
 
 mset(spec_fn(function ()
-               local d = math.max(3, you.depth() - 1)
-               local e = math.max(1, you.depth() - 20)
-               return "place:Snake:$ w:65 / guardian serpent w:5 / " ..
+               local d = math.max(6, you.depth() * 2 - 2)
+               local e = math.max(1, you.depth() - 18)
+               return "place:Snake:$ w:130 / guardian serpent w:5 / " ..
                  "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
              end))
 
 mset(spec_fn(function ()
                local d = math.max(120, 280 - 10 * you.depth())
                local e = math.max(1, you.depth() - 9)
-               return "place:Swamp:$ w:" .. d .. " / hydra / " ..
-                 "swamp dragon / green death w:6 / death drake w:1 / " ..
-                 "golden dragon w:1 / tentacled monstrosity w:" .. e
+               local f = math.max(1, math.floor((you.depth() - 9) / 3))
+               return "place:Swamp:$ w:" .. d .. " / eight-headed hydra w:8 / " ..
+                 "swamp dragon w:8 / tentacled monstrosity w:" .. e ..
+                 " / shambling mangrove w:" .. f .. " / green death w:6 / " ..
+                 "death drake w:1 / golden dragon w:1"
              end))
 
 mset(spec_fn(function ()
                local d = math.max(1, you.depth() - 11)
-               return "place:Vaults:$ 9 w:30 / place:Vaults:$ w:60 / " ..
+               return "place:Vaults:$ w:60 / place:Vaults:$ 9 w:30 / " ..
                  "titan w:" .. d .. " / golden dragon w:" .. d ..
                  " / ancient lich w:" .. d
              end))
@@ -305,9 +310,10 @@ mset(spec_fn(function ()
                local e = math.min(8, math.floor((you.depth()) / 5) + 4)
                local f = math.max(1, you.depth() - 5)
                return "chaos spawn w:" .. d .. " / ugly thing w:" .. d ..
-                 " / very ugly thing w:5 / apocalypse crab w:5 / " ..
+                 " / very ugly thing w:4 / apocalypse crab w:4 / " ..
                  "shapeshifter hd:16 w:" ..e .. " / glowing shapeshifter w:" .. e ..
-                 " / killer klown w:8 / chaos champion w:2 / pandemonium lord w:" .. f
+                 " / killer klown w:8 / chaos champion w:2 / " ..
+                 "greater demon w:2 / pandemonium lord w:" .. f
              end))
 
 mset(spec_fn(function ()

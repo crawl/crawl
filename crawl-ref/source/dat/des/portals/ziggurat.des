@@ -315,22 +315,24 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered unrand no_exits
-# This is evil. Monster sets are: summoners (1), stares (2), harmless (3).
+# This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
-MONS: ancient lich / shadow demon / ironbrand convoker / curse skull
-MONS: eye of draining / eye of devastation / giant eyeball / ghost moth
+MONS: ancient lich / shadow demon / curse skull / \
+      ironbrand convoker / corrupter / deep elf demonologist
+MONS: eye of draining / eye of devastation / \
+      giant eyeball / ghost moth / black sun
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
 : elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
 SUBST: 3 = 12
 : end
-KFEAT: n = iron_grate
+KFEAT: m = iron_grate
 MAP
-nnn
-n3n
-nnn
+mmm
+m3m
+mmm
 ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
@@ -356,10 +358,11 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_h
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
+MONS: crimson imp
 MAP
 ccncc
 c...c
-n...n
+n.1.n
 c...c
 ccncc
 ENDMAP
@@ -383,8 +386,8 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_k
 TAGS: ziggurat_pillar centered unrand no_exits
-MONS: boring beetle, boulder beetle, orb spider
-SUBST: 2 : 2:19 3:1
+MONS: boring beetle, boulder beetle, torpor snail, orb spider
+SUBST: 2 : 2:14 3:5 4:1
 MAP
 xxxxx
 xx2xx
@@ -515,11 +518,11 @@ NAME:    ziggurat_pillar_centre_drop
 TAGS:    ziggurat_pillar centered generate_awake unrand no_exits
 DEPTH:   Zig:10-
 WEIGHT:  5
-MONS:    lost soul
+MONS:    lost soul, rakshasa
 KFEAT:   ~ = known permanent teleport trap
 SUBST:   9 : 00., x : bcvx, X : bcnv
 : if you.depth() > 18 then
-SUBST:   0 : 011
+SUBST:   0 : 0112
 : end
 MAP
   xxx
