@@ -4259,6 +4259,7 @@ enum targeting_type
     DIR_TARGET_OBJECT,  // targets items
     DIR_MOVABLE_OBJECT, // skips corpses
     DIR_JUMP,           // a jump target
+    DIR_LEAP,           // power leap -- short-range cblink
 };
 
 enum torment_source_type

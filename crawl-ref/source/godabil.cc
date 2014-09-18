@@ -5687,7 +5687,7 @@ bool ru_power_leap()
     while (1)
     {
         direction_chooser_args args;
-        args.restricts = DIR_TARGET;
+        args.restricts = DIR_LEAP;
         args.needs_path = false;
         args.may_target_monster = false;
         args.top_prompt = "Leap to where?";
