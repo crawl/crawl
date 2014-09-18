@@ -954,13 +954,13 @@ static int _prompt_ring_to_remove(int new_ring)
 
     for (size_t i = 0; i < rings.size(); i++)
     {
-        string m;
+        string m = "<w>";
         const char key = _ring_slot_key(ring_types[i]);
         m += key;
         if (key == '<')
             m += '<';
 
-        m += " or " + rings[i]->name(DESC_INVENTORY);
+        m += "</w> or " + rings[i]->name(DESC_INVENTORY);
         mprf_nocap("%s", m.c_str());
     }
     flush_prev_message();
@@ -1254,7 +1254,7 @@ static equipment_type _choose_ring_slot()
          eq_it != slots.end();
          ++eq_it)
     {
-        string msg = "";
+        string msg = "<w>";
         const char key = _ring_slot_key(*eq_it);
         msg += key;
         if (key == '<')
@@ -1262,9 +1262,9 @@ static equipment_type _choose_ring_slot()
 
         item_def* ring = you.slot_item(*eq_it, true);
         if (ring)
-            msg += " or " + ring->name(DESC_INVENTORY);
+            msg += "</w> or " + ring->name(DESC_INVENTORY);
         else
-            msg += " - no ring";
+            msg += "</w> - no ring";
 
         if (*eq_it == EQ_LEFT_RING)
             msg += " (left)";
