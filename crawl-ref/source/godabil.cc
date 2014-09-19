@@ -5067,7 +5067,8 @@ void ru_offer_new_sacrifices()
         || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_HEALTH)
     {
         vector<mutation_type> possible_health_mutations;
-        if (player_mutation_level(MUT_FRAIL) <= 2)
+        if (player_mutation_level(MUT_FRAIL) <= 2
+            && you.innate_mutation[MUT_ROBUST] == 0) // block conflicts w/ DS
             possible_health_mutations.push_back(MUT_FRAIL);
         if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
             possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
@@ -5115,7 +5116,8 @@ void ru_offer_new_sacrifices()
         if (player_mutation_level(MUT_SCREAM) <= 2)
             possible_purity_mutations.push_back(MUT_SCREAM);
         if (player_mutation_level(MUT_SLOW_HEALING) <= 2
-            && !player_mutation_level(MUT_NO_DEVICE_HEAL))
+            && !player_mutation_level(MUT_NO_DEVICE_HEAL)
+            && you.innate_mutation[MUT_REGENERATION] == 0) //block conflicts
         {
             possible_purity_mutations.push_back(MUT_SLOW_HEALING);
         }
