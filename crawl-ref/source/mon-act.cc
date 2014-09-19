@@ -3691,7 +3691,25 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     if (grd(f) == DNGN_CLOSED_DOOR || grd(f) == DNGN_SEALED_DOOR)
     {
-        if (mons_can_open_door(mons, f))
+        if (mons_can_destroy_door(mons, f))
+        {
+            grd(f) = DNGN_FLOOR;
+            set_terrain_changed(f);
+
+            if (you.see_cell(f))
+            {
+                viewwindow();
+
+                if (!you.can_see(mons))
+                {
+                    mpr("The door bursts into shrapnel!");
+                    interrupt_activity(AI_FORCE_INTERRUPT);
+                }
+                else
+                    simple_monster_message(mons, " bursts through the door, destroying it!");
+            }
+        }
+        else if (mons_can_open_door(mons, f))
         {
             _mons_open_door(mons, f);
             return true;

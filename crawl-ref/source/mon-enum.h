@@ -189,6 +189,7 @@ enum mon_itemeat_type
 #if TAG_MAJOR_VERSION == 34
     MONEAT_FOOD,
 #endif
+    MONEAT_DOORS,
 
     NUM_MONEAT
 };

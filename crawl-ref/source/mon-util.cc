@@ -3951,11 +3951,23 @@ bool mons_can_eat_door(const monster* mon, const coord_def& pos)
     return true;
 }
 
+bool mons_can_destroy_door(const monster* mon, const coord_def& pos)
+{
+    if (mons_itemeat(mon) != MONEAT_DOORS)
+        return false;
+
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return false;
+
+    return true;
+}
+
 static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 {
     return mon->can_pass_through_feat(DNGN_FLOOR)
            && (mons_can_open_door(mon, pos)
-               || mons_can_eat_door(mon, pos));
+               || mons_can_eat_door(mon, pos)
+               || mons_can_destroy_door(mon, pos));
 }
 
 bool mons_can_traverse(const monster* mon, const coord_def& p,
