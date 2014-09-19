@@ -593,6 +593,9 @@ bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
         rc = true, form = false;
     }
 
+    if (player_mutation_level(MUT_NO_LOVE) && spell == SPELL_ENSLAVEMENT)
+        return true;
+
     // Check for banned schools (Currently just Ru sacrifices)
     if (cannot_use_spell_school(spell, evoked))
         return true;
@@ -1185,15 +1188,23 @@ bool learn_spell()
 string desc_cannot_memorise_reason(spell_type spell, bool form)
 {
     string desc;
+
     if (cannot_use_spell_school(spell))
         desc = "You cannot memorise or cast this type of magic.";
     else
     {
-        desc += article_a(species_name(you.species));
+        desc = "You cannot ";
+        if (form)
+            desc += "currently ";
+        desc += "memorise or cast this spell because you are ";
+
+        if (form)
+            desc += "in " + uppercase_first(transform_name()) + " form";
+        else
+            desc += article_a(species_name(you.species));
 
         desc += ".";
     }
-
     return desc;
 }
 
