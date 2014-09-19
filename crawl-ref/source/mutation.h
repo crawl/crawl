@@ -78,6 +78,7 @@ struct mutation_def
     const char* have[3];    // What appears on the 'A' screen.
     const char* gain[3];    // Message when you gain the mutation.
     const char* lose[3];    // Message when you lose the mutation.
+    const char* desc;       // A descriptive phrase that can be used in a sentence.
 };
 
 void init_mut_index();
@@ -105,6 +106,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 bool delete_all_mutations(const string &reason);
 
 const char* mutation_name(mutation_type mut);
+const char* mutation_desc_for_text(mutation_type mut);
 string mutation_desc(mutation_type which_mutat, int level = -1,
                           bool colour = false);
 

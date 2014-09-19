@@ -5299,7 +5299,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
 
             if (!_execute_sacrifice(health_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
-                    mutation_name(health_sacrifice)).c_str()))
+                    mutation_desc_for_text(health_sacrifice)).c_str()))
             {
                 return false;
             }
@@ -5316,7 +5316,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
 
             if (!_execute_sacrifice(essence_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
-                    mutation_name(essence_sacrifice)).c_str()))
+                    mutation_desc_for_text(essence_sacrifice)).c_str()))
             {
                 return false;
             }
@@ -5342,7 +5342,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
 
             if (!_execute_sacrifice(purity_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
-                    mutation_name(purity_sacrifice)).c_str()))
+                    mutation_desc_for_text(purity_sacrifice)).c_str()))
             {
                 return false;
             }

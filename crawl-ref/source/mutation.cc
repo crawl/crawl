@@ -1934,6 +1934,14 @@ const char* mutation_name(mutation_type mut)
     return get_mutation_def(mut).short_desc;
 }
 
+const char* mutation_desc_for_text(mutation_type mut)
+{
+    if (!_is_valid_mutation(mut))
+        return nullptr;
+
+    return get_mutation_def(mut).desc;
+}
+
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
 string mutation_desc(mutation_type mut, int level, bool colour)
