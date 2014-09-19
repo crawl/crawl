@@ -3533,7 +3533,9 @@ bool is_useless_item(const item_def &item, bool temp)
         {
             case ROD_SHADOWS:
             case ROD_SWARM:
-                return player_mutation_level(MUT_NO_LOVE);
+                if (item_type_known(item))
+                    return player_mutation_level(MUT_NO_LOVE);
+                // intentional fallthrough
             default:
                 return false;
         }
