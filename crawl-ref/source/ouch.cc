@@ -818,6 +818,20 @@ void reset_damage_counters()
     you.source_damage = 0;
 }
 
+// Determine what's threatening for purposes of sacrifice drink and reading.
+// the statuses are guaranteed not to happen if the incoming damage is less
+// than 4% max hp. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 20% max health damage or <30% max health
+// current hp.
+static bool _is_damage_threatening (int damage_fraction_of_hp)
+{
+    int hp_fraction = you.hp * 100 / you.hp_max;
+    return damage_fraction_of_hp > 5
+            && hp_fraction <= 85
+            && (damage_fraction_of_hp + random2(20) >= 20
+                || random2(100) < hp_fraction);
+}
+
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source, const char *death_source_name,
@@ -886,12 +900,13 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         you.check_awaken(500);
 
+        int damage_fraction_of_hp = dam * 100 / you.hp_max;
+
+        // Check _is_damage_threatening separately for read and drink so they
+        // don't always trigger in unison when you have both.
         if (player_mutation_level(MUT_NO_READ))
         {
-            // chance of status increases with low hp
-            // guaranteed at under 15% hp
-            if (random2(100) < max(0, 115 -
-                div_rand_round(you.hp * 100, you.hp_max)))
+            if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
                 mpr("You feel threatened and lose the ability to read scrolls!");
@@ -900,10 +915,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         if (player_mutation_level(MUT_NO_DRINK))
         {
-            // chance of status increases with low hp
-            // guaranteed at under 15% hp
-            if (random2(100) < max(0, 115 -
-                div_rand_round(you.hp * 100, you.hp_max)))
+            if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
                 mpr("You feel threatened and lose the ability to drink potions!");
