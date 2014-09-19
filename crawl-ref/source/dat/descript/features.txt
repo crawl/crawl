@@ -251,8 +251,8 @@ it like any other door (i.e., by walking into it or pressing ‘O’).
 %%%%
 A sacrificial altar of Ru
 
-This altar to Ru the Awakened is engraved with an open eye and a sacrificial
-knife.
+An altar to Ru the Awakened in the shape of a scales with a heart in
+one scale and a pictogram representing power and enlightenment in the other.
 %%%%
 A sealed door
 
