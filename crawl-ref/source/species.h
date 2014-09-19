@@ -30,6 +30,7 @@ const char *get_species_abbrev(species_type which_species);
 // from player.cc
 string species_name(species_type speci, bool genus = false, bool adj = false);
 species_type str_to_species(const string &species);
+string species_walking_verb(species_type sp);
 
 monster_type player_species_to_mons_species(species_type species);
 
