@@ -302,6 +302,11 @@ bool check_awaken(monster* mons)
     if (you.berserk())
         return true;
 
+    // If you've sacrificed stealth, you always alert monsters.
+    if (player_mutation_level(MUT_NO_STEALTH))
+        return true;
+
+
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice()
                        + mons_sense_invis(mons) * 5;
