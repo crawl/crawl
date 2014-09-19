@@ -214,6 +214,7 @@ static const char *_moneat_names[] =
 #if TAG_MAJOR_VERSION == 34
     "food",
 #endif
+    "doors"
 };
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)

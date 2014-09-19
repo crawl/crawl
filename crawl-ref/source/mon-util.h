@@ -442,6 +442,7 @@ string get_mon_shape_str(const mon_body_shape shape);
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);
 bool mons_can_eat_door(const monster* mon, const coord_def& pos);
+bool mons_can_destroy_door(const monster* mon, const coord_def& pos);
 bool mons_can_traverse(const monster* mon, const coord_def& pos,
                        bool only_in_sight = false,
                        bool checktraps = true);
