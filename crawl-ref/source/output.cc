@@ -886,15 +886,8 @@ static void _print_stats_wp(int y)
         text = "-) " + you.unarmed_attack_name();
 
     CGOTOXY(1, y, GOTO_STAT);
-    textcolour(Options.status_caption_colour);
-    CPRINTF("Wp: ");
     textcolour(_wpn_name_colour());
-#ifdef USE_TILE_LOCAL
-    int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
-    CPRINTF("%s", chop_string(text, w).c_str());
-#else
-    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
-#endif
+    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x).c_str());
     textcolour(LIGHTGREY);
 }
 
@@ -924,7 +917,7 @@ static void _print_stats_qv(int y)
         if (fire_warn_if_impossible(true))
         {
             col  = DARKGREY;
-            text = "Unavailable";
+            text = "Quiver unavailable";
         }
         else
         {
@@ -935,8 +928,6 @@ static void _print_stats_qv(int y)
         text = prefix + text;
     }
     CGOTOXY(1, y, GOTO_STAT);
-    textcolour(Options.status_caption_colour);
-    CPRINTF("Qv: ");
     textcolour(col);
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
