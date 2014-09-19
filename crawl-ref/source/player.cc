@@ -828,7 +828,7 @@ bool you_can_wear(int eq, bool special_armour)
 
     case EQ_SHIELD:
         // Most races can wear robes or a buckler/shield.
-        if (special_armour)
+        if (special_armour && !player_mutation_level(MUT_MISSING_HAND))
             return true;
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
