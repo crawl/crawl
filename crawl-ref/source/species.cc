@@ -236,6 +236,28 @@ string species_name(species_type speci, bool genus, bool adj)
     return res;
 }
 
+/** What walking-like thing does this species do?
+ *
+ *  @param sp what kind of species to look at
+ *  @returns a "word" to which "-er" or "-ing" can be appended.
+ */
+string species_walking_verb(species_type sp)
+{
+    switch (sp)
+    {
+    case SP_NAGA:
+        return "Slid";
+    case SP_TENGU:
+        return "Glid";
+    case SP_OCTOPODE:
+        return "Wriggl";
+    case SP_VINE_STALKER:
+        return "Stalk";
+    default:
+        return "Walk";
+    }
+}
+
 int species_has_claws(species_type species, bool mut_level)
 {
     if (species == SP_TROLL)

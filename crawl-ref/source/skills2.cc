@@ -212,11 +212,7 @@ static string _stk_genus_short_cap()
 
 static string _stk_walker()
 {
-    return Skill_Species == SP_NAGA         ? "Slider"   :
-           Skill_Species == SP_TENGU        ? "Glider"   :
-           Skill_Species == SP_OCTOPODE     ? "Wriggler" :
-           Skill_Species == SP_VINE_STALKER ? "Stalker"
-                                            : "Walker";
+    return species_walking_verb(Skill_Species) + "er";
 }
 
 static string _stk_weight()

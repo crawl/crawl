@@ -4258,7 +4258,7 @@ static const char *divine_title[NUM_GODS][8] =
      "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
     // Yredelemnul -- zombie death.
-    {"Traitor",            "Zealot",                "Exhumer",                  "Fey %s",
+    {"Traitor",            "Zealot",                "Exhumer",                  "Fey @Genus@",
      "Soul Tainter",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
 
     // Xom.
@@ -4275,7 +4275,7 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
-     "Fiendish",           "Demolition %s",         "Pandemonic",               "Champion of Chaos"},
+     "Fiendish",           "Demolition @Genus@",    "Pandemonic",               "Champion of Chaos"},
 
     // Sif Muna -- scholarly theme.
     {"Ignorant",           "Disciple",              "Student",                  "Adept",
@@ -4283,18 +4283,18 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Trog -- anger theme.
     {"Puny",               "Troglodyte",            "Angry Troglodyte",         "Frenzied",
-     "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
+     "@Genus@ of Prey",    "Rampant",               "Wild @Genus@",             "Bane of Scribes"},
 
     // Nemelex Xobeh -- alluding to Tarot and cards.
-    {"Unlucky %s",         "Pannier",               "Jester",                   "Fortune-Teller",
+    {"Unlucky @Genus@",    "Pannier",               "Jester",                   "Fortune-Teller",
      "Soothsayer",         "Magus",                 "Cardsharp",                "Hand of Fortune"},
 
     // Elyvilon.
     {"Sinner",             "Comforter",             "Caregiver",                "Practitioner",
-     "Pacifier",           "Purifying %s",          "Faith Healer",             "Bringer of Life"},
+     "Pacifier",           "Purifying @Genus@",     "Faith Healer",             "Bringer of Life"},
 
     // Lugonu -- distortion theme.
-    {"Pure",               "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
+    {"Pure",               "Abyss-Baptised",        "Unweaver",                 "Distorting @Genus@",
      "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     // Beogh -- messiah theme.
@@ -4303,14 +4303,14 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Jiyva -- slime and jelly theme.
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
-     "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
+     "Putrid Slime",       "Consuming @Genus@",     "Archjelly",                "Royal Jelly"},
 
     // Fedhas Madash -- nature theme.
-    {"Walking Fertiliser", "Green %s",              "Inciter",                  "Photosynthesist",
+    {"@Walking@ Fertiliser", "Green @Genus@",       "Inciter",                  "Photosynthesist",
      "Cultivator",         "Green Death",           "Nimbus",                   "Force of Nature"},
 
     // Cheibriados -- slow theme
-    {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
+    {"Unwound @Genus@",    "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
      "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"},
 
     // Ashenzari -- divination theme
@@ -4326,8 +4326,8 @@ static const char *divine_title[NUM_GODS][8] =
      "Rich",               "Opulent",               "Tycoon",                   "Plutocrat"},
 
     // Qazlal -- natural disaster theme
-    {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
-     "Eye of the Storm",   "%s Catastrophe",        "%s Cataclysm",             "End of an Era"},
+    {"Unspoiled",          "@Adj@ Mishap",          "Lightning Rod",            "@Adj@ Disaster",
+     "Eye of the Storm",   "@Adj@ Catastrophe",     "@Adj@ Cataclysm",          "End of an Era"},
 
     // Ru -- enlightenment theme
     {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
@@ -4344,10 +4344,10 @@ string god_title(god_type which_god, species_type which_species, int piety)
     else
         title = divine_title[which_god][_piety_level(piety)];
 
-    title = replace_all(title, "%s",
-                        which_god == GOD_QAZLAL
-                        ? species_name(which_species, false, true)
-                        : species_name(which_species, true, false));
+    //XXX: unify with stuff in skills2.cc
+    title = replace_all(title, "@Genus@", species_name(which_species, true, false));
+    title = replace_all(title, "@Adj@", species_name(which_species, false, true));
+    title = replace_all(title, "@Walking@", (species_walking_verb(which_species) + "ing"));
 
     return title;
 }
