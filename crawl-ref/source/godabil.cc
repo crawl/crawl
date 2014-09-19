@@ -34,6 +34,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
+#include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -5284,6 +5285,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.words", "sacrificed words!");
             break;
         case ABIL_RU_SACRIFICE_DRINK:
             piety_gain = 28;
@@ -5292,6 +5294,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.drink", "sacrificed drink!");
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
             piety_gain = 20;
@@ -5303,6 +5306,9 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.health",
+                    make_stringf("sacrificed health: %s!",
+                    mutation_desc_for_text(health_sacrifice)).c_str());
             break;
         case ABIL_RU_SACRIFICE_ESSENCE:
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
@@ -5320,6 +5326,9 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.essence",
+                    make_stringf("sacrificed essence: %s!",
+                    mutation_desc_for_text(essence_sacrifice)).c_str());
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
@@ -5346,6 +5355,9 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.purity",
+                    make_stringf("sacrificed purity: %s!",
+                    mutation_desc_for_text(purity_sacrifice)).c_str());
             break;
         case ABIL_RU_SACRIFICE_STEALTH:
             piety_gain = 20 + _piety_for_skill(SK_STEALTH);
@@ -5356,6 +5368,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 return false;
             }
             _ru_kill_skill(SK_STEALTH);
+            mark_milestone("sacrifice.stealth", "sacrificed stealth!");
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
             piety_gain = 45 + _piety_for_skill(SK_EVOCATIONS);
@@ -5366,6 +5379,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 return false;
             }
             _ru_kill_skill(SK_EVOCATIONS);
+            mark_milestone("sacrifice.evocations", "sacrificed evocations!");
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
             piety_gain = 20 + _piety_for_skill(SK_DODGING);
@@ -5393,6 +5407,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 return false;
             }
             _ru_kill_skill(SK_DODGING);
+            mark_milestone("sacrifice.dodging", "sacrificed dodging!");
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
             piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
@@ -5405,6 +5420,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 return false;
             }
             _ru_kill_skill(SK_ARMOUR);
+            mark_milestone("sacrifice.armour", "sacrificed armour!");
             break;
         case ABIL_RU_SACRIFICE_SANITY:
             piety_gain = 25;
@@ -5414,6 +5430,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
+            mark_milestone("sacrifice.sanity", "sacrificed sanity!");
             break;
         case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
@@ -5427,6 +5444,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 return false;
             }
             add_daction(DACT_ALLY_SACRIFICE_LOVE);
+            mark_milestone("sacrifice.love", "sacrificed love!");
             break;
         case ABIL_RU_SACRIFICE_ARCANA:
             piety_gain = 25;
@@ -5490,6 +5508,14 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 }
             }
             num_sacrifices = 3;
+            mark_milestone("sacrifice.arcana",
+                make_stringf("sacrificed arcana: %s, %s, and %s!",
+                    mutation_desc_for_text(static_cast<mutation_type>(
+                        current_arcane_sacrifices[0].get_int())),
+                    mutation_desc_for_text(static_cast<mutation_type>(
+                        current_arcane_sacrifices[1].get_int())),
+                    mutation_desc_for_text(static_cast<mutation_type>(
+                        current_arcane_sacrifices[2].get_int()))).c_str());
             break;
         case ABIL_RU_SACRIFICE_HAND:
             piety_gain = 70 + _piety_for_skill(SK_SHIELDS);
@@ -5529,6 +5555,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             }
 
             you.stop_train.insert(SK_SHIELDS);
+            mark_milestone("sacrifice.hand", "sacrificed a hand!");
             break;
         default:
             return false;
