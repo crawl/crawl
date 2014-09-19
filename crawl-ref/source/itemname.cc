@@ -3365,6 +3365,13 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
+        if (item.sub_type == WAND_ENSLAVEMENT
+            && item_type_known(item)
+            && player_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
+
         return item.plus2 == ZAPCOUNT_EMPTY
                 || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
