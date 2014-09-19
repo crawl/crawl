@@ -29,7 +29,7 @@ Gods
   - Bribe Branch: send money to the inhabitants of a branch to turn them
     temporarily neutral or incite them to join you.
   - Duplication: one non-artefact item can be duplicated at an altar.
-* New god: Ru the Insubstantial. Ru is a temple god, with an altar either in
+* New god: Ru the Awakened. Ru is a temple god, with an altar either in
   Temple or on D:2-9.
   - Periodically offers the player a choice of three permanent sacrifices in
     exchange for piety; all abilities scale with piety; piety never decreases.
