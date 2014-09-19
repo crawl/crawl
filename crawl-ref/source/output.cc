@@ -1911,23 +1911,28 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
+static int _stealth_breakpoint(int stealth)
+{
+    if (stealth == 0)
+        return 0;
+    else if (stealth >= 500)
+        return 10;
+    else if (stealth >= 450)
+        return 9;
+    else
+        return 1 + stealth / 50;
+}
+
 static string _stealth_bar(int sw) {
     string bar;
     //no coloring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth  ";
-    const int stealth = check_stealth();
-    // here we reflect the log adjectives
-    bar += (stealth >  10) ? "+" : ".";
-    bar += (stealth >  30) ? "+" : ".";
-    bar += (stealth >  60) ? "+" : ".";
-    bar += (stealth >  90) ? "+" : ".";
-    bar += (stealth >  120) ? "+" : ".";
-    bar += (stealth >  160) ? "+" : ".";
-    bar += (stealth >  220) ? "+" : ".";
-    bar += (stealth >  300) ? "+" : ".";
-    bar += (stealth >  400) ? "+" : ".";
-    bar += (stealth >  520) ? "+" : ".";
+    const int stealth_num = _stealth_breakpoint(check_stealth());
+    for (int i = 0; i < stealth_num; i++)
+        bar += "+";
+    for (int i = 0; i < 10 - stealth_num; i++)
+        bar += ".";
     bar += "\n";
     linebreak_string(bar, sw);
     return bar;
@@ -2464,7 +2469,7 @@ static char _get_overview_screen_results()
             overview.add_item_formatted_string(blines[i], hotkey);
         }
     }
-    
+
     overview.add_text(_stealth_bar(get_number_of_cols()));
     overview.add_text(" ");
     overview.add_text(_status_mut_abilities(get_number_of_cols()));
@@ -2518,21 +2523,15 @@ void print_overview_screen()
     }
 }
 
+static const char* stealth_words[11] =
+{
+    "extremely un", "very un", "un", "fairly ", "", "quite ", "very ",
+    "extremely ", "extraordinarily ", "incredibly ", "uncannily "
+};
+
 string stealth_desc(int stealth)
 {
-    string prefix =
-         (stealth ==  0) ? "extremely un" :
-         (stealth <  50) ? "very un" :
-         (stealth < 100) ? "un" :
-         (stealth < 150) ? "fairly " :
-         (stealth < 200) ? "" :
-         (stealth < 250) ? "quite " :
-         (stealth < 300) ? "very " :
-         (stealth < 350) ? "extremely " :
-         (stealth < 400) ? "extraordinarily " :
-         (stealth < 500) ? "incredibly "
-                         : "uncannily ";
-    return prefix + "stealthy";
+    return make_stringf("%sstealthy", stealth_words[_stealth_breakpoint(stealth)]);
 }
 
 string magic_res_adjective(int mr)
