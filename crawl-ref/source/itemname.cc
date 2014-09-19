@@ -3546,6 +3546,12 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         if (you_worship(GOD_TROG))
             return true;
+        if (!you.could_wield(item, true, !temp))
+        {
+            // Weapon is too large (or small) to be wielded and cannot
+            // be thrown either.
+            return true;
+        }
         if (!item_type_known(item))
             return false;
         break;
