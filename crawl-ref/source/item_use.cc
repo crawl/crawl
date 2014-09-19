@@ -1189,8 +1189,9 @@ static bool _swap_rings(int ring_slot)
     }
     else if (available == 0)
     {
-        mprf("You're already wearing %s cursed rings!%s",
+        mprf("You're already wearing %s cursed ring%s!%s",
              number_in_words(cursed).c_str(),
+             (cursed == 1 ? "" : "s"),
              (cursed > 2 ? " Isn't that enough for you?" : ""));
         return false;
     }
