@@ -5556,7 +5556,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                 unequip_item(ring_slot);
             }
 
-            you.stop_train.insert(SK_SHIELDS);
+            _ru_kill_skill(SK_SHIELDS);
             mark_milestone("sacrifice", "sacrificed a hand!");
             break;
         default:
