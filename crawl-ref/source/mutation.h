@@ -17,7 +17,7 @@ enum mutation_activity_type
     MUTACT_FULL,     // other mutations
 };
 
-enum mutation_class_type
+enum mutation_permanence_class
 {
     // Temporary mutations wear off after awhile
     MUTCLASS_TEMPORARY,
@@ -101,7 +101,7 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
             bool beneficial = false,
-            mutation_class_type mutclass = MUTCLASS_NORMAL,
+            mutation_permanence_class mutclass = MUTCLASS_NORMAL,
             bool no_rot = false);
 
 void display_mutations();
