@@ -2702,7 +2702,6 @@ int player_wizardry()
 int player_shield_class()
 {
     int shield = 0;
-    int stat = 0;
 
     if (you.incapacitated())
         return 0;
@@ -2723,6 +2722,10 @@ int player_shield_class()
 
         shield += item.plus * 200;
 
+        shield += you.skill(SK_SHIELDS, 38)
+                + min(you.skill(SK_SHIELDS, 38), 3 * 38);
+
+        int stat = 0;
         if (item.sub_type == ARM_BUCKLER)
             stat = you.dex() * 38;
         else if (item.sub_type == ARM_LARGE_SHIELD)
@@ -2730,6 +2733,8 @@ int player_shield_class()
         else
             stat = you.dex() * 19 + you.strength() * 19;
         stat = stat * (base_shield + 13) / 26;
+
+        shield += stat;
     }
     else
     {
@@ -2740,22 +2745,16 @@ int player_shield_class()
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
     }
 
-    if (shield + stat > 0 && player_wearing_slot(EQ_SHIELD))
-    {
-        shield += you.skill(SK_SHIELDS, 38)
-                + min(you.skill(SK_SHIELDS, 38), 3 * 38);
-    }
-
     // mutations
-    // +2, +4, +6 (displayed)
+    // +2, +3, +4 (displayed values)
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
                ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200 + 200
                : 0);
 
-    stat += qazlal_sh_boost() * 100;
-    stat += tso_sh_boost() * 100;
+    shield += qazlal_sh_boost() * 100;
+    shield += tso_sh_boost() * 100;
 
-    return (shield + stat + 50) / 100;
+    return (shield + 50) / 100;
 }
 
 /**
