@@ -2678,8 +2678,7 @@ static int _find_transtravel_stair(const level_id &cur,
                                     const coord_def &stair,
                                     level_id &closest_level,
                                     int &best_level_distance,
-                                    coord_def &best_stair,
-                                    const bool target_has_excludes)
+                                    coord_def &best_stair)
 {
     int local_distance = -1;
     level_id player_level = level_id::current();
@@ -2807,12 +2806,8 @@ static int _find_transtravel_stair(const level_id &cur,
             // have no exact target location. If there *is* an exact target
             // location, we can't follow stairs for which we have incomplete
             // information.
-            //
-            // We can also not use incomplete stair information if there are
-            // excludes on the target level.
             if (target.pos.x == -1
-                && dest.id == target.id
-                && !target_has_excludes)
+                && dest.id == target.id)
             {
                 if (local_distance == -1 || local_distance > dist2stair)
                 {
@@ -2853,8 +2848,7 @@ static int _find_transtravel_stair(const level_id &cur,
             const int newdist =
                 _find_transtravel_stair(dest.id, target,
                                         dist2stair, dest.pos, closest_level,
-                                        best_level_distance, best_stair,
-                                        target_has_excludes);
+                                        best_level_distance, best_stair);
             if (newdist != -1
                 && (local_distance == -1 || local_distance > newdist))
             {
@@ -2911,13 +2905,9 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
 
     find_travel_pos(you.pos(), NULL, NULL, NULL);
 
-    const LevelInfo &target_level =
-        travel_cache.get_level_info(target.id);
-
     _find_transtravel_stair(current, target,
                             0, cur_stair, closest_level,
-                            best_level_distance, best_stair,
-                            !target_level.get_excludes().empty());
+                            best_level_distance, best_stair);
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
