@@ -5549,7 +5549,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             }
 
             // And one ring
-            if (ring != NULL )
+            if (ring != NULL)
             {
                 mprf("You can no longer wear %s!",
                     ring->name(DESC_YOUR).c_str());
