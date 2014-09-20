@@ -1266,8 +1266,8 @@ void tso_divine_shield()
     you.set_duration(DUR_DIVINE_SHIELD,
                      35 + you.skill_rdiv(SK_INVOCATIONS, 4, 3));
 
-    // shield bonus up to 8
-    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skill_rdiv(SK_SHIELDS, 1, 5);
+    // affects size of SH bonus, decreases near end of duration
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5);
 
     you.redraw_armour_class = true;
 }

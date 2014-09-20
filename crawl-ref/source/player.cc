@@ -2740,14 +2740,7 @@ int player_shield_class()
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
     }
 
-    if (you.duration[DUR_DIVINE_SHIELD])
-    {
-        shield += you.attribute[ATTR_DIVINE_SHIELD] * 150;
-        stat = max(stat, int(you.attribute[ATTR_DIVINE_SHIELD] * 300));
-    }
-
-    if (shield + stat > 0
-        && (player_wearing_slot(EQ_SHIELD) || you.duration[DUR_DIVINE_SHIELD]))
+    if (shield + stat > 0 && player_wearing_slot(EQ_SHIELD))
     {
         shield += you.skill(SK_SHIELDS, 38)
                 + min(you.skill(SK_SHIELDS, 38), 3 * 38);
@@ -2760,6 +2753,7 @@ int player_shield_class()
                : 0);
 
     stat += qazlal_sh_boost() * 100;
+    stat += tso_sh_boost() * 100;
 
     return (shield + stat + 50) / 100;
 }
