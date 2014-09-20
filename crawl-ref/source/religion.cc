@@ -3033,11 +3033,7 @@ void excommunication(god_type new_god, bool immediate)
                           coord_def((int)new_god, old_piety));
 
     for (unsigned int i = 0; i < abilities.size(); ++i)
-    {
         you.stop_train.insert(abil_skill(abilities[i]));
-        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
-            you.stop_train.insert(SK_SHIELDS);
-    }
 
     update_can_train();
 
@@ -3468,11 +3464,7 @@ void join_religion(god_type which_god, bool immediate)
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities(true, true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
-    {
         you.start_train.insert(abil_skill(abilities[i]));
-        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
-            you.start_train.insert(SK_SHIELDS);
-    }
     update_can_train();
 
     // When you start worshipping a good god, you make all non-hostile
