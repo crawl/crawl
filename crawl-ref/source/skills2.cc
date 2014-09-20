@@ -487,8 +487,7 @@ bool is_useless_skill(skill_type skill)
         return true;
 #endif
 
-    if (
-        (skill == SK_AIR_MAGIC && player_mutation_level(MUT_NO_AIR_MAGIC))
+    if ((skill == SK_AIR_MAGIC && player_mutation_level(MUT_NO_AIR_MAGIC))
         || (skill == SK_CHARMS && player_mutation_level(MUT_NO_CHARM_MAGIC))
         || (skill == SK_CONJURATIONS
             && player_mutation_level(MUT_NO_CONJURATION_MAGIC))
