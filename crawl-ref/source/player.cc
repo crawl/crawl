@@ -7104,9 +7104,7 @@ bool player::no_tele_print_reason(bool calc_unid, bool permit_id, bool blinking,
                                        it->name(DESC_A).c_str()));
                 }
                 else
-                {
                     worn_notele.push_back(it->name(DESC_A).c_str());
-                }
 
                 if (it->base_type == OBJ_JEWELLERY
                     && it->sub_type >= AMU_FIRST_AMULET)

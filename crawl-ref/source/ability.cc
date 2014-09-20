@@ -1717,9 +1717,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.no_tele_print_reason(false, false, true, quiet))
-        {
             return false;
-        }
         return true;
 
     case ABIL_EVOKE_BERSERK:
