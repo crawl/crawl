@@ -228,8 +228,8 @@ Cure all your mutations — but only once.
 Divine Shield ability
 
 The Shining One grants you a divine shield. Because it is held aloft by godly
-power, it does not interfere with your equipment. However, it is controlled by
-your willpower, and your skill with Shields will improve it.
+power, it does not interfere with your equipment. The strength and duration
+of the shield are increased by Invocations skill.
 %%%%
 Cleansing Flame ability
 
