@@ -2382,7 +2382,7 @@ void handle_monster_move(monster* mons)
                     mons->target = new_target->pos();
                     mons->foe = new_target->mindex();
                     mprf(MSGCH_GOD, "You redirect %s's attack!",
-                    mons->name(DESC_THE, true).c_str());
+                         mons->name(DESC_THE).c_str());
                     fight_melee(mons, new_target);
                 }
                 else

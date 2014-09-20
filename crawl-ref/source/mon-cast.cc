@@ -3040,7 +3040,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             else if (r < chance + div_rand_round(chance, 2))
             {
                 mprf(MSGCH_GOD, "You redirect %s's attack!",
-                        mons->name(DESC_THE, true).c_str());
+                        mons->name(DESC_THE).c_str());
                 int pfound = 0;
                 for (radius_iterator ri(you.pos(),
                     LOS_DEFAULT); ri; ++ri)
