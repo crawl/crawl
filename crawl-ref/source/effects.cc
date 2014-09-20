@@ -1789,11 +1789,11 @@ static void _magic_contamination_effects()
     }
 
 #if TAG_MAJOR_VERSION == 34
-    const mutation_class_type mutclass = you.species == SP_DJINNI
+    const mutation_permanence_class mutclass = you.species == SP_DJINNI
         ? MUTCLASS_TEMPORARY
         : MUTCLASS_NORMAL;
 #else
-    const mutation_class_type mutclass = MUTCLASS_NORMAL;
+    const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
 #endif
 
     // We want to warp the player, not do good stuff!

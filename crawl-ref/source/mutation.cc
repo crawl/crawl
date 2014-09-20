@@ -1354,22 +1354,31 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-// Returns true if a mutation is successfully resisted, false otherwise.
-// Does not include divine intervention!
-static bool _resist_mutation(mutation_class_type mutclass, bool beneficial)
+/**
+   Do a resistance check for the given mutation permanence class.
+   Does not include divine intervention!
+
+   @param mutclass The type of mutation that is checking resistance
+   @param beneficial Is the mutation beneficial?
+
+   @returns True if a mutation is successfully resisted, false otherwise.
+**/
+static bool _resist_mutation(mutation_permanence_class mutclass,
+                             bool beneficial)
 {
-    const int item_chance = mutclass == MUTCLASS_TEMPORARY
-        ? 3
-        : 10;
-    const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY
-        ? 2
-        : 3;
+    const int item_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
+    const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 2 : 3;
 
     // To be nice, beneficial mutations go through removable sources of rMut.
-    return (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
-        || (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    if (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
+        return true;
+    if ((player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
         || (player_mutation_level(MUT_MUTATION_RESISTANCE)
-                && !one_chance_in(mut_resist_chance));
+            && !one_chance_in(mut_resist_chance)))
+    {
+        return true;
+    }
+    return false;
 }
 
 // Undead can't be mutated, and fall apart instead.
@@ -1381,7 +1390,7 @@ bool undead_mutation_rot()
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
-            mutation_class_type mutclass, bool no_rot)
+            mutation_permanence_class mutclass, bool no_rot)
 {
     if (which_mutation == RANDOM_BAD_MUTATION
         && mutclass == MUTCLASS_NORMAL
@@ -1452,19 +1461,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     if (mutclass == MUTCLASS_NORMAL
-        && (which_mutation == RANDOM_MUTATION || which_mutation == RANDOM_XOM_MUTATION))
+        && (which_mutation == RANDOM_MUTATION || which_mutation == RANDOM_XOM_MUTATION)
+        && x_chance_in_y(how_mutated(false, true), 15))
     {
-        // If already heavily mutated, remove a mutation instead.
-        if (x_chance_in_y(how_mutated(false, true), 15))
-        {
-            // God gifts override mutation loss due to being heavily
-            // mutated.
-            if (!one_chance_in(3) && !god_gift && !force_mutation)
-                return false;
-            else
-                return delete_mutation(RANDOM_MUTATION, reason, failMsg,
-                                       force_mutation, false);
-        }
+        // God gifts override mutation loss due to being heavily
+        // mutated.
+        if (!one_chance_in(3) && !god_gift && !force_mutation)
+            return false;
+        else
+            return delete_mutation(RANDOM_MUTATION, reason, failMsg,
+                                   force_mutation, false);
     }
 
     switch (which_mutation)
@@ -1520,9 +1526,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
-    int rc = _handle_conflicting_mutations(
-            mutat, god_gift || force_mutation, reason,
-            mutclass == MUTCLASS_TEMPORARY);
+    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation,
+                                           reason,
+                                           mutclass == MUTCLASS_TEMPORARY);
     if (rc == 1)
         return true;
     if (rc == -1)
