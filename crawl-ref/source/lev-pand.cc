@@ -45,31 +45,36 @@ void init_pandemonium()
     for (int pc = 0; pc < PAN_MONS_ALLOC; ++pc)
     {
         env.mons_alloc[pc] = random_choose_weighted(
-                           376884, MONS_ORANGE_DEMON,
-                           376884, MONS_HELLWING,
-                           376884, MONS_SMOKE_DEMON,
-                           376884, MONS_YNOXINUL,
-                           376884, MONS_ABOMINATION_LARGE,
-                           188442, MONS_NEQOXEC,
-                           188442, MONS_MONSTROUS_DEMONSPAWN,
-                           188442, MONS_GELID_DEMONSPAWN,
-                           188442, MONS_INFERNAL_DEMONSPAWN,
-                           188442, MONS_PUTRID_DEMONSPAWN,
-                           188442, MONS_TORTUROUS_DEMONSPAWN,
-                            41876, MONS_HELLION,
-                            41876, MONS_TORMENTOR,
-                            41876, MONS_REAPER,
-                            41876, MONS_SOUL_EATER,
-                            41876, MONS_ICE_DEVIL,
-                            41876, MONS_BLUE_DEVIL,
-                            41876, MONS_HELL_BEAST,
-                            41876, MONS_IRON_DEVIL,
-                           115520, MONS_RED_DEVIL,
-                           182400, MONS_SIXFIRHY,
-                            48000, MONS_DEMONIC_CRAWLER,
-                            48000, MONS_SUN_DEMON,
-                            48000, MONS_SHADOW_DEMON,
-                            48000, MONS_LOROCYPROCA,
+                           188442, MONS_ORANGE_DEMON,
+                           188442, MONS_HELLWING,
+                           188442, MONS_SMOKE_DEMON,
+                           188442, MONS_YNOXINUL,
+                           188442, MONS_ABOMINATION_LARGE,
+
+                            94221, MONS_NEQOXEC,
+                            94221, MONS_MONSTROUS_DEMONSPAWN,
+                            94221, MONS_GELID_DEMONSPAWN,
+                            94221, MONS_INFERNAL_DEMONSPAWN,
+                            94221, MONS_PUTRID_DEMONSPAWN,
+                            94221, MONS_TORTUROUS_DEMONSPAWN,
+
+                            91200, MONS_SIXFIRHY,
+
+                            57760, MONS_RED_DEVIL,
+
+                            24000, MONS_DEMONIC_CRAWLER,
+                            24000, MONS_SUN_DEMON,
+                            24000, MONS_SHADOW_DEMON,
+                            24000, MONS_LOROCYPROCA,
+
+                            20938, MONS_HELLION,
+                            20938, MONS_TORMENTOR,
+                            20938, MONS_REAPER,
+                            20938, MONS_SOUL_EATER,
+                            20938, MONS_ICE_DEVIL,
+                            20938, MONS_BLUE_DEVIL,
+                            20938, MONS_HELL_BEAST,
+                            20938, MONS_IRON_DEVIL,
                                 0);
 
         // The last three slots have a good chance of big badasses.
