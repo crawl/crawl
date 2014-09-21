@@ -3,6 +3,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "butcher.h"
 #include "food.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -145,6 +146,22 @@ static int food_isveggie(lua_State *ls)
     return 1;
 }
 
+static int food_bottleable(lua_State *ls)
+{
+    LUA_ITEM(ls, item, 1);
+    lua_pushboolean(ls, item && item->base_type == OBJ_CORPSES
+                             && can_bottle_blood_from_corpse(item->mon_type));
+    return 1;
+}
+
+// differs from food_can_eat in several respects
+static int food_edible(lua_State *ls)
+{
+    LUA_ITEM(ls, item, 1);
+    lua_pushboolean(ls, item && !is_inedible(*item));
+    return 1;
+}
+
 static const struct luaL_reg food_lib[] =
 {
     { "do_eat",            food_do_eat },
@@ -160,6 +177,8 @@ static const struct luaL_reg food_lib[] =
     { "isfruit",           food_isfruit },
     { "ismeaty",           food_ismeaty },
     { "isveggie",          food_isveggie },
+    { "bottleable",        food_bottleable },
+    { "edible",            food_edible },
     { NULL, NULL },
 };
 
