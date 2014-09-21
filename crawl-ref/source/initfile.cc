@@ -802,7 +802,7 @@ void game_options::reset_options()
     hp_warning             = 30;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
-    cloud_status           = is_tiles();
+    cloud_status           = !is_tiles();
     trapwalk_safe_hp       = true;
 
     user_note_prefix       = "";
