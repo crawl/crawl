@@ -2852,6 +2852,15 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_ARACHNE_STAVELESS;
         }
 
+        case MONS_DUVESSA:
+        case MONS_DOWAN:
+        {
+            const tileidx_t t = _tileidx_monster_base(type, in_water,
+                                    mon.colour, mon.number, tile_num);
+            return (mon.props.exists("elven_twin_is_energized")) ? t + 1
+                                                                 : t;
+        }
+
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...

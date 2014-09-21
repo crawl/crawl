@@ -3262,6 +3262,8 @@ void elven_twin_energize(monster* mons)
 
         mons->add_ench(ENCH_HASTE);
     }
+
+    mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
 }
 
 /**
