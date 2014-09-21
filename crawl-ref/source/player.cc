@@ -7118,7 +7118,7 @@ bool player::no_tele_print_reason(bool calc_unid, bool permit_id, bool blinking,
                             " slot_item(EQ_AMULET) is NULL");
                     }
                     worn_notele.push_back(amulet->name(DESC_A).c_str());
-                    found_nonartefact = is_artefact(*amulet);
+                    found_nonartefact = !is_artefact(*amulet);
                 }
                 //...but we also don't want to report "buggy stasis" from it.
                 found_stasis = true;
