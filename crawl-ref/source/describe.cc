@@ -598,11 +598,6 @@ int str_to_trap(const string &s)
     // allow a couple of synonyms
     if (tspec == "random" || tspec == "any")
         return TRAP_RANDOM;
-    else if (tspec == "nonteleport" || tspec == "noteleport"
-             || tspec == "nontele" || tspec == "notele")
-    {
-        return TRAP_NONTELEPORT;
-    }
 
     for (int i = 0; i < NUM_TRAPS; ++i)
         if (tspec == lowercase_string(trap_names[i]))
