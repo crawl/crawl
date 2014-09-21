@@ -214,6 +214,7 @@
     Michael Spang
     David Speare
     Jan 'heftig' Steffens
+    Timothy Stiles
     Johan Strandell
     Ben Striegel
     Derrick Sund
