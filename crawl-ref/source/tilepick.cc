@@ -17,6 +17,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
@@ -2857,7 +2858,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         {
             const tileidx_t t = _tileidx_monster_base(type, in_water,
                                     mon.colour, mon.number, tile_num);
-            return (mon.props.exists("elven_twin_is_energized")) ? t + 1
+            return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
                                                                  : t;
         }
 
