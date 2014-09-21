@@ -683,7 +683,7 @@ bool food_change(bool initial)
         {
             if (newstate <= HS_SATIATED)
             {
-                if (you.duration[DUR_BERSERK] > 1)
+                if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
                                          "your rage any longer.");
