@@ -4383,7 +4383,9 @@ static void _mons_create_tentacles(monster* head)
     {
         if (monster_habitable_grid(tent_type, grd(*adj_it))
             && !actor_at(*adj_it))
+        {
             adj_squares.push_back(*adj_it);
+        }
     }
 
     if (unsigned(possible_count) > adj_squares.size())
