@@ -234,7 +234,8 @@ static bool _is_public_key(string key)
      || key == "chimera_batty"
      || key == "chimera_wings"
      || key == "chimera_legs"
-     || key == "custom_spells")
+     || key == "custom_spells"
+     || key == "elven_twin_is_energized")
     {
         return true;
     }

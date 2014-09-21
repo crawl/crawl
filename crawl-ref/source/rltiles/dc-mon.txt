@@ -842,7 +842,9 @@ satyr MONS_SATYR
 ## Elves ('e')
 %sdir mon/unique
 dowan MONS_DOWAN
+dowan2
 duvessa MONS_DUVESSA
+duvessa2
 fannar MONS_FANNAR
 %rim 1
 %sdir mon
