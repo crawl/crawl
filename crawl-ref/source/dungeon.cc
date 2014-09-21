@@ -5944,6 +5944,9 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec, int ch
 {
     trap_type spec_type = spec->tr_type;
 
+    if (spec_type == TRAP_SHAFT)
+        ASSERT(is_valid_shaft_level());
+
     while (spec_type >= NUM_TRAPS
 #if TAG_MAJOR_VERSION == 34
            || spec_type == TRAP_DART || spec_type == TRAP_GAS
