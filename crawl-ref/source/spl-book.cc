@@ -596,6 +596,24 @@ bool you_cannot_memorise(spell_type spell, bool &form, bool evoked)
     if (player_mutation_level(MUT_NO_LOVE) && spell == SPELL_ENSLAVEMENT)
         return true;
 
+    if (spell == SPELL_SUBLIMATION_OF_BLOOD)
+    {
+        // XXX: Using player::cannot_bleed will incorrectly
+        // catch statue- or lich-formed players.
+        if (you.species == SP_GARGOYLE
+            || you.species == SP_GHOUL
+            || you.species == SP_MUMMY)
+        {
+            rc = true;
+            form = false;
+        }
+        else if (!form_can_bleed(you.form))
+        {
+            rc = true;
+            form = true;
+        }
+    }
+
     // Check for banned schools (Currently just Ru sacrifices)
     if (cannot_use_spell_school(spell, evoked))
         return true;
