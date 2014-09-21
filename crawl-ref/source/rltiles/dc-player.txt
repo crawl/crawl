@@ -404,7 +404,8 @@ scalemail SCALEMAIL
 scalemail2 SCALEMAIL2
 leather_metal SCALEMAIL3
 plate PLATE
-plate2 PLATE2
+plate2
+plate3
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
 crystal_plate2
