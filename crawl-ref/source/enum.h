@@ -4308,8 +4308,8 @@ enum trap_type
     TRAP_UNASSIGNED = 100,
 #if TAG_MAJOR_VERSION == 34
     TRAP_UNUSED1,                      // was TRAP_INDEPTH
+    TRAP_UNUSED2,                      // was TRAP_NOTELEPORT
 #endif
-    TRAP_NONTELEPORT,
     TRAP_RANDOM,
 };
 
