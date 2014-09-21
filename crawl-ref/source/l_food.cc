@@ -150,7 +150,8 @@ static int food_bottleable(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
     lua_pushboolean(ls, item && item->base_type == OBJ_CORPSES
-                             && can_bottle_blood_from_corpse(item->mon_type));
+                             && can_bottle_blood_from_corpse(item->mon_type)
+                             && !food_is_rotten(*item));
     return 1;
 }
 
