@@ -390,8 +390,8 @@ static void _mark_invisible_at(const coord_def &where,
 }
 
 /**
- * Mark monsters that have transitioned from seen to unseen in the last turn get
- * an invisible monster indicator.
+ * Mark invisible monsters with a known position with an invisible monster
+ * indicator.
  * @param mons      The monster to check.
  * @param hash_ind  The random hash index, combined with the mid to make a
  *                  unique hash for this roll.  Needed for when we can't mark
@@ -400,20 +400,21 @@ static void _mark_invisible_at(const coord_def &where,
 */
 static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
 {
-    // Monster didn't go unseen last turn.
+    // Monster position is unknown.
     if (mons->unseen_pos.origin())
         return;
 
-
-    // We expire these unseen invis markers after one turn.
-    if (you.turn_is_over && !mons->went_unseen_this_turn)
+    // We expire these unseen invis markers after one turn if the monster
+    // has moved away.
+    if (you.turn_is_over && !mons->went_unseen_this_turn
+        && mons->pos() != mons->unseen_pos)
     {
         mons->unseen_pos = coord_def(0, 0);
         return;
     }
 
     bool do_tiles_draw;
-    // Try to use the original position where the monster became unseen.
+    // Try to use the unseen position.
     if (_valid_invisible_spot(mons->unseen_pos, mons))
     {
         do_tiles_draw = mons->unseen_pos != mons->pos();
@@ -422,6 +423,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
     }
 
     // Fall back to a random position adjacent to the unseen position.
+    // This can only happen if the monster just became unseen.
     vector <coord_def> adj_unseen;
     for (adjacent_iterator ai(mons->unseen_pos, false); ai; ai++)
     {
@@ -483,6 +485,7 @@ static void _update_monster(monster* mons)
         && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
         return;
     }
 
@@ -495,6 +498,7 @@ static void _update_monster(monster* mons)
         || (range2 > 1 && (you.pos() - mons->pos()).abs() <= range2))
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
         return;
     }
 
@@ -505,6 +509,7 @@ static void _update_monster(monster* mons)
         && (mons->stealth() <= -2 || !_hashed_rand(mons, 1, 4)))
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
     }
     else
         _handle_unseen_mons(mons, 2);
