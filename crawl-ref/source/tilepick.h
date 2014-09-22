@@ -66,5 +66,7 @@ static inline void bind_item_tile(item_def &item) {}
 string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefix);
 
 void tile_init_props(monster* mon);
-
+tileidx_t tileidx_monster_base(int type, bool in_water = false, int colour = 0,
+                               int number = 0, int tile_num_prop = 0);
+tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset);
 #endif
