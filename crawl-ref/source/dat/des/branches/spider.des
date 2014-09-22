@@ -468,7 +468,11 @@ KMONS:  3| = ghost moth / moth of wrath
 KITEM:  | = acquire any w:5 / any good_item
 KFEAT:  ` = known zot trap
 KFEAT:  ^ = web w:7 / known web trap w:1 / any trap w:1 / . w:7
+:   if you.depth() == 4 then
+KFEAT:  ~ = zot trap w:20 / web w:8 / known web trap w:2 / . w:5
+:   else
 KFEAT:  ~ = zot trap w:15 / shaft trap / web w:4 / known web trap w:1 / . w:5
+:   end
 NSUBST: 4 = 1:122 / 1:112
 SUBST:  X = c
 : else
