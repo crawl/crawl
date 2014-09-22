@@ -825,6 +825,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_BODY_ARMOUR:
         if (player_genus(GENPC_DRACONIAN))
             return false;
+        return true;
 
     case EQ_SHIELD:
         // Most races can wear robes or a buckler/shield.
