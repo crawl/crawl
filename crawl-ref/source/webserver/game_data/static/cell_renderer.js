@@ -226,9 +226,23 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 if ((fg_idx >= main.MAIN_MAX) && cell.doll)
                 {
+                    var mcache_map = {};
+                    if (cell.mcache)
+                    {
+                        for (var i = 0; i < cell.mcache.length; ++i)
+                            mcache_map[cell.mcache[i][0]] = i;
+                    }                            
                     $.each(cell.doll, function (i, doll_part) {
+                        var xofs = 0;
+                        var yofs = 0;
+                        if (mcache_map[doll_part[0]] !== undefined)
+                        {
+                            var mind = mcache_map[doll_part[0]]
+                            xofs = cell.mcache[mind][1];
+                            yofs = cell.mcache[mind][2];
+                        }
                         renderer.draw_player(doll_part[0],
-                                             x, y, 0, 0, doll_part[1]);
+                                             x, y, xofs, yofs, doll_part[1]);
                     });
                 }
 

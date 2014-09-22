@@ -12,11 +12,15 @@
 #include <sys/stat.h>
 
 #include "files.h"
+#include "mon-info.h"
+#include "options.h"
+#include "tilemcache.h"
 #include "syscalls.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
 #include "tiledef-player.h"
+#include "tilepick.h"
 #include "tilepick-p.h"
 #include "transform.h"
 
@@ -320,6 +324,20 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_CLOAK]   = 0;
         break;
     default:
+        // A monster tile is being used for the player.
+        if (Options.tile_use_monster != MONS_PROGRAM_BUG)
+        {
+            result.parts[TILEP_PART_BASE]    = tileidx_player_mons();
+            result.parts[TILEP_PART_DRCHEAD] = 0;
+            result.parts[TILEP_PART_HAIR]    = 0;
+            result.parts[TILEP_PART_BEARD]   = 0;
+            result.parts[TILEP_PART_LEG]     = 0;
+            result.parts[TILEP_PART_HELM]    = 0;
+            result.parts[TILEP_PART_BOOTS]   = 0;
+            result.parts[TILEP_PART_BODY]    = 0;
+            result.parts[TILEP_PART_ARM]     = 0;
+            result.parts[TILEP_PART_CLOAK]   = 0;
+        }
         break;
     }
 
@@ -533,6 +551,33 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
+    // Set up mcache data based on equipment.
+    int draw_info_count = 0, dind = 0;
+    mcache_entry *entry = NULL;
+    tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+    if (Options.tile_use_monster != MONS_PROGRAM_BUG)
+    {
+        monster_type mtype;
+        if (Options.tile_use_monster != MONS_NO_MONSTER)
+            mtype = Options.tile_use_monster;
+        else
+            mtype = player_mons(false);
+        monster_info minfo(mtype, mtype);
+        item_def *item;
+        if (you.slot_item(EQ_WEAPON))
+        {
+            item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+            minfo.inv[MSLOT_WEAPON].reset(item);
+        }
+        if (you.slot_item(EQ_SHIELD))
+        {
+            item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+            minfo.inv[MSLOT_SHIELD].reset(item);
+        }
+        tileidx_t mcache_idx = mcache.register_monster(minfo);
+        entry = mcache.get(mcache_idx);
+        draw_info_count = entry->info(&dinfo[0]);
+    }
     // A higher index here means that the part should be drawn on top.
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
@@ -556,8 +601,20 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         {
             ymax = 18;
         }
+        int ofs_x = 0, ofs_y = 0;
+        if (Options.tile_use_monster != MONS_PROGRAM_BUG)
+        {
 
-        buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
+            if (((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON))
+                 || (p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD)))
+                && dind < draw_info_count - 1)
+            {
+                ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
+                ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
+                ++dind;
+            }
+        }
+        buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }
 }
 #endif

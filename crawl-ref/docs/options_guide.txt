@@ -105,7 +105,8 @@ The contents of this text are:
                 tile_show_demon_tier, tile_water_anim, tile_misc_anim,
                 tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
-                tile_level_map_hide_messages, tile_level_map_hide_sidebar
+                tile_level_map_hide_messages, tile_level_map_hide_sidebar,
+		tile_player_tile
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -1900,6 +1901,29 @@ tile_level_map_hide_messages = true
 tile_level_map_hide_sidebar = false
         Controls what screen elements are hidden when using the level map.
         These options are only available on WebTiles.
+
+tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
+        If set to playermons, displays the player using the monster tile for
+        her species, instead of using the normal doll. 
+
+	If set to a value of the form mons:<monster>, where <monster> is the
+        name of a monster, use the base tile of <monster> as the player
+        tile. For example a value of mons:ijyb will cause Ijyb's tile to be
+        used. Any spaces in the monster name should be included. For instance:
+        a value of mons:the royal jelly is valid.
+
+	If set to a value of the form tile:<monster-tile> where <monster-tile>
+        is the name of a monster tile, use this tile as the player tile. This
+        form is most useful for using specific variant tiles of monster with
+        multiple tiles, such as hydra, chaos spawn, or large abominations. The
+        tile name must include the mons_ prefix. For example, to use the hydra
+        tile with many heads, use a value of tile:mons_hydra_7. Generally these
+        names are predictable from the monster name, but see the file
+        source/rltiles/dc-mon.txt in the source tree for the actual tile
+        name. In this file, the tile name is the second word in each entry
+        after the file name of the image, and always begins with MONS_ (case is
+        ignored for the tile_player_tile option).
+
 
 4-  Character Dump.
 ===================

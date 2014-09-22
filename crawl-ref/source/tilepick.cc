@@ -91,14 +91,6 @@ TextureID get_dngn_tex(tileidx_t idx)
         return TEX_FEAT;
 }
 
-#ifdef USE_TILE
-static tileidx_t _tileidx_monster_base(int type,
-                                       bool in_water = false,
-                                       int colour = 0,
-                                       int number = 0,
-                                       int tile_num_prop = 0);
-#endif
-
 static tileidx_t _tileidx_trap(trap_type type)
 {
     switch (type)
@@ -640,7 +632,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     if (env.map_knowledge(gc).detected_monster())
     {
         ASSERT(cell.monster() == MONS_SENSED);
-        *fg = _tileidx_monster_base(cell.monsterinfo()->base_type);
+        *fg = tileidx_monster_base(cell.monsterinfo()->base_type);
     }
     else if (env.map_knowledge(gc).detected_item())
         *fg = tileidx_item(*cell.item());
@@ -1012,7 +1004,7 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
     return tile + offset % count;
 }
 
-static tileidx_t _mon_clamp(tileidx_t tile, int offset)
+tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
     return tile + min(max(offset, 0), count - 1);
@@ -1049,8 +1041,8 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
 // only the type is known are pushed here.
-static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
-                                       int number, int tile_num_prop)
+tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
+                               int tile_num_prop)
 {
     switch (type)
     {
@@ -1362,7 +1354,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         const tileidx_t ugly_tile = (type == MONS_VERY_UGLY_THING) ?
             TILEP_MONS_VERY_UGLY_THING : TILEP_MONS_UGLY_THING;
         int colour_offset = ugly_thing_colour_offset(colour);
-        return _mon_clamp(ugly_tile, colour_offset);
+        return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
 
     // vortices ('v')
@@ -1514,7 +1506,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_DRAGON;
     case MONS_HYDRA:
         // Number of heads
-        return _mon_clamp(TILEP_MONS_HYDRA, number - 1);
+        return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
     case MONS_ICE_DRAGON:
         return TILEP_MONS_ICE_DRAGON;
     case MONS_STEAM_DRAGON:
@@ -1609,7 +1601,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
     case MONS_MERGED_SLIME_CREATURE:
-        return _mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
+        return tileidx_mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_AZURE_JELLY:
         return TILEP_MONS_AZURE_JELLY;
     case MONS_DEATH_OOZE:
@@ -2121,9 +2113,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         // Step down the number of heads to get the appropriate tile:
         // For the last five heads, use tiles 1-5, for greater amounts
         // use the next tile for every 5 more heads.
-        return _mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
-                          number <= 5 ? number - 1
-                                      : 4 + (number - 1)/5);
+        return tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
+                                 number <= 5 ? 
+                                 number - 1 : 4 + (number - 1)/5);
     case MONS_XTAHUA:
         return TILEP_MONS_XTAHUA;
 
@@ -2856,8 +2848,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_DUVESSA:
         case MONS_DOWAN:
         {
-            const tileidx_t t = _tileidx_monster_base(type, in_water,
-                                    mon.colour, mon.number, tile_num);
+            const tileidx_t t = tileidx_monster_base(type, in_water, mon.colour,
+                                                     mon.number, tile_num);
             return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
                                                                  : t;
         }
@@ -2865,16 +2857,17 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...
-            const tileidx_t t = _tileidx_monster_base(type, in_water,
-                                    mon.colour, mon.number, tile_num);
+            const tileidx_t t = tileidx_monster_base(type, in_water,
+                                                     mon.colour, mon.number,
+                                                     tile_num);
             if (t == TILEP_MONS_PROGRAM_BUG)
                 return TILE_UNSEEN_MONSTER;
             return t;
         }
 
         default:
-            return _tileidx_monster_base(type, in_water, mon.colour,
-                                         mon.number, tile_num);
+            return tileidx_monster_base(type, in_water, mon.colour, mon.number,
+                                        tile_num);
         }
     }
 }
@@ -3069,12 +3062,37 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
     }
 }
 
+/**
+ * Return the monster tile used for the player based on a monster type.
+ *
+ * When using the player species monster or a monster in general instead of an
+ * explicit tile name, this function cleans up the tiles for certain monsters
+ * where there's an alternate tile that's better than the base one for doll
+ * purposes.
+ * @returns The tile id of the tile that will be used.
+*/
 tileidx_t tileidx_player_mons()
 {
-    const monster_type mons = player_mons(false);
+    monster_type mons;
+    if (Options.tile_player_tile)
+        return Options.tile_player_tile;
+
+    if (Options.tile_use_monster != MONS_NO_MONSTER)
+        mons = Options.tile_use_monster;
+    else
+        mons = player_mons(false);
+
     if (mons_is_base_draconian(mons))
         return tileidx_draco_base(mons);
-    return _tileidx_monster_base(player_mons(false));
+
+    switch(mons)
+    {
+    case MONS_CENTAUR:         return TILEP_MONS_CENTAUR_MELEE;
+    case MONS_CENTAUR_WARRIOR: return TILEP_MONS_CENTAUR_WARRIOR_MELEE;
+    case MONS_YAKTAUR:         return TILEP_MONS_YAKTAUR_MELEE;
+    case MONS_YAKTAUR_CAPTAIN: return TILEP_MONS_YAKTAUR_CAPTAIN_MELEE;
+    default:                   return tileidx_monster_base(mons);
+    }
 }
 
 static tileidx_t _tileidx_unrand_artefact(int idx)
