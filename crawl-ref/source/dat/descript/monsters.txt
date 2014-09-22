@@ -2498,6 +2498,13 @@ A creature rarely seen by anyone; those few who have seen one would rather they
 hadn't. Among the few bemused reports, the single common element is the
 creatures' bat-like movement.
 %%%%
+ushabti
+
+A funerary stone figurine kept in tombs to serve the deceased as they passed
+through the afterlife. Inscribed with spells to answer divine calls for manual
+labour in the afterlife, the ushabti are magically animated to slavishly
+protect the interred for eternity.
+%%%%
 vampire
 
 A human cursed with vampirism, drifting in a state between life and undeath,

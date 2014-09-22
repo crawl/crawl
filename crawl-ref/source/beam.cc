@@ -2866,6 +2866,12 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
         place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
+
+    if (origin_spell == SPELL_DEATH_RATTLE)
+        if (coinflip())
+            place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());
+        else
+            place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -6532,6 +6538,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
+    case BEAM_DEATH_RATTLE:          return "breath of the dead";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

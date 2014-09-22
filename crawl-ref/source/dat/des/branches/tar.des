@@ -245,7 +245,8 @@ TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
 MONS:    soul eater, patrolling curse skull
 MONS:    skeletal warrior / phantasmal warrior w:6 / \
-         shadow wraith w:4 / guardian mummy w:6 / death ooze w:4
+         shadow wraith w:4 / guardian mummy w:4 / \
+         ushabti w:2 / death ooze w:4
 KMONS:   45 = vampire knight
 KMONS:   67 = vampire mage
 KMONS:   89 = flayed ghost

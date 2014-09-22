@@ -378,6 +378,11 @@ Death Channel spell
 This spell raises living creatures slain by the caster and his or her allies
 into a state of unliving slavery as spectral things.
 %%%%
+Death Rattle spell
+
+This spell is an exhaling of the essence of the dying, a foul scattered mix
+of miasma and negative energy clouds.
+%%%%
 Death's Door spell
 
 This spell is extremely powerful, but carries a degree of risk. It renders

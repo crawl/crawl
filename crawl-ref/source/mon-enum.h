@@ -249,6 +249,7 @@ enum shout_type
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CAW,                  // for ravens
     S_CHERUB,               // for cherubs
+    S_RUMBLE,               // for ushabti
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

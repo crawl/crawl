@@ -1102,6 +1102,16 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour     = BEAM_MISSILE;
         break;
 
+    case SPELL_DEATH_RATTLE:
+        beam.name     = "vile air";
+        beam.colour   = DARKGREY;
+        beam.damage   = dice_def(2, 4);
+        beam.hit      = AUTOMATIC_HIT;
+        beam.flavour  = BEAM_DEATH_RATTLE;
+        beam.foe_ratio = 30;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -2160,6 +2170,7 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     case SPELL_ENSNARE:
     case SPELL_THROW_FLAME:
     case SPELL_MEPHITIC_CLOUD:
+    case SPELL_DEATH_RATTLE:
         return !targ_friendly && !targ_sanct;
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:

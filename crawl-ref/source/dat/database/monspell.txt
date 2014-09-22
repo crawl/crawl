@@ -487,7 +487,6 @@ Stone Arrow gargoyle cast
 Bolt of Magma molten gargoyle cast
 
 @The_monster@ blasts magma @at@ @target@!
-
 %%%%
 Primal Wave elemental wellspring cast
 
@@ -517,6 +516,9 @@ Blink golden eye cast
 
 __NONE
 %%%%
+ushabti cast
+
+@The_monster@ shakes and rattles.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

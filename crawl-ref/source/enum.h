@@ -485,7 +485,8 @@ enum beam_type                  // bolt::flavour
 #endif
     BEAM_ENSNARE,
     BEAM_CRYSTAL,
-    BEAM_LAST_REAL = BEAM_CRYSTAL,
+    BEAM_DEATH_RATTLE,
+    BEAM_LAST_REAL = BEAM_DEATH_RATTLE,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -2532,6 +2533,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
+    MONS_USHABTI,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -3212,6 +3214,7 @@ enum monster_type                      // menv[].type
     MONS_MNOLEG_TENTACLE,
     MONS_MNOLEG_TENTACLE_SEGMENT,
     MONS_BENNU,
+    MONS_USHABTI,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4273,6 +4276,7 @@ enum spell_type
     SPELL_PARALYSIS_GAZE,
     SPELL_CONFUSION_GAZE,
     SPELL_DRAINING_GAZE,
+    SPELL_DEATH_RATTLE,
     NUM_SPELLS
 };
 
