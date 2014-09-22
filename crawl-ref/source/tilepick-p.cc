@@ -9,7 +9,6 @@
 #include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "options.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
@@ -509,11 +508,7 @@ tileidx_t tileidx_player()
         case TRAN_APPENDAGE:
         case TRAN_NONE:
         default:
-            {
-                if (Options.tile_show_player_species)
-                    ch = tileidx_player_mons();
-                break;
-            }
+            break;
     }
 
     // Currently, the flying flag is only used for not drawing the tile in the

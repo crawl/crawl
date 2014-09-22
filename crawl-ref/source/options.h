@@ -453,8 +453,9 @@ public:
     bool        tile_show_demon_tier;
     bool        tile_water_anim;
     bool        tile_misc_anim;
-    bool        tile_show_player_species;
     vector<string> tile_layout_priority;
+    monster_type tile_use_monster;
+    tileidx_t   tile_player_tile;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     string      tile_display_mode;
@@ -525,6 +526,7 @@ private:
     void add_item_glyph_override(const string &);
     void set_option_fragment(const string &s);
     bool set_lang(const char *s);
+    void set_player_tile(const string &s);
 
     static const string interrupt_prefix;
 };

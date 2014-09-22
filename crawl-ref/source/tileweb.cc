@@ -976,23 +976,26 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
         tiles.json_write_comma();
         tiles.write_message("[%u,%d]", (unsigned int) doll.parts[p], ymax);
     }
-
     tiles.json_close_array();
 }
 
-static void _send_mcache(mcache_entry *entry, bool submerged)
+static void _send_mcache(mcache_entry *entry, bool submerged,
+                         bool send_doll = true)
 {
     bool trans = entry->transparent();
-    if (trans)
+    if (trans && send_doll)
         tiles.json_write_int("trans", 1);
 
     const dolls_data *doll = entry->doll();
-    if (doll)
-        _send_doll(*doll, submerged, trans);
-    else
+    if (send_doll)
     {
-        tiles.json_write_comma();
-        tiles.write_message("\"doll\":[]");
+        if (doll)
+            _send_doll(*doll, submerged, trans);
+        else
+        {
+            tiles.json_write_comma();
+            tiles.write_message("\"doll\":[]");
+        }
     }
 
     tiles.json_open_array("mcache");
@@ -1206,7 +1209,33 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 last_player_doll = result;
             }
             if (fg_changed || player_doll_changed)
+            {
                 _send_doll(last_player_doll, in_water, false);
+                if (Options.tile_use_monster != MONS_PROGRAM_BUG)
+                {
+                    monster_type mtype;
+                    if (Options.tile_use_monster != MONS_NO_MONSTER)
+                        mtype = Options.tile_use_monster;
+                    else
+                        mtype = player_mons(false);
+                    monster_info minfo(mtype, mtype);
+                    item_def *item;
+                    if (you.slot_item(EQ_WEAPON))
+                    {
+                        item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+                        minfo.inv[MSLOT_WEAPON].reset(item);
+                    }
+                    if (you.slot_item(EQ_SHIELD))
+                    {
+                        item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+                        minfo.inv[MSLOT_SHIELD].reset(item);
+                    }
+                    tileidx_t mcache_idx = mcache.register_monster(minfo);
+                    mcache_entry *entry = mcache.get(mcache_idx);
+                    if (entry)
+                        _send_mcache(entry, in_water, false);
+                }
+            }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
         {
