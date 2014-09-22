@@ -460,6 +460,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -2;
         break;
     case TILEP_MONS_CENTAUR_MELEE:
+        *ofs_x = -3;
+        *ofs_y = -3;
+        break;
     case TILEP_MONS_DEMIGOD:
         *ofs_x = -1;
         *ofs_y = -3;
@@ -593,6 +596,22 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_HILL_GIANT:
         *ofs_x = 6;
+        *ofs_y = 2;
+        break;
+    case TILEP_MONS_TROLL:
+        *ofs_x = -3;
+        *ofs_y = 11;
+        break;
+    case TILEP_MONS_GHOUL:
+        *ofs_x = -3;
+        *ofs_y = -3;
+        break;
+    case TILEP_MONS_VAMPIRE:
+        *ofs_x = 5;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_ORB_OF_FIRE:
+        *ofs_x = 0;
         *ofs_y = 2;
         break;
     default:
@@ -732,6 +751,60 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_HELL_KNIGHT:
     case TILEP_MONS_DEATH_KNIGHT:
         *ofs_x = -3;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_KOBOLD:
+        *ofs_x = 3;
+        *ofs_y = -10;
+        break;
+
+    case TILEP_MONS_MUMMY:
+        *ofs_x = -6;
+        *ofs_y = 0;
+        break;
+
+    case TILEP_MONS_TROLL:
+        *ofs_x = 2;
+        *ofs_y = 7;
+        break;
+
+    case TILEP_MONS_GHOUL:
+    case TILEP_MONS_OGRE:
+        *ofs_x = 2;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_VAMPIRE:
+        *ofs_x = -4;
+        *ofs_y = -4;
+        break;
+
+    case TILEP_MONS_GARGOYLE:
+        *ofs_x = -8;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_CENTAUR_MELEE:
+        *ofs_x = -8;
+        *ofs_y = -4;
+        break;
+
+    case TILEP_MONS_HALFLING:
+        *ofs_x = -2;
+        *ofs_y = 5;
+        break;
+
+    case TILEP_MONS_DEEP_ELF_SUMMONER:
+    case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
+    case TILEP_MONS_DEEP_ELF_MAGE:
+    case TILEP_MONS_DEEP_ELF_CONJURER:
+        *ofs_x = 3;
+        *ofs_y = -7;
+        break;
+
+    case TILEP_MONS_ORB_OF_FIRE:
+        *ofs_x = -4;
         *ofs_y = 2;
         break;
 
