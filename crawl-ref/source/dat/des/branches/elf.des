@@ -1595,26 +1595,6 @@ xxcC.....Ccxx
  xcc.....ccx
 ENDMAP
 
-# Even more mangled. Sorry...
-NAME: nicolae_blade_entry_pointy_end
-: elven_blade_entry(_G)
-MAP
-      =
-xxxx-----x
-x..xx++xxx
-x....xxx
-xx.1...xxx
- x.......xxx
- xx..1.....x
-  x........xx
-  xx...1....x
-   x.........
-   xx....1...
-    x........
-    xxx......
-      xx.....
-ENDMAP
-
 
 ##############################################################################
 ##############################################################################
