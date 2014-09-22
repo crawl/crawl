@@ -4118,9 +4118,6 @@ void handle_god_time(int time_delta)
                 {
                     ru_offer_new_sacrifices();
 
-                    simple_god_message(" believes you are ready to make a new sacrifice.");
-                    more();
-
                     // raise the delay if there's an active sacrifice, and more
                     // so the more often you pass on a sacrifice and the more
                     // piety you have.

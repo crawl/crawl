@@ -4909,26 +4909,6 @@ vector<ability_type> get_possible_sacrifices()
 {
     vector<ability_type> possible_sacrifices;
 
-    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HEALTH);
-    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ESSENCE);
-    possible_sacrifices.push_back(ABIL_RU_SACRIFICE_PURITY);
-
-    if (player_mutation_level(MUT_NO_AIR_MAGIC)
-        + player_mutation_level(MUT_NO_CHARM_MAGIC)
-        + player_mutation_level(MUT_NO_CONJURATION_MAGIC)
-        + player_mutation_level(MUT_NO_EARTH_MAGIC)
-        + player_mutation_level(MUT_NO_FIRE_MAGIC)
-        + player_mutation_level(MUT_NO_HEXES_MAGIC)
-        + player_mutation_level(MUT_NO_ICE_MAGIC)
-        + player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
-        + player_mutation_level(MUT_NO_POISON_MAGIC)
-        + player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-        + player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)
-        + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
-        < 6)
-    {
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARCANA);
-    }
     if (!player_mutation_level(MUT_NO_READ))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_WORDS);
     if (!player_mutation_level(MUT_NO_DRINK) && you.species != SP_MUMMY)
@@ -4947,6 +4927,153 @@ vector<ability_type> get_possible_sacrifices()
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
     if (!player_mutation_level(MUT_MISSING_HAND))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
+
+    // Determine how many health mutations are left and which one to use
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
+
+    vector<mutation_type> possible_health_mutations;
+    if (player_mutation_level(MUT_FRAIL) <= 2
+        && you.innate_mutation[MUT_ROBUST] == 0) // block conflicts w/ DS
+        possible_health_mutations.push_back(MUT_FRAIL);
+    if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
+        possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
+    if (player_mutation_level(MUT_SLOW_REFLEXES) <= 2)
+        possible_health_mutations.push_back(MUT_SLOW_REFLEXES);
+    int num_health_mutations = possible_health_mutations.size();
+
+    if (num_health_mutations > 0)
+    {
+        current_health_sacrifice.push_back(
+        static_cast<int>(possible_health_mutations[
+            random2(num_health_mutations)]));
+
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HEALTH);
+    }
+
+    // Determine how many essence mutations are left and which one to use
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
+
+    vector<mutation_type> possible_essence_mutations;
+    if (player_mutation_level(MUT_ANTI_WIZARDRY) <= 2)
+        possible_essence_mutations.push_back(MUT_ANTI_WIZARDRY);
+    if (player_mutation_level(MUT_MAGICAL_VULNERABILITY) <= 2)
+        possible_essence_mutations.push_back(MUT_MAGICAL_VULNERABILITY);
+    if (player_mutation_level(MUT_LOW_MAGIC) <= 2)
+        possible_essence_mutations.push_back(MUT_LOW_MAGIC);
+    int num_essence_mutations = possible_essence_mutations.size();
+
+    if (num_essence_mutations > 0)
+    {
+        current_essence_sacrifice.push_back(
+            static_cast<int>(possible_essence_mutations[
+                random2(num_essence_mutations)]));
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ESSENCE);
+    }
+
+    // Determine how many purity mutations are left and which one to use
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
+
+    vector<mutation_type> possible_purity_mutations;
+    if (player_mutation_level(MUT_DETERIORATION) <= 2)
+        possible_purity_mutations.push_back(MUT_DETERIORATION);
+    if (player_mutation_level(MUT_SCREAM) <= 2)
+        possible_purity_mutations.push_back(MUT_SCREAM);
+    if (player_mutation_level(MUT_SLOW_HEALING) <= 2
+        && !player_mutation_level(MUT_NO_DEVICE_HEAL)
+        && you.innate_mutation[MUT_REGENERATION] == 0) //block conflicts
+    {
+        possible_purity_mutations.push_back(MUT_SLOW_HEALING);
+    }
+    if (player_mutation_level(MUT_NO_DEVICE_HEAL) <= 2
+        && !player_mutation_level(MUT_SLOW_HEALING))
+    {
+        possible_purity_mutations.push_back(MUT_NO_DEVICE_HEAL);
+    }
+    possible_purity_mutations.push_back(MUT_DOPEY);
+    possible_purity_mutations.push_back(MUT_CLUMSY);
+    possible_purity_mutations.push_back(MUT_WEAK);
+
+    int num_purity_mutations = possible_purity_mutations.size();
+    if (num_purity_mutations > 0)
+    {
+        current_purity_sacrifice.push_back(
+            static_cast<int>(possible_purity_mutations[
+                random2(num_purity_mutations)]));
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_PURITY);
+    }
+
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    vector<mutation_type> possible_minor_mutations;
+    vector<mutation_type> possible_medium_mutations;
+    vector<mutation_type> possible_major_mutations;
+    int num_major_mutations;
+    int num_medium_mutations;
+    int num_minor_mutations;
+
+    if (!player_mutation_level(MUT_NO_CHARM_MAGIC))
+        possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
+    if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
+        possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
+    if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+        possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
+    if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
+        possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
+    num_major_mutations = possible_major_mutations.size();
+    current_arcane_sacrifices.push_back(
+        static_cast<int>(possible_major_mutations[
+            random2(num_major_mutations)]));
+
+    if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
+        possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
+    if (!player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        possible_medium_mutations.push_back(MUT_NO_NECROMANCY_MAGIC);
+    if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
+        possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
+    num_medium_mutations = possible_medium_mutations.size();
+    current_arcane_sacrifices.push_back(
+        static_cast<int>(possible_medium_mutations[
+            random2(num_medium_mutations)]));
+
+    if (!player_mutation_level(MUT_NO_AIR_MAGIC))
+        possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
+    if (!player_mutation_level(MUT_NO_EARTH_MAGIC))
+        possible_minor_mutations.push_back(MUT_NO_EARTH_MAGIC);
+    if (!player_mutation_level(MUT_NO_FIRE_MAGIC))
+        possible_minor_mutations.push_back(MUT_NO_FIRE_MAGIC);
+    if (!player_mutation_level(MUT_NO_ICE_MAGIC))
+        possible_minor_mutations.push_back(MUT_NO_ICE_MAGIC);
+    if (!player_mutation_level(MUT_NO_POISON_MAGIC))
+        possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
+    num_minor_mutations = possible_minor_mutations.size();
+    current_arcane_sacrifices.push_back(
+        static_cast<int>(possible_minor_mutations[
+            random2(num_minor_mutations)]));
+
+    if (player_mutation_level(MUT_NO_AIR_MAGIC)
+        + player_mutation_level(MUT_NO_CHARM_MAGIC)
+        + player_mutation_level(MUT_NO_CONJURATION_MAGIC)
+        + player_mutation_level(MUT_NO_EARTH_MAGIC)
+        + player_mutation_level(MUT_NO_FIRE_MAGIC)
+        + player_mutation_level(MUT_NO_HEXES_MAGIC)
+        + player_mutation_level(MUT_NO_ICE_MAGIC)
+        + player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        + player_mutation_level(MUT_NO_POISON_MAGIC)
+        + player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
+        < 3)
+    {
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARCANA);
+    }
 
     return possible_sacrifices;
 }
@@ -5018,19 +5145,22 @@ const skill_type arcane_mutation_to_skill(mutation_type mutation)
 }
 
 // Pick three new sacrifices to offer to the player. They should be distinct
-// from one another and not offer duplicates of some options. Ideally we'll
-// offer three "tiers" of sacrifices, but right now we mostly have two tiers.
-// Since these sacrifices will be abilities, we also need to set up those
-// abilities and the descriptions of them, so players know what they're
-// getting into.
+// from one another and not offer duplicates of some options.
 void ru_offer_new_sacrifices()
 {
     ru_expire_sacrifices();
 
     vector<ability_type> possible_sacrifices = get_possible_sacrifices();
 
-    //for now we'll just pick three at random
+    // for now we'll just pick three at random
     int num_sacrifices = possible_sacrifices.size();
+
+    if (num_sacrifices < 3)
+        // This can't happen outside wizmode, but may as well handle gracefully
+        return;
+
+    simple_god_message(" believes you are ready to make a new sacrifice.");
+                    more();
 
     // try to get three distinct sacrifices
     int lesser_sacrifice = random2(num_sacrifices);
@@ -5057,139 +5187,6 @@ void ru_offer_new_sacrifices()
             static_cast<int>(possible_sacrifices[sacrifice]));
     available_sacrifices.push_back(
             static_cast<int>(possible_sacrifices[greater_sacrifice]));
-
-    ASSERT(you.props.exists("current_health_sacrifice"));
-    CrawlVector &current_health_sacrifice
-        = you.props["current_health_sacrifice"].get_vector();
-
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_HEALTH
-        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_HEALTH
-        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_HEALTH)
-    {
-        vector<mutation_type> possible_health_mutations;
-        if (player_mutation_level(MUT_FRAIL) <= 2
-            && you.innate_mutation[MUT_ROBUST] == 0) // block conflicts w/ DS
-            possible_health_mutations.push_back(MUT_FRAIL);
-        if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
-            possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
-        if (player_mutation_level(MUT_SLOW_REFLEXES) <= 2)
-            possible_health_mutations.push_back(MUT_SLOW_REFLEXES);
-        int num_health_mutations = possible_health_mutations.size();
-        current_health_sacrifice.push_back(
-            static_cast<int>(possible_health_mutations[
-                random2(num_health_mutations)]));
-    }
-
-    ASSERT(you.props.exists("current_essence_sacrifice"));
-    CrawlVector &current_essence_sacrifice
-        = you.props["current_essence_sacrifice"].get_vector();
-
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
-        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ESSENCE
-        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ESSENCE)
-    {
-        vector<mutation_type> possible_essence_mutations;
-        if (player_mutation_level(MUT_ANTI_WIZARDRY) <= 2)
-            possible_essence_mutations.push_back(MUT_ANTI_WIZARDRY);
-        if (player_mutation_level(MUT_MAGICAL_VULNERABILITY) <= 2)
-            possible_essence_mutations.push_back(MUT_MAGICAL_VULNERABILITY);
-        if (player_mutation_level(MUT_LOW_MAGIC) <= 2)
-            possible_essence_mutations.push_back(MUT_LOW_MAGIC);
-
-        int num_essence_mutations = possible_essence_mutations.size();
-        current_essence_sacrifice.push_back(
-            static_cast<int>(possible_essence_mutations[
-                random2(num_essence_mutations)]));
-    }
-
-    ASSERT(you.props.exists("current_purity_sacrifice"));
-    CrawlVector &current_purity_sacrifice
-        = you.props["current_purity_sacrifice"].get_vector();
-
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_PURITY
-        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_PURITY
-        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_PURITY)
-    {
-        vector<mutation_type> possible_purity_mutations;
-        if (player_mutation_level(MUT_DETERIORATION) <= 2)
-            possible_purity_mutations.push_back(MUT_DETERIORATION);
-        if (player_mutation_level(MUT_SCREAM) <= 2)
-            possible_purity_mutations.push_back(MUT_SCREAM);
-        if (player_mutation_level(MUT_SLOW_HEALING) <= 2
-            && !player_mutation_level(MUT_NO_DEVICE_HEAL)
-            && you.innate_mutation[MUT_REGENERATION] == 0) //block conflicts
-        {
-            possible_purity_mutations.push_back(MUT_SLOW_HEALING);
-        }
-        if (player_mutation_level(MUT_NO_DEVICE_HEAL) <= 2
-            && !player_mutation_level(MUT_SLOW_HEALING))
-        {
-            possible_purity_mutations.push_back(MUT_NO_DEVICE_HEAL);
-        }
-        possible_purity_mutations.push_back(MUT_DOPEY);
-        possible_purity_mutations.push_back(MUT_CLUMSY);
-        possible_purity_mutations.push_back(MUT_WEAK);
-
-        int num_purity_mutations = possible_purity_mutations.size();
-        current_purity_sacrifice.push_back(
-            static_cast<int>(possible_purity_mutations[
-                random2(num_purity_mutations)]));
-    }
-
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
-    CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
-
-    if (possible_sacrifices[lesser_sacrifice] == ABIL_RU_SACRIFICE_ARCANA
-        || possible_sacrifices[sacrifice] == ABIL_RU_SACRIFICE_ARCANA
-        || possible_sacrifices[greater_sacrifice] == ABIL_RU_SACRIFICE_ARCANA)
-    {
-        vector<mutation_type> possible_minor_mutations;
-        vector<mutation_type> possible_medium_mutations;
-        vector<mutation_type> possible_major_mutations;
-        int num_major_mutations;
-        int num_medium_mutations;
-        int num_minor_mutations;
-
-        if (!player_mutation_level(MUT_NO_CHARM_MAGIC))
-            possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
-        if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
-            possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
-        if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC))
-            possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
-        if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
-            possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
-        num_major_mutations = possible_major_mutations.size();
-        current_arcane_sacrifices.push_back(
-            static_cast<int>(possible_major_mutations[
-                random2(num_major_mutations)]));
-
-        if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-            possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
-        if (!player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
-            possible_medium_mutations.push_back(MUT_NO_NECROMANCY_MAGIC);
-        if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
-            possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
-        num_medium_mutations = possible_medium_mutations.size();
-        current_arcane_sacrifices.push_back(
-            static_cast<int>(possible_medium_mutations[
-                random2(num_medium_mutations)]));
-
-        if (!player_mutation_level(MUT_NO_AIR_MAGIC))
-            possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
-        if (!player_mutation_level(MUT_NO_EARTH_MAGIC))
-            possible_minor_mutations.push_back(MUT_NO_EARTH_MAGIC);
-        if (!player_mutation_level(MUT_NO_FIRE_MAGIC))
-            possible_minor_mutations.push_back(MUT_NO_FIRE_MAGIC);
-        if (!player_mutation_level(MUT_NO_ICE_MAGIC))
-            possible_minor_mutations.push_back(MUT_NO_ICE_MAGIC);
-        if (!player_mutation_level(MUT_NO_POISON_MAGIC))
-            possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
-        num_minor_mutations = possible_minor_mutations.size();
-        current_arcane_sacrifices.push_back(
-            static_cast<int>(possible_minor_mutations[
-                random2(num_minor_mutations)]));
-    }
 }
 
 static const char* _describe_sacrifice_piety_gain(int piety_gain)
