@@ -291,28 +291,35 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     if (spell_cast == SPELL_MAJOR_DESTRUCTION)
     {
-        switch (random2(7))
-        {
-        case 0: real_spell = SPELL_BOLT_OF_FIRE;         break;
-        case 1: real_spell = SPELL_FIREBALL;             break;
-        case 2: real_spell = SPELL_LIGHTNING_BOLT;       break;
-        case 3: real_spell = SPELL_STICKY_FLAME;         break;
-        case 4: real_spell = SPELL_IRON_SHOT;            break;
-        case 5: real_spell = SPELL_BOLT_OF_DRAINING;     break;
-        case 6: real_spell = SPELL_ORB_OF_ELECTRICITY;   break;
-        }
+        real_spell = random_choose(SPELL_BOLT_OF_FIRE,
+                                   SPELL_FIREBALL,
+                                   SPELL_LIGHTNING_BOLT,
+                                   SPELL_STICKY_FLAME,
+                                   SPELL_IRON_SHOT,
+                                   SPELL_BOLT_OF_DRAINING,
+                                   SPELL_ORB_OF_ELECTRICITY,
+                                   -1);
     }
     else if (spell_cast == SPELL_RANDOM_BOLT) // if casting directly
     {
-        switch (random2(6))
-        {
-        case 0: real_spell = SPELL_VENOM_BOLT;           break;
-        case 1: real_spell = SPELL_BOLT_OF_DRAINING;     break;
-        case 2: real_spell = SPELL_BOLT_OF_FIRE;         break;
-        case 3: real_spell = SPELL_LIGHTNING_BOLT;       break;
-        case 4: real_spell = SPELL_QUICKSILVER_BOLT;     break;
-        case 5: real_spell = SPELL_CRYSTAL_BOLT;         break;
-        }
+        real_spell = random_choose(SPELL_VENOM_BOLT,
+                                   SPELL_BOLT_OF_DRAINING,
+                                   SPELL_BOLT_OF_FIRE,
+                                   SPELL_LIGHTNING_BOLT,
+                                   SPELL_QUICKSILVER_BOLT,
+                                   SPELL_CRYSTAL_BOLT,
+                                   -1);
+    }
+    else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
+    {
+        // ones with ranges too small are fixed in setup_mons_cast
+        real_spell = random_choose_weighted(10, SPELL_ORB_OF_ELECTRICITY,
+                                            10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+                                             2, SPELL_IOOD,
+                                             5, SPELL_GHOSTLY_FIREBALL,
+                                            10, SPELL_FIREBALL,
+                                            10, SPELL_FLASH_FREEZE,
+                                             0);
     }
     else if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
@@ -886,7 +893,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_IOOD:                  // tracer only
-    case SPELL_LEGENDARY_DESTRUCTION: // ditto
     case SPELL_LRD:                   // for noise generation purposes
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
@@ -1316,6 +1322,19 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
+    if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
+    {
+        int range = spell_range(theBeam.origin_spell,
+                                12 * mons->spell_hd(theBeam.origin_spell),
+                                false);
+        while (distance2(mons->pos(), mons->target) > dist_range(range))
+        {
+            theBeam = mons_spell_beam(mons, spell_cast, power);
+            range = spell_range(theBeam.origin_spell,
+                                12 * mons->spell_hd(theBeam.origin_spell),
+                                false);
+        }
+    }
     bolt_parent_init(&theBeam, &pbolt);
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
@@ -5969,25 +5988,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LEGENDARY_DESTRUCTION:
     {
         mons->hurt(mons, 10);
-        spell_type real_spell;
-        int range = 0;
-        do
+        if (pbolt.origin_spell == SPELL_IOOD)
         {
-            real_spell = random_choose_weighted(
-                             10, SPELL_ORB_OF_ELECTRICITY,
-                             10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-                              2, SPELL_IOOD,
-                              5, SPELL_GHOSTLY_FIREBALL,
-                             10, SPELL_FIREBALL,
-                             10, SPELL_FLASH_FREEZE,
-                              0);
-            range = spell_range(real_spell,
-                                12 * mons->spell_hd(real_spell),
-                                false);
+            cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
+            return;
         }
-        while (distance2(mons->pos(), pbolt.target) > dist_range(range));
-        mons_cast(mons, pbolt, real_spell, false, special_ability);
-        return;
+        // Don't return yet, we want to actually fire the random beam later
+        break;
     }
 
     case SPELL_FORCEFUL_INVITATION:
