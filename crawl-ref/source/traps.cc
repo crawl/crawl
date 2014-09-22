@@ -1756,7 +1756,7 @@ bool trap_def::ground_only() const
     return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
 }
 
-bool is_valid_shaft_level(const level_id &place)
+bool is_valid_shaft_level(bool known, const level_id &place)
 {
     if (crawl_state.test
         || crawl_state.game_is_sprint()
@@ -1783,11 +1783,11 @@ bool is_valid_shaft_level(const level_id &place)
 
     const Branch &branch = branches[place.branch];
 
-    // When generating levels, don't place a shaft on the level
+    // When generating levels, don't place an unknown shaft on the level
     // immediately above the bottom of a branch if that branch is
     // significantly more dangerous than normal.
     int min_delta = 1;
-    if (env.turns_on_level == -1 && branch.dangerous_bottom_level)
+    if (!known && env.turns_on_level == -1 && branch.dangerous_bottom_level)
         min_delta = 2;
 
     return (brdepth[place.branch] - place.depth) >= min_delta;
