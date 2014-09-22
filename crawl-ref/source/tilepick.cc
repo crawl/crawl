@@ -4870,6 +4870,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CORRUPT_BODY:             return TILEG_CORRUPT_BODY;
     case SPELL_CREATE_TENTACLES:         return TILEG_CREATE_TENTACLES;
     case SPELL_CRYSTAL_BOLT:             return TILEG_CRYSTAL_BOLT;
+    case SPELL_DEATH_RATTLE:             return TILEG_DEATH_RATTLE;
     case SPELL_DIMENSION_ANCHOR:         return TILEG_DIMENSION_ANCHOR;
     case SPELL_DISINTEGRATE:             return TILEG_DISINTEGRATE;
     case SPELL_DRUIDS_CALL:              return TILEG_DRUIDS_CALL;

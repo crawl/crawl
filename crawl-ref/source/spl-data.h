@@ -3454,6 +3454,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DEATH_RATTLE, "Death Rattle",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     7,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     5, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,
