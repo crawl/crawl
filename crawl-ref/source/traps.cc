@@ -1756,8 +1756,9 @@ bool trap_def::ground_only() const
     return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
 }
 
-bool is_valid_shaft_level(bool known, const level_id &place)
+bool is_valid_shaft_level(bool known)
 {
+    const level_id place = level_id::current();
     if (crawl_state.test
         || crawl_state.game_is_sprint()
         || crawl_state.game_is_zotdef())
