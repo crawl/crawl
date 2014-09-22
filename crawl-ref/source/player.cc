@@ -758,9 +758,9 @@ bool you_can_wear(int eq, bool special_armour)
     if (you.species == SP_FELID)
     {
         if (player_mutation_level(MUT_MISSING_HAND))
-            return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
-        else
             return eq == EQ_RIGHT_RING || eq == EQ_AMULET;
+        else
+            return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
     }
 
     // Octopodes can wear soft helmets, eight rings, and an amulet.
