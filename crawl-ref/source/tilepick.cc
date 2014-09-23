@@ -5436,6 +5436,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_DURABILITY;
     case ABIL_RU_SACRIFICE_HAND:
         return TILEG_ABILITY_RU_SACRIFICE_HAND;
+    case ABIL_RU_REJECT_SACRIFICES:
+        return TILEG_ABILITY_RENOUNCE_RELIGION;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

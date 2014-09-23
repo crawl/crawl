@@ -973,7 +973,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             else if (you_worship(GOD_RU))
             {
                 ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                if (one_chance_in(100))
+                ASSERT(you.props.exists("available_sacrifices"));
+                int sacrifice_count =
+                    you.props["available_sacrifices"].get_vector().size();
+                if (sacrifice_count == 0 && one_chance_in(100))
                 {
                     int current_progress =
                         you.props["ru_progress_to_next_sacrifice"]
