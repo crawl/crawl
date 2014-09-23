@@ -3372,6 +3372,22 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
+        // heal wand is useless for VS if they can't get allies
+        if (item.sub_type == WAND_HEAL_WOUNDS
+            && you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
+            && player_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
+
+        // haste wand is useless for VS if they can't get allies
+        if (item.sub_type == WAND_HASTING
+            && you.species == SP_FORMICID
+            && player_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
+
         return item.plus2 == ZAPCOUNT_EMPTY
                 || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
