@@ -1171,13 +1171,6 @@ bool mons_is_conjured(monster_type mc)
            || mc == MONS_FULMINANT_PRISM;
 }
 
-// Returns true if the given monster's foe is also a monster.
-bool mons_foe_is_mons(const monster* mons)
-{
-    const actor *foe = mons->get_foe();
-    return foe && foe->is_monster();
-}
-
 int mons_weight(monster_type mc)
 {
     ASSERT_smc();
