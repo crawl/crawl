@@ -278,6 +278,25 @@ LUAFN(moninf_get_desc)
     return 1;
 }
 
+LUAFN(moninf_get_status)
+{
+    MONINF(ls, 1, mi);
+    const char* which = NULL;
+    if (lua_gettop(ls) >= 2)
+        which = luaL_checkstring(ls, 2);
+
+    vector<string> status = mi->attributes();
+    if (!which)
+    {
+        PLUARET(string, comma_separated_line(status.begin(),
+                                             status.end(), ", ").c_str());
+    }
+    for (vector<string>::const_iterator i = status.begin(); i != status.end(); ++i)
+        if (*i == which)
+            PLUARET(boolean, true);
+    PLUARET(boolean, false);
+}
+
 LUAFN(moninf_get_name)
 {
     MONINF(ls, 1, mi);
@@ -310,6 +329,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
+    MIREG(status),
     MIREG(name),
     MIREG(has_known_ranged_attack),
     MIREG(speed_description),
