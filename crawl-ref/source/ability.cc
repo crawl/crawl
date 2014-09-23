@@ -3181,7 +3181,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
         ru_draw_out_power();
-        you.increase_duration(DUR_EXHAUSTED, 5 + random2(5));
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
         break;
 
     case ABIL_RU_POWER_LEAP:
@@ -3196,7 +3196,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             canned_msg(MSG_OK);
             return SPRET_ABORT;
         }
-        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        you.increase_duration(DUR_EXHAUSTED, 18 + random2(8));
         break;
 
     case ABIL_RU_APOCALYPSE:
