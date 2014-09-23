@@ -1003,8 +1003,6 @@ void wizard_get_god_gift()
     if (you_worship(GOD_RU))
     {
         ru_offer_new_sacrifices();
-
-        you.props["ru_sacrifice_delay"] = 70;
         you.props["ru_progress_to_next_sacrifice"] = 0;
         return;
     }

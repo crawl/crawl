@@ -821,7 +821,16 @@ If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
+%%%%
+Reject Sacrifices ability
 
+Adherents who cannot bring themselves to make any offered sacrifice may reject
+the offers. Doing so means Ru will take more time evaluating the adherent's
+readiness for future sacrifices. Ru will not offer more sacrifices while there
+is an existing offer still extended.
+
+Each consecutive rejection increases the sacrifice timer significantly.
+Accepting a sacrifice will reset the timer to the standard length.
 %%%%
 Renounce Religion ability
 

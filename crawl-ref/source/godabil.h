@@ -115,6 +115,8 @@ const char* arcane_mutation_to_school_name(mutation_type mutation);
 vector<ability_type> get_possible_sacrifices();
 void ru_offer_new_sacrifices();
 bool ru_do_sacrifice(ability_type sacrifice);
+bool ru_reject_sacrifices();
+void ru_reset_sacrifice_timer(bool clear_timer = false);
 void ru_expire_sacrifices();
 bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);

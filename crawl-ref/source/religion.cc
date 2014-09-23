@@ -3575,7 +3575,7 @@ void join_religion(god_type which_god, bool immediate)
     {
         // monks get bonus piety for first god
         if (you_worship(GOD_RU))
-            you.props["ru_progress_to_next_sacrifice"] = 100;
+            you.props["ru_progress_to_next_sacrifice"] = 9999;
         else
             gain_piety(35, 1, false);
     }
@@ -4048,7 +4048,6 @@ void handle_god_time(int time_delta)
     // Update the god's opinion of the player.
     if (!you_worship(GOD_NO_GOD))
     {
-        int added_delay;
         int delay;
         switch (you.religion)
         {
@@ -4115,18 +4114,8 @@ void handle_god_time(int time_delta)
             if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
             {
                 if (you.piety < piety_breakpoint(5)) // 6* is max piety for Ru
-                {
                     ru_offer_new_sacrifices();
 
-                    // raise the delay if there's an active sacrifice, and more
-                    // so the more often you pass on a sacrifice and the more
-                    // piety you have.
-                    added_delay = div_rand_round((90 + max(100,
-                        static_cast<int>(you.piety))
-                        - 100) * (3 + you.faith()), 9);
-                    you.props["ru_sacrifice_delay"] = delay + added_delay;
-
-                }
                 you.props["ru_progress_to_next_sacrifice"] = 0;
             }
             break;

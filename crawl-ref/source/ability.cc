@@ -455,6 +455,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
       0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
 
     // Gozag
     { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
@@ -1162,6 +1164,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_NIMBLENESS:
     case ABIL_RU_SACRIFICE_DURABILITY:
     case ABIL_RU_SACRIFICE_HAND:
+    case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -3163,6 +3166,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_RU_REJECT_SACRIFICES:
+        fail_check();
+        if (!ru_reject_sacrifices())
+            return SPRET_ABORT;
+        break;
+
     case ABIL_RU_DRAW_OUT_POWER:
         fail_check();
         if (you.duration[DUR_EXHAUSTED])
@@ -3973,7 +3982,8 @@ static int _find_ability_slot(const ability_def &abil)
       || abil.ability == ABIL_RU_SACRIFICE_ARCANA
       || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
       || abil.ability == ABIL_RU_SACRIFICE_DURABILITY
-      || abil.ability == ABIL_RU_SACRIFICE_HAND)
+      || abil.ability == ABIL_RU_SACRIFICE_HAND
+      || abil.ability == ABIL_RU_REJECT_SACRIFICES)
     {
         first_slot = letter_to_index('P');
     }
@@ -4028,6 +4038,8 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
             abilities.push_back(
                 static_cast<ability_type>(available_sacrifices[i].get_int()));
         }
+        if (num_sacrifices > 0)
+            abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
     }
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
