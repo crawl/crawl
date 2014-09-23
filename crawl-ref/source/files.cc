@@ -827,6 +827,14 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (feat_is_escape_hatch(stair_taken))
         return stair_taken;
 
+    if (stair_taken == DNGN_ENTER_DIS
+        || stair_taken == DNGN_ENTER_GEHENNA
+        || stair_taken == DNGN_ENTER_COCYTUS
+        || stair_taken == DNGN_ENTER_TARTARUS)
+    {
+        return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+    }
+
     if (feat_is_branch_exit(stair_taken))
     {
         for (branch_iterator it; it; it++)
@@ -841,14 +849,6 @@ static int _get_dest_stair_type(branch_type old_branch,
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
-    }
-
-    if (stair_taken == DNGN_ENTER_DIS
-        || stair_taken == DNGN_ENTER_GEHENNA
-        || stair_taken == DNGN_ENTER_COCYTUS
-        || stair_taken == DNGN_ENTER_TARTARUS)
-    {
-        return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
     }
 
     if (stair_taken == DNGN_ENTER_LABYRINTH)
