@@ -2065,6 +2065,7 @@ MAP
 ENDMAP
 
 NAME:    xom_redecorated
+DEPTH:   D:2-, !D:$
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor
 SUBST:   x = ccbbbv
 NSUBST:  . = 2:T / .
