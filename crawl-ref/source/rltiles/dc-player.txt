@@ -384,7 +384,6 @@ jacket2 JACKET2
 jacket3 JACKET3
 leather_stud LEATHER_STUD
 jacket_stud JACKET_STUD
-chainmail CHAINMAIL2
 half_plate HALF_PLATE
 half_plate2 HALF_PLATE2
 half_plate3 HALF_PLATE3
@@ -397,7 +396,9 @@ armour_blue_gold
 ringmail RINGMAIL
 ringmail2
 ringmail3
-chainmail3 CHAINMAIL
+chainmail CHAINMAIL
+chainmail2
+chainmail3
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
 scalemail SCALEMAIL

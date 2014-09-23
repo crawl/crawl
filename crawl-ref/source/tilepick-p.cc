@@ -321,47 +321,46 @@ tileidx_t tilep_equ_armour(const item_def &item)
             return tile;
     }
 
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
+    if (item.sub_type == ARM_ROBE)
         return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
                        TILEP_BODY_ROBE_LAST_NORM);
 
-    case ARM_LEATHER_ARMOUR:
-        return tileidx_enchant_equ(item, TILEP_BODY_LEATHER_ARMOUR, true);
-    case ARM_RING_MAIL:
-        return tileidx_enchant_equ(item, TILEP_BODY_RINGMAIL, true);
-    case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
-    case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
-    case ARM_PLATE_ARMOUR:
-        return tileidx_enchant_equ(item, TILEP_BODY_PLATE, true);
-    case ARM_CRYSTAL_PLATE_ARMOUR:
-        return tileidx_enchant_equ(item, TILEP_BODY_CRYSTAL_PLATE, true);
+    tileidx_t tile = 0;
+    switch (item.sub_type)
+    {
+    case ARM_LEATHER_ARMOUR:        tile = TILEP_BODY_LEATHER_ARMOUR; break;
+    case ARM_RING_MAIL:             tile = TILEP_BODY_RINGMAIL; break;
+    case ARM_CHAIN_MAIL:            tile = TILEP_BODY_CHAINMAIL; break;
+    case ARM_SCALE_MAIL:            tile = TILEP_BODY_SCALEMAIL; break;
+    case ARM_PLATE_ARMOUR:          tile = TILEP_BODY_PLATE; break;
+    case ARM_CRYSTAL_PLATE_ARMOUR:  tile = TILEP_BODY_CRYSTAL_PLATE; break;
 
-    case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;
-    case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
-    case ARM_STEAM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_WHITE;
-    case ARM_MOTTLED_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_MAGENTA;
-    case ARM_STORM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BLUE;
-    case ARM_GOLD_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GOLD;
-    case ARM_SWAMP_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BROWN;
-    case ARM_PEARL_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_PEARL;
+    case ARM_FIRE_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_GREEN; break;
+    case ARM_ICE_DRAGON_HIDE:       tile = TILEP_BODY_DRAGONSC_CYAN; break;
+    case ARM_STEAM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_WHITE; break;
+    case ARM_MOTTLED_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_MAGENTA; break;
+    case ARM_STORM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BLUE; break;
+    case ARM_GOLD_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_GOLD; break;
+    case ARM_SWAMP_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BROWN; break;
+    case ARM_PEARL_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_PEARL; break;
 
-    case ARM_FIRE_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GREEN;
-    case ARM_ICE_DRAGON_ARMOUR:     return TILEP_BODY_DRAGONARM_CYAN;
-    case ARM_STEAM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_WHITE;
-    case ARM_MOTTLED_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_MAGENTA;
-    case ARM_STORM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BLUE;
-    case ARM_GOLD_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GOLD;
-    case ARM_SWAMP_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BROWN;
-    case ARM_PEARL_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_PEARL;
+    case ARM_FIRE_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GREEN; break;
+    case ARM_ICE_DRAGON_ARMOUR:     tile = TILEP_BODY_DRAGONARM_CYAN; break;
+    case ARM_STEAM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_WHITE; break;
+    case ARM_MOTTLED_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_MAGENTA; break;
+    case ARM_STORM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BLUE; break;
+    case ARM_GOLD_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GOLD; break;
+    case ARM_SWAMP_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BROWN; break;
+    case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
 
-    case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
-    case ARM_TROLL_HIDE:           return TILEP_BODY_TROLL_HIDE;
-    case ARM_TROLL_LEATHER_ARMOUR: return TILEP_BODY_TROLL_LEATHER;
+    case ARM_ANIMAL_SKIN:           tile = TILEP_BODY_ANIMAL_SKIN; break;
+    case ARM_TROLL_HIDE:            tile = TILEP_BODY_TROLL_HIDE; break;
+    case ARM_TROLL_LEATHER_ARMOUR:  tile = TILEP_BODY_TROLL_LEATHER; break;
 
-    default: return 0;
+    default:                        tile = 0;
     }
+
+    return tileidx_enchant_equ(item, tile, true);
 }
 
 tileidx_t tilep_equ_cloak(const item_def &item)
