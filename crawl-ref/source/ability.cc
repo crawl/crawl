@@ -445,7 +445,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
       0, 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_RU_SACRIFICE_SANITY, "Sacrifice Sanity",
+    { ABIL_RU_SACRIFICE_COURAGE, "Sacrifice Courage",
       0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
       0, 0, 0, 0, 0, ABFLAG_NONE },
@@ -1159,7 +1159,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_STEALTH:
     case ABIL_RU_SACRIFICE_ARTIFICE:
     case ABIL_RU_SACRIFICE_LOVE:
-    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_COURAGE:
     case ABIL_RU_SACRIFICE_ARCANA:
     case ABIL_RU_SACRIFICE_NIMBLENESS:
     case ABIL_RU_SACRIFICE_DURABILITY:
@@ -3156,7 +3156,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_RU_SACRIFICE_STEALTH:
     case ABIL_RU_SACRIFICE_ARTIFICE:
     case ABIL_RU_SACRIFICE_LOVE:
-    case ABIL_RU_SACRIFICE_SANITY:
+    case ABIL_RU_SACRIFICE_COURAGE:
     case ABIL_RU_SACRIFICE_ARCANA:
     case ABIL_RU_SACRIFICE_NIMBLENESS:
     case ABIL_RU_SACRIFICE_DURABILITY:
@@ -3978,7 +3978,7 @@ static int _find_ability_slot(const ability_def &abil)
       || abil.ability == ABIL_RU_SACRIFICE_STEALTH
       || abil.ability == ABIL_RU_SACRIFICE_ARTIFICE
       || abil.ability == ABIL_RU_SACRIFICE_LOVE
-      || abil.ability == ABIL_RU_SACRIFICE_SANITY
+      || abil.ability == ABIL_RU_SACRIFICE_COURAGE
       || abil.ability == ABIL_RU_SACRIFICE_ARCANA
       || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
       || abil.ability == ABIL_RU_SACRIFICE_DURABILITY

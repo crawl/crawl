@@ -4919,8 +4919,8 @@ vector<ability_type> get_possible_sacrifices()
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARTIFICE);
     if (!player_mutation_level(MUT_NO_LOVE))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_LOVE);
-    if (!player_mutation_level(MUT_NO_SANITY))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_SANITY);
+    if (!player_mutation_level(MUT_COWARDICE))
+        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_COURAGE);
     if (!player_mutation_level(MUT_NO_DODGING))
         possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
     if (!player_mutation_level(MUT_NO_ARMOUR) && you_can_wear(EQ_BODY_ARMOUR))
@@ -5421,15 +5421,15 @@ bool ru_do_sacrifice(ability_type sacrifice)
             _ru_kill_skill(SK_ARMOUR);
             mark_milestone("sacrifice", "sacrificed armour!");
             break;
-        case ABIL_RU_SACRIFICE_SANITY:
+        case ABIL_RU_SACRIFICE_COURAGE:
             piety_gain = 25;
 
-            if (!_execute_sacrifice(MUT_NO_SANITY, piety_gain,
-                "sacrifice your sanity"))
+            if (!_execute_sacrifice(MUT_COWARDICE, piety_gain,
+                "sacrifice your courage"))
             {
                 return false;
             }
-            mark_milestone("sacrifice", "sacrificed sanity!");
+            mark_milestone("sacrifice", "sacrificed courage!");
             break;
         case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))

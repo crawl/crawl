@@ -311,7 +311,7 @@ void player_reacts_to_monsters()
 
     // If the player is insane, horrify them in proportion
     // to the scariness of monsters they can see.
-    if (player_mutation_level(MUT_NO_SANITY))
+    if (player_mutation_level(MUT_COWARDICE))
     {
         const coord_def& center = you.pos();
         const int radius = 8;
