@@ -1790,14 +1790,14 @@ static const mutation_def mut_data[] =
   "inability to love",
 },
 
-{ MUT_NO_SANITY,                0,  1, MUTFLAG_RU, false,
-  "insanity",
+{ MUT_COWARDICE,                0,  1, MUTFLAG_RU, false,
+  "cowardly",
 
-  {"You have lost your grip on sanity.", "", ""},
-  {"You have lost your grip on sanity.", "", ""},
-  {"You have regained your grip on sanity.", "", ""},
+  {"You are a coward.", "", ""},
+  {"You have lost your courage.", "", ""},
+  {"You have regained your courage.", "", ""},
 
-  "insanity",
+  "cowardice",
 },
 
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
