@@ -587,8 +587,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.aux_source.clear();
         beam.is_tracer    = false;
         beam.hit          = 20;
-        beam.damage       = mons_foe_is_mons(mons) ? dice_def(5, 7)
-                                                   : dice_def(3, 15);
+        beam.damage       = dice_def(3, 15);
         break;
 
     case SPELL_HEAL_OTHER:
