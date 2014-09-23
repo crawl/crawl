@@ -5693,11 +5693,11 @@ void ru_draw_out_power()
     you.redraw_quiver = true;
     you.redraw_evasion = true;
 
-    inc_hp(div_rand_round(you.piety, 16)
-        + roll_dice(div_rand_round(you.piety, 20), 7));
+    inc_hp(
+        + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
-        + roll_dice(div_rand_round(you.piety, 40), 5));
-    drain_player(20, false, true);
+        + roll_dice(div_rand_round(you.piety, 40), 4));
+    drain_player(25, false, true);
 }
 
 bool ru_power_leap()
