@@ -715,9 +715,23 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         switch (type)
         {
         case WAND_HEAL_WOUNDS:
-            w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25); break;
+            if (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
+                && player_mutation_level(MUT_NO_LOVE))
+            {
+                w = 0; // with no allies, totally useless
+            }
+            else
+                w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25);
+            break;
         case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
-            w = (you.species == SP_FORMICID ? 5 : 25); break;
+            if (you.species == SP_FORMICID
+                && player_mutation_level(MUT_NO_LOVE))
+            {
+                w = 0; // with no allies, totally useless
+            }
+            else
+                w = (you.species == SP_FORMICID ? 5 : 25);
+            break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
             w = you.species == SP_FORMICID || crawl_state.game_is_sprint()
                 ? 1 : 15;
