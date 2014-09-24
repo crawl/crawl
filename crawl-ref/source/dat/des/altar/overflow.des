@@ -1501,7 +1501,7 @@ ccc@ccc
 ENDMAP
 
 NAME:   grunt_qazlal_sundering
-DEPTH:  D:2-
+DEPTH:  D:2-, !D:$
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_qazlal uniq_altar_qazlal
 KFEAT:  _ = altar_qazlal
@@ -1976,7 +1976,11 @@ MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
 MONS:   place:D:1-8
 NSUBST: ' = 1:_ / *:.
 SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
-KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3
+:   if you.depth() == dgn.br_depth(you.branch()) then
+KFEAT:  ~ = teleport trap w:20 / alarm trap w:3
+:   else
+KFEAT:  ~ = known shaft trap / teleport trap / alarm trap w:3
+:   end
 NSUBST: Z = 1:* / *:%
 SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
 COLOUR: . = random
