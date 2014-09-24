@@ -606,7 +606,8 @@ string describe_mutations(bool center_title)
         if (you.mutation[i] != 0 && you.innate_mutation[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_desc(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true,
+                ((you.sacrifices[i] != 0) ? true : false));
             result += "\n";
             have_any = true;
         }
@@ -1951,7 +1952,8 @@ const char* mutation_desc_for_text(mutation_type mut)
 
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
-string mutation_desc(mutation_type mut, int level, bool colour)
+string mutation_desc(mutation_type mut, int level, bool colour,
+        bool is_sacrifice)
 {
     // Ignore the player's forms, etc.
     const bool ignore_player = (level != -1);
@@ -2022,6 +2024,8 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         {
             if (fully_inactive)
                 colourname = "darkgrey";
+            else if (is_sacrifice)
+                colourname = "lightred";
             else if (partially_active)
                 colourname = "blue";
             else
@@ -2034,6 +2038,8 @@ string mutation_desc(mutation_type mut, int level, bool colour)
 
             if (fully_inactive || (mut == MUT_COLD_BLOODED && player_res_cold(false) > 0))
                 colourname = "darkgrey";
+            else if (is_sacrifice)
+                colourname = "lightred";
             else if (partially_active)
                 colourname = demonspawn ? "yellow"    : "blue";
             else if (extra)

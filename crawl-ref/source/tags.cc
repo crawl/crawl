@@ -1441,6 +1441,7 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.mutation[j]);
         marshallByte(th, you.innate_mutation[j]);
         marshallByte(th, you.temp_mutation[j]);
+        marshallByte(th, you.sacrifices[j]);
     }
 
     marshallByte(th, you.demonic_traits.size());
@@ -2474,13 +2475,22 @@ static void tag_read_you(reader &th)
     for (j = 0; j < count; ++j)
     {
         you.mutation[j]         = unmarshallUByte(th);
-        you.innate_mutation[j] = unmarshallUByte(th);
+        you.innate_mutation[j]  = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() >= TAG_MINOR_TEMP_MUTATIONS
             && th.getMinorVersion() != TAG_MINOR_0_11)
         {
 #endif
-        you.temp_mutation[j] = unmarshallUByte(th);
+        you.temp_mutation[j]    = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_RU_SACRIFICES)
+            you.sacrifices[j]   = 0;
+        else
+            you.sacrifices[j]   = unmarshallUByte(th);
+#else
+        you.sacrifices[j]   = 0;
+#endif
+
 #if TAG_MAJOR_VERSION == 34
         }
 #endif
@@ -2548,7 +2558,7 @@ static void tag_read_you(reader &th)
 #endif
 
     for (j = count; j < NUM_MUTATIONS; ++j)
-        you.mutation[j] = you.innate_mutation[j] = 0;
+        you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j] = 0;
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
