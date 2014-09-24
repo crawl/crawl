@@ -375,7 +375,8 @@ bool melee_attack::handle_phase_dodged()
         if (attacker->alive()
             && (defender->is_player() ?
                    you.species == SP_MINOTAUR :
-                   mons_base_type(defender->as_monster()) == MONS_MINOTAUR)
+                   mons_species(mons_base_type(defender->as_monster()))
+                      == MONS_MINOTAUR)
             && defender->can_see(attacker)
             // Retaliation only works on the first attack in a round.
             // FIXME: player's attack is -1, even for auxes
