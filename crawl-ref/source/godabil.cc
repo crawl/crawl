@@ -5217,6 +5217,7 @@ static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
     }
 
     perma_mutate(sacrifice, 1, "Ru sacrifice");
+    you.sacrifices[sacrifice] += 1;
     return true;
 }
 
