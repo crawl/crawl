@@ -1894,7 +1894,7 @@ void zap_wand(int slot)
 
     if (item_type_known(wand)
         && (item_ident(wand, ISFLAG_KNOW_PLUSES)
-            || you.skill(SK_EVOCATIONS, 10) > 50 + random2(141)))
+            || you.skill_rdiv(SK_EVOCATIONS) > random2(27)))
     {
         if (!item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
