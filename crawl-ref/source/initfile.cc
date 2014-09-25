@@ -1871,7 +1871,7 @@ void game_options::set_player_tile(const string &field)
             string base_tname = fields[1];
             unsigned found = base_tname.rfind('_');
             int offset = 0;
-            if (found != std::string::npos 
+            if (found != std::string::npos
                 && parse_int(fields[1].substr(found + 1).c_str(), offset))
             {
                 base_tname = base_tname.substr(0, found);
@@ -1906,7 +1906,7 @@ void game_options::set_player_tile(const string &field)
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
-        
+
         if ((by_mons && lowercase_string(me->name) == fields[1])
             || (!by_mons && tileidx_monster_base(i) == base_tile))
         {
@@ -1922,14 +1922,14 @@ void game_options::set_player_tile(const string &field)
             report_error("Unknown monster: \"%s\"", fields[1].c_str());
         else
         {
-            report_error("Unable to determine monster from tile: \"%s\"", 
+            report_error("Unable to determine monster from tile: \"%s\"",
                          fields[1].c_str());
             tile_player_tile = 0;
         }
     }
     return;
 }
-#endif // USE_TILE 
+#endif // USE_TILE
 
 void game_options::do_kill_map(const string &from, const string &to)
 {

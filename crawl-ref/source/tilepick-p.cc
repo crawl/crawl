@@ -321,8 +321,10 @@ tileidx_t tilep_equ_armour(const item_def &item)
     }
 
     if (item.sub_type == ARM_ROBE)
+    {
         return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
                        TILEP_BODY_ROBE_LAST_NORM);
+    }
 
     tileidx_t tile = 0;
     switch (item.sub_type)
