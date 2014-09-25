@@ -158,9 +158,12 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     // known to the player and assuming unknown terrain to be traversable.
     monster_pathfind mp;
     const int range = mons_tracking_range(mon);
-    // Use a large safety margin.  x4 should be ok.
+    // At the very least, we shouldn't consider a visible monster with a
+    // direct path to you "safe" just because it would be too stupid to
+    // track you that far out-of-sight. Use a factor of 2 for smarter
+    // creatures as a safety margin.
     if (range > 0)
-        mp.set_range(range * 2);
+        mp.set_range(max(LOS_RADIUS, range * 2));
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return true;
