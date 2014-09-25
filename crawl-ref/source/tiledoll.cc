@@ -575,8 +575,11 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);
-        entry = mcache.get(mcache_idx);
-        draw_info_count = entry->info(&dinfo[0]);
+        if (mcache_idx)
+        {
+            entry = mcache.get(mcache_idx);
+            draw_info_count = entry->info(&dinfo[0]);
+        }
     }
     // A higher index here means that the part should be drawn on top.
     // This is drawn in reverse order because this could be a ghost
