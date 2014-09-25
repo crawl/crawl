@@ -231,13 +231,13 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     {
                         for (var i = 0; i < cell.mcache.length; ++i)
                             mcache_map[cell.mcache[i][0]] = i;
-                    }                            
+                    }
                     $.each(cell.doll, function (i, doll_part) {
                         var xofs = 0;
                         var yofs = 0;
                         if (mcache_map[doll_part[0]] !== undefined)
                         {
-                            var mind = mcache_map[doll_part[0]]
+                            var mind = mcache_map[doll_part[0]];
                             xofs = cell.mcache[mind][1];
                             yofs = cell.mcache[mind][2];
                         }

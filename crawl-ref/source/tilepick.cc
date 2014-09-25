@@ -2114,7 +2114,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         // For the last five heads, use tiles 1-5, for greater amounts
         // use the next tile for every 5 more heads.
         return tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
-                                 number <= 5 ? 
+                                 number <= 5 ?
                                  number - 1 : 4 + (number - 1)/5);
     case MONS_XTAHUA:
         return TILEP_MONS_XTAHUA;
@@ -3085,7 +3085,7 @@ tileidx_t tileidx_player_mons()
     if (mons_is_base_draconian(mons))
         return tileidx_draco_base(mons);
 
-    switch(mons)
+    switch (mons)
     {
     case MONS_CENTAUR:         return TILEP_MONS_CENTAUR_MELEE;
     case MONS_CENTAUR_WARRIOR: return TILEP_MONS_CENTAUR_WARRIOR_MELEE;
