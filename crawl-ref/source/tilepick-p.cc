@@ -325,7 +325,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_ROBE:
         return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
                        TILEP_BODY_ROBE_LAST_NORM);
-
     case ARM_LEATHER_ARMOUR:
         return tileidx_enchant_equ(item, TILEP_BODY_LEATHER_ARMOUR, true);
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
