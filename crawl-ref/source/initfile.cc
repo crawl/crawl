@@ -1855,6 +1855,7 @@ void game_options::set_player_tile(const string &field)
     else if (field == "playermons")
     {
         tile_use_monster = MONS_NO_MONSTER;
+        tile_player_tile = 0;
         return;
     }
 
@@ -1921,6 +1922,8 @@ void game_options::set_player_tile(const string &field)
         {
             found = true;
             tile_use_monster = i;
+            if (by_mons)
+                tile_player_tile = 0;
             break;
         }
     }
