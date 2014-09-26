@@ -1213,12 +1213,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 _send_doll(last_player_doll, in_water, false);
                 if (Options.tile_use_monster != MONS_PROGRAM_BUG)
                 {
-                    monster_type mtype;
-                    if (Options.tile_use_monster != MONS_NO_MONSTER)
-                        mtype = Options.tile_use_monster;
-                    else
-                        mtype = player_mons(false);
-                    monster_info minfo(mtype, mtype);
+                    monster_info minfo(MONS_PLAYER_GHOST, MONS_PLAYER_GHOST);
+                    minfo.props["monster_tile"] =
+                        short(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))
                     {
