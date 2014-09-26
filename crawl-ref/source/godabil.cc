@@ -5729,7 +5729,7 @@ void ru_draw_out_power()
     you.redraw_quiver = true;
     you.redraw_evasion = true;
 
-    inc_hp(
+    inc_hp(div_rand_round(you.piety, 16)
         + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
         + roll_dice(div_rand_round(you.piety, 40), 4));
