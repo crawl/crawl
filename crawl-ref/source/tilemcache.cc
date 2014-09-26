@@ -465,6 +465,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_DEMIGOD:
+    case TILEP_MONS_KIRKE:
         *ofs_x = -1;
         *ofs_y = -3;
         break;
