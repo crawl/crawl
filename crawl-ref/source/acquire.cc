@@ -569,14 +569,14 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result = 0;
 
+    // Rings are (number of usable rings) times as common as amulets.
+    // XXX: unify this with the actual check for ring slots
+    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
+                       - (player_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
     {
-        // Rings are (number of usable rings) times as common as amulets.
-        // XXX: unify this with the actual check for ring slots
-        int ring_num = you.species == SP_OCTOPODE ? 8 : 2;
-        if (player_mutation_level(MUT_MISSING_HAND))
-            --ring_num;
         result = one_chance_in(ring_num + 1) ? get_random_amulet_type()
                                              : get_random_ring_type();
 
