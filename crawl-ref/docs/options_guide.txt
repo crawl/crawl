@@ -1912,17 +1912,20 @@ tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         used. Any spaces in the monster name should be included. For instance:
         a value of mons:the royal jelly is valid.
 
-	If set to a value of the form tile:<monster-tile> where <monster-tile>
-        is the name of a monster tile, use this tile as the player tile. This
-        form is most useful for using specific variant tiles of monster with
-        multiple tiles, such as hydra, chaos spawn, or large abominations. The
-        tile name must include the mons_ prefix. For example, to use the hydra
-        tile with many heads, use a value of tile:mons_hydra_7. Generally these
-        names are predictable from the monster name, but see the file
-        source/rltiles/dc-mon.txt in the source tree for the actual tile
-        name. In this file, the tile name is the second word in each entry
-        after the file name of the image, and always begins with MONS_ (case is
-        ignored for the tile_player_tile option).
+	If set to a value of the form tile:<player-tile> where <player-tile> is
+        the name of a tile in the player tile sheet, use this tile as the
+        player tile. This form is most useful for using specific variant tiles
+        of monster with multiple tiles, such as hydra and large abominations,
+        or special tiles like Cigotuvi's Monster or player transformations that
+        don't have their own base monster. The tile name must be the full name,
+        e.g. mons_hydra_7. For example, to use the hydra tile with many heads,
+        use a value of tile:mons_hydra_7. The tile names can be found in the
+        source tree folder source/rltiles in the files dc-mon.txt,
+        dc-demon.txt, and dc-player.txt. In these files, the tile name is in
+        the second word in each entry after the file name of the image, and
+        case is ignored for matching. Monster tile names are usually of the
+        form mons_<monster-name>, but other tiles like transformations are
+        named differently, e.g. tran_tree for the tree transformation tile.
 
 
 4-  Character Dump.

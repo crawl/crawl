@@ -557,12 +557,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     if (Options.tile_use_monster != MONS_PROGRAM_BUG)
     {
-        monster_type mtype;
-        if (Options.tile_use_monster != MONS_NO_MONSTER)
-            mtype = Options.tile_use_monster;
-        else
-            mtype = player_mons(false);
-        monster_info minfo(mtype, mtype);
+        monster_info minfo(MONS_PLAYER_GHOST, MONS_PLAYER_GHOST);
+        minfo.props["monster_tile"] = short(doll.parts[TILEP_PART_BASE]);
         item_def *item;
         if (you.slot_item(EQ_WEAPON))
         {
