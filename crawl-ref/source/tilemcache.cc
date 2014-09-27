@@ -457,6 +457,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
     case TILEP_MONS_MINOTAUR:
+    case TILEP_MONS_VAMPIRE:
         *ofs_x = -1;
         *ofs_y = -2;
         break;
@@ -608,13 +609,95 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -3;
         *ofs_y = -3;
         break;
-    case TILEP_MONS_VAMPIRE:
-        *ofs_x = 5;
-        *ofs_y = -4;
-        break;
     case TILEP_MONS_ORB_OF_FIRE:
         *ofs_x = 0;
         *ofs_y = 2;
+        break;
+    case TILEP_MONS_TENTACLED_MONSTROSITY:
+    case TILEP_MONS_CIGOTUVIS_MONSTER:
+        *ofs_x = -4;
+        *ofs_y = 2;
+        break;
+    case TILEP_MONS_SERPENT_OF_HELL_GEHENNA:
+    case TILEP_MONS_SERPENT_OF_HELL_COCYTUS:
+    case TILEP_MONS_SERPENT_OF_HELL_DIS:
+    case TILEP_MONS_SERPENT_OF_HELL_TARTARUS:
+        *ofs_x = -4;
+        *ofs_y = 3;
+        break;
+    case TILEP_MONS_UNSEEN_HORROR:
+        *ofs_x = -4;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_UGLY_THING:
+    case TILEP_MONS_UGLY_THING_1:
+    case TILEP_MONS_UGLY_THING_2:
+    case TILEP_MONS_UGLY_THING_3:
+    case TILEP_MONS_UGLY_THING_4:
+    case TILEP_MONS_UGLY_THING_5:
+        *ofs_x = -4;
+        *ofs_y = -7;
+        break;
+    case TILEP_MONS_VERY_UGLY_THING:
+    case TILEP_MONS_VERY_UGLY_THING_1:
+    case TILEP_MONS_VERY_UGLY_THING_2:
+    case TILEP_MONS_VERY_UGLY_THING_3:
+    case TILEP_MONS_VERY_UGLY_THING_4:
+    case TILEP_MONS_VERY_UGLY_THING_5:
+        *ofs_x = -3;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_ORANGE_STATUE:
+        *ofs_x = 3;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_LOROCYPROCA:
+        *ofs_x = -4;
+        *ofs_y = 6;
+        break;
+    case TILEP_MONS_HELLION:
+        *ofs_x = -1;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_CACODEMON:
+        *ofs_x = -3;
+        *ofs_y = -13;
+        break;
+    case TILEP_MONS_STARCURSED_MASS:
+        *ofs_x = -4;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_WRETCHED_STAR:
+        *ofs_x = 1;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_9:
+        *ofs_x = -2;
+        *ofs_y = -3;
+        break;
+    case TILEP_MONS_EXECUTIONER:
+        *ofs_x = -4;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_ICE_FIEND:
+        *ofs_x = 1;
+        *ofs_y = 2;
+        break;
+    case TILEP_MONS_PANDEMONIUM_LORD:
+        *ofs_x = -2;
+        *ofs_y = 0;
+        break;
+    case TILEP_MONS_HELL_SENTINEL:
+        *ofs_x = -1;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_DEMONIC_PLANT:
+        *ofs_x = -1;
+        *ofs_y = 2;
+        break;
+    case TILEP_MONS_TENTACLED_STARSPAWN:
+        *ofs_x = -1;
+        *ofs_y = 1;
         break;
     default:
         // This monster cannot be displayed with a weapon.
@@ -638,6 +721,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_KIRKE:
         *ofs_x = 1;
         *ofs_y = 0;
         break;
@@ -757,6 +841,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_KOBOLD:
+    case TILEP_MONS_SONJA:
         *ofs_x = 3;
         *ofs_y = -10;
         break;
@@ -775,11 +860,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_OGRE:
         *ofs_x = 2;
         *ofs_y = 1;
-        break;
-
-    case TILEP_MONS_VAMPIRE:
-        *ofs_x = -4;
-        *ofs_y = -4;
         break;
 
     case TILEP_MONS_GARGOYLE:
@@ -808,6 +888,112 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORB_OF_FIRE:
         *ofs_x = -4;
         *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_TENTACLED_MONSTROSITY:
+    case TILEP_MONS_CIGOTUVIS_MONSTER:
+    case TILEP_MONS_SERPENT_OF_HELL_GEHENNA:
+    case TILEP_MONS_SERPENT_OF_HELL_COCYTUS:
+    case TILEP_MONS_SERPENT_OF_HELL_DIS:
+    case TILEP_MONS_SERPENT_OF_HELL_TARTARUS:
+        *ofs_x = 4;
+        *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_UNSEEN_HORROR:
+        *ofs_x = 5;
+        *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_UGLY_THING:
+    case TILEP_MONS_UGLY_THING_1:
+    case TILEP_MONS_UGLY_THING_2:
+    case TILEP_MONS_UGLY_THING_3:
+    case TILEP_MONS_UGLY_THING_4:
+    case TILEP_MONS_UGLY_THING_5:
+        *ofs_x = 4;
+        *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_VERY_UGLY_THING:
+    case TILEP_MONS_VERY_UGLY_THING_1:
+    case TILEP_MONS_VERY_UGLY_THING_2:
+    case TILEP_MONS_VERY_UGLY_THING_3:
+    case TILEP_MONS_VERY_UGLY_THING_4:
+    case TILEP_MONS_VERY_UGLY_THING_5:
+        *ofs_x = 4;
+        *ofs_y = 5;
+        break;
+
+    case TILEP_MONS_ORANGE_STATUE:
+        *ofs_x = -2;
+        *ofs_y = -3;
+        break;
+
+    case TILEP_MONS_LOROCYPROCA:
+        *ofs_x = -3;
+        *ofs_y = 0;
+        break;
+
+    case TILEP_MONS_HELLION:
+        *ofs_x = 0;
+        *ofs_y = 4;
+        break;
+
+    case TILEP_MONS_CACODEMON:
+        *ofs_x = 4;
+        *ofs_y = -13;
+        break;
+
+    case TILEP_MONS_STARCURSED_MASS:
+        *ofs_x = -3;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_WRETCHED_STAR:
+        *ofs_x = 1;
+        *ofs_y = -4;
+        break;
+
+    case TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_9:
+        *ofs_x = 3;
+        *ofs_y = 0;
+        break;
+
+    case TILEP_MONS_EXECUTIONER:
+        *ofs_x = 2;
+        *ofs_y = 4;
+        break;
+
+    case TILEP_MONS_ICE_FIEND:
+        *ofs_x = -2;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_PANDEMONIUM_LORD:
+        *ofs_x = 1;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_HELL_SENTINEL:
+        *ofs_x = 4;
+        *ofs_y = -5;
+        break;
+
+    case TILEP_MONS_DEMONIC_PLANT:
+        *ofs_x = 5;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_TENTACLED_STARSPAWN:
+        *ofs_x = 1;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_GOBLIN:
+    case TILEP_MONS_IJYB:
+        *ofs_x = 1;
+        *ofs_y = 4;
         break;
 
     case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture
