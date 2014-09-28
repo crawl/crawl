@@ -70,6 +70,7 @@
 #endif
 #include "transform.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "view.h"
 
 static int _spell_enhancement(spell_type spell);
@@ -1004,13 +1005,19 @@ static bool _spellcasting_aborted(spell_type spell,
                                   bool evoked)
 {
     string msg;
-    if (!wiz_cast && spell_is_uncastable(spell, msg, evoked))
+
+    bool uncastable = false;
+
     {
-        mprf("%s", msg.c_str());
-        return true;
+        // MP was already deducted, so don't check MP in spell_is_uncastable.
+        unwind_var<int> fake_mp(you.magic_points, 50);
+        uncastable = !wiz_cast && spell_is_uncastable(spell, msg, evoked);
     }
 
-    return false;
+    if (uncastable)
+        mprf("%s", msg.c_str());
+
+    return uncastable;
 }
 
 static targetter* _spell_targetter(spell_type spell, int pow, int range)
