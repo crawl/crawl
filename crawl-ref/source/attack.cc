@@ -1823,20 +1823,21 @@ bool attack::apply_damage_brand(const char *what)
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
-        if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_hit_dice()
-            && !one_chance_in(5)
-            && !defender->as_monster()->check_clarity(false))
+        if (!mons_class_is_confusable(defender->type)
+            || hdcheck < defender->get_hit_dice()
+            || one_chance_in(5)
+            || defender->as_monster()->check_clarity(false))
         {
-            // Declaring these just to pass to the enchant function.
-            bolt beam_temp;
-            beam_temp.thrower =
-                attacker->is_player() ? KILL_YOU : KILL_MON;
-            beam_temp.flavour = BEAM_CONFUSION;
-            beam_temp.beam_source = attacker->mindex();
-            beam_temp.apply_enchantment_to_monster(defender->as_monster());
-            obvious_effect = beam_temp.obvious_effect;
+            break;
         }
+
+        // Declaring these just to pass to the enchant function.
+        bolt beam_temp;
+        beam_temp.thrower = attacker->is_player() ? KILL_YOU : KILL_MON;
+        beam_temp.flavour = BEAM_CONFUSION;
+        beam_temp.beam_source = attacker->mindex();
+        beam_temp.apply_enchantment_to_monster(defender->as_monster());
+        obvious_effect = beam_temp.obvious_effect;
 
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
