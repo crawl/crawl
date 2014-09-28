@@ -2170,19 +2170,28 @@ static void _brand_weapon(item_def &wpn)
 {
     you.wield_change = true;
 
+    const string itname = wpn.name(DESC_YOUR);
+
     _rebrand_weapon(wpn);
 
-    const string itname = wpn.name(DESC_YOUR);
     bool success = true;
     colour_t flash_colour = BLACK;
 
     switch (get_weapon_brand(wpn))
     {
     case SPWPN_VORPAL:
-    case SPWPN_PROTECTION:
-    case SPWPN_EVASION:
         flash_colour = YELLOW;
         mprf("%s emits a brilliant flash of light!",itname.c_str());
+        break;
+
+    case SPWPN_PROTECTION:
+        flash_colour = YELLOW;
+        mprf("%s projects an invisible shield of force!",itname.c_str());
+        break;
+
+    case SPWPN_EVASION:
+        flash_colour = YELLOW;
+        mprf("%s emits a repelling force!",itname.c_str());
         break;
 
     case SPWPN_FLAMING:
@@ -2196,6 +2205,10 @@ static void _brand_weapon(item_def &wpn)
         break;
 
     case SPWPN_DRAINING:
+        flash_colour = DARKGREY;
+        mprf("%s craves living souls!", itname.c_str());
+        break;
+
     case SPWPN_VAMPIRISM:
         flash_colour = DARKGREY;
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
@@ -2223,6 +2236,7 @@ static void _brand_weapon(item_def &wpn)
 
     if (success)
     {
+        mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
         item_set_appearance(wpn);
         // Message would spoil this even if we didn't identify.
         set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
