@@ -368,6 +368,8 @@ monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draco_or_demonspawn_subspecies(const monster* mon);
 monster_type mons_detected_base(monster_type mt);
+bool mons_is_siren_beholder(monster_type mc);
+bool mons_is_siren_beholder(const monster* mons);
 
 bool mons_looks_stabbable(const monster* m);
 bool mons_looks_distracted(const monster* m);

@@ -2708,8 +2708,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
         if (type == MONS_MINOTAUR)
             str = "hoof";
-        else if (swimming()
-                 && (type == MONS_MERFOLK || mons_genus(type) == MONS_SIREN))
+        else if (swimming() && mons_genus(type) == MONS_MERFOLK)
         {
             str         = "tail";
             *can_plural = false;

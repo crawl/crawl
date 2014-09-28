@@ -792,7 +792,6 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_SHOALS:
         return mons_species(mons->type) == MONS_CYCLOPS
                || mons_species(mons->type) == MONS_MERFOLK
-               || mons_genus(mons->type) == MONS_SIREN
                || mons->type == MONS_HARPY;
 
     case BRANCH_SLIME:
@@ -1164,6 +1163,21 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
 monster_type mons_detected_base(monster_type mc)
 {
     return monster_symbols[mc].detected;
+}
+
+/** Does a monster of this type behold opponents like a siren?
+ */
+bool mons_is_siren_beholder(monster_type mc)
+{
+    return mc == MONS_SIREN || mc == MONS_MERFOLK_AVATAR;
+}
+
+/** Does this monster behold opponents like a siren?
+ *  Ignores any disabilities, checking only the monster's type.
+ */
+bool mons_is_siren_beholder(const monster* mons)
+{
+    return mons_is_siren_beholder(mons->type);
 }
 
 int get_shout_noise_level(const shout_type shout)
@@ -3382,7 +3396,7 @@ bool mons_has_los_ability(monster_type mon_type)
     }
 
     // Beholding just needs LOS.
-    if (mons_genus(mon_type) == MONS_SIREN)
+    if (mons_is_siren_beholder(mon_type))
         return true;
 
     return false;
