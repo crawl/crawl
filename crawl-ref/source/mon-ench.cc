@@ -959,8 +959,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer more vulnerable to fire.");
         break;
 
-    case ENCH_SIREN_SONG:
-        props.erase("siren_call");
+    case ENCH_MERFOLK_AVATAR_SONG:
+        props.erase("merfolk_avatar_call");
         break;
 
     case ENCH_POISON_VULN:
@@ -1169,7 +1169,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:
-        case ENCH_SIREN_SONG:
+        case ENCH_MERFOLK_AVATAR_SONG:
             del_ench(i->first);
             break;
 
@@ -1946,13 +1946,13 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_SIREN_SONG:
+    case ENCH_MERFOLK_AVATAR_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
         if (silenced(pos()) || paralysed() || petrified()
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
-            del_ench(ENCH_SIREN_SONG, true, false);
+            del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(this))
             {
                 mprf("%s song is interrupted.",
@@ -1961,9 +1961,9 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        siren_song(this);
+        merfolk_avatar_song(this);
 
-        // The siren will stop singing without her audience
+        // The merfolk avatar will stop singing without her audience
         if (!see_cell_no_trans(you.pos()))
             decay_enchantment(en);
 
@@ -2127,7 +2127,7 @@ static const char *enchant_names[] =
 #endif
     "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
+    "iood_charged", "fire_vuln", "tornado_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34
     "building_charge",

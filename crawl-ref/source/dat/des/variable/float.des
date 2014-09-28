@@ -2285,7 +2285,7 @@ MONS:    orc knight ; wand of frost . arbalest ego:flaming . bolt ego:none . cha
          orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
-         mermaid ; chain mail . javelin ego:poisoned
+         siren ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
@@ -2549,7 +2549,7 @@ KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
-KMONS: A = alligator snapping turtle w:5 / siren / merfolk aquamancer / \
+KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
            merfolk impaler / harpy
 KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
@@ -2934,7 +2934,7 @@ KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
 KMONS:    4 = ice statue / w:5 orange crystal statue
 KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
-KMONS:    6 = siren
+KMONS:    6 = merfolk avatar
 KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage

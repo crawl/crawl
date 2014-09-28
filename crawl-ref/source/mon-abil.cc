@@ -1001,8 +1001,8 @@ static bool _will_starcursed_scream(monster* mon)
     return one_chance_in(n);
 }
 
-// Returns true if you resist the siren's call.
-static bool _siren_movement_effect(const monster* mons)
+// Returns true if you resist the merfolk avatar's call.
+static bool _merfolk_avatar_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD]
                       || you.duration[DUR_TIME_STEP]
@@ -3225,7 +3225,7 @@ void move_child_tentacles(monster* mons)
     }
 }
 
-void siren_song(monster* mons)
+void merfolk_avatar_song(monster* mons)
 {
     // First, attempt to pull the player, if mesmerised
     if (you.beheld_by(mons) && coinflip())
@@ -3234,7 +3234,7 @@ void siren_song(monster* mons)
         // turn (to avoid making you jump two spaces at once)
         if (!mons->props["foe_approaching"].get_bool())
         {
-            _siren_movement_effect(mons);
+            _merfolk_avatar_movement_effect(mons);
 
             // Reset foe tracking position so that we won't automatically
             // veto pulling on a subsequent turn because you 'approached'
@@ -3255,14 +3255,14 @@ void siren_song(monster* mons)
     }
     if (ally_hd > mons->get_experience_level())
     {
-        if (mons->props.exists("siren_call"))
+        if (mons->props.exists("merfolk_avatar_call"))
         {
-            // Normally can only happen if allies of the siren show up during
-            // a song that has already summoned drowned souls (though is
+            // Normally can only happen if allies of the merfolk avatar show up
+            // during a song that has already summoned drowned souls (though is
             // technically possible if some existing ally gains HD instead)
             if (you.see_cell(mons->pos()))
                 mpr("The shadowy forms in the deep grow still as others approach.");
-            mons->props.erase("siren_call");
+            mons->props.erase("merfolk_avatar_call");
         }
 
         return;
@@ -3276,14 +3276,14 @@ void siren_song(monster* mons)
 
     if (deep_water.size())
     {
-        if (!mons->props.exists("siren_call"))
+        if (!mons->props.exists("merfolk_avatar_call"))
         {
             if (you.see_cell(mons->pos()))
             {
                 mprf("Shadowy forms rise from the deep at %s song!",
                      mons->name(DESC_ITS).c_str());
             }
-            mons->props["siren_call"].get_bool() = true;
+            mons->props["merfolk_avatar_call"].get_bool() = true;
         }
 
         if (coinflip())
@@ -3305,7 +3305,7 @@ void siren_song(monster* mons)
                                  SAME_ATTITUDE(mons), mons, 1, SPELL_NO_SPELL,
                                  deep_water[i], mons->foe, MG_FORCE_PLACE));
 
-                // Scale down drowned soul damage for low level sirens
+                // Scale down drowned soul damage for low level merfolk avatars
                 if (soul)
                     soul->set_hit_dice(mons->get_hit_dice());
             }
@@ -3314,13 +3314,13 @@ void siren_song(monster* mons)
 }
 
 /**
- * Have a mermaid or siren attempt to mesmerize the player.
+ * Have a siren or merfolk avatar attempt to mesmerize the player.
  *
  * @param mons  The singing monster.
  * @param spl   The channel to print messages in.
  * @return      Whether the ability was used.
  */
-static bool _mermaid_sing(monster* mons, msg_channel_type spl)
+static bool _siren_sing(monster* mons, msg_channel_type spl)
 {
     // Don't behold observer in the arena.
     if (crawl_state.game_is_arena())
@@ -3350,9 +3350,9 @@ static bool _mermaid_sing(monster* mons, msg_channel_type spl)
         return false;
     }
 
-    // Don't even try on berserkers. Mermaids know their limits.
-    // (Sirens should still sing since their song has other effects)
-    if (mons->type != MONS_SIREN && you.berserk())
+    // Don't even try on berserkers. Sirens know their limits.
+    // (merfolk avatars should still sing since their song has other effects)
+    if (mons->type != MONS_MERFOLK_AVATAR && you.berserk())
         return false;
 
     const bool already_mesmerised = you.beheld_by(mons);
@@ -3368,8 +3368,11 @@ static bool _mermaid_sing(monster* mons, msg_channel_type spl)
     // Sing! Beyond this point, we should always return true.
     noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
 
-    if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
-        mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
+    if (mons->type == MONS_MERFOLK_AVATAR
+        && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
+    {
+        mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
+    }
 
     if (you.can_see(mons))
     {
@@ -3385,7 +3388,7 @@ static bool _mermaid_sing(monster* mons, msg_channel_type spl)
                           coinflip()         ? "a haunting song"
                                              : "an eerie melody");
 
-        // If you're already mesmerised by an invisible mermaid, she
+        // If you're already mesmerised by an invisible siren, she
         // can still prolong the enchantment.
         if (!already_mesmerised)
             return true;
@@ -3875,10 +3878,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_MERMAID:
     case MONS_SIREN:
+    case MONS_MERFOLK_AVATAR:
     {
-        used = _mermaid_sing(mons, spl);
+        used = _siren_sing(mons, spl);
         break;
     }
 

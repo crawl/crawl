@@ -1669,15 +1669,9 @@ merfolk javelineer
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
 %%%%
-mermaid
+siren
 
-A young merfolk woman who has become an acolyte of the sunken god. As a
-consequence of her worship, she has begun the transformation into an avatar of
-the mystery and danger of the sea's depths. Her voice can instill the same
-single-minded fascination that grabs hold of sailors on a long voyage.
-
-Why only female merfolk are called to become avatars of the sunken god is a
-mystery understood only by the avatars themselves.
+A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 minotaur
 
@@ -2160,15 +2154,10 @@ simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
-siren
+merfolk avatar
 
-Once a merfolk woman, she has become an avatar of the sunken god. Her voice can
-instill the same single-minded fascination that grabs hold of sailors on a long
-voyage. Her song also can call up the souls of others who have drowned in her
-waters in order to bring you the same watery bliss.
-
-Why only female merfolk are called to become avatars of the sunken god is a
-mystery understood only by the avatars themselves.
+A beguiling merfolk whose voice mesmerizes listeners. It carries no weapon,
+but its song summons drowned souls to defend the sea against intruders.
 %%%%
 sixfirhy
 
@@ -2906,12 +2895,10 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
-malarious mermaid
+malarious siren
 
-Like other mermaids, this young merfolk woman who has become an acolyte of the
-sunken god, and is undergoing a transformation into an avatar. She looks deeply
-ill, but her voice still has the power to instill a powerful fascination in her
-victims.
+This young merfolk looks deeply ill, but its voice still has the power to
+mesmerize its victims.
 %%%%
 master elementalist
 
@@ -3007,8 +2994,8 @@ This bat is well past its sell-by date.
 %%%%
 sickly siren
 
-A young woman with a fish tail in place of legs. She looks quite sick, but
-still capable of bespelling her audience.
+This young merfolk looks quite sick, but still capable of bespelling its
+audience.
 %%%%
 skeletal archer
 

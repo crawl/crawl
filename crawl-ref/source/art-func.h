@@ -659,10 +659,10 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 {
     if (you.beheld())
     {
-        // This shouldn't clear mermaids and sirens, but we lack the information
-        // why they behold us -- usually, it's due to the axe.  Since unwielding
-        // it costs scrolls of rem curse, we might say getting the demon away is
-        // enough of a shock to get you back to senses.
+        // This shouldn't clear sirens and merfolk avatars, but we lack the
+        // information why they behold us -- usually, it's due to the axe.
+        // Since unwielding it costs scrolls of rem curse, we might say getting
+        // the demon away is enough of a shock to get you back to senses.
         you.clear_beholders();
         mpr("Your thirst for blood fades away.");
     }

@@ -5195,6 +5195,12 @@ void unmarshallMonster(reader &th, monster& m)
     if (m.props.exists("iood_mid"))
         m.summoner = m.props["iood_mid"].get_int(), m.props.erase("iood_mid");
 
+    if (m.props.exists("siren_call"))
+    {
+        m.props["merfolk_avatar_call"] = m.props["siren_call"].get_bool();
+        m.props.erase("siren_call");
+    }
+
     if (m.type == MONS_ZOMBIE_SMALL || m.type == MONS_ZOMBIE_LARGE)
         m.type = MONS_ZOMBIE;
     if (m.type == MONS_SKELETON_SMALL || m.type == MONS_SKELETON_LARGE)

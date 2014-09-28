@@ -1075,7 +1075,7 @@ ENDMAP
 
 NAME:  evilmike_abyss_rune_siren
 TAGS:  abyss_rune unrand patrolling
-MONS:  generate_awake siren, blink frog
+MONS:  generate_awake merfolk avatar, blink frog
 KMONS: O = starcursed mass
 KITEM: O = abyssal rune of Zot
 SUBST: X = c., c = ccv, N : n.

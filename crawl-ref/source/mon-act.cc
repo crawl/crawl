@@ -3350,7 +3350,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
     }
 
-    if (mons->type == MONS_SIREN)
+    if (mons->type == MONS_MERFOLK_AVATAR)
     {
         // Don't voluntarily break LoS with a player we're mesmerising
         if (you.beheld_by(mons) && !you.see_cell(targ))

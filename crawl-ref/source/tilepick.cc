@@ -1233,16 +1233,16 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
             return TILEP_MONS_MERFOLK_JAVELINEER_WATER;
         else
             return TILEP_MONS_MERFOLK_JAVELINEER;
-    case MONS_MERMAID:
-        if (in_water)
-            return TILEP_MONS_MERMAID_WATER;
-        else
-            return TILEP_MONS_MERMAID;
     case MONS_SIREN:
         if (in_water)
             return TILEP_MONS_SIREN_WATER;
         else
             return TILEP_MONS_SIREN;
+    case MONS_MERFOLK_AVATAR:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_AVATAR_WATER;
+        else
+            return TILEP_MONS_MERFOLK_AVATAR;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
     case MONS_WATER_NYMPH:
@@ -3602,10 +3602,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // merfolk ('m')
     case MONS_MERFOLK:
         return TILE_CORPSE_MERFOLK;
-    case MONS_MERMAID:
-        return TILE_CORPSE_MERMAID;
     case MONS_SIREN:
         return TILE_CORPSE_SIREN;
+    case MONS_MERFOLK_AVATAR:
+        return TILE_CORPSE_MERFOLK_AVATAR;
     case MONS_DRYAD:
         return TILE_CORPSE_DRYAD;
     case MONS_WATER_NYMPH:

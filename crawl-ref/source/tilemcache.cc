@@ -435,8 +435,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_FIGHTER:
     case TILEP_MONS_UNBORN:
     case TILEP_MONS_JORGRUN:
-    case TILEP_MONS_MERMAID:
     case TILEP_MONS_SIREN:
+    case TILEP_MONS_MERFOLK_AVATAR:
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_DIMME:
     case TILEP_MONS_HALFLING:
@@ -736,8 +736,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 3;
         *ofs_y = 2;
         break;
-    case TILEP_MONS_MERMAID_WATER:
     case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_AVATAR_WATER:
         *ofs_x = 5;
         *ofs_y = 2;
         break;
@@ -764,10 +764,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_ORC_KNIGHT:
     case TILEP_MONS_KIRKE:
-    case TILEP_MONS_MERMAID:
-    case TILEP_MONS_MERMAID_WATER:
     case TILEP_MONS_SIREN:
     case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_AVATAR:
+    case TILEP_MONS_MERFOLK_AVATAR_WATER:
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_DIMME:

@@ -175,8 +175,8 @@ mon/spriggan/spriggan CORPSE_SPRIGGAN
 
 ## Merfolk ('m')
 merfolk_water CORPSE_MERFOLK
-mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
+merfolk_avatar_water CORPSE_MERFOLK_AVATAR
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
 

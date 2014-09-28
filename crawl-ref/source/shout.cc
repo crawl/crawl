@@ -485,7 +485,7 @@ void apply_noises()
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
            const char *msg, int who,
-           bool mermaid, bool message_if_unseen, bool fake_noise)
+           bool siren, bool message_if_unseen, bool fake_noise)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -522,7 +522,7 @@ bool noisy(int original_loudness, const coord_def& where,
                 noise_msg,
                 (scaled_loudness + 1) * 1000,
                 who,
-                0 | (mermaid ? NF_MERMAID : 0)
+                0 | (siren ? NF_SIREN : 0)
                 | (message_if_unseen ? NF_MESSAGE_IF_UNSEEN : 0)));
 
     // Some users of noisy() want an immediate answer to whether the
@@ -544,9 +544,9 @@ bool noisy(int original_loudness, const coord_def& where,
 }
 
 bool noisy(int loudness, const coord_def& where, int who,
-           bool mermaid, bool message_if_unseen)
+           bool siren, bool message_if_unseen)
 {
-    return noisy(loudness, where, NULL, who, mermaid, message_if_unseen);
+    return noisy(loudness, where, NULL, who, siren, message_if_unseen);
 }
 
 // This fakes noise even through silence.
@@ -1074,7 +1074,7 @@ static void _actor_apply_noise(actor *act,
     {
         const int loudness = div_rand_round(noise_intensity_millis, 1000);
         act->check_awaken(loudness);
-        if (!(noise.noise_flags & NF_MERMAID))
+        if (!(noise.noise_flags & NF_SIREN))
         {
             you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
             you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
@@ -1087,11 +1087,11 @@ static void _actor_apply_noise(actor *act,
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)
             behaviour_event(mons, ME_ALERT, &you, apparent_source);
-        else if ((noise.noise_flags & NF_MERMAID)
+        else if ((noise.noise_flags & NF_SIREN)
                  && mons_secondary_habitat(mons) == HT_WATER
                  && !mons->friendly())
         {
-            // Mermaids/sirens call (hostile) aquatic monsters.
+            // Sirens/merfolk avatar call (hostile) aquatic monsters.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else

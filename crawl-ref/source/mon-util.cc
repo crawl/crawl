@@ -792,7 +792,7 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_SHOALS:
         return mons_species(mons->type) == MONS_CYCLOPS
                || mons_species(mons->type) == MONS_MERFOLK
-               || mons_genus(mons->type) == MONS_MERMAID
+               || mons_genus(mons->type) == MONS_SIREN
                || mons->type == MONS_HARPY;
 
     case BRANCH_SLIME:
@@ -3382,7 +3382,7 @@ bool mons_has_los_ability(monster_type mon_type)
     }
 
     // Beholding just needs LOS.
-    if (mons_genus(mon_type) == MONS_MERMAID)
+    if (mons_genus(mon_type) == MONS_SIREN)
         return true;
 
     return false;
@@ -3594,8 +3594,7 @@ static gender_type _mons_class_gender(monster_type mc)
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_genus(mc) == MONS_MERMAID
-        || mc == MONS_QUEEN_ANT
+    if (mc == MONS_QUEEN_ANT
         || mc == MONS_QUEEN_BEE
         || mc == MONS_HARPY
         || mc == MONS_SPHINX
@@ -4849,7 +4848,7 @@ int count_allies()
 bool mons_stores_tracking_data(const monster* mons)
 {
     return mons->type == MONS_THORN_HUNTER
-           || mons->type == MONS_SIREN;
+           || mons->type == MONS_MERFOLK_AVATAR;
 }
 
 bool mons_is_beast(monster_type mc)

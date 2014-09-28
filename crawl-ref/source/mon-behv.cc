@@ -169,8 +169,8 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
                 // Get to firing range even if we are close.
                 _set_firing_pos(mon, you.pos());
             }
-        else if (mon->type == MONS_SIREN && !ignore_special_firing_AI)
-            find_siren_water_target(mon);
+        else if (mon->type == MONS_MERFOLK_AVATAR && !ignore_special_firing_AI)
+            find_merfolk_avatar_water_target(mon);
         else if (!mon->firing_pos.zero()
                  && mon->see_cell_no_trans(mon->target))
         {
@@ -628,7 +628,7 @@ void handle_behaviour(monster* mon)
                     }
                 }
 
-                if (mon->travel_target == MTRAV_SIREN)
+                if (mon->travel_target == MTRAV_MERFOLK_AVATAR)
                     mon->travel_target = MTRAV_NONE;
 
                 // Spectral weapons simply seek back to their owner if

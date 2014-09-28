@@ -29,7 +29,7 @@ static inline int noise_is_audible(int noise_intensity_millis)
 enum noise_flag_type
 {
     NF_NONE    = 0,
-    NF_MERMAID = 0x1,
+    NF_SIREN   = 0x1,
     NF_MESSAGE_IF_UNSEEN = 0x2,
 };
 

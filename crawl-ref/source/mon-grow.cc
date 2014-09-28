@@ -64,7 +64,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 
     monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
-    monster_level_up(MONS_MERMAID, MONS_SIREN),
+    monster_level_up(MONS_SIREN, MONS_MERFOLK_AVATAR),
 
     // Spriggan -> rider is no good (no mount), -> defender would be an insane
     // power jump, -> druid or -> air mage would require magic training,
