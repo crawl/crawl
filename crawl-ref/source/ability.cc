@@ -1725,11 +1725,11 @@ static bool _check_ability_possible(const ability_def& abil,
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
         if (no_tele_reason.empty())
-            return false;
+            return true;
 
         if (!quiet)
              mpr(no_tele_reason.c_str());
-        return true;
+        return false;
     }
 
     case ABIL_EVOKE_BERSERK:
