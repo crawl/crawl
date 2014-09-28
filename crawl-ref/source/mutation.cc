@@ -1356,29 +1356,32 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
 }
 
 /**
-   Do a resistance check for the given mutation permanence class.
-   Does not include divine intervention!
-
-   @param mutclass The type of mutation that is checking resistance
-   @param beneficial Is the mutation beneficial?
-
-   @returns True if a mutation is successfully resisted, false otherwise.
+ * Do a resistance check for the given mutation permanence class.
+ * Does not include divine intervention!
+ *
+ * @param mutclass The type of mutation that is checking resistance
+ * @param beneficial Is the mutation beneficial?
+ *
+ * @return True if a mutation is successfully resisted, false otherwise.
 **/
 static bool _resist_mutation(mutation_permanence_class mutclass,
                              bool beneficial)
 {
-    const int item_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
-    const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 2 : 3;
-
-    // To be nice, beneficial mutations go through removable sources of rMut.
-    if (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
+    if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
         return true;
-    if ((player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
-        || (player_mutation_level(MUT_MUTATION_RESISTANCE)
-            && !one_chance_in(mut_resist_chance)))
+
+    const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 2 : 3;
+    if (player_mutation_level(MUT_MUTATION_RESISTANCE)
+        && !one_chance_in(mut_resist_chance)))
     {
         return true;
     }
+
+    const int item_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
+    // To be nice, beneficial mutations go through removable sources of rMut.
+    if (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
+        return true;
+
     return false;
 }
 
