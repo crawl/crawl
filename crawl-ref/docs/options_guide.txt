@@ -2229,6 +2229,7 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         all do the same thing.
 
 mon_glyph = <monster name or symbol> : <colour> <glyph>
+            <monster name or symbol> : <monster name>
         The mon_glyph option allows you to customise the symbol and
         colour used to display a monster.
 
@@ -2248,6 +2249,13 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              mon_glyph = small simulacrum : x
 
         (The left hand side of the : is case-sensitive.)
+
+        You can also specify another monster, so that it copies the base
+        symbol and colour of that monster (this is not transitive). For
+        example, if you think that slime creature colours are backwards:
+
+            mon_glyph = slime creature : merged slime creature
+            mon_glyph = merged slime creature : slime creature
 
         You can specify symbols using their code points using the syntax
         as shown in the "feature" option. If you're using

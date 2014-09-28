@@ -1237,29 +1237,26 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
     }
 }
 
-void game_options::add_mon_glyph_overrides(const string &mons,
-                                           cglyph_t &mdisp)
+static monster_type _mons_class_by_string(const string &name)
 {
     // If one character, this is a monster letter.
-    int letter = -1;
-    if (mons.length() == 1)
-        letter = mons[0] == '_' ? ' ' : mons[0];
+    ucs_t letter = -1;
+    if (name.length() == 1)
+        letter = name[0];
 
-    bool found = false;
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if (me->basechar == letter || me->name == mons)
+        if ((ucs_t) me->basechar == letter
+              || lowercase_string(me->name) == lowercase_string(name))
         {
-            found = true;
-            mon_glyph_overrides[i] = mdisp;
+            return i;
         }
     }
-    if (!found)
-        report_error("Unknown monster: \"%s\"", mons.c_str());
+    return MONS_0;
 }
 
 cglyph_t game_options::parse_mon_glyph(const string &s) const
@@ -1285,9 +1282,25 @@ void game_options::add_mon_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    const monster_type m = _mons_class_by_string(override[0]);
+    if (m == MONS_0)
+        report_error("Unknown monster: \"%s\"", text.c_str());
+
+    cglyph_t mdisp;
+
+    // Look for monsters first so that "blue devil" works right.
+    const monster_type n = _mons_class_by_string(override[1]);
+    if (n != MONS_0)
+    {
+        const monsterentry *me = get_monster_data(n);
+        mdisp.ch = me->basechar;
+        mdisp.col = me->colour;
+    }
+    else
+        mdisp = parse_mon_glyph(override[1]);
+
     if (mdisp.ch || mdisp.col)
-        add_mon_glyph_overrides(override[0], mdisp);
+        mon_glyph_overrides[m] = mdisp;
 }
 
 void game_options::add_item_glyph_override(const string &text)
