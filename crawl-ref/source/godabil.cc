@@ -5227,16 +5227,7 @@ static int _get_sacrifice_piety(ability_type sacrifice)
                 piety_gain += 20;
             else if (you.species == SP_OCTOPODE
                     || you.species == SP_FELID
-                    || you.species == SP_RED_DRACONIAN
-                    || you.species == SP_WHITE_DRACONIAN
-                    || you.species == SP_GREEN_DRACONIAN
-                    || you.species == SP_YELLOW_DRACONIAN
-                    || you.species == SP_GREY_DRACONIAN
-                    || you.species == SP_BLACK_DRACONIAN
-                    || you.species == SP_PURPLE_DRACONIAN
-                    || you.species == SP_MOTTLED_DRACONIAN
-                    || you.species == SP_PALE_DRACONIAN
-                    || you.species == SP_BASE_DRACONIAN)
+                    || player_genus(GENPC_DRACONIAN))
             {
                 piety_gain += 28; // this sacrifice is worse for these races
             }
