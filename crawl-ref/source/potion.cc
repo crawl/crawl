@@ -310,22 +310,18 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_INVISIBILITY:
-        if (you.haloed() || you.glows_naturally())
+        if (you.backlit() || you.haloed())
         {
-            if (potion && was_known)
+            // XXX: merge with item_use.cc:_dont_use_invis()
+            if (potion && was_known && get_contamination_level() > 1)
             {
                 mpr("You cannot become invisible while glowing.");
                 return false;
             }
 
-            // You can't turn invisible while haloed or glowing
-            // naturally, but identify the effect anyway.
-            mpr("You briefly turn translucent.");
-            break;
-        }
-        else if (you.backlit())
-        {
             vector<string> afflictions;
+            if (you.haloed())
+                afflictions.push_back("halo");
             if (get_contamination_level() > 1)
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
@@ -336,10 +332,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
 
             mprf(MSGCH_DURATION,
-                 "You become %stransparent, but the glow from your "
+                 "You become %stransparent, but the glow from %s "
                  "%s prevents you from becoming "
                  "completely invisible.",
                  you.duration[DUR_INVIS] ? "more " : "",
+                 you.haloed() && you.halo_radius2() == -1 ? "the" : "your",
                  comma_separated_line(afflictions.begin(), afflictions.end()).c_str());
         }
         else
