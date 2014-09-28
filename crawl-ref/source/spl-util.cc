@@ -1141,7 +1141,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.duration[DUR_CONF] > 0)
             return "You're too confused!";
         if (!enough_mp(spell_mana(spell), true, false))
-            return "You don't have enough mp!";
+            return "You don't have enough magic!";
         if (!prevent && spell_no_hostile_in_range(spell))
             return "You can't see any valid targets!";
     }
