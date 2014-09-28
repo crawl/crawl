@@ -116,6 +116,8 @@ LUARET1(you_skill_progress, number,
 LUARET1(you_can_train_skill, boolean,
         lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
                             : false)
+LUARET1(you_best_skill, string,
+        skill_name(best_skill(SK_FIRST_SKILL, SK_LAST_SKILL)))
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -519,7 +521,8 @@ static const struct luaL_reg you_clib[] =
     { "base_skill"  , you_base_skill },
     { "skill_progress", you_skill_progress },
     { "can_train_skill", you_can_train_skill },
-    { "train_skill", you_train_skill },
+    { "best_skill",   you_best_skill },
+    { "train_skill",  you_train_skill },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
