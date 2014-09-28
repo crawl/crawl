@@ -283,7 +283,6 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
-    const int wizardry = player_wizardry();
     int fail_reduce = 100;
 
     if (in_good_standing(GOD_VEHUMET, 2) && vehumet_supports_spell(spell))
@@ -292,6 +291,8 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         // back to 67%.
         fail_reduce = fail_reduce * 2 / 3;
     }
+
+    const int wizardry = player_wizardry(spell);
 
     if (wizardry > 0)
       fail_reduce = fail_reduce * 6 / (7 + wizardry);

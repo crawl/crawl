@@ -2533,10 +2533,19 @@ int player_armour_shield_spell_penalty()
     return max(total_penalty, 0) / scale;
 }
 
-int player_wizardry()
+/**
+ * How many spell-success-chance-boosting ('wizardry') effects can the player
+ * apply to the given spell?
+ *
+ * @param spell     The type of spell being cast.
+ * @return          The number of relevant wizardry effects.
+ */
+int player_wizardry(spell_type spell)
 {
-    return you.wearing(EQ_RINGS, RING_WIZARDRY)
-           + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
+    const int item_wiz = you.wearing(EQ_RINGS, RING_WIZARDRY)
+                          + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
+    const int form_wiz = you.form == TRAN_DRAGON && spell == SPELL_DRAGON_CALL;
+    return item_wiz + form_wiz;
 }
 
 /**
