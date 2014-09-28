@@ -3107,7 +3107,11 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                      new_exp);
             }
 
-            if (!(new_exp % 3) && !skip_attribute_increase)
+            const bool manual_stat_level = you.species == SP_DEMIGOD ?
+                                            new_exp % 3 != 1 : // 2,3,5,6...
+                                            new_exp % 3 == 0;  // 3,6,9,12...
+
+            if (manual_stat_level && !skip_attribute_increase)
                 if (!attribute_increase())
                     return; // abort level gain, the xp is still there
 
@@ -3341,8 +3345,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_DEMIGOD:
-                if (!(you.experience_level % 2) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_SPRIGGAN:
