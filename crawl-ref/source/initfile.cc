@@ -1909,24 +1909,15 @@ void game_options::set_player_tile(const string &field)
     }
 
     // Handle mons:<monster-name> values
-    bool found = false;
-    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+    const monster_type m = _mons_class_by_string(fields[1]);
+    if (m == MONS_0)
+        report_error("Unknown monster: \"%s\"", fields[1].c_str());
+    else
     {
-        const monsterentry *me = get_monster_data(i);
-        if (!me || me->mc == MONS_PROGRAM_BUG)
-            continue;
-
-        if (( lowercase_string(me->name) == fields[1]))
-        {
-            found = true;
-            tile_use_monster = i;
-            tile_player_tile = 0;
-            break;
-        }
+        tile_use_monster = m;
+        tile_player_tile = 0;
     }
 
-    if (!found)
-        report_error("Unknown monster: \"%s\"", fields[1].c_str());
     return;
 }
 #endif // USE_TILE
