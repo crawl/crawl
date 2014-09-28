@@ -604,7 +604,7 @@ static string _describe_branch_bribability()
         line += "Susceptibility: ";
         const int suscept = gozag_branch_bribe_susceptibility(targets[i]);
         ASSERT(suscept >= 0
-               && suscept < ARRAYSZ(bribe_susceptibility_adjectives));
+               && suscept < (int)ARRAYSZ(bribe_susceptibility_adjectives));
         line += bribe_susceptibility_adjectives[suscept];
 
         if (!branch_bribe[targets[i]])
@@ -679,7 +679,7 @@ static string _comma_separate_gods(const vector<god_type> &gods)
         return god_name(gods[0]) + " and " + god_name(gods[1]);
 
     string names = "";
-    for (int i = 0; i < gods.size() - 1; i++)
+    for (unsigned int i = 0; i < gods.size() - 1; i++)
         names += god_name(gods[i]) + ", ";
     if (gods.size() > 1)
         names += "and ";
