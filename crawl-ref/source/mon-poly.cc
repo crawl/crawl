@@ -229,7 +229,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // player into a different type which can also behold the player,
     // the polymorph disrupts the beholding process.  Do this before
     // changing mons->type, since unbeholding can only happen while
-    // the monster is still a mermaid/siren.
+    // the monster is still a siren/merfolk avatar.
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 

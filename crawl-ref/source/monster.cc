@@ -2709,7 +2709,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
         if (type == MONS_MINOTAUR)
             str = "hoof";
         else if (swimming()
-                 && (type == MONS_MERFOLK || mons_genus(type) == MONS_MERMAID))
+                 && (type == MONS_MERFOLK || mons_genus(type) == MONS_SIREN))
         {
             str         = "tail";
             *can_plural = false;

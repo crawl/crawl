@@ -868,7 +868,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             break;
         }
 
-    case MONS_MERMAID:
+    case MONS_SIREN:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         break;

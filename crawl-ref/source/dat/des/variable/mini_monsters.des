@@ -1380,7 +1380,7 @@ NAME:   mikee_hates_you
 TAGS:   no_monster_gen
 DEPTH:  Depths
 KPROP:  l = no_cloud_gen
-KMONS:  1 = generate_awake siren
+KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
                                              trident ego:draining . robe
 KITEM:  1 = acquire any

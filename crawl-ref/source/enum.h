@@ -1839,7 +1839,7 @@ enum enchant_type
     ENCH_IOOD_CHARGED,
     ENCH_FIRE_VULN,
     ENCH_TORNADO_COOLDOWN,
-    ENCH_SIREN_SONG,
+    ENCH_MERFOLK_AVATAR_SONG,
     ENCH_BARBS,
 #if TAG_MAJOR_VERSION == 34
     ENCH_BUILDING_CHARGE,
@@ -2666,8 +2666,8 @@ enum monster_type                      // menv[].type
     MONS_OCTOPODE_CRUSHER,
 #endif
     MONS_MERFOLK,
-    MONS_MERMAID,
     MONS_SIREN,
+    MONS_MERFOLK_AVATAR,
 #if TAG_MAJOR_VERSION > 34
     MONS_DROWNED_SOUL,
 #endif
@@ -4411,7 +4411,7 @@ enum montravel_target_type
     MTRAV_NONE = 0,
     MTRAV_FOE,         // Travelling to reach its foe.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
-    MTRAV_SIREN,       // Sirens travelling towards deep water.
+    MTRAV_MERFOLK_AVATAR, // Merfolk avatars travelling towards deep water.
     MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
     MTRAV_KNOWN_UNREACHABLE, // As above, and the player knows this.
 };

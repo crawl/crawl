@@ -10,9 +10,9 @@ function callback.grunt_lady_of_the_lake_trigger(data, triggerable, triggerer,
     return
   end
 
-  local b = dgn.find_marker_positions_by_prop("siren_spawn", 1)[1]
+  local b = dgn.find_marker_positions_by_prop("merfolk_avatar_spawn", 1)[1]
 
-  if dgn.create_monster(b.x, b.y, "generate_awake siren") then
+  if dgn.create_monster(b.x, b.y, "generate_awake merfolk avatar") then
 
     data.triggered = true
     if you.see_cell(b.x, b.y) then
@@ -1263,7 +1263,7 @@ KPROP: wK = no_rtele_into
   cf:add_triggerer(DgnTriggerer:new{type="player_move"})
   lua_marker("O", cf)
   lua_marker(":", cf)
-  lua_marker("K", props_marker { siren_spawn = 1 })
+  lua_marker("K", props_marker { merfolk_avatar_spawn = 1 })
 }}
 MAP
     wwwww

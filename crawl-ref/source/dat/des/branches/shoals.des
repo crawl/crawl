@@ -55,7 +55,7 @@ ENDMAP
 NAME:   minmay_shoals_entry_lonely_mermaid
 TAGS:   shoals_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = mermaid
+KMONS:  1 = siren
 KFEAT:  1 = w
 SUBST:  Y = W.
 SUBST:  y = Ww
@@ -143,7 +143,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: Z = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / mermaid
+KMONS:  1 = merfolk / siren
 MAP
 ..xxx
 xZ..x
@@ -165,7 +165,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / mermaid / nothing w:40
+KMONS:  1 = merfolk / siren / nothing w:40
 validate {{ return has_exit_from_glyph('O') }}
 MAP
 @...xxxxxxx....
@@ -358,10 +358,10 @@ DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance | buckler | nothing w:30
-KMONS:   3 = mermaid ; trident ego:flaming | spear ego:flaming . \
+KMONS:   3 = siren ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance w:20 | buckler | nothing w:70
-KMONS:   4 = siren
+KMONS:   4 = merfolk avatar
 KMONS:   67 = fire bat
 KMONS:   8 = fire crab
 KITEM:   67 = % w:15 / *
@@ -454,7 +454,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = mermaid / siren
+KMONS:   5 = siren / merfolk avatar
 KFEAT:   12345 = deep_water
 SHUFFLE: 1235
 NSUBST:  V = 1:w / *:x
@@ -484,7 +484,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = mermaid / siren
+KMONS:   5 = siren / merfolk avatar
 KMONS:   6 = cyclops
 KMONS:   7 = stone giant
 KMONS:   8 = frost giant
@@ -620,7 +620,7 @@ NAME:    hangedman_shoals_cup_caves
 TAGS:    water_ok
 DEPTH:   Shoals
 MONS:    cyclops / stone giant w:2
-MONS:    mermaid, harpy, snapping turtle, centaur / centaur warrior, sea snake
+MONS:    siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
 SHUFFLE: 234560, ABC
 SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1, % = %:8 *:1 .:1
 MAP
@@ -723,7 +723,7 @@ KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1
-KMONS: s = siren
+KMONS: s = merfolk avatar
 KFEAT: sf = w
 MAP
   www
@@ -758,7 +758,7 @@ NSUBST: { = 1:{ / *:.
 SUBST: b = .wW, r = ..Wxx
 KPROP: wW.{x1 = no_tide
 SHUFFLE: {([
-KMONS: 1 = merfolk / merfolk impaler w:5 / mermaid w:5 / nothing w:20
+KMONS: 1 = merfolk / merfolk impaler w:5 / siren w:5 / nothing w:20
 KFEAT: : = . / W
 KFEAT: y = w
 MAP
@@ -803,7 +803,7 @@ SUBST: . = ....W, w = wWW..., q = w, x = xxxc
 KFEAT: 123 = . w:40 / W
 KMONS: 1 = merfolk / nothing w:5
 KMONS: 2 = merfolk / merfolk aquamancer / merfolk javelineer / merfolk impaler / nothing w:45
-KMONS: 3 = mermaid / siren w:5 / nothing w:5
+KMONS: 3 = siren / merfolk avatar w:5 / nothing w:5
 MAP
      .......
    ...xxxxx...
@@ -1087,7 +1087,7 @@ ENDMAP
 # The hut itself may not contain Ilsuiw if she had other engagements.
 NAME:    shoal_ilsuiw
 TAGS:    shoal_guardian
-KMONS:   1 = Ilsuiw, siren
+KMONS:   1 = Ilsuiw, merfolk avatar
 KMONS:   2 = merfolk impaler / merfolk javelineer
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
 KMONS:   A = Ilsuiw band
@@ -1111,7 +1111,7 @@ NAME:    shoals_rune_alternative
 TAGS:    shoal_rune_hangedman water_ok allow_dup transparent no_dump
 KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
 KMONS:   3 = kraken / harpy band w:5
-KMONS:   d = siren / water nymph w:5
+KMONS:   d = merfolk avatar / water nymph w:5
 KITEM:   d = barnacled rune of zot
 KFEAT:   123 = w
 KPROP:   d = no_tide
@@ -1159,7 +1159,7 @@ ENDMAP
 NAME:    shoals_ilsuiw_alternative
 TAGS:    shoal_guardian water_ok
 WEIGHT:  8
-KMONS:   1 = Ilsuiw, siren
+KMONS:   1 = Ilsuiw, merfolk avatar
 KMONS:   2 = merfolk impaler / merfolk javelineer
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
 KMONS:   4 = Ilsuiw band

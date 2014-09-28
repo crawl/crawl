@@ -38,7 +38,7 @@ function base_monster_setup(e)
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
-           merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
+           merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
@@ -57,7 +57,7 @@ function base_monster_setup(e)
            wind drake / deep elf priest band w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
-           siren / alligator snapping turtle / anaconda / greater naga /\
+           merfolk avatar / alligator snapping turtle / anaconda / greater naga /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\

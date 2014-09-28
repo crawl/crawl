@@ -3333,7 +3333,7 @@ static void _move_player(coord_def move)
                                      || is_sanctuary(you.pos())
                                         && is_sanctuary(targ));
 
-    // You cannot move away from a mermaid but you CAN fight monsters on
+    // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
     monster* beholder = NULL;
     if (!you.confused())

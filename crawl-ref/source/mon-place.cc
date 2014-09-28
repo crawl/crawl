@@ -3178,7 +3178,7 @@ static monster_type _band_member(band_type band, int which)
         return random_draconian_monster_species();
 
     case BAND_ILSUIW:
-        return random_choose_weighted(30, MONS_MERMAID,
+        return random_choose_weighted(30, MONS_SIREN,
                                       15, MONS_MERFOLK,
                                       10, MONS_MERFOLK_JAVELINEER,
                                       10, MONS_MERFOLK_IMPALER,
@@ -3270,7 +3270,7 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_FAUN_PARTY:
         if (which == 1)
-            return MONS_MERMAID;
+            return MONS_SIREN;
         else
             return MONS_FAUN;
 

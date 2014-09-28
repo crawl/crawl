@@ -900,8 +900,8 @@ TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
 MONS:   rat w:4 / nothing w:1, rat / green rat w:5
-KMONS:  G = mermaid hd:3 name:malarious name_adjective name_species
-KMONS:  H = siren hd:3 name:sickly name_adjective name_species
+KMONS:  G = siren hd:3 name:malarious name_adjective name_species
+KMONS:  H = merfolk avatar hd:3 name:sickly name_adjective name_species
 KMONS:  hJ = giant newt / ball python / adder / nothing w:2
 KMONS:  g = giant newt / ball python / giant mite / giant cockroach / \
             giant gecko / nothing w:7
