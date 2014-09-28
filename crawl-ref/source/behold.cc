@@ -17,17 +17,12 @@
 #include "state.h"
 #include "areas.h"
 
-static bool _siren_beholder(const monster* mons)
-{
-    return mons_genus(mons->type) == MONS_SIREN;
-}
-
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster* mon, bool axe)
 {
     if (is_sanctuary(pos()) && !axe)
     {
-        if (_siren_beholder(mon))
+        if (mons_is_siren_beholder(mon))
         {
             if (can_see(mon))
             {
@@ -142,7 +137,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
 static void _removed_beholder_msg(const monster* mon)
 {
-    if (!mon->alive() || mons_genus(mon->type) != MONS_SIREN
+    if (!mon->alive() || !mons_is_siren_beholder(mon)
         || mon->submerged() || !you.see_cell(mon->pos()))
     {
         return;
@@ -150,7 +145,7 @@ static void _removed_beholder_msg(const monster* mon)
 
     if (is_sanctuary(you.pos()) && !mons_is_fleeing(mon))
     {
-        if (_siren_beholder(mon))
+        if (mons_is_siren_beholder(mon))
         {
             if (you.can_see(mon))
             {
@@ -175,7 +170,7 @@ static void _removed_beholder_msg(const monster* mon)
     {
         if (silenced(you.pos()) || silenced(mon->pos()))
         {
-            if (_siren_beholder(mon))
+            if (mons_is_siren_beholder(mon))
             {
                 mprf("You can no longer hear %s's singing!",
                      mon->name(DESC_THE).c_str());
@@ -185,7 +180,7 @@ static void _removed_beholder_msg(const monster* mon)
             return;
         }
 
-        if (_siren_beholder(mon))
+        if (mons_is_siren_beholder(mon))
             mprf("%s stops singing.", mon->name(DESC_THE).c_str());
         else
             mprf("%s is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
@@ -193,7 +188,7 @@ static void _removed_beholder_msg(const monster* mon)
         return;
     }
 
-    if (_siren_beholder(mon))
+    if (mons_is_siren_beholder(mon))
         mpr("Something stops singing.");
     else
         mpr("Your mesmeriser is now quite boring!");
@@ -269,7 +264,7 @@ bool player::possible_beholder(const monster* mon) const
     return mon->alive() && !mon->submerged()
         && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
         && !mon->wont_attack() && !mon->pacified()
-        && ((mons_genus(mon->type) == MONS_SIREN
+        && ((mons_is_siren_beholder(mon->type)
              || mon->has_spell(SPELL_MESMERISE))
             && !silenced(pos()) && !silenced(mon->pos())
             && !mon->has_ench(ENCH_MUTE)
