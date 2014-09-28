@@ -1041,7 +1041,7 @@ static bool _lamp_of_fire()
     dist target;
 
     const int pow = 8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4);
-    if (spell_direction(target, base_beam, DIR_TARGET, TARG_ANY, 8,
+    if (spell_direction(target, base_beam, DIR_TARGET, TARG_HOSTILE, 8,
                         true, true, false, NULL,
                         "Aim the lamp in which direction?", true, NULL))
     {
