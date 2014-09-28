@@ -525,7 +525,6 @@ private:
 
     void split_parse(const string &s, const string &separator,
                      void (game_options::*add)(const string &));
-    void add_mon_glyph_overrides(const string &mons, cglyph_t &mdisp);
     void add_mon_glyph_override(const string &);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &);
