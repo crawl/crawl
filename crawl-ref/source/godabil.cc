@@ -5216,7 +5216,10 @@ static int _get_sacrifice_piety(ability_type sacrifice)
             return 20 + _piety_for_skill(SK_STEALTH);
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            return 60 + _piety_for_skill(SK_EVOCATIONS);
+            piety_gain = 60 + _piety_for_skill(SK_EVOCATIONS);
+            if (player_mutation_level(MUT_NO_LOVE))
+                piety_gain -= 10; // You've already lost some value here
+            return piety_gain;
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
             piety_gain = 20 + _piety_for_skill(SK_DODGING);
@@ -5249,10 +5252,18 @@ static int _get_sacrifice_piety(ability_type sacrifice)
             return 25;
             break;
         case ABIL_RU_SACRIFICE_LOVE:
-            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
-                return 3;
+            else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                && player_mutation_level(MUT_NO_ARTIFICE))
+            {
+                return 1; // this is virtually useless, aside from zot_tub
+            }
+            else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                || player_mutation_level(MUT_NO_ARTIFICE))
+            {
+                return 10;
+            }
             else
-                return 20 + _piety_for_skill(SK_SUMMONINGS);
+                return 20;
             break;
         case ABIL_RU_SACRIFICE_ARCANA:
             piety_gain = 25;
