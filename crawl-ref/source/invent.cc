@@ -1743,7 +1743,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRISM
             && you.undead_state() == US_ALIVE && !crawl_state.game_is_zotdef()
-            && !you_foodless())
+            && !you_foodless()
+            && you.hunger_state >= HS_FULL)
         {
             return true;
         }
