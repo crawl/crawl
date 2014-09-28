@@ -726,7 +726,11 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " or chaotic gods will be scourged. (" +
                    _comma_separate_gods(evil_gods) + " are evil, and " +
                    _comma_separate_gods(chaotic_gods) + " are chaotic.)";
-        // XXX: handle Ru here
+        case GOD_RU:
+            return uppercase_first(god_name(which_god)) +
+                   " does not punish followers who leave "+god_name(which_god)+
+                   "'s service; however, their piety will be lost even upon"
+                   " rejoining, and their sacrifices remain forever.";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"
