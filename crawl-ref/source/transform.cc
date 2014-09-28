@@ -617,7 +617,7 @@ public:
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
            true, 0,                 // can_cast, spellcasting penalty
            10, 12, SPWPN_FREEZING, WHITE,  // unarmed acc bonus, damage, brand, & ui colour
-           "Ice fists",             // name of unarmed-combat "weapon" (in UI)
+           "",             // name of unarmed-combat "weapon" (in UI)
            DEFAULT_VERBS, // verbs used for uc
            FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
@@ -637,6 +637,15 @@ public:
         else
 #endif
             return "You warm up again.";
+    }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string default_name) const
+    {
+        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        return make_stringf("Ice fist%s", singular ? "" : "s");
     }
 };
 
