@@ -1056,7 +1056,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
             if (!do_resist)
             {
                 const coord_def oldpos = you.pos();
-                mpr("The pull of her song draws you forwards.");
+                mpr("The pull of its song draws you forwards.");
 
                 if (swapping)
                 {
@@ -3376,7 +3376,7 @@ static bool _siren_sing(monster* mons, msg_channel_type spl)
 
     if (you.can_see(mons))
     {
-        const char * const song_adj = already_mesmerised ? "her luring"
+        const char * const song_adj = already_mesmerised ? "its luring"
                                                          : "a haunting";
         const string song_desc = make_stringf(" chants %s song.", song_adj);
         simple_monster_message(mons, song_desc.c_str(), spl);
@@ -3388,7 +3388,7 @@ static bool _siren_sing(monster* mons, msg_channel_type spl)
                           coinflip()         ? "a haunting song"
                                              : "an eerie melody");
 
-        // If you're already mesmerised by an invisible siren, she
+        // If you're already mesmerised by an invisible siren, it
         // can still prolong the enchantment.
         if (!already_mesmerised)
             return true;
