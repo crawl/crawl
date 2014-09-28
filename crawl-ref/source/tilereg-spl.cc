@@ -231,7 +231,8 @@ void SpellRegion::update()
         desc.quantity = spell_mana(spell);
 
         string temp;
-        if (is_prevented_teleport(spell)
+        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK)
+             && you.no_tele(false, false, true)
             || spell_is_uncastable(spell, temp)
             || spell_mana(spell) > you.magic_points)
         {
