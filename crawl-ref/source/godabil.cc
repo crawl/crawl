@@ -5252,7 +5252,7 @@ static int _get_sacrifice_piety(ability_type sacrifice)
             return 25;
             break;
         case ABIL_RU_SACRIFICE_LOVE:
-            else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
                 && player_mutation_level(MUT_NO_ARTIFICE))
             {
                 return 1; // this is virtually useless, aside from zot_tub
