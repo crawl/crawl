@@ -6852,128 +6852,137 @@ int player_res_magic(bool calc_unid, bool temp)
     return rm;
 }
 
-bool player::no_tele_print_reason(bool calc_unid, bool permit_id, bool blinking, bool quiet) const
+/**
+ * Is the player prevented from teleporting? If so, why?
+ *
+ * @param calc_unid     Whether to identify unknown items that prevent tele
+ *                      (probably obsolete)
+ * @param blinking      Are you blinking or teleporting?
+ * @return              Why the player is prevented from teleporting, if they
+ *                      are; else, the empty string.
+ */
+string player::no_tele_reason(bool calc_unid, bool blinking) const
 {
     if (crawl_state.game_is_sprint() && !blinking)
-    {
-        if (!quiet)
-            mpr("Long-range teleportation is disallowed in Dungeon Sprint.");
-        return true;
-    }
+        return "Long-range teleportation is disallowed in Dungeon Sprint.";
 
-    if (you.species == SP_FORMICID)
-    {
-        if (!quiet)
-            mpr("You cannot teleport.");
-        return true;
-    }
+    if (species == SP_FORMICID)
+        return pluralise(::species_name(species)) + " cannot teleport.";
 
     vector<string> problems;
-    bool found_any = false;
 
     if (duration[DUR_DIMENSION_ANCHOR])
-    {
         problems.push_back("locked down by Dimension Anchor");
-        found_any = true;
-    }
 
     if (form == TRAN_TREE)
-    {
         problems.push_back("held in place by your roots");
-        found_any = true;
-    }
 
     if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
-    {
         problems.push_back("in the halo of the Orb");
-        found_any = true;
-    }
 
-    bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
+    const bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
     vector<item_def> notele_items;
     if (has_notele_item(calc_unid, &notele_items) || stasis_block)
     {
-        found_any = true;
-        if (!quiet) {
-            vector<string> worn_notele;
-            bool amulet_handled = false;
-            bool found_nonartefact = false;
-            bool found_stasis = false;
+        vector<string> worn_notele;
+        bool amulet_handled = false;
+        bool found_nonartefact = false;
+        bool found_stasis = false;
 
-            for (vector<item_def>::iterator it=notele_items.begin();
-                 it < notele_items.end(); ++it)
+        for (vector<item_def>::iterator it=notele_items.begin();
+             it < notele_items.end(); ++it)
+        {
+            if (it->base_type == OBJ_WEAPONS)
             {
-                if (it->base_type == OBJ_WEAPONS)
+                problems.push_back(make_stringf("wielding %s",
+                                                it->name(DESC_A).c_str()));
+            }
+            else
+                worn_notele.push_back(it->name(DESC_A).c_str());
+
+            if (it->base_type == OBJ_JEWELLERY && jewellery_is_amulet(*it))
+                amulet_handled = true;
+        }
+
+        if (wearing(EQ_AMULET, AMU_STASIS, calc_unid))
+        {
+            //We don't want to report amulet of stasis with -Tele twice...
+            if (!amulet_handled)
+            {
+                item_def *amulet = slot_item(EQ_AMULET);
+                if (!amulet)
                 {
-                    problems.push_back(make_stringf("wielding %s",
-                                       it->name(DESC_A).c_str()));
+                    die("wearing(EQ_AMULET,...) is true but"
+                        " slot_item(EQ_AMULET) is NULL");
                 }
-                else
-                    worn_notele.push_back(it->name(DESC_A).c_str());
+                worn_notele.push_back(amulet->name(DESC_A).c_str());
+                found_nonartefact = !is_artefact(*amulet);
+            }
+            //...but we also don't want to report "buggy stasis" from it.
+            found_stasis = true;
+        }
 
-                if (it->base_type == OBJ_JEWELLERY
-                    && it->sub_type >= AMU_FIRST_AMULET)
-                {
-                    amulet_handled = true;
-                }
-            }
+        if (worn_notele.size()>(problems.empty() ? 3 : 1))
+        {
+            problems.push_back(
+                make_stringf("wearing %s %s preventing teleportation",
+                             number_in_words(worn_notele.size()).c_str(),
+                             found_nonartefact ? "items": "artefacts"));
+        }
+        else if (!worn_notele.empty())
+        {
+            problems.push_back(
+                make_stringf("wearing %s",
+                             comma_separated_line(worn_notele.begin(),
+                                                  worn_notele.end()).c_str()));
+        }
 
-            if (wearing(EQ_AMULET, AMU_STASIS, calc_unid))
-            {
-                //We don't want to report amulet of stasis with -Tele twice...
-                if (!amulet_handled)
-                {
-                    item_def *amulet = slot_item(EQ_AMULET);
-                    if (!amulet)
-                    {
-                        die("wearing(EQ_AMULET,...) is true but"
-                            " slot_item(EQ_AMULET) is NULL");
-                    }
-                    worn_notele.push_back(amulet->name(DESC_A).c_str());
-                    found_nonartefact = !is_artefact(*amulet);
-                }
-                //...but we also don't want to report "buggy stasis" from it.
-                found_stasis = true;
-            }
-
-            if (worn_notele.size()>(problems.empty() ? 3 : 1))
-            {
-                problems.push_back(
-                    make_stringf("wearing %s %s preventing teleportation",
-                                 number_in_words(worn_notele.size()).c_str(),
-                                 found_nonartefact ? "items": "artefacts"));
-            }
-            else if (!worn_notele.empty())
-            {
-                problems.push_back(
-                    make_stringf("wearing %s",
-                                 comma_separated_line(worn_notele.begin(),
-                                 worn_notele.end()).c_str()));
-            }
-
-            if (stasis_block && !found_stasis)
-            {
-                // Formicids and AMU_STASIS are handled above, other sources
-                // of stasis will display this message:
-                problems.push_back("affected by a buggy stasis");
-            }
+        if (stasis_block && !found_stasis)
+        {
+            // Formicids and AMU_STASIS are handled above, other sources
+            // of stasis will display this message:
+            problems.push_back("affected by a buggy stasis");
         }
     }
 
-    if (found_any && !quiet) {
-        if (problems.empty())
-            problems.push_back("affected by something buggy");
+    if (problems.empty())
+        return ""; // no problem
 
-        mprf("You cannot teleport because you are %s.", comma_separated_line(
-             problems.begin(), problems.end()).c_str());
-    }
-
-    return found_any;
+    return make_stringf("You cannot teleport because you are %s.",
+                        comma_separated_line(problems.begin(),
+                                             problems.end()).c_str());
 }
 
-bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
+/**
+ * Is the player prevented from teleporting/blinking right now? If so,
+ * print why.
+ *
+ * @param calc_unid     Whether to identify unknown items that prevent tele
+ *                      (probably obsolete)
+ * @param blinking      Are you blinking or teleporting?
+ * @return              Whether the player is prevented from teleportation.
+ */
+bool player::no_tele_print_reason(bool calc_unid, bool, bool blinking) const
 {
-    return no_tele_print_reason(calc_unid, permit_id, blinking, true);
+    const string reason = no_tele_reason(calc_unid, blinking);
+    if (reason.empty())
+        return false;
+
+    mpr(reason.c_str());
+    return true;
+}
+
+/**
+ * Is the player prevented from teleporting/blinking right now?
+ *
+ * @param calc_unid     Whether to identify unknown items that prevent tele
+ *                      (probably obsolete)
+ * @param blinking      Are you blinking or teleporting?
+ * @return              Whether the player is prevented from teleportation.
+ */
+bool player::no_tele(bool calc_unid, bool, bool blinking) const
+{
+    return no_tele_reason(calc_unid, blinking) != "";
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
