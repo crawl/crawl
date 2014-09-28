@@ -332,6 +332,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
                 afflictions.push_back("corona");
             if (you.duration[DUR_LIQUID_FLAMES])
                 afflictions.push_back("liquid flames");
+            if (you.duration[DUR_QUAD_DAMAGE])
+                afflictions.push_back("!!!QUAD DAMAGE!!!");
 
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from your "
