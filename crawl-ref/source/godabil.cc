@@ -5144,6 +5144,142 @@ const skill_type arcane_mutation_to_skill(mutation_type mutation)
     }
 }
 
+static int _piety_for_skill(skill_type skill)
+{
+    int divisor = 500;
+    return div_rand_round(skill_exp_needed(you.skills[skill], skill,
+        you.species), divisor);
+}
+
+#define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
+
+static int _get_sacrifice_piety(ability_type sacrifice)
+{
+    int piety_gain;
+    skill_type mutation_skill;
+    int arcane_mutations_size;
+
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &current_essence_sacrifice =
+        you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice =
+        you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    mutation_type essence_sacrifice;
+    mutation_type purity_sacrifice;
+
+    switch (sacrifice)
+    {
+        case ABIL_RU_SACRIFICE_WORDS:
+            return 28;
+            break;
+        case ABIL_RU_SACRIFICE_DRINK:
+            return 28;
+            break;
+        case ABIL_RU_SACRIFICE_HEALTH:
+            return 20;
+            break;
+        case ABIL_RU_SACRIFICE_ESSENCE:
+            essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
+
+            if (essence_sacrifice == MUT_LOW_MAGIC)
+                return 12;
+            else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
+                return 28;
+            else
+                return 16;
+            break;
+        case ABIL_RU_SACRIFICE_PURITY:
+            purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
+
+            if (purity_sacrifice == MUT_WEAK
+                || purity_sacrifice == MUT_CLUMSY
+                || purity_sacrifice == MUT_DOPEY)
+            {
+                return 8;
+            }
+            // the other sacrifices get sharply worse if you already
+            // have levels of them.
+            else if (player_mutation_level(purity_sacrifice) == 2)
+                return 28;
+            else if (player_mutation_level(purity_sacrifice) == 1)
+                return 20;
+            else
+                return 12;
+            break;
+        case ABIL_RU_SACRIFICE_STEALTH:
+            return 20 + _piety_for_skill(SK_STEALTH);
+            break;
+        case ABIL_RU_SACRIFICE_ARTIFICE:
+            return 60 + _piety_for_skill(SK_EVOCATIONS);
+            break;
+        case ABIL_RU_SACRIFICE_NIMBLENESS:
+            piety_gain = 20 + _piety_for_skill(SK_DODGING);
+            if (player_mutation_level(MUT_NO_ARMOUR))
+                piety_gain += 20;
+            else if (you.species == SP_OCTOPODE
+                    || you.species == SP_FELID
+                    || you.species == SP_RED_DRACONIAN
+                    || you.species == SP_WHITE_DRACONIAN
+                    || you.species == SP_GREEN_DRACONIAN
+                    || you.species == SP_YELLOW_DRACONIAN
+                    || you.species == SP_GREY_DRACONIAN
+                    || you.species == SP_BLACK_DRACONIAN
+                    || you.species == SP_PURPLE_DRACONIAN
+                    || you.species == SP_MOTTLED_DRACONIAN
+                    || you.species == SP_PALE_DRACONIAN
+                    || you.species == SP_BASE_DRACONIAN)
+            {
+                piety_gain += 28; // this sacrifice is worse for these races
+            }
+            return piety_gain;
+            break;
+        case ABIL_RU_SACRIFICE_DURABILITY:
+            piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
+            if (player_mutation_level(MUT_NO_DODGING))
+                piety_gain += 20;
+            return piety_gain;
+            break;
+        case ABIL_RU_SACRIFICE_COURAGE:
+            return 25;
+            break;
+        case ABIL_RU_SACRIFICE_LOVE:
+            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+                return 3;
+            else
+                return 20 + _piety_for_skill(SK_SUMMONINGS);
+            break;
+        case ABIL_RU_SACRIFICE_ARCANA:
+            piety_gain = 25;
+            arcane_mutations_size = current_arcane_sacrifices.size();
+            for (int i = 0; i < arcane_mutations_size; ++i)
+            {
+                mutation_type arcane_sacrifice =
+                    AS_MUT(current_arcane_sacrifices[i]);
+                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
+                if (player_mutation_level(MUT_NO_LOVE)
+                        && arcane_sacrifice == MUT_NO_SUMMONING_MAGIC)
+                    // nothing in the summoning school helps so substact piety
+                    piety_gain -= 8;
+                else
+                    piety_gain += _piety_for_skill(mutation_skill);
+            }
+            return piety_gain;
+            break;
+        case ABIL_RU_SACRIFICE_HAND:
+            return 70 + _piety_for_skill(SK_SHIELDS);
+            break;
+        default:
+            return 0;
+    }
+    return 0;
+}
+
 // Pick three new sacrifices to offer to the player. They should be distinct
 // from one another and not offer duplicates of some options.
 void ru_offer_new_sacrifices()
@@ -5163,18 +5299,49 @@ void ru_offer_new_sacrifices()
                     more();
 
     // try to get three distinct sacrifices
-    int lesser_sacrifice = random2(num_sacrifices);
+    int lesser_sacrifice;
     int sacrifice = -1;
     int greater_sacrifice = -1;
+    int number_of_tries = 0;
+    int max_tries = 30;
+    int max_overpiety = 170;
 
     do
+    {
+        lesser_sacrifice = random2(num_sacrifices);
+        number_of_tries += 1;
+    }
+    while (number_of_tries < max_tries
+            && (lesser_sacrifice == -1
+                || you.piety + _get_sacrifice_piety(
+                    possible_sacrifices[lesser_sacrifice])
+                    > max_overpiety));
+
+    number_of_tries = 0;
+    do
+    {
         sacrifice = random2(num_sacrifices);
-    while (sacrifice == -1 || sacrifice == lesser_sacrifice);
+        number_of_tries += 1;
+    }
+    while (number_of_tries < max_tries
+            && (sacrifice == -1
+                || sacrifice == lesser_sacrifice
+                || you.piety + _get_sacrifice_piety(
+                    possible_sacrifices[sacrifice]) > max_overpiety));
 
+    number_of_tries = 0;
     do
+    {
         greater_sacrifice = random2(num_sacrifices);
-    while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
-           || greater_sacrifice == sacrifice);
+        number_of_tries += 1;
+    }
+    while (number_of_tries < max_tries
+            && (greater_sacrifice == -1
+                || greater_sacrifice == lesser_sacrifice
+                || greater_sacrifice == sacrifice
+                || you.piety + _get_sacrifice_piety(
+                    possible_sacrifices[greater_sacrifice])
+                    > max_overpiety));
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
@@ -5221,12 +5388,6 @@ static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
     return true;
 }
 
-static int _piety_for_skill(skill_type skill)
-{
-    int divisor = 500;
-    return div_rand_round(skill_exp_needed(you.skills[skill], skill,
-        you.species), divisor);
-}
 
 static void _ru_kill_skill(skill_type skill)
 {
@@ -5235,7 +5396,6 @@ static void _ru_kill_skill(skill_type skill)
     you.stop_train.insert(skill);
 }
 
-#define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
 bool ru_do_sacrifice(ability_type sacrifice)
 {
@@ -5279,7 +5439,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
     switch (sacrifice)
     {
         case ABIL_RU_SACRIFICE_WORDS:
-            piety_gain = 28;
+            piety_gain = _get_sacrifice_piety(sacrifice);
             if (!_execute_sacrifice(MUT_NO_READ, piety_gain,
                 "sacrifice your ability to read while threatened"))
             {
@@ -5288,7 +5448,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed words!");
             break;
         case ABIL_RU_SACRIFICE_DRINK:
-            piety_gain = 28;
+            piety_gain = _get_sacrifice_piety(sacrifice);
             if (!_execute_sacrifice(MUT_NO_DRINK, piety_gain,
                 "sacrifice your ability to drink while threatened"))
             {
@@ -5297,7 +5457,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed drink!");
             break;
         case ABIL_RU_SACRIFICE_HEALTH:
-            piety_gain = 20;
+            piety_gain = _get_sacrifice_piety(sacrifice);
             health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
             if (!_execute_sacrifice(health_sacrifice, piety_gain,
@@ -5312,13 +5472,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             break;
         case ABIL_RU_SACRIFICE_ESSENCE:
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
-
-            if (essence_sacrifice == MUT_LOW_MAGIC)
-                piety_gain = 12;
-            else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
-                piety_gain = 28;
-            else
-                piety_gain = 16;
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(essence_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
@@ -5332,22 +5486,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
-
-            if (purity_sacrifice == MUT_WEAK
-                || purity_sacrifice == MUT_CLUMSY
-                || purity_sacrifice == MUT_DOPEY)
-            {
-                piety_gain = 8;
-            }
-            // the other sacrifices get sharply worse if you already
-            // have levels of them.
-            else if (player_mutation_level(purity_sacrifice) == 2)
-                piety_gain = 28;
-            else if (player_mutation_level(purity_sacrifice) == 1)
-                piety_gain = 20;
-            else
-                piety_gain = 12;
-
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(purity_sacrifice, piety_gain,
                 make_stringf("corrupt yourself with %s",
@@ -5360,7 +5499,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                     mutation_desc_for_text(purity_sacrifice)).c_str());
             break;
         case ABIL_RU_SACRIFICE_STEALTH:
-            piety_gain = 20 + _piety_for_skill(SK_STEALTH);
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
                 "sacrifice your ability to go unnoticed"))
@@ -5371,7 +5510,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed stealth!");
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = 45 + _piety_for_skill(SK_EVOCATIONS);
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
                 "sacrifice all use of magical tools"))
@@ -5382,24 +5521,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed evocations!");
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            piety_gain = 20 + _piety_for_skill(SK_DODGING);
-            if (player_mutation_level(MUT_NO_ARMOUR))
-                piety_gain += 20;
-            else if (you.species == SP_OCTOPODE
-                    || you.species == SP_FELID
-                    || you.species == SP_RED_DRACONIAN
-                    || you.species == SP_WHITE_DRACONIAN
-                    || you.species == SP_GREEN_DRACONIAN
-                    || you.species == SP_YELLOW_DRACONIAN
-                    || you.species == SP_GREY_DRACONIAN
-                    || you.species == SP_BLACK_DRACONIAN
-                    || you.species == SP_PURPLE_DRACONIAN
-                    || you.species == SP_MOTTLED_DRACONIAN
-                    || you.species == SP_PALE_DRACONIAN
-                    || you.species == SP_BASE_DRACONIAN)
-            {
-                piety_gain += 28; // this sacrifice is worse for these races
-            }
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_NO_DODGING, piety_gain,
                 "sacrifice your ability to dodge"))
@@ -5410,9 +5532,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed dodging!");
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
-            if (player_mutation_level(MUT_NO_DODGING))
-                piety_gain += 20;
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_NO_ARMOUR, piety_gain,
                 "sacrifice your ability to wear armour well"))
@@ -5423,7 +5543,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed armour!");
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain = 25;
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_COWARDICE, piety_gain,
                 "sacrifice your courage"))
@@ -5433,10 +5553,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed courage!");
             break;
         case ABIL_RU_SACRIFICE_LOVE:
-            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
-                piety_gain = 3;
-            else
-                piety_gain = 20 + _piety_for_skill(SK_SUMMONINGS);
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_NO_LOVE, piety_gain,
                 "sacrifice your ability to be loved"))
@@ -5447,20 +5564,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             mark_milestone("sacrifice", "sacrificed love!");
             break;
         case ABIL_RU_SACRIFICE_ARCANA:
-            piety_gain = 25;
-            arcane_mutations_size = current_arcane_sacrifices.size();
-            for (int i = 0; i < arcane_mutations_size; ++i)
-            {
-                mutation_type arcane_sacrifice =
-                    AS_MUT(current_arcane_sacrifices[i]);
-                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-                if (player_mutation_level(MUT_NO_LOVE)
-                        && arcane_sacrifice == MUT_NO_SUMMONING_MAGIC)
-                    // nothing in the summoning school helps so substact piety
-                    piety_gain -= 8;
-                else
-                    piety_gain += _piety_for_skill(mutation_skill);
-            }
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             mprf("Ru asks you to sacrifice all use of %s, %s, and %s.",
                 arcane_mutation_to_school_name(
@@ -5518,7 +5622,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
                         current_arcane_sacrifices[2].get_int()))).c_str());
             break;
         case ABIL_RU_SACRIFICE_HAND:
-            piety_gain = 70 + _piety_for_skill(SK_SHIELDS);
+            piety_gain = _get_sacrifice_piety(sacrifice);
 
             if (!_execute_sacrifice(MUT_MISSING_HAND, piety_gain,
                 make_stringf("sacrifice one of your %s",
