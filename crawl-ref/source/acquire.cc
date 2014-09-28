@@ -412,7 +412,7 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
     else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
-        quantity += random2avg(10, 2);
+        quantity += 2 + random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
         quantity = 8 + random2(5);
 
