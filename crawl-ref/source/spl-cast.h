@@ -86,8 +86,6 @@ string spell_schools_string(spell_type spell);
 string spell_hunger_string(spell_type spell, bool rod = false);
 string spell_noise_string(spell_type spell);
 
-bool is_prevented_teleport(spell_type spell);
-
 bool spell_is_uncastable(spell_type spell, string &message, bool evoked = false);
 void spell_skills(spell_type spell, set<skill_type> &skills);
 

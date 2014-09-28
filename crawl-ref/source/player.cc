@@ -6910,11 +6910,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             if (!amulet_handled)
             {
                 item_def *amulet = slot_item(EQ_AMULET);
-                if (!amulet)
-                {
-                    die("wearing(EQ_AMULET,...) is true but"
-                        " slot_item(EQ_AMULET) is NULL");
-                }
+                ASSERT(amulet);
                 worn_notele.push_back(amulet->name(DESC_A).c_str());
                 found_nonartefact = !is_artefact(*amulet);
             }
@@ -6922,7 +6918,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             found_stasis = true;
         }
 
-        if (worn_notele.size()>(problems.empty() ? 3 : 1))
+        if (worn_notele.size() > (problems.empty() ? 3 : 1))
         {
             problems.push_back(
                 make_stringf("wearing %s %s preventing teleportation",
@@ -6962,7 +6958,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
  * @param blinking      Are you blinking or teleporting?
  * @return              Whether the player is prevented from teleportation.
  */
-bool player::no_tele_print_reason(bool calc_unid, bool, bool blinking) const
+bool player::no_tele_print_reason(bool calc_unid, bool blinking) const
 {
     const string reason = no_tele_reason(calc_unid, blinking);
     if (reason.empty())
@@ -6977,10 +6973,11 @@ bool player::no_tele_print_reason(bool calc_unid, bool, bool blinking) const
  *
  * @param calc_unid     Whether to identify unknown items that prevent tele
  *                      (probably obsolete)
+ * @param permit_id     Unused for players.
  * @param blinking      Are you blinking or teleporting?
  * @return              Whether the player is prevented from teleportation.
  */
-bool player::no_tele(bool calc_unid, bool, bool blinking) const
+bool player::no_tele(bool calc_unid, bool /*permit_id*/, bool blinking) const
 {
     return no_tele_reason(calc_unid, blinking) != "";
 }
