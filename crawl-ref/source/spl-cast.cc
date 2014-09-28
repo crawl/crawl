@@ -905,12 +905,12 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
     alert_nearby_monsters();
 }
 
-bool is_prevented_teleport(spell_type spell, bool quiet)
+bool is_prevented_teleport(spell_type spell)
 {
     return (spell == SPELL_BLINK
              || spell == SPELL_CONTROLLED_BLINK
              || spell == SPELL_TELEPORT_SELF)
-            && you.no_tele_print_reason(false, false, spell != SPELL_TELEPORT_SELF, quiet);
+            && you.no_tele_print_reason(false, false, spell != SPELL_TELEPORT_SELF);
 }
 
 bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)

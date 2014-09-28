@@ -1192,12 +1192,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
+        // XXX: this is a little redundant with you_no_tele_reason()
+        // but trying to sort out temp and ctele and so on is a mess
         if (you.species == SP_FORMICID)
-            return "You can't teleport!";
+            return pluralise(species_name(you.species)) + " cannot teleport.";
+
         if (temp && you.no_tele(false, false, true)
             && (!prevent || spell != SPELL_CONTROL_TELEPORT))
         {
-            return "You can't teleport right now!";
+            return you.no_tele_reason(false, true);
         }
         break;
 
