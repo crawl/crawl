@@ -3476,7 +3476,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-            return you.can_safely_mutate(temp);
+            return !you.can_safely_mutate(temp);
 
         case POT_LIGNIFY:
             return you.undead_state(temp)
