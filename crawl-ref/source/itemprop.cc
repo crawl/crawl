@@ -1074,12 +1074,12 @@ bool jewellery_is_amulet(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    return item.sub_type >= AMU_RAGE;
+    return jewellery_is_amulet(item.sub_type);
 }
 
 bool jewellery_is_amulet(int sub_type)
 {
-    return sub_type >= AMU_RAGE;
+    return sub_type >= AMU_FIRST_AMULET;
 }
 
 // Returns number of sizes off (0 if fitting).
