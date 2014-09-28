@@ -98,7 +98,7 @@ static const char *_god_wrath_adjectives[NUM_GODS] =
  * @param god   The god in question.
  * @return      A string name for the god's wrath.
  */
-string god_wrath_name(god_type god)
+static string _god_wrath_name(god_type god)
 {
     const bool use_full_name = god == GOD_FEDHAS; // fedhas is very formal.
                                                   // apparently.
@@ -124,7 +124,7 @@ static bool _yred_random_zombified_hostile()
     while (skel && !mons_skeleton(z_base));
 
     mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                           god_wrath_name(GOD_YREDELEMNUL),
+                                           _god_wrath_name(GOD_YREDELEMNUL),
                                            true, 0, 0, you.pos(), 0,
                                            GOD_YREDELEMNUL, z_base);
 
@@ -168,7 +168,7 @@ static bool _okawaru_random_servant()
                                               you.experience_level);
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           god_wrath_name(GOD_OKAWARU),
+                                           _god_wrath_name(GOD_OKAWARU),
                                            true, 0, 0, you.pos(), 0,
                                            GOD_OKAWARU);
 
@@ -191,7 +191,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
         mon_type = MONS_SHADOW_DEMON;
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           god_wrath_name(GOD_DITHMENOS),
+                                           _god_wrath_name(GOD_DITHMENOS),
                                            true, 0, 0, you.pos(), 0,
                                            GOD_DITHMENOS);
 
@@ -328,7 +328,7 @@ static bool _zin_retribution()
             you.put_to_sleep(NULL, 30 + random2(20));
             break;
         case 2:
-            paralyse_player(god_wrath_name(god));
+            paralyse_player(_god_wrath_name(god));
             break;
         }
         break;
@@ -418,7 +418,7 @@ static bool _elyvilon_retribution()
 
     case 2: // mostly flavour messages
         MiscastEffect(&you, -god, SPTYP_POISON, one_chance_in(3) ? 1 : 0,
-                      god_wrath_name(god));
+                      _god_wrath_name(god));
         break;
 
     case 3:
@@ -464,7 +464,7 @@ static bool _cheibriados_retribution()
     case 4:
         simple_god_message(" adjusts the clock.", god);
         MiscastEffect(&you, -god, SPTYP_RANDOM, 8, 90,
-                      god_wrath_name(god));
+                      _god_wrath_name(god));
         if (one_chance_in(wrath_type - 1))
             break;
     // High tension wrath
@@ -574,7 +574,7 @@ static monster* get_avatar(god_type god)
     if (!avatar)
         return NULL;
 
-    avatar->mname = god_wrath_name(god);
+    avatar->mname = _god_wrath_name(god);
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
     avatar->set_hit_dice(you.experience_level);
@@ -633,7 +633,7 @@ static bool _makhleb_summon_servant(monster_type servant)
 {
 
     mgen_data temp = mgen_data::hostile_at(servant,
-                                           god_wrath_name(GOD_MAKHLEB),
+                                           _god_wrath_name(GOD_MAKHLEB),
                                            true, 0, 0, you.pos(), 0,
                                            GOD_MAKHLEB);
 
@@ -734,7 +734,7 @@ static bool _kikubaaqudgha_retribution()
             {
                 MiscastEffect(&you, -god, SPTYP_NECROMANCY,
                               2 + div_rand_round(you.experience_level, 9),
-                              random2avg(88, 3), god_wrath_name(god));
+                              random2avg(88, 3), _god_wrath_name(god));
             }
         }
     }
@@ -745,7 +745,7 @@ static bool _kikubaaqudgha_retribution()
         {
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
                           2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), god_wrath_name(god));
+                          random2avg(88, 3), _god_wrath_name(god));
         }
         while (one_chance_in(5));
     }
@@ -753,7 +753,7 @@ static bool _kikubaaqudgha_retribution()
     // Every act of retribution causes corpses in view to rise against
     // you.
     animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                 god_wrath_name(god), god);
+                 _god_wrath_name(god), god);
 
     return true;
 }
@@ -799,7 +799,7 @@ static bool _yredelemnul_retribution()
         simple_god_message("'s anger turns toward you for a moment.", god);
         MiscastEffect(&you, -god, SPTYP_NECROMANCY,
                       2 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), god_wrath_name(god));
+                      random2avg(88, 3), _god_wrath_name(god));
     }
 
     return true;
@@ -894,7 +894,7 @@ static bool _trog_retribution()
         dec_penance(god, 2);
         mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
         MiscastEffect(&you, -god, SPTYP_FIRE, 8 + you.experience_level,
-                      random2avg(98, 3), god_wrath_name(god));
+                      random2avg(98, 3), _god_wrath_name(god));
     }
 
     return true;
@@ -930,7 +930,7 @@ static bool _beogh_retribution()
             if (monster *mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        god_wrath_name(god),
+                        _god_wrath_name(god),
                         true, 0, 0, you.pos(), 0, god)))
             {
                 ASSERT(mon->weapon() != NULL);
@@ -992,7 +992,7 @@ static bool _beogh_retribution()
             punisher = MONS_ORC;
 
         mgen_data temp = mgen_data::hostile_at(punisher,
-                                               god_wrath_name(god),
+                                               _god_wrath_name(god),
                                                true, 0, 0, you.pos(),
                                                MG_PERMIT_BANDS, god);
 
@@ -1055,7 +1055,7 @@ static bool _sif_muna_retribution()
     case 5:
     case 6:
         MiscastEffect(&you, -god, SPTYP_DIVINATION, 9, 90,
-                      god_wrath_name(god));
+                      _god_wrath_name(god));
         break;
 
     case 7:
@@ -1148,7 +1148,7 @@ static void _lugonu_minion_retribution()
             );
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               god_wrath_name(god), true, 0,
+                                               _god_wrath_name(god), true, 0,
                                                0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1165,7 +1165,7 @@ static void _lugonu_minion_retribution()
                                                      -1);
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               god_wrath_name(god), true, 0,
+                                               _god_wrath_name(god), true, 0,
                                                0, you.pos(), 0, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1392,7 +1392,7 @@ static void _jiyva_summon_slimes()
 
         mgen_data temp =
             mgen_data::hostile_at(static_cast<monster_type>(slime),
-                                  god_wrath_name(god),
+                                  _god_wrath_name(god),
                                   true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -1441,7 +1441,7 @@ static void _fedhas_elemental_miscast()
                                                    SPTYP_EARTH, SPTYP_AIR,
                                                    -1);
     MiscastEffect(&you, -god, stype, 5 + you.experience_level,
-                  random2avg(88, 3), god_wrath_name(god));
+                  random2avg(88, 3), _god_wrath_name(god));
 }
 
 /**
@@ -1473,7 +1473,7 @@ static bool _fedhas_summon_plants()
 
     mgen_data temp =
         mgen_data::hostile_at(MONS_OKLOB_PLANT,
-                              god_wrath_name(god),
+                              _god_wrath_name(god),
                               false, 0, 0,
                               coord_def(-1, -1),
                               MG_FORCE_PLACE, god);
@@ -1612,7 +1612,7 @@ static bool _dithmenos_retribution()
                         MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
                         level_id(BRANCH_DUNGEON,
                                  min(27, you.experience_level + 5)),
-                        0, 0, 0, "", god_wrath_name(god))))
+                        0, 0, 0, "", _god_wrath_name(god))))
             {
                 count++;
             }
@@ -1646,7 +1646,7 @@ static void _qazlal_summon_elementals()
 
     mgen_data temp =
         mgen_data::hostile_at(MONS_NO_MONSTER,
-                              god_wrath_name(god),
+                              _god_wrath_name(god),
                               true, 0, 0, you.pos(), 0, god);
 
     temp.hd = you.experience_level;
@@ -1735,7 +1735,7 @@ static void _qazlal_elemental_vulnerability()
 {
     const god_type god = GOD_QAZLAL;
 
-    if (mutate(RANDOM_QAZLAL_MUTATION, god_wrath_name(god), false,
+    if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
                false, true, false, MUTCLASS_TEMPORARY, true))
     {
         simple_god_message(" strips away your elemental protection.",

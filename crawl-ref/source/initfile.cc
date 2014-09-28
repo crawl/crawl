@@ -1873,7 +1873,7 @@ void game_options::set_player_tile(const string &field)
         if (isdigit(*(fields[1].rbegin())))
         {
             string base_tname = fields[1];
-            unsigned found = base_tname.rfind('_');
+            size_t found = base_tname.rfind('_');
             int offset = 0;
             tileidx_t base_tile = 0;
             if (found != std::string::npos
