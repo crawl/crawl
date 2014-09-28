@@ -1726,35 +1726,35 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
             switch (wp.first)
             {
             case WPN_SHORT_SWORD:
-                // Fighters and gladiators get cutlasses.
+                // Gladiators and fighters get cutlasses.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
                     wp.first = WPN_CUTLASS;
                 break;
             case WPN_MACE:
-                // Fighters and gladiators get flails.
+                // Gladiators and fighters get flails.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
                     wp.first = WPN_FLAIL;
                 break;
             case WPN_HAND_AXE:
-                // Non-little fighters and gladiators get war axes.
+                // Gladiators and non-little fighters get war axes.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) >= SIZE_SMALL)
+                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
                 {
                     wp.first = WPN_WAR_AXE;
                 }
                 break;
             case WPN_SPEAR:
-                // Non-small fighters and gladiators get tridents.
+                // Gladiators and non-small fighters get tridents.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM)
+                      && species_size(ng->species, PSIZE_BODY) > SIZE_SMALL)
                 {
                     wp.first = WPN_TRIDENT;
                 }
                 break;
             case WPN_FALCHION:
-                // Non-little fighters and gladiators get long swords.
+                // Gladiators and non-little fighters get long swords.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) >= SIZE_SMALL)
+                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
                 {
                     wp.first = WPN_LONG_SWORD;
                 }
