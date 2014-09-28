@@ -1372,15 +1372,18 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
 
     const int mut_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 2 : 3;
     if (player_mutation_level(MUT_MUTATION_RESISTANCE)
-        && !one_chance_in(mut_resist_chance)))
+        && !one_chance_in(mut_resist_chance))
     {
         return true;
     }
 
     const int item_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
     // To be nice, beneficial mutations go through removable sources of rMut.
-    if (you.rmut_from_item() && !beneficial && !one_chance_in(item_chance))
+    if (you.rmut_from_item() && !beneficial
+        && !one_chance_in(item_resist_chance))
+    {
         return true;
+    }
 
     return false;
 }
