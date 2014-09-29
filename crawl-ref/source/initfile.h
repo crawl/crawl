@@ -54,7 +54,7 @@ public:
     vector<string> cmd_args;
 
     int map_gen_iters;
-    unique_ptr<depth_ranges> map_gen_range;
+    Unique_ptr<depth_ranges> map_gen_range;
 
     vector<string> extra_opts_first;
     vector<string> extra_opts_last;

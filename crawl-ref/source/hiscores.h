@@ -120,7 +120,7 @@ private:
     int         scrolls_used;       // Number of scrolls used.
     int         potions_used;       // Number of potions used.
 
-    mutable unique_ptr<xlog_fields> fields;
+    mutable Unique_ptr<xlog_fields> fields;
 
 public:
     scorefile_entry();

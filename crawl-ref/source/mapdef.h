@@ -268,7 +268,7 @@ public:
     string marker;
 
     // Special handling for Lua markers:
-    unique_ptr<lua_datum> lua_fn;
+    Unique_ptr<lua_datum> lua_fn;
 
     map_marker_spec(string _key, const string &mark)
         : key(_key), marker(mark), lua_fn() { }
@@ -509,7 +509,7 @@ private:
         int keyspec_idx;
     };
     typedef Matrix<overlay_def> overlay_matrix;
-    unique_ptr<overlay_matrix> overlay;
+    Unique_ptr<overlay_matrix> overlay;
 
     typedef map<int, keyed_mapspec> keyed_specs;
     keyed_specs keyspecs;
@@ -813,8 +813,8 @@ struct feature_spec
 {
     int genweight;                 /**> The weight of this specific feature. */
     int feat;                      /**> The specific feature being placed. */
-    unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
-    unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
+    Unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
+    Unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
     int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
@@ -901,7 +901,7 @@ public:
     dlua_set_map(map_def *map);
     ~dlua_set_map();
 private:
-    unique_ptr<lua_datum> old_map;
+    Unique_ptr<lua_datum> old_map;
 };
 
 dungeon_feature_type map_feature_at(map_def *map,
@@ -1060,7 +1060,7 @@ public:
 struct subvault_place
 {
     coord_def tl, br;
-    unique_ptr<map_def> subvault;
+    Unique_ptr<map_def> subvault;
 
     subvault_place();
     subvault_place(const coord_def &_tl, const coord_def &_br,

@@ -367,7 +367,7 @@ struct cell_travel_safety
 };
 
 typedef FixedArray<cell_travel_safety, GXM, GYM> travel_safe_grid;
-static unique_ptr<travel_safe_grid> _travel_safe_grid;
+static Unique_ptr<travel_safe_grid> _travel_safe_grid;
 
 class precompute_travel_safety_grid
 {
@@ -380,7 +380,7 @@ public:
         if (!_travel_safe_grid.get())
         {
             did_compute = true;
-            unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
+            Unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
             travel_safe_grid &safegrid(*tsgrid);
             for (rectangle_iterator ri(1); ri; ++ri)
             {

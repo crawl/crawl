@@ -241,7 +241,7 @@ struct dgn_colour_override_manager
 };
 
 typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
-static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
+static Unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
 
