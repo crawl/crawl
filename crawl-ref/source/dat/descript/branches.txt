@@ -213,7 +213,7 @@ in Pandemonium. These towers and their contents will react violently to
 those that can conquer them, and scale up according to how many ziggurats
 an adventurer has completed.
 
-It can only be entered when carrying at least three runes of Zot.
+It can only be entered when carrying at least two runes of Zot.
 %%%%
 Labyrinth
 
