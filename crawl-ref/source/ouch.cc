@@ -206,6 +206,9 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_POISON:
+        resist = player_res_poison();
+        hurted = resist_adjust_damage(&you, flavour, resist, hurted, true);
+
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
@@ -214,19 +217,12 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             ASSERT(beam);
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
             pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
+            poison_player(pois, source, kaux);
 
-            resist = poison_player(pois, source, kaux) ? 0 : 1;
-
-            hurted = resist_adjust_damage(&you, flavour, resist,
-                                          hurted, true);
             if (resist > 0)
                 canned_msg(MSG_YOU_RESIST);
         }
-        else
-        {
-            hurted = resist_adjust_damage(&you, flavour, player_res_poison(),
-                                          hurted, true);
-        }
+
         break;
 
     case BEAM_POISON_ARROW:
