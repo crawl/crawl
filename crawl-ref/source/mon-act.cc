@@ -1543,7 +1543,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    bool archer = mons->is_archer();
+    const bool archer = mons_class_flag(mons->type, M_DONT_MELEE);
 
     const bool liquefied = mons->liquefied_ground();
 
