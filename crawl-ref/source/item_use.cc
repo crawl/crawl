@@ -2745,9 +2745,7 @@ void read_scroll(int slot)
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
             if (you.no_tele_print_reason(false, which_scroll == SCR_BLINKING))
-            {
                 return;
-            }
             break;
 
         case SCR_ENCHANT_ARMOUR:

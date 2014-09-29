@@ -167,9 +167,7 @@ static string _religion_help(god_type god)
     {
         case GOD_ZIN:
             if (can_do_capstone_ability(god))
-            {
                 result += "You can have all your mutations cured.\n";
-            }
             result += "You can pray at an altar to donate money.";
             break;
 
