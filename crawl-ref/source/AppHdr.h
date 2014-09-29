@@ -29,7 +29,9 @@ using namespace std;
 template<typename T>
 static inline T move(T x) { return x; } // good enough for our purposes
 # include <cstddef>
-# define nullptr NULL
+# ifndef nullptr // clang in the OS X 10.9 SDK #defines this in C++03 mode
+#  define nullptr NULL
+# endif
 #else
 # define Unique_ptr unique_ptr
 #endif
