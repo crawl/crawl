@@ -446,7 +446,7 @@ spret_type cast_dragon_call(int pow, bool fail)
 
     fail_check();
 
-    mpr("You call out to the draconic realm and the roar of the horde responds!");
+    mpr("You call out to the draconic realm, and the dragon horde roars back!");
     noisy(15, you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
