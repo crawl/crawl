@@ -309,7 +309,7 @@ static void _sdump_visits(dump_params &par)
     if (place_info.num_visits > 0)
     {
         int num_zigs = place_info.num_visits;
-        text += make_stringf("You %s%s %d Ziggurat",
+        text += make_stringf("You %s%s %d ziggurat",
                              have.c_str(),
                              (num_zigs == you.zigs_completed) ? "completed"
                                                               : "visited",
