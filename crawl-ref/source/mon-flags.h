@@ -96,8 +96,7 @@ const uint64_t M_NO_REGEN          = 1<<27;
 // wizard
 const uint64_t M_SPELL_NO_SILENT   = 1<<28;
 
-// can cast spells when silenced; but casting makes noise when not
-// silenced
+// casting makes noise even if an innate ability (no effect on silence)
 const uint64_t M_NOISY_SPELLS      = 1<<29;
 
 // boneless corpses

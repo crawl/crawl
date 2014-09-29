@@ -6192,8 +6192,7 @@ static int _noise_level(const monster* mons, spell_type spell,
     if (silent
         || (innate
             && !mons_class_flag(mons->type, M_NOISY_SPELLS)
-            && !(flags & SPFLAG_NOISY)
-            && mons_genus(mons->type) != MONS_DRAGON))
+            && !(flags & SPFLAG_NOISY)))
     {
         noise = 0;
     }
