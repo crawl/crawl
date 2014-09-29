@@ -426,6 +426,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     const shop_struct& shop = env.shop[shopidx];
 
     unwind_bool in_shop(_in_shop_now, true);
+    unwind_var<ordering_mode> default_order(shopping_order);
 
     cursor_control coff(false);
 
