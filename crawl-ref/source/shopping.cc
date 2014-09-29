@@ -269,7 +269,8 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 
 // Comparator for sorting a permutation list according to the shop, the
 // original list of item IDs, and the current ordering mode.
-class ShopSorter {
+class ShopSorter
+{
 public:
     ShopSorter(const shop_struct &shop, const vector<int>& stocklist)
         : stock(stocklist), id(shoptype_identifies_stock(shop.type)),
@@ -306,6 +307,7 @@ private:
     const bool id;
     const int greed;
 };
+
 static vector<int> stock_order;
 
 static void _shop_print_stock(const vector<int>& stock,
