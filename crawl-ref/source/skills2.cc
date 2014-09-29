@@ -541,8 +541,8 @@ bool all_skills_maxed(bool inc_harmful)
 
 int skill_bump(skill_type skill, int scale)
 {
-    int sk = you.skill_rdiv(skill, scale);
-    return sk < 3 * scale ? sk * 2 : sk + 3 * scale;
+    const int sk = you.skill_rdiv(skill, scale);
+    return sk + min(sk, 3 * scale);
 }
 
 // What aptitude value corresponds to doubled skill learning
