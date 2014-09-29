@@ -209,7 +209,7 @@ struct monster_info : public monster_info_base
                    bool fullname = true, const char *adjective = nullptr) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
-    unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
+    Unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
     union
     {

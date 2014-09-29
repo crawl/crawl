@@ -267,7 +267,7 @@ public:
     string debug_to_string() const;
 private:
     bool initialised;
-    unique_ptr<lua_datum> marker_table;
+    Unique_ptr<lua_datum> marker_table;
 
 private:
     void check_register_table();

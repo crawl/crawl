@@ -470,7 +470,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
                       unsigned char box_alpha)
 {
-    unique_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
+    Unique_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
     GLWPrim rect(x_pos - box_width, y_pos - box_width,
                  x_pos + width + box_width, y_pos + height + box_width);
 

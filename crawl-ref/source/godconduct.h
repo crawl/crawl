@@ -13,7 +13,7 @@ struct god_conduct_trigger
     int pgain;
     bool known;
     bool enabled;
-    unique_ptr<monster> victim;
+    Unique_ptr<monster> victim;
 
     god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
                         int pg = 0,
