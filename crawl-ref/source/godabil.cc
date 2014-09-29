@@ -716,7 +716,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
                            + 3 * power_mult;
     const int piety_power = you.piety * 3 / 2;
-    const int power = (invo_power + you.piety) / 2 / power_mult;
+    const int power = (invo_power + piety_power) / 2 / power_mult;
     // Old recite was mostly deterministic, which is bad.
     const int resist = mon->get_hit_dice() + random2(6);
     const int check = power - resist;
