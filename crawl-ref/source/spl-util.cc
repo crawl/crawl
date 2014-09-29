@@ -1313,8 +1313,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CURE_POISON:
         // no good for poison-immune species (ghoul, mummy, garg)
         if (player_res_poison(false, temp, temp) == 3
-            // allow starving vampires to memorize cpois ^
-             && you.undead_state() != US_SEMI_UNDEAD)
+            // allow starving vampires to memorize cpois
+            && you.undead_state() != US_SEMI_UNDEAD)
         {
             return "You can't be poisoned!";
         }
