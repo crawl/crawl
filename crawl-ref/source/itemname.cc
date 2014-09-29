@@ -970,6 +970,7 @@ static string misc_type_name(int type, bool known)
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
+    case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
 
     default:
         return "buggy miscellaneous item";
@@ -3813,6 +3814,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         // These can always be used.
         case MISC_LANTERN_OF_SHADOWS:
+        case MISC_ZIGGURAT:
             return false;
 
         // Purely summoning misc items don't work w/ sac love

@@ -3750,6 +3750,8 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
+        case MISC_ZIGGURAT:
+            return ETC_BONE;
         default:
             return LIGHTGREEN;
     }

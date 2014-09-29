@@ -499,6 +499,12 @@ A collection of spells once used by the great swamp civilizations. Their towers
 have crumbled and decayed, but this book remains, pages flecked with peat
 and moss.
 %%%%
+figurine of a ziggurat
+
+A small figurine made of some strange material, shaped like a stepped pyramid.
+It seems incredibly detailed, as if it were a vast building had been shrunken
+by incomprehensible magics and not just a model.
+%%%%
 fire dragon armour
 
 Armour made from the scales of a fire-breathing dragon. It provides great
