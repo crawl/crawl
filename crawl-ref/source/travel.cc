@@ -390,7 +390,7 @@ public:
                 ts.safe_if_ignoring_hostile_terrain =
                     _is_travelsafe_square(p, true);
             }
-            _travel_safe_grid = move(tsgrid);
+            _travel_safe_grid = Move(tsgrid);
         }
     }
     ~precompute_travel_safety_grid()

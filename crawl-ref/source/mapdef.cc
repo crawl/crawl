@@ -1076,7 +1076,7 @@ void map_lines::extend(int min_width, int min_height, char fill)
             for (int x = 0; x < old_width; ++x)
                 (*new_overlay)(x, y) = (*overlay)(x, y);
 
-        overlay = move(new_overlay);
+        overlay = Move(new_overlay);
     }
 }
 
@@ -1595,7 +1595,7 @@ void map_lines::rotate(bool clockwise)
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
-        overlay = move(new_overlay);
+        overlay = Move(new_overlay);
     }
 
     map_width = lines.size();
