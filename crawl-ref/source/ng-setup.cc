@@ -1148,7 +1148,7 @@ static void _give_basic_spells(job_type which_job)
 
     string temp;
     if (which_spell != SPELL_NO_SPELL
-        && !spell_is_uncastable(which_spell, temp))
+        && !spell_is_uncastable(which_spell, temp, false))
     {
         add_spell_to_memory(which_spell);
     }

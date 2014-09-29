@@ -923,9 +923,20 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
     alert_nearby_monsters();
 }
 
-bool spell_is_uncastable(spell_type spell, string &msg, bool evoked)
+/**
+ * Is the given spell castable by the player?
+ *
+ * @param spell The spell to check.
+ * @param msg A string to contain the reason why the spell is uncastable, if
+ *            any.
+ * @param temp  Include checks for volatile or temporary states (status effects,
+ *              mana, gods, items, etc.).
+ * @param evoke Was this spell cast through item evocation?
+ * @returns True if the spell is castable, false otherwise.
+*/
+bool spell_is_uncastable(spell_type spell, string &msg, bool temp, bool evoked)
 {
-    msg = spell_uselessness_reason(spell, true, true, evoked);
+    msg = spell_uselessness_reason(spell, temp, true, evoked);
     return msg != "";
 }
 
@@ -1011,7 +1022,7 @@ static bool _spellcasting_aborted(spell_type spell,
     {
         // MP was already deducted, so don't check MP in spell_is_uncastable.
         unwind_var<int> fake_mp(you.magic_points, 50);
-        uncastable = !wiz_cast && spell_is_uncastable(spell, msg, evoked);
+        uncastable = !wiz_cast && spell_is_uncastable(spell, msg, true, evoked);
     }
 
     if (uncastable)
