@@ -198,7 +198,7 @@ TAGS:    no_rotate
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
-TILE:    " : floor_limestone w:5 / floor_nerves
+FTILE:   "ABCDEFGHIJKLMNOPRQS : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
 SHUFFLE: ABCDEFHIJKLMNOPQRS
