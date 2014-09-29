@@ -25,15 +25,17 @@ namespace std {};
 using namespace std;
 
 #if !defined(TARGET_COMPILER_VC) && defined(__cplusplus) && __cplusplus < 201103
+// Use uppercase names so we don't conflict with pre-C++11 implementations.
 # define Unique_ptr auto_ptr
 template<typename T>
-static inline T move(T x) { return x; } // good enough for our purposes
+static inline T Move(T x) { return x; } // good enough for our purposes
 # include <cstddef>
 # ifndef nullptr // clang in the OS X 10.9 SDK #defines this in C++03 mode
 #  define nullptr NULL
 # endif
 #else
 # define Unique_ptr unique_ptr
+# define Move move
 #endif
 
 #ifdef TARGET_COMPILER_VC
