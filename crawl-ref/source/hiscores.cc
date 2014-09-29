@@ -64,7 +64,7 @@
 #define SCORE_VERSION "0.1"
 
 // enough memory allocated to snarf in the scorefile entries
-static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
+static Unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
 // hackish: scorefile position of newest entry.  Will be highlit during
 // highscore printing (always -1 when run from command line).
