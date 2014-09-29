@@ -511,40 +511,49 @@ bool you_can_memorise(spell_type spell)
     return !spell_is_useless(spell, false, true);
 }
 
-bool cannot_use_spell_school(spell_type spell, bool evoked)
-{
-    if (evoked)
-        return false;
 
-    if (
-           (spell_typematch(spell, SPTYP_AIR)
-            && player_mutation_level(MUT_NO_AIR_MAGIC))
-        || (spell_typematch(spell, SPTYP_CHARMS)
-            && player_mutation_level(MUT_NO_CHARM_MAGIC))
-        || (spell_typematch(spell, SPTYP_CONJURATION)
-            && player_mutation_level(MUT_NO_CONJURATION_MAGIC))
-        || (spell_typematch(spell, SPTYP_EARTH)
-            && player_mutation_level(MUT_NO_EARTH_MAGIC))
-        || (spell_typematch(spell, SPTYP_FIRE)
-            && player_mutation_level(MUT_NO_FIRE_MAGIC))
-        || (spell_typematch(spell, SPTYP_HEXES)
-            && player_mutation_level(MUT_NO_HEXES_MAGIC))
-        || (spell_typematch(spell, SPTYP_ICE)
-            && player_mutation_level(MUT_NO_ICE_MAGIC))
-        || (spell_typematch(spell, SPTYP_NECROMANCY)
-            && player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
-        || (spell_typematch(spell, SPTYP_POISON)
-            && player_mutation_level(MUT_NO_POISON_MAGIC))
-        || (spell_typematch(spell, SPTYP_SUMMONING)
-            && player_mutation_level(MUT_NO_SUMMONING_MAGIC))
-        || (spell_typematch(spell, SPTYP_TRANSLOCATION)
-            && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
-        || (spell_typematch(spell, SPTYP_TRANSMUTATION)
-            && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-        )
+// a map of schools to the corresponding sacrifice 'mutations'.
+static const mutation_type arcana_sacrifice_map[] = {
+    MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_HEXES_MAGIC,
+    MUT_NO_CHARM_MAGIC,
+    MUT_NO_FIRE_MAGIC,
+    MUT_NO_ICE_MAGIC,
+    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
+    MUT_NO_SUMMONING_MAGIC,
+    NUM_MUTATIONS, // SPTYP_DIVINATION
+    MUT_NO_TRANSLOCATION_MAGIC,
+    MUT_NO_POISON_MAGIC,
+    MUT_NO_EARTH_MAGIC,
+    MUT_NO_AIR_MAGIC
+};
+
+/**
+ * Are some subset of the given schools unusable by the player?
+ * (Due to Sacrifice Arcana)
+ *
+ * @param schools   A bitfield containing a union of spschool_flag_types.
+ * @return          Whether the player is unable use any of the given schools.
+ */
+bool cannot_use_schools(unsigned int schools)
+{
+    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
+
+    // iter over every school
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        return true;
+        // skip schools not in the provided set
+        const int school = 1<<i;
+        if (!(schools & school))
+            continue;
+
+        // check if the player has this school locked out
+        const mutation_type lockout_mut = arcana_sacrifice_map[i];
+        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+            return true;
     }
+
     return false;
 }
 
@@ -723,7 +732,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             num_known++;
         else if (!you_can_memorise(spell))
         {
-            if (cannot_use_spell_school(spell))
+            if (cannot_use_schools(get_spell_disciplines(spell)))
                 num_restricted++;
             else
                 num_race++;
@@ -1097,7 +1106,7 @@ string desc_cannot_memorise_reason(spell_type spell)
 {
     string desc;
 
-    if (cannot_use_spell_school(spell))
+    if (cannot_use_schools(get_spell_disciplines(spell)))
         return "You cannot memorise or cast this type of magic.";
 
     return "You cannot memorise or cast this spell, because you are "
