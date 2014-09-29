@@ -3137,24 +3137,27 @@ void melee_attack::mons_apply_attack_flavour()
             break;
         }
 
-        if (attacker->type == MONS_RED_WASP || one_chance_in(3))
+        // chance to apply simple poison based on HD (regardless of paralysis)
+        const int poison_chance_denom = max(1, 7 - attacker->get_hit_dice());
+        if (one_chance_in(poison_chance_denom))
         {
-            int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
-                                   attacker->get_hit_dice() * 5 / 2);
-            defender->poison(attacker, dmg);
+            const int poison = random_range(attacker->get_hit_dice() * 3,
+                                            attacker->get_hit_dice() * 5) / 2;
+            defender->poison(attacker, poison);
         }
 
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_YELLOW_WASP)
-            paralyse_roll += 3;
+        // decrease para chance for low-hd attackers
+        const int para_chance_reduction = max(0, 7 - attacker->get_hit_dice());
+        // also decrease para chance if little damage was done
+        const int para_chance_denom = (damage_done > 4 ? 3 : 20)
+                                       + para_chance_reduction;
+        const bool strong_result = one_chance_in(para_chance_denom);
 
-        const int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
-        const bool strong_result = one_chance_in(paralyse_roll);
-
+        const int dur_bonus = attacker->get_hit_dice() / 7 - 1;
         if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
+            defender->paralyse(attacker, dur_bonus + roll_dice(1, 3));
         else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+            defender->slow_down(attacker, dur_bonus + roll_dice(1, 3));
 
         break;
     }
