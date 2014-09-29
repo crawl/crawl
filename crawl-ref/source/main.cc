@@ -1594,7 +1594,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
     {
         // "unsafe", as often you bail at single-digit hp and a wasted turn to
         // an overeager prompt cancellation might be nasty.
-        if (!yesno("Are you sure you want to leave this Ziggurat?", false, 'n'))
+        if (!yesno("Are you sure you want to leave this ziggurat?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
