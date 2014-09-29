@@ -1118,7 +1118,8 @@ static void _hell_effects(int time_delta)
     if (!player_in_hell())
         return;
 
-    if ((you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY))
+    // 50% chance at max piety
+    if (you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY * 2)
         || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
