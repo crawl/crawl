@@ -679,8 +679,7 @@ enum zin_eff
 bool zin_recite_to_single_monster(const coord_def& where)
 {
     // That's a pretty good sanity check, I guess.
-    if (!you_worship(GOD_ZIN))
-        return false;
+    ASSERT(you_worship(GOD_ZIN));
 
     monster* mon = monster_at(where);
 
@@ -711,11 +710,16 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (coinflip())
         return false;
 
-    // Resistance is now based on HD. You can affect up to (30+30)/2 = 30 'power' (HD).
-    int power = (skill_bump(SK_INVOCATIONS, 10) + you.piety * 3 / 2) / 20;
+    // Resistance is now based on HD.
+    // You can affect up to (30+30)/2 = 30 'power' (HD).
+    const int power_mult = 10;
+    const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
+                           + 3 * power_mult;
+    const int piety_power = you.piety * 3 / 2;
+    const int power = (invo_power + you.piety) / 2 / power_mult;
     // Old recite was mostly deterministic, which is bad.
-    int resist = mon->get_hit_dice() + random2(6);
-    int check = power - resist;
+    const int resist = mon->get_hit_dice() + random2(6);
+    const int check = power - resist;
 
     // We abort if we didn't *beat* their HD - but first we might get a cute message.
     if (mon->can_speak() && one_chance_in(5))
