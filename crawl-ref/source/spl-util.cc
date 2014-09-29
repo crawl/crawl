@@ -1147,7 +1147,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (cannot_use_spell_school(spell, evoked))
+    if (!evoked && cannot_use_schools(get_spell_disciplines(spell)))
         return "You cannot use spells of this school!";
 
 

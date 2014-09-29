@@ -46,7 +46,7 @@ spell_type which_spell_in_book(int sbook_type, int spl);
 int rod_spell(int zap_device_2, bool check_range = false);
 bool is_memorised(spell_type spell);
 
-bool cannot_use_spell_school(spell_type spell, bool evoked = false);
+bool cannot_use_schools(unsigned int schools);
 bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true,
                             int current_spell = SPELL_NO_SPELL);
