@@ -1788,7 +1788,8 @@ unsigned int item_value(item_def item, bool ident)
         switch (item.sub_type)
         {
         case MISC_HORN_OF_GERYON:
-            valued += 600;
+        case MISC_ZIGGURAT:
+            valued += 5000;
             break;
 
         case MISC_FAN_OF_GALES:

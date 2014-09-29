@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
@@ -43,6 +44,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -1156,6 +1158,30 @@ static bool _sack_of_spiders(item_def &sack)
         mpr("...but nothing happens.");
 
     return success;
+}
+
+static bool _make_zig(item_def &zig)
+{
+    if (feat_is_critical(grd(you.pos())))
+    {
+        mpr("You can't place a gateway to a ziggurat here.");
+        return false;
+    }
+    for (int lev = 1; lev <= brdepth[BRANCH_ZIGGURAT]; lev++)
+    {
+        if (is_level_on_stack(level_id(BRANCH_ZIGGURAT, lev))
+            || you.where_are_you == BRANCH_ZIGGURAT)
+        {
+            mpr("Finish your current ziggurat first!");
+            return false;
+        }
+    }
+
+    ASSERT(in_inventory(zig));
+    dec_inv_item_quantity(zig.link, 1);
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_ZIGGURAT);
+    mpr("You set the figurine down, and a mystic portal to a ziggurat forms.");
+    return true;
 }
 
 static bool _ball_of_energy()
@@ -2349,6 +2375,10 @@ bool evoke_item(int slot, bool check_range)
                     pract = 1;
                     break;
             }
+
+        case MISC_ZIGGURAT:
+            // Don't set did_work to false, _make_zig handles the message.
+            unevokable = !_make_zig(item);
             break;
 
         default:
