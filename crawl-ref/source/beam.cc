@@ -66,6 +66,7 @@
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -254,7 +255,8 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
 
     if (ztype == ZAP_LIGHTNING_BOLT)
     {
-        noisy(25, you.pos(), "You hear a mighty clap of thunder!");
+        noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT),
+               you.pos(), "You hear a mighty clap of thunder!");
         pbolt.heard = true;
     }
 
@@ -2384,7 +2386,8 @@ static void _imb_explosion(bolt *parent, coord_def center)
             {
                 if (you.see_cell(center))
                     mpr("The orb of energy explodes!");
-                noisy(10, center);
+                noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
+                      center);
                 first = false;
             }
             beam.friend_info.reset();
@@ -2619,10 +2622,11 @@ void bolt::affect_endpoint()
         if (you.see_cell(pos()))
         {
             mpr("The wave splashes down.");
-            noisy(25, pos());
+            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
         }
         else
-            noisy(25, pos(), "You hear a splash.");
+            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
+                  pos(), "You hear a splash.");
         _create_feat_splash(pos(), 2, random_range(3, 12, 2));
     }
 

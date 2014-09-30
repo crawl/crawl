@@ -108,7 +108,7 @@ static const struct spell_desc spelldata[] =
      3,
      100,
      4, 4,
-     3, 0,
+     3, 2,
      NULL,
      false,
      false
@@ -160,7 +160,7 @@ static const struct spell_desc spelldata[] =
      5,
      200,
      5, 12, // capped at LOS, yet this 12 matters since range increases linearly
-     5, 0,
+     5, 25,
      NULL,
      true,
      false
@@ -330,7 +330,7 @@ static const struct spell_desc spelldata[] =
      6,
      200,
      6, 6,
-     6, 0,
+     6, 2,
      NULL,
      true,
      false
@@ -553,7 +553,7 @@ static const struct spell_desc spelldata[] =
      6,
      200,
      6, 6,
-     6, 0,
+     6, 2,
      NULL,
      true,
      false
@@ -646,7 +646,7 @@ static const struct spell_desc spelldata[] =
      4,
      100,
      7, 7,
-     4, 0,
+     4, 10,
      NULL,
      true,
      false
@@ -1468,7 +1468,7 @@ static const struct spell_desc spelldata[] =
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     2, 0,
+     2, 4,
      NULL,
      false,
      false
@@ -1691,7 +1691,7 @@ static const struct spell_desc spelldata[] =
      9,
      200,
      -1, -1,
-     7, 0,
+     7, 30,
      NULL,
      false,
      false
@@ -1849,7 +1849,7 @@ static const struct spell_desc spelldata[] =
      8,
      200,
      -1, -1,
-     8, 0,
+     8, 25,
      NULL,
      false,
      false
@@ -1862,7 +1862,7 @@ static const struct spell_desc spelldata[] =
      5,
      200,
      -1, -1,
-     4, 0,
+     4, 15,
      NULL,
      false,
      false
@@ -1901,7 +1901,7 @@ static const struct spell_desc spelldata[] =
      4,
      0,
      LOS_RADIUS, LOS_RADIUS,
-     3, 0,
+     3, 8, // when it closes
      NULL,
      false,
      false
@@ -2507,7 +2507,7 @@ static const struct spell_desc spelldata[] =
      6,
      200,
      7, 7,
-     6, 0,
+     6, 25,
      NULL,
      true,
      false
@@ -2706,7 +2706,7 @@ static const struct spell_desc spelldata[] =
      5,
      200,
      6, 6,
-     5, 0,
+     5, 2,
      NULL,
      true,
      false
@@ -3233,7 +3233,7 @@ static const struct spell_desc spelldata[] =
      2,
      100,
      -1, -1,
-     2, 0,
+     2, 8,
      NULL,
      false,
      true
@@ -3287,7 +3287,7 @@ static const struct spell_desc spelldata[] =
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     4, 0,
+     4, 10,
      NULL,
      true,
      false
@@ -3575,7 +3575,7 @@ static const struct spell_desc spelldata[] =
      5,
      200,
      -1, -1,
-     4, 0,
+     4, 10,
      NULL,
      false,
      false
@@ -3666,7 +3666,7 @@ static const struct spell_desc spelldata[] =
      9,
      200,
      7, 7,
-     9, 0,
+     9, 25,
      NULL,
      false,
      false
@@ -3705,7 +3705,7 @@ static const struct spell_desc spelldata[] =
      9,
      200,
      -1, -1,
-     7, 0,
+     7, 15,
      NULL,
      false,
      false

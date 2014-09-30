@@ -660,7 +660,7 @@ bool MiscastEffect::_malign_gateway()
         env.grid(point) = DNGN_MALIGN_GATEWAY;
         set_terrain_changed(point);
 
-        noisy(10, point);
+        noisy(spell_effect_noise(SPELL_MALIGN_GATEWAY), point);
         all_msg = "The dungeon shakes, a horrible noise fills the air, and a "
                   "portal to some otherworldly place is opened!";
         msg_ch = MSGCH_WARN;

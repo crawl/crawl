@@ -2297,7 +2297,7 @@ static void _update_golubria_traps()
                 else
                     mprf(MSGCH_SOUND, "You hear a snapping sound.");
                 trap->destroy();
-                noisy(8, *it);
+                noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), *it);
             }
         }
     }

@@ -35,6 +35,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "state.h"
+#include "spl-util.h"
 #include "terrain.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
@@ -380,7 +381,7 @@ void manage_clouds()
                 bool you_see = you.see_cell(cloud.pos);
                 if (you_see && !you_worship(GOD_QAZLAL))
                     mpr("Lightning arcs down from a storm cloud!");
-                noisy(25, cloud.pos,
+                noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
                       you_see || you_worship(GOD_QAZLAL) ? NULL
                       : "You hear a mighty clap of thunder!");
             }
@@ -1158,7 +1159,7 @@ static int _actor_cloud_damage(actor *act,
                         mpr("Lightning from the thunderstorm strikes something"
                             " you cannot see.");
                     }
-                    noisy(25, act->pos(),
+                    noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), act->pos(),
                           act->is_player() || you.see_cell(act->pos())
                           || you_worship(GOD_QAZLAL)
                           ? NULL
