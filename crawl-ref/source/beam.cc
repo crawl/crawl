@@ -6013,6 +6013,16 @@ static sweep_type _radial_sweep(int r)
     return result;
 }
 
+/** How much noise does an explosion this big make?
+ *
+ *  @param the size of the explosion (radius, not diamater)
+ *  @returns how much noise it would make.
+ */
+int explosion_noise(int rad)
+{
+    return 10 + rad * 5;
+}
+
 #define MAX_EXPLOSION_RADIUS 9
 // Returns true if we saw something happening.
 bool bolt::explode(bool show_more, bool hole_in_the_middle)
@@ -6061,7 +6071,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     if (!is_tracer)
     {
-        loudness = 10 + 5 * r;
+        loudness = explosion_noise(r);
 
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.

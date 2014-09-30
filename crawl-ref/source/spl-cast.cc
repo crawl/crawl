@@ -2009,30 +2009,13 @@ string spell_noise_string(spell_type spell)
 
 
     switch (spell)
-    //When the noise can vary, we're most interested in the worst case.
     {
     case SPELL_IOOD:
         effect_noise = 7;
         break;
 
-    // Small explosions.
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_FIREBALL:
-    case SPELL_HELLFIRE_BURST:
     case SPELL_TORNADO:
         effect_noise = 15;
-        break;
-
-    // Medium explosions
-    case SPELL_LRD:         // Variable explosion noise
-        effect_noise = 20;
-        break;
-
-    // Big explosions
-    case SPELL_FIRE_STORM:  //The storms make medium or big explosions
-    case SPELL_CONJURE_BALL_LIGHTNING:
-        effect_noise = 25;
-        break;
 
     default:
         break;
