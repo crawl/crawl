@@ -427,6 +427,7 @@ void wizard_toggle_dprf()
     mpr("Diagnostic messages are available only in debug builds.");
 }
 #else
+// Be sure to change enum diag_type in mpr.h to match.
 static const char* diag_names[] =
 {
     "normal",
