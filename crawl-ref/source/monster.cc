@@ -2502,10 +2502,12 @@ string monster::name(description_level_type desc, bool force_vis,
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
     return mi.proper_name(desc)
-#ifdef DEBUG_MONSTERS
+#ifdef DEBUG_MONINDEX
     // This is incredibly spammy, too bad for regular debug builds, but
     // I keep re-adding this over and over during debugging.
-           + make_stringf("«%d:%d»", mindex(), mid)
+           + (Options.quiet_debug_messages[DIAG_MONINDEX]
+              ? string()
+              : make_stringf("«%d:%d»", mindex(), mid))
 #endif
     ;
 }

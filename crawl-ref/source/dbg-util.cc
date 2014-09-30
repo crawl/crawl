@@ -437,6 +437,9 @@ static const char* diag_names[] =
 #ifdef DEBUG_MONSPEAK
     "speech",
 #endif
+#ifdef DEBUG_MONINDEX
+    "monster index",
+#endif
 };
 
 void wizard_toggle_dprf()

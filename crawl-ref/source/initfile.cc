@@ -696,6 +696,9 @@ void game_options::reset_options()
 
 #ifdef DEBUG_DIAGNOSTICS
     quiet_debug_messages.reset();
+# ifdef DEBUG_MONINDEX
+    quiet_debug_messages.set(DIAG_MONINDEX);
+# endif
 #endif
 
 #if defined(USE_TILE_LOCAL)
