@@ -1104,6 +1104,8 @@ static bool _spell_is_empowered(spell_type spell)
             return true;
         }
         break;
+    case SPELL_DRAGON_CALL:
+        return you.form == TRAN_DRAGON;
     default:
         break;
     }
