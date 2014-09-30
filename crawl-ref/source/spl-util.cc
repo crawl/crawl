@@ -1126,6 +1126,7 @@ bool spell_is_form(spell_type spell)
         case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_DRAGON_FORM:
+        case SPELL_HYDRA_FORM:
         case SPELL_ICE_FORM:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
@@ -1284,6 +1285,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
+    case SPELL_HYDRA_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:

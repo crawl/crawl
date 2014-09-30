@@ -636,6 +636,12 @@ This spell allows one to trap an enemy in a ring of blessed flame. If such a
 foe decides to step through it, it does extra damage especially to evil and
 unholy beings. Holy creatures can step through it without any ill effects.
 %%%%
+Hydra Form spell
+
+This spell very briefly transforms the caster into a many-headed hydra. Its
+many heads strike in all directions. Edible foes slain by the gnashing teeth
+are instantly devoured, reinvigorating the caster in their reptillian rampage.
+%%%%
 Ice Form spell
 
 This spell temporarily transforms the caster's body into a frozen ice-creature,
