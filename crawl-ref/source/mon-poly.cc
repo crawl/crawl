@@ -35,14 +35,6 @@
 #include "traps.h"
 #include "xom.h"
 
-dungeon_feature_type get_mimic_feat(const monster* mimic)
-{
-    if (mimic->props.exists("feat_type"))
-        return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
-    else
-        return DNGN_FLOOR;
-}
-
 bool feature_mimic_at(const coord_def &c)
 {
     return map_masked(c, MMT_MIMIC);
