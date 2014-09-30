@@ -392,6 +392,7 @@ enum transformation_type
 #endif
     TRAN_FUNGUS,
     TRAN_SHADOW,
+    TRAN_HYDRA,
     NUM_TRANSFORMS,
 };
 

@@ -11,6 +11,8 @@
 #include "enum.h"
 #include "player.h"
 
+#define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
+
 enum form_capability
 {
     FC_DEFAULT,
@@ -36,6 +38,7 @@ public:
 enum duration_power_scaling
 {
     PS_NONE,                // no bonus
+    PS_TENTH,               // bonus based on rand2(power)/10
     PS_SINGLE,              // bonus based on rand2(power)
     PS_ONE_AND_A_HALF,      // bonus based on r(power) + r(power/2)
     PS_DOUBLE               // bonus based on r(power) + r(power)
@@ -216,6 +219,8 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
+int hydra_form_heads();
+void set_hydra_form_heads(int heads);
 const char* transform_name(transformation_type form = you.form);
 
 int form_hp_mod();

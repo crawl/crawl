@@ -113,8 +113,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 
-    can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
-        && !attacker->confused();
+    can_cleave = !jumping_attack && attacker != defender
+                 && !attacker->confused()
+                 && (wpn_skill == SK_AXES
+                     || attk == &you && you.form == TRAN_HYDRA);
 
     if (jumping_attack)
         attack_position = attack_pos;

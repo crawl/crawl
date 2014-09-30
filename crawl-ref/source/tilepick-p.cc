@@ -489,6 +489,9 @@ tileidx_t tileidx_player()
 #endif
         case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
         case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
+        case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
+                                                    hydra_form_heads() - 1);
+                             break;
         case TRAN_DRAGON:
         {
             switch (you.species)

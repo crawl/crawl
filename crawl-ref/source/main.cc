@@ -2621,8 +2621,9 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             else
             {
                 list<actor*> cleave_targets;
-                if (you.weapon() && melee_skill(*you.weapon()) == SK_AXES
-                    && !you.confused())
+                if (!you.confused()
+                    && (you.weapon() && melee_skill(*you.weapon()) == SK_AXES
+                        || you.form == TRAN_HYDRA))
                 {
                     get_all_cleave_targets(&you, target, cleave_targets);
                 }
