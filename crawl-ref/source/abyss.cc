@@ -101,7 +101,7 @@ static coord_def _place_feature_near(const coord_def &centre,
 
         if (grd(cp) == candidate)
         {
-            dprf("Placing %s at (%d,%d)",
+            dprf(DIAG_ABYSS, "Placing %s at (%d,%d)",
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
             grd(cp) = replacement;
@@ -218,7 +218,7 @@ static bool _abyss_place_map(const map_def *mdef)
     }
     catch (dgn_veto_exception &e)
     {
-        dprf("Abyss map placement vetoed: %s", e.what());
+        dprf(DIAG_ABYSS, "Abyss map placement vetoed: %s", e.what());
     }
     return false;
 }
@@ -286,7 +286,8 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
 
     if (places_found)
     {
-        dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
+        dprf(DIAG_ABYSS, "Placing abyssal rune at (%d,%d)",
+             chosen_spot.x, chosen_spot.y);
         int item_ind  = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
         if (item_ind != NON_ITEM)
         {
@@ -429,7 +430,8 @@ static bool _abyss_check_place_feat(coord_def p,
     // item-free.
     if (place_feat || (feats_wanted && *feats_wanted > 0))
     {
-        dprf("Placing abyss feature: %s.", dungeon_feature_name(which_feat));
+        dprf(DIAG_ABYSS, "Placing abyss feature: %s.",
+             dungeon_feature_name(which_feat));
 
         // When placing Abyss exits, try to use a vault if we have one.
         if (which_feat == DNGN_EXIT_ABYSS
@@ -718,7 +720,7 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
         const coord_def oldp = vp.pos;
 #endif
         vp.pos += delta;
-        dprf("Moved vault (%s) from (%d,%d)-(%d,%d)",
+        dprf(DIAG_ABYSS, "Moved vault (%s) from (%d,%d)-(%d,%d)",
              vp.map.name.c_str(), oldp.x, oldp.y, vp.pos.x, vp.pos.y);
     }
 }
@@ -788,7 +790,7 @@ static void _abyss_move_entities(coord_def target_centre,
 static void _abyss_expand_mask_to_cover_vault(map_bitmask *mask,
                                               int map_index)
 {
-    dprf("Expanding mask to cover vault %d (nvaults: %u)",
+    dprf(DIAG_ABYSS, "Expanding mask to cover vault %d (nvaults: %u)",
          map_index, (unsigned int)env.level_vaults.size());
     const vault_placement &vp = *env.level_vaults[map_index];
     for (vault_place_iterator vpi(vp); vpi; ++vpi)
@@ -923,7 +925,7 @@ void maybe_shift_abyss_around_player()
         return;
     }
 
-    dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
+    dprf(DIAG_ABYSS, "Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
 
     abyss_area_shift();
     if (you.pet_target != MHITYOU)
@@ -935,14 +937,14 @@ void maybe_shift_abyss_around_player()
         if (mitm[i].defined())
             ++j;
 
-    dprf("Number of items present: %d", j);
+    dprf(DIAG_ABYSS, "Number of items present: %d", j);
 
     j = 0;
     for (monster_iterator mi; mi; ++mi)
         ++j;
 
-    dprf("Number of monsters present: %d", j);
-    dprf("Number of clouds present: %d", env.cloud_no);
+    dprf(DIAG_ABYSS, "Number of monsters present: %d", j);
+    dprf(DIAG_ABYSS, "Number of clouds present: %d", env.cloud_no);
 #endif
 }
 
@@ -1460,7 +1462,8 @@ static colour_t _roll_abyss_rock_colour()
 static void _abyss_generate_new_area()
 {
     _initialize_abyss_state();
-    dprf("Abyss Coord (%d, %d)", abyssal_state.major_coord.x, abyssal_state.major_coord.y);
+    dprf(DIAG_ABYSS, "Abyss Coord (%d, %d)",
+         abyssal_state.major_coord.x, abyssal_state.major_coord.y);
     remove_sanctuary(false);
 
     env.floor_colour = _roll_abyss_floor_colour();
@@ -1506,7 +1509,8 @@ void generate_abyss()
 retry:
     _initialize_abyss_state();
 
-    dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
+    dprf(DIAG_ABYSS, "generate_abyss(); turn_on_level: %d",
+         env.turns_on_level);
 
     // Generate the initial abyss without vaults. Vaults are horrifying.
     _abyss_generate_new_area();
