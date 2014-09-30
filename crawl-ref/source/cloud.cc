@@ -135,6 +135,9 @@ static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
 
     cloud_struct& c = env.cloud[cloud];
 
+    if (type == CLOUD_RANDOM_SMOKE)
+        type = random_smoke_type();
+
     c.type        = type;
     c.decay       = decay;
     c.pos         = p;

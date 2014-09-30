@@ -43,7 +43,8 @@ enum xom_event_type
     XOM_GOOD_SNAKES,
     XOM_GOOD_DESTRUCTION,
     XOM_GOOD_ENCHANT_MONSTER,
-    XOM_LAST_GOOD_ACT = XOM_GOOD_ENCHANT_MONSTER,
+    XOM_GOOD_FOG,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_FOG,
 
     // bad acts
     XOM_BAD_NOTHING,  // bad act suppressed
@@ -68,7 +69,8 @@ enum xom_event_type
     XOM_BAD_NOISE,
     XOM_BAD_ENCHANT_MONSTER,
     XOM_BAD_BLINK_MONSTERS,
-    XOM_LAST_BAD_ACT = XOM_BAD_BLINK_MONSTERS,
+    XOM_BAD_CHAOS_CLOUD,
+    XOM_LAST_BAD_ACT = XOM_BAD_CHAOS_CLOUD,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
