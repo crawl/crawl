@@ -583,7 +583,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(m);
     ac = m->armour_class();
-    ev = m->melee_evasion(0, EV_IGNORE_PHASESHIFT); // dubious
+    ev = m->melee_evasion(0, EV_IGNORE_NONE); // dubious
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m);
