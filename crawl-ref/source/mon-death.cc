@@ -456,9 +456,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     }
 
     if (corpse_class == MONS_NO_MONSTER
-        || (!force && !vault_forced
-            && !one_chance_in(mons_corpse_effect(corpse_class) == CE_MUTAGEN
-                              ? 6 : 2)))
+        || (!force && !vault_forced && coinflip()))
     {
         return -1;
     }
