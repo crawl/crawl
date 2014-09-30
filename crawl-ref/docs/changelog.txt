@@ -221,6 +221,7 @@ Items
 * Cleaving hits the full eight squares around a player, when not blocked by
   walls.
 * Putting on or taking off armour now always takes five turns.
+* Scrolls of magic mapping now show 100% of the map.
 * Gloves of archery no longer penalise melee.
 * Sustain abilities effects no longer stack.
 * Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
