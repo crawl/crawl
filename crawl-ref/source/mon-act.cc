@@ -4068,10 +4068,10 @@ static bool _monster_move(monster* mons)
                     mprf("%s knocks down a tree!",
                          actor_visible?
                          mons->name(DESC_THE).c_str() : "Something");
-                    noisy(25, target);
+                    noisy(NOISE_OF_SCROLL, target);
                 }
                 else
-                    noisy(25, target, "You hear a crashing sound.");
+                    noisy(NOISE_OF_SCROLL, target, "You hear a crashing sound.");
             }
             else if (player_can_hear(mons->pos() + mmov))
             {
