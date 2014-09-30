@@ -2168,7 +2168,7 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
+    ASSERT_RANGE(you.form, TRAN_NONE, NUM_TRANSFORMS);
 #if TAG_MAJOR_VERSION == 34
     // Fix the effects of #7668 (Vampire lose undead trait once coming back
     // from lich form).
