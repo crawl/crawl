@@ -924,15 +924,15 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 }
 
 /**
- * Is the given spell castable by the player?
+ * Is the player currently unable to cast the given spell?
  *
- * @param spell The spell to check.
- * @param msg A string to contain the reason why the spell is uncastable, if
- *            any.
- * @param temp  Include checks for volatile or temporary states (status effects,
- *              mana, gods, items, etc.).
- * @param evoke Was this spell cast through item evocation?
- * @returns True if the spell is castable, false otherwise.
+ * @param[in] spell     The spell to check.
+ * @param[out] msg      A string set to the (or a) reason that the spell is
+ *                      uncastable, if it is.
+ * @param[in] temp      Include checks for volatile or temporary states
+ *                      (status effects, mana, gods, items, etc.).
+ * @param[in] evoke     Was this spell 'cast' through item evocation?
+ * @return              True if the spell is uncastable, false otherwise.
 */
 bool spell_is_uncastable(spell_type spell, string &msg, bool temp, bool evoked)
 {
