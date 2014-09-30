@@ -733,7 +733,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_ct_points = you.ct_skill_points[tsk];
 
     if (!simu && you.ct_skill_points[fsk] > 0)
-        dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+    {
+        dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
+             skill_name(fsk), you.ct_skill_points[fsk]);
+    }
 
     // We need to transfer by small steps and update skill levels each time
     // so that cross-training is handled properly.
@@ -803,15 +806,23 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         else
             you.transfer_skill_points -= total_skp_lost;
 
-        dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
-        dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+        dprf(DIAG_SKILLS, "skill %s lost %d points",
+             skill_name(fsk), total_skp_lost);
+        dprf(DIAG_SKILLS, "skill %s gained %d points",
+             skill_name(tsk), total_skp_gained);
         if (you.ct_skill_points[fsk] > 0)
-            dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+        {
+            dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
+                 skill_name(fsk), you.ct_skill_points[fsk]);
+        }
 
         if (you.transfer_skill_points == 0 || you.skills[tsk] == 27)
             ashenzari_end_transfer(true);
         else
-            dprf("%d skill points left to transfer", you.transfer_skill_points);
+        {
+            dprf(DIAG_SKILLS, "%d skill points left to transfer",
+                 you.transfer_skill_points);
+        }
     }
     return new_level;
 }

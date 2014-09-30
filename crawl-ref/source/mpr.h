@@ -80,6 +80,7 @@ enum msg_colour_type
 enum diag_type
 {
     DIAG_NORMAL,
+    DIAG_SKILLS,
     DIAG_COMBAT,
     DIAG_BEAM,
     DIAG_NOISE,
