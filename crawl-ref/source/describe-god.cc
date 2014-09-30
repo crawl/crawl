@@ -622,23 +622,31 @@ static string _describe_branch_bribability()
  *
  * @return Whether the player chose to cycle to the next description screen.
  */
-static bool _check_description_cycle()
+static bool _check_description_cycle(god_desc_type gdesc)
 {
+    // Another function may have left a dangling recolour.
+    textcolor(LIGHTGREY);
+
     const int bottom_line = min(30, get_number_of_lines());
 
     cgotoxy(1, bottom_line);
-    formatted_string::parse_string(
-                                   "Press '<w>!</w>' or '<w>^</w>'"
+    const char* place;
+    switch (gdesc)
+    {
+        case GDESC_OVERVIEW: place = "<w>Overview</w>|Powers|Wrath"; break;
+        case GDESC_DETAILED: place = "Overview|<w>Powers</w>|Wrath"; break;
+        case GDESC_WRATH:    place = "Overview|Powers|<w>Wrath</w>"; break;
+    }
+    formatted_string::parse_string(make_stringf("[<w>!</w>/<w>^</w>"
 #ifdef USE_TILE_LOCAL
-                                   " or <w>Right-click</w>"
+                                   "|<w>Right-click</w>"
 #endif
-                                   " to get more information.").display();
+    "]: %s", place)).display();
 
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
     return keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^';
-
 }
 
 /**
@@ -729,6 +737,13 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " does not punish followers who leave "+god_name(which_god)+
                    "'s service; however, their piety will be lost even upon"
                    " rejoining, and their sacrifices remain forever.";
+        case GOD_XOM:
+            return "Unfaithful ex-followers will find themselves "
+                   "suffering through "+god_name(which_god)+"'s bad moods for "+
+                   "so long as "+god_name(which_god)+" can be bothered to " +
+                   "remember about them. Still, "+god_name(which_god)+
+                   "'s caprice remains; the unfaithful are rewarded just as "+
+                   "the faithful are punished.";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"
@@ -746,6 +761,7 @@ static void _god_wrath_description(god_type which_god)
     clrscr();
     textcolor(WHITE);
     cprintf("                                  Wrath\n");
+    cprintf("\n");
 
     const int width = min(80, get_number_of_cols());
 
@@ -753,9 +769,6 @@ static void _god_wrath_description(god_type which_god)
      _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
-
-    if (_check_description_cycle())
-        describe_god(which_god, true);
 }
 
 /**
@@ -835,27 +848,8 @@ static void _detailed_god_description(god_type which_god)
 
     _print_string_wrapped(get_god_powers(which_god), width);
 
-    // nothing more to say about xom; bail out early.
-    if (which_god == GOD_XOM)
-    {
-        // let's talk about his wrath here.
-        _print_string_wrapped("Unfaithful ex-followers will find themselves "
-                              "suffering through Xom's bad moods for so long "
-                              "as Xom can be bothered to remember about them. "
-                              "Still, Xom's caprice remains; the unfaithful "
-                              "are rewarded just as the faithful are punished."
-                              , width);
-
-        if (_check_description_cycle())
-            describe_god(which_god, true);
-        return;
-    }
-
     _print_string_wrapped(get_god_likes(which_god, true), width);
     _print_string_wrapped(_get_god_misc_info(which_god), width);
-
-    if (_check_description_cycle())
-        _god_wrath_description(which_god);
 }
 
 /**
@@ -1116,7 +1110,7 @@ static void _describe_god_powers(god_type which_god, int numcols)
         cprintf("None.\n");
 }
 
-void describe_god(god_type which_god, bool give_title)
+static void _god_overview_description(god_type which_god, bool give_title)
 {
     clrscr();
 
@@ -1125,13 +1119,6 @@ void describe_god(god_type which_god, bool give_title)
         textcolor(WHITE);
         cprintf("                                  Religion\n");
         textcolor(LIGHTGREY);
-    }
-
-    if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
-    {
-        cprintf("\nYou are not religious.");
-        get_ch();
-        return;
     }
 
     // Print long god's name.
@@ -1181,7 +1168,43 @@ void describe_god(god_type which_god, bool give_title)
 
         _describe_god_powers(which_god, numcols);
     }
+}
 
-    if (_check_description_cycle())
+void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
+{
+    if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
+    {
+        clrscr();
+        textcolor(WHITE);
+        cprintf("                                  Religion\n");
+        textcolor(LIGHTGREY);
+        cprintf("\nYou are not religious.");
+        get_ch();
+        return;
+    }
+
+    switch (gdesc)
+    {
+    case GDESC_OVERVIEW:
+        _god_overview_description(which_god, give_title);
+        break;
+    case GDESC_DETAILED:
         _detailed_god_description(which_god);
+        break;
+    case GDESC_WRATH:
+        _god_wrath_description(which_god);
+        break;
+    }
+
+    if (_check_description_cycle(gdesc))
+    {
+        god_desc_type new_gdesc;
+        switch (gdesc)
+        {
+        case GDESC_OVERVIEW: new_gdesc = GDESC_DETAILED; break;
+        case GDESC_DETAILED: new_gdesc = GDESC_WRATH;    break;
+        case GDESC_WRATH:    new_gdesc = GDESC_OVERVIEW; break;
+        }
+        describe_god(which_god, give_title, new_gdesc);
+    }
 }
