@@ -4140,15 +4140,16 @@ static const string _xom_effect_to_name(int effect)
         "animate monster weapon", "random item gift",
         "acquirement", "summon allies", "polymorph", "swap monsters",
         "teleportation", "vitrification", "mutation", "lightning",
-        "change scenery", "snakes to sticks", "inner flame monsters",
-        "fog",
+        "change scenery", "snakes to sticks", "mass fireball",
+        "good enchant monster", "fog",
         // bad acts
         "nothing", "coloured smoke trail", "miscast (pseudo)",
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
         "stat loss", "teleportation", "swap weapons", "chaos upgrade",
         "mutation", "polymorph", "repel stairs", "confusion", "draining",
-        "torment", "summon demons", "banishment (pseudo)",
-        "banishment", "chaos cloud",
+        "torment", "summon hostiles", "banishment (pseudo)",
+        "banishment", "bad noise", "bad enchant monster", "blink monsters",
+        "chaos cloud",
     };
 
     string result = "";
@@ -4198,7 +4199,7 @@ void debug_xom_effects()
         return;
     }
 
-    FILE *ostat = fopen("xom_debug.stat", "a");
+    FILE *ostat = fopen("xom_debug.stat", "w");
     if (!ostat)
     {
         mprf(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");
