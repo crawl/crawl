@@ -683,7 +683,7 @@ void exercise(skill_type exsk, int deg)
     if (you.skills[exsk] >= 27)
         return;
 
-    dprf("Exercise %s by %d.", skill_name(exsk), deg);
+    dprf(DIAG_SKILLS, "Exercise %s by %d.", skill_name(exsk), deg);
 
     // push first in case queues are empty, like during -test
     while (deg > 0)
@@ -765,7 +765,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
 #endif
 #ifdef DEBUG_TRAINING_COST
     int exp_pool = you.exp_available;
-    dprf("skill cost level: %d, cost: %dxp/10skp, max XP usable: %d.",
+    dprf(DIAG_SKILLS,
+         "skill cost level: %d, cost: %dxp/10skp, max XP usable: %d.",
          you.skill_cost_level, cost, exp);
 #endif
 
@@ -857,11 +858,14 @@ static void _train_skills(int exp, const int cost, const bool simu)
         {
             skill_type sk = static_cast<skill_type>(i);
             if (total_gain[sk] && !simu)
-                dprf("Trained %s by %d.", skill_name(sk), total_gain[sk]);
+            {
+                dprf(DIAG_SKILLS, "Trained %s by %d.",
+                     skill_name(sk), total_gain[sk]);
+            }
 #ifdef DEBUG_TRAINING_COST
             total += total_gain[sk];
         }
-        dprf("Total skill points gained: %d, cost: %d XP.",
+        dprf(DIAG_SKILLS, "Total skill points gained: %d, cost: %d XP.",
              total, exp_pool - you.exp_available);
 #else
         }
@@ -988,7 +992,7 @@ void set_skill_level(skill_type skill, double amount)
     const bool reduced = target < you.skill_points[skill];
 
 #ifdef DEBUG_TRAINING_COST
-    dprf("target: %d.", target);
+    dprf(DIAG_SKILLS, "target: %d.", target);
 #endif
     while (you.skill_points[skill] != target)
     {
@@ -1017,8 +1021,8 @@ void set_skill_level(skill_type skill, double amount)
         }
 
 #ifdef DEBUG_TRAINING_COST
-        dprf("cost level: %d, total experience: %d, next level: %d, "
-             "skill points: %d, delta_skp: %d, delta_xp: %d.",
+        dprf(DIAG_SKILLS, "cost level: %d, total experience: %d, "
+             "next level: %d, skill points: %d, delta_skp: %d, delta_xp: %d.",
              you.skill_cost_level, you.total_experience, next_level,
              you.skill_points[skill], delta_skp, delta_xp);
 #endif
