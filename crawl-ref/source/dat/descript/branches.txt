@@ -24,6 +24,9 @@ to help relieve the orcs of the latter. Prospective customers should be warned:
 the haphazard manner in which orcs dig their mineshafts has resulted in a
 complex and treacherous tangle of chambers, in which it is easy to be trapped.
 
+They are filled with the sounds of industry, and thus all sounds are harder to
+hear.
+
 The Orcish Mines are four levels deep and contain the entrance to the Elven
 Halls.
 %%%%
@@ -42,6 +45,8 @@ Most adventurers find the Lair of Beasts to be an exciting change of climate.
 And indeed, there is something to be said about getting gored, mauled and eaten
 rather than sliced, burnt or stabbed.
 
+It is filled with the sounds of nature, and thus all sounds are harder to hear.
+
 The Lair is eight levels deep and contains the stairs to three more branches.
 %%%%
 Swamp
@@ -58,6 +63,9 @@ Shoals
 The exotic underground beaches of the Shoals make up a few small islands in a
 seemingly endless sea. The merfolk have made it their home, alongside many
 dreaded sea creatures.
+
+It is filled with the sound of the sea breaking on sand, and thus all sounds
+are harder to hear.
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon
 features only one of the Shoals and Swamp branches. If the Shoals are present,
@@ -89,6 +97,9 @@ Any trace of intelligent beings has long been dissolved. Still, there are
 rumours of great treasures deep down, hidden safely away in secret chambers
 without door or window.
 
+The only noise here is the occasional drip of acid, and thus all sounds are
+easier to hear.
+
 The Slime Pits are six levels deep and contain the slimy rune. The entry is
 between Lair:6 and Lair:8.
 %%%%
@@ -109,6 +120,9 @@ The Crypt is a huge repository for the ancient dead. The air is chill and
 fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
 every noise echoes worryingly, violating the overbearing silence of the grave.
 
+It is suffused with the silence of the grave, and thus all sounds are easier to
+hear.
+
 The Crypt is three levels deep, and contains the entrance to the Tomb. Its entry
 is either on Vaults:2 or Vaults:3.
 %%%%
@@ -117,6 +131,9 @@ Tomb
 The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. The list of those who have returned from this place of pure
 death is exceedingly short.
+
+It is suffused with the silence of the grave, and thus all sounds are much
+easier to hear.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is on
 Crypt:3.
