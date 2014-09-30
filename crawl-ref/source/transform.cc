@@ -140,6 +140,8 @@ int FormDuration::power_bonus(int pow) const
     {
         case PS_NONE:
             return 0;
+        case PS_TENTH:
+            return random2(pow)/10;
         case PS_SINGLE:
             return random2(pow);
         case PS_ONE_AND_A_HALF:
@@ -451,7 +453,7 @@ public:
     { };
 
     /**
-     * Find the player's unarmed acc bonus, base unarmed damage in this form.
+     * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -534,7 +536,7 @@ public:
     { };
 
     /**
-     * Find the player's unarmed acc bonus, base unarmed damage in this form.
+     * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -682,7 +684,7 @@ public:
     }
 
     /**
-     * Find the player's unarmed acc bonus, base unarmed damage in this form.
+     * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -822,7 +824,7 @@ public:
     }
 
     /**
-     * Find the player's unarmed acc bonus, base unarmed damage in this form.
+     * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
     {
@@ -1107,6 +1109,91 @@ public:
     }
 };
 
+
+/**
+ * How many heads does the player's hydra form currently have?
+ */
+int hydra_form_heads()
+{
+    ASSERT(you.props.exists(HYDRA_FORM_HEADS_KEY));
+    return you.props[HYDRA_FORM_HEADS_KEY].get_int();
+}
+
+/**
+ * Set the number of hydra heads that the player currently has.
+ *
+ * @param pow   The power of the form.
+ */
+void set_hydra_form_heads(int heads)
+{
+    you.props[HYDRA_FORM_HEADS_KEY] = min(20, max(1, heads));
+}
+
+class FormHydra : public Form
+{
+public:
+    FormHydra()
+    : Form("Hydra", "hydra-form", "hydra", // short name, long name, wizmode name
+           "",  // description
+           EQF_PHYSICAL,  // blocked slots
+           MR_RES_POISON, // resists
+           FormDuration(4, PS_TENTH, 12), // duration
+           8, 0,    // str mod, dex mod
+           SIZE_BIG, 15, 6,    // size, hp mod, stealth mod
+           true, 0,                 // can_cast, spellcasting penalty
+           10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
+           "",             // name of unarmed-combat "weapon" (in UI)
+           FormAttackVerbs("nip at", "bite", "gouge", "chomp"), // verbs used for uc
+           FC_DEFAULT, FC_ENABLE,  // can_fly, can_swim
+           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
+           "roar", 4,          // shout verb, shout volume modifier
+           "foreclaw", "",          // hand name, foot name
+           MONS_HYDRA)       // equivalent monster
+    { };
+
+    /**
+     * Get a string describing the form you're turning into.
+     */
+    string get_transform_description() const
+    {
+        return make_stringf("a %d-headed hydra.", hydra_form_heads());
+    }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const
+    {
+        return make_stringf("You %s %s",
+                            past_tense ? "were" : "are",
+                            get_transform_description().c_str());
+    }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string default_name) const
+    {
+        return make_stringf("Bite (x%d)", hydra_form_heads());
+    }
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const
+    {
+        // 3 damage per head for 1-10
+        const int normal_heads_damage = min(hydra_form_heads(), 10) * 3;
+        // 3/2 damage per head for 11-20 (they get in each-other's way)
+            // (and also a 62-base-damage form scares me)
+        const int too_many_heads_damage = max(0, hydra_form_heads() - 10)
+                                            * 3 / 2;
+        // 2-47 (though more like 14-32 in practical ranges...)
+        return 2 + normal_heads_damage + too_many_heads_damage;
+    }
+
+};
+
 static const FormNone FORM_NONE = FormNone();
 static const FormSpider FORM_SPIDER = FormSpider();
 static const FormBlade FORM_BLADE = FormBlade();
@@ -1128,6 +1215,7 @@ static const FormJelly FORM_JELLY = FormJelly();
 #endif
 static const FormFungus FORM_FUNGUS = FormFungus();
 static const FormShadow FORM_SHADOW = FormShadow();
+static const FormHydra FORM_HYDRA = FormHydra();
 
 
 static const Form* forms[] =
@@ -1153,6 +1241,7 @@ static const Form* forms[] =
 #endif
     &FORM_FUNGUS,
     &FORM_SHADOW,
+    &FORM_HYDRA,
 };
 
 const Form* get_form(transformation_type form)
@@ -1944,6 +2033,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
         you.duration[DUR_STONESKIN] = 0;
 
+    if (which_trans == TRAN_HYDRA)
+        set_hydra_form_heads(div_rand_round(pow, 10));
+
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans).c_str());
 
@@ -2140,6 +2232,8 @@ void untransform(bool skip_move)
     you.wield_change        = true;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
+    if (you.props.exists(HYDRA_FORM_HEADS_KEY))
+        you.props.erase(HYDRA_FORM_HEADS_KEY);
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;

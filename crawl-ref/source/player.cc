@@ -2185,7 +2185,7 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
         mv = 8;
-    else if (you.fishtail)
+    else if (you.fishtail || you.form == TRAN_HYDRA && you.in_water())
         mv = 6;
 
     // moving on liquefied ground takes longer
@@ -6471,6 +6471,9 @@ int player::armour_class(bool /*calc_unid*/) const
         case TRAN_WISP:
             AC += 500 + 50 * experience_level;
             break;
+        case TRAN_HYDRA:
+            AC += 600 + you.props[TRANSFORM_POW_KEY].get_int() * 5; // max 16
+            break;
         case TRAN_FUNGUS:
             AC += 1200;
             break;
@@ -6696,7 +6699,8 @@ int player::res_water_drowning() const
     if (is_unbreathing()
         || species == SP_MERFOLK && !form_changed_physiology()
         || species == SP_OCTOPODE && !form_changed_physiology()
-        || form == TRAN_ICE_BEAST)
+        || form == TRAN_ICE_BEAST
+        || form == TRAN_HYDRA)
     {
         rw++;
     }

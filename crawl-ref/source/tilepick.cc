@@ -32,6 +32,7 @@
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
 #include "tileview.h"
+#include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
 
