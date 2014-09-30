@@ -5,8 +5,6 @@
 
 #ifndef MONPOLY_H
 #define MONPOLY_H
-const item_def *give_mimic_item(monster* mimic);
-dungeon_feature_type get_mimic_feat(const monster* mimic);
 bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
