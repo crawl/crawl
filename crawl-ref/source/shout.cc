@@ -498,7 +498,7 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0? original_loudness + random2avg(abs(ambient), 3)
                    : original_loudness - random2avg(abs(ambient), 3);
 
-    dprf("Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
+    dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          loudness, original_loudness, ambient, where.x, where.y);
 
     if (loudness <= 0)
@@ -579,7 +579,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 {
                     if (coinflip())
                     {
-                        dprf("disturbing %s (%d, %d)",
+                        dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
                              mi->name(DESC_PLAIN).c_str(),
                              mi->pos().x, mi->pos().y);
                         behaviour_event(*mi, ME_DISTURB, 0, where);
@@ -587,7 +587,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     break;
                 }
             }
-            dprf("alerting %s (%d, %d)",
+            dprf(DIAG_NOISE, "alerting %s (%d, %d)",
                             mi->name(DESC_PLAIN).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
@@ -602,14 +602,14 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             {
                 if (coinflip())
                 {
-                    dprf("disturbing %s (%d, %d)",
+                    dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
                          mi->name(DESC_PLAIN).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_DISTURB, 0, where);
                 }
                 else
                 {
-                    dprf("alerting %s (%d, %d)",
+                    dprf(DIAG_NOISE, "alerting %s (%d, %d)",
                          mi->name(DESC_PLAIN).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_ALERT, 0, where);
@@ -726,7 +726,8 @@ void noise_grid::propagate_noise()
         return;
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("noise_grid: %u noises to apply", (unsigned int)noises.size());
+    dprf(DIAG_NOISE, "noise_grid: %u noises to apply",
+         (unsigned int)noises.size());
 #endif
     vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
@@ -933,8 +934,8 @@ coord_def noise_grid::noise_perceived_position(actor *act,
         : perceived_point;
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("[NOISE] Noise perceived by %s at (%d,%d) centroid (%d,%d) "
-         "source (%d,%d) "
+    dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
+         "centroid (%d,%d) source (%d,%d) "
          "heard at (%d,%d), distance: %d (traveled %d)",
          act->name(DESC_PLAIN, true).c_str(),
          final_perceived_point.x, final_perceived_point.y,
@@ -1058,7 +1059,7 @@ static void _actor_apply_noise(actor *act,
                                int noise_travel_distance)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("[NOISE] Actor %s (%d,%d) perceives noise (%d) "
+    dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
          "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,
