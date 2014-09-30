@@ -15,6 +15,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #ifdef WIZARD
@@ -57,6 +58,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-monench.h"
@@ -2234,6 +2236,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
 
     god_acting gdact(GOD_XOM);
 
+
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
@@ -2271,9 +2274,21 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_destruction(sever, debug);
     else if (tension > 0 && x_chance_in_y(14, sever))
         done = _xom_rearrange_pieces(sever, debug);
-    else if (random2(tension) < 15 && x_chance_in_y(15, sever))
+    else if (tension > 0 && x_chance_in_y(15, sever))
+    {
+
+        if (cloud_type_at(you.pos()) != CLOUD_NONE)
+            return XOM_DID_NOTHING;
+        if (debug)
+            return XOM_GOOD_FOG;
+        big_cloud(CLOUD_RANDOM_SMOKE, &you, you.pos(), 50, 8 + random2(8));
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "fog"), true);
+        god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
+        done = XOM_GOOD_FOG;
+    }
+    else if (random2(tension) < 15 && x_chance_in_y(16, sever))
         done = _xom_give_item(sever, debug);
-    else if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(16, sever))
+    else if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(17, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2317,7 +2332,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = XOM_GOOD_TELEPORT;
     }
-    else if (random2(tension) < 5 && x_chance_in_y(17, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(18, sever))
     {
         if (debug)
             return XOM_GOOD_VITRIFY;
@@ -2331,12 +2346,12 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             done = XOM_GOOD_VITRIFY;
         }
     }
-    else if (random2(tension) < 5 && x_chance_in_y(18, sever)
+    else if (random2(tension) < 5 && x_chance_in_y(19, sever)
              && x_chance_in_y(16, how_mutated()))
     {
         done = _xom_give_mutations(true, debug);
     }
-    else if (tension > 0 && x_chance_in_y(19, sever))
+    else if (tension > 0 && x_chance_in_y(20, sever))
         done = _xom_throw_divine_lightning(debug);
 
     return done;
@@ -3486,12 +3501,25 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(2, nasty, debug);
             badness = 2;
         }
-        else if (x_chance_in_y(13, sever))
+        else if (tension > 0 && x_chance_in_y(13, sever))
+        {
+            if (cloud_type_at(you.pos()) != CLOUD_NONE)
+                return XOM_DID_NOTHING;
+            if (debug)
+                return XOM_BAD_CHAOS_CLOUD;
+            big_cloud(CLOUD_CHAOS, &you, you.pos(), 50, 4 + random2(20));
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
+                      true);
+            god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
+            done = XOM_BAD_CHAOS_CLOUD;
+            badness = 2;
+        }
+        else if (x_chance_in_y(14, sever))
         {
             done    = _xom_chaos_upgrade_nearby_monster(debug);
             badness = 2 + coinflip();
         }
-        else if (x_chance_in_y(14, sever) && !player_in_branch(BRANCH_ABYSS))
+        else if (x_chance_in_y(15, sever) && !player_in_branch(BRANCH_ABYSS))
         {
             // Try something else if teleportation is impossible.
             if (!_teleportation_check())
@@ -3544,32 +3572,32 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
                       true);
             done = XOM_BAD_TELEPORT;
         }
-        else if (x_chance_in_y(15, sever))
+        else if (x_chance_in_y(16, sever))
         {
             done    = _xom_polymorph_nearby_monster(false, debug);
             badness = 3;
         }
-        else if (tension > 0 && x_chance_in_y(16, sever))
+        else if (tension > 0 && x_chance_in_y(17, sever))
         {
             done    = _xom_repel_stairs(debug);
             badness = (you.duration[DUR_REPEL_STAIRS_CLIMB] ? 3 : 2);
         }
-        else if (random2(tension) < 11 && x_chance_in_y(17, sever))
+        else if (random2(tension) < 11 && x_chance_in_y(18, sever))
         {
             done    = _xom_give_mutations(false, debug);
             badness = 3;
         }
-        else if (x_chance_in_y(18, sever))
+        else if (x_chance_in_y(19, sever))
         {
             done    = _xom_summon_hostiles(sever, debug);
             badness = 3 + coinflip();
         }
-        else if (x_chance_in_y(19, sever))
+        else if (x_chance_in_y(20, sever))
         {
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
         }
-        else if (x_chance_in_y(20, sever))
+        else if (x_chance_in_y(21, sever))
         {
             done    = _xom_draining_torment_effect(sever, debug);
             badness = (random2(tension) > 5 ? 3 : 2);
@@ -4113,13 +4141,14 @@ static const string _xom_effect_to_name(int effect)
         "acquirement", "summon allies", "polymorph", "swap monsters",
         "teleportation", "vitrification", "mutation", "lightning",
         "change scenery", "snakes to sticks", "inner flame monsters",
+        "fog",
         // bad acts
         "nothing", "coloured smoke trail", "miscast (pseudo)",
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
         "stat loss", "teleportation", "swap weapons", "chaos upgrade",
         "mutation", "polymorph", "repel stairs", "confusion", "draining",
         "torment", "summon demons", "banishment (pseudo)",
-        "banishment"
+        "banishment", "chaos cloud",
     };
 
     string result = "";

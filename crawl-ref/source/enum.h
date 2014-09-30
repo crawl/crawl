@@ -739,7 +739,9 @@ enum cloud_type
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
     CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
 
-    CLOUD_RANDOM = 98,
+    // Random per-square.
+    CLOUD_RANDOM_SMOKE = 97,
+    CLOUD_RANDOM,
     CLOUD_DEBUGGING,
 };
 

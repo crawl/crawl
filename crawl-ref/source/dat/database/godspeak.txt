@@ -397,6 +397,14 @@ Xom shushes you conspicuously.
 
 Xom whispers "Shhh!"
 %%%%
+Xom cloud
+
+"The weather's been a too boring around here."
+
+Xom asks Qazlal to spice things up a little.
+
+"Forecast: mostly cloudy."
+%%%%
 Xom life saving general
 
 "What? Wait, NO!"
