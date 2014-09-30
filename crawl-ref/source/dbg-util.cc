@@ -433,6 +433,7 @@ static const char* diag_names[] =
     "normal",
     "combat",
     "beam",
+    "noise",
     "abyss",
     "monplace",
 #ifdef DEBUG_MONSPEAK

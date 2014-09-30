@@ -82,6 +82,7 @@ enum diag_type
     DIAG_NORMAL,
     DIAG_COMBAT,
     DIAG_BEAM,
+    DIAG_NOISE,
     DIAG_ABYSS,
     DIAG_MONPLACE,
 #ifdef DEBUG_MONSPEAK
