@@ -2007,19 +2007,9 @@ string spell_noise_string(spell_type spell)
         effect_noise = beem.loudness;
     }
 
-
-    switch (spell)
-    {
-    case SPELL_IOOD:
-        effect_noise = 7;
-        break;
-
-    case SPELL_TORNADO:
+    // A typical amount of noise.
+    if (spell == SPELL_TORNADO)
         effect_noise = 15;
-
-    default:
-        break;
-    }
 
     const int noise = max(casting_noise, effect_noise);
 
