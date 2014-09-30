@@ -76,6 +76,7 @@ enum msg_colour_type
     MSGCOL_NONE,                // parsing failure, etc
 };
 
+// Be sure to change diag_names in dbg-util.cc to match.
 enum diag_type
 {
     DIAG_NORMAL,
