@@ -1045,7 +1045,7 @@ void wizard_transform()
     while (true)
     {
         string line;
-        for (int i = 0; i <= LAST_FORM; i++)
+        for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
 #if TAG_MAJOR_VERSION == 34
             if (i == TRAN_JELLY)
@@ -1053,7 +1053,7 @@ void wizard_transform()
 #endif
             line += make_stringf("[%c] %-10s ", i + 'a',
                                  transform_name((transformation_type)i));
-            if (i % 5 == 4 || i == LAST_FORM)
+            if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
                 mprf(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
@@ -1070,7 +1070,7 @@ void wizard_transform()
             return;
         }
 
-        if (keyin < 'a' || keyin > 'a' + LAST_FORM)
+        if (keyin < 'a' || keyin > 'a' + NUM_TRANSFORMS - 1)
             continue;
 
 #if TAG_MAJOR_VERSION == 34

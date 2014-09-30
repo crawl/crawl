@@ -6445,6 +6445,7 @@ int player::armour_class(bool /*calc_unid*/) const
         case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
         case TRAN_LICH:  // can wear normal body armour (no bonus)
+        case NUM_TRANSFORMS:
             break;
 
 #if TAG_MAJOR_VERSION == 34

@@ -44,8 +44,6 @@
 #include "traps.h"
 #include "xom.h"
 
-#define NUM_FORMS (LAST_FORM + 1)
-
 // transform slot enums into flags
 #define SLOTF(s) (1 << s)
 
@@ -1159,8 +1157,8 @@ static const Form* forms[] =
 
 const Form* get_form(transformation_type form)
 {
-    COMPILE_CHECK(ARRAYSZ(forms) == NUM_FORMS);
-    ASSERT_RANGE(form, 0, NUM_FORMS);
+    COMPILE_CHECK(ARRAYSZ(forms) == NUM_TRANSFORMS);
+    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return forms[form];
 }
 
@@ -1180,7 +1178,7 @@ static void _extra_hp(int amount_extra);
  */
 const char* transform_name(transformation_type form)
 {
-    ASSERT_RANGE(form, 0, NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return forms[form]->wiz_name.c_str();
 }
 
@@ -1192,7 +1190,7 @@ const char* transform_name(transformation_type form)
 */
 bool form_can_wield(transformation_type form)
 {
-    ASSERT_RANGE(form, 0, NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return forms[form]->slot_available(EQ_WEAPON);
 }
 
@@ -1204,7 +1202,7 @@ bool form_can_wield(transformation_type form)
  */
 bool form_can_wear(transformation_type form)
 {
-    ASSERT_RANGE(form, 0, NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return (forms[form]->blocked_slots & EQF_WEAR) != EQF_WEAR;
 }
 
@@ -1217,7 +1215,7 @@ bool form_can_wear(transformation_type form)
  */
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
-    ASSERT_RANGE(form, 0, NUM_FORMS);
+    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return forms[form]->can_wear_item(item);
 }
 
