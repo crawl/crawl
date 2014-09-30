@@ -1,6 +1,18 @@
-Stone Soup 0.16 (up to 0.16-a0-603-g12f7cf7)
+Stone Soup 0.16 (up to 0.16-a0-942-g1b4356f)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Insubstantial.
+
+Branches, environment
+---------------------
+* Ziggurats now only require two runes to enter, down from three.
+
+Character
+---------
+* Demigods now gain one stat of their choice on 2/3 levels (2,3,5,6...26,27),
+  instead of gaining one stat of their choice on every third level and one
+  random stat on every other level.
+* All species can now choose 'unarmed' when playing backgrounds that allow a
+  weapon choice.
 
 Monsters
 --------
@@ -8,10 +20,17 @@ Monsters
   as such Mnoleg no longer has Malign Gateway.
 * The Serpent of Hell is considerably tougher; it now has three heads which
   can attack and/or breathe separately and can also summon backup.
+* Mimics now cackle and vanish (forever) when discovered.
+* Mermaids have been renamed to sirens; sirens have been renamed to merfolk
+  avatars.
+
+Spells
+------
+* Dragon Form now provides a spell power & success chance enhancer for Dragon's
+  Call.
 
 Items
 -----
-* Scrolls of magic mapping now show 100% of the map.
 * The captain's cutlass is now +5 (was +10) and can disarm enemies.
 
 Gods
@@ -44,15 +63,26 @@ Gods
   - Cataclysm: Deals very high damage to all monsters in LOS and inflicts
     statuses. Costs heavy drain and exhaustion.
 * Dithmenos worshippers are now rejected by fiery/illuminating summons.
+* TSO's Divine Shield no longer benefits from Shields skill.
+* Zin:
+   - Hell effect protection halved; now capping out at 50%, down from 100%.
+   - Recite now more effective at very low Invocations.
 
 Interface
 ---------
 * Some effects (Shatter, banishment, etc.) now display animations.
 * The screen now flashes on attempting to autoexplore with monsters in view,
   indicating where the relevant monsters are.
+* Stealth is now displayed as a bar in the % screen. (The old 'stealth words')
+  are still visible with @.)
+* A third page has been added to the god description (^) screen, listing causes
+  and effects of divine wrath.
+* Monsters no longer appear on the minimap.
 * Multiple species/backgrounds/weapons can be specified in the init file,
   causing one to be randomly selected; a new "combo" option allows entire sets
   of the above to be specified, again with one being randomly selected.
+* In tiles, the init file now allows you to specify an arbitrary monster tile
+  for your character to be displayed as.
 
 Stone Soup 0.15.1 (20140915)
 ----------------------------
@@ -277,6 +307,7 @@ Items
 * Cleaving hits the full eight squares around a player, when not blocked by
   walls.
 * Putting on or taking off armour now always takes five turns.
+* Scrolls of magic mapping now show 100% of the map.
 * Gloves of archery no longer penalise melee.
 * Sustain abilities effects no longer stack.
 * Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
