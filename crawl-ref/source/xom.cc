@@ -3072,8 +3072,9 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 static int _xom_repel_stairs(bool debug = false)
 {
     // Repeating the effect while it's still active is boring.
-    if (you.duration[DUR_REPEL_STAIRS_MOVE]
-        || you.duration[DUR_REPEL_STAIRS_CLIMB])
+    if (!debug &&
+        (you.duration[DUR_REPEL_STAIRS_MOVE]
+         || you.duration[DUR_REPEL_STAIRS_CLIMB]))
     {
         return XOM_DID_NOTHING;
     }
@@ -3577,7 +3578,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_polymorph_nearby_monster(false, debug);
             badness = 3;
         }
-        else if (tension > 0 && x_chance_in_y(17, sever))
+        else if ((tension > 0 || you.where_are_you == BRANCH_ABYSS)
+                 && x_chance_in_y(17, sever))
         {
             done    = _xom_repel_stairs(debug);
             badness = (you.duration[DUR_REPEL_STAIRS_CLIMB] ? 3 : 2);
