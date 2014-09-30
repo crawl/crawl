@@ -3782,8 +3782,9 @@ bool melee_attack::do_knockback(bool trample)
     return false;
 }
 
-// Cleave covers the 8 adjacent cells, but is stopped by solid features.
-// Allies are passed through without harm.
+/**
+ * Find the list of targets to cleave (after hitting the main target).
+ */
 void melee_attack::cleave_setup()
 {
     if (cell_is_solid(defender->pos()))
@@ -3793,16 +3794,9 @@ void melee_attack::cleave_setup()
     if (attacker->pos() == defender->pos())
         return;
 
-    int dir = coinflip() ? -1 : 1;
-    bool behind = coinflip();
-    get_cleave_targets(attacker, defender->pos(), dir, cleave_targets, behind);
-    cleave_targets.reverse();
-    attack_cleave_targets(attacker, cleave_targets, attack_number,
-                          effective_attack_number);
-
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
-    get_cleave_targets(attacker, defender->pos(), -dir, cleave_targets, !behind);
+    get_cleave_targets(attacker, defender->pos(), cleave_targets);
 }
 
 // cleave damage modifier for additional attacks: 75% of base damage

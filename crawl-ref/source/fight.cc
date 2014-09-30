@@ -608,10 +608,17 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
            || attacker == &you && defender->wont_attack()
            || defender == &you && attacker->wont_attack();
 }
-// Put the potential cleave targets into a list. Up to 4, taken in order by
-// rotating from the def position and stopping at the first solid feature.
-void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
-                        list<actor*> &targets, bool behind)
+
+/**
+ * List potential cleave targets (adjacent hostile creatures), aside from the
+ * targeted defender itself.
+ *
+ * @param attacker[in]   The attacking creature.
+ * @param def[in]        The location of the targeted defender.
+ * @param targets[out]   A list to be populated with targets.
+ */
+void get_cleave_targets(const actor* attacker, const coord_def& def,
+                        list<actor*> &targets)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -620,23 +627,13 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
 
     const coord_def atk = attacker->pos();
     coord_def atk_vector = def - atk;
-    int num = behind ? 4 : 3;
-    // Let the cleave try to go farther around if we are sure that this
-    // won't overlap with going in the other direction.
-    for (adjacent_iterator ai(atk); ai; ++ai)
-    {
-        if (cell_is_solid(*ai))
-        {
-            num = 7;
-            break;
-        }
-    }
+    const int dir = coinflip() ? -1 : 1;
 
-    for (int i = 0; i < num; ++i)
+    for (int i = 0; i < 7; ++i)
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
         if (cell_is_solid(atk + atk_vector))
-            break;
+            continue;
 
         actor * target = actor_at(atk + atk_vector);
         if (target && !_dont_harm(attacker, target))
@@ -644,29 +641,41 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
     }
 }
 
+/**
+ * List potential cleave targets (adjacent hostile creatures), including the
+ * defender.
+ *
+ * @param attacker[in]   The attacking creature.
+ * @param def[in]        The location of the targeted defender.
+ * @param targets[out]   A list to be populated with targets.
+ */
 void get_all_cleave_targets(const actor* attacker, const coord_def& def,
                             list<actor*> &targets)
 {
     if (cell_is_solid(def))
         return;
 
-    int dir = coinflip() ? -1 : 1;
-    bool behind = coinflip();
-    get_cleave_targets(attacker, def, dir, targets, behind);
-    targets.reverse();
     if (actor_at(def))
         targets.push_back(actor_at(def));
-    get_cleave_targets(attacker, def, -dir, targets, !behind);
+    get_cleave_targets(attacker, def, targets);
 }
 
+/**
+ * Attack a provided list of cleave targets.
+ *
+ * @param attacker                  The attacking creature.
+ * @param targets                   The targets to cleave.
+ * @param attack_number             ?
+ * @param effective_attack_number   ?
+ */
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number)
 {
-    while (!targets.empty())
+    ASSERT(attacker);
+    while (attacker->alive() && !targets.empty())
     {
         actor* def = targets.front();
-        if (attacker->alive() && def && def->alive()
-            && !_dont_harm(attacker, def))
+        if (def && def->alive() && !_dont_harm(attacker, def))
         {
             melee_attack attck(attacker, def, attack_number,
                                ++effective_attack_number, true);

@@ -43,8 +43,8 @@ stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
 
 void chaos_affect_actor(actor *victim);
-void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
-                        list<actor*> &targets, bool behind);
+void get_cleave_targets(const actor* attacker, const coord_def& def,
+                        list<actor*> &targets);
 void get_all_cleave_targets(const actor* attacker, const coord_def& def,
                             list<actor*> &targets);
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
