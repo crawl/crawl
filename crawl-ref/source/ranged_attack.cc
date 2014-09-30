@@ -592,7 +592,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
-    dprf("Brand rolled %d against defender HD: %d.",
+    dprf(DIAG_COMBAT, "Brand rolled %d against defender HD: %d.",
          resist_roll, defender->get_hit_dice());
 
     if (resist_roll < defender->get_hit_dice())
