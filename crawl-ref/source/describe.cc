@@ -3275,11 +3275,35 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
+/**
+ * Append information about a given monster's MR to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
+{
+    result << "MR ";
+
+    const int mr = mi.res_magic();
+    const int mr_bars = mr / 40;
+    for (int i = 0; i < mr_bars; i++)
+        result << "+";
+    for (int i = 4; i >= mr_bars; --i)
+        result << ".";
+
+    result << "\n";
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
+
+    _describe_monster_mr(mi, result);
+
+    result << "\n";
 
     resists_t resist = mi.resists();
 
@@ -3366,15 +3390,6 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is susceptible to "
                << comma_separated_line(suscept.begin(), suscept.end())
                << ".\n";
-    }
-
-    const int mr = mi.res_magic();
-    // How resistant is it? Same scale as the player.
-    if (mr >= 40)
-    {
-        result << uppercase_first(pronoun)
-               << make_stringf(" is %s to hostile enchantments.\n",
-                               magic_res_adjective(mr).c_str());
     }
 
     if (mons_class_flag(mi.type, M_STATIONARY)
