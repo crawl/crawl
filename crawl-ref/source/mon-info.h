@@ -150,6 +150,8 @@ struct monster_info_base
     string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    int ac;
+    int ev;
     resists_t mresists;
     mon_itemuse_type mitemuse;
     int mbase_speed;

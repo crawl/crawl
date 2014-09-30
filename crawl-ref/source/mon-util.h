@@ -186,6 +186,8 @@ static inline int get_resist(resists_t all, mon_resist_flags res)
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(monster_type mc) IMMUTABLE;
+int get_mons_class_ac(monster_type mc) IMMUTABLE;
+int get_mons_class_ev(monster_type mc) IMMUTABLE;
 resists_t get_mons_class_resists(monster_type mc) IMMUTABLE;
 resists_t get_mons_resists(const monster* mon);
 int get_mons_resist(const monster* mon, mon_resist_flags res);
