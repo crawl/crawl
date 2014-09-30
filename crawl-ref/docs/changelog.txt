@@ -5,6 +5,9 @@ Stone Soup 0.16 (up to 0.16-a0-942-g1b4356f)
 Branches, environment
 ---------------------
 * Ziggurats now only require two runes to enter, down from three.
+* Every time a player clears a ziggurat (exits from the top floor, Zig:27), all
+  subsequent ziggurats become significantly harder.
+* A Hall of Blades area (not branch) is now guaranteed on Elf:2.
 
 Character
 ---------
@@ -23,6 +26,13 @@ Monsters
 * Mimics now cackle and vanish (forever) when discovered.
 * Mermaids have been renamed to sirens; sirens have been renamed to merfolk
   avatars.
+* Curse skulls now move - fast!
+* New monster: elemental wellsprings, appearing in Cocytus. They fire powerful
+  waves of water which produce hostile water elementals - but deplete their
+  own 'health' in the process.
+* New monster: bennu, the divine phoenix, appearing in Tomb. Attacks with fire,
+  draining, and holy; when killed, explodes into ghostly flame and instantly
+  returns to life (once).
 
 Spells
 ------
