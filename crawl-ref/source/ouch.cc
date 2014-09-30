@@ -27,6 +27,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
+#include "colour.h"
 #include "chardump.h"
 #include "delay.h"
 #include "describe.h"
@@ -660,7 +661,7 @@ static void _maybe_ru_retribution(int dam, int death_source)
     }
 }
 
-static void _maybe_spawn_jellies(int dam, const char* aux,
+static void _maybe_spawn_monsters(int dam, const char* aux,
                                   kill_method_type death_type, int death_source)
 {
     // We need to exclude acid damage and similar things or this function
@@ -668,38 +669,55 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     if (death_source == NON_MONSTER)
         return;
 
-    monster_type mon = royal_jelly_ejectable_monster();
-
     // Exclude torment damage.
-    const bool torment = aux && strstr(aux, "torment");
+    if (aux && strstr(aux, "torment"))
+        return;
+
+    monster_type mon;
+    int how_many = 0;
+
     if (you_worship(GOD_JIYVA)
-        && you.piety >= piety_breakpoint(5)
-        && !torment)
+        && you.piety >= piety_breakpoint(5))
     {
-        int how_many = 0;
+        mon = royal_jelly_ejectable_monster();
         if (dam >= you.hp_max * 3 / 4)
             how_many = random2(4) + 2;
         else if (dam >= you.hp_max / 2)
             how_many = random2(2) + 2;
         else if (dam >= you.hp_max / 4)
             how_many = 1;
+    }
+    else if (you_worship(GOD_XOM)
+             && dam >= you.hp_max / 4
+             && x_chance_in_y(dam, 3 * you.hp_max))
+    {
+        mon = MONS_BUTTERFLY;
+        how_many = 2 + random2(5);
+    }
 
-        if (how_many > 0)
+    if (how_many > 0)
+    {
+        int count_created = 0;
+        for (int i = 0; i < how_many; ++i)
         {
-            int count_created = 0;
-            for (int i = 0; i < how_many; ++i)
+            int foe = death_source;
+            if (invalid_monster_index(foe))
+                foe = MHITNOT;
+            mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
+                         foe, 0, you.religion);
+
+            if (create_monster(mg))
+                count_created++;
+        }
+
+        if (count_created > 0)
+        {
+            if (mon == MONS_BUTTERFLY)
             {
-                int foe = death_source;
-                if (invalid_monster_index(foe))
-                    foe = MHITNOT;
-                mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
-                             foe, 0, GOD_JIYVA);
-
-                if (create_monster(mg))
-                    count_created++;
+                mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "butterfly on damage"), true);
             }
-
-            if (count_created > 0)
+            else
             {
                 mprf("You shudder from the %s and a %s!",
                      death_type == KILLED_BY_MONSTER ? "blow" : "blast",
@@ -761,6 +779,13 @@ static void _maybe_fog(int dam)
     {
         mpr("You emit a cloud of dark smoke.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
+    }
+    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 5 * upper_threshold))
+    {
+        mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
+        big_cloud(CLOUD_MAGIC_TRAIL, &you, you.pos(), 50, 4 + random2(5),
+                  -1, ETC_RANDOM);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "smoke on damage"), true);
     }
 }
 
@@ -999,7 +1024,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_ru_retribution(dam, death_source);
-            _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _maybe_spawn_monsters(dam, aux, death_type, death_source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
