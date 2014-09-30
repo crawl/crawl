@@ -99,7 +99,7 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
         place_cloud(CLOUD_FIRE, where, durat, &you);
         mpr("The fire roars!");
     }
-    noisy(2, where);
+    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
 
     return SPRET_SUCCESS;
 }
@@ -145,7 +145,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
+spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {
     if (distance2(beam.target, you.pos()) > dist_range(beam.range)
@@ -162,20 +162,24 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
         return SPRET_ABORT;
     }
 
+    cloud_type cty;
     //XXX: there should be a better way to specify beam cloud types
-    switch (cty)
+    switch (spl)
     {
-        case CLOUD_POISON:
+        case SPELL_POISONOUS_CLOUD:
             beam.flavour = BEAM_POISON;
             beam.name = "blast of poison";
             break;
-        case CLOUD_HOLY_FLAMES:
+            cty = CLOUD_POISON;
+        case SPELL_HOLY_BREATH:
             beam.flavour = BEAM_HOLY;
             beam.origin_spell = SPELL_HOLY_BREATH;
+            cty = CLOUD_HOLY_FLAMES;
             break;
-        case CLOUD_COLD:
+        case SPELL_FREEZING_CLOUD:
             beam.flavour = BEAM_COLD;
             beam.name = "freezing blast";
+            cty = CLOUD_COLD;
             break;
         default:
             mpr("That kind of cloud doesn't exist!");
@@ -195,7 +199,7 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     fail_check();
 
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
-    noisy(2, beam.target);
+    noisy(spell_effect_noise(spl), beam.target);
     return SPRET_SUCCESS;
 }
 

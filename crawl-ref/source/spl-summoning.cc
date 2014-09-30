@@ -447,7 +447,7 @@ spret_type cast_dragon_call(int pow, bool fail)
     fail_check();
 
     mpr("You call out to the draconic realm, and the dragon horde roars back!");
-    noisy(15, you.pos());
+    noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
 
@@ -519,7 +519,7 @@ static bool _place_dragon()
 
 void do_dragon_call(int time)
 {
-    noisy(15, you.pos());
+    noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     while (time > you.attribute[ATTR_NEXT_DRAGON_TIME]
            && you.duration[DUR_DRAGON_CALL])
@@ -1327,7 +1327,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         env.grid(point) = DNGN_MALIGN_GATEWAY;
         set_terrain_changed(point);
 
-        noisy(10, point);
+        noisy(spell_effect_noise(SPELL_MALIGN_GATEWAY), point);
         mprf(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
                          "and a portal to some otherworldly place is opened!");
 
@@ -1481,7 +1481,7 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         }
 
         mpr("A forested plane collides here with a resounding crunch!");
-        noisy(10, caster->pos());
+        noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
         mgen_data dryad_data = mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1,
                                          SPELL_SUMMON_FOREST, caster->pos(),

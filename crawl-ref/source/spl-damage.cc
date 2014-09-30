@@ -336,7 +336,8 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             case SPELL_CHAIN_LIGHTNING:
             {
                 const char* msg = "You hear a mighty clap of thunder!";
-                noisy(25, source, (first || !see_source) ? msg : NULL);
+                noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), source,
+                      (first || !see_source) ? msg : NULL);
                 break;
             }
             case SPELL_CHAIN_OF_CHAOS:
@@ -1037,7 +1038,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     mprf("The air twists around and %sstrikes %s!",
          mons->flight_mode() ? "violently " : "",
          mons->name(DESC_THE).c_str());
-    noisy(4, beam.target);
+    noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
     behaviour_event(mons, ME_ANNOY, &you);
 
@@ -1231,7 +1232,7 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
 
     if (x_chance_in_y(chance, 100))
     {
-        noisy(30, where);
+        noisy(spell_effect_noise(SPELL_SHATTER), where);
 
         destroy_wall(where);
 
@@ -1294,7 +1295,7 @@ spret_type cast_shatter(int pow, bool fail)
         mpr("The dungeon shakes!");
     else
     {
-        noisy(30, you.pos());
+        noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
@@ -1353,7 +1354,7 @@ bool mons_shatter(monster* caster, bool actual)
         }
         else
         {
-            noisy(30, caster->pos(), caster->mindex());
+            noisy(spell_effect_noise(SPELL_SHATTER), caster->pos(), caster->mindex());
             mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
                  caster->name(DESC_THE).c_str());
         }
@@ -3051,7 +3052,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
         }
     }
 
-    noisy(25, hitfunc.origin);
+    noisy(spell_effect_noise(SPELL_GLACIATE), hitfunc.origin);
 
     return SPRET_SUCCESS;
 }

@@ -12,7 +12,7 @@ void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1, int colour = -1,
                string name = "", string tile = "");
 
-spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
+spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail);
 
 spret_type cast_ring_of_flames(int power, bool fail);

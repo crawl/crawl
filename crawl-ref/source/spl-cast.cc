@@ -1474,13 +1474,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 #endif
 
     case SPELL_POISONOUS_CLOUD:
-        return cast_big_c(powc, CLOUD_POISON, &you, beam, fail);
-
     case SPELL_HOLY_BREATH:
-        return cast_big_c(powc, CLOUD_HOLY_FLAMES, &you, beam, fail);
-
     case SPELL_FREEZING_CLOUD:
-        return cast_big_c(powc, CLOUD_COLD, &you, beam, fail);
+        return cast_big_c(powc, spell, &you, beam, fail);
 
     case SPELL_FIRE_STORM:
         return cast_fire_storm(powc, beam, fail);
@@ -2002,61 +1998,44 @@ string spell_hunger_string(spell_type spell, bool rod)
 string spell_noise_string(spell_type spell)
 {
     const int casting_noise = spell_noise(spell);
-    int effect_noise;
+    int effect_noise = spell_effect_noise(spell);
+    zap_type zap = spell_to_zap(spell);
+    if (effect_noise == 0 && zap != NUM_ZAPS)
+    {
+        bolt beem;
+        zappy(zap, 0, beem);
+        effect_noise = beem.loudness;
+    }
+
 
     switch (spell)
     //When the noise can vary, we're most interested in the worst case.
     {
-    // Clouds
-    case SPELL_POISONOUS_CLOUD:
-    case SPELL_FREEZING_CLOUD:
-    case SPELL_CONJURE_FLAME:
-        effect_noise = 2;
-        break;
-
-    case SPELL_AIRSTRIKE:
-        effect_noise = 4;
-        break;
-
     case SPELL_IOOD:
         effect_noise = 7;
         break;
 
-    case SPELL_SONG_OF_SLAYING:
-    case SPELL_MALIGN_GATEWAY:
-        effect_noise = 10;
-        break;
-
-    case SPELL_EXCRUCIATING_WOUNDS:
     // Small explosions.
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
-    case SPELL_DELAYED_FIREBALL:
     case SPELL_HELLFIRE_BURST:
     case SPELL_TORNADO:
         effect_noise = 15;
         break;
 
     // Medium explosions
-    case SPELL_LRD:         //LRD most often do small and medium explosions
-        effect_noise = 20;  //and sometimes big ones with green crystal
+    case SPELL_LRD:         // Variable explosion noise
+        effect_noise = 20;
         break;
 
     // Big explosions
     case SPELL_FIRE_STORM:  //The storms make medium or big explosions
-    case SPELL_GLACIATE:
-    case SPELL_LIGHTNING_BOLT:
-    case SPELL_CHAIN_LIGHTNING:
     case SPELL_CONJURE_BALL_LIGHTNING:
         effect_noise = 25;
         break;
 
-    case SPELL_SHATTER:
-        effect_noise = 30;
-        break;
-
     default:
-        effect_noise = 0;
+        break;
     }
 
     const int noise = max(casting_noise, effect_noise);

@@ -260,7 +260,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         power /= 2;
     else if (which_brand == SPWPN_PAIN && !silenced(you.pos()))
     {
-        noisy(15, you.pos());
+        noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
         // We must repeat the special message here (as there's a side effect.)
         emit_special_message = true;
     }
