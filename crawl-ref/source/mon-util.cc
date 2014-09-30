@@ -315,6 +315,18 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
     all = all & ~(res * 7) | res * (lev & 7);
 }
 
+int get_mons_class_ac(monster_type mc)
+{
+    const monsterentry *me = get_monster_data(mc);
+    return me ? me->AC : get_monster_data(MONS_PROGRAM_BUG)->AC;
+}
+
+int get_mons_class_ev(monster_type mc)
+{
+    const monsterentry *me = get_monster_data(mc);
+    return me ? me->ev : get_monster_data(MONS_PROGRAM_BUG)->ev;
+}
+
 resists_t get_mons_class_resists(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);

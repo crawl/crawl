@@ -3275,6 +3275,60 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
+
+/**
+ * Print a bar of +s and .s representing a given stat to a provided stream.
+ *
+ * @param value[in]         The current value represented by the bar.
+ * @param max[in]           The max value that can be represented by the bar.
+ * @param scale[in]         The value that each + and . represents.
+ * @param name              The name of the bar.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _print_bar(int value, int max, int scale,
+                       string name, ostringstream &result)
+{
+    result << name << " ";
+
+    const int bars = value / scale;
+    const int max_bars = max / scale;
+
+    for (int i = 0; i < min(bars, max_bars); i++)
+        result << "+";
+    for (int i = max_bars - 1; i >= bars; --i)
+        result << ".";
+
+#ifdef DEBUG_DIAGNOSTICS
+    result << " (" << value << ")";
+#endif
+
+    result << "\n";
+}
+
+/**
+ * Append information about a given monster's AC to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
+{
+    // max ac 40 (dispater)
+    _print_bar(mi.ac, 40, 5, "AC", result);
+}
+
+/**
+ * Append information about a given monster's EV to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
+{
+    // max ev 40 (to match ac, though even eresh only has 30)
+    _print_bar(mi.ev, 40, 5, "EV", result);
+}
+
 /**
  * Append information about a given monster's MR to the provided stream.
  *
@@ -3283,17 +3337,11 @@ static void _add_energy_to_string(int speed, int energy, string what,
  */
 static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 {
-    result << "MR ";
-
-    const int mr = mi.res_magic();
-    const int mr_bars = mr / 40;
-    for (int i = 0; i < mr_bars; i++)
-        result << "+";
-    for (int i = 4; i >= mr_bars; --i)
-        result << ".";
-
-    result << "\n";
+    const int max_mr = 200; // export this? is this already?
+    const int bar_scale = 40; // likewise export this per player stuff?
+    _print_bar(mi.res_magic(), max_mr, bar_scale, "MR", result);
 }
+
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
@@ -3301,6 +3349,8 @@ static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
 
+    _describe_monster_ac(mi, result);
+    _describe_monster_ev(mi, result);
     _describe_monster_mr(mi, result);
 
     result << "\n";
