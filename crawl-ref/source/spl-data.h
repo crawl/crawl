@@ -1396,6 +1396,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HYDRA_FORM, "Hydra Form",
+    SPTYP_TRANSMUTATION,
+    SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
+    6,
+    200,
+    -1, -1,
+    6, 0,
+    NULL,
+    false,
+    true
+},
+
+{
     SPELL_NECROMUTATION, "Necromutation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL | SPFLAG_CORPSE_VIOLATING | SPFLAG_CHAOTIC,

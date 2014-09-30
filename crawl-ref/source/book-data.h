@@ -159,8 +159,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_STONESKIN,
     SPELL_ICE_FORM,
     SPELL_STATUE_FORM,
+    SPELL_HYDRA_FORM,
     SPELL_DRAGON_FORM,
-    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
@@ -272,7 +272,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_NO_SPELL,
+    SPELL_HYDRA_FORM,   // dubious
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
