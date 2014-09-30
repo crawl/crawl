@@ -86,6 +86,9 @@ enum diag_type
 #ifdef DEBUG_MONSPEAK
     DIAG_SPEECH,
 #endif
+#ifdef DEBUG_MONINDEX
+    DIAG_MONINDEX,
+#endif
     NUM_DIAGNOSTICS
 };
 
