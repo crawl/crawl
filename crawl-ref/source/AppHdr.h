@@ -318,6 +318,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 
     // Outputs many "hidden" details, defaults to wizard on.
     #define DEBUG_DIAGNOSTICS
+    #define DEBUG_MONINDEX
 
     // Scan for bad items before every input (may be slow)
     //
@@ -351,7 +352,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #ifdef DEBUG_DIAGNOSTICS
     #define DEBUG_TESTS
     #define DEBUG_MONSPEAK
-    #define DEBUG_MONINDEX
 #endif
 
 // =========================================================================
