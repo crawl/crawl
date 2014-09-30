@@ -467,8 +467,7 @@ static bool _spell_weapon_check(const spell_type spell)
         // The wielded weapon must be a non-branded non-launcher
         // non-artefact!
         const item_def& weapon = *you.weapon();
-        return !is_artefact(weapon) && !is_range_weapon(weapon)
-               && get_weapon_brand(weapon) == SPWPN_NORMAL;
+        return !is_artefact(weapon) && !is_range_weapon(weapon);
     }
     default:
         return true;
