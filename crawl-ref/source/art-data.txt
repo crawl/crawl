@@ -161,7 +161,7 @@ COLOUR: BLACK
 ####################### First come the old fixed arts.
 
 NAME:    Singing Sword
-OBJ:     OBJ_WEAPONS/WPN_BASTARD_SWORD
+OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
@@ -256,7 +256,7 @@ VALUE:   1200
 BOOL:    special, evil
 
 NAME:    Sword of Zonguldrok
-OBJ:     OBJ_WEAPONS/WPN_BASTARD_SWORD
+OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
 COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
@@ -574,7 +574,7 @@ MAGIC:    1
 STEALTH:  1
 
 NAME:    plutonium sword
-OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
+OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
 PLUS:    +14
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
