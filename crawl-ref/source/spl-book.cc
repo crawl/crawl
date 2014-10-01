@@ -1101,16 +1101,16 @@ bool learn_spell()
     return learn_spell(specspell);
 }
 
-// Returns a string about why a character can't memorise a spell.
+/**
+ * Why can't the player memorize the given spell?
+ *
+ * @param spell     The spell in question.
+ * @return          A string describing (one of) the reason(s) the player
+ *                  can't memorize this spell.
+ */
 string desc_cannot_memorise_reason(spell_type spell)
 {
-    string desc;
-
-    if (cannot_use_schools(get_spell_disciplines(spell)))
-        return "You cannot memorise or cast this type of magic.";
-
-    return "You cannot memorise or cast this spell, because you are "
-            + article_a(species_name(you.species)) + ".";
+    return spell_uselessness_reason(spell, false, true);
 }
 
 /**
