@@ -1282,8 +1282,10 @@ void game_options::add_mon_glyph_override(const string &text)
         return;
 
     const monster_type m = _mons_class_by_string(override[0]);
-    if (m == MONS_0)
+    if (m == MONS_0) {
         report_error("Unknown monster: \"%s\"", text.c_str());
+        return;
+    }
 
     cglyph_t mdisp;
 
@@ -1299,7 +1301,14 @@ void game_options::add_mon_glyph_override(const string &text)
         mdisp = parse_mon_glyph(override[1]);
 
     if (mdisp.ch || mdisp.col)
+    {
         mon_glyph_overrides[m] = mdisp;
+        
+        // Ideally we'd not set this at game start only to have it overwritten
+        // in the monster init, but we need monster symbols to be updated when
+        // the option changes in-game.
+        update_monster_symbol(m, mdisp);
+    }
 }
 
 void game_options::add_item_glyph_override(const string &text)
