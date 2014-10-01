@@ -586,7 +586,7 @@ string kill_def::append_places(const kill_monster_desc &md,
         {
             if (iter != places.begin())
                 augmented += " ";
-            augmented += short_place_name(*iter);
+            augmented += level_id::from_packed_place(*iter).describe();
         }
         augmented += ")";
         return augmented;
@@ -637,7 +637,8 @@ string kill_ghost::info() const
 {
     return ghost_name
            + (Options.dump_kill_places != KDO_NO_PLACES ?
-                " (" + short_place_name(place) + ")" : string(""));
+                " (" + level_id::from_packed_place(place).describe() + ")" :
+                string(""));
 }
 
 void kill_ghost::save(writer& outf) const
@@ -831,7 +832,7 @@ static int kill_lualc_places(lua_State *ls)
 static int kill_lualc_place_name(lua_State *ls)
 {
     int num = luaL_checkint(ls, 1);
-    string plname = short_place_name(num);
+    string plname = level_id::from_packed_place(num).describe();
     lua_pushstring(ls, plname.c_str());
     return 1;
 }

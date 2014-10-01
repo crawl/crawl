@@ -1064,7 +1064,7 @@ static string _origin_monster_name(const item_def &item)
 
 static string _origin_place_desc(const item_def &item)
 {
-    return prep_branch_level_name(item.orig_place);
+    return prep_branch_level_name(level_id::from_packed_place(item.orig_place));
 }
 
 bool origin_describable(const item_def &item)

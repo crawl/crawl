@@ -512,9 +512,9 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolour(WHITE);
 
-    cprintf("%s", chop_string(uppercase_first(place_name(
-                          get_packed_place(), true, true)) + pstr,
-                      columns - helplen).c_str());
+    cprintf("%s", chop_string(
+                    uppercase_first(level_id::current().describe(true, true))
+                      + pstr, columns - helplen).c_str());
 
     cgotoxy(max(1, (columns - titlelen) / 2), 1);
     title.display();

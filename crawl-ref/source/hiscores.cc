@@ -1006,8 +1006,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("title", "%s", title.c_str());
 
     fields->add_field("place", "%s",
-                      place_name(get_packed_place(branch, dlvl),
-                                 false, true).c_str());
+                      level_id(branch, dlvl).describe().c_str());
 
     // Note: "br", "lvl" (and former "ltyp") are redundant with "place"
     // but may still be used by DGL logs.
@@ -1897,25 +1896,13 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     char scratch[ INFO_SIZE ];
 
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
-    {
-        const string pname = place_name(get_packed_place(branch, dlvl),
-                                        false, true);
-        return make_stringf(" (%s)", pname.c_str());
-    }
+        return " (" + level_id(branch, dlvl).describe() + ")";
 
     if (verbose && death_type != KILLED_BY_QUITTING)
         place += "...";
 
     // where did we die?
-    string placename = place_name(get_packed_place(branch, dlvl), true, true);
-
-    // add appropriate prefix
-    if (placename.find("Level") == 0)
-        place += " on ";
-    else
-        place += " in ";
-
-    place += placename;
+    place += " " + prep_branch_level_name(level_id(branch, dlvl));
 
     if (!mapdesc.empty())
         place += make_stringf(" (%s)", mapdesc.c_str());

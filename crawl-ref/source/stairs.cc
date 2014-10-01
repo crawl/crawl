@@ -701,7 +701,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         if (!known_shaft)
         {
             mark_milestone("shaft", "fell down a shaft to "
-                                    + short_place_name(shaft_dest) + ".");
+                                    + shaft_dest.describe() + ".");
         }
 
         handle_items_on_shaft(you.pos(), false);

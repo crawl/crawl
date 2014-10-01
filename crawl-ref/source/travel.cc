@@ -3178,7 +3178,25 @@ unsigned short level_id::packed_place() const
 
 string level_id::describe(bool long_name, bool with_number) const
 {
-    return place_name(this->packed_place(), long_name, with_number);
+    string result = (long_name ? branches[branch].longname
+                               : branches[branch].abbrevname);
+
+    if (with_number && brdepth[branch] != 1)
+    {
+        if (long_name)
+        {
+            // decapitalise 'the'
+            if (result.find("The") == 0)
+                result[0] = 't';
+            result = make_stringf("Level %d of %s",
+                      depth, result.c_str());
+        }
+        else if (depth)
+            result = make_stringf("%s:%d", result.c_str(), depth);
+        else
+            result = make_stringf("%s:$", result.c_str());
+    }
+    return result;
 }
 
 level_id level_id::parse_level_id(const string &s) throw (string)
