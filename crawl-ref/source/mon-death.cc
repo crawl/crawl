@@ -919,8 +919,11 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         return;
 
     // Mummies are smart enough not to waste curses on summons or allies.
-    if (target->is_monster() && target->as_monster()->friendly())
+    if (target->is_monster() && target->as_monster()->friendly()
+        && !crawl_state.game_is_arena())
+    {
         target = &you;
+    }
 
     if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
         && target->is_player())
