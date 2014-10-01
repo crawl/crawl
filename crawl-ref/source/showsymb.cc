@@ -392,17 +392,10 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.col = _get_mons_colour(*mi);
 
         monster_type stype = _show_mons_type(*mi);
-        const bool override = Options.mon_glyph_overrides.find(stype)
-                              != Options.mon_glyph_overrides.end();
-        if (mi->props.exists("glyph") && !override)
-            g.ch = mi->props["glyph"].get_int();
-        else if (show.mons == MONS_SENSED)
+        if (show.mons == MONS_SENSED)
             g.ch = mons_char(mi->base_type);
         else
             g.ch = mons_char(stype);
-
-        if (mi->props.exists("glyph") && override)
-            g.col = mons_class_colour(stype);
 
         // If we want to show weapons, overwrite all of that.
         item_def* weapon = mi->inv[MSLOT_WEAPON].get();
@@ -519,17 +512,9 @@ cglyph_t get_mons_glyph(const monster_info& mi)
 {
     monster_type stype = _show_mons_type(mi);
     cglyph_t g;
-    const bool override = Options.mon_glyph_overrides.find(stype)
-                          != Options.mon_glyph_overrides.end();
-    if (mi.props.exists("glyph") && !override)
-        g.ch = mi.props["glyph"].get_int();
-    else
-        g.ch = mons_char(stype);
 
-    if (mi.props.exists("glyph") && override)
-        g.col = mons_class_colour(stype);
-    else
-        g.col = _get_mons_colour(mi);
+    g.ch = mons_char(stype);
+    g.col = _get_mons_colour(mi);
     g.col = real_colour(g.col);
     return g;
 }

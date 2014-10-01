@@ -4985,3 +4985,13 @@ monster* choose_random_monster_on_level(int weight,
 
     return chosen;
 }
+
+void update_monster_symbol(monster_type mtype, cglyph_t md)
+{
+    ASSERT(mtype != MONS_0);
+
+    if (md.ch)
+        monster_symbols[mtype].glyph = get_glyph_override(md.ch);
+    if (md.col)
+        monster_symbols[mtype].colour = md.col;
+}
