@@ -3734,11 +3734,9 @@ static const spell_type smitey_spells[] = {
  */
 static bool _mons_has_smite_attack(const monster* mons)
 {
-    const monster_spells &hspell_pass = mons->spells;
-    for (unsigned i = 0; i < hspell_pass.size(); ++i)
-        for (unsigned j = 0 ; j < ARRAYSZ(smitey_spells); j++)
-            if (hspell_pass[i] == smitey_spells[j])
-                return true;
+    for (unsigned j = 0 ; j < ARRAYSZ(smitey_spells); j++)
+        if (mons->has_spell(smitey_spells[j]))
+            return true;
 
     return false;
 }
