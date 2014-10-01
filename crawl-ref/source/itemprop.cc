@@ -262,10 +262,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12, 200,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 0 },
-    { WPN_BASTARD_SWORD,          "bastard sword",        15, -1, 15, 220,  3,
+    { WPN_DOUBLE_SWORD,          "double sword",        15, -1, 15, 220,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 2 },
-    { WPN_BLESSED_BASTARD_SWORD, "blessed bastard sword", 16, -2, 14, 220,  3,
+    { WPN_BLESSED_DOUBLE_SWORD, "blessed double sword", 16, -2, 14, 220,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 16, 250,  5,
@@ -274,10 +274,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0 },
-    { WPN_CLAYMORE,              "claymore",              19, -4, 19, 260,  5,
+    { WPN_TRIPLE_SWORD,              "triple sword",              19, -4, 19, 260,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 2 },
-    { WPN_BLESSED_CLAYMORE,      "blessed claymore",      20, -5, 18, 260,  5,
+    { WPN_BLESSED_TRIPLE_SWORD,      "blessed triple sword",      20, -5, 18, 260,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0 },
 
@@ -1426,9 +1426,9 @@ bool convert2good(item_def &item)
     case WPN_LONG_SWORD:    item.sub_type = WPN_BLESSED_LONG_SWORD; break;
     case WPN_SCIMITAR:      item.sub_type = WPN_BLESSED_SCIMITAR; break;
     case WPN_DEMON_BLADE:   item.sub_type = WPN_EUDEMON_BLADE; break;
-    case WPN_BASTARD_SWORD: item.sub_type = WPN_BLESSED_BASTARD_SWORD; break;
+    case WPN_DOUBLE_SWORD: item.sub_type = WPN_BLESSED_DOUBLE_SWORD; break;
     case WPN_GREAT_SWORD:   item.sub_type = WPN_BLESSED_GREAT_SWORD; break;
-    case WPN_CLAYMORE:      item.sub_type = WPN_BLESSED_CLAYMORE; break;
+    case WPN_TRIPLE_SWORD:      item.sub_type = WPN_BLESSED_TRIPLE_SWORD; break;
     case WPN_DEMON_WHIP:    item.sub_type = WPN_SACRED_SCOURGE; break;
     case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
     }
@@ -1449,9 +1449,9 @@ bool convert2bad(item_def &item)
     case WPN_BLESSED_LONG_SWORD:   item.sub_type = WPN_LONG_SWORD; break;
     case WPN_BLESSED_SCIMITAR:     item.sub_type = WPN_SCIMITAR; break;
     case WPN_EUDEMON_BLADE:        item.sub_type = WPN_DEMON_BLADE; break;
-    case WPN_BLESSED_BASTARD_SWORD:item.sub_type = WPN_BASTARD_SWORD; break;
+    case WPN_BLESSED_DOUBLE_SWORD:item.sub_type = WPN_DOUBLE_SWORD; break;
     case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_GREAT_SWORD; break;
-    case WPN_BLESSED_CLAYMORE:     item.sub_type = WPN_CLAYMORE; break;
+    case WPN_BLESSED_TRIPLE_SWORD:     item.sub_type = WPN_TRIPLE_SWORD; break;
     case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
     case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
     }

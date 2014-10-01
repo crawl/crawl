@@ -76,7 +76,7 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
-bastard sword
+double sword
 
 A long, large sword.
 %%%%
@@ -88,11 +88,11 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
-blessed bastard sword
+blessed double sword
 
 A long, large sword, enhanced by the Shining One's power.
 %%%%
-blessed claymore
+blessed triple sword
 
 A massive sword, enhanced by the Shining One's power.
 %%%%
@@ -391,7 +391,7 @@ chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
-claymore
+triple sword
 
 A massive sword, requiring great skill to use effectively.
 %%%%

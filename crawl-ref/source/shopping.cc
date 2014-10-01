@@ -1110,12 +1110,12 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case WPN_TRIPLE_CROSSBOW:
-        case WPN_CLAYMORE:
+        case WPN_TRIPLE_SWORD:
         case WPN_EXECUTIONERS_AXE:
             valued += 100;
             break;
 
-        case WPN_BASTARD_SWORD:
+        case WPN_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_DEMON_WHIP:
@@ -1128,8 +1128,8 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
-        case WPN_BLESSED_BASTARD_SWORD:
-        case WPN_BLESSED_CLAYMORE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_EUDEMON_BLADE:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:

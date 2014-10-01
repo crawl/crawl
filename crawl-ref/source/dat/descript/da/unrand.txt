@@ -143,7 +143,7 @@ finde en værdig modstander.
 %%%%
 plutonium sword
 
-En claymore af et underligt, glødende metal. Du spekulerer over, om strålingen
+En triple sword af et underligt, glødende metal. Du spekulerer over, om strålingen
 vil få et ekstra hoved til at vokse frem på dine skuldre.
 %%%%
 great mace "Undeadhunter"

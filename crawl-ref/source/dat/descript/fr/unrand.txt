@@ -209,7 +209,7 @@ ce peuple féérique.
 %%%%
 plutonium sword
 
-Une claymore faite d'un étrange métal luisant. Vous vous demandez si cette
+Une triple sword faite d'un étrange métal luisant. Vous vous demandez si cette
 radiation va vous faire pousser une nouvelle tête.
 %%%%
 great mace "Undeadhunter"

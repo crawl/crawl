@@ -729,11 +729,11 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
                              WPN_DEMON_TRIDENT,
-                             WPN_BASTARD_SWORD,
+                             WPN_DOUBLE_SWORD,
                              WPN_EVENINGSTAR,
                              WPN_EXECUTIONERS_AXE,
                              WPN_QUICK_BLADE,
-                             WPN_CLAYMORE,
+                             WPN_TRIPLE_SWORD,
                              -1);
     }
     else if (x_chance_in_y(item_level, 20))
@@ -943,8 +943,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PAIN;
             // **** intentional fall through here ****
         case WPN_GREAT_SWORD:
-        case WPN_BASTARD_SWORD:
-        case WPN_CLAYMORE:
+        case WPN_DOUBLE_SWORD:
+        case WPN_TRIPLE_SWORD:
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
@@ -1157,9 +1157,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_EUDEMON_BLADE:
-        case WPN_BLESSED_BASTARD_SWORD:
+        case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_CLAYMORE:
+        case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
             rc = SPWPN_HOLY_WRATH;

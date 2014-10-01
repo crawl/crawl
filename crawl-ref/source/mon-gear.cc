@@ -644,7 +644,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // effects, i.e. no polearms.
         item.sub_type = random_choose_weighted(10, WPN_GREAT_MACE,
                                                6, WPN_GREAT_SWORD,
-                                               2, WPN_CLAYMORE,
+                                               2, WPN_TRIPLE_SWORD,
                                                8, WPN_BATTLEAXE,
                                                2, WPN_EXECUTIONERS_AXE,
                                                0);
@@ -1009,7 +1009,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                4, WPN_WAR_AXE,
                                                7, WPN_BROAD_AXE,
                                                7, WPN_EVENINGSTAR,
-                                               7, WPN_BASTARD_SWORD,
+                                               7, WPN_DOUBLE_SWORD,
                                                7, WPN_DEMON_TRIDENT,
                                                0);
         if (x_chance_in_y(5, 9))
@@ -1069,7 +1069,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                8, WPN_SCIMITAR,
                                                8, WPN_GREAT_SWORD,
                                                9, WPN_BROAD_AXE,
-                                               10, WPN_BASTARD_SWORD,
+                                               10, WPN_DOUBLE_SWORD,
                                                13, WPN_EVENINGSTAR,
                                                14, WPN_DEMON_TRIDENT,
                                                0);
@@ -1375,7 +1375,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_SOJOBO:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(6) ? WPN_CLAYMORE
+        item.sub_type = one_chance_in(6) ? WPN_TRIPLE_SWORD
                                          : WPN_GREAT_SWORD;
         if (x_chance_in_y(2, 3))
         {
@@ -1459,7 +1459,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                    10, WPN_DEMON_TRIDENT,
                                                     7, WPN_BATTLEAXE,
                                                     5, WPN_GREAT_SWORD,
-                                                    2, WPN_BASTARD_SWORD,
+                                                    2, WPN_DOUBLE_SWORD,
                                                     5, WPN_DIRE_FLAIL,
                                                     2, WPN_GREAT_MACE,
                                                     5, WPN_GLAIVE,

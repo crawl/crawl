@@ -94,11 +94,11 @@ beef jerky
 
 Une tranche séchée de vache ou de bœuf mort.
 %%%%
-blessed bastard sword
+blessed double sword
 
 Une épée longue et large, améliorée par l'Étincelant.
 %%%%
-blessed claymore
+blessed triple sword
 
 Une épée massive, améliorée par l'Étincelant.
 %%%%

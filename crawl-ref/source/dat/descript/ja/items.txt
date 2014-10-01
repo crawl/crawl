@@ -54,11 +54,11 @@ beef jerky
 
 細長く切られた保存加工済みの牛肉だ。
 %%%%
-blessed bastard sword
+blessed double sword
 
 長くて幅広な大剣だ。輝けるものの力により強化されている。
 %%%%
-blessed claymore
+blessed triple sword
 
 巨大な大剣だ。輝けるものの力により強化されている。
 %%%%
