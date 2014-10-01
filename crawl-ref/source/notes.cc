@@ -226,8 +226,11 @@ string Note::describe(bool when, bool where, bool what) const
 
     if (where)
     {
-        result << "| " << chop_string(short_place_name(packed_place),
-                                      MAX_NOTE_PLACE_LEN) << " | ";
+        result << "| "
+               << chop_string(
+                    level_id::from_packed_place(packed_place).describe(),
+                    MAX_NOTE_PLACE_LEN)
+               << " | ";
     }
 
     if (what)
@@ -259,7 +262,8 @@ string Note::describe(bool when, bool where, bool what) const
             if (!desc.empty())
                 result << desc;
             else
-                result << "Entered " << place_name(packed_place, true, true);
+                result << "Entered "
+                       << level_id::from_packed_place(packed_place).describe(true, true);
             break;
         case NOTE_LEARN_SPELL:
             result << "Learned a level "
@@ -439,8 +443,10 @@ void Note::check_milestone() const
         if (br != -1 && br != BRANCH_WIZLAB)
         {
             ASSERT_RANGE(br, 0, NUM_BRANCHES);
-            string branch = place_name(packed_place, true, false).c_str();
-            if (branch.find("The ") == 0)
+            string branch =
+               level_id::from_packed_place(packed_place).describe(true, false);
+
+            if  (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
@@ -451,7 +457,7 @@ void Note::check_milestone() const
             else if (dep == _dungeon_branch_depth(br)
                      || br == BRANCH_ZIGGURAT)
             {
-                string level = place_name(packed_place, true, true);
+                string level = level_id::from_packed_place(packed_place).describe(true, true);
                 if (level.find("Level ") == 0)
                     level[0] = tolower(level[0]);
 

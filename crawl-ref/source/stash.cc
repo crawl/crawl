@@ -584,7 +584,7 @@ static MenuEntry *stash_menu_fixup(MenuEntry *me)
 bool Stash::show_menu(const level_pos &prefix, bool can_travel,
                       const vector<item_def>* matching_items) const
 {
-    const string prefix_str = short_place_name(prefix.id);
+    const string prefix_str = prefix.id.describe();
     const vector<item_def> *item_list = matching_items ? matching_items
                                                        : &items;
     StashMenu menu;
@@ -979,7 +979,7 @@ void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
 bool ShopInfo::show_menu(const level_pos &place,
                          bool can_travel) const
 {
-    const string place_str = short_place_name(place.id);
+    const string place_str = place.id.describe();
 
     StashMenu menu;
 
@@ -2187,7 +2187,7 @@ bool StashTracker::display_search_results(
         if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
             matchtitle << "(" << waypoint << ") ";
 
-        matchtitle << "[" << short_place_name(res.pos.id) << "] "
+        matchtitle << "[" << res.pos.id.describe() << "] "
                    << res.match;
 
         if (res.matches > 1 && res.count > 1)

@@ -2644,7 +2644,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             unknown = shop_item_unknown(get_thing_item(thing));
 
         string etitle =
-            make_stringf("[%s] %s%s (%d gp)", short_place_name(pos.id).c_str(),
+            make_stringf("[%s] %s%s (%d gp)", pos.id.describe().c_str(),
                          name_thing(thing, DESC_A).c_str(),
                          unknown ? " (unknown)" : "", cost);
 
