@@ -430,16 +430,6 @@ public:
         return branch < id.branch || (branch==id.branch && depth < id.depth);
     }
 
-    bool operator == (const branch_type _branch) const
-    {
-        return branch == _branch;
-    }
-
-    bool operator != (const branch_type _branch) const
-    {
-        return !operator == (_branch);
-    }
-
     void save(writer&) const;
     void load(reader&);
 };
