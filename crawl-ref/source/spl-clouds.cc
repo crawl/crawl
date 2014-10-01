@@ -162,7 +162,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
         return SPRET_ABORT;
     }
 
-    cloud_type cty;
+    cloud_type cty = CLOUD_NONE;
     //XXX: there should be a better way to specify beam cloud types
     switch (spl)
     {
