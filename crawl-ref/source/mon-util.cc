@@ -3770,23 +3770,42 @@ bool monster_shover(const monster* m)
            && mchar != 'G' && mchar != 'w' && mchar != 'E';
 }
 
-// Returns true if m1 and m2 are related, and m1 is higher up the totem pole
-// than m2. The criteria for being related are somewhat loose, as you can see
-// below.
-bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
+/**
+ * Is the first monster considered 'senior' to the second; that is, can it
+ * 'push' (swap with) the latter?
+ *
+ * Generally, this is true if m1 and m2 are related, and m1 is higher up the
+ * totem pole than m2.
+ *
+ * Not guaranteed to be transitive or symmetric, though it probably should be.
+ *
+ * @param m1        The potentially senior monster.
+ * @param m2        The potentially junior monster.
+ * @param fleeing   Whether the first monster is running away; relevant for
+ *                  smiters pushing melee monsters out of the way.
+ * @return          Whether m1 can push m2.
+ */
+ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 {
-    const monsterentry *me1 = get_monster_data(m1->type),
-                       *me2 = get_monster_data(m2->type);
-
-    if (!me1 || !me2)
-        return false;
-
     // Fannar's ice beasts can push past Fannar, who benefits from this.
     // Similarly, he refuses to push past them unless he's fleeing.
     if (m1->type == MONS_FANNAR && m2->type == MONS_ICE_BEAST)
         return fleeing;
     if (m1->type == MONS_ICE_BEAST && m2->type == MONS_FANNAR)
         return true;
+
+    // Geryon really profits from *not* pushing past hell beasts.
+    if (m1->type == MONS_GERYON)
+        return false;
+
+    // Special-case spectral things to push past things that summon them
+    // (revenants, ghost crabs).
+    // XXX: unify this logic with Fannar's & Geryon's? (summon-buddies?)
+    if (m1->type == MONS_SPECTRAL_THING
+        && (m2->type == MONS_REVENANT || m2->type == MONS_GHOST_CRAB))
+    {
+        return true;
+    }
 
     // Band leaders can displace followers regardless of type considerations.
     // -cao
@@ -3804,18 +3823,6 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
             return false;
     }
 
-    char mchar1 = me1->basechar;
-    char mchar2 = me2->basechar;
-
-    // If both are demons, the smaller number is the nastier demon.
-    if (isadigit(mchar1) && isadigit(mchar2))
-        return fleeing || mchar1 < mchar2;
-
-    // &s are the evillest demons of all, well apart from Geryon, who really
-    // profits from *not* pushing past beasts.
-    if (mchar1 == '&' && isadigit(mchar2) && m1->type != MONS_GERYON)
-        return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
-
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // or spectral zombified undead can push past non-spectral zombified
@@ -3826,32 +3833,15 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return true;
     }
 
-    if (mons_genus(m1->type) == MONS_KILLER_BEE
-        && mons_genus(m2->type) == MONS_KILLER_BEE)
-    {
-        if (fleeing)
-            return true;
-
-        if (m1->type == MONS_QUEEN_BEE && m2->type != MONS_QUEEN_BEE)
-            return true;
-    }
-
-    // Special-case gnolls, so they can't get past (hob)goblins.
-    if (mons_species(m1->type) == MONS_GNOLL
-        && mons_species(m2->type) != MONS_GNOLL)
+    // Aside from those special cases, only related monsters can push past
+    // each-other. (All demons are 'related'.)
+    if (mons_genus(m1->type) != mons_genus(m2->type)
+        && (m1->holiness() != MH_DEMONIC || m2->holiness() != MH_DEMONIC))
     {
         return false;
     }
 
-    // Special-case (non-enslaved soul) spectral things to push past revenants.
-    if ((m1->type == MONS_SPECTRAL_THING && !mons_enslaved_soul(m1))
-        && m2->type == MONS_REVENANT)
-    {
-        return true;
-    }
-
-    return mchar1 == mchar2 && (fleeing ||
-                                m1->get_hit_dice() > m2->get_hit_dice());
+    return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
