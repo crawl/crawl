@@ -1329,6 +1329,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_DELAYED_FIREBALL:
         if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
             return "You are already charged!";
+        break;
 
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_DEATHS_DOOR:
