@@ -78,7 +78,7 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 double sword
 
-A long, large sword.
+A magical weapon with two razor-sharp blades.
 %%%%
 battleaxe
 
@@ -90,11 +90,13 @@ A strip of preserved dead cow or bull.
 %%%%
 blessed double sword
 
-A long, large sword, enhanced by the Shining One's power.
+A magical weapon with two razor-sharp blades, enhanced by the Shining One's
+power.
 %%%%
 blessed triple sword
 
-A massive sword, enhanced by the Shining One's power.
+A magical weapon with three great razor-sharp blades, enhanced by the Shining
+One's power.
 %%%%
 blessed falchion
 
@@ -393,7 +395,8 @@ A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
 triple sword
 
-A massive sword, requiring great skill to use effectively.
+A magical weapon with three great razor-sharp blades, requiring great skill to
+use effectively.
 %%%%
 cloak
 
