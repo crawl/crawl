@@ -700,61 +700,59 @@ void update_vision_range()
     set_los_radius(you.current_vision);
 }
 
-// Checks whether the player's current species can
-// use (usually wear) a given piece of equipment.
-// Note that EQ_BODY_ARMOUR and EQ_HELMET only check
-// the ill-fitting variant (i.e., not caps and robes).
-// If special_armour is set to true, special cases
-// such as bardings, light armour and caps are
-// considered. Otherwise, these simply return false.
-// ---------------------------------------------------
+/**
+ * Ignoring form, but not ignoring equipment, can the player use (usually wear)
+ * a given equipment slot?
+ *
+ * @param eq                The slot in question.
+ * @param special_armour    Whether to check if the player can use some subset
+ *                          of item types for a given slot (e.g. hats,
+ *                          bardings); otherwise, those return false.
+ * @return                  Whether the player can ever use the given slot.
+ */
 bool you_can_wear(int eq, bool special_armour)
 {
-    // Amulet provides another slot
-    if (eq == EQ_RING_AMULET && player_equip_unrand(UNRAND_FINGER_AMULET))
-        return true;
-
-    if (you.species == SP_FELID)
-    {
-        if (player_mutation_level(MUT_MISSING_HAND))
-            return eq == EQ_RIGHT_RING || eq == EQ_AMULET;
-        else
-            return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
-    }
-
-    // Octopodes can wear soft helmets, eight rings, and an amulet.
-    if (you.species == SP_OCTOPODE)
-    {
-        if (special_armour && eq == EQ_HELMET)
-            return true;
-        else if (player_mutation_level(MUT_MISSING_HAND))
-            return eq >= EQ_RING_ONE && eq <= EQ_RING_SEVEN
-                   || eq == EQ_AMULET || eq == EQ_WEAPON;
-        else
-            return eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
-                   || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON;
-    }
-
     switch (eq)
     {
     case EQ_LEFT_RING:
-        if (player_mutation_level(MUT_MISSING_HAND))
-            return false;
-        else
-            return true;
+        return you.species != SP_OCTOPODE
+               && !player_mutation_level(MUT_MISSING_HAND);
 
     case EQ_RIGHT_RING:
+        return you.species != SP_OCTOPODE;
+
+    case EQ_RING_ONE:
+    case EQ_RING_TWO:
+    case EQ_RING_THREE:
+    case EQ_RING_FOUR:
+    case EQ_RING_FIVE:
+    case EQ_RING_SIX:
+    case EQ_RING_SEVEN:
+        return you.species == SP_OCTOPODE;
+
+    case EQ_RING_EIGHT:
+        return you.species == SP_OCTOPODE
+               && !player_mutation_level(MUT_MISSING_HAND);
+
     case EQ_AMULET:
-    case EQ_CLOAK:
         return true;
+
+    case EQ_RING_AMULET:
+        return player_equip_unrand(UNRAND_FINGER_AMULET);
+
+    case EQ_CLOAK:
+        return you.species != SP_FELID && you.species != SP_OCTOPODE;
 
     case EQ_GLOVES:
         if (player_mutation_level(MUT_CLAWS, false) == 3)
             return false;
-        // These species cannot wear gloves.
+
+        // big & tiny & weird races can't wear gloves
         if (you.species == SP_TROLL
+            || you.species == SP_OGRE
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
+            || you.species == SP_FELID
+            || you.species == SP_OCTOPODE)
         {
             return false;
         }
@@ -769,56 +767,73 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return false;
         }
-        // These species cannot wear boots.
+        // big and tiny & weird races can't wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
 #if TAG_MAJOR_VERSION == 34
             || you.species == SP_DJINNI
 #endif
-            || you.species == SP_OGRE)
+            || you.species == SP_OGRE
+            || you.species == SP_FELID
+            || you.species == SP_OCTOPODE)
         {
             return false;
         }
         return true;
 
     case EQ_BODY_ARMOUR:
-        if (player_genus(GENPC_DRACONIAN))
+        // weird races (& draconians) can't wear body armour
+        if (player_genus(GENPC_DRACONIAN)
+            || you.species == SP_FELID
+            || you.species == SP_OCTOPODE)
+        {
             return false;
+        }
         return true;
 
     case EQ_SHIELD:
-        // Most races can wear robes or a buckler/shield.
-        if (special_armour && !player_mutation_level(MUT_MISSING_HAND))
-            return true;
+        // no hand, no shield
+        if (player_mutation_level(MUT_MISSING_HAND) || you.species == SP_FELID)
+            return false;
+
+        /// big & tiny races can only wear some shield types.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
             || you.species == SP_OGRE)
         {
-            return false;
+            return special_armour;
         }
-        if (player_mutation_level(MUT_MISSING_HAND))
-            return false;
         return true;
 
     case EQ_HELMET:
-        // No caps or hats with Horns 3 or Antennae 3.
+        // the cat in the hat is strictly disallowed
+        if (you.species == SP_FELID)
+            return false;
+
+        // No hats with Horns 3 or Antennae 3.
         if (player_mutation_level(MUT_HORNS, false) == 3
             || player_mutation_level(MUT_ANTENNAE, false) == 3)
         {
             return false;
         }
-        // Anyone else can wear caps.
+
+        // Anyone else can wear hats.
         if (special_armour)
             return true;
+
+        // Any level of horns/beak/antennae lock out hard helmets.
         if (player_mutation_level(MUT_HORNS, false)
             || player_mutation_level(MUT_BEAK, false)
             || player_mutation_level(MUT_ANTENNAE, false))
         {
             return false;
         }
+
+        // big & tiny & weird races can't wear helmets (& draconians)
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
             || you.species == SP_OGRE
+            || you.species == SP_OCTOPODE
             || player_genus(GENPC_DRACONIAN))
         {
             return false;
@@ -827,7 +842,7 @@ bool you_can_wear(int eq, bool special_armour)
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return true; // kittehs were handled earlier
+        return you.species != SP_FELID;
 
     default:
         return false;
