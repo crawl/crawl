@@ -5921,7 +5921,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK || species == SP_OCTOPODE
+    return (species_can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || !permanently)
                 && form_can_swim();
