@@ -3709,39 +3709,54 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     return decline_pronoun(gender, variant);
 }
 
-// Checks if the monster can use smiting/torment to attack without
-// unimpeded LOS to the player.
+// XXX: this is awful and should not exist
+static const spell_type smitey_spells[] = {
+    SPELL_SMITING,
+    SPELL_AIRSTRIKE,
+    SPELL_SYMBOL_OF_TORMENT,
+    SPELL_HELLFIRE_BURST,
+    SPELL_FIRE_STORM,
+    SPELL_SHATTER,
+    SPELL_TORNADO,          // dubious
+    SPELL_GLACIATE,         // dubious
+    SPELL_CHAOTIC_MIRROR,
+    SPELL_OZOCUBUS_REFRIGERATION,
+    SPELL_MASS_CONFUSION
+};
+
+/**
+ * Does the given monster have spells that can damage without requiring LOF?
+ *
+ * Smitey (smite, airstrike), full-LOS (torment, refrigeration)...
+ *
+ * @param mon   The monster in question.
+ * @return      Whether the given monster has 'smitey' effects.
+ */
 static bool _mons_has_smite_attack(const monster* mons)
 {
     const monster_spells &hspell_pass = mons->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
-        if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
-            || hspell_pass[i] == SPELL_SMITING
-            || hspell_pass[i] == SPELL_HELLFIRE_BURST
-            || hspell_pass[i] == SPELL_FIRE_STORM
-            || hspell_pass[i] == SPELL_AIRSTRIKE
-            || hspell_pass[i] == SPELL_CHAOTIC_MIRROR)
-        {
-            return true;
-        }
+        for (unsigned j = 0 ; j < ARRAYSZ(smitey_spells); j++)
+            if (hspell_pass[i] == smitey_spells[j])
+                return true;
 
     return false;
 }
 
-// Determines if a monster is smart and pushy enough to displace other
-// monsters.  A shover should not cause damage to the shovee by
-// displacing it, so monsters that trail clouds of badness are
-// ineligible.  The shover should also benefit from shoving, so monsters
-// that can smite/torment are ineligible.
-//
-// (Smiters would be eligible for shoving when fleeing if the AI allowed
-// for smart monsters to flee.)
+/**
+ * Is the given monster smart and pushy enough to displace other
+ * monsters?
+ *
+ * A shover should not cause damage to the shovee by
+ * displacing it, so monsters that trail clouds of badness are
+ * ineligible.  The shover should also benefit from shoving, so monsters
+ * that can smite/torment are ineligible.
+ *
+ * @param m     The monster in question.
+ * @return      Whether that monster is ever allowed to 'push' other monsters.
+ */
 bool monster_shover(const monster* m)
 {
-    const monsterentry *me = get_monster_data(m->type);
-    if (!me)
-        return false;
-
     // Efreet and fire elementals are disqualified because they leave behind
     // clouds of flame. Curse toes are disqualified because they trail
     // clouds of miasma.
@@ -3753,21 +3768,17 @@ bool monster_shover(const monster* m)
 
     // Monsters too stupid to use stairs (e.g. non-spectral zombified undead)
     // are also disqualified.
-    if (!mons_can_use_stairs(m))
+    // However, summons *can* push past pals & cause trouble.
+    // XXX: redundant with intelligence check?
+    if (!mons_can_use_stairs(m) && !m->is_summoned())
         return false;
 
-    // Smiters profit from staying back and smiting.
-    if (_mons_has_smite_attack(m))
+    // Geryon really profits from *not* pushing past hell beasts.
+    if (m->type == MONS_GERYON)
         return false;
 
-    char mchar = me->basechar;
-
-    // Somewhat arbitrary: giants and dragons are too big to get past anything,
-    // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
-    // aren't pushers and shovers. Worms and elementals are on the list because
-    // all 'w' are currently unrelated.
-    return mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
-           && mchar != 'G' && mchar != 'w' && mchar != 'E';
+    // no dumb creatures pushing, aside from jellies, which just kind of ooze.
+    return mons_intel(m) >= I_REPTILE || mons_genus(m->type) == MONS_JELLY;
 }
 
 /**
@@ -3787,16 +3798,13 @@ bool monster_shover(const monster* m)
  */
  bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 {
+    // non-fleeing smiters won't push past anything.
+    if (_mons_has_smite_attack(m1) && !fleeing)
+        return false;
+
     // Fannar's ice beasts can push past Fannar, who benefits from this.
-    // Similarly, he refuses to push past them unless he's fleeing.
-    if (m1->type == MONS_FANNAR && m2->type == MONS_ICE_BEAST)
-        return fleeing;
     if (m1->type == MONS_ICE_BEAST && m2->type == MONS_FANNAR)
         return true;
-
-    // Geryon really profits from *not* pushing past hell beasts.
-    if (m1->type == MONS_GERYON)
-        return false;
 
     // Special-case spectral things to push past things that summon them
     // (revenants, ghost crabs).
