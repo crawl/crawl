@@ -169,8 +169,8 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
         case SPELL_POISONOUS_CLOUD:
             beam.flavour = BEAM_POISON;
             beam.name = "blast of poison";
-            break;
             cty = CLOUD_POISON;
+            break;
         case SPELL_HOLY_BREATH:
             beam.flavour = BEAM_HOLY;
             beam.origin_spell = SPELL_HOLY_BREATH;
