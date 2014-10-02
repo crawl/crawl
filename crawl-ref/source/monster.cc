@@ -123,7 +123,7 @@ void monster::reset()
     ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
-    spells.init(SPELL_NO_SPELL);
+    spells.init(mon_spell_slot());
 
     mid             = 0;
     flags           = 0;
@@ -780,10 +780,10 @@ bool monster::has_spell_of_type(unsigned disciplines) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        if (spells[i] == SPELL_NO_SPELL)
+        if (spells[i].spell == SPELL_NO_SPELL)
             continue;
 
-        if (spell_typematch(spells[i], disciplines))
+        if (spell_typematch(spells[i].spell, disciplines))
             return true;
     }
     return false;
@@ -3037,7 +3037,7 @@ void monster::banish(actor *agent, const string &)
 bool monster::has_spells() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL)
+        if (spells[i].spell != SPELL_NO_SPELL)
             return true;
 
     return false;
@@ -3046,7 +3046,7 @@ bool monster::has_spells() const
 bool monster::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] == spell)
+        if (spells[i].spell == spell)
             return true;
 
     return false;
@@ -3055,7 +3055,7 @@ bool monster::has_spell(spell_type spell) const
 bool monster::has_unholy_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unholy_spell(spells[i]))
+        if (is_unholy_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3064,7 +3064,7 @@ bool monster::has_unholy_spell() const
 bool monster::has_evil_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_evil_spell(spells[i]))
+        if (is_evil_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3073,7 +3073,7 @@ bool monster::has_evil_spell() const
 bool monster::has_unclean_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unclean_spell(spells[i]))
+        if (is_unclean_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3082,7 +3082,7 @@ bool monster::has_unclean_spell() const
 bool monster::has_chaotic_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_chaotic_spell(spells[i]))
+        if (is_chaotic_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3091,7 +3091,7 @@ bool monster::has_chaotic_spell() const
 bool monster::has_corpse_violating_spell() const
 {
      for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_corpse_violating_spell(spells[i]))
+        if (is_corpse_violating_spell(spells[i].spell))
             return true;
 
     return false;
@@ -5065,7 +5065,7 @@ void monster::load_ghost_spells()
 {
     if (!ghost.get())
     {
-        spells.init(SPELL_NO_SPELL);
+        spells.init(mon_spell_slot());
         return;
     }
 
@@ -5076,7 +5076,7 @@ void monster::load_ghost_spells()
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
         mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
-             i, spells[i], spell_title(spells[i]));
+             i, spells[i], spell_title(spells[i].spell));
     }
 #endif
 }
@@ -5133,10 +5133,10 @@ void monster::forget_random_spell()
     int which_spell = -1;
     int count = 0;
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL && one_chance_in(++count))
+        if (spells[i].spell != SPELL_NO_SPELL && one_chance_in(++count))
             which_spell = i;
     if (which_spell != -1)
-        spells[which_spell] = SPELL_NO_SPELL;
+        spells[which_spell].spell = SPELL_NO_SPELL;
 }
 
 void monster::scale_hp(int num, int den)
@@ -5346,7 +5346,7 @@ bool monster::needs_berserk(bool check_spells) const
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            const int spell = spells[i];
+            const int spell = spells[i].spell;
             if (spell != SPELL_NO_SPELL && spell != SPELL_BERSERKER_RAGE)
                 return false;
         }

@@ -2437,10 +2437,10 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
         int shortest_range = LOS_RADIUS + 1;
         for (int i = 0; i < 5; ++i)
         {
-            if (mon->spells[i] == SPELL_NO_SPELL)
+            if (mon->spells[i].spell == SPELL_NO_SPELL)
                 continue;
 
-            int range = spell_range(mon->spells[i], 100, false);
+            int range = spell_range(mon->spells[i].spell, 100, false);
             if (range < shortest_range)
                 shortest_range = range;
         }

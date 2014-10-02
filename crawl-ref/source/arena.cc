@@ -143,11 +143,11 @@ namespace arena
         monster_spells &spells(mons->spells);
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            spell_type sp = spells[i];
+            spell_type sp = spells[i].spell;
             if (no_summons && spell_typematch(sp, SPTYP_SUMMONING))
-                spells[i] = SPELL_NO_SPELL;
+                spells[i].spell = SPELL_NO_SPELL;
             else if (no_animate && sp == SPELL_ANIMATE_DEAD)
-                spells[i] = SPELL_NO_SPELL;
+                spells[i].spell = SPELL_NO_SPELL;
         }
     }
 

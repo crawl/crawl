@@ -54,6 +54,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "misc.h"
+#include "mon-book.h"
 #include "mon-death.h"
 #include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
@@ -68,6 +69,7 @@
 #include "skills2.h"
 #include "state.h"
 #include "env.h"
+#include "spl-util.h"
 #include "spl-wpnench.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -322,7 +324,11 @@ static void marshallGhost(writer &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost(reader &th);
 
 static void marshallSpells(writer &, const monster_spells &);
-static void unmarshallSpells(reader &, monster_spells &);
+static void unmarshallSpells(reader &, monster_spells &
+#if TAG_MAJOR_VERSION == 34
+                             , unsigned hd, bool wizard, bool priest
+#endif
+);
 
 static void marshallMonsterInfo (writer &, const monster_info &);
 static void unmarshallMonsterInfo (reader &, monster_info &mi);
@@ -4146,7 +4152,7 @@ void marshallMonster(writer &th, const monster& m)
         if (m.inv[i] != NON_ITEM)
             parts |= MP_ITEMS;
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        if (m.spells[i])
+        if (m.spells[i].spell != SPELL_NO_SPELL)
             parts |= MP_SPELLS;
 
     marshallShort(th, m.type);
@@ -4405,7 +4411,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         switch (mi.colour)
         {
         case BROWN:        // monstrous demonspawn, naga ritualist
-            if (mi.spells[0] == SPELL_FORCE_LANCE)
+            if (mi.spells[0].spell == SPELL_FORCE_LANCE)
                 mi.type = MONS_NAGA_RITUALIST;
             else
                 mi.type = MONS_MONSTROUS_DEMONSPAWN;
@@ -4420,7 +4426,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
             mi.type = MONS_PUTRID_DEMONSPAWN;
             break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
-            if (mi.spells[0] == SPELL_PORTAL_PROJECTILE)
+            if (mi.spells[0].spell == SPELL_PORTAL_PROJECTILE)
                 mi.type = MONS_NAGA_SHARPSHOOTER;
             else
                 mi.type = MONS_TORTUROUS_DEMONSPAWN;
@@ -4967,7 +4973,15 @@ void unmarshallMonster(reader &th, monster& m)
             m.inv[j] = unmarshallShort(th);
 
     if (parts & MP_SPELLS)
-        unmarshallSpells(th, m.spells);
+    {
+        unmarshallSpells(th, m.spells
+#if TAG_MAJOR_VERSION == 34
+                         , m.get_experience_level(),
+                           m.flags & MF_ACTUAL_SPELLS,
+                           m.flags & MF_PRIEST
+#endif
+                         );
+    }
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
@@ -5064,7 +5078,7 @@ void unmarshallMonster(reader &th, monster& m)
         switch (m.colour)
         {
         case BROWN:        // monstrous demonspawn, naga ritualist
-            if (m.spells[0] == SPELL_FORCE_LANCE)
+            if (m.spells[0].spell == SPELL_FORCE_LANCE)
                 m.type = MONS_NAGA_RITUALIST;
             else
                 m.type = MONS_MONSTROUS_DEMONSPAWN;
@@ -5079,7 +5093,7 @@ void unmarshallMonster(reader &th, monster& m)
             m.type = MONS_PUTRID_DEMONSPAWN;
             break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
-            if (m.spells[0] == SPELL_PORTAL_PROJECTILE)
+            if (m.spells[0].spell == SPELL_PORTAL_PROJECTILE)
                 m.type = MONS_NAGA_SHARPSHOOTER;
             else
                 m.type = MONS_TORTUROUS_DEMONSPAWN;
@@ -5508,30 +5522,81 @@ static void _draw_tiles()
 static void marshallSpells(writer &th, const monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        marshallShort(th, spells[j]);
+    {
+        marshallShort(th, spells[j].spell);
+        marshallByte(th, spells[j].freq);
+        marshallShort(th, spells[j].flags);
+    }
 }
 
-static void unmarshallSpells(reader &th, monster_spells &spells)
+static void unmarshallSpells(reader &th, monster_spells &spells
+#if TAG_MAJOR_VERSION == 34
+                             , unsigned hd, bool wizard, bool priest
+#endif
+                            )
 {
+#if TAG_MAJOR_VERSION == 34
+    unsigned int count = 0;
+#endif
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
     {
-        spells[j] = unmarshallSpellType(th
+        spells[j].spell = unmarshallSpellType(th
 
 #if TAG_MAJOR_VERSION == 34
             , true
 #endif
             );
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_MALMUTATE && spells[j] == SPELL_POLYMORPH)
-            spells[j] = SPELL_MALMUTATE;
+        if (th.getMinorVersion() < TAG_MINOR_MALMUTATE
+            && spells[j].spell == SPELL_POLYMORPH)
+        {
+            spells[j].spell = SPELL_MALMUTATE;
+        }
 
-        if (spells[j] == SPELL_FAKE_RAKSHASA_SUMMON)
-            spells[j] = SPELL_PHANTOM_MIRROR;
+        if (spells[j].spell == SPELL_FAKE_RAKSHASA_SUMMON)
+            spells[j].spell = SPELL_PHANTOM_MIRROR;
 
-        if (spells[j] == SPELL_SUNRAY)
-            spells[j] = SPELL_STONE_ARROW;
+        if (spells[j].spell == SPELL_SUNRAY)
+            spells[j].spell = SPELL_STONE_ARROW;
+
+        if (th.getMinorVersion() < TAG_MINOR_MONSTER_SPELL_SLOTS
+            && spells[j].spell != SPELL_NO_SPELL)
+        {
+            count++;
+
+            const unsigned int flags = get_spell_flags(spells[j].spell);
+            const bool innate = (!wizard && !priest)
+                                || !!(flags | SPFLAG_INNATE);
+            if (innate)
+                spells[j].flags |= MON_SPELL_INNATE;
+            else
+            {
+                if (wizard)
+                    spells[j].flags |= MON_SPELL_WIZARD;
+                else if (priest)
+                    spells[j].flags |= MON_SPELL_PRIEST;
+                else
+                    spells[j].flags |= MON_SPELL_INNATE; // rip
+            }
+
+            if (j == NUM_MONSTER_SPELL_SLOTS - 1)
+                spells[j].flags |= MON_SPELL_EMERGENCY;
+        }
+        else
+        {
+#endif
+        spells[j].freq = unmarshallByte(th);
+        spells[j].flags = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        }
 #endif
     }
+
+#if TAG_MAJOR_VERSION == 34
+    const unsigned one_freq = (hd + 50) / count;
+    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        spells[j].freq = one_freq;
+#endif
 }
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
@@ -5593,7 +5658,12 @@ static ghost_demon unmarshallGhost(reader &th)
 
     ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
 
-    unmarshallSpells(th, ghost.spells);
+    unmarshallSpells(th, ghost.spells
+#if TAG_MAJOR_VERSION == 34
+                     , ghost.xl, true, false
+#endif
+                    );
+
 
     return ghost;
 }

@@ -668,13 +668,22 @@ private:
 
 typedef vector<delay_queue_item> delay_queue_type;
 
-class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
+struct mon_spell_slot
+{
+    spell_type spell;
+    uint8_t freq;
+    unsigned short flags;
+};
+
+class monster_spells : public FixedVector<mon_spell_slot,
+                                          NUM_MONSTER_SPELL_SLOTS>
 {
 public:
     monster_spells()
-        : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
+        : FixedVector<mon_spell_slot, NUM_MONSTER_SPELL_SLOTS>
+              (mon_spell_slot())
     { }
-    void clear() { init(SPELL_NO_SPELL); }
+    void clear() { init(mon_spell_slot()); }
 };
 
 class reader;

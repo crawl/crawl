@@ -198,18 +198,18 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     // Use misc slots (3+4) for the primary spells of parts 1 & 2
     const int boltslot = partnum + 1;
     // Overwrite the base monster's misc spells if they had any
-    if (dummy.spells[0] != SPELL_NO_SPELL)
+    if (dummy.spells[0].spell != SPELL_NO_SPELL)
         spells[boltslot] = dummy.spells[0];
 
     // Other spell slots overwrite if the base monster(s) didn't have one
     // Enchantment
-    if (spells[1] == SPELL_NO_SPELL && dummy.spells[1] != SPELL_NO_SPELL)
+    if (spells[1].spell == SPELL_NO_SPELL && dummy.spells[1].spell != SPELL_NO_SPELL)
         spells[1] = dummy.spells[1];
     // Self-enchantment
-    if (spells[2] == SPELL_NO_SPELL && dummy.spells[2] != SPELL_NO_SPELL)
+    if (spells[2].spell == SPELL_NO_SPELL && dummy.spells[2].spell != SPELL_NO_SPELL)
         spells[2] = dummy.spells[2];
     // Emergency
-    if (spells[5] == SPELL_NO_SPELL && dummy.spells[5] != SPELL_NO_SPELL)
+    if (spells[5].spell == SPELL_NO_SPELL && dummy.spells[5].spell != SPELL_NO_SPELL)
         spells[5] = dummy.spells[5];
 }
 
