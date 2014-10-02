@@ -286,6 +286,12 @@ bool wizard_create_feature(const coord_def& pos)
     if (pos == you.pos() && cell_is_solid(pos))
         you.wizmode_teleported_into_rock = true;
 
+    if (mimic)
+        env.level_map_mask(pos) |= MMT_MIMIC;
+
+    if (you.see_cell(pos))
+        view_update_at(pos);
+
     return true;
 }
 

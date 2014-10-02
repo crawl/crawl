@@ -66,6 +66,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
+#include "wiz-dgn.h"
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
@@ -1761,6 +1762,15 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             set_hp(1);
             print_stats();
         }
+
+    case CMD_TARGET_WIZARD_CREATE_MIMIC:
+        if (target() != you.pos())
+        {
+            wizard_create_feature(target());
+            need_beam_redraw = true;
+        }
+        return;
+
     default:
         break;
     }
