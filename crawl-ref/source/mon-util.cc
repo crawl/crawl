@@ -2428,7 +2428,6 @@ bool init_abomination(monster* mon, int hd)
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
 
     mon->set_hit_dice(min(max_hd, hd));
-    mprf("DEBUG: abom HD: %d -> %d", hd, mon->get_hit_dice());
 
     const monsterentry *m = get_monster_data(mon->type);
     int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
