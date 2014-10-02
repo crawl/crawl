@@ -2544,11 +2544,11 @@ void define_monster(monster* mons)
         // brethren; those should be based on the base monster,
         // with modifiers taken from the job.
 
-        if (mons->base_monster == MONS_NO_MONSTER
-            || mons->base_monster == MONS_PROGRAM_BUG) // latter is zombie gen
-        {
-            monbase = random_demonspawn_monster_species();
-        }
+        monbase = (mons->base_monster == MONS_NO_MONSTER
+                   || mons->base_monster == MONS_PROGRAM_BUG) // zombie gen
+                  ? random_demonspawn_monster_species()
+                  : mons->base_monster;
+
         const monsterentry* mbase = get_monster_data(monbase);
         hp     = hit_points(hd,
                             mbase->hpdice[1] + m->hpdice[1],
@@ -2573,8 +2573,13 @@ void define_monster(monster* mons)
     mons->max_hit_points  = hp_max;
     mons->speed_increment = 70;
 
-    mons->base_monster = monbase;
-    mons->number = monnumber;
+    if (mons->base_monster == MONS_NO_MONSTER
+        || mons->base_monster == MONS_PROGRAM_BUG) // latter is zombie gen
+    {
+        mons->base_monster = monbase;
+    }
+    if (mons->number == 0)
+        mons->number = monnumber;
 
     mons->flags      = 0;
     mons->experience = 0;
