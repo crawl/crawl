@@ -2028,15 +2028,13 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     ASSERT(!invalid_monster_type(ztype));
     ASSERT(mons_class_is_zombified(cs));
 
-    monster_type base = mons_species(ztype);
-
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
 
     mon->type         = cs;
-    mon->base_monster = base;
+    mon->base_monster = ztype;
 
     mon->colour       = mons_class_colour(mon->type);
     mon->speed        = (cs == MONS_SPECTRAL_THING

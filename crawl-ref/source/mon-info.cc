@@ -467,7 +467,9 @@ monster_info::monster_info(const monster* m, int milev)
         nomsg_wounds = true;
     }
 
-    base_type = m->base_monster;
+    base_type = mons_class_is_zombified(m->type) ?
+                    m->base_monster
+                    : mons_species(m->base_monster);
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
 
