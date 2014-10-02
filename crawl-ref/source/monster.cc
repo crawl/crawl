@@ -75,7 +75,7 @@
 
 monster::monster()
     : hit_points(0), max_hit_points(0),
-      ac(0), ev(0), speed(0), speed_increment(0), target(), firing_pos(),
+      ev(0), speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
@@ -133,7 +133,6 @@ void monster::reset()
     hit_points      = 0;
     max_hit_points  = 0;
     hit_dice        = 0;
-    ac              = 0;
     ev              = 0;
     speed_increment = 0;
     attitude        = ATT_HOSTILE;
@@ -181,7 +180,6 @@ void monster::init_with(const monster& mon)
     hit_points        = mon.hit_points;
     max_hit_points    = mon.max_hit_points;
     hit_dice          = mon.hit_dice;
-    ac                = mon.ac;
     ev                = mon.ev;
     speed             = mon.speed;
     speed_increment   = mon.speed_increment;
@@ -897,8 +895,6 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     }
 
     const int brand = get_weapon_brand(item);
-    if (brand == SPWPN_PROTECTION)
-        ac += 5;
     if (brand == SPWPN_EVASION)
         ev += 5;
 
@@ -960,13 +956,13 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     }
 }
 
-int monster::armour_bonus(const item_def &item)
+int monster::armour_bonus(const item_def &item) const
 {
     if (is_shield(item))
         return 0;
 
     int armour_ac = property(item, PARM_AC);
-    // For concistency with players, we should multiply this by 1 + (skill/22),
+    // For consistency with players, we should multiply this by 1 + (skill/22),
     // where skill may be HD.
 
     const int armour_plus = item.plus;
@@ -983,7 +979,6 @@ void monster::equip_armour(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    ac += armour_bonus(item);
     ev += property(item, PARM_EVASION) / (is_shield(item) ? 2 : 6);
 }
 
@@ -1018,13 +1013,6 @@ void monster::equip_jewellery(item_def &item, int near)
             del_ench(ENCH_CONFUSION);
         if (has_ench(ENCH_BERSERK))
             del_ench(ENCH_BERSERK);
-    }
-
-    if (item.sub_type == RING_PROTECTION)
-    {
-        const int jewellery_plus = item.plus;
-        ASSERT(abs(jewellery_plus) < 30); // sanity check
-        ac += jewellery_plus;
     }
 
     if (item.sub_type == RING_EVASION)
@@ -1074,8 +1062,6 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
     }
 
     const int brand = get_weapon_brand(item);
-    if (brand == SPWPN_PROTECTION)
-        ac -= 5;
     if (brand == SPWPN_EVASION)
         ev -= 5;
 
@@ -1130,7 +1116,6 @@ void monster::unequip_armour(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    ac -= armour_bonus(item);
     ev -= property(item, PARM_EVASION) / (is_shield(item) ? 2 : 6);
 }
 
@@ -1143,13 +1128,6 @@ void monster::unequip_jewellery(item_def &item, int near)
         snprintf(info, INFO_SIZE, " takes off %s.",
                  item.name(DESC_A).c_str());
         simple_monster_message(this, info);
-    }
-
-    if (item.sub_type == RING_PROTECTION)
-    {
-        const int jewellery_plus = item.plus;
-        ASSERT(abs(jewellery_plus) < 30);
-        ac -= jewellery_plus;
     }
 
     if (item.sub_type == RING_EVASION)
@@ -3359,22 +3337,133 @@ int monster::missile_deflection() const
         return 0;
 }
 
+/**
+ * What AC bonus or penalty does a given zombie type apply to the base
+ * monster type's?
+ *
+ * @param type      The type of zombie. (Skeleton, simulac, etc)
+ * @return          The ac modifier to apply to the base monster's AC.
+ */
+static int _zombie_ac_modifier(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_ZOMBIE:
+        case MONS_SIMULACRUM:
+            return -2;
+        case MONS_SKELETON:
+            return -6;
+        case MONS_SPECTRAL_THING:
+            return 2;
+        default:
+            die("invalid zombie type %d (%s)", type,
+                mons_class_name(type));
+    }
+}
+
+/**
+ * What's the base armour class of this monster?
+ *
+ * Usually based on type; ghost demons can override this, and draconians/
+ * demonspawn are... complicated.
+ *
+ * @return The base armour class of this monster, before applying item &
+ *          status effects.
+ */
+int monster::base_armour_class() const
+{
+    // ghost demon struct overrides the monster values.
+    if (mons_is_ghost_demon(type))
+        return ghost->ac;
+
+    // zombie, skeleton, etc ac mods
+    if (mons_class_is_zombified(type))
+    {
+        // handle weird zombies for which type isn't enough to reconstruct ac
+        // (e.g. zombies with jobs & demonghost zombies)
+        const int base_ac = props.exists(ZOMBIE_BASE_AC_KEY) ?
+                                props[ZOMBIE_BASE_AC_KEY].get_int() :
+                                get_monster_data(base_monster)->AC;
+
+        return _zombie_ac_modifier(type) + base_ac;
+    }
+
+    // abominations & hell beasts are weird.
+    if (type == MONS_ABOMINATION_LARGE)
+        return min(30, 7 + get_hit_dice() / 2);
+    if (type == MONS_ABOMINATION_SMALL)
+        return min(15, 3 + get_hit_dice() * 2 / 3);
+    if (type == MONS_HELL_BEAST)
+        return max(0, get_hit_dice() - 2);
+
+    const int base_ac = get_monster_data(type)->AC;
+
+    // demonspawn & draconians combine base & class ac values.
+    if (mons_is_draconian_job(type) || mons_is_demonspawn_job(type))
+        return base_ac + get_monster_data(base_monster)->AC;
+
+    return base_ac;
+}
+
+/**
+ * What's the armour class of this monster?
+ *
+ * @return The armour class of this monster, including items, statuses, etc.
+ */
 int monster::armour_class() const
 {
-    int a = ac;
+    int ac = base_armour_class();
+
+    // check for protection-brand weapons
+    const mon_inv_type last_weap_slot = mons_wields_two_weapons(this) ?
+                                        MSLOT_ALT_WEAPON :
+                                        MSLOT_WEAPON;
+    for (int i = MSLOT_WEAPON; i <= last_weap_slot; i++)
+    {
+        const item_def *weap = mslot_item(static_cast<mon_inv_type>(i));
+        if (!weap)
+            continue;
+
+        const int brand = get_weapon_brand(*weap);
+        if (brand == SPWPN_PROTECTION)
+            ac += 5;
+    }
+
+    // armour from ac
+    const item_def *armour = mslot_item(MSLOT_ARMOUR);
+    if (armour)
+        ac += armour_bonus(*armour);
+
+    // armour from jewellery
+    const item_def *ring = mslot_item(MSLOT_JEWELLERY);
+    if (ring && ring->sub_type == RING_PROTECTION)
+    {
+        const int jewellery_plus = ring->plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        ac += jewellery_plus;
+    }
 
     // Extra AC for snails/turtles drawn into their shells.
     if (has_ench(ENCH_WITHDRAWN))
-        a += 10;
+        ac += 10;
+
+    // various enchantments
+    if (has_ench(ENCH_STONESKIN))
+        ac += get_hit_dice() / 2;
+    if (has_ench(ENCH_OZOCUBUS_ARMOUR))
+        ac += 4 + get_hit_dice() / 3;
+    if (has_ench(ENCH_ICEMAIL))
+        ac += ICEMAIL_MAX;
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
-        a -= get_ench(ENCH_WRETCHED).degree;
+        ac -= get_ench(ENCH_WRETCHED).degree;
 
+    // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
-        a /= 2;
+        ac /= 2;
 
-    return max(a, 0);
+    return max(ac, 0);
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -4538,7 +4627,6 @@ void monster::uglything_init(bool only_mutate)
         hit_points      = max_hit_points;
     }
 
-    ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;
     speed_increment = 70;
@@ -4555,7 +4643,6 @@ void monster::ghost_demon_init()
     hit_dice        = ghost->xl;
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
-    ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;
     speed_increment = 70;

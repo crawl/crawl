@@ -174,7 +174,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     if (partnum == 1)
     {
         // Always AC/EV on the first part
-        ac = dummy.ac;
+        ac = dummy.armour_class();
         ev = dummy.ev;
         max_hp = dummy.max_hit_points;
         xl = dummy.get_hit_dice();

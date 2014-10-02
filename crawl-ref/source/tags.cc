@@ -4154,7 +4154,6 @@ void marshallMonster(writer &th, const monster& m)
     ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
     marshallString(th, m.mname);
-    marshallByte(th, m.ac);
     marshallByte(th, m.ev);
     marshallByte(th, m.get_experience_level());
     marshallByte(th, m.speed);
@@ -4885,7 +4884,10 @@ void unmarshallMonster(reader &th, monster& m)
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th);
-    m.ac              = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_MON_AC)
+        unmarshallByte(th);
+#endif
     m.ev              = unmarshallByte(th);
     m.set_hit_dice(     unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34

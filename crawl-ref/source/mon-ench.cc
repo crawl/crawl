@@ -196,28 +196,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_STONESKIN:
-        {
-            // player gets 2+earth/5
-            const int ac_bonus = get_hit_dice() / 2;
-
-            ac += ac_bonus;
-            // the monster may get drained or level up, we need to store the bonus
-            props["stoneskin_ac"].get_byte() = ac_bonus;
-        }
-        break;
-
-    case ENCH_OZOCUBUS_ARMOUR:
-        {
-            // player gets 4+ice/3
-            const int ac_bonus = 4 + get_hit_dice() / 3;
-
-            ac += ac_bonus;
-            // the monster may get drained or level up, we need to store the bonus
-            props["ozocubus_ac"].get_byte() = ac_bonus;
-        }
-        break;
-
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
 
@@ -312,10 +290,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_ROLLING:
         calc_speed();
-        break;
-
-    case ENCH_ICEMAIL:
-        ac += ICEMAIL_MAX;
         break;
 
     case ENCH_AGILE:
@@ -524,8 +498,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_STONESKIN:
-        if (props.exists("stoneskin_ac"))
-            ac -= props["stoneskin_ac"].get_byte();
         if (!quiet && you.can_see(this))
         {
             mprf("%s skin looks tender.",
@@ -534,8 +506,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_OZOCUBUS_ARMOUR:
-        if (props.exists("ozocubus_ac"))
-            ac -= props["ozocubus_ac"].get_byte();
         if (!quiet && you.can_see(this))
         {
             mprf("%s icy armour evaporates.",
@@ -969,7 +939,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_ICEMAIL:
-        ac -= ICEMAIL_MAX;
         if (!quiet && you.can_see(this))
         {
             mprf("%s icy envelope dissipates!",
