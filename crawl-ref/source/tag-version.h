@@ -116,6 +116,7 @@ enum tag_minor_version
     TAG_MINOR_METABOLISM,          // Remove random fast/slow meta mutations
     TAG_MINOR_RU_SACRIFICES,       // Store Ru sacrifices in an array for coloration
     TAG_MINOR_IS_UNDEAD,           // Remove the old "is_undead" player var
+    TAG_MINOR_REMOVE_MON_AC,       // Remove the old "ac" monster field
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

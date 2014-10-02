@@ -133,7 +133,6 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     calc_speed();
 
     const monsterentry *m = get_monster_data(after);
-    ac += m->AC - orig->AC;
     ev += m->ev - orig->ev;
 
     if (adjust_hd)

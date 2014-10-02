@@ -220,6 +220,9 @@ shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);
 bool mons_is_pghost(monster_type mc);
+bool mons_is_draconian_job(monster_type mc);
+bool mons_is_demonspawn_job(monster_type mc);
+bool mons_is_job(monster_type mc);
 
 int mons_avg_hp(monster_type mc);
 int exper_value(const monster* mon, bool real = true);

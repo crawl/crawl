@@ -476,7 +476,7 @@ void debug_stethoscope(int mon)
          mons.get_experience_level(),
          mons.experience,
          mons.hit_points, mons.max_hit_points,
-         mons.ac, mons.armour_class(),
+         mons.base_armour_class(), mons.armour_class(),
          mons.ev,
          mons.res_magic(),
          exper_value(&mons),

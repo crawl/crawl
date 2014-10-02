@@ -1965,30 +1965,26 @@ void roll_zombie_hp(monster* mon)
     mon->hit_points     = mon->max_hit_points;
 }
 
-static void _roll_zombie_ac_ev_mods(monster* mon, int& acmod, int& evmod)
+static void _roll_zombie_ev_mods(monster* mon, int& evmod)
 {
     ASSERT(mons_class_is_zombified(mon->type));
 
     switch (mon->type)
     {
     case MONS_ZOMBIE:
-        acmod = -2;
         evmod = -5;
         break;
 
     case MONS_SKELETON:
-        acmod = -6;
         evmod = -7;
         break;
 
     case MONS_SIMULACRUM:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        acmod = -2;
         evmod = -5;
         break;
 
     case MONS_SPECTRAL_THING:
-        acmod = +2;
         evmod = -5;
         break;
 
@@ -1998,16 +1994,14 @@ static void _roll_zombie_ac_ev_mods(monster* mon, int& acmod, int& evmod)
     }
 }
 
-static void _roll_zombie_ac_ev(monster* mon)
+static void _roll_zombie_ev(monster* mon)
 {
     ASSERT(mons_class_is_zombified(mon->type));
 
-    int acmod = 0;
     int evmod = 0;
 
-    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
+    _roll_zombie_ev_mods(mon, evmod);
 
-    mon->ac = max(mon->ac + acmod, 0);
     mon->ev = max(mon->ev + evmod, 0);
 }
 
@@ -2032,6 +2026,15 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->type         = ztype;
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
+    // handle zombies with jobs & ghostdemon zombies; they otherwise
+    // wouldn't store enough information for us to recreate them right.
+    if (mons_is_job(ztype) || mons_is_ghost_demon(ztype))
+    {
+        mprf("DEBUG base ac: %d (%s / %s)", mon->base_armour_class(),
+             mons_type_name(mon->type, DESC_PLAIN).c_str(),
+             mons_type_name(mon->base_monster, DESC_PLAIN).c_str());
+        mon->props[ZOMBIE_BASE_AC_KEY] = mon->base_armour_class();
+    }
 
     mon->type         = cs;
     mon->base_monster = ztype;
@@ -2056,7 +2059,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
         mon->flags   |= MF_NO_REGEN;
 
     roll_zombie_hp(mon);
-    _roll_zombie_ac_ev(mon);
+    _roll_zombie_ev(mon);
 }
 
 bool downgrade_zombie_to_skeleton(monster* mon)
@@ -2064,14 +2067,12 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
         return false;
 
-    int acmod = 0;
     int evmod = 0;
 
-    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
+    _roll_zombie_ev_mods(mon, evmod);
 
-    // Reverse the zombie AC and EV mods, since they will be replaced
-    // with the skeleton AC and EV mods below.
-    mon->ac = max(mon->ac - acmod, 0);
+    // Reverse the zombie EV mods, since they will be replaced
+    // with the skeleton EV mods below.
     mon->ev = max(mon->ev - evmod, 0);
 
     const int old_hp    = mon->hit_points;
@@ -2082,7 +2083,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
 
     roll_zombie_hp(mon);
-    _roll_zombie_ac_ev(mon);
+    _roll_zombie_ev(mon);
 
     // Scale the skeleton HP to the zombie HP.
     mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;

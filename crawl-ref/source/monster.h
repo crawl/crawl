@@ -8,6 +8,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
+#define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -29,7 +30,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int ac;
     int ev;
     int speed;
     int speed_increment;
@@ -430,6 +430,7 @@ public:
     bool can_throw_large_rocks() const;
     bool can_speak();
 
+    int base_armour_class() const;
     int armour_class() const;
     int gdr_perc() const { return 0; }
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
@@ -543,7 +544,7 @@ private:
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
     void unequip_jewellery(item_def &item, int near);
-    int armour_bonus(const item_def &item);
+    int armour_bonus(const item_def &item) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,
                     int sub_type) const;

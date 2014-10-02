@@ -1285,6 +1285,69 @@ bool mons_is_pghost(monster_type mc)
     return mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION;
 }
 
+static const monster_type demonspawn_jobs[] = {
+    MONS_BLOOD_SAINT,
+    MONS_CHAOS_CHAMPION,
+    MONS_WARMONGER,
+    MONS_CORRUPTER,
+    MONS_BLACK_SUN,
+};
+
+/**
+ * Is the provided monster_type a demonspawn job type? (Not just any
+ * demonspawn, but specifically one with a job! Or the job itself, depending
+ * how you think about it.)
+ *
+ * @param mc    The monster type in question.
+ * @return      Whether that monster type is a demonspawn job.
+ **/
+bool mons_is_demonspawn_job(monster_type mc)
+{
+    // XXX: could use a range check here, but I don't like the fragility...
+    for (int i = 0; i < ARRAYSZ(demonspawn_jobs); i++)
+        if (demonspawn_jobs[i] == mc)
+            return true;
+    return false;
+}
+
+static const monster_type draconian_jobs[] = {
+    MONS_DRACONIAN_CALLER,
+    MONS_DRACONIAN_MONK,
+    MONS_DRACONIAN_ZEALOT,
+    MONS_DRACONIAN_SHIFTER,
+    MONS_DRACONIAN_ANNIHILATOR,
+    MONS_DRACONIAN_SCORCHER,
+    MONS_DRACONIAN_KNIGHT,
+};
+
+/**
+ * Is the provided monster_type a draconian job type? (Not just any draconian,
+ * but specifically one with a job! Or the job itself, depending how you think
+ * about it.)
+ *
+ * @param mc    The monster type in question.
+ * @return      Whether that monster type is a draconian job.
+ **/
+bool mons_is_draconian_job(monster_type mc)
+{
+    // XXX: could use a range check here, but I don't like the fragility...
+    for (int i = 0; i < ARRAYSZ(draconian_jobs); i++)
+        if (draconian_jobs[i] == mc)
+            return true;
+    return false;
+}
+
+/**
+ * Is the provided monster_type a job? (E.g. black sun, draconian knight)
+ *
+ * @param mc    The monster type in question.
+ * @return      Whether that monster type is a job.
+ **/
+bool mons_is_job(monster_type mc)
+{
+    return mons_is_draconian_job(mc) || mons_is_demonspawn_job(mc);
+}
+
 bool mons_is_unique(monster_type mc)
 {
     return mons_class_flag(mc, M_UNIQUE);
@@ -2366,6 +2429,7 @@ bool init_abomination(monster* mon, int hd)
     const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
     mon->set_hit_dice(min(max_hd, hd));
+    mprf("DEBUG: abom HD: %d -> %d", hd, mon->get_hit_dice());
 
     const monsterentry *m = get_monster_data(mon->type);
     int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
@@ -2374,15 +2438,9 @@ bool init_abomination(monster* mon, int hd)
     mon->hit_points     = hp;
 
     if (mon->type == MONS_ABOMINATION_LARGE)
-    {
-        mon->ac = min(max_ac, 7 + hd / 2);
         mon->ev = min(max_ac, 2 * hd / 3);
-    }
     else
-    {
-        mon->ac = min(max_ac, 3 + hd * 2 / 3);
         mon->ev = min(max_ac, 4 + hd);
-    }
 
     return true;
 }
@@ -2396,12 +2454,11 @@ void define_monster(monster* mons)
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
-    int hp = 0, hp_max, ac, ev;
+    int hp = 0, hp_max, ev;
 
     mons->mname.clear();
 
     // misc
-    ac = m->AC;
     ev = m->ev;
 
     mons->god = GOD_NO_GOD;
@@ -2413,16 +2470,17 @@ void define_monster(monster* mons)
         break;
 
     case MONS_ABOMINATION_SMALL:
-        init_abomination(mons, 4 + random2(4));
+        hd = 4 + random2(4);
+        init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
-        init_abomination(mons, 8 + random2(4));
+        hd = 8 + random2(4);
+        init_abomination(mons, hd);
         break;
 
     case MONS_HELL_BEAST:
         hd = 4 + random2(4);
-        ac = 2 + random2(5);
         ev = 7 + random2(5);
         break;
 
@@ -2448,26 +2506,6 @@ void define_monster(monster* mons)
         col = element_colour(ETC_KRAKEN);
         break;
 
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_KNIGHT:
-    {
-        // Professional draconians still have a base draconian type.
-        // White draconians will never be draconian scorchers, but
-        // apart from that, anything goes.
-        do
-            monbase = random_draconian_monster_species();
-        while (drac_colour_incompatible(mcls, monbase));
-        const monsterentry* mbase = get_monster_data(monbase);
-        ac += mbase->AC;
-        ev += mbase->ev;
-        break;
-    }
-
     case MONS_TIAMAT:
         // Initialise to a random draconian type.
         draconian_change_colour(mons);
@@ -2489,36 +2527,46 @@ void define_monster(monster* mons)
         monnumber = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
         break;
 
-    case MONS_BLOOD_SAINT:
-    case MONS_CHAOS_CHAMPION:
-    case MONS_WARMONGER:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
-    {
-        // Some base demonspawn have more or less HP, AC, EV than their
-        // brethren; those should be based on the base monster,
-        // with modifiers taken from the job.
-        monbase = mons->base_monster != MONS_NO_MONSTER
-                  ? mons->base_monster
-                  : random_demonspawn_monster_species();
-        const monsterentry* mbase = get_monster_data(monbase);
-        hp     = hit_points(hd,
-                            mbase->hpdice[1] + m->hpdice[1],
-                            mbase->hpdice[2] + m->hpdice[2]);
-        hp    += mbase->hpdice[3] + m->hpdice[3];
-        ac    += mbase->AC;
-        ev    += mbase->ev;
-        break;
-    }
-
     case MONS_SERPENT_OF_HELL:
     case MONS_SERPENT_OF_HELL_COCYTUS:
     case MONS_SERPENT_OF_HELL_DIS:
     case MONS_SERPENT_OF_HELL_TARTARUS:
         monnumber = 3;
+        break;
 
     default:
         break;
+    }
+
+    if (mons_is_draconian_job(mcls))
+    {
+        // Professional draconians still have a base draconian type.
+        // White draconians will never be draconian scorchers, but
+        // apart from that, anything goes.
+        do
+            monbase = random_draconian_monster_species();
+        while (drac_colour_incompatible(mcls, monbase));
+        const monsterentry* mbase = get_monster_data(monbase);
+        ev += mbase->ev;
+    }
+
+    if (mons_is_demonspawn_job(mcls))
+    {
+        // Some base demonspawn have more or less HP, AC, EV than their
+        // brethren; those should be based on the base monster,
+        // with modifiers taken from the job.
+
+        if (mons->base_monster == MONS_NO_MONSTER
+            || mons->base_monster == MONS_PROGRAM_BUG) // latter is zombie gen
+        {
+            monbase = random_demonspawn_monster_species();
+        }
+        const monsterentry* mbase = get_monster_data(monbase);
+        hp     = hit_points(hd,
+                            mbase->hpdice[1] + m->hpdice[1],
+                            mbase->hpdice[2] + m->hpdice[2]);
+        hp    += mbase->hpdice[3] + m->hpdice[3];
+        ev    += mbase->ev;
     }
 
     if (col == BLACK) // but never give out darkgrey to monsters
@@ -2536,15 +2584,11 @@ void define_monster(monster* mons)
     mons->set_hit_dice(hd);
     mons->hit_points      = hp;
     mons->max_hit_points  = hp_max;
-    mons->ac              = ac;
     mons->ev              = ev;
     mons->speed_increment = 70;
 
-    if (mons->base_monster == MONS_NO_MONSTER)
-        mons->base_monster = monbase;
-
-    if (mons->number == 0)
-        mons->number = monnumber;
+    mons->base_monster = monbase;
+    mons->number = monnumber;
 
     mons->flags      = 0;
     mons->experience = 0;
