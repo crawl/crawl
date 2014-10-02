@@ -2447,13 +2447,11 @@ void define_monster(monster* mons)
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
-    int hp = 0, hp_max, ev;
+    int hp = 0, hp_max;
 
     mons->mname.clear();
 
     // misc
-    ev = m->ev;
-
     mons->god = GOD_NO_GOD;
 
     switch (mcls)
