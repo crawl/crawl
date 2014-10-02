@@ -2286,9 +2286,9 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         break;
 
     case MONS_GREATER_MUMMY:
-        books.push_back(MST_MUMMY);
         books.push_back(MST_GREATER_MUMMY_I);
         books.push_back(MST_GREATER_MUMMY_II);
+        books.push_back(MST_GREATER_MUMMY_III);
         break;
 
     default:
