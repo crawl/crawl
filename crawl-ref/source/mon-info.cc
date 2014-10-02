@@ -1652,9 +1652,12 @@ int monster_info::res_magic() const
     if (mr == MAG_IMMUNE)
         return MAG_IMMUNE;
 
+    const int hd = mons_is_pghost(type) ? ghost_rank_to_level(u.ghost.xl_rank)
+                                        : mons_class_hit_dice(type);
+
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)
-        mr = mons_class_hit_dice(type) * (-mr) * 4 / 3;
+        mr = hd * (-mr) * 4 / 3;
 
     // Randarts
     mr += 40 * randarts(ARTP_MAGIC);

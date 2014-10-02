@@ -1004,6 +1004,32 @@ int ghost_level_to_rank(const int xl)
     return 7;
 }
 
+// Approximate inverse, in the middle of the range
+int ghost_rank_to_level(const int rank)
+{
+    switch (rank)
+    {
+    case 0:
+        return 2;
+    case 1:
+        return 5;
+    case 2:
+        return 9;
+    case 3:
+        return 13;
+    case 4:
+        return 19;
+    case 5:
+        return 24;
+    case 6:
+        return 26;
+    case 7:
+        return 27;
+    default:
+        die("Bad ghost rank %d", rank);
+    }
+}
+
 static spell_type servitor_spells_primary[] =
 {
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
