@@ -1989,7 +1989,10 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
     if (mons_is_job(ztype) || mons_is_ghost_demon(ztype))
+    {
         mon->props[ZOMBIE_BASE_AC_KEY] = mon->base_armour_class();
+        mon->props[ZOMBIE_BASE_EV_KEY] = mon->base_evasion();
+    }
 
     mon->type         = cs;
     mon->base_monster = ztype;
