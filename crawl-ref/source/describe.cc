@@ -3461,8 +3461,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     // Seeing/sensing invisible.
     if (mons_class_flag(mi.type, M_SEE_INVIS)
-            || ((mons_is_pghost(mi.type) || mi.type == MONS_PANDEMONIUM_LORD)
-                && mi.u.ghost.can_sinv))
+            || mons_is_ghost_demon(mi.type) && mi.u.ghost.can_sinv)
     {
         result << uppercase_first(pronoun) << " can see invisible.\n";
     }

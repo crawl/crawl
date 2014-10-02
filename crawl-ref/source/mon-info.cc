@@ -700,8 +700,10 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         u.ghost.ac = quantise(ghost.ac, 5);
         u.ghost.damage = quantise(ghost.damage, 5);
-        u.ghost.can_sinv = ghost.see_invis;
     }
+
+    if (mons_is_ghost_demon(type))
+        u.ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
     spells.init(SPELL_NO_SPELL);
