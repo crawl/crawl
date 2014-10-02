@@ -217,7 +217,7 @@ void item_colour(item_def &item)
     if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
         return; // unrandarts have already been coloured
 
-    static const COLORS potion_colours[] =
+    static const COLOURS potion_colours[] =
     {
 #if TAG_MAJOR_VERSION == 34
         // clear

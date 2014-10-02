@@ -2640,37 +2640,37 @@ bool MenuItem::can_be_highlighted() const
     return m_allow_highlight;
 }
 
-void MenuItem::set_highlight_colour(COLORS colour)
+void MenuItem::set_highlight_colour(COLOURS colour)
 {
     m_highlight_colour = colour;
     m_dirty = true;
 }
 
-COLORS MenuItem::get_highlight_colour() const
+COLOURS MenuItem::get_highlight_colour() const
 {
     return m_highlight_colour;
 }
 
-void MenuItem::set_bg_colour(COLORS colour)
+void MenuItem::set_bg_colour(COLOURS colour)
 {
     m_bg_colour = colour;
     m_dirty = true;
 }
 
-void MenuItem::set_fg_colour(COLORS colour)
+void MenuItem::set_fg_colour(COLOURS colour)
 {
     m_fg_colour = colour;
     m_dirty = true;
 }
 
-COLORS MenuItem::get_fg_colour() const
+COLOURS MenuItem::get_fg_colour() const
 {
     return m_fg_colour;
 }
 
-COLORS MenuItem::get_bg_colour() const
+COLOURS MenuItem::get_bg_colour() const
 {
-    return static_cast<COLORS> (m_bg_colour);
+    return static_cast<COLOURS> (m_bg_colour);
 }
 
 void MenuItem::set_visible(bool flag)

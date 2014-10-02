@@ -612,12 +612,12 @@ public:
     virtual bool selected() const;
     virtual void allow_highlight(bool toggle);
     virtual bool can_be_highlighted() const;
-    virtual void set_highlight_colour(COLORS colour);
-    virtual COLORS get_highlight_colour() const;
-    virtual void set_fg_colour(COLORS colour);
-    virtual void set_bg_colour(COLORS colour);
-    virtual COLORS get_fg_colour() const;
-    virtual COLORS get_bg_colour() const;
+    virtual void set_highlight_colour(COLOURS colour);
+    virtual COLOURS get_highlight_colour() const;
+    virtual void set_fg_colour(COLOURS colour);
+    virtual void set_bg_colour(COLOURS colour);
+    virtual COLOURS get_fg_colour() const;
+    virtual COLOURS get_bg_colour() const;
 
     virtual void set_visible(bool flag);
     virtual bool is_visible() const;
@@ -648,8 +648,8 @@ protected:
     vector<int> m_hotkeys;
     string m_description;
 
-    COLORS m_fg_colour;
-    COLORS m_highlight_colour;
+    COLOURS m_fg_colour;
+    COLOURS m_highlight_colour;
     int m_bg_colour;
 
     MenuItem* m_link_left;
@@ -1062,7 +1062,7 @@ protected:
 #ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
 #else
-    COLORS m_old_bg_colour;
+    COLOURS m_old_bg_colour;
 #endif
 };
 
@@ -1080,8 +1080,8 @@ protected:
     // Tiles does not seem to support background colors
     ShapeBuffer m_shape_buf;
 #endif
-    COLORS m_old_bg_colour;
-    COLORS m_old_fg_colour;
+    COLOURS m_old_bg_colour;
+    COLOURS m_old_fg_colour;
 };
 
 /**

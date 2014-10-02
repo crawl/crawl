@@ -247,7 +247,7 @@ const int AGILITY_BONUS = 5;
 
 // colors, such pretty colors ...
 // The order is important (IRGB bit patterns).
-enum COLORS
+enum COLOURS
 {
     BLACK,
     BLUE,
