@@ -4352,7 +4352,9 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         unmarshallUnsigned(th, mi.ev);
         unmarshallUnsigned(th, mi.base_ev);
 #if TAG_MAJOR_VERSION == 34
-    } else {
+    }
+    else
+    {
         mi.ac = get_mons_class_ac(mi.type);
         mi.ev = mi.base_ev = get_mons_class_ev(mi.type);
     }
