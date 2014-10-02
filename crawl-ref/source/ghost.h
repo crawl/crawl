@@ -77,6 +77,7 @@ private:
 
 bool debug_check_ghosts();
 int ghost_level_to_rank(const int xl);
+int ghost_rank_to_level(const int rank);
 
 extern vector<ghost_demon> ghosts;
 
