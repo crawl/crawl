@@ -1016,7 +1016,7 @@ static const mon_spellbook mspell_list[] =
     // fake spell for monsters berserking when fleeing
     {  MST_BERSERK_ESCAPE,
       {
-       { SPELL_BERSERKER_RAGE, 57, MON_SPELL_INNATE },
+       { SPELL_BERSERKER_RAGE, 57, MON_SPELL_INNATE | MON_SPELL_EMERGENCY },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1750,7 +1750,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_THRASHING_HORROR,
       {
-       { SPELL_MIGHT, 59, MON_SPELL_INNATE },
+       { SPELL_MIGHT, 59, MON_SPELL_INNATE | MON_SPELL_EMERGENCY },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
