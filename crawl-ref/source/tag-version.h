@@ -117,6 +117,7 @@ enum tag_minor_version
     TAG_MINOR_RU_SACRIFICES,       // Store Ru sacrifices in an array for coloration
     TAG_MINOR_IS_UNDEAD,           // Remove the old "is_undead" player field
     TAG_MINOR_REMOVE_MON_AC_EV,    // Remove the old "ac" & "ev" monster fields
+    TAG_MINOR_DISPLAY_MON_AC_EV,   // Marshall & unmarshall ac/ev in monster_info
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
