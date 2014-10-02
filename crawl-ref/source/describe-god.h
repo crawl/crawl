@@ -11,6 +11,7 @@ enum god_desc_type
     GDESC_OVERVIEW,
     GDESC_DETAILED,
     GDESC_WRATH,
+    NUM_GDESCS
 };
 
 string god_title(god_type which_god, species_type which_species, int piety);

@@ -630,12 +630,13 @@ static bool _check_description_cycle(god_desc_type gdesc)
     const int bottom_line = min(30, get_number_of_lines());
 
     cgotoxy(1, bottom_line);
-    const char* place;
+    const char* place = NULL;
     switch (gdesc)
     {
         case GDESC_OVERVIEW: place = "<w>Overview</w>|Powers|Wrath"; break;
         case GDESC_DETAILED: place = "Overview|<w>Powers</w>|Wrath"; break;
         case GDESC_WRATH:    place = "Overview|Powers|<w>Wrath</w>"; break;
+        default: die("Unknown god description type!");
     }
     formatted_string::parse_string(make_stringf("[<w>!</w>/<w>^</w>"
 #ifdef USE_TILE_LOCAL
@@ -1194,17 +1195,14 @@ void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
     case GDESC_WRATH:
         _god_wrath_description(which_god);
         break;
+    default:
+        die("Unknown god description type!");
     }
 
     if (_check_description_cycle(gdesc))
     {
-        god_desc_type new_gdesc;
-        switch (gdesc)
-        {
-        case GDESC_OVERVIEW: new_gdesc = GDESC_DETAILED; break;
-        case GDESC_DETAILED: new_gdesc = GDESC_WRATH;    break;
-        case GDESC_WRATH:    new_gdesc = GDESC_OVERVIEW; break;
-        }
-        describe_god(which_god, give_title, new_gdesc);
+        const god_desc_type new_desc =
+            static_cast<god_desc_type>((gdesc + 1) % NUM_GDESCS);
+        describe_god(which_god, give_title, new_desc);
     }
 }
