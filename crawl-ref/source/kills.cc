@@ -318,7 +318,7 @@ void Kills::record_kill(const monster* mon)
 
     kill_def &k = kills[descriptor];
     if (k.kills)
-        k.add_kill(mon, get_packed_place());
+        k.add_kill(mon, level_id::current());
     else
         k = kill_def(mon);
 }
@@ -426,7 +426,7 @@ int Kills::num_kills(kill_monster_desc desc) const
 kill_def::kill_def(const monster* mon) : kills(0), exp(0)
 {
     exp = exper_value(mon);
-    add_kill(mon, get_packed_place());
+    add_kill(mon, level_id::current());
 }
 
 // For monster names ending with these suffixes, we pluralise directly without
@@ -489,22 +489,23 @@ void kill_def::merge(const kill_def &k, bool uniq)
     else
     {
         kills += k.kills;
-        for (int i = 0, size = k.places.size(); i < size; ++i)
+        for (size_t i = 0, size = k.places.size(); i < size; ++i)
             add_place(k.places[i], uniq);
     }
 }
 
-void kill_def::add_kill(const monster* mon, unsigned short place)
+void kill_def::add_kill(const monster* mon, level_id place)
 {
     kills++;
     // They're only unique if they aren't summoned.
     add_place(place, mons_is_unique(mon->type) && !mon->is_summoned());
 }
 
-void kill_def::add_place(unsigned short place, bool force)
+void kill_def::add_place(level_id place, bool force)
 {
-    for (unsigned i = 0; i < places.size(); ++i)
-        if (places[i] == place) return;
+    for (size_t i = 0; i < places.size(); ++i)
+        if (places[i] == place)
+            return;
 
     if (force || places.size() < PLACE_LIMIT)
         places.push_back(place);
@@ -575,18 +576,18 @@ string kill_def::append_places(const kill_monster_desc &md,
 {
     if (Options.dump_kill_places == KDO_NO_PLACES) return name;
 
-    int nplaces = places.size();
+    size_t nplaces = places.size();
     if (nplaces == 1 || mons_is_unique(md.monnum)
             || Options.dump_kill_places == KDO_ALL_PLACES)
     {
         string augmented = name;
         augmented += " (";
-        for (vector<unsigned short>::const_iterator iter = places.begin();
+        for (vector<level_id>::const_iterator iter = places.begin();
              iter != places.end(); ++iter)
         {
             if (iter != places.begin())
                 augmented += " ";
-            augmented += level_id::from_packed_place(*iter).describe();
+            augmented += iter->describe();
         }
         augmented += ")";
         return augmented;
@@ -600,10 +601,10 @@ void kill_def::save(writer& outf) const
     marshallShort(outf, exp);
 
     marshallShort(outf, places.size());
-    for (vector<unsigned short>::const_iterator iter = places.begin();
+    for (vector<level_id>::const_iterator iter = places.begin();
          iter != places.end(); ++iter)
     {
-        marshallShort(outf, *iter);
+        iter->save(outf);
     }
 }
 
@@ -615,13 +616,29 @@ void kill_def::load(reader& inf)
     places.clear();
     short place_count = unmarshallShort(inf);
     for (short i = 0; i < place_count; ++i)
-        places.push_back((unsigned short) unmarshallShort(inf));
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
+        {
+            places.push_back(level_id::from_packed_place(
+                                (unsigned short) unmarshallShort(inf)));
+        }
+        else
+        {
+#endif
+        level_id tmp;
+        tmp.load(inf);
+        places.push_back(tmp);
+#if TAG_MAJOR_VERSION == 34
+        }
+#endif
+    }
 }
 
 kill_ghost::kill_ghost(const monster* mon)
 {
     exp = exper_value(mon);
-    place = get_packed_place();
+    place = level_id::current();
     ghost_name = mon->ghost->name;
 
     // Check whether this is really a ghost, since we also have to handle
@@ -637,7 +654,7 @@ string kill_ghost::info() const
 {
     return ghost_name
            + (Options.dump_kill_places != KDO_NO_PLACES ?
-                " (" + level_id::from_packed_place(place).describe() + ")" :
+                " (" + place.describe() + ")" :
                 string(""));
 }
 
@@ -645,14 +662,19 @@ void kill_ghost::save(writer& outf) const
 {
     marshallString4(outf, ghost_name);
     marshallShort(outf, (unsigned short) exp);
-    marshallShort(outf, place);
+    place.save(outf);
 }
 
 void kill_ghost::load(reader& inf)
 {
     unmarshallString4(inf, ghost_name);
     exp = unmarshallShort(inf);
-    place = (unsigned short) unmarshallShort(inf);
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
+        place = level_id::from_packed_place((unsigned short) unmarshallShort(inf));
+    else
+#endif
+    place.load(inf);
 }
 
 kill_monster_desc::kill_monster_desc(const monster* mon)
@@ -805,36 +827,6 @@ static int kill_lualc_modifier(lua_State *ls)
         return 1;
     }
     return 0;
-}
-
-static int kill_lualc_places(lua_State *ls)
-{
-    if (!lua_islightuserdata(ls, 1))
-    {
-        luaL_argerror(ls, 1, "Unexpected argument type");
-        return 0;
-    }
-
-    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
-    if (ke)
-    {
-        lua_newtable(ls);
-        for (int i = 0, count = ke->places.size(); i < count; ++i)
-        {
-            lua_pushnumber(ls, ke->places[i]);
-            lua_rawseti(ls, -2, i + 1);
-        }
-        return 1;
-    }
-    return 0;
-}
-
-static int kill_lualc_place_name(lua_State *ls)
-{
-    int num = luaL_checkint(ls, 1);
-    string plname = level_id::from_packed_place(num).describe();
-    lua_pushstring(ls, plname.c_str());
-    return 1;
 }
 
 static int kill_lualc_isunique(lua_State *ls)
@@ -1026,8 +1018,6 @@ static const struct luaL_reg kill_lib[] =
     { "desc",       kill_lualc_desc },
     { "monnum",     kill_lualc_monnum },
     { "modifier",   kill_lualc_modifier },
-    { "places",     kill_lualc_places },
-    { "place_name", kill_lualc_place_name },
     { "holiness",   kill_lualc_holiness },
     { "symbol",     kill_lualc_symbol },
     { "isghost",    kill_lualc_isghost },
