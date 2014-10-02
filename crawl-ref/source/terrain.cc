@@ -533,7 +533,8 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_RETURN_FROM_ZOT
            && feat != DNGN_RETURN_FROM_VAULTS
-           && feat != DNGN_EXIT_HELL;
+           && feat != DNGN_EXIT_HELL
+           && feat != DNGN_ENTER_HELL;
 }
 
 /** Is this feature a type of fountain?
