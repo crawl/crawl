@@ -4089,7 +4089,7 @@ int monster::res_magic() const
         u /= 2;
 
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
-        u += 70;
+        u += 80;
 
     if (u < 0)
         u = 0;
