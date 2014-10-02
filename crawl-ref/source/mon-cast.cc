@@ -40,6 +40,7 @@
 #include "terrain.h"
 #include "mgen_data.h"
 #include "mon-act.h"
+#include "mon-book.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
 #include "ouch.h"
@@ -2862,6 +2863,32 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     return mons_should_fire(beam);
 }
 
+static spell_type _pick_spell_from_list(const monster_spells &spells,
+                                        int flag, bool &wizard, bool &priest)
+{
+    spell_type spell_cast = SPELL_NO_SPELL;
+    int weight = 0;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    {
+        if (spells[i].spell == SPELL_NO_SPELL)
+            continue;
+
+        int flags = get_spell_flags(spells[i].spell);
+        if (!(flags & SPFLAG_SELFENCH))
+            continue;
+
+        weight += spells[i].freq;
+        if (x_chance_in_y(spells[i].freq, weight))
+        {
+            spell_cast = spells[i].spell;
+            wizard = spells[i].flags & MON_SPELL_WIZARD;
+            priest = spells[i].flags & MON_SPELL_PRIEST;
+        }
+    }
+
+    return spell_cast;
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -2926,18 +2953,35 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    // Servitors never fail to (try) to cast a spell
-    else if (mons->type != MONS_SPELLFORGED_SERVITOR
-             && random2(200) > mons->get_hit_dice() + 50)
-    {
-        return false;
-    }
     else if (spellcasting_poly && coinflip()) // 50% chance of not casting
         return false;
     else
     {
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(mons->spells);
+
+        if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
+             || (mons->has_ench(ENCH_WATER_HOLD)
+                 && !mons->res_water_drowning())))
+        {
+            if (mons_class_flag(mons->type, M_SPELL_NO_SILENT))
+                return false;
+
+            bool innate = false;
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            {
+                if (hspell_pass[i].flags & MON_SPELL_INNATE)
+                    innate = true;
+                else
+                {
+                    hspell_pass[i].spell = SPELL_NO_SPELL;
+                    hspell_pass[i].freq = 0;
+                }
+            }
+
+            if (!innate)
+                return false;
+        }
 
         if (!mon_enemies_around(mons))
         {
@@ -2964,6 +3008,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
             else if (mons_is_fleeing(mons) || mons->pacified())
             {
+                // TODO: adapt this to the new monster spell slot system
+#if 0
                 // Since the player isn't around, we'll extend the monster's
                 // normal choices to include the self-enchant slot.
                 int foundcount = 0;
@@ -2977,6 +3023,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         finalAnswer = true;
                     }
                 }
+#endif
             }
             else if (mons->foe == MHITYOU && !monsterNearby)
                 return false;
@@ -3008,24 +3055,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
-            if ((mons_is_fleeing(mons) || mons->pacified())
-                && _ms_low_hitpoint_cast(mons, hspell_pass[5].spell))
+            int found_spell = 0;
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                spell_cast = hspell_pass[5].spell;
-                finalAnswer = true;
-            }
-
-            if (!finalAnswer)
-            {
-                int found_spell = 0;
-                for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+                if (_ms_low_hitpoint_cast(mons, hspell_pass[i].spell)
+                    && one_chance_in(++found_spell))
                 {
-                    if (_ms_low_hitpoint_cast(mons, hspell_pass[i].spell)
-                        && one_chance_in(++found_spell))
-                    {
-                        spell_cast  = hspell_pass[i].spell;
-                        finalAnswer = true;
-                    }
+                    spell_cast  = hspell_pass[i].spell;
+                    finalAnswer = true;
                 }
             }
         }
@@ -3126,24 +3163,29 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             const bolt orig_beem = beem;
-            // Up to five tries to pick a spell,
-            // with the last try being a self-enchantment.
-            for (int attempt = 0; attempt < 5; ++attempt)
+
+            for (int attempt = 0; attempt < 2; attempt++)
             {
                 beem = orig_beem;
 
                 bool spellOK = false;
 
                 // Setup spell.
-                // If we're in the last attempt, try the self-enchantment.
-                if (attempt == 4 && coinflip())
-                    spell_cast = hspell_pass[2].spell;
+                // If we didn't find a spell on the first pass, try a
+                // self-enchantment.
+                if (attempt > 0 && coinflip())
+                {
+                    spell_cast = _pick_spell_from_list(hspell_pass,
+                                                       SPFLAG_SELFENCH,
+                                                       wizard, priest);
+                }
                 // Monsters that are fleeing or pacified and leaving the
-                // level will always try to choose their emergency spell.
+                // level will always try to choose an emergency spell.
                 else if (mons_is_fleeing(mons) || mons->pacified())
                 {
-                    spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
-                                                   : hspell_pass[5].spell);
+                    spell_cast = _pick_spell_from_list(hspell_pass,
+                                                       SPFLAG_EMERGENCY,
+                                                       wizard, priest);
 
                     if (crawl_state.game_is_zotdef()
                         && mons->type == MONS_ICE_STATUE)
@@ -3163,15 +3205,32 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 }
                 else
                 {
-                    // Randomly picking one of the non-emergency spells:
-                    spell_cast = hspell_pass[random2(5)].spell;
+                    spell_cast = SPELL_NO_SPELL;
+
+                    unsigned what = random2(200);
+                    int i = 0;
+                    for (; i < NUM_MONSTER_SPELL_SLOTS; i++)
+                    {
+                        if (hspell_pass[i].spell == SPELL_NO_SPELL)
+                            continue;
+
+                        if (hspell_pass[i].freq >= what)
+                            break;
+                        what -= hspell_pass[i].freq;
+                    }
+
+                    // If we roll above the weight of the spell list,
+                    // don't cast a spell at all.
+                    if (i == NUM_MONSTER_SPELL_SLOTS)
+                        return false;
+
+                    spell_cast = hspell_pass[i].spell;
+                    wizard = hspell_pass[i].flags & MON_SPELL_WIZARD;
+                    priest = hspell_pass[i].flags & MON_SPELL_PRIEST;
                 }
 
-                if (spell_cast == SPELL_NO_SPELL)
-                    continue;
-
                 // Setup the spell.
-                if (spell_cast != SPELL_MELEE)
+                if (spell_cast != SPELL_MELEE && spell_cast != SPELL_NO_SPELL)
                     setup_mons_cast(mons, beem, spell_cast);
 
                 // Try to find a nearby ally to haste, heal, might,
