@@ -707,7 +707,7 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
-    spells.init(SPELL_NO_SPELL);
+    spells.init(mon_spell_slot());
     if (m->props.exists("custom_spells") || mons_is_pghost(type))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -1791,7 +1791,7 @@ bool monster_info::has_spells() const
     if (books[0] == MST_GHOST)
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (this->spells[i] != SPELL_NO_SPELL)
+            if (this->spells[i].spell != SPELL_NO_SPELL)
                 return true;
         return false;
     }

@@ -3649,7 +3649,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
             if (spname.empty() || spname == "." || spname == "none"
                 || spname == "no spell")
             {
-                cur_spells[i] = SPELL_NO_SPELL;
+                cur_spells[i].spell = SPELL_NO_SPELL;
             }
             else
             {
@@ -3666,7 +3666,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                                          spname.c_str());
                     return;
                 }
-                cur_spells[i] = sp;
+                cur_spells[i].spell = sp;
             }
         }
 

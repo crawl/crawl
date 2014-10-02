@@ -680,7 +680,7 @@ bool mons_is_illuminating(const monster* mon)
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        if (is_illuminating_spell(mon->spells[i]))
+        if (is_illuminating_spell(mon->spells[i].spell))
             return true;
     }
 
@@ -2030,9 +2030,9 @@ int exper_value(const monster* mon, bool real)
     {
         const monster_spells &hspell_pass = mon->spells;
 
-        for (int i = 0; i < 6; ++i)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            switch (hspell_pass[i])
+            switch (hspell_pass[i].spell)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
@@ -2339,11 +2339,11 @@ unique_books get_unique_spells(const monster_info &mi)
         {
             spell_type spell;
             if (book == MST_GHOST)
-                spell = mi.spells[j];
+                spell = mi.spells[j].spell;
             else
             {
                 ASSERT(msidx < ARRAYSZ(mspell_list));
-                spell = mspell_list[msidx].spells[j];
+                spell = mspell_list[msidx].spells[j].spell;
             }
 
             bool match = false;
@@ -2370,7 +2370,7 @@ static void _mons_load_spells(monster* mon)
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
-    mon->spells.init(SPELL_NO_SPELL);
+    mon->spells.init(mon_spell_slot());
     if (book == MST_NO_SPELLS)
         return;
 
@@ -3459,7 +3459,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
+            if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
                 return true;
     }
 
@@ -3480,7 +3480,7 @@ bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        switch (mon->spells[i])
+        switch (mon->spells[i].spell)
         {
         case SPELL_SLEEP:
             if (foe->can_sleep())

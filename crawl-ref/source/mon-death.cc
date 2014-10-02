@@ -3238,10 +3238,10 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // may not be called due to lack of visibility.
     if (mons_is_dowan(mons))
     {
-        mons->spells[0] = SPELL_THROW_ICICLE;
-        mons->spells[1] = SPELL_BLINK;
-        mons->spells[3] = SPELL_STONE_ARROW;
-        mons->spells[4] = SPELL_HASTE;
+        mons->spells[0].spell = SPELL_THROW_ICICLE;
+        mons->spells[1].spell = SPELL_BLINK;
+        mons->spells[3].spell = SPELL_STONE_ARROW;
+        mons->spells[4].spell = SPELL_HASTE;
         // Nothing with 6.
 
         // Indicate that he has an updated spellbook.

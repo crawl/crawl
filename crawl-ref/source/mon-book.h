@@ -11,10 +11,19 @@
 #include "enum.h"
 #include "mon-mst.h"
 
+enum mon_spell_slot_flags
+{
+    MON_SPELL_NO_FLAGS  = 0,
+    MON_SPELL_EMERGENCY = 1 << 0,
+    MON_SPELL_INNATE    = 1 << 1,
+    MON_SPELL_WIZARD    = 1 << 2,
+    MON_SPELL_PRIEST    = 1 << 3,
+};
+
 struct mon_spellbook
 {
     mon_spellbook_type type;
-    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
+    mon_spell_slot spells[NUM_MONSTER_SPELL_SLOTS];
 };
 
 typedef vector<vector<spell_type> > unique_books;

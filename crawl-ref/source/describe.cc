@@ -3871,7 +3871,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            if (hspell_pass[i] != SPELL_NO_SPELL)
+            if (hspell_pass[i].spell != SPELL_NO_SPELL)
             {
                 if (!found_spell)
                 {
@@ -3880,8 +3880,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                 }
 
                 inf.body << "    " << i << ": "
-                         << spell_title(hspell_pass[i])
-                         << " (" << static_cast<int>(hspell_pass[i])
+                         << spell_title(hspell_pass[i].spell)
+                         << " (" << static_cast<int>(hspell_pass[i].spell)
                          << ")";
             }
         }

@@ -307,7 +307,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            spell_type spell = mon->spells[i];
+            spell_type spell = mon->spells[i].spell;
 
             if (spell == SPELL_NO_SPELL)
                 continue;
