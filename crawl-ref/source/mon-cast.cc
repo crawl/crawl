@@ -2877,10 +2877,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     const spell_type draco_breath = _get_draconian_breath_spell(mons);
     actor *foe = mons->get_foe();
 
-    // A polymorphed unique will retain his or her spells even in another
-    // form. If the new form has the SPELLCASTER flag, casting happens as
-    // normally, otherwise we need to enforce it, but it only happens with
-    // a 50% chance.
+    // If we were polymorphed into a new form, we might have retained our
+    // spells (if we were a named monster, for example). However, we can only
+    // use them if the new form can speak. If the new form has the SPELLCASTER
+    // flag, casting will happen normally anyway; otherwise, we set this
+    // variable to permit casting anyway, but only with a 50% chance.
     const bool spellcasting_poly(
         !mons->can_use_spells()
         && mons_class_flag(mons->type, M_SPEAKS)
