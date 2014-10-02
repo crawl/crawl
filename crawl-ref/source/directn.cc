@@ -1762,6 +1762,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             set_hp(1);
             print_stats();
         }
+        break;
 
     case CMD_TARGET_WIZARD_CREATE_MIMIC:
         if (target() != you.pos())
