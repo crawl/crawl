@@ -1403,17 +1403,6 @@ static spell_type _get_draconian_breath_spell(monster* mons)
     return draco_breath;
 }
 
-static bool _is_emergency_spell(const monster_spells &msp, int spell)
-{
-    // If the emergency spell appears early, it's probably not a dedicated
-    // escape spell.
-    for (int i = 0; i < 5; ++i)
-        if (msp[i].spell == spell)
-            return false;
-
-    return msp[5].spell == spell;
-}
-
 // Function should return false if friendlies shouldn't animate any dead.
 // Currently, this only happens if the player is in the middle of butchering
 // a corpse (infuriating), or if they are less than satiated.  Only applies
@@ -2931,6 +2920,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     bool priest;
     bool wizard;
+    bool emergency_spell = false;
     god_type god;
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
@@ -3045,10 +3035,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
         }
 
+        const bool emergency = mons->hit_points < mons->max_hit_points / 3;
+
         // Promote the casting of useful spells for low-HP monsters.
         // (kraken should always cast their escape spell of inky).
-        if (!finalAnswer
-            && mons->hit_points < mons->max_hit_points / 3
+        if (!finalAnswer && emergency
             && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
         {
             // Note: There should always be at least some chance we don't
@@ -3202,6 +3193,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     {
                         spell_cast = SPELL_NO_SPELL;
                     }
+
+                    if (spell_cast != SPELL_NO_SPELL)
+                        emergency_spell = true;
                 }
                 else
                 {
@@ -3213,6 +3207,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     {
                         if (hspell_pass[i].spell == SPELL_NO_SPELL)
                             continue;
+
+                        if (hspell_pass[i].flags & MON_SPELL_EMERGENCY
+                            && !emergency)
+                        {
+                            continue;
+                        }
 
                         if (hspell_pass[i].freq >= what)
                             break;
@@ -3376,8 +3376,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // The breath weapon is also occasionally used.
         if (draco_breath != SPELL_NO_SPELL
             && (spell_cast == SPELL_NO_SPELL
-                 || !_is_emergency_spell(hspell_pass, spell_cast)
-                    && one_chance_in(4))
+                 || !emergency_spell && one_chance_in(4))
             && !player_or_mon_in_sanct(mons)
             && !mons->has_ench(ENCH_BREATH_WEAPON))
         {
