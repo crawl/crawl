@@ -351,6 +351,8 @@ void ghost_demon::init_random_demon()
 
         if (one_chance_in(15))
             spells[4].spell = SPELL_DIG;
+
+        fixup_spells(spells, xl, true, false);
     }
 
     // Does demon cycle colours?
@@ -819,6 +821,8 @@ void ghost_demon::add_spells()
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         spells[i].spell = translate_spell(spells[i].spell);
+
+    fixup_spells(spells, xl, true, false);
 
     spellcaster = has_spells();
 }

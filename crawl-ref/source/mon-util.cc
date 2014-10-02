@@ -5026,3 +5026,39 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
     if (md.col)
         monster_symbols[mtype].colour = md.col;
 }
+
+void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
+{
+    unsigned count = 0;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    {
+        if (spells[i].spell == SPELL_NO_SPELL)
+            continue;
+
+        count++;
+
+        const unsigned int flags = get_spell_flags(spells[i].spell);
+        const bool innate = (!wizard && !priest)
+                            || !!(flags | SPFLAG_INNATE);
+
+        if (innate)
+            spells[i].flags |= MON_SPELL_INNATE;
+        else
+        {
+            if (wizard)
+                spells[i].flags |= MON_SPELL_WIZARD;
+            else if (priest)
+                spells[i].flags |= MON_SPELL_PRIEST;
+            else
+                spells[i].flags |= MON_SPELL_INNATE; // rip
+        }
+
+        if (i == NUM_MONSTER_SPELL_SLOTS - 1)
+            spells[i].flags |= MON_SPELL_EMERGENCY;
+    }
+    unsigned one_freq = (hd + 50) / count;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    {
+        spells[i].freq = one_freq;
+    }
+}
