@@ -4945,7 +4945,7 @@ bool mons_is_player_shadow(const monster* mon)
 bool mons_antimagic_affected(const monster* mons)
 {
     return mons->can_use_spells()
-           && !mons->is_priest()
+           && mons->is_actual_spellcaster()
            && !mons_class_flag(mons->type, M_FAKE_SPELLS);
 }
 
@@ -5056,6 +5056,9 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;
     }
+    if (!count)
+        return;
+
     unsigned one_freq = (hd + 50) / count;
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
