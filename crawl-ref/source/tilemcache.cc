@@ -1109,6 +1109,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 3;
         break;
 
+    case TILEP_MONS_FRANCES: // left-handed - shield goes in right hand
+        *ofs_x = -20;
+        *ofs_y = -1;
+        break;
+
     case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture
     default:
         // This monster cannot be displayed with a shield.
