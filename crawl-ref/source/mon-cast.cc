@@ -2863,7 +2863,7 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
             continue;
 
         int flags = get_spell_flags(spells[i].spell);
-        if (!(flags & SPFLAG_SELFENCH))
+        if (!(flags & flag))
             continue;
 
         weight += spells[i].freq;
