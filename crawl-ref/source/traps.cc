@@ -719,7 +719,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                     hide();
             }
-            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
+            else if (random2(m->evasion()) > 8
+                     || (trig_knows && random2(m->evasion()) > 8))
             {
                 if (in_sight
                     && !simple_monster_message(m,
@@ -806,7 +807,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                     hide();
             }
-            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
+            else if (random2(m->evasion()) > 8
+                     || (trig_knows && random2(m->evasion()) > 8))
             {
                 // Triggered but evaded.
                 triggered = true;

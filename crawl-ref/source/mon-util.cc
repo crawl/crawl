@@ -2426,7 +2426,6 @@ bool init_abomination(monster* mon, int hd)
     }
 
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
-    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
     mon->set_hit_dice(min(max_hd, hd));
     mprf("DEBUG: abom HD: %d -> %d", hd, mon->get_hit_dice());
@@ -2436,11 +2435,6 @@ bool init_abomination(monster* mon, int hd)
 
     mon->max_hit_points = hp;
     mon->hit_points     = hp;
-
-    if (mon->type == MONS_ABOMINATION_LARGE)
-        mon->ev = min(max_ac, 2 * hd / 3);
-    else
-        mon->ev = min(max_ac, 4 + hd);
 
     return true;
 }
@@ -2481,7 +2475,6 @@ void define_monster(monster* mons)
 
     case MONS_HELL_BEAST:
         hd = 4 + random2(4);
-        ev = 7 + random2(5);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -2546,8 +2539,6 @@ void define_monster(monster* mons)
         do
             monbase = random_draconian_monster_species();
         while (drac_colour_incompatible(mcls, monbase));
-        const monsterentry* mbase = get_monster_data(monbase);
-        ev += mbase->ev;
     }
 
     if (mons_is_demonspawn_job(mcls))
@@ -2566,7 +2557,6 @@ void define_monster(monster* mons)
                             mbase->hpdice[1] + m->hpdice[1],
                             mbase->hpdice[2] + m->hpdice[2]);
         hp    += mbase->hpdice[3] + m->hpdice[3];
-        ev    += mbase->ev;
     }
 
     if (col == BLACK) // but never give out darkgrey to monsters
@@ -2584,7 +2574,6 @@ void define_monster(monster* mons)
     mons->set_hit_dice(hd);
     mons->hit_points      = hp;
     mons->max_hit_points  = hp_max;
-    mons->ev              = ev;
     mons->speed_increment = 70;
 
     mons->base_monster = monbase;

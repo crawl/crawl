@@ -811,8 +811,6 @@ static void _place_player_corpse(bool explode)
     corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
     corpse.props[CORPSE_NAME_KEY] = you.your_name;
     corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
-    corpse.props["ev"].get_int() = player_evasion(static_cast<ev_ignore_type>(
-                                   EV_IGNORE_HELPLESS | EV_IGNORE_PHASESHIFT));
     mitm[o] = corpse;
 
     move_item_to_grid(&o, you.pos(), !you.in_water());

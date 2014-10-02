@@ -292,10 +292,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_AGILE:
-        ev += AGILITY_BONUS;
-        break;
-
     case ENCH_FROZEN:
         calc_speed();
         break;
@@ -947,7 +943,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_AGILE:
-        ev -= AGILITY_BONUS;
         if (!quiet)
             simple_monster_message(this, " is no longer unusually agile.");
         break;

@@ -75,7 +75,7 @@
 
 monster::monster()
     : hit_points(0), max_hit_points(0),
-      ev(0), speed(0), speed_increment(0), target(), firing_pos(),
+      speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
@@ -133,7 +133,6 @@ void monster::reset()
     hit_points      = 0;
     max_hit_points  = 0;
     hit_dice        = 0;
-    ev              = 0;
     speed_increment = 0;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_SLEEP;
@@ -180,7 +179,6 @@ void monster::init_with(const monster& mon)
     hit_points        = mon.hit_points;
     max_hit_points    = mon.max_hit_points;
     hit_dice          = mon.hit_dice;
-    ev                = mon.ev;
     speed             = mon.speed;
     speed_increment   = mon.speed_increment;
     position          = mon.position;
@@ -895,9 +893,6 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     }
 
     const int brand = get_weapon_brand(item);
-    if (brand == SPWPN_EVASION)
-        ev += 5;
-
     if (msg)
     {
         bool message_given = true;
@@ -958,6 +953,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
 
 int monster::armour_bonus(const item_def &item) const
 {
+    // XXX: ASSERT !is_shield() instead?
     if (is_shield(item))
         return 0;
 
@@ -978,8 +974,6 @@ void monster::equip_armour(item_def &item, int near)
                  item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
-
-    ev += property(item, PARM_EVASION) / (is_shield(item) ? 2 : 6);
 }
 
 void monster::equip_jewellery(item_def &item, int near)
@@ -1013,13 +1007,6 @@ void monster::equip_jewellery(item_def &item, int near)
             del_ench(ENCH_CONFUSION);
         if (has_ench(ENCH_BERSERK))
             del_ench(ENCH_BERSERK);
-    }
-
-    if (item.sub_type == RING_EVASION)
-    {
-        const int jewellery_plus = item.plus;
-        ASSERT(abs(jewellery_plus) < 30); // sanity check
-        ev += jewellery_plus;
     }
 }
 
@@ -1062,9 +1049,6 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
     }
 
     const int brand = get_weapon_brand(item);
-    if (brand == SPWPN_EVASION)
-        ev -= 5;
-
     if (msg && brand != SPWPN_NORMAL)
     {
         bool message_given = true;
@@ -1115,8 +1099,6 @@ void monster::unequip_armour(item_def &item, int near)
                  item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
-
-    ev -= property(item, PARM_EVASION) / (is_shield(item) ? 2 : 6);
 }
 
 void monster::unequip_jewellery(item_def &item, int near)
@@ -1128,13 +1110,6 @@ void monster::unequip_jewellery(item_def &item, int near)
         snprintf(info, INFO_SIZE, " takes off %s.",
                  item.name(DESC_A).c_str());
         simple_monster_message(this, info);
-    }
-
-    if (item.sub_type == RING_EVASION)
-    {
-        const int jewellery_plus = item.plus;
-        ASSERT(abs(jewellery_plus) < 30);
-        ev -= jewellery_plus;
     }
 }
 
@@ -3338,6 +3313,34 @@ int monster::missile_deflection() const
 }
 
 /**
+ * How many weapons of the given brand does this monster currently wield?
+ *
+ * @param mon       The monster in question.
+ * @param brand     The brand in question.
+ * @return          The number of the aforementioned weapons currently wielded.
+ */
+static int _weapons_with_prop(const monster *mon, brand_type brand)
+{
+    int wielded = 0;
+
+    const mon_inv_type last_weap_slot = mons_wields_two_weapons(mon) ?
+                                        MSLOT_ALT_WEAPON :
+                                        MSLOT_WEAPON;
+    for (int i = MSLOT_WEAPON; i <= last_weap_slot; i++)
+    {
+        const item_def *weap = mon->mslot_item(static_cast<mon_inv_type>(i));
+        if (!weap)
+            continue;
+
+        const int weap_brand = get_weapon_brand(*weap);
+        if (brand == weap_brand)
+            wielded++;
+    }
+
+    return wielded;
+}
+
+/**
  * What AC bonus or penalty does a given zombie type apply to the base
  * monster type's?
  *
@@ -3346,6 +3349,8 @@ int monster::missile_deflection() const
  */
 static int _zombie_ac_modifier(monster_type type)
 {
+    ASSERT(mons_class_is_zombified(type));
+
     switch (type)
     {
         case MONS_ZOMBIE:
@@ -3390,9 +3395,9 @@ int monster::base_armour_class() const
 
     // abominations & hell beasts are weird.
     if (type == MONS_ABOMINATION_LARGE)
-        return min(30, 7 + get_hit_dice() / 2);
+        return min(20, 7 + get_hit_dice() / 2);
     if (type == MONS_ABOMINATION_SMALL)
-        return min(15, 3 + get_hit_dice() * 2 / 3);
+        return min(10, 3 + get_hit_dice() * 2 / 3);
     if (type == MONS_HELL_BEAST)
         return max(0, get_hit_dice() - 2);
 
@@ -3415,19 +3420,7 @@ int monster::armour_class() const
     int ac = base_armour_class();
 
     // check for protection-brand weapons
-    const mon_inv_type last_weap_slot = mons_wields_two_weapons(this) ?
-                                        MSLOT_ALT_WEAPON :
-                                        MSLOT_WEAPON;
-    for (int i = MSLOT_WEAPON; i <= last_weap_slot; i++)
-    {
-        const item_def *weap = mslot_item(static_cast<mon_inv_type>(i));
-        if (!weap)
-            continue;
-
-        const int brand = get_weapon_brand(*weap);
-        if (brand == SPWPN_PROTECTION)
-            ac += 5;
-    }
+    ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION);
 
     // armour from ac
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
@@ -3466,26 +3459,138 @@ int monster::armour_class() const
     return max(ac, 0);
 }
 
-int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
+/**
+ * What EV bonus or penalty does a given zombie type apply to the base
+ * monster type's?
+ *
+ * @param type      The type of zombie. (Skeleton, simulac, etc)
+ * @return          The ev modifier to apply to the base monster's EV.
+ */
+static int _zombie_ev_modifier(monster_type type)
 {
-    int evasion = ev;
+    ASSERT(mons_class_is_zombified(type));
 
-    // Phase Shift EV is already included (but ignore if dimension anchored)
-    if (mons_class_flag(type, M_PHASE_SHIFT)
-        && ((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
+    switch (type)
     {
-        evasion -= 8;
+        case MONS_ZOMBIE:
+        case MONS_SIMULACRUM:
+        case MONS_SPECTRAL_THING:
+            return -5;
+        case MONS_SKELETON:
+            return -7;
+        default:
+            die("invalid zombie type %d (%s)", type,
+                mons_class_name(type));
     }
+}
+
+/**
+ * What's the base evasion of this monster?
+ *
+ * @return The base evasion of this monster, before applying items & statuses.
+ **/
+int monster::base_evasion() const
+{
+    // ghost demon struct overrides the monster values.
+    if (mons_is_ghost_demon(type))
+        return ghost->ev;
+
+    // zombie, skeleton, etc ac mods
+    if (mons_class_is_zombified(type))
+    {
+        // handle weird zombies for which type isn't enough to reconstruct ev
+        // (e.g. zombies with jobs & demonghost zombies)
+        const int base_ev = props.exists(ZOMBIE_BASE_EV_KEY) ?
+                                props[ZOMBIE_BASE_EV_KEY].get_int() :
+                                get_monster_data(base_monster)->ev;
+
+        return _zombie_ev_modifier(type) + base_ev;
+    }
+
+    // abominations & hell beasts are weird.
+    if (type == MONS_ABOMINATION_LARGE)
+        return min(20, 2 * get_hit_dice() / 3);
+    if (type == MONS_ABOMINATION_SMALL)
+        return min(10, 4 + get_hit_dice());
+    if (type == MONS_HELL_BEAST)
+        return 7 + get_hit_dice();
+
+    const int base_ev = get_monster_data(type)->ev;
+
+    // demonspawn & draconians combine base & class ac values.
+    if (mons_is_draconian_job(type) || mons_is_demonspawn_job(type))
+        return base_ev + get_monster_data(base_monster)->ev;
+
+    return base_ev;
+}
+
+/**
+ * What's the current evasion of this monster?
+ *
+ * Convenience function.
+ *
+ * @return The evasion of this monster, after applying items & statuses.
+ **/
+int monster::evasion() const
+{
+    return melee_evasion(NULL, EV_IGNORE_NONE);
+}
+
+/**
+ * What's the current evasion of this monster?
+ *
+ * @param evit      A bitfield of ev modifiers to ignore.
+ * @return The evasion of this monster, after applying items & statuses.
+ **/
+int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
+{
+    int evasion = base_evasion();
+
+    // check for evasion-brand weapons
+    evasion += 5 * _weapons_with_prop(this, SPWPN_EVASION);
+
+    // account for armour
+    for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
+    {
+        const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
+        if (armour)
+        {
+            evasion += property(*armour, PARM_EVASION)
+                        / (is_shield(*armour) ? 2 : 6);
+        }
+    }
+
+    // evasion from jewellery
+    const item_def *ring = mslot_item(MSLOT_JEWELLERY);
+    if (ring && ring->sub_type == RING_EVASION)
+    {
+        const int jewellery_plus = ring->plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        evasion += jewellery_plus;
+    }
+
+    // ignore phase shift if dimension-anchored (or if told to)
+    if (mons_class_flag(type, M_PHASE_SHIFT)
+        && !((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
+    {
+        evasion += 8;
+    }
+
+
+    if (has_ench(ENCH_AGILE))
+        evasion += 5;
 
     if (evit & EV_IGNORE_HELPLESS)
         return max(evasion, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
-        evasion = 0;
-    else if (caught() || is_constricted())
+        return 0;
+
+    if (caught() || is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
         evasion /= 2;
+
     return max(evasion, 0);
 }
 
@@ -4627,7 +4732,6 @@ void monster::uglything_init(bool only_mutate)
         hit_points      = max_hit_points;
     }
 
-    ev              = ghost->ev;
     speed           = ghost->speed;
     speed_increment = 70;
     colour          = ghost->colour;
@@ -4643,7 +4747,6 @@ void monster::ghost_demon_init()
     hit_dice        = ghost->xl;
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
-    ev              = ghost->ev;
     speed           = ghost->speed;
     speed_increment = 70;
     colour          = ghost->colour;

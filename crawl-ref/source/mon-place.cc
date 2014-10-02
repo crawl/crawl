@@ -1965,46 +1965,6 @@ void roll_zombie_hp(monster* mon)
     mon->hit_points     = mon->max_hit_points;
 }
 
-static void _roll_zombie_ev_mods(monster* mon, int& evmod)
-{
-    ASSERT(mons_class_is_zombified(mon->type));
-
-    switch (mon->type)
-    {
-    case MONS_ZOMBIE:
-        evmod = -5;
-        break;
-
-    case MONS_SKELETON:
-        evmod = -7;
-        break;
-
-    case MONS_SIMULACRUM:
-        // Simulacra aren't tough, but you can create piles of them. - bwr
-        evmod = -5;
-        break;
-
-    case MONS_SPECTRAL_THING:
-        evmod = -5;
-        break;
-
-    default:
-        die("invalid zombie type %d (%s)", mon->type,
-            mons_class_name(mon->type));
-    }
-}
-
-static void _roll_zombie_ev(monster* mon)
-{
-    ASSERT(mons_class_is_zombified(mon->type));
-
-    int evmod = 0;
-
-    _roll_zombie_ev_mods(mon, evmod);
-
-    mon->ev = max(mon->ev + evmod, 0);
-}
-
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -2059,21 +2019,12 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
         mon->flags   |= MF_NO_REGEN;
 
     roll_zombie_hp(mon);
-    _roll_zombie_ev(mon);
 }
 
 bool downgrade_zombie_to_skeleton(monster* mon)
 {
     if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
         return false;
-
-    int evmod = 0;
-
-    _roll_zombie_ev_mods(mon, evmod);
-
-    // Reverse the zombie EV mods, since they will be replaced
-    // with the skeleton EV mods below.
-    mon->ev = max(mon->ev - evmod, 0);
 
     const int old_hp    = mon->hit_points;
     const int old_maxhp = mon->max_hit_points;
@@ -2083,7 +2034,6 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
 
     roll_zombie_hp(mon);
-    _roll_zombie_ev(mon);
 
     // Scale the skeleton HP to the zombie HP.
     mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;

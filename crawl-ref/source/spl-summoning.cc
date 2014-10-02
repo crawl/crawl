@@ -1781,10 +1781,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         roll_zombie_hp(mons);
     }
 
-    // this seems to be for felid corpses?
-    if (item.props.exists("ev"))
-        mons->ev = item.props["ev"].get_int();
-
     if (!name.empty()
         && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {

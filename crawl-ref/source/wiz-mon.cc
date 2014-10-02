@@ -470,14 +470,14 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
+         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
          mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.base_armour_class(), mons.armour_class(),
-         mons.ev,
+         mons.base_evasion(), mons.evasion(),
          mons.res_magic(),
          exper_value(&mons),
          mons.speed, mons.speed_increment,
