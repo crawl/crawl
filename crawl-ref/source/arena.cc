@@ -443,26 +443,26 @@ namespace arena
         int line = 1;
 
         cgotoxy(1, line++, GOTO_STAT);
-        textcolor(WHITE);
+        textcolour(WHITE);
         center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long);
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);
-        textcolor(YELLOW);
+        textcolour(YELLOW);
         center_print(crawl_view.hudsz.x, faction_a.desc,
                      total_trials ? team_a_wins : -1);
         cgotoxy(1, line++, GOTO_STAT);
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
         center_print(crawl_view.hudsz.x, "vs");
         cgotoxy(1, line++, GOTO_STAT);
-        textcolor(YELLOW);
+        textcolour(YELLOW);
         center_print(crawl_view.hudsz.x, faction_b.desc,
                      total_trials ? trials_done - team_a_wins - ties : -1);
 
         if (total_trials > 1 && trials_done < total_trials)
         {
             cgotoxy(1, line++, GOTO_STAT);
-            textcolor(BROWN);
+            textcolour(BROWN);
             center_print(crawl_view.hudsz.x,
                          make_stringf("Round %d of %d",
                                       after_fight ? trials_done
@@ -472,7 +472,7 @@ namespace arena
         else
         {
             cgotoxy(1, line++, GOTO_STAT);
-            textcolor(BROWN);
+            textcolour(BROWN);
             clear_to_end_of_line();
         }
     }

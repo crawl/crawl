@@ -357,7 +357,7 @@ static void _post_init(bool newc)
 
     // This just puts the view up for the first turn.
     you.redraw_title = true;
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();
     viewwindow();
@@ -764,7 +764,7 @@ again:
     while (true)
     {
         menu.draw_menu();
-        textcolor(WHITE);
+        textcolour(WHITE);
         cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
         clear_to_end_of_line();
         cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
@@ -898,7 +898,7 @@ again:
             else
             {
                 // bad name
-                textcolor(RED);
+                textcolour(RED);
                 cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
                 clear_to_end_of_line();
                 cprintf("That's a silly name");

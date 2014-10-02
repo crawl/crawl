@@ -63,7 +63,7 @@ static struct termios game_term;
     #include CURSES_INCLUDE_FILE
 #endif
 
-// Globals holding current text/backg. colors
+// Globals holding current text/backg. colours
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
 static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
@@ -541,7 +541,7 @@ void update_screen()
 
 void clear_to_end_of_line()
 {
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     textbackground(BLACK);
     clrtoeol();
 
@@ -567,7 +567,7 @@ int num_to_lines(int num)
 
 void clrscr()
 {
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
@@ -675,12 +675,12 @@ static int curs_fg_attr(int col)
     return COLOR_PAIR(pair) | flags;
 }
 
-void textcolor(int col)
+void textcolour(int col)
 {
     (void)attrset(Current_Colour = curs_fg_attr(col));
 
 #ifdef USE_TILE_WEB
-    tiles.textcolor(col);
+    tiles.textcolour(col);
 #endif
 }
 

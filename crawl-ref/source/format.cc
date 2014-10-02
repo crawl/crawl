@@ -14,14 +14,14 @@ formatted_string::formatted_string(int init_colour)
     : ops()
 {
     if (init_colour)
-        textcolor(init_colour);
+        textcolour(init_colour);
 }
 
 formatted_string::formatted_string(const string &s, int init_colour)
     : ops()
 {
     if (init_colour)
-        textcolor(init_colour);
+        textcolour(init_colour);
     cprintf(s);
 }
 
@@ -73,7 +73,7 @@ formatted_string formatted_string::parse_string(const string &s,
     if (eot_ends_format)
     {
         if (colour_stack.back() != colour_stack.front())
-            fs.textcolor(colour_stack.front());
+            fs.textcolour(colour_stack.front());
     }
     return fs;
 }
@@ -92,10 +92,10 @@ void formatted_string::parse_string_to_multiple(const string &s,
     {
         out.push_back(formatted_string());
         formatted_string& fs = out.back();
-        fs.textcolor(colour_stack.back());
+        fs.textcolour(colour_stack.back());
         parse_string1(lines[i], fs, colour_stack, NULL);
         if (colour_stack.back() != colour_stack.front())
-            fs.textcolor(colour_stack.front());
+            fs.textcolour(colour_stack.front());
     }
 }
 
@@ -204,7 +204,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             {
                 // If this was the only tag, or the colour didn't match
                 // the one we are popping, display the tag as a warning.
-                fs.textcolor(LIGHTRED);
+                fs.textcolour(LIGHTRED);
                 fs.cprintf("</%s>", tagtext.c_str());
             }
         }
@@ -212,7 +212,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             colour_stack.push_back(get_colour(tagtext));
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
-        fs.textcolor(colour_stack.back());
+        fs.textcolour(colour_stack.back());
 
         tag += tagtext.length() + 1;
     }
@@ -439,17 +439,17 @@ void formatted_string::del_char()
 void formatted_string::add_glyph(cglyph_t g)
 {
     const int last_col = find_last_colour();
-    this->textcolor(g.col);
+    this->textcolour(g.col);
     this->cprintf("%s", stringize_glyph(g.ch).c_str());
-    this->textcolor(last_col);
+    this->textcolour(last_col);
 }
 
-void formatted_string::textcolor(int color)
+void formatted_string::textcolour(int colour)
 {
     if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
         ops.erase(ops.end() - 1);
 
-    ops.push_back(color);
+    ops.push_back(colour);
 }
 
 void formatted_string::clear()
@@ -480,7 +480,7 @@ void formatted_string::fs_op::display() const
     switch (type)
     {
     case FSOP_COLOUR:
-        ::textcolor(x);
+        ::textcolour(x);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());

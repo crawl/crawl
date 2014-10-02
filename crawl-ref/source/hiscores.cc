@@ -282,7 +282,7 @@ void hiscores_print_list(int display_count, int format)
     // close off
     _hs_close(scores, _score_file_name());
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     int start = newest_entry - display_count / 2;
 
@@ -298,12 +298,12 @@ void hiscores_print_list(int display_count, int format)
     {
         // check for recently added entry
         if (i == newest_entry)
-            textcolor(YELLOW);
+            textcolour(YELLOW);
 
         _hiscores_print_entry(*hs_list[i], i, format, cprintf);
 
         if (i == newest_entry)
-            textcolor(LIGHTGREY);
+            textcolour(LIGHTGREY);
     }
 }
 
@@ -396,7 +396,7 @@ static void _show_morgue(scorefile_entry& se)
     for (i = 0; i < blines.size(); ++i)
         morgue_file.add_item_formatted_string(blines[i]);
 
-    textcolor(WHITE);
+    textcolour(WHITE);
     morgue_file.show();
 }
 
@@ -473,7 +473,7 @@ void show_hiscore_table()
     while (true)
     {
         menu.draw_menu();
-        textcolor(WHITE);
+        textcolour(WHITE);
         const int keyn = getch_ck();
 
         if (key_is_escape(keyn))

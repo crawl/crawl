@@ -245,7 +245,7 @@ const int AGILITY_BONUS = 5;
 #define mgrd   env.mgrid
 #define igrd   env.igrid
 
-// colors, such pretty colors ...
+// colours, such pretty colours ...
 // The order is important (IRGB bit patterns).
 enum COLOURS
 {

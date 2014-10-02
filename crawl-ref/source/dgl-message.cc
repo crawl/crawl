@@ -31,9 +31,9 @@ static void _show_message_line(string line)
         line = line.substr(sender_pos + 1);
         trim_string(line);
         formatted_string fs;
-        fs.textcolor(WHITE);
+        fs.textcolour(WHITE);
         fs.cprintf("%s: ", sender.c_str());
-        fs.textcolor(LIGHTGREY);
+        fs.textcolour(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_DGL_MESSAGE, 0);
         if (Options.note_dgl_messages)

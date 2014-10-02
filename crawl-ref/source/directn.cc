@@ -463,7 +463,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
     }
     const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    textcolor(real_colour(colour));
+    textcolour(real_colour(colour));
     putwch(glych);
 }
 #endif
@@ -1278,7 +1278,7 @@ void direction_chooser::draw_beam_if_needed()
         _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
     }
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 #ifdef USE_TILE
     tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 

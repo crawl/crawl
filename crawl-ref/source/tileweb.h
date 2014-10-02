@@ -120,7 +120,7 @@ public:
     void draw_doll_edit();
 
     // Webtiles-specific
-    void textcolor(int col);
+    void textcolour(int col);
     void textbackground(int col);
     void put_ucs_string(ucs_t *str);
     void clear_to_end_of_line();

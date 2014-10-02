@@ -137,7 +137,7 @@ string spell_uselessness_reason(spell_type spell, bool temp = true,
                                 bool prevent = false, bool evoked = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
-                                int default_color = COL_UNKNOWN,
+                                int default_colour = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
 bool spell_no_hostile_in_range(spell_type spell, bool rod = false);

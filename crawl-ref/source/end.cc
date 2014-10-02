@@ -331,7 +331,7 @@ NORETURN void end_game(scorefile_entry &se)
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
         get_invent(OSEL_ANY);
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))

@@ -625,7 +625,7 @@ static string _describe_branch_bribability()
 static bool _check_description_cycle(god_desc_type gdesc)
 {
     // Another function may have left a dangling recolour.
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     const int bottom_line = min(30, get_number_of_lines());
 
@@ -760,7 +760,7 @@ static string _describe_god_wrath_causes(god_type which_god)
 static void _god_wrath_description(god_type which_god)
 {
     clrscr();
-    textcolor(WHITE);
+    textcolour(WHITE);
     cprintf("                                  Wrath\n");
     cprintf("\n");
 
@@ -842,9 +842,9 @@ static void _detailed_god_description(god_type which_god)
 
     const string godname = uppercase_first(god_name(which_god, true));
     const int len = get_number_of_cols() - strwidth(godname);
-    textcolor(god_colour(which_god));
+    textcolour(god_colour(which_god));
     cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     cprintf("\n");
 
     _print_string_wrapped(get_god_powers(which_god), width);
@@ -898,13 +898,13 @@ static string _god_penance_message(god_type which_god)
  */
 static void _describe_god_powers(god_type which_god, int numcols)
 {
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
     cprintf("\n\n%s%*s%s\n", header,
             get_number_of_cols() - 1 - strwidth(header) - strwidth(cost),
             "", cost);
-    textcolor(god_colour(which_god));
+    textcolour(god_colour(which_god));
 
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
@@ -1117,18 +1117,18 @@ static void _god_overview_description(god_type which_god, bool give_title)
 
     if (give_title)
     {
-        textcolor(WHITE);
+        textcolour(WHITE);
         cprintf("                                  Religion\n");
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
     }
 
     // Print long god's name.
-    textcolor(god_colour(which_god));
+    textcolour(god_colour(which_god));
     cprintf("%s", uppercase_first(god_name(which_god, true)).c_str());
     cprintf("\n\n");
 
     // Print god's description.
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     string god_desc = getLongDescription(god_name(which_god));
     const int numcols = get_number_of_cols() - 1;
@@ -1139,7 +1139,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
     {
         // Print title based on piety.
         cprintf("\nTitle - ");
-        textcolor(god_colour(which_god));
+        textcolour(god_colour(which_god));
 
         string title = god_title(which_god, you.species, you.piety);
         cprintf("%s", title.c_str());
@@ -1149,16 +1149,16 @@ static void _god_overview_description(god_type which_god, bool give_title)
     // I know these messages aren't perfect so if you can think up
     // something better, do it.
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     cprintf("\n\nFavour - ");
-    textcolor(god_colour(which_god));
+    textcolour(god_colour(which_god));
 
     //mv: Player is praying at altar without appropriate religion.
     // It means player isn't checking his own religion and so we only
     // display favour and go out.
     if (!you_worship(which_god))
     {
-        textcolor(god_colour(which_god));
+        textcolour(god_colour(which_god));
         cprintf(_god_penance_message(which_god).c_str());
     }
     else
@@ -1176,9 +1176,9 @@ void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
         clrscr();
-        textcolor(WHITE);
+        textcolour(WHITE);
         cprintf("                                  Religion\n");
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
         cprintf("\nYou are not religious.");
         get_ch();
         return;

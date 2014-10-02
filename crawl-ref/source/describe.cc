@@ -156,7 +156,7 @@ public:
 void print_description(const describe_info &inf)
 {
     clrscr();
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
@@ -165,7 +165,7 @@ void print_description(const describe_info &inf)
 static void _print_quote(const describe_info &inf)
 {
     clrscr();
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     default_desc_proc proc;
     process_quote<default_desc_proc>(proc, inf);
@@ -2281,7 +2281,7 @@ static bool _describe_spellbook(item_def &item)
         _update_inscription(item);
 
         cgotoxy(1, wherey());
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
 
         if (_can_memorise(item) && !crawl_state.player_is_dead())
         {

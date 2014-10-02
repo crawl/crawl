@@ -149,7 +149,7 @@ static string _welcome(const newgame_def* ng)
 static void _print_character_info(const newgame_def* ng)
 {
     clrscr();
-    textcolor(BROWN);
+    textcolour(BROWN);
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
@@ -537,7 +537,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
         clrscr();
     }
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     ng->name = choice->name;
     ng->type = choice->type;
@@ -866,10 +866,10 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     clrscr();
 
     // TODO: attach these to the menu in a NoSelectTextItem
-    textcolor(BROWN);
+    textcolour(BROWN);
     cprintf("%s", _welcome(ng).c_str());
 
-    textcolor(YELLOW);
+    textcolour(YELLOW);
     cprintf(" Please select your species.");
 
     _construct_species_menu(ng, defaults, freeform);
@@ -896,7 +896,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     descriptor->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     // Poll input until we have a conclusive escape or pick
     while (true)
     {
@@ -1266,10 +1266,10 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     clrscr();
 
     // TODO: attach these to the menu in a NoSelectTextItem
-    textcolor(BROWN);
+    textcolour(BROWN);
     cprintf("%s", _welcome(ng).c_str());
 
-    textcolor(YELLOW);
+    textcolour(YELLOW);
     cprintf(" Please select your background.");
 
     _construct_backgrounds_menu(ng, defaults, freeform);
@@ -1295,7 +1295,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     descriptor->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     // Poll input until we have a conclusive escape or pick
     while (true)
@@ -1616,7 +1616,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     freeform->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor(CYAN);
+    textcolour(CYAN);
     cprintf("\nYou have a choice of weapons:  ");
 
     while (true)
@@ -2055,7 +2055,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     freeform->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor(CYAN);
+    textcolour(CYAN);
     cprintf("\nYou have a choice of %s:\n\n",
             ng_choice->type == GAME_TYPE_TUTORIAL ? "lessons"
                                                   : "maps");

@@ -97,7 +97,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     const int spell_levels = player_spell_levels();
 
     formatted_string out;
-    out.textcolor(LIGHTGREY);
+    out.textcolour(LIGHTGREY);
 
     out.cprintf("%s", book.name(DESC_THE).c_str());
 
@@ -141,7 +141,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
                 colour = spell_highlight_by_utility(stype);
         }
 
-        out.textcolor(colour);
+        out.textcolour(colour);
 
         char strng[2];
         strng[0] = index_to_letter(spelcount);
@@ -173,7 +173,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         spelcount++;
     }
 
-    out.textcolor(LIGHTGREY);
+    out.textcolour(LIGHTGREY);
     out.cprintf("\n");
 
     switch (action)

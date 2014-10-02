@@ -598,7 +598,7 @@ string describe_mutations(bool center_title)
 
     result += "</lightblue>";
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)

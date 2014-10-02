@@ -87,9 +87,9 @@ void cprintf(const char *format,...)
     TextRegion::text_mode->addstr(buffer);
 }
 
-void textcolor(int color)
+void textcolour(int colour)
 {
-    TextRegion::textcolor(color);
+    TextRegion::textcolour(colour);
 }
 
 void textbackground(int bg)

@@ -359,7 +359,7 @@ void MenuRegion::set_entry(int idx, const string &str, int colour,
     MenuRegionEntry &e = m_entries[idx];
     e.valid = true;
     e.text.clear();
-    e.text.textcolor(colour);
+    e.text.textcolour(colour);
     e.text += formatted_string::parse_string(str);
     e.colour   = colour;
     e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
