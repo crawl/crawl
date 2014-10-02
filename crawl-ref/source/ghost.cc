@@ -1167,4 +1167,5 @@ void ghost_demon::init_spellforged_servitor()
     if (!primary && !secondary)
         populate_servitor_spells(servitor_spells_fallback, true, best_magic_skill);
 
+    fixup_spells(spells, 150, true, false);
 }
