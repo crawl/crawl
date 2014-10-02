@@ -1059,7 +1059,7 @@ static void _redraw_stacked_cards(const vector<card_type>& draws,
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
         cgotoxy(1, i+2);
-        textcolor(selected == i ? WHITE : LIGHTGREY);
+        textcolour(selected == i ? WHITE : LIGHTGREY);
         cprintf("%u - %s", i+1, card_name(draws[i]));
         clear_to_end_of_line();
     }
@@ -1247,7 +1247,7 @@ bool stack_five(int slot)
             {
                 clrscr();
                 cgotoxy(1,1);
-                textcolor(WHITE);
+                textcolour(WHITE);
                 cprintf("Press a digit to select a card, then another digit "
                         "to swap it.");
                 cgotoxy(1,10);
@@ -1263,7 +1263,7 @@ bool stack_five(int slot)
             if (c == CK_ENTER)
             {
                 cgotoxy(1,11);
-                textcolor(LIGHTGREY);
+                textcolour(LIGHTGREY);
                 cprintf("Are you done? (press y or Y to confirm)");
                 if (toupper(getchk()) == 'Y')
                     break;

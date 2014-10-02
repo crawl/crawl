@@ -97,7 +97,7 @@ static bool _shop_yesno(const char* prompt, int safeanswer)
 #else
     if (_in_shop_now)
     {
-        textcolor(channel_to_colour(MSGCH_PROMPT));
+        textcolour(channel_to_colour(MSGCH_PROMPT));
         _shop_print(prompt, 1);
 
         return yesno(NULL, true, safeanswer, false, false, true);
@@ -352,15 +352,15 @@ static void _shop_print_stock(const vector<int>& stock,
         // Is this too complicated? (jpeg)
 
         if (in_list[i])
-            textcolor(LIGHTCYAN);
+            textcolour(LIGHTCYAN);
         else if (total_cost > you.gold && selected[i])
-            textcolor(LIGHTRED);
+            textcolour(LIGHTRED);
         else if (gp_value <= you.gold - total_cost || selected[i] && can_afford)
-            textcolor(LIGHTGREEN);
+            textcolour(LIGHTGREEN);
         else if (!can_afford)
-            textcolor(RED);
+            textcolour(RED);
         else
-            textcolor(YELLOW);
+            textcolour(YELLOW);
 
         if (in_list[i])
             cprintf("%c $ ", c);
@@ -373,7 +373,7 @@ static void _shop_print_stock(const vector<int>& stock,
         const string colprf = item_prefix(item);
         const int col = menu_colour(item.name(DESC_A),
                                     colprf, "shop");
-        textcolor(col != -1 ? col : LIGHTGREY);
+        textcolour(col != -1 ? col : LIGHTGREY);
 
         string item_name = item.name(DESC_A, false, id);
         if (shop_item_unknown(item))
@@ -396,7 +396,7 @@ static void _shop_print_stock(const vector<int>& stock,
         tmp->set_visible(true);
 #endif
     }
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 
 static int _count_identical(const vector<int>& stock, const item_def& item)
@@ -558,7 +558,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             snprintf(info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
                      you.gold != 1 ? "s" : "");
 
-            textcolor(YELLOW);
+            textcolour(YELLOW);
         }
         else if (total_cost > you.gold)
         {
@@ -569,7 +569,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                      total_cost - you.gold,
                      (total_cost - you.gold != 1) ? "s" : "");
 
-            textcolor(LIGHTRED);
+            textcolour(LIGHTRED);
         }
         else
         {
@@ -580,7 +580,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                      you.gold - total_cost,
                      (you.gold - total_cost != 1) ? "s" : "");
 
-            textcolor(YELLOW);
+            textcolour(YELLOW);
         }
 
         _shop_print(info, 0);
@@ -594,10 +594,10 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         else
             snprintf(info, INFO_SIZE, "What would you like to do? ");
 
-        textcolor(CYAN);
+        textcolour(CYAN);
         _shop_print(info, 1);
 
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
 
 #ifdef USE_TILE_LOCAL
         //draw menu over the top of the prompt text

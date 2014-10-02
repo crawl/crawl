@@ -28,7 +28,7 @@ public:
     void cprintf(PRINTF(1, ));
     void cprintf(const string &s);
     void add_glyph(cglyph_t g);
-    void textcolor(int color);
+    void textcolour(int colour);
     formatted_string chop(int length) const;
     void del_char();
     void all_caps();
@@ -74,8 +74,8 @@ public:
         bool relative;
         string text;
 
-        fs_op(int color)
-            : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
+        fs_op(int colour)
+            : type(FSOP_COLOUR), x(colour), y(-1), relative(false), text()
         {
         }
 

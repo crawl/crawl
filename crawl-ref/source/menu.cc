@@ -92,7 +92,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
         return;
 
     const int col = m_menu->item_colour(index, me);
-    textcolor(col);
+    textcolour(col);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
 
@@ -498,9 +498,9 @@ bool Menu::process_key(int keyin)
         char linebuf[80];
         cgotoxy(1,1);
         clear_to_end_of_line();
-        textcolor(WHITE);
+        textcolour(WHITE);
         cprintf("Select what? (regex) ");
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
         bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
         if (validline && linebuf[0])
         {
@@ -2546,8 +2546,8 @@ void PrecisionMenu::draw_menu()
     }
     // Render everything else here
 
-    // Reset textcolor just in case
-    textcolor(LIGHTGRAY);
+    // Reset textcolour just in case
+    textcolour(LIGHTGRAY);
 }
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
@@ -2797,7 +2797,7 @@ void TextItem::render()
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
     string white_space(m_max_coord.x - m_min_coord.x, ' ');
-    textcolor(BLACK);
+    textcolour(BLACK);
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
@@ -2811,7 +2811,7 @@ void TextItem::render()
     {
         endline_pos = m_render_text.find('\n', newline_pos);
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
-        textcolor(m_fg_colour);
+        textcolour(m_fg_colour);
         textbackground(m_bg_colour);
         cprintf("%s", m_render_text.substr(newline_pos,
                 endline_pos - newline_pos).c_str());
@@ -2910,7 +2910,7 @@ void FormattedTextItem::render()
     {
         m_font_buf.clear();
         // FIXME: m_fg_colour doesn't work here while it works in console.
-        textcolor(m_fg_colour);
+        textcolour(m_fg_colour);
         m_font_buf.add(formatted_string::parse_string(m_render_text, true,
                                                       NULL, m_fg_colour),
                        m_min_coord.x, m_min_coord.y + get_vertical_offset());
@@ -2930,7 +2930,7 @@ void FormattedTextItem::render()
     }
 
     cgotoxy(m_min_coord.x, m_min_coord.y);
-    textcolor(m_fg_colour);
+    textcolour(m_fg_colour);
     display_tagged_block(m_render_text);
 #endif
 }
@@ -4268,7 +4268,7 @@ void MenuDescriptor::_place_items()
         // update
         m_active_item = tmp;
 #ifndef USE_TILE_LOCAL
-        textcolor(BLACK);
+        textcolour(BLACK);
         textbackground(BLACK);
         for (int i = 0; i < m_desc_item.get_max_coord().y
                             - m_desc_item.get_min_coord().y; ++i)
@@ -4277,7 +4277,7 @@ void MenuDescriptor::_place_items()
                     m_desc_item.get_min_coord().y + i);
             clear_to_end_of_line();
         }
-        textcolor(LIGHTGRAY);
+        textcolour(LIGHTGRAY);
 #endif
 
         if (tmp == NULL)

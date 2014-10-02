@@ -16,7 +16,7 @@ public:
     // STATIC -
     // TODO enne - move these to TilesFramework?
 
-    // where now printing? what color?
+    // where now printing? what colour?
     static int print_x;
     static int print_y;
     static int text_col;
@@ -35,14 +35,14 @@ public:
     //static int get_number_of_lines();
     static void _setcursortype(int curstype);
     static void textbackground(int bg);
-    static void textcolor(int col);
+    static void textcolour(int col);
 
     // Object's method
     void clear_to_end_of_line();
     void putwch(ucs_t chr);
 
     ucs_t   *cbuf; //text backup
-    uint8_t *abuf; //textcolor backup
+    uint8_t *abuf; //textcolour backup
 
     int cx_ofs; //cursor x offset
     int cy_ofs; //cursor y offset

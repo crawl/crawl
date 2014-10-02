@@ -1397,15 +1397,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 }
 
 /**
- * Determines what color a spell should be highlighted with.
+ * Determines what colour a spell should be highlighted with.
  *
- * @param spell           The type of spell to be colored.
- * @param default_color   Color to be used if the spell is unremarkable.
+ * @param spell           The type of spell to be coloured.
+ * @param default_colour   Colour to be used if the spell is unremarkable.
  * @param transient       If true, check if spell is temporarily useless.
  * @param rod_spell       If the spell being evoked from a rod.
- * @return                The color to highlight the spell.
+ * @return                The colour to highlight the spell.
  */
-int spell_highlight_by_utility(spell_type spell, int default_color,
+int spell_highlight_by_utility(spell_type spell, int default_colour,
                                bool transient, bool rod_spell)
 {
     // If your god hates the spell, that
@@ -1417,12 +1417,12 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     }
 
     if (_spell_is_empowered(spell) && !rod_spell)
-        default_color = COL_EMPOWERED;
+        default_colour = COL_EMPOWERED;
 
     if (spell_is_useless(spell, transient))
-        default_color = COL_USELESS;
+        default_colour = COL_USELESS;
 
-    return default_color;
+    return default_colour;
 }
 
 bool spell_no_hostile_in_range(spell_type spell, bool rod)

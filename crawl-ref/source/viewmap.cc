@@ -510,7 +510,7 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
 #endif // WIZARD
 
     cgotoxy(1, 1);
-    textcolor(WHITE);
+    textcolour(WHITE);
 
     cprintf("%s", chop_string(uppercase_first(place_name(
                           get_packed_place(), true, true)) + pstr,
@@ -519,7 +519,7 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(max(1, (columns - titlelen) / 2), 1);
     title.display();
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     cgotoxy(max(1, columns - helplen + 1), 1);
     help.display();
 }
@@ -671,7 +671,7 @@ bool show_map(level_pos &lpos,
         const int top = 2;
         clrscr();
 #endif
-        textcolor(DARKGREY);
+        textcolour(DARKGREY);
 
         bool on_level = false;
 

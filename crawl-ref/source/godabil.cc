@@ -2803,11 +2803,11 @@ int fedhas_check_corpse_spores(bool quiet)
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
 
-        unsigned color = GREEN | COLFLAG_FRIENDLY_MONSTER;
-        color = real_colour(color);
+        unsigned colour = GREEN | COLFLAG_FRIENDLY_MONSTER;
+        colour = real_colour(colour);
 
         unsigned character = mons_char(MONS_GIANT_SPORE);
-        put_colour_ch(color, character);
+        put_colour_ch(colour, character);
 #endif
 #ifdef USE_TILE
         tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);

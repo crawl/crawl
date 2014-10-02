@@ -494,7 +494,7 @@ public:
     {
         // XXX: this should not be necessary as formatted_string should
         //      already do it
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
 
         // XXX: the screen may have resized since the last time we
         //  called lines.resize().  We can't actually resize lines
@@ -594,7 +594,7 @@ public:
         else
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
-            textcolor(channel_to_colour(MSGCH_PROMPT));
+            textcolour(channel_to_colour(MSGCH_PROMPT));
             if (crawl_state.game_is_hints())
             {
                 string more_str = "--more-- Press Space ";

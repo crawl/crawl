@@ -1802,7 +1802,7 @@ bool TilesFramework::need_redraw() const
     return m_need_redraw;
 }
 
-void TilesFramework::textcolor(int col)
+void TilesFramework::textcolour(int col)
 {
     m_print_fg = col & 0xF;
     m_print_bg = (col >> 4) & 0xF;

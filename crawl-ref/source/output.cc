@@ -294,7 +294,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 
 static string _god_powers(bool simple = false);
 
-// Color for captions like 'Health:', 'Str:', etc.
+// Colour for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
 
 // Colour for values, which come after captions.
@@ -306,17 +306,17 @@ static const short HUD_VALUE_COLOUR = LIGHTGREY;
 
 class colour_bar
 {
-    typedef unsigned short color_t;
+    typedef unsigned short colour_t;
  public:
-    color_t m_default;
-    color_t m_change_pos;
-    color_t m_change_neg;
-    color_t m_empty;
+    colour_t m_default;
+    colour_t m_change_pos;
+    colour_t m_change_neg;
+    colour_t m_empty;
 
-    colour_bar(color_t default_colour,
-               color_t change_pos,
-               color_t change_neg,
-               color_t empty,
+    colour_bar(colour_t default_colour,
+               colour_t change_pos,
+               colour_t change_neg,
+               colour_t empty,
                bool round = false)
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
@@ -359,54 +359,54 @@ class colour_bar
 
         CGOTOXY(ox, oy, GOTO_STAT);
 
-        textcolor(BLACK);
+        textcolour(BLACK);
         for (int cx = 0; cx < width; cx++)
         {
 #ifdef USE_TILE_LOCAL
             // Maybe this should use textbackground too?
-            textcolor(BLACK + m_empty * 16);
+            textcolour(BLACK + m_empty * 16);
 
             if (cx < disp)
             {
 #if TAG_MAJOR_VERSION == 34
-                textcolor(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
+                textcolour(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
 #else
-                textcolor(BLACK + m_default * 16);
+                textcolour(BLACK + m_default * 16);
 #endif
             }
             else if (cx < sub_disp)
-                textcolor(BLACK + YELLOW * 16);
+                textcolour(BLACK + YELLOW * 16);
             else if (old_disp >= sub_disp && cx < old_disp)
-                textcolor(BLACK + m_change_neg * 16);
+                textcolour(BLACK + m_change_neg * 16);
             putwch(' ');
 #else
             if (cx < disp && cx < old_disp)
             {
 #if TAG_MAJOR_VERSION == 34
-                textcolor((temp) ? temp_colour : m_default);
+                textcolour((temp) ? temp_colour : m_default);
 #else
-                textcolor(m_default);
+                textcolour(m_default);
 #endif
                 putwch('=');
             }
             else if (cx < disp)
             {
-                textcolor(m_change_pos);
+                textcolour(m_change_pos);
                 putwch('=');
             }
             else if (cx < sub_disp)
             {
-                textcolor(YELLOW);
+                textcolour(YELLOW);
                 putwch('=');
             }
             else if (cx < old_disp)
             {
-                textcolor(m_change_neg);
+                textcolour(m_change_neg);
                 putwch('-');
             }
             else
             {
-                textcolor(m_empty);
+                textcolour(m_empty);
                 putwch('-');
             }
 #endif
@@ -419,7 +419,7 @@ class colour_bar
                 m_request_redraw_after = 0;
         }
 
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
         textbackground(BLACK);
     }
 
@@ -443,16 +443,16 @@ class colour_bar
 
         CGOTOXY(ox, obase, GOTO_STAT);
 
-        textcolor(WHITE);
+        textcolour(WHITE);
         for (int cx = 0; cx < height; cx++)
         {
             // Maybe this should use textbackground too?
-            textcolor(BLACK + m_empty * 16);
+            textcolour(BLACK + m_empty * 16);
 
             if (cx < disp)
-                textcolor(BLACK + m_default * 16);
+                textcolour(BLACK + m_default * 16);
             else if (old_disp > disp && cx < old_disp)
-                textcolor(BLACK + m_change_neg * 16);
+                textcolour(BLACK + m_change_neg * 16);
             putwch(' ');
 
             // move up a line if we've drawn this bit of the bar
@@ -467,7 +467,7 @@ class colour_bar
                 m_request_redraw_after = 0;
         }
 
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
         textbackground(BLACK);
     }
 
@@ -532,14 +532,14 @@ void update_message_status()
     static const int len = strwidth(msg);
     static const string spc(len, ' ');
 
-    textcolor(LIGHTBLUE);
+    textcolour(LIGHTBLUE);
 
     CGOTOXY(crawl_view.hudsz.x - len + 1, 1, GOTO_STAT);
     if (SysEnv.have_messages)
         CPRINTF(msg);
     else
         CPRINTF(spc.c_str());
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 #endif
 
@@ -561,7 +561,7 @@ void update_turn_count()
     CGOTOXY(19+6, 9 + yhack, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
-    textcolor(HUD_VALUE_COLOUR);
+    textcolour(HUD_VALUE_COLOUR);
     if (Options.show_game_turns)
     {
         CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
@@ -571,7 +571,7 @@ void update_turn_count()
     }
     else
         CPRINTF("%d", you.num_turns);
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 
 static int _count_digits(int val)
@@ -589,7 +589,7 @@ static int _count_digits(int val)
 static void _print_stats_temperature(int x, int y)
 {
     cgotoxy(x, y, GOTO_STAT);
-    textcolor(HUD_CAPTION_COLOUR);
+    textcolour(HUD_CAPTION_COLOUR);
     cprintf("Temperature: ");
 
     Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
@@ -622,13 +622,13 @@ static void _print_stats_mp(int x, int y)
     }
 
     CGOTOXY(x+8, y, GOTO_STAT);
-    textcolor(mp_colour);
+    textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
     CPRINTF("/%d", you.max_magic_points);
     if (boosted)
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
 
     int col = _count_digits(you.magic_points)
               + _count_digits(you.max_magic_points) + 1;
@@ -719,22 +719,22 @@ static void _print_stats_hp(int x, int y)
     // 01234567890123456789
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
-    textcolor(HUD_CAPTION_COLOUR);
+    textcolour(HUD_CAPTION_COLOUR);
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
         CPRINTF(max_max_hp != you.hp_max ? "EP: " : "Essence: ");
     else
 #endif
     CPRINTF(max_max_hp != you.hp_max ? "HP: " : "Health: ");
-    textcolor(hp_colour);
+    textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
     CPRINTF("/%d", you.hp_max);
     if (max_max_hp != you.hp_max)
         CPRINTF(" (%d)", max_max_hp);
     if (boosted)
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
 
     int col = wherex() - crawl_view.hudp.x;
     for (int i = 18-col; i > 0; i--)
@@ -794,7 +794,7 @@ static void _print_stat(stat_type stat, int x, int y)
 {
     CGOTOXY(x+5, y, GOTO_STAT);
 
-    textcolor(_get_stat_colour(stat));
+    textcolour(_get_stat_colour(stat));
     CPRINTF("%d", you.stat(stat, false));
 
     if (you.stat_loss[stat] > 0)
@@ -808,11 +808,11 @@ static void _print_stats_ac(int x, int y)
     // AC:
     CGOTOXY(x+4, y, GOTO_STAT);
     if (_boosted_ac())
-        textcolor(LIGHTBLUE);
+        textcolour(LIGHTBLUE);
     else if (you.duration[DUR_CORROSION])
-        textcolor(RED);
+        textcolour(RED);
     else
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
     string ac = make_stringf("%2d ", you.armour_class());
 #ifdef WIZARD
     if (you.wizard)
@@ -823,11 +823,11 @@ static void _print_stats_ac(int x, int y)
     // SH: (two lines lower)
     CGOTOXY(x+4, y+2, GOTO_STAT);
     if (you.incapacitated() && you.shielded())
-        textcolor(RED);
+        textcolour(RED);
     else if (_boosted_sh())
-        textcolor(LIGHTBLUE);
+        textcolour(LIGHTBLUE);
     else
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
     string sh = make_stringf("%2d ", player_displayed_shield_class());
     CPRINTF("%-12s", sh.c_str());
 }
@@ -835,7 +835,7 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+    textcolour(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
               || you.cannot_move() ? RED :
               _boosted_ev()
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
@@ -884,16 +884,16 @@ static void _print_stats_wp(int y)
         text = "-) " + you.unarmed_attack_name();
 
     CGOTOXY(1, y, GOTO_STAT);
-    textcolor(Options.status_caption_colour);
+    textcolour(Options.status_caption_colour);
     CPRINTF("Wp: ");
-    textcolor(_wpn_name_colour());
+    textcolour(_wpn_name_colour());
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
 #else
     CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
 #endif
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 
 static void _print_stats_qv(int y)
@@ -933,22 +933,22 @@ static void _print_stats_qv(int y)
         text = prefix + text;
     }
     CGOTOXY(1, y, GOTO_STAT);
-    textcolor(Options.status_caption_colour);
+    textcolour(Options.status_caption_colour);
     CPRINTF("Qv: ");
-    textcolor(col);
+    textcolour(col);
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
 #else
     CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
 #endif
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 
 struct status_light
 {
-    status_light(int c, string t) : color(c), text(t) {}
-    int color;
+    status_light(int c, string t) : colour(c), text(t) {}
+    int colour;
     string text;
 };
 
@@ -1072,7 +1072,7 @@ static void _print_status_lights(int y)
 
         if (end_x <= crawl_view.hudsz.x)
         {
-            textcolor(lights[i_light].color);
+            textcolour(lights[i_light].colour);
             CPRINTF("%s", lights[i_light].text.c_str());
             if (end_x < crawl_view.hudsz.x)
                 CPRINTF(" ");
@@ -1095,14 +1095,14 @@ static void _print_status_lights(int y)
         size_t i_light = 0;
         if (lights.size() == 1)
         {
-            textcolor(lights[0].color);
+            textcolour(lights[0].colour);
             CPRINTF("%s", lights[0].text.c_str());
         }
         else
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
-                textcolor(lights[i_light].color);
+                textcolour(lights[i_light].colour);
                 if (i_light == lights.size() - 1
                     && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex())
                 {
@@ -1168,9 +1168,9 @@ static void _redraw_title(const string &your_name, const string &job_name)
 
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
-    textcolor(YELLOW);
+    textcolour(YELLOW);
 #ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout() && you.wizard) textcolor(LIGHTBLUE);
+    if (tiles.is_using_small_layout() && you.wizard) textcolour(LIGHTBLUE);
 #endif
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
 #ifdef USE_TILE_LOCAL
@@ -1179,7 +1179,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
     if (you.wizard)
 #endif
     {
-        textcolor(LIGHTBLUE);
+        textcolour(LIGHTBLUE);
         CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         CPRINTF(" *WIZARD*");
     }
@@ -1189,7 +1189,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
 
     // Line 2:
     // Minotaur [of God] [Piety]
-    textcolor(YELLOW);
+    textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
@@ -1202,7 +1202,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
 
         string piety = _god_powers(true);
         if (player_under_penance())
-            textcolor(RED);
+            textcolour(RED);
         if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
             <= WIDTH)
         {
@@ -1220,14 +1220,14 @@ static void _redraw_title(const string &your_name, const string &job_name)
              && !had_gods())
     {
         string godpiety = "**....";
-        textcolor(DARKGREY);
+        textcolour(DARKGREY);
         if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
     }
 
     clear_to_end_of_line();
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 
 void print_stats()
@@ -1243,7 +1243,7 @@ void print_stats()
 #endif
 
     cursor_control coff(false);
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     // Displayed evasion is tied to dex/str.
     if (you.redraw_stats[STAT_DEX]
@@ -1304,17 +1304,17 @@ void print_stats()
 #else
         CGOTOXY(1, 8, GOTO_STAT);
 #endif
-        textcolor(Options.status_caption_colour);
+        textcolour(Options.status_caption_colour);
         CPRINTF("XL: ");
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
         if (you.experience_level >= 27)
             CPRINTF("%10s", "");
         else
         {
-            textcolor(Options.status_caption_colour);
+            textcolour(Options.status_caption_colour);
             CPRINTF("Next: ");
-            textcolor(HUD_VALUE_COLOUR);
+            textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
         if (crawl_state.game_is_zotdef())
@@ -1324,9 +1324,9 @@ void print_stats()
 #else
             CGOTOXY(1, 9, GOTO_STAT);
 #endif
-            textcolor(Options.status_caption_colour);
+            textcolour(Options.status_caption_colour);
             CPRINTF("ZP: ");
-            textcolor(HUD_VALUE_COLOUR);
+            textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%d     ", you.zot_points);
         }
         you.redraw_experience = false;
@@ -1346,7 +1346,7 @@ void print_stats()
         // Increase y-value for all following lines.
         yhack++;
         CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOUR);
+        textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%-6d", you.gold);
     }
 
@@ -1382,7 +1382,7 @@ void print_stats()
         you.redraw_status_flags = 0;
         _print_status_lights(11 + yhack);
     }
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
 #ifdef USE_TILE_LOCAL
     if (has_changed)
@@ -1416,10 +1416,10 @@ void print_stats_level()
         ypos++;
 #endif
     cgotoxy(19, ypos, GOTO_STAT);
-    textcolor(HUD_CAPTION_COLOUR);
+    textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
 
-    textcolor(HUD_VALUE_COLOUR);
+    textcolour(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
     CPRINTF("(%d) ", env.absdepth0 + 1);
 #endif
@@ -1429,10 +1429,10 @@ void print_stats_level()
 
 void draw_border()
 {
-    textcolor(HUD_CAPTION_COLOUR);
+    textcolour(HUD_CAPTION_COLOUR);
     clrscr();
 
-    textcolor(Options.status_caption_colour);
+    textcolour(Options.status_caption_colour);
 
 #if TAG_MAJOR_VERSION == 34
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
@@ -1631,7 +1631,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         // for targeting
         if (idx >= 0)
         {
-            textcolor(WHITE);
+            textcolour(WHITE);
             CPRINTF(stringize_glyph(mlist_index_to_letter(idx)).c_str());
             CPRINTF(" - ");
             printed += 4;
@@ -1642,7 +1642,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         {
             monster_info mi = mons[i_mon];
             cglyph_t g = get_mons_glyph(mi);
-            textcolor(g.col);
+            textcolour(g.col);
             CPRINTF("%s", stringize_glyph(g.ch).c_str());
             ++printed;
 
@@ -1650,7 +1650,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             if (i_mon > 6)
                 break;
         }
-        textcolor(LIGHTGREY);
+        textcolour(LIGHTGREY);
 
         const int count = (end - start);
 
@@ -1660,19 +1660,19 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
 
             monster_info mi = mons[start];
 #ifdef TARGET_OS_WINDOWS
-            textcolor(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP));
+            textcolour(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP));
 #else
-            textcolor(real_colour(dam_colour(mi) | COLFLAG_REVERSE));
+            textcolour(real_colour(dam_colour(mi) | COLFLAG_REVERSE));
 #endif
             CPRINTF(" ");
             textbackground(BLACK);
-            textcolor(LIGHTGREY);
+            textcolour(LIGHTGREY);
             CPRINTF(" ");
             printed += 3;
         }
         else
         {
-            textcolor(LIGHTGREY);
+            textcolour(LIGHTGREY);
             CPRINTF("  ");
             printed += 2;
         }
@@ -1682,7 +1682,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             int desc_colour;
             string desc;
             mons[start].to_string(count, desc, desc_colour, zombified);
-            textcolor(desc_colour);
+            textcolour(desc_colour);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
             CPRINTF("%s", desc.c_str());
         }
@@ -1690,7 +1690,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
 
     // Set start to the next un-described monster.
     start = end;
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 }
 #endif
 
@@ -1896,7 +1896,7 @@ static int _stealth_breakpoint(int stealth)
 
 static string _stealth_bar(int sw) {
     string bar;
-    //no coloring
+    //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth  ";
     const int stealth_num = _stealth_breakpoint(check_stealth());
@@ -2301,7 +2301,7 @@ static vector<formatted_string> _get_overview_stats()
 //      name : name of the resist, correct spacing is handled here
 //      spacing : width of the name column
 //      value : actual value of the resistance (can be negative)
-//      max : maximum value of the resistance (for color AND representation),
+//      max : maximum value of the resistance (for colour AND representation),
 //          default is the most common case (1)
 //      pos_resist : false for "bad" resistances (no tele, random tele, *Rage),
 //          inverts the value for the colour choice

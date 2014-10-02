@@ -771,7 +771,7 @@ void view_update_at(const coord_def &pos)
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
 #endif
 #ifdef USE_TILE_WEB
@@ -839,7 +839,7 @@ static void _debug_pane_bounds()
 
     if (crawl_view.mlistsz.y > 0)
     {
-        textcolor(WHITE);
+        textcolour(WHITE);
         cgotoxy(1,1, GOTO_MLIST);
         cprintf("+   L");
         cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
@@ -861,7 +861,7 @@ static void _debug_pane_bounds()
     cgotoxy(crawl_view.viewp.x+crawl_view.viewsz.x-2,
             crawl_view.viewp.y+crawl_view.viewsz.y-1);
     cprintf("V+");
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 #endif
 }
 

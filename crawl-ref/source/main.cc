@@ -2158,7 +2158,7 @@ static void _prep_input()
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();

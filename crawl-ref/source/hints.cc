@@ -185,7 +185,7 @@ void pick_hints(newgame_def* choice)
         "<cyan>You can be:</cyan>"
         "\n").display();
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
 
     for (int i = 0; i < HINT_TYPES_NUM; i++)
         _print_hints_menu((hints_types)i);
@@ -1557,7 +1557,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        // FIXME: Branch entrance character is not being colored yellow.
+        // FIXME: Branch entrance character is not being coloured yellow.
         text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2969,7 +2969,7 @@ formatted_string hints_abilities_info()
 // aptitude information.
 string hints_skills_info()
 {
-    textcolor(channel_to_colour(MSGCH_TUTORIAL));
+    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "
@@ -2988,7 +2988,7 @@ string hints_skills_info()
 
 string hints_skill_training_info()
 {
-    textcolor(channel_to_colour(MSGCH_TUTORIAL));
+    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "The training percentage (in <brown>brown</brown>) "
@@ -3004,7 +3004,7 @@ string hints_skill_training_info()
 
 string hints_skills_description_info()
 {
-    textcolor(channel_to_colour(MSGCH_TUTORIAL));
+    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "

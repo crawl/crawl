@@ -15,7 +15,7 @@ int num_to_lines(int num);
 void clrscr();
 void clear_to_end_of_line();
 void gotoxy_sys(int x, int y);
-void textcolor(int c);
+void textcolour(int c);
 void textbackground(int c);
 void cprintf(const char *format, ...);
 
@@ -37,7 +37,7 @@ void set_mouse_enabled(bool enabled);
 
 static inline void put_colour_ch(int colour, unsigned ch)
 {
-    textcolor(colour);
+    textcolour(colour);
     putwch(ch);
 }
 

@@ -145,14 +145,14 @@ void TextRegion::putwch(ucs_t ch)
     addstr_aux(&ch, 1);
 }
 
-void TextRegion::textcolor(int color)
+void TextRegion::textcolour(int colour)
 {
-    text_col = color;
+    text_col = colour;
 }
 
 void TextRegion::textbackground(int col)
 {
-    textcolor(col*16 + (text_col & 0xf));
+    textcolour(col*16 + (text_col & 0xf));
 }
 
 void TextRegion::cgotoxy(int x, int y)
