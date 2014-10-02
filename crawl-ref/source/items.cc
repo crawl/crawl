@@ -617,7 +617,7 @@ void destroy_item(int dest, bool never_created)
 static void _handle_gone_item(const item_def &item)
 {
     if (player_in_branch(BRANCH_ABYSS)
-        && place_branch(item.orig_place) == BRANCH_ABYSS)
+        && item.orig_place.branch == BRANCH_ABYSS)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
@@ -939,12 +939,12 @@ void pickup_menu(int item_link)
 
 bool origin_known(const item_def &item)
 {
-    return item.orig_place != 0;
+    return item.orig_place != level_id();
 }
 
 void origin_reset(item_def &item)
 {
-    item.orig_place  = 0;
+    item.orig_place.clear();
     item.orig_monnum = 0;
 }
 
@@ -953,7 +953,7 @@ void origin_set_unknown(item_def &item)
 {
     if (!origin_known(item))
     {
-        item.orig_place  = 0xFFFF;
+        item.orig_place  = level_id(BRANCH_DUNGEON, 0);
         item.orig_monnum = 0;
     }
 }
@@ -963,7 +963,7 @@ void origin_set_startequip(item_def &item)
 {
     if (!origin_known(item))
     {
-        item.orig_place  = 0xFFFF;
+        item.orig_place  = level_id(BRANCH_DUNGEON, 0);
         item.orig_monnum = -IT_SRC_START;
     }
 }
@@ -974,21 +974,21 @@ void origin_set_monster(item_def &item, const monster* mons)
     {
         if (!item.orig_monnum)
             item.orig_monnum = mons->type;
-        item.orig_place = get_packed_place();
+        item.orig_place = level_id::current();
     }
 }
 
 void origin_purchased(item_def &item)
 {
     // We don't need to check origin_known if it's a shop purchase
-    item.orig_place  = get_packed_place();
+    item.orig_place  = level_id::current();
     item.orig_monnum = -IT_SRC_SHOP;
 }
 
 void origin_acquired(item_def &item, int agent)
 {
     // We don't need to check origin_known if it's a divine gift
-    item.orig_place  = get_packed_place();
+    item.orig_place  = level_id::current();
     item.orig_monnum = -agent;
 }
 
@@ -1033,13 +1033,12 @@ static void _check_note_item(item_def &item)
 
 void origin_set(const coord_def& where)
 {
-    unsigned short pplace = get_packed_place();
     for (stack_iterator si(where); si; ++si)
     {
         if (origin_known(*si))
             continue;
 
-        si->orig_place  = pplace;
+        si->orig_place = level_id::current();
     }
 }
 
@@ -1047,7 +1046,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 {
     if (!origin_known(item))
     {
-        item.orig_place = get_packed_place();
+        item.orig_place = level_id::current();
         _check_note_item(item);
     }
 }
@@ -1064,13 +1063,18 @@ static string _origin_monster_name(const item_def &item)
 
 static string _origin_place_desc(const item_def &item)
 {
-    return prep_branch_level_name(level_id::from_packed_place(item.orig_place));
+    return prep_branch_level_name(item.orig_place);
+}
+
+static bool _origin_is_special(const item_def &item)
+{
+    return item.orig_place == level_id(BRANCH_DUNGEON, 0);
 }
 
 bool origin_describable(const item_def &item)
 {
     return origin_known(item)
-           && item.orig_place != 0xFFFFU
+           && !_origin_is_special(item)
            && !is_stackable_item(item)
            && item.quantity == 1
            && item.base_type != OBJ_CORPSES
@@ -1085,7 +1089,7 @@ static string _article_it(const item_def &item)
 
 static bool _origin_is_original_equip(const item_def &item)
 {
-    return item.orig_place == 0xFFFFU && item.orig_monnum == -IT_SRC_START;
+    return _origin_is_special(item) && item.orig_monnum == -IT_SRC_START;
 }
 
 bool origin_is_god_gift(const item_def& item, god_type *god)

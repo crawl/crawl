@@ -529,8 +529,8 @@ struct item_def
     // Inventory letter of the item.
     short  slot;
 
-    unsigned short orig_place;
-    short          orig_monnum;
+    level_id orig_place;
+    short    orig_monnum;
 
     string inscription;
 
@@ -539,7 +539,7 @@ struct item_def
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0), colour(0), rnd(0), quantity(0), flags(0),
-                 pos(), link(NON_ITEM), slot(0), orig_place(0),
+                 pos(), link(NON_ITEM), slot(0), orig_place(),
                  orig_monnum(0), inscription()
     {
     }

@@ -3591,7 +3591,10 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     marshallByte(th, item.slot);
 
+    item.orig_place.save(th);
+#if 0
     marshallShort(th, item.orig_place);
+#endif
     marshallShort(th, item.orig_monnum);
     marshallString(th, item.inscription.c_str());
 
@@ -3631,7 +3634,21 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.slot        = unmarshallByte(th);
 
-    item.orig_place  = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
+    {
+        unsigned short packed = unmarshallShort(th);
+        if (packed == 0)
+            item.orig_place.clear();
+        else if (packed == 0xFFFF)
+            item.orig_place = level_id(BRANCH_DUNGEON, 0);
+        else
+            item.orig_place = level_id::from_packed_place(packed);
+    }
+    else
+#endif
+    item.orig_place.load(th);
+
     item.orig_monnum = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_ORIG_MONNUM && item.orig_monnum > 0)
