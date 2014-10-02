@@ -4264,6 +4264,9 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.holi);
     marshallUnsigned(th, mi.mintel);
+    marshallUnsigned(th, mi.ac);
+    marshallUnsigned(th, mi.ev);
+    marshallUnsigned(th, mi.base_ev);
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
@@ -4340,6 +4343,20 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.fire_blocker);
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_DISPLAY_MON_AC_EV)
+    {
+#endif
+        unmarshallUnsigned(th, mi.ac);
+        unmarshallUnsigned(th, mi.ev);
+        unmarshallUnsigned(th, mi.base_ev);
+#if TAG_MAJOR_VERSION == 34
+    } else {
+        mi.ac = get_mons_class_ac(mi.type);
+        mi.ev = mi.base_ev = get_mons_class_ev(mi.type);
+    }
+#endif
 
     unmarshallUnsigned(th, mi.holi);
     unmarshallUnsigned(th, mi.mintel);
