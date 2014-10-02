@@ -684,7 +684,7 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         default: break;
     }
     if (modifier != M_NORMAL)
-        monnum = mon->base_monster;
+        monnum = mons_species(mon->base_monster);
 
     if (mon->is_shapeshifter())
         modifier = M_SHAPESHIFTER;

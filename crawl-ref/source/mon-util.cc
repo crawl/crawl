@@ -1412,13 +1412,14 @@ bool mons_class_leaves_hide(monster_type mc)
 
 int mons_zombie_size(monster_type mc)
 {
+    mc = mons_species(mc);
     ASSERT_smc();
     return smc->zombie_size;
 }
 
 monster_type mons_zombie_base(const monster* mon)
 {
-    return mon->base_monster;
+    return mons_species(mon->base_monster);
 }
 
 bool mons_class_is_zombified(monster_type mc)
@@ -1451,7 +1452,9 @@ bool mons_is_zombified(const monster* mon)
 
 monster_type mons_base_type(const monster* mon)
 {
-    if (mons_class_is_zombified(mon->type) || mons_class_is_chimeric(mon->type))
+    if (mons_class_is_zombified(mon->type))
+        return mons_species(mon->base_monster);
+    if (mons_class_is_chimeric(mon->type))
         return mon->base_monster;
     return mon->type;
 }
