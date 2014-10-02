@@ -402,8 +402,10 @@ chainmail3
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
 scalemail SCALEMAIL
-scalemail2 SCALEMAIL2
-leather_metal SCALEMAIL3
+scalemail2
+scalemail3
+scalemail_light SCALEMAIL_LIGHT
+leather_metal LEATHER_METAL
 plate PLATE
 plate2
 plate3
