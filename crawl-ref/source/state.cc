@@ -210,6 +210,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     case AI_FORCE_INTERRUPT:
     case AI_HP_LOSS:
     case AI_MONSTER_ATTACKS:
+    case AI_MIMIC:
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
         return true;
 
