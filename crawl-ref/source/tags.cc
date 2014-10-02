@@ -60,6 +60,9 @@
  #include "mon-chimera.h"
 #endif
 #include "mon-util.h"
+#if TAG_MAJOR_VERSION == 34
+ #include "mon-place.h"
+#endif
 #include "mon-transit.h"
 #include "place.h"
 #include "quiver.h"
@@ -4812,6 +4815,28 @@ static void tag_read_level(reader &th)
 
     env.properties.clear();
     env.properties.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
+    {
+        CrawlHashTable &props = env.properties;
+        if (props.exists(VAULT_MON_BASES_KEY))
+        {
+            ASSERT(!props.exists(VAULT_MON_PLACES_KEY));
+            CrawlVector &type_vec = props[VAULT_MON_TYPES_KEY].get_vector();
+            CrawlVector &base_vec = props[VAULT_MON_BASES_KEY].get_vector();
+            size_t size = type_vec.size();
+            props[VAULT_MON_PLACES_KEY].new_vector(SV_LEV_ID).resize(size);
+            CrawlVector &place_vec = props[VAULT_MON_PLACES_KEY].get_vector();
+            for (size_t i = 0; i < size; i++)
+            {
+                if (type_vec[i].get_int() == -1)
+                   place_vec[i] = level_id::from_packed_place(base_vec[i].get_int());
+                else
+                   place_vec[i] = level_id();
+            }
+        }
+    }
+#endif
 
     env.dactions_done = unmarshallInt(th);
 

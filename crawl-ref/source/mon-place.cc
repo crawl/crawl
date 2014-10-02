@@ -58,13 +58,17 @@ band_type active_monster_band = BAND_NO_BAND;
 
 static vector<int> vault_mon_types;
 static vector<int> vault_mon_bases;
+static vector<level_id> vault_mon_places;
 static vector<int> vault_mon_weights;
 static vector<bool> vault_mon_bands;
 
+#if TAG_MAJOR_VERSION > 34
 #define VAULT_MON_TYPES_KEY   "vault_mon_types"
 #define VAULT_MON_BASES_KEY   "vault_mon_bases"
+#define VAULT_MON_PLACES_KEY  "vault_mon_places"
 #define VAULT_MON_WEIGHTS_KEY "vault_mon_weights"
 #define VAULT_MON_BANDS_KEY   "vault_mon_bands"
+#endif
 
 // proximity is the same as for mons_place:
 // 0 is no restrictions
@@ -694,7 +698,7 @@ monster_type resolve_monster_type(monster_type mon_type,
             bool banded = vault_mon_bands[i];
 
             if (type == -1)
-                *place = level_id::from_packed_place(base);
+                *place = vault_mon_places[i];
             else
             {
                 base_type = (monster_type) base;
@@ -4083,10 +4087,11 @@ void set_vault_mon_list(const vector<mons_spec> &list)
 
     props.erase(VAULT_MON_TYPES_KEY);
     props.erase(VAULT_MON_BASES_KEY);
+    props.erase(VAULT_MON_PLACES_KEY);
     props.erase(VAULT_MON_WEIGHTS_KEY);
     props.erase(VAULT_MON_BANDS_KEY);
 
-    unsigned int size = list.size();
+    size_t size = list.size();
     if (size == 0)
     {
         setup_vault_mon_list();
@@ -4095,15 +4100,17 @@ void set_vault_mon_list(const vector<mons_spec> &list)
 
     props[VAULT_MON_TYPES_KEY].new_vector(SV_INT).resize(size);
     props[VAULT_MON_BASES_KEY].new_vector(SV_INT).resize(size);
+    props[VAULT_MON_PLACES_KEY].new_vector(SV_LEV_ID).resize(size);
     props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_INT).resize(size);
     props[VAULT_MON_BANDS_KEY].new_vector(SV_BOOL).resize(size);
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
+    CrawlVector &place_vec  = props[VAULT_MON_PLACES_KEY].get_vector();
     CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
     CrawlVector &band_vec   = props[VAULT_MON_BANDS_KEY].get_vector();
 
-    for (unsigned int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
         const mons_spec &spec = list[i];
 
@@ -4111,7 +4118,8 @@ void set_vault_mon_list(const vector<mons_spec> &list)
         {
             ASSERT(branch_has_monsters(spec.place.branch));
             type_vec[i] = -1;
-            base_vec[i] = spec.place.packed_place();
+            base_vec[i] = -1;
+            place_vec[i] = spec.place;
         }
         else
         {
@@ -4120,6 +4128,7 @@ void set_vault_mon_list(const vector<mons_spec> &list)
             type_vec[i] = spec.type;
             base_vec[i] = spec.monbase;
             band_vec[i] = spec.band;
+            place_vec[i] = level_id();
         }
         weight_vec[i] = spec.genweight;
     }
@@ -4139,33 +4148,32 @@ static void _get_vault_mon_list(vector<mons_spec> &list)
     ASSERT(props.exists(VAULT_MON_BASES_KEY));
     ASSERT(props.exists(VAULT_MON_WEIGHTS_KEY));
     ASSERT(props.exists(VAULT_MON_BANDS_KEY));
+    ASSERT(props.exists(VAULT_MON_PLACES_KEY));
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
+    CrawlVector &place_vec  = props[VAULT_MON_PLACES_KEY].get_vector();
     CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
     CrawlVector &band_vec   = props[VAULT_MON_BANDS_KEY].get_vector();
 
-    ASSERT(type_vec.size() == base_vec.size());
-    ASSERT(type_vec.size() == weight_vec.size());
-    ASSERT(type_vec.size() == band_vec.size());
+    size_t size = type_vec.size();
+    ASSERT(size == base_vec.size());
+    ASSERT(size == place_vec.size());
+    ASSERT(size == weight_vec.size());
+    ASSERT(size == band_vec.size());
 
-    unsigned int size = type_vec.size();
-    for (unsigned int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
-        monster_type type = static_cast<monster_type>(static_cast<int>(type_vec[i]));
-        monster_type base = static_cast<monster_type>(static_cast<int>(base_vec[i]));
+        monster_type type = static_cast<monster_type>(type_vec[i].get_int());
+        monster_type base = static_cast<monster_type>(base_vec[i].get_int());
+        level_id    place = place_vec[i];
 
         mons_spec spec;
 
-#if TAG_MAJOR_VERSION == 34
-        if ((int)type == -1)
-            type = MONS_NO_MONSTER;
-#endif
-        if (type == MONS_NO_MONSTER && base != MONS_NO_MONSTER)
+        if (place.is_valid())
         {
-            spec.place = level_id::from_packed_place(base);
-            ASSERT(spec.place.is_valid());
-            ASSERT(branch_has_monsters(spec.place.branch));
+            ASSERT(branch_has_monsters(place.branch));
+            spec.place = place;
         }
         else
         {
@@ -4185,6 +4193,7 @@ void setup_vault_mon_list()
 {
     vault_mon_types.clear();
     vault_mon_bases.clear();
+    vault_mon_places.clear();
     vault_mon_weights.clear();
     vault_mon_bands.clear();
 
@@ -4195,20 +4204,23 @@ void setup_vault_mon_list()
 
     vault_mon_types.resize(size);
     vault_mon_bases.resize(size);
+    vault_mon_places.resize(size);
     vault_mon_weights.resize(size);
     vault_mon_bands.resize(size);
 
-    for (unsigned int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
         if (list[i].place.is_valid())
         {
             vault_mon_types[i] = -1;
-            vault_mon_bases[i] = list[i].place.packed_place();
+            vault_mon_bases[i] = -1;
+            vault_mon_places[i] = list[i].place;
         }
         else
         {
             vault_mon_types[i] = list[i].type;
             vault_mon_bases[i] = list[i].monbase;
+            vault_mon_places[i] = level_id();
         }
         vault_mon_bands[i] = list[i].band;
         vault_mon_weights[i] = list[i].genweight;

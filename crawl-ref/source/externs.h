@@ -384,6 +384,7 @@ public:
     // 'pos' on the current level leads to.
     static level_id get_next_level_id(const coord_def &pos);
 
+    // Important that if run after this, ::valid() is false.
     level_id()
         : branch(BRANCH_DUNGEON), depth(-1)
     {
