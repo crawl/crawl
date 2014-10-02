@@ -1026,11 +1026,11 @@ void discover_mimic(const coord_def& pos, bool wake)
 
     if (you.see_cell(pos))
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
-    _mimic_vanish(pos, name);
     if (item)
         destroy_item(item->index(), true);
     else
         _destroy_mimic_feature(pos);
+    _mimic_vanish(pos, name);
 
     // Just in case there's another one.
     if (mimic_at(pos))
