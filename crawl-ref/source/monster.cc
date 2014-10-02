@@ -3566,10 +3566,10 @@ int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
 {
     const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
 
-    int evasion = base_evasion();
+    int evas = base_evasion();
 
     // check for evasion-brand weapons
-    evasion += 5 * _weapons_with_prop(this, SPWPN_EVASION, calc_unid);
+    evas += 5 * _weapons_with_prop(this, SPWPN_EVASION, calc_unid);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
@@ -3577,8 +3577,8 @@ int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
         const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
         if (armour)
         {
-            evasion += property(*armour, PARM_EVASION)
-                        / (is_shield(*armour) ? 2 : 6);
+            evas += property(*armour, PARM_EVASION)
+                    / (is_shield(*armour) ? 2 : 6);
         }
     }
 
@@ -3590,32 +3590,32 @@ int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
     {
         const int jewellery_plus = ring->plus;
         ASSERT(abs(jewellery_plus) < 30); // sanity check
-        evasion += jewellery_plus;
+        evas += jewellery_plus;
     }
 
     // ignore phase shift if dimension-anchored (or if told to)
     if (mons_class_flag(type, M_PHASE_SHIFT)
         && !((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
     {
-        evasion += 8;
+        evas += 8;
     }
 
 
     if (has_ench(ENCH_AGILE))
-        evasion += 5;
+        evas += 5;
 
     if (evit & EV_IGNORE_HELPLESS)
-        return max(evasion, 0);
+        return max(evas, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
         return 0;
 
     if (caught() || is_constricted())
-        evasion /= (body_size(PSIZE_BODY) + 2);
+        evas /= (body_size(PSIZE_BODY) + 2);
     else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
-        evasion /= 2;
+        evas /= 2;
 
-    return max(evasion, 0);
+    return max(evas, 0);
 }
 
 bool monster::heal(int amount, bool max_too)
