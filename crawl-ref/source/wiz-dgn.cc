@@ -254,7 +254,7 @@ bool wizard_create_feature(const coord_def& pos)
         }
     }
 
-    if (mimic && !feat_is_mimicable(feat)
+    if (mimic && !feat_is_mimicable(feat, false)
         && !yesno("This isn't a valid feature mimic. Create it anyway? ",
                   true, 'n'))
     {
