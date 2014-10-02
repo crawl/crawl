@@ -395,9 +395,10 @@ public:
     }
 
     static level_id parse_level_id(const string &s) throw (string);
+#if TAG_MAJOR_VERSION == 34
     static level_id from_packed_place(const unsigned short place);
+#endif
 
-    unsigned short packed_place() const;
     string describe(bool long_name = false, bool with_number = true) const;
 
     void clear()

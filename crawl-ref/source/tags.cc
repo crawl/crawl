@@ -567,9 +567,14 @@ static void unmarshall_container(reader &th, T_container &container,
         (container.*inserter)(unmarshal(th));
 }
 
+static unsigned short _pack(const level_id& id)
+{
+    return (static_cast<int>(id.branch) << 8) | (id.depth & 0xFF);
+}
+
 void marshall_level_id(writer& th, const level_id& id)
 {
-    marshallShort(th, id.packed_place());
+    marshallShort(th, _pack(id));
 }
 
 static void _marshall_level_id_set(writer& th, const set<level_id>& id)
@@ -616,9 +621,27 @@ static T unmarshall_int_as(reader& th)
     return static_cast<T>(unmarshallInt(th));
 }
 
+#if TAG_MAJOR_VERSION == 34
+level_id level_id::from_packed_place(unsigned short place)
+#else
+level_id _unpack(unsigned short place)
+#endif
+{
+    level_id id;
+
+    id.branch     = static_cast<branch_type>((place >> 8) & 0xFF);
+    id.depth      = (int8_t)(place & 0xFF);
+
+    return id;
+}
+
 level_id unmarshall_level_id(reader& th)
 {
+#if TAG_MAJOR_VERSION == 34
     return level_id::from_packed_place(unmarshallShort(th));
+#else
+    return _unpack(unmarshallShort(th));
+#endif
 }
 
 static set<level_id> _unmarshall_level_id_set(reader& th)
