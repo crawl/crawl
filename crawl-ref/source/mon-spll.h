@@ -423,7 +423,8 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HELLFIRE, 34, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 17, MON_SPELL_INNATE },
-       { SPELL_MELEE, 17, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
       }
@@ -432,8 +433,8 @@ static const mon_spellbook mspell_list[] =
     {  MST_HELL_SENTINEL,
       {
        { SPELL_HELLFIRE, 28, MON_SPELL_INNATE },
-       { SPELL_MELEE, 28, MON_SPELL_INNATE },
        { SPELL_IRON_SHOT, 14, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1593,9 +1594,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_EIDOLON,
       {
-       { SPELL_MELEE, 21, MON_SPELL_INNATE },
        { SPELL_BOLT_OF_DRAINING, 21, MON_SPELL_INNATE },
        { SPELL_CAUSE_FEAR, 21, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1695,7 +1696,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_SOUL_EATER,
       {
        { SPELL_DRAIN_LIFE, 30, MON_SPELL_INNATE },
-       { SPELL_MELEE, 30, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1904,7 +1905,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_SLOW, 30, MON_SPELL_WIZARD },
-       { SPELL_MELEE, 15, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1915,7 +1916,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_SLOW, 15, MON_SPELL_WIZARD },
-       { SPELL_MELEE, 30, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1926,7 +1927,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 15, MON_SPELL_WIZARD },
-       { SPELL_MELEE, 30, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1935,9 +1936,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SATYR,
       {
-       { SPELL_MELEE, 16, MON_SPELL_WIZARD },
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -2035,7 +2036,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WIND_DRAKE,
       {
        { SPELL_AIRSTRIKE, 29, MON_SPELL_INNATE },
-       { SPELL_MELEE, 29, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -2281,7 +2282,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_RANDOM_BOLT, 16, MON_SPELL_PRIEST },
        { SPELL_CHAOTIC_MIRROR, 16, MON_SPELL_PRIEST },
-       { SPELL_MELEE, 32, MON_SPELL_PRIEST },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -2301,9 +2302,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEMONSPAWN_WARMONGER,
       {
-       { SPELL_MELEE, 16, MON_SPELL_PRIEST }, // heh
        { SPELL_SAP_MAGIC, 16, MON_SPELL_PRIEST },
        { SPELL_GRAND_AVATAR, 32, MON_SPELL_PRIEST },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -2390,7 +2391,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_OCTOPODE_CRUSHER,
       {
        { SPELL_IRON_SHOT, 26, MON_SPELL_WIZARD },
-       { SPELL_MELEE, 40, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
