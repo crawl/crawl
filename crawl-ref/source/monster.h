@@ -9,6 +9,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAX_DAMAGE_COUNTER 10000
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
+#define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -30,7 +31,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int ev;
     int speed;
     int speed_increment;
 
@@ -433,7 +433,9 @@ public:
     int base_armour_class() const;
     int armour_class() const;
     int gdr_perc() const { return 0; }
-    int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
+    int base_evasion() const;
+    int evasion() const;
+    int melee_evasion(const actor* /*attacker*/, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength, bool unused = true, bool quiet = false);

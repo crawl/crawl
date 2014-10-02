@@ -116,7 +116,6 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
 void monster::upgrade_type(monster_type after, bool adjust_hd,
                             bool adjust_hp)
 {
-    const monsterentry *orig = get_monster_data(type);
     // Ta-da!
     type   = after;
 
@@ -131,9 +130,6 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     speed  = dummy.speed;
     spells = dummy.spells;
     calc_speed();
-
-    const monsterentry *m = get_monster_data(after);
-    ev += m->ev - orig->ev;
 
     if (adjust_hd)
         set_hit_dice(max(get_experience_level(), dummy.get_hit_dice()));

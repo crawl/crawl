@@ -115,8 +115,8 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
     TAG_MINOR_METABOLISM,          // Remove random fast/slow meta mutations
     TAG_MINOR_RU_SACRIFICES,       // Store Ru sacrifices in an array for coloration
-    TAG_MINOR_IS_UNDEAD,           // Remove the old "is_undead" player var
-    TAG_MINOR_REMOVE_MON_AC,       // Remove the old "ac" monster field
+    TAG_MINOR_IS_UNDEAD,           // Remove the old "is_undead" player field
+    TAG_MINOR_REMOVE_MON_AC_EV,    // Remove the old "ac" & "ev" monster fields
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

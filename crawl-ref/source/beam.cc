@@ -4924,7 +4924,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
     defer_rand r;
-    int rand_ev = random2(mon->ev);
+    int rand_ev = random2(mon->evasion());
     int defl = mon->missile_deflection();
 
     // FIXME: We're randomising mon->evasion, which is further

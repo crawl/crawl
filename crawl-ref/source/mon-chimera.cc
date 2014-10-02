@@ -143,7 +143,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     if (dummy.is_jumpy()
         || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
     {
-        ev = dummy.ev;
+        ev = dummy.evasion();
         mon->props["chimera_legs"].get_int() = partnum;
     }
 
@@ -175,7 +175,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     {
         // Always AC/EV on the first part
         ac = dummy.armour_class();
-        ev = dummy.ev;
+        ev = dummy.evasion();
         max_hp = dummy.max_hit_points;
         xl = dummy.get_hit_dice();
         // Copy all spells from first part

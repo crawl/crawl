@@ -157,7 +157,7 @@ static void _write_mon(FILE * o, monster &mon)
             mon.name(DESC_PLAIN, true).c_str(),
             mon.get_experience_level(),
             mon.armour_class(),
-            mon.ev);
+            mon.evasion());
 }
 
 static bool _equip_weapon(const string &weapon, bool &abort)
