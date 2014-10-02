@@ -6339,7 +6339,7 @@ static int _stoneskin_bonus()
     return boost;
 }
 
-int player::armour_class() const
+int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
 

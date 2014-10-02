@@ -431,10 +431,10 @@ public:
     bool can_speak();
 
     int base_armour_class() const;
-    int armour_class() const;
+    int armour_class(bool calc_unid = true) const;
     int gdr_perc() const { return 0; }
     int base_evasion() const;
-    int evasion() const;
+    int evasion(bool calc_unid = true) const;
     int melee_evasion(const actor* /*attacker*/, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
@@ -546,7 +546,7 @@ private:
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
     void unequip_jewellery(item_def &item, int near);
-    int armour_bonus(const item_def &item) const;
+    int armour_bonus(const item_def &item, bool calc_unid = true) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,
                     int sub_type) const;

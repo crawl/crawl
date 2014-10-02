@@ -951,15 +951,23 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     }
 }
 
-int monster::armour_bonus(const item_def &item) const
+/**
+ * What AC bonus does the monster get from the given item?
+ *
+ * @param calc_unid     Whether to include properties unknown (to the player)
+ *                      in the calculated result.
+ * @return              The AC provided by wearing the given item.
+ */
+int monster::armour_bonus(const item_def &item, bool calc_unid) const
 {
-    // XXX: ASSERT !is_shield() instead?
-    if (is_shield(item))
-        return 0;
+    ASSERT(!is_shield(item));
 
     int armour_ac = property(item, PARM_AC);
     // For consistency with players, we should multiply this by 1 + (skill/22),
     // where skill may be HD.
+
+    if (!calc_unid && !item_ident(item, ISFLAG_KNOW_PLUSES))
+        return armour_ac;
 
     const int armour_plus = item.plus;
     ASSERT(abs(armour_plus) < 30); // sanity check
@@ -3315,11 +3323,15 @@ int monster::missile_deflection() const
 /**
  * How many weapons of the given brand does this monster currently wield?
  *
- * @param mon       The monster in question.
- * @param brand     The brand in question.
- * @return          The number of the aforementioned weapons currently wielded.
+ * @param mon           The monster in question.
+ * @param brand         The brand in question.
+ * @param calc_unid     Whether to include weapons whose brands are unknown (to
+ *                      the player).
+ * @return              The number of the aforementioned weapons currently
+ *                      wielded.
  */
-static int _weapons_with_prop(const monster *mon, brand_type brand)
+static int _weapons_with_prop(const monster *mon, brand_type brand,
+                              bool calc_unid = true)
 {
     int wielded = 0;
 
@@ -3330,6 +3342,9 @@ static int _weapons_with_prop(const monster *mon, brand_type brand)
     {
         const item_def *weap = mon->mslot_item(static_cast<mon_inv_type>(i));
         if (!weap)
+            continue;
+
+        if (!calc_unid && !item_ident(*weap, ISFLAG_KNOW_TYPE))
             continue;
 
         const int weap_brand = get_weapon_brand(*weap);
@@ -3413,23 +3428,28 @@ int monster::base_armour_class() const
 /**
  * What's the armour class of this monster?
  *
- * @return The armour class of this monster, including items, statuses, etc.
+ * @param calc_unid     Whether to include unknown items/properties in the
+ *                      calculated results.
+ * @return              The armour class of this monster, including items,
+ *                      statuses, etc.
  */
-int monster::armour_class() const
+int monster::armour_class(bool calc_unid) const
 {
     int ac = base_armour_class();
 
     // check for protection-brand weapons
-    ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION);
+    ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 
     // armour from ac
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour)
-        ac += armour_bonus(*armour);
+        ac += armour_bonus(*armour, calc_unid);
 
     // armour from jewellery
     const item_def *ring = mslot_item(MSLOT_JEWELLERY);
-    if (ring && ring->sub_type == RING_PROTECTION)
+    if (ring && ring->sub_type == RING_PROTECTION
+        && (calc_unid
+            || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
     {
         const int jewellery_plus = ring->plus;
         ASSERT(abs(jewellery_plus) < 30); // sanity check
@@ -3527,13 +3547,13 @@ int monster::base_evasion() const
 /**
  * What's the current evasion of this monster?
  *
- * Convenience function.
- *
+ * @param calc_unid     Whether to include unknown items/properties in the
+ *                      calculated results.
  * @return The evasion of this monster, after applying items & statuses.
  **/
-int monster::evasion() const
+int monster::evasion(bool calc_unid) const
 {
-    return melee_evasion(NULL, EV_IGNORE_NONE);
+    return melee_evasion(NULL, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
 }
 
 /**
@@ -3544,10 +3564,12 @@ int monster::evasion() const
  **/
 int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
 {
+    const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
+
     int evasion = base_evasion();
 
     // check for evasion-brand weapons
-    evasion += 5 * _weapons_with_prop(this, SPWPN_EVASION);
+    evasion += 5 * _weapons_with_prop(this, SPWPN_EVASION, calc_unid);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
@@ -3562,7 +3584,9 @@ int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
 
     // evasion from jewellery
     const item_def *ring = mslot_item(MSLOT_JEWELLERY);
-    if (ring && ring->sub_type == RING_EVASION)
+    if (ring && ring->sub_type == RING_EVASION
+        && (calc_unid
+            || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
     {
         const int jewellery_plus = ring->plus;
         ASSERT(abs(jewellery_plus) < 30); // sanity check
