@@ -1029,8 +1029,6 @@ void player_open_door(coord_def doorpos, bool check_confused);
 
 void dec_disease_player(int delay);
 
-void dec_color_smoke_trail();
-
 void handle_player_drowning(int delay);
 
 bool player_weapon_wielded();
