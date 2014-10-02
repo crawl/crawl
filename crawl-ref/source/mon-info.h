@@ -152,6 +152,7 @@ struct monster_info_base
     mon_intel_type mintel;
     int ac;
     int ev;
+    int base_ev;
     resists_t mresists;
     mon_itemuse_type mitemuse;
     int mbase_speed;

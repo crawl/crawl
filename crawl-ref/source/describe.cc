@@ -24,6 +24,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "clua.h"
+#include "colour.h"
 #include "command.h"
 #include "decks.h"
 #include "delay.h"
@@ -3284,17 +3285,32 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param scale[in]         The value that each + and . represents.
  * @param name              The name of the bar.
  * @param result[in,out]    The stringstream to append to.
+ * @param base_value[in]    The 'base' value represented by the bar. If
+ *                          INT_MAX, is ignored.
  */
 static void _print_bar(int value, int max, int scale,
-                       string name, ostringstream &result)
+                       string name, ostringstream &result,
+                       int base_value = INT_MAX)
 {
+    if (base_value == INT_MAX)
+        base_value = value;
+
     result << name << " ";
 
-    const int bars = value / scale;
+    const int cur_bars = value / scale;
+    const int base_bars = base_value / scale;
+    const int bars = cur_bars ? cur_bars : base_bars;
     const int max_bars = max / scale;
+
+    if (!cur_bars && base_bars)
+        result << "(";
 
     for (int i = 0; i < min(bars, max_bars); i++)
         result << "+";
+
+    if (!cur_bars && base_bars)
+        result << ")";
+
     for (int i = max_bars - 1; i >= bars; --i)
         result << ".";
 
@@ -3325,8 +3341,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    // max ev 40 (to match ac, though even eresh only has 30)
-    _print_bar(mi.ev, 40, 5, "EV", result);
+    // max ev 30 (eresh) (also to make space for parens)
+    _print_bar(mi.ev, 30, 5, "EV", result, mi.base_ev);
 }
 
 /**

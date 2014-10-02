@@ -1303,7 +1303,7 @@ void game_options::add_mon_glyph_override(const string &text)
     if (mdisp.ch || mdisp.col)
     {
         mon_glyph_overrides[m] = mdisp;
-        
+
         // Ideally we'd not set this at game start only to have it overwritten
         // in the monster init, but we need monster symbols to be updated when
         // the option changes in-game.
