@@ -3008,22 +3008,22 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
             else if (mons_is_fleeing(mons) || mons->pacified())
             {
-                // TODO: adapt this to the new monster spell slot system
-#if 0
                 // Since the player isn't around, we'll extend the monster's
                 // normal choices to include the self-enchant slot.
-                int foundcount = 0;
-                for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
+                if (one_chance_in(4))
                 {
-                    if (_ms_useful_fleeing_out_of_sight(mons,
-                                                        hspell_pass[i].spell)
-                        && one_chance_in(++foundcount))
+                    int foundcount = 0;
+                    for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                     {
-                        spell_cast = hspell_pass[i].spell;
-                        finalAnswer = true;
+                        if (_ms_useful_fleeing_out_of_sight(mons,
+                                                            hspell_pass[i].spell)
+                            && one_chance_in(++foundcount))
+                        {
+                            spell_cast = hspell_pass[i].spell;
+                            finalAnswer = true;
+                        }
                     }
                 }
-#endif
             }
             else if (mons->foe == MHITYOU && !monsterNearby)
                 return false;
@@ -3032,7 +3032,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Monsters caught in a net try to get away.
         // This is only urgent if enemies are around.
         if (!finalAnswer && mon_enemies_around(mons)
-            && mons->caught() && one_chance_in(4))
+            && mons->caught() && one_chance_in(15))
         {
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
@@ -3049,7 +3049,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // (kraken should always cast their escape spell of inky).
         if (!finalAnswer
             && mons->hit_points < mons->max_hit_points / 3
-            && (coinflip() || mons->type == MONS_KRAKEN))
+            && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
         {
             // Note: There should always be at least some chance we don't
             // get here... even if the monster is on its last HP.  That
