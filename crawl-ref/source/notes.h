@@ -69,7 +69,7 @@ struct Note
     NOTE_TYPES type;
     int first, second;
     int turn;
-    unsigned short packed_place;
+    level_id place;
 
     string name;
     string desc;
