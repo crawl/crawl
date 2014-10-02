@@ -3668,6 +3668,16 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 }
                 cur_spells[i].spell = sp;
             }
+
+            monsterentry *me = get_monster_data(spec.type);
+            const uint64_t flags = me ? me->bitfields : 0;
+
+            fixup_spells(cur_spells,
+                         spec.hd > 0 ? spec.hd :
+                         me          ? me->hpdice[0]
+                                     : 1,
+                         (spec.extra_monster_flags | flags) & MF_ACTUAL_SPELLS,
+                         (spec.extra_monster_flags | flags) & MF_PRIEST);
         }
 
         spec.spells.push_back(cur_spells);

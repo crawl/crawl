@@ -5535,9 +5535,6 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 #endif
                             )
 {
-#if TAG_MAJOR_VERSION == 34
-    unsigned int count = 0;
-#endif
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
     {
         spells[j].spell = unmarshallSpellType(th
@@ -5559,30 +5556,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         if (spells[j].spell == SPELL_SUNRAY)
             spells[j].spell = SPELL_STONE_ARROW;
 
-        if (th.getMinorVersion() < TAG_MINOR_MONSTER_SPELL_SLOTS
-            && spells[j].spell != SPELL_NO_SPELL)
-        {
-            count++;
-
-            const unsigned int flags = get_spell_flags(spells[j].spell);
-            const bool innate = (!wizard && !priest)
-                                || !!(flags | SPFLAG_INNATE);
-            if (innate)
-                spells[j].flags |= MON_SPELL_INNATE;
-            else
-            {
-                if (wizard)
-                    spells[j].flags |= MON_SPELL_WIZARD;
-                else if (priest)
-                    spells[j].flags |= MON_SPELL_PRIEST;
-                else
-                    spells[j].flags |= MON_SPELL_INNATE; // rip
-            }
-
-            if (j == NUM_MONSTER_SPELL_SLOTS - 1)
-                spells[j].flags |= MON_SPELL_EMERGENCY;
-        }
-        else
+        if (th.getMinorVersion() >= TAG_MINOR_MONSTER_SPELL_SLOTS)
         {
 #endif
         spells[j].freq = unmarshallByte(th);
@@ -5593,9 +5567,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
     }
 
 #if TAG_MAJOR_VERSION == 34
-    const unsigned one_freq = (hd + 50) / count;
-    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        spells[j].freq = one_freq;
+    fixup_spells(spells, hd, wizard, priest);
 #endif
 }
 
