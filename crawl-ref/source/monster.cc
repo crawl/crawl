@@ -38,6 +38,7 @@
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
 #include "mon-clone.h"
@@ -5105,7 +5106,13 @@ bool monster::can_use_spells() const
 
 bool monster::is_priest() const
 {
-    return flags & MF_PRIEST;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+       if (spells[i].flags & MON_SPELL_PRIEST)
+           return true;
+    }
+
+    return false;
 }
 
 bool monster::is_fighter() const
@@ -5120,7 +5127,13 @@ bool monster::is_archer() const
 
 bool monster::is_actual_spellcaster() const
 {
-    return flags & MF_ACTUAL_SPELLS;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+       if (spells[i].flags & MON_SPELL_WIZARD)
+           return true;
+    }
+
+    return false;
 }
 
 bool monster::is_shapeshifter() const
