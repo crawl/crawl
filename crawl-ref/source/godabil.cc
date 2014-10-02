@@ -2287,8 +2287,8 @@ void process_sunlights(bool future)
         int from = you.elapsed_time - you.time_taken;
 
         // Deterministic roll, to guarantee evaporation when shined long enough.
-        struct { short place; coord_def coord; int64_t game_start; } to_hash;
-        to_hash.place = get_packed_place();
+        struct { level_id place; coord_def coord; int64_t game_start; } to_hash;
+        to_hash.place = level_id::current();
         to_hash.coord = c;
         to_hash.game_start = you.birth_time;
         int h = hash32(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;

@@ -3171,11 +3171,6 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     return id;
 }
 
-unsigned short level_id::packed_place() const
-{
-    return get_packed_place(branch, depth);
-}
-
 string level_id::describe(bool long_name, bool with_number) const
 {
     string result = (long_name ? branches[branch].longname
@@ -3226,16 +3221,6 @@ level_id level_id::parse_level_id(const string &s) throw (string)
     }
 
     return level_id(br, dep);
-}
-
-level_id level_id::from_packed_place(unsigned short place)
-{
-    level_id id;
-
-    id.branch     = (branch_type) place_branch(place);
-    id.depth      = place_depth(place);
-
-    return id;
 }
 
 void level_id::save(writer& outf) const

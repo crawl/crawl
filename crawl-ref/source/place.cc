@@ -24,26 +24,6 @@ string prep_branch_level_name(level_id id)
                                     : "in " + place;
 }
 
-branch_type place_branch(unsigned short place)
-{
-    return static_cast<branch_type>((place >> 8) & 0xFF);
-}
-
-int place_depth(unsigned short place)
-{
-    return (int8_t)(place & 0xFF);
-}
-
-unsigned short get_packed_place(branch_type branch, int subdepth)
-{
-    return (static_cast<int>(branch) << 8) | (subdepth & 0xFF);
-}
-
-unsigned short get_packed_place()
-{
-    return get_packed_place(you.where_are_you, you.depth);
-}
-
 bool single_level_branch(branch_type branch)
 {
     return branch >= 0 && branch < NUM_BRANCHES

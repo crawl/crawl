@@ -11,12 +11,6 @@
 //////////////////////////////////////////////////////////////////////
 // Places and names
 //
-unsigned short get_packed_place();
-
-unsigned short get_packed_place(branch_type branch, int subdepth);
-
-branch_type place_branch(unsigned short place);
-int place_depth(unsigned short place);
 
 // Prepositional form of branch level name.  For example, "in the
 // Abyss" or "on level 3 of the Main Dungeon".
