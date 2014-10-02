@@ -5590,7 +5590,8 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 // Random demon in pan - only one per level.  Stats are stored in ghost struct.
 {
     MONS_PANDEMONIUM_LORD, '&', BLACK, "pandemonium lord",
-    M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_HYBRID,
+    // See invis is also set in ghost.cc
+    M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_HYBRID | M_SEE_INVIS,
     MR_RES_POISON,
     0, 14, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
