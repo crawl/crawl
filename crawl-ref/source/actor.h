@@ -7,8 +7,9 @@
 enum ev_ignore_type
 {
     EV_IGNORE_NONE       = 0,
-    EV_IGNORE_HELPLESS   = 1,
-    EV_IGNORE_PHASESHIFT = 2,
+    EV_IGNORE_HELPLESS   = 1<<0,
+    EV_IGNORE_PHASESHIFT = 1<<1,
+    EV_IGNORE_UNIDED     = 1<<2,
 };
 
 struct bolt;
@@ -253,7 +254,7 @@ public:
 
     virtual bool can_throw_large_rocks() const = 0;
 
-    virtual int armour_class() const = 0;
+    virtual int armour_class(bool calc_unid = true) const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
                  int stab_bypass = 0) const;
