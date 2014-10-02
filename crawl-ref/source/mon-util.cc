@@ -1304,7 +1304,7 @@ static const monster_type demonspawn_jobs[] = {
 bool mons_is_demonspawn_job(monster_type mc)
 {
     // XXX: could use a range check here, but I don't like the fragility...
-    for (int i = 0; i < ARRAYSZ(demonspawn_jobs); i++)
+    for (size_t i = 0; i < ARRAYSZ(demonspawn_jobs); i++)
         if (demonspawn_jobs[i] == mc)
             return true;
     return false;
@@ -1331,7 +1331,7 @@ static const monster_type draconian_jobs[] = {
 bool mons_is_draconian_job(monster_type mc)
 {
     // XXX: could use a range check here, but I don't like the fragility...
-    for (int i = 0; i < ARRAYSZ(draconian_jobs); i++)
+    for (size_t i = 0; i < ARRAYSZ(draconian_jobs); i++)
         if (draconian_jobs[i] == mc)
             return true;
     return false;
