@@ -672,8 +672,8 @@ first.
 bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many
-dragons by powerful necromantic magic. Fortunately for you, whatever organ
-produces a dragon's fearsome breath was lost in the process.
+dragons by powerful necromantic magic. Fortunately, whatever organ produces a
+dragon's fearsome breath was lost in the process.
 %%%%
 boring beetle
 
