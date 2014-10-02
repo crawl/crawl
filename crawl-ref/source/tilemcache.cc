@@ -741,6 +741,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 5;
         *ofs_y = 2;
         break;
+    case TILEP_MONS_WRAITH:
+        *ofs_x = -4;
+        *ofs_y = -4;
+        break;
     default:
         // This monster cannot be displayed with a weapon.
         return false;
@@ -898,6 +902,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_MUMMY:
         *ofs_x = -6;
         *ofs_y = 0;
+        break;
+
+    case TILEP_MONS_WRAITH:
+        *ofs_x = -4;
+        *ofs_y = -1;
         break;
 
     case TILEP_MONS_TROLL:
