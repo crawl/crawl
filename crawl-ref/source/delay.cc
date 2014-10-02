@@ -1417,7 +1417,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     delay_type curr = current_delay_action();
 
-    if (ai == AI_SEE_MONSTER && player_stair_delay())
+    if ((ai == AI_SEE_MONSTER || ai == AI_MIMIC) && player_stair_delay())
         return false;
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
@@ -1765,7 +1765,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue", "hungry", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
-    "sense_monster"
+    "sense_monster", "mimic"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)

@@ -18,6 +18,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -973,6 +974,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 
     mprf("The %s mimic %svanishes%s!",
          name.c_str(), cackle_str.c_str(), smoke_str);
+    interrupt_activity(AI_MIMIC);
 }
 
 /**
