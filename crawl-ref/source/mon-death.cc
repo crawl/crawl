@@ -2845,7 +2845,7 @@ static void _vanish_orig_eq(monster* mons)
         if (!item.defined())
             continue;
 
-        if (item.orig_place != 0 || item.orig_monnum != 0
+        if (origin_known(item) || item.orig_monnum != 0
             || !item.inscription.empty()
             || is_unrandom_artefact(item)
             || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
