@@ -4303,11 +4303,11 @@ int monster::res_magic() const
     if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
         u += get_jewellery_res_magic(mitm[jewellery], false);
 
-    if (has_ench(ENCH_LOWERED_MR))
-        u /= 2;
-
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
         u += 80;
+
+    if (has_ench(ENCH_LOWERED_MR))
+        u /= 2;
 
     if (u < 0)
         u = 0;
