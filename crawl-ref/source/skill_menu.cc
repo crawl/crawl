@@ -268,7 +268,7 @@ void SkillMenuEntry::_clear()
         m_name->clear_tile();
 #endif
 }
-COLORS SkillMenuEntry::get_colour() const
+COLOURS SkillMenuEntry::get_colour() const
 {
     if (is_set(SKMF_HELP))
         return DARKGREY;
