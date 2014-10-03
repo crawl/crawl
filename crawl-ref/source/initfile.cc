@@ -1063,6 +1063,10 @@ void game_options::reset_options()
     tile_misc_anim           = true;
     tile_use_monster         = MONS_PROGRAM_BUG;
     tile_player_tile         = 0;
+    tile_weapon_offsets.first  = INT_MAX;
+    tile_weapon_offsets.second = INT_MAX;
+    tile_shield_offsets.first  = INT_MAX;
+    tile_shield_offsets.second = INT_MAX;
 #endif
 
 #ifdef USE_TILE_WEB
@@ -1874,18 +1878,18 @@ void game_options::set_player_tile(const string &field)
 {
     if (field == "normal")
     {
-        tile_use_monster = MONS_PROGRAM_BUG;
+        tile_use_monster = MONS_0;
         tile_player_tile = 0;
         return;
     }
     else if (field == "playermons")
     {
-        tile_use_monster = MONS_NO_MONSTER;
+        tile_use_monster = MONS_PLAYER;
         tile_player_tile = 0;
         return;
     }
-    vector<string> fields = split_string(":", field);
 
+    vector<string> fields = split_string(":", field);
     // Handle tile:<tile-name> values
     if (fields.size() == 2 && fields[0] == "tile")
     {
@@ -1916,27 +1920,60 @@ void game_options::set_player_tile(const string &field)
             report_error("Unknown tile: \"%s\"", fields[1].c_str());
             return;
         }
-        tile_use_monster = MONS_PLAYER_GHOST;
-        return;
+        tile_use_monster = MONS_PLAYER;
     }
-    else if (!(fields.size() == 2 && fields[0] == "mons"))
+    else if (fields.size() == 2 && fields[0] == "mons")
+    {
+        // Handle mons:<monster-name> values
+        const monster_type m = _mons_class_by_string(fields[1]);
+        if (m == MONS_0)
+            report_error("Unknown monster: \"%s\"", fields[1].c_str());
+        else
+        {
+            tile_use_monster = m;
+            tile_player_tile = 0;
+        }
+    }
+    else
     {
         report_error("Invalid setting for tile_player_tile: \"%s\"",
                      field.c_str());
+    }
+}
+
+void game_options::set_tile_offsets(const string &field, bool set_shield)
+{
+    bool error = false;
+    pair<int, int> *offsets;
+    if (set_shield)
+        offsets = &tile_shield_offsets;
+    else
+        offsets = &tile_weapon_offsets;
+
+    if (field == "reset")
+    {
+        offsets->first = INT_MAX;
+        offsets->second = INT_MAX;
         return;
     }
 
-    // Handle mons:<monster-name> values
-    const monster_type m = _mons_class_by_string(fields[1]);
-    if (m == MONS_0)
-        report_error("Unknown monster: \"%s\"", fields[1].c_str());
-    else
+    vector<string> offs = split_string(",", field);
+    if (offs.size() != 2
+        || !parse_int(offs[0].c_str(), offsets->first)
+        || abs(offsets->first) > 32
+        || !parse_int(offs[1].c_str(), offsets->second)
+        || abs(offsets->second) > 32)
     {
-        tile_use_monster = m;
-        tile_player_tile = 0;
+        report_error("Invalid %s tile offsets: \"%s\"",
+                     set_shield ? "shield" : "weapon", field.c_str());
+        error = true;
     }
 
-    return;
+    if (error)
+    {
+        offsets->first = INT_MAX;
+        offsets->second = INT_MAX;
+    }
 }
 #endif // USE_TILE
 
@@ -3618,6 +3655,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_player_tile")
         set_player_tile(field);
+    else if (key == "tile_weapon_offsets")
+        set_tile_offsets(field, false);
+    else if (key == "tile_shield_offsets")
+        set_tile_offsets(field, true);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #ifdef USE_TILE_WEB

@@ -456,6 +456,8 @@ public:
     vector<string> tile_layout_priority;
     monster_type tile_use_monster;
     tileidx_t   tile_player_tile;
+    pair<int, int> tile_weapon_offsets;
+    pair<int, int> tile_shield_offsets;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     string      tile_display_mode;
@@ -526,6 +528,7 @@ private:
     void set_option_fragment(const string &s);
     bool set_lang(const char *s);
     void set_player_tile(const string &s);
+    void set_tile_offsets(const string &s, bool set_shield);
 
     static const string interrupt_prefix;
 };
