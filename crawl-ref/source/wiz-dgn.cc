@@ -45,7 +45,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (you.where_are_you == BRANCH_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
@@ -139,7 +139,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     if (pos.id.depth == brdepth[pos.id.branch])
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
-    if (pos.id.branch != you.where_are_you && pos.id.depth == 1
+    if (!player_in_branch(pos.id.branch) && pos.id.depth == 1
         && pos.id.branch != BRANCH_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
@@ -152,7 +152,7 @@ static void _wizard_go_to_level(const level_pos &pos)
         for (int i = you.level_stack.size() - 1; i >= 0; i--)
             if (you.level_stack[i].id == pos.id)
                 you.level_stack.resize(i);
-        if (you.where_are_you != pos.id.branch)
+        if (!player_in_branch(pos.id.branch))
             you.level_stack.push_back(level_pos::current());
     }
 

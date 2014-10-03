@@ -263,7 +263,7 @@ static int _etc_tree(int, const coord_def& loc)
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
     return (h>>30) ? GREEN :
-        you.where_are_you == BRANCH_SWAMP ? BROWN : LIGHTGREEN; // Swamp trees are mangroves.
+        player_in_branch(BRANCH_SWAMP) ? BROWN : LIGHTGREEN; // Swamp trees are mangroves.
 }
 
 bool get_tornado_phase(const coord_def& loc)

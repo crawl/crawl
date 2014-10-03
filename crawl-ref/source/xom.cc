@@ -3578,7 +3578,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_polymorph_nearby_monster(false, debug);
             badness = 3;
         }
-        else if ((tension > 0 || you.where_are_you == BRANCH_ABYSS)
+        // Pushing stairs/exits is always hilarious in the Abyss!
+        else if ((tension > 0 || player_in_branch(BRANCH_ABYSS))
                  && x_chance_in_y(17, sever))
         {
             done    = _xom_repel_stairs(debug);

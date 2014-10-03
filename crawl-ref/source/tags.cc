@@ -1255,7 +1255,7 @@ void tag_read(reader &inf, tag_type tag_id)
         // all cells have been filled. We mustn't crash when it returns
         // from those excursions, and generate_abyss will check_map_validity
         // itself after the grid is fully populated.
-        if (you.where_are_you != BRANCH_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             unwind_var<coord_def> you_pos(you.position, coord_def());
             check_map_validity();
@@ -4060,7 +4060,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (feature == DNGN_BADLY_SEALED_DOOR)
         feature = DNGN_SEALED_DOOR;
     if (feature == DNGN_ESCAPE_HATCH_UP
-        && you.where_are_you == BRANCH_LABYRINTH)
+        && player_in_branch(BRANCH_LABYRINTH))
     {
         feature = DNGN_EXIT_LABYRINTH;
     }
@@ -4713,7 +4713,7 @@ static void tag_read_level(reader &th)
             if (feat == DNGN_BADLY_SEALED_DOOR)
                 grd[i][j] = DNGN_SEALED_DOOR;
             if (feat == DNGN_ESCAPE_HATCH_UP
-                && you.where_are_you == BRANCH_LABYRINTH)
+                && player_in_branch(BRANCH_LABYRINTH))
             {
                 grd[i][j] = DNGN_EXIT_LABYRINTH;
             }

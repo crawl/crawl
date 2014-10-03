@@ -2058,7 +2058,7 @@ bool is_known_branch_id(branch_type branch)
         return true;
 
     // If we're in the branch, it darn well is known.
-    if (you.where_are_you == branch)
+    if (player_in_branch(branch))
         return true;
 
     // The Vestibule is special: there are no stairs to it, just a
