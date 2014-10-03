@@ -434,11 +434,6 @@ static bool _is_random_monster(monster_type mt)
            || mt == WANDERING_MONSTER;
 }
 
-static bool _is_not_zombifiable(monster_type mt)
-{
-    return !mons_zombie_size(mt);
-}
-
 static bool _has_big_aura(monster_type mt)
 {
     return mt == MONS_SILENT_SPECTRE;
