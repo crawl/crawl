@@ -299,6 +299,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
     switch (feat)
     {
+    case DNGN_ENTER_HELL:
+        return player_in_hell() ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS;
+
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
@@ -307,7 +310,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_HELL:
         return CMD_GO_UPSTAIRS;
 
-    case DNGN_ENTER_HELL:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
