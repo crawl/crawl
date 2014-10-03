@@ -174,7 +174,7 @@ void wizard_create_spec_object()
             }
         }
 
-        if (mon >= MONS_FIRST_NONBASE_DRACONIAN && mon <= MONS_LAST_DRACONIAN)
+        if (mons_is_draconian_job(mon))
         {
             mpr("You can't make a draconian corpse by its background.");
             mon = MONS_DRACONIAN;
