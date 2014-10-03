@@ -6,6 +6,7 @@
 #include "env.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "options.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
@@ -50,6 +51,7 @@ public:
     static bool get_shield_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
 
 protected:
+    monster_type mtype;
     tileidx_t m_mon_tile;
     tileidx_t m_equ_tile;
     tileidx_t m_shd_tile;
@@ -219,6 +221,7 @@ mcache_monster::mcache_monster(const monster_info& mon)
 {
     ASSERT(mcache_monster::valid(mon));
 
+    mtype = mon.type;
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     const item_info* mon_weapon = mon.inv[MSLOT_WEAPON].get();
@@ -1131,12 +1134,40 @@ int mcache_monster::info(tile_draw_info *dinfo) const
     dinfo[count++].set(m_mon_tile);
 
     int ofs_x, ofs_y;
-    if (m_equ_tile && get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
-        dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
 
-    if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
-        dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
+    if (m_equ_tile)
+    {
+        bool have_offs = false;
+        // This mcache is for the player using a custom tile.
+        if (mtype == MONS_PLAYER
+            && Options.tile_weapon_offsets.first != INT_MAX)
+        {
+            ofs_x = Options.tile_weapon_offsets.first;
+            ofs_y = Options.tile_weapon_offsets.second;
+            have_offs = true;
+        }
+        else if (get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
+            have_offs = true;
 
+        if (have_offs)
+            dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
+    }
+    if (m_shd_tile)
+    {
+        bool have_offs = false;
+        if (mtype == MONS_PLAYER
+            && Options.tile_shield_offsets.first != INT_MAX)
+        {
+            ofs_x = Options.tile_shield_offsets.first;
+            ofs_y = Options.tile_shield_offsets.second;
+            have_offs = true;
+        }
+        else if (get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
+            have_offs = true;
+
+        if (have_offs)
+            dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
+    }
     return count;
 }
 
@@ -1145,10 +1176,14 @@ bool mcache_monster::valid(const monster_info& mon)
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     int ox, oy;
-    return (mon.inv[MSLOT_WEAPON].get() != NULL
-            && get_weapon_offset(mon_tile, &ox, &oy))
-        || (mon.inv[MSLOT_SHIELD].get() != NULL
-            && get_shield_offset(mon_tile, &ox, &oy));
+    bool have_weapon_offs = (mon.type == MONS_PLAYER 
+                             && Options.tile_weapon_offsets.first != INT_MAX)
+        || get_weapon_offset(mon_tile, &ox, &oy);
+    bool have_shield_offs = (mon.type == MONS_PLAYER 
+                             && Options.tile_shield_offsets.first != INT_MAX)
+        || get_shield_offset(mon_tile, &ox, &oy);
+    return (mon.inv[MSLOT_WEAPON].get() != NULL && have_weapon_offs)
+        || (mon.inv[MSLOT_SHIELD].get() != NULL && have_shield_offs);
 }
 
 /////////////////////////////////////////////////////////////////////////////

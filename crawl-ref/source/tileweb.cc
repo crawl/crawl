@@ -1212,9 +1212,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
             if (fg_changed || player_doll_changed)
             {
                 _send_doll(last_player_doll, in_water, false);
-                if (Options.tile_use_monster != MONS_PROGRAM_BUG)
+                if (Options.tile_use_monster != MONS_0)
                 {
-                    monster_info minfo(MONS_PLAYER_GHOST, MONS_PLAYER_GHOST);
+                    monster_info minfo(MONS_PLAYER, MONS_PLAYER);
                     minfo.props["monster_tile"] =
                         short(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;

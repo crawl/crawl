@@ -3047,14 +3047,16 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
 */
 tileidx_t tileidx_player_mons()
 {
+    ASSERT(Options.tile_use_monster != MONS_0);
+
     monster_type mons;
     if (Options.tile_player_tile)
         return Options.tile_player_tile;
 
-    if (Options.tile_use_monster != MONS_NO_MONSTER)
-        mons = Options.tile_use_monster;
-    else
+    if (Options.tile_use_monster == MONS_PLAYER)
         mons = player_mons(false);
+    else
+        mons = Options.tile_use_monster;
 
     if (mons_is_base_draconian(mons))
         return tileidx_draco_base(mons);
