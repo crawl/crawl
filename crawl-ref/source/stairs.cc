@@ -710,10 +710,9 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        if (!you.flight_mode() || force_stair)
-            mprf("You fall through a shaft%s!", howfar.c_str());
-        else
-            mpr("You dive down through the shaft.");
+        mprf("You %s a shaft%s!", you.flight_mode() ? "dive into"
+                                                    : "fall through",
+                                  howfar.c_str());
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
