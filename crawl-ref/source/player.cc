@@ -99,6 +99,10 @@
 #include "viewgeom.h"
 #include "xom.h"
 
+#if TAG_MAJOR_VERSION == 34
+const int DJ_MP_RATE = 2;
+#endif
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
