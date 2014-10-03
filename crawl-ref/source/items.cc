@@ -4223,7 +4223,7 @@ bool maybe_identify_base_type(item_def &item)
             item_count = NUM_SCROLLS; break;
         case OBJ_JEWELLERY:
             if (item.sub_type >= RING_FIRST_RING && item.sub_type < NUM_RINGS)
-                item_count = NUM_RINGS;
+                item_count = NUM_RINGS - RING_FIRST_RING;
             else
             {
                 item_count = NUM_JEWELLERY - AMU_FIRST_AMULET;
@@ -4237,11 +4237,12 @@ bool maybe_identify_base_type(item_def &item)
 
     int ident_count = 0;
 
-    for (int i = (is_amulet ? AMU_FIRST_AMULET : 0);
-         i < item_count + (is_amulet ? AMU_FIRST_AMULET : 0);
+    for (int i = (is_amulet ? AMU_FIRST_AMULET : RING_FIRST_RING);
+         i < item_count + (is_amulet ? AMU_FIRST_AMULET : RING_FIRST_RING);
          i++)
     {
-        bool identified = you.type_ids[item.base_type][i] == ID_KNOWN_TYPE;
+        const bool identified = you.type_ids[item.base_type][i]
+                                == ID_KNOWN_TYPE;
         ident_count += identified ? 1 : 0;
     }
 
