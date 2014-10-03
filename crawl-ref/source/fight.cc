@@ -42,6 +42,7 @@
 #include "state.h"
 #include "target.h"
 #include "terrain.h"
+#include "transform.h"
 #include "travel.h"
 #include "traps.h"
 
@@ -598,6 +599,29 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         you.received_weapon_warning = true;
 
     return result;
+}
+
+/**
+ * Can the given actor 'cleave' (hit surrounding targets) when attacking
+ * using the given skill?
+ *
+ * @param attacker      The player or monster in question.
+ * @param attack_skill  The skill used for the attack. (e.g. axes, etc)
+ * @return              Whether the attacker is allowed to cleave with this
+ *                      attack.
+ */
+bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
+{
+    if (attacker.confused())
+        return false;
+
+    if (attacker.is_player()
+        && you.form == TRAN_HYDRA && hydra_form_heads() > 1)
+    {
+        return true;
+    }
+
+    return attack_skill == SK_AXES;
 }
 
 // Used by cleave and jump attack to determine if multi-hit targets will be

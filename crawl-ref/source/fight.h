@@ -42,6 +42,8 @@ int calc_heavy_armour_penalty(bool random_factor);
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
 
+bool actor_can_cleave(const actor &attacker, skill_type attack_skill);
+
 void chaos_affect_actor(actor *victim);
 void get_cleave_targets(const actor* attacker, const coord_def& def,
                         list<actor*> &targets);
