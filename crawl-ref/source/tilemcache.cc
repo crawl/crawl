@@ -1176,10 +1176,10 @@ bool mcache_monster::valid(const monster_info& mon)
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     int ox, oy;
-    bool have_weapon_offs = (mon.type == MONS_PLAYER 
+    bool have_weapon_offs = (mon.type == MONS_PLAYER
                              && Options.tile_weapon_offsets.first != INT_MAX)
         || get_weapon_offset(mon_tile, &ox, &oy);
-    bool have_shield_offs = (mon.type == MONS_PLAYER 
+    bool have_shield_offs = (mon.type == MONS_PLAYER
                              && Options.tile_shield_offsets.first != INT_MAX)
         || get_shield_offset(mon_tile, &ox, &oy);
     return (mon.inv[MSLOT_WEAPON].get() != NULL && have_weapon_offs)
