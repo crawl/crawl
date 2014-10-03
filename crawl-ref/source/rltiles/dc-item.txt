@@ -151,6 +151,7 @@ lajatang3
 %sdir item/weapon/ranged
 blowgun1 WPN_BLOWGUN
 blowgun2
+
 sling1 WPN_HUNTING_SLING
 sling2
 %rim 0
@@ -160,6 +161,10 @@ greatsling2
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+longbow1 WPN_LONGBOW
+longbow2
+longbow3
+
 hand_crossbow WPN_HAND_CROSSBOW
 hand_crossbow2
 hand_crossbow3
@@ -168,9 +173,6 @@ arbalest2
 arbalest3
 triple_crossbow WPN_TRIPLE_CROSSBOW
 triple_crossbow2
-longbow1 WPN_LONGBOW
-longbow2
-longbow3
 
 %sdir item/weapon/brands
 %rim 0
