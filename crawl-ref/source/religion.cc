@@ -3888,6 +3888,26 @@ bool god_hates_killing(god_type god, const monster* mon)
     return retval;
 }
 
+/**
+ * Will the given god object if you follow them & eat the given monster?
+ *
+ * @param god       The god in question.
+ * @param monster   The monster to be eaten.
+ * @return          Whether eating this monster will incur penance.
+ */
+bool god_hates_eating(god_type god, const monster* mon)
+{
+    // XXX: deduplicate this with is_forbidden_food etc
+
+    if (god_hates_cannibalism(god) && is_player_same_genus(mon->type))
+        return true;
+    if (is_good_god(you.religion) && mons_class_holiness(mon->type) == MH_HOLY)
+        return true;
+    if (you_worship(GOD_ZIN) && mons_intel(mon) >= I_NORMAL)
+        return true;
+    return false;
+}
+
 bool god_likes_fresh_corpses(god_type god)
 {
     if (god == GOD_LUGONU)
