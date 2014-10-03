@@ -486,7 +486,7 @@ monster_type pick_random_monster(level_id place,
     else if (kind == RANDOM_BANDLESS_MONSTER)
         return pick_monster(place, _is_banded_monster);
     else if (mons_class_is_zombified(kind))
-        return pick_monster(place, _is_not_zombifiable);
+        return pick_local_zombifiable_monster(place, kind, coord_def());
     else if (crawl_state.game_is_sprint())
         return pick_monster(place, _has_big_aura);
     else
