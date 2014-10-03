@@ -1731,7 +1731,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
  * @param which_trans       The form being checked.
  * @param feat              The dungeon feature to be checked for danger.
  * @return                  If the feat is lethal for the player in the form.
- **/
+ */
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat)
 {
