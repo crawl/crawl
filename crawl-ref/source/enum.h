@@ -2762,6 +2762,7 @@ enum monster_type                      // menv[].type
     MONS_DRACONIAN_SCORCHER,
 
     MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
+    MONS_LAST_NONBASE_DRACONIAN = MONS_DRACONIAN_SCORCHER,
 
     // Lava monsters:
 #if TAG_MAJOR_VERSION == 34

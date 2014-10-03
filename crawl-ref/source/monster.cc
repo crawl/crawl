@@ -3419,7 +3419,7 @@ int monster::base_armour_class() const
     const int base_ac = get_monster_data(type)->AC;
 
     // demonspawn & draconians combine base & class ac values.
-    if (mons_is_draconian_job(type) || mons_is_demonspawn_job(type))
+    if (mons_is_job(type))
         return base_ac + get_monster_data(base_monster)->AC;
 
     return base_ac;
@@ -3538,7 +3538,7 @@ int monster::base_evasion() const
     const int base_ev = get_monster_data(type)->ev;
 
     // demonspawn & draconians combine base & class ac values.
-    if (mons_is_draconian_job(type) || mons_is_demonspawn_job(type))
+    if (mons_is_job(type))
         return base_ev + get_monster_data(base_monster)->ev;
 
     return base_ev;

@@ -1285,14 +1285,6 @@ bool mons_is_pghost(monster_type mc)
     return mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION;
 }
 
-static const monster_type demonspawn_jobs[] = {
-    MONS_BLOOD_SAINT,
-    MONS_CHAOS_CHAMPION,
-    MONS_WARMONGER,
-    MONS_CORRUPTER,
-    MONS_BLACK_SUN,
-};
-
 /**
  * Is the provided monster_type a demonspawn job type? (Not just any
  * demonspawn, but specifically one with a job! Or the job itself, depending
@@ -1303,22 +1295,9 @@ static const monster_type demonspawn_jobs[] = {
  **/
 bool mons_is_demonspawn_job(monster_type mc)
 {
-    // XXX: could use a range check here, but I don't like the fragility...
-    for (size_t i = 0; i < ARRAYSZ(demonspawn_jobs); i++)
-        if (demonspawn_jobs[i] == mc)
-            return true;
-    return false;
+    return mc >= MONS_FIRST_NONBASE_DEMONSPAWN
+           && mc <= MONS_LAST_NONBASE_DEMONSPAWN;
 }
-
-static const monster_type draconian_jobs[] = {
-    MONS_DRACONIAN_CALLER,
-    MONS_DRACONIAN_MONK,
-    MONS_DRACONIAN_ZEALOT,
-    MONS_DRACONIAN_SHIFTER,
-    MONS_DRACONIAN_ANNIHILATOR,
-    MONS_DRACONIAN_SCORCHER,
-    MONS_DRACONIAN_KNIGHT,
-};
 
 /**
  * Is the provided monster_type a draconian job type? (Not just any draconian,
@@ -1330,11 +1309,8 @@ static const monster_type draconian_jobs[] = {
  **/
 bool mons_is_draconian_job(monster_type mc)
 {
-    // XXX: could use a range check here, but I don't like the fragility...
-    for (size_t i = 0; i < ARRAYSZ(draconian_jobs); i++)
-        if (draconian_jobs[i] == mc)
-            return true;
-    return false;
+    return mc >= MONS_FIRST_NONBASE_DRACONIAN
+           && mc <= MONS_LAST_NONBASE_DRACONIAN;
 }
 
 /**
