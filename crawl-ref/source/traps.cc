@@ -1925,9 +1925,9 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 */
 int num_traps_for_place()
 {
-    if (you.where_are_you == BRANCH_TEMPLE
+    if (player_in_branch(BRANCH_TEMPLE)
         || (!player_in_connected_branch()
-            && you.where_are_you != BRANCH_PANDEMONIUM))
+            && !player_in_branch(BRANCH_PANDEMONIUM)))
     {
         return 0;
     }

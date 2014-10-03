@@ -543,7 +543,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             die("hell exit without return destination");
 
     case DNGN_ABYSSAL_STAIR:
-        ASSERT(you.where_are_you == BRANCH_ABYSS);
+        ASSERT(player_in_branch(BRANCH_ABYSS));
         push_features_to_abyss();
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_DOWN_I:
@@ -871,7 +871,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
 
     // Did we enter a new branch.
     const bool entered_branch(
-        you.where_are_you != old_level.branch
+        !player_in_branch(old_level.branch)
         && parent_branch(you.where_are_you) == old_level.branch);
 
     if (stair_find == DNGN_EXIT_ABYSS

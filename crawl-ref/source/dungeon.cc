@@ -1436,7 +1436,7 @@ void fixup_misplaced_items()
             // We accept items in deep water in the Abyss---they are likely to
             // be revealed eventually by morphing, and having deep water push
             // items away leads to strange results.
-            if (feat == DNGN_DEEP_WATER && you.where_are_you == BRANCH_ABYSS)
+            if (feat == DNGN_DEEP_WATER && player_in_branch(BRANCH_ABYSS))
                 continue;
 
             mprf(MSGCH_ERROR, "Item %s buggily placed in feature %s at (%d, %d).",
@@ -1472,7 +1472,7 @@ static void _fixup_branch_stairs()
         // random.
         vector<coord_def> vault_stairs, normal_stairs;
         dungeon_feature_type exit = your_branch().exit_stairs;
-        if (you.where_are_you == root_branch) // ZotDef
+        if (player_in_branch(root_branch)) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
@@ -1481,13 +1481,13 @@ static void _fixup_branch_stairs()
             else if (feat_is_stone_stair_up(grd(*ri)))
             {
 #ifdef DEBUG_DIAGNOSTICS
-                if (count++ && you.where_are_you != root_branch)
+                if (count++ && !player_in_branch(root_branch))
                 {
                     mprf(MSGCH_ERROR, "Multiple branch exits on %s",
                          level_id::current().describe().c_str());
                 }
 #endif
-                if (you.where_are_you == root_branch)
+                if (player_in_branch(root_branch))
                 {
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                     _set_grd(*ri, exit);
@@ -1501,7 +1501,7 @@ static void _fixup_branch_stairs()
                 }
             }
         }
-        if (you.where_are_you != root_branch)
+        if (!player_in_branch(root_branch))
         {
             vector<coord_def> stairs;
             if (!vault_stairs.empty())
@@ -1694,7 +1694,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
              i ? "down" : "up");
 
         if (num_stairs > needed_stairs && preserve_vault_stairs
-            && (i || you.depth != 1 || you.where_are_you != root_branch))
+            && (i || you.depth != 1 || !player_in_branch(root_branch)))
         {
             success = false;
             continue;
@@ -1726,7 +1726,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         // If we only need one stone stair, make sure it's _I.
         if (i == 0 && needed_stairs == 1)
         {
-            ASSERT(num_stairs == 1 || you.where_are_you == root_branch);
+            ASSERT(num_stairs == 1 || player_in_branch(root_branch));
             if (num_stairs == 1)
             {
                 grd(stair_list[0]) = DNGN_STONE_STAIRS_UP_I;
@@ -1890,7 +1890,7 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return you.where_are_you != BRANCH_ZIGGURAT;
+    return !player_in_branch(BRANCH_ZIGGURAT);
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
