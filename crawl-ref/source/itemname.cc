@@ -2460,7 +2460,8 @@ void check_item_knowledge(bool unknown_items)
             }
 
             if (i == OBJ_JEWELLERY
-                && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION))
+                && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION
+                    || j == RING_REGENERATION))
             {
                 continue;
             }
