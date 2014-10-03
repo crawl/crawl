@@ -459,7 +459,7 @@ void Note::check_milestone() const
                     level[0] = tolower(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",
-                               "reached" + level + ".");
+                               "reached " + level + ".");
             }
         }
     }
