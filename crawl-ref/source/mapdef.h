@@ -28,6 +28,8 @@
 #include "tags.h"
 #include "travel_defs.h"
 
+#define NEVER_CORPSE_KEY "never_corpse"
+
 class mon_enchant;
 extern const char *traversable_glyphs;
 

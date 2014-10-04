@@ -49,6 +49,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "terrain.h"
+#include "mapdef.h" // NEVER_CORPSE_KEY
 #include "mgen_data.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -717,7 +718,7 @@ static void _hydra_devour(monster &victim)
     }
 
     // and devour the corpse.
-    victim.props["never_corpse"] = true;
+    victim.props[NEVER_CORPSE_KEY] = true;
 }
 
 /**
