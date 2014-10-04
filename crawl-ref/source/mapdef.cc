@@ -3816,8 +3816,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (strip_tag(mon_str, "always_corpse"))
             mspec.props["always_corpse"] = true;
 
-        if (strip_tag(mon_str, "never_corpse"))
-            mspec.props["never_corpse"] = true;
+        if (strip_tag(mon_str, NEVER_CORPSE_KEY))
+            mspec.props[NEVER_CORPSE_KEY] = true;
 
         if (!mon_str.empty() && isadigit(mon_str[0]))
         {

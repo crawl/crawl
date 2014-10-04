@@ -41,6 +41,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "los_def.h"
+#include "mapdef.h" // NEVER_CORPSE_KEY
 #include "mapmark.h"
 #include "makeitem.h"
 #include "message.h"
@@ -430,7 +431,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         return -1;
 
     // If we were told not to leave a corpse, don't.
-    if (mons->props.exists("never_corpse"))
+    if (mons->props.exists(NEVER_CORPSE_KEY))
         return -1;
 
     item_def corpse;
