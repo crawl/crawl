@@ -3848,10 +3848,6 @@ bool game_options::set_lang(const char *lc)
         lang = LANG_KRAUT;
     else if (l == "futhark" || l == "runes" || l == "runic")
         lang = LANG_FUTHARK;
-/*
-    else if (l == "cyr" || l == "cyrillic" || l == "commie" || l == "кириллица")
-        lang = LANG_CYRILLIC;
-*/
     else if (l == "wide" || l == "doublewidth" || l == "fullwidth")
         lang = LANG_WIDE;
     else if (l == "grunt" || l == "sgrunt" || l == "!!!")
