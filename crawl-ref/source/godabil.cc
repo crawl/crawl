@@ -5304,45 +5304,60 @@ void ru_offer_new_sacrifices()
     int sacrifice = -1;
     int greater_sacrifice = -1;
     int number_of_tries = 0;
-    int max_tries = 30;
+    int max_tries = 20;
     int max_overpiety = 170;
 
     do
     {
         lesser_sacrifice = random2(num_sacrifices);
         number_of_tries += 1;
+        if (number_of_tries == max_tries)
+        {
+            number_of_tries = 0;
+            max_overpiety += 3;
+        }
     }
-    while (number_of_tries < max_tries
-            && (lesser_sacrifice == -1
+    while (lesser_sacrifice == -1
                 || you.piety + _get_sacrifice_piety(
                     possible_sacrifices[lesser_sacrifice])
-                    > max_overpiety));
+                    > max_overpiety);
+    mprf("num tries: %d", number_of_tries);
 
     number_of_tries = 0;
     do
     {
         sacrifice = random2(num_sacrifices);
         number_of_tries += 1;
+        if (number_of_tries == max_tries)
+        {
+            number_of_tries = 0;
+            max_overpiety += 3;
+        }
     }
-    while (number_of_tries < max_tries
-            && (sacrifice == -1
+    while (sacrifice == -1
                 || sacrifice == lesser_sacrifice
                 || you.piety + _get_sacrifice_piety(
-                    possible_sacrifices[sacrifice]) > max_overpiety));
+                    possible_sacrifices[sacrifice]) > max_overpiety);
+    mprf("num tries: %d", number_of_tries);
 
     number_of_tries = 0;
     do
     {
         greater_sacrifice = random2(num_sacrifices);
         number_of_tries += 1;
+        if (number_of_tries == max_tries)
+        {
+            number_of_tries = 0;
+            max_overpiety += 3;
+        }
     }
-    while (number_of_tries < max_tries
-            && (greater_sacrifice == -1
+    while (greater_sacrifice == -1
                 || greater_sacrifice == lesser_sacrifice
                 || greater_sacrifice == sacrifice
                 || you.piety + _get_sacrifice_piety(
                     possible_sacrifices[greater_sacrifice])
-                    > max_overpiety));
+                    > max_overpiety);
+    mprf("num tries: %d", number_of_tries);
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
