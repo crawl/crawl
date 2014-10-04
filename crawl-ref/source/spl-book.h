@@ -63,12 +63,14 @@ bool make_book_theme_randart(item_def &book,
                              int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1,
                              spell_type incl_spell = SPELL_NO_SPELL,
-                             string owner = "", string title = "");
+                             string owner = "", string title = "",
+                             bool exact_level = false);
 bool make_book_theme_randart(item_def &book,
                              vector<spell_type> incl_spells,
                              int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1,
-                             string owner = "", string title = "");
+                             string owner = "", string title = "",
+                             bool exact_level = false);
 void make_book_Roxanne_special(item_def *book);
 void make_book_Kiku_gift(item_def &book, bool first);
 

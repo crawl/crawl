@@ -1880,7 +1880,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
                                  int disc1, int disc2,
                                  int num_spells, int max_levels,
                                  const vector<spell_type> &spells,
-                                 spell_type chosen_spells[])
+                                 spell_type chosen_spells[], bool exact_level)
 {
     ASSERT(num_spells <= (int) spells.size());
     ASSERT(num_spells <= SPELLBOOK_SIZE);
@@ -1945,8 +1945,9 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
         }
     }
 
-    int book_pos    = 0;
-    int spells_left = spells.size();
+    int spells_needed = num_spells;
+    int book_pos      = 0;
+    int spells_left   = spells.size();
     while (book_pos < num_spells && max_levels > 0 && spells_left > 0)
     {
         if (chosen_spells[book_pos] != SPELL_NO_SPELL)
@@ -1967,10 +1968,11 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
         int levels = spell_difficulty(spell);
 
-        if (levels > max_levels)
+        if (levels > max_levels - (exact_level ? spells_needed + 1 : 0))
         {
             spell_weights[spell] = 0;
             spells_left--;
+            spells_needed--;
             continue;
         }
         chosen_spells[book_pos++] = spell;
@@ -2048,20 +2050,21 @@ static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
                              spell_type incl_spell, string owner,
-                             string title)
+                             string title, bool exact_level)
 {
     vector<spell_type> spells;
     if (incl_spell != SPELL_NO_SPELL)
         spells.push_back(incl_spell);
     return make_book_theme_randart(book, spells, disc1, disc2,
-                                   num_spells, max_levels, owner, title);
+                                   num_spells, max_levels, owner, title,
+                                   exact_level);
 }
 
 bool make_book_theme_randart(item_def &book,
                              vector<spell_type> incl_spells,
                              int disc1, int disc2,
                              int num_spells, int max_levels,
-                             string owner, string title)
+                             string owner, string title, bool exact_level)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2109,18 +2112,18 @@ bool make_book_theme_randart(item_def &book,
             disc2_pos = i;
     }
 
-    book.plus  = num_spells | (max_levels << 8);
+    book.plus  = num_spells | (max_levels << 8); // NOTE: What's this do?
     book.plus2 = disc1_pos  | (disc2_pos  << 8);
 
     book.sub_type = BOOK_RANDART_THEME;
-    _make_book_randart(book);
+    _make_book_randart(book);   // NOTE: have any spells been set here?
 
     int god_discard        = 0;
     int uncastable_discard = 0;
 
     vector<spell_type> spells;
     _get_spell_list(spells, disc1, disc2, god, !completely_random,
-                    god_discard, uncastable_discard);
+                    god_discard, uncastable_discard); // NOTE: what's in this spell list?
 
     if (num_spells > (int) spells.size())
         num_spells = spells.size();
@@ -2135,7 +2138,7 @@ bool make_book_theme_randart(item_def &book,
     // example, in Charms).  Try one more time with max_levels = 2.
     while (!_get_weighted_spells(completely_random, god, disc1, disc2,
                                  num_spells, max_levels, spells,
-                                 chosen_spells))
+                                 chosen_spells, exact_level))
     {
         if (max_levels != 1)
             die("_get_weighted_spells() failed");
