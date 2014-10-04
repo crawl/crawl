@@ -430,6 +430,9 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = replace_all(msg, "@player_genus_plural@",
                       pluralise(species_name(you.species, true)));
 
+    msg = maybe_pick_random_substring(msg);
+    msg = maybe_capitalise_substring(msg);
+
     mprf(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
@@ -459,9 +462,6 @@ void noisy_equipment()
 
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
-
-    msg = maybe_pick_random_substring(msg);
-    msg = maybe_capitalise_substring(msg);
 
     item_noise(*weapon, msg, 20);
 }
