@@ -2041,17 +2041,30 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     canned_msg(MSG_ANIMATE_REMAINS);
 
     item_def& corpse = mitm[co];
+    const int mon_number = _corpse_number(corpse);
     // How many simulacra can this particular monster give at maximum.
     int num_sim  = 1 + random2(mons_weight(corpse.mon_type) / 150);
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
-                 corpse.mon_type);
+                 corpse.mon_type, mon_number);
 
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
     how_many = min<int>(how_many, num_sim);
+    
+    // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
+    if (corpse.mon_type == MONS_HYDRA && mon_number == 0)
+    {
+        // No monster to conj_verb with :(
+        mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
+             how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
+        if (!turn_corpse_into_skeleton(corpse))
+            butcher_corpse(corpse, MB_FALSE, false);
+        return SPRET_SUCCESS;
+    }
+
     int count = 0;
     for (int i = 0; i < how_many; ++i)
     {
