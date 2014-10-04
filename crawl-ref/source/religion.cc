@@ -3799,15 +3799,13 @@ god_type choose_god(god_type def_god)
     string help = def_god == NUM_GODS ? "by name"
                                       : "default " + god_name(def_god);
     string prompt = make_stringf("Which god (%s)? ", help.c_str());
-    if (msgwin_get_line(prompt, specs, sizeof(specs)) == 0
-        && specs[0] == '\0')
-    {
-        // If they pressed enter (not escape) with no input.
-        return def_god;
-    }
 
+    if (msgwin_get_line(prompt, specs, sizeof(specs)) != 0)
+        return NUM_GODS; // FIXME: distinguish cancellation from no match
+
+    // If they pressed enter with no input.
     if (specs[0] == '\0')
-        return NUM_GODS;
+        return def_god;
 
     string spec = lowercase_string(specs);
 
