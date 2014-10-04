@@ -1659,6 +1659,21 @@ static targetter *_wand_targetter(const item_def *wand)
     }
 }
 
+/**
+ * What power can the player zap the given wand at?
+ *
+ * @param wand  The wand in question.
+ * @return      The spellpower with which the player zaps the wand.
+ */
+static int _wand_power(const item_def &wand)
+{
+    // fireball is more powerful than most wands (30-125)
+    if (wand.sub_type == WAND_FIREBALL)
+        return 30 + you.skill(SK_EVOCATIONS, 7) / 2;
+    // 15-80
+    return 15 + you.skill(SK_EVOCATIONS, 5) / 2;
+}
+
 void zap_wand(int slot)
 {
     if (!form_can_use_wand())
@@ -1834,7 +1849,7 @@ void zap_wand(int slot)
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
-    const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
+    const int power = _wand_power(wand);
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
