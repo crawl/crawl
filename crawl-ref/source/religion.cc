@@ -3784,11 +3784,27 @@ void god_pitch(god_type which_god)
     join_religion(which_god);
 }
 
-god_type choose_god()
+/** Ask the user for a god by name.
+ *
+ * @param def_god The god to use if the user presses just ENTER
+ *                (default NUM_GODS).
+ * @return the best match for the user's input, or def_god if the user
+ *         pressed ENTER without providing input, or NUM_GODS if the
+ *         user cancelled or there was no match.
+ */
+god_type choose_god(god_type def_god)
 {
     char specs[80];
 
-    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+    string help = def_god == NUM_GODS ? "by name"
+                                      : "default " + god_name(def_god);
+    string prompt = make_stringf("Which god (%s)? ", help.c_str());
+    if (msgwin_get_line(prompt, specs, sizeof(specs)) == 0
+        && specs[0] == '\0')
+    {
+        // If they pressed enter (not escape) with no input.
+        return def_god;
+    }
 
     if (specs[0] == '\0')
         return NUM_GODS;

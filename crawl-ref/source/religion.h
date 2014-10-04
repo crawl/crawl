@@ -59,7 +59,7 @@ int gozag_service_fee();
 bool player_can_join_god(god_type which_god);
 void join_religion(god_type which_god, bool immediate = true);
 void god_pitch(god_type which_god);
-god_type choose_god();
+god_type choose_god(god_type def_god = NUM_GODS);
 
 static inline bool you_worship(god_type god)
 {
