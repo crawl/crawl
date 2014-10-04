@@ -150,56 +150,6 @@ static const char* jager[][4] =
   {0}
 };
 
-static const char* cyrillic[][4] =
-{
-  {"a",   "а"},
-  {"b",   "б"},
-  {"v",   "в"},
-  {"wr",  "р"},
-  {"w",   "у"},
-  {"g",   "г"},
-  {"d",   "д"},
-  {"ye",  "е"},
-  {"ie",  "е"},
-  {"eu",  "ев"},
-  {"e",   "е"},
-  {"io",  "ё"},
-  {"yo",  "ё"},
-  {"zh",  "ж"},
-  {"z",   "з"},
-  {"j",   "й"},
-  {"x",   "кс"},
-  {"q",   "к"},
-  {"l",   "л"},
-  {"m",   "м"},
-  {"n",   "н"},
-  {"o",   "о"},
-  {"p",   "п"},
-  {"rr",  "р"},
-  {"r",   "р"},
-  {"s",   "с"},
-  {"t",   "т"},
-  {"u",   "у"},
-  {"f",   "ф"},
-  {"kh",  "х"},
-  {"h",   "х"},
-  {"k",   "к"},
-  {"ts",  "ц"},
-  {"chr", "кр"},
-  {"ch",  "ч"},
-  {"c",   "ц"},
-  {"shch","щ"},
-  {"sh",  "ш"},
-  {"e",   "э"},
-  {"yu",  "ю"},
-  {"iu",  "ю"},
-  {"ya",  "я"},
-  {"ia",  "я"},
-  {"i",   "и"},
-  {"y",   "ы"},
-  {0}
-};
-
 static const char* runes[][4] =
 {
   {"ae",  "ᛇ"},
@@ -499,9 +449,6 @@ void filter_lang(string &str)
         break;
     case LANG_KRAUT:
         _german(str), repl = german;
-        break;
-    case LANG_CYRILLIC:
-        repl = cyrillic;
         break;
     case LANG_WIDE:
         return _wide(str);
