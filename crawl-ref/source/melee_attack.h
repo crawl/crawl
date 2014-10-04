@@ -97,10 +97,10 @@ private:
 
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
-    bool decapitate_hydra(int damage_done, int damage_type = -1);
-    bool chop_hydra_head(int damage_done,
-                         int dam_type,
-                         brand_type wpn_brand);
+
+    bool consider_decapitation(int damage_done, int damage_type = -1);
+    bool attack_chops_heads(int damage_done, int damage_type, int wpn_brand);
+    void decapitate(int dam_type);
 
     /* Axe cleaving */
     void cleave_setup();

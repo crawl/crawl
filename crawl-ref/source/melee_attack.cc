@@ -532,6 +532,8 @@ bool melee_attack::handle_phase_hit()
     // Check if some hit-effect killed the monster.
     if (attacker->is_player())
         stop_hit = !player_monattk_hit_effects();
+    else if (defender->is_player())
+        consider_decapitation(damage_done);
 
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
@@ -2064,7 +2066,7 @@ bool melee_attack::player_monattk_hit_effects()
     //
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
-    if (decapitate_hydra(damage_done))
+    if (consider_decapitation(damage_done))
         return defender->alive();
 
     // Mutually exclusive with (overrides) brand damage!
@@ -2267,38 +2269,152 @@ void melee_attack::handle_noise(const coord_def & pos)
     noise_factor = 0;
 }
 
-// Returns true if the attack cut off a head *and* cauterized it.
-bool melee_attack::chop_hydra_head(int dam,
-                                   int dam_type,
-                                   brand_type wpn_brand)
+/**
+ * If appropriate, chop a head off the defender. (Usually a hydra.)
+ *
+ * @param dam           The damage done in the attack that may or may not chop
+  *                     off a head.
+ * @param damage_type   The type of damage done in the attack.
+ * @return              Whether a head was chopped off & cauterized, or whether
+ *                      the defender is now entirely headless.
+ *                      (relevant for considering whether to do fire damage.)
+ */
+bool melee_attack::consider_decapitation(int dam, int damage_type)
 {
-    if (defender->as_monster()->mons_species() == MONS_SERPENT_OF_HELL)
-        return false; // nope
+    const int dam_type = (damage_type != -1) ? damage_type :
+                                               attacker->damage_type();
+    const brand_type wpn_brand = attacker->damage_brand();
 
-    // Monster attackers have only a 25% chance of making the
+    if (!attack_chops_heads(dam, dam_type, wpn_brand))
+        return false;
+
+    decapitate(dam_type);
+
+    if (!defender->alive())
+        return true;
+
+    // if your last head got chopped off, don't 'cauterize the wound'.
+    if (defender->is_player() && you.form != TRAN_HYDRA)
+        return false;
+
+    // Only living hydras get to regenerate heads.
+    if (defender->holiness() != MH_NATURAL)
+        return false;
+
+    unsigned int limit = MAX_HYDRA_HEADS;
+    if (defender->type == MONS_LERNAEAN_HYDRA)
+        limit = 27;
+
+    if (wpn_brand == SPWPN_FLAMING)
+    {
+        if (defender_visible)
+            mpr("The flame cauterises the wound!");
+        return true;
+    }
+
+    // XXX: deduplicate this headcount
+    const int heads = defender->is_monster() ?
+                        defender->as_monster()->number :
+                        hydra_form_heads();
+    if (heads >= limit - 1)
+        return false; // don't overshoot the head limit!
+
+    if (defender->is_monster())
+    {
+        simple_monster_message(defender->as_monster(), " grows two more!");
+        defender->as_monster()->number += 2;
+        defender->heal(8 + random2(8), true);
+    }
+    else
+    {
+        mpr("You grow two more!");
+        set_hydra_form_heads(heads + 2);
+        you.wield_change        = true;
+    }
+
+    return false;
+}
+
+/**
+ * Can the given actor lose its heads? (Is it hydra or hydra-like?)
+ *
+ * @param defender  The actor in question.
+ * @return          Whether the given actor is susceptible to head-choppage.
+ */
+static bool actor_can_lose_heads(const actor* defender)
+{
+    if (defender->is_monster()
+        && defender->as_monster()->has_hydra_multi_attack()
+        && defender->type != MONS_SPECTRAL_THING
+        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
+    {
+        return true;
+    }
+
+    if (defender->is_player() && you.form == TRAN_HYDRA)
+        return true;
+
+    return false;
+}
+
+/**
+ * Does this attack chop off one of the defender's heads? (Generally only
+ * relevant for hydra defenders)
+ *
+ * @param dam           The damage done in the attack in question.
+ * @param dam_type      The vorpal_damage_type of the attack.
+ * @param wpn_brand     The brand_type of the attack.
+ * @return              Whether the attack will chop off a head.
+ */
+bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
+{
+    // hydras and hydra-like things only.
+    if (!actor_can_lose_heads(defender))
+        return false;
+
+    // Monster attackers+defenders have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons
     const bool player_spec_weap = attacker->is_monster()
-                                   && attacker->type == MONS_SPECTRAL_WEAPON
-                                   && attacker->as_monster()->summoner
-                                      == MID_PLAYER;
-    if (attacker->is_monster() && !player_spec_weap && !one_chance_in(4))
-        return false;
-
-    // Only cutting implements.
-    if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
-        && dam_type != DVORP_CLAWING || dam <= 0)
+                                    && attacker->type == MONS_SPECTRAL_WEAPON
+                                    && attacker->as_monster()->summoner
+                                        == MID_PLAYER;
+    if (attacker->is_monster() && defender->is_monster()
+        && !player_spec_weap && !one_chance_in(4))
     {
         return false;
     }
 
-    if (dam < 4 && wpn_brand != SPWPN_VORPAL && coinflip())
+    // Only cutting implements.
+    if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
+        && dam_type != DVORP_CLAWING)
+    {
         return false;
+    }
 
     // Small claws are not big enough.
     if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
         return false;
 
+    // you need to have done at least some damage.
+    if (dam <= 0)
+        return false;
+
+    // usually at least 4 damage, unless you are an unlucky vorpal user.
+    if (dam < 4 && wpn_brand != SPWPN_VORPAL && coinflip())
+        return false;
+
+    // ok, good enough!
+    return true;
+}
+
+/**
+ * Decapitate the (hydra or hydra-like) defender!
+ *
+ * @param dam_type      The vorpal_damage_type of the attack.
+ */
+void melee_attack::decapitate(int dam_type)
+{
     const char *verb = NULL;
 
     if (dam_type == DVORP_CLAWING)
@@ -2315,7 +2431,10 @@ bool melee_attack::chop_hydra_head(int dam,
         verb = RANDOM_ELEMENT(slice_verbs);
     }
 
-    if (defender->as_monster()->number == 1) // will be zero afterwards
+    const int heads = defender->is_monster() ?
+                        defender->as_monster()->number :
+                        hydra_form_heads();
+    if (heads == 1) // will be zero afterwards
     {
         if (defender_visible)
         {
@@ -2324,7 +2443,13 @@ bool melee_attack::chop_hydra_head(int dam,
                  attacker->conj_verb(verb).c_str(),
                  apostrophise(defender_name(true)).c_str());
         }
-        defender->as_monster()->number--;
+
+
+        if (defender->is_player())
+        {
+            untransform();
+            return;
+        }
 
         if (!defender->is_summoned())
         {
@@ -2334,58 +2459,24 @@ bool melee_attack::chop_hydra_head(int dam,
 
         defender->hurt(attacker, INSTANT_DEATH);
 
-        return true;
+        return;
+    }
+
+    if (defender_visible)
+    {
+        mprf("%s %s one of %s heads off!",
+             atk_name(DESC_THE).c_str(),
+             attacker->conj_verb(verb).c_str(),
+             apostrophise(defender_name(true)).c_str());
+    }
+
+    if (defender->is_player())
+    {
+        set_hydra_form_heads(heads - 1);
+        you.wield_change        = true;
     }
     else
-    {
-        if (defender_visible)
-        {
-            mprf("%s %s one of %s heads off!",
-                 atk_name(DESC_THE).c_str(),
-                 attacker->conj_verb(verb).c_str(),
-                 apostrophise(defender_name(true)).c_str());
-        }
         defender->as_monster()->number--;
-
-        // Only living hydras get to regenerate heads.
-        if (defender->holiness() == MH_NATURAL)
-        {
-            unsigned int limit = 20;
-            if (defender->type == MONS_LERNAEAN_HYDRA)
-                limit = 27;
-
-            if (wpn_brand == SPWPN_FLAMING)
-            {
-                if (defender_visible)
-                    mpr("The flame cauterises the wound!");
-                return true;
-            }
-            else if (defender->as_monster()->number < limit - 1)
-            {
-                simple_monster_message(defender->as_monster(),
-                                       " grows two more!");
-                defender->as_monster()->number += 2;
-                defender->heal(8 + random2(8), true);
-            }
-        }
-    }
-
-    return false;
-}
-
-bool melee_attack::decapitate_hydra(int dam, int damage_type)
-{
-    if (defender->is_monster()
-        && defender->as_monster()->has_hydra_multi_attack()
-        && defender->type != MONS_SPECTRAL_THING)
-    {
-        const int dam_type = (damage_type != -1) ? damage_type
-                                                 : attacker->damage_type();
-        const brand_type wpn_brand = attacker->damage_brand();
-
-        return chop_hydra_head(dam, dam_type, wpn_brand);
-    }
-    return false;
 }
 
 /**
@@ -2971,12 +3062,15 @@ bool melee_attack::mons_attack_effects()
     if (defender->is_player())
         practise(EX_MONSTER_WILL_HIT);
 
-    // decapitate_hydra() returns true if the wound was cauterized or the
+    // consider_decapitation() returns true if the wound was cauterized or the
     // last head was removed.  In the former case, we shouldn't apply
     // the brand damage (so we return here).  If the monster was killed
     // by the decapitation, we should stop the rest of the attack, too.
-    if (decapitate_hydra(damage_done, attacker->damage_type(attack_number)))
+    if (consider_decapitation(damage_done,
+                              attacker->damage_type(attack_number)))
+    {
         return defender->alive();
+    }
 
     if (attacker != defender && attk_type == AT_TRAMPLE)
         do_knockback();
