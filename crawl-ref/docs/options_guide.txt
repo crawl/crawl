@@ -17,7 +17,8 @@ The contents of this text are:
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
                 combo, random_pick, good_random, restart_after_game,
-                default_manual_training, autopickup_starting_ammo
+                restart_after_save, default_manual_training,
+                autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
@@ -356,6 +357,10 @@ restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
         restart_after_game is set. This option is enabled by default
         for tiles builds and disabled by default for other builds.
+
+restart_after_save = false
+        When the game is saved, return to the main menu. This option
+        is only effective if restart_after_game is also enabled.
 
 default_manual_training = false
         When set to true, new characters will start with skill training

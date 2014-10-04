@@ -335,6 +335,7 @@ public:
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
+    bool        restart_after_save; // .. or on save
 
     vector<text_pattern> drop_filter;
 
