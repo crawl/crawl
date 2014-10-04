@@ -5321,7 +5321,6 @@ void ru_offer_new_sacrifices()
                 || you.piety + _get_sacrifice_piety(
                     possible_sacrifices[lesser_sacrifice])
                     > max_overpiety);
-    mprf("num tries: %d", number_of_tries);
 
     number_of_tries = 0;
     do
@@ -5338,7 +5337,6 @@ void ru_offer_new_sacrifices()
                 || sacrifice == lesser_sacrifice
                 || you.piety + _get_sacrifice_piety(
                     possible_sacrifices[sacrifice]) > max_overpiety);
-    mprf("num tries: %d", number_of_tries);
 
     number_of_tries = 0;
     do
@@ -5357,7 +5355,6 @@ void ru_offer_new_sacrifices()
                 || you.piety + _get_sacrifice_piety(
                     possible_sacrifices[greater_sacrifice])
                     > max_overpiety);
-    mprf("num tries: %d", number_of_tries);
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
