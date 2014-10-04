@@ -394,7 +394,8 @@ static bool _build_level_vetoable(bool enable_random_maps,
     }
     catch (dgn_veto_exception& e)
     {
-        dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
+        dprf(DIAG_DNGN, "<white>VETO</white>: %s: %s",
+             level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
         mapstat_report_map_veto(e.what());
 #endif
@@ -519,13 +520,15 @@ void dgn_erase_unused_vault_placements()
         {
             vault_placement *vp = env.level_vaults[i];
             // Unreferenced vault, blow it away
-            dprf("Removing references to unused map #%d) '%s' (%d,%d) (%d,%d)",
+            dprf(DIAG_DNGN, "Removing references to unused map #%d)"
+                            " '%s' (%d,%d) (%d,%d)",
                  i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
                  vp->size.x, vp->size.y);
 
             if (!vp->seen)
             {
-                dprf("Unregistering unseen vault: %s", vp->map.name.c_str());
+                dprf(DIAG_DNGN, "Unregistering unseen vault: %s",
+                     vp->map.name.c_str());
                 _dgn_unregister_vault(vp->map);
             }
 
@@ -561,11 +564,12 @@ void dgn_erase_unused_vault_placements()
     }
 
 #ifdef DEBUG_ABYSS
-    dprf("Extant vaults on level: %d", (int) env.level_vaults.size());
+    dprf(DIAG_DNGN, "Extant vaults on level: %d",
+         (int) env.level_vaults.size());
     for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
     {
         const vault_placement &vp(*env.level_vaults[i]);
-        dprf("%d) %s (%d,%d) size (%d,%d)",
+        dprf(DIAG_DNGN, "%d) %s (%d,%d) size (%d,%d)",
              i, vp.map.name.c_str(), vp.pos.x, vp.pos.y,
              vp.size.x, vp.size.y);
     }
@@ -1241,7 +1245,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
     if (!crawl_state.test)
-        dprf("absdepth0 = %d", env.absdepth0);
+        dprf(DIAG_DNGN, "absdepth0 = %d", env.absdepth0);
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
@@ -1610,8 +1614,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (player_in_branch(BRANCH_ZOT))
             replace = DNGN_GRANITE_STATUE;
 
-        dprf("Before culling: %d/%d %s stairs", num_stairs, needed_stairs,
-             i ? "down" : "up");
+        dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
+             num_stairs, needed_stairs, i ? "down" : "up");
 
         if (num_stairs > needed_stairs)
         {
@@ -1647,7 +1651,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                                            env.level_map_mask);
                     if (where.x)
                     {
-                        dprf("Too many stairs -- removing one of a connected pair.");
+                        dprf(DIAG_DNGN, "Too many stairs -- removing one"
+                                        " of a connected pair.");
                         grd(stair_list[s2]) = replace;
                         num_stairs--;
                         stair_list[s2] = stair_list[num_stairs];
@@ -1677,11 +1682,11 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                     // we can't preserve vault stairs.
                     if (!tries)
                     {
-                        dprf("Too many stairs inside vaults!");
+                        dprf(DIAG_DNGN, "Too many stairs inside vaults!");
                         break;
                     }
                 }
-                dprf("Too many stairs -- removing one blindly.");
+                dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
                 _set_grd(stair_list[remove], replace);
 
                 stair_list[remove] = stair_list[--num_stairs];
@@ -1690,8 +1695,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 
         // FIXME: stairs that generate inside random vaults are still
         // protected, resulting in superfluoes ones.
-        dprf("After culling: %d/%d %s stairs", num_stairs, needed_stairs,
-             i ? "down" : "up");
+        dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
+             num_stairs, needed_stairs, i ? "down" : "up");
 
         if (num_stairs > needed_stairs && preserve_vault_stairs
             && (i || you.depth != 1 || !player_in_branch(root_branch)))
@@ -1714,7 +1719,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 
             if (!gc.origin())
             {
-                dprf("Adding stair %d at (%d,%d)", s, gc.x, gc.y);
+                dprf(DIAG_DNGN, "Adding stair %d at (%d,%d)", s, gc.x, gc.y);
                 // base gets fixed up to be the right stone stair below...
                 _set_grd(gc, base);
                 stair_list[num_stairs++] = gc;
@@ -1909,7 +1914,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
                 vlist << ", ";
             vlist << env.level_vaults[i]->map.name;
         }
-        mprf(MSGCH_DIAGNOSTICS, "Dungeon has %d zones after placing %s.",
+        dprf(DIAG_DNGN, "Dungeon has %d zones after placing %s.",
              newzones, vlist.str().c_str());
 #endif
         if (newzones > dgn_zones)
@@ -1935,7 +1940,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 
     if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
     {
-        dprf("Warning: failed to preserve vault stairs.");
+        dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
             throw dgn_veto_exception("Failed to fix stone stairs.");
     }
@@ -2336,13 +2341,13 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             if (feat_is_stone_stair(feat) && one_chance_in(4))
             {
                 const coord_def new_pos = _place_specific_feature(feat);
-                dprf("Placed %s mimic at (%d,%d).",
+                dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
                      feat_type_name(feat), new_pos.x, new_pos.y);
                 env.level_map_mask(new_pos) |= MMT_MIMIC;
                 continue;
             }
 
-            dprf("Placed %s mimic at (%d,%d).",
+            dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
 
@@ -2376,7 +2381,7 @@ static void _place_item_mimics()
         if (one_chance_in(ITEM_MIMIC_CHANCE))
         {
             item.flags |= ISFLAG_MIMIC;
-            dprf("Placed a %s mimic at (%d,%d).",
+            dprf(DIAG_DNGN, "Placed a %s mimic at (%d,%d).",
                  item.name(DESC_BASENAME).c_str(), item.pos.x, item.pos.y);
         }
     }
@@ -3149,7 +3154,7 @@ static void _place_chance_vaults()
         const map_def *map = maps[i];
         if (!map->map_already_used())
         {
-            dprf("Placing CHANCE vault: %s (%s)",
+            dprf(DIAG_DNGN, "Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
             check_fallback = !_build_secondary_vault(map);
         }
@@ -3164,7 +3169,7 @@ static void _place_chance_vaults()
                     random_map_for_tag(fallback_tag, true, false, MB_FALSE);
                 if (fallback)
                 {
-                    dprf("Found fallback vault %s for chance tag %s",
+                    dprf(DIAG_DNGN, "Found fallback vault %s for chance tag %s",
                          fallback->name.c_str(), chance_tag.c_str());
                     _build_secondary_vault(fallback);
                 }
@@ -3644,7 +3649,7 @@ static void _place_branch_entrances(bool use_vaults)
             && (level_id::current() == brentry[it->id] || mimic))
         {
             // Placing a stair.
-            dprf("Placing stair to %s", it->shortname);
+            dprf(DIAG_DNGN, "Placing stair to %s", it->shortname);
 
             // Attempt to place an entry vault if allowed
             if (use_vaults)
@@ -3757,7 +3762,7 @@ static int _place_uniques()
             fprintf(ostat, "Placed valid unique map: %s.\n",
                     uniq_map->name.c_str());
 #endif
-            dprf("Placed %s.", uniq_map->name.c_str());
+            dprf(DIAG_DNGN, "Placed %s.", uniq_map->name.c_str());
         }
 #ifdef DEBUG_UNIQUE_PLACEMENT
         else
@@ -3918,7 +3923,7 @@ static void _builder_monsters()
     const dungeon_feature_type preferred_grid_feature =
         in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
-    dprf("_builder_monsters: Generating %d monsters", mon_wanted);
+    dprf(DIAG_DNGN, "_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
@@ -4207,7 +4212,7 @@ void dgn_seen_vault_at(coord_def p)
     {
         if (!vp->seen)
         {
-            dprf("Vault %s (%d,%d)-(%d,%d) seen",
+            dprf(DIAG_DNGN, "Vault %s (%d,%d)-(%d,%d) seen",
                  vp->map.name.c_str(), vp->pos.x, vp->pos.y,
                  vp->size.x, vp->size.y);
             vp->seen = true;
@@ -4280,7 +4285,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     const map_section_type placed_vault_orientation =
         vault_main(place, vault, check_collisions);
 
-    dprf("Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
+    dprf(DIAG_DNGN, "Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
          placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
@@ -4305,7 +4310,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     // be accessed with the '9' and '8' glyphs. (due)
     if (!place.map.random_mons.empty())
     {
-        dprf("Setting the custom random mons list.");
+        dprf(DIAG_DNGN, "Setting the custom random mons list.");
         set_vault_mon_list(place.map.random_mons);
     }
 
@@ -5638,7 +5643,8 @@ void place_spec_shop(const coord_def& where,
         // is capped at 255.
         int factor = random2(8) + 12;
 
-        dprf("Shop type %d: original greed = %d, factor = %d, discount = %d%%.",
+        dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
+                        " discount = %d%%.",
              env.shop[i].type, env.shop[i].greed, factor, (20-factor)*5);
 
         factor *= env.shop[i].greed;
@@ -5648,7 +5654,8 @@ void place_spec_shop(const coord_def& where,
 
     if (spec->greed != -1)
     {
-        dprf("Shop spec overrides greed: %d becomes %d.", env.shop[i].greed, spec->greed);
+        dprf(DIAG_DNGN, "Shop spec overrides greed: %d becomes %d.",
+             env.shop[i].greed, spec->greed);
         env.shop[i].greed = spec->greed;
     }
 
@@ -5658,14 +5665,15 @@ void place_spec_shop(const coord_def& where,
 
     if (spec->use_all && !spec->items.empty())
     {
-        dprf("Shop spec wants all items placed: %d becomes %u.", plojy,
-             (unsigned int)spec->items.size());
+        dprf(DIAG_DNGN, "Shop spec wants all items placed: %d becomes %u.",
+             plojy, (unsigned int)spec->items.size());
         plojy = (int) spec->items.size();
     }
 
     if (spec->num_items != -1)
     {
-        dprf("Shop spec overrides number of items: %d becomes %d.", plojy, spec->num_items);
+        dprf(DIAG_DNGN, "Shop spec overrides number of items: %d becomes %d.",
+             plojy, spec->num_items);
         plojy = spec->num_items;
     }
 
@@ -6156,7 +6164,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)
 {
-    dprf("Level entry point on %sstair: %d (%s)",
+    dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
          stair_to_find, dungeon_feature_name(stair_to_find));
 
@@ -6186,7 +6194,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             return pos;
 
         // Couldn't find a good place, warn, and use old behaviour.
-        dprf("Oops, couldn't find labyrinth entry marker.");
+        dprf(DIAG_DNGN, "Oops, couldn't find labyrinth entry marker.");
         stair_to_find = DNGN_FLOOR;
     }
 
@@ -6888,7 +6896,10 @@ int vault_placement::connect(bool spotty) const
             exits_placed++;
         }
         else
-            dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);
+        {
+            dprf(DIAG_DNGN, "Warning: failed to connect vault exit (%d;%d).",
+                 i->x, i->y);
+        }
     }
 
     return exits_placed;
@@ -7108,7 +7119,7 @@ static void _calc_density()
     out:;
     }
 
-    dprf("Level density: %d", open);
+    dprf(DIAG_DNGN, "Level density: %d", open);
     env.density = open;
 }
 

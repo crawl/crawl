@@ -642,7 +642,7 @@ static bool _apply_vault_grid(map_def &def,
 
     if (check_place && !map_place_valid(def, start, size))
     {
-        dprf("Bad vault place: (%d,%d) dim (%d,%d)",
+        dprf(DIAG_DNGN, "Bad vault place: (%d,%d) dim (%d,%d)",
              start.x, start.y, size.x, size.y);
         return false;
     }
@@ -909,7 +909,7 @@ void map_selector::announce(const map_def *vault) const
     {
         if (sel == DEPTH_AND_CHANCE)
         {
-            mprf(MSGCH_DIAGNOSTICS,
+            dprf(DIAG_DNGN,
                  "[CHANCE+DEPTH] Found map %s for %s (%s)",
                  vault->name.c_str(), place.describe().c_str(),
                  vault->chance(place).describe().c_str());
@@ -921,7 +921,7 @@ void map_selector::announce(const map_def *vault) const
                 sel == DEPTH ? "[DEPTH] Found random map %s for %s" :
                 "[TAG] Found map %s tagged '%s'";
 
-            mprf(MSGCH_DIAGNOSTICS, format,
+            dprf(DIAG_DNGN, format,
                  vault->name.c_str(),
                  sel == TAG ? tag.c_str() : place.describe().c_str());
         }

@@ -3015,7 +3015,8 @@ coord_def map_def::float_dock()
     if (which_orient == MAP_NONE || which_orient == MAP_FLOAT)
         return coord_def(-1, -1);
 
-    dprf("Docking floating vault to %s", map_section_name(which_orient));
+    dprf(DIAG_DNGN, "Docking floating vault to %s",
+         map_section_name(which_orient));
 
     return dock_pos(which_orient);
 }
@@ -3100,8 +3101,10 @@ coord_def map_def::float_aligned_place() const
     const point_vector our_anchors = anchor_points();
     const coord_def fail(-1, -1);
 
-    dprf("Aligning floating vault with %u points vs %u reference points",
-         (unsigned int)our_anchors.size(), (unsigned int)map_anchor_points.size());
+    dprf(DIAG_DNGN, "Aligning floating vault with %u points vs %u"
+                    " reference points",
+                    (unsigned int)our_anchors.size(),
+                    (unsigned int)map_anchor_points.size());
 
     // Mismatch in the number of points we have to align, bail.
     if (our_anchors.size() != map_anchor_points.size())
@@ -3147,7 +3150,7 @@ void map_def::hmirror()
     if (has_tag("no_hmirror"))
         return;
 
-    dprf("Mirroring %s horizontally.", name.c_str());
+    dprf(DIAG_DNGN, "Mirroring %s horizontally.", name.c_str());
     map.hmirror();
 
     switch (orient)
@@ -3180,7 +3183,7 @@ void map_def::vmirror()
     if (has_tag("no_vmirror"))
         return;
 
-    dprf("Mirroring %s vertically.", name.c_str());
+    dprf(DIAG_DNGN, "Mirroring %s vertically.", name.c_str());
     map.vmirror();
 
     switch (orient)
@@ -3218,7 +3221,8 @@ void map_def::rotate(bool clock)
     // Make sure the largest dimension fits in the smaller map bound.
     if (map.width() <= GMINM && map.height() <= GMINM)
     {
-        dprf("Rotating %s %sclockwise.", name.c_str(), !clock? "anti-" : "");
+        dprf(DIAG_DNGN, "Rotating %s %sclockwise.",
+             name.c_str(), !clock? "anti-" : "");
         map.rotate(clock);
 
         // Orientation shifts for clockwise rotation:
