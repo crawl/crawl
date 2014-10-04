@@ -431,6 +431,7 @@ void wizard_toggle_dprf()
 static const char* diag_names[] =
 {
     "normal",
+    "level builder",
     "skill",
     "combat",
     "beam",
