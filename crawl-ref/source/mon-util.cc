@@ -2350,8 +2350,8 @@ static void _mons_load_spells(monster* mon)
     if (book == MST_NO_SPELLS)
         return;
 
-    dprf("%s: loading spellbook #%d", mon->name(DESC_PLAIN, true).c_str(),
-         static_cast<int>(book));
+    dprf(DIAG_MONPLACE, "%s: loading spellbook #%d",
+         mon->name(DESC_PLAIN, true).c_str(), static_cast<int>(book));
 
     for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
     {
