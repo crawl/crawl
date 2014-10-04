@@ -1151,15 +1151,11 @@ static void _mons_fire_wand(monster* mons, item_def &wand, bolt &beem,
     {
         const int wand_type = wand.sub_type;
 
-        if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
+        set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+        if (!mons->props["wand_known"].get_bool())
         {
-            set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+            mprf("It is %s.", wand.name(DESC_A).c_str());
             mons->props["wand_known"] = true;
-        }
-        else
-        {
-            set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
-            mons->props["wand_known"] = false;
         }
 
         // Increment zap count.
