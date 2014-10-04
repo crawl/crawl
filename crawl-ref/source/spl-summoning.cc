@@ -1697,6 +1697,12 @@ static void _display_undead_motions(int motions)
     }
 }
 
+static int _corpse_number(const item_def &item)
+{
+    return item.props.exists(MONSTER_NUMBER)
+           ? item.props[MONSTER_NUMBER].get_short(): 0;
+}
+
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, actor *as, string nas,
                            god_type god, bool actual, bool force_beh,
@@ -1717,8 +1723,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
                            item.props[MONSTER_HIT_DICE].get_short() : 0;
-    const int number = (item.props.exists(MONSTER_NUMBER)) ?
-                           item.props[MONSTER_NUMBER].get_short() : 0;
+    const int number = _corpse_number(item);
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
