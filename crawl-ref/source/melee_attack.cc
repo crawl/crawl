@@ -1153,7 +1153,7 @@ public:
     {
         const int fang_damage = you.has_usable_fangs() * 2;
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
-            return fang_damage + div_rand_round(2 * you.get_hit_dice(), 3);
+            return fang_damage + div_rand_round(you.get_hit_dice(), 3);
 
         const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
 
