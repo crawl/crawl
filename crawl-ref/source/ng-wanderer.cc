@@ -374,6 +374,26 @@ static void _give_wanderer_book(skill_type skill, int & slot)
     newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, book_type);
 }
 
+// Give the wanderer a randart book containing two spells of total level 4.
+// The theme of the book is the spell school of the chosen skill.
+static void _give_wanderer_minor_book(skill_type skill, int & slot)
+{
+    // Doing a rejection loop for this because I am lazy.
+    while (skill == SK_SPELLCASTING)
+    {
+        int value = SK_LAST_MAGIC - SK_FIRST_MAGIC_SCHOOL + 1;
+        skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
+    }
+
+    int school = skill2spell_type(skill);
+
+    newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, BOOK_RANDART_THEME);
+    item_def &item(you.inv[slot]);
+
+    make_book_theme_randart(item, school, 0, 2, 4, SPELL_NO_SPELL, "", "",
+        true);
+}
+
 static void _give_wanderer_item(object_class_type base, int sub, int & slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
@@ -458,36 +478,70 @@ static void _decent_potion_or_scroll(int & slot)
 // Create a random wand in the inventory.
 static void _wanderer_random_evokable(int & slot)
 {
-    wand_type selected_wand = WAND_ENSLAVEMENT;
-
-    switch (random2(5))
+    if (one_chance_in(3))
     {
-    case 0:
-        selected_wand = WAND_ENSLAVEMENT;
-        break;
+        int selected_evoker = MISC_BOX_OF_BEASTS;
+        int charges = 0;
 
-    case 1:
-        selected_wand = WAND_CONFUSION;
-        break;
+        switch (random2(5))
+        {
+        case 0:
+            selected_evoker = MISC_BOX_OF_BEASTS;
+            charges = random_range(10, 15, 2);
+            break;
 
-    case 2:
-        selected_wand = WAND_MAGIC_DARTS;
-        break;
+        case 1:
+            selected_evoker = MISC_LAMP_OF_FIRE;
+            break;
 
-    case 3:
-        selected_wand = WAND_FROST;
-        break;
+        case 2:
+            selected_evoker = MISC_STONE_OF_TREMORS;
+            break;
 
-    case 4:
-        selected_wand = WAND_FLAME;
-        break;
+        case 3:
+            selected_evoker = MISC_PHIAL_OF_FLOODS;
+            break;
 
-    default:
-        break;
+        case 4:
+            selected_evoker = MISC_FAN_OF_GALES;
+            break;
+        }
+        newgame_make_item(slot, EQ_NONE, OBJ_MISCELLANY, selected_evoker, -1, 1,
+                           charges);
     }
+    else
+    {
+        wand_type selected_wand = WAND_ENSLAVEMENT;
 
-    newgame_make_item(slot, EQ_NONE, OBJ_WANDS, selected_wand, -1, 1,
-                       15);
+        switch (random2(5))
+        {
+        case 0:
+            selected_wand = WAND_ENSLAVEMENT;
+            break;
+
+        case 1:
+            selected_wand = WAND_CONFUSION;
+            break;
+
+        case 2:
+            selected_wand = WAND_MAGIC_DARTS;
+            break;
+
+        case 3:
+            selected_wand = WAND_FROST;
+            break;
+
+        case 4:
+            selected_wand = WAND_FLAME;
+            break;
+
+        default:
+            break;
+        }
+
+        newgame_make_item(slot, EQ_NONE, OBJ_WANDS, selected_wand, -1, 1,
+                           15);
+    }
     slot++;
 }
 
@@ -606,69 +660,6 @@ static void _wanderer_good_equipment(skill_type & skill,
     }
 }
 
-// The "decent" spell type item puts a spell in the player's memory.
-static void _give_wanderer_spell(skill_type skill)
-{
-    spell_type spell = SPELL_NO_SPELL;
-
-    // Doing a rejection loop for this because I am lazy.
-    while (skill == SK_SPELLCASTING || skill == SK_CHARMS)
-    {
-        int value = SK_LAST_MAGIC - SK_FIRST_MAGIC_SCHOOL + 1;
-        skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
-    }
-
-    switch ((int)skill)
-    {
-    case SK_CONJURATIONS:
-        spell = SPELL_MAGIC_DART;
-        break;
-
-    case SK_SUMMONINGS:
-        spell = SPELL_SUMMON_SMALL_MAMMAL;
-        break;
-
-    case SK_NECROMANCY:
-        spell = SPELL_PAIN;
-        break;
-
-    case SK_TRANSLOCATIONS:
-        spell = SPELL_APPORTATION;
-        break;
-
-    case SK_TRANSMUTATIONS:
-        spell = SPELL_BEASTLY_APPENDAGE;
-        break;
-
-    case SK_FIRE_MAGIC:
-        spell = SPELL_FLAME_TONGUE;
-        break;
-
-    case SK_ICE_MAGIC:
-        spell = SPELL_FREEZE;
-        break;
-
-    case SK_AIR_MAGIC:
-        spell = SPELL_SHOCK;
-        break;
-
-    case SK_EARTH_MAGIC:
-        spell = SPELL_SANDBLAST;
-        break;
-
-    case SK_POISON_MAGIC:
-        spell = SPELL_STING;
-        break;
-
-    case SK_HEXES:
-        spell = SPELL_CORONA;
-        break;
-    }
-
-    if (you_can_memorise(spell))
-        add_spell_to_memory(spell); // XXX: check spell slot available?
-}
-
 static void _wanderer_decent_equipment(skill_type & skill,
                                        set<skill_type> & gift_skills,
                                        int & slot)
@@ -679,19 +670,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
           SK_POLEARMS };
 
     int total_weapons = ARRAYSZ(combined_weapon_skills);
-
-    // Give the player knowledge of only one spell.
-    if (skill >= SK_SPELLCASTING && skill <= SK_LAST_MAGIC)
-    {
-        for (unsigned i = 0; i < you.spells.size(); ++i)
-        {
-            if (you.spells[i] != SPELL_NO_SPELL)
-            {
-                skill = SK_NONE;
-                break;
-            }
-        }
-    }
 
     // If fighting comes up, give something from the highest weapon
     // skill.
@@ -754,7 +732,8 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
     case SK_POISON_MAGIC:
-        _give_wanderer_spell(skill);
+        _give_wanderer_minor_book(skill, slot);
+        slot++;
         break;
 
     case SK_EVOCATIONS:
