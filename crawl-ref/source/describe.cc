@@ -1807,6 +1807,19 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_WANDS:
+    {
+        const bool known_empty = item_ident(item, ISFLAG_KNOW_PLUSES)
+                                    && item.plus == 0
+                                 || item.plus2 == ZAPCOUNT_EMPTY;
+
+        if (!item_ident(item, ISFLAG_KNOW_PLUSES) && !known_empty)
+        {
+            description << "\nIf evoked without being fully identified,"
+                           " several charges will be wasted out of"
+                           " unfamiliarity with the device.";
+        }
+
+
         if (item_type_known(item))
         {
             const int max_charges = wand_max_charges(item.sub_type);
@@ -1820,12 +1833,10 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\nIt is fully charged.";
         }
 
-        if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus == 0
-            || item.plus2 == ZAPCOUNT_EMPTY)
-        {
+        if (known_empty)
             description << "\nUnfortunately, it has no charges left.";
-        }
         break;
+    }
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)

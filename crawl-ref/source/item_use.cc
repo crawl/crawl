@@ -1737,18 +1737,17 @@ void zap_wand(int slot)
 
     const zap_type type_zapped = wand.zap();
 
-    bool has_charges = true;
-    if (wand.plus < 1)
+    const bool has_charges = wand.plus > 0;
+    if (!has_charges && wand.plus2 == ZAPCOUNT_EMPTY)
     {
-        if (wand.plus2 == ZAPCOUNT_EMPTY)
-        {
-            mpr("This wand has no charges.");
-            return;
-        }
-        has_charges = false;
+        mpr("This wand has no charges.");
+        return;
     }
 
+    // already know the type
     const bool alreadyknown = item_type_known(wand);
+    // will waste charges
+    const bool wasteful     = !item_ident(wand, ISFLAG_KNOW_PLUSES);
           bool invis_enemy  = false;
     const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
     targetter *hitfunc      = 0;
@@ -1791,7 +1790,9 @@ void zap_wand(int slot)
         (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
         _wand_range(type_zapped) : _max_wand_range();
     const string zap_title =
-        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
+        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY)
+                    + (wasteful ? " <lightred>(will waste charges)</lightred>"
+                                : "");
     direction_chooser_args args;
     args.mode = targ_mode;
     args.range = tracer_range;
@@ -1898,21 +1899,35 @@ void zap_wand(int slot)
 
     // Take off a charge.
     wand.plus--;
+    // And a few more, if you didn't know the wand's charges.
+    if (wasteful)
+    {
+        const int initial_charge = wand.plus;
+
+        const int wasted_charges = 1 + random2(2); //1-2
+        wand.plus = max(0, wand.plus - wasted_charges);
+
+        dprf("Wasted %d charges (wand %d -> %d)", wasted_charges,
+             initial_charge, wand.plus);
+        mpr("You wasted at least one charge getting the wand working.");
+    }
 
     // Zap counts count from the last recharge.
     if (wand.plus2 == ZAPCOUNT_RECHARGED)
         wand.plus2 = 0;
     // Increment zap count.
     if (wand.plus2 >= 0)
+    {
         wand.plus2++;
+        // And at least once more for wasteage
+        if (wasteful)
+            wand.plus2++;
+    }
 
     // Identify if unknown.
     if (!alreadyknown)
     {
         set_ident_type(wand, ID_KNOWN_TYPE);
-        if (wand.sub_type == WAND_RANDOM_EFFECTS)
-            mpr("You feel that this wand is rather unreliable.");
-
         mprf_nocap("%s", wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
 
