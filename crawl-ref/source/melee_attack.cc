@@ -2155,11 +2155,12 @@ bool melee_attack::chop_hydra_head(int dam,
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons
-    if (attacker->is_monster() && attacker->type!= MONS_SPECTRAL_WEAPON
-        && !one_chance_in(4))
-    {
+    const bool player_spec_weap = attacker->is_monster()
+                                   && attacker->type == MONS_SPECTRAL_WEAPON
+                                   && attacker->as_monster()->summoner
+                                      == MID_PLAYER;
+    if (attacker->is_monster() && !player_spec_weap && !one_chance_in(4))
         return false;
-    }
 
     // Only cutting implements.
     if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
