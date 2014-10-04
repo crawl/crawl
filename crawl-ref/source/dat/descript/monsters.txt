@@ -2895,10 +2895,10 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
-sickly siren
+malarious merfolk avatar
 
-This young merfolk looks deeply ill, but its voice still has the power to
-mesmerize its victims.
+This young merfolk looks deeply ill, but still capable of bespelling its
+audience.
 %%%%
 master elementalist
 
@@ -2994,8 +2994,8 @@ This bat is well past its sell-by date.
 %%%%
 sickly siren
 
-This young merfolk looks quite sick, but still capable of bespelling its
-audience.
+This young merfolk looks quite sick, but its voice still has the power to
+mesmerize its victims.
 %%%%
 skeletal archer
 
