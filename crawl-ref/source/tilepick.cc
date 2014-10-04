@@ -4137,7 +4137,13 @@ tileidx_t tileidx_item(const item_def &item)
                 return TILE_RING_RANDART_OFFSET + offset;
             }
             else if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
+            {
+                return TILE_RING_ID_FIRST + type - RING_FIRST_RING
+#if TAG_MAJOR_VERSION == 34
+                       + 1 // we have a save-compat ring tile before FIRST_RING
+#endif
+                    ;
+            }
             else
                 return TILE_RING_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
         }
@@ -4324,7 +4330,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
 
     if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
     {
-        int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING;
+        int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING
+#if TAG_MAJOR_VERSION == 34
+                   + 1 // we have a save-compat ring tile before FIRST_RING
+#endif
+            ;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
         if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
