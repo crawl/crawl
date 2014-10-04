@@ -3353,6 +3353,12 @@ static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 {
+    if (mi.res_magic() == MAG_IMMUNE)
+    {
+        result << "MR ∞";
+        return;
+    }
+
     const int max_mr = 200; // export this? is this already?
     const int bar_scale = 40; // likewise export this per player stuff?
     _print_bar(mi.res_magic(), max_mr, bar_scale, "MR", result);
