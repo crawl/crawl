@@ -5147,9 +5147,7 @@ const skill_type arcane_mutation_to_skill(mutation_type mutation)
 
 static int _piety_for_skill(skill_type skill)
 {
-    int divisor = 500;
-    return div_rand_round(skill_exp_needed(you.skills[skill], skill,
-        you.species), divisor);
+    return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
