@@ -1025,8 +1025,8 @@ void wizard_god_wrath()
         mpr("You suffer the terrible wrath of No God.");
     else if (!divine_retribution(god, true, true))
     {
-        // Currently only dead Jiyva.
-        mpr("You're not eligible for wrath.");
+        // Dead Jiyva, or Ru/Gozag/Ashenzari.
+        mprf("%s is not feeling wrathful today.", god_name(god).c_str());
     }
 }
 
