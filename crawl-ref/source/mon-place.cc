@@ -298,7 +298,7 @@ static void _apply_ood(level_id &place)
         if (fuzz)
         {
             place.depth += fuzz;
-            dprf("Monster level fuzz: %d (old: %s, new: %s)",
+            dprf(DIAG_MONPLACE, "Monster level fuzz: %d (old: %s, new: %s)",
                  fuzz, old_place.describe().c_str(), place.describe().c_str());
         }
     }
@@ -310,7 +310,7 @@ static void _apply_ood(level_id &place)
     {
         // this maxes depth most of the time
         place.depth += random2avg(27, 2);
-        dprf("Super OOD roll: Old: %s, New: %s",
+        dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
              old_place.describe().c_str(), place.describe().c_str());
     }
 }
@@ -374,7 +374,7 @@ void spawn_random_monsters()
 
     if (rate == 0)
     {
-        dprf("random monster gen scaled off, %d turns on level",
+        dprf(DIAG_MONPLACE, "random monster gen scaled off, %d turns on level",
              env.turns_on_level);
         return;
     }
@@ -396,7 +396,7 @@ void spawn_random_monsters()
     if (player_in_connected_branch()
         || (player_has_orb() && !player_in_branch(BRANCH_ABYSS)))
     {
-        dprf("Placing monster, rate: %d, turns here: %d",
+        dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
         proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                                  : PROX_AWAY_FROM_PLAYER);
@@ -650,7 +650,10 @@ monster_type resolve_monster_type(monster_type mon_type,
             else
                 proximity = PROX_AWAY_FROM_PLAYER;
             if (proximity == PROX_NEAR_STAIRS)
-                dprf("foreign monster from %s", place->describe().c_str());
+            {
+                dprf(DIAG_MONPLACE, "foreign monster from %s",
+                     place->describe().c_str());
+            }
             else // we dunt cotton to no ferrniers in these here parts
                 *place = orig_place;
 
@@ -874,8 +877,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // places.
     if (chose_ood_monster && _in_ood_pack_protected_place())
     {
-        dprf("Chose monster with OOD roll: %s, disabling band generation",
-             get_monster_data(mg.cls)->name);
+        dprf(DIAG_MONPLACE, "Chose monster with OOD roll: %s,"
+                            " disabling band generation",
+                            get_monster_data(mg.cls)->name);
         create_band = false;
     }
 
@@ -4221,5 +4225,5 @@ void setup_vault_mon_list()
         vault_mon_weights[i] = list[i].genweight;
     }
     if (size)
-        dprf("Level has a custom monster set.");
+        dprf(DIAG_MONPLACE, "Level has a custom monster set.");
 }
