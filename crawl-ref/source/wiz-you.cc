@@ -1018,15 +1018,16 @@ void wizard_toggle_xray_vision()
 
 void wizard_god_wrath()
 {
-    if (you_worship(GOD_NO_GOD))
-    {
+    const god_type god = choose_god(you.religion);
+    if (god == NUM_GODS)
+        mpr("That god doesn't seem to exist!");
+    else if (god == GOD_NO_GOD)
         mpr("You suffer the terrible wrath of No God.");
-        return;
-    }
-
-    if (!divine_retribution(you.religion, true, true))
+    else if (!divine_retribution(god, true, true))
+    {
         // Currently only dead Jiyva.
         mpr("You're not eligible for wrath.");
+    }
 }
 
 void wizard_god_mollify()
