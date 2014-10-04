@@ -509,6 +509,10 @@ void artefact_desc_properties(const item_def &item,
         fake_rap = ARTP_NEGATIVE_ENERGY;
         break;
 
+    case AMU_REGENERATION:
+        fake_rap = ARTP_REGENERATION;
+        break;
+
     case RING_PROTECTION:
         fake_rap  = ARTP_AC;
         fake_plus = item.plus;
@@ -1692,7 +1696,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_LIFE_PROTECTION:
-        provides = ARTP_AC;
+        provides = ARTP_NEGATIVE_ENERGY;
         break;
 
     case RING_PROTECTION_FROM_MAGIC:
