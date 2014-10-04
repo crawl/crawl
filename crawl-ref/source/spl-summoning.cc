@@ -2053,7 +2053,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
     how_many = min<int>(how_many, num_sim);
-    
+
     // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
     if (corpse.mon_type == MONS_HYDRA && mon_number == 0)
     {
