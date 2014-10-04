@@ -709,6 +709,7 @@ void game_options::reset_options()
 #else
     restart_after_game = false;
 #endif
+    restart_after_save = false;
 
     macro_dir = SysEnv.macro_dir;
 
@@ -2577,6 +2578,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
+    else BOOL_OPTION(restart_after_save);
 #endif
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);

@@ -2115,11 +2115,17 @@ void process_command(command_type cmd)
 #endif
 
     case CMD_SAVE_GAME:
-        if (yesno("Save game and exit?", true, 'n'))
+    {
+        const char * const prompt
+            = (Options.restart_after_game && Options.restart_after_save)
+              ? "Save game and return to main menu?"
+              : "Save game and exit?";
+        if (yesno(prompt, true, 'n'))
             save_game(true);
         else
             canned_msg(MSG_OK);
         break;
+    }
 
     case CMD_SAVE_GAME_NOW:
         mpr("Saving game... please wait.");
