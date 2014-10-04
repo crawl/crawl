@@ -12,6 +12,7 @@
 #include "player.h"
 
 #define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
+#define MAX_HYDRA_FORM_HEADS 20
 
 enum form_capability
 {
