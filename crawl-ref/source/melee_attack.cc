@@ -1473,7 +1473,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             const bool spell_user = mons_antimagic_affected(defender->as_monster());
 
-            antimagic_affects_defender(damage_done * 16);
+            antimagic_affects_defender(damage_done * 32);
             mprf("You drain %s %s.",
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
                  spell_user ? "magic" : "power");
@@ -1482,7 +1482,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 && !defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
-                int drain = random2(damage_done) + 1;
+                int drain = random2(damage_done * 2) + 1;
                 //Augment mana drain--1.25 "standard" effectiveness at 0 mp,
                 //.25 at mana == max_mana
                 drain = (int)((1.25 - you.magic_points / you.max_magic_points)
