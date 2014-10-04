@@ -1126,7 +1126,7 @@ int hydra_form_heads()
  */
 void set_hydra_form_heads(int heads)
 {
-    you.props[HYDRA_FORM_HEADS_KEY] = min(MAX_HYDRA_FORM_HEADS, max(1, heads));
+    you.props[HYDRA_FORM_HEADS_KEY] = min(MAX_HYDRA_HEADS, max(1, heads));
 }
 
 class FormHydra : public Form
