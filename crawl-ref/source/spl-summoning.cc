@@ -2112,10 +2112,13 @@ bool monster_simulacrum(monster *mon, bool actual)
         // Search all the items on the ground for a corpse.
         for (stack_iterator si(*ri, true); si; ++si)
         {
+            // Safe on non-corpses.
+            const int mon_number = _corpse_number(*si);
 
             if (si->base_type != OBJ_CORPSES
                 || si->sub_type != CORPSE_BODY
-                || !mons_class_can_be_zombified(si->mon_type))
+                || !mons_class_can_be_zombified(si->mon_type)
+                || si->mon_type == MONS_HYDRA && mon_number == 0)
             {
                 continue;
             }
@@ -2140,7 +2143,7 @@ bool monster_simulacrum(monster *mon, bool actual)
                                   MG_FORCE_BEH
                                   | (cast_visible ? MG_DONT_COME : 0),
                                   mon->god,
-                                  mitm[co].mon_type)))
+                                  mitm[co].mon_type, mon_number)))
                 {
                     was_successful = true;
                     player_angers_monster(sim);
