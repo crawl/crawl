@@ -2895,7 +2895,7 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
-malarious siren
+sickly siren
 
 This young merfolk looks deeply ill, but its voice still has the power to
 mesmerize its victims.
