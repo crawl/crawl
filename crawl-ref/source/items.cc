@@ -1855,6 +1855,8 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
     god_id_item(item);
+    if (item.base_type == OBJ_WANDS)
+        set_ident_type(item, ID_KNOWN_TYPE);
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
