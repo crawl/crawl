@@ -5771,7 +5771,7 @@ void ru_do_retribution(monster* mons, int damage)
         + damage - (2 * mons->get_hit_dice()));
     const actor* act = &you;
 
-    if (power > 50 && (mons->can_use_spells() || mons->is_actual_spellcaster()))
+    if (power > 50 && (mons->has_spells() || mons->is_actual_spellcaster()))
     {
         simple_monster_message(mons, " is muted in retribution by your aura!",
             MSGCH_GOD);
@@ -6011,7 +6011,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     switch (effect)
     {
         case 0:
-            if (mons->can_use_spells() || mons->is_actual_spellcaster())
+            if (mons->has_spells() || mons->is_actual_spellcaster())
             {
                 simple_monster_message(mons, " is muted by your wave of power!");
                 mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));

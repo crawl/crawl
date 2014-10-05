@@ -3628,7 +3628,6 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
 void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 {
     spec.explicit_spells = true;
-    spec.extra_monster_flags |= MF_SPELLCASTER;
     vector<string>::iterator spell_it;
     for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
     {

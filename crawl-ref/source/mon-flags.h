@@ -8,8 +8,7 @@
 // constants.
 const uint64_t M_NO_FLAGS = 0;
 
-// any non-physical-attack powers,
-const uint64_t M_SPELLCASTER       = 1<< 0;
+//1<< 0;
 
 // monster is a wizard (hated by Trog; affected by silence)
 const uint64_t M_ACTUAL_SPELLS     = 1<< 1;
@@ -216,12 +215,12 @@ const uint64_t MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER;
 
     // These are based on the flags in monster class, but can be set for
     // monsters that are not normally spellcasters (in vaults).
-const uint64_t MF_SPELLCASTER        = BIT(23);
+// BIT(23);
 const uint64_t MF_ACTUAL_SPELLS      = BIT(24); // Can use spells and is a spellcaster for
                                      // Trog purposes.
 const uint64_t MF_PRIEST             = BIT(25); // Is a priest (divine spells)
                                      // for the conduct.
-const uint64_t MF_SPELL_MASK         = MF_SPELLCASTER|MF_ACTUAL_SPELLS|MF_PRIEST;
+const uint64_t MF_SPELL_MASK         = MF_ACTUAL_SPELLS|MF_PRIEST;
 
 const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
 

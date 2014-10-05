@@ -811,8 +811,6 @@ void monster::bind_spell_flags()
 
     // Alas, we don't know if the mon is zombified at the moment, if it
     // is, the flags will be removed later.
-    if (mons_class_flag(type, M_SPELLCASTER))
-        flags |= MF_SPELLCASTER;
     if (mons_class_flag(type, M_ACTUAL_SPELLS))
         flags |= MF_ACTUAL_SPELLS;
     if (mons_class_flag(type, M_PRIEST))
@@ -5097,11 +5095,6 @@ bool monster::has_multitargeting() const
     return (has_hydra_multi_attack() && !mons_is_zombified(this))
            || type == MONS_TENTACLED_MONSTROSITY
            || type == MONS_ELECTRIC_GOLEM;
-}
-
-bool monster::can_use_spells() const
-{
-    return flags & MF_SPELLCASTER;
 }
 
 bool monster::is_priest() const

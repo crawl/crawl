@@ -301,23 +301,26 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
     fprintf(stderr, "\n");
 
-    if (mon->can_use_spells())
+
+    bool found_spells = false;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        fprintf(stderr, "Spells:\n");
+        spell_type spell = mon->spells[i].spell;
 
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        if (!found_spells)
         {
-            spell_type spell = mon->spells[i].spell;
-
-            if (spell == SPELL_NO_SPELL)
-                continue;
-
-            fprintf(stderr, "    slot #%d: ", i);
-            if (!is_valid_spell(spell))
-                fprintf(stderr, "Invalid spell #%d\n", (int) spell);
-            else
-                fprintf(stderr, "%s\n", spell_title(spell));
+            fprintf(stderr, "Spells:\n");
+            found_spells = true;
         }
+
+        fprintf(stderr, "    slot #%d: ", i);
+        if (!is_valid_spell(spell))
+            fprintf(stderr, "Invalid spell #%d\n", (int) spell);
+        else
+            fprintf(stderr, "%s\n", spell_title(spell));
         fprintf(stderr, "\n");
     }
 

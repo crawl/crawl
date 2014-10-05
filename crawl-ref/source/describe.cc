@@ -3192,7 +3192,7 @@ static string _monster_spells_description(const monster_info& mi)
         return "It may possess any of a vast number of diabolical powers.\n";
 
     // Show monster spells and spell-like abilities.
-    if (!mi.is_spellcaster() || !mi.has_spells())
+    if (!mi.has_spells())
         return "";
 
     unique_books books = get_unique_spells(mi);
@@ -3864,36 +3864,32 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                                                  "; ", "; ");
     }
 
-    if (mons.can_use_spells())
+    const monster_spells &hspell_pass = mons.spells;
+    bool found_spell = false;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        const monster_spells &hspell_pass = mons.spells;
-        bool found_spell = false;
-
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (hspell_pass[i].spell != SPELL_NO_SPELL)
         {
-            if (hspell_pass[i].spell != SPELL_NO_SPELL)
+            if (!found_spell)
             {
-                if (!found_spell)
-                {
-                    inf.body << "\n\nMonster Spells:\n";
-                    found_spell = true;
-                }
-
-                inf.body << "    " << i << ": "
-                         << spell_title(hspell_pass[i].spell)
-                         << " (";
-                if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
-                    inf.body << "emergency, ";
-                if (hspell_pass[i].flags & MON_SPELL_INNATE)
-                    inf.body << "innate, ";
-                if (hspell_pass[i].flags & MON_SPELL_WIZARD)
-                    inf.body << "wizard, ";
-                if (hspell_pass[i].flags & MON_SPELL_PRIEST)
-                    inf.body << "priest, ";
-                if (hspell_pass[i].flags & MON_SPELL_BREATH)
-                    inf.body << "breath, ";
-                inf.body << (int) hspell_pass[i].freq << ")";
+                inf.body << "\n\nMonster Spells:\n";
+                found_spell = true;
             }
+
+            inf.body << "    " << i << ": "
+                     << spell_title(hspell_pass[i].spell)
+                     << " (";
+            if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
+                inf.body << "emergency, ";
+            if (hspell_pass[i].flags & MON_SPELL_INNATE)
+                inf.body << "innate, ";
+            if (hspell_pass[i].flags & MON_SPELL_WIZARD)
+                inf.body << "wizard, ";
+            if (hspell_pass[i].flags & MON_SPELL_PRIEST)
+                inf.body << "priest, ";
+            if (hspell_pass[i].flags & MON_SPELL_BREATH)
+                inf.body << "breath, ";
+                inf.body << (int) hspell_pass[i].freq << ")";
         }
     }
 

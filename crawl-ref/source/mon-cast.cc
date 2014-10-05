@@ -2873,15 +2873,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     const spell_type draco_breath = _get_draconian_breath_spell(mons);
     actor *foe = mons->get_foe();
 
-    // A polymorphed unique will retain his or her spells even in another
-    // form. If the new form has the SPELLCASTER flag, casting happens as
-    // normally, otherwise we need to enforce it, but it only happens with
-    // a 50% chance.
-    const bool spellcasting_poly(
-        !mons->can_use_spells()
-        && mons_class_flag(mons->type, M_SPEAKS)
-        && mons->has_spells());
-
     if (is_sanctuary(mons->pos()) && !mons->wont_attack())
         return false;
 
@@ -2891,8 +2882,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (mons->asleep()
         || mons->submerged()
         || mons->berserk_or_insane()
-        || (!mons->can_use_spells()
-            && !spellcasting_poly
+        || (!mons->has_spells()
             && draco_breath == SPELL_NO_SPELL))
     {
         return false;
@@ -2908,8 +2898,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
          || (mons->has_ench(ENCH_WATER_HOLD) && !mons->res_water_drowning()))
-        && (priest || wizard || spellcasting_poly
-            || mons_class_flag(mons->type, M_SPELL_NO_SILENT)))
+        && (priest || wizard || mons_class_flag(mons->type, M_SPELL_NO_SILENT)))
     {
         return false;
     }
@@ -2924,8 +2913,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (spellcasting_poly && coinflip()) // 50% chance of not casting
-        return false;
     else
     {
         spell_type spell_cast = SPELL_NO_SPELL;
@@ -3638,7 +3625,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 }
             }
         }
-    } // end "if (mons->can_use_spells())"
+    } // end "if the monster has spells it can use"
 
     return true;
 }
