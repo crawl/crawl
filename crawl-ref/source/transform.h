@@ -38,11 +38,11 @@ public:
 
 enum duration_power_scaling
 {
-    PS_NONE,                // no bonus
-    PS_TENTH,               // bonus based on rand2(power)/10
-    PS_SINGLE,              // bonus based on rand2(power)
-    PS_ONE_AND_A_HALF,      // bonus based on r(power) + r(power/2)
-    PS_DOUBLE               // bonus based on r(power) + r(power)
+    PS_NONE,                /// no bonus
+    PS_TENTH,               /// bonus based on rand2(power)/10
+    PS_SINGLE,              /// bonus based on rand2(power)
+    PS_ONE_AND_A_HALF,      /// bonus based on r(power) + r(power/2)
+    PS_DOUBLE               /// bonus based on r(power) + r(power)
 };
 
 class FormDuration
@@ -54,11 +54,11 @@ public:
     int power_bonus(int pow) const;
 
 public:
-    // base duration (in 10*aut, probably)
+    /// base duration (in 10*aut, probably)
     const int base;
-    // the extent to which spellpower affects duration scaling
+    /// the extent to which spellpower affects duration scaling
     const duration_power_scaling scaling_type;
-    // max duration (in 10*aut, probably)
+    /// max duration (in 10*aut, probably)
     const int max;
 };
 
@@ -139,97 +139,108 @@ public:
     bool player_can_swim() const;
 
 public:
-    // Status light ("Foo"); "" for none
+    /// Status light ("Foo"); "" for none
     const string short_name;
-    // "foo"; used for wizmode transformation dialogue
+    /// "foo"; used for wizmode transformation dialogue
     const string wiz_name;
 
-    // A struct representing the duration of the form, based on power etc
+    /// A struct representing the duration of the form, based on power etc
     const FormDuration duration;
 
-    // flat stat bonuses
+    /// flat str bonus
     const int str_mod;
+    /// flat dex bonus
     const int dex_mod;
 
-    // a bitfield representing a union of (1 << equipment_type) values for
-    // equipment types unusable in this form
+    /// Equipment types unusable in this form.
+    /** A bitfield representing a union of (1 << equipment_type) values for
+     * equipment types that are unusable in this form.
+     */
     const int blocked_slots;
-    // size of the form
+    /// size of the form
     const size_type size;
-    // 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
+    /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
     const int hp_mod;
 
-    // can the player cast while in this form?
+    /// can the player cast while in this form?
     const bool can_cast;
-    // increase to spell fail rate (value is weird - see spell_fail())
+    /// increase to spell fail rate (value is weird - see spell_fail())
     const int spellcasting_penalty;
 
-    // acc bonus when using UC in form
+    /// acc bonus when using UC in form
     const int unarmed_hit_bonus;
-    // colour of 'weapon' in UI
+    /// colour of 'weapon' in UI
     const int uc_colour;
-    // a set of verbs to use based on damage done, when using UC in this form
+    /// a set of verbs to use based on damage done, when using UC in this form
     const FormAttackVerbs uc_attack_verbs;
 
-    // has blood (used for sublimation and bloodsplatters)
+    /// has blood (used for sublimation and bloodsplatters)
     const form_capability can_bleed;
-    // see player::is_unbreathing
+    /// see player::is_unbreathing
     const bool breathes;
-    // "Used to mark forms which keep most form-based mutations."
-    // ugh
+    /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
+    // ugh
 
-    // what verb does the player use when shouting in this form?
+    /// what verb does the player use when shouting in this form?
     const string shout_verb;
-    // a flat bonus (or penalty) to shout volume
+    /// a flat bonus (or penalty) to shout volume
     const int shout_volume_modifier;
 
-    // names of the player's appendages when in the form; "" if form doesn't
-    // change them (fallback to species, etc)
+    /// The name of this form's hand-equivalents; "" defaults to species.
     const string hand_name;
+    /// The name of this form's foot-equivalents; "" defaults to species.
     const string foot_name;
 
 protected:
-    // "foo-form" &c; used for morgue and % screen. "" for none
+    /// "foo-form" &c; used for morgue and % screen. "" for none
     const string long_name;
-    // "a barish foo." used for @ screen and transform messages. "" for none
+    /// "a barish foo." used for @ screen and transform messages. "" for none
     const string description;
 
-    // bitfield representing a union of mon_resist_flags for resists granted
-    // by the form
+    /// Resistances granted by this form.
+    /** A bitfield holding a union of mon_resist_flags for resists granted
+     * by the form.
+     */
     const int resists;
 
-    // a multiplier to Stealth skill for player stealth calculations.
-    // if 0, fall back to species values.
+    /// Stealth skill multiplier.
+    /** a multiplier to Stealth skill for player stealth calculations.
+     * if 0, fall back to species values.
+     */
     const int stealth_mod;
 
-    // base unarmed damage provided by the form. (note that BUD is not
-    // equivalent to weapon damage...)
+    /// Base unarmed damage provided by the form.
     const int base_unarmed_damage;
 
 private:
     bool all_blocked(int slotflags) const;
 
 private:
-    // whether the form enables, forbids, or does nothing to the player's
-    // ability to fly / swim (traverse deep water).
+    /// Can this form fly?
+    /** Whether the form enables, forbids, or does nothing to the player's
+     * ability to fly.
+     */
     const form_capability can_fly;
+    /// Can this form swim?
+    /** Whether the form enables, forbids, or does nothing to the player's
+     * ability to swim (traverse deep water).
+     */
     const form_capability can_swim;
 
-    // flat bonus to player AC when in the form.
+    /// flat bonus to player AC when in the form.
     const int flat_ac;
-    // spellpower-based bonus to player AC; multiplied by power / 100
+    /// spellpower-based bonus to player AC; multiplied by power / 100
     const int power_ac;
-    // experience level-based bonus to player AC; XL * xl_ac / 100
+    /// experience level-based bonus to player AC; XL * xl_ac / 100
     const int xl_ac;
 
-    // the brand of the attack (SPWPN_FREEZING, etc)
+    /// the brand of the attack (SPWPN_FREEZING, etc)
     const brand_type uc_brand;
-    // the name of the uc 'weapon' in the HUD (e.g 'ice fists')
-    // "" to use default
+    /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
 
-    // a monster corresponding to the form; used for console player glyphs
+    /// a monster corresponding to the form; used for console player glyphs
     const monster_type equivalent_mons;
 };
 const Form* get_form(transformation_type form = you.form);
