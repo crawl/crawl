@@ -295,6 +295,8 @@ static const char* _prop_name[] =
     "Regen",
     "SustAb",
     "noupg",
+    "rCorr",
+    "rMut",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -351,6 +353,8 @@ static int8_t _prop_type[] =
     ARTP_VAL_ANY,  //REGENERATION
     ARTP_VAL_BOOL, //SUSTAB
     ARTP_VAL_BOOL, //NO_UPGRADE
+    ARTP_VAL_BOOL, //RCORR
+    ARTP_VAL_BOOL, //RMUT
 };
 
 static void _tweak_randart(item_def &item)
@@ -1412,6 +1416,8 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_REGENERATION
          1, //ARTP_SUSTAB,
          0, //ARTP_NO_UPGRADE
+         1, //ARTP_RCORR
+         1, //ARTP_RMUT
     };
     COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
 
@@ -1572,6 +1578,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_REGENERATION",
         "ARTP_SUSTAB",
         "ARTP_NO_UPGRADE",
+        "ARTP_RCORR",
+        "ARTP_RMUT",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
