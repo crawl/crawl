@@ -873,7 +873,7 @@ string monster_info::_core_name() const
         switch (type)
         {
         case MONS_SLIME_CREATURE:
-            ASSERT(number <= 5);
+            ASSERT(number <= ARRAYSZ(slime_sizes));
             s = slime_sizes[number] + s;
             break;
         case MONS_UGLY_THING:
