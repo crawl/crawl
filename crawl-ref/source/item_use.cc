@@ -1887,7 +1887,9 @@ void zap_wand(int slot)
     // And a few more, if you didn't know the wand's charges.
     if (wasteful)
     {
+#ifdef DEBUG_DIAGNOSTICS
         const int initial_charge = wand.plus;
+#endif
 
         const int wasted_charges = 1 + random2(2); //1-2
         wand.plus = max(0, wand.plus - wasted_charges);
