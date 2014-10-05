@@ -2509,8 +2509,10 @@ string monster::conj_verb(const string &verb) const
     if (verb == "release spores at")
         return "releases spores at";
 
+#if TAG_MAJOR_VERSION == 34
     if (verb == "snap closed at")
         return "snaps closed at";
+#endif
 
     if (verb == "pounce on")
         return "pounces on";

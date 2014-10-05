@@ -2853,8 +2853,10 @@ string melee_attack::mons_attack_verb()
         "constrict",
         "trample",
         "trunk-slap",
+#if TAG_MAJOR_VERSION == 34
         "snap closed at",
         "splash",
+#endif
         "pounce on",
         "sting",
     };
