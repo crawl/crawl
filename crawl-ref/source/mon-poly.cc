@@ -325,9 +325,9 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     monster_spells spl    = mons->spells;
     const bool need_save_spells
-            = (!name.empty()
-               && (!mons->can_use_spells() || mons->is_actual_spellcaster())
-               && !slimified);
+            =  old_mon_unique && !slimified
+               && mons_class_intel(targetc) >= I_NORMAL
+               && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;
 
@@ -365,7 +365,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // swamp drake he'll breathe fumes and, if polymorphed further,
     // won't remember his spells anymore.
     if (need_save_spells
-        && (!mons->can_use_spells() || mons->is_actual_spellcaster()))
+        && (!mons->has_spells() || mons->is_actual_spellcaster()))
     {
         mons->spells = spl;
     }

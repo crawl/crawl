@@ -1776,6 +1776,9 @@ bool monster_info::ground_level() const
 // Use monster.h's has_spells for knowing a monster has spells
 bool monster_info::has_spells() const
 {
+    if (props.exists("custom_spells"))
+        return true;
+
     const vector<mon_spellbook_type> books = get_spellbooks(*this);
 
     const size_t num_books = books.size();

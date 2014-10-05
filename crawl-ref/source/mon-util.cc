@@ -675,14 +675,9 @@ bool mons_is_illuminating(const monster* mon)
     if (mon->halo_radius2() >= 0)
         return true;
 
-    if (!mon->can_use_spells())
-        return false;
-
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-    {
         if (is_illuminating_spell(mon->spells[i].spell))
             return true;
-    }
 
     return false;
 }
@@ -706,8 +701,7 @@ bool mons_is_fiery(const monster* mon)
     return mon->has_attack_flavour(AF_FIRE)
            || mon->has_attack_flavour(AF_PURE_FIRE)
            || mon->has_attack_flavour(AF_STICKY_FLAME)
-           || (mon->has_spell_of_type(SPTYP_FIRE)
-               && mon->can_use_spells());
+           || mon->has_spell_of_type(SPTYP_FIRE);
 }
 
 bool mons_is_projectile(monster_type mc)
@@ -2014,7 +2008,7 @@ int exper_value(const monster* mon, bool real)
     const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mon->can_use_spells();
+    const bool spellcaster = mon->has_spells();
 
     // Early out for no XP monsters.
     if (mons_class_flag(mc, M_NO_EXP_GAIN))
@@ -3456,11 +3450,13 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mons_has_los_ability(mon->type))
         return true;
 
-    if (mon->can_use_spells())
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
-                return true;
+        if (mon->spells[i].spell != SPELL_NO_SPELL
+            && _ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
+        {
+            return true;
+        }
     }
 
     return false;
@@ -3475,9 +3471,6 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    if (!mon->can_use_spells())
-        return false;
-
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
         switch (mon->spells[i].spell)
@@ -4944,8 +4937,7 @@ bool mons_is_player_shadow(const monster* mon)
 
 bool mons_antimagic_affected(const monster* mons)
 {
-    return mons->can_use_spells()
-           && mons->is_actual_spellcaster()
+    return mons->is_actual_spellcaster()
            && !mons_class_flag(mons->type, M_FAKE_SPELLS);
 }
 
