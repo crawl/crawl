@@ -213,6 +213,23 @@ string Form::get_untransform_message() const
 }
 
 /**
+ * What AC bonus does the player get while in this form?
+ *
+ * Many forms are power-dependent, so the answer given may be strange if the
+ * player isn't currently in the form in question.
+ *
+ * @return  The AC bonus currently granted by the form, multiplied by 100 to
+ *          allow for pseudo-decimal flexibility (& to match
+ *          player::armour_class())
+ */
+int Form::get_ac_bonus() const
+{
+    return flat_ac * 100
+           + power_ac * you.props[TRANSFORM_POW_KEY].get_int()
+           + xl_ac * you.experience_level;
+}
+
+/**
  * (freeze)
  */
 static string _brand_suffix(int brand)
@@ -389,6 +406,7 @@ public:
            FormDuration(0, PS_NONE, 0), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0, 0, 0,   // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -418,6 +436,7 @@ public:
            FormDuration(10, PS_DOUBLE, 60), // duration
            0, 5,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
+           2, 0, 0,    // flat AC, spellpower AC, XL AC
            true, 10,                 // can_cast, spellcasting penalty
            10, 5, SPWPN_VENOM, LIGHTGREEN,  // unarmed acc bonus, damage, brand, & ui colour
            "Fangs",             // name of unarmed-combat "weapon" (in UI)
@@ -441,6 +460,7 @@ public:
            FormDuration(10, PS_SINGLE, 100), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            true, 20,                 // can_cast, spellcasting penalty
            12, -1, SPWPN_NORMAL, RED,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -524,6 +544,7 @@ public:
            DEFAULT_DURATION, // duration
            2, -2,    // str mod, dex mod
            SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
+           17, 10, 0,    // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            9, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -534,6 +555,16 @@ public:
            "", "",          // hand name, foot name
            MONS_STATUE)       // equivalent monster
     { };
+
+    /**
+     * The AC bonus of the form, multiplied by 100 to match
+     * player::armour_class().
+     */
+    int get_ac_bonus() const
+    {
+        return Form::get_ac_bonus()
+               - (you.species == SP_GARGOYLE ? 400 : 0);
+    }
 
     /**
      * Find the player's base unarmed damage in this form.
@@ -615,6 +646,7 @@ public:
            FormDuration(30, PS_DOUBLE, 100), // duration
            0, 0,    // str mod, dex mod
            SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
+           5, 7, 0,    // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            10, 12, SPWPN_FREEZING, WHITE,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -660,6 +692,7 @@ public:
            DEFAULT_DURATION, // duration
            10, 0,    // str mod, dex mod
            SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
+           16, 0, 0,    // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
            "Teeth and claws",             // name of unarmed-combat "weapon" (in UI)
@@ -681,6 +714,17 @@ public:
     monster_type get_equivalent_mons() const
     {
         return dragon_form_dragon_type();
+    }
+
+    /**
+     * The AC bonus of the form, multiplied by 100 to match
+     * player::armour_class().
+     */
+    int get_ac_bonus() const
+    {
+        if (player_genus(GENPC_DRACONIAN))
+            return 1000;
+        return Form::get_ac_bonus();
     }
 
     /**
@@ -735,6 +779,7 @@ public:
            DEFAULT_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           6, 0, 0,   // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            10, 5, SPWPN_DRAINING, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -777,6 +822,7 @@ public:
            DEFAULT_DURATION, // duration
            -5, 5,    // str mod, dex mod
            SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            false, 10,                 // can_cast, spellcasting penalty
            12, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "Teeth",             // name of unarmed-combat "weapon" (in UI)
@@ -860,6 +906,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            false, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "Teeth",             // name of unarmed-combat "weapon" (in UI)
@@ -883,6 +930,7 @@ public:
            FormDuration(10, PS_DOUBLE, 60), // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
+           0, 0, 0,   // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -944,6 +992,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
+           20, 0, 50,     // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            10, 12, SPWPN_NORMAL, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
            "Branches",             // name of unarmed-combat "weapon" (in UI)
@@ -972,6 +1021,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            false, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "Teeth",             // name of unarmed-combat "weapon" (in UI)
@@ -995,6 +1045,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
+           5, 0, 50,    // flat AC, spellpower AC, XL AC
            false, 0,                 // can_cast, spellcasting penalty
            10, 5, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "Misty tendrils",             // name of unarmed-combat "weapon" (in UI)
@@ -1024,6 +1075,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            false, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -1048,6 +1100,7 @@ public:
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
+           12, 0, 0,    // flat AC, spellpower AC, XL AC
            false, 0,                 // can_cast, spellcasting penalty
            10, 12, SPWPN_CONFUSE, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
            "Spores",             // name of unarmed-combat "weapon" (in UI)
@@ -1087,6 +1140,7 @@ public:
            DEFAULT_DURATION, // duration
            0, 0,    // str mod, dex mod
            SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
+           0, 0, 0,    // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            0, 3, SPWPN_NORMAL, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
@@ -1140,6 +1194,7 @@ public:
            FormDuration(4, PS_TENTH, 12), // duration
            8, 0,    // str mod, dex mod
            SIZE_BIG, 15, 6,    // size, hp mod, stealth mod
+           6, 5, 0,    // flat AC, spellpower AC, XL AC
            true, 0,                 // can_cast, spellcasting penalty
            10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
            "",             // name of unarmed-combat "weapon" (in UI)
