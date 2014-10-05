@@ -129,6 +129,7 @@ enum tag_minor_version
     TAG_MINOR_CORPSE_CRASH,        // don't crash when loading corpses
     TAG_MINOR_INIT_RND,            // initialize rnd in more places
     TAG_MINOR_RING_PLUSSES,        // don't generate +144 rings
+    TAG_MINOR_BLESSED_WPNS,        // Remove blessed long blade base types
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

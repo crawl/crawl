@@ -3139,12 +3139,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_LONGBOW:               return TILE_WPN_LONGBOW;
     case WPN_LAJATANG:              return TILE_WPN_LAJATANG;
     case WPN_BARDICHE:              return TILE_WPN_BARDICHE;
-    case WPN_BLESSED_FALCHION:      return TILE_WPN_FALCHION;
-    case WPN_BLESSED_LONG_SWORD:    return TILE_WPN_LONG_SWORD;
-    case WPN_BLESSED_SCIMITAR:      return TILE_WPN_SCIMITAR;
-    case WPN_BLESSED_GREAT_SWORD:   return TILE_WPN_GREAT_SWORD;
-    case WPN_BLESSED_DOUBLE_SWORD:  return TILE_WPN_BLESSED_DOUBLE_SWORD;
-    case WPN_BLESSED_TRIPLE_SWORD:  return TILE_WPN_BLESSED_TRIPLE_SWORD;
     }
 
     return TILE_ERROR;

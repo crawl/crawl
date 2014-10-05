@@ -505,13 +505,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                                          0);
             break;
 
-        case WPN_BLESSED_FALCHION:      // special gifts of TSO
-        case WPN_BLESSED_LONG_SWORD:
-        case WPN_BLESSED_SCIMITAR:
-        case WPN_EUDEMON_BLADE:
-        case WPN_BLESSED_DOUBLE_SWORD:
-        case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_EUDEMON_BLADE:      // special gifts of TSO
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
             rc = SPWPN_HOLY_WRATH;

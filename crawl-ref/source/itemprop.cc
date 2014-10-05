@@ -263,21 +263,12 @@ static const weapon_def Weapon_prop[] =
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10 },      // or perhaps DAMV_CHOPPING is more apt?
-    { WPN_BLESSED_FALCHION,      "blessed falchion",       9,  2, 12, 170,  3,
-        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 0, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 7, 10 },
-    { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
-        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 0, 0 },
     { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 6, 10 },
-    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
-        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
-        DAMV_SLICING, 0, 0 },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 2 },
@@ -287,21 +278,32 @@ static const weapon_def Weapon_prop[] =
     { WPN_DOUBLE_SWORD,          "double sword",        15, -1, 15, 220,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 2 },
-    { WPN_BLESSED_DOUBLE_SWORD, "blessed double sword", 16, -2, 14, 220,  3,
-        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
-        DAMV_SLICING, 0, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 16, 250,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 6, 10 },
-    { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
-        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
-        DAMV_SLICING, 0, 0 },
     { WPN_TRIPLE_SWORD,              "triple sword",              19, -4, 19, 260,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 2 },
-    { WPN_BLESSED_TRIPLE_SWORD,      "blessed triple sword",      20, -5, 18, 260,  5,
+#if TAG_MAJOR_VERSION == 34
+    { WPN_BLESSED_FALCHION,      "old falchion",         8,  2, 13, 170,  3,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
+        DAMV_SLICING, 0, 0 },
+    { WPN_BLESSED_LONG_SWORD,    "old long sword",      10,  1, 14, 160,  3,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
+    { WPN_BLESSED_SCIMITAR,      "old scimitar",        12, -2, 14, 170,  3,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
+    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     15, -1, 15, 220,  3,
+        SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        DAMV_SLICING, 0, 0 },
+    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     16, -3, 16, 250,  5,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0 },
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword",19, -4, 19, 260,  5,
+        SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        DAMV_SLICING, 0, 0 },
+#endif
 
     // Axes
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
@@ -1423,7 +1425,9 @@ bool is_demonic_weapon_type(int wpn_type)
  */
 bool is_blessed_weapon_type(int wpn_type)
 {
-    return wpn_type >= WPN_BLESSED_FALCHION && wpn_type <= WPN_TRISHULA;
+    return wpn_type == WPN_EUDEMON_BLADE
+           || wpn_type == WPN_SACRED_SCOURGE
+           || wpn_type == WPN_TRISHULA;
 }
 
 /**
@@ -1473,9 +1477,7 @@ bool is_blessed_convertible(const item_def &item)
     return !is_artefact(item)
            && (item.base_type == OBJ_WEAPONS
                && (is_demonic(item)
-                   || item.sub_type == WPN_SACRED_SCOURGE
-                   || item.sub_type == WPN_TRISHULA
-                   || item_attack_skill(item) == SK_LONG_BLADES));
+                   || is_blessed(item)));
 }
 
 bool convert2good(item_def &item)
@@ -1487,13 +1489,7 @@ bool convert2good(item_def &item)
     {
     default: return false;
 
-    case WPN_FALCHION:      item.sub_type = WPN_BLESSED_FALCHION; break;
-    case WPN_LONG_SWORD:    item.sub_type = WPN_BLESSED_LONG_SWORD; break;
-    case WPN_SCIMITAR:      item.sub_type = WPN_BLESSED_SCIMITAR; break;
     case WPN_DEMON_BLADE:   item.sub_type = WPN_EUDEMON_BLADE; break;
-    case WPN_DOUBLE_SWORD: item.sub_type = WPN_BLESSED_DOUBLE_SWORD; break;
-    case WPN_GREAT_SWORD:   item.sub_type = WPN_BLESSED_GREAT_SWORD; break;
-    case WPN_TRIPLE_SWORD:      item.sub_type = WPN_BLESSED_TRIPLE_SWORD; break;
     case WPN_DEMON_WHIP:    item.sub_type = WPN_SACRED_SCOURGE; break;
     case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
     }
@@ -1510,13 +1506,7 @@ bool convert2bad(item_def &item)
     {
     default: return false;
 
-    case WPN_BLESSED_FALCHION:     item.sub_type = WPN_FALCHION; break;
-    case WPN_BLESSED_LONG_SWORD:   item.sub_type = WPN_LONG_SWORD; break;
-    case WPN_BLESSED_SCIMITAR:     item.sub_type = WPN_SCIMITAR; break;
     case WPN_EUDEMON_BLADE:        item.sub_type = WPN_DEMON_BLADE; break;
-    case WPN_BLESSED_DOUBLE_SWORD:item.sub_type = WPN_DOUBLE_SWORD; break;
-    case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_GREAT_SWORD; break;
-    case WPN_BLESSED_TRIPLE_SWORD:     item.sub_type = WPN_TRIPLE_SWORD; break;
     case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
     case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
     }
