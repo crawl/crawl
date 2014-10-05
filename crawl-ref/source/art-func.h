@@ -1071,7 +1071,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
         else
         {
             const monster* mons = defender->as_monster();
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            for (unsigned i = 0; i < mons->spells.size(); i++)
                 school |= get_spell_disciplines(mons->spells[i].spell);
         }
         if (school != SPTYP_NONE)

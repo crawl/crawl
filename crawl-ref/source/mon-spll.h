@@ -12,10 +12,8 @@
         {
             { spell type, frequency, flags },
             { spell type, frequency, flags },
-            { spell type, frequency, flags },
-            { spell type, frequency, flags },
-            { spell type, frequency, flags },
-            { spell type, frequency, flags }
+            [...]
+            { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
         }
     }
 
@@ -29,8 +27,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 9, MON_SPELL_WIZARD },
        { SPELL_HASTE, 9, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 18, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -40,8 +37,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 9, MON_SPELL_WIZARD  },
        { SPELL_MAGIC_DART, 9, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 18, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -53,6 +49,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
        { SPELL_MAGIC_DART, 9, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 9, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -63,7 +60,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INJURY_MIRROR, 20, MON_SPELL_PRIEST },
        { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
        { SPELL_HAUNT, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -72,9 +69,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BROTHERS_IN_ARMS, 21, MON_SPELL_PRIEST },
        { SPELL_BERSERKER_RAGE, 21, MON_SPELL_PRIEST },
        { SPELL_TROGS_HAND, 21, MON_SPELL_PRIEST  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -83,9 +78,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DRAIN_LIFE, 30, MON_SPELL_PRIEST },
        { SPELL_ANIMATE_DEAD, 15, MON_SPELL_PRIEST },
        { SPELL_INJURY_MIRROR, 15, MON_SPELL_PRIEST  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -94,9 +87,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VENOM_BOLT, 19, MON_SPELL_WIZARD },
        { SPELL_SLOW, 19, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_ENCIRCLE, 19, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -108,6 +99,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -119,6 +111,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD  },
        { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -129,7 +122,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
        { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -140,18 +133,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
        { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_HELLION,
       {
        { SPELL_HELLFIRE_BURST, 57, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -160,9 +149,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VAMPIRIC_DRAINING, 0, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 0, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 0, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -173,7 +160,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD  },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
@@ -184,7 +171,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 20, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 10, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
@@ -192,10 +179,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 29, MON_SPELL_INNATE },
        { SPELL_FIREBALL, 29, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -203,21 +187,14 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 36, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 36, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_BRAIN_WORM,
       {
        { SPELL_BRAIN_FEED, 55, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -229,6 +206,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MASS_CONFUSION, 10, MON_SPELL_INNATE },
        { SPELL_BLINK, 10, MON_SPELL_INNATE },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -237,9 +215,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 20, MON_SPELL_INNATE },
        { SPELL_PHANTOM_MIRROR, 20, MON_SPELL_INNATE  },
        { SPELL_BLINK, 10, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -250,7 +226,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DRAIN_MAGIC, 12, MON_SPELL_INNATE },
        { SPELL_CONFUSE, 12, MON_SPELL_INNATE },
        { SPELL_TELEPORT_OTHER, 12, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -258,10 +234,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CREATE_TENTACLES, 44, MON_SPELL_INNATE },
        { SPELL_INK_CLOUD, 22, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -272,18 +245,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_DEMON, 12, MON_SPELL_WIZARD  },
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_STEAM_DRAGON,
       {
        { SPELL_STEAM_BALL, 54, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -292,9 +261,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PAIN, 13, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 26, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -303,9 +270,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PAIN, 17, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK, 17, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -315,8 +280,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AGONY, 15, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 15, MON_SPELL_WIZARD },
        { SPELL_SIMULACRUM, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
@@ -326,8 +290,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AGONY, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -339,6 +302,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -350,6 +314,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_SLOW, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -360,7 +325,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -372,6 +337,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -383,6 +349,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -392,8 +359,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CANTRIP, 13, MON_SPELL_PRIEST  },
        { SPELL_SMITING, 13, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 13, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -404,18 +370,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 10, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 10, MON_SPELL_PRIEST },
        { SPELL_MINOR_HEALING, 10, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_MOTTLED_DRAGON,
       {
        { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -423,10 +385,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HELLFIRE, 34, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 17, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -434,10 +393,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HELLFIRE, 28, MON_SPELL_INNATE },
        { SPELL_IRON_SHOT, 14, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -445,10 +401,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_COLD, 46, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 23, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -458,8 +411,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 17, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 17, MON_SPELL_INNATE },
        { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -467,32 +419,21 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PAIN, 28, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 29, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_STORM_DRAGON,
       {
        { SPELL_LIGHTNING_BOLT, 64, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_WHITE_IMP,
       {
        { SPELL_THROW_FROST, 52, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -500,10 +441,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_IRON_SHOT, 19, MON_SPELL_INNATE },
        { SPELL_SUMMON_UFETUBUS, 38, MON_SPELL_INNATE  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -512,9 +450,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALMUTATE, 19, MON_SPELL_INNATE },
        { SPELL_BRAIN_FEED, 19, MON_SPELL_INNATE },
        { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -522,10 +458,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_TELEPORT_OTHER, 28, MON_SPELL_INNATE },
        { SPELL_TELEPORT_SELF, 28, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -534,9 +467,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STICKY_FLAME_RANGE, 19, MON_SPELL_INNATE },
        { SPELL_STEAM_BALL, 19, MON_SPELL_INNATE },
        { SPELL_SMITING, 19, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -547,7 +478,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CONFUSE, 13, MON_SPELL_INNATE },
        { SPELL_MALMUTATE, 13, MON_SPELL_INNATE },
        { SPELL_DIG, 13, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -556,9 +487,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_POISON_ARROW, 21, MON_SPELL_INNATE },
        { SPELL_POISONOUS_CLOUD, 21, MON_SPELL_INNATE },
        { SPELL_VENOM_BOLT, 21, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -568,8 +497,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FIREBALL, 16, MON_SPELL_INNATE },
        { SPELL_STICKY_FLAME_RANGE, 16, MON_SPELL_INNATE },
        { SPELL_SMITING, 16, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -579,8 +507,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FREEZING_CLOUD, 16, MON_SPELL_INNATE },
        { SPELL_AIRSTRIKE, 16, MON_SPELL_INNATE },
        { SPELL_BOLT_OF_COLD, 16, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -589,9 +516,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 18, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 36, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 18, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -600,9 +525,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_COLD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -610,10 +533,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BLINK, 15, MON_SPELL_WIZARD },
        { SPELL_SUMMON_VERMIN, 45, MON_SPELL_WIZARD  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -623,8 +543,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 15, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 15, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -634,8 +553,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALIGN_OFFERING, 14, MON_SPELL_PRIEST },
        { SPELL_SMITING, 14, MON_SPELL_PRIEST },
        { SPELL_TWISTED_RESURRECTION, 14, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -646,7 +564,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALIGN_OFFERING, 12, MON_SPELL_PRIEST },
        { SPELL_SMITING, 12, MON_SPELL_PRIEST },
        { SPELL_TWISTED_RESURRECTION, 12, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -655,9 +573,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_DEMON, 24, MON_SPELL_WIZARD  },
        { SPELL_SUMMON_GREATER_DEMON, 24, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -668,7 +584,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 22, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -679,7 +595,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 22, MON_SPELL_WIZARD },
        { SPELL_SUMMON_DEMON, 11, MON_SPELL_WIZARD },
        { SPELL_HELLFIRE, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -689,8 +605,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VAMPIRIC_DRAINING, 22, MON_SPELL_WIZARD },
        { SPELL_CALL_LOST_SOUL, 11, MON_SPELL_WIZARD },
        { SPELL_TWISTED_RESURRECTION, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -699,20 +614,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_WIZARD },
        { SPELL_SUMMON_DEMON, 19, MON_SPELL_WIZARD },
        { SPELL_CANTRIP, 19, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_NAGA,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -724,6 +633,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_POISON_ARROW, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -731,65 +641,42 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 16, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_SHINING_EYE,
       {
        { SPELL_MALMUTATE, 57, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_FROST_GIANT,
       {
        { SPELL_BOLT_OF_COLD, 66, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_ANGEL,
       {
        { SPELL_MINOR_HEALING, 62, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_DAEVA,
       {
        { SPELL_SMITING, 64, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_SHADOW_DRAGON,
       {
        { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -800,7 +687,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MINOR_HEALING, 22, MON_SPELL_WIZARD },
        { SPELL_SMITING, 11, MON_SPELL_WIZARD },
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -810,8 +697,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 12, MON_SPELL_PRIEST },
        { SPELL_SYMBOL_OF_TORMENT, 12, MON_SPELL_PRIEST },
        { SPELL_SUMMON_UNDEAD, 24, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -819,10 +705,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LIGHTNING_BOLT, 44, MON_SPELL_INNATE },
        { SPELL_BLINK, 22, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -831,9 +714,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 32, MON_SPELL_INNATE },
        { SPELL_FIREBALL, 32, MON_SPELL_INNATE },
        { SPELL_MALMUTATE, 16, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -841,43 +722,28 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PAIN, 17, MON_SPELL_INNATE },
        { SPELL_ANIMATE_DEAD, 34, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_HELL_HOG,
       {
        { SPELL_STICKY_FLAME_SPLASH, 61, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_SWAMP_DRAGON,
       {
        { SPELL_POISONOUS_CLOUD, 59, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_SWAMP_DRAKE,
       {
        { SPELL_NOXIOUS_CLOUD, 54, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -885,10 +751,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_SUMMON_DRAGON, 35, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -897,42 +760,28 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SHADOW_CREATURES, 33, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_EYE_OF_DEVASTATION,
       {
        { SPELL_ENERGY_BOLT, 60, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_QUICKSILVER_DRAGON,
       {
        { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_IRON_DRAGON,
       {
        { SPELL_METAL_SPLINTERS, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -944,17 +793,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_DEATH_DRAKE,
       {
        { SPELL_MIASMA_BREATH, 59, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -965,18 +811,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FIREBALL, 13, MON_SPELL_WIZARD },
        { SPELL_HELLFIRE, 13, MON_SPELL_WIZARD },
        { SPELL_HELLFIRE_BURST, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_DRAC_CALLER,
       {
        { SPELL_SUMMON_DRAKES, 66, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -987,7 +829,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_RANGE, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_ENCIRCLE, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -995,10 +837,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SYMBOL_OF_TORMENT, 26, MON_SPELL_INNATE },
        { SPELL_SUMMON_MUSHROOMS, 39, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1008,8 +847,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_ICICLE, 12, MON_SPELL_INNATE },
        { SPELL_FREEZING_CLOUD, 12, MON_SPELL_INNATE },
        { SPELL_SUMMON_ICE_BEAST, 24, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1017,11 +855,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_BERSERK_ESCAPE,
       {
        { SPELL_BERSERKER_RAGE, 57, MON_SPELL_INNATE | MON_SPELL_EMERGENCY },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1031,19 +865,14 @@ static const mon_spellbook mspell_list[] =
         { SPELL_STEAM_BALL, 16, MON_SPELL_WIZARD },
         { SPELL_THROW_ICICLE, 16, MON_SPELL_WIZARD },
         { SPELL_BLINK, 16, MON_SPELL_WIZARD },
-        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_ALLIGATOR,
       {
        { SPELL_SWIFTNESS, 62, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1057,8 +886,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 8, MON_SPELL_WIZARD },
        { SPELL_HASTE, 8, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 17, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1067,9 +895,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PARALYSE, 16, MON_SPELL_INNATE },
        { SPELL_CONFUSE, 16, MON_SPELL_INNATE },
        { SPELL_BERSERKER_RAGE, 33, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1082,7 +908,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_OTHER_CLOSE, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 13, MON_SPELL_WIZARD },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1090,10 +916,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BLINK, 28, MON_SPELL_WIZARD  },
        { SPELL_TELEPORT_SELF, 28, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1102,9 +925,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PAIN, 18, MON_SPELL_WIZARD },
        { SPELL_HASTE, 18, MON_SPELL_WIZARD  },
        { SPELL_SYMBOL_OF_TORMENT, 18, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1113,9 +934,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_SMALL_MAMMAL, 14, MON_SPELL_WIZARD },
        { SPELL_SUMMON_MINOR_DEMON, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 27, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1126,18 +945,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 11, MON_SPELL_WIZARD },
        { SPELL_WATER_ELEMENTALS, 22, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_PRINCE_RIBBIT,
       {
        { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1145,10 +960,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BLINK_RANGE, 30, MON_SPELL_WIZARD },
        { SPELL_HASTE, 30, MON_SPELL_WIZARD  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1159,7 +971,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MONSTROUS_MENAGERIE, 11, MON_SPELL_WIZARD },
        { SPELL_CORONA, 11, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1171,6 +983,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 9, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 9, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1180,8 +993,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_OZOCUBUS_REFRIGERATION, 20, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1192,7 +1004,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SWIFTNESS, 12, MON_SPELL_WIZARD },
        { SPELL_SUMMON_SMALL_MAMMAL, 12, MON_SPELL_WIZARD },
        { SPELL_CANTRIP, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1202,8 +1014,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SWIFTNESS, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 14, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 14, MON_SPELL_WIZARD    },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1211,11 +1022,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_GERYON,
       {
        { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1225,8 +1032,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_INNATE },
        { SPELL_IRON_SHOT, 13, MON_SPELL_INNATE },
        { SPELL_HELLFIRE, 13, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1235,9 +1041,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 22, MON_SPELL_INNATE },
        { SPELL_HELLFIRE, 22, MON_SPELL_INNATE },
        { SPELL_FIRE_SUMMON, 22, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1249,6 +1053,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_INNATE },
        { SPELL_PARALYSE, 11, MON_SPELL_INNATE },
        { SPELL_MAJOR_HEALING, 11, MON_SPELL_INNATE },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1256,10 +1061,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LIGHTNING_BOLT, 24, MON_SPELL_INNATE },
        { SPELL_FLASH_FREEZE, 48, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1268,9 +1070,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_INNATE },
        { SPELL_CREATE_TENTACLES, 27, MON_SPELL_INNATE },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1281,7 +1081,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MAJOR_HEALING, 30, MON_SPELL_INNATE },
        { SPELL_TORNADO, 60, MON_SPELL_INNATE },
        { SPELL_BLINK_RANGE, 30, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1291,8 +1091,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 11, MON_SPELL_INNATE },
        { SPELL_HASTE, 36, MON_SPELL_INNATE  },
        { SPELL_SUMMON_GREATER_DEMON, 11, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1303,7 +1102,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SYMBOL_OF_TORMENT, 20, MON_SPELL_INNATE },
        { SPELL_BOLT_OF_DRAINING, 20, MON_SPELL_INNATE },
        { SPELL_DISPEL_UNDEAD, 20, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1314,7 +1113,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_WIZARD },
        { SPELL_SUMMON_UNDEAD, 11, MON_SPELL_WIZARD },
        { SPELL_TOMB_OF_DOROKLOHE, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1324,18 +1123,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_CHAIN_LIGHTNING, 23, MON_SPELL_WIZARD },
        { SPELL_BLINK, 23, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_DISSOLUTION,
       {
        { SPELL_SUMMON_EYEBALLS, 62, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1344,9 +1139,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VENOM_BOLT, 32, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 16, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1354,10 +1147,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PAIN, 21, MON_SPELL_INNATE },
        { SPELL_HASTE, 41, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1366,9 +1156,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AGONY, 17, MON_SPELL_INNATE },
        { SPELL_PAIN, 17, MON_SPELL_INNATE },
        { SPELL_HASTE, 34, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1376,10 +1164,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 30, MON_SPELL_WIZARD },
        { SPELL_BLINK, 29, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1390,7 +1175,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_ILLUSION, 14, MON_SPELL_INNATE },
        { SPELL_PAIN, 14, MON_SPELL_INNATE },
        { SPELL_TELEPORT_SELF, 14, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1401,7 +1186,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
        { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1411,8 +1196,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1420,10 +1204,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_MIGHT, 34, MON_SPELL_PRIEST  },
        { SPELL_HASTE, 34, MON_SPELL_PRIEST  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1433,8 +1214,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AWAKEN_FOREST, 15, MON_SPELL_WIZARD },
        { SPELL_DRUIDS_CALL, 15, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1443,9 +1223,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AIRSTRIKE, 32, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_WIZARD },
        { SPELL_CONTROL_WINDS, 16, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1457,6 +1235,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MASS_CONFUSION, 11, MON_SPELL_WIZARD },
        { SPELL_STRIP_RESISTANCE, 11, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1464,10 +1243,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_FIRE_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BLINK, 35, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1476,9 +1252,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PAIN, 19, MON_SPELL_INNATE },
        { SPELL_PARALYSE, 19, MON_SPELL_INNATE },
        { SPELL_BLINK, 19, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1487,9 +1261,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 21, MON_SPELL_INNATE },
        { SPELL_SLOW, 21, MON_SPELL_INNATE },
        { SPELL_METAL_SPLINTERS, 21, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1497,10 +1269,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_IRON_SHOT, 36, MON_SPELL_INNATE },
        { SPELL_IRON_ELEMENTALS, 36, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1509,9 +1278,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CONFUSE, 17, MON_SPELL_WIZARD },
        { SPELL_SILENCE, 17, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 34, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1521,8 +1288,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_SPECTRAL_ORCS, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
        { SPELL_DEATHS_DOOR, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1530,32 +1296,21 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BLINK_CLOSE, 29, MON_SPELL_INNATE },
        { SPELL_BLINK_AWAY, 29, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_ORB_SPIDER,
       {
        { SPELL_IOOD, 57, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_PEARL_DRAGON,
       {
        { SPELL_HOLY_BREATH, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1563,10 +1318,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 32, MON_SPELL_INNATE },
        { SPELL_HOLY_FLAMES, 32, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1575,9 +1327,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 28, MON_SPELL_WIZARD },
        { SPELL_SLOW, 28, MON_SPELL_WIZARD },
        { SPELL_CORPSE_ROT, 28, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1587,8 +1337,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MESMERISE, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_CLOSE, 17, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 17, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1596,32 +1345,21 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_DRAINING, 21, MON_SPELL_INNATE },
        { SPELL_CAUSE_FEAR, 21, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_BASILISK,
       {
        { SPELL_PETRIFY, 56, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_CATOBLEPAS,
       {
        { SPELL_PETRIFYING_CLOUD, 64, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1629,10 +1367,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SHADOW_CREATURES, 30, MON_SPELL_INNATE },
        { SPELL_SUMMON_DEMON, 30, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1641,10 +1376,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HOLY_LIGHT, 40, MON_SPELL_INNATE },
        { SPELL_SILVER_BLAST, 40, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 #endif
@@ -1655,8 +1387,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HEAL_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_HASTE_OTHER, 11, MON_SPELL_PRIEST },
        { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1666,8 +1397,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
        { SPELL_VENOM_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1678,7 +1408,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 14, MON_SPELL_WIZARD },
        { SPELL_HELLFIRE, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 14, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1689,40 +1419,28 @@ static const mon_spellbook mspell_list[] =
        { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 12, MON_SPELL_WIZARD },
        { SPELL_BLINK_RANGE, 23, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_SOUL_EATER,
       {
        { SPELL_DRAIN_LIFE, 30, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_WRETCHED_STAR,
       {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 60, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_TENTACLED_STARSPAWN,
       {
        { SPELL_CREATE_TENTACLES, 66, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1733,7 +1451,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 21, MON_SPELL_INNATE },
        { SPELL_IRON_SHOT, 11, MON_SPELL_INNATE },
        { SPELL_SUMMON_DEMON, 11, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1743,19 +1461,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
        { SPELL_CALL_IMP, 13, MON_SPELL_WIZARD },
        { SPELL_MEPHITIC_CLOUD, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_THRASHING_HORROR,
       {
        { SPELL_MIGHT, 59, MON_SPELL_INNATE | MON_SPELL_EMERGENCY },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1765,8 +1478,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PETRIFY, 16, MON_SPELL_WIZARD },
        { SPELL_SHATTER, 16, MON_SPELL_WIZARD },
        { SPELL_DIG, 16, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1774,10 +1486,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LRD, 31, MON_SPELL_WIZARD },
        { SPELL_DIG, 31, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1786,20 +1495,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_MIGHT_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_MINOR_HEALING, 21, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_VAULT_SENTINEL,
       {
        { SPELL_SENTINEL_MARK, 58, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1807,10 +1510,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_MIGHT_OTHER, 30, MON_SPELL_WIZARD },
        { SPELL_WORD_OF_RECALL, 30, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1818,10 +1518,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_INJURY_BOND, 21, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 41, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1830,9 +1527,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SHADOW_CREATURES, 100, MON_SPELL_INNATE },
        { SPELL_PLANEREND, 67, MON_SPELL_INNATE },
        { SPELL_PHANTOM_MIRROR, 33, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1841,9 +1536,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 21, MON_SPELL_WIZARD },
        { SPELL_PAIN, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1852,9 +1545,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 21, MON_SPELL_WIZARD },
        { SPELL_STONE_ARROW, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1863,8 +1554,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VENOM_BOLT, 21, MON_SPELL_WIZARD },
        { SPELL_HAUNT, 21, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 21, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1873,9 +1563,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 21, MON_SPELL_WIZARD },
        { SPELL_SLOW, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD  },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1885,8 +1573,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_GHOSTLY_FLAMES, 17, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1895,9 +1582,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AWAKEN_VINES, 23, MON_SPELL_WIZARD },
        { SPELL_AWAKEN_FOREST, 23, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1905,10 +1590,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_SLOW, 30, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1916,10 +1598,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_SLOW, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1927,10 +1606,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1938,10 +1614,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1951,8 +1624,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1962,8 +1634,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_MAGMA, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1973,8 +1644,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1984,8 +1654,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VENOM_BOLT, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -1994,9 +1663,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 27, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 27, MON_SPELL_WIZARD  },
        { SPELL_FREEZING_CLOUD, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2005,9 +1672,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_MAGMA, 17, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 34, MON_SPELL_WIZARD  },
        { SPELL_FIREBALL, 17, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2017,8 +1682,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CORROSIVE_BOLT, 13, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 27, MON_SPELL_WIZARD  },
        { SPELL_POISONOUS_CLOUD, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2028,19 +1692,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_WIND_BLAST, 28, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 14, MON_SPELL_WIZARD },
        { SPELL_AIR_ELEMENTALS, 14, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_WIND_DRAKE,
       {
        { SPELL_AIRSTRIKE, 29, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2048,21 +1707,14 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_THORN_VOLLEY, 43, MON_SPELL_INNATE },
        { SPELL_WALL_OF_BRAMBLES, 22, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_WATER_NYMPH,
       {
        { SPELL_WATERSTRIKE, 60, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2073,7 +1725,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 11, MON_SPELL_PRIEST },
        { SPELL_ANIMATE_DEAD, 11, MON_SPELL_PRIEST },
        { SPELL_MINOR_HEALING, 22, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2083,9 +1735,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FREEZE, 22, MON_SPELL_WIZARD },
        { SPELL_THROW_ICICLE, 22, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2094,10 +1744,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_MAGMA, 19, MON_SPELL_WIZARD },
        { SPELL_STONE_ARROW, 37, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2108,8 +1755,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_VENOM_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 22, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2120,8 +1766,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STICKY_FLAME_RANGE, 11, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 22, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2132,29 +1777,23 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FORCE_LANCE, 11, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 22, MON_SPELL_WIZARD  },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 11, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
+
     {  MST_ASTERION,
       {
        { SPELL_MAJOR_DESTRUCTION, 11, MON_SPELL_PRIEST },
        { SPELL_SPECTRAL_WEAPON, 22, MON_SPELL_WIZARD },
        { SPELL_HASTE, 32, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_RAIJU,
       {
        { SPELL_BLINKBOLT, 57, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2166,6 +1805,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2177,6 +1817,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_SLOW, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2188,6 +1829,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 10, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 10, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2199,6 +1841,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2209,17 +1852,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD  },
        { SPELL_TELEPORT_OTHER, 20, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 10, MON_SPELL_WIZARD },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_NAGA_SNIPER,
       {
        { SPELL_PORTAL_PROJECTILE, 59, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2228,9 +1868,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_OLGREBS_TOXIC_RADIANCE, 23, MON_SPELL_WIZARD },
        { SPELL_VIRULENCE, 23, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2240,19 +1878,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 24, MON_SPELL_WIZARD },
        { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_WORLDBINDER,
       {
        { SPELL_FORCEFUL_INVITATION, 58, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2260,10 +1893,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LEGENDARY_DESTRUCTION, 32, MON_SPELL_PRIEST },
        { SPELL_EPHEMERAL_INFUSION, 32, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2271,10 +1901,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PLANEREND, 32, MON_SPELL_PRIEST },
        { SPELL_CORRUPT_BODY, 32, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2282,10 +1909,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_RANDOM_BOLT, 16, MON_SPELL_PRIEST },
        { SPELL_CHAOTIC_MIRROR, 16, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2295,8 +1919,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALIGN_OFFERING, 13, MON_SPELL_PRIEST },
        { SPELL_BLACK_MARK, 26, MON_SPELL_PRIEST },
        { SPELL_DISPEL_UNDEAD, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2304,10 +1927,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SAP_MAGIC, 16, MON_SPELL_PRIEST },
        { SPELL_GRAND_AVATAR, 32, MON_SPELL_PRIEST },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2318,7 +1938,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
        { SPELL_SIMULACRUM, 13, MON_SPELL_WIZARD },
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2329,7 +1949,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VAMPIRIC_DRAINING, 13, MON_SPELL_WIZARD },
        { SPELL_AGONY, 13, MON_SPELL_WIZARD },
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2340,7 +1960,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 13, MON_SPELL_WIZARD },
        { SPELL_OZOCUBUS_ARMOUR, 13, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2350,52 +1970,35 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_ALLIES_AWAY, 0, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 0, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 0, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_CRYSTAL_GUARDIAN,
       {
        { SPELL_CRYSTAL_BOLT, 66, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_GARGOYLE,
       {
        { SPELL_STONE_ARROW, 56, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_MOLTEN_GARGOYLE,
       {
        { SPELL_BOLT_OF_MAGMA, 57, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_OCTOPODE_CRUSHER,
       {
        { SPELL_IRON_SHOT, 26, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2405,8 +2008,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2414,10 +2016,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SUMMON_MINOR_DEMON, 30, MON_SPELL_INNATE },
        { SPELL_SUMMON_DEMON, 30, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2426,9 +2025,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BRAIN_FEED, 20, MON_SPELL_INNATE },
        { SPELL_DRAIN_MAGIC, 20, MON_SPELL_INNATE },
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2437,20 +2034,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_UNDEAD, 33, MON_SPELL_INNATE },
        { SPELL_BLACK_MARK, 22, MON_SPELL_INNATE },
        { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
     {  MST_ELEMENTAL_WELLSPRING,
       {
        { SPELL_PRIMAL_WAVE, 65, MON_SPELL_INNATE },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2460,8 +2051,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
        { SPELL_SUMMON_UNDEAD, 26, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2471,8 +2061,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
        { SPELL_SUMMON_EMPEROR_SCORPIONS, 26, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
 
@@ -2482,9 +2071,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
        { SPELL_SUMMON_UNDEAD, 26, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
-       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
+       { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
-    },
-
+    }
 };

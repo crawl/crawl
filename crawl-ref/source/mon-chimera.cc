@@ -179,8 +179,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
         max_hp = dummy.max_hit_points;
         xl = dummy.get_hit_dice();
         // Copy all spells from first part
-        for (int n = 0; n < NUM_MONSTER_SPELL_SLOTS; ++n)
-            spells[n] = dummy.spells[n];
+        spells = dummy.spells;
         return;
     }
     // Make sure resulting chimera can use spells

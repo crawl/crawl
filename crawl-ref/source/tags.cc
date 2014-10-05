@@ -4151,9 +4151,8 @@ void marshallMonster(writer &th, const monster& m)
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         if (m.inv[i] != NON_ITEM)
             parts |= MP_ITEMS;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        if (m.spells[i].spell != SPELL_NO_SPELL)
-            parts |= MP_SPELLS;
+    if (m.spells.size() > 0)
+        parts |= MP_SPELLS;
 
     marshallShort(th, m.type);
     marshallUnsigned(th, parts);
@@ -5521,7 +5520,9 @@ static void _draw_tiles()
 
 static void marshallSpells(writer &th, const monster_spells &spells)
 {
-    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+    const uint8_t spellsize = spells.size();
+    marshallByte(th, spellsize);
+    for (int j = 0; j < spellsize; ++j)
     {
         marshallShort(th, spells[j].spell);
         marshallByte(th, spells[j].freq);
@@ -5535,7 +5536,14 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 #endif
                             )
 {
-    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+    const uint8_t spellsize =
+#if TAG_MAJOR_VERSION == 34
+
+        (th.getMinorVersion() < TAG_MINOR_ARB_SPELL_SLOTS)
+            ? NUM_MONSTER_SPELL_SLOTS :
+#endif
+        unmarshallByte(th);
+    for (int j = 0; j < spellsize; ++j)
     {
         spells[j].spell = unmarshallSpellType(th
 

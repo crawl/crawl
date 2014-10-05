@@ -675,16 +675,7 @@ struct mon_spell_slot
     unsigned short flags;
 };
 
-class monster_spells : public FixedVector<mon_spell_slot,
-                                          NUM_MONSTER_SPELL_SLOTS>
-{
-public:
-    monster_spells()
-        : FixedVector<mon_spell_slot, NUM_MONSTER_SPELL_SLOTS>
-              (mon_spell_slot())
-    { }
-    void clear() { init(mon_spell_slot()); }
-};
+typedef vector<mon_spell_slot> monster_spells;
 
 class reader;
 class writer;

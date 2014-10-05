@@ -34,6 +34,7 @@
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -3629,20 +3630,16 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 {
     spec.explicit_spells = true;
     vector<string>::iterator spell_it;
+
     for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
     {
         monster_spells cur_spells;
 
         const vector<string> spell_names(split_string(";", (*spell_it)));
-        if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
-        {
-            error = make_stringf("Too many monster spells (max %d) in %s",
-                                 NUM_MONSTER_SPELL_SLOTS,
-                                 spell_it->c_str());
-            return;
-        }
+
         for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
+            cur_spells.push_back(mon_spell_slot());
             const string spname(
                 lowercase_string(replace_all_of(spell_names[i], "_", " ")));
             if (spname.empty() || spname == "." || spname == "none"
@@ -3667,17 +3664,17 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 }
                 cur_spells[i].spell = sp;
             }
-
-            monsterentry *me = get_monster_data(spec.type);
-            const uint64_t flags = me ? me->bitfields : 0;
-
-            fixup_spells(cur_spells,
-                         spec.hd > 0 ? spec.hd :
-                         me          ? me->hpdice[0]
-                                     : 1,
-                         (spec.extra_monster_flags | flags) & MF_ACTUAL_SPELLS,
-                         (spec.extra_monster_flags | flags) & MF_PRIEST);
         }
+
+        monsterentry *me = get_monster_data(spec.type);
+        const uint64_t flags = me ? me->bitfields : 0;
+
+        fixup_spells(cur_spells,
+                     spec.hd > 0 ? spec.hd :
+                     me          ? me->hpdice[0]
+                                 : 1,
+                     (spec.extra_monster_flags | flags) & MF_ACTUAL_SPELLS,
+                     (spec.extra_monster_flags | flags) & MF_PRIEST);
 
         spec.spells.push_back(cur_spells);
     }

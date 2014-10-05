@@ -707,11 +707,10 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
-    spells.init(mon_spell_slot());
+    spells.clear();
     if (m->props.exists("custom_spells") || mons_is_pghost(type))
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            spells[i] = m->spells[i];
+        spells = m->spells;
         // XXX handle here special cases for sources of magic (magic, divine, other)
         if (m->is_priest())
             this->props["priest"] = true;
@@ -1793,10 +1792,7 @@ bool monster_info::has_spells() const
     // Ghosts have a special book but may not have any spells anyways.
     if (books[0] == MST_GHOST)
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (this->spells[i].spell != SPELL_NO_SPELL)
-                return true;
-        return false;
+        return spells.size() > 0;
     }
 
     return true;

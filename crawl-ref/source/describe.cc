@@ -3866,31 +3866,29 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-    {
-        if (hspell_pass[i].spell != SPELL_NO_SPELL)
-        {
-            if (!found_spell)
-            {
-                inf.body << "\n\nMonster Spells:\n";
-                found_spell = true;
-            }
 
-            inf.body << "    " << i << ": "
-                     << spell_title(hspell_pass[i].spell)
-                     << " (";
-            if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
-                inf.body << "emergency, ";
-            if (hspell_pass[i].flags & MON_SPELL_INNATE)
-                inf.body << "innate, ";
-            if (hspell_pass[i].flags & MON_SPELL_WIZARD)
-                inf.body << "wizard, ";
-            if (hspell_pass[i].flags & MON_SPELL_PRIEST)
-                inf.body << "priest, ";
-            if (hspell_pass[i].flags & MON_SPELL_BREATH)
-                inf.body << "breath, ";
-                inf.body << (int) hspell_pass[i].freq << ")";
+    for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+    {
+        if (!found_spell)
+        {
+            inf.body << "\n\nMonster Spells:\n";
+            found_spell = true;
         }
+
+        inf.body << "    " << i << ": "
+                 << spell_title(hspell_pass[i].spell)
+                 << " (";
+        if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
+            inf.body << "emergency, ";
+        if (hspell_pass[i].flags & MON_SPELL_INNATE)
+            inf.body << "innate, ";
+        if (hspell_pass[i].flags & MON_SPELL_WIZARD)
+            inf.body << "wizard, ";
+        if (hspell_pass[i].flags & MON_SPELL_PRIEST)
+            inf.body << "priest, ";
+        if (hspell_pass[i].flags & MON_SPELL_BREATH)
+            inf.body << "breath, ";
+        inf.body << (int) hspell_pass[i].freq << ")";
     }
 
     bool has_item = false;
