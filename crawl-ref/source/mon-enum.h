@@ -36,6 +36,7 @@ enum attack_type
 {
     AT_NONE,
     AT_HIT,         // Including weapon attacks.
+    AT_FIRST_ATTACK = AT_HIT,
     AT_BITE,
     AT_STING,
     AT_SPORE,
@@ -58,6 +59,8 @@ enum attack_type
 #endif
     AT_POUNCE,
     AT_REACH_STING,
+    AT_LAST_REAL_ATTACK = AT_REACH_STING,
+
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
     AT_SHOOT,
