@@ -640,7 +640,7 @@ Hydra Form spell
 
 This spell very briefly transforms the caster into a many-headed hydra. Its
 many heads strike in all directions. Edible foes slain by the gnashing teeth
-are instantly devoured, reinvigorating the caster in their reptillian rampage.
+are instantly devoured, reinvigorating the caster in their reptilian rampage.
 %%%%
 Ice Form spell
 
