@@ -2340,21 +2340,12 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(calc_unid);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
 
-    const int rsust = player_sust_abil(calc_unid);
-    out += _resist_composer("SustAb", cwidth, rsust) + "\n";
+    const int rcorr = you.res_corr(calc_unid);
+    out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     out += _resist_composer("rMut", cwidth, rmuta) + "\n";
-
-
-    const int gourmand = you.gourmand(calc_unid);
-    const int saplevel = player_mutation_level(MUT_SAPROVOROUS);
-    const bool show_saprov = saplevel && !gourmand;
-    out += _resist_composer(show_saprov ? "Saprov" : "Gourm",
-                            cwidth,
-                            show_saprov ? saplevel : gourmand,
-                            show_saprov ? 3 : 1) + "\n";
 
     const int rmagi = player_res_magic(calc_unid) / 40;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
@@ -2376,10 +2367,17 @@ static vector<formatted_string> _get_overview_resistances(
     out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
 
-    const int rcorr = you.res_corr(calc_unid);
-    out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
-    const int rrott = you.res_rotting();
-    out += _resist_composer("rRot", cwidth, rrott) + "\n";
+    const int rsust = player_sust_abil(calc_unid);
+    out += _resist_composer("SustAb", cwidth, rsust) + "\n";
+
+    const int gourmand = you.gourmand(calc_unid);
+    const int saplevel = player_mutation_level(MUT_SAPROVOROUS);
+    const bool show_saprov = saplevel && !gourmand;
+    out += _resist_composer(show_saprov ? "Saprov" : "Gourm",
+                            cwidth,
+                            show_saprov ? saplevel : gourmand,
+                            show_saprov ? 3 : 1) + "\n";
+
     const int rspir = you.spirit_shield(calc_unid);
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
     const int rward = you.warding(calc_unid);
