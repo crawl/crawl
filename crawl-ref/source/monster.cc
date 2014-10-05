@@ -1518,7 +1518,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
     }
 
     if (mons->is_holy())
-        return is_blessed(weapon);
+        return is_blessed(weapon) || get_weapon_brand(weapon) == SPWPN_HOLY_WRATH;
 
     if (is_unrandom_artefact(weapon))
     {

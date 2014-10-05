@@ -215,8 +215,7 @@ static bool _altar_prayer()
     if (you_worship(GOD_ZIN))
         return _zin_donate_gold();
 
-    // TSO blesses weapons with holy wrath, and long blades and demon
-    // whips specially.
+    // TSO blesses weapons with holy wrath, and demon weapons specially.
     else if (can_do_capstone_ability(GOD_SHINING_ONE))
     {
         simple_god_message(" will bless one of your weapons.");

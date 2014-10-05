@@ -165,26 +165,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_BLESSED_BLADE;
         break;
 
-    // new blessed weapons
-    case WPN_BLESSED_LONG_SWORD:
-        tile = TILEP_HAND1_LONG_SWORD_SLANT;
-        break;
-    case WPN_BLESSED_GREAT_SWORD:
-        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
-        break;
-    case WPN_BLESSED_SCIMITAR:
-        tile = TILEP_HAND1_SCIMITAR;
-        break;
-    case WPN_BLESSED_FALCHION:
-        tile = TILEP_HAND1_FALCHION;
-        break;
-    case WPN_BLESSED_DOUBLE_SWORD:
-        tile = TILEP_HAND1_DOUBLE_SWORD_BLESSED;
-        break;
-    case WPN_BLESSED_TRIPLE_SWORD:
-        tile = TILEP_HAND1_TRIPLE_SWORD_BLESSED;
-        break;
-
     // Axe
     case WPN_HAND_AXE:
         tile = TILEP_HAND1_HAND_AXE;

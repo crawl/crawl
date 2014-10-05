@@ -972,14 +972,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
 
         item.sub_type  = random_choose(WPN_EUDEMON_BLADE,
-                                       WPN_BLESSED_LONG_SWORD,
-                                       WPN_BLESSED_SCIMITAR,
-                                       WPN_BLESSED_FALCHION,
+                                       WPN_SCIMITAR,
+                                       WPN_SCIMITAR,
+                                       WPN_LONG_SWORD,
                                        -1);
 
         set_equip_desc(item, ISFLAG_GLOWING);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-        item.plus   = 1 + random2(3);
+        item.plus   = 2 + random2(4);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 

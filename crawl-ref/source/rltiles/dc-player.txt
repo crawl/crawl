@@ -560,7 +560,6 @@ sword_thief SWORD_THIEF
 double_sword DOUBLE_SWORD
 double_sword2
 double_sword3
-double_sword_blessed DOUBLE_SWORD_BLESSED
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
@@ -568,7 +567,6 @@ great_sword_slant GREAT_SWORD_SLANT
 great_sword_slant2
 triple_sword TRIPLE_SWORD
 triple_sword2
-triple_sword_blessed TRIPLE_SWORD_BLESSED
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 scimitar2

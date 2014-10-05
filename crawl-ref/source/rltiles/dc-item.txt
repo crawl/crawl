@@ -85,11 +85,9 @@ greatsword3
 double_sword WPN_DOUBLE_SWORD
 double_sword2
 double_sword3
-double_sword_blessed WPN_BLESSED_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
 triple_sword2
 triple_sword3
-triple_sword_blessed WPN_BLESSED_TRIPLE_SWORD
 demon_blade WPN_DEMON_BLADE
 demon_blade2
 demon_blade3

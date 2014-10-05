@@ -473,7 +473,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
             continue;
         item_considered.sub_type = i;
 
-        // Can't get blessed blades through acquirement, only from TSO
+        // Can't get blessed weapons through acquirement, only from TSO
         if (is_blessed(item_considered))
             continue;
 
