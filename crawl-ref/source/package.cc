@@ -35,10 +35,6 @@ Notes:
 #include "errors.h"
 #include "syscalls.h"
 
-#if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
-#define DO_FSYNC
-#endif
-
 // debugging defines
 #undef  FSCK_VERBOSE
 #undef  COSTLY_ASSERTS
@@ -83,6 +79,9 @@ typedef map<plen_t, plen_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
   : n_users(0), dirty(false), aborted(false)
+#ifdef DO_FSYNC
+    , tmp(false)
+#endif
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
@@ -127,6 +126,9 @@ package::package(const char* file, bool writeable, bool empty)
 
 package::package()
   : rw(true), n_users(0), dirty(false), aborted(false)
+#ifdef DO_FSYNC
+    , tmp(true)
+#endif
 {
     dprintf("package: initializing tmp file\n");
     filename = "[tmp]";
