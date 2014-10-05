@@ -983,11 +983,7 @@ string monster_info::common_name(description_level_type desc) const
         && number > 0)
     {
         if (number < 11)
-        {
-            const char* cardinals[] = {"one", "two", "three", "four", "five",
-                                       "six", "seven", "eight", "nine", "ten"};
-            ss << cardinals[number - 1];
-        }
+            ss << number_in_words(number);
         else
             ss << make_stringf("%d", number);
 
