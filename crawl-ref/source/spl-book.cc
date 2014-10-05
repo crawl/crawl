@@ -253,6 +253,7 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_ENCHANTMENTS:
     case BOOK_PARTY_TRICKS:
+    case BOOK_FEN: // XXX: move this to weight 12 after the honeymoon
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
@@ -294,7 +295,6 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
-    case BOOK_WAR_CHANTS:
         return 100;
 #endif
 

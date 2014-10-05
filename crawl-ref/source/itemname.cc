@@ -1158,7 +1158,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:               return "Stalking";
-    case BOOK_WAR_CHANTS:             return "War Chants";
 #endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
@@ -1310,6 +1309,8 @@ string sub_type_string(const item_def &item, bool known)
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
+        else if (sub_type == BOOK_FEN)
+            return "Fen Folio";
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -2472,7 +2473,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
                 continue;
 
-            if (i == OBJ_BOOKS && (j == BOOK_STALKING || j == BOOK_WAR_CHANTS))
+            if (i == OBJ_BOOKS && j == BOOK_STALKING)
                 continue;
 #endif
 
