@@ -997,6 +997,16 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_MON;
 }
 
+static void _setup_ufetubus_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_FRAG;
+    beam.damage  = dice_def(3, 5);
+    beam.name    = "exploding ufetubus";
+    beam.colour  = LIGHTCYAN;
+    beam.ex_size = 1;
+}
+
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -1067,6 +1077,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (type == MONS_LURKING_HORROR)
         sanct_msg = "The lurking horror fades away harmlessly.";
+    else if (type == MONS_UFETUBUS)
+    {
+        _setup_ufetubus_explosion(beam, *mons);
+        sanct_msg = "By Zin's power, the ufetubus's explosion is contained.";
+    }
     else if (type == MONS_FULMINANT_PRISM)
     {
         _setup_prism_explosion(beam, *mons);
@@ -1641,6 +1656,7 @@ int monster_die(monster* mons, killer_type killer,
     if (mons->type == MONS_GIANT_SPORE
         || mons->type == MONS_BALL_LIGHTNING
         || mons->type == MONS_LURKING_HORROR
+        || mons->type == MONS_UFETUBUS
         || (mons->type == MONS_FULMINANT_PRISM && mons->number > 0)
         || mons->type == MONS_BENNU
         || mons->has_ench(ENCH_INNER_FLAME))
