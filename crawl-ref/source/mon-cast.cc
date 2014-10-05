@@ -1425,18 +1425,6 @@ static bool _animate_dead_okay(spell_type spell)
     return true;
 }
 
-// Spells that work even if magic is off.  Be careful to not add ones which
-// appear both ways (SPELL_LIGHTNING_BOLT is also storm dragon breath, etc).
-static bool _is_physiological_spell(spell_type spell)
-{
-    return spell == SPELL_QUICKSILVER_BOLT
-        || spell == SPELL_METAL_SPLINTERS
-        || spell == SPELL_STICKY_FLAME_SPLASH
-        || spell == SPELL_SPIT_POISON
-        || spell == SPELL_HOLY_BREATH
-        || spell == SPELL_FIRE_BREATH;
-}
-
 // Returns true if the spell is something you wouldn't want done if
 // you had a friendly target...  only returns a meaningful value for
 // non-beam spells.
@@ -1510,17 +1498,6 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && !callee->is_travelling();
 }
 
-// If true, this monster's spellcasting should respect the breath timer.
-static bool _is_breath_caster(monster_type mtyp)
-{
-    // Wind drakes breathe as a special ability, not a spell; but they do
-    // "cast" Airstrike by flapping their wings, and that shouldn't respect
-    // the breath timer. All other drakes and dragons have only breath
-    // spells (if you count the refrigeration roar of SoH[Coc]).
-    return mons_genus(mtyp) == MONS_DRAGON
-           || mons_genus(mtyp) == MONS_DRAKE && mtyp != MONS_WIND_DRAKE;
-}
-
 static bool _mirrorable(const monster* agent, const monster* mon)
 {
     return mon != agent
@@ -1532,8 +1509,9 @@ static bool _mirrorable(const monster* agent, const monster* mon)
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
-static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
+static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
 {
+    spell_type monspell = slot.spell;
     bool ret = false;
     actor *foe = mon->get_foe();
 
@@ -1554,7 +1532,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             return true;
     }
 
-    if (_is_breath_caster(mon->type) && mon->has_ench(ENCH_BREATH_WEAPON))
+    if (slot.flags & MON_SPELL_BREATH && mon->has_ench(ENCH_BREATH_WEAPON))
         return true;
 
     // Don't bother casting a summon spell if we're already at its cap
@@ -2067,9 +2045,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 // Spells a monster may want to cast if fleeing from the player, and
 // the player is not in sight.
 static bool _ms_useful_fleeing_out_of_sight(const monster* mon,
-                                            spell_type monspell)
+                                            mon_spell_slot slot)
 {
-    if (monspell == SPELL_NO_SPELL || _ms_waste_of_time(mon, monspell))
+    spell_type monspell = slot.spell;
+    if (monspell == SPELL_NO_SPELL || _ms_waste_of_time(mon, slot))
         return false;
 
     switch (monspell)
@@ -2092,9 +2071,10 @@ static bool _ms_useful_fleeing_out_of_sight(const monster* mon,
     return false;
 }
 
-static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
+static bool _ms_low_hitpoint_cast(const monster* mon, mon_spell_slot slot)
 {
-    if (_ms_waste_of_time(mon, monspell))
+    spell_type monspell = slot.spell;
+    if (_ms_waste_of_time(mon, slot))
         return false;
 
     bool targ_adj      = false;
@@ -2920,6 +2900,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     bool priest;
     bool wizard;
+    bool breath = false;
     bool emergency_spell = false;
     god_type god;
 
@@ -3006,7 +2987,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                     {
                         if (_ms_useful_fleeing_out_of_sight(mons,
-                                                            hspell_pass[i].spell)
+                                                            hspell_pass[i])
                             && one_chance_in(++foundcount))
                         {
                             spell_cast = hspell_pass[i].spell;
@@ -3049,7 +3030,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             int found_spell = 0;
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                if (_ms_low_hitpoint_cast(mons, hspell_pass[i].spell)
+                if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
                     && one_chance_in(++found_spell))
                 {
                     spell_cast  = hspell_pass[i].spell;
@@ -3131,7 +3112,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 if (hspell_pass[i].spell == SPELL_NO_SPELL)
                     num_no_spell++;
-                else if (_ms_waste_of_time(mons, hspell_pass[i].spell)
+                else if (_ms_waste_of_time(mons, hspell_pass[i])
                          || hspell_pass[i].spell == SPELL_DIG)
                 {
                     // Instead of making a new one,
@@ -3227,6 +3208,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = hspell_pass[i].spell;
                     wizard = hspell_pass[i].flags & MON_SPELL_WIZARD;
                     priest = hspell_pass[i].flags & MON_SPELL_PRIEST;
+                    breath = hspell_pass[i].flags & MON_SPELL_BREATH;
                 }
 
                 // Setup the spell.
@@ -3402,7 +3384,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             && !x_chance_in_y(4 * BASELINE_DELAY,
                               4 * BASELINE_DELAY
                               + mons->get_ench(ENCH_ANTIMAGIC).duration)
-            && !_is_physiological_spell(spell_cast)
             && spell_cast != draco_breath)
         {
             // This may be a bad idea -- if we decide monsters shouldn't
@@ -3586,7 +3567,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->suicide();
 
         // Dragons now have a time-out on their breath weapons, draconians too!
-        if (_is_breath_caster(mons->type)
+        if (breath
             || mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath)
         {
             setup_breath_timeout(mons);
@@ -4061,16 +4042,12 @@ static bool _mons_cast_freeze(monster* mons)
 
 void setup_breath_timeout(monster* mons)
 {
-    ASSERT(mons_genus(mons->type) == MONS_DRAGON
-           || mons_genus(mons->type) == MONS_DRAKE
-           || mons_genus(mons->type) == MONS_DRACONIAN);
-
     if (mons->has_ench(ENCH_BREATH_WEAPON))
         return;
 
     int timeout = roll_dice(1, 5);
 
-    dprf("dragon/draconian breath timeout %d", timeout);
+    dprf("breath timeout: %d", timeout);
 
     mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, 1, mons, timeout*10);
     mons->add_ench(breath_timeout);
