@@ -2140,160 +2140,187 @@ static string _god_powers(bool simple)
 
 static vector<formatted_string> _get_overview_stats()
 {
-    char buf[1000];
+    formatted_string entry;
 
     // 4 columns
-    column_composer cols1(4, 18, 28, 40);
+    column_composer cols(4, 18, 28, 41);
 
-    if (!player_rotted())
-    {
-        if (_boosted_hp())
-        {
-            snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d</lightblue>",
-                     you.hp, you.hp_max);
-        }
-        else
-            snprintf(buf, sizeof buf, "HP %3d/%d", you.hp, you.hp_max);
-    }
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("HP:   ");
+
+    if (_boosted_hp())
+        entry.textcolour(LIGHTBLUE);
     else
-    {
-        if (_boosted_hp())
-        {
-            snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d (%d)</lightblue>",
-                     you.hp, you.hp_max, get_real_hp(true, true));
-        }
-        else
-        {
-            snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
-                     you.hp, you.hp_max, get_real_hp(true, true));
-        }
-    }
-    cols1.add_formatted(0, buf, false);
+        entry.textcolour(HUD_VALUE_COLOUR);
+
+    entry.cprintf("%d/%d", you.hp, you.hp_max);
+    if (player_rotted())
+        entry.cprintf(" (%d)", get_real_hp(true, true));
+
+    cols.add_formatted(0, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("MP:   ");
 
     if (_boosted_mp())
-    {
-        snprintf(buf, sizeof buf, "MP <lightblue>%3d/%d</lightblue>",
-                 you.magic_points, you.max_magic_points);
-    }
+        entry.textcolour(LIGHTBLUE);
     else
-    {
-        snprintf(buf, sizeof buf, "MP %3d/%d",
-                 you.magic_points, you.max_magic_points);
-    }
-    cols1.add_formatted(0, buf, false);
+        entry.textcolour(HUD_VALUE_COLOUR);
 
-    snprintf(buf, sizeof buf, "Gold %d", you.gold);
-    cols1.add_formatted(0, buf, false);
+    entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
+
+    cols.add_formatted(0, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("Gold: ");
+
+    entry.textcolour(HUD_VALUE_COLOUR);
+
+    entry.cprintf("%d", you.gold);
+
+    cols.add_formatted(0, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("AC: ");
 
     if (_boosted_ac())
-    {
-        snprintf(buf, sizeof buf, "AC <lightblue>%2d</lightblue>",
-                 you.armour_class());
-    }
+        entry.textcolour(LIGHTBLUE);
     else
-        snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
-    cols1.add_formatted(1, buf, false);
+        entry.textcolour(HUD_VALUE_COLOUR);
+
+    entry.cprintf("%2d", you.armour_class());
+
+    cols.add_formatted(1, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("EV: ");
 
     if (_boosted_ev())
-    {
-        snprintf(buf, sizeof buf, "EV <lightblue>%2d</lightblue>",
-                 player_evasion());
-    }
+        entry.textcolour(LIGHTBLUE);
     else
-        snprintf(buf, sizeof buf, "EV %2d", player_evasion());
-    cols1.add_formatted(1, buf, false);
+        entry.textcolour(HUD_VALUE_COLOUR);
 
+    entry.cprintf("%2d", player_evasion());
+
+    cols.add_formatted(1, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("SH: ");
 
     if (_boosted_sh())
-    {
-        snprintf(buf, sizeof buf, "SH <lightblue>%2d</lightblue>",
-                 player_displayed_shield_class());
-    }
+        entry.textcolour(LIGHTBLUE);
     else
-        snprintf(buf, sizeof buf, "SH %2d", player_displayed_shield_class());
-    cols1.add_formatted(1, buf, false);
+        entry.textcolour(HUD_VALUE_COLOUR);
 
-    const char* str_col = colour_to_str(_get_stat_colour(STAT_STR)).c_str();
-    if (you.strength(false) == you.max_strength())
-    {
-        snprintf(buf, sizeof buf, "Str <%s>%2d</%s>",
-                 str_col, you.strength(false), str_col);
-    }
-    else
-    {
-        snprintf(buf, sizeof buf, "Str <%s>%2d (%d)</%s>",
-                 str_col, you.strength(false), you.max_strength(), str_col);
-    }
-    cols1.add_formatted(2, buf, false);
+    entry.cprintf("%2d", player_displayed_shield_class());
 
-    const char* int_col = colour_to_str(_get_stat_colour(STAT_INT)).c_str();
-    if (you.intel(false) == you.max_intel())
-    {
-        snprintf(buf, sizeof buf, "Int <%s>%2d</%s>",
-                 int_col, you.intel(false), int_col);
-    }
-    else
-    {
-        snprintf(buf, sizeof buf, "Int <%s>%2d (%d)</%s>",
-                 int_col, you.intel(false), you.max_intel(), int_col);
-    }
-    cols1.add_formatted(2, buf, false);
+    cols.add_formatted(1, entry.to_colour_string(), false);
+    entry.clear();
 
-    const char* dex_col = colour_to_str(_get_stat_colour(STAT_DEX)).c_str();
-    if (you.dex(false) == you.max_dex())
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("Str: ");
+
+    entry.textcolour(_get_stat_colour(STAT_STR));
+
+    entry.cprintf("%2d", you.strength(false));
+    if (you.strength(false) != you.max_strength())
+        entry.cprintf(" (%d)", you.max_strength());
+
+    cols.add_formatted(2, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("Int: ");
+
+    entry.textcolour(_get_stat_colour(STAT_INT));
+
+    entry.cprintf("%2d", you.intel(false));
+    if (you.intel(false) != you.max_intel())
+        entry.cprintf(" (%d)", you.max_intel());
+
+    cols.add_formatted(2, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("Dex: ");
+
+    entry.textcolour(_get_stat_colour(STAT_DEX));
+
+    entry.cprintf("%2d", you.dex(false));
+    if (you.dex(false) != you.max_dex())
+        entry.cprintf(" (%d)", you.max_dex());
+
+    cols.add_formatted(2, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("XL:     ");
+
+    entry.textcolour(HUD_VALUE_COLOUR);
+    entry.cprintf("%d", you.experience_level);
+
+    if (you.experience_level < 27)
     {
-        snprintf(buf, sizeof buf, "Dex <%s>%2d</%s>",
-                 dex_col, you.dex(false), dex_col);
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("   Next: ");
+
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d%%", get_exp_progress());
     }
-    else
-    {
-        snprintf(buf, sizeof buf, "Dex <%s>%2d (%d)</%s>",
-                 dex_col, you.dex(false), you.max_dex(), dex_col);
-    }
-    cols1.add_formatted(2, buf, false);
+
+    cols.add_formatted(3, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("God:    ");
+
+    entry.textcolour(HUD_VALUE_COLOUR);
 
     string godpowers = _god_powers(false);
 #ifdef WIZARD
     if (you.wizard)
         godpowers = _wiz_god_powers();
 #endif
+    entry += formatted_string::parse_string(godpowers);
 
-    char lives[40];
+    cols.add_formatted(3, entry.to_colour_string(), false);
+    entry.clear();
+
+    entry.textcolour(HUD_CAPTION_COLOUR);
+    entry.cprintf("Spells: ");
+
+    entry.textcolour(HUD_VALUE_COLOUR);
+    entry.cprintf("%d memorised, %d level%s left",
+                  you.spell_no, player_spell_levels(),
+                  (player_spell_levels() == 1) ? "" : "s");
+
+    cols.add_formatted(3, entry.to_colour_string(), false);
+    entry.clear();
+
     if (you.species == SP_FELID)
     {
-        snprintf(lives, sizeof(lives), "Lives: %d, deaths: %d",
-                 you.lives, you.deaths);
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("Lives:  ");
+
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d", you.lives);
+
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("   Deaths: ");
+
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d", you.deaths);
+
+        cols.add_formatted(3, entry.to_colour_string(), false);
+        entry.clear();
     }
-    else
-        lives[0] = 0;
 
-#if TAG_MAJOR_VERSION == 34
-    char temperature[20];
-    if (you.species == SP_LAVA_ORC)
-    {
-        snprintf(temperature, sizeof(temperature), "Temperature: %f",
-                 you.temperature);
-    }
-    else
-        temperature[0] = 0;
-#endif
-
-    snprintf(buf, sizeof buf,
-             "XL: %d%s\n"
-             "God: %s\n"
-             "Spells: %2d memorised, %2d level%s left\n"
-             "%s",
-             you.experience_level,
-             (you.experience_level < 27 ? make_stringf("   Next: %2d%%",
-                                                   get_exp_progress()).c_str()
-                                        : ""),
-             godpowers.c_str(),
-             you.spell_no, player_spell_levels(),
-             (player_spell_levels() == 1) ? "" : "s",
-             lives);
-    cols1.add_formatted(3, buf, false);
-
-    return cols1.formatted_lines();
+    return cols.formatted_lines();
 }
 
 // generator of resistance strings:
