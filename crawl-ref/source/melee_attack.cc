@@ -2832,7 +2832,6 @@ string melee_attack::mons_attack_verb()
 
     static const char *attack_types[] =
     {
-        "",
         "hit",         // including weapon attacks
         "bite",
         "sting",
@@ -2861,8 +2860,9 @@ string melee_attack::mons_attack_verb()
         "sting",
     };
 
+    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
     ASSERT(attk_type < (int)ARRAYSZ(attack_types));
-    return attack_types[attk_type];
+    return attack_types[attk_type - AT_FIRST_ATTACK];
 }
 
 string melee_attack::mons_attack_desc()
