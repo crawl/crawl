@@ -5658,7 +5658,6 @@ bool monster::self_destructs()
 {
     if (type == MONS_GIANT_SPORE
         || type == MONS_BALL_LIGHTNING
-        || type == MONS_UFETUBUS
         || type == MONS_LURKING_HORROR
         || type == MONS_ORB_OF_DESTRUCTION
         || type == MONS_FULMINANT_PRISM)
