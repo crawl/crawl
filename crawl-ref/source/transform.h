@@ -54,8 +54,11 @@ public:
     int power_bonus(int pow) const;
 
 public:
+    // base duration (in 10*aut, probably)
     const int base;
+    // the extent to which spellpower affects duration scaling
     const duration_power_scaling scaling_type;
+    // max duration (in 10*aut, probably)
     const int max;
 };
 
@@ -136,59 +139,97 @@ public:
     bool player_can_swim() const;
 
 public:
+    // Status light ("Foo"); "" for none
     const string short_name;
+    // "foo"; used for wizmode transformation dialogue
     const string wiz_name;
 
+    // A struct representing the duration of the form, based on power etc
     const FormDuration duration;
 
+    // flat stat bonuses
     const int str_mod;
     const int dex_mod;
 
+    // a bitfield representing a union of (1 << equipment_type) values for
+    // equipment types unusable in this form
     const int blocked_slots;
+    // size of the form
     const size_type size;
+    // 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
     const int hp_mod;
 
+    // can the player cast while in this form?
     const bool can_cast;
+    // increase to spell fail rate (value is weird - see spell_fail())
     const int spellcasting_penalty;
 
+    // acc bonus when using UC in form
     const int unarmed_hit_bonus;
+    // colour of 'weapon' in UI
     const int uc_colour;
+    // a set of verbs to use based on damage done, when using UC in this form
     const FormAttackVerbs uc_attack_verbs;
 
+    // has blood (used for sublimation and bloodsplatters)
     const form_capability can_bleed;
+    // see player::is_unbreathing
     const bool breathes;
+    // "Used to mark forms which keep most form-based mutations."
+    // ugh
     const bool keeps_mutations;
 
+    // what verb does the player use when shouting in this form?
     const string shout_verb;
+    // a flat bonus (or penalty) to shout volume
     const int shout_volume_modifier;
 
+    // names of the player's appendages when in the form; "" if form doesn't
+    // change them (fallback to species, etc)
     const string hand_name;
     const string foot_name;
 
 protected:
+    // "foo-form" &c; used for morgue and % screen. "" for none
     const string long_name;
+    // "a barish foo." used for @ screen and transform messages. "" for none
     const string description;
 
+    // bitfield representing a union of mon_resist_flags for resists granted
+    // by the form
     const int resists;
 
+    // a multiplier to Stealth skill for player stealth calculations.
+    // if 0, fall back to species values.
     const int stealth_mod;
 
+    // base unarmed damage provided by the form. (note that BUD is not
+    // equivalent to weapon damage...)
     const int base_unarmed_damage;
 
 private:
     bool all_blocked(int slotflags) const;
 
 private:
+    // whether the form enables, forbids, or does nothing to the player's
+    // ability to fly / swim (traverse deep water).
     const form_capability can_fly;
     const form_capability can_swim;
 
+    // flat bonus to player AC when in the form.
     const int flat_ac;
+    // spellpower-based bonus to player AC; multiplied by power / 100
     const int power_ac;
+    // experience level-based bonus to player AC; XL * xl_ac / 100
     const int xl_ac;
 
+    // the brand of the attack (SPWPN_FREEZING, etc)
     const brand_type uc_brand;
+    // the name of the uc 'weapon' in the HUD (e.g 'ice fists')
+    // "" to use default
     const string uc_attack;
 
+    // a monster corresponding to the form; used for console player glyphs
     const monster_type equivalent_mons;
 };
 const Form* get_form(transformation_type form = you.form);
