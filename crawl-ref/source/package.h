@@ -88,7 +88,6 @@ private:
     int n_users;
     bool dirty;
     bool aborted;
-    bool tmp;
     map<string, plen_t> directory;
     map<plen_t, plen_t> free_blocks;
     vector<plen_t> unlinked_blocks;

@@ -82,7 +82,7 @@ typedef map<plen_t, bm_p> bm_t;
 typedef map<plen_t, plen_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
-  : n_users(0), dirty(false), aborted(false), tmp(false)
+  : n_users(0), dirty(false), aborted(false)
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
@@ -126,7 +126,7 @@ package::package(const char* file, bool writeable, bool empty)
 }
 
 package::package()
-  : rw(true), n_users(0), dirty(false), aborted(false), tmp(true)
+  : rw(true), n_users(0), dirty(false), aborted(false)
 {
     dprintf("package: initializing tmp file\n");
     filename = "[tmp]";
