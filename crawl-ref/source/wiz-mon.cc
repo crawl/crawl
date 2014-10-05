@@ -549,24 +549,21 @@ void debug_stethoscope(int mon)
     ostringstream spl;
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
-    for (int k = 0; k < NUM_MONSTER_SPELL_SLOTS; ++k)
+    for (unsigned int k = 0; k < hspell_pass.size(); ++k)
     {
-        if (hspell_pass[k].spell != SPELL_NO_SPELL)
-        {
-            if (found_spell)
-                spl << ", ";
+        if (found_spell)
+            spl << ", ";
 
-            found_spell = true;
+        found_spell = true;
 
-            spl << k << ": ";
+        spl << k << ": ";
 
-            if (hspell_pass[k].spell >= NUM_SPELLS)
-                spl << "buggy spell";
-            else
-                spl << spell_title(hspell_pass[k].spell);
+        if (hspell_pass[k].spell >= NUM_SPELLS)
+            spl << "buggy spell";
+        else
+            spl << spell_title(hspell_pass[k].spell);
 
-            spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
-        }
+        spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());

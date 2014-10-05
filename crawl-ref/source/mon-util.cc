@@ -675,7 +675,7 @@ bool mons_is_illuminating(const monster* mon)
     if (mon->halo_radius2() >= 0)
         return true;
 
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    for (unsigned int i = 0; i < mon->spells.size(); ++i)
         if (is_illuminating_spell(mon->spells[i].spell))
             return true;
 
@@ -2024,7 +2024,7 @@ int exper_value(const monster* mon, bool real)
     {
         const monster_spells &hspell_pass = mon->spells;
 
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
         {
             switch (hspell_pass[i].spell)
             {
@@ -2329,8 +2329,13 @@ unique_books get_unique_spells(const monster_info &mi)
 
         vector<spell_type> spells;
 
-        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        for (unsigned int j = 0;
+             (book == MST_GHOST && j < mi.spells.size())
+             || (book != MST_GHOST
+                 && mspell_list[msidx].spells[j].spell != SPELL_NO_SPELL);
+             ++j)
         {
+                break;
             spell_type spell;
             if (book == MST_GHOST)
                 spell = mi.spells[j].spell;
@@ -2364,7 +2369,7 @@ static void _mons_load_spells(monster* mon)
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
-    mon->spells.init(mon_spell_slot());
+    mon->spells.clear();
     if (book == MST_NO_SPELLS)
         return;
 
@@ -2375,8 +2380,12 @@ static void _mons_load_spells(monster* mon)
     {
         if (mspell_list[i].type == book)
         {
-            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-                mon->spells[j] = mspell_list[i].spells[j];
+            for (unsigned int j = 0;
+                 mspell_list[i].spells[j].spell != SPELL_NO_SPELL;
+                 ++j)
+            {
+                mon->spells.push_back(mspell_list[i].spells[j]);
+            }
             break;
         }
     }
@@ -3450,14 +3459,9 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mons_has_los_ability(mon->type))
         return true;
 
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-    {
-        if (mon->spells[i].spell != SPELL_NO_SPELL
-            && _ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
-        {
+    for (unsigned int i = 0; i < mon->spells.size(); ++i)
+        if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
             return true;
-        }
-    }
 
     return false;
 }
@@ -3471,7 +3475,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    for (unsigned int i = 0; i < mon->spells.size(); ++i)
     {
         switch (mon->spells[i].spell)
         {
@@ -5022,7 +5026,7 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
 void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
 {
     unsigned count = 0;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    for (unsigned int i = 0; i < spells.size(); i++)
     {
         if (spells[i].spell == SPELL_NO_SPELL)
             continue;
@@ -5048,12 +5052,26 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;
     }
+
     if (!count)
+    {
+        spells.clear();
         return;
+    }
 
     unsigned one_freq = (hd + 50) / count;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    for (unsigned int i = 0; i < spells.size(); i++)
     {
         spells[i].freq = one_freq;
+    }
+
+    for (monster_spells::iterator it = spells.begin();
+         it != spells.end(); it++)
+    {
+        if (it->spell == SPELL_NO_SPELL)
+        {
+            spells.erase(it);
+            it = spells.begin();
+        }
     }
 }

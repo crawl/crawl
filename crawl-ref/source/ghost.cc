@@ -253,7 +253,7 @@ void ghost_demon::init_random_demon()
     else
         speed = 8 + roll_dice(2,5);
 
-    spells.init(mon_spell_slot());
+    spells.clear();
 
     if (spellcaster)
     {
@@ -288,7 +288,7 @@ void ghost_demon::init_random_demon()
 
         // Convert the player spell indices to monster spell ones.
         // Pan lords also get their Agony upgraded to Torment.
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        for (unsigned int i = 0; i < spells.size(); ++i)
         {
             spells[i].spell = translate_spell(spells[i].spell);
             if (spells[i].spell == SPELL_AGONY)
@@ -795,7 +795,7 @@ static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_
 // remember a few spells.
 void ghost_demon::add_spells()
 {
-    spells.init(mon_spell_slot());
+    spells.clear();
 
     spells[0].spell = search_spell_list(search_order_conj, SPELL_NO_SPELL);
     spells[1].spell = search_spell_list(search_order_conj, spells[0].spell);
@@ -819,7 +819,7 @@ void ghost_demon::add_spells()
         spells[5].spell = SPELL_CONTROLLED_BLINK;
     }
 
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    for (unsigned int i = 0; i < spells.size(); ++i)
         spells[i].spell = translate_spell(spells[i].spell);
 
     fixup_spells(spells, xl, true, false);
@@ -829,10 +829,7 @@ void ghost_demon::add_spells()
 
 bool ghost_demon::has_spells() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i].spell != SPELL_NO_SPELL)
-            return true;
-    return false;
+    return spells.size() > 0;
 }
 
 // When passed the number for a player spell, returns the equivalent
@@ -989,7 +986,7 @@ bool debug_check_ghosts()
             return false;
 
         // Check for non-existing spells.
-        for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
+        for (unsigned int sp = 0; sp < ghost.spells.size(); ++sp)
             if (ghost.spells[sp].spell < 0 || ghost.spells[sp].spell >= NUM_SPELLS)
                 return false;
     }

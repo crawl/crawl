@@ -119,6 +119,7 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_MON_AC_EV,    // Remove the old "ac" & "ev" monster fields
     TAG_MINOR_DISPLAY_MON_AC_EV,   // Marshall & unmarshall ac/ev in monster_info
     TAG_MINOR_MONSTER_SPELL_SLOTS, // Introduce monster spell slot flags/freqs
+    TAG_MINOR_ARB_SPELL_SLOTS,     // Arbitrary number of monster spell slots.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -24,7 +24,7 @@ enum mon_spell_slot_flags
 struct mon_spellbook
 {
     mon_spellbook_type type;
-    mon_spell_slot spells[NUM_MONSTER_SPELL_SLOTS];
+    mon_spell_slot spells[256]; // because it needs to be stored in a byte
 };
 
 typedef vector<vector<spell_type> > unique_books;

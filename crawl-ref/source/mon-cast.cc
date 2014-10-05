@@ -2837,7 +2837,7 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
 {
     spell_type spell_cast = SPELL_NO_SPELL;
     int weight = 0;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    for (unsigned int i = 0; i < spells.size(); i++)
     {
         if (spells[i].spell == SPELL_NO_SPELL)
             continue;
@@ -2919,7 +2919,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return false;
 
             bool innate = false;
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            for (unsigned int i = 0; i < hspell_pass.size(); i++)
             {
                 if (hspell_pass[i].flags & MON_SPELL_INNATE)
                     innate = true;
@@ -2964,7 +2964,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (one_chance_in(4))
                 {
                     int foundcount = 0;
-                    for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
+                    for (unsigned int i = hspell_pass.size() - 1; i >= 0; --i)
                     {
                         if (_ms_useful_fleeing_out_of_sight(mons,
                                                             hspell_pass[i])
@@ -2985,7 +2985,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (!finalAnswer && mon_enemies_around(mons)
             && mons->caught() && one_chance_in(15))
         {
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
             {
                 if (_ms_quick_get_away(mons, hspell_pass[i].spell))
                 {
@@ -3008,7 +3008,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
             int found_spell = 0;
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
             {
                 if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
                     && one_chance_in(++found_spell))
@@ -3086,9 +3086,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             // Remove healing/invis/haste if we don't need them.
-            int num_no_spell = 0;
+            unsigned int num_no_spell = 0;
 
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
             {
                 if (hspell_pass[i].spell == SPELL_NO_SPELL)
                     num_no_spell++;
@@ -3108,7 +3108,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             // If no useful spells... cast no spell.
-            if (num_no_spell == NUM_MONSTER_SPELL_SLOTS
+            if (num_no_spell == hspell_pass.size()
                 && draco_breath == SPELL_NO_SPELL)
             {
                 return false;
@@ -3163,8 +3163,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = SPELL_NO_SPELL;
 
                     unsigned what = random2(200);
-                    int i = 0;
-                    for (; i < NUM_MONSTER_SPELL_SLOTS; i++)
+                    unsigned int i = 0;
+                    for (; i < hspell_pass.size(); i++)
                     {
                         if (hspell_pass[i].spell == SPELL_NO_SPELL)
                             continue;
@@ -3182,7 +3182,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                     // If we roll above the weight of the spell list,
                     // don't cast a spell at all.
-                    if (i == NUM_MONSTER_SPELL_SLOTS)
+                    if (i == hspell_pass.size())
                         return false;
 
                     spell_cast = hspell_pass[i].spell;
@@ -5418,7 +5418,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                     break;
             }
 
-            for (int i = 0, size = monsters.size(); i < size; ++i)
+            for (unsigned int i = 0, size = monsters.size(); i < size; ++i)
             {
                 create_monster(
                     mgen_data(monsters[i], SAME_ATTITUDE(mons), mons,
