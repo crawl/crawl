@@ -1170,13 +1170,13 @@ static bool _init_artefact_book(item_def &book)
     return book_good;
 }
 
-void setup_unrandart(item_def &item)
+void setup_unrandart(item_def &item, bool creating)
 {
     ASSERT(is_unrandom_artefact(item));
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     const unrandart_entry *unrand = _seekunrandart(item);
 
-    if (unrand->prpty[ARTP_NO_UPGRADE] && item.props.exists(ARTEFACT_NAME_KEY))
+    if (unrand->prpty[ARTP_NO_UPGRADE] && !creating)
         return; // don't mangle mutable items
 
     for (int i = 0; i < ART_PROPERTIES; i++)

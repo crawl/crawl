@@ -3941,7 +3941,7 @@ void unmarshallItem(reader &th, item_def &item)
 #endif
 
     if (is_unrandom_artefact(item))
-        setup_unrandart(item);
+        setup_unrandart(item, false);
 
     bind_item_tile(item);
 }
