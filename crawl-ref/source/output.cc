@@ -2394,6 +2394,8 @@ static vector<formatted_string> _get_overview_resistances(
     const int rmagi = player_res_magic(calc_unid) / 40;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
+    out += _stealth_bar(get_number_of_cols()) + "\n";
+
     cols.add_formatted(0, out, false);
 
     // Second column, resist name is 9 chars
@@ -2483,7 +2485,6 @@ static char _get_overview_screen_results()
         }
     }
 
-    overview.add_text(_stealth_bar(get_number_of_cols()));
     overview.add_text(" ");
     overview.add_text(_status_mut_abilities(get_number_of_cols()));
 
