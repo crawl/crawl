@@ -627,6 +627,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NAGA_MAGE,
       {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_VENOM_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 10, MON_SPELL_WIZARD },
        { SPELL_HASTE, 10, MON_SPELL_WIZARD  },
