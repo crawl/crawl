@@ -6384,7 +6384,11 @@ int player::armour_class(bool /*calc_unid*/) const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
+    {
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
+        if (form == TRAN_ICE_BEAST)
+            AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
+    }
 
     AC += _stoneskin_bonus();
 
@@ -6397,29 +6401,22 @@ int player::armour_class(bool /*calc_unid*/) const
     if (you.duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
 
-    if (!player_is_shapechanged()
-        || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))
-        || (form == TRAN_STATUE && species == SP_GARGOYLE))
-    {
-        // Being a lich doesn't preclude the benefits of hide/scales -- bwr
-        //
-        // Note: Even though necromutation is a high level spell, it does
-        // allow the character full armour (so the bonus is low). -- bwr
-        if (form == TRAN_LICH)
-            AC += 600;
+    AC += get_form()->get_ac_bonus();
 
-        if (player_genus(GENPC_DRACONIAN))
+    // drac scales suppressed in all serious forms, except dragon
+    if (player_genus(GENPC_DRACONIAN)
+        && (!player_is_shapechanged() || form == TRAN_DRAGON))
+    {
+        AC += 400 + 100 * (experience_level / 3);  // max 13
+        if (species == SP_GREY_DRACONIAN) // no breath
+            AC += 500;
+    }
+
+    // other race-based ac bonuses (naga, gargoyle)
+    if (!player_is_shapechanged())
+    {
+        switch (species)
         {
-            AC += 400 + 100 * (experience_level / 3);  // max 13
-            if (species == SP_GREY_DRACONIAN) // no breath
-                AC += 500;
-            if (form == TRAN_DRAGON)
-                AC += 1000;
-        }
-        else
-        {
-            switch (species)
-            {
             case SP_NAGA:
                 AC += 100 * experience_level / 3;              // max 9
                 break;
@@ -6427,68 +6424,10 @@ int player::armour_class(bool /*calc_unid*/) const
             case SP_GARGOYLE:
                 AC += 200 + 100 * experience_level * 2 / 5     // max 20
                           + 100 * (max(0, experience_level - 7) * 2 / 5);
-                if (form == TRAN_STATUE)                       // max 28
-                    AC += 1300 + you.props[TRANSFORM_POW_KEY].get_int() * 10;
                 break;
 
             default:
                 break;
-            }
-        }
-    }
-    else
-    {
-        // transformations:
-        switch (form)
-        {
-        case TRAN_NONE:
-        case TRAN_APPENDAGE:
-        case TRAN_BLADE_HANDS:
-        case TRAN_LICH:  // can wear normal body armour (no bonus)
-        case NUM_TRANSFORMS:
-            break;
-
-#if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY:
-#endif
-        case TRAN_BAT:
-        case TRAN_PIG:
-        case TRAN_PORCUPINE:
-        case TRAN_SHADOW: // no bonus
-            break;
-
-        case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += 200;
-            break;
-
-        case TRAN_ICE_BEAST:
-            AC += 500 + you.props[TRANSFORM_POW_KEY].get_int() * 7; // max 12
-
-            if (duration[DUR_ICY_ARMOUR])
-                AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
-            break;
-
-        case TRAN_WISP:
-            AC += 500 + 50 * experience_level;
-            break;
-        case TRAN_HYDRA:
-            AC += 600 + you.props[TRANSFORM_POW_KEY].get_int() * 5; // max 16
-            break;
-        case TRAN_FUNGUS:
-            AC += 1200;
-            break;
-        case TRAN_DRAGON: // Draconians handled above
-            AC += 1600;
-            break;
-
-        case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += 1700 + you.props[TRANSFORM_POW_KEY].get_int() * 10; // max 32
-            // Stoneskin bonus already accounted for.
-            break;
-
-        case TRAN_TREE: // extreme bonus, no EV
-            AC += 2000 + 50 * experience_level;
-            break;
         }
     }
 

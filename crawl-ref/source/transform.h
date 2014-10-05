@@ -69,6 +69,7 @@ public:
          FormDuration _duration,
          int _str_mod, int _dex_mod,
          size_type _size, int _hp_mod, int _stealth_mod,
+         int _flat_ac, int _power_ac, int _xl_ac,
          bool _can_cast, int _spellcasting_penalty,
          int _unarmed_hit_bonus, int _base_unarmed_damage,
          brand_type _uc_brand, int _uc_colour,
@@ -94,6 +95,7 @@ public:
     resists(_resists), stealth_mod(_stealth_mod),
     base_unarmed_damage(_base_unarmed_damage),
     can_fly(_can_fly), can_swim(_can_swim),
+    flat_ac(_flat_ac), power_ac(_power_ac), xl_ac(_xl_ac),
     uc_brand(_uc_brand), uc_attack(_uc_attack),
     equivalent_mons(_equivalent_mons)
     { };
@@ -121,6 +123,7 @@ public:
     bool res_sticky_flame() const;
 
     virtual int get_stealth_mod() const { return stealth_mod; }
+    virtual int get_ac_bonus() const;
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
     virtual brand_type get_uc_brand() const { return uc_brand; }
     virtual string get_uc_attack_name(string default_name) const;
@@ -169,6 +172,7 @@ protected:
     const int resists;
 
     const int stealth_mod;
+
     const int base_unarmed_damage;
 
 private:
@@ -177,6 +181,10 @@ private:
 private:
     const form_capability can_fly;
     const form_capability can_swim;
+
+    const int flat_ac;
+    const int power_ac;
+    const int xl_ac;
 
     const brand_type uc_brand;
     const string uc_attack;
