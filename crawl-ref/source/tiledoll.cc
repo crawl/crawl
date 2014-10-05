@@ -602,8 +602,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             ymax = 18;
         }
         int ofs_x = 0, ofs_y = 0;
-        if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON))
-            || (p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
+        if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
+             || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
             && dind < draw_info_count - 1)
         {
                 ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
