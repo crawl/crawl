@@ -1163,6 +1163,14 @@ int wand_charge_value(int type)
 
     default:
         return 8;
+
+    case WAND_FLAME:
+    case WAND_FROST:
+    case WAND_MAGIC_DARTS:
+    case WAND_SLOWING:
+    case WAND_CONFUSION:
+    case WAND_RANDOM_EFFECTS:
+        return 16;
     }
 }
 
