@@ -2138,12 +2138,29 @@ static string _god_powers(bool simple)
     return "";
 }
 
+static bool _player_statrotted()
+{
+    return you.strength(false) != you.max_strength()
+        || you.intel(false) != you.max_intel()
+        || you.dex(false) != you.max_dex();
+}
+
 static vector<formatted_string> _get_overview_stats()
 {
     formatted_string entry;
 
     // 4 columns
-    column_composer cols(4, 18, 28, 41);
+    int col1 = 18;
+    int col2 = 10;
+    int col3 = 11;
+
+    if (player_rotted())
+        col1 += 3;
+
+    if (_player_statrotted())
+        col3 += 2;
+
+    column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
     entry.textcolour(HUD_CAPTION_COLOUR);
     entry.cprintf("HP:   ");
