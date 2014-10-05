@@ -353,12 +353,11 @@ void wizard_heal(bool super_heal)
 {
     if (super_heal)
     {
-        // Clear more stuff and give a HP boost.
+        // Clear more stuff.
         unrot_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        inc_max_hp(10);
         you.attribute[ATTR_XP_DRAIN] = 0;
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
