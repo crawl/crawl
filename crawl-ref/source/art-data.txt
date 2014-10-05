@@ -829,14 +829,15 @@ MAGIC:   1
 
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT
-PLUS:    +2
+PLUS:    -4
+INSCRIP: rMut, rAcid
 COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   1
-BOOL:    elec
+BOOL:    elec, poison, life
 
 NAME:    fencer's gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
