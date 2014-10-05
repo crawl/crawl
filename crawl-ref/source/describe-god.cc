@@ -753,6 +753,22 @@ static string _describe_god_wrath_causes(god_type which_god)
 }
 
 /**
+ * Print the standard top line of the god description screens.
+ *
+ * @param god       The god in question.
+ * @param width     The width of the screen.
+ */
+static void _print_top_line(god_type which_god, int width)
+{
+    const string godname = uppercase_first(god_name(which_god, true));
+    textcolour(god_colour(which_god));
+    const int len = width - strwidth(godname);
+    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
+    textcolour(LIGHTGREY);
+    cprintf("\n");
+}
+
+/**
  * Print a description of the given god's dislikes & wrath effects.
  *
  * @param which_god     The god in question.
@@ -763,12 +779,7 @@ static void _god_wrath_description(god_type which_god)
 
     const int width = min(80, get_number_of_cols()) - 1;
 
-    const string godname = uppercase_first(god_name(which_god, true));
-    textcolour(god_colour(which_god));
-    const int len = width - strwidth(godname);
-    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
-    textcolour(LIGHTGREY);
-    cprintf("\n");
+    _print_top_line(which_god, width);
 
     _print_string_wrapped(get_god_dislikes(which_god, true), width);
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
@@ -844,12 +855,7 @@ static void _detailed_god_description(god_type which_god)
 
     const int width = min(80, get_number_of_cols()) - 1;
 
-    const string godname = uppercase_first(god_name(which_god, true));
-    textcolour(god_colour(which_god));
-    const int len = width - strwidth(godname);
-    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
-    textcolour(LIGHTGREY);
-    cprintf("\n");
+    _print_top_line(which_god, width);
 
     _print_string_wrapped(get_god_powers(which_god), width);
 
@@ -1128,13 +1134,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
         textcolour(LIGHTGREY);
     }
 
-    // Print long god's name.
-    const string godname = uppercase_first(god_name(which_god, true));
-    textcolour(god_colour(which_god));
-    const int len = numcols - strwidth(godname);
-    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
-    textcolour(LIGHTGREY);
-    cprintf("\n");
+    _print_top_line(which_god, numcols);
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
