@@ -2335,7 +2335,6 @@ unique_books get_unique_spells(const monster_info &mi)
                  && mspell_list[msidx].spells[j].spell != SPELL_NO_SPELL);
              ++j)
         {
-                break;
             spell_type spell;
             if (book == MST_GHOST)
                 spell = mi.spells[j].spell;
