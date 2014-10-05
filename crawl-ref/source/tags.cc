@@ -5567,7 +5567,8 @@ static void unmarshallSpells(reader &th, monster_spells &spells
     }
 
 #if TAG_MAJOR_VERSION == 34
-    fixup_spells(spells, hd, wizard, priest);
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_SPELL_SLOTS)
+        fixup_spells(spells, hd, wizard, priest);
 #endif
 }
 
