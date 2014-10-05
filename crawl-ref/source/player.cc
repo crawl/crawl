@@ -4451,6 +4451,9 @@ void inc_hp(int hp_gain)
 
 void rot_hp(int hp_loss)
 {
+    if (!player_rotted() && hp_loss > 0)
+        you.redraw_magic_points = true;
+
     you.hp_max_adj_temp -= hp_loss;
     calc_hp();
 
@@ -4472,6 +4475,8 @@ void unrot_hp(int hp_recovered)
     calc_hp();
 
     you.redraw_hit_points = true;
+    if (!player_rotted())
+        you.redraw_magic_points = true;
 }
 
 int player_rotted()

@@ -621,7 +621,9 @@ static void _print_stats_mp(int x, int y)
                 mp_colour = Options.mp_colour[i].second;
     }
 
-    CGOTOXY(x+8, y, GOTO_STAT);
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF(player_rotted() ? "MP: " : "Magic:  ");
     textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
@@ -722,10 +724,10 @@ static void _print_stats_hp(int x, int y)
     textcolour(HUD_CAPTION_COLOUR);
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
-        CPRINTF(max_max_hp != you.hp_max ? "EP: " : "Essence: ");
+        CPRINTF(player_rotted() ? "EP: " : "Essence: ");
     else
 #endif
-    CPRINTF(max_max_hp != you.hp_max ? "HP: " : "Health: ");
+    CPRINTF(player_rotted() ? "HP: " : "Health: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -1459,7 +1461,6 @@ void draw_border()
         CPRINTF("Contam:");
     else
 #endif
-    CPRINTF("Magic:");
     CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
     CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");
@@ -2150,12 +2151,12 @@ static vector<formatted_string> _get_overview_stats()
     formatted_string entry;
 
     // 4 columns
-    int col1 = 18;
+    int col1 = 20;
     int col2 = 10;
     int col3 = 11;
 
     if (player_rotted())
-        col1 += 3;
+        col1 += 1;
 
     if (_player_statrotted())
         col3 += 2;
@@ -2163,7 +2164,10 @@ static vector<formatted_string> _get_overview_stats()
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("HP:   ");
+    if (player_rotted())
+        entry.cprintf("HP:   ");
+    else
+        entry.cprintf("Health: ");
 
     if (_boosted_hp())
         entry.textcolour(LIGHTBLUE);
@@ -2178,7 +2182,10 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("MP:   ");
+    if (player_rotted())
+        entry.cprintf("MP:   ");
+    else
+        entry.cprintf("Magic:  ");
 
     if (_boosted_mp())
         entry.textcolour(LIGHTBLUE);
@@ -2191,7 +2198,10 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Gold: ");
+    if (player_rotted())
+        entry.cprintf("Gold: ");
+    else
+        entry.cprintf("Gold:   ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
 
