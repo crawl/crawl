@@ -1599,10 +1599,14 @@ bool name_zombie(monster* mon, const monster* orig)
     if (!mons_is_unique(orig->type) && orig->mname.empty())
         return false;
 
-    const monster_type species = mons_species(orig->type);
-    const string orig_name = mons_class_name(species);
-    dprf("orig name: %s", orig_name.c_str());
-    return name_zombie(mon, orig->type, orig_name);
+    string name;
+
+    if (!orig->mname.empty())
+        name = orig->mname;
+    else
+        name = mons_type_name(orig->type, DESC_PLAIN);
+
+    return name_zombie(mon, orig->type, name);
 }
 
 static int _downscale_zombie_damage(int damage)
