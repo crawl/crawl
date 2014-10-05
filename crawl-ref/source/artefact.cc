@@ -1506,12 +1506,20 @@ string make_artefact_name(const item_def &item, bool appearance)
     return result;
 }
 
+static const unrandart_entry *_seekunrandart(const item_def &item)
+{
+    return get_unrand_entry(item.special);
+}
+
 string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
     if (item_type_known(item) || force_known)
     {
+        // unrands don't use cached names
+        if (is_unrandom_artefact(item))
+            return _seekunrandart(item)->name;
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
@@ -1543,11 +1551,6 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[0];  // dummy unrandart
     else
         return &unranddata[unrand_index];
-}
-
-static const unrandart_entry *_seekunrandart(const item_def &item)
-{
-    return get_unrand_entry(item.special);
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
@@ -2000,10 +2003,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     if (unrand->prpty[ARTP_CURSED] != 0)
         do_curse_item(item);
-
-    // get true artefact name
-    ASSERT(!item.props.exists(ARTEFACT_NAME_KEY));
-    item.props[ARTEFACT_NAME_KEY].get_string() = unrand->name;
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
