@@ -1968,17 +1968,17 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
         int levels = spell_difficulty(spell);
 
-        if (levels > max_levels - (exact_level ? spells_needed + 1 : 0))
+        if (levels > max_levels - (exact_level ? spells_needed - 1 : 0))
         {
             spell_weights[spell] = 0;
             spells_left--;
-            spells_needed--;
             continue;
         }
         chosen_spells[book_pos++] = spell;
         spell_weights[spell]      = 0;
         max_levels               -= levels;
         spells_left--;
+        spells_needed--;
     }
     ASSERT(max_levels >= 0);
 
