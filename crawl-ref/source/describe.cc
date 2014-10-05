@@ -3881,8 +3881,18 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
                 inf.body << "    " << i << ": "
                          << spell_title(hspell_pass[i].spell)
-                         << " (" << static_cast<int>(hspell_pass[i].spell)
-                         << ")";
+                         << " (";
+                if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
+                    inf.body << "emergency, ";
+                if (hspell_pass[i].flags & MON_SPELL_INNATE)
+                    inf.body << "innate, ";
+                if (hspell_pass[i].flags & MON_SPELL_WIZARD)
+                    inf.body << "wizard, ";
+                if (hspell_pass[i].flags & MON_SPELL_PRIEST)
+                    inf.body << "priest, ";
+                if (hspell_pass[i].flags & MON_SPELL_BREATH)
+                    inf.body << "breath, ";
+                inf.body << (int) hspell_pass[i].freq << ")";
             }
         }
     }
