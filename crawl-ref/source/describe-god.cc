@@ -760,14 +760,18 @@ static string _describe_god_wrath_causes(god_type which_god)
 static void _god_wrath_description(god_type which_god)
 {
     clrscr();
-    textcolour(WHITE);
-    cprintf("                                  Wrath\n");
+
+    const int width = min(80, get_number_of_cols()) - 1;
+
+    const string godname = uppercase_first(god_name(which_god, true));
+    textcolour(god_colour(which_god));
+    const int len = width - strwidth(godname);
+    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
+    textcolour(LIGHTGREY);
     cprintf("\n");
 
-    const int width = min(80, get_number_of_cols());
-
     _print_string_wrapped(get_god_dislikes(which_god, true), width);
-     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
+    _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
 }
@@ -838,11 +842,11 @@ static void _detailed_god_description(god_type which_god)
 {
     clrscr();
 
-    const int width = min(80, get_number_of_cols());
+    const int width = min(80, get_number_of_cols()) - 1;
 
     const string godname = uppercase_first(god_name(which_god, true));
-    const int len = get_number_of_cols() - strwidth(godname);
     textcolour(god_colour(which_god));
+    const int len = width - strwidth(godname);
     cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
     textcolour(LIGHTGREY);
     cprintf("\n");
@@ -902,7 +906,7 @@ static void _describe_god_powers(god_type which_god, int numcols)
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
     cprintf("\n\n%s%*s%s\n", header,
-            get_number_of_cols() - 1 - strwidth(header) - strwidth(cost),
+            min(80, get_number_of_cols()) - 1 - strwidth(header) - strwidth(cost),
             "", cost);
     textcolour(god_colour(which_god));
 
@@ -1115,23 +1119,25 @@ static void _god_overview_description(god_type which_god, bool give_title)
 {
     clrscr();
 
+    const int numcols = min(80, get_number_of_cols()) - 1;
     if (give_title)
     {
         textcolour(WHITE);
-        cprintf("                                  Religion\n");
+        const int len = numcols - strlen("Religion");
+        cprintf("%sReligion\n", string(len / 2, ' ').c_str());
         textcolour(LIGHTGREY);
     }
 
     // Print long god's name.
+    const string godname = uppercase_first(god_name(which_god, true));
     textcolour(god_colour(which_god));
-    cprintf("%s", uppercase_first(god_name(which_god, true)).c_str());
-    cprintf("\n\n");
+    const int len = numcols - strwidth(godname);
+    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
+    textcolour(LIGHTGREY);
+    cprintf("\n");
 
     // Print god's description.
-    textcolour(LIGHTGREY);
-
     string god_desc = getLongDescription(god_name(which_god));
-    const int numcols = get_number_of_cols() - 1;
     cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
     // Title only shown for our own god.
@@ -1175,12 +1181,7 @@ void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
 {
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
-        clrscr();
-        textcolour(WHITE);
-        cprintf("                                  Religion\n");
-        textcolour(LIGHTGREY);
-        cprintf("\nYou are not religious.");
-        get_ch();
+        mpr("You are not religious.");
         return;
     }
 
