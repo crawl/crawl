@@ -2301,9 +2301,9 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (defender->holiness() != MH_NATURAL)
         return false;
 
-    unsigned int limit = MAX_HYDRA_HEADS;
-    if (defender->type == MONS_LERNAEAN_HYDRA)
-        limit = 27;
+    // What's the largest number of heads the defender can have?
+    const int limit = defender->type == MONS_LERNAEAN_HYDRA ? 27
+                                                            : MAX_HYDRA_HEADS;
 
     if (wpn_brand == SPWPN_FLAMING)
     {
