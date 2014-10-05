@@ -108,12 +108,38 @@ public:
 
     int get_duration(int pow) const;
 
+    /**
+     * What monster corresponds to this form?
+     *
+     * Used for console player glyphs.
+     *
+     * @return The monster_type corresponding to this form.
+     */
     virtual monster_type get_equivalent_mons() const { return equivalent_mons; }
 
+    /**
+     * A name for the form longer than that used by the status light.
+     *
+     * E.g. "foo-form", "blade tentacles", &c. Used for dumps, morgues &
+     * the % screen.
+     *
+     * @return The 'long name' of the form.
+     */
     virtual string get_long_name() const { return long_name; }
+
+    /**
+     * A description of this form.
+     *
+     * E.g. "a fearsome dragon!", punctuation included.
+     *
+     * Used for the @ screen and, by default, transformation messages.
+     *
+     * @return A description of the form.
+     */
+    virtual string get_transform_description() const { return description; }
+
     virtual string get_description(bool past_tense = false) const;
     virtual string transform_message(transformation_type previous_trans) const;
-    virtual string get_transform_description() const { return description; }
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -125,11 +151,25 @@ public:
     bool res_acid() const;
     bool res_sticky_flame() const;
 
+    /**
+     * A multiplier to Stealth skill for player stealth calculations.
+     *
+     * If 0, fall back to species values.
+     */
     virtual int get_stealth_mod() const { return stealth_mod; }
-    virtual int get_ac_bonus() const;
+
+    /**
+     * Base unarmed damage provided by the form.
+     */
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
+
+    /**
+     * The brand of this form's unarmed attacks (SPWPN_FREEZING, etc).
+     */
     virtual brand_type get_uc_brand() const { return uc_brand; }
+
     virtual string get_uc_attack_name(string default_name) const;
+    virtual int get_ac_bonus() const;
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -193,9 +233,9 @@ public:
     const string foot_name;
 
 protected:
-    /// "foo-form" &c; used for morgue and % screen. "" for none
+    /// See Form::get_long_name().
     const string long_name;
-    /// "a barish foo." used for @ screen and transform messages. "" for none
+    /// See Form::get_transform_description().
     const string description;
 
     /// Resistances granted by this form.
@@ -204,13 +244,10 @@ protected:
      */
     const int resists;
 
-    /// Stealth skill multiplier.
-    /** a multiplier to Stealth skill for player stealth calculations.
-     * if 0, fall back to species values.
-     */
+    /// See Form::get_stealth_mod().
     const int stealth_mod;
 
-    /// Base unarmed damage provided by the form.
+    /// See Form::get_base_unarmed_damage().
     const int base_unarmed_damage;
 
 private:
@@ -235,12 +272,12 @@ private:
     /// experience level-based bonus to player AC; XL * xl_ac / 100
     const int xl_ac;
 
-    /// the brand of the attack (SPWPN_FREEZING, etc)
+    /// See Form::get_uc_brand().
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
 
-    /// a monster corresponding to the form; used for console player glyphs
+    /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
 };
 const Form* get_form(transformation_type form = you.form);
