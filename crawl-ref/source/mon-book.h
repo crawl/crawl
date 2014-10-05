@@ -18,6 +18,7 @@ enum mon_spell_slot_flags
     MON_SPELL_INNATE    = 1 << 1,
     MON_SPELL_WIZARD    = 1 << 2,
     MON_SPELL_PRIEST    = 1 << 3,
+    MON_SPELL_BREATH    = 1 << 4, // sets a breath timer, requires it to be 0
 };
 
 struct mon_spellbook

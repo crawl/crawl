@@ -278,7 +278,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_STEAM_DRAGON,
       {
-       { SPELL_STEAM_BALL, 54, MON_SPELL_INNATE },
+       { SPELL_STEAM_BALL, 54, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -410,7 +410,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MOTTLED_DRAGON,
       {
-       { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_INNATE },
+       { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -476,7 +476,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_STORM_DRAGON,
       {
-       { SPELL_LIGHTNING_BOLT, 64, MON_SPELL_INNATE },
+       { SPELL_LIGHTNING_BOLT, 64, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -597,9 +597,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GOLDEN_DRAGON,
       {
-       { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_INNATE },
-       { SPELL_BOLT_OF_COLD, 23, MON_SPELL_INNATE },
-       { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_INNATE },
+       { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_BOLT_OF_COLD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -707,7 +707,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NAGA,
       {
-       { SPELL_SPIT_POISON, 55, MON_SPELL_INNATE },
+       { SPELL_SPIT_POISON, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -784,7 +784,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SHADOW_DRAGON,
       {
-       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_INNATE },
+       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -861,7 +861,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SWAMP_DRAGON,
       {
-       { SPELL_POISONOUS_CLOUD, 59, MON_SPELL_INNATE },
+       { SPELL_POISONOUS_CLOUD, 59, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -872,7 +872,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SWAMP_DRAKE,
       {
-       { SPELL_NOXIOUS_CLOUD, 54, MON_SPELL_INNATE },
+       { SPELL_NOXIOUS_CLOUD, 54, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -883,7 +883,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SERPENT_OF_HELL,
       {
-       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_INNATE },
+       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_SUMMON_DRAGON, 35, MON_SPELL_INNATE },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -916,7 +916,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_QUICKSILVER_DRAGON,
       {
-       { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_INNATE },
+       { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -927,7 +927,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_IRON_DRAGON,
       {
-       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_NO_FLAGS },
+       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -949,7 +949,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEATH_DRAKE,
       {
-       { SPELL_MIASMA_BREATH, 59, MON_SPELL_INNATE },
+       { SPELL_MIASMA_BREATH, 59, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1462,7 +1462,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELLEPHANT,
       {
-       { SPELL_FIRE_BREATH, 35, MON_SPELL_INNATE },
+       { SPELL_FIRE_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BLINK, 35, MON_SPELL_INNATE },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
@@ -1550,7 +1550,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_PEARL_DRAGON,
       {
-       { SPELL_HOLY_BREATH, 68, MON_SPELL_INNATE },
+       { SPELL_HOLY_BREATH, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS },
