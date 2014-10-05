@@ -5077,7 +5077,7 @@ void monster::load_ghost_spells()
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
         mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
-             i, spells[i], spell_title(spells[i].spell));
+             i, spells[i].spell, spell_title(spells[i].spell));
     }
 #endif
 }
