@@ -3684,6 +3684,8 @@ enum artefact_prop_type
     ARTP_REGENERATION,
     ARTP_SUSTAB,
     ARTP_NO_UPGRADE,
+    ARTP_RCORR,
+    ARTP_RMUT,
     ARTP_NUM_PROPERTIES
 };
 

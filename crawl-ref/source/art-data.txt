@@ -830,14 +830,13 @@ MAGIC:   1
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT
 PLUS:    -4
-INSCRIP: rMut, rAcid
 COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   1
-BOOL:    elec, poison, life
+BOOL:    elec, poison, life, rMut, rCorr
 
 NAME:    fencer's gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
@@ -1131,12 +1130,13 @@ TILE_EQ:  spellbinder
 MAGIC:    1
 
 NAME:    lajatang of Order
-INSCRIP: silver, rMut
+INSCRIP: silver
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 COLOUR:  ETC_SILVER
 TILE:    urand_order
 TILE_EQ: order
 PLUS:    +7
+BOOL:    rMut
 
 ENUM:     FIRESTARTER
 NAME:     great mace "Firestarter"

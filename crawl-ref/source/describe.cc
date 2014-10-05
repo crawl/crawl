@@ -242,6 +242,8 @@ static vector<string> _randart_propnames(const item_def& item,
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
         { "MR",     ARTP_MAGIC,                 1 },
+        { "rMut",   ARTP_RMUT,                  2 },
+        { "rCorr",  ARTP_RCORR,                 2 },
 
         // Quantitative attributes
         { "HP",     ARTP_HP,                    0 },
@@ -476,6 +478,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_RMSL, "It protects you from missiles.", false},
         { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
+        { ARTP_RCORR, "It protects you from acid and corrosion.", false},
+        { ARTP_RMUT, "It protects you from mutation.", false},
     };
 
     // Give a short description of the base type, for base types with no
