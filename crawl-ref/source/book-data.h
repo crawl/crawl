@@ -165,18 +165,17 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-#if TAG_MAJOR_VERSION == 34
-{   // Book of War Chants
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+
+{   // Fen Folio
+    SPELL_CORPSE_ROT,
+    SPELL_STONE_ARROW,
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_SUMMON_FOREST,
+    SPELL_HYDRA_FORM,
+    SPELL_SUMMON_HYDRA,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-#endif
 
 #if TAG_MAJOR_VERSION > 34
 {   // Book of Battle
@@ -272,7 +271,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_HYDRA_FORM,   // dubious
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

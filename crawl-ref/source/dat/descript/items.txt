@@ -527,6 +527,12 @@ An enchanted fan inhabited by benevolent air spirits. Swinging the fan
 unleashes a blast of wind around the bearer and sets the spirits free to sweep
 away the bearer's enemies.
 %%%%
+fen folio
+
+A collection of spells once used by the great swamp civilizations. Their towers
+have crumbled and decayed, but this book remains, pages flecked with peat
+and moss.
+%%%%
 fire dragon armour
 
 Armour made from the scales of a fire-breathing dragon. It provides great
