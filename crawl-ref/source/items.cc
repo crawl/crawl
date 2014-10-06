@@ -4237,11 +4237,11 @@ bool maybe_identify_base_type(item_def &item)
             return false;
     }
 
+    const int item_base = is_amulet ? AMU_FIRST_AMULET : 0;
+
     int ident_count = 0;
 
-    for (int i = (is_amulet ? AMU_FIRST_AMULET : RING_FIRST_RING);
-         i < item_count + (is_amulet ? AMU_FIRST_AMULET : RING_FIRST_RING);
-         i++)
+    for (int i = item_base; i < item_count + item_base; i++)
     {
         const bool identified = you.type_ids[item.base_type][i]
                                 == ID_KNOWN_TYPE;
