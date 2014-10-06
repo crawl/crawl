@@ -923,14 +923,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         {
             int amusement = 64;
 
-            // Cursed cloaks prevent you from removing body armour.
-            // Cursed gloves prevent switching of rings.
-            if (get_armour_slot(arm) == EQ_CLOAK
-                || get_armour_slot(arm) == EQ_GLOVES)
-            {
-                amusement *= 2;
-            }
-
             god_type god;
             if (origin_is_god_gift(arm, &god) && god == GOD_XOM)
                 amusement *= 2;
