@@ -517,7 +517,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 || player_mutation_level(MUT_CLAWS, false) >= 3)
             {
                 if (verbose)
-                    mpr("The hauberk won't fit your hands.");
+                {
+                    mprf("The hauberk won't fit your %s.",
+                         you.hand_name(true));
+                }
                 return false;
             }
 
@@ -534,10 +537,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
                 // No strange race can wear this.
-                const char* parts[] = { "head", "hands", "feet" };
+                const char* parts[] = { "head", you.hand_name(true), "feet" };
                 COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
-                if (player_mutation_level(MUT_MISSING_HAND))
-                    parts[1] = "hand";
 
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
@@ -601,10 +602,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                if (player_mutation_level(MUT_MISSING_HAND))
-                    mpr("You can't wear a glove with your huge claw!");
-                else
-                    mpr("You can't wear gloves with your huge claws!");
+                mprf("You can't wear a glove with your huge claw%s!",
+                     player_mutation_level(MUT_MISSING_HAND) ? "" : "s");
             }
             return false;
         }
@@ -768,7 +767,10 @@ bool do_wear_armour(int item, bool quiet)
             if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
             else
-                mprf("You'd need three %s to do that!", you.hand_name(true).c_str());
+            {
+                mprf("You'd need three %s to do that!",
+                     you.hand_name(true).c_str());
+            }
         }
         return false;
     }
