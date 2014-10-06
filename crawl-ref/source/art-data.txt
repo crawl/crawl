@@ -829,7 +829,7 @@ MAGIC:   1
 
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT
-PLUS:    -4
+PLUS:    -2
 COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
