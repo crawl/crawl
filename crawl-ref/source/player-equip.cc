@@ -1246,7 +1246,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
-    if (item.cursed())
+    if (item.cursed() && !unmeld)
     {
         mprf("Oops, that %s feels deathly cold.",
              jewellery_is_amulet(item)? "amulet" : "ring");
@@ -1267,7 +1267,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     // Cursed or not, we know that since we've put the ring on.
     set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
-    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (!unmeld)
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
