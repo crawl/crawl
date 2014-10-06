@@ -842,7 +842,11 @@ string monster_info::_core_name() const
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
 #endif
-    case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
+    case MONS_SPECTRAL_THING:
+        nametype = mons_species(base_type);
+        break;
+
+    case MONS_PILLAR_OF_SALT:
     case MONS_BLOCK_OF_ICE:     case MONS_CHIMERA:
     case MONS_SENSED:
         nametype = base_type;
