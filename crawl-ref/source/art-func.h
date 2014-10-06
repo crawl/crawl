@@ -937,7 +937,7 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
  *                  (physical) attacks.
  * @param defender  The victim of the attack. (Not const because checking res
  *                  may end up IDing items on monsters... )
- * @return          The amount of damage that the defender will recieve.
+ * @return          The amount of damage that the defender will receive.
  */
 static int _calc_elemental_staff_damage(beam_type flavour,
                                         actor* defender)
