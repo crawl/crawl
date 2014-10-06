@@ -253,7 +253,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
             return SPRET_ABORT;
         }
         MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                      9, 90, "a distortion unwield");
+                      9, 90, "rebranding a weapon of distortion");
     }
 
     fail_check();
