@@ -519,7 +519,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 if (verbose)
                 {
                     mprf("The hauberk won't fit your %s.",
-                         you.hand_name(true));
+                         you.hand_name(true).c_str());
                 }
                 return false;
             }
@@ -537,7 +537,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
                 // No strange race can wear this.
-                const char* parts[] = { "head", you.hand_name(true), "feet" };
+                const char* parts[] = { "head", you.hand_name(true).c_str(),
+                                        you.foot_name(true).c_str() };
                 COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
 
                 // Auto-disrobing would be nice.
