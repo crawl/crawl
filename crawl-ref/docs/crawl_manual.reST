@@ -2144,14 +2144,18 @@ Stealth
 
   Stealth also helps you make a very powerful first strike against a
   sleeping/resting monster who hasn't noticed you yet. This is most effective
-  with a dagger, slightly less effective with other short blades and less useful
-  (although by no means negligible) with any other weapon. Stabbing also improves
-  some melee attacks against confused or otherwise incapacitated monsters, though
-  this is much less effective than when the monster is asleep or paralysed.
+  with a dagger, slightly less effective with other short blades, again somewhat
+  less useful with long blades, clubs, spears, tridents, and felid claws, and
+  finally even less useful (although still by no means negligible) with any other
+  weapon.
 
-  Note that in addition to the bonus from using a short blade/dagger, there is an
-  additional stabbing bonus based on the average of your stealth skill and your
-  skill in your wielded weapon.
+  Stealth also improves some melee attacks against confused, distracted, or
+  otherwise incapacitated monsters, though this is much less effective than when
+  the monster is asleep or paralysed.
+
+  Note that in addition to the bonus from weapon type, there is an additional
+  stabbing bonus based on the average of your stealth skill and your skill with
+  your wielded weapon.
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
