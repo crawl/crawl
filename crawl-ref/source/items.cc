@@ -4211,7 +4211,7 @@ bool maybe_identify_base_type(item_def &item)
         return false;
 
     int item_count; // Number of objects in an enum
-    bool is_amulet = false;
+    bool is_amulet = false, is_ring = false;
 
     switch (item.base_type)
     {
@@ -4225,7 +4225,10 @@ bool maybe_identify_base_type(item_def &item)
             item_count = NUM_SCROLLS; break;
         case OBJ_JEWELLERY:
             if (item.sub_type >= RING_FIRST_RING && item.sub_type < NUM_RINGS)
+            {
                 item_count = NUM_RINGS - RING_FIRST_RING;
+                is_ring = true;
+            }
             else
             {
                 item_count = NUM_JEWELLERY - AMU_FIRST_AMULET;
@@ -4237,7 +4240,10 @@ bool maybe_identify_base_type(item_def &item)
             return false;
     }
 
-    const int item_base = is_amulet ? AMU_FIRST_AMULET : 0;
+    const int item_base =
+        is_amulet ? AMU_FIRST_AMULET
+      : is_ring   ? RING_FIRST_RING
+      :             0;
 
     int ident_count = 0;
 
