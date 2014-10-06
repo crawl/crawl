@@ -2859,10 +2859,11 @@ string melee_attack::mons_attack_verb()
         "pounce on",
         "sting",
     };
-
     COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
-    ASSERT(attk_type < (int)ARRAYSZ(attack_types));
-    return attack_types[attk_type - AT_FIRST_ATTACK];
+
+    const int verb_index = attk_type - AT_FIRST_ATTACK;
+    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
+    return attack_types[verb_index];
 }
 
 string melee_attack::mons_attack_desc()
