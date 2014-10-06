@@ -1275,7 +1275,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    bool check_validity   = true;
     spell_type mzap       = SPELL_NO_SPELL;
     int rate              = 0;
 
@@ -1286,17 +1285,10 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // monster-castable rod spells!
     switch (mzap)
     {
-    case SPELL_RANDOM_BOLT:
-        // don't use quicksilver, it does fixed damage from monsters
-        mzap = random_choose(SPELL_BOLT_OF_FIRE,
-                             SPELL_BOLT_OF_COLD,
-                             SPELL_VENOM_BOLT,
-                             SPELL_BOLT_OF_DRAINING,
-                             SPELL_CRYSTAL_BOLT,
-                             SPELL_LIGHTNING_BOLT,
-                             -1);
     case SPELL_BOLT_OF_INACCURACY:
     case SPELL_CLOUD_CONE:
+    // Handled in mons_spell_beam
+    case SPELL_RANDOM_BOLT:
         break;
 
     case SPELL_THUNDERBOLT:
@@ -1328,7 +1320,15 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     dprf("using rod with power %d", power);
 
-    bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
+    bolt theBeam;
+    do
+    {
+        theBeam = mons_spell_beam(mons, mzap, power, true);
+    }
+    //XXX: this does fixed 3d20 by monsters, too nasty
+    while (mzap == SPELL_RANDOM_BOLT
+           && theBeam.origin_spell == SPELL_QUICKSILVER_BOLT);
+
     beem         = _generate_item_beem(beem, theBeam, mons);
     beem.aux_source =
         rod.name(DESC_QUALNAME, false, true, false, false);
