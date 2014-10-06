@@ -1377,6 +1377,33 @@ static int damage_or_escape_net(int hold)
     return escape;
 }
 
+/**
+ * Let the player attempt to unstick themself from a web.
+ */
+void _free_self_from_web()
+{
+    // Check if there's actually a web trap in your tile.
+    trap_def *trap = find_trap(you.pos());
+    if (trap && trap->type == TRAP_WEB)
+    {
+        // if so, roll a chance to escape the web (based on str).
+        if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
+        {
+            mpr("You struggle to detach yourself from the web.");
+            // but you actually accomplished nothing!
+            return;
+        }
+
+        // destroy or escape the web.
+        maybe_destroy_web(&you);
+    }
+
+    // whether or not there was a web trap there, you're free now.
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
+    you.redraw_evasion = true;
+}
+
 // Calls the above function to decide on how to get free.
 // Note that usually the net will be damaged until trying to slip out
 // becomes feasible (for size etc.), so it may take even longer.
@@ -1386,19 +1413,8 @@ void free_self_from_net()
 
     if (net == NON_ITEM)
     {
-        trap_def *trap = find_trap(you.pos());
-        if (trap && trap->type == TRAP_WEB)
-        {
-            if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
-            {
-                mpr("You struggle to detach yourself from the web.");
-                return;
-            }
-            maybe_destroy_web(&you);
-        }
-        you.attribute[ATTR_HELD] = 0;
-        you.redraw_quiver = true;
-        you.redraw_evasion = true;
+        // If there's no net, it must be a web.
+        _free_self_from_web();
         return;
     }
 
