@@ -300,7 +300,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                                    SPELL_ORB_OF_ELECTRICITY,
                                    -1);
     }
-    else if (spell_cast == SPELL_RANDOM_BOLT) // if casting directly
+    else if (spell_cast == SPELL_RANDOM_BOLT)
     {
         real_spell = random_choose(SPELL_VENOM_BOLT,
                                    SPELL_BOLT_OF_DRAINING,
@@ -308,6 +308,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                                    SPELL_LIGHTNING_BOLT,
                                    SPELL_QUICKSILVER_BOLT,
                                    SPELL_CRYSTAL_BOLT,
+                                   SPELL_CORROSIVE_BOLT,
                                    -1);
     }
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
