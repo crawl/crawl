@@ -804,7 +804,8 @@ static void _finish_delay(const delay_queue_item &delay)
         // words, this is equivalent to if the user took off the previous
         // amulet and was slowed before putting the amulet of stasis on as a
         // separate action on the next turn
-        if (nasty_stasis(item, OPER_PUTON))
+        if (nasty_stasis(item, OPER_PUTON)
+            && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             string prompt = "Really put on ";
             prompt += item.name(DESC_INVENTORY);
