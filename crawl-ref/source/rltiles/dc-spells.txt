@@ -158,6 +158,7 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
 beastly_appendage BEASTLY_APPENDAGE
+hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 
 # rod spells
