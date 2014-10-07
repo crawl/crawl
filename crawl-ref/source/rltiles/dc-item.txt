@@ -801,6 +801,15 @@ emerald
 brown
 pink
 white
+bubbly
+cloudy
+effervescent
+fizzy
+golden
+murky
+puce
+purple_red
+sky_blue
 
 %sdir item/potion
 %back i-label
