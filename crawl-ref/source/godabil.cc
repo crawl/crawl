@@ -594,9 +594,7 @@ bool zin_check_able_to_recite(bool quiet)
  * If prayertype is null, we're just checking whether we can.
  * Otherwise we're actually reciting, and may need to present a menu.
  *
- * @param[out] prayertype If non-null, receives the type of recitation to
- *             be used: either the only possible type, or the type chosen
- *             by the player.  Only modified when we return 1.
+ * @param quiet     Whether to suppress messages.
  * @return  0 if no monsters were found, or if the player declined to choose
  *          a type of recitation, or if all the found monsters returned
  *          zero from _zin_check_recite_to_single_monster().
@@ -605,7 +603,7 @@ bool zin_check_able_to_recite(bool quiet)
  *          monsters, and at least one returned -1 from
  *          _zin_check_recite_to_single_monster().
  */
-int zin_check_recite_to_monsters()
+int zin_check_recite_to_monsters(bool quiet)
 {
     bool found_ineligible = false;
     bool found_eligible = false;
@@ -639,12 +637,14 @@ int zin_check_recite_to_monsters()
 
     if (!found_eligible && !found_ineligible)
     {
-        dprf("No audience found!");
+        if (!quiet)
+            dprf("No audience found!");
         return 0;
     }
     else if (!found_eligible && found_ineligible)
     {
-        dprf("No sensible audience found!");
+        if (!quiet)
+            dprf("No sensible audience found!");
         return -1;
     }
 
