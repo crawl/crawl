@@ -22,7 +22,7 @@ require("dlua/layout/geoelf_corridors.lua")
 
 ----------------------------------------------------------------
 --
--- How to use the geoelf layout generator:
+--  How to use the geoelf layout generator:
 --
 --  1. Initialize the room and corridor arrays in the layout.
 --     They will be needed as parameters to the subsequent
@@ -50,6 +50,23 @@ require("dlua/layout/geoelf_corridors.lua")
 --    -> J, K, L, M, N, O: glass with pictures of tree, bush,
 --                         plant, fungus, statue, fountain
 --                         (needs special tiles)
+--
+--  If you need to connect the portion of the map generated
+--   using geoelf layout generator ("the geoelf layout") to a
+--   portion of the map generated in a different way ("your
+--   layout"):
+--
+--  1.-3. As above
+--  4. Use the add_room_dummy function to mark where on your
+--     layout you want the geoelf layout to connect to
+--    -> Nothing will be displayed for these rooms
+--  5. Add the possible corridors to connect the dummy rooms to
+--     the geoelf layout
+--    -> Not all corridors will appear, but at least one will
+--       connect to each dummy room
+--    -> If you connect the dummy rooms to each other, corridors
+--       will be added between them as well
+--  6. Call the geoelf.generate function
 --
 
 
@@ -79,7 +96,8 @@ require("dlua/layout/geoelf_corridors.lua")
 --  -> radius: The size from room center to edge
 --  -> zone: used to connect the rooms into a tree
 --  -> corridor: An array of the corridors indexed using
---                 direction values
+--               direction values
+--  -> is_dummy: Whether this room is a plaeholder
 --
 -- The elements in the array of room data are numbered from 0 as
 --  in C++, not from 1 as recommended in LUA documentation.  The
@@ -116,6 +134,7 @@ function geoelf.add_room (room_data, center_x, center_y, radius)
   room_data[index].radius   = radius
   room_data[index].zone     = index
   room_data[index].corridor = {}
+  room_data[index].is_dummy = false
 
   for i = 0, geoelf.directions.COUNT - 1 do
     room_data[index].corridor[i] = nil
@@ -123,6 +142,94 @@ function geoelf.add_room (room_data, center_x, center_y, radius)
 
   room_data.count = index + 1
   return index
+end
+
+----------------
+--
+-- add_room_dummy
+--
+-- Purpose: This function adds a dummy room at the specified
+--          position to the list of rooms for the layout.  A
+--          dummy room is connected into the tree but is never
+--          drawn to the layout.  Dummy rooms should be used to
+--          connect the geoelf room system to parts of a map
+--          generate using a different method.
+-- Parameter(s):
+--  -> room_data: The array of room information.  This new room
+--                will be added to the array.
+--  -> center_x
+--  -> center_y: The x/y coordinates for the center of the room.
+-- Returns: The index of the room.  You will need this to
+--          specify possible corridors.
+--
+-- The room data structure is the same as for add_room
+--
+
+function geoelf.add_room_dummy (room_data, center_x, center_y)
+  if (room_data == nil) then
+    crawl.mpr("Error: No room data array")
+  end
+  if (room_data.count == nil) then
+    crawl.mpr("Error: Room data array does not have count")
+  end
+  if (center_x == nil) then
+    crawl.mpr("Error: center_x is nil")
+  end
+  if (center_y == nil) then
+    crawl.mpr("Error: center_y is nil")
+  end
+
+  if (geoelf.debug) then
+    print("geoelf.add_room_dummy(room_data, " .. center_x .. ", " ..
+          center_y .. ")")
+  end
+
+  local index = room_data.count
+  room_data[index] = {}
+
+  room_data[index].center_x = center_x
+  room_data[index].center_y = center_y
+  room_data[index].radius   = 1
+  room_data[index].zone     = index
+  room_data[index].corridor = {}
+  room_data[index].is_dummy = true
+
+  for i = 0, geoelf.directions.COUNT - 1 do
+    room_data[index].corridor[i] = nil
+  end
+
+  room_data.count = index + 1
+  return index
+end
+
+----------------
+--
+-- is_room_dummy
+--
+-- Purpose: To determine if the room with the specified index
+--          is a dummy room dummy room.
+-- Parameter(s):
+--  -> room_data: The array of room information.
+--  -> index: The index of the room
+-- Returns: Whether the room in room_data with index index is a
+--          dummy room.
+--
+
+function geoelf.is_room_dummy (room_data, index)
+  if (room_data == nil) then
+    crawl.mpr("Error: No room data array")
+  end
+  if (room_data.count == nil) then
+    crawl.mpr("Error: Room data array does not have count")
+  end
+  if (index == nil) then
+    crawl.mpr("Error: index is nil")
+  end
+  if (index >= room_data.count) then
+    crawl.mpr("Error: index is larger than room count")
+  end
+
+  return room_data[index].is_dummy
 end
 
 ----------------
@@ -271,6 +378,15 @@ function geoelf.generate (e, room_data, corridor_data,
   if (extra_fraction == nil) then
     crawl.mpr("Error: extra_fraction is nil")
   end
+  if (fancy_room_fraction == nil) then
+    crawl.mpr("Error: fancy_room_fraction is nil")
+  end
+  if (only_trees == nil) then
+    crawl.mpr("Error: only_trees is nil")
+  end
+  if (force_open_room_edge == nil) then
+    crawl.mpr("Error: force_open_room_edge is nil")
+  end
 
   if (geoelf.debug) then
     print("geoelf.generate(room_data, corridor_data, " .. extra_fraction .. ")")
@@ -301,9 +417,11 @@ function geoelf.generate (e, room_data, corridor_data,
   -- draw rooms
   if (geoelf.debug) then print("Drawing rooms:") end
   for i = 0, room_data.count - 1 do
-    geoelf.rooms.draw(e, room_data, corridor_data, draw_order[i],
-                      (crawl.random_real() < fancy_room_fraction),
-                      force_open_room_edge)
+    if (not room_data[draw_order[i]].is_dummy) then
+      geoelf.rooms.draw(e, room_data, corridor_data, draw_order[i],
+                        (crawl.random_real() < fancy_room_fraction),
+                        force_open_room_edge)
+    end
   end
 
   -- substitutions
@@ -334,8 +452,6 @@ function geoelf.generate (e, room_data, corridor_data,
     end
   end
 end
-
-
 
 ----------------
 --
