@@ -1380,7 +1380,7 @@ static int damage_or_escape_net(int hold)
 /**
  * Let the player attempt to unstick themself from a web.
  */
-void _free_self_from_web()
+static void _free_self_from_web()
 {
     // Check if there's actually a web trap in your tile.
     trap_def *trap = find_trap(you.pos());
