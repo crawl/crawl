@@ -1660,6 +1660,11 @@ merfolk aquamancer
 A slender merfolk mystic with unusually webby hands. Its form shifts and
 glistens as if seen through ocean spray.
 %%%%
+merfolk avatar
+
+A beguiling merfolk whose voice mesmerizes listeners. It carries no weapon,
+but its song summons drowned souls to defend the sea against intruders.
+%%%%
 merfolk impaler
 
 A powerfully muscled merfolk warrior, bearing a deadly weapon.
@@ -1668,10 +1673,6 @@ merfolk javelineer
 
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
-%%%%
-siren
-
-A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 minotaur
 
@@ -2154,10 +2155,9 @@ simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
-merfolk avatar
+siren
 
-A beguiling merfolk whose voice mesmerizes listeners. It carries no weapon,
-but its song summons drowned souls to defend the sea against intruders.
+A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 sixfirhy
 
