@@ -2114,6 +2114,12 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     _extra_hp(form_hp_mod());
 
+    if (you.digging && which_trans == TRAN_TREE)
+    {
+        mpr("Your mandibles meld away.");
+        you.digging = false;
+    }
+
     // Extra effects
     switch (which_trans)
     {
