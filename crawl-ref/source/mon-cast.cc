@@ -4756,22 +4756,27 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
 }
 
 // not making this static so that monster can link to it
-spell_type serpent_of_hell_breaths[][3] = {
+const spell_type serpent_of_hell_breaths[][3] =
+{
+    // Geh
     {
         SPELL_FIRE_BREATH,
         SPELL_FIREBALL,
         SPELL_HELLFIRE
     },
+    // Coc
     {
         SPELL_COLD_BREATH,
         SPELL_FREEZING_CLOUD,
         SPELL_FLASH_FREEZE
     },
+    // Dis
     {
         SPELL_METAL_SPLINTERS,
         SPELL_QUICKSILVER_BOLT,
         SPELL_LEHUDIBS_CRYSTAL_SPEAR
     },
+    // Tar
     {
         SPELL_BOLT_OF_DRAINING,
         SPELL_MIASMA_BREATH,
