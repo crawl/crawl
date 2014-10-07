@@ -378,6 +378,8 @@ the Bulwark
 the Ward
 
 Fortification
+
+Complete Protection
 %%%%
 # other armour properties (beside protection)
 _armour_property_name_
