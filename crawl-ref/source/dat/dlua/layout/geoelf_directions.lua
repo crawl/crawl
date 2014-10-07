@@ -7,7 +7,7 @@
 --  direction.
 ------------------------------------------------------------------------------
 
-geoelf.directions    = {}    -- Namespace for direction constants, etc.
+geoelf.directions = {}    -- Namespace for direction constants, etc.
 
 
 
@@ -16,6 +16,7 @@ geoelf.directions    = {}    -- Namespace for direction constants, etc.
 --
 
 geoelf.directions.COUNT = 8
+geoelf.directions.COUNT_STRAIGHT = 4
 
 --
 -- The possible directions
@@ -63,3 +64,32 @@ geoelf.directions.GET_REVERSE =
     [geoelf.directions.NW] = geoelf.directions.SE,
     [geoelf.directions.SW] = geoelf.directions.NE,
     [geoelf.directions.NE] = geoelf.directions.SW }
+
+--
+-- Moving along any straight directions involve repeatedly
+--  either increasing or decreasing the component of the
+--  position.  This can be seen as either adding 1 or -1.
+--
+
+geoelf.directions.STEP_SIGN =
+  { [geoelf.directions.S] = 1,
+    [geoelf.directions.N] = -1,
+    [geoelf.directions.E] = 1,
+    [geoelf.directions.W] = -1 }
+
+--
+-- Each diagonal direction is a combination of 2 straight
+--  directions.
+--
+
+geoelf.directions.COMPONENT_X =
+  { [geoelf.directions.SE] = geoelf.directions.E,
+    [geoelf.directions.NW] = geoelf.directions.W,
+    [geoelf.directions.SW] = geoelf.directions.W,
+    [geoelf.directions.NE] = geoelf.directions.E }
+
+geoelf.directions.COMPONENT_Y =
+  { [geoelf.directions.SE] = geoelf.directions.S,
+    [geoelf.directions.NW] = geoelf.directions.N,
+    [geoelf.directions.SW] = geoelf.directions.S,
+    [geoelf.directions.NE] = geoelf.directions.N }

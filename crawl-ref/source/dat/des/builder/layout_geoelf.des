@@ -2,6 +2,7 @@
 # layout_geoelf.des: Layouts for Elf with geometric rooms
 #                    These are not the only Elf layouts
 #                    These layouts will build around primary vaults correctly.
+#                    There is another geoelf layout in layout_geoelf_castle.des.
 ###############################################################################
 
 # Required file contains overview
@@ -122,7 +123,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
           --  block this one (i.e. an NE-SW one)
           local block_index = nil
           if (rooms_by_position[y][x - 1] ~= nil) then
-            old_index = rooms_by_position[y][x - 1]
+            local old_index = rooms_by_position[y][x - 1]
             block_index = room_data[old_index].corridor[geoelf.directions.NE]
           end
 
@@ -256,7 +257,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
           --  block this one (i.e. an E-W one)
           local block_index = nil
           if (x >= 1 and rooms_by_position[y - 1][x - 1] ~= nil) then
-            old_index = rooms_by_position[y - 1][x - 1]
+            local old_index = rooms_by_position[y - 1][x - 1]
             block_index = room_data[old_index].corridor[geoelf.directions.E]
           end
 

@@ -1,0 +1,1196 @@
+###############################################################################
+# layout_geoelf_castle.des: A special geoelf layout for Elf:$ that builds a
+#                           castle around the primary vault.
+#                           There are other geoelf layouts in layout_geoelf.des.
+###############################################################################
+
+# Required file contains overview of geoelf room placement
+: require("dlua/layout/geoelf.lua")
+
+{{
+  --
+  -- Constants
+  --
+  -- These have to be global so they can also be used in the
+  --  veto function.
+  --
+
+  -- size of castle
+  CASTLE_INNER        = 4
+  CASTLE_HALLWAY      = 3
+  CASTLE_MOAT         = 2
+  CASTLE_OPEN         = 1
+  CASTLE_OVERWRITABLE = 3
+  CASTLE_TOTAL        = CASTLE_INNER + CASTLE_HALLWAY      + CASTLE_MOAT +
+                        CASTLE_OPEN  + CASTLE_OVERWRITABLE
+  CASTLE_TURRET_RADIUS      = 4
+  CASTLE_TURRET_MOAT_RADIUS = CASTLE_TURRET_RADIUS + CASTLE_MOAT
+  CASTLE_TURRET_OPEN_RADIUS = CASTLE_TURRET_MOAT_RADIUS + CASTLE_OPEN
+  CASTLE_TURRET_OVERWRITABLE_RADIUS = CASTLE_HALLWAY + CASTLE_MOAT         +
+                                      CASTLE_OPEN    + CASTLE_OVERWRITABLE - 1
+
+  INNER_WALL_SPACING_MIN = 6
+  INNER_WALL_SPACING_MAX = 12
+
+  GATE_FROM_CORNER_MIN = 8
+  GATE_SIZE_MIN = 2
+  GATE_SIZE_MAX = 3
+
+  -- room parameters
+  ROOMS_OFFSET_MAX      = 1
+  ROOMS_RADIUS_MIN      = 3
+  ROOMS_RADIUS_MAX      = 5
+  ROOMS_RADIUS_EDGE_MIN = 2
+  ROOMS_RADIUS_EDGE_MAX = 4
+  ROOMS_EXTRA_CORRIDOR_FRACTION = 0.5
+  ROOMS_FANCY_ROOM_FRACTION     = 0.2
+
+  -- room placement
+  ROOMS_BORDER_MIN  = ROOMS_OFFSET_MAX + ROOMS_RADIUS_MAX + 1
+  ROOMS_FROM_CASTLE = ROOMS_OFFSET_MAX + ROOMS_RADIUS_MAX + 1
+  ROOMS_SPACING_MIN = ROOMS_OFFSET_MAX + ROOMS_RADIUS_MAX * 2 + 2
+  ROOMS_INTO_CASTLE = ROOMS_SPACING_MIN - ROOMS_FROM_CASTLE
+  ROOMS_MIN_SPACE   = CASTLE_TOTAL + ROOMS_BORDER_MIN + ROOMS_FROM_CASTLE
+
+  -- veto tests
+  PRIMARY_VAULT_MIN_PADDING = ROOMS_MIN_SPACE + 1
+  PRIMARY_VAULT_MIN_SIZE    = GATE_FROM_CORNER_MIN + GATE_SIZE_MAX
+                              - CASTLE_HALLWAY - CASTLE_INNER
+
+  -- edge rows of rooms have no individual offset to allow
+  --  for maximum distance from grid
+  ROOMS_SPACING_EDGE   = math.ceil(ROOMS_SPACING_MIN / 2) + 1
+  ROOMS_MIN_SPACE_EDGE = ROOMS_SPACING_EDGE + ROOMS_RADIUS_EDGE_MAX + 2
+
+  DEBUG_CASTLE_DESIGN = false
+}}
+
+
+
+##############################################################
+# layout_geoelf_castle
+# Idea by psyshvl and doy (probably independantly)
+# Adapted and coded by infiniplex
+#
+# This layout builds a castle around a primary vault, and then
+#  fills up the extra space with geoelf rooms.  It will NOT work
+#  without a primary vault of a suitable size.  If there is no
+#  primary vault, or the primary vault is too big or too small,
+#  the layout will be vetoed.
+#
+# The shape of the castle is as follows (not to scale):
+#
+#  ??????????''cc~~"..
+#  ??????????''cc~~"..    ? - primary vault
+#  ??????????''cc~~"..
+#  ??????????''cc~~"".    ' - inner rooms area
+#  '''''''''''***~~~".    c - outer hallway
+#  ''''''''''*****~~".    ~ - moat
+#  cccccccccc*****~~".    " - open area around castle
+#  cccc==cccc*****~~".    . - open area around castle (overwritable)
+#  ~~~~::~~~~~***~~~".
+#  ~~~~::~~~~~~~~~~"".    * - turret
+#  """"""""""~~~~~""..    = - main castle gate
+#  ........."""""""...    : - gate causeway
+#  ...................
+#
+# Depending on the position of the primary vault, the castle may
+#  be:
+#  -> in the map corner (2 walls, 1 turrets)
+#  -> along a map edge (3 walls, 2 turrets)
+#  -> "floating" in the middle of the map (4 walls, 4 turrets)
+#
+# The castle is not overwritable; it is effectively an extension
+#  of the primary vault.  Stairs are never placed in the castle
+#  proper.  Instead, they are always in overwritable area around
+#  it or the rooms.
+#
+# The rooms around the castle are a modified grid.
+#  -> Rooms that would overlap the castle proper are not added.
+#     Rooms may (and often do) overlap the "overwritable" area
+#     outside the castle.
+#  -> The rooms are lined up just outside the castle.  This
+#     means the spacing between the rows overlapping the castle
+#     may be larger than between other rows.  If this happens,
+#     diagonal hallways are not added between these rooms.
+#  -> An extra row half-offset may be added any any or all sides
+#     of the grid, depending on the available space.
+#
+# TODO: When geometric pan (WFCD) boxes are finalized, add
+#       octagon-, square-, and two types of hexagon-shaped
+#       turrets as alternatives to the round ones.
+#
+
+NAME:   layout_geoelf_castle
+DEPTH:  Elf:$
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+  local INSIDE_GLYPH = "'"
+  local WALL_GLYPH   = "c"
+  local DOOR_GLYPH   = "="
+  local MOAT_GLYPH   = "w"
+
+  --
+  --  PHASE 1: Resize the map to maximal size.
+  --
+
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+
+
+  --
+  --  PHASE 2: Choose design and placement of castle and rooms
+  --           based on primary vault
+  --
+
+  -- choose which sides of primary vault have castle and rooms
+  local p_x_min, p_x_max, p_y_min, p_y_max = primary_vault_dimensions()
+  if (p_x_min == nil) then
+    crawl.mpr("layout_geoelf_castle didn't veto for no primary vault")
+    return true  -- no primary vault
+  end
+
+  local primary_vault = { bounds = {}, border = {} }
+  primary_vault.bounds[geoelf.directions.W] = p_x_min
+  primary_vault.bounds[geoelf.directions.E] = p_x_max
+  primary_vault.bounds[geoelf.directions.N] = p_y_min
+  primary_vault.bounds[geoelf.directions.S] = p_y_max
+  primary_vault.border[geoelf.directions.W] =       p_x_min - 1
+  primary_vault.border[geoelf.directions.E] = gxm - p_x_max - 2
+  primary_vault.border[geoelf.directions.N] =       p_y_min - 1
+  primary_vault.border[geoelf.directions.S] = gym - p_y_max - 2
+
+  local is_castle = {}
+  local is_rooms  = {}
+  local gate_best = nil
+  local gate_best_space = 0
+  for i = 0, geoelf.directions.COUNT_STRAIGHT - 1 do
+    is_castle[i] = (primary_vault.border[i] >= CASTLE_TOTAL)
+    is_rooms[i]  = (primary_vault.border[i] >= ROOMS_MIN_SPACE)
+
+    -- put the castle gate on the side with most space
+    if (primary_vault.border[i] > gate_best_space) then
+      gate_best = i
+      gate_best_space = primary_vault.border[i]
+    end
+  end
+
+  if (DEBUG_CASTLE_DESIGN) then
+    print("")
+    print("GEOELF CASTLE DEBUG INFO")
+    print("Primary vault")
+    print("  Bounds: (" .. primary_vault.bounds[geoelf.directions.W]
+             .. " and " .. primary_vault.bounds[geoelf.directions.E]
+             .. ", "    .. primary_vault.bounds[geoelf.directions.N]
+             .. " and " .. primary_vault.bounds[geoelf.directions.S] .. ")")
+    print("  Borders: (" .. primary_vault.border[geoelf.directions.W]
+              .. " and " .. primary_vault.border[geoelf.directions.E]
+              .. ", "    .. primary_vault.border[geoelf.directions.N]
+              .. " and " .. primary_vault.border[geoelf.directions.S]
+              .. ") / " .. CASTLE_TOTAL .. ", " .. ROOMS_MIN_SPACE)
+  end
+
+
+
+  --
+  --  PHASE 3: Design the castle
+  --
+
+  -- choose the shape of the components
+  castle = { base = {}, inner = {}, hallway = {}, moat = {}, open = {},
+             overwritable = {}, turret = {} }
+
+  for i = 0, geoelf.directions.COUNT_STRAIGHT - 1 do
+    castle.base[i] = primary_vault.bounds[i]
+  end
+
+  if (castle.base[geoelf.directions.W] < 1) then
+    castle.base[geoelf.directions.W] = 1
+  end
+  if (castle.base[geoelf.directions.E] > gxm - 2) then
+    castle.base[geoelf.directions.E] = gxm - 2
+  end
+  if (castle.base[geoelf.directions.N] < 1) then
+    castle.base[geoelf.directions.N] = 1
+  end
+  if (castle.base[geoelf.directions.S] > gym - 2) then
+    castle.base[geoelf.directions.S] = gym - 2
+  end
+
+  for i = 0, geoelf.directions.COUNT_STRAIGHT - 1 do
+    local step_sign = geoelf.directions.STEP_SIGN[i]
+
+    if (is_castle[i]) then
+      castle.inner[i]        = castle.base[i]    + CASTLE_INNER     * step_sign
+      castle.hallway[i]      = castle.inner[i]   + CASTLE_HALLWAY   * step_sign
+      castle.moat[i]         = castle.hallway[i] + CASTLE_MOAT      * step_sign
+      castle.open[i]         = castle.moat[i]    + CASTLE_OPEN      * step_sign
+      castle.overwritable[i] = castle.open[i] + CASTLE_OVERWRITABLE * step_sign
+    else
+      castle.inner[i]        = castle.base[i] + step_sign
+      castle.hallway[i]      = castle.base[i] + step_sign
+      castle.moat[i]         = castle.base[i]
+      castle.open[i]         = castle.base[i]
+      castle.overwritable[i] = castle.base[i]
+    end
+  end
+
+  if (DEBUG_CASTLE_DESIGN) then
+    print("Castle Bounds")
+    print("  Base: ("    .. castle.base[geoelf.directions.W]
+                .. " - " .. castle.base[geoelf.directions.E]
+                .. ", "  .. castle.base[geoelf.directions.N]
+                .. " - " .. castle.base[geoelf.directions.S] .. ")")
+    print("  Inner: ("   .. castle.inner[geoelf.directions.W]
+                .. " - " .. castle.inner[geoelf.directions.E]
+                .. ", "  .. castle.inner[geoelf.directions.N]
+                .. " - " .. castle.inner[geoelf.directions.S] .. ")")
+    print("  Hallway: (" .. castle.hallway[geoelf.directions.W]
+                .. " - " .. castle.hallway[geoelf.directions.E]
+                .. ", "  .. castle.hallway[geoelf.directions.N]
+                .. " - " .. castle.hallway[geoelf.directions.S] .. ")")
+    print("  Moat: ("    .. castle.moat[geoelf.directions.W]
+                .. " - " .. castle.moat[geoelf.directions.E]
+                .. ", "  .. castle.moat[geoelf.directions.N]
+                .. " - " .. castle.moat[geoelf.directions.S] .. ")")
+    print("  Open: ("    .. castle.open[geoelf.directions.W]
+                .. " - " .. castle.open[geoelf.directions.E]
+                .. ", "  .. castle.open[geoelf.directions.N]
+                .. " - " .. castle.open[geoelf.directions.S] .. ")")
+    print("  Overwritable: ("    .. castle.overwritable[geoelf.directions.W]
+                        .. " - " .. castle.overwritable[geoelf.directions.E]
+                        .. ", "  .. castle.overwritable[geoelf.directions.N]
+                        .. " - " .. castle.overwritable[geoelf.directions.S]
+                        .. ")")
+  end
+
+  -- choose which turrets to add
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    local component_x = geoelf.directions.COMPONENT_X[i]
+    local component_y = geoelf.directions.COMPONENT_Y[i]
+
+    castle.turret[i] = {}
+    castle.turret[i].is_placed = (    is_castle[component_x]
+                                  and is_castle[component_y])
+    -- turret position is linked to inner rooms, not hallway
+    castle.turret[i].x = castle.inner[component_x]
+                         + geoelf.directions.STEP_SIGN[component_x]
+    castle.turret[i].y = castle.inner[component_y]
+                         + geoelf.directions.STEP_SIGN[component_y]
+  end
+
+
+
+  --
+  --  PHASE 4: Choose which rooms to add to the basic grid
+  --           outside the castle
+  --
+
+  local edge_rooms = {}
+
+  -- spacing of north and south rooms along x axis
+  local min_x = castle.overwritable[geoelf.directions.W] + ROOMS_INTO_CASTLE
+  local max_x = castle.overwritable[geoelf.directions.E] - ROOMS_INTO_CASTLE
+  local range_x = max_x - min_x
+  edge_rooms.count_x = math.floor(range_x / ROOMS_SPACING_MIN) + 1
+  local range_x_min = (edge_rooms.count_x - 1) * ROOMS_SPACING_MIN
+  edge_rooms.spacing_x = ROOMS_SPACING_MIN
+  edge_rooms.allow_diagonals_x = true
+
+  if (is_rooms[geoelf.directions.W]) then
+    if (is_rooms[geoelf.directions.E]) then
+      -- spread out the rooms to connect on both sides
+      --  -> this prevents diagonal connections on the side
+      edge_rooms.min_x = min_x
+      edge_rooms.spacing_x = range_x / (edge_rooms.count_x - 1)
+      edge_rooms.allow_diagonals_x = false
+    else
+      -- pack the rooms against the west side
+      edge_rooms.min_x = min_x
+    end
+  else
+    if (is_rooms[geoelf.directions.E]) then
+      -- pack the rooms against the east side
+      edge_rooms.min_x = max_x - range_x_min
+    else
+      -- center the rooms
+      local min_x_max = max_x - range_x_min
+      edge_rooms.min_x = math.floor((min_x + min_x_max) / 2)
+    end
+  end
+
+  -- spacing of east and west rooms along x axis
+  local min_y = castle.overwritable[geoelf.directions.N] + ROOMS_INTO_CASTLE
+  local max_y = castle.overwritable[geoelf.directions.S] - ROOMS_INTO_CASTLE
+  local range_y = max_y - min_y
+  edge_rooms.count_y = math.floor(range_y / ROOMS_SPACING_MIN) + 1
+  local range_y_min = (edge_rooms.count_y - 1) * ROOMS_SPACING_MIN
+  edge_rooms.spacing_y = ROOMS_SPACING_MIN
+  edge_rooms.allow_diagonals_y = true
+
+  if (is_rooms[geoelf.directions.N]) then
+    if (is_rooms[geoelf.directions.S]) then
+      -- spread out the rooms to connect on both sides
+      --  -> this prevents diagonal connections on the side
+      edge_rooms.min_y = min_y
+      edge_rooms.spacing_y = range_y / (edge_rooms.count_y - 1)
+      edge_rooms.allow_diagonals_y = false
+    else
+      -- pack the rooms against the east side
+      edge_rooms.min_y = min_y
+    end
+  else
+    if (is_rooms[geoelf.directions.S]) then
+      -- pack the rooms against the west side
+      edge_rooms.min_y = max_y - range_y_min
+    else
+      -- center the rooms
+      local min_y_max = max_y - range_y_min
+      edge_rooms.min_y = math.floor((min_y + min_y_max) / 2)
+    end
+  end
+
+  -- calculate row positions
+  edge_rooms.row_base = {}
+  edge_rooms.row_base[geoelf.directions.W] =
+                   castle.overwritable[geoelf.directions.W] - ROOMS_FROM_CASTLE
+  edge_rooms.row_base[geoelf.directions.E] =
+                   castle.overwritable[geoelf.directions.E] + ROOMS_FROM_CASTLE
+  edge_rooms.row_base[geoelf.directions.N] =
+                   castle.overwritable[geoelf.directions.N] - ROOMS_FROM_CASTLE
+  edge_rooms.row_base[geoelf.directions.S] =
+                   castle.overwritable[geoelf.directions.S] + ROOMS_FROM_CASTLE
+
+  edge_rooms.row_count = {}
+  for i = 0, geoelf.directions.COUNT_STRAIGHT - 1 do
+    if (is_rooms[i] == false) then
+      edge_rooms.row_count[i] = 0
+    else
+      local available_space = primary_vault.border[i]
+                              - (ROOMS_FROM_CASTLE + ROOMS_BORDER_MIN) + 1
+      edge_rooms.row_count[i] = math.floor(available_space / ROOMS_SPACING_MIN)
+      if (edge_rooms.row_count[i] <= 0) then
+        crawl.mpr("Error in layout_geoelf_castle: 0 rows in direction " ..
+                  i .. " filling " .. ROOMS_SPACING_MIN .. " / " ..
+                  available_space .. " space")
+      end
+    end
+  end
+
+  if (DEBUG_CASTLE_DESIGN) then
+    print("Rooms by edge")
+
+    print("  Rooms along castle X: " .. edge_rooms.count_x)
+    print("  Rooms along castle X: " .. edge_rooms.count_x)
+    print("  Rooms minimum spacing: " .. ROOMS_SPACING_MIN ..
+          " (straight),  " .. ROOMS_SPACING_EDGE .. " (diagonal)  + " ..
+          ROOMS_BORDER_MIN .. " (border)")
+
+    local LETTERS =
+      { [geoelf.directions.S] = "S",
+        [geoelf.directions.N] = "N",
+        [geoelf.directions.E] = "E",
+        [geoelf.directions.W] = "W" }
+
+    for i = 0, geoelf.directions.COUNT_STRAIGHT - 1 do
+      local step_sign = geoelf.directions.STEP_SIGN[i]
+      local line = "  " .. LETTERS[i] .. " " .. edge_rooms.row_count[i] ..
+                   (is_rooms[i] and " Y" or " N") .. ": "
+      for j = 0, edge_rooms.row_count[i] - 1 do
+        local pos = edge_rooms.row_base[i] + j * ROOMS_SPACING_MIN * step_sign
+        line = line .. "  " .. pos
+      end
+      print(line)
+    end
+  end
+
+  -- combine all x positions into an array
+  local room_pos_x = {}
+  room_pos_x.begin_center = edge_rooms.row_count[geoelf.directions.W]
+  room_pos_x.begin_east   = room_pos_x.begin_center + edge_rooms.count_x
+  room_pos_x.total        = room_pos_x.begin_east
+                            + edge_rooms.row_count[geoelf.directions.E]
+  room_pos_x.last         = room_pos_x.total - 1
+  local is_room_diagonals_x = {}
+  for i = 0, room_pos_x.total - 1 do
+    is_room_diagonals_x[i] = true
+    if (i < room_pos_x.begin_center) then
+      local rows_out = room_pos_x.begin_center - i - 1
+      room_pos_x[i] = edge_rooms.row_base[geoelf.directions.W]
+                      - rows_out * ROOMS_SPACING_MIN
+    elseif (i < room_pos_x.begin_east) then
+      local rows_along = i - room_pos_x.begin_center
+      room_pos_x[i] = edge_rooms.min_x
+                      + math.floor(rows_along * edge_rooms.spacing_x)
+      is_room_diagonals_x[i] = edge_rooms.allow_diagonals_x
+    else
+      local rows_out = i - room_pos_x.begin_east
+      room_pos_x[i] = edge_rooms.row_base[geoelf.directions.E]
+                      + rows_out * ROOMS_SPACING_MIN
+    end
+  end
+
+  -- combine all y positions into an array
+  local room_pos_y = {}
+  room_pos_y.begin_center = edge_rooms.row_count[geoelf.directions.N]
+  room_pos_y.begin_south  = room_pos_y.begin_center + edge_rooms.count_y
+  room_pos_y.total        = room_pos_y.begin_south
+                            + edge_rooms.row_count[geoelf.directions.S]
+  room_pos_y.last         = room_pos_y.total - 1
+  local is_room_diagonals_y = {}
+  for i = 0, room_pos_y.total - 1 do
+    is_room_diagonals_y[i] = true
+    if (i < room_pos_y.begin_center) then
+      local rows_out = room_pos_y.begin_center - i - 1
+      room_pos_y[i] = edge_rooms.row_base[geoelf.directions.N]
+                      - rows_out * ROOMS_SPACING_MIN
+    elseif (i < room_pos_y.begin_south) then
+      local rows_along = i - room_pos_y.begin_center
+      room_pos_y[i] = edge_rooms.min_y
+                      + math.floor(rows_along * edge_rooms.spacing_y)
+      is_room_diagonals_y[i] = edge_rooms.allow_diagonals_y
+    else
+      local rows_out = i - room_pos_y.begin_south
+      room_pos_y[i] = edge_rooms.row_base[geoelf.directions.S]
+                      + rows_out * ROOMS_SPACING_MIN
+    end
+  end
+
+  if (DEBUG_CASTLE_DESIGN) then
+    print("Room grid positions")
+
+    local line = "  X " .. room_pos_x.total .. ":"
+    for i = 0, room_pos_x.total - 1 do
+      line = line .. "  " .. room_pos_x[i]
+      if (not is_room_diagonals_x[i]) then
+        line = line .. " (NODIAG)"
+      end
+    end
+    print(line)
+
+    local line = "  Y " .. room_pos_y.total .. ":"
+    for i = 0, room_pos_y.total - 1 do
+      line = line .. "  " .. room_pos_y[i]
+      if (not is_room_diagonals_y[i]) then
+        line = line .. " (NODIAG)"
+      end
+    end
+    print(line)
+  end
+
+
+
+  --
+  --  PHASE 5: Calculate the edge rows of rooms to add
+  --
+
+  local is_edge_row = {}
+  is_edge_row[geoelf.directions.W] = (room_pos_x[0] >= ROOMS_MIN_SPACE_EDGE)
+  is_edge_row[geoelf.directions.E] = (gxm - room_pos_x[room_pos_x.last]
+                                                    >= ROOMS_MIN_SPACE_EDGE)
+  is_edge_row[geoelf.directions.N] = (room_pos_y[0] >= ROOMS_MIN_SPACE_EDGE)
+  is_edge_row[geoelf.directions.S] = (gym - room_pos_y[room_pos_y.last]
+                                                    >= ROOMS_MIN_SPACE_EDGE)
+
+  -- setting these all is easier than working out which ones we need
+  local edge_row_at = {}
+  edge_row_at[geoelf.directions.W] = room_pos_x[0] - ROOMS_SPACING_EDGE
+  edge_row_at[geoelf.directions.E] = room_pos_x[room_pos_x.last]
+                                                   + ROOMS_SPACING_EDGE
+  edge_row_at[geoelf.directions.N] = room_pos_y[0] - ROOMS_SPACING_EDGE
+  edge_row_at[geoelf.directions.S] = room_pos_y[room_pos_y.last]
+                                                   + ROOMS_SPACING_EDGE
+
+  -- add a corner edge rooms if we have both edge sides
+  local is_edge_corner = {}
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    local component_x = geoelf.directions.COMPONENT_X[i]
+    local component_y = geoelf.directions.COMPONENT_Y[i]
+    is_edge_corner[i] = is_edge_row[component_x] and
+                        is_edge_row[component_y] and
+                        (edge_rooms.row_count[component_x] >= 1 or
+                         edge_rooms.row_count[component_y] >= 1   )
+  end
+
+  if (DEBUG_CASTLE_DESIGN) then
+    print("Edge rows")
+
+    if (is_edge_row[geoelf.directions.W]) then
+      print("  W: x = " .. edge_row_at[geoelf.directions.W])
+    end
+    if (is_edge_row[geoelf.directions.E]) then
+      print("  E: x = " .. edge_row_at[geoelf.directions.E])
+    end
+    if (is_edge_row[geoelf.directions.N]) then
+      print("  N: y = " .. edge_row_at[geoelf.directions.N])
+    end
+    if (is_edge_row[geoelf.directions.S]) then
+      print("  S: y = " .. edge_row_at[geoelf.directions.S])
+    end
+
+    if (is_edge_corner[geoelf.directions.SE]) then
+      print("  SE corner")
+    end
+    if (is_edge_corner[geoelf.directions.NW]) then
+      print("  NW corner")
+    end
+    if (is_edge_corner[geoelf.directions.SS]) then
+      print("  SW corner")
+    end
+    if (is_edge_corner[geoelf.directions.NE]) then
+      print("  NE corner")
+    end
+  end
+
+
+
+  --
+  --  PHASE 6: Add the main grid of rooms outside the castle
+  --
+
+  -- create the arrays
+  local room_data     = { count = 0 }
+  local corridor_data = { count = 0 }
+  local grid_rooms_by_position = {}
+
+  -- add rooms for the main grid
+  for y = 0, room_pos_y.total - 1 do
+    grid_rooms_by_position[y] = {}
+    for x = 0, room_pos_x.total - 1 do
+      local x_pos = room_pos_x[x] +
+                    crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+      local y_pos = room_pos_y[y] +
+                    crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+      local radius = crawl.random_range(ROOMS_RADIUS_MIN, ROOMS_RADIUS_MAX)
+
+      if (x <  room_pos_x.begin_center or
+          x >= room_pos_x.begin_east   or
+          y <  room_pos_y.begin_center or
+          y >= room_pos_y.begin_south    ) then
+        grid_rooms_by_position[y][x] = geoelf.add_room(room_data,
+                                                       x_pos, y_pos, radius)
+      else
+        grid_rooms_by_position[y][x] = geoelf.add_room_dummy(room_data,
+                                                             x_pos, y_pos)
+      end
+    end
+  end
+
+  -- add potential corridors
+  --  -> at least one room must be non-dummy
+  --  -> only add diagonals if at least one room allows them
+  --     (we don't need both)
+  for y = 0, room_pos_y.total - 1 do
+    for x = 0, room_pos_x.total - 1 do
+      local index = grid_rooms_by_position[y][x]
+      local allow_diagonals = is_room_diagonals_x[x] and
+                              is_room_diagonals_y[y]
+
+      -- east-west
+      if (x >= 1) then
+        local other_index = grid_rooms_by_position[y][x - 1]
+        if (not geoelf.is_room_dummy(room_data, index) or
+            not geoelf.is_room_dummy(room_data, other_index)) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.E, nil)
+        end
+      end
+
+      -- south-north
+      if (y >= 1) then
+        local other_index = grid_rooms_by_position[y - 1][x]
+        if (not geoelf.is_room_dummy(room_data, index) or
+            not geoelf.is_room_dummy(room_data, other_index)) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              other_index, index,
+                              geoelf.directions.S, nil)
+        end
+      end
+
+      -- southeast-northwest
+      if (y >= 1 and x >= 1) then
+        local other_index = grid_rooms_by_position[y - 1][x - 1]
+        local allow_diagonals_other = is_room_diagonals_x[x - 1] and
+                                      is_room_diagonals_y[y - 1]
+        if (not geoelf.is_room_dummy(room_data, index) or
+            not geoelf.is_room_dummy(room_data, other_index)) then
+          if(allow_diagonals or allow_diagonals_other) then
+
+            -- determine if there is another corridor that would
+            --  block this one (i.e. an NE-SW one)
+            local block_index = nil
+            local old_index = grid_rooms_by_position[y][x - 1]
+            if (not geoelf.is_room_dummy(room_data, old_index)) then
+              block_index = room_data[old_index].corridor[geoelf.directions.NE]
+            end
+
+            geoelf.add_corridor(room_data, corridor_data,
+                                other_index, index,
+                                geoelf.directions.SE, block_index)
+          end
+        end
+      end
+
+      -- southwest-northeast
+      if (y >= 1 and x + 1 < room_pos_x.total) then
+        local other_index = grid_rooms_by_position[y - 1][x + 1]
+        local allow_diagonals_other = is_room_diagonals_x[x + 1] and
+                                      is_room_diagonals_y[y - 1]
+        if (not geoelf.is_room_dummy(room_data, index) or
+            not geoelf.is_room_dummy(room_data, other_index)) then
+          if(allow_diagonals or allow_diagonals_other) then
+            geoelf.add_corridor(room_data, corridor_data,
+                                other_index, index,
+                                geoelf.directions.SW, nil)
+          end
+        end
+      end
+
+      -- done this room
+    end
+  end
+
+
+
+  --
+  --  PHASE 7: Add edge rows of rooms
+  --    -> Rooms must be push as far as possible away from
+  --       the main grid to avoid having too much overlap
+  --
+
+  -- corners
+  local corner_index = {}
+
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    if (is_edge_corner[i]) then
+      local component_x = geoelf.directions.COMPONENT_X[i]
+      local component_y = geoelf.directions.COMPONENT_Y[i]
+
+      local radius = crawl.random_range(ROOMS_RADIUS_EDGE_MIN,
+                                        ROOMS_RADIUS_EDGE_MAX)
+      corner_index[i] = geoelf.add_room(room_data,
+                                        edge_row_at[component_x],
+                                        edge_row_at[component_y], radius)
+
+      local other_index_x = (component_x == geoelf.directions.W)
+                            and 0 or room_pos_x.last
+      local other_index_y = (component_y == geoelf.directions.N)
+                            and 0 or room_pos_y.last
+      local other_index = grid_rooms_by_position[other_index_y][other_index_x]
+      geoelf.add_corridor(room_data, corridor_data,
+                          other_index, corner_index[i], i, nil)
+    end
+  end
+
+  --
+  -- NOTE: I tried combining these four cases into a single
+  --       loop, but it ended up longer than the 4 cases,
+  --       very hard to understand (even by the standards of my
+  --       convoluted code), and didn't work reliably.
+  --                                                ~ infiniplex
+  --
+
+  -- The west side (north->south)
+  if (is_edge_row[geoelf.directions.W]) then
+    local x_pos = edge_row_at[geoelf.directions.W]
+    local previous_index = corner_index[geoelf.directions.NW]
+    for y = 0, room_pos_y.total - 2 do
+      local other_index_NE = grid_rooms_by_position[y    ][0]
+      local other_index_SE = grid_rooms_by_position[y + 1][0]
+      if (not geoelf.is_room_dummy(room_data, other_index_NE) and
+          not geoelf.is_room_dummy(room_data, other_index_SE)) then
+        local y_pos = math.floor((room_pos_y[y] + room_pos_y[y + 1]) / 2)
+                      crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+        local radius = crawl.random_range(ROOMS_RADIUS_EDGE_MIN,
+                                          ROOMS_RADIUS_EDGE_MAX)
+        local new_index = geoelf.add_room(room_data, x_pos, y_pos, radius)
+
+        local allow_diagonals_here = true
+        if (y >= room_pos_y.begin_center and
+            y <  room_pos_y.begin_south - 1) then
+          allow_diagonals_here = edge_rooms.allow_diagonals_y
+        end
+        local allow_diagonals_NE = is_room_diagonals_y[y]
+        local allow_diagonals_SE = is_room_diagonals_y[y + 1]
+
+        if (allow_diagonals_here or allow_diagonals_NE) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_NE,
+                              geoelf.directions.NE, nil)
+        end
+        if (allow_diagonals_here or allow_diagonals_SE) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_SE,
+                              geoelf.directions.SE, nil)
+        end
+        if (previous_index ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, previous_index,
+                              geoelf.directions.N, nil)
+        end
+
+        previous_index = new_index
+      end
+    end
+    if (corner_index[geoelf.directions.SW] ~= nil and
+        previous_index ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          corner_index[geoelf.directions.SW], previous_index,
+                          geoelf.directions.N, nil)
+    end
+  end
+
+  -- The east side (north->south)
+  if (is_edge_row[geoelf.directions.E]) then
+    local x_pos = edge_row_at[geoelf.directions.E]
+    local previous_index = corner_index[geoelf.directions.NE]
+    for y = 0, room_pos_y.total - 2 do
+      local other_index_NW = grid_rooms_by_position[y    ][room_pos_x.last]
+      local other_index_SW = grid_rooms_by_position[y + 1][room_pos_x.last]
+      if (not geoelf.is_room_dummy(room_data, other_index_NW) and
+          not geoelf.is_room_dummy(room_data, other_index_SW)) then
+        local y_pos = math.floor((room_pos_y[y] + room_pos_y[y + 1]) / 2)
+                      crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+        local radius = crawl.random_range(ROOMS_RADIUS_EDGE_MIN,
+                                          ROOMS_RADIUS_EDGE_MAX)
+        local new_index = geoelf.add_room(room_data, x_pos, y_pos, radius)
+
+        local allow_diagonals_here = true
+        if (y >= room_pos_y.begin_center and
+            y <  room_pos_y.begin_south - 1) then
+          allow_diagonals_here = edge_rooms.allow_diagonals_y
+        end
+        local allow_diagonals_NW = is_room_diagonals_y[y]
+        local allow_diagonals_SW = is_room_diagonals_y[y + 1]
+
+        if (allow_diagonals_here or allow_diagonals_NW) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_NW,
+                              geoelf.directions.NW, nil)
+        end
+        if (allow_diagonals_here or allow_diagonals_SW) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_SW,
+                              geoelf.directions.SW, nil)
+        end
+        if (previous_index ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, previous_index,
+                              geoelf.directions.N, nil)
+        end
+
+        previous_index = new_index
+      end
+    end
+    if (corner_index[geoelf.directions.SE] ~= nil and
+        previous_index ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          corner_index[geoelf.directions.SE], previous_index,
+                          geoelf.directions.N, nil)
+    end
+  end
+
+  -- The north side (west->east)
+  if (is_edge_row[geoelf.directions.N]) then
+    local y_pos = edge_row_at[geoelf.directions.N]
+    local previous_index = corner_index[geoelf.directions.NW]
+    for x = 0, room_pos_x.total - 2 do
+      local other_index_SW = grid_rooms_by_position[0][x]
+      local other_index_SE = grid_rooms_by_position[0][x + 1]
+      if (not geoelf.is_room_dummy(room_data, other_index_SW) and
+          not geoelf.is_room_dummy(room_data, other_index_SE)) then
+        local x_pos = math.floor((room_pos_x[x] + room_pos_x[x + 1]) / 2)
+                      crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+        local radius = crawl.random_range(ROOMS_RADIUS_EDGE_MIN,
+                                          ROOMS_RADIUS_EDGE_MAX)
+        local new_index = geoelf.add_room(room_data, x_pos, y_pos, radius)
+
+        local allow_diagonals_here = true
+        if (x >= room_pos_x.begin_center and
+            x <  room_pos_x.begin_east - 1) then
+          allow_diagonals_here = edge_rooms.allow_diagonals_x
+        end
+        local allow_diagonals_SW = is_room_diagonals_x[x]
+        local allow_diagonals_SE = is_room_diagonals_x[x + 1]
+
+        if (allow_diagonals_here or allow_diagonals_SW) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_SW,
+                              geoelf.directions.SW, nil)
+        end
+        if (allow_diagonals_here or allow_diagonals_SE) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_SE,
+                              geoelf.directions.SE, nil)
+        end
+        if (previous_index ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, previous_index,
+                              geoelf.directions.W, nil)
+        end
+
+        previous_index = new_index
+      end
+    end
+    if (corner_index[geoelf.directions.NE] ~= nil and
+        previous_index ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          corner_index[geoelf.directions.NE], previous_index,
+                          geoelf.directions.W, nil)
+    end
+  end
+
+  -- The south side (west->east)
+  if (is_edge_row[geoelf.directions.S]) then
+    local y_pos = edge_row_at[geoelf.directions.S]
+    local previous_index = corner_index[geoelf.directions.SW]
+    for x = 0, room_pos_x.total - 2 do
+      local other_index_NW = grid_rooms_by_position[room_pos_y.last][x]
+      local other_index_NE = grid_rooms_by_position[room_pos_y.last][x + 1]
+      if (not geoelf.is_room_dummy(room_data, other_index_NW) and
+          not geoelf.is_room_dummy(room_data, other_index_NE)) then
+        local x_pos = math.floor((room_pos_x[x] + room_pos_x[x + 1]) / 2)
+                      crawl.random_range(-ROOMS_OFFSET_MAX, ROOMS_OFFSET_MAX)
+        local radius = crawl.random_range(ROOMS_RADIUS_EDGE_MIN,
+                                          ROOMS_RADIUS_EDGE_MAX)
+        local new_index = geoelf.add_room(room_data, x_pos, y_pos, radius)
+
+        local allow_diagonals_here = true
+        if (x >= room_pos_x.begin_center and
+            x <  room_pos_x.begin_east - 1) then
+          allow_diagonals_here = edge_rooms.allow_diagonals_x
+        end
+        local allow_diagonals_NW = is_room_diagonals_x[x]
+        local allow_diagonals_NE = is_room_diagonals_x[x + 1]
+
+        if (allow_diagonals_here or allow_diagonals_NW) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_NW,
+                              geoelf.directions.NW, nil)
+        end
+        if (allow_diagonals_here or allow_diagonals_NE) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, other_index_NE,
+                              geoelf.directions.NE, nil)
+        end
+        if (previous_index ~= nil) then
+          geoelf.add_corridor(room_data, corridor_data,
+                              new_index, previous_index,
+                              geoelf.directions.W, nil)
+        end
+
+        previous_index = new_index
+      end
+    end
+    if (corner_index[geoelf.directions.SE] ~= nil and
+        previous_index ~= nil) then
+      geoelf.add_corridor(room_data, corridor_data,
+                          corner_index[geoelf.directions.SE], previous_index,
+                          geoelf.directions.W, nil)
+    end
+  end
+
+
+
+  --
+  --  PHASE 8: Draw the everything except the castle
+  --
+
+  -- draw the open area around the castle
+
+  fill_area { x1 = castle.hallway[geoelf.directions.W] + 1,
+              x2 = castle.hallway[geoelf.directions.E] - 1,
+              y1 = castle.overwritable[geoelf.directions.N],
+              y2 = castle.overwritable[geoelf.directions.S],
+              fill = geoelf.glyphs.FLOOR }
+  fill_area { x1 = castle.overwritable[geoelf.directions.W],
+              x2 = castle.overwritable[geoelf.directions.E],
+              y1 = castle.hallway[geoelf.directions.N] + 1,
+              y2 = castle.hallway[geoelf.directions.S] - 1,
+              fill = geoelf.glyphs.FLOOR }
+
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    if (castle.turret[i].is_placed) then
+      make_circle { x = castle.turret[i].x, y = castle.turret[i].y,
+                    radius = CASTLE_TURRET_OVERWRITABLE_RADIUS,
+                    fill = geoelf.glyphs.FLOOR }
+    end
+  end
+
+  -- run the geoelf generator to add the rooms
+  --    -> note that this can interact with the castle area
+  geoelf.generate(_G, room_data, corridor_data, ROOMS_EXTRA_CORRIDOR_FRACTION,
+                  ROOMS_FANCY_ROOM_FRACTION, false, false)
+
+
+
+  --
+  --  PHASE 9: Build the castle
+  --    -> This much of the map is non-overwritable
+  --
+
+  -- draw the non-overwritable open area around the castle
+  fill_area { x1 = castle.open[geoelf.directions.W],
+              x2 = castle.open[geoelf.directions.E],
+              y1 = castle.open[geoelf.directions.N],
+              y2 = castle.open[geoelf.directions.S], fill = INSIDE_GLYPH }
+
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    if (castle.turret[i].is_placed) then
+      make_circle { x = castle.turret[i].x, y = castle.turret[i].y,
+                    radius = CASTLE_TURRET_OPEN_RADIUS, fill = INSIDE_GLYPH }
+    end
+  end
+
+  -- draw the moat
+  fill_area { x1 = castle.moat[geoelf.directions.W],
+              x2 = castle.moat[geoelf.directions.E],
+              y1 = castle.moat[geoelf.directions.N],
+              y2 = castle.moat[geoelf.directions.S], fill = MOAT_GLYPH }
+
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    if (castle.turret[i].is_placed) then
+      make_circle { x = castle.turret[i].x, y = castle.turret[i].y,
+                    radius = CASTLE_TURRET_MOAT_RADIUS, fill = MOAT_GLYPH }
+    end
+  end
+
+  -- draw the hallways
+  fill_area { x1 = castle.hallway[geoelf.directions.W],
+              x2 = castle.hallway[geoelf.directions.E],
+              y1 = castle.hallway[geoelf.directions.N],
+              y2 = castle.hallway[geoelf.directions.S],
+              border = WALL_GLYPH, fill = INSIDE_GLYPH }
+
+  -- draw the inner rooms
+  fill_area { x1 = castle.inner[geoelf.directions.W],
+              x2 = castle.inner[geoelf.directions.E],
+              y1 = castle.inner[geoelf.directions.N],
+              y2 = castle.inner[geoelf.directions.S],
+              border = WALL_GLYPH, fill = INSIDE_GLYPH }
+
+  -- draw horizontal walls
+  local wall_at  = castle.inner[geoelf.directions.W]
+  local wall_end = castle.inner[geoelf.directions.E] - INNER_WALL_SPACING_MIN
+  while (wall_at < wall_end) do
+    fill_area { x1 = wall_at, x2 = wall_at,
+                y1 = castle.inner[geoelf.directions.N],
+                y2 = castle.inner[geoelf.directions.S],
+                fill = WALL_GLYPH }
+    wall_at = wall_at + crawl.random_range(INNER_WALL_SPACING_MIN,
+                                           INNER_WALL_SPACING_MAX)
+  end
+
+  -- draw vertical walls
+  wall_at  = castle.inner[geoelf.directions.N]
+  wall_end = castle.inner[geoelf.directions.S] - INNER_WALL_SPACING_MIN
+  while (wall_at < wall_end) do
+    fill_area { x1 = castle.inner[geoelf.directions.W],
+                x2 = castle.inner[geoelf.directions.E],
+                y1 = wall_at, y2 = wall_at,
+                fill = WALL_GLYPH }
+    wall_at = wall_at + crawl.random_range(INNER_WALL_SPACING_MIN,
+                                           INNER_WALL_SPACING_MAX)
+  end
+
+  -- draw the turrets
+  local turret_center = crawl.random_element {
+    [geoelf.glyphs.TREE]     = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.TREE],
+    [geoelf.glyphs.BUSH]     = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.BUSH],
+    [geoelf.glyphs.PLANT]    = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.PLANT],
+    [geoelf.glyphs.FUNGUS]   = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.FUNGUS],
+    [geoelf.glyphs.STATUE]   = geoelf.glyphs.FEATURE_OPTIONS[geoelf.glyphs.STATUE]   * 5,
+    [geoelf.glyphs.FOUNTAIN] = geoelf.glyphs.FEATURE_OPTIONS[geoelf.glyphs.FOUNTAIN] * 5,
+    [INSIDE_GLYPH]           = 15,
+  }
+
+  for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
+    if (castle.turret[i].is_placed) then
+      make_round_box { x1 = castle.turret[i].x - CASTLE_TURRET_RADIUS,
+                       x2 = castle.turret[i].x + CASTLE_TURRET_RADIUS,
+                       y1 = castle.turret[i].y - CASTLE_TURRET_RADIUS,
+                       y2 = castle.turret[i].y + CASTLE_TURRET_RADIUS,
+                       floor = INSIDE_GLYPH, wall = WALL_GLYPH,
+                       door = DOOR_GLYPH,
+                       door_count = crawl.random_range(2, 4),
+                       passable = INSIDE_GLYPH, veto_gates = false }
+      mapgrd[castle.turret[i].x][castle.turret[i].y] = turret_center
+    end
+  end
+
+  -- draw the gate
+  local gate_size = crawl.random_range(GATE_SIZE_MIN, GATE_SIZE_MAX)
+
+  if (gate_best == geoelf.directions.S or
+      gate_best == geoelf.directions.N) then
+    local gate_x_min = castle.hallway[geoelf.directions.W]
+                       + GATE_FROM_CORNER_MIN
+    local gate_x_max = castle.hallway[geoelf.directions.E]
+                       - GATE_FROM_CORNER_MIN
+    local gate_x = crawl.random_range(gate_x_min, gate_x_max - gate_size)
+
+    local gate_y
+    if (gate_best == geoelf.directions.S) then
+      gate_y = castle.hallway[geoelf.directions.S]
+      fill_area { x1 = gate_x, x2 = gate_x + gate_size - 1,
+                  y1 = gate_y + 1, y2 = gate_y + 1 + CASTLE_MOAT,
+                  fill = INSIDE_GLYPH }
+    else
+      gate_y = castle.hallway[geoelf.directions.N]
+      fill_area { x1 = gate_x, x2 = gate_x + gate_size - 1,
+                  y1 = gate_y - 1 - CASTLE_MOAT, y2 = gate_y - 1,
+                  fill = INSIDE_GLYPH }
+    end
+    fill_area { x1 = gate_x, x2 = gate_x + gate_size - 1,
+                y1 = gate_y, y2 = gate_y,
+                fill = DOOR_GLYPH }
+  else
+    local gate_y_min = castle.hallway[geoelf.directions.N]
+                       + GATE_FROM_CORNER_MIN
+    local gate_y_max = castle.hallway[geoelf.directions.S]
+                       - GATE_FROM_CORNER_MIN
+    local gate_y = crawl.random_range(gate_y_min, gate_y_max - gate_size)
+
+    local gate_x
+    if (gate_best == geoelf.directions.E) then
+      gate_x = castle.hallway[geoelf.directions.E]
+      fill_area { x1 = gate_x + 1, x2 = gate_x + 1 + CASTLE_MOAT,
+                  y1 = gate_y, y2 = gate_y + gate_size - 1,
+                  fill = INSIDE_GLYPH }
+    else
+      gate_x = castle.hallway[geoelf.directions.W]
+      fill_area { x1 = gate_x - 1 - CASTLE_MOAT, x2 = gate_x - 1,
+                  y1 = gate_y, y2 = gate_y + gate_size - 1,
+                  fill = INSIDE_GLYPH }
+    end
+    fill_area { x1 = gate_x, x2 = gate_x,
+                y1 = gate_y, y2 = gate_y + gate_size - 1,
+                fill = DOOR_GLYPH }
+  end
+
+  -- fill in the area around the castle
+  --  -> this area will be overridden
+  --  -> we need to make sure the map is connected without going
+  --     into this area
+  for y = 1, gym - 2 do
+    for x = 1, gxm - 2 do
+      if dgn.in_vault(x, y) then
+        mapgrd[x][y] = WALL_GLYPH
+      end
+    end
+  end
+
+  -- add doors
+  local inner_area = (castle.inner[geoelf.directions.E] -
+                      castle.inner[geoelf.directions.W] + 1) *
+                     (castle.inner[geoelf.directions.S] -
+                      castle.inner[geoelf.directions.N] + 1)
+  connect_adjacent_rooms { wall = WALL_GLYPH, floor = INSIDE_GLYPH,
+                           replace = DOOR_GLYPH,
+                           max = inner_area, check_distance = 8,
+                           x1 = castle.inner[geoelf.directions.W] - 1,
+                           x2 = castle.inner[geoelf.directions.E] + 1,
+                           y1 = castle.inner[geoelf.directions.N] - 1,
+                           y2 = castle.inner[geoelf.directions.S] + 1 }
+
+
+
+  --
+  --  PHASE 10: Miscellaneous Cleanup
+  --
+
+  -- apply special glyph meanings to castle
+  --  -> remember that the "=" must be the first glyph for parsing reasons
+  --  -> the castle cannot be overwritten
+  kmask(DOOR_GLYPH .. INSIDE_GLYPH .. MOAT_GLYPH .. WALL_GLYPH .. " = vault")
+  kfeat(DOOR_GLYPH .. " = closed_door")
+  kfeat(INSIDE_GLYPH .. " = floor")
+
+  -- place the stairs outside the vault area
+  nsubst(geoelf.glyphs.FLOOR .. " = 1:{ / 1:( / 1:[ / *:" ..
+         geoelf.glyphs.FLOOR)
+
+  -- Replace all floor cells around primary vault with "."s.
+  --  This is needed to prevent vetos
+  --  I think it is related to ensuring the primary vault is
+  --    connected to the layout
+  --  TODO: Why does it have to be "."s? Can this be fixed?
+  for y = 1, gym - 2 do
+    for x = 1, gxm - 2 do
+      if dgn.in_vault(x, y) then
+        for dy = -1, 1 do
+          for dx = -1, 1 do
+            if mapgrd[x + dx][y + dy] == INSIDE_GLYPH then
+              mapgrd[x + dx][y + dy] = "."
+            end
+          end
+        end
+      end
+    end
+  end
+
+  -- Finally, draw the map for debugging reasons
+  if (DEBUG_CASTLE_DESIGN) then
+    for y = 0, gym - 1 do
+      local line = ""
+      for x = 0, gxm - 1 do
+        if dgn.in_vault(x, y) then
+          line = line .. " "
+        else
+          line = line .. mapgrd[x][y]
+        end
+      end
+      print(line)
+    end
+    print("")
+  end
+}}
+
+veto {{
+  -- Only allow this layout if there is a primary vault with
+  --  enough space around it for at least one line of rooms
+
+  local gxm, gym = dgn.max_bounds()
+  local p_x_min, p_x_max, p_y_min, p_y_max = primary_vault_dimensions()
+
+  if (p_x_min == nil) then
+    if (DEBUG_CASTLE_DESIGN) then
+      crawl.mpr("layout_geoelf_castle vetoed because no primary vault")
+    end
+    return true  -- no primary vault
+  elseif (p_x_max - p_x_min < PRIMARY_VAULT_MIN_SIZE or
+          p_y_max - p_y_min < PRIMARY_VAULT_MIN_SIZE) then
+    -- primary vault is too small
+    if (DEBUG_CASTLE_DESIGN) then
+      crawl.mpr("layout_geoelf_castle vetoed because primary vault too small")
+    end
+    return true
+  elseif (p_x_min <           PRIMARY_VAULT_MIN_PADDING and
+          p_x_max > gxm - 1 - PRIMARY_VAULT_MIN_PADDING and
+          p_y_min <           PRIMARY_VAULT_MIN_PADDING and
+          p_y_max > gym - 1 - PRIMARY_VAULT_MIN_PADDING) then
+    -- not enough room around primary vault on any side
+    if (DEBUG_CASTLE_DESIGN) then
+      crawl.mpr("layout_geoelf_castle vetoed because primary vault too big")
+    end
+    return true
+  else
+    if (DEBUG_CASTLE_DESIGN) then
+      crawl.mpr("layout_geoelf_castle passed veto test")
+      print("Bounds:   " .. p_x_min .. " - " .. p_x_max ..
+            ", "         .. p_y_min .. " - " .. p_y_max)
+      print("Required: " ..        PRIMARY_VAULT_MIN_PADDING  ..
+            " - "        .. (gxm - PRIMARY_VAULT_MIN_PADDING) ..
+            ", "         ..        PRIMARY_VAULT_MIN_PADDING  ..
+            " - "        .. (gym - PRIMARY_VAULT_MIN_PADDING))
+    end
+    return false
+  end
+}}
+MAP
+ENDMAP
