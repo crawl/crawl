@@ -36,8 +36,17 @@ enum potion_description_colour_type
     PDC_YELLOW,
     PDC_GREEN,
     PDC_BROWN,
-    PDC_PINK,
+    PDC_RUBY,
     PDC_WHITE,
+    PDC_EMERALD,
+    PDC_GREY,
+    PDC_PINK,
+    PDC_COPPERY,
+    PDC_GOLDEN,
+    PDC_DARK,
+    PDC_PUCE,
+    PDC_AMETHYST,
+    PDC_SAPPHIRE,
     PDC_NCOLOURS
 };
 

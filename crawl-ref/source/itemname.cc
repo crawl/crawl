@@ -1668,7 +1668,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 "clear",
 #endif
                 "blue", "black", "silvery", "cyan", "purple", "orange",
-                "inky", "red", "yellow", "green", "brown", "pink", "white"
+                "inky", "red", "yellow", "green", "brown", "ruby", "white",
+                "emerald", "grey", "pink", "coppery", "golden", "dark", "puce",
+                "amethyst", "sapphire",
             };
             COMPILE_CHECK(ARRAYSZ(potion_colours) == PDC_NCOLOURS);
 

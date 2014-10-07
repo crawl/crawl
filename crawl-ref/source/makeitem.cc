@@ -226,7 +226,11 @@ void item_colour(item_def &item)
         // blue, black, silvery, cyan, purple, orange
         BLUE, LIGHTGREY, WHITE, CYAN, MAGENTA, LIGHTRED,
         // inky, red, yellow, green, brown, pink, white
-        BLUE, RED, YELLOW, GREEN, BROWN, LIGHTMAGENTA, WHITE
+        BLUE, RED, YELLOW, GREEN, BROWN, LIGHTMAGENTA, WHITE,
+        // emerald, grey, pink, copper, gold, dark, puce
+        LIGHTGREEN, LIGHTGREY, LIGHTRED, YELLOW, YELLOW, BROWN, BROWN,
+        // amethyst, sapphire
+        MAGENTA, BLUE
     };
     COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
 
