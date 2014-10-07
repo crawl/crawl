@@ -1721,6 +1721,14 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
             attk.flavour = RANDOM_ELEMENT(flavours);
         }
 
+        if (attk.flavour == AF_SCARAB)
+        {
+            attack_flavour flavours[] =
+                {AF_VAMPIRIC, AF_VAMPIRIC, AF_DRAIN_SPEED, AF_DRAIN_XP};
+
+            attk.flavour = RANDOM_ELEMENT(flavours);
+        }
+
         if (attk.flavour == AF_DRAIN_STAT)
         {
             attack_flavour flavours[] =
