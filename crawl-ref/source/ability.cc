@@ -1579,7 +1579,7 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        const int result = zin_check_recite_to_monsters();
+        const int result = zin_check_recite_to_monsters(quiet);
         if (result == -1)
         {
             if (!quiet)
