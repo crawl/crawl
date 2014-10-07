@@ -1417,6 +1417,16 @@ xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:     elven_hall_of_blades_dummy
+# Not tagged 'dummy' because then the veto doesn't run.
+TAGS:     no_dump
+PLACE:    Elf:2
+ORIENT:   float
+veto {{ return crawl.game_started() and not dgn.br_exists("Blade") }}
+MAP
+.
+ENDMAP
+
 NAME:   mumra_blade_entry_bloodbath
 TAGS:   no_item_gen
 SUBST:  d = ..', e = .'', f = .'''
