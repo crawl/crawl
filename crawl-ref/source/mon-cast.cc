@@ -4755,8 +4755,8 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
     }
 }
 
-// not making this static so that monster can link to it
-const spell_type serpent_of_hell_breaths[][3] =
+// marking this extern (const defaults to static) so that monster can link to it
+extern const spell_type serpent_of_hell_breaths[][3] =
 {
     // Geh
     {
