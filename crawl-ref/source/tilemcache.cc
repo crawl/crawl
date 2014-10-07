@@ -542,6 +542,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 2;
         *ofs_y = -3;
         break;
+    case TILEP_MONS_GHOST:
+        *ofs_x = 3;
+        *ofs_y = -4;
+        break;
     case TILEP_MONS_FRANCES: // left-handed
         *ofs_x = 20;
         *ofs_y = -1;
@@ -1098,6 +1102,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_GREAT_ORB_OF_EYES:
+    case TILEP_MONS_GHOST:
         *ofs_x = 2;
         *ofs_y = -2;
         break;
