@@ -5543,6 +5543,8 @@ static void unmarshallSpells(reader &th, monster_spells &spells
             ? NUM_MONSTER_SPELL_SLOTS :
 #endif
         unmarshallByte(th);
+    spells.clear();
+    spells.resize(spellsize);
     for (int j = 0; j < spellsize; ++j)
     {
         spells[j].spell = unmarshallSpellType(th
