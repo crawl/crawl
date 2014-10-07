@@ -287,7 +287,7 @@ mset(spec_fn(function ()
                local d = math.max(120, 280 - 10 * you.depth())
                local e = math.max(1, you.depth() - 9)
                local f = math.max(1, math.floor((you.depth() - 9) / 3))
-               return "place:Swamp:$ w:" .. d .. " / eight-headed hydra w:8 / " ..
+               return "place:Swamp:$ w:" .. d .. " / hydra w:8 / " ..
                  "swamp dragon w:8 / tentacled monstrosity w:" .. e ..
                  " / shambling mangrove w:" .. f .. " / green death w:6 / " ..
                  "death drake w:1 / golden dragon w:1"
