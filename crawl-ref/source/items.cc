@@ -4201,8 +4201,87 @@ bool is_valid_mimic_item(const item_def &item)
     return false;
 }
 
-// If there is only one unidentified subtype left in the item's object type,
-// automatically identify it.
+/**
+ * How many types of identifiable item exist in the same category as the
+ * given item? (E.g., wands, scrolls, rings, etc.)
+ *
+ * @param item      The item in question.
+ * @return          The number of item enums in the same category.
+ *                  If the item isn't in a category of identifiable items,
+ *                  returns 0.
+ */
+static int _items_in_category(const item_def &item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_WANDS:
+            return NUM_WANDS;
+        case OBJ_STAVES:
+            return NUM_STAVES;
+        case OBJ_POTIONS:
+            return NUM_POTIONS;
+        case OBJ_SCROLLS:
+            return NUM_SCROLLS;
+        case OBJ_JEWELLERY:
+            if (jewellery_is_amulet(item.sub_type))
+                return NUM_JEWELLERY - AMU_FIRST_AMULET;
+            return NUM_RINGS - RING_FIRST_RING;
+        default:
+            return 0;
+    }
+}
+
+/**
+ * What's the first enum for the given item's category?
+ *
+ * @param item  The item in question.
+ * @return      The enum value for the first item of the given type.
+ */
+static int _get_item_base(const item_def &item)
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return 0; // XXX: dubious
+    if (jewellery_is_amulet(item))
+        return AMU_FIRST_AMULET;
+    return RING_FIRST_RING;
+}
+
+/**
+ * Autoidentify the (given) last item in its category.
+ *
+ 8 @param item  The item to identify.
+ */
+static void _identify_last_item(item_def &item)
+{
+    if (!in_inventory(item) && item_needs_autopickup(item)
+        && (item.base_type == OBJ_STAVES
+            || item.base_type == OBJ_JEWELLERY))
+    {
+        item.props["needs_autopickup"] = true;
+    }
+
+    set_ident_type(item, ID_KNOWN_TYPE);
+
+    if (item.props.exists("needs_autopickup") && is_useless_item(item))
+        item.props.erase("needs_autopickup");
+
+    const string class_name = item.base_type == OBJ_JEWELLERY ?
+                                    item_base_name(item) :
+                                    item_class_name(item.base_type, true);
+    mprf("You have identified the last %s.", class_name.c_str());
+
+    if (in_inventory(item))
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+}
+
+
+/**
+ * Check to see if there's only one unidentified subtype left in the given
+ * item's object type. If so, automatically identify it.
+ *
+ * @param item  The item in question.
+ * @return      Whether the item was identified.
+ */
 bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
@@ -4210,40 +4289,12 @@ bool maybe_identify_base_type(item_def &item)
     if (get_ident_type(item) == ID_KNOWN_TYPE)
         return false;
 
-    int item_count; // Number of objects in an enum
-    bool is_amulet = false, is_ring = false;
+    const int item_count = _items_in_category(item);
+    if (!item_count)
+        return false;
 
-    switch (item.base_type)
-    {
-        case OBJ_WANDS:
-            item_count = NUM_WANDS; break;
-        case OBJ_STAVES:
-            item_count = NUM_STAVES; break;
-        case OBJ_POTIONS:
-            item_count = NUM_POTIONS; break;
-        case OBJ_SCROLLS:
-            item_count = NUM_SCROLLS; break;
-        case OBJ_JEWELLERY:
-            if (item.sub_type >= RING_FIRST_RING && item.sub_type < NUM_RINGS)
-            {
-                item_count = NUM_RINGS - RING_FIRST_RING;
-                is_ring = true;
-            }
-            else
-            {
-                item_count = NUM_JEWELLERY - AMU_FIRST_AMULET;
-                is_amulet = true;
-            }
-            break;
-
-        default:
-            return false;
-    }
-
-    const int item_base =
-        is_amulet ? AMU_FIRST_AMULET
-      : is_ring   ? RING_FIRST_RING
-      :             0;
+    // What's the enum of the first item in the category?
+    const int item_base = _get_item_base(item);
 
     int ident_count = 0;
 
@@ -4254,32 +4305,9 @@ bool maybe_identify_base_type(item_def &item)
         ident_count += identified ? 1 : 0;
     }
 
-    if (ident_count == item_count - 1)
-    {
-        if (!in_inventory(item) && item_needs_autopickup(item)
-            && (item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_JEWELLERY))
-        {
-            item.props["needs_autopickup"] = true;
-        }
+    if (ident_count < item_count - 1)
+        return false;
 
-        set_ident_type(item, ID_KNOWN_TYPE);
-
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
-
-        string class_name;
-        if (item.base_type == OBJ_JEWELLERY)
-            class_name = is_amulet ? "amulet" : "ring";
-        else
-            class_name = item_class_name(item.base_type, true);
-
-        mprf("You have identified the last %s.", class_name.c_str());
-        if (in_inventory(item))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-
-        return true;
-    }
-
-    return false;
+    _identify_last_item(item);
+    return true;
 }
