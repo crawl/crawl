@@ -156,23 +156,38 @@ static const armour_def Armour_prop[] =
         EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT  },
 };
 
+/// The standard properties for a given weapon type. (E.g. falchions)
 struct weapon_def
 {
+    /// The weapon_type enum for this weapon type.
     int                 id;
+    /// The name of this weapon type. (E.g. "club".)
     const char         *name;
+    /// The base damage of the weapon. (Later multiplied by skill, etc)
     int                 dam;
+    /// The base to-hit bonus of the weapon.
     int                 hit;
+    /// The number of aut it takes to swing the weapon with 0 skill.
     int                 speed;
+    /// The weight of the weapon. Affects almost nothing.
     int                 mass;
+    /// The extent to which str is more useful than dex; ranges 0-10.
     int                 str_weight;
 
+    /// The weapon skill corresponding to this weapon's use.
     skill_type          skill;
-    size_type           min_2h_size; // min size to wield the weapon 2h
-    size_type           min_1h_size; // min size to wield the weapon 1h
-    missile_type        ammo;         // MI_NONE for non-launchers
+    /// The size of the smallest creature that can wield the weapon.
+    size_type           min_2h_size;
+    /// The smallest creature that can wield the weapon one-handed.
+    size_type           min_1h_size;
+    /// The ammo fired by the weapon; MI_NONE for non-launchers.
+    missile_type        ammo;
 
+    /// A union of vorpal_damage_type flags (slash, crush, etc)
     int                 dam_type;
+    /// Used in *some* item generation code; higher = generated more often.
     int                 commonness;
+    /// Used in *some* item 'acquirement' code; higher = generated more.
     int                 acquire_weight;
 };
 
