@@ -2770,6 +2770,7 @@ NAME:  lightli_temple_of_fire
 TAGS:  temple_overflow_1 temple_overflow_trog temple_overflow_makhleb
 DEPTH: D:2-9
 KPROP: Y = no_rtele_into
+KMASK: Y = no_monster_gen
 {{
   local params = dgn.map_parameters()
   if params ~= nil then
