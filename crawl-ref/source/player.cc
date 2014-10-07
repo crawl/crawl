@@ -5998,18 +5998,21 @@ static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
 /**
  * What verb should be used to describe the player's shouting?
  *
- * @return  A shouty kind of verb.
+ * @param directed      Whether you're shouting at anyone in particular.
+ * @return              A shouty kind of verb.
  */
-string player::shout_verb() const
+string player::shout_verb(bool directed) const
 {
     if (!get_form()->shout_verb.empty())
         return get_form()->shout_verb;
 
     const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
 
-    if (species == SP_FELID)
-        return felid_shout_verbs[screaminess];
-    return shout_verbs[screaminess];
+    if (species != SP_FELID)
+        return shout_verbs[screaminess];
+    if (directed && screaminess == 0)
+        return "hiss"; // hiss at, not meow at
+    return felid_shout_verbs[screaminess];
 }
 
 /**

@@ -483,7 +483,7 @@ public:
     bool has_spell(spell_type spell) const;
 
     size_type transform_size(transformation_type tform) const;
-    string shout_verb() const;
+    string shout_verb(bool directed = false) const;
     int shout_volume() const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;

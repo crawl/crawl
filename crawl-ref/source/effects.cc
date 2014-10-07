@@ -857,7 +857,7 @@ void yell(const actor* mon)
     int mons_targd = MHITNOT;
     dist targ;
 
-    const string shout_verb = you.shout_verb();
+    const string shout_verb = you.shout_verb(mon != NULL);
     string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
     const int noise_level = you.shout_volume();
