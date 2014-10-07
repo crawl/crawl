@@ -3465,6 +3465,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_SCARABS, "Summon Scarabs",
+     SPTYP_SUMMONING | SPTYP_NECROMANCY,
+     SPFLAG_NONE,
+     7,
+     100,
+     -1, -1,
+     6, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,

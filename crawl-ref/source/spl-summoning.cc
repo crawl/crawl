@@ -3507,6 +3507,7 @@ static const summons_desc summonsdata[] =
     { SPELL_PHANTOM_MIRROR,             4, 1 },
     { SPELL_FAKE_MARA_SUMMON,           2, 1 },
     { SPELL_SUMMON_EMPEROR_SCORPIONS,   6, 2 },
+    { SPELL_SUMMON_SCARABS,             8, 1 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              12, 2 },
     { SPELL_WEAVE_SHADOWS,              4, 2 },

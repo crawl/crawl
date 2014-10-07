@@ -2115,6 +2115,16 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_GREATER_MUMMY_IV,
+      {
+       { SPELL_SUMMON_EMPEROR_SCORPIONS, 13, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 13, MON_SPELL_WIZARD },
+       { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
+       { SPELL_SUMMON_SCARABS, 26, MON_SPELL_WIZARD },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_FIRE_BREATH,
       {
        { SPELL_FIRE_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },

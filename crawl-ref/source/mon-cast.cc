@@ -1339,6 +1339,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AVATAR_SONG:
     case SPELL_REPEL_MISSILES:
     case SPELL_DEFLECT_MISSILES:
+    case SPELL_SUMMON_SCARABS:
         return true;
     default:
         if (check_validity)
@@ -6006,6 +6007,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         simple_monster_message(mons, " begins deflecting missiles!");
         mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
         return;
+
+    case SPELL_SUMMON_SCARABS:
+    {
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 3 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(mgen_data(MONS_DEATH_SCARAB, SAME_ATTITUDE(mons),
+                                     mons, 2, spell_cast, mons->pos(),
+                                     mons->foe, 0, god));
+        }
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

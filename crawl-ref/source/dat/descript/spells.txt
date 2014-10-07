@@ -1414,6 +1414,10 @@ Summon Mushrooms spell
 
 This spell summons wandering mushrooms and deathcaps next to a chosen foe.
 %%%%
+Summon Scarabs spell
+
+This spell calls forth a swarm of death scarabs.
+%%%%
 Summon Small Mammal spell
 
 This spell summons a small creature to the caster's aid.
