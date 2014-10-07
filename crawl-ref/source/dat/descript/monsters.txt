@@ -839,6 +839,11 @@ death ooze
 
 A putrid undead mass of decaying flesh that spurts pestilent slime.
 %%%%
+death scarab
+
+A hideous swarming undead insect, exuding death and decay and feeding on the
+life energies of those unfortunate enough to encounter them.
+%%%%
 death yak
 
 A larger and beefier relative of the common dungeon yak. Its little red eyes

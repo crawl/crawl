@@ -2876,6 +2876,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 5 + random2(3);
         break;
 
+    case MONS_DEATH_SCARAB:
+        band = BAND_DEATH_SCARABS;
+        band_size = 3 + random2(3);
+        break;
+
     default: ;
     }
 
@@ -3483,6 +3488,9 @@ static monster_type _band_member(band_type band, int which)
                                       1, MONS_SPRIGGAN_AIR_MAGE,
                                       1, MONS_LICH,
                                       0);
+
+    case BAND_DEATH_SCARABS:
+        return MONS_DEATH_SCARAB;
 
     case BAND_RANDOM_SINGLE:
     {
