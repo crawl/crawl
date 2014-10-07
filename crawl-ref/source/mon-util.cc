@@ -2307,9 +2307,11 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
     return books;
 }
 
-// get a list of unique spells from a monster's preset spellbooks
+// Get a list of unique spells from a monster's preset spellbooks
 // or in the case of ghosts their actual spells.
-unique_books get_unique_spells(const monster_info &mi)
+// If flags is non-zero, it returns only spells that match those flags.
+unique_books get_unique_spells(const monster_info &mi,
+                               mon_spell_slot_flags flags)
 {
     // No entry for MST_GHOST
     COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
@@ -2341,6 +2343,11 @@ unique_books get_unique_spells(const monster_info &mi)
             else
             {
                 ASSERT(msidx < ARRAYSZ(mspell_list));
+                if (flags != MON_SPELL_NO_FLAGS
+                    && !(mspell_list[msidx].spells[j].flags & flags))
+                {
+                    continue;
+                }
                 spell = mspell_list[msidx].spells[j].spell;
             }
 
@@ -2353,6 +2360,9 @@ unique_books get_unique_spells(const monster_info &mi)
             if (!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE)
                 spells.push_back(spell);
         }
+
+        if (spells.size() == 0)
+            continue;
 
         result.push_back(spells);
     }
