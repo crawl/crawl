@@ -2061,7 +2061,7 @@ void gozag_incite(monster *mon)
  * @param quiet         Whether to suppress messages.
  * @return              How much of the stack was goldified.
  */
-bool gozag_goldify(const item_def &it, int quant_got, bool quiet)
+int gozag_goldify(const item_def &it, int quant_got, bool quiet)
 {
     if (it.base_type != OBJ_POTIONS
         && it.base_type != OBJ_SCROLLS
