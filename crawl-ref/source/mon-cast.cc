@@ -4755,44 +4755,55 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
     }
 }
 
+// not making this static so that monster can link to it
+spell_type serpent_of_hell_breaths[][3] = {
+    {
+        SPELL_FIRE_BREATH,
+        SPELL_FIREBALL,
+        SPELL_HELLFIRE
+    },
+    {
+        SPELL_COLD_BREATH,
+        SPELL_FREEZING_CLOUD,
+        SPELL_FLASH_FREEZE
+    },
+    {
+        SPELL_METAL_SPLINTERS,
+        SPELL_QUICKSILVER_BOLT,
+        SPELL_LEHUDIBS_CRYSTAL_SPEAR
+    },
+    {
+        SPELL_BOLT_OF_DRAINING,
+        SPELL_MIASMA_BREATH,
+        SPELL_CORROSIVE_BOLT
+    }
+};
+
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
     if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
-        spell_type real_breaths[3];
-        ASSERT(mons->number == ARRAYSZ(real_breaths));
+        ASSERT(mons->type >= MONS_SERPENT_OF_HELL);
+        ASSERT(mons->type <= MONS_SERPENT_OF_HELL_TARTARUS);
 
-        switch (mons->type)
-        {
-        case MONS_SERPENT_OF_HELL:
-            real_breaths[0] = SPELL_FIRE_BREATH;
-            real_breaths[1] = SPELL_FIREBALL;
-            real_breaths[2] = SPELL_HELLFIRE;
-            break;
-        case MONS_SERPENT_OF_HELL_COCYTUS:
-            real_breaths[0] = SPELL_COLD_BREATH;
-            real_breaths[1] = SPELL_FREEZING_CLOUD;
-            real_breaths[2] = SPELL_FLASH_FREEZE;
-            break;
-        case MONS_SERPENT_OF_HELL_DIS:
-            real_breaths[0] = SPELL_METAL_SPLINTERS;
-            real_breaths[1] = SPELL_QUICKSILVER_BOLT;
-            real_breaths[2] = SPELL_LEHUDIBS_CRYSTAL_SPEAR;
-            break;
-        case MONS_SERPENT_OF_HELL_TARTARUS:
-            real_breaths[0] = SPELL_BOLT_OF_DRAINING;
-            real_breaths[1] = SPELL_MIASMA_BREATH;
-            real_breaths[2] = SPELL_CORROSIVE_BOLT;
-            break;
-        default:
-            ASSERT(false);
-            break;
-        }
+#if TAG_MAJOR_VERSION > 34
+        const int idx = mons->type - MONS_SERPENT_OF_HELL;
+#else
+        const int idx =
+            mons->type == MONS_SERPENT_OF_HELL          ? 0
+          : mons->type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
+          : mons->type == MONS_SERPENT_OF_HELL_DIS      ? 2
+          : mons->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
+          :                                               -1;
+#endif
+        ASSERT(idx < (int)ARRAYSZ(serpent_of_hell_breaths));
+        ASSERT(idx >= 0);
+        ASSERT(mons->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
 
         for (unsigned int i = 0; i < mons->number; ++i)
         {
-            spell_type head_spell = real_breaths[i];
+            spell_type head_spell = serpent_of_hell_breaths[idx][i];
             setup_mons_cast(mons, pbolt, head_spell);
             mons_cast(mons, pbolt, head_spell, do_noise, special_ability);
         }
