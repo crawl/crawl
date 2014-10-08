@@ -34,6 +34,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
 #include "mon-death.h"
@@ -2205,7 +2206,7 @@ void shock_serpent_discharge(monster* serpent, coord_def pos, int pow,
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
-    mons_cast(mons, pbolt, spell_cast, true, true);
+    mons_cast(mons, pbolt, spell_cast, MON_SPELL_INNATE);
 }
 
 static void _establish_connection(int tentacle,

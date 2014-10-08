@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -987,7 +988,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 
     mgrd(you.pos()) = mon->mindex();
 
-    mons_cast(mon, beam, spell);
+    mons_cast(mon, beam, spell, MON_SPELL_NO_FLAGS);
 
     mon->reset();
 }

@@ -3044,6 +3044,16 @@ bool monster::has_spell(spell_type spell) const
     return false;
 }
 
+unsigned short monster::spell_slot_flags(spell_type spell) const
+{
+    unsigned short slot_flags = MON_SPELL_NO_FLAGS;
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (spells[i].spell == spell)
+            slot_flags |= spells[i].flags;
+
+    return slot_flags;
+}
+
 bool monster::has_unholy_spell() const
 {
     for (unsigned int i = 0; i < spells.size(); ++i)
@@ -6427,12 +6437,12 @@ void monster::steal_item_from_player()
 
             if (has_ench(ENCH_TP))
             {
-                mons_cast_noise(this, beem, SPELL_BLINK);
+                mons_cast_noise(this, beem, SPELL_BLINK, MON_SPELL_WIZARD);
                 // this can kill us, delay the call
                 (new blink_fineff(this))->schedule();
             }
             else
-                mons_cast(this, beem, SPELL_TELEPORT_SELF);
+                mons_cast(this, beem, SPELL_TELEPORT_SELF, MON_SPELL_WIZARD);
 
             return;
         }
