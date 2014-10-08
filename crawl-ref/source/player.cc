@@ -2980,9 +2980,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                      new_exp);
             }
 
-            const bool manual_stat_level = you.species == SP_DEMIGOD ?
-                                            new_exp % 3 != 1 : // 2,3,5,6...
-                                            new_exp % 3 == 0;  // 3,6,9,12...
+            const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
 
             if (manual_stat_level && !skip_attribute_increase)
                 if (!attribute_increase())
