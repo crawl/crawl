@@ -237,6 +237,9 @@ void give_basic_mutations(species_type speci)
     case SP_MINOTAUR:
         you.mutation[MUT_HORNS]  = 2;
         break;
+    case SP_DEMIGOD:
+        you.mutation[MUT_SUSTAIN_ABILITIES] = 1;
+        break;
     case SP_SPRIGGAN:
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 3;
