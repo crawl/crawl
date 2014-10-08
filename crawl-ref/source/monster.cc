@@ -1793,12 +1793,12 @@ static int _get_monster_armour_value(const monster *mon,
 
 /**
  * Attempt to have a monster pick up and wear the given armour item.
- * @params item The item in question.
- * @params near If -1, print an equip message if the the monster picks up the
+ * @param item  The item in question.
+ * @param near  If -1, print an equip message if the the monster picks up the
  *              item and is visible to the player. If 0, never print a pickup
  *              message, and for any other value print the message regardless
  *              of visibility.
- * @params force If true, force the monster to pick up and wear the item.
+ * @param force If true, force the monster to pick up and wear the item.
  * @return  True if the monster picks up and wears the item, false otherwise.
  */
 bool monster::pickup_armour(item_def &item, int near, bool force)
