@@ -5042,21 +5042,12 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
 
         count++;
 
-        const unsigned int flags = get_spell_flags(spells[i].spell);
-        const bool innate = (!wizard && !priest)
-                            || !!(flags | SPFLAG_INNATE);
-
-        if (innate)
-            spells[i].flags |= MON_SPELL_INNATE;
+        if (wizard)
+            spells[i].flags |= MON_SPELL_WIZARD;
+        else if (priest)
+            spells[i].flags |= MON_SPELL_PRIEST;
         else
-        {
-            if (wizard)
-                spells[i].flags |= MON_SPELL_WIZARD;
-            else if (priest)
-                spells[i].flags |= MON_SPELL_PRIEST;
-            else
-                spells[i].flags |= MON_SPELL_INNATE; // rip
-        }
+            spells[i].flags |= MON_SPELL_INNATE; // rip
 
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;

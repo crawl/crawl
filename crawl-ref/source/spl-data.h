@@ -169,7 +169,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BLINKBOLT, "Blinkbolt",
      SPTYP_AIR | SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      5,
      200,
      5, 12,
@@ -2088,7 +2088,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPIT_POISON, "Spit Poison",
      SPTYP_POISON,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      2,
      0,
      7, 7,
@@ -2219,7 +2219,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPIT_ACID, "Spit Acid",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      5,
      0,
      LOS_RADIUS, LOS_RADIUS,
@@ -2246,7 +2246,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STICKY_FLAME_SPLASH, "Sticky Flame Splash",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      4,
      100,
      5, 5,
@@ -2259,7 +2259,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FIRE_BREATH, "Fire Breath",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      5,
      0,
      6, 6,
@@ -2272,7 +2272,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CHAOS_BREATH, "Chaos Breath",
      SPTYP_CONJURATION | SPTYP_RANDOM,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      5,
      0,
      6, 6,
@@ -2285,7 +2285,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_COLD_BREATH, "Cold Breath",
      SPTYP_CONJURATION | SPTYP_ICE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      5,
      0,
      6, 6,
@@ -2298,7 +2298,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DRACONIAN_BREATH, "Draconian Breath",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
      8,
      0,
      LOS_RADIUS, LOS_RADIUS,
@@ -3798,7 +3798,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SERPENT_OF_HELL_BREATH, "Serpent of Hell Breath",
     SPTYP_CONJURATION,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
     5,
     0,
     LOS_RADIUS, LOS_RADIUS,
