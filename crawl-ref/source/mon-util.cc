@@ -5071,7 +5071,7 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
         if (it->spell == SPELL_NO_SPELL)
         {
             spells.erase(it);
-            it = spells.begin();
+            it = spells.begin() - 1;
         }
     }
 }
