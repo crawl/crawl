@@ -113,11 +113,11 @@ function base_monster_setup(e)
            Maud / Nergalle / Nessos / Ilsuiw band / Arachne /\
            Polyphemus / Rupert / Saint Roka band / Snorg / Wiglaf")
   e.kmons("K = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
-           Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara /\
-           the Serpent of Hell")
+           Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon / the royal jelly")
+           Ereshkigal / Ignacio / Geryon / the royal jelly /\
+           the Serpent of Hell")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
