@@ -34,12 +34,12 @@ enum object_selector
     OSEL_BLESSABLE_WEAPON        = -18,
 };
 
-#define SLOT_BARE_HANDS      -2
-
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3
 #define PROMPT_INAPPROPRIATE -4
+
+#define SLOT_BARE_HANDS      PROMPT_GOT_SPECIAL
 
 struct SelItem
 {
