@@ -2839,9 +2839,6 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
     int weight = 0;
     for (unsigned int i = 0; i < spells.size(); i++)
     {
-        if (spells[i].spell == SPELL_NO_SPELL)
-            continue;
-
         int flags = get_spell_flags(spells[i].spell);
         if (!(flags & flag))
             continue;
@@ -2910,19 +2907,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (mons_class_flag(mons->type, M_SPELL_NO_SILENT))
             return false;
 
-        bool found_innate = false;
-        for (size_t i = 0; i < hspell_pass.size(); i++)
+        for (monster_spells::iterator it = hspell_pass.begin();
+             it != hspell_pass.end(); it++)
         {
-            if (hspell_pass[i].flags & MON_SPELL_INNATE)
-                found_innate = true;
-            else
+            // These require speaking.
+            if (it->flags & MON_SPELL_WIZARD || it->flags & MON_SPELL_PRIEST)
             {
-                hspell_pass[i].spell = SPELL_NO_SPELL;
-                hspell_pass[i].freq = 0;
+                hspell_pass.erase(it);
+                it = hspell_pass.begin();
             }
         }
 
-        if (!found_innate)
+        if (!hspell_pass.size())
             return false;
     }
 
@@ -3077,29 +3073,21 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         // Remove healing/invis/haste if we don't need them.
-        unsigned int num_no_spell = 0;
-
-        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        for (monster_spells::iterator it = hspell_pass.begin();
+             it != hspell_pass.end(); it++)
         {
-            if (hspell_pass[i].spell == SPELL_NO_SPELL)
-                num_no_spell++;
-            else if (_ms_waste_of_time(mons, hspell_pass[i])
-                     || hspell_pass[i].spell == SPELL_DIG)
-            {
-                // Instead of making a new one,
-                // make the weapon attack
-                if (hspell_pass[i].spell == SPELL_SPECTRAL_WEAPON)
-                    hspell_pass[i].spell = SPELL_MELEE;
-
+            if (_ms_waste_of_time(mons, *it)
                 // Should monster not have selected dig by now,
                 // it never will.
-                hspell_pass[i].spell = SPELL_NO_SPELL;
-                num_no_spell++;
+                || it->spell == SPELL_DIG)
+            {
+                hspell_pass.erase(it);
+                it = hspell_pass.begin();
             }
         }
 
         // If no useful spells... cast no spell.
-        if (num_no_spell == hspell_pass.size()
+        if (!hspell_pass.size()
             && draco_breath == SPELL_NO_SPELL)
         {
             return false;
@@ -3157,9 +3145,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 unsigned int i = 0;
                 for (; i < hspell_pass.size(); i++)
                 {
-                    if (hspell_pass[i].spell == SPELL_NO_SPELL)
-                        continue;
-
                     if (hspell_pass[i].flags & MON_SPELL_EMERGENCY
                         && !emergency)
                     {
