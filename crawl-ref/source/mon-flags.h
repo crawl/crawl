@@ -91,9 +91,7 @@ const uint64_t M_FAST_REGEN        = 1<<26;
 // cannot regenerate
 const uint64_t M_NO_REGEN          = 1<<27;
 
-// cannot cast spells when silenced; even though it's not a priest or
-// wizard
-const uint64_t M_SPELL_NO_SILENT   = 1<<28;
+                                   //1<<28;
 
 // casting makes noise even if an innate ability (no effect on silence)
 const uint64_t M_NOISY_SPELLS      = 1<<29;

@@ -300,6 +300,10 @@ Roxanne cast
 
 @sphinx cast@
 %%%%
+silent Berserker Rage Rupert cast
+
+@The_monster@ flies into a rage!
+%%%%
 Berserker Rage Rupert cast
 
 @The_monster@ roars madly and goes into a rage!
