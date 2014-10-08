@@ -234,6 +234,9 @@ void item_colour(item_def &item)
     };
     COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
 
+    // Compute random tile choice.
+    item.rnd = random2(256);
+
     int switchnum = 0;
     colour_t temp_value;
 
@@ -251,7 +254,7 @@ void item_colour(item_def &item)
         if (is_artefact(item))
         {
             item.colour = _exciting_colour();
-            return;
+            break;
         }
 
         switch (item.sub_type)
@@ -689,9 +692,6 @@ void item_colour(item_def &item)
     default:
         break;
     }
-
-    // Compute random tile choice.
-    item.rnd = random2(256);
 }
 
 // Does Xom consider an item boring?
