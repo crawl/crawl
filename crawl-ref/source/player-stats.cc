@@ -78,6 +78,12 @@ int player::max_dex() const
 static void _handle_stat_change(stat_type stat, bool see_source = true);
 static void _handle_stat_change(bool see_source = true);
 
+/**
+ * Handle manual, permanent character stat increases. (Usually from every third
+ * XL.
+ *
+ * @return Whether the stat was actually increased (HUPs can interrupt this).
+ */
 bool attribute_increase()
 {
     crawl_state.stat_gain_prompt = true;
@@ -112,6 +118,8 @@ bool attribute_increase()
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
+
+    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
 
     bool tried_lua = false;
     int keyin;
@@ -148,17 +156,20 @@ bool attribute_increase()
 
         case 's':
         case 'S':
-            modify_stat(STAT_STR, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_STR, 1, false, "level gain");
             return true;
 
         case 'i':
         case 'I':
-            modify_stat(STAT_INT, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_INT, 1, false, "level gain");
             return true;
 
         case 'd':
         case 'D':
-            modify_stat(STAT_DEX, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_DEX, 1, false, "level gain");
             return true;
 #ifdef TOUCH_UI
         default:
