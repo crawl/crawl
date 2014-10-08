@@ -2882,6 +2882,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (mons->asleep()
         || mons->submerged()
         || mons->berserk_or_insane()
+        || mons_is_confused(mons, false)
         || (!mons->has_spells()
             && draco_breath == SPELL_NO_SPELL))
     {
@@ -2896,729 +2897,718 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
-    // Shapeshifters don't get spells.
-    if (mons->is_shapeshifter() && (priest || wizard))
-        return false;
-    else if (mons_is_confused(mons, false))
-        return false;
-    else if (mons_is_ghost_demon(mons->type)
-             && !mons->ghost->spellcaster)
+    spell_type spell_cast = SPELL_NO_SPELL;
+    monster_spells hspell_pass(mons->spells);
+
+    if (silenced(mons->pos())
+        || mons->has_ench(ENCH_MUTE)
+        || mons->has_ench(ENCH_WATER_HOLD)
+           && !mons->res_water_drowning()
+        // Shapeshifters don't get 'real' spells.
+        || mons->is_shapeshifter())
     {
-        return false;
+        if (mons_class_flag(mons->type, M_SPELL_NO_SILENT))
+            return false;
+
+        bool found_innate = false;
+        for (size_t i = 0; i < hspell_pass.size(); i++)
+        {
+            if (hspell_pass[i].flags & MON_SPELL_INNATE)
+                found_innate = true;
+            else
+            {
+                hspell_pass[i].spell = SPELL_NO_SPELL;
+                hspell_pass[i].freq = 0;
+            }
+        }
+
+        if (!found_innate)
+            return false;
     }
-    else
+
+    if (!mon_enemies_around(mons))
     {
-        spell_type spell_cast = SPELL_NO_SPELL;
-        monster_spells hspell_pass(mons->spells);
-
-        if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
-             || (mons->has_ench(ENCH_WATER_HOLD)
-                 && !mons->res_water_drowning())))
+        // Force the casting of dig when the player is not visible -
+        // this is EVIL!
+        // only do this for monsters that are actually seeking out a
+        // hostile target -doy
+        if (mons->has_spell(SPELL_DIG)
+            && mons_is_seeking(mons)
+            && !(mons->wont_attack() && mons->foe == MHITYOU))
         {
-            if (mons_class_flag(mons->type, M_SPELL_NO_SILENT))
-                return false;
-
-            bool innate = false;
-            for (unsigned int i = 0; i < hspell_pass.size(); i++)
-            {
-                if (hspell_pass[i].flags & MON_SPELL_INNATE)
-                    innate = true;
-                else
-                {
-                    hspell_pass[i].spell = SPELL_NO_SPELL;
-                    hspell_pass[i].freq = 0;
-                }
-            }
-
-            if (!innate)
-                return false;
-        }
-
-        if (!mon_enemies_around(mons))
-        {
-            // Force the casting of dig when the player is not visible -
-            // this is EVIL!
-            // only do this for monsters that are actually seeking out a
-            // hostile target -doy
-            if (mons->has_spell(SPELL_DIG)
-                && mons_is_seeking(mons)
-                && !(mons->wont_attack() && mons->foe == MHITYOU))
-            {
-                spell_cast = SPELL_DIG;
-                finalAnswer = true;
-            }
-            else if ((mons->has_spell(SPELL_MINOR_HEALING)
-                         || mons->has_spell(SPELL_MAJOR_HEALING))
-                     && mons->hit_points < mons->max_hit_points)
-            {
-                // The player's out of sight!
-                // Quick, let's take a turn to heal ourselves. -- bwr
-                spell_cast = mons->has_spell(SPELL_MAJOR_HEALING) ?
-                                 SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
-                finalAnswer = true;
-            }
-            else if (mons_is_fleeing(mons) || mons->pacified())
-            {
-                // Since the player isn't around, we'll extend the monster's
-                // normal choices to include the self-enchant slot.
-                if (one_chance_in(4))
-                {
-                    int foundcount = 0;
-                    for (unsigned int i = hspell_pass.size() - 1; i >= 0; --i)
-                    {
-                        if (_ms_useful_fleeing_out_of_sight(mons,
-                                                            hspell_pass[i])
-                            && one_chance_in(++foundcount))
-                        {
-                            spell_cast = hspell_pass[i].spell;
-                            finalAnswer = true;
-                        }
-                    }
-                }
-            }
-            else if (mons->foe == MHITYOU && !monsterNearby)
-                return false;
-        }
-
-        // Monsters caught in a net try to get away.
-        // This is only urgent if enemies are around.
-        if (!finalAnswer && mon_enemies_around(mons)
-            && mons->caught() && one_chance_in(15))
-        {
-            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
-            {
-                if (_ms_quick_get_away(mons, hspell_pass[i].spell))
-                {
-                    spell_cast = hspell_pass[i].spell;
-                    finalAnswer = true;
-                    break;
-                }
-            }
-        }
-
-        const bool emergency = mons->hit_points < mons->max_hit_points / 3;
-
-        // Promote the casting of useful spells for low-HP monsters.
-        // (kraken should always cast their escape spell of inky).
-        if (!finalAnswer && emergency
-            && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
-        {
-            // Note: There should always be at least some chance we don't
-            // get here... even if the monster is on its last HP.  That
-            // way we don't have to worry about monsters infinitely casting
-            // Healing on themselves (e.g. orc high priests).
-            int found_spell = 0;
-            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
-            {
-                if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
-                    && one_chance_in(++found_spell))
-                {
-                    spell_cast  = hspell_pass[i].spell;
-                    finalAnswer = true;
-                }
-            }
-        }
-
-        bool ignore_good_idea = false;
-        if (does_ru_wanna_redirect(mons))
-        {
-            int r = random2(100);
-            int chance = div_rand_round(you.piety, 16);
-            // 10% chance of stopping any attack
-            if (r < chance)
-            {
-                if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
-                {
-                    simple_monster_message(mons,
-                        " begins to cast a spell, but is stunned by your will!",
-                        MSGCH_GOD);
-                }
-                else if (mons_class_flag(mons->type, M_PRIEST))
-                    simple_monster_message(mons,
-                        " begins to pray, but is stunned by your will!",
-                        MSGCH_GOD);
-                else
-                    simple_monster_message(mons,
-                        " begins to attack, but is stunned by your will!",
-                        MSGCH_GOD);
-                mons->lose_energy(EUT_SPELL);
-                return true;
-            }
-            // 5% chance of redirect
-            else if (r < chance + div_rand_round(chance, 2))
-            {
-                mprf(MSGCH_GOD, "You redirect %s's attack!",
-                        mons->name(DESC_THE).c_str());
-                int pfound = 0;
-                for (radius_iterator ri(you.pos(),
-                    LOS_DEFAULT); ri; ++ri)
-                {
-                    monster* new_target = monster_at(*ri);
-
-                    if (new_target == NULL
-                        || mons_is_projectile(new_target->type)
-                        || mons_is_firewood(new_target))
-                    {
-                        continue;
-                    }
-
-                    ASSERT(new_target);
-
-                    if (one_chance_in(++pfound))
-                    {
-                        mons->target = new_target->pos();
-                        mons->foe = new_target->mindex();
-                        beem.target = mons->target;
-                        ignore_good_idea = true;
-                    }
-                }
-            }
-        }
-
-        if (!finalAnswer)
-        {
-            // If nothing found by now, safe friendlies and good
-            // neutrals will rarely cast.
-            if (mons->wont_attack() && !mon_enemies_around(mons)
-                && !one_chance_in(10))
-            {
-                return false;
-            }
-
-            // Remove healing/invis/haste if we don't need them.
-            unsigned int num_no_spell = 0;
-
-            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
-            {
-                if (hspell_pass[i].spell == SPELL_NO_SPELL)
-                    num_no_spell++;
-                else if (_ms_waste_of_time(mons, hspell_pass[i])
-                         || hspell_pass[i].spell == SPELL_DIG)
-                {
-                    // Instead of making a new one,
-                    // make the weapon attack
-                    if (hspell_pass[i].spell == SPELL_SPECTRAL_WEAPON)
-                        hspell_pass[i].spell = SPELL_MELEE;
-
-                    // Should monster not have selected dig by now,
-                    // it never will.
-                    hspell_pass[i].spell = SPELL_NO_SPELL;
-                    num_no_spell++;
-                }
-            }
-
-            // If no useful spells... cast no spell.
-            if (num_no_spell == hspell_pass.size()
-                && draco_breath == SPELL_NO_SPELL)
-            {
-                return false;
-            }
-
-            const bolt orig_beem = beem;
-
-            for (int attempt = 0; attempt < 2; attempt++)
-            {
-                beem = orig_beem;
-
-                bool spellOK = false;
-
-                // Setup spell.
-                // If we didn't find a spell on the first pass, try a
-                // self-enchantment.
-                if (attempt > 0 && coinflip())
-                {
-                    spell_cast = _pick_spell_from_list(hspell_pass,
-                                                       SPFLAG_SELFENCH,
-                                                       wizard, priest);
-                }
-                // Monsters that are fleeing or pacified and leaving the
-                // level will always try to choose an emergency spell.
-                else if (mons_is_fleeing(mons) || mons->pacified())
-                {
-                    spell_cast = _pick_spell_from_list(hspell_pass,
-                                                       SPFLAG_EMERGENCY,
-                                                       wizard, priest);
-
-                    if (crawl_state.game_is_zotdef()
-                        && mons->type == MONS_ICE_STATUE)
-                    {
-                        // Don't spam ice beasts when wounded.
-                        spell_cast = SPELL_NO_SPELL;
-                    }
-
-                    // Pacified monsters leaving the level will only
-                    // try and cast escape spells.
-                    if (spell_cast != SPELL_NO_SPELL
-                        && mons->pacified()
-                        && !testbits(get_spell_flags(spell_cast), SPFLAG_ESCAPE))
-                    {
-                        spell_cast = SPELL_NO_SPELL;
-                    }
-
-                    if (spell_cast != SPELL_NO_SPELL)
-                        emergency_spell = true;
-                }
-                else
-                {
-                    spell_cast = SPELL_NO_SPELL;
-
-                    unsigned what = random2(200);
-                    unsigned int i = 0;
-                    for (; i < hspell_pass.size(); i++)
-                    {
-                        if (hspell_pass[i].spell == SPELL_NO_SPELL)
-                            continue;
-
-                        if (hspell_pass[i].flags & MON_SPELL_EMERGENCY
-                            && !emergency)
-                        {
-                            continue;
-                        }
-
-                        if (hspell_pass[i].freq >= what)
-                            break;
-                        what -= hspell_pass[i].freq;
-                    }
-
-                    // If we roll above the weight of the spell list,
-                    // don't cast a spell at all.
-                    if (i == hspell_pass.size())
-                        return false;
-
-                    spell_cast = hspell_pass[i].spell;
-                    wizard = hspell_pass[i].flags & MON_SPELL_WIZARD;
-                    priest = hspell_pass[i].flags & MON_SPELL_PRIEST;
-                    breath = hspell_pass[i].flags & MON_SPELL_BREATH;
-                }
-
-                // Setup the spell.
-                if (spell_cast != SPELL_MELEE && spell_cast != SPELL_NO_SPELL)
-                    setup_mons_cast(mons, beem, spell_cast);
-
-                // Try to find a nearby ally to haste, heal, might,
-                // or make invisible.
-                if ((spell_cast == SPELL_HASTE_OTHER
-                     || spell_cast == SPELL_HEAL_OTHER
-                     || spell_cast == SPELL_MIGHT_OTHER
-                     || spell_cast == SPELL_INVISIBILITY_OTHER)
-                        && !_set_allied_target(mons, beem,
-                               mons->type == MONS_IRONBRAND_CONVOKER))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
-                // Alligators shouldn't spam swiftness.
-                if (spell_cast == SPELL_SWIFTNESS
-                    && mons->type == MONS_ALLIGATOR
-                    && ((int) mons->number + random2avg(170, 5) >=
-                        you.num_turns))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
-                // And Mara shouldn't cast player ghost if he can't
-                // see the player
-                if (spell_cast == SPELL_SUMMON_ILLUSION
-                    && mons->type == MONS_MARA
-                    && (!foe
-                        || !mons->can_see(foe)
-                        || !actor_is_illusion_cloneable(foe)))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
-                // Monsters are limited casting it, too.
-                if (spell_cast == SPELL_MALIGN_GATEWAY
-                    && !can_cast_malign_gateway())
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
-                // Same limitations as player.
-                if (spell_cast == SPELL_LEDAS_LIQUEFACTION
-                    && (!mons->stand_on_solid_ground()
-                        || liquefied(mons->pos())))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
-                // Don't torment your allies. Maybe we want to add other
-                // spells here? Mass confusion, tornado, etc.?
-                if (you.visible_to(mons) && mons_aligned(mons, &you))
-                {
-                    if ((spell_cast == SPELL_SYMBOL_OF_TORMENT
-                             && !player_res_torment(false)
-                             && !player_kiku_res_torment())
-                         || (spell_cast == SPELL_OZOCUBUS_REFRIGERATION
-                             && !player_res_cold(false)))
-                    {
-                        spell_cast = SPELL_NO_SPELL;
-                        continue;
-                    }
-                }
-
-                // Don't knockback something we're trying to constrict.
-                const actor *victim = actor_at(beem.target);
-                if (victim &&
-                    beem.can_knockback(victim)
-                    && mons->is_constricting()
-                    && mons->constricting->count(victim->mid))
-                {
-                        spell_cast = SPELL_NO_SPELL;
-                        continue;
-                }
-
-                // beam-type spells requiring tracers
-                if (spell_needs_tracer(spell_cast))
-                {
-                    const bool explode =
-                        spell_is_direct_explosion(spell_cast);
-                    fire_tracer(mons, beem, explode);
-                    // Good idea?
-                    if (mons_should_fire(beem, ignore_good_idea))
-                        spellOK = true;
-                }
-                else
-                {
-                    // All direct-effect/summoning/self-enchantments/etc.
-                    spellOK = true;
-
-                    if (_ms_direct_nasty(spell_cast)
-                        && mons_aligned(mons, (mons->foe == MHITYOU) ?
-                           &you : foe)) // foe=get_foe() is NULL for friendlies
-                    {                   // targeting you, which is bad here.
-                        spellOK = false;
-                    }
-                    else if (mons->foe == MHITYOU || mons->foe == MHITNOT)
-                    {
-                        // XXX: Note the crude hack so that monsters can
-                        // use ME_ALERT to target (we should really have
-                        // a measure of time instead of peeking to see
-                        // if the player is still there). -- bwr
-                        if (!you.visible_to(mons)
-                            && (mons->target != you.pos() || coinflip()))
-                        {
-                            spellOK = false;
-                        }
-                    }
-                    else if (!mons->can_see(&menv[mons->foe]))
-                        spellOK = false;
-                    else if (mons->type == MONS_DAEVA
-                             && mons->god == GOD_SHINING_ONE)
-                    {
-                        const monster* mon = &menv[mons->foe];
-
-                        // Don't allow TSO-worshipping daevas to make
-                        // unchivalric magic attacks, except against
-                        // appropriate monsters.
-                        if (find_stab_type(mons, mon) != STAB_NO_STAB
-                            && !tso_unchivalric_attack_safe_monster(mon))
-                        {
-                            spellOK = false;
-                        }
-                    }
-                }
-
-                if (!spellOK)
-                    spell_cast = SPELL_NO_SPELL;
-
-                if (spell_cast != SPELL_NO_SPELL)
-                    break;
-            }
-        }
-
-        bool was_drac_breath = false;
-
-        // If there's otherwise no ranged attack use the breath weapon.
-        // The breath weapon is also occasionally used.
-        if (draco_breath != SPELL_NO_SPELL
-            && (spell_cast == SPELL_NO_SPELL
-                 || !emergency_spell && one_chance_in(4))
-            && !player_or_mon_in_sanct(mons)
-            && !mons->has_ench(ENCH_BREATH_WEAPON))
-        {
-            spell_cast = draco_breath;
-            setup_mons_cast(mons, beem, spell_cast);
+            spell_cast = SPELL_DIG;
             finalAnswer = true;
-            was_drac_breath = true;
         }
-
-        // Should the monster *still* not have a spell, well, too bad {dlb}:
-        if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
-            return false;
-
-        // Friendly monsters don't use polymorph, as it's likely to cause
-        // runaway growth of an enemy.
-        if (spell_cast == SPELL_POLYMORPH && mons->friendly())
-            return false;
-
-        // Past this point, we're actually casting, instead of just pondering.
-
-        // Check for antimagic if casting a spell spell.
-        if (mons->has_ench(ENCH_ANTIMAGIC) && wizard
-            && !x_chance_in_y(4 * BASELINE_DELAY,
-                              4 * BASELINE_DELAY
-                              + mons->get_ench(ENCH_ANTIMAGIC).duration)
-            && spell_cast != draco_breath)
+        else if ((mons->has_spell(SPELL_MINOR_HEALING)
+                  || mons->has_spell(SPELL_MAJOR_HEALING))
+                 && mons->hit_points < mons->max_hit_points)
         {
-            // This may be a bad idea -- if we decide monsters shouldn't
-            // lose a turn like players do not, please make this just return.
-            simple_monster_message(mons, " falters for a moment.");
+            // The player's out of sight!
+            // Quick, let's take a turn to heal ourselves. -- bwr
+            spell_cast = mons->has_spell(SPELL_MAJOR_HEALING) ?
+                         SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
+            finalAnswer = true;
+        }
+        else if (mons_is_fleeing(mons) || mons->pacified())
+        {
+            // Since the player isn't around, we'll extend the monster's
+            // normal choices to include the self-enchant slot.
+            if (one_chance_in(4))
+            {
+                int foundcount = 0;
+                for (unsigned int i = hspell_pass.size() - 1; i >= 0; --i)
+                {
+                    if (_ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
+                        && one_chance_in(++foundcount))
+                    {
+                        spell_cast = hspell_pass[i].spell;
+                        finalAnswer = true;
+                    }
+                }
+            }
+        }
+        else if (mons->foe == MHITYOU && !monsterNearby)
+            return false;
+    }
+
+    // Monsters caught in a net try to get away.
+    // This is only urgent if enemies are around.
+    if (!finalAnswer && mon_enemies_around(mons)
+        && mons->caught() && one_chance_in(15))
+    {
+        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        {
+            if (_ms_quick_get_away(mons, hspell_pass[i].spell))
+            {
+                spell_cast = hspell_pass[i].spell;
+                finalAnswer = true;
+                break;
+            }
+        }
+    }
+
+    const bool emergency = mons->hit_points < mons->max_hit_points / 3;
+
+    // Promote the casting of useful spells for low-HP monsters.
+    // (kraken should always cast their escape spell of inky).
+    if (!finalAnswer && emergency
+        && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
+    {
+        // Note: There should always be at least some chance we don't
+        // get here... even if the monster is on its last HP.  That
+        // way we don't have to worry about monsters infinitely casting
+        // Healing on themselves (e.g. orc high priests).
+        int found_spell = 0;
+        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        {
+            if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
+                && one_chance_in(++found_spell))
+            {
+                spell_cast  = hspell_pass[i].spell;
+                finalAnswer = true;
+            }
+        }
+    }
+
+    bool ignore_good_idea = false;
+    if (does_ru_wanna_redirect(mons))
+    {
+        int r = random2(100);
+        int chance = div_rand_round(you.piety, 16);
+        // 10% chance of stopping any attack
+        if (r < chance)
+        {
+            if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+            {
+                simple_monster_message(mons,
+                    " begins to cast a spell, but is stunned by your will!",
+                    MSGCH_GOD);
+            }
+            else if (mons_class_flag(mons->type, M_PRIEST))
+                simple_monster_message(mons,
+                    " begins to pray, but is stunned by your will!",
+                    MSGCH_GOD);
+            else
+                simple_monster_message(mons,
+                    " begins to attack, but is stunned by your will!",
+                    MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
             return true;
         }
-        // Try to animate dead: if nothing rises, pretend we didn't cast it.
-        else if (spell_cast == SPELL_ANIMATE_DEAD)
+        // 5% chance of redirect
+        else if (r < chance + div_rand_round(chance, 2))
         {
-            if (mons->friendly() && !_animate_dead_okay(spell_cast))
-                return false;
-
-            if (mons->is_summoned())
-                return false;
-
-            if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
-                              mons->foe, mons, "", god, false))
+            mprf(MSGCH_GOD, "You redirect %s's attack!",
+                    mons->name(DESC_THE).c_str());
+            int pfound = 0;
+            for (radius_iterator ri(you.pos(),
+                LOS_DEFAULT); ri; ++ri)
             {
-                return false;
-            }
-        }
-        // Ditto for crawling corpses.
-        else if (spell_cast == SPELL_TWISTED_RESURRECTION)
-        {
-            if (mons->friendly() && !_animate_dead_okay(spell_cast))
-                return false;
+                monster* new_target = monster_at(*ri);
 
-            if (mons->is_summoned())
-                return false;
-
-            if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
-                                      mons->foe, god, false))
-            {
-                return false;
-            }
-        }
-        // Ditto for simulacra.
-        else if (spell_cast == SPELL_SIMULACRUM)
-        {
-            if (mons->friendly() && !_animate_dead_okay(spell_cast))
-                return false;
-
-            if (!monster_simulacrum(mons, false))
-                return false;
-        }
-        // Ditto for vines
-        else if (spell_cast == SPELL_AWAKEN_VINES)
-        {
-            if (!_awaken_vines(mons, true))
-                return false;
-        }
-        // Try to cause fear: if nothing is scared, pretend we didn't cast it.
-        else if (spell_cast == SPELL_CAUSE_FEAR)
-        {
-            if (_mons_cause_fear(mons, false) < 0)
-                return false;
-        }
-        // Check use of LOS attack spells.
-        else if (spell_cast == SPELL_DRAIN_LIFE
-                 || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
-        {
-            if (cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast),
-                                      mons, false) != SPRET_SUCCESS)
-            {
-                return false;
-            }
-        }
-        else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
-        {
-            if (cast_toxic_radiance(mons, 100, false, true) != SPRET_SUCCESS)
-                return false;
-        }
-        else if (spell_cast == SPELL_IGNITE_POISON)
-        {
-            if (cast_ignite_poison(mons, 0, false, true) != SPRET_SUCCESS)
-                return false;
-        }
-        // See if we have a good spot to cast LRD at.
-        else if (spell_cast == SPELL_LRD)
-        {
-            if (!in_bounds(beem.target))
-                return false;
-        }
-        // Try to cast Shatter; if nothing happened, pretend we didn't cast it.
-        else if (spell_cast == SPELL_SHATTER)
-        {
-            if (!mons_shatter(mons, false))
-                return false;
-        }
-        // Check if it's possible to spawn more tentacles. If not, don't bother trying.
-        else if (spell_cast == SPELL_CREATE_TENTACLES)
-        {
-            if (!_mons_available_tentacles(mons))
-                return false;
-        }
-        // Only cast word of recall if there's enough things to bother recalling
-        else if (spell_cast == SPELL_WORD_OF_RECALL)
-        {
-            if (!_should_recall(mons))
-                return false;
-        }
-        // Try to mass confuse; if we can't, pretend nothing happened.
-        else if (spell_cast == SPELL_MASS_CONFUSION)
-        {
-            if (_mons_mass_confuse(mons, false) < 0)
-                return false;
-        }
-        // Check if our enemy can be slowed for Metabolic Englaciation.
-        else if (spell_cast == SPELL_ENGLACIATION)
-        {
-            if (!foe
-                || !mons->see_cell_no_trans(mons->target)
-                || foe->res_cold() > 0
-                || (foe->is_monster()
-                    && (mons_is_firewood(foe->as_monster())
-                        || foe->as_monster()->has_ench(ENCH_SLOW)))
-                || (!foe->is_monster()
-                    && you.duration[DUR_SLOW] > 0))
-            {
-                return false;
-            }
-        }
-        else if (spell_cast == SPELL_TORNADO)
-        {
-            if (!_should_tornado(mons))
-                return false;
-        }
-        else if (spell_cast == SPELL_EPHEMERAL_INFUSION)
-        {
-            if (!_should_ephemeral_infusion(mons))
-                return false;
-        }
-        else if (spell_cast == SPELL_GLACIATE)
-        {
-            if (!foe
-                || !_glaciate_tracer(mons,
-                                     12 * mons->spell_hd(spell_cast),
-                                     foe->pos()))
-            {
-                return false;
-            }
-        }
-        else if (spell_cast == SPELL_CLOUD_CONE)
-        {
-            if (!foe
-                || !mons_should_cloud_cone(mons,
-                                           12 * mons->spell_hd(spell_cast),
-                                           foe->pos()))
-            {
-                return false;
-            }
-        }
-        else if (spell_cast == SPELL_DAZZLING_SPRAY)
-        {
-            if (!foe
-                || !_spray_tracer(mons, 12 * mons->spell_hd(spell_cast),
-                                  beem, spell_cast))
-            {
-                return false;
-            }
-        }
-        else if (spell_cast == SPELL_SYMBOL_OF_TORMENT)
-        {
-            if (!_trace_los(mons, _torment_vulnerable))
-                return false;
-        }
-        else if (spell_cast == SPELL_CHAIN_LIGHTNING)
-        {
-            if (!_trace_los(mons, _elec_vulnerable))
-                return false;
-        }
-        else if (spell_cast == SPELL_CHAIN_OF_CHAOS)
-        {
-            if (!_trace_los(mons, _dummy_vulnerable))
-                return false;
-        }
-
-        if (mons->type == MONS_BALL_LIGHTNING)
-            mons->suicide();
-
-        // Dragons now have a time-out on their breath weapons, draconians too!
-        if (breath
-            || mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath)
-        {
-            setup_breath_timeout(mons);
-        }
-
-        // FINALLY! determine primary spell effects {dlb}:
-        if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
-        {
-            // Why only cast blink if nearby? {dlb}
-            if (monsterNearby)
-            {
-                mons_cast_noise(mons, beem, spell_cast);
-                monster_blink(mons);
-
-                mons->lose_energy(EUT_SPELL);
-            }
-            else
-                return false;
-        }
-        else if (spell_cast == SPELL_BLINK_RANGE)
-        {
-            blink_range(mons);
-            mons->lose_energy(EUT_SPELL);
-        }
-        else if (spell_cast == SPELL_BLINK_AWAY)
-        {
-            blink_away(mons, true);
-            mons->lose_energy(EUT_SPELL);
-        }
-        else if (spell_cast == SPELL_BLINK_CLOSE)
-        {
-            blink_close(mons);
-            mons->lose_energy(EUT_SPELL);
-        }
-        else
-        {
-            const int orig_hp = (foe) ? foe->stat_hp() : 0;
-            const bool battlesphere = mons->props.exists("battlesphere");
-            if (spell_needs_foe(spell_cast))
-                make_mons_stop_fleeing(mons);
-
-            if (battlesphere)
-                aim_battlesphere(mons, spell_cast, beem.ench_power, beem);
-            mons_cast(mons, beem, spell_cast);
-            if (battlesphere)
-                trigger_battlesphere(mons, beem);
-            if (mons->has_ench(ENCH_GRAND_AVATAR))
-                trigger_grand_avatar(mons, foe, spell_cast, orig_hp);
-            if (wizard && mons->has_ench(ENCH_SAP_MAGIC))
-            {
-                mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                           mons->get_ench(ENCH_SAP_MAGIC)
-                                                 .agent(),
-                                           BASELINE_DELAY
-                                           * spell_difficulty(spell_cast)));
-            }
-            mons->lose_energy(EUT_SPELL);
-            // Wellsprings "cast" from their own hp.
-            if (spell_cast == SPELL_PRIMAL_WAVE
-                && mons->type == MONS_ELEMENTAL_WELLSPRING)
-            {
-                mons->hurt(mons, 5 + random2(15));
-                if (mons->alive())
+                if (new_target == NULL
+                    || mons_is_projectile(new_target->type)
+                    || mons_is_firewood(new_target))
                 {
-                    create_monster(
-                        mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
-                        3, spell_cast, mons->pos(), mons->foe, 0));
+                    continue;
+                }
+
+                ASSERT(new_target);
+
+                if (one_chance_in(++pfound))
+                {
+                    mons->target = new_target->pos();
+                    mons->foe = new_target->mindex();
+                    beem.target = mons->target;
+                    ignore_good_idea = true;
                 }
             }
         }
-    } // end "if the monster has spells it can use"
+    }
+
+    if (!finalAnswer)
+    {
+        // If nothing found by now, safe friendlies and good
+        // neutrals will rarely cast.
+        if (mons->wont_attack() && !mon_enemies_around(mons)
+            && !one_chance_in(10))
+        {
+            return false;
+        }
+
+        // Remove healing/invis/haste if we don't need them.
+        unsigned int num_no_spell = 0;
+
+        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        {
+            if (hspell_pass[i].spell == SPELL_NO_SPELL)
+                num_no_spell++;
+            else if (_ms_waste_of_time(mons, hspell_pass[i])
+                     || hspell_pass[i].spell == SPELL_DIG)
+            {
+                // Instead of making a new one,
+                // make the weapon attack
+                if (hspell_pass[i].spell == SPELL_SPECTRAL_WEAPON)
+                    hspell_pass[i].spell = SPELL_MELEE;
+
+                // Should monster not have selected dig by now,
+                // it never will.
+                hspell_pass[i].spell = SPELL_NO_SPELL;
+                num_no_spell++;
+            }
+        }
+
+        // If no useful spells... cast no spell.
+        if (num_no_spell == hspell_pass.size()
+            && draco_breath == SPELL_NO_SPELL)
+        {
+            return false;
+        }
+
+        const bolt orig_beem = beem;
+
+        for (int attempt = 0; attempt < 2; attempt++)
+        {
+            beem = orig_beem;
+
+            bool spellOK = false;
+
+            // Setup spell.
+            // If we didn't find a spell on the first pass, try a
+            // self-enchantment.
+            if (attempt > 0 && coinflip())
+            {
+                spell_cast = _pick_spell_from_list(hspell_pass,
+                                                   SPFLAG_SELFENCH,
+                                                   wizard, priest);
+            }
+            // Monsters that are fleeing or pacified and leaving the
+            // level will always try to choose an emergency spell.
+            else if (mons_is_fleeing(mons) || mons->pacified())
+            {
+                spell_cast = _pick_spell_from_list(hspell_pass,
+                                                   SPFLAG_EMERGENCY,
+                                                   wizard, priest);
+
+                if (crawl_state.game_is_zotdef()
+                    && mons->type == MONS_ICE_STATUE)
+                {
+                    // Don't spam ice beasts when wounded.
+                    spell_cast = SPELL_NO_SPELL;
+                }
+
+                // Pacified monsters leaving the level will only
+                // try and cast escape spells.
+                if (spell_cast != SPELL_NO_SPELL
+                    && mons->pacified()
+                    && !testbits(get_spell_flags(spell_cast), SPFLAG_ESCAPE))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                }
+
+                if (spell_cast != SPELL_NO_SPELL)
+                    emergency_spell = true;
+            }
+            else
+            {
+                spell_cast = SPELL_NO_SPELL;
+
+                unsigned what = random2(200);
+                unsigned int i = 0;
+                for (; i < hspell_pass.size(); i++)
+                {
+                    if (hspell_pass[i].spell == SPELL_NO_SPELL)
+                        continue;
+
+                    if (hspell_pass[i].flags & MON_SPELL_EMERGENCY
+                        && !emergency)
+                    {
+                        continue;
+                    }
+
+                    if (hspell_pass[i].freq >= what)
+                        break;
+                    what -= hspell_pass[i].freq;
+                }
+
+                // If we roll above the weight of the spell list,
+                // don't cast a spell at all.
+                if (i == hspell_pass.size())
+                    return false;
+
+                spell_cast = hspell_pass[i].spell;
+                wizard = hspell_pass[i].flags & MON_SPELL_WIZARD;
+                priest = hspell_pass[i].flags & MON_SPELL_PRIEST;
+                breath = hspell_pass[i].flags & MON_SPELL_BREATH;
+            }
+
+            // Setup the spell.
+            if (spell_cast != SPELL_MELEE && spell_cast != SPELL_NO_SPELL)
+                setup_mons_cast(mons, beem, spell_cast);
+
+            // Try to find a nearby ally to haste, heal, might,
+            // or make invisible.
+            if ((spell_cast == SPELL_HASTE_OTHER
+                 || spell_cast == SPELL_HEAL_OTHER
+                 || spell_cast == SPELL_MIGHT_OTHER
+                 || spell_cast == SPELL_INVISIBILITY_OTHER)
+                    && !_set_allied_target(mons, beem,
+                           mons->type == MONS_IRONBRAND_CONVOKER))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            // Alligators shouldn't spam swiftness.
+            if (spell_cast == SPELL_SWIFTNESS
+                && mons->type == MONS_ALLIGATOR
+                && ((int) mons->number + random2avg(170, 5) >=
+                    you.num_turns))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            // And Mara shouldn't cast player ghost if he can't
+            // see the player
+            if (spell_cast == SPELL_SUMMON_ILLUSION
+                && mons->type == MONS_MARA
+                && (!foe
+                    || !mons->can_see(foe)
+                    || !actor_is_illusion_cloneable(foe)))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            // Monsters are limited casting it, too.
+            if (spell_cast == SPELL_MALIGN_GATEWAY
+                && !can_cast_malign_gateway())
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            // Same limitations as player.
+            if (spell_cast == SPELL_LEDAS_LIQUEFACTION
+                && (!mons->stand_on_solid_ground()
+                    || liquefied(mons->pos())))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            // Don't torment your allies. Maybe we want to add other
+            // spells here? Mass confusion, tornado, etc.?
+            if (you.visible_to(mons) && mons_aligned(mons, &you))
+            {
+                if ((spell_cast == SPELL_SYMBOL_OF_TORMENT
+                         && !player_res_torment(false)
+                         && !player_kiku_res_torment())
+                     || (spell_cast == SPELL_OZOCUBUS_REFRIGERATION
+                         && !player_res_cold(false)))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+            }
+
+            // Don't knockback something we're trying to constrict.
+            const actor *victim = actor_at(beem.target);
+            if (victim &&
+                beem.can_knockback(victim)
+                && mons->is_constricting()
+                && mons->constricting->count(victim->mid))
+            {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+            }
+
+            // beam-type spells requiring tracers
+            if (spell_needs_tracer(spell_cast))
+            {
+                const bool explode =
+                    spell_is_direct_explosion(spell_cast);
+                fire_tracer(mons, beem, explode);
+                // Good idea?
+                if (mons_should_fire(beem, ignore_good_idea))
+                    spellOK = true;
+            }
+            else
+            {
+                // All direct-effect/summoning/self-enchantments/etc.
+                spellOK = true;
+
+                if (_ms_direct_nasty(spell_cast)
+                    && mons_aligned(mons, (mons->foe == MHITYOU) ?
+                       &you : foe)) // foe=get_foe() is NULL for friendlies
+                {                   // targeting you, which is bad here.
+                    spellOK = false;
+                }
+                else if (mons->foe == MHITYOU || mons->foe == MHITNOT)
+                {
+                    // XXX: Note the crude hack so that monsters can
+                    // use ME_ALERT to target (we should really have
+                    // a measure of time instead of peeking to see
+                    // if the player is still there). -- bwr
+                    if (!you.visible_to(mons)
+                        && (mons->target != you.pos() || coinflip()))
+                    {
+                        spellOK = false;
+                    }
+                }
+                else if (!mons->can_see(&menv[mons->foe]))
+                    spellOK = false;
+                else if (mons->type == MONS_DAEVA
+                         && mons->god == GOD_SHINING_ONE)
+                {
+                    const monster* mon = &menv[mons->foe];
+
+                    // Don't allow TSO-worshipping daevas to make
+                    // unchivalric magic attacks, except against
+                    // appropriate monsters.
+                    if (find_stab_type(mons, mon) != STAB_NO_STAB
+                        && !tso_unchivalric_attack_safe_monster(mon))
+                    {
+                        spellOK = false;
+                    }
+                }
+            }
+
+            if (!spellOK)
+                spell_cast = SPELL_NO_SPELL;
+
+            if (spell_cast != SPELL_NO_SPELL)
+                break;
+        }
+    }
+
+    bool was_drac_breath = false;
+
+    // If there's otherwise no ranged attack use the breath weapon.
+    // The breath weapon is also occasionally used.
+    if (draco_breath != SPELL_NO_SPELL
+        && (spell_cast == SPELL_NO_SPELL
+             || !emergency_spell && one_chance_in(4))
+        && !player_or_mon_in_sanct(mons)
+        && !mons->has_ench(ENCH_BREATH_WEAPON))
+    {
+        spell_cast = draco_breath;
+        setup_mons_cast(mons, beem, spell_cast);
+        finalAnswer = true;
+        was_drac_breath = true;
+    }
+
+    // Should the monster *still* not have a spell, well, too bad {dlb}:
+    if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
+        return false;
+
+    // Friendly monsters don't use polymorph, as it's likely to cause
+    // runaway growth of an enemy.
+    if (spell_cast == SPELL_POLYMORPH && mons->friendly())
+        return false;
+
+    // Past this point, we're actually casting, instead of just pondering.
+
+    // Check for antimagic if casting a spell spell.
+    if (mons->has_ench(ENCH_ANTIMAGIC) && wizard
+        && !x_chance_in_y(4 * BASELINE_DELAY,
+                          4 * BASELINE_DELAY
+                          + mons->get_ench(ENCH_ANTIMAGIC).duration)
+        && spell_cast != draco_breath)
+    {
+        // This may be a bad idea -- if we decide monsters shouldn't
+        // lose a turn like players do not, please make this just return.
+        simple_monster_message(mons, " falters for a moment.");
+        mons->lose_energy(EUT_SPELL);
+        return true;
+    }
+    // Try to animate dead: if nothing rises, pretend we didn't cast it.
+    else if (spell_cast == SPELL_ANIMATE_DEAD)
+    {
+        if (mons->friendly() && !_animate_dead_okay(spell_cast))
+            return false;
+
+        if (mons->is_summoned())
+            return false;
+
+        if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
+                          mons->foe, mons, "", god, false))
+        {
+            return false;
+        }
+    }
+    // Ditto for crawling corpses.
+    else if (spell_cast == SPELL_TWISTED_RESURRECTION)
+    {
+        if (mons->friendly() && !_animate_dead_okay(spell_cast))
+            return false;
+
+        if (mons->is_summoned())
+            return false;
+
+        if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
+                                  mons->foe, god, false))
+        {
+            return false;
+        }
+    }
+    // Ditto for simulacra.
+    else if (spell_cast == SPELL_SIMULACRUM)
+    {
+        if (mons->friendly() && !_animate_dead_okay(spell_cast))
+            return false;
+
+        if (!monster_simulacrum(mons, false))
+            return false;
+    }
+    // Ditto for vines
+    else if (spell_cast == SPELL_AWAKEN_VINES)
+    {
+        if (!_awaken_vines(mons, true))
+            return false;
+    }
+    // Try to cause fear: if nothing is scared, pretend we didn't cast it.
+    else if (spell_cast == SPELL_CAUSE_FEAR)
+    {
+        if (_mons_cause_fear(mons, false) < 0)
+            return false;
+    }
+    // Check use of LOS attack spells.
+    else if (spell_cast == SPELL_DRAIN_LIFE
+             || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
+    {
+        if (cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast),
+                                  mons, false) != SPRET_SUCCESS)
+        {
+            return false;
+        }
+    }
+    else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
+    {
+        if (cast_toxic_radiance(mons, 100, false, true) != SPRET_SUCCESS)
+            return false;
+    }
+    else if (spell_cast == SPELL_IGNITE_POISON)
+    {
+        if (cast_ignite_poison(mons, 0, false, true) != SPRET_SUCCESS)
+            return false;
+    }
+    // See if we have a good spot to cast LRD at.
+    else if (spell_cast == SPELL_LRD)
+    {
+        if (!in_bounds(beem.target))
+            return false;
+    }
+    // Try to cast Shatter; if nothing happened, pretend we didn't cast it.
+    else if (spell_cast == SPELL_SHATTER)
+    {
+        if (!mons_shatter(mons, false))
+            return false;
+    }
+    // Check if it's possible to spawn more tentacles. If not, don't bother trying.
+    else if (spell_cast == SPELL_CREATE_TENTACLES)
+    {
+        if (!_mons_available_tentacles(mons))
+            return false;
+    }
+    // Only cast word of recall if there's enough things to bother recalling
+    else if (spell_cast == SPELL_WORD_OF_RECALL)
+    {
+        if (!_should_recall(mons))
+            return false;
+    }
+    // Try to mass confuse; if we can't, pretend nothing happened.
+    else if (spell_cast == SPELL_MASS_CONFUSION)
+    {
+        if (_mons_mass_confuse(mons, false) < 0)
+            return false;
+    }
+    // Check if our enemy can be slowed for Metabolic Englaciation.
+    else if (spell_cast == SPELL_ENGLACIATION)
+    {
+        if (!foe
+            || !mons->see_cell_no_trans(mons->target)
+            || foe->res_cold() > 0
+            || (foe->is_monster()
+                && (mons_is_firewood(foe->as_monster())
+                    || foe->as_monster()->has_ench(ENCH_SLOW)))
+            || (!foe->is_monster()
+                && you.duration[DUR_SLOW] > 0))
+        {
+            return false;
+        }
+    }
+    else if (spell_cast == SPELL_TORNADO)
+    {
+        if (!_should_tornado(mons))
+            return false;
+    }
+    else if (spell_cast == SPELL_EPHEMERAL_INFUSION)
+    {
+        if (!_should_ephemeral_infusion(mons))
+            return false;
+    }
+    else if (spell_cast == SPELL_GLACIATE)
+    {
+        if (!foe
+            || !_glaciate_tracer(mons,
+                                 12 * mons->spell_hd(spell_cast),
+                                 foe->pos()))
+        {
+            return false;
+        }
+    }
+    else if (spell_cast == SPELL_CLOUD_CONE)
+    {
+        if (!foe
+            || !mons_should_cloud_cone(mons,
+                                       12 * mons->spell_hd(spell_cast),
+                                       foe->pos()))
+        {
+            return false;
+        }
+    }
+    else if (spell_cast == SPELL_DAZZLING_SPRAY)
+    {
+        if (!foe
+            || !_spray_tracer(mons, 12 * mons->spell_hd(spell_cast),
+                              beem, spell_cast))
+        {
+            return false;
+        }
+    }
+    else if (spell_cast == SPELL_SYMBOL_OF_TORMENT)
+    {
+        if (!_trace_los(mons, _torment_vulnerable))
+            return false;
+    }
+    else if (spell_cast == SPELL_CHAIN_LIGHTNING)
+    {
+        if (!_trace_los(mons, _elec_vulnerable))
+            return false;
+    }
+    else if (spell_cast == SPELL_CHAIN_OF_CHAOS)
+    {
+        if (!_trace_los(mons, _dummy_vulnerable))
+            return false;
+    }
+
+    if (mons->type == MONS_BALL_LIGHTNING)
+        mons->suicide();
+
+    // Dragons now have a time-out on their breath weapons, draconians too!
+    if (breath
+        || mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath)
+    {
+        setup_breath_timeout(mons);
+    }
+
+    // FINALLY! determine primary spell effects {dlb}:
+    if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
+    {
+        // Why only cast blink if nearby? {dlb}
+        if (monsterNearby)
+        {
+            mons_cast_noise(mons, beem, spell_cast);
+            monster_blink(mons);
+
+            mons->lose_energy(EUT_SPELL);
+        }
+        else
+            return false;
+    }
+    else if (spell_cast == SPELL_BLINK_RANGE)
+    {
+        blink_range(mons);
+        mons->lose_energy(EUT_SPELL);
+    }
+    else if (spell_cast == SPELL_BLINK_AWAY)
+    {
+        blink_away(mons, true);
+        mons->lose_energy(EUT_SPELL);
+    }
+    else if (spell_cast == SPELL_BLINK_CLOSE)
+    {
+        blink_close(mons);
+        mons->lose_energy(EUT_SPELL);
+    }
+    else
+    {
+        const int orig_hp = (foe) ? foe->stat_hp() : 0;
+        const bool battlesphere = mons->props.exists("battlesphere");
+        if (spell_needs_foe(spell_cast))
+            make_mons_stop_fleeing(mons);
+
+        if (battlesphere)
+            aim_battlesphere(mons, spell_cast, beem.ench_power, beem);
+        mons_cast(mons, beem, spell_cast);
+        if (battlesphere)
+            trigger_battlesphere(mons, beem);
+        if (mons->has_ench(ENCH_GRAND_AVATAR))
+            trigger_grand_avatar(mons, foe, spell_cast, orig_hp);
+        if (wizard && mons->has_ench(ENCH_SAP_MAGIC))
+        {
+            mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                       mons->get_ench(ENCH_SAP_MAGIC)
+                                             .agent(),
+                                       BASELINE_DELAY
+                                       * spell_difficulty(spell_cast)));
+        }
+        mons->lose_energy(EUT_SPELL);
+        // Wellsprings "cast" from their own hp.
+        if (spell_cast == SPELL_PRIMAL_WAVE
+            && mons->type == MONS_ELEMENTAL_WELLSPRING)
+        {
+            mons->hurt(mons, 5 + random2(15));
+            if (mons->alive())
+            {
+                create_monster(
+                    mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
+                    3, spell_cast, mons->pos(), mons->foe, 0));
+            }
+        }
+    }
 
     return true;
 }
@@ -4883,8 +4873,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, special_ability);
 
-    bool priest;
-    bool wizard;
+    bool priest, wizard; // not used
     god_type god;
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
