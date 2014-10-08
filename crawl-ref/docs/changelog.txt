@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-942-g1b4356f)
+Stone Soup 0.16 (up to 0.16-a0-1163-g830ab83)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Insubstantial.
 
@@ -11,9 +11,9 @@ Branches, environment
 
 Character
 ---------
-* Demigods now gain one stat of their choice on 2/3 levels (2,3,5,6...26,27),
-  instead of gaining one stat of their choice on every third level and one
-  random stat on every other level.
+* Demigods now gain two stats of their choice on on every third level, in
+  exchange for no longer getting one random stat on every second level.
+* Demigods now have innate Sustain Abilities.
 * All species can now choose 'unarmed' when playing backgrounds that allow a
   weapon choice.
 
@@ -27,6 +27,8 @@ Monsters
 * Mermaids have been renamed to sirens; sirens have been renamed to merfolk
   avatars.
 * Curse skulls now move - fast!
+* Changed monster: iron devils have been upgraded to rust devils, which do less
+  damage but corrode with their touch.
 * New monster: elemental wellsprings, appearing in Cocytus. They fire powerful
   waves of water which produce hostile water elementals - but deplete their
   own 'health' in the process.
@@ -36,12 +38,28 @@ Monsters
 
 Spells
 ------
+* New spell: Hydra Form, a short-duration Transmutation that attacks all
+  adjacent foes & devours slain foes for nutrition and healing.
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
 
 Items
 -----
-* The captain's cutlass is now +5 (was +10) and can disarm enemies.
+* Cleaving attacks (from axes and Hydra Form) try to hit all adjacent enemies,
+  rather than being blocked by walls.
+* Wand changes:
+  - Zapping wands that don't have their charge count identified wastes several
+    charges.
+  - Wand type is auto-identified on pickup.
+  - Many weak wands have had their max charge count increased.
+* Regeneration has been moved from rings to amulets.
+* Unrand changes:
+  - The Ring of Vitality is now the Amulet of Vitality.
+  - The captain's cutlass is now +5 (was +10) and can disarm enemies.
+  - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
+* Renamed items:
+    - Bastard swords are now double swords;
+    - Claymores are now triple swords.
 
 Gods
 ----
@@ -81,12 +99,14 @@ Gods
 Interface
 ---------
 * Some effects (Shatter, banishment, etc.) now display animations.
+* Monster AC, EV, and MR are now displayed as bars in their descriptions.
 * The screen now flashes on attempting to autoexplore with monsters in view,
   indicating where the relevant monsters are.
 * Stealth is now displayed as a bar in the % screen. (The old 'stealth words')
   are still visible with @.)
 * A third page has been added to the god description (^) screen, listing causes
   and effects of divine wrath.
+* Derived undead (zombies, skeletons, &c) now have their full names displayed.
 * Monsters no longer appear on the minimap.
 * Multiple species/backgrounds/weapons can be specified in the init file,
   causing one to be randomly selected; a new "combo" option allows entire sets
