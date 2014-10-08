@@ -3599,6 +3599,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_STEALTH:
             return player_mutation_level(MUT_NO_STEALTH);
 
+        case RING_SUSTAIN_ABILITIES:
+            return player_mutation_level(MUT_SUSTAIN_ABILITIES);
+
         default:
             return false;
         }
