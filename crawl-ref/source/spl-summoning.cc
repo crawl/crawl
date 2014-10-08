@@ -1497,7 +1497,8 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
             // Pre-awaken the forest just summoned.
             bolt dummy;
-            mons_cast(dryad, dummy, SPELL_AWAKEN_FOREST);
+            mons_cast(dryad, dummy, SPELL_AWAKEN_FOREST,
+                      dryad->spell_slot_flags(SPELL_AWAKEN_FOREST));
         }
 
         you.duration[DUR_FORESTED] = duration;

@@ -40,6 +40,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -443,15 +444,16 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
     return mons->foe != MHITNOT
            && mons->has_spell(SPELL_DIG)
            && !mons->confused()
-           && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
-           && (!mons->has_ench(ENCH_ANTIMAGIC)
-               || (random
-                   && x_chance_in_y(4 * BASELINE_DELAY,
-                                    4 * BASELINE_DELAY
-                                    + mons->get_ench(ENCH_ANTIMAGIC).duration)
-                  || (!random
-                      && 4 * BASELINE_DELAY
-                         >= mons->get_ench(ENCH_ANTIMAGIC).duration)));
+           && !(mons->spell_slot_flags(SPELL_DIG) & MON_SPELL_WIZARD)
+              || (!(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
+                 && (!mons->has_ench(ENCH_ANTIMAGIC)
+                     || (random
+                         && x_chance_in_y(4 * BASELINE_DELAY,
+                                          4 * BASELINE_DELAY
+                                          + mons->get_ench(ENCH_ANTIMAGIC).duration)
+                     || (!random
+                         && 4 * BASELINE_DELAY
+                         >= mons->get_ench(ENCH_ANTIMAGIC).duration))));
 }
 
 static bool _mons_can_zap_dig(const monster* mons)
@@ -1314,7 +1316,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_SUMMON_SWARM:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
-        mons_cast(mons, beem, mzap, false);
+        mons_cast(mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
         return true;
 
@@ -4034,7 +4036,8 @@ static bool _monster_move(monster* mons)
             {
                 setup_mons_cast(mons, beem, SPELL_DIG);
                 beem.target = mons->pos() + mmov;
-                mons_cast(mons, beem, SPELL_DIG, true, true);
+                mons_cast(mons, beem, SPELL_DIG,
+                          mons->spell_slot_flags(SPELL_DIG));
             }
             else if (_mons_can_zap_dig(mons))
             {

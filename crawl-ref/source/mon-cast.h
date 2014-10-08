@@ -21,9 +21,9 @@ bool handle_mon_spell(monster* mons, bolt &beem);
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
-               bool do_noise = true, bool special_ability = false);
+               unsigned short slot_flags, bool do_noise = true);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
-                     spell_type spell_cast, bool special_ability = false);
+                     spell_type spell_cast, unsigned short slot_flags);
 bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 

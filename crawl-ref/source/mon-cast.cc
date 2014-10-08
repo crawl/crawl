@@ -2832,8 +2832,14 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     return mons_should_fire(beam);
 }
 
+/** Chooses a matching spell from this spell list, based on frequency.
+ *
+ *  @param[in]  spells     the monster spell list to search
+ *  @param[in]  flag       what SPFLAG_ the spell should match
+ *  @param[out] slot_flags the flags of the slot the spell was found in
+ */
 static spell_type _pick_spell_from_list(const monster_spells &spells,
-                                        int flag, bool &wizard, bool &priest)
+                                        int flag, unsigned short &slot_flags)
 {
     spell_type spell_cast = SPELL_NO_SPELL;
     int weight = 0;
@@ -2847,12 +2853,26 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
         if (x_chance_in_y(spells[i].freq, weight))
         {
             spell_cast = spells[i].spell;
-            wizard = spells[i].flags & MON_SPELL_WIZARD;
-            priest = spells[i].flags & MON_SPELL_PRIEST;
+            slot_flags = spells[i].flags;
         }
     }
 
     return spell_cast;
+}
+
+/** Update the flags and the wizard and priest flags accordingly.
+ *
+ *  @param[out] flags the slot flags to update
+ *  @param[out] wizard whether this spell slot is a wizard spell
+ *  @param[out] priest whether this spell slot is a priest spell
+ *  @param[in]  newvalue the new value for 'flags'
+ */
+static void _set_flags(unsigned short &flags, bool &wizard, bool &priest,
+                       unsigned short newvalue)
+{
+    flags = newvalue;
+    wizard = flags & MON_SPELL_WIZARD;
+    priest = flags & MON_SPELL_PRIEST;
 }
 
 //---------------------------------------------------------------
@@ -2888,13 +2908,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     bool priest;
     bool wizard;
-    bool breath = false;
     bool emergency_spell = false;
     god_type god;
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
+    unsigned short flags = MON_SPELL_NO_FLAGS;
     spell_type spell_cast = SPELL_NO_SPELL;
+
     monster_spells hspell_pass(mons->spells);
 
     if (silenced(mons->pos())
@@ -2933,6 +2954,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             && !(mons->wont_attack() && mons->foe == MHITYOU))
         {
             spell_cast = SPELL_DIG;
+            _set_flags(flags, wizard, priest, mons->spell_slot_flags(SPELL_DIG));
             finalAnswer = true;
         }
         else if ((mons->has_spell(SPELL_MINOR_HEALING)
@@ -2943,6 +2965,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // Quick, let's take a turn to heal ourselves. -- bwr
             spell_cast = mons->has_spell(SPELL_MAJOR_HEALING) ?
                          SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
+            _set_flags(flags, wizard, priest, mons->spell_slot_flags(spell_cast));
             finalAnswer = true;
         }
         else if (mons_is_fleeing(mons) || mons->pacified())
@@ -2958,6 +2981,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         && one_chance_in(++foundcount))
                     {
                         spell_cast = hspell_pass[i].spell;
+                        _set_flags(flags, wizard, priest, hspell_pass[i].flags);
                         finalAnswer = true;
                     }
                 }
@@ -2977,6 +3001,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (_ms_quick_get_away(mons, hspell_pass[i].spell))
             {
                 spell_cast = hspell_pass[i].spell;
+                _set_flags(flags, wizard, priest, hspell_pass[i].flags);
                 finalAnswer = true;
                 break;
             }
@@ -3108,7 +3133,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 spell_cast = _pick_spell_from_list(hspell_pass,
                                                    SPFLAG_SELFENCH,
-                                                   wizard, priest);
+                                                   flags);
+                _set_flags(flags, wizard, priest, flags);
             }
             // Monsters that are fleeing or pacified and leaving the
             // level will always try to choose an emergency spell.
@@ -3116,7 +3142,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 spell_cast = _pick_spell_from_list(hspell_pass,
                                                    SPFLAG_EMERGENCY,
-                                                   wizard, priest);
+                                                   flags);
+                _set_flags(flags, wizard, priest, flags);
 
                 if (crawl_state.game_is_zotdef()
                     && mons->type == MONS_ICE_STATUE)
@@ -3162,9 +3189,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     return false;
 
                 spell_cast = hspell_pass[i].spell;
-                wizard = hspell_pass[i].flags & MON_SPELL_WIZARD;
-                priest = hspell_pass[i].flags & MON_SPELL_PRIEST;
-                breath = hspell_pass[i].flags & MON_SPELL_BREATH;
+                _set_flags(flags, wizard, priest, hspell_pass[i].flags);
             }
 
             // Setup the spell.
@@ -3308,8 +3333,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
     }
 
-    bool was_drac_breath = false;
-
     // If there's otherwise no ranged attack use the breath weapon.
     // The breath weapon is also occasionally used.
     if (draco_breath != SPELL_NO_SPELL
@@ -3321,7 +3344,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         spell_cast = draco_breath;
         setup_mons_cast(mons, beem, spell_cast);
         finalAnswer = true;
-        was_drac_breath = true;
+        _set_flags(flags, wizard, priest, MON_SPELL_INNATE | MON_SPELL_BREATH);
     }
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
@@ -3335,12 +3358,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     // Past this point, we're actually casting, instead of just pondering.
 
+    // ...unless we find out the spell would be useless, in which case we
+    // may pretend nothing happened --wheals.
+
     // Check for antimagic if casting a spell spell.
     if (mons->has_ench(ENCH_ANTIMAGIC) && wizard
         && !x_chance_in_y(4 * BASELINE_DELAY,
                           4 * BASELINE_DELAY
-                          + mons->get_ench(ENCH_ANTIMAGIC).duration)
-        && spell_cast != draco_breath)
+                          + mons->get_ench(ENCH_ANTIMAGIC).duration))
     {
         // This may be a bad idea -- if we decide monsters shouldn't
         // lose a turn like players do not, please make this just return.
@@ -3523,11 +3548,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         mons->suicide();
 
     // Dragons now have a time-out on their breath weapons, draconians too!
-    if (breath
-        || mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath)
-    {
+    if (flags & MON_SPELL_BREATH)
         setup_breath_timeout(mons);
-    }
 
     // FINALLY! determine primary spell effects {dlb}:
     if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
@@ -3535,7 +3557,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Why only cast blink if nearby? {dlb}
         if (monsterNearby)
         {
-            mons_cast_noise(mons, beem, spell_cast);
+            mons_cast_noise(mons, beem, spell_cast, flags);
             monster_blink(mons);
 
             mons->lose_energy(EUT_SPELL);
@@ -3567,7 +3589,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         if (battlesphere)
             aim_battlesphere(mons, spell_cast, beem.ench_power, beem);
-        mons_cast(mons, beem, spell_cast);
+        mons_cast(mons, beem, spell_cast, flags);
         if (battlesphere)
             trigger_battlesphere(mons, beem);
         if (mons->has_ench(ENCH_GRAND_AVATAR))
@@ -4745,7 +4767,7 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
-               bool do_noise, bool special_ability)
+               unsigned short slot_flags, bool do_noise)
 {
     if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
@@ -4783,7 +4805,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             spell_type head_spell = real_breaths[i];
             setup_mons_cast(mons, pbolt, head_spell);
-            mons_cast(mons, pbolt, head_spell, do_noise, special_ability);
+            mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }
 
         return;
@@ -4833,14 +4855,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (monsterNearby)
             {
                 if (do_noise)
-                    mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+                    mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
                 direct_effect(mons, spell_cast, pbolt, &you);
             }
             return;
         }
 
         if (do_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         direct_effect(mons, spell_cast, pbolt, mons->get_foe());
         return;
     }
@@ -4856,7 +4878,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
 
     if (do_noise)
-        mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+        mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
     bool priest, wizard; // not used
     god_type god;
@@ -5483,7 +5505,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             }
             else if (!friendly && !has_mon_foe)
             {
-                mons_cast_noise(mons, pbolt, spell_cast);
+                mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
                 // "Enchant" the player.
                 slugform = getSpeakString("gastronok_debuff");
@@ -5537,7 +5559,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             }
             else // "Enchant" the player.
             {
-                mons_cast_noise(mons, pbolt, spell_cast);
+                mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
                 mpr(RANDOM_ELEMENT(other_msgs));
             }
         }
@@ -5729,7 +5751,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         mons->del_ench(ENCH_IOOD_CHARGED);
         if (orig_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
@@ -5965,7 +5987,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const item_def *weapon = mons->mslot_item(MSLOT_WEAPON);
         if (launcher && launcher != weapon)
             mons->swap_weapons();
-        mons_cast_noise(mons, pbolt, spell_cast);
+        mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         handle_throw(mons, pbolt, true, false);
         return;
     }
@@ -6561,7 +6583,7 @@ static void _noise_fill_target(string& targ_prep, string& target,
 }
 
 void mons_cast_noise(monster* mons, const bolt &pbolt,
-                     spell_type spell_cast, bool special_ability)
+                     spell_type spell_cast, unsigned short slot_flags)
 {
     bool force_silent = false;
 
@@ -6598,21 +6620,20 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const bool unseen    = !you.can_see(mons);
     const bool silent    = silenced(mons->pos()) || force_silent;
-    const bool no_silent = mons_class_flag(mons->type, M_SPELL_NO_SILENT);
 
     if (unseen && silent)
         return;
 
-    const unsigned int flags = get_spell_flags(actual_spell);
+    const unsigned int spell_flags = get_spell_flags(actual_spell);
 
-    const bool priest = mons->is_priest();
-    const bool wizard = mons->is_actual_spellcaster();
+    const bool priest = slot_flags & MON_SPELL_PRIEST;
+    const bool wizard = slot_flags & MON_SPELL_WIZARD;
     const bool innate = !(priest || wizard || no_silent)
-                        || (flags & SPFLAG_INNATE) || special_ability;
+                        || (spell_flags & SPFLAG_INNATE) || special_ability;
 
     int noise = _noise_level(mons, actual_spell, silent, innate);
 
-    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
+    const bool targeted = (spell_flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible());
 

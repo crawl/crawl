@@ -48,6 +48,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -3819,7 +3820,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     beem.target = target;
     mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
          mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, shadow_spell, false, false);
+    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
 }
