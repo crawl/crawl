@@ -33,8 +33,7 @@ enum spflag_type
                                                  // is still a battle spell
     SPFLAG_SELFENCH             = 0x020000,      // monsters use as selfench
     SPFLAG_MONSTER              = 0x040000,      // monster-only spell
-    SPFLAG_INNATE               = 0x080000,      // an innate spell, even if
-                                                 // use by a priest/wizard
+                                //0x080000,
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
     SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
     SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas

@@ -6624,15 +6624,14 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     if (unseen && silent)
         return;
 
-    const unsigned int spell_flags = get_spell_flags(actual_spell);
 
     const bool priest = slot_flags & MON_SPELL_PRIEST;
     const bool wizard = slot_flags & MON_SPELL_WIZARD;
-    const bool innate = !(priest || wizard || no_silent)
-                        || (spell_flags & SPFLAG_INNATE) || special_ability;
+    const bool innate = slot_flags & MON_SPELL_INNATE;
 
     int noise = _noise_level(mons, actual_spell, silent, innate);
 
+    const unsigned int spell_flags = get_spell_flags(actual_spell);
     const bool targeted = (spell_flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible());
