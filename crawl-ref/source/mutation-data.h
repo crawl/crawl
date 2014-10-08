@@ -1730,6 +1730,16 @@ static const mutation_def mut_data[] =
   "immunity to freezing clouds",
 },
 
+{ MUT_SUSTAIN_ABILITIES,             0,  1, MUTFLAG_GOOD, false,
+    "sustain abilities",
+
+    {"Your attributes are resistant to harm.", "", ""},
+    {"You feel buggy for a sustained period.", "", ""},
+    {"", "", ""},
+
+    "sustained abilities",
+},
+
 { MUT_NO_DRINK,                0,  1, MUTFLAG_RU, false,
   "inability to drink while threatened",
 

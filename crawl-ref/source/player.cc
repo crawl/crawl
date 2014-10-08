@@ -2642,10 +2642,18 @@ int player_displayed_shield_class()
     return player_shield_class() / 2;
 }
 
+/**
+ * Does the player take halved ability damage?
+ *
+ * @param calc_unid     Whether to include properties of worn but unidentified
+ *                      items in the calculation. (Probably irrelevant.)
+ * @return              Whether the player has SustAb.
+ */
 bool player_sust_abil(bool calc_unid)
 {
     return you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid)
-           || you.scan_artefacts(ARTP_SUSTAB);
+           || you.scan_artefacts(ARTP_SUSTAB)
+           || player_mutation_level(MUT_SUSTAIN_ABILITIES);
 }
 
 void forget_map(bool rot)
