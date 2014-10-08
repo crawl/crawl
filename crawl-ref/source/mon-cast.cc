@@ -2925,14 +2925,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Shapeshifters don't get 'real' spells.
         || mons->is_shapeshifter())
     {
-        if (mons_class_flag(mons->type, M_SPELL_NO_SILENT))
-            return false;
-
         for (monster_spells::iterator it = hspell_pass.begin();
              it != hspell_pass.end(); it++)
         {
             // These require speaking.
-            if (it->flags & MON_SPELL_WIZARD || it->flags & MON_SPELL_PRIEST)
+            if (it->flags & MON_SPELL_WIZARD
+                || it->flags & MON_SPELL_PRIEST
+                || it->flags & MON_SPELL_NO_SILENT)
             {
                 hspell_pass.erase(it);
                 it = hspell_pass.begin();

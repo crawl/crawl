@@ -893,8 +893,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_RUPERT,
       {
-       { SPELL_PARALYSE, 16, MON_SPELL_INNATE },
-       { SPELL_CONFUSE, 16, MON_SPELL_INNATE },
+       { SPELL_PARALYSE, 16, MON_SPELL_INNATE | MON_SPELL_NO_SILENT },
+       { SPELL_CONFUSE, 16, MON_SPELL_INNATE | MON_SPELL_NO_SILENT },
        { SPELL_BERSERKER_RAGE, 33, MON_SPELL_INNATE },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
@@ -1022,7 +1022,7 @@ static const mon_spellbook mspell_list[] =
     // demon lords
     {  MST_GERYON,
       {
-       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_INNATE },
+       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_INNATE | MON_SPELL_NO_SILENT },
        { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
       }
     },
