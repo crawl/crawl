@@ -948,6 +948,15 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
+    // res_corr, only on armour
+    if (!done_powers
+        && one_chance_in(4 + power_level)
+        && aclass == OBJ_ARMOUR)
+    {
+        proprt[ARTP_RCORR] = 1;
+        power_level++;
+    }
+
     if (x_chance_in_y(power_level, 12) || power_level > 10)
         done_powers = true;
 
