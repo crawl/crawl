@@ -2934,7 +2934,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 || it->flags & MON_SPELL_NO_SILENT)
             {
                 hspell_pass.erase(it);
-                it = hspell_pass.begin();
+                it = hspell_pass.begin() - 1;
             }
         }
 
@@ -3106,7 +3106,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 || it->spell == SPELL_DIG)
             {
                 hspell_pass.erase(it);
-                it = hspell_pass.begin();
+                it = hspell_pass.begin() - 1;
             }
         }
 

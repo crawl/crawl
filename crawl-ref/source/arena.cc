@@ -149,7 +149,7 @@ namespace arena
                 || no_animate && sp == SPELL_ANIMATE_DEAD)
             {
                 spells.erase(it);
-                it = spells.begin();
+                it = spells.begin() - 1;
             }
         }
     }
