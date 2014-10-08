@@ -1847,16 +1847,42 @@ bool check_warning_inscriptions(const item_def& item,
         return check_old_item_warning(item, oper);
 }
 
-// This function prompts the user for an item, handles the '?' and '*'
-// listings, and returns the inventory slot to the caller (which if
-// must_exist is true (the default) will be an assigned item), with
-// a positive quantity.
-//
-// It returns PROMPT_ABORT       if the player hits escape.
-// It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
-// It returns PROMPT_NOTHING     if there are no matching items.
-//
-// Note: This function never checks if the item is appropriate.
+/**
+ * Prompts the user for an item.
+ *
+ * Prompts the user for an item, handling the '?' and '*' listings,
+ * and returns the inventory slot to the caller (which if
+ * must_exist is true (the default) will be an assigned item), with
+ * a positive quantity.
+ *
+ * Note: Does not check if the item is appropriate.
+ *
+ * @param prompt           The question to ask the user.
+ * @param mtype            The menu type.
+ * @param type_expect      The object_class_type or object_selector for
+ *                         items to be listed.
+ * @param must_exist       If true, only allows selecting items that exist.
+ * @param auto_list        If true, start in the '?' list InvMenu.
+ * @param allow_easy_quit  If true and the corresponding game option is enabled,
+ *                         menu can be quit with space in addition to escape.
+ * @param other_valid_char A character that, if not '\0', will cause
+ *                         PROMPT_GOT_SPECIAL to be returned when pressed.
+ * @param excluded_slot    An inventory slot that will be omitted from listings.
+ * @param count            [out] The quantity of the selected item to perform
+ *                         the operation on.
+ *                         Also disables numeric inscription shortcuts.
+ * @param oper             The operation_type that will be used on the result.
+ *                         Modifies some checks, including applicability of
+ *                         warning inscriptions.
+ * @param allow_list_known If true, '\' will switch to the known item list.
+ * @param do_warning       If true, warning inscriptions are checked and the
+ *                         user prompted, if necessary.
+ *
+ * @return  the inventory slot of an item or one of the following special values
+ *          - PROMPT_ABORT:       if the player hits escape.
+ *          - PROMPT_GOT_SPECIAL: if the player hits the "other_valid_char".
+ *          - PROMPT_NOTHING:     if there are no matching items.
+ */
 int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
                        bool must_exist, bool auto_list,
