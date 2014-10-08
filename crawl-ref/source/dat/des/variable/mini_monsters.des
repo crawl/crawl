@@ -5669,7 +5669,7 @@ KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
 KMONS:   8 = war gargoyle / iron dragon /  \
              dancing weapon ; great sword good_item | great mace good_item | \
                               glaive good_item | battleaxe good_item
-MONS:    7 = hell sentinel
+KMONS:   7 = hell sentinel
 SUBST:   xc = v, F~ = G
 COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
