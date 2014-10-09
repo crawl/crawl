@@ -1411,13 +1411,6 @@ void no_ability_msg()
         if (you.flight_mode())
             mpr("You're already flying!");
     }
-    else if (silenced(you.pos()) && !you_worship(GOD_NO_GOD))
-    {
-        // At the very least the player has "Renounce Religion", but
-        // cannot use it in silence.
-        mprf("You cannot call out to %s while silenced.",
-             god_name(you.religion).c_str());
-    }
     else
         mpr("Sorry, you're not good enough to have a special ability.");
 }
@@ -3716,8 +3709,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (!you_worship(GOD_NO_GOD)
-        && (include_unusable || !silenced(you.pos())))
+    if (!you_worship(GOD_NO_GOD))
     {
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
     }
