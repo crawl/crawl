@@ -1734,7 +1734,7 @@ static const mutation_def mut_data[] =
     "sustain abilities",
 
     {"Your attributes are resistant to harm.", "", ""},
-    {"You feel buggy for a sustained period.", "", ""},
+    {"", "", ""},
     {"", "", ""},
 
     "sustained abilities",
