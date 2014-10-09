@@ -1840,11 +1840,9 @@ static int _determine_ring_plus(int subtype)
 
     switch (subtype)
     {
-    case RING_SLAYING:
-        if (coinflip())
-            rc += random2(3);
     case RING_PROTECTION:
     case RING_STRENGTH:
+    case RING_SLAYING:
     case RING_EVASION:
     case RING_DEXTERITY:
     case RING_INTELLIGENCE:
@@ -1856,7 +1854,7 @@ static int _determine_ring_plus(int subtype)
                 rc -= random2(4);
         }
         else
-            rc += 1 + (one_chance_in(3) ? random2(3) : random2avg(6, 2));
+            rc = 1 + (one_chance_in(3) ? random2(3) : random2avg(6, 2));
         break;
 
     default:
