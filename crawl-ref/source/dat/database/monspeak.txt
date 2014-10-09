@@ -4000,40 +4000,26 @@ w:1
 ############ FREDERICK ### An extremely smug (& powerful) demigod
 Frederick
 
-w:50000
-@_Frederick_godbotherer_@
-
-@_Frederick_generic_@
-%%%%
-No God Frederick
-
-# might be nice to have some unique lines here for demigods & other atheists
-
-@_Frederick_generic_@
-%%%%
-_Frederick_generic_
-
 @_Frederick_common_@
 
 w:5
 @_Frederick_rare_@
 %%%%
-_Frederick_godbotherer_
+Beogh Frederick
 
+w:2
+@The_monster@ says, "You didn't bring enough reinforcements. Come back later!"
+
+w:30
+@Frederick@
+%%%%
+Okawaru Frederick
+
+w:2
 @The_monster@ says, "Pah! Those who rely on gods for strength get nowhere in life."
 
-@The_monster@ says, "Do you think your god will save you from me?" @player_only@
-
-@The_monster@ says, "Praying to your god? Ha! It won't help." @player_only@
-
-@The_monster@ says, "Of all the petty fools that call themselves 'gods', {{ return you.god() }} may be the most useless."
-
-# uppercase first char (for eg the Shining One)
-"{{ return (you.god():gsub("^%l", string.upper)) }}?" @The_monster@ laughs.
-
-# might be a little too aggressive
-w:5
-@The_monster@ says, "Why bend the knee? I'd rather toss the gods from their thrones, and accept THEIR worship instead!"
+w:30
+@Frederick@
 %%%%
 _Frederick_common_
 
