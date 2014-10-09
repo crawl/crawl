@@ -680,6 +680,7 @@ static void _describe_glow(status_info* inf)
                              : "really heavily ";
         inf->short_text += "contaminated";
         inf->long_text = describe_contamination(cont);
+        // XXX: make short & long text match more closely?
     }
 }
 
