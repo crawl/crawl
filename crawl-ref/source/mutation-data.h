@@ -1921,7 +1921,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_NO_SUMMONING_MAGIC,                0,  1, MUTFLAG_RU, false,
-  "cannot use summoning magic",
+  "no summoning magic",
 
   {"You cannot study or cast Summoning magic.", "", ""},
   {"You can no longer study or cast Summoning magic.", "", ""},
