@@ -3103,6 +3103,18 @@ static void tag_read_you_items(reader &th)
 
         if (item && is_unrandom_artefact(*item))
         {
+#if TAG_MAJOR_VERSION == 34
+            // save-compat: if the player was wearing the Ring of Vitality before
+            // it turned into an amulet, take it off safely
+            if (is_unrandom_artefact(*item, UNRAND_VITALITY) && i != EQ_AMULET)
+            {
+                you.equip[i] = -1;
+                you.melded.set(i, false);
+                // XXX: need to update ash bondage, or is this too early?
+                continue;
+            }
+#endif
+
             const unrandart_entry *entry = get_unrand_entry(item->special);
 
             if (entry->world_reacts_func)
