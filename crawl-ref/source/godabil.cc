@@ -36,6 +36,7 @@
 #include "goditem.h"
 #include "hiscores.h"
 #include "invent.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "losglobal.h"
@@ -5444,6 +5445,8 @@ bool ru_do_sacrifice(ability_type sacrifice)
     item_def* const shield = you.slot_item(EQ_SHIELD, true);
     item_def* const weapon = you.slot_item(EQ_WEAPON, true);
     item_def* const ring = you.slot_item(ring_slot, true);
+    int ring_inv_slot = you.equip[ring_slot];
+    bool open_ring_slot = false;
 
     int piety_gain;
     // by the time we apply this, we'll have either 1 or 3 (arcane).
@@ -5666,9 +5669,38 @@ bool ru_do_sacrifice(ability_type sacrifice)
             // And one ring
             if (ring != NULL)
             {
+                if (you.species == SP_OCTOPODE)
+                {
+                    for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
+                    {
+                        if (!you.slot_item(static_cast<equipment_type>(eq)
+                            , true))
+                        {
+                            open_ring_slot = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!you.slot_item(static_cast<equipment_type>(
+                        EQ_RIGHT_RING), true))
+                    {
+                        open_ring_slot = true;
+                    }
+                }
+
                 mprf("You can no longer wear %s!",
                     ring->name(DESC_YOUR).c_str());
                 unequip_item(ring_slot);
+                if (open_ring_slot)
+                {
+                    mprf("You put %s back on %s %s!",
+                    ring->name(DESC_YOUR).c_str(),
+                    (you.species == SP_OCTOPODE ? "another" : "your other"),
+                    you.hand_name(true).c_str());
+                    puton_ring(ring_inv_slot, false);
+                }
             }
 
             _ru_kill_skill(SK_SHIELDS);
