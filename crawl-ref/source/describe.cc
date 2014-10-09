@@ -1260,7 +1260,7 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_SEE_INVISIBLE:
             description += "It allows its wearer to see invisible things.";
             break;
-        case SPARM_DARKNESS:
+        case SPARM_INVISIBILITY:
             description += "When activated it hides its wearer from "
                 "the sight of others, but also increases "
                 "their metabolic rate by a large amount.";

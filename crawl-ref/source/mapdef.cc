@@ -4768,7 +4768,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "cold_resistance",
         "poison_resistance",
         "see_invisible",
-        "darkness",
+        "invisibility",
         "strength",
         "dexterity",
         "intelligence",

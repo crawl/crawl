@@ -1726,7 +1726,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
 
     case ARM_CLOAK:
         rc = random_choose(SPARM_POISON_RESISTANCE,
-                           SPARM_DARKNESS,
+                           SPARM_INVISIBILITY,
                            SPARM_MAGIC_RESISTANCE,
                            -1);
         break;
@@ -1845,7 +1845,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
 #endif
-    case SPARM_DARKNESS:
+    case SPARM_INVISIBILITY:
         return slot == EQ_CLOAK;
 
     case SPARM_REFLECTION:

@@ -833,7 +833,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             autotoggle_autopickup(false);
             break;
 
-        case SPARM_DARKNESS:
+        case SPARM_INVISIBILITY:
             if (!you.duration[DUR_INVIS])
                 mpr("You become transparent for a moment.");
             break;
@@ -969,7 +969,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         }
         break;
 
-    case SPARM_DARKNESS:
+    case SPARM_INVISIBILITY:
         if (you.duration[DUR_INVIS]
             && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
             && !you.evokable_invis())
