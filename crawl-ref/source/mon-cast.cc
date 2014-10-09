@@ -2974,7 +2974,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (one_chance_in(4))
             {
                 int foundcount = 0;
-                for (unsigned int i = hspell_pass.size() - 1; i >= 0; --i)
+                for (int i = hspell_pass.size() - 1; i >= 0; --i)
                 {
                     if (_ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
                         && one_chance_in(++foundcount))
