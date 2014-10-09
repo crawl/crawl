@@ -60,14 +60,12 @@ static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
 static const int EQF_WEAR = EQF_LEAR | SLOTF(EQ_CLOAK) | SLOTF(EQ_SHIELD);
 // everything but jewellery
 static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
-// octopodes somtimes have their extra rings blocked
-static const int EQF_OCTO = SLOTF(EQ_RING_THREE) | SLOTF(EQ_RING_FOUR)
-                            | SLOTF(EQ_RING_FIVE) | SLOTF(EQ_RING_SIX)
-                            | SLOTF(EQ_RING_SEVEN) | SLOTF(EQ_RING_EIGHT);
 // all rings (except for the macabre finger amulet's)
 static const int EQF_RINGS = SLOTF(EQ_LEFT_RING) | SLOTF(EQ_RIGHT_RING)
                              | SLOTF(EQ_RING_ONE) | SLOTF(EQ_RING_TWO)
-                             | EQF_OCTO;
+                             | SLOTF(EQ_RING_THREE) | SLOTF(EQ_RING_FOUR)
+                             | SLOTF(EQ_RING_FIVE) | SLOTF(EQ_RING_SIX)
+                             | SLOTF(EQ_RING_SEVEN) | SLOTF(EQ_RING_EIGHT);
 // amulet & pal
 static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 // everything
@@ -641,7 +639,7 @@ public:
     FormIce()
     : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
            "a creature of crystalline ice.",  // description
-           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           EQF_PHYSICAL,  // blocked slots
            MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3), // resists
            FormDuration(30, PS_DOUBLE, 100), // duration
            0, 0,    // str mod, dex mod
@@ -687,7 +685,7 @@ public:
     FormDragon()
     : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
            "a fearsome dragon!",  // description
-           EQF_PHYSICAL | EQF_OCTO,  // blocked slots
+           EQF_PHYSICAL,  // blocked slots
            MR_RES_POISON, // resists - most handled in functions
            DEFAULT_DURATION, // duration
            10, 0,    // str mod, dex mod
@@ -987,7 +985,7 @@ public:
     FormTree()
     : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
            "a tree.",  // description
-           EQF_LEAR | SLOTF(EQ_CLOAK) | EQF_OCTO,  // blocked slots
+           EQF_LEAR | SLOTF(EQ_CLOAK),  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
@@ -1095,7 +1093,7 @@ public:
     FormFungus()
     : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
            "a sentient fungus.",  // description
-           (EQF_PHYSICAL & ~SLOTF(EQ_HELMET)) | EQF_OCTO,  // blocked slots
+           EQF_PHYSICAL & ~SLOTF(EQ_HELMET),  // blocked slots
            MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
            BAD_DURATION, // duration
            0, 0,    // str mod, dex mod
