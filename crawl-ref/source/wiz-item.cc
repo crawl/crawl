@@ -1198,7 +1198,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "cold resistance",
             "poison resistance",
             "see invis",
-            "darkness",
+            "invisibility",
             "strength",
             "dexterity",
             "intelligence",

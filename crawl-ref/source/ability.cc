@@ -2432,7 +2432,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
+    case ABIL_EVOKE_TURN_INVISIBLE:     // ring, cloaks, randarts
         fail_check();
         potion_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
         contaminate_player(1000 + random2(2000), true);

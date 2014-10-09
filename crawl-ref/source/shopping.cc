@@ -1396,7 +1396,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_JUMPING:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
-            case SPARM_DARKNESS:
+            case SPARM_INVISIBILITY:
             case SPARM_MAGIC_RESISTANCE:
             case SPARM_PROTECTION:
                 valued += 50;
