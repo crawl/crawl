@@ -456,6 +456,14 @@ static void _handle_recitation(int step)
 static void _decrement_durations()
 {
     int delay = you.time_taken;
+    const char* hand_s = "s";
+    const char* verb_conj_s = "";
+
+    if (player_mutation_level(MUT_MISSING_HAND))
+    {
+        hand_s = "";
+        verb_conj_s = "s";
+    }
 
     if (you.gourmand())
     {
@@ -695,11 +703,12 @@ static void _decrement_durations()
         you.redraw_evasion      = true;
         you.redraw_armour_class = true;
     }
-    _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
+    _decrement_a_duration(DUR_FINESSE, delay, (string("Your hand") + hand_s
+            + " slow" + verb_conj_s + " down.").c_str());
 
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           ((string("Your ") + you.hand_name(true)) +
-                           " stop glowing.").c_str());
+                           " stop" + verb_conj_s + " glowing.").c_str());
 
     _decrement_a_duration(DUR_SURE_BLADE, delay,
                           "The bond with your blade fades away.");

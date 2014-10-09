@@ -304,7 +304,9 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 spret_type cast_confusing_touch(int power, bool fail)
 {
     fail_check();
-    msg::stream << "Your " << you.hand_name(true) << " begin to glow "
+    msg::stream << "Your " << you.hand_name(true) << " begin"
+                << (player_mutation_level(MUT_MISSING_HAND) ? "s" : "")
+                << " to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << endl;
 
