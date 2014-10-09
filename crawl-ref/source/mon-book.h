@@ -28,6 +28,8 @@ struct mon_spellbook
     mon_spell_slot spells[256]; // because it needs to be stored in a byte
 };
 
+#define END_OF_MONS_BOOK { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
+
 typedef vector<vector<spell_type> > unique_books;
 
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon);
