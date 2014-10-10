@@ -389,7 +389,7 @@ void ghost_demon::init_player_ghost()
     max_hp = ((get_real_hp(false) >= MAX_GHOST_HP)
              ? MAX_GHOST_HP
              : get_real_hp(false));
-    ev     = player_evasion();
+    ev     = player_evasion(EV_IGNORE_HELPLESS);
     ac     = you.armour_class();
 
     if (ev > MAX_GHOST_EVASION)
