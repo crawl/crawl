@@ -4,6 +4,8 @@
 #include "mon-util.h"
 #include "mon-message.h"
 
+#define SPECIAL_WEAPON_KEY "special_weapon_name"
+
 enum monster_info_flags
 {
     MB_STABBABLE,

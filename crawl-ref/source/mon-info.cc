@@ -701,6 +701,16 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         u.ghost.ac = quantise(ghost.ac, 5);
         u.ghost.damage = quantise(ghost.damage, 5);
+
+        // no sense printing messages for SPWPN_NORMAL, and we don't have
+        // enough info to mention vorpal weapons (nor are they very
+        // interesting)
+        if (ghost.brand != SPWPN_NORMAL && ghost.brand != SPWPN_VORPAL)
+        {
+            props[SPECIAL_WEAPON_KEY] =
+                make_stringf("a weapon of %s", brand_type_name(ghost.brand,
+                                                               false));
+        }
     }
 
     if (mons_is_ghost_demon(type))
