@@ -118,7 +118,6 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 static string _zd_mons_description_for_ability(const ability_def &abil);
 static monster_type _monster_for_ability(const ability_def& abil);
-static spret_type _jump_player(int jump_range, int exh_red, bool fail);
 
 /**
  * This all needs to be split into data/util/show files
@@ -244,7 +243,6 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_JUMP, "Jump Attack", 0, 0, 125, 0, 0, ABFLAG_EXHAUSTION},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
@@ -275,7 +273,6 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_EVOKE_JUMP, "Evoke Jump Attack", 2, 0, 125, 0, 0, ABFLAG_EXHAUSTION},
     { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_FOG, "Evoke Fog", 2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TELEPORT_CONTROL, "Evoke Teleport Control", 4, 0, 200, 0, 0, ABFLAG_NONE},
@@ -1068,10 +1065,6 @@ talent get_talent(ability_type ability, bool check_confused)
             failure -= 20;
         break;
 
-    case ABIL_JUMP:
-        failure = 25 - you.experience_level;
-        break;
-
     case ABIL_FLY:
         failure = 42 - (3 * you.experience_level);
         break;
@@ -1125,9 +1118,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_BLINK:
         failure = 40 - you.skill(SK_EVOCATIONS, 2);
-        break;
-    case ABIL_EVOKE_JUMP:
-        failure = 30 - you.skill(SK_EVOCATIONS, 2);
         break;
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_FOG:
@@ -1814,13 +1804,6 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_JUMP || tal.which == ABIL_JUMP)
-        && !you.can_jump())
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
     if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT || tal.which == ABIL_FLY)
         && !flight_allowed())
     {
@@ -2148,10 +2131,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_JUMP:
-        return _jump_player(player_mutation_level(MUT_JUMP) + 2,
-                            you.experience_level, fail);
-
     case ABIL_RECHARGING:
         fail_check();
         if (recharge_wand() <= 0)
@@ -2453,8 +2432,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         else
             fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
         break;
-    case ABIL_EVOKE_JUMP:
-        return _jump_player(4, you.skill(SK_EVOCATIONS, 1), fail);
     case ABIL_EVOKE_FOG:     // cloak of the Thief
         fail_check();
         mpr("With a swish of your cloak, you release a cloud of fog.");
@@ -3626,9 +3603,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-    if (player_mutation_level(MUT_JUMP))
-        _add_talent(talents, ABIL_JUMP, check_confused);
-
     // Spit Poison. Nagas can upgrade to Breathe Poison.
     if (you.species == SP_NAGA)
     {
@@ -3781,9 +3755,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
     }
-
-    if (you.evokable_jump() && !player_mutation_level(MUT_NO_ARTIFICE))
-        _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
 
     if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
         && !player_mutation_level(MUT_NO_ARTIFICE)
@@ -4102,56 +4073,4 @@ int generic_cost::cost() const
 int scaling_cost::cost(int max) const
 {
     return (value < 0) ? (-value) : ((value * max + 500) / 1000);
-}
-
-/**
- * Attempt to let the player perform a jump attack.
- *
- * @param jump_range    The max range of the jump, as a radius.
- * @param exh_red       A factor that decreases jump exhaustion duration.
- * @param fail          Standard ability failure param, for fail_check().
- * @return              Whether the jump succeeded, failed, or was aborted.
- * May sometimes return 'failed' when it was actually aborted, thanks to
- * fight_jump(). TODO: refactor these methods together
- */
-spret_type _jump_player(int jump_range, int exh_red, bool fail)
-{
-    coord_def landing;
-    direction_chooser_args args;
-    targetter_jump tgt(&you, dist_range(jump_range));
-    dist jdirect;
-
-    args.restricts = DIR_JUMP;
-    args.mode = TARG_HOSTILE;
-    args.just_looking = false;
-    args.needs_path = true;
-    args.may_target_monster = true;
-    args.may_target_self = false;
-    args.target_prefix = NULL;
-    args.top_prompt = "Aiming: <white>Jump Attack</white>";
-    args.behaviour = NULL;
-    args.cancel_at_self = true;
-    args.hitfunc = &tgt;
-    args.range = jump_range;
-    direction(jdirect, args);
-    if (!jdirect.isValid)
-    {
-        // Check for user cancel.
-        canned_msg(MSG_OK);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    if (!fight_jump(&you, actor_at(jdirect.target), jdirect.target,
-                   tgt.landing_site, tgt.additional_sites,
-                   tgt.jump_is_blocked))
-    {
-        you.turn_is_over = false;
-        return SPRET_ABORT;
-    }
-
-    you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
-                                         + random2(30 - exh_red));
-    return SPRET_SUCCESS;
 }

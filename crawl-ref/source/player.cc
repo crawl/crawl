@@ -188,10 +188,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
     if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        string msg = (move_verb == "jump-attack"
-                      ? "Do you really want to %s when you might land in "
-                      "the Zot trap?"
-                      : "Do you really want to %s into the Zot trap?");
+        string msg = "Do you really want to %s into the Zot trap?";
         string prompt = make_stringf(msg.c_str(), move_verb.c_str());
 
         if (prompted)
@@ -208,24 +205,12 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        if (move_verb == "jump-attack")
-        {
-            prompt = make_stringf("Really jump when you might land on that %s?",
-                                  feature_description_at(p, false,
-                                                         DESC_BASENAME,
-                                                         false).c_str());
-        }
-        else
-        {
-            prompt = make_stringf("Really %s %s that %s?",
-                                  move_verb.c_str(),
-                                  (trap->type == TRAP_ALARM
-                                   || trap->type == TRAP_PLATE) ? "onto"
-                                  : "into",
-                                  feature_description_at(p, false,
-                                                         DESC_BASENAME,
-                                                         false).c_str());
-        }
+        prompt = make_stringf("Really %s %s that %s?", move_verb.c_str(),
+                              (trap->type == TRAP_ALARM
+                               || trap->type == TRAP_PLATE) ? "onto"
+                              : "into",
+                              feature_description_at(p, false, DESC_BASENAME,
+                                                     false).c_str());
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3326,10 +3311,8 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
 
                 if (you.experience_level == 6 || you.experience_level == 12)
-                {
                     perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
-                    perma_mutate(MUT_JUMP, 1, "growing up");
-                }
+
                 _felid_extra_life();
                 break;
 

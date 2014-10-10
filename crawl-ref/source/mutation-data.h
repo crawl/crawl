@@ -457,7 +457,7 @@ static const mutation_def mut_data[] =
 
    "fiery breath",
 },
-
+#if TAG_MAJOR_VERSION == 34
 { MUT_JUMP,                 0,  3, MUTFLAG_GOOD, false,
   "jump",
 
@@ -475,7 +475,7 @@ static const mutation_def mut_data[] =
 
    "jumping",
 },
-
+#endif
 { MUT_BLINK,                          3,  3, MUTFLAG_GOOD, false,
   "blink",
 

@@ -867,10 +867,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             }
             break;
 
-        case SPARM_JUMPING:
-            mpr("You feel more sure on your feet.");
-            break;
-
         case SPARM_MAGIC_RESISTANCE:
             mpr("You feel resistant to hostile enchantments.");
             break;
@@ -1011,11 +1007,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
         land_player(); // land_player() has a check for airborne()
 
-        break;
-
-    case SPARM_JUMPING:
-        if (!you.evokable_jump())
-            mpr("You feel less sure on your feet.");
         break;
 
     case SPARM_MAGIC_RESISTANCE:

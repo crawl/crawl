@@ -1216,7 +1216,9 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
+#if TAG_MAJOR_VERSION == 34
             "jumping",
+#endif
         };
 
         const int non_art = acq_calls - num_arts;

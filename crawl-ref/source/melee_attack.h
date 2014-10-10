@@ -53,15 +53,12 @@ public:
     bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool jumping_attack;
-    bool jump_blocked;
     coord_def attack_position;
 
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false, bool is_jump_attack = false,
-                 bool is_jump_blocked = false,
+                 bool is_cleaving = false,
                  coord_def attack_pos = coord_def(0, 0));
 
     // Applies attack damage and other effects.

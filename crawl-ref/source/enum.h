@@ -75,8 +75,6 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    // Felids
-    ABIL_JUMP,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -95,8 +93,7 @@ enum ability_type
 #endif
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
-    ABIL_EVOKE_JUMP,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_JUMP,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
 
     // Divine abilities
     // Zin
@@ -3456,9 +3453,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_CLING,
     MUT_FUMES,
-#endif
     MUT_JUMP,
-#if TAG_MAJOR_VERSION == 34
     MUT_EXOSKELETON,
 #endif
     MUT_ANTIMAGIC_BITE,
@@ -4282,7 +4277,7 @@ enum targeting_type
     DIR_DIR,            // needs a clear line to target
     DIR_TARGET_OBJECT,  // targets items
     DIR_MOVABLE_OBJECT, // skips corpses
-    DIR_JUMP,           // a jump target
+    DIR_SHADOW_STEP,    // a shadow step target
     DIR_LEAP,           // power leap -- short-range cblink
 };
 

@@ -1393,7 +1393,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_SEE_INVISIBLE:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
-            case SPARM_JUMPING:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
             case SPARM_INVISIBILITY:

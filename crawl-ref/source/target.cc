@@ -880,19 +880,19 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_jump::targetter_jump(const actor* act, int r2, bool cp,
+targetter_shadow_step::targetter_shadow_step(const actor* act, int r2, bool cp,
                                bool imm) :
     range2(r2), clear_path(cp), immobile(imm)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
-    jump_is_blocked = false;
+    step_is_blocked = false;
 }
 
-bool targetter_jump::valid_aim(coord_def a)
+bool targetter_shadow_step::valid_aim(coord_def a)
 {
-    coord_def c, jump_pos;
+    coord_def c, shadow_step_pos;
     ray_def ray;
 
     if (origin == a)
@@ -914,10 +914,6 @@ bool targetter_jump::valid_aim(coord_def a)
     {
         switch (no_landing_reason)
         {
-        case BLOCKED_FLYING:
-            return notify_fail("A flying creature is in the way.");
-        case BLOCKED_GIANT:
-            return notify_fail("A giant creature is in the way.");
         case BLOCKED_MOVE:
         case BLOCKED_OCCUPIED:
             return notify_fail("There is no safe place near that"
@@ -935,7 +931,7 @@ bool targetter_jump::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_jump::valid_landing(coord_def a, bool check_invis)
+bool targetter_shadow_step::valid_landing(coord_def a, bool check_invis)
 {
     actor *act;
     ray_def ray;
@@ -983,29 +979,12 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
             }
             break;
         }
-        const dungeon_feature_type grid = grd(ray.pos());
-        if (clear_path && act && (!check_invis || agent->can_see(act)))
-        {
-            // Can't jump over airborn enemies nor giant enemies not in deep
-            // water or lava.
-            if (act->airborne())
-            {
-                blocked_landing_reason = BLOCKED_FLYING;
-                return false;
-            }
-            else if (act->body_size() == SIZE_GIANT
-                     && grid != DNGN_DEEP_WATER && grid != DNGN_LAVA)
-            {
-                blocked_landing_reason = BLOCKED_GIANT;
-                return false;
-            }
-        }
         ray.advance();
     }
     return true;
 }
 
-aff_type targetter_jump::is_affected(coord_def loc)
+aff_type targetter_shadow_step::is_affected(coord_def loc)
 {
     aff_type aff = AFF_NO;
 
@@ -1016,10 +995,10 @@ aff_type targetter_jump::is_affected(coord_def loc)
     return aff;
 }
 
-// If something unseen either occupies the aim position or blocks the jump path,
-// indicate that with jump_is_blocked, but still return true so long there is at
+// If something unseen either occupies the aim position or blocks the shadow_step path,
+// indicate that with step_is_blocked, but still return true so long there is at
 // least one valid landing position from the player's perspective.
-bool targetter_jump::set_aim(coord_def a)
+bool targetter_shadow_step::set_aim(coord_def a)
 {
     set<coord_def>::const_iterator site;
 
@@ -1028,7 +1007,7 @@ bool targetter_jump::set_aim(coord_def a)
     if (!targetter::set_aim(a))
         return false;
 
-    jump_is_blocked = false;
+    step_is_blocked = false;
 
     // Find our set of landing sites, choose one at random to be the destination
     // and see if it's actually blocked.
@@ -1040,14 +1019,14 @@ bool targetter_jump::set_aim(coord_def a)
             site_ind--;
         landing_site = *site;
         if (!valid_landing(landing_site, false))
-            jump_is_blocked = true;
+            step_is_blocked = true;
         return true;
     }
     return false;
 }
 
 // Determine the set of valid landing sites
-void targetter_jump::set_additional_sites(coord_def a)
+void targetter_shadow_step::set_additional_sites(coord_def a)
 {
      get_additional_sites(a);
      additional_sites = temp_sites;
@@ -1057,34 +1036,30 @@ void targetter_jump::set_additional_sites(coord_def a)
 // in the private set variable temp_sites.  This uses valid_aim(), so it looks
 // for uninhabited squares that are habitable by the player, but doesn't check
 // against e.g. harmful clouds
-void targetter_jump::get_additional_sites(coord_def a)
+void targetter_shadow_step::get_additional_sites(coord_def a)
 {
     bool agent_adjacent = a.distance_from(agent->pos()) == 1;
     temp_sites.clear();
 
-    if (immobile)
+    const actor *victim = actor_at(a);
+    if (!victim || victim->invisible() || !victim->umbraed())
     {
-        const actor *victim = actor_at(a);
-        if (!victim || victim->invisible() || !victim->umbraed())
-        {
-            no_landing_reason = BLOCKED_NO_TARGET;
-            return;
-        }
-        if (!victim->is_stationary()
-            && !victim->cannot_move()
-            && !victim->asleep())
-        {
-            no_landing_reason = BLOCKED_MOBILE;
-            return;
-        }
+        no_landing_reason = BLOCKED_NO_TARGET;
+        return;
+    }
+    if (!victim->is_stationary()
+        && !victim->cannot_move()
+        && !victim->asleep())
+    {
+        no_landing_reason = BLOCKED_MOBILE;
+        return;
     }
 
     no_landing_reason = BLOCKED_NONE;
     for (adjacent_iterator ai(a, false); ai; ++ai)
     {
         // See if site is valid, record a putative reason for why no sites were
-        // found.  A flying or giant monster blocking the landing site gets
-        // priority as an reason, since it's very jump-specific.
+        // found.
         if (!agent_adjacent || agent->pos().distance_from(*ai) > 1)
         {
             if (valid_landing(*ai))
@@ -1092,17 +1067,14 @@ void targetter_jump::get_additional_sites(coord_def a)
                 temp_sites.insert(*ai);
                 no_landing_reason = BLOCKED_NONE;
             }
-            else if (no_landing_reason != BLOCKED_FLYING
-                     && no_landing_reason != BLOCKED_GIANT)
-            {
+            else
                 no_landing_reason = blocked_landing_reason;
-            }
         }
     }
 }
 
 // See if we can find at least one valid landing position for the given monster.
-bool targetter_jump::has_additional_sites(coord_def a)
+bool targetter_shadow_step::has_additional_sites(coord_def a)
 {
     get_additional_sites(a);
     return temp_sites.size();

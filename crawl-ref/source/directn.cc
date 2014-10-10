@@ -117,8 +117,9 @@ static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
-static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_path,
-                                   int range, targetter *hitfunc);
+static bool _find_shadow_step_mons(const coord_def& where, int mode,
+                                   bool need_path, int range,
+                                   targetter *hitfunc);
 
 #ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int mode, bool need_path,
@@ -395,7 +396,7 @@ void direction_chooser::print_key_hints() const
             prompt += hint_string;
             break;
         case DIR_TARGET:
-        case DIR_JUMP:
+        case DIR_SHADOW_STEP:
         case DIR_LEAP:
             prompt += ", Dir - move target cursor";
             prompt += hint_string;
@@ -1091,8 +1092,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
     if (!success)
     {
-        if (restricts == DIR_JUMP)
-            find_targ = _find_jump_attack_mons;
+        if (restricts == DIR_SHADOW_STEP)
+            find_targ = _find_shadow_step_mons;
         else
             find_targ = _find_monster;
 
@@ -1182,8 +1183,8 @@ const coord_def& direction_chooser::target() const
 
 void direction_chooser::set_target(const coord_def& new_target)
 {
-    if (restricts == DIR_JUMP)
-        valid_jump = hitfunc->has_additional_sites(new_target);
+    if (restricts == DIR_SHADOW_STEP)
+        valid_shadow_step = hitfunc->has_additional_sites(new_target);
     moves.target = new_target;
 }
 
@@ -1231,7 +1232,7 @@ void direction_chooser::draw_beam_if_needed()
                     bcol = (*ri == target()) ? RED : MAGENTA;
                 else if (aff == AFF_YES)
                     bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
-                // Jump attack landing sites
+                // shadow step landing sites
                 else
                     bcol = (*ri == target()) ? LIGHTGREEN : GREEN;
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
@@ -1353,11 +1354,13 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 {
     const monster* mons = monster_at(target());
 
-    if (restricts == DIR_JUMP && !valid_jump)
+    if (restricts == DIR_SHADOW_STEP && !valid_shadow_step)
         return false;
 
-    if ((restricts == DIR_LEAP || restricts == DIR_JUMP || !allow_out_of_range)
-            && !in_range(target()))
+    if ((restricts == DIR_LEAP 
+         || restricts == DIR_SHADOW_STEP 
+         || !allow_out_of_range)
+        && !in_range(target()))
     {
         mprf(MSGCH_EXAMINE_FILTER, "%s",
              hitfunc? hitfunc->why_not.c_str() : "That is beyond the maximum range.");
@@ -1630,7 +1633,7 @@ void direction_chooser::reinitialize_move_flags()
 // Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
-    if (restricts != DIR_TARGET && restricts != DIR_JUMP)
+    if (restricts != DIR_TARGET && restricts != DIR_SHADOW_STEP)
     {
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
@@ -2506,14 +2509,15 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     return _want_target_monster(mon, mode);
 }
 
-static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_path,
-                                   int range, targetter *hitfunc)
+static bool _find_shadow_step_mons(const coord_def& where, int mode,
+                                   bool need_path, int range,
+                                   targetter *hitfunc)
 {
 #ifdef CLUA_BINDINGS
     {
         coord_def dp = grid2player(where);
         // We could pass more info here.
-        maybe_bool x = clua.callmbooleanfn("ch_target_jump", "dd",
+        maybe_bool x = clua.callmbooleanfn("ch_target_shadow_step", "dd",
                                            dp.x, dp.y);
         if (x != MB_MAYBE)
             return _tobool(x);
@@ -2523,7 +2527,7 @@ static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_p
     // Need a monster to attack; this checks that the monster is a valid target.
     if (!_find_monster(where, mode, need_path, range, hitfunc))
         return false;
-    // Can't jump on yourself
+    // Can't step on yourself
     if (where == you.pos())
         return false;
 
