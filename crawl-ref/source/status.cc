@@ -660,28 +660,34 @@ static void _describe_hunger(status_info* inf)
 
 static void _describe_glow(status_info* inf)
 {
-    const int cont = get_contamination_level();
-    if (cont > 0)
-    {
-        inf->light_colour = DARKGREY;
-        if (cont > 1)
-            inf->light_colour = _bad_ench_colour(cont, 3, 4);
-#if TAG_MAJOR_VERSION == 34
-        if (cont > 1 || you.species != SP_DJINNI)
-#endif
-        inf->light_text = "Contam";
+    const int signed_cont = get_contamination_level();
+    if (signed_cont <= 0)
+        return;
 
-        inf->short_text =
-                 (cont == 1) ? "very slightly " :
-                 (cont == 2) ? "slightly " :
-                 (cont == 3) ? "" :
-                 (cont == 4) ? "moderately " :
-                 (cont == 5) ? "heavily "
-                             : "really heavily ";
-        inf->short_text += "contaminated";
-        inf->long_text = describe_contamination(cont);
-        // XXX: make short & long text match more closely?
-    }
+    const unsigned int cont = signed_cont; // so we don't get compiler warnings
+    inf->light_colour = DARKGREY;
+    if (cont > 1)
+        inf->light_colour = _bad_ench_colour(cont, 3, 4);
+#if TAG_MAJOR_VERSION == 34
+    if (cont > 1 || you.species != SP_DJINNI)
+#endif
+    inf->light_text = "Contam";
+
+    /// Mappings from contamination levels to descriptions.
+    static const string contam_adjectives[] =
+    {
+        "",
+        "very slightly ",
+        "",
+        "heavily ",
+        "very heavily ",
+        "very very heavily ", // this is silly but no one will ever see it
+        "impossibly ",        // (likewise)
+    };
+    ASSERT_RANGE(cont, 0, ARRAYSZ(contam_adjectives));
+
+    inf->short_text = contam_adjectives[cont] + "contaminated";
+    inf->long_text = describe_contamination(cont);
 }
 
 static void _describe_regen(status_info* inf)
