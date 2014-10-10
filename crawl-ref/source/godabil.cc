@@ -5826,7 +5826,7 @@ void ru_do_retribution(monster* mons, int damage)
     }
     else if (power > 35)
     {
-        simple_monster_message(mons, " is paralyzed in retribution by your aura!",
+        simple_monster_message(mons, " is paralysed in retribution by your aura!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
@@ -6067,7 +6067,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
             } // if not a spellcaster, fall through to paralysis.
 
         case 1:
-            simple_monster_message(mons, " is paralyzed by your wave of power!");
+            simple_monster_message(mons, " is paralysed by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
             dmg += roll_dice(die_size, 4);
             break;
