@@ -5898,7 +5898,7 @@ bool ru_power_leap()
 
     if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat power leaps.");
+        crawl_state.cant_cmd_repeat("You can't repeat power leap.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
         return false;
@@ -5918,7 +5918,7 @@ bool ru_power_leap()
         if (crawl_state.seen_hups)
         {
             clear_messages();
-            mpr("Cancelling jump due to HUP.");
+            mpr("Cancelling leap due to HUP.");
             return false;
         }
 
@@ -5980,7 +5980,7 @@ bool ru_power_leap()
         else
         {
             clear_messages();
-            mpr("You can only jump to visible locations.");
+            mpr("You can only leap to visible locations.");
         }
     }
 
