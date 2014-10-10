@@ -1985,37 +1985,6 @@ spret_type cast_discharge(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _disperse_monster(monster* mon, int pow)
-{
-    if (!mon)
-        return 0;
-
-    if (mon->no_tele())
-        return 0;
-
-    if (mon->check_res_magic(pow) > 0)
-    {
-        monster_blink(mon);
-        return 1;
-    }
-    else
-    {
-        monster_teleport(mon, true);
-        return 1;
-    }
-
-    return 0;
-}
-
-spret_type cast_dispersal(int pow, bool fail)
-{
-    fail_check();
-    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
-        mpr("The air shimmers briefly around you.");
-
-    return SPRET_SUCCESS;
-}
-
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,

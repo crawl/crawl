@@ -29,4 +29,6 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel,
                                       bool fail = false);
 spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 
+spret_type cast_dispersal(int pow, bool fail = false);
+
 #endif
