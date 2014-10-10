@@ -267,7 +267,7 @@ static const char* _prop_name[] =
 #if TAG_MAJOR_VERSION > 34
     "+Fog",
 #endif
-    "+Blnk",
+    "+Blink",
     "+Rage",
     "Noisy",
     "-Cast",
@@ -275,9 +275,9 @@ static const char* _prop_name[] =
     "-Tele",
     "*Rage",
 #if TAG_MAJOR_VERSION == 34
-    "Hungr",
+    "Hunger",
 #endif
-    "Contm",
+    "Contam",
     "Acc",
     "Dam",
     "Curse",
@@ -294,7 +294,7 @@ static const char* _prop_name[] =
 #endif
     "Regen",
     "SustAb",
-    "noupg",
+    "noupgr",
     "rCorr",
     "rMut",
 };
@@ -382,7 +382,7 @@ static void _tweak_randart(item_def &item)
             continue;
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            prompt += "\n";
+            *(prompt.rend()) = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -397,7 +397,7 @@ static void _tweak_randart(item_def &item)
         else
             choice = '-'; // Too many choices!
 
-        snprintf(buf, sizeof(buf), "%s) %s%-5s%s ",
+        snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
                 choice == '<' ? "<<" : string(1, choice).c_str(),
                  props[i] ? "<w>" : "",
                  _prop_name[i],
