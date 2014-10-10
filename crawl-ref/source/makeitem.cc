@@ -1754,13 +1754,12 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
     {
-        const int tmp = random2(800) + 400 * (item.sub_type != ARM_BOOTS);
+        const int tmp = random2(600) + 400 * (item.sub_type != ARM_BOOTS);
 
         rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_JUMPING :
-             (tmp < 600) ? SPARM_FLYING :
-             (tmp < 800) ? SPARM_STEALTH :
-             (tmp < 1000) ? SPARM_COLD_RESISTANCE
+             (tmp < 400) ? SPARM_FLYING :
+             (tmp < 600) ? SPARM_STEALTH :
+             (tmp < 800) ? SPARM_COLD_RESISTANCE
                           : SPARM_FIRE_RESISTANCE;
         break;
     }
@@ -1831,7 +1830,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         // deliberate fall-through
     case SPARM_RUNNING:
     case SPARM_STEALTH:
+#if TAG_MAJOR_VERSION == 34
     case SPARM_JUMPING:
+#endif
         return slot == EQ_BOOTS;
 
     case SPARM_ARCHMAGI:

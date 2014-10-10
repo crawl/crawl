@@ -82,14 +82,6 @@ Begynd at flyve. Mens du flyver kan du trygt krydse vand og lignende
 forhindringer. Men vær dog opmærksom på, at evnen til at flyve kan udløbe på
 uheldige tidspunkter og lade dig styrte i døden.
 %%%%
-Jump Attack ability
-
-Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
-målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
-fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
-denne evne, hvis du står eller svømmer i vand, lava eller flydende jord. Katte
-er naturlige springere og bliver endnu bedre, når de når niveau 6 og 12.
-%%%%
 Hellfire ability
 
 Hærger dine fjender med helvedesild.
@@ -146,13 +138,6 @@ være usynlig og kan i sidste ende forårsage gløden.
 Turn Visible ability
 
 Bliv synlig igen.
-%%%%
-Evoke Jump Attack ability
-
-Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
-målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
-fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
-denne evne, hvis du står eller svømmer i vand, lava eller flydende jord.
 %%%%
 Stop Flying ability
 

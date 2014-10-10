@@ -313,7 +313,6 @@ public:
     void attacking(actor *other, bool ranged);
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
-    bool can_jump() const;
     bool go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;

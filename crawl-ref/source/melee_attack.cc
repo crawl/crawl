@@ -101,27 +101,22 @@
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num,
-                           bool is_cleaving, bool is_jump_attack,
-                           bool is_jump_blocked, coord_def attack_pos)
+                           bool is_cleaving, coord_def attack_pos)
     :  // Call attack's constructor
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), jumping_attack(is_jump_attack),
-    jump_blocked(is_jump_blocked)
+    cleaving(is_cleaving)
 {
     attack_occurred = false;
     init_attack(SK_UNARMED_COMBAT, attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 
-    can_cleave = !jumping_attack && attacker != defender
-                 && actor_can_cleave(*attacker, wpn_skill);
+    can_cleave = attacker != defender
+        && actor_can_cleave(*attacker, wpn_skill);
 
-    if (jumping_attack)
-        attack_position = attack_pos;
-    else
-        attack_position = attacker->pos();
+    attack_position = attacker->pos();
 }
 
 bool melee_attack::can_reach()
@@ -135,7 +130,7 @@ bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
     if (defender && (!adjacent(attack_position, defender->pos())
-                     && !jumping_attack && !can_reach())
+                     && !can_reach())
         || attk_type == AT_CONSTRICT
            && (!attacker->can_constrict(defender)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
@@ -147,9 +142,7 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player() && defender && defender->is_monster())
     {
-        // These checks are handled in fight_jump() for jump attacks
-        if (!jumping_attack && weapon
-            && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
         {
             const char* verb = "attack";
             string junk1, junk2;
@@ -179,10 +172,8 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        // Jump attack did this check in jump_fight()
-        else if (!jumping_attack
-                 && stop_attack_prompt(defender->as_monster(), false,
-                                       attack_position))
+        else if (stop_attack_prompt(defender->as_monster(), false,
+                                    attack_position))
         {
             cancel_attack = true;
             return false;
@@ -191,28 +182,6 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player())
     {
-        // Handle jump_attack movement.  If the player is jump-attacking a
-        // square with no visible target, defender may be empty, but
-        // path-blocking events are handled first.
-        if (jumping_attack)
-        {
-            if (defender && you.can_see(defender))
-                mprf("You jump-attack %s!", defender->name(DESC_THE).c_str());
-            else
-                mpr("You jump-attack!");
-            if (jump_blocked)
-            {
-                mpr("Something unseen blocks your movement!");
-                return false;
-            }
-            else if (!defender)
-            {
-                mpr("There is nothing there, so you fail to move!");
-                return false;
-            }
-            move_player_to_grid(attack_position, false);
-        }
-
         // Set delay now that we know the attack won't be cancelled.
         you.time_taken = you.attack_delay(weapon);
         if (weapon)
@@ -235,20 +204,6 @@ bool melee_attack::handle_phase_attempted()
     }
     else
     {
-        if (jumping_attack)
-        {
-            ASSERT(defender);
-            mprf("%s jump-attacks %s!", attacker->name(DESC_THE).c_str(),
-                 defender->name(DESC_THE).c_str());
-            if (jump_blocked)
-            {
-                mprf("%s is blocked by something %s can't see!",
-                     attacker->name(DESC_THE).c_str(),
-                     attacker->pronoun(PRONOUN_SUBJECTIVE).c_str());
-                return false;
-            }
-        }
-
         // Only the first attack costs any energy.
         if (!effective_attack_number)
         {
@@ -280,7 +235,7 @@ bool melee_attack::handle_phase_attempted()
     attacker->make_hungry(3, true);
 
     // Xom thinks fumbles are funny...
-    if (!jumping_attack && attacker->fumbles_attack())
+    if (attacker->fumbles_attack())
     {
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
@@ -2714,13 +2669,6 @@ int melee_attack::calc_to_hit(bool random)
 
 void melee_attack::player_stab_check()
 {
-    if (jumping_attack)
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
-        return;
-    }
-
     attack::player_stab_check();
 }
 

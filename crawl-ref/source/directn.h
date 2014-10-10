@@ -258,8 +258,10 @@ private:
     bool show_beam;             // Does the user want the beam displayed?
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
-    bool valid_jump;            // If jumping, do we currently have a monster
-                                // target with a valid landing position?
+
+    bool valid_shadow_step;     // If shadow-stepping, do we currently have a
+                                // monster target with a valid landing
+                                // position?
 
     // What we need to redraw.
     bool need_beam_redraw;

@@ -930,58 +930,6 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     return true;
 }
 
-bool player::can_jump(bool quiet) const
-{
-    if (duration[DUR_EXHAUSTED])
-    {
-        if (!quiet)
-            mpr("You're too exhausted to jump.");
-        return false;
-    }
-    if (in_water())
-    {
-        if (!quiet)
-            mpr("You can't jump while in water.");
-        return false;
-    }
-    if (in_lava())
-    {
-        if (!quiet)
-            mpr("You can't jump while standing in lava.");
-        return false;
-    }
-    if (liquefied_ground())
-    {
-        if (!quiet)
-            mpr("You can't jump while stuck in this mess.");
-        return false;
-    }
-    if (is_constricted())
-    {
-        if (!quiet)
-            mpr("You can't jump while being constricted.");
-        return false;
-    }
-    if (caught())
-    {
-        if (!quiet)
-            mprf("You can't jump while %s.", held_status());
-        return false;
-    }
-    if (form == TRAN_TREE || form == TRAN_WISP)
-    {
-        if (!quiet)
-            canned_msg(MSG_PRESENT_FORM);
-        return false;
-    }
-    return true;
-}
-
-bool player::can_jump() const
-{
-    return can_jump(false);
-}
-
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];

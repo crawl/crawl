@@ -573,8 +573,6 @@ public:
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false) const;
-    bool can_jump() const;
-    bool can_jump(bool quiet) const;
     bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool has_lifeforce() const;

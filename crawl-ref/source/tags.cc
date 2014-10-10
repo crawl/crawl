@@ -2604,11 +2604,6 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
             you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         }
-        if (you.species == SP_FELID && you.innate_mutation[MUT_JUMP] == 0)
-        {
-            you.mutation[MUT_JUMP] = you.innate_mutation[MUT_JUMP]
-                                   = min(1 + you.experience_level / 6, 3);
-        }
         if (you.species == SP_FORMICID)
         {
             you.mutation[MUT_ANTENNAE] = you.innate_mutation[MUT_ANTENNAE] = 3;
@@ -2713,6 +2708,13 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_SLOW_METABOLISM] =
         you.innate_mutation[MUT_SLOW_METABOLISM];
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_NO_JUMP
+        && you.species == SP_FELID && you.innate_mutation[MUT_JUMP] != 0)
+    {
+        you.mutation[MUT_JUMP] = 0;
+    }
+
 #endif
 
     count = unmarshallUByte(th);
