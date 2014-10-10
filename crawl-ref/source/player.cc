@@ -4692,9 +4692,10 @@ string describe_contamination(int cont)
         "Your entire body has taken on an eerie glow!",
         "You are engulfed in a nimbus of crackling magics!",
     };
-    // XXX: make these map closer to those in status.cc:_describe_glow?
 
-    ASSERT_RANGE(cont, 0, ARRAYSZ(contam_descriptions));
+    ASSERT(cont >= 0);
+    const unsigned int ucont = cont;
+    ASSERT(ucont < ARRAYSZ(contam_descriptions));
     return contam_descriptions[cont];
 }
 
