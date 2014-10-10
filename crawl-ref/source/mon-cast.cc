@@ -2777,7 +2777,7 @@ static void _cast_black_mark(monster* agent)
             continue;
         }
         monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_BLACK_MARK))
+        if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
             simple_monster_message(mon, " begins absorbing vital energies!");
