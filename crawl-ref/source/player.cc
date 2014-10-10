@@ -405,25 +405,38 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 if (!stepped)
                     noisy(4, you.pos(), "Gloop!");
 
-                mprf("You %s lava.",
-                     (stepped) ? "slowly immerse yourself in the" : "fall into the");
-
-                // Extra time if you stepped in.
-                if (stepped)
-                    you.time_taken *= 2;
 #if TAG_MAJOR_VERSION == 34
-                // This gets called here because otherwise you wouldn't heat
-                // until your second turn in lava.
-                if (temperature() < TEMP_FIRE)
-                    mpr("The lava instantly superheats you.");
-                you.temperature = TEMP_MAX;
+                mprf("You %s%s lava.",
+                     (you.species == SP_LAVA_ORC && stepped) ? "slowly " : "",
+                     (stepped) ? "immerse yourself in the" : "fall into the");
+                if (you.species == SP_LAVA_ORC)
+                {
+                    // Extra time if you stepped in.
+                    if (stepped)
+                        you.time_taken *= 2;
+
+                    // This gets called here because otherwise you wouldn't heat
+                    // until your second turn in lava.
+                    if (temperature() < TEMP_FIRE)
+                        mpr("The lava instantly superheats you.");
+                    you.temperature = TEMP_MAX;
+                }
+#else
+                mprf("You %s the lava.",
+                     (stepped) ? "immerse yourself in" : "fall into");
 #endif
             }
 
             else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
             {
-                mpr("You slowly pull yourself out of the lava.");
-                you.time_taken *= 2;
+#if TAG_MAJOR_VERSION == 34
+                mprf("You %spull yourself out of the lava.",
+                     you.species == SP_LAVA_ORC ? "slowly " : "");
+                if (you.species == SP_LAVA_ORC)
+                    you.time_taken *= 2;
+#else
+                mpr("You pull yourself out of the lava.");
+#endif
             }
         }
 
@@ -731,8 +744,12 @@ bool you_can_wear(int eq, bool special_armour)
 
     case EQ_BOOTS:
         // Bardings.
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        if (you.species == SP_NAGA
+            || you.species == SP_SALAMANDER
+            || you.species == SP_CENTAUR)
+        {
             return special_armour;
+        }
         if (player_mutation_level(MUT_HOOVES, false) == 3
             || player_mutation_level(MUT_TALONS, false) == 3)
         {
@@ -828,6 +845,7 @@ bool player_has_feet(bool temp)
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI
 #endif
+        || you.species == SP_SALAMANDER
         || you.fishtail && temp)
     {
         return false;
@@ -860,7 +878,10 @@ bool you_tran_can_wear(const item_def &item)
                                                            : EQ_RINGS);
     case OBJ_ARMOUR:
         if (item.sub_type == ARM_NAGA_BARDING)
-            return you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS);
+        {
+            return (you.species == SP_NAGA || you.species == SP_SALAMANDER)
+                   && you_tran_can_wear(EQ_BOOTS);
+        }
         else if (item.sub_type == ARM_CENTAUR_BARDING)
             return you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS);
 
@@ -3357,6 +3378,24 @@ void level_change(bool skip_attribute_increase)
                     perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
+            case SP_SALAMANDER:
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+
+                if (you.experience_level == 7 || you.experience_level == 14)
+                {
+                    perma_mutate(MUT_HEAT_RESISTANCE, 1, "salamander growth");
+                    perma_mutate(MUT_SLOW, 1, "salamander growth");
+                }
+
+                if (you.experience_level == 14)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You can now swim through lava.");
+                }
+
+                break;
+
             default:
                 break;
             }
@@ -3537,6 +3576,7 @@ static int _species_stealth_mod()
             return 9;
 
         case SP_MINOTAUR:
+        case SP_SALAMANDER: // slithery, but fiery
             return 12;
 
         case SP_VAMPIRE:
@@ -6787,6 +6827,7 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_NAGA:
     case SP_MUMMY:
     case SP_VINE_STALKER:
+    case SP_SALAMANDER:
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:

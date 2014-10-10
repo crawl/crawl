@@ -142,6 +142,7 @@ bool player::extra_balanced() const
               || form == TRAN_TREE
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
+                      || species == SP_SALAMANDER // ditto
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
                   && (form == TRAN_LICH || form == TRAN_STATUE
                       || form == TRAN_SHADOW
@@ -587,7 +588,7 @@ static string _foot_name_singular(bool *can_plural)
         return "tentacles";
     }
 
-    if (you.species == SP_NAGA)
+    if (you.species == SP_NAGA || you.species == SP_SALAMANDER)
     {
         *can_plural = false;
         return "underbelly";

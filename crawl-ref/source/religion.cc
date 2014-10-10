@@ -3276,15 +3276,17 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_SIF_MUNA && !you.spell_no)
         return false;
 
-#if TAG_MAJOR_VERSION == 34
     // Dithmenos hates fiery species.
     if (which_god == GOD_DITHMENOS
-        && (you.species == SP_DJINNI
-            || you.species == SP_LAVA_ORC))
+        && (you.species == SP_SALAMANDER
+#if TAG_MAJOR_VERSION == 34
+            || you.species == SP_DJINNI
+            || you.species == SP_LAVA_ORC
+#endif
+            ))
     {
         return false;
     }
-#endif
 
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;

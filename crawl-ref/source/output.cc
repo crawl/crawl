@@ -1823,7 +1823,9 @@ const char *equip_slot_to_name(int equip)
     }
 
     if (equip == EQ_BOOTS
-        && (you.species == SP_CENTAUR || you.species == SP_NAGA))
+        && (you.species == SP_CENTAUR
+            || you.species == SP_NAGA
+            || you.species == SP_SALAMANDER))
     {
         return "Barding";
     }
@@ -1989,7 +1991,9 @@ static void _print_overview_screen_equip(column_composer& cols,
                      plural ? "s" : "");
         }
         else if (e_order[i] == EQ_BOOTS
-                 && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+                 && (you.species == SP_NAGA
+                     || you.species == SP_SALAMANDER
+                     || you.species == SP_CENTAUR))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
@@ -2750,6 +2754,12 @@ static string _status_mut_abilities(int sw)
         break;
 
 #endif
+    case SP_SALAMANDER:
+        mutations.push_back("fiery attack");
+        if (you.experience_level >= 14)
+            mutations.push_back("swim through lava");
+        break;
+
     default:
         break;
     }                           //end switch - innate abilities

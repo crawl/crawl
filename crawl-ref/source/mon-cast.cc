@@ -3657,7 +3657,9 @@ static void _mons_summon_elemental(monster* mons,
 // Returns true if a message referring to the player's legs makes sense.
 static bool _legs_msg_applicable()
 {
-    return you.species != SP_NAGA && !you.fishtail;
+    return you.species != SP_NAGA
+           && you.species != SP_SALAMANDER
+           && !you.fishtail;
 }
 
 void mons_cast_haunt(monster* mons)

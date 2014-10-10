@@ -1490,13 +1490,14 @@ bool form_likes_lava(transformation_type form)
 #if TAG_MAJOR_VERSION == 34
     // Lava orcs can only swim in non-phys-change forms.
     // However, ice beast & statue form will melt back to lava, so they're OK
-    return you.species == SP_LAVA_ORC
-           && (!form_changed_physiology(form)
-               || form == TRAN_ICE_BEAST
-               || form == TRAN_STATUE);
-#else
-    return false;
+    if (you.species == SP_LAVA_ORC)
+    {
+       return !form_changed_physiology(form)
+              || form == TRAN_ICE_BEAST
+              || form == TRAN_STATUE;
+    }
 #endif
+    return you.species == SP_SALAMANDER && !form_changed_physiology(form);
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -2446,7 +2447,9 @@ void untransform(bool skip_move)
     // Removed barding check, no transformed creatures can wear barding
     // anyway.
     // *coughs* Ahem, blade hands... -- jpeg
-    if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+    if (you.species == SP_NAGA
+        || you.species == SP_SALAMANDER
+        || you.species == SP_CENTAUR)
     {
         const int arm = you.equip[EQ_BOOTS];
 

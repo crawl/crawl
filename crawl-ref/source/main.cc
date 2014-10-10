@@ -3283,7 +3283,8 @@ static void _move_player(coord_def move)
 
     const string walkverb = you.flight_mode()           ? "fly"
                           : you.form == TRAN_SPIDER     ? "crawl"
-                          : (you.species == SP_NAGA
+                          : ((you.species == SP_NAGA
+                              || you.species == SP_SALAMANDER)
                              && form_keeps_mutations()) ? "slither"
                                                         : "walk";
 

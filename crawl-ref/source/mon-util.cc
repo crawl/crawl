@@ -4406,6 +4406,7 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     switch (ghost.species)
     {
     case SP_NAGA:
+    case SP_SALAMANDER:
         return MON_SHAPE_NAGA;
 
     case SP_CENTAUR:

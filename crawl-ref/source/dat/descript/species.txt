@@ -105,6 +105,12 @@ Ogre
 Large and strong, they're mostly seen as brutes. Ogres are very comfortable
 with the basics of magic, however.
 %%%%
+Salamander
+
+Half-human, half-snake, and all ablaze, these creatures have a legendary
+affinitiy for fire and combat. As they mature they grow ever more resistant to
+fire as their speed of movement slows.
+%%%%
 Spriggan
 
 Very small, very frail and very fast. Spriggans make highly competent stabbers

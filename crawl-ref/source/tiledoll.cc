@@ -286,7 +286,9 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
-        case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
+        case SP_NAGA:
+        case SP_SALAMANDER:
+                         ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
         default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
@@ -300,7 +302,9 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
-        case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
+        case SP_NAGA:
+        case SP_SALAMANDER:
+                         ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
         default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
@@ -539,7 +543,9 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
 
     // Special case bardings from being cut off.
     const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_NAGA);
+                                        TILEP_BASE_NAGA)
+                         || is_player_tile(doll.parts[TILEP_PART_BASE],
+                                           TILEP_BASE_SALAMANDER);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED

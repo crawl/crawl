@@ -639,6 +639,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FORMICID;
     case SP_VINE_STALKER:
         return TILEP_BASE_VINE_STALKER;
+    case SP_SALAMANDER:
+        return TILEP_BASE_SALAMANDER;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -779,6 +781,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = TILEP_HAIR_DJINN2;
             break;
 #endif
+        case SP_SALAMANDER:
+            hair = 0;
+            break;
         default:
             // nothing to do
             break;
@@ -1034,7 +1039,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
+    if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_SALAMANDER))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;

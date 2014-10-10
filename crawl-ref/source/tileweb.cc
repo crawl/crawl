@@ -954,7 +954,9 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 
     // Special case bardings from being cut off.
     const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_NAGA);
+                                        TILEP_BASE_NAGA)
+                         || is_player_tile(doll.parts[TILEP_PART_BASE],
+                                           TILEP_BASE_SALAMANDER);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)

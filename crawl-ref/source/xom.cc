@@ -2543,8 +2543,13 @@ static void _xom_zero_miscast()
         messages.push_back("Your eyebrows wriggle.");
     }
 
-    if (you.species != SP_NAGA && !you.fishtail && !you.airborne())
+    if (you.species != SP_NAGA
+        && you.species != SP_SALAMANDER
+        && !you.fishtail
+        && !you.airborne())
+    {
         messages.push_back("You do an impromptu tapdance.");
+    }
 
     ///////////////////////////
     // Equipment related stuff.
@@ -2674,7 +2679,8 @@ static void _get_hand_type(string &hand, bool &can_plural)
     hand_vec.push_back(you.hand_name(false, &plural));
     plural_vec.push_back(plural);
 
-    if (you.species != SP_NAGA || form_changed_physiology())
+    if (you.species != SP_NAGA && you.species != SP_SALAMANDER
+        || form_changed_physiology())
     {
         item_def* item;
         if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)

@@ -575,6 +575,13 @@ string describe_mutations(bool center_title)
         break;
     }
 
+    case SP_SALAMANDER:
+        result += "You cannot wear boots.\n";
+        if (you.experience_level >= 14)
+            result += "You can swim through lava.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }
@@ -1199,8 +1206,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (_is_covering(mutat) && _body_covered() >= 3)
         return true;
 
-    // Only Nagas and Draconians can get this one.
-    if (you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN)
+    // Only Nagas, Salamanders, and Draconians can get this one.
+    if (you.species != SP_NAGA
+        && you.species != SP_SALAMANDER
+        && !player_genus(GENPC_DRACONIAN)
         && mutat == MUT_STINGER)
     {
         return true;

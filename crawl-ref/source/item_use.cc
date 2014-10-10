@@ -473,7 +473,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
     {
-        if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
+        if ((you.species == SP_NAGA || you.species == SP_SALAMANDER)
+             && sub_type == ARM_NAGA_BARDING
             || you.species == SP_CENTAUR && sub_type == ARM_CENTAUR_BARDING)
         {
             if (ignore_temporary || !player_is_shapechanged())
@@ -625,6 +626,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         if (you.species == SP_NAGA
+            || you.species == SP_SALAMANDER
 #if TAG_MAJOR_VERSION == 34
             || you.species == SP_DJINNI
 #endif

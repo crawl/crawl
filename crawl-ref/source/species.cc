@@ -3,6 +3,7 @@
 #include "species.h"
 
 #include "libutil.h"
+#include "player.h"
 #include "random.h"
 
 // March 2008: change order of species and jobs on character selection
@@ -20,10 +21,11 @@ static species_type species_order[] =
     // large species
     SP_OGRE,           SP_TROLL,
     // significantly different body type from human ("monstrous")
-    SP_NAGA,           SP_CENTAUR,
-    SP_MERFOLK,        SP_MINOTAUR,
-    SP_TENGU,          SP_BASE_DRACONIAN,
-    SP_GARGOYLE,       SP_FORMICID,
+    SP_NAGA,           SP_SALAMANDER,
+    SP_CENTAUR,        SP_MERFOLK,
+    SP_MINOTAUR,       SP_TENGU,
+    SP_BASE_DRACONIAN, SP_GARGOYLE,
+    SP_FORMICID,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
@@ -63,7 +65,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
 #if TAG_MAJOR_VERSION == 34
       "Dj", "LO",
 #endif
-      "Gr", "Fo", "VS",
+      "Gr", "Fo", "VS", "Sa",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD",
 #if TAG_MAJOR_VERSION > 34
@@ -193,17 +195,18 @@ string species_name(species_type speci, bool genus, bool adj)
     default:
         switch (speci)
         {
-        case SP_HUMAN:    res = "Human";    break;
-        case SP_HALFLING: res = "Halfling"; break;
-        case SP_KOBOLD:   res = "Kobold";   break;
-        case SP_MUMMY:    res = "Mummy";    break;
-        case SP_NAGA:     res = "Naga";     break;
-        case SP_CENTAUR:  res = "Centaur";  break;
-        case SP_SPRIGGAN: res = "Spriggan"; break;
-        case SP_MINOTAUR: res = "Minotaur"; break;
-        case SP_TENGU:    res = "Tengu";    break;
-        case SP_GARGOYLE: res = "Gargoyle"; break;
-        case SP_FORMICID: res = "Formicid"; break;
+        case SP_HUMAN:      res = "Human";      break;
+        case SP_HALFLING:   res = "Halfling";   break;
+        case SP_KOBOLD:     res = "Kobold";     break;
+        case SP_MUMMY:      res = "Mummy";      break;
+        case SP_NAGA:       res = "Naga";       break;
+        case SP_CENTAUR:    res = "Centaur";    break;
+        case SP_SPRIGGAN:   res = "Spriggan";   break;
+        case SP_MINOTAUR:   res = "Minotaur";   break;
+        case SP_TENGU:      res = "Tengu";      break;
+        case SP_GARGOYLE:   res = "Gargoyle";   break;
+        case SP_FORMICID:   res = "Formicid";   break;
+        case SP_SALAMANDER: res = "Salamander"; break;
 
         case SP_VINE_STALKER:
             res = (adj ? "Vine" : genus ? "Vine" : "Vine Stalker");
@@ -244,6 +247,7 @@ string species_walking_verb(species_type sp)
     switch (sp)
     {
     case SP_NAGA:
+    case SP_SALAMANDER:
         return "Slid";
     case SP_TENGU:
         return "Glid";
@@ -322,11 +326,11 @@ bool species_likes_water(species_type species)
 
 bool species_likes_lava(species_type species)
 {
+    return species == SP_SALAMANDER && you.experience_level >= 14
 #if TAG_MAJOR_VERSION == 34
-    return species == SP_LAVA_ORC;
-#else
-    return false;
+           || species == SP_LAVA_ORC
 #endif
+           ;
 }
 
 bool species_can_throw_large_rocks(species_type species)
@@ -475,6 +479,8 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_FORMICID;
     case SP_VINE_STALKER:
         return MONS_VINE_STALKER;
+    case SP_SALAMANDER:
+        return MONS_SALAMANDER;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
@@ -584,11 +590,12 @@ int species_exp_modifier(species_type species)
     case SP_VAMPIRE:
     case SP_TROLL:
     case SP_DEMONSPAWN:
+    case SP_SALAMANDER:
 #if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:
     case SP_LAVA_ORC:
-        return -1;
 #endif
+        return -1;
     case SP_DEMIGOD:
         return -2;
     default:
@@ -638,6 +645,7 @@ int species_hp_modifier(species_type species)
     case SP_LAVA_ORC:
 #endif
     case SP_MINOTAUR:
+    case SP_SALAMANDER:
         return 1;
     case SP_DEEP_DWARF:
     case SP_NAGA:
@@ -666,6 +674,7 @@ int species_mp_modifier(species_type species)
     case SP_TENGU:
     case SP_VINE_STALKER:
     case SP_FORMICID:
+    case SP_SALAMANDER:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:

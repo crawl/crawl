@@ -98,6 +98,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
         break;
 
     case SP_NAGA:
+    case SP_SALAMANDER:
         if (arm == ARM_BOOTS || arm == ARM_CENTAUR_BARDING)
             result = ARM_NAGA_BARDING;
         if (arm == ARM_SHIELD && x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
@@ -203,10 +204,13 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
             result = NUM_ARMOURS; break;
         }
 
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        if (you.species == SP_NAGA
+            || you.species == SP_SALAMANDER
+            || you.species == SP_CENTAUR)
         {
-            armour_type bard = (you.species == SP_NAGA) ? ARM_NAGA_BARDING
-                                                        : ARM_CENTAUR_BARDING;
+            armour_type bard =
+                (you.species == SP_CENTAUR) ? ARM_CENTAUR_BARDING
+                                            : ARM_NAGA_BARDING;
             if (one_chance_in(you.seen_armour[bard] ? 4 : 2))
                 result = bard;
         }

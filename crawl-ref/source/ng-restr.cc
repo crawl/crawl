@@ -205,6 +205,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_TENGU:
         case SP_BASE_DRACONIAN:
         case SP_DEMIGOD:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -279,6 +280,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_TENGU:
         case SP_DEMIGOD:
         case SP_GARGOYLE:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -837,6 +839,21 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+    case SP_SALAMANDER:
+        switch (job)
+        {
+            case JOB_GLADIATOR:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_SKALD:
+            case JOB_CONJURER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     default:
         return CC_BANNED;
     }
@@ -886,6 +903,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_FORMICID:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
 
         default:
@@ -926,6 +944,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
 
         default:
@@ -953,6 +972,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
 
         case SP_SPRIGGAN:
@@ -1014,6 +1034,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_FORMICID:
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
+        case SP_SALAMANDER:
             return CC_UNRESTRICTED;
 
         default:
@@ -1034,6 +1055,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 #endif
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_SALAMANDER:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
@@ -1076,6 +1098,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 #endif
         case SP_TROLL:
         case SP_GARGOYLE:
+        case SP_SALAMANDER:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;

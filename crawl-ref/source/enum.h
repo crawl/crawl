@@ -3855,7 +3855,8 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
+    SP_SALAMANDER,
+    LAST_VALID_SPECIES = SP_SALAMANDER,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

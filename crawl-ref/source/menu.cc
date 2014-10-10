@@ -1120,8 +1120,10 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     // Special case bardings from being cut off.
-    bool is_naga = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    bool is_naga = equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+                   || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1
+                   || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_SALAMANDER
+                   || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_SALAMANDER + 1;
     if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
     {
@@ -3066,8 +3068,11 @@ void SaveMenuItem::_pack_doll()
     }
 
     // Special case bardings from being cut off.
-    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    bool is_naga = m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+                   || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1
+                   || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_SALAMANDER
+                   || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_SALAMANDER + 1;
+
     if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
     {
