@@ -3484,7 +3484,7 @@ void bolt::affect_player_enchantment(bool resistible)
                 else if (margin >= 15)
                     mpr("You easily resist.");
                 else if (margin >= 0)
-                    mpr("You resist.");
+                    mpr("You resist with some effort.");
                 else if (margin >= -14)
                     mpr("You resist with significant effort.");
                 else if (margin >= -30)
