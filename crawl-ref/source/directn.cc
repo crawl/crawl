@@ -1357,8 +1357,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     if (restricts == DIR_SHADOW_STEP && !valid_shadow_step)
         return false;
 
-    if ((restricts == DIR_LEAP 
-         || restricts == DIR_SHADOW_STEP 
+    if ((restricts == DIR_LEAP
+         || restricts == DIR_SHADOW_STEP
          || !allow_out_of_range)
         && !in_range(target()))
     {
@@ -3204,6 +3204,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
                          ISFLAG_KNOW_CURSE);
         name2.clear();
     }
+
+    if (mi.props.exists(SPECIAL_WEAPON_KEY))
+        name1 = mi.props[SPECIAL_WEAPON_KEY].get_string();
 
     if (name1.empty())
         return desc;
