@@ -1938,18 +1938,14 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
     transformation_type trans;
 
     if (power_level >= 2)
-        trans = coinflip() ? TRAN_DRAGON : TRAN_LICH;
+        trans = random_choose(TRAN_DRAGON, TRAN_LICH, -1);
     else if (power_level == 1)
-        trans = coinflip() ? TRAN_STATUE : TRAN_BLADE_HANDS;
+        trans = random_choose(TRAN_STATUE, TRAN_HYDRA, TRAN_BLADE_HANDS, -1);
     else
-    {
-        trans = one_chance_in(3) ? TRAN_SPIDER :
-                coinflip()       ? TRAN_ICE_BEAST
-                                 : TRAN_BAT;
-    }
+        trans = random_choose(TRAN_SPIDER, TRAN_ICE_BEAST, TRAN_BAT, -1);
 
-    // Might fail, e.g. because of cursed equipment or potential death by
-    // stat loss. Aren't we being nice? (jpeg)
+    // Might fail, e.g. because of Zin's protection (!), transforming into a
+    // non-flier above lava/deep water, being undead, etc
     if (!transform(random2(power/4), trans, true))
         canned_msg(MSG_NOTHING_HAPPENS);
 }
