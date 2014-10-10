@@ -203,8 +203,7 @@ enum shadow_step_block_reason
 class targetter_shadow_step : public targetter
 {
 public:
-    targetter_shadow_step(const actor* act, int r2, bool clear_path = true,
-                          bool immobile = false);
+    targetter_shadow_step(const actor* act, int r2);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
@@ -221,8 +220,6 @@ private:
     shadow_step_block_reason blocked_landing_reason;
     set<coord_def> temp_sites;
     int range2;
-    bool clear_path;
-    bool immobile;
 };
 
 class targetter_explosive_bolt : public targetter_beam

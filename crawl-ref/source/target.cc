@@ -880,9 +880,8 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_shadow_step::targetter_shadow_step(const actor* act, int r2, bool cp,
-                               bool imm) :
-    range2(r2), clear_path(cp), immobile(imm)
+targetter_shadow_step::targetter_shadow_step(const actor* act, int r2) :
+    range2(r2)
 {
     ASSERT(act);
     agent = act;
