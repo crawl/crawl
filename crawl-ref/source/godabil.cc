@@ -503,6 +503,7 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
+ * @param quiet[in]     Whether to suppress messenging.
  * @return  -1 if the monster is already affected. The eligibility vector
  *          is unchanged.
  * @return  0 if the monster is otherwise ineligible for recite. The
@@ -511,7 +512,8 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *          indicates which types of recitation it is vulnerable to.
  */
 static int _zin_check_recite_to_single_monster(const monster *mon,
-                                               recite_counts &eligibility)
+                                               recite_counts &eligibility,
+                                               bool quiet = false)
 {
     ASSERT(mon);
 
@@ -550,10 +552,13 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     eligibility[RECITE_HERETIC] = _heretic_recite_weakness(mon);
 
 #ifdef DEBUG_DIAGNOSTICS
-    string elig;
-    for (int i = 0; i < NUM_RECITE_TYPES; i++)
-        elig += '0' + eligibility[i];
-    dprf("Eligibility: %s", elig.c_str());
+    if (!quiet)
+    {
+        string elig;
+        for (int i = 0; i < NUM_RECITE_TYPES; i++)
+            elig += '0' + eligibility[i];
+        dprf("Eligibility: %s", elig.c_str());
+    }
 #endif
 
     // Checking to see whether they were eligible for anything at all.
@@ -619,7 +624,7 @@ int zin_check_recite_to_monsters(bool quiet)
             continue;
 
         recite_counts retval;
-        switch (_zin_check_recite_to_single_monster(mon, retval))
+        switch (_zin_check_recite_to_single_monster(mon, retval, quiet))
         {
         case -1:
             found_ineligible = true;
