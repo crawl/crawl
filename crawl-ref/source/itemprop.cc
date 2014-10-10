@@ -113,9 +113,9 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,  600,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -25, 1100,
+    { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -23, 1100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -25, 1100,
+    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -23, 1100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   40,
