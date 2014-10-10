@@ -1797,7 +1797,7 @@ const char* resist_margin_phrase(int margin)
 {
     return margin >= 30  ? " resists with almost no effort." :
            margin >= 15  ? " easily resists." :
-           margin >= 0   ? " resists." :
+           margin >= 0   ? " resists with some effort." :
            margin >= -14 ? " resists with significant effort.":
            margin >= -30 ? " struggles to resist."
                          : " barely resists.";
