@@ -397,10 +397,11 @@ static void _tweak_randart(item_def &item)
         else
             choice = '-'; // Too many choices!
 
-        if (props[i])
-            snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
-        else
-            snprintf(buf, sizeof(buf), "%c) %-5s ", choice, _prop_name[i]);
+        snprintf(buf, sizeof(buf), "%s) %s%-5s%s ",
+                choice == '<' ? "<<" : string(1, choice).c_str(),
+                 props[i] ? "<w>" : "",
+                 _prop_name[i],
+                 props[i] ? "</w>" : "");
 
         prompt += buf;
 
