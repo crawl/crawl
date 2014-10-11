@@ -2337,6 +2337,18 @@ static void tag_read_you(reader &th)
                 a = ABIL_STOP_FLYING;
             found_stop_flying = true;
         }
+
+        if (th.getMinorVersion() < TAG_MINOR_NO_JUMP)
+        {
+            // ABIL_JUMP deleted (ABIL_DIG has its old spot), map it
+            // away and shift following intrinsic abilities down.
+            // ABIL_EVOKE_JUMP was also deleted, but was the last
+            // evocable ability, so just map it away.
+            if (a == ABIL_DIG || a == ABIL_EVOKE_TELEPORT_CONTROL + 1)
+                a = ABIL_NON_ABILITY;
+            else if (a > ABIL_DIG && a < ABIL_MIN_EVOKE)
+                a -= 1;
+        }
 #endif
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
