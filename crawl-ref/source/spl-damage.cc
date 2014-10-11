@@ -202,7 +202,6 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail)
 {
     fail_check();
-    bool do_more = caster->is_player() || you.can_see(caster);
     bolt beam;
 
     // initialise beam structure
@@ -318,8 +317,6 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
 
         const bool see_source = you.see_cell(source);
         const bool see_targ   = you.see_cell(target);
-        if (see_source || see_targ)
-            do_more = true;
 
         if (target.x == -1)
         {
@@ -389,8 +386,6 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         beam.fire();
     }
 
-    if (do_more)
-        more();
     return SPRET_SUCCESS;
 }
 
