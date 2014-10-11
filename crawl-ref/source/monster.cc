@@ -3472,7 +3472,7 @@ int monster::armour_class(bool calc_unid) const
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
-        ac -= get_ench(ENCH_WRETCHED).degree;
+        ac -= 4 * get_ench(ENCH_WRETCHED).degree;
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
@@ -4567,14 +4567,6 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
     if (alive())
     {
-        if (attacker_effects && amount != INSTANT_DEATH
-            && agent && agent->is_monster()
-            && agent->as_monster()->has_ench(ENCH_WRETCHED))
-        {
-            int degree = agent->as_monster()->get_ench(ENCH_WRETCHED).degree;
-            amount = div_rand_round(amount * (10 - min(degree, 5)), 10);
-        }
-
         if (amount != INSTANT_DEATH
             && mons_species(true) == MONS_DEEP_DWARF)
         {
@@ -5219,9 +5211,6 @@ void monster::calc_speed()
         break;
     }
 
-    if (has_ench(ENCH_WRETCHED) && speed > 3)
-        speed--;
-
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
@@ -5438,7 +5427,7 @@ bool monster::malmutate(const string &reason)
     }
 
     simple_monster_message(this, " twists and deforms.");
-    add_ench(mon_enchant(ENCH_WRETCHED, 1, nullptr, INFINITE_DURATION));
+    add_ench(mon_enchant(ENCH_WRETCHED, 1));
     return true;
 }
 

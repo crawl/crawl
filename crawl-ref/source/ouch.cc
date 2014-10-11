@@ -851,8 +851,7 @@ static bool _is_damage_threatening (int damage_fraction_of_hp)
 
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux, bool see_source, const char *death_source_name,
-          bool attacker_effects)
+          const char *aux, bool see_source, const char *death_source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -862,18 +861,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         return;
 
     int drain_amount = 0;
-
-    if (attacker_effects && dam != INSTANT_DEATH
-        && !invalid_monster_index(death_source)
-        && menv[death_source].has_ench(ENCH_WRETCHED))
-    {
-        // An abstract boring simulation of reduced stats/etc due to bad muts
-        // reducing the monster's melee damage, spell power, etc.  This is
-        // wrong eg. for clouds that would be smaller and with a shorter
-        // duration but do the same damage, etc.
-        int degree = menv[death_source].get_ench(ENCH_WRETCHED).degree;
-        dam = div_rand_round(dam * (10 - min(degree, 5)), 10);
-    }
 
     if ((you.duration[DUR_FORTITUDE] || you.species == SP_DEEP_DWARF)
          && dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
