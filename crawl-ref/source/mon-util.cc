@@ -583,9 +583,8 @@ mon_holy_type mons_class_holiness(monster_type mc)
 bool mons_class_is_confusable(monster_type mc)
 {
     ASSERT_smc();
-    return smc->resist_magic < MAG_IMMUNE
-           && mons_class_holiness(mc) != MH_NONLIVING
-           && mons_class_holiness(mc) != MH_PLANT;
+    return mons_class_holiness(mc) != MH_NONLIVING
+        && mons_class_holiness(mc) != MH_PLANT;
 }
 
 bool mons_class_is_stationary(monster_type mc)
