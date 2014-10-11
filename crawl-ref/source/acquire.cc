@@ -455,11 +455,14 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
-    // based on empirical data where pure-shield MDs get skills like 17 sh 25 m&f
-    // and pure-shield Spriggans 7 sh 18 m&f.
-    int shield_sk = you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
-    int want_shield = min(2 * shield_sk, best_sk) + 10;
-    int dont_shield = max(best_sk - shield_sk, 0) + 10;
+    // based on empirical data where pure-shield MDs get skills like 17 sh
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.  Pretend formicid
+    // shield skill is 0 so they always weight towards 2H.
+    const int shield_sk = you.species == SP_FORMICID
+        ? 0
+        : you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
+    const int want_shield = min(2 * shield_sk, best_sk) + 10;
+    const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
     // opposite handedness 1/2, assuming your shields usage is respectively
     // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
