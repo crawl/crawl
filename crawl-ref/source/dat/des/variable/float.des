@@ -3333,13 +3333,12 @@ ENDMAP
 ##############################################################################
 # Sometimes You Just Gotta Run
 NAME:    erik_ogre
-DEPTH:   D:6-10
+DEPTH:   D:4-9
 ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST:   X=x, Y:x.
-MONS:    ogre, rust devil, nothing
-ITEM:    potion of heal wounds / potion of haste / potion of berserk rage /\
-         scroll of blinking
+MONS:    ogre, goliath beetle, nothing
+ITEM:    potion of heal wounds / potion of haste / potion of berserk rage
 MAP
         xx@xx
         x...x
