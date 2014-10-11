@@ -87,8 +87,18 @@ static coord_def mmov;
 int monster::get_hit_dice() const
 {
     const int base_hd = get_experience_level();
+
     const mon_enchant drain_ench = get_ench(ENCH_DRAINED);
-    return max(base_hd - drain_ench.degree, 1);
+    const int drained_hd = base_hd - drain_ench.degree;
+
+    // temp malmuts
+    const mon_enchant wretched_ench = get_ench(ENCH_WRETCHED);
+    // cap at 5 stacks for hd purposes
+    const int wretchedness = min(wretched_ench.degree, 5);
+    // -10% hd per wretched level (cap at -50%)
+    const int wretched_hd = drained_hd * (10 - wretchedness) / 10;
+
+    return max(wretched_hd, 1);
 }
 
 /**
