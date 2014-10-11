@@ -503,6 +503,9 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
 
+    if (player_mutation_level(MUT_METHODICAL_MAGIC) > 0)
+        enhanced++;
+
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
@@ -753,6 +756,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
         return false;
+    }
+
+    if (player_mutation_level(MUT_METHODICAL_MAGIC) > 0)
+    {
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
     }
 
     if (check_range && spell_no_hostile_in_range(spell))

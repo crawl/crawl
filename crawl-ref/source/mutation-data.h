@@ -2014,4 +2014,14 @@ static const mutation_def mut_data[] =
     "disrupted casting (-Wiz)",
 },
 
+{ MUT_METHODICAL_MAGIC,                4,  1, MUTFLAG_BAD, false,
+  "methodical spellcasting",
+
+  {"Your spells take 50% longer to cast, but are stronger.", "", ""},
+  {"You feel compelled to cast spells more carefully.", "", ""},
+  {"You no longer cast spells carefully.", "", ""},
+
+  "methodical spellcasting",
+},
+
 };
