@@ -1505,7 +1505,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_DAZED))
         v.push_back("dazed");
     if (is(MB_MUTE))
-        v.push_back("permanently mute");
+        v.push_back("mute");
     if (is(MB_BLIND))
         v.push_back("blind");
     if (is(MB_DUMB))
