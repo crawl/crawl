@@ -6524,15 +6524,23 @@ bool player::heal(int amount, bool max_too)
     return true; /* TODO Check whether the player was healed. */
 }
 
-mon_holy_type player::holiness() const
+/**
+ * What is the player's (current) mon_holy_type category?
+ * Nonliving (statues, etc), undead, or alive.
+ *
+ * @param temp      Whether to consider temporary effects: forms,
+ *                  petrification...
+ * @return          The player's holiness category.
+ */
+mon_holy_type player::holiness(bool temp) const
 {
-    if (species == SP_GARGOYLE || form == TRAN_STATUE || form == TRAN_WISP
-        || petrified())
+    if (species == SP_GARGOYLE ||
+        temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
         return MH_NONLIVING;
     }
 
-    if (undead_state())
+    if (undead_state(temp))
         return MH_UNDEAD;
 
     return MH_NATURAL;
