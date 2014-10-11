@@ -331,7 +331,7 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const;
 
-    mon_holy_type holiness() const;
+    mon_holy_type holiness(bool /*temp*/ = true) const;
     bool undead_or_demonic() const;
     bool holy_wrath_susceptible() const;
     bool is_holy(bool check_spells = true) const;
