@@ -2668,9 +2668,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             break;
         }
 
-        mprf(MSGCH_DURATION, you.duration[DUR_FINESSE]
-             ? "Your hands get new energy."
-             : "You can now deal lightning-fast blows.");
+        if (you.duration[DUR_FINESSE])
+        {
+            const bool plural = !player_mutation_level(MUT_MISSING_HAND);
+            mprf(MSGCH_DURATION, "Your %s get%s new energy.",
+                 you.hand_name(plural).c_str(), plural ? "" : "s");
+        }
+        else
+            mprf(MSGCH_DURATION, "You can now deal lightning-fast blows.");
 
         you.increase_duration(DUR_FINESSE,
             40 + random2(you.skill(SK_INVOCATIONS, 8)), 80);
@@ -3684,9 +3689,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
-    {
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
-    }
 
     if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);
