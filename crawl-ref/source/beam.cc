@@ -3914,7 +3914,6 @@ void bolt::affect_player()
         hurted += damage.roll();
 
 #ifdef DEBUG_DIAGNOSTICS
-    int roll = hurted;
     const int preac = hurted;
 #endif
 
@@ -3922,8 +3921,8 @@ void bolt::affect_player()
 
 #ifdef DEBUG_DIAGNOSTICS
     const int postac = hurted;
-    dprf(DIAG_BEAM, "Player damage: rolled=%d; before AC=%d; after AC=%d",
-                    roll, preac, postac);
+    dprf(DIAG_BEAM, "Player damage: before AC=%d; after AC=%d",
+                    preac, postac);
 #endif
 
     practise(EX_BEAM_WILL_HIT);
