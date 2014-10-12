@@ -34,6 +34,7 @@
 #include "delay.h"
 #include "dgn-shoals.h"
 #include "dgnevent.h"
+#include "english.h"
 #include "env.h"
 #include "feature.h"
 #include "fight.h"

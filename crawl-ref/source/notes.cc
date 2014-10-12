@@ -12,6 +12,7 @@
 #include "notes.h"
 
 #include "branch.h"
+#include "english.h"
 #include "files.h"
 #include "kills.h"
 #include "hiscores.h"

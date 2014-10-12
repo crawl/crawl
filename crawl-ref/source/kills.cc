@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "describe.h"
+#include "english.h"
 #include "mon-info.h"
 #include "files.h"
 #include "ghost.h"

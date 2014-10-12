@@ -3633,6 +3633,15 @@ enum pronoun_type
     NUM_PRONOUN_CASES
 };
 
+enum gender_type
+{
+    GENDER_NEUTER,
+    GENDER_MALE,
+    GENDER_FEMALE,
+    GENDER_YOU, // A person, not a gender, but close enough.
+    NUM_GENDERS
+};
+
 // Be sure to update _prop_name[] in wiz-item.cc to match.  Also
 // _randart_propnames(), but order doesn't matter there.
 enum artefact_prop_type

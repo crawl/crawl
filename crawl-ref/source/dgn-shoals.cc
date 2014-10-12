@@ -7,6 +7,7 @@
 #include "dungeon.h"
 #include "dgn-shoals.h"
 #include "dgn-height.h"
+#include "english.h"
 #include "env.h"
 #include "flood_find.h"
 #include "fprop.h"

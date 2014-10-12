@@ -10,6 +10,7 @@
 #include "chardump.h"
 #include "coord.h"
 #include "delay.h"
+#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "initfile.h"

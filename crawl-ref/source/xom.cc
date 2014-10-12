@@ -24,6 +24,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "feature.h"
 #include "goditem.h"

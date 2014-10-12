@@ -5,6 +5,7 @@
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "libutil.h"

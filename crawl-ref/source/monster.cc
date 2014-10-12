@@ -21,6 +21,7 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "fineff.h"

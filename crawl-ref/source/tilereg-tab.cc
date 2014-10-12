@@ -5,6 +5,7 @@
 #include "tilereg-tab.h"
 
 #include "cio.h"
+#include "english.h"
 #include "libutil.h"
 #include "macro.h"
 #include "state.h"

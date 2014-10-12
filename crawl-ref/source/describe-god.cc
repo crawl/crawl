@@ -14,6 +14,7 @@
 #include "cio.h"
 #include "database.h"
 #include "describe.h"
+#include "english.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "godprayer.h" // can_do_capstone_ability()

@@ -288,9 +288,6 @@ char mlist_index_to_letter(int index);
 
 void direction(dist &moves, const direction_chooser_args& args);
 
-string thing_do_grammar(description_level_type dtype, bool add_stop,
-                        bool force_article, string desc);
-
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);

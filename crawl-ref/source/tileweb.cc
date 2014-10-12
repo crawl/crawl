@@ -6,6 +6,7 @@
 #include "branch.h"
 #include "coord.h"
 #include "directn.h"
+#include "english.h"
 #include "env.h"
 #include "files.h"
 #include "itemname.h"

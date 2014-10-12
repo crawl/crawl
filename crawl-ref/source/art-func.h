@@ -23,6 +23,7 @@
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "effects.h"       // For Sceptre of Torment tormenting
+#include "english.h"       // For apostrophise
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes

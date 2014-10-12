@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "database.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "evoke.h"
 #include "fight.h"

@@ -9,6 +9,7 @@
 #include "coord.h"
 #include "dactions.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "fineff.h"
 #include "godabil.h"

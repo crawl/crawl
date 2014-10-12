@@ -16,6 +16,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "english.h"
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"

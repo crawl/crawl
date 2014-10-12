@@ -22,6 +22,7 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "errors.h"
 #include "fight.h"
@@ -3694,22 +3695,6 @@ static gender_type _mons_class_gender(monster_type mc)
     return gender;
 }
 
-static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
-{
-    // subj  poss    refl        obj
-    { "it",  "its",  "itself",   "it"  }, // neuter
-    { "he",  "his",  "himself",  "him" }, // masculine
-    { "she", "her",  "herself",  "her" }, // feminine
-    { "you", "your", "yourself", "you" }, // 2nd person
-};
-
-const char *decline_pronoun(gender_type gender, pronoun_type variant)
-{
-    ASSERT_RANGE(gender, 0, NUM_GENDERS);
-    ASSERT_RANGE(variant, 0, NUM_PRONOUN_CASES);
-    return _pronoun_declension[gender][variant];
-}
-
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Its_ sword explodes!
@@ -3718,7 +3703,6 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
-    COMPILE_CHECK(ARRAYSZ(_pronoun_declension) == NUM_GENDERS);
     const gender_type gender = !visible ? GENDER_NEUTER
                                         : _mons_class_gender(mon_type);
     return decline_pronoun(gender, variant);

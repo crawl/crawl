@@ -28,6 +28,7 @@
 #include "dbg-util.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "english.h"
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -2962,41 +2963,6 @@ void describe_floor()
     mprf(channel, "%s%s here.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_LABYRINTH && !you_foodless())
         mprf(MSGCH_EXAMINE, "Beware, for starvation awaits!");
-}
-
-string thing_do_grammar(description_level_type dtype, bool add_stop,
-                        bool force_article, string desc)
-{
-    if (add_stop && !ends_with(desc, ".") && !ends_with(desc, "!")
-        && !ends_with(desc, "?"))
-    {
-        desc += ".";
-    }
-
-    // Avoid double articles.
-    if (starts_with(desc, "the ") || starts_with(desc, "The ")
-        || starts_with(desc, "a ") || starts_with(desc, "A ")
-        || starts_with(desc, "an ") || starts_with(desc, "An ")
-        || starts_with(desc, "some ") || starts_with(desc, "Some "))
-    {
-        if (dtype == DESC_THE || dtype == DESC_A)
-            dtype = DESC_PLAIN;
-    }
-
-    if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
-        return desc;
-
-    switch (dtype)
-    {
-    case DESC_THE:
-        return "the " + desc;
-    case DESC_A:
-        return article_a(desc, true);
-    case DESC_NONE:
-        return "";
-    default:
-        return desc;
-    }
 }
 
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)

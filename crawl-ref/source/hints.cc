@@ -21,6 +21,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "end.h"
+#include "english.h"
 #include "files.h"
 #include "food.h"
 #include "format.h"

@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "defines.h"
+#include "english.h"
 #include "env.h"
 #include "libutil.h"
 #include "monster.h"

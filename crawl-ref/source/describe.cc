@@ -29,6 +29,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"
+#include "english.h"
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"

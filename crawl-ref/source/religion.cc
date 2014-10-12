@@ -35,6 +35,7 @@
 #include "dgnevent.h"
 #include "dlua.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "enum.h"
 #include "exercise.h"

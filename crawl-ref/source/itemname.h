@@ -95,8 +95,6 @@ enum mbn_type
     MBN_BRAND, // plain brand name
 };
 
-bool is_vowel(const ucs_t chr);
-
 void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 

@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h" //XXX
+#include "english.h"
 #include "evoke.h" // wind_blast
 #include "exclude.h" //XXX
 #ifdef USE_TILE

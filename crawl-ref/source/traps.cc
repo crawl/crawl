@@ -24,6 +24,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "hints.h"

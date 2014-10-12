@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "exercise.h"
 #include "externs.h"
+#include "english.h"
 #include "enum.h"
 #include "env.h"
 #include "godconduct.h"
