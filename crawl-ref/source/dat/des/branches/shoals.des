@@ -10,11 +10,29 @@ function shoals_finale_setup(e, qualifier, decoy_count)
     decoy_count = crawl.random_range(6, 7)
   end
   e.hook('post_place', function ()
+    -- one rune hut, one ilsuiw hut, maybe a mimic hut, and a bunch of decoys.
     dgn.place_maps{tag=("shoal_rune" .. qualifier), count=1, die_on_error=true}
     dgn.place_maps{tag="shoal_guardian", count=1, die_on_error=true}
+    if crawl.one_chance_in(10) then
+        dgn.place_maps{tag=("shoal_mimic" .. qualifier), count=1,
+                       die_on_error=true}
+        -- place fewer decoys if you have a fake rune hut, to compensate for
+        -- increased threat
+        decoy_count = decoy_count - 2
+    end
     dgn.place_maps{tag=("shoal_hut" .. qualifier), count=decoy_count,
                    die_on_error=true}
   end)
+end
+
+function shoals_vault_is_mimic(e)
+  local params = dgn.map_parameters()
+  if params == nil then
+    return false
+  end
+
+  local tag = unpack(params)
+  return tag ~= nil and string.find(tag, "mimic")
 end
 
 -- When the kraken dies, the tides will control the water, so the items will
@@ -1050,12 +1068,17 @@ WEIGHT: 8
 # Shoal huts.
 
 NAME:      shoalhut_rune
-TAGS:      shoal_rune_simple water_ok no_dump transparent
+TAGS:      shoal_rune_simple shoal_mimic_simple water_ok no_dump transparent \
+           allow_dup
 NSUBST:    A = 1:+ / 1 = x:19 +:1 / *:x
 SUBST:     0 = 0.
 SUBST:     e = e.
 KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
+: if shoals_vault_is_mimic() then
+KITEM:     O = barnacled rune of Zot mimic
+: else
 KITEM:     O = barnacled rune of Zot
+: end
 KPROP:     O = no_tide
 LROCKTILE: wall_vines
 MAP
@@ -1108,11 +1131,16 @@ ENDMAP
 # HangedMan's alternative Shoals:$
 
 NAME:    shoals_rune_alternative
-TAGS:    shoal_rune_hangedman water_ok allow_dup transparent no_dump
+TAGS:    shoal_rune_hangedman shoal_mimic_hangedman water_ok allow_dup \
+         transparent no_dump
 KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
 KMONS:   3 = kraken / harpy band w:5
 KMONS:   d = merfolk avatar / water nymph w:5
+: if shoals_vault_is_mimic() then
+KITEM:   d = barnacled rune of zot mimic
+: else
 KITEM:   d = barnacled rune of zot
+: end
 KFEAT:   123 = w
 KPROP:   d = no_tide
 SHUFFLE: AB / AB / BA, CD / CD / DC
