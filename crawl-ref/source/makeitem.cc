@@ -1014,18 +1014,18 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
-                                    // total weight 10,000
-            rc = random_choose_weighted(3329, SPWPN_NORMAL,
-                                        1666, SPWPN_VENOM,
-                                        1666, SPWPN_ELECTROCUTION,
-                                         694, SPWPN_DRAINING,
-                                         556, SPWPN_FLAMING,
-                                         555, SPWPN_FREEZING,
-                                         486, SPWPN_VAMPIRISM,
-                                         420, SPWPN_PAIN,
-                                         315, SPWPN_HOLY_WRATH,
-                                         175, SPWPN_DISTORTION,
-                                         138, SPWPN_ANTIMAGIC,
+                                    // total weight 100
+            rc = random_choose_weighted(34, SPWPN_NORMAL,
+                                        16, SPWPN_VENOM,
+                                        16, SPWPN_ELECTROCUTION,
+                                         7, SPWPN_DRAINING,
+                                         6, SPWPN_FLAMING,
+                                         6, SPWPN_FREEZING,
+                                         5, SPWPN_VAMPIRISM,
+                                         4, SPWPN_PAIN,
+                                         3, SPWPN_HOLY_WRATH,
+                                         2, SPWPN_DISTORTION,
+                                         1, SPWPN_ANTIMAGIC,
                                            0);
             break;
 
@@ -1089,30 +1089,30 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         // Staves
         case WPN_QUARTERSTAFF:
-                                  // Total weight 10,000
-        rc = random_choose_weighted(5271, SPWPN_NORMAL,
-                                    1666, SPWPN_PROTECTION,
-                                     833, SPWPN_DRAINING,
-                                     750, SPWPN_VORPAL,
-                                     675, SPWPN_SPEED,
-                                     243, SPWPN_DISTORTION,
-                                     194, SPWPN_PAIN,
-                                     187, SPWPN_HOLY_WRATH,
-                                     181, SPWPN_ANTIMAGIC,
+                                  // Total weight 100
+        rc = random_choose_weighted(50, SPWPN_NORMAL,
+                                    18, SPWPN_PROTECTION,
+                                     8, SPWPN_DRAINING,
+                                     8, SPWPN_VORPAL,
+                                     8, SPWPN_SPEED,
+                                     2, SPWPN_DISTORTION,
+                                     2, SPWPN_PAIN,
+                                     2, SPWPN_HOLY_WRATH,
+                                     2, SPWPN_ANTIMAGIC,
                                        0);
             break;
 
         case WPN_LAJATANG:
-                                        // total weight 65
-            rc = random_choose_weighted(22, SPWPN_NORMAL,
-                                        8, SPWPN_SPEED,
-                                        7, SPWPN_ELECTROCUTION,
-                                        7, SPWPN_VAMPIRISM,
-                                        6, SPWPN_PROTECTION,
-                                        5, SPWPN_VENOM,
-                                        5, SPWPN_PAIN,
-                                        3, SPWPN_ANTIMAGIC,
-                                        2, SPWPN_DISTORTION,
+                                        // total weight 100
+            rc = random_choose_weighted(34, SPWPN_NORMAL,
+                                        12, SPWPN_SPEED,
+                                        12, SPWPN_ELECTROCUTION,
+                                        12, SPWPN_VAMPIRISM,
+                                         9, SPWPN_PROTECTION,
+                                         7, SPWPN_VENOM,
+                                         7, SPWPN_PAIN,
+                                         4, SPWPN_ANTIMAGIC,
+                                         3, SPWPN_DISTORTION,
                                         0);
             break;
 
