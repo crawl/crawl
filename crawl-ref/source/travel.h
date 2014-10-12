@@ -297,7 +297,7 @@ struct LevelInfo
 {
     LevelInfo() : stairs(), excludes(), stair_distances(), id()
     {
-        da_counters.init(0);
+        daction_counters.init(0);
     }
 
     void save(writer&) const;
@@ -341,7 +341,7 @@ struct LevelInfo
     // current level.
     bool is_known_branch(uint8_t branch) const;
 
-    FixedVector<int, NUM_DA_COUNTERS> da_counters;
+    FixedVector<int, NUM_DACTION_COUNTERS> daction_counters;
 
 private:
     // Gets a list of coordinates of all player-known stairs on the current
@@ -426,10 +426,10 @@ public:
 
     bool is_known_branch(uint8_t branch) const;
 
-    void update_da_counters(); // of the current level
+    void update_daction_counters(); // of the current level
 
-    unsigned int query_da_counter(daction_type c);
-    void clear_da_counter(daction_type c);
+    unsigned int query_daction_counter(daction_type c);
+    void clear_daction_counter(daction_type c);
 
 private:
     void fixup_levels();

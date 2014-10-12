@@ -764,7 +764,7 @@ void wizard_list_levels()
         }
     }
 
-    travel_cache.update_da_counters();
+    travel_cache.update_daction_counters();
 
     vector<level_id> levs = travel_cache.known_levels();
 
@@ -775,10 +775,10 @@ void wizard_list_levels()
         ASSERT(lv);
 
         string cnts = "";
-        for (int j = 0; j < NUM_DA_COUNTERS; j++)
+        for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
         {
             char num[20];
-            sprintf(num, "%d/", lv->da_counters[j]);
+            sprintf(num, "%d/", lv->daction_counters[j]);
             cnts += num;
         }
         mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
@@ -786,10 +786,10 @@ void wizard_list_levels()
     }
 
     string cnts = "";
-    for (int j = 0; j < NUM_DA_COUNTERS; j++)
+    for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
     {
         char num[20];
-        sprintf(num, "%d/", query_da_counter((daction_type)j));
+        sprintf(num, "%d/", query_daction_counter((daction_type)j));
         cnts += num;
     }
     mprf("%-10s : %s", "`- total", cnts.c_str());

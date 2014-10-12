@@ -4469,7 +4469,7 @@ enum daction_type
     DACT_ALLY_SLIME,
     DACT_ALLY_PLANT,
 
-    NUM_DA_COUNTERS,
+    NUM_DACTION_COUNTERS,
 
     // Leave space for new counters, as they need to be at the start.
     DACT_OLD_ENSLAVED_SOULS_POOF = 16,

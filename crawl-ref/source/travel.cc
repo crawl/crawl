@@ -3323,7 +3323,7 @@ void LevelInfo::update()
     precompute_travel_safety_grid travel_safety_calc;
     update_stair_distances();
 
-    update_da_counters(this);
+    update_daction_counters(this);
 }
 
 void LevelInfo::set_distance_between_stairs(int a, int b, int dist)
@@ -3646,9 +3646,9 @@ void LevelInfo::save(writer& outf) const
 
     marshallExcludes(outf, excludes);
 
-    marshallByte(outf, NUM_DA_COUNTERS);
-    for (int i = 0; i < NUM_DA_COUNTERS; i++)
-        marshallShort(outf, da_counters[i]);
+    marshallByte(outf, NUM_DACTION_COUNTERS);
+    for (int i = 0; i < NUM_DACTION_COUNTERS; i++)
+        marshallShort(outf, daction_counters[i]);
 }
 
 void LevelInfo::load(reader& inf, int minorVersion)
@@ -3681,9 +3681,9 @@ void LevelInfo::load(reader& inf, int minorVersion)
     unmarshallExcludes(inf, minorVersion, excludes);
 
     int n_count = unmarshallByte(inf);
-    ASSERT_RANGE(n_count, 0, NUM_DA_COUNTERS + 1);
+    ASSERT_RANGE(n_count, 0, NUM_DACTION_COUNTERS + 1);
     for (int i = 0; i < n_count; i++)
-        da_counters[i] = unmarshallShort(inf);
+        daction_counters[i] = unmarshallShort(inf);
 }
 
 void LevelInfo::fixup()
@@ -3961,30 +3961,30 @@ void TravelCache::update()
     get_level_info(level_id::current()).update();
 }
 
-void TravelCache::update_da_counters()
+void TravelCache::update_daction_counters()
 {
-    ::update_da_counters(&get_level_info(level_id::current()));
+    ::update_daction_counters(&get_level_info(level_id::current()));
 }
 
-unsigned int TravelCache::query_da_counter(daction_type c)
+unsigned int TravelCache::query_daction_counter(daction_type c)
 {
     // other levels are up to date, the current one not necessarily so
-    update_da_counters();
+    update_daction_counters();
 
     unsigned int sum = 0;
 
     map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for (; i != levels.end(); ++i)
-        sum += i->second.da_counters[c];
+        sum += i->second.daction_counters[c];
 
     return sum;
 }
 
-void TravelCache::clear_da_counter(daction_type c)
+void TravelCache::clear_daction_counter(daction_type c)
 {
     map<level_id, LevelInfo>::iterator i = levels.begin();
     for (; i != levels.end(); ++i)
-        i->second.da_counters[c] = 0;
+        i->second.daction_counters[c] = 0;
 }
 
 void TravelCache::fixup_levels()
