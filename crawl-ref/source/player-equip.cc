@@ -561,13 +561,13 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_PAIN:
                 {
-                    const char* your_arm = you.arm_name(false).c_str();
+                    const string your_arm = you.arm_name(false);
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
-                        mprf("Pain shudders through your %s!", your_arm);
+                        mprf("Pain shudders through your %s!", your_arm.c_str());
                     else
-                        mprf("A searing pain shoots up your %s!", your_arm);
+                        mprf("A searing pain shoots up your %s!", your_arm.c_str());
                     break;
                 }
 

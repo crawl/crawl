@@ -1544,12 +1544,13 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
         return false;
     }
 
-    const char* monsname = mons->name(DESC_THE, false).c_str();
-
     if (_given_gift(mons))
     {
         if (!quiet)
-            mprf("%s has already been given a gift.", monsname);
+        {
+            mprf("%s has already been given a gift.",
+                 mons->name(DESC_THE, false).c_str());
+        }
         return false;
     }
 
@@ -1602,8 +1603,6 @@ bool beogh_gift_item()
     if (!beogh_can_gift_items_to(mons, false))
         return false;
 
-    const char* monsname = mons->name(DESC_THE, false).c_str();
-
     int item_slot = prompt_invent_item("Give which item?",
                                        MT_INVLIST, OSEL_ANY, true);
 
@@ -1628,7 +1627,8 @@ bool beogh_gift_item()
              && (!mons_weapon
                  || mons->hands_reqd(*mons_weapon) != HANDS_TWO)))
     {
-        mprf("%s can't use that.", monsname);
+        mprf("%s can't use that.", mons->name(DESC_THE, false).c_str());
+
         return false;
     }
 

@@ -523,14 +523,14 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         col_name = _init_scale(scale, xl_mode);
 
-    const char* title = make_stringf("%10.10s | %s", col_name.c_str(),
-                                     _title_line).c_str();
+    const string title = make_stringf("%10.10s | %s", col_name.c_str(),
+                                      _title_line);
     if (Options.fsim_csv)
         fprintf(o, "%s\t%s\n", col_name.c_str(), _csv_title_line);
     else
-        fprintf(o, "%s\n", title);
+        fprintf(o, "%s\n", title.c_str());
 
-    mpr(title);
+    mpr(title.c_str());
 
     const int iter_limit = Options.fsim_rounds;
     for (int i = xl_mode ? 1 : 0; i <= 27; i++)
