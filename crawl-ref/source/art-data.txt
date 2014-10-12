@@ -598,7 +598,7 @@ COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison, tilerim
+BOOL:    poison
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy

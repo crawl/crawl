@@ -371,9 +371,9 @@ crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
 
-%rim 1
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
+animal_skin3
 
 troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
@@ -394,6 +394,7 @@ swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_hide ARM_PEARL_DRAGON_HIDE
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
+%rim 1
 cloak1_leather ARM_CLOAK
 cloak2
 cloak3
@@ -439,8 +440,10 @@ lshield_louise LSHIELD_LOUISE
 elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 
+%rim 0
 hat1 THELM_HAT
 hat2
+hat3
 
 helmet1 THELM_HELM THELM_FIRST
 helmet2
@@ -464,6 +467,7 @@ glove4
 glove5
 
 ###### BOOTS
+%rim 1
 boots1_brown ARM_BOOTS
 boots2_jackboots
 boots3_stripe
