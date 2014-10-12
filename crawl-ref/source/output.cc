@@ -1995,10 +1995,9 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (e_order[i] == EQ_WEAPON
                  && you.form == TRAN_BLADE_HANDS)
         {
-            if (player_mutation_level(MUT_MISSING_HAND))
-                snprintf(buf, sizeof buf, "%s  - Blade Hand", slot);
-            else
-                snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
+            const bool plural = !player_mutation_level(MUT_MISSING_HAND);
+            snprintf(buf, sizeof buf, "%s  - Blade Hand%s", slot,
+                     plural ? "s" : "");
         }
         else if (e_order[i] == EQ_BOOTS
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))

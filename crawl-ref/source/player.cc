@@ -8654,3 +8654,50 @@ void player_open_door(coord_def doorpos, bool check_confused)
     update_exclusion_los(excludes);
     viewwindow();
 }
+
+/**
+ * Get the singular form of a given plural-agreeing verb.
+ *
+ * An absurd simplification of the english language, but for our purposes...
+ *
+ * @param plural_verb   A plural-agreeing verb. ("Smoulders, "are", etc.)
+ * @return              A singular-agreeing form of the verb.
+ *                      E.g. "smoulder", "is", etc.
+ */
+string _conjugate_verb(const string &plural_verb)
+{
+    return plural_verb + "s"; // the trivial case
+    // XXX: when we end up needing to conjugate more verbs, add support
+}
+
+/**
+ * Return a string describing the player's hand(s) taking a given verb.
+ *
+ * @param plural_verb    A plural-agreeing verb. ("Smoulders", "are", etc.)
+ * @return               A string describing the action.
+ *                       E.g. "tentacles smoulder", "paw is", etc.
+ */
+string player::hands_verb(const string &plural_verb) const
+{
+    bool plural;
+    const string hand = hand_name(true, &plural);
+    if (plural)
+        return hand + " " + plural_verb;
+    return hand + " " + _conjugate_verb(plural_verb);
+}
+
+/**
+ * Return a string describing the player's hand(s) (or equivalent) taking the
+ * given action (verb).
+ *
+ * @param plural_verb   The plural-agreeing verb corresponding to the action to
+ *                      take. (E.g., "smoulder", "glow", "gain", etc.)
+ * @param subject       The subject of the action. E.g. ".", "new energy.", &c.
+ * @return              A string describing the player taking the given action.
+ *                      E.g. "Your tentacle gains new energy."
+ */
+string player::hands_act(const string &plural_verb,
+                         const string &subject) const
+{
+    return "Your " + hands_verb(plural_verb) + " " + subject;
+}

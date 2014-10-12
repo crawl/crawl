@@ -900,11 +900,7 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    const bool plural = !player_mutation_level(MUT_MISSING_HAND);
-    const string hand_msg = make_stringf("Your %s smoulder%s for a moment.",
-                                         you.hand_name(plural).c_str(),
-                                         plural ? "" : "s");
-    _equip_mpr(show_msgs, hand_msg.c_str());
+    _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
 }
 
 static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
