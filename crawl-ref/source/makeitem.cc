@@ -1114,22 +1114,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_LAJATANG:
-            if (one_chance_in(8))
-                rc = SPWPN_SPEED;
-            else if (one_chance_in(12))
-                rc = SPWPN_PAIN;
-            else if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-            else if (one_chance_in(9))
-                rc = SPWPN_PROTECTION;
-            else if (one_chance_in(6))
-                rc = SPWPN_ELECTROCUTION;
-            else if (one_chance_in(5))
-                rc = SPWPN_VAMPIRISM;
-            else if (one_chance_in(6))
-                rc = SPWPN_VENOM;
-            else if (one_chance_in(8))
-                rc = SPWPN_ANTIMAGIC;
+            rc = random_choose_weighted(16200, SPWPN_SPEED,
+                                         9450, SPWPN_PAIN,
+                                         4158, SPWPN_DISTORTION,
+                                        11088, SPWPN_PROTECTION,
+                                        14784, SPWPN_ELECTROCUTION,
+                                        14784, SPWPN_VAMPIRISM,
+                                         9856, SPWPN_VENOM,
+                                         6160, SPWPN_ANTIMAGIC,
+                                        43120, rc,
+                                        0);
             break;
 
         case WPN_DEMON_WHIP:
