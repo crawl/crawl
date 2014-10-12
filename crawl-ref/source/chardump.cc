@@ -34,6 +34,7 @@
 #include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
+#include "invent.h"
 #include "itemprop.h"
 #include "itemname.h"
 #include "items.h"
@@ -713,8 +714,10 @@ static void _sdump_inventory(dump_params &par)
     {
         text += "Inventory:\n\n";
 
-        for (i = 0; i < NUM_OBJECT_CLASSES; i++)
+        for (int obj = 0; obj < NUM_OBJECT_CLASSES; obj++)
         {
+            i = inv_order[obj];
+
             if (inv_class2[i] != 0)
             {
                 switch (i)
