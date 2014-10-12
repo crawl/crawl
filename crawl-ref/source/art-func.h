@@ -888,9 +888,10 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
     }
     if (you.see_cell(attacker->pos()) || you.see_cell(defender->pos()))
     {
-        mprf("%s %s%s %s%s.", attacker->name(DESC_THE).c_str(), verb,
-            attacker->is_player() ? "" : "s", defender->name(DESC_THE).c_str(),
-            adv);
+        mprf("%s %s %s%s.", attacker->name(DESC_THE).c_str(),
+             attacker->conj_verb(verb).c_str(),
+             defender->name(DESC_THE).c_str(),
+             adv);
     }
 
     if (!mondied)
@@ -1009,7 +1010,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
 
     mprf("%s %s %s.",
          attacker->name(DESC_THE).c_str(),
-         attacker->is_player() ? verb : pluralise(verb).c_str(),
+         attacker->conj_verb(verb).c_str(),
          defender->name(DESC_THE).c_str());
 
     defender->hurt(attacker, bonus_dam, flavour);

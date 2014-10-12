@@ -1926,8 +1926,8 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
         special_damage_message = make_stringf(
             "%s %s %s%s",
             what ? what : atk_name(DESC_THE).c_str(),
-            what ? pluralise(verb).c_str() // XXX: may need to change this
-                  : attacker->conj_verb(verb).c_str(),
+            what ? conjugate_verb(verb).c_str() // XXX: may need to change this
+                 : attacker->conj_verb(verb).c_str(),
             // Don't allow reflexive if the subject wasn't the attacker.
             defender_name(!what).c_str(),
             attack_strength_punctuation(special_damage).c_str());
