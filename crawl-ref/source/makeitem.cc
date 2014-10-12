@@ -1114,15 +1114,15 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_LAJATANG:
-            rc = random_choose_weighted(16200, SPWPN_SPEED,
-                                         9450, SPWPN_PAIN,
-                                         4158, SPWPN_DISTORTION,
-                                        11088, SPWPN_PROTECTION,
-                                        14784, SPWPN_ELECTROCUTION,
-                                        14784, SPWPN_VAMPIRISM,
-                                         9856, SPWPN_VENOM,
-                                         6160, SPWPN_ANTIMAGIC,
-                                        43120, rc,
+            rc = random_choose_weighted(22, rc,
+                                        8, SPWPN_SPEED,
+                                        7, SPWPN_ELECTROCUTION,
+                                        7, SPWPN_VAMPIRISM,
+                                        6, SPWPN_PROTECTION,
+                                        5, SPWPN_VENOM,
+                                        5, SPWPN_PAIN,
+                                        3, SPWPN_ANTIMAGIC,
+                                        2, SPWPN_DISTORTION,
                                         0);
             break;
 
