@@ -2811,7 +2811,7 @@ void excommunication(god_type new_god, bool immediate)
 
     case GOD_YREDELEMNUL:
         you.duration[DUR_MIRROR_DAMAGE] = 0;
-        if (query_da_counter(DACT_ALLY_YRED_SLAVE))
+        if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",
                                GOD_YREDELEMNUL);
@@ -2846,7 +2846,7 @@ void excommunication(god_type new_god, bool immediate)
         if (_need_water_walking())
             fall_into_a_pool(grd(you.pos()));
 
-        if (query_da_counter(DACT_ALLY_BEOGH))
+        if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
                                "are?\"", GOD_BEOGH);
@@ -2926,7 +2926,7 @@ void excommunication(god_type new_god, bool immediate)
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
 
-        if (query_da_counter(DACT_ALLY_SLIME))
+        if (query_daction_counter(DACT_ALLY_SLIME))
         {
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
@@ -2936,7 +2936,7 @@ void excommunication(god_type new_god, bool immediate)
         break;
 
     case GOD_FEDHAS:
-        if (query_da_counter(DACT_ALLY_PLANT))
+        if (query_daction_counter(DACT_ALLY_PLANT))
         {
             mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon turn on you.");
             add_daction(DACT_ALLY_PLANT);
@@ -3018,7 +3018,7 @@ void excommunication(god_type new_god, bool immediate)
 
     // When you start worshipping a non-good god, or no god, you make
     // all non-hostile holy beings that worship a good god hostile.
-    if (!is_good_god(new_god) && query_da_counter(DACT_ALLY_HOLY))
+    if (!is_good_god(new_god) && query_daction_counter(DACT_ALLY_HOLY))
     {
         mprf(MSGCH_MONSTER_ENCHANT, "The divine host forsakes you.");
         add_daction(DACT_ALLY_HOLY);
@@ -3474,20 +3474,20 @@ void join_religion(god_type which_god, bool immediate)
     // when you start worshipping Trog, you make all non-hostile magic
     // users hostile.
     if (is_good_god(you.religion)
-        && query_da_counter(DACT_ALLY_UNHOLY_EVIL))
+        && query_daction_counter(DACT_ALLY_UNHOLY_EVIL))
     {
         add_daction(DACT_ALLY_UNHOLY_EVIL);
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
     if (you_worship(GOD_ZIN)
-        && query_da_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
+        && query_daction_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
     {
         add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
         mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
     }
     else if (you_worship(GOD_TROG)
-             && query_da_counter(DACT_ALLY_SPELLCASTER))
+             && query_daction_counter(DACT_ALLY_SPELLCASTER))
     {
         add_daction(DACT_ALLY_SPELLCASTER);
         mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");

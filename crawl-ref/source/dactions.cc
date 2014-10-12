@@ -150,15 +150,15 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     }
 }
 
-void update_da_counters(LevelInfo *lev)
+void update_daction_counters(LevelInfo *lev)
 {
-    for (int act = 0; act < NUM_DA_COUNTERS; act++)
-        lev->da_counters[act] = 0;
+    for (int act = 0; act < NUM_DACTION_COUNTERS; act++)
+        lev->daction_counters[act] = 0;
 
     for (monster_iterator mi; mi; ++mi)
-        for (int act = 0; act < NUM_DA_COUNTERS; act++)
+        for (int act = 0; act < NUM_DACTION_COUNTERS; act++)
             if (mons_matches_daction(*mi, static_cast<daction_type>(act)))
-                lev->da_counters[act]++;
+                lev->daction_counters[act]++;
 }
 
 void add_daction(daction_type act)
@@ -172,8 +172,8 @@ void add_daction(daction_type act)
 
     // If we're removing a counted monster type, zero the counter even though
     // it hasn't been actually removed from the levels yet.
-    if (act < NUM_DA_COUNTERS)
-        travel_cache.clear_da_counter(act);
+    if (act < NUM_DACTION_COUNTERS)
+        travel_cache.clear_daction_counter(act);
 
     // Immediately apply it to the current level.
     catchup_dactions();
@@ -378,7 +378,7 @@ static void _apply_daction(daction_type act)
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
 #endif
-    case NUM_DA_COUNTERS:
+    case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
         ;
     }
@@ -390,9 +390,9 @@ void catchup_dactions()
         _apply_daction(you.dactions[env.dactions_done++]);
 }
 
-unsigned int query_da_counter(daction_type c)
+unsigned int query_daction_counter(daction_type c)
 {
-    return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
+    return travel_cache.query_daction_counter(c) + count_daction_in_transit(c);
 }
 
 static void _daction_hog_to_human(monster *mon, bool in_transit)
