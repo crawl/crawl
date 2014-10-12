@@ -1064,14 +1064,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_HUNTING_SLING:
-            if (coinflip())
-                break;
-            // intentionally fallthrough to normal launcher brands
         case WPN_GREATSLING:
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_HAND_CROSSBOW:
         case WPN_ARBALEST:
+            if (coinflip())
+                continue;
+            // intentionally fallthrough to normal launcher brands
         case WPN_TRIPLE_CROSSBOW:
                                     // total weight 100
             rc = random_choose_weighted(48, SPWPN_FLAMING,
