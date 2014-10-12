@@ -1015,7 +1015,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         case WPN_WHIP:
                                     // total weight 10,000
-            rc = random_choose_weighted(3329, rc,
+            rc = random_choose_weighted(3329, SPWPN_NORMAL,
                                         1666, SPWPN_VENOM,
                                         1666, SPWPN_ELECTROCUTION,
                                          694, SPWPN_DRAINING,
@@ -1073,6 +1073,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_HAND_CROSSBOW:
         case WPN_ARBALEST:
         case WPN_TRIPLE_CROSSBOW:
+                                    // total weight 100
             rc = random_choose_weighted(48, SPWPN_FLAMING,
                                         25, SPWPN_FREEZING,
                                         15, SPWPN_EVASION,
@@ -1089,7 +1090,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         // Staves
         case WPN_QUARTERSTAFF:
                                   // Total weight 10,000
-        rc = random_choose_weighted(5271, rc,
+        rc = random_choose_weighted(5271, SPWPN_NORMAL,
                                     1666, SPWPN_PROTECTION,
                                      833, SPWPN_DRAINING,
                                      750, SPWPN_VORPAL,
@@ -1102,7 +1103,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_LAJATANG:
-            rc = random_choose_weighted(22, rc,
+                                        // total weight 65
+            rc = random_choose_weighted(22, SPWPN_NORMAL,
                                         8, SPWPN_SPEED,
                                         7, SPWPN_ELECTROCUTION,
                                         7, SPWPN_VAMPIRISM,
@@ -1118,7 +1120,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
                                         // total weight 100
-            rc = random_choose_weighted(27, rc,
+            rc = random_choose_weighted(27, SPWPN_NORMAL,
                                         20, SPWPN_VENOM,
                                         16, SPWPN_ELECTROCUTION,
                                         13, coinflip() ? SPWPN_FLAMING
