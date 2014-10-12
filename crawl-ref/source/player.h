@@ -27,6 +27,11 @@
 #define STONESKIN_KEY "stoneskin_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
+#define HORROR_PENALTY_KEY "horror_penalty"
+
+// display/messaging breakpoints for penalties from Ru's MUT_HORROR
+#define HORROR_LVL_EXTREME  3
+#define HORROR_LVL_OVERWHELMING  5
 
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 

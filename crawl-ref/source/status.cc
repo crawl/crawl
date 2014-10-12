@@ -566,27 +566,29 @@ bool fill_status_info(int status, status_info* inf)
     }
 
     case DUR_HORROR:
-        inf->light_text = make_stringf("Horr(%d)",
-                          (-1 * you.props["horror_penalty"].get_int()));
-        if (you.props["horror_penalty"].get_int() > 4)
+    {
+        const int horror = you.props[HORROR_PENALTY_KEY].get_int();
+        inf->light_text = make_stringf("Horr(%d)", -1 * horror);
+        if (horror >= HORROR_LVL_OVERWHELMING)
         {
             inf->light_colour = RED;
             inf->short_text   = "overwhelmed with horror";
             inf->long_text    = "Horror overwhelms you!";
         }
-        else if (you.props["horror_penalty"].get_int() > 2)
+        else if (horror >= HORROR_LVL_EXTREME)
         {
             inf->light_colour = LIGHTRED;
             inf->short_text   = "extremely horrified";
             inf->long_text    = "You are extremely horrified!";
         }
-        else if (you.props["horror_penalty"].get_int())
+        else if (horror)
         {
             inf->light_colour = YELLOW;
             inf->short_text   = "horrified";
             inf->long_text    = "You are horrified!";
         }
         break;
+    }
 
     case STATUS_CLOUD:
     {

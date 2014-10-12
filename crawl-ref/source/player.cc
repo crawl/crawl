@@ -4167,7 +4167,7 @@ int slaying_bonus(bool ranged)
         ret += you.props["song_of_slaying_bonus"].get_int();
 
     if (you.duration[DUR_HORROR])
-        ret += you.props["horror_penalty"].get_int();
+        ret += you.props[HORROR_PENALTY_KEY].get_int();
 
     return ret;
 }

@@ -233,7 +233,7 @@ int attack::calc_to_hit(bool random)
 
         // horror penalty
         if (you.duration[DUR_HORROR])
-            mhit -= you.props["horror_penalty"].get_int();
+            mhit -= you.props[HORROR_PENALTY_KEY].get_int();
 
         // hunger penalty
         if (you.hunger_state == HS_STARVING)
