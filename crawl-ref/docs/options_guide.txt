@@ -106,7 +106,7 @@ The contents of this text are:
                 tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
-		tile_player_tile, tile_weapon_offsets, tile_shield_offsets
+                tile_player_tile, tile_weapon_offsets, tile_shield_offsets
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -1903,15 +1903,15 @@ tile_level_map_hide_sidebar = false
 
 tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         If set to playermons, displays the player using the monster tile for
-        her species, instead of using the normal doll. 
+        her species, instead of using the normal doll.
 
-	If set to a value of the form mons:<monster>, where <monster> is the
+        If set to a value of the form mons:<monster>, where <monster> is the
         name of a monster, use the base tile of <monster> as the player
         tile. For example a value of mons:ijyb will cause Ijyb's tile to be
         used. Any spaces in the monster name should be included. For instance:
         a value of mons:the royal jelly is valid.
 
-	If set to a value of the form tile:<player-tile> where <player-tile> is
+        If set to a value of the form tile:<player-tile> where <player-tile> is
         the name of a tile in the player tile sheet, use this tile as the
         player tile. This form is most useful for using specific variant tiles
         of monster with multiple tiles, such as hydra and large abominations,
@@ -1929,17 +1929,17 @@ tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
 tile_weapon_offsets = (<x>,<y> | reset)
 tile_shield_offsets = (<x>,<y> | reset)
         When using a custom tile with tile_player_tile, these option set the
-	pixel x (horizontal) and y (vertical) offsets for the location where
-	the weapon or shield will be drawn in the tile. The x and y offsets
-	must be integers between -32 and 32, inclusive. Negative x values will
-	adjust left, and Negative y values will adjust up. At 0,0, the weapon
-	is drawn on the left side of the tile, and at 0,0 the shield is drawn
-	on the right side. A weapon x offset of e.g. 10 to 20 (depending on the
-	tile) together with a shield x offset of -10 to -20 can therefore be
-	used to swap locations of weapon and shield.
+        pixel x (horizontal) and y (vertical) offsets for the location where
+        the weapon or shield will be drawn in the tile. The x and y offsets
+        must be integers between -32 and 32, inclusive. Negative x values will
+        adjust left, and Negative y values will adjust up. At 0,0, the weapon
+        is drawn on the left side of the tile, and at 0,0 the shield is drawn
+        on the right side. A weapon x offset of e.g. 10 to 20 (depending on the
+        tile) together with a shield x offset of -10 to -20 can therefore be
+        used to swap locations of weapon and shield.
 
-	Using the value "reset" will clear any previously defined offset, which
-	is using for in-game tile changes via lua.
+        Using the value "reset" will clear any previously defined offset, which
+        is using for in-game tile changes via lua.
 
 4-  Character Dump.
 ===================
