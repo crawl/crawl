@@ -14,9 +14,10 @@
 /**
  * Key for <tt>you.props</tt> indicating that the player already received a
  * message about melting Ozocubu's Armour this turn.  The value does not
- * matter, only the key's existance in the hash.
+ * matter, only the key's existence in the hash.
  */
 #define MELT_ARMOUR_KEY "melt_armour"
+#define MELT_SHIELD_KEY "melt_shield"
 
 // Keep in sync with names in hiscores.cc.
 // Note that you can't ever remove entries from here -- not even when a major

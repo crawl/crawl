@@ -260,6 +260,34 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
+ * Check whether the player's ice (ozocubu's) armour and/or condensation shield
+ * were melted this turn; if so, print the appropriate message.
+ */
+static void _maybe_melt_armour()
+{
+    // We have to do the messaging here, because a simple wand of flame will
+    // call _maybe_melt_player_enchantments twice. It also avoids duplicate
+    // messages when melting because of several heat sources.
+    string what;
+    if (you.props.exists(MELT_ARMOUR_KEY))
+    {
+        what = "armour";
+        you.props.erase(MELT_ARMOUR_KEY);
+    }
+
+    if (you.props.exists(MELT_SHIELD_KEY))
+    {
+        if (what != "")
+            what += " and ";
+        what += "shield";
+        you.props.erase(MELT_SHIELD_KEY);
+    }
+
+    if (what != "")
+        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
+}
+
+/**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
 void player_reacts_to_monsters()
@@ -282,32 +310,12 @@ void player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
     }
 
-    // We have to do the messaging here, because a simple wand of flame will
-    // call _maybe_melt_player_enchantments twice. It also avoid duplicate
-    // messages when melting because of several heating sources.
-    string what;
-    if (you.props.exists(MELT_ARMOUR_KEY))
-    {
-        what = "armour";
-        you.props.erase(MELT_ARMOUR_KEY);
-    }
-
-    if (you.props.exists("melt_shield"))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase("melt_shield");
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
-
     handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
+    _maybe_melt_armour();
 
     // If the player is insane, horrify them in proportion
     // to the scariness of monsters they can see.
