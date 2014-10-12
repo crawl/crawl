@@ -1129,26 +1129,17 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(5))       // 7.3%
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(10))      // 4.0%
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(5))       // 10.2%
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(5))       // 12.8%
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(5))       // 16%
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(5))       // 20%
-                rc = SPWPN_VENOM;
+                                        // total weight 100
+            rc = random_choose_weighted(27, rc,
+                                        20, SPWPN_VENOM,
+                                        16, SPWPN_ELECTROCUTION,
+                                        13, coinflip() ? SPWPN_FLAMING
+                                                       : SPWPN_FREEZING,
+                                        10, SPWPN_DRAINING,
+                                         7, SPWPN_VAMPIRISM,
+                                         4, SPWPN_PAIN,
+                                         3, SPWPN_ANTIMAGIC,
+                                         0);
             break;
 
         case WPN_BLESSED_FALCHION:      // special gifts of TSO
