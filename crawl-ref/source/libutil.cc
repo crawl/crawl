@@ -464,16 +464,21 @@ string apostrophise_fixup(const string &msg)
  *
  * An absurd simplification of the english language, but for our purposes...
  *
- * @param verb  A plural-agreeing verb ("smoulder", "are", etc.)
- * @return      A singular-agreeing form of the verb (e.g. "smoulders", "is").
+ * @param verb  A plural-agreeing or infinitive verb.
+ *              ("smoulder", "are", "be", etc.)
+ * @return      A singular-agreeing form of the verb.
+ *              ("smoulders", "is", "is", etc.)
  */
 string conjugate_verb(const string &verb)
 {
     if (!verb.empty() && verb[0] == '!')
         return verb.substr(1);
 
-    if (verb == "are")
+    if (verb == "are" || verb == "be")
         return "is";
+
+    if (verb == "have")
+        return "has";
 
     // Conjugate the first word of a phrase (e.g. "release spores at")
     const size_t space = verb.find(" ");
