@@ -3333,7 +3333,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CORRODE:
-        corrode_actor(defender, atk_name(DESC_THE).c_str());
+        if (defender->slot_item(EQ_BODY_ARMOUR))
+            corrode_actor(defender, atk_name(DESC_THE).c_str());
         break;
 
     case AF_DISTORT:
