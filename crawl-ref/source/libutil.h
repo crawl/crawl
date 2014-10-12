@@ -88,6 +88,7 @@ string pluralise(const string &name,
                  const char *no_of[] = NULL);
 string apostrophise(const string &name);
 string apostrophise_fixup(const string &msg);
+string conjugate_verb(const string &verb);
 
 
 

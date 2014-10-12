@@ -2500,30 +2500,7 @@ string monster::pronoun(pronoun_type pro, bool force_visible) const
 
 string monster::conj_verb(const string &verb) const
 {
-    if (!verb.empty() && verb[0] == '!')
-        return verb.substr(1);
-
-    if (verb == "are")
-        return "is";
-
-    if (verb == "release spores at")
-        return "releases spores at";
-
-#if TAG_MAJOR_VERSION == 34
-    if (verb == "snap closed at")
-        return "snaps closed at";
-#endif
-
-    if (verb == "pounce on")
-        return "pounces on";
-
-    if (ends_with(verb, "f") || ends_with(verb, "fe")
-        || ends_with(verb, "y"))
-    {
-        return verb + "s";
-    }
-
-    return pluralise(verb);
+    return conjugate_verb(verb);
 }
 
 string monster::hand_name(bool plural, bool *can_plural) const

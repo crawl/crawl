@@ -8656,21 +8656,6 @@ void player_open_door(coord_def doorpos, bool check_confused)
 }
 
 /**
- * Get the singular form of a given plural-agreeing verb.
- *
- * An absurd simplification of the english language, but for our purposes...
- *
- * @param plural_verb   A plural-agreeing verb. ("Smoulders, "are", etc.)
- * @return              A singular-agreeing form of the verb.
- *                      E.g. "smoulder", "is", etc.
- */
-string _conjugate_verb(const string &plural_verb)
-{
-    return plural_verb + "s"; // the trivial case
-    // XXX: when we end up needing to conjugate more verbs, add support
-}
-
-/**
  * Return a string describing the player's hand(s) taking a given verb.
  *
  * @param plural_verb    A plural-agreeing verb. ("Smoulders", "are", etc.)
@@ -8683,7 +8668,7 @@ string player::hands_verb(const string &plural_verb) const
     const string hand = hand_name(true, &plural);
     if (plural)
         return hand + " " + plural_verb;
-    return hand + " " + _conjugate_verb(plural_verb);
+    return hand + " " + conjugate_verb(plural_verb);
 }
 
 /**
