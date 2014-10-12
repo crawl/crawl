@@ -1,6 +1,6 @@
 Stone Soup 0.16 (up to 0.16-a0-1163-g830ab83)
 --------------------------------------------
-* New gods: Gozag Ym Sagoz the Greedy and Ru the Insubstantial.
+* New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
 Branches, environment
 ---------------------
