@@ -555,10 +555,10 @@ string player::hand_name(bool plural, bool *can_plural) const
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
-    *can_plural = true;
+    *can_plural = !player_mutation_level(MUT_MISSING_HAND);
 
     const string singular = _hand_name_singular();
-    if (plural && *can_plural && !player_mutation_level(MUT_MISSING_HAND))
+    if (plural && *can_plural)
         return pluralise(singular);
 
     return singular;

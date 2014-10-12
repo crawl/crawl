@@ -2670,9 +2670,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         if (you.duration[DUR_FINESSE])
         {
-            const bool plural = !player_mutation_level(MUT_MISSING_HAND);
-            mprf(MSGCH_DURATION, "Your %s get%s new energy.",
-                 you.hand_name(plural).c_str(), plural ? "" : "s");
+            // "Your [hand(s)] get{s} new energy."
+            const char *action = you.hands_act("get", "new energy.").c_str();
+            mprf(MSGCH_DURATION, "%s", action);
         }
         else
             mprf(MSGCH_DURATION, "You can now deal lightning-fast blows.");

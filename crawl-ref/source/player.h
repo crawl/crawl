@@ -561,6 +561,8 @@ public:
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
     string hand_name(bool plural, bool *can_plural = NULL) const;
+    string hands_verb(const string &plural_verb) const;
+    string hands_act(const string &plural_verb, const string &subject) const;
     string foot_name(bool plural, bool *can_plural = NULL) const;
     string arm_name(bool plural, bool *can_plural = NULL) const;
     string unarmed_attack_name() const;

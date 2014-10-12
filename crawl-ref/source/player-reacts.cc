@@ -696,18 +696,11 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    const bool hands_plural = !player_mutation_level(MUT_MISSING_HAND);
-    const char *verb_conj_s = hands_plural ? ""    // 'your hands slow down'
-                                           : "s";  // 'your hand slows down'
-    const string finesse_msg = make_stringf("Your %s slow%s down.",
-                                            you.hand_name(hands_plural).c_str(),
-                                            verb_conj_s);
-    _decrement_a_duration(DUR_FINESSE, delay, finesse_msg.c_str());
+    _decrement_a_duration(DUR_FINESSE, delay,
+                          you.hands_act("slow", "down.").c_str());
 
-    const string ctouch_msg = make_stringf("Your %s stop%s glowing.",
-                                           you.hand_name(hands_plural).c_str(),
-                                           verb_conj_s);
-    _decrement_a_duration(DUR_CONFUSING_TOUCH, delay, ctouch_msg.c_str());
+    _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
+                          you.hands_act("stop", "glowing.").c_str());
 
     _decrement_a_duration(DUR_SURE_BLADE, delay,
                           "The bond with your blade fades away.");
