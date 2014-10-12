@@ -808,6 +808,24 @@ void InvMenu::sort_menu(vector<InvEntry*> &invitems,
     sort(invitems.begin(), invitems.end(), menu_entry_comparator(cond));
 }
 
+FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
+    OBJ_WEAPONS,
+    OBJ_MISSILES,
+    OBJ_ARMOUR,
+    OBJ_STAVES,
+    OBJ_RODS,
+    OBJ_JEWELLERY,
+    OBJ_WANDS,
+    OBJ_SCROLLS,
+    OBJ_POTIONS,
+    OBJ_BOOKS,
+    OBJ_MISCELLANY,
+    OBJ_FOOD,
+    // These two can't actually be in your inventory.
+    OBJ_CORPSES,
+    OBJ_ORBS,
+    OBJ_GOLD);
+
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
                                 menu_letter ckey, bool sort)
@@ -819,24 +837,6 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = NULL;
     if (sort) cond = find_menu_sort_condition();
-
-    FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
-        OBJ_WEAPONS,
-        OBJ_MISSILES,
-        OBJ_ARMOUR,
-        OBJ_STAVES,
-        OBJ_RODS,
-        OBJ_JEWELLERY,
-        OBJ_WANDS,
-        OBJ_SCROLLS,
-        OBJ_POTIONS,
-        OBJ_BOOKS,
-        OBJ_MISCELLANY,
-        OBJ_FOOD,
-        // These two can't actually be in your inventory.
-        OBJ_CORPSES,
-        OBJ_ORBS,
-        OBJ_GOLD);
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {

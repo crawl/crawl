@@ -41,6 +41,8 @@ enum object_selector
 
 #define SLOT_BARE_HANDS      PROMPT_GOT_SPECIAL
 
+extern FixedVector<int, NUM_OBJECT_CLASSES> inv_order;
+
 struct SelItem
 {
     int slot;
