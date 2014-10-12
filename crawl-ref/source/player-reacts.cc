@@ -309,7 +309,6 @@ static int _current_horror_level()
             || mons_is_projectile(mon->type)
             || mon->friendly()
             || mons_is_firewood(mon)
-            || mon->submerged() // XXX: redundant?
             || !you.can_see(mon))
         {
             continue;
