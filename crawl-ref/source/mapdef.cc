@@ -25,6 +25,7 @@
 #include "dungeon.h"
 #include "dgn-height.h"
 #include "end.h"
+#include "english.h"
 #include "exclude.h"
 #include "files.h"
 #include "initfile.h"

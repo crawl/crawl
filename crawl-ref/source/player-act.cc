@@ -15,6 +15,7 @@
 #include "artefact.h"
 #include "coordit.h"
 #include "dgnevent.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"

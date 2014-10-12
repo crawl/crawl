@@ -25,6 +25,7 @@
 #include "database.h"
 #include "delay.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "fineff.h"

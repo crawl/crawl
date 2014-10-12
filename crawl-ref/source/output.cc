@@ -23,6 +23,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
+#include "english.h"
 #include "env.h"
 #include "files.h"
 #include "format.h"

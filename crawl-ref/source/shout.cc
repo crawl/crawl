@@ -16,6 +16,7 @@
 #include "coord.h"
 #include "database.h"
 #include "dlua.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"

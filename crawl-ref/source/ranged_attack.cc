@@ -11,6 +11,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "coord.h"
+#include "english.h"
 #include "exercise.h"
 #include "godconduct.h"
 #include "itemname.h"

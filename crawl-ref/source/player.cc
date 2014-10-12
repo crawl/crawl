@@ -33,6 +33,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"

@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "decks.h"
 #include "dgn-overview.h"
+#include "english.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"

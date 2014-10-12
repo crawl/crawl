@@ -18,6 +18,7 @@
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"
+#include "english.h"
 #include "env.h"
 #include "stringutil.h"
 #include "tags.h"

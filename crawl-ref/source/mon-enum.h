@@ -21,15 +21,6 @@ enum corpse_effect_type
     CE_ROTTEN,
 };
 
-enum gender_type
-{
-    GENDER_NEUTER,
-    GENDER_MALE,
-    GENDER_FEMALE,
-    GENDER_YOU, // A person, not a gender, but close enough.
-    NUM_GENDERS
-};
-
 // TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
 enum attack_type

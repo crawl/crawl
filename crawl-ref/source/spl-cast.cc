@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "food.h"

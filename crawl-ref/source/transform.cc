@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "cloud.h"
 #include "delay.h"
+#include "english.h"
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"

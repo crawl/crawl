@@ -27,6 +27,7 @@
 #include "files.h"
 #include "dungeon.h"
 #include "end.h"
+#include "english.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"

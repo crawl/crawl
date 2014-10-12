@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgn-shoals.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "hints.h"

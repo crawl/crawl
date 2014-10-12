@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "target.h"
 #include "fprop.h"

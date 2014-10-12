@@ -22,6 +22,7 @@
 #include "colour.h"
 #include "decks.h"
 #include "describe.h"
+#include "english.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"
@@ -64,12 +65,6 @@ static void _maybe_identify_pack_item()
         if (item.defined() && get_ident_type(item) != ID_KNOWN_TYPE)
             maybe_identify_base_type(item);
     }
-}
-
-bool is_vowel(const ucs_t chr)
-{
-    const char low = towlower(chr);
-    return low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u';
 }
 
 // quant_name is useful since it prints out a different number of items

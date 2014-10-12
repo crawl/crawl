@@ -69,28 +69,8 @@ vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
 string strip_tag_prefix(string &s, const string &tagprefix);
 bool parse_int(const char *s, int &i);
 
-string number_in_words(unsigned number, int pow = 0);
-
 // String 'descriptions'
-
-extern const char *standard_plural_qualifiers[];
-
-// Applies a description type to a name, but does not pluralise! You
-// must pluralise the name if needed. The quantity is used to prefix the
-// name with a quantity if appropriate.
-string apply_description(description_level_type desc, const string &name,
-                         int quantity = 1, bool num_in_words = false);
-
 description_level_type description_type_by_name(const char *desc);
-string article_a(const string &name, bool lowercase = true);
-string pluralise(const string &name,
-                 const char *stock_plural_quals[] = standard_plural_qualifiers,
-                 const char *no_of[] = NULL);
-string apostrophise(const string &name);
-string apostrophise_fixup(const string &msg);
-string conjugate_verb(const string &verb);
-
-
 
 bool shell_safe(const char *file);
 
