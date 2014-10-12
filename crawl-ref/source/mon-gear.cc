@@ -213,8 +213,7 @@ static void _give_potion(monster* mon, int level)
             return;
 
         mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created, false,
-                           &monster::pickup_potion);
+        _give_monster_item(mon, thing_created, false);
     }
 }
 
