@@ -928,11 +928,20 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
     const bool non_death = death_type == KILLED_BY_QUITTING
-        || death_type == KILLED_BY_WINNING
-        || death_type == KILLED_BY_LEAVING;
+                        || death_type == KILLED_BY_WINNING
+                        || death_type == KILLED_BY_LEAVING;
 
-    if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && !non_death && you.hp_max > 0)
+    // certain effects (e.g. drowned souls) use KILLED_BY_WATER for flavour
+    // reasons (morgue messages?), with regrettable consequences if we don't
+    // double-check.
+    const bool env_death = death_source == NON_MONSTER
+                           && (death_type == KILLED_BY_LAVA
+                               || death_type == KILLED_BY_WATER);
+
+    // death's door protects against everything but falling into water/lava,
+    // excessive rot, leaving the dungeon, or quitting.
+    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
+        && you.hp_max > 0)
     {
         return;
     }
