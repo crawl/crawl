@@ -88,7 +88,7 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
             if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
                 remove_condensation_shield();
             else
-                you.props["melt_shield"] = true;
+                you.props[MELT_SHIELD_KEY] = true;
         }
 
         if (you.mutation[MUT_ICEMAIL])
