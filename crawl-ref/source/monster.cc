@@ -2110,26 +2110,29 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
     return pickup(item, MSLOT_MISSILE, near);
 }
 
-bool monster::pickup_wand(item_def &item, int near)
+bool monster::pickup_wand(item_def &item, int near, bool force)
 {
-    // Don't pick up empty wands.
-    if (item.plus == 0)
-        return false;
+    if (!force)
+    {
+        // Don't pick up empty wands.
+        if (item.plus == 0)
+            return false;
 
-    // Only low-HD monsters bother with wands.
-    if (get_hit_dice() >= 14)
-        return false;
+        // Only low-HD monsters bother with wands.
+        if (get_hit_dice() >= 14)
+            return false;
 
-    // Holy monsters and worshippers of good gods won't pick up evil
-    // wands.
-    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-        return false;
+        // Holy monsters and worshippers of good gods won't pick up evil
+        // wands.
+        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
+            return false;
+    }
 
     // If a monster already has a charged wand, don't bother.
     // Otherwise, replace with a charged one.
     if (item_def *wand = mslot_item(MSLOT_WAND))
     {
-        if (wand->plus > 0)
+        if (wand->plus > 0 && !force)
             return false;
 
         if (!drop_item(MSLOT_WAND, near))
@@ -2262,7 +2265,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     // Other types can always be picked up
     // (barring other checks depending on subtype, of course).
     case OBJ_WANDS:
-        return pickup_wand(item, near);
+        return pickup_wand(item, near, force);
     case OBJ_SCROLLS:
         return pickup_scroll(item, near);
     case OBJ_POTIONS:

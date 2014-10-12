@@ -266,7 +266,7 @@ public:
 
     bool      pickup_item(item_def &item, int near = -1, bool force = false);
     void      pickup_message(const item_def &item, int near);
-    bool      pickup_wand(item_def &item, int near);
+    bool      pickup_wand(item_def &item, int near, bool force = false);
     bool      pickup_scroll(item_def &item, int near);
     bool      pickup_potion(item_def &item, int near);
     bool      pickup_gold(item_def &item, int near);
