@@ -362,6 +362,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
+        you.duration[DUR_BREATH_WEAPON] = 0;
     }
 
     // Clear most status ailments.
