@@ -459,6 +459,42 @@ string apostrophise_fixup(const string &msg)
     return replace_all(msg, "s's", "s'");
 }
 
+/**
+ * Get the singular form of a given plural-agreeing verb.
+ *
+ * An absurd simplification of the english language, but for our purposes...
+ *
+ * @param verb  A plural-agreeing verb ("smoulder", "are", etc.)
+ * @return      A singular-agreeing form of the verb (e.g. "smoulders", "is").
+ */
+string conjugate_verb(const string &verb)
+{
+    if (!verb.empty() && verb[0] == '!')
+        return verb.substr(1);
+
+    if (verb == "are")
+        return "is";
+
+    if (verb == "release spores at")
+        return "releases spores at";
+
+#if TAG_MAJOR_VERSION == 34
+    if (verb == "snap closed at")
+        return "snaps closed at";
+#endif
+
+    if (verb == "pounce on")
+        return "pounces on";
+
+    if (ends_with(verb, "f") || ends_with(verb, "fe")
+        || ends_with(verb, "y"))
+    {
+        return verb + "s";
+    }
+
+    return pluralise(verb);
+}
+
 static string pow_in_words(int pow)
 {
     switch (pow)
