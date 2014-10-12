@@ -28,8 +28,7 @@
 #include "unwind.h"
 
 static void _give_monster_item(monster* mon, int thing,
-                               bool force_item = false,
-                               bool (monster::*pickupfn)(item_def&, int) = NULL)
+                               bool force_item = false)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -68,8 +67,7 @@ static void _give_monster_item(monster* mon, int thing,
     }
 
     unwind_var<int> save_speedinc(mon->speed_increment);
-    if (!(pickupfn ? (mon->*pickupfn)(mthing, false)
-                   : mon->pickup_item(mthing, false, true)))
+    if (!mon->pickup_item(mthing, false, true))
     {
         dprf(DIAG_MONPLACE, "Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN, false, true).c_str(),
@@ -92,7 +90,7 @@ void give_specific_item(monster* mon, const item_def& tpl)
         return;
 
     mitm[thing] = tpl;
-    _give_monster_item(mon, thing, true, NULL);
+    _give_monster_item(mon, thing, true);
 }
 
 static bool _should_give_unique_item(monster* mon)
