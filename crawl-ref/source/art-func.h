@@ -890,7 +890,8 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
     {
         mprf("%s %s %s%s.", attacker->name(DESC_THE).c_str(),
              attacker->conj_verb(verb).c_str(),
-             defender->name(DESC_THE).c_str(),
+             (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
+                                   : defender->name(DESC_THE)).c_str(),
              adv);
     }
 
@@ -1011,7 +1012,8 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     mprf("%s %s %s.",
          attacker->name(DESC_THE).c_str(),
          attacker->conj_verb(verb).c_str(),
-         defender->name(DESC_THE).c_str());
+         (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
+                               : defender->name(DESC_THE)).c_str());
 
     defender->hurt(attacker, bonus_dam, flavour);
 
