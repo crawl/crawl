@@ -288,6 +288,114 @@ static void _maybe_melt_armour()
 }
 
 /**
+ * How much horror does the player character feel in the current situation?
+ *
+ * (For Ru's MUT_COWARDICE.)
+ *
+ * Penalties are based on the "scariness" (threat level) of monsters currently
+ * visible.
+ */
+static int _current_horror_level()
+{
+    const coord_def& center = you.pos();
+    const int radius = 8;
+    int horror_level = 0;
+
+    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    {
+        const monster* const mon = monster_at(*ri);
+
+        if (mon == NULL
+            || mons_is_projectile(mon->type)
+            || mon->friendly()
+            || mons_is_firewood(mon)
+            || mon->submerged() // XXX: redundant?
+            || !you.can_see(mon))
+        {
+            continue;
+        }
+
+        ASSERT(mon);
+
+        const mon_threat_level_type threat_level = mons_threat_level(mon);
+        if (threat_level == MTHRT_NASTY)
+            horror_level += 3;
+        else if (threat_level == MTHRT_TOUGH)
+            horror_level += 1;
+    }
+    // Subtract one from the horror level so that you don't get a message
+    // when a single tough monster appears.
+    horror_level = max(0, horror_level - 1);
+    return horror_level;
+}
+
+/**
+ * What was the player's most recent horror level?
+ *
+ * (For Ru's MUT_COWARDICE.)
+ */
+static int _old_horror_level()
+{
+    if (you.duration[DUR_HORROR])
+        return you.props[HORROR_PENALTY_KEY].get_int();
+    return 0;
+}
+
+/**
+ * When the player should no longer be horrified, end the DUR_HORROR if it
+ * exists & cleanup the corresponding prop.
+ */
+static void _end_horror()
+{
+    if (!you.duration[DUR_HORROR])
+        return;
+
+    you.props.erase(HORROR_PENALTY_KEY);
+    you.set_duration(DUR_HORROR, 0);
+}
+
+/**
+ * Update penalties for cowardice based on the current situation, if the player
+ * has Ru's MUT_COWARDICE.
+ */
+static void _update_cowardice()
+{
+    if (!player_mutation_level(MUT_COWARDICE))
+    {
+        // If the player somehow becomes sane again, handle that
+        _end_horror();
+        return;
+    }
+
+    const int horror_level = _current_horror_level();
+
+    if (horror_level <= 0)
+    {
+        // If you were horrified before & aren't now, clean up.
+        _end_horror();
+        return;
+    }
+
+    // Lookup the old value before modifying it
+    const int old_horror_level = _old_horror_level();
+
+    // as long as there's still scary enemies, keep the horror going
+    you.props[HORROR_PENALTY_KEY] = horror_level;
+    you.set_duration(DUR_HORROR, 1);
+
+    // only show a message on increase
+    if (horror_level <= old_horror_level)
+        return;
+
+    if (horror_level >= HORROR_LVL_OVERWHELMING)
+        mpr("Monsters! Monsters everywhere! You have to get out of here!");
+    else if (horror_level >= HORROR_LVL_EXTREME)
+        mpr("You reel with horror at the sight of these foes!");
+    else
+        mpr("You feel a twist of horror at the sight of this foe.");
+}
+
+/**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
 void player_reacts_to_monsters()
@@ -316,78 +424,7 @@ void player_reacts_to_monsters()
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
     _maybe_melt_armour();
-
-    // If the player is insane, horrify them in proportion
-    // to the scariness of monsters they can see.
-    if (player_mutation_level(MUT_COWARDICE))
-    {
-        const coord_def& center = you.pos();
-        const int radius = 8;
-        int horror_level = 0;
-        int old_horror_level = 0;
-        if (you.duration[DUR_HORROR])
-            old_horror_level = you.props["horror_penalty"].get_int();
-
-        for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
-        {
-            monster* mon = monster_at(*ri);
-
-            if (mon == NULL
-                || mons_is_projectile(mon->type)
-                || mon->friendly()
-                || mons_is_firewood(mon)
-                || mon->submerged()
-                || !you.see_cell(mon->pos())
-                || (mon->invisible() && !you.can_see_invisible()))
-            {
-                continue;
-            }
-
-            ASSERT(mon);
-
-            mon_threat_level_type threat_level = mons_threat_level(mon);
-            if (threat_level == MTHRT_NASTY)
-                horror_level += 3;
-            else if (threat_level == MTHRT_TOUGH)
-                horror_level += 1;
-        }
-
-        // Subtract one from the horror level so that you don't get a message
-        // when a single tough monster appears.
-        horror_level = max(0, horror_level - 1);
-
-        if (horror_level > 0)
-        {
-            if (horror_level > old_horror_level)
-            {
-                if (horror_level > old_horror_level)
-                {
-                    // only show a message on increase
-
-                    if (horror_level > 4)
-                        mpr("Monsters! Monsters everywhere! You have to get out of here!");
-                    else if (horror_level > 2)
-                        mpr("You reel with horror at the sight of these foes!");
-                    else
-                        mpr("You feel a twist of horror at the sight of this foe.");
-                }
-            }
-            // as long as there's still scary enemies, keep the horror going
-            you.props["horror_penalty"] = horror_level;
-            you.set_duration(DUR_HORROR, 1);
-        }
-        else if (you.duration[DUR_HORROR])
-        {
-            you.props["horror_penalty"] = 0;
-            you.set_duration(DUR_HORROR, 0);
-        }
-    }
-    else if (you.duration[DUR_HORROR])
-    {
-        // If the player somehow becomes sane again, we need to handle that too
-        you.props["horror_penalty"] = 0;
-        you.set_duration(DUR_HORROR, 0);
-    }
+    _update_cowardice();
 }
 
 static bool _check_recite()
