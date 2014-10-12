@@ -475,16 +475,10 @@ string conjugate_verb(const string &verb)
     if (verb == "are")
         return "is";
 
-    if (verb == "release spores at")
-        return "releases spores at";
-
-#if TAG_MAJOR_VERSION == 34
-    if (verb == "snap closed at")
-        return "snaps closed at";
-#endif
-
-    if (verb == "pounce on")
-        return "pounces on";
+    // Conjugate the first word of a phrase (e.g. "release spores at")
+    const size_t space = verb.find(" ");
+    if (space != string::npos)
+        return conjugate_verb(verb.substr(0, space)) + verb.substr(space);
 
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))
