@@ -1510,10 +1510,12 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
     apply_random_around_square(_irradiate_cell, who->pos(), true, powc, 8, who);
 
     if (who->is_player())
+    {
         contaminate_player(1500 + random2(1500)); // on avg, a bit under 50% of
                                                   // yellow contam
                                                   // another cast might or
                                                   // might not push you over
+    }
     return SPRET_SUCCESS;
 }
 
