@@ -1573,7 +1573,12 @@ static bool _seal_doors_and_stairs(const monster* warden)
                 if (igrd(*i) != NON_ITEM || act)
                 {
                     coord_def newpos;
-                    get_push_space(*i, newpos, act, false, &veto_spots);
+                    // If we don't find a spot, try again ignoring tension.
+                    const bool success =
+                        get_push_space(*i, newpos, act, false, &veto_spots)
+                        || get_push_space(*i, newpos, act, true, &veto_spots);
+                    ASSERTM(success, "No push space from (%d,%d)", i->x, i->y);
+
                     move_items(*i, newpos);
                     if (act)
                     {
