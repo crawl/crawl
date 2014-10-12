@@ -816,9 +816,11 @@ phantasmal_warrior MONS_PHANTASMAL_WARRIOR
 %rim 1
 eidolon MONS_EIDOLON
 
+## Orb guardians ('X')
 %sdir mon
 %rim 0
-orb_guardian MONS_ORB_GUARDIAN /*'X'*/
+orb_guardian MONS_ORB_GUARDIAN
+orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 
 ## Centaurs ('c')
 %rim 1
