@@ -393,10 +393,9 @@ bool Form::all_blocked(int slotflags) const
 }
 
 
-
 class FormNone : public Form
 {
-public:
+private:
     FormNone()
     : Form("", "", "none", // short name, long name, wizmode name
            "",  // description
@@ -417,6 +416,12 @@ public:
            MONS_PLAYER)       // equivalent monster
     { };
 
+    // Deleted
+    FormNone(const FormNone &);
+    FormNone &operator=(const FormNone &);
+public:
+    static const FormNone instance;
+
     /**
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
@@ -426,7 +431,7 @@ public:
 
 class FormSpider : public Form
 {
-public:
+private:
     FormSpider()
     : Form("Spider", "spider-form", "spider", // short name, long name, wizmode name
            "a venomous arachnid creature.",  // description
@@ -446,11 +451,17 @@ public:
            "front leg", "",          // hand name, foot name
            MONS_SPIDER)       // equivalent monster
     { };
+
+    // Deleted
+    FormSpider(const FormSpider &);
+    FormSpider &operator=(const FormSpider &);
+public:
+    static const FormSpider instance;
 };
 
 class FormBlade : public Form
 {
-public:
+private:
     FormBlade()
     : Form("Blade", "", "blade", // short name, long name, wizmode name
            "",  // description
@@ -470,6 +481,12 @@ public:
            "scythe-like blade", "",          // hand name, foot name
            MONS_PLAYER)       // equivalent monster
     { };
+
+    // Deleted
+    FormBlade(const FormBlade &);
+    FormBlade &operator=(const FormBlade &);
+public:
+    static const FormBlade instance;
 
     /**
      * Find the player's base unarmed damage in this form.
@@ -534,7 +551,7 @@ public:
 
 class FormStatue : public Form
 {
-public:
+private:
     FormStatue()
     : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
            "a stone statue.",  // description
@@ -554,6 +571,12 @@ public:
            "", "",          // hand name, foot name
            MONS_STATUE)       // equivalent monster
     { };
+
+    // Deleted
+    FormStatue(const FormStatue &);
+    FormStatue &operator=(const FormStatue &);
+public:
+    static const FormStatue instance;
 
     /**
      * The AC bonus of the form, multiplied by 100 to match
@@ -636,7 +659,7 @@ public:
 
 class FormIce : public Form
 {
-public:
+private:
     FormIce()
     : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
            "a creature of crystalline ice.",  // description
@@ -656,6 +679,12 @@ public:
            "front paw", "paw",          // hand name, foot name
            MONS_ICE_BEAST)       // equivalent monster
     { };
+
+    // Deleted
+    FormIce(const FormIce &);
+    FormIce &operator=(const FormIce &);
+public:
+    static const FormIce instance;
 
     /**
      * Get a message for untransforming from this form.
@@ -682,7 +711,7 @@ public:
 
 class FormDragon : public Form
 {
-public:
+private:
     FormDragon()
     : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
            "a fearsome dragon!",  // description
@@ -702,6 +731,12 @@ public:
            "foreclaw", "",          // hand name, foot name
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
+
+    // Deleted
+    FormDragon(const FormDragon &);
+    FormDragon &operator=(const FormDragon &);
+public:
+    static const FormDragon instance;
 
     /**
      * Get an monster type corresponding to the transformation.
@@ -769,7 +804,7 @@ public:
 
 class FormLich : public Form
 {
-public:
+private:
     FormLich()
     : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
            "a lich.",  // description
@@ -789,6 +824,12 @@ public:
            "", "",          // hand name, foot name
            MONS_LICH)       // equivalent monster
     { };
+
+    // Deleted
+    FormLich(const FormLich &);
+    FormLich &operator=(const FormLich &);
+public:
+    static const FormLich instance;
 
     /**
      * Get a message for transforming into this form.
@@ -812,7 +853,7 @@ public:
 
 class FormBat : public Form
 {
-public:
+private:
     FormBat()
     : Form("Bat", "bat-form", "bat", // short name, long name, wizmode name
            "",  // description
@@ -832,6 +873,12 @@ public:
            "foreclaw", "",          // hand name, foot name
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
+
+    // Deleted
+    FormBat(const FormBat &);
+    FormBat &operator=(const FormBat &);
+public:
+    static const FormBat instance;
 
     /**
      * Get an monster type corresponding to the transformation.
@@ -896,7 +943,7 @@ public:
 
 class FormPig : public Form
 {
-public:
+private:
     FormPig()
     : Form("Pig", "pig-form", "pig", // short name, long name, wizmode name
            "a filthy swine.",  // description
@@ -916,11 +963,17 @@ public:
            "front trotter", "trotter",          // hand name, foot name
            MONS_HOG)       // equivalent monster
     { };
+
+    // Deleted
+    FormPig(const FormPig &);
+    FormPig &operator=(const FormPig &);
+public:
+    static const FormPig instance;
 };
 
 class FormAppendage : public Form
 {
-public:
+private:
     FormAppendage()
     : Form("App", "appendage", "appendage", // short name, long name, wizmode name
            "",  // description
@@ -940,6 +993,12 @@ public:
            "", "",          // hand name, foot name
            MONS_PLAYER)       // equivalent monster
     { };
+
+    // Deleted
+    FormAppendage(const FormAppendage &);
+    FormAppendage &operator=(const FormAppendage &);
+public:
+    static const FormAppendage instance;
 
     string get_description(bool past_tense) const
     {
@@ -982,7 +1041,7 @@ public:
 
 class FormTree : public Form
 {
-public:
+private:
     FormTree()
     : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
            "a tree.",  // description
@@ -1003,15 +1062,21 @@ public:
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
+    // Deleted
+    FormTree(const FormTree &);
+    FormTree &operator=(const FormTree &);
+public:
+    static const FormTree instance;
+
     /**
      * Get a message for untransforming from this form.
      */
     string get_untransform_message() const { return "You feel less woody."; }
 };
 
-class FormPorcupine: public Form
+class FormPorcupine : public Form
 {
-public:
+private:
     FormPorcupine()
     : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
            "a spiny porcupine.",  // description
@@ -1031,11 +1096,17 @@ public:
            "front leg", "",          // hand name, foot name
            MONS_PORCUPINE)       // equivalent monster
     { };
+
+    // Deleted
+    FormPorcupine(const FormPorcupine &);
+    FormPorcupine &operator=(const FormPorcupine &);
+public:
+    static const FormPorcupine instance;
 };
 
-class FormWisp: public Form
+class FormWisp : public Form
 {
-public:
+private:
     FormWisp()
     : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
            "an insubstantial wisp.",  // description
@@ -1056,6 +1127,12 @@ public:
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
+    // Deleted
+    FormWisp(const FormWisp &);
+    FormWisp &operator=(const FormWisp &);
+public:
+    static const FormWisp instance;
+
     /**
      * Get a message for untransforming from this form.
      */
@@ -1065,7 +1142,7 @@ public:
 #if TAG_MAJOR_VERSION == 34
 class FormJelly : public Form
 {
-public:
+private:
     FormJelly()
     : Form("Jelly",  "jelly-form", "jelly", // short name, long name, wizmode name
            "a lump of jelly.",  // description
@@ -1085,12 +1162,18 @@ public:
            "", "",          // hand name, foot name
            MONS_JELLY)       // equivalent monster
     { };
+
+    // Deleted
+    FormJelly(const FormJelly &);
+    FormJelly &operator=(const FormJelly &);
+public:
+    static const FormJelly instance;
 };
 #endif
 
 class FormFungus : public Form
 {
-public:
+private:
     FormFungus()
     : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
            "a sentient fungus.",  // description
@@ -1111,6 +1194,12 @@ public:
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 
+    // Deleted
+    FormFungus(const FormFungus &);
+    FormFungus &operator=(const FormFungus &);
+public:
+    static const FormFungus instance;
+
     /**
      * Can the player wear the given item while in this form?
      *
@@ -1128,9 +1217,9 @@ public:
     }
 };
 
-class FormShadow: public Form
+class FormShadow : public Form
 {
-public:
+private:
     FormShadow()
     : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
            "a swirling mass of dark shadows.",  // description
@@ -1150,6 +1239,12 @@ public:
            "", "",          // hand name, foot name
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
+
+    // Deleted
+    FormShadow(const FormShadow &);
+    FormShadow &operator=(const FormShadow &);
+public:
+    static const FormShadow instance;
 
     /**
      * Get a message for untransforming from this form.
@@ -1184,7 +1279,7 @@ void set_hydra_form_heads(int heads)
 
 class FormHydra : public Form
 {
-public:
+private:
     FormHydra()
     : Form("Hydra", "hydra-form", "hydra", // short name, long name, wizmode name
            "",  // description
@@ -1204,6 +1299,12 @@ public:
            "foreclaw", "",          // hand name, foot name
            MONS_HYDRA)       // equivalent monster
     { };
+
+    // Deleted
+    FormHydra(const FormHydra &);
+    FormHydra &operator=(const FormHydra &);
+public:
+    static const FormHydra instance;
 
     /**
      * Get a string describing the form you're turning into.
@@ -1248,54 +1349,54 @@ public:
 
 };
 
-static const FormNone FORM_NONE = FormNone();
-static const FormSpider FORM_SPIDER = FormSpider();
-static const FormBlade FORM_BLADE = FormBlade();
-static const FormStatue FORM_STATUE = FormStatue();
+// Static const members.
+const FormNone FormNone::instance = FormNone();
+const FormSpider FormSpider::instance = FormSpider();
+const FormBlade FormBlade::instance = FormBlade();
+const FormStatue FormStatue::instance = FormStatue();
 
-static const FormIce FORM_ICE = FormIce();
-static const FormLich FORM_LICH = FormLich();
-static const FormDragon FORM_DRAGON = FormDragon();
-static const FormBat FORM_BAT = FormBat();
+const FormIce FormIce::instance = FormIce();
+const FormLich FormLich::instance = FormLich();
+const FormDragon FormDragon::instance = FormDragon();
+const FormBat FormBat::instance = FormBat();
 
-static const FormPig FORM_PIG = FormPig();
-static const FormAppendage FORM_APPENDAGE = FormAppendage();
-static const FormTree FORM_TREE = FormTree();
-static const FormPorcupine FORM_PORCUPINE = FormPorcupine();
+const FormPig FormPig::instance = FormPig();
+const FormAppendage FormAppendage::instance = FormAppendage();
+const FormTree FormTree::instance = FormTree();
+const FormPorcupine FormPorcupine::instance = FormPorcupine();
 
-static const FormWisp FORM_WISP = FormWisp();
+const FormWisp FormWisp::instance = FormWisp();
 #if TAG_MAJOR_VERSION == 34
-static const FormJelly FORM_JELLY = FormJelly();
+const FormJelly FormJelly::instance = FormJelly();
 #endif
-static const FormFungus FORM_FUNGUS = FormFungus();
-static const FormShadow FORM_SHADOW = FormShadow();
-static const FormHydra FORM_HYDRA = FormHydra();
-
+const FormFungus FormFungus::instance = FormFungus();
+const FormShadow FormShadow::instance = FormShadow();
+const FormHydra FormHydra::instance = FormHydra();
 
 static const Form* forms[] =
 {
-    &FORM_NONE,
-    &FORM_SPIDER,
-    &FORM_BLADE,
-    &FORM_STATUE,
+    &FormNone::instance,
+    &FormSpider::instance,
+    &FormBlade::instance,
+    &FormStatue::instance,
 
-    &FORM_ICE,
-    &FORM_DRAGON,
-    &FORM_LICH,
-    &FORM_BAT,
+    &FormIce::instance,
+    &FormDragon::instance,
+    &FormLich::instance,
+    &FormBat::instance,
 
-    &FORM_PIG,
-    &FORM_APPENDAGE,
-    &FORM_TREE,
-    &FORM_PORCUPINE,
+    &FormPig::instance,
+    &FormAppendage::instance,
+    &FormTree::instance,
+    &FormPorcupine::instance,
 
-    &FORM_WISP,
+    &FormWisp::instance,
 #if TAG_MAJOR_VERSION == 34
-    &FORM_JELLY,
+    &FormJelly::instance,
 #endif
-    &FORM_FUNGUS,
-    &FORM_SHADOW,
-    &FORM_HYDRA,
+    &FormFungus::instance,
+    &FormShadow::instance,
+    &FormHydra::instance,
 };
 
 const Form* get_form(transformation_type form)
@@ -1306,12 +1407,7 @@ const Form* get_form(transformation_type form)
 }
 
 
-
-
-
-
 static void _extra_hp(int amount_extra);
-
 
 /**
  * Get the wizmode name of a form.

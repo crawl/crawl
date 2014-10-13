@@ -64,7 +64,13 @@ public:
 
 class Form
 {
-public:
+private:
+    // These are unimplemented, as a C++03-friendly form of = delete
+    // (that is only checked at link time).
+    Form();
+    Form(const Form &f);
+    Form &operator=(const Form &f);
+protected:
     Form(string _short_name, string _long_name, string _wiz_name,
          string _description,
          int _blocked_slots,
@@ -103,6 +109,7 @@ public:
     equivalent_mons(_equivalent_mons)
     { };
 
+public:
     bool slot_available(int slot) const;
     virtual bool can_wear_item(const item_def& item) const;
 
