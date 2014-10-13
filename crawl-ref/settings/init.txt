@@ -7,9 +7,13 @@
 # https://gitorious.org/crawl/crawl/source/HEAD:crawl-ref/docs/options_guide.txt
 #
 # Crawl uses the first file of the following list as its option file:
-#  * settings/init.txt
+#  * init.txt in the -rcdir directory (if specified)
+#  * .crawlrc in the -rcdir directory (if specified)
 #  * init.txt (in the Crawl directory)
-#  * ~/.crawlrc
+#  * ~/.crawl/init.txt (Unix only)
+#  * ~/.crawlrc (Unix only)
+#  * ~/init.txt (Unix only)
+#  * settings/init.txt (in the Crawl directory)
 
 ##### Some basic explanation of option syntax #######################
 # Lines beginning with '#' are comments.  The basic syntax is:
