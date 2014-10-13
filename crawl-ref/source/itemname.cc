@@ -3712,6 +3712,9 @@ string item_prefix(const item_def &item, bool temp)
 {
     vector<string> prefixes;
 
+    if (!item.is_valid())
+        return "";
+
     if (fully_identified(item))
         prefixes.push_back("identified");
     else if (item_ident(item, ISFLAG_KNOW_TYPE)
