@@ -3093,7 +3093,7 @@ int get_max_subtype(object_class_type base_type)
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
-    ASSERT(base_type < NUM_OBJECT_CLASSES);
+    ASSERT_RANGE(base_type, 0, NUM_OBJECT_CLASSES);
 
     return max_subtype[base_type];
 }
