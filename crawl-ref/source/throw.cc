@@ -863,7 +863,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
-        practise(EX_WILL_LAUNCH, range_skill(*launcher));
+        practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->special)->type_name)
         {
@@ -890,7 +890,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const skill_type sk =
             projected == LRET_THROWN ? SK_THROWING
-                                     : range_skill(*you.weapon());
+                                     : item_attack_skill(*you.weapon());
         if (!one_chance_in(1 + skill_bump(sk)))
             did_return = true;
     }

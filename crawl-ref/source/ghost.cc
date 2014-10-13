@@ -423,7 +423,10 @@ void ghost_demon::init_player_ghost()
         {
             damage = property(weapon, PWPN_DAMAGE);
 
-            damage *= 25 + you.skills[melee_skill(weapon)];
+            // Bows skill doesn't make bow-bashing better.
+            skill_type sk = is_range_weapon(weapon) ? SK_FIGHTING
+                                                    : item_attack_skill(weapon);
+            damage *= 25 + you.skills[sk];
             damage /= 25;
 
             if (weapon.base_type == OBJ_WEAPONS)

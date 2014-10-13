@@ -740,7 +740,7 @@ static void _get_randart_properties(const item_def &item,
 
             if (atype == WPN_BLOWGUN)
                 proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-            else if (range_skill(item) == SK_CROSSBOWS)
+            else if (item_attack_skill(item) == SK_CROSSBOWS)
             {
                 // Penetration and electrocution are only allowed on
                 // crossbows.  This may change in future.

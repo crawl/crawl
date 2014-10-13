@@ -3180,24 +3180,18 @@ void hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_ADJUST_INVENTORY);
 
                 // Weapon skill used by this weapon and the best weapon skill.
-                skill_type curr_wpskill, best_wpskill;
+                skill_type curr_wpskill = item_attack_skill(item);
+                skill_type best_wpskill;
 
                 // Maybe this is a launching weapon?
                 if (is_range_weapon(item))
-                {
-                    // Then only compare with other launcher skills.
-                    curr_wpskill = range_skill(item);
                     best_wpskill = best_skill(SK_SLINGS, SK_THROWING);
-                }
                 else
-                {
-                    // Compare with other melee weapons.
-                    curr_wpskill = melee_skill(item);
                     best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
-                    // Maybe unarmed is better.
-                    if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])
-                        best_wpskill = SK_UNARMED_COMBAT;
-                }
+
+                // Maybe unarmed is better.
+                if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])
+                    best_wpskill = SK_UNARMED_COMBAT;
 
                 if (you.skills[curr_wpskill] + 2 < you.skills[best_wpskill])
                 {

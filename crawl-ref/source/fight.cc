@@ -548,7 +548,7 @@ int weapon_min_delay(const item_def &weapon)
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
-    if (melee_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
+    if (item_attack_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
         min_delay = 5;
 
     // All weapons have min delay 7 or better
@@ -556,7 +556,7 @@ int weapon_min_delay(const item_def &weapon)
         min_delay = 7;
 
     // ...except crossbows...
-    if (range_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+    if (item_attack_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
         min_delay = 10;
 
     // ... and unless it would take more than skill 27 to get there.

@@ -221,7 +221,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         // XXX: To deal with the fact that is_missile_brand_ok will be
         // unhappy if we attempt to brand stones, tell it we're using
         // sling bullets instead.
-        if (range_skill(weapon) == SK_SLINGS)
+        if (item_attack_skill(weapon) == SK_SLINGS)
             missile = MI_SLING_BULLET;
 
         if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
@@ -320,8 +320,7 @@ spret_type cast_sure_blade(int power, bool fail)
 {
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
-    else if (melee_skill(you.weapon()->base_type,
-                          you.weapon()->sub_type) != SK_SHORT_BLADES)
+    else if (item_attack_skill(*you.weapon()) != SK_SHORT_BLADES)
     {
         mpr("You cannot bond with this weapon.");
     }
