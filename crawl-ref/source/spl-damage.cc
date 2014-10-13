@@ -277,7 +277,9 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
 
             if (!cell_see_cell(source, mi->pos(), LOS_SOLID)
                 || !cell_see_cell(caster->pos(), mi->pos(), LOS_SOLID_SEE))
+            {
                 continue;
+            }
 
             count++;
 

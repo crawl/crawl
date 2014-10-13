@@ -321,9 +321,7 @@ spret_type cast_sure_blade(int power, bool fail)
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
     else if (item_attack_skill(*you.weapon()) != SK_SHORT_BLADES)
-    {
         mpr("You cannot bond with this weapon.");
-    }
     else
     {
         fail_check();
