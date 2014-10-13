@@ -1521,8 +1521,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
         // What kind of assassin would forget her blowgun or dagger somewhere else?
         if (mons->type == MONS_SONJA)
+        {
             return item_attack_skill(weapon) == SK_SHORT_BLADES
                    || wtype == WPN_BLOWGUN;
+        }
     }
 
     if (mons->is_holy())
