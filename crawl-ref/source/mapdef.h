@@ -500,7 +500,7 @@ private:
             no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
             keyspec_idx(0)
         {}
-        int colour;
+        colour_t colour;
         string rocktile;
         string floortile;
         string tile;
@@ -642,7 +642,7 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    int colour;
+    colour_t colour;
 
     god_type god;
     bool god_gift;

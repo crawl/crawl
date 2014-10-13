@@ -951,7 +951,7 @@ static void _print_stats_qv(int y)
 struct status_light
 {
     status_light(int c, string t) : colour(c), text(t) {}
-    int colour;
+    colour_t colour;
     string text;
 };
 

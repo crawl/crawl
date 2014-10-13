@@ -97,7 +97,7 @@ public:
     string tag;
     string text;
     int quantity, selected_qty;
-    int colour;
+    colour_t colour;
     vector<int> hotkeys;
     MenuEntryLevel level;
     bool preselected;

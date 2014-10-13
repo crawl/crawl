@@ -11,7 +11,7 @@ struct zap_info
     int power_cap;
     dam_deducer* damage;
     tohit_deducer* tohit;       // Enchantments have power modifier here
-    int colour;
+    colour_t colour;
     bool is_enchantment;
     beam_type flavour;
     dungeon_char_type glyph;

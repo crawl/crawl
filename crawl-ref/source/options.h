@@ -54,7 +54,7 @@ struct colour_mapping
 {
     string tag;
     text_pattern pattern;
-    int colour;
+    colour_t colour;
     bool operator== (const colour_mapping &o) const
     {
         return tag == o.tag && pattern == o.pattern && colour == o.colour;
