@@ -1,4 +1,11 @@
 ##### Crawl Init file ###############################################
+# For descriptions of all options, as well as some more in-depth information
+# on setting them, consult the file
+#    options_guide.txt
+# in your /docs directory. If you can't find it, the file is also available
+# online at:
+# https://gitorious.org/crawl/crawl/source/HEAD:crawl-ref/docs/options_guide.txt
+#
 # Crawl uses the first file of the following list as its option file:
 #  * settings/init.txt
 #  * init.txt (in the Crawl directory)
@@ -32,11 +39,6 @@
 # From there on, 'ae' will be treated as if it you typed autopickup_exceptions,
 # so you can save time typing it.
 #
-# For descriptions of all options, as well as some more in-depth information
-# on setting them, consult the file
-#    options_guide.txt
-# in your /docs directory. If you can't find it, the file is also available online at
-# https://gitorious.org/crawl/crawl/source/HEAD:crawl-ref/docs/options_guide.txt
 
 ##### Other files ###################################################
 # You can include other files from your options file using the 'include'
