@@ -49,7 +49,7 @@ struct bolt
                                        // beams.
     int         range;
     unsigned    glyph;                 // missile gfx
-    int         colour;
+    colour_t    colour;
     beam_type   flavour;
     beam_type   real_flavour;          // for random and chaos beams this
                                        // will remain the same while flavour

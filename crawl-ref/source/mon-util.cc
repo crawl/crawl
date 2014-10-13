@@ -67,7 +67,7 @@ static FixedVector < int, NUM_MONSTERS > mon_entry;
 struct mon_display
 {
     ucs_t        glyph;
-    unsigned     colour;
+    colour_t     colour;
     monster_type detected; // What a monster of type "type" is detected as.
 
     mon_display(unsigned gly = 0, unsigned col = 0,

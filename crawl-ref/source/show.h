@@ -42,7 +42,7 @@ struct show_type
     dungeon_feature_type feat;
     show_item_type item;
     monster_type mons;
-    unsigned short colour;
+    colour_t colour;
 
     show_type();
     show_type(dungeon_feature_type f);

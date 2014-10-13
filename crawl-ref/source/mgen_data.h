@@ -77,7 +77,7 @@ struct mgen_data
     int             number;
 
     // The colour of the monster.
-    int             colour;
+    colour_t        colour;
 
     // How close to or far from the player the monster should be created.
     // Is usually used only when the initial position (pos) is unspecified.
