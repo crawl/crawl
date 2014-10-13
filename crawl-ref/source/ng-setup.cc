@@ -744,11 +744,11 @@ static void _give_items_skills(const newgame_def& ng)
         // And give them a book
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_DEBILITATION);
 
-        you.skills[SK_FIGHTING]             = 1;
-        you.skills[range_skill(you.inv[1])] = 2;
-        you.skills[SK_DODGING]              = 2;
-        you.skills[SK_SPELLCASTING]         = 1;
-        you.skills[SK_HEXES]                = 3;
+        you.skills[SK_FIGHTING]                   = 1;
+        you.skills[item_attack_skill(you.inv[1])] = 2;
+        you.skills[SK_DODGING]                    = 2;
+        you.skills[SK_SPELLCASTING]               = 1;
+        you.skills[SK_HEXES]                      = 3;
         break;
 
     case JOB_WIZARD:
@@ -940,7 +940,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]  = 1;
         weap_skill = 1;
 
-        you.skills[range_skill(you.inv[1])] = 4;
+        you.skills[item_attack_skill(you.inv[1])] = 4;
         break;
 
     case JOB_WANDERER:
@@ -994,10 +994,11 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (weap_skill)
     {
-        if (!you.weapon())
+        item_def *weap = you.weapon();
+        if (!weap)
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-            you.skills[melee_skill(*you.weapon())] = weap_skill;
+            you.skills[item_attack_skill(*weap)] = weap_skill;
     }
 
     if (you.species == SP_FELID)

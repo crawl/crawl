@@ -801,8 +801,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
     for (int i = 0; i < slot; ++i)
     {
-        if (you.inv[i].base_type == OBJ_WEAPONS
-            && range_skill(you.inv[i]) == SK_CROSSBOWS)
+        if (item_attack_skill(you.inv[i]) == SK_CROSSBOWS)
         {
             need_bolts = true;
             break;
@@ -822,8 +821,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
     for (int i = 0; i < slot; ++i)
     {
-        if (you.inv[i].base_type == OBJ_WEAPONS
-            && range_skill(you.inv[i]) == SK_BOWS)
+        if (item_attack_skill(you.inv[i]) == SK_BOWS)
         {
             needs_arrows = true;
             break;

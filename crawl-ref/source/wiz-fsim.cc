@@ -68,13 +68,9 @@ static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
-    const int missile = you.m_quiver->get_fire_item();
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
-
-    if (missile != -1)
-        return range_skill(you.inv[missile]);
 
     return SK_UNARMED_COMBAT;
 }

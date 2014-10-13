@@ -2785,12 +2785,8 @@ static bool _similar_equip(const item_def& pickup_item,
     if (pickup_item.base_type == OBJ_ARMOUR)
         return true;
 
-    // Launchers of the same type are similar.
-    if (is_ranged_weapon_type(pickup_item.sub_type))
-        return pickup_item.sub_type != inv_item.sub_type;
-
-    return (melee_skill(pickup_item) == melee_skill(inv_item))
-           && (get_damage_type(pickup_item) == get_damage_type(inv_item));
+    return item_attack_skill(pickup_item) == item_attack_skill(inv_item)
+           && get_damage_type(pickup_item) == get_damage_type(inv_item);
 }
 
 static bool _similar_wands(const item_def& pickup_item,

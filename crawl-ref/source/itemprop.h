@@ -107,12 +107,6 @@ int weapon_str_weight(const item_def &wpn) PURE;
 skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
-skill_type melee_skill(const item_def &item) PURE;
-skill_type melee_skill(object_class_type wclass, int wtype) IMMUTABLE;
-
-skill_type range_skill(const item_def &item) PURE;
-skill_type range_skill(object_class_type wclass, int wtype) IMMUTABLE;
-
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:

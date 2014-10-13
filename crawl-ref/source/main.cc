@@ -2622,7 +2622,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             {
                 list<actor*> cleave_targets;
                 const skill_type wpn_skl = you.weapon() ?
-                                                melee_skill(*you.weapon()) :
+                                                item_attack_skill(*you.weapon()) :
                                                 SK_UNARMED_COMBAT;
                 if (actor_can_cleave(you, wpn_skl))
                     get_all_cleave_targets(&you, target, cleave_targets);

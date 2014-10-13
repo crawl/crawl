@@ -804,7 +804,7 @@ void append_weapon_stats(string &description, const item_def &item)
     description += "Minimum delay: ";
     _append_value(description, weapon_min_delay(item) / 10.0f, false);
 
-    if (range_skill(item) == SK_SLINGS)
+    if (item_attack_skill(item) == SK_SLINGS)
     {
         description += make_stringf("\nFiring bullets:    Base damage: %d",
                                     base_dam +
