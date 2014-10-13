@@ -1132,11 +1132,6 @@ private:
     FormWisp &operator=(const FormWisp &);
 public:
     static const FormWisp instance;
-
-    /**
-     * Get a message for untransforming from this form.
-     */
-    string get_untransform_message() const { return "You stop sporulating."; }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1215,6 +1210,11 @@ public:
             return true; // mushroom caps!
         return Form::can_wear_item(item);
     }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const { return "You stop sporulating."; }
 };
 
 class FormShadow : public Form
