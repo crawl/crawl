@@ -3644,9 +3644,6 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
     marshallByte(th, item.slot);
 
     item.orig_place.save(th);
-#if 0
-    marshallShort(th, item.orig_place);
-#endif
     marshallShort(th, item.orig_monnum);
     marshallString(th, item.inscription.c_str());
 
