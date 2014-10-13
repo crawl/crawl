@@ -28,9 +28,6 @@
 static bool _is_bookrod_type(const item_def& item,
                              bool (*suitable)(spell_type spell))
 {
-    if (!item_is_spellbook(item) && item.base_type != OBJ_RODS)
-        return false;
-
     // Return false for item_infos of unknown subtype
     // (== NUM_{BOOKS,RODS} in most cases, OBJ_RANDOM for acquirement)
     if (item.sub_type == get_max_subtype(item.base_type)
@@ -38,6 +35,12 @@ static bool _is_bookrod_type(const item_def& item,
     {
         return false;
     }
+
+    if (item.base_type == OBJ_RODS)
+        return suitable(spell_in_rod(item.sub_type));
+
+    if (!item_is_spellbook(item))
+        return false;
 
     int total       = 0;
     int total_liked = 0;
@@ -54,7 +57,7 @@ static bool _is_bookrod_type(const item_def& item,
     }
 
     // If at least half of the available spells are suitable, the whole
-    // spellbook or rod is, too.
+    // spellbook is, too.
     return total_liked >= (total / 2) + 1;
 }
 

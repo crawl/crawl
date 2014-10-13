@@ -1205,31 +1205,6 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     return true;
 }
 
-static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
-                                    int& cost)
-{
-    bool success = false;
-
-    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
-    {
-        spell_type s = which_spell_in_book(rod, i);
-        int c = spell_difficulty(s) * ROD_CHARGE_MULT;
-
-        if (s == SPELL_NO_SPELL || rod.plus < c)
-            continue;
-
-        success = true;
-
-        spell = s;
-        cost = c;
-
-        if (one_chance_in(SPELLBOOK_SIZE - i + 1))
-            break;
-    }
-
-    return success;
-}
-
 static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
 {
     coord_def prev;
@@ -1285,10 +1260,10 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    spell_type mzap       = SPELL_NO_SPELL;
-    int rate              = 0;
+    spell_type mzap = spell_in_rod(rod.sub_type);
+    int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
-    if (!_get_rod_spell_and_cost(rod, mzap, rate))
+    if (rod.plus < rate)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding

@@ -32,6 +32,7 @@
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "itemprop-enum.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -64,9 +65,38 @@
 // The list of spells in spellbooks:
 #include "book-data.h"
 
+static int _rod_spells[NUM_RODS][2] =
+{
+    { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
+    { ROD_SWARM,       SPELL_SUMMON_SWARM },
+    { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
+    { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
+    { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
+    { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
+#if TAG_MAJOR_VERSION == 34
+    { ROD_WARDING,     SPELL_MELEE },
+#endif
+    { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
+    { ROD_STRIKING,    SPELL_MELEE },
+#if TAG_MAJOR_VERSION == 34
+    { ROD_VENOM,       SPELL_MELEE },
+#endif
+};
+
+spell_type spell_in_rod(int rod)
+{
+    for (int i = 0; i < NUM_RODS; i++)
+        if (rod == _rod_spells[i][0])
+            return static_cast<spell_type>(_rod_spells[i][1]);
+    die("unknown rod type %d", rod);
+}
+
 spell_type which_spell_in_book(const item_def &book, int spl)
 {
     ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_RODS);
+
+    if (book.base_type == OBJ_RODS)
+        return !spl ? spell_in_rod(book.sub_type) : SPELL_NO_SPELL;
 
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
@@ -88,8 +118,8 @@ spell_type which_spell_in_book(int sbook_type, int spl)
 
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
-int spellbook_contents(item_def &book, read_book_action_type action,
-                        formatted_string *fs)
+// XXX: redundancy with append_spells in describe.cc
+int spellbook_contents(item_def &book, formatted_string *fs)
 {
     int spelcount = 0;
     int i, j;
@@ -116,31 +146,20 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         const int levels_req = spell_levels_required(stype);
 
         int colour = DARKGREY;
-        if (action == RBOOK_USE_ROD)
+        if (you.has_spell(stype))
+            colour = COL_MEMORIZED;
+        else if (!you_can_memorise(stype)
+                 || you.experience_level < level_diff
+                 || spell_levels < levels_req
+                 || book.base_type == OBJ_BOOKS
+                    && !player_can_memorise_from_spellbook(book))
         {
-            ASSERT(book.base_type == OBJ_RODS);
-            if (book.plus >= level_diff * ROD_CHARGE_MULT)
-                colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, true);
-            else
-                colour = COL_USELESS;
+            colour = COL_USELESS;
         }
+        else if (!you.has_spell(stype))
+            colour = COL_UNMEMORIZED;
         else
-        {
-            if (you.has_spell(stype))
-                colour = COL_MEMORIZED;
-            else if (!you_can_memorise(stype)
-                || you.experience_level < level_diff
-                || spell_levels < levels_req
-                || book.base_type == OBJ_BOOKS
-                   && !player_can_memorise_from_spellbook(book))
-            {
-                colour = COL_USELESS;
-            }
-            else if (!you.has_spell(stype))
-                colour = COL_UNMEMORIZED;
-            else
-                colour = spell_highlight_by_utility(stype);
-        }
+            colour = spell_highlight_by_utility(stype);
 
         out.textcolour(colour);
 
@@ -154,20 +173,15 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
 
         string schools;
-        if (action == RBOOK_USE_ROD)
-            schools = "Evocations";
-        else
+        bool first = true;
+        for (i = 0; i <= SPTYP_LAST_EXPONENT; i++)
         {
-            bool first = true;
-            for (i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+            if (spell_typematch(stype, 1 << i))
             {
-                if (spell_typematch(stype, 1 << i))
-                {
-                    if (!first)
-                        schools += "/";
-                    schools += spelltype_long_name(1 << i);
-                    first = false;
-                }
+                if (!first)
+                    schools += "/";
+                schools += spelltype_long_name(1 << i);
+                first = false;
             }
         }
         out.cprintf("%s%d\n", chop_string(schools, 30).c_str(), level_diff);
@@ -177,27 +191,15 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     out.textcolour(LIGHTGREY);
     out.cprintf("\n");
 
-    switch (action)
+    if (book.base_type == OBJ_BOOKS && in_inventory(book)
+        && item_type_known(book)
+        && player_can_memorise_from_spellbook(book))
     {
-    case RBOOK_USE_ROD:
-        out.cprintf("Select a spell to cast.\n");
-        break;
-
-    case RBOOK_READ_SPELL:
-        if (book.base_type == OBJ_BOOKS && in_inventory(book)
-            && item_type_known(book)
-            && player_can_memorise_from_spellbook(book))
-        {
-            out.cprintf("Select a spell to read its description, to "
-                         "memorise it or to forget it.\n");
-        }
-        else
-            out.cprintf("Select a spell to read its description.\n");
-        break;
-
-    default:
-        break;
+        out.cprintf("Select a spell to read its description, to "
+                    "memorise it or to forget it.\n");
     }
+    else
+        out.cprintf("Select a spell to read its description.\n");
 
     if (fs)
         *fs = out;
@@ -369,11 +371,6 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-static bool _is_valid_spell_in_book(const item_def &book, int spell)
-{
-    return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
-}
-
 // Returns false if the player cannot memorise from the book,
 // and true otherwise. -- bwr
 bool player_can_memorise_from_spellbook(const item_def &book)
@@ -482,7 +479,7 @@ bool maybe_id_book(item_def &book, bool silent)
     return true;
 }
 
-int read_book(item_def &book, read_book_action_type action)
+int read_book(item_def &book)
 {
     if (!maybe_id_book(book))
         return 0;
@@ -491,8 +488,7 @@ int read_book(item_def &book, read_book_action_type action)
     tiles_crt_control show_as_menu(CRT_MENU, "read_book");
 #endif
 
-    // Remember that this function is called for rods as well.
-    const int keyin = spellbook_contents(book, action);
+    const int keyin = spellbook_contents(book);
 
     if (!crawl_state.is_replaying_keys())
         redraw_screen();
@@ -608,7 +604,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
     int spells_in_book = 0;
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
-        if (!_is_valid_spell_in_book(book, j))
+        if (which_spell_in_book(book, j) == SPELL_NO_SPELL)
             continue;
 
         const spell_type spell = which_spell_in_book(book, j);
@@ -1240,155 +1236,6 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
         mprf("A bug prevents you from forgetting %s.", spell_title(spell));
         return false;
     }
-}
-
-int count_rod_spells(const item_def &item, bool need_id)
-{
-    if (item.base_type != OBJ_RODS)
-        return -1;
-
-    if (need_id && !item_type_known(item))
-        return 0;
-
-    const int type = item.book_number();
-    if (type == -1)
-        return 0;
-
-    int nspel = 0;
-    while (nspel < SPELLBOOK_SIZE && _is_valid_spell_in_book(item, nspel))
-        ++nspel;
-
-    return nspel;
-}
-
-int rod_spell(int rod, bool check_range)
-{
-    item_def& irod(you.inv[rod]);
-
-    if (irod.base_type != OBJ_RODS)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return -1;
-    }
-
-    // ID code got moved to item_use::wield_effects. {due}
-
-    const int num_spells = count_rod_spells(irod, false);
-
-    int keyin = 0;
-    if (num_spells == 0)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);  // shouldn't happen
-        return 0;
-    }
-    else if (num_spells == 1)
-        keyin = 'a';  // automatically selected if it's the only option
-    else
-    {
-        mprf(MSGCH_PROMPT,
-             "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
-             'a' + num_spells - 1);
-
-        // Note that the list of spells is not presented here.
-        keyin = get_ch();
-
-        if (keyin == '?' || keyin == '*')
-        {
-            keyin = read_book(you.inv[rod], RBOOK_USE_ROD);
-            // [ds] read_book sets turn_is_over.
-            you.turn_is_over = false;
-        }
-    }
-
-    if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r' || keyin == '\n')
-    {
-        canned_msg(MSG_OK);
-        return -1;
-    }
-
-    if (!isaalpha(keyin))
-    {
-        canned_msg(MSG_HUH);
-        return -1;
-    }
-
-    const int idx = letter_to_index(keyin);
-
-    if (idx >= SPELLBOOK_SIZE || !_is_valid_spell_in_book(irod, idx))
-    {
-        canned_msg(MSG_HUH);
-        return -1;
-    }
-
-    const spell_type spell = which_spell_in_book(irod, idx);
-    int mana = spell_mana(spell) * ROD_CHARGE_MULT;
-    int power = calc_spell_power(spell, false, false, true, true);
-
-    int food = spell_hunger(spell, true);
-
-    if (you.undead_state() == US_UNDEAD)
-        food = 0;
-
-    if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
-        && !you.undead_state())
-    {
-        canned_msg(MSG_NO_ENERGY);
-        crawl_state.zero_turns_taken();
-        return -1;
-    }
-
-    if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
-        && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
-    {
-        // Starting it up takes 2 mana, continuing any amount up to 5.
-        // You don't get to expend less (other than stopping the zap completely).
-        mana = min(5 * ROD_CHARGE_MULT, (int)irod.plus);
-        // Never allow using less than a whole point of charge.
-        mana = max(mana, ROD_CHARGE_MULT);
-        you.props["thunderbolt_mana"].get_int() = mana;
-    }
-
-    if (irod.plus < mana)
-    {
-        mpr("The rod doesn't have enough magic points.");
-        crawl_state.zero_turns_taken();
-        // Don't lose a turn for trying to evoke without enough MP - that's
-        // needlessly cruel for an honest error.
-        return -1;
-    }
-
-    if (check_range && spell_no_hostile_in_range(spell, true))
-    {
-        // Abort if there are no hostiles within range, but flash the range
-        // markers for a short while.
-        mpr("You can't see any susceptible monsters within range! "
-            "(Use <w>V</w> to cast anyway.)");
-
-        if (Options.use_animations & UA_RANGE)
-        {
-            targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
-            range_view_annotator show_range(&range);
-            delay(50);
-        }
-        crawl_state.zero_turns_taken();
-        return -1;
-    }
-
-    // All checks passed, we can cast the spell.
-    if (you.confused())
-        random_uselessness();
-    else if (your_spells(spell, power, false, true) == SPRET_ABORT)
-    {
-        crawl_state.zero_turns_taken();
-        return -1;
-    }
-
-    make_hungry(food, true, true);
-    irod.plus -= mana;
-    you.wield_change = true;
-    you.turn_is_over = true;
-
-    return roll_dice(1, 1 + spell_difficulty(spell) / 2);
 }
 
 static bool _compare_spells(spell_type a, spell_type b)

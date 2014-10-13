@@ -2216,9 +2216,7 @@ static void _show_spells(const item_def &item)
 {
     formatted_string fs;
     item_def dup = item;
-    spellbook_contents(dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
-                                                        : RBOOK_USE_ROD,
-                       &fs);
+    spellbook_contents(dup, &fs);
     fs.display(2, -2);
 }
 

@@ -1029,22 +1029,8 @@ static bool _is_rod_spell(spell_type spell)
         return false;
 
     for (int i = 0; i < NUM_RODS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i + NUM_FIXED_BOOKS, j) == spell)
-                return true;
-
-    return false;
-}
-
-static bool _is_book_spell(spell_type spell)
-{
-    if (spell == SPELL_NO_SPELL)
-        return false;
-
-    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == spell)
-                return true;
+        if (spell_in_rod(i) == spell)
+            return true;
 
     return false;
 }
@@ -1097,15 +1083,11 @@ static bool _append_books(string &desc, item_def &item, string key)
             }
 
     item.base_type = OBJ_RODS;
-    int book;
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        book = item.book_number();
-
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(book, j) == type)
-                rods.push_back(item.name(DESC_BASENAME));
+        if (spell_in_rod(i) == type)
+            rods.push_back(item.name(DESC_BASENAME));
     }
 
     if (!books.empty())
@@ -1628,9 +1610,9 @@ static void _find_description(bool *again, string *error_inout)
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
-                me->colour = _is_book_spell(spell) ? WHITE
-                           : _is_rod_spell(spell)  ? LIGHTGREY
-                                                   : DARKGREY; // monster-only
+                me->colour = is_player_spell(spell) ? WHITE
+                           : _is_rod_spell(spell)   ? LIGHTGREY
+                                                    : DARKGREY; // monster-only
             }
 
             me->data = &key_list[i];
