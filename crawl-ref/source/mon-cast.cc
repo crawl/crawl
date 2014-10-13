@@ -258,7 +258,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     // Initialise to some bogus values so we can catch problems.
     beam.name         = "****";
-    beam.colour       = 1000;
+    beam.colour       = 255;
     beam.hit          = -1;
     beam.damage       = dice_def(1, 0);
     beam.ench_power   = -1;
