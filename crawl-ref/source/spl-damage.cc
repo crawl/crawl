@@ -275,7 +275,8 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             if (dist > min_dist)
                 continue;
 
-            if (!cell_see_cell(source, mi->pos(), LOS_SOLID))
+            if (!cell_see_cell(source, mi->pos(), LOS_SOLID)
+                || !cell_see_cell(caster->pos(), mi->pos(), LOS_SOLID))
                 continue;
 
             count++;
@@ -351,12 +352,6 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             mprf("The %s arcs out of your line of sight!", beam.name.c_str());
         else if (!see_source && see_targ)
             mprf("The %s suddenly appears!", beam.name.c_str());
-
-        if (!you.see_cell_no_trans(target))
-        {
-            // It's no longer in the caster's LOS and influence.
-            pow = pow / 2 + 1;
-        }
 
         beam.source = source;
         beam.target = target;
