@@ -1431,13 +1431,13 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
 
 bool spell_no_hostile_in_range(spell_type spell, bool rod)
 {
-    int minRange = get_dist_to_nearest_monster();
-    if (minRange < 0)
+    const int range = calc_spell_range(spell, 0, rod);
+    if (range < 0 && !spell_harms_area(spell))
         return false;
 
-    const int range = calc_spell_range(spell, 0, rod);
-    if (range < 0)
-        return false;
+    int minRange = get_dist_to_nearest_monster();
+    if (minRange >= LOS_RADIUS_SQ + 1 && spell_needs_foe(spell))
+        return true;
 
     switch (spell)
     {
