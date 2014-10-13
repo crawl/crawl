@@ -642,7 +642,7 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    colour_t colour;
+    int colour; // a colour_t (BLACK for "default"), or -1 for "any"
 
     god_type god;
     bool god_gift;

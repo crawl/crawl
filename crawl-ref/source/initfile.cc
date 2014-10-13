@@ -3481,9 +3481,10 @@ void game_options::read_option_line(const string &str, bool runscript)
             colour_mapping mapping;
             mapping.tag     = tagname;
             mapping.pattern = patname;
-            mapping.colour  = str_to_colour(colname);
+            const int col = str_to_colour(colname);
+            mapping.colour = col;
 
-            if (mapping.colour == -1)
+            if (col == -1)
                 continue;
             else if (minus_equal)
                 remove_matching(menu_colour_mappings, mapping);
