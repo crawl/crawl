@@ -1571,6 +1571,81 @@ static void _expend_xp_evoker(item_def &item)
     item.plus2 = 10;
 }
 
+static bool _rod_spell(item_def& irod, bool check_range)
+{
+    ASSERT(irod.base_type == OBJ_RODS);
+
+    const spell_type spell = spell_in_rod(irod.sub_type);
+    int mana = spell_mana(spell) * ROD_CHARGE_MULT;
+    int power = calc_spell_power(spell, false, false, true, true);
+
+    int food = spell_hunger(spell, true);
+
+    if (you.undead_state() == US_UNDEAD)
+        food = 0;
+
+    if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
+        && !you.undead_state())
+    {
+        canned_msg(MSG_NO_ENERGY);
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
+        && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
+    {
+        // Starting it up takes 2 mana, continuing any amount up to 5.
+        // You don't get to expend less (other than stopping the zap completely).
+        mana = min(5 * ROD_CHARGE_MULT, (int)irod.plus);
+        // Never allow using less than a whole point of charge.
+        mana = max(mana, ROD_CHARGE_MULT);
+        you.props["thunderbolt_mana"].get_int() = mana;
+    }
+
+    if (irod.plus < mana)
+    {
+        mpr("The rod doesn't have enough magic points.");
+        crawl_state.zero_turns_taken();
+        // Don't lose a turn for trying to evoke without enough MP - that's
+        // needlessly cruel for an honest error.
+        return false;
+    }
+
+    if (check_range && spell_no_hostile_in_range(spell, true))
+    {
+        // Abort if there are no hostiles within range, but flash the range
+        // markers for a short while.
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>V</w> to cast anyway.)");
+
+        if (Options.use_animations & UA_RANGE)
+        {
+            targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
+            range_view_annotator show_range(&range);
+            delay(50);
+        }
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    // All checks passed, we can cast the spell.
+    if (you.confused())
+        random_uselessness();
+    else if (your_spells(spell, power, false, true) == SPRET_ABORT)
+    {
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    make_hungry(food, true, true);
+    irod.plus -= mana;
+    you.wield_change = true;
+    you.turn_is_over = true;
+
+    return true;
+}
+
 bool evoke_item(int slot, bool check_range)
 {
     if (you.form == TRAN_WISP)
@@ -1669,12 +1744,10 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        pract = rod_spell(slot, check_range);
-        // [ds] Early exit, no turns are lost.
-        if (pract == -1)
+        if (!(pract = _rod_spell(you.inv[slot], check_range)))
             return false;
 
-        did_work = true;  // rod_spell() will handle messages
+        did_work = true;  // _rod_spell() handled messages
         count_action(CACT_EVOKE, EVOC_ROD);
         break;
 

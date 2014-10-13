@@ -3130,14 +3130,13 @@ bool item_is_melded(const item_def& item)
 bool item_def::has_spells() const
 {
     return item_is_spellbook(*this) && item_type_known(*this)
-           || count_rod_spells(*this, true) > 0;
+           || base_type == OBJ_RODS;
 }
 
 int item_def::book_number() const
 {
-    return base_type == OBJ_BOOKS  ? sub_type :
-           base_type == OBJ_RODS   ? sub_type + NUM_FIXED_BOOKS
-                                   : -1;
+    return base_type == OBJ_BOOKS ? sub_type
+                                  : -1;
 }
 
 bool item_def::cursed() const

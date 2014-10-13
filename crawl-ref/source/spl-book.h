@@ -12,12 +12,6 @@
 
 class formatted_string;
 
-enum read_book_action_type
-{
-    RBOOK_USE_ROD,
-    RBOOK_READ_SPELL,
-};
-
 int  book_rarity(uint8_t which_book);
 int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
@@ -28,7 +22,7 @@ void mark_had_book(int booktype);
 void inscribe_book_highlevel(item_def &book);
 
 bool maybe_id_book(item_def &book, bool silent = false);
-int read_book(item_def &item, read_book_action_type action);
+int read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
@@ -39,11 +33,10 @@ bool forget_spell_from_book(spell_type spell, const item_def* book);
 string desc_cannot_memorise_reason(spell_type spell);
 bool player_can_memorise_from_spellbook(const item_def &book);
 
+spell_type spell_in_rod(int rod);
 spell_type which_spell_in_book(const item_def &book, int spl);
 spell_type which_spell_in_book(int sbook_type, int spl);
 
-// returns amount practised (or -1 for abort)
-int rod_spell(int zap_device_2, bool check_range = false);
 bool is_memorised(spell_type spell);
 
 bool cannot_use_schools(unsigned int schools);
@@ -52,10 +45,7 @@ bool has_spells_to_memorise(bool silent = true,
                             int current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
 
-int spellbook_contents(item_def &book, read_book_action_type action,
-                        formatted_string *fs = NULL);
-
-int count_rod_spells(const item_def &item, bool need_id);
+int spellbook_contents(item_def &book, formatted_string *fs = NULL);
 
 bool make_book_level_randart(item_def &book, int level = -1,
                              int num_spells = -1, string owner = "");

@@ -2632,7 +2632,7 @@ static void _handle_read_book(int item_slot)
     while (true)
     {
         // Spellbook
-        const int ltr = read_book(book, RBOOK_READ_SPELL);
+        const int ltr = read_book(book);
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
