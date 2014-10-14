@@ -1471,7 +1471,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (damage_brand == SPWPN_ANTIMAGIC && you.mutation[MUT_ANTIMAGIC_BITE]
             && damage_done > 0)
         {
-            const bool spell_user = defender->as_monster()->is_actual_spellcaster();
+            const bool spell_user = defender->antimagic_susceptible();
 
             antimagic_affects_defender(damage_done * 16);
             mprf("You drain %s %s.",
@@ -3219,9 +3219,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
         {
-            const bool spell_user =
-                defender->is_player()
-                || defender->as_monster()->is_actual_spellcaster();
+            const bool spell_user = defender->antimagic_susceptible();
 
             if (you.can_see(attacker) || you.can_see(defender))
             {

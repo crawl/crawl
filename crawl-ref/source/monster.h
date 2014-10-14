@@ -362,6 +362,7 @@ public:
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;
+    bool antimagic_susceptible() const;
 
     bool stasis(bool calc_unid = true, bool items = true) const;
 
