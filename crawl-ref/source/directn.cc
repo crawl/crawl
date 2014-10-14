@@ -952,7 +952,7 @@ char mlist_index_to_letter(int index)
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
-    if ((Options.use_animations & UA_RANGE) && range)
+    if (range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -961,7 +961,7 @@ range_view_annotator::range_view_annotator(targetter *range)
 
 range_view_annotator::~range_view_annotator()
 {
-    if ((Options.use_animations & UA_RANGE) && crawl_state.darken_range)
+    if (crawl_state.darken_range)
     {
         crawl_state.darken_range = NULL;
         viewwindow(false);

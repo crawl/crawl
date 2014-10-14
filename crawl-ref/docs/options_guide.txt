@@ -1377,9 +1377,7 @@ use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
                              ranged weapon.
           range            - Flashes the screen with an overlay indicating the
                              actual range of an attempted spell, if there are
-                             no monsters within the spell's range. Also
-                             controls whether areas outside of the range of the
-                             spell are darkened while targeting.
+                             no monsters within the spell's range.
           hp               - Flashes the screen red whenever you take damage
                              below the level indicated by the hp_warning
                              option.
