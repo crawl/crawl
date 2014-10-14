@@ -4940,12 +4940,6 @@ bool mons_is_player_shadow(const monster* mon)
            && mon->mname.empty();
 }
 
-bool mons_antimagic_affected(const monster* mons)
-{
-    return mons->is_actual_spellcaster()
-           && !mons_class_flag(mons->type, M_FAKE_SPELLS);
-}
-
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster* mon)
 {

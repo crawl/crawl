@@ -5220,7 +5220,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_DRAIN_MAGIC:
-        rc = mons_antimagic_affected(mon);
+        rc = mon->is_actual_spellcaster();
         break;
 
     case BEAM_INNER_FLAME:
@@ -5737,7 +5737,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_DRAIN_MAGIC:
     {
-        if (!mons_antimagic_affected(mon))
+        if (!mon->is_actual_spellcaster())
             break;
 
         const int dur =

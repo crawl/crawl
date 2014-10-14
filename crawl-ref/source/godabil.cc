@@ -789,7 +789,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
             {
                 if (one_chance_in(3))
                     effect = ZIN_BLIND;
-                else if (mons_antimagic_affected(mon))
+                else if (mon->is_actual_spellcaster())
                     effect = ZIN_ANTIMAGIC;
                 else
                     effect = ZIN_SILVER_CORONA;
