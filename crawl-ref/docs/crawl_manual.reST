@@ -2221,17 +2221,21 @@ Ctrl-W
   Set waypoint (a digit between 0 and 9). Check the option show_waypoints. You
   can go to a waypoint by pressing Ctrl-G or G and the digit.
 
-Resting and Searching
+Resting
 ----------------------------------------
 
 s, Del, . or Numpad 5
-  Rests and searches (these are not distinguished) for one turn. This is most
-  often used tactically for waiting a few turns. Serious resting should be
-  done with the 5 command.
+  Rests for one turn. This is most often used tactically for waiting a few
+  turns. Serious resting should be done with the 5 command, for the sake of
+  your keyboard &amp; sanity.
 
 5 or Shift-Numpad 5
   Long resting, until both health and magic points are full or 100 turns
   are over.
+
+Resting is the only way to get rid of manticore spikes, but is otherwise
+indistinguishable from any other action; healing, magic point restoration,
+etc, proceed at the same rate, whether you're resting or not.
 
 Dungeon interaction
 ----------------------------------------
