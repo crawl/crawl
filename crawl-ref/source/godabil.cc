@@ -3157,7 +3157,7 @@ void fedhas_evolve_flora()
         plant->spells.clear();
         plant->spells.push_back(mon_spell_slot());
         plant->spells[0].spell = SPELL_SPIT_ACID;
-        plant->spells[0].flags = MON_SPELL_INNATE;
+        plant->spells[0].flags = MON_SPELL_NATURAL;
     }
 
     plant->set_hit_dice(plant->get_experience_level()

@@ -428,6 +428,7 @@ public:
 
     bool can_throw_large_rocks() const;
     bool can_speak();
+    bool is_silenced() const;
 
     int base_armour_class() const;
     int armour_class(bool calc_unid = true) const;

@@ -777,6 +777,14 @@ bool monster::can_speak()
     return shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA;
 }
 
+bool monster::is_silenced() const
+{
+    return silenced(pos())
+            || has_ench(ENCH_MUTE)
+            || has_ench(ENCH_WATER_HOLD)
+               && !res_water_drowning();
+}
+
 bool monster::has_spell_of_type(unsigned disciplines) const
 {
     for (unsigned int i = 0; i < spells.size(); ++i)
@@ -4341,7 +4349,11 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 
 bool monster::antimagic_susceptible() const
 {
-    return is_actual_spellcaster();
+    for (unsigned int i = 0; i < spells.size(); ++i)
+       if (spells[i].flags & MON_SPELL_ANTIMAGIC_MASK)
+           return true;
+
+    return false;
 }
 
 flight_type monster::flight_mode() const
@@ -5127,10 +5139,8 @@ bool monster::is_archer() const
 bool monster::is_actual_spellcaster() const
 {
     for (unsigned int i = 0; i < spells.size(); ++i)
-    {
        if (spells[i].flags & MON_SPELL_WIZARD)
            return true;
-    }
 
     return false;
 }
