@@ -3539,20 +3539,24 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // 10% chance of stopping any attack
         if (r < chance)
         {
-            if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+            if (wizard)
             {
                 simple_monster_message(mons,
                     " begins to cast a spell, but is stunned by your will!",
                     MSGCH_GOD);
             }
-            else if (mons_class_flag(mons->type, M_PRIEST))
+            else if (priest)
+            {
                 simple_monster_message(mons,
                     " begins to pray, but is stunned by your will!",
                     MSGCH_GOD);
+            }
             else
+            {
                 simple_monster_message(mons,
                     " begins to attack, but is stunned by your will!",
                     MSGCH_GOD);
+            }
             mons->lose_energy(EUT_SPELL);
             return true;
         }

@@ -5047,9 +5047,7 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
 
     unsigned one_freq = (hd + 50) / count;
     for (unsigned int i = 0; i < spells.size(); i++)
-    {
         spells[i].freq = one_freq;
-    }
 
     for (monster_spells::iterator it = spells.begin();
          it != spells.end(); it++)
