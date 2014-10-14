@@ -444,16 +444,16 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
     return mons->foe != MHITNOT
            && mons->has_spell(SPELL_DIG)
            && !mons->confused()
-           && !(mons->spell_slot_flags(SPELL_DIG) & MON_SPELL_WIZARD)
-              || (!(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
-                 && (!mons->has_ench(ENCH_ANTIMAGIC)
-                     || (random
-                         && x_chance_in_y(4 * BASELINE_DELAY,
-                                          4 * BASELINE_DELAY
-                                          + mons->get_ench(ENCH_ANTIMAGIC).duration)
-                     || (!random
-                         && 4 * BASELINE_DELAY
-                         >= mons->get_ench(ENCH_ANTIMAGIC).duration))));
+           && (!(mons->spell_slot_flags(SPELL_DIG) & MON_SPELL_WIZARD)
+               || (!(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
+                  && (!mons->has_ench(ENCH_ANTIMAGIC)
+                      || (random
+                          && x_chance_in_y(4 * BASELINE_DELAY,
+                                           4 * BASELINE_DELAY
+                                           + mons->get_ench(ENCH_ANTIMAGIC).duration)
+                      || (!random
+                          && 4 * BASELINE_DELAY
+                          >= mons->get_ench(ENCH_ANTIMAGIC).duration)))));
 }
 
 static bool _mons_can_zap_dig(const monster* mons)
