@@ -2227,7 +2227,7 @@ Resting
 s, Del, . or Numpad 5
   Rests for one turn. This is most often used tactically for waiting a few
   turns. Serious resting should be done with the 5 command, for the sake of
-  your keyboard &amp; sanity.
+  your keyboard and sanity.
 
 5 or Shift-Numpad 5
   Long resting, until both health and magic points are full or 100 turns
