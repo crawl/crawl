@@ -67,6 +67,10 @@ Banishment spell
 
 <Banish ability>
 %%%%
+Battlecry spell
+
+Inspires nearby allies of the caster to fight more aggressively.
+%%%%
 Beastly Appendage spell
 
 This spell makes the caster temporarily replace one or a pair of appendages
@@ -489,6 +493,12 @@ Explosive Bolt spell
 
 This spell hurls a bolt containing fiery energy; on piercing a target, it lets
 loose an explosion that harms nearby creatures as well.
+%%%%
+Flay spell
+
+Opens painful illusionary wounds on the target's body, which disappear after
+a short time or on the death of the caster. Ineffective against unnatural
+targets.
 %%%%
 Fire Breath spell
 
@@ -1033,6 +1043,11 @@ This ability taints the victim's ability to cast spells; casting a spell while
 afflicted with this condition causes them to lose control over their magic,
 progressively hindering their chances of success as more spells are cast.
 %%%%
+Seal Doors spell
+
+Imparts seals on nearby doors and stairs, preventing those not allied with
+the caster from traversing them.
+%%%%
 Searing Ray spell
 
 This spell fires a continuous ray of arcane energy from the caster's hands.
@@ -1079,6 +1094,10 @@ This spell bends space along a shroud covering the caster's body, protecting
 them from some blows by redirecting their force to the air nearby. Ranged
 attacks move too quickly to be diverted in this way. The shroud is highly
 unstable, and may fall apart unexpectedly under stress.
+%%%%
+Signal Horn spell
+
+Generates a loud noise, alerting nearby enemies.
 %%%%
 Silence spell
 

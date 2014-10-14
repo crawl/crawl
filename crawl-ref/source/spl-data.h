@@ -3874,6 +3874,45 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BATTLECRY, "Battlecry",
+     SPTYP_CHARMS,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH,
+     6,
+     0,
+     -1, -1,
+     5, 0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SIGNAL_HORN, "Signal Horn",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
+     6,
+     0,
+     -1, -1,
+     NOISE_OF_SCROLL, 0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SEAL_DOORS, "Seal Doors",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH,
+     6,
+     0,
+     -1, -1,
+     5, 0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
@@ -3881,6 +3920,19 @@ static const struct spell_desc spelldata[] =
      0,
      -1, -1,
      1, 0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_FLAY, "Flay",
+     SPTYP_NECROMANCY,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     6, 0,
      NULL,
      false,
      false
