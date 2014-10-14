@@ -283,7 +283,14 @@ static int l_item_do_subtype(lua_State *ls)
     const char *s = NULL;
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item), true);
-    if (item_type_known(*item))
+    if (item->base_type == OBJ_BOOKS)
+    {
+        if (item->sub_type == BOOK_MANUAL)
+            s = "manual";
+        else
+            s = "spellbook";
+    }
+    else if (item_type_known(*item))
     {
         if (item->base_type == OBJ_JEWELLERY)
             s = jewellery_effect_name(item->sub_type);
@@ -307,13 +314,6 @@ static int l_item_do_subtype(lua_State *ls)
 #endif
             else if (item->sub_type == POT_CURE_MUTATION)
                 s = "cure mutation";
-        }
-        else if (item->base_type == OBJ_BOOKS)
-        {
-            if (item->sub_type == BOOK_MANUAL)
-                s = "manual";
-            else
-                s = "spellbook";
         }
     }
 
