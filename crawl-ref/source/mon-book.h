@@ -21,6 +21,7 @@ enum mon_spell_slot_flags
     MON_SPELL_BREATH    = 1 << 4, // sets a breath timer, requires it to be 0
     MON_SPELL_NO_SILENT = 1 << 5, // can't be used while silenced/mute/etc.
     MON_SPELL_INSTANT   = 1 << 6, // allows another action on the same turn
+    MON_SPELL_NOISY     = 1 << 7, // makes noise despite being innate
 };
 
 struct mon_spellbook

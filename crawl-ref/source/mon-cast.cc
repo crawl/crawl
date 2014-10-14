@@ -6680,26 +6680,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
-                                  bool silent, bool innate)
+                        bool silent, unsigned short slot_flags)
 {
     const unsigned int flags = get_spell_flags(spell);
 
     int noise;
 
     if (silent
-        || (innate
-            && !mons_class_flag(mons->type, M_NOISY_SPELLS)
+        || (slot_flags & MON_SPELL_INNATE
+            && !(slot_flags & MON_SPELL_NOISY)
             && !(flags & SPFLAG_NOISY)))
     {
         noise = 0;
     }
+    else if (mons_genus(mons->type) == MONS_DRAGON)
+        noise = get_shout_noise_level(S_ROAR);
     else
-    {
-        if (mons_genus(mons->type) == MONS_DRAGON)
-            noise = get_shout_noise_level(S_ROAR);
-        else
-            noise = spell_noise(spell);
-    }
+        noise = spell_noise(spell);
+
     return noise;
 }
 
@@ -7109,12 +7107,11 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     if (unseen && silent)
         return;
 
-
     const bool priest = slot_flags & MON_SPELL_PRIEST;
     const bool wizard = slot_flags & MON_SPELL_WIZARD;
     const bool innate = slot_flags & MON_SPELL_INNATE;
 
-    int noise = _noise_level(mons, actual_spell, silent, innate);
+    int noise = _noise_level(mons, actual_spell, silent, slot_flags);
 
     const unsigned int spell_flags = get_spell_flags(actual_spell);
     const bool targeted = (spell_flags & SPFLAG_TARGETING_MASK)

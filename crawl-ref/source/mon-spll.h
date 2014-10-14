@@ -251,7 +251,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_STEAM_DRAGON,
       {
-       { SPELL_STEAM_BALL, 54, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_STEAM_BALL, 54, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -376,7 +376,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MOTTLED_DRAGON,
       {
-       { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -425,7 +425,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_STORM_DRAGON,
       {
-       { SPELL_LIGHTNING_BOLT, 64, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_LIGHTNING_BOLT, 64, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -522,9 +522,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GOLDEN_DRAGON,
       {
-       { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_BOLT_OF_COLD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
-       { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_BOLT_OF_COLD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -640,8 +640,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CURSE_SKULL,
       {
-       { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_INNATE },
-       { SPELL_SYMBOL_OF_TORMENT, 16, MON_SPELL_INNATE },
+       { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_INNATE | MON_SPELL_NOISY },
+       { SPELL_SYMBOL_OF_TORMENT, 16, MON_SPELL_INNATE | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -676,7 +676,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SHADOW_DRAGON,
       {
-       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -736,7 +736,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SWAMP_DRAGON,
       {
-       { SPELL_POISONOUS_CLOUD, 59, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_POISONOUS_CLOUD, 59, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -750,7 +750,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SERPENT_OF_HELL,
       {
-       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        { SPELL_SUMMON_DRAGON, 35, MON_SPELL_INNATE },
        END_OF_MONS_BOOK
       }
@@ -774,14 +774,14 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_QUICKSILVER_DRAGON,
       {
-       { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
 
     {  MST_IRON_DRAGON,
       {
-       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -1313,7 +1313,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_PEARL_DRAGON,
       {
-       { SPELL_HOLY_BREATH, 68, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_HOLY_BREATH, 68, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -2043,9 +2043,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MURRAY,
       {
-       { SPELL_SUMMON_UNDEAD, 33, MON_SPELL_INNATE },
-       { SPELL_BLACK_MARK, 22, MON_SPELL_INNATE },
-       { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_INNATE },
+       { SPELL_SUMMON_UNDEAD, 33, MON_SPELL_INNATE | MON_SPELL_NOISY },
+       { SPELL_BLACK_MARK, 22, MON_SPELL_INNATE | MON_SPELL_NOISY },
+       { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_INNATE | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },
@@ -2094,6 +2094,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_FIRE_DRAGON_BREATH,
+      {
+       { SPELL_FIRE_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_HELL_HOUND,
       {
        { SPELL_FIRE_BREATH, 20, MON_SPELL_INNATE | MON_SPELL_BREATH },
@@ -2125,6 +2132,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_COLD_BREATH,
       {
        { SPELL_COLD_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_ICE_DRAGON_BREATH,
+      {
+       { SPELL_COLD_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH | MON_SPELL_NOISY },
        END_OF_MONS_BOOK
       }
     },

@@ -93,8 +93,7 @@ const uint64_t M_NO_REGEN          = 1<<27;
 
                                    //1<<28;
 
-// casting makes noise even if an innate ability (no effect on silence)
-const uint64_t M_NOISY_SPELLS      = 1<<29;
+                                   //1<<29;
 
 // boneless corpses
 const uint64_t M_NO_SKELETON       = 1<<30;
