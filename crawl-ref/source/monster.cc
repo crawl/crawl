@@ -4339,6 +4339,11 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     return false;
 }
 
+bool antimagic_susceptible() const
+{
+    return is_actual_spellcaster();
+}
+
 flight_type monster::flight_mode() const
 {
     // Checking class flags is not enough - see mons_flies().

@@ -308,6 +308,7 @@ public:
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
     virtual bool inaccuracy() const;
+    virtual bool antimagic_susceptible() const = 0;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
 

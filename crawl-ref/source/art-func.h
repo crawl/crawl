@@ -1058,8 +1058,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
                                        int dam)
 {
     // Only cause miscasts if the target has magic to disrupt.
-    if ((defender->is_player()
-         || defender->as_monster()->is_actual_spellcaster())
+    if (defender->antimagic_susceptible()
         && !mondied)
     {
         int school = SPTYP_NONE;
