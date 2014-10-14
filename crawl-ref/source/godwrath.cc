@@ -228,7 +228,7 @@ static void _tso_shouts()
     simple_god_message(" booms out: "
                        "\"Take the path of righteousness! REPENT!\"",
                        GOD_SHINING_ONE);
-    noisy(NOISE_OF_SCROLL, you.pos());
+    noisy(25, you.pos()); // same as scroll of noise
 }
 
 /**
@@ -339,7 +339,7 @@ static bool _zin_retribution()
         break;
     case 5: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
-        noisy(NOISE_OF_SCROLL, you.pos());
+        noisy(25, you.pos()); // same as scroll of noise
         break;
     case 6:
     case 7: // remove good mutations

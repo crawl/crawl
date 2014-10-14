@@ -2910,7 +2910,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_NOISE:
-        noisy(NOISE_OF_SCROLL, you.pos(), "You hear a loud clanging noise!");
+        noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
     case SCR_SUMMONING:
