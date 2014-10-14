@@ -3971,11 +3971,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (you.can_see(mons))
             {
                 simple_monster_message(mons, " blows on a signal horn!");
-                noisy(NOISE_OF_SCROLL, mons->pos());
+                noisy(25, mons->pos());
             }
             else
-                noisy(NOISE_OF_SCROLL, mons->pos(),
-                      "You hear a note blown loudly on a horn!");
+                noisy(25, mons->pos(), "You hear a note blown loudly on a horn!");
 
             // This is probably coopting the enchant for something beyond its
             // intended purpose, but the message does match....
