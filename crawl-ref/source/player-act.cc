@@ -995,7 +995,7 @@ bool player::can_cling_to_walls() const
     return false;
 }
 
-bool antimagic_susceptible() const
+bool player::antimagic_susceptible() const
 {
     // Maybe check for having non-zero (max) MP?
     return true;

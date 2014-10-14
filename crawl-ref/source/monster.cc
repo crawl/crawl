@@ -4339,7 +4339,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     return false;
 }
 
-bool antimagic_susceptible() const
+bool monster::antimagic_susceptible() const
 {
     return is_actual_spellcaster();
 }
