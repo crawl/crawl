@@ -563,8 +563,8 @@ Ghostly Fireball spell
 
 This spell allows the caster to throw an exploding ball of necromantic energy.
 It somehow resembles eerie greenish flames, but it has nothing in common with
-fire besides appearance. This energy can be resisted using life protection, and
-it not only does no damage to the undead but can even heal them.
+fire besides appearance; it can only be resisted by effects protecting against
+negative energy. It not only does no damage to the undead, but even heals them.
 %%%%
 Ghostly Flames spell
 
