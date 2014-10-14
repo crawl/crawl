@@ -395,7 +395,7 @@ veto {{
   end
   return false
 }}
-MONS: generate_awake Cerebov
+MONS: generate_awake Cerebov band
 MAP
 1
 ENDMAP
@@ -410,7 +410,7 @@ veto {{
   end
   return false
 }}
-MONS: generate_awake Gloorx Vloq
+MONS: generate_awake Gloorx Vloq band
 MAP
 1
 ENDMAP
@@ -425,7 +425,7 @@ veto {{
   end
   return false
 }}
-MONS: generate_awake Mnoleg
+MONS: generate_awake Mnoleg band
 MAP
 1
 ENDMAP
@@ -440,7 +440,7 @@ veto {{
   end
   return false
 }}
-MONS: generate_awake Lom Lobon
+MONS: generate_awake Lom Lobon band
 MAP
 1
 ENDMAP
