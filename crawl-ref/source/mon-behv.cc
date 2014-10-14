@@ -1205,6 +1205,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
         else if (mon->has_ench(ENCH_FEAR))
         {
+            // self-attacks probably shouldn't break fear.
+            if (src == mon)
+                break;
+
             if (you.can_see(mon))
             {
                 mprf("%s attack snaps %s out of %s fear.",
