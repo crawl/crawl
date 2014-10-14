@@ -685,16 +685,8 @@ bool mons_is_illuminating(const monster* mon)
 // Dithmenos also hates fire users and generally fiery beings.
 bool mons_is_fiery(const monster* mon)
 {
-    // This chain of checks is for fire breath weapons and special
-    // abilities.
-    if (mons_species(mon->type) == MONS_FIRE_DRAGON
-        || mon->type == MONS_BURNING_BUSH
-        || (mons_genus(mon->type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(mon) == MONS_RED_DRACONIAN)
-        || mon->type == MONS_HELL_HOUND
-        || mon->type == MONS_FIRE_DRAKE
-        || mon->type == MONS_LINDWURM
-        || mon->type == MONS_FIRE_CRAB)
+    if (mons_genus(mon->type) == MONS_DRACONIAN
+        && draco_or_demonspawn_subspecies(mon) == MONS_RED_DRACONIAN)
     {
         return true;
     }

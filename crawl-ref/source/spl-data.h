@@ -3822,6 +3822,58 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPIT_LAVA, "Spit Lava",
+     SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     5, 0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_ELECTRICAL_BOLT, "Electrical Bolt",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
+     5,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     5, 0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_FLAMING_CLOUD, "Flaming Cloud",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER,
+     5,
+     0,
+     6, 6,
+     5, 0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_THROW_BARBS, "Throw Barbs",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     5, 0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

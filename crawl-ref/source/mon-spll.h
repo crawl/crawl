@@ -1699,6 +1699,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WIND_DRAKE,
       {
+       { SPELL_WIND_BLAST, 50, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_AIRSTRIKE, 29, MON_SPELL_INNATE },
        END_OF_MONS_BOOK
       }
@@ -2074,5 +2075,138 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_UNDEAD, 26, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
-    }
+    },
+
+    {  MST_FIRE_BREATH,
+      {
+       { SPELL_FIRE_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_HELL_HOUND,
+      {
+       { SPELL_FIRE_BREATH, 20, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_FIRE_CRAB,
+      {
+       { SPELL_FLAMING_CLOUD, 62, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_APOCALYPSE_CRAB,
+      {
+       { SPELL_CHAOS_BREATH, 62, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_GHOST_CRAB,
+      {
+       { SPELL_GHOSTLY_FLAMES, 62, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_COLD_BREATH,
+      {
+       { SPELL_COLD_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_BLACK_DRACONIAN,
+      {
+       { SPELL_LIGHTNING_BOLT, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_MOTTLED_DRACONIAN,
+      {
+       { SPELL_STICKY_FLAME_SPLASH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_YELLOW_DRACONIAN,
+      {
+       { SPELL_SPIT_ACID, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_GREEN_DRACONIAN,
+      {
+       { SPELL_POISONOUS_CLOUD, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_PURPLE_DRACONIAN,
+      {
+       { SPELL_QUICKSILVER_BOLT, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_PALE_DRACONIAN,
+      {
+       { SPELL_STEAM_BALL, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_LAVA_SNAKE,
+      {
+       { SPELL_SPIT_LAVA, 100, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_ACID_SPIT,
+      {
+       { SPELL_SPIT_ACID, 67, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_OKLOB_SAPLING,
+      {
+       { SPELL_SPIT_ACID, 50, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_ELECTRIC_EEL,
+      {
+       { SPELL_ELECTRICAL_BOLT, 100, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_SHOCK_SERPENT,
+      {
+       { SPELL_ELECTRICAL_BOLT, 33, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_BURNING_BUSH,
+      {
+       { SPELL_THROW_FLAME, 67, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_MANTICORE,
+      {
+       { SPELL_THROW_BARBS, 100, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
 };
