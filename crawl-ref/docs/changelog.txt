@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1163-g830ab83)
+Stone Soup 0.16 (up to 0.16-a0-1291-g8fa6bee)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -16,8 +16,8 @@ Character
 * Demigods now have innate Sustain Abilities.
 * All species can now choose 'unarmed' when playing backgrounds that allow a
   weapon choice.
-* Wanderers now receive a randart spellbook with exactly two spells whose
-  levels total at most 4 in place of starting with a Level 1 spell memorized.
+* Wanderers now receive a randart spellbook instead of starting with a Level 1
+  spell memorized.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
   a wand.
 * Felids no longer have a jump-attack ability, which has been removed.
@@ -40,12 +40,19 @@ Monsters
 * New monster: bennu, the divine phoenix, appearing in Tomb. Attacks with fire,
   draining, and holy; when killed, explodes into ghostly flame and instantly
   returns to life (once).
-* MR-immunity no longer confers confusion immunity to monsters.
+* Monster malmutations are now temporary, but more significant.
+* Player ghosts now have their weapon brands displayed.
+* Frederick is now a demigod.
+* Magic immunity no longer confers confusion immunity to monsters.
 
 Spells
 ------
-* New spell: Hydra Form, a short-duration Transmutation that attacks all
-  adjacent foes & devours slain foes for nutrition and healing.
+* New spells:
+    - Hydra Form (L6 Transmutation), a short-duration form that attacks all
+      adjacent foes & devours slain foes for nutrition and healing.
+    - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
+      malmutates nearby enemies, but also contaminates the caster.
+* Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
 
@@ -65,8 +72,9 @@ Items
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
 * Renamed items:
-    - Bastard swords are now double swords;
+    - Bastard swords are now double swords.
     - Claymores are now triple swords.
+    - Cloaks of darkness are now cloaks of invisibility.
 * Removed items: boots of jumping.
 
 Gods
@@ -85,19 +93,20 @@ Gods
     temporarily neutral or incite them to join you.
   - Duplication: one non-artefact item can be duplicated at an altar.
 * New god: Ru the Awakened. Ru is a temple god, with an altar either in
-  Temple or on D:2-9. Ru's abilities can be used while silenced.
+  Temple or on D:2-9.
   - Periodically offers the player a choice of three permanent sacrifices in
     exchange for piety; all abilities scale with piety; piety never decreases.
   - Leaving Ru leaves all your sacrifices in place, but incurs no wrath.
-  - Enemies may fail to attack you or even attack each other instead.
-  - Enemies that hurt you may be punished with status effects.
-  - Draw Out Power: restore health and mana to yourself, break free of webs and
-    constriction, and cure confusion and petrification. Inflicts minor
-    self-drain and short exhaustion.
-  - Power Leap: Blinks you three tiles and deals high AOE damage at your
-    destination. Inflicts medium exhaustion.
-  - Apocalypse: Deals very high damage to all monsters in LOS and inflicts
-    statuses. Inflicts heavy drain and exhaustion.
+  - 1*: Enemies may fail to attack you or even attack each other instead.
+  - 2*: Enemies that hurt you may be punished with status effects.
+  - 3*: Draw Out Power: restore health and mana to yourself, break free of webs
+        and constriction, and cure confusion and petrification. Inflicts minor
+        self-drain and short exhaustion.
+  - 4*: Power Leap: Blinks you three tiles and deals high AOE damage at your
+        destination. Inflicts medium exhaustion.
+  - 5*: Apocalypse: Deals very high damage to all monsters in LOS and inflicts
+        statuses. Inflicts heavy drain and exhaustion.
+  - Ru's abilities can be used while silenced.
 * Dithmenos worshippers are now rejected by fiery/illuminating summons.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
