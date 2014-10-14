@@ -3501,7 +3501,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
                 && one_chance_in(++found_spell))
             {
-                spell_cast  = hspell_pass[i].spell;
+                spell_cast = hspell_pass[i].spell;
+                flags = hspell_pass[i].flags;
                 finalAnswer = true;
             }
         }
@@ -3515,13 +3516,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // 10% chance of stopping any attack
         if (r < chance)
         {
-            if (flags & MON_SPELL_WIZARD)
+            if (mons->is_actual_spellcaster())
             {
                 simple_monster_message(mons,
                     " begins to cast a spell, but is stunned by your will!",
                     MSGCH_GOD);
             }
-            else if (flags & MON_SPELL_PRIEST)
+            else if (mons->is_priest())
             {
                 simple_monster_message(mons,
                     " begins to pray, but is stunned by your will!",
