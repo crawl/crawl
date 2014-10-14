@@ -1436,8 +1436,13 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         return false;
 
     int minRange = get_dist_to_nearest_monster();
-    if (minRange >= LOS_RADIUS_SQ + 1 && spell_needs_foe(spell))
-        return true;
+    if (minRange >= LOS_RADIUS_SQ + 1)
+    {
+        if (spell_needs_foe(spell))
+            return true;
+    }
+    else if (spell_harms_area(spell))
+        return false;
 
     switch (spell)
     {
