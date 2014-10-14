@@ -20,6 +20,7 @@ Character
   levels total at most 4 in place of starting with a Level 1 spell memorized.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
   a wand.
+* Felids no longer have a jump-attack ability, which has been removed.
 
 Monsters
 --------
@@ -39,6 +40,7 @@ Monsters
 * New monster: bennu, the divine phoenix, appearing in Tomb. Attacks with fire,
   draining, and holy; when killed, explodes into ghostly flame and instantly
   returns to life (once).
+* MR-immunity no longer confers confusion immunity to monsters.
 
 Spells
 ------
@@ -57,6 +59,7 @@ Items
   - Wand type is auto-identified on pickup.
   - Many weak wands have had their max charge count increased.
 * Regeneration has been moved from rings to amulets.
+* Corrosion resistance can now occur on artefact armour.
 * Unrand changes:
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
@@ -64,6 +67,7 @@ Items
 * Renamed items:
     - Bastard swords are now double swords;
     - Claymores are now triple swords.
+* Removed items: boots of jumping.
 
 Gods
 ----
@@ -112,11 +116,14 @@ Interface
   and effects of divine wrath.
 * Derived undead (zombies, skeletons, &c) now have their full names displayed.
 * Monsters no longer appear on the minimap.
-* Multiple species/backgrounds/weapons can be specified in the init file,
-  causing one to be randomly selected; a new "combo" option allows entire sets
-  of the above to be specified, again with one being randomly selected.
-* In tiles, the init file now allows you to specify an arbitrary monster tile
-  for your character to be displayed as.
+* The weapon, species, and background options allow these aspects to be
+  specified in the init file, causing one to be randomly selected; a new combo
+  option allows entire sets of the above to be specified, again with one being
+  randomly selected.
+* In tiles, the tile_player_tile option allows you to specify an arbitrary
+  monster tile to display for your character. The options tile_weapon_offets
+  and tile_shield_offsets can be used to adjust the player weapon and shield
+  location when using these custom tiles.
 
 Stone Soup 0.15.1 (20140915)
 ----------------------------
