@@ -2679,18 +2679,17 @@ static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
     }
 }
 
-static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
-                                        bool& wizard, god_type& god)
+static god_type _mons_spell_god(monster* mons)
 {
-    priest = mons->is_priest();
-    wizard = mons->is_actual_spellcaster();
+    const bool priest = mons->is_priest();
+    const bool wizard = mons->is_actual_spellcaster();
 
     // If the monster's a priest, assume summons come from priestly
     // abilities, in which case they'll have the same god. If the
     // monster is neither a priest nor a wizard, assume summons come
     // from intrinsic abilities, in which case they'll also have the
     // same god.
-    god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
+    god_type god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
 
     // Permanent wizard summons of Yred should have the same god even
     // though they aren't priests. This is so that e.g. the zombies of
@@ -2698,6 +2697,8 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
     // Yred.
     if (mons->god == GOD_YREDELEMNUL)
         god = mons->god;
+
+    return god;
 }
 
 // Is it worth bothering to invoke recall? (Currently defined by there being at
@@ -3364,21 +3365,6 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
     return spell_cast;
 }
 
-/** Update the flags and the wizard and priest flags accordingly.
- *
- *  @param[out] flags the slot flags to update
- *  @param[out] wizard whether this spell slot is a wizard spell
- *  @param[out] priest whether this spell slot is a priest spell
- *  @param[in]  newvalue the new value for 'flags'
- */
-static void _set_flags(unsigned short &flags, bool &wizard, bool &priest,
-                       unsigned short newvalue)
-{
-    flags = newvalue;
-    wizard = flags & MON_SPELL_WIZARD;
-    priest = flags & MON_SPELL_PRIEST;
-}
-
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -3408,11 +3394,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return false;
     }
 
-    bool priest;
-    bool wizard;
-    god_type god;
-
-    _mons_set_priest_wizard_god(mons, priest, wizard, god);
+    god_type god = _mons_spell_god(mons);
 
     unsigned short flags = MON_SPELL_NO_FLAGS;
     spell_type spell_cast = SPELL_NO_SPELL;
@@ -3454,7 +3436,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             && !(mons->wont_attack() && mons->foe == MHITYOU))
         {
             spell_cast = SPELL_DIG;
-            _set_flags(flags, wizard, priest, mons->spell_slot_flags(SPELL_DIG));
+            flags = mons->spell_slot_flags(SPELL_DIG);
             finalAnswer = true;
         }
         else if ((mons->has_spell(SPELL_MINOR_HEALING)
@@ -3465,7 +3447,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // Quick, let's take a turn to heal ourselves. -- bwr
             spell_cast = mons->has_spell(SPELL_MAJOR_HEALING) ?
                          SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
-            _set_flags(flags, wizard, priest, mons->spell_slot_flags(spell_cast));
+            flags = mons->spell_slot_flags(spell_cast);
             finalAnswer = true;
         }
         else if (mons_is_fleeing(mons) || mons->pacified())
@@ -3481,7 +3463,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         && one_chance_in(++foundcount))
                     {
                         spell_cast = hspell_pass[i].spell;
-                        _set_flags(flags, wizard, priest, hspell_pass[i].flags);
+                        flags = hspell_pass[i].flags;
                         finalAnswer = true;
                     }
                 }
@@ -3501,7 +3483,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (_ms_quick_get_away(mons, hspell_pass[i].spell))
             {
                 spell_cast = hspell_pass[i].spell;
-                _set_flags(flags, wizard, priest, hspell_pass[i].flags);
+                flags = hspell_pass[i].flags;
                 finalAnswer = true;
                 break;
             }
@@ -3539,13 +3521,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // 10% chance of stopping any attack
         if (r < chance)
         {
-            if (wizard)
+            if (flags & MON_SPELL_WIZARD)
             {
                 simple_monster_message(mons,
                     " begins to cast a spell, but is stunned by your will!",
                     MSGCH_GOD);
             }
-            else if (priest)
+            else if (flags & MON_SPELL_PRIEST)
             {
                 simple_monster_message(mons,
                     " begins to pray, but is stunned by your will!",
@@ -3635,7 +3617,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 spell_cast = _pick_spell_from_list(hspell_pass,
                                                    SPFLAG_SELFENCH,
                                                    flags);
-                _set_flags(flags, wizard, priest, flags);
             }
             // Monsters that are fleeing or pacified and leaving the
             // level will always try to choose an emergency spell.
@@ -3644,7 +3625,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 spell_cast = _pick_spell_from_list(hspell_pass,
                                                    SPFLAG_EMERGENCY,
                                                    flags);
-                _set_flags(flags, wizard, priest, flags);
 
                 if (crawl_state.game_is_zotdef()
                     && mons->type == MONS_ICE_STATUE)
@@ -3687,7 +3667,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     return false;
 
                 spell_cast = hspell_pass[i].spell;
-                _set_flags(flags, wizard, priest, hspell_pass[i].flags);
+                flags = hspell_pass[i].flags;
             }
 
             // Setup the spell.
@@ -3846,7 +3826,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     // may pretend nothing happened --wheals.
 
     // Check for antimagic if casting a spell spell.
-    if (mons->has_ench(ENCH_ANTIMAGIC) && wizard
+    if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_WIZARD
         && !x_chance_in_y(4 * BASELINE_DELAY,
                           4 * BASELINE_DELAY
                           + mons->get_ench(ENCH_ANTIMAGIC).duration))
@@ -4067,7 +4047,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             trigger_battlesphere(mons, beem);
         if (mons->has_ench(ENCH_GRAND_AVATAR))
             trigger_grand_avatar(mons, foe, spell_cast, orig_hp);
-        if (wizard && mons->has_ench(ENCH_SAP_MAGIC))
+        if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
         {
             mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                        mons->get_ench(ENCH_SAP_MAGIC)
@@ -5358,10 +5338,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
-    bool priest, wizard; // not used
-    god_type god;
-
-    _mons_set_priest_wizard_god(mons, priest, wizard, god);
+    god_type god = _mons_spell_god(mons);
 
     switch (spell_cast)
     {
