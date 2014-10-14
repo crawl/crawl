@@ -848,6 +848,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
                                 bool force_full)
 {
     bool changed = false;
+    bool defined = next.defined();
 
     if (force_full || current.base_type != next.base_type)
     {
@@ -855,14 +856,23 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
         json_write_int("base_type", next.base_type);
     }
 
+    changed |= _update_int(force_full, current.quantity, next.quantity,
+                           "quantity", false);
+
+    if (!defined)
+    {
+        current = next;
+        return; // For undefined items, only send base_type and quantity
+    }
+    else if (!current.defined())
+        force_full = true; // if the item was undefined before, send everything
+
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
     changed |= _update_int(force_full, current.plus, next.plus,
                            "plus", false);
     changed |= _update_int(force_full, current.plus2, next.plus2,
                            "plus2", false);
-    changed |= _update_int(force_full, current.quantity, next.quantity,
-                           "quantity", false);
     changed |= _update_int(force_full, current.flags, next.flags,
                            "flags", false);
     changed |= _update_string(force_full, current.inscription,
@@ -873,18 +883,24 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
     changed |= (current.special != next.special);
 
     // Derived stuff
-    if (changed)
+    if (changed && defined)
     {
         string name = next.name(DESC_A, true, false, true);
         if (force_full || current.name(DESC_A, true, false, true) != name)
             json_write_string("name", name);
 
-        const string current_prefix = item_prefix(current);
         const string prefix = item_prefix(next);
-        const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
         const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
-        if (force_full || current_prefcol != prefcol)
+        if (force_full)
             json_write_int("col", macro_colour(prefcol));
+        else
+        {
+            const string current_prefix = item_prefix(current);
+            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+
+            if (current_prefcol != prefcol)
+                json_write_int("col", macro_colour(prefcol));
+        }
 
         tileidx_t tile = tileidx_item(next);
         if (force_full || tileidx_item(current) != tile)
