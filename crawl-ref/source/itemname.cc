@@ -1326,7 +1326,7 @@ string sub_type_string(const item_def &item, bool known)
 }
 
 /**
- * What's the for the weapon used by a given ghost?
+ * What's the name for the weapon used by a given ghost?
  *
  * There's no actual weapon info, just brand, so we have to improvise...
  *
