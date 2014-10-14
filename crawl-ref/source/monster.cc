@@ -803,16 +803,6 @@ void monster::bind_melee_flags()
 
 void monster::bind_spell_flags()
 {
-    // Bind spellcaster / priest flags from the base type. These may be
-    // overridden by vault defs for individual monsters.
-
-    // Alas, we don't know if the mon is zombified at the moment, if it
-    // is, the flags will be removed later.
-    if (mons_class_flag(type, M_ACTUAL_SPELLS))
-        flags |= MF_ACTUAL_SPELLS;
-    if (mons_class_flag(type, M_PRIEST))
-        flags |= MF_PRIEST;
-
     if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(this))
         flags |= MF_SEEN_RANGED;
 }

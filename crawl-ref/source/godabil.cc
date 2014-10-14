@@ -1800,9 +1800,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
-    // If the original monster type has melee, spellcasting or priestly
-    // abilities, make sure its spectral thing has them as well.
-    mon->flags |= orig.flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+    // If the original monster type has melee abilities, make sure
+    // its spectral thing has them as well.
+    mon->flags |= orig.flags & MF_MELEE_MASK;
     mon->spells = orig.spells;
 
     name_zombie(mon, &orig);
@@ -3688,8 +3688,7 @@ monster* shadow_monster(bool equip)
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
     mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                    | MF_WAS_IN_VIEW | MF_HARD_RESET
-                    | MF_ACTUAL_SPELLS;
+                    | MF_WAS_IN_VIEW | MF_HARD_RESET;
     mon->hit_points = you.hp;
     mon->set_hit_dice(min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
