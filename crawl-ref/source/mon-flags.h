@@ -209,14 +209,9 @@ const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
 const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
 const uint64_t MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER;
 
-    // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally spellcasters (in vaults).
-// BIT(23);
-const uint64_t MF_ACTUAL_SPELLS      = BIT(24); // Can use spells and is a spellcaster for
-                                     // Trog purposes.
-const uint64_t MF_PRIEST             = BIT(25); // Is a priest (divine spells)
-                                     // for the conduct.
-const uint64_t MF_SPELL_MASK         = MF_ACTUAL_SPELLS|MF_PRIEST;
+                                     //BIT(23);
+                                     //BIT(24);
+                                     //BIT(25);
 
 const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
 

@@ -4976,8 +4976,8 @@ void unmarshallMonster(reader &th, monster& m)
         unmarshallSpells(th, m.spells
 #if TAG_MAJOR_VERSION == 34
                          , m.get_experience_level(),
-                           m.flags & MF_ACTUAL_SPELLS,
-                           m.flags & MF_PRIEST
+                           mons_class_flag(m.type, M_ACTUAL_SPELLS),
+                           mons_class_flag(m.type, M_PRIEST)
 #endif
                          );
     }

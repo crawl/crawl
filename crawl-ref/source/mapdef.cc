@@ -3673,8 +3673,10 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                      spec.hd > 0 ? spec.hd :
                      me          ? me->hpdice[0]
                                  : 1,
-                     (spec.extra_monster_flags | flags) & MF_ACTUAL_SPELLS,
-                     (spec.extra_monster_flags | flags) & MF_PRIEST);
+                     flags & M_ACTUAL_SPELLS
+                        || spec.props.exists("actual_spells"),
+                     flags & M_PRIEST
+                        || spec.props.exists("priest"));
 
         spec.spells.push_back(cur_spells);
     }
@@ -3784,16 +3786,10 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.genweight = 10;
 
         if (strip_tag(mon_str, "priest_spells"))
-        {
-            mspec.extra_monster_flags &= ~MF_ACTUAL_SPELLS;
-            mspec.extra_monster_flags |= MF_PRIEST;
-        }
+            mspec.props["priest"] = true;
 
         if (strip_tag(mon_str, "actual_spells"))
-        {
-            mspec.extra_monster_flags &= ~MF_PRIEST;
-            mspec.extra_monster_flags |= MF_ACTUAL_SPELLS;
-        }
+            mspec.props["actual_spells"] = true;
 
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
