@@ -151,6 +151,7 @@ string base_type_string(const item_def &item);
 string sub_type_string(const item_def &item, bool known = true);
 
 string ego_type_string(const item_def &item, bool terse = false, int override_brand = 0);
+string ghost_brand_name(int brand);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
 const char* jewellery_effect_name(int jeweltype) PURE; //used in l_item.cc
