@@ -3733,7 +3733,7 @@ string item_prefix(const item_def &item, bool temp)
 {
     vector<string> prefixes;
 
-    if (!item.is_valid())
+    if (!item.defined())
         return "";
 
     if (fully_identified(item))
