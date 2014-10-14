@@ -1505,6 +1505,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAULT_SENTINEL,
       {
+       { SPELL_SIGNAL_HORN, 50, MON_SPELL_INNATE | MON_SPELL_NO_SILENT
+                                | MON_SPELL_BREATH },
        { SPELL_SENTINEL_MARK, 58, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
@@ -1616,6 +1618,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SATYR,
       {
+       { SPELL_BATTLECRY, 25, MON_SPELL_INNATE | MON_SPELL_NO_SILENT },
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
@@ -2232,6 +2235,37 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 22, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_BATTLECRY,
+      {
+       { SPELL_BATTLECRY, 100, MON_SPELL_INNATE | MON_SPELL_INSTANT
+                               | MON_SPELL_NO_SILENT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_SAINT_ROKA,
+      {
+       { SPELL_BATTLECRY, 100, MON_SPELL_INNATE | MON_SPELL_INSTANT
+                               | MON_SPELL_NO_SILENT },
+       { SPELL_SMITING, 64, MON_SPELL_PRIEST },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_VAULT_WARDEN,
+      {
+       { SPELL_SEAL_DOORS, 50, MON_SPELL_INNATE | MON_SPELL_NO_SILENT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_FLAYED_GHOST,
+      {
+       { SPELL_FLAY, 40, MON_SPELL_INNATE },
        END_OF_MONS_BOOK
       }
     },

@@ -20,6 +20,7 @@
 #include "effects.h"
 #include "env.h"
 #include "evoke.h"
+#include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -1183,7 +1184,8 @@ static bool _los_free_spell(spell_type spell_cast)
        || spell_cast == SPELL_WATERSTRIKE
        || spell_cast == SPELL_HOLY_FLAMES
        || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS
-       || spell_cast == SPELL_CHAOTIC_MIRROR;
+       || spell_cast == SPELL_CHAOTIC_MIRROR
+       || spell_cast == SPELL_FLAY;
 }
 
 // Set up bolt structure for monster spell casting.
@@ -1216,6 +1218,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_WATERSTRIKE:
         case SPELL_HOLY_FLAMES:
         case SPELL_CHAOTIC_MIRROR:
+        case SPELL_FLAY:
             return true;
         default:
             // Other spells get normal setup:
@@ -1350,6 +1353,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_PHANTOM_MIRROR:
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
+    case SPELL_BATTLECRY:
+    case SPELL_SIGNAL_HORN:
+    case SPELL_SEAL_DOORS:
         return true;
     default:
         if (check_validity)
@@ -1512,6 +1518,482 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && !mon->is_summoned()
            && !mons_is_conjured(mon->type)
            && !mons_is_unique(mon->type);
+}
+
+enum battlecry_type
+{
+    BATTLECRY_ORC,
+    BATTLECRY_HOLY,
+    BATTLECRY_NATURAL,
+    NUM_BATTLECRIES
+};
+
+static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
+{
+    switch (type)
+    {
+        case BATTLECRY_ORC:
+            return mons_genus(mons->type) == MONS_ORC;
+        case BATTLECRY_HOLY:
+            return mons->holiness() == MH_HOLY;
+        case BATTLECRY_NATURAL:
+            return mons->holiness() == MH_NATURAL;
+        default:
+            return false;
+    }
+}
+
+static int _battle_cry(const monster* chief, bool check_only = false)
+{
+    battlecry_type type =
+        (mons_genus(chief->type) == MONS_ORC) ? BATTLECRY_ORC :
+        (chief->holiness() == MH_HOLY)        ? BATTLECRY_HOLY
+                                              : BATTLECRY_NATURAL;
+    const actor *foe = chief->get_foe();
+    int affected = 0;
+
+    enchant_type battlecry = (type == BATTLECRY_ORC ? ENCH_BATTLE_FRENZY
+                                                    : ENCH_ROUSED);
+
+    // Columns 0 and 1 should have one instance of %s (for the monster),
+    // column 2 two (for a determiner and the monsters), and column 3 none.
+    enum { AFFECT_ONE, AFFECT_MANY, GENERIC_ALLIES };
+    static const char * const messages[][3] =
+    {
+        {
+            "%s goes into a battle-frenzy!",
+            "%s %s go into a battle-frenzy!",
+            "orcs"
+        },
+        {
+            "%s is roused by the hymn!",
+            "%s %s are roused to righteous anger!",
+            "holy creatures"
+        },
+        {
+            "%s is stirred to greatness!",
+            "%s %s are stirred to greatness!",
+            "satyr's allies"
+        },
+    };
+    COMPILE_CHECK(ARRAYSZ(messages) == NUM_BATTLECRIES);
+
+    if (foe
+        && (!foe->is_player() || !chief->friendly())
+        && !silenced(chief->pos())
+        && !chief->has_ench(ENCH_MUTE)
+        && chief->can_see(foe))
+    {
+        const int level = chief->get_hit_dice() > 12? 2 : 1;
+        vector<monster* > seen_affected;
+        for (monster_near_iterator mi(chief, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (*mi != chief
+                && _is_battlecry_compatible(*mi, type)
+                && mons_aligned(chief, *mi)
+                && !mi->berserk_or_insane()
+                && !mi->has_ench(ENCH_MIGHT)
+                && !mi->cannot_move()
+                && !mi->confused()
+                && (mi->get_hit_dice() < chief->get_hit_dice()
+                    || type == BATTLECRY_HOLY))
+            {
+                if (check_only)
+                    return 1; // just need to check
+
+                mon_enchant ench = mi->get_ench(battlecry);
+                if (ench.ench == ENCH_NONE || ench.degree < level)
+                {
+                    const int dur =
+                        random_range(12, 20) * speed_to_duration(mi->speed);
+
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        ench.degree   = level;
+                        ench.duration = max(ench.duration, dur);
+                        mi->update_ench(ench);
+                    }
+                    else
+                        mi->add_ench(mon_enchant(battlecry, level, chief, dur));
+
+                    affected++;
+                    if (you.can_see(*mi))
+                        seen_affected.push_back(*mi);
+
+                    if (mi->asleep())
+                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
+                }
+            }
+        }
+
+        if (affected)
+        {
+            // The yell happens whether you happen to see it or not.
+            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
+
+            // Disabling detailed frenzy announcement because it's so spammy.
+            const msg_channel_type channel =
+                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
+                                          : MSGCH_FRIEND_ENCHANT;
+
+            if (!seen_affected.empty())
+            {
+                string who;
+                if (seen_affected.size() == 1)
+                {
+                    who = seen_affected[0]->name(DESC_THE);
+                    mprf(channel, messages[type][AFFECT_ONE], who.c_str());
+                }
+                else
+                {
+                    bool generic = false;
+                    monster_type mon_type = seen_affected[0]->type;
+                    for (unsigned int i = 0; i < seen_affected.size(); i++)
+                    {
+                        if (seen_affected[i]->type != mon_type)
+                        {
+                            // not homogeneous - use the generic term instead
+                            generic = true;
+                            break;
+                        }
+                    }
+                    who = get_monster_data(mon_type)->name;
+
+                    mprf(channel, messages[type][AFFECT_MANY],
+                         chief->friendly() ? "Your" : "The",
+                         (!generic ? pluralise(who).c_str()
+                                   : messages[type][GENERIC_ALLIES]));
+                }
+            }
+        }
+    }
+
+    return affected;
+}
+
+static void _set_door(set<coord_def> door, dungeon_feature_type feat)
+{
+    for (set<coord_def>::const_iterator i = door.begin();
+         i != door.end(); ++i)
+    {
+        grd(*i) = feat;
+        set_terrain_changed(*i);
+    }
+}
+
+static bool _can_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    set<coord_def> all_door;
+    vector<coord_def> veto_spots;
+    find_connected_identical(door, all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        // Only attempt to push players and non-hostile monsters out of
+        // doorways
+        actor* act = actor_at(*i);
+        if (act)
+        {
+            if (act->is_player()
+                || act->is_monster()
+                    && act->as_monster()->attitude != ATT_HOSTILE)
+            {
+                coord_def newpos;
+                if (!get_push_space(*i, newpos, act, true, &veto_spots))
+                    return false;
+                else
+                    veto_spots.push_back(newpos);
+            }
+            else
+                return false;
+        }
+        // If there are items in the way, see if there's room to push them
+        // out of the way
+        else if (igrd(*i) != NON_ITEM)
+        {
+            if (!has_push_space(*i, 0))
+                return false;
+        }
+    }
+
+    // Didn't find any items we couldn't displace
+    return true;
+}
+
+static bool _should_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    dungeon_feature_type old_feat = grd(door);
+    int cur_tension = get_tension(GOD_NO_GOD);
+
+    set<coord_def> all_door;
+    vector<coord_def> veto_spots;
+    find_connected_identical(door, all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+
+    bool player_in_door = false;
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        if (you.pos() == *i)
+        {
+            player_in_door = true;
+            break;
+        }
+    }
+
+    int new_tension;
+    if (player_in_door)
+    {
+        coord_def newpos;
+        coord_def oldpos = you.pos();
+        get_push_space(oldpos, newpos, &you, false, &veto_spots);
+        you.move_to_pos(newpos);
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+        you.move_to_pos(oldpos);
+    }
+    else
+    {
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+    }
+
+    // If closing the door would reduce player tension by too much, probably
+    // it is scarier for the player to leave it open and thus it should be left
+    // open
+
+    // Currently won't allow tension to be lowered by more than 33%
+    return ((cur_tension - new_tension) * 3) <= cur_tension;
+}
+
+// Find an adjacent space to displace a stack of items or a creature
+// (If act is null, we are just moving items and not an actor)
+bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
+                    bool ignore_tension, const vector<coord_def>* excluded)
+{
+    if (act && act->is_stationary())
+        return false;
+
+    int max_tension = -1;
+    coord_def best_spot(-1, -1);
+    bool can_push = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        dungeon_feature_type feat = grd(*ai);
+        if (feat_has_solid_floor(feat))
+        {
+            // Extra checks if we're moving a monster instead of an item
+            if (act)
+            {
+                if (actor_at(*ai)
+                    || !act->can_pass_through(*ai)
+                    || !act->is_habitable(*ai))
+                {
+                    continue;
+                }
+
+                bool spot_vetoed = false;
+                if (excluded)
+                {
+                    for (unsigned int i = 0; i < excluded->size(); ++i)
+                        if (excluded->at(i) == *ai)
+                        {
+                            spot_vetoed = true;
+                            break;
+                        }
+                }
+                if (spot_vetoed)
+                    continue;
+
+                // If we don't care about tension, first valid spot is acceptable
+                if (ignore_tension)
+                {
+                    newpos = *ai;
+                    return true;
+                }
+                else // Calculate tension with monster at new location
+                {
+                    set<coord_def> all_door;
+                    find_connected_identical(pos, all_door);
+                    dungeon_feature_type old_feat = grd(pos);
+
+                    act->move_to_pos(*ai);
+                    _set_door(all_door, DNGN_CLOSED_DOOR);
+                    int new_tension = get_tension(GOD_NO_GOD);
+                    _set_door(all_door, old_feat);
+                    act->move_to_pos(pos);
+
+                    if (new_tension > max_tension)
+                    {
+                        max_tension = new_tension;
+                        best_spot = *ai;
+                        can_push = true;
+                    }
+                }
+            }
+            else //If we're not moving a creature, the first open spot is enough
+            {
+                newpos = *ai;
+                return true;
+            }
+        }
+    }
+
+    if (can_push)
+        newpos = best_spot;
+    return can_push;
+}
+
+bool has_push_space(const coord_def& pos, actor* act,
+                    const vector<coord_def>* excluded)
+{
+    coord_def dummy(-1, -1);
+    return get_push_space(pos, dummy, act, true, excluded);
+}
+
+static bool _seal_doors_and_stairs(const monster* warden,
+                                   bool check_only = false)
+{
+    ASSERT(warden);
+    ASSERT(warden->type == MONS_VAULT_WARDEN);
+
+    int num_closed = 0;
+    int seal_duration = 80 + random2(80);
+    bool player_pushed = false;
+    bool had_effect = false;
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
+                 ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_OPEN_DOOR)
+        {
+            if (!_can_force_door_shut(*ri))
+                continue;
+
+            // If it's scarier to leave this door open, do so
+            if (!_should_force_door_shut(*ri))
+                continue;
+
+            if (check_only)
+                return true;
+
+            set<coord_def> all_door;
+            vector<coord_def> veto_spots;
+            find_connected_identical(*ri, all_door);
+            copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                // If there are things in the way, push them aside
+                actor* act = actor_at(*i);
+                if (igrd(*i) != NON_ITEM || act)
+                {
+                    coord_def newpos;
+                    get_push_space(*i, newpos, act, false, &veto_spots);
+                    move_items(*i, newpos);
+                    if (act)
+                    {
+                        actor_at(*i)->move_to_pos(newpos);
+                        if (act->is_player())
+                            player_pushed = true;
+                        veto_spots.push_back(newpos);
+                    }
+                }
+            }
+
+            // Close the door
+            bool seen = false;
+            vector<coord_def> excludes;
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                const coord_def& dc = *i;
+                grd(dc) = DNGN_CLOSED_DOOR;
+                set_terrain_changed(dc);
+                dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+                if (is_excluded(dc))
+                    excludes.push_back(dc);
+
+                if (you.see_cell(dc))
+                    seen = true;
+
+                had_effect = true;
+            }
+
+            if (seen)
+            {
+                for (set<coord_def>::const_iterator i = all_door.begin();
+                     i != all_door.end(); ++i)
+                {
+                    if (env.map_knowledge(*i).seen())
+                    {
+                        env.map_knowledge(*i).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+                        env.tile_bk_bg(*i) = TILE_DNGN_CLOSED_DOOR;
+#endif
+                    }
+                }
+
+                update_exclusion_los(excludes);
+                ++num_closed;
+            }
+        }
+
+        // Try to seal the door
+        if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
+        {
+            set<coord_def> all_door;
+            find_connected_identical(*ri, all_door);
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
+                                    TERRAIN_CHANGE_DOOR_SEAL, warden);
+                had_effect = true;
+            }
+        }
+        else if (feat_is_travelable_stair(grd(*ri)))
+        {
+            dungeon_feature_type stype;
+            if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
+                stype = DNGN_SEALED_STAIRS_UP;
+            else
+                stype = DNGN_SEALED_STAIRS_DOWN;
+
+            temp_change_terrain(*ri, stype, seal_duration,
+                                TERRAIN_CHANGE_DOOR_SEAL, warden);
+            had_effect = true;
+        }
+    }
+
+    if (had_effect)
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s activates a sealing rune.",
+                (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str()
+                                          : "Someone"));
+        if (num_closed > 1)
+            mpr("The doors slam shut!");
+        else if (num_closed == 1)
+            mpr("A door slams shut!");
+
+        if (player_pushed)
+            mpr("You are pushed out of the doorway!");
+
+        return true;
+    }
+
+    return false;
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -2032,7 +2514,19 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
 
     case SPELL_THROW_BARBS:
         // Don't fire barbs in melee range.
-        return foe && foe->pos().distance_from(mon->pos()) < 2;
+        return !foe || foe->pos().distance_from(mon->pos()) < 2;
+
+    case SPELL_BATTLECRY:
+        return !_battle_cry(mon, true);
+
+    case SPELL_SIGNAL_HORN:
+        return mon->friendly();
+
+    case SPELL_SEAL_DOORS:
+        return mon->friendly() || !_seal_doors_and_stairs(mon, true);
+
+    case SPELL_FLAY:
+        return !foe || foe->holiness() != MH_NATURAL;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
@@ -3545,27 +4039,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             mons_cast_noise(mons, beem, spell_cast, flags);
             monster_blink(mons);
-
-            mons->lose_energy(EUT_SPELL);
         }
         else
             return false;
     }
     else if (spell_cast == SPELL_BLINK_RANGE)
-    {
         blink_range(mons);
-        mons->lose_energy(EUT_SPELL);
-    }
     else if (spell_cast == SPELL_BLINK_AWAY)
-    {
         blink_away(mons, true);
-        mons->lose_energy(EUT_SPELL);
-    }
     else if (spell_cast == SPELL_BLINK_CLOSE)
-    {
         blink_close(mons);
-        mons->lose_energy(EUT_SPELL);
-    }
     else
     {
         const int orig_hp = (foe) ? foe->stat_hp() : 0;
@@ -3588,7 +4071,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                        BASELINE_DELAY
                                        * spell_difficulty(spell_cast)));
         }
-        mons->lose_energy(EUT_SPELL);
         // Wellsprings "cast" from their own hp.
         if (spell_cast == SPELL_PRIMAL_WAVE
             && mons->type == MONS_ELEMENTAL_WELLSPRING)
@@ -3603,7 +4085,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
     }
 
-    return true;
+    if (!(flags & MON_SPELL_INSTANT))
+    {
+        mons->lose_energy(EUT_SPELL);
+        return true;
+    }
+
+    return false; // to let them do something else
 }
 
 static int _monster_abjure_target(monster* target, int pow, bool actual)
@@ -6162,6 +6650,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+
+    case SPELL_BATTLECRY:
+        _battle_cry(mons);
+        return;
+
+    case SPELL_SIGNAL_HORN:
+        return; // the entire point is the noise, handled elsewhere
+
+    case SPELL_SEAL_DOORS:
+        _seal_doors_and_stairs(mons);
+        return;
 
     }
 

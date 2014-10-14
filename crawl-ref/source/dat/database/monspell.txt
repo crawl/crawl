@@ -61,6 +61,10 @@ Animate Dead cast gestures
 
 @The_monster@ throws @possessive@ @arms@ wide.
 %%%%
+Battlecry cast
+
+@The_monster@ roars a battlecry!
+%%%%
 Blinkbolt cast
 
 @The_monster@ bursts into living lightning!
@@ -173,6 +177,18 @@ Phantom Mirror cast
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
+%%%%
+unseen Signal Horn cast
+
+You hear a note loudly blown on a horn!
+%%%%
+Signal Horn cast
+
+@The_monster@ blows a loud note on a signal horn!
+%%%%
+Seal Doors cast
+
+@The_monster@ activates a sealing rune.
 %%%%
 Spit Acid cast
 
@@ -347,6 +363,20 @@ giant orange brain cast
 
 @The_monster@ pulsates.
 %%%%
+silent flayed ghost cast
+
+@The_monster@ moans in silent anguish.
+
+@The_monster@ stares @at@ @foe@ with tortured malice.
+%%%%
+flayed ghost cast
+
+@The_monster@ stares @at@ @foe@ with tortured malice.
+
+@The_monster@ cries, "Suffer as I suffered!"
+
+@The_monster@ cries, "Feel what I felt!"
+%%%%
 manticore cast
 
 @The_monster@ flicks its tail.
@@ -410,9 +440,17 @@ dryad cast
 
 @The_monster@ calls out to the forest.
 %%%%
+Battlecry cherub cast
+
+@The_monster@ sings a powerful hymn!
+%%%%
 Minor Healing dryad cast
 
 @The_monster@ draws upon the vitality of nature.
+%%%%
+Battlecry satyr cast
+
+@The_monster@ plays a rousing melody on his pipes!
 %%%%
 Cause Fear satyr cast
 
