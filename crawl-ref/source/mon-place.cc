@@ -2837,6 +2837,30 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_CEREBOV:
+        natural_leader = true;
+        band = BAND_CEREBOV;
+        band_size = 5 + random2(3);
+        break;
+
+    case MONS_GLOORX_VLOQ:
+        natural_leader = true;
+        band = BAND_GLOORX_VLOQ;
+        band_size = 5 + random2(3);
+        break;
+
+    case MONS_MNOLEG:
+        natural_leader = true;
+        band = BAND_MNOLEG;
+        band_size = 5 + random2(3);
+        break;
+
+    case MONS_LOM_LOBON:
+        natural_leader = true;
+        band = BAND_LOM_LOBON;
+        band_size = 5 + random2(3);
+        break;
+
     default: ;
     }
 
@@ -3400,6 +3424,48 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_VASHNIA:
         return MONS_NAGA_SHARPSHOOTER;
+
+    case BAND_CEREBOV:
+        if (which == 1)
+            return MONS_BRIMSTONE_FIEND;
+
+        return random_choose_weighted(1, MONS_BALRUG,
+                                      3, MONS_SUN_DEMON,
+                                      3, MONS_EFREET,
+                                      0);
+
+    case BAND_GLOORX_VLOQ:
+        if (which == 1)
+            return MONS_EXECUTIONER;
+
+        return random_choose_weighted(1, MONS_SHADOW_DEMON,
+                                      3, MONS_DEMONIC_CRAWLER,
+                                      3, MONS_SHADOW_WRAITH,
+                                      0);
+
+    case BAND_MNOLEG:
+        if (which == 1)
+            return MONS_TENTACLED_MONSTROSITY;
+
+        return random_choose_weighted(2, MONS_CACODEMON,
+                                      3, MONS_ABOMINATION_LARGE,
+                                      3, MONS_NEQOXEC,
+                                      3, MONS_KILLER_KLOWN,
+                                      1, MONS_VERY_UGLY_THING,
+                                      0);
+
+    case BAND_LOM_LOBON:
+        return random_choose_weighted(2, MONS_DRACONIAN_ANNIHILATOR,
+                                      2, MONS_DEEP_ELF_ANNIHILATOR,
+                                      4, MONS_WIZARD,
+                                      4, MONS_RAKSHASA,
+                                      2, MONS_GIANT_ORANGE_BRAIN,
+                                      2, MONS_BLIZZARD_DEMON,
+                                      2, MONS_GREEN_DEATH,
+                                      1, MONS_TITAN,
+                                      1, MONS_SPRIGGAN_AIR_MAGE,
+                                      1, MONS_LICH,
+                                      0);
 
     case BAND_RANDOM_SINGLE:
     {

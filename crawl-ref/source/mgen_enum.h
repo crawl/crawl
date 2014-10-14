@@ -103,6 +103,10 @@ enum band_type
     BAND_CORRUPTER,
     BAND_BLACK_SUN,
     BAND_VASHNIA,
+    BAND_CEREBOV,
+    BAND_GLOORX_VLOQ,
+    BAND_LOM_LOBON,
+    BAND_MNOLEG,
     BAND_RANDOM_SINGLE,
     NUM_BANDS                   // always last
 };
