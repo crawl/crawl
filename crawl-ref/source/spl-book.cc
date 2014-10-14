@@ -96,7 +96,11 @@ spell_type which_spell_in_book(const item_def &book, int spl)
     ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_RODS);
 
     if (book.base_type == OBJ_RODS)
-        return !spl ? spell_in_rod(book.sub_type) : SPELL_NO_SPELL;
+    {
+        return spl == 0 && item_type_known(book)
+               ? spell_in_rod(book.sub_type)
+               : SPELL_NO_SPELL;
+    }
 
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
