@@ -1512,6 +1512,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         bool zin_id = false;
         string god_warning;
 
+        mark_mon_equipment_seen(mon);
+
         if (you_worship(GOD_ZIN)
             && mon->is_shapeshifter()
             && !(mon->flags & MF_KNOWN_SHIFTER))
@@ -1527,7 +1529,6 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                 god_warning += "glowing ";
             god_warning += "shapeshifter.";
         }
-
 
         monster_info mi(mon);
 

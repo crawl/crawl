@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "act-iter.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
@@ -431,6 +432,32 @@ void update_monsters_in_view()
         xom_is_stimulated(12 * num_hostile);
     }
 }
+
+void mark_mon_equipment_seen(const monster *mons)
+{
+    // mark items as seen.
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
+    {
+        int item_id = mons->inv[slot];
+        if (item_id == NON_ITEM)
+            continue;
+
+        item_def &item = mitm[item_id];
+
+        item.flags |= ISFLAG_SEEN;
+
+        // ID brands of non-randart weapons held by enemies.
+        if (is_artefact(item))
+            continue;
+
+        if (slot == MSLOT_WEAPON
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+        {
+            item.flags |= ISFLAG_KNOW_TYPE;
+        }
+    }
+}
+
 
 // We logically associate a difficulty parameter with each tile on each level,
 // to make deterministic magic mapping work.  This function returns the

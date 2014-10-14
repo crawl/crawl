@@ -1362,10 +1362,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     const bool know_ego = know_brand;
 
     // Display runed/glowing/embroidered etc?
-    // Only display this if brand is unknown or item is unbranded.
+    // Only display this if brand is unknown.
     const bool show_cosmetic = !__know_pluses && !terse && !basename
         && !qualname && !dbname
-        && (!know_brand || !special)
+        && !know_brand
         && !(ignore_flags & ISFLAG_COSMETIC_MASK);
 
     // So that show_cosmetic won't be affected by ignore_flags.
@@ -1431,6 +1431,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "vampiric ";
             else if (wpn_brand == SPWPN_ANTIMAGIC)
                 buff << "antimagic ";
+            else if (wpn_brand == SPWPN_NORMAL && !know_pluses
+                     && get_equip_desc(*this))
+            {
+                buff << "enchanted ";
+            }
         }
         buff << item_base_name(*this);
 
