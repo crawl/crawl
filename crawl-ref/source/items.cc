@@ -3129,8 +3129,8 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return item_is_spellbook(*this) && item_type_known(*this)
-           || base_type == OBJ_RODS;
+    return (item_is_spellbook(*this) || base_type == OBJ_RODS)
+           && item_type_known(*this);
 }
 
 int item_def::book_number() const
