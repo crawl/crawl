@@ -5033,7 +5033,7 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
         else if (priest)
             spells[i].flags |= MON_SPELL_PRIEST;
         else
-            spells[i].flags |= MON_SPELL_INNATE; // rip
+            spells[i].flags |= MON_SPELL_MAGICAL; // rip
 
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;

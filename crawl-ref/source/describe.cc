@@ -3241,9 +3241,17 @@ static string _monster_spells_description(const monster_info& mi)
     ostringstream result;
 
     result << _monster_spell_type_description(
-        mi, MON_SPELL_INNATE, "Set",
+        mi, MON_SPELL_NATURAL, "Set",
         " possesses the following special abilities: ",
         " possesses one of the following sets of special abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_MAGICAL, "Set",
+        " possesses the following magical abilities: ",
+        " possesses one of the following sets of magical abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_DEMONIC, "Set",
+        " possesses the following demonic abilities: ",
+        " possesses one of the following sets of demonic abilities:\n");
     result << _monster_spell_type_description(
         mi, MON_SPELL_PRIEST, "Set",
         " possesses the following divine abilities: ",
@@ -3893,8 +3901,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " (";
         if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
             inf.body << "emergency, ";
-        if (hspell_pass[i].flags & MON_SPELL_INNATE)
-            inf.body << "innate, ";
+        if (hspell_pass[i].flags & MON_SPELL_NATURAL)
+            inf.body << "natural, ";
+        if (hspell_pass[i].flags & MON_SPELL_DEMONIC)
+            inf.body << "demonic, ";
+        if (hspell_pass[i].flags & MON_SPELL_MAGICAL)
+            inf.body << "magical, ";
         if (hspell_pass[i].flags & MON_SPELL_WIZARD)
             inf.body << "wizard, ";
         if (hspell_pass[i].flags & MON_SPELL_PRIEST)

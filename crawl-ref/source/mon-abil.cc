@@ -1605,7 +1605,7 @@ void shock_serpent_discharge(monster* serpent, coord_def pos, int pow,
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
-    mons_cast(mons, pbolt, spell_cast, MON_SPELL_INNATE);
+    mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
 }
 
 static void _establish_connection(int tentacle,

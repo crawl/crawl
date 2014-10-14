@@ -3401,20 +3401,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     monster_spells hspell_pass(mons->spells);
 
-    if (silenced(mons->pos())
-        || mons->has_ench(ENCH_MUTE)
-        || mons->has_ench(ENCH_WATER_HOLD)
-           && !mons->res_water_drowning()
+    if (mons->is_silenced()
         // Shapeshifters don't get 'real' spells.
         || mons->is_shapeshifter())
     {
         for (monster_spells::iterator it = hspell_pass.begin();
              it != hspell_pass.end(); it++)
         {
-            // These require speaking.
-            if (it->flags & MON_SPELL_WIZARD
-                || it->flags & MON_SPELL_PRIEST
-                || it->flags & MON_SPELL_NO_SILENT)
+            if (it->flags & MON_SPELL_SILENCE_MASK)
             {
                 hspell_pass.erase(it);
                 it = hspell_pass.begin() - 1;
@@ -3826,7 +3820,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     // may pretend nothing happened --wheals.
 
     // Check for antimagic if casting a spell spell.
-    if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_WIZARD
+    if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_ANTIMAGIC_MASK
         && !x_chance_in_y(4 * BASELINE_DELAY,
                           4 * BASELINE_DELAY
                           + mons->get_ench(ENCH_ANTIMAGIC).duration))
@@ -6668,7 +6662,7 @@ static int _noise_level(const monster* mons, spell_type spell,
     int noise;
 
     if (silent
-        || (slot_flags & MON_SPELL_INNATE
+        || (slot_flags & MON_SPELL_INNATE_MASK
             && !(slot_flags & MON_SPELL_NOISY)
             && !(flags & SPFLAG_NOISY)))
     {
@@ -7090,7 +7084,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const bool priest = slot_flags & MON_SPELL_PRIEST;
     const bool wizard = slot_flags & MON_SPELL_WIZARD;
-    const bool innate = slot_flags & MON_SPELL_INNATE;
+    const bool innate = slot_flags & MON_SPELL_INNATE_MASK;
 
     int noise = _noise_level(mons, actual_spell, silent, slot_flags);
 
