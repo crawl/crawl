@@ -961,7 +961,7 @@ brand_type attack::random_chaos_brand()
             break;
         case SPWPN_ANTIMAGIC:
             if (defender->as_monster() &&
-                !mons_antimagic_affected(defender->as_monster()))
+                !defender->as_monster()->is_actual_spellcaster())
             {
                 susceptible = false;
             }
