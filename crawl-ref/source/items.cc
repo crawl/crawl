@@ -2682,11 +2682,6 @@ static bool _is_option_autopickup(const item_def &item)
     else
         return false;
 
-    //Check for initial settings
-    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
-        if (Options.force_autopickup[i].first.matches(iname))
-            return Options.force_autopickup[i].second;
-
 #ifdef CLUA_BINDINGS
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
                                         &item, iname.c_str());
@@ -2710,6 +2705,11 @@ static bool _is_option_autopickup(const item_def &item)
     if (res)
         return false;
 #endif
+
+    //Check for initial settings
+    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
+        if (Options.force_autopickup[i].first.matches(iname))
+            return Options.force_autopickup[i].second;
 
     return Options.autopickups[item.base_type];
 }
