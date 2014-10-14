@@ -1999,6 +1999,8 @@ char* failure_rate_to_string(int fail)
 
 string spell_hunger_string(spell_type spell, bool rod)
 {
+    if (spell == SPELL_MELEE)
+        return "N/A";
     return hunger_cost_string(spell_hunger(spell, rod));
 }
 
