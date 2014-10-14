@@ -807,6 +807,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRAC_SCORCHER,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_FIRE, 13, MON_SPELL_WIZARD },
        { SPELL_STICKY_FLAME_RANGE, 13, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 13, MON_SPELL_WIZARD },
@@ -818,6 +819,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRAC_CALLER,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_SUMMON_DRAKES, 66, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
@@ -825,6 +827,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRAC_SHIFTER,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_DIMENSION_ANCHOR, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_RANGE, 15, MON_SPELL_WIZARD },
@@ -1722,6 +1725,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRACONIAN_ZEALOT,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_SUMMON_DEMON, 11, MON_SPELL_PRIEST },
        { SPELL_HELLFIRE_BURST, 11, MON_SPELL_PRIEST },
        { SPELL_SMITING, 11, MON_SPELL_PRIEST },
@@ -1935,6 +1939,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRACONIAN_KNIGHT_I,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_DRAINING, 13, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
@@ -1946,6 +1951,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRACONIAN_KNIGHT_II,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 13, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 13, MON_SPELL_WIZARD },
@@ -1957,6 +1963,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRACONIAN_KNIGHT_III,
       {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
@@ -2119,6 +2126,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_DRACONIAN,
+      {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_BLACK_DRACONIAN,
       {
        { SPELL_LIGHTNING_BOLT, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
@@ -2206,6 +2220,18 @@ static const mon_spellbook mspell_list[] =
     {  MST_MANTICORE,
       {
        { SPELL_THROW_BARBS, 100, MON_SPELL_INNATE },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_DRACONIAN_ANNIHILATOR,
+      {
+       { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_INNATE | MON_SPELL_BREATH },
+       { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
+       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 11, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 22, MON_SPELL_WIZARD },
+       { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
+       { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
     },
