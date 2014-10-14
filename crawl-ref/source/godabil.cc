@@ -3152,6 +3152,13 @@ void fedhas_evolve_flora()
 
     if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         plant->add_ench(ENCH_EXPLODING);
+    else if (plant->type == MONS_OKLOB_PLANT)
+    {
+        plant->spells.clear();
+        plant->spells.push_back(mon_spell_slot());
+        plant->spells[0].spell = SPELL_SPIT_ACID;
+        plant->spells[0].flags = MON_SPELL_INNATE;
+    }
 
     plant->set_hit_dice(plant->get_experience_level()
                         + you.skill_rdiv(SK_INVOCATIONS));

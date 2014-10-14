@@ -848,13 +848,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_CHAOS_BREATH:
-        beam.name       = "blast of chaos";
-        beam.aux_source = "blast of chaotic breath";
-        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
-        beam.colour     = ETC_RANDOM;
-        beam.hit        = 30;
-        beam.flavour    = BEAM_CHAOS;
-        beam.is_beam    = true;
+        beam.name         = "blast of chaos";
+        beam.aux_source   = "blast of chaotic breath";
+        beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);
+        beam.colour       = ETC_RANDOM;
+        beam.hit          = 30;
+        beam.flavour      = BEAM_CHAOS;
+        beam.is_beam      = true;
+        beam.is_big_cloud = true;
         break;
 
     case SPELL_COLD_BREATH:
@@ -1095,6 +1096,47 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_ACID;
         beam.hit      = 17 + power / 25;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_SPIT_LAVA:
+        beam.name        = "glob of lava";
+        beam.damage      = dice_def(3, 10);
+        beam.hit         = 20;
+        beam.colour      = RED;
+        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.flavour     = BEAM_LAVA;
+        break;
+
+    case SPELL_ELECTRICAL_BOLT:
+        beam.name        = "bolt of electricity";
+        beam.damage      = dice_def(3, 3 + mons->get_hit_dice());
+        beam.hit         = 35;
+        beam.colour      = LIGHTCYAN;
+        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.flavour     = BEAM_ELECTRICITY;
+        break;
+
+    case SPELL_FLAMING_CLOUD:
+        beam.name         = "blast of flame";
+        beam.aux_source   = "blast of fiery breath";
+        beam.short_name   = "flames";
+        beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);
+        beam.colour       = RED;
+        beam.hit          = 30;
+        beam.flavour      = BEAM_FIRE;
+        beam.is_beam      = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_THROW_BARBS:
+        beam.name        = "volley of spikes";
+        beam.aux_source  = "volley of spikes";
+        beam.hit_verb    = "skewers";
+        beam.hit         = 27;
+        beam.damage      = dice_def(2, 13);
+        beam.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.colour      = LIGHTGREY;
+        beam.flavour     = BEAM_MISSILE;
         break;
 
     default:
@@ -2023,6 +2065,10 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return mon->has_ench(ENCH_TOXIC_RADIANCE);
+
+    case SPELL_THROW_BARBS:
+        // Don't fire barbs in melee range.
+        return foe && foe->pos().distance_from(mon->pos()) < 2;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

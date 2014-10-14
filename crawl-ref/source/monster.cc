@@ -2821,6 +2821,14 @@ int monster::mindex() const
 void monster::set_hit_dice(int new_hit_dice)
 {
     hit_dice = new_hit_dice;
+
+    // XXX: this is unbelievably hacky to preserve old behaviour
+    if (type == MONS_OKLOB_PLANT && !spells.empty())
+    {
+        ASSERT(spells[0].spell == SPELL_SPIT_ACID);
+        spells[0].freq = 200 * hit_dice
+                         / (crawl_state.game_is_zotdef() ? 40 : 30);
+    }
 }
 
 void monster::moveto(const coord_def& c, bool clear_net)

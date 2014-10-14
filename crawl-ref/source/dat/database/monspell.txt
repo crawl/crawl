@@ -194,6 +194,10 @@ Draconian Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Electrical Bolt cast
+
+@The_monster@ shoots out a bolt of @beam@ @at@ @target@!
+%%%%
 unseen Fire Breath cast
 
 You hear a roar.
@@ -205,6 +209,10 @@ Fire Breath cast
 unseen Draconian Breath cast
 
 You hear a roar.
+%%%%
+Spit Lava cast
+
+@The_monster@ spits lava @at@ @target@.
 %%%%
 Spit Poison cast
 
@@ -339,6 +347,10 @@ giant orange brain cast
 
 @The_monster@ pulsates.
 %%%%
+manticore cast
+
+@The_monster@ flicks its tail.
+%%%%
 orange crystal statue cast
 
 @The_monster@ glitters.
@@ -389,6 +401,10 @@ thrashing horror cast
 Airstrike wind drake cast
 
 @The_monster@ flaps its wings @at@ @target@.
+%%%%
+Wind Blast wind drake cast
+
+@The_monster@ exhales a fierce blast of wind!
 %%%%
 dryad cast
 

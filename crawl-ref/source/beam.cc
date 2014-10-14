@@ -2507,10 +2507,10 @@ cloud_type bolt::get_cloud_type()
     if (origin_spell == SPELL_HOLY_BREATH)
         return CLOUD_HOLY_FLAMES;
 
-    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+    if (origin_spell == SPELL_FLAMING_CLOUD)
         return CLOUD_FIRE;
 
-    if (origin_spell == SPELL_CHAOS_BREATH && is_big_cloud)
+    if (origin_spell == SPELL_CHAOS_BREATH)
         return CLOUD_CHAOS;
 
     if (name == "foul vapour")

@@ -451,6 +451,10 @@ Druid's Call spell
 This spell allows a druid to recall woodland creatures from elsewhere on the
 same dungeon level.
 %%%%
+Electrical Bolt spell
+
+Throws a bolt of electricity at the target.
+%%%%
 Energy Bolt spell
 
 This spell fires a beam of highly destructive energy. It can blow rock into
@@ -508,6 +512,10 @@ spell levels if the learner already knows Delayed Fireball.
 Flame Tongue spell
 
 This spell creates a short burst of flame.
+%%%%
+Flaming Cloud spell
+
+This spell conjures up a large cloud of roaring flames.
 %%%%
 Flash Freeze spell
 
@@ -1150,6 +1158,10 @@ Spit Acid spell
 
 <Spit Acid ability>
 %%%%
+Spit Lava spell
+
+Spit lava at a targeted enemy.
+%%%%
 Spit Poison spell
 
 <Spit Poison ability>
@@ -1380,6 +1392,11 @@ This spell randomly translocates another creature.
 Teleport Self spell
 
 This spell teleports the caster to a random location.
+%%%%
+Throw Barbs spell
+
+Fires a volley of barbs at the target, skewering them and making movement
+painful.
 %%%%
 Throw Flame spell
 
