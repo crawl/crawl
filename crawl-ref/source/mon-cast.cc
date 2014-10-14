@@ -1409,42 +1409,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     return true;
 }
 
-// Returns a suitable breath weapon for the draconian; does not handle all
-// draconians, does fire a tracer.
-static spell_type _get_draconian_breath_spell(monster* mons)
-{
-    spell_type draco_breath = SPELL_NO_SPELL;
-
-    if (mons_genus(mons->type) == MONS_DRACONIAN)
-    {
-        switch (draco_or_demonspawn_subspecies(mons))
-        {
-        case MONS_DRACONIAN:
-        case MONS_YELLOW_DRACONIAN:     // already handled as ability
-            break;
-        case MONS_GREY_DRACONIAN:       // no breath
-            break;
-        default:
-            draco_breath = SPELL_DRACONIAN_BREATH;
-            break;
-        }
-    }
-
-    if (draco_breath != SPELL_NO_SPELL)
-    {
-        // [ds] Check line-of-fire here. It won't happen elsewhere.
-        bolt beem;
-        setup_mons_cast(mons, beem, draco_breath);
-
-        fire_tracer(mons, beem);
-
-        if (!mons_should_fire(beem))
-            draco_breath = SPELL_NO_SPELL;
-    }
-
-    return draco_breath;
-}
-
 // Function should return false if friendlies shouldn't animate any dead.
 // Currently, this only happens if the player is in the middle of butchering
 // a corpse (infuriating), or if they are less than satiated.  Only applies
@@ -2933,7 +2897,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 {
     bool monsterNearby = mons_near(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
-    const spell_type draco_breath = _get_draconian_breath_spell(mons);
     actor *foe = mons->get_foe();
 
     if (is_sanctuary(mons->pos()) && !mons->wont_attack())
@@ -2946,15 +2909,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         || mons->submerged()
         || mons->berserk_or_insane()
         || mons_is_confused(mons, false)
-        || (!mons->has_spells()
-            && draco_breath == SPELL_NO_SPELL))
+        || !mons->has_spells())
     {
         return false;
     }
 
     bool priest;
     bool wizard;
-    bool emergency_spell = false;
     god_type god;
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
@@ -3157,11 +3118,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         // If no useful spells... cast no spell.
-        if (!hspell_pass.size()
-            && draco_breath == SPELL_NO_SPELL)
-        {
+        if (!hspell_pass.size())
             return false;
-        }
 
         const bolt orig_beem = beem;
 
@@ -3205,9 +3163,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 {
                     spell_cast = SPELL_NO_SPELL;
                 }
-
-                if (spell_cast != SPELL_NO_SPELL)
-                    emergency_spell = true;
             }
             else
             {
@@ -3376,20 +3331,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (spell_cast != SPELL_NO_SPELL)
                 break;
         }
-    }
-
-    // If there's otherwise no ranged attack use the breath weapon.
-    // The breath weapon is also occasionally used.
-    if (draco_breath != SPELL_NO_SPELL
-        && (spell_cast == SPELL_NO_SPELL
-             || !emergency_spell && one_chance_in(4))
-        && !player_or_mon_in_sanct(mons)
-        && !mons->has_ench(ENCH_BREATH_WEAPON))
-    {
-        spell_cast = draco_breath;
-        setup_mons_cast(mons, beem, spell_cast);
-        finalAnswer = true;
-        _set_flags(flags, wizard, priest, MON_SPELL_INNATE | MON_SPELL_BREATH);
     }
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
