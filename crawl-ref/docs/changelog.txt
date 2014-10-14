@@ -130,7 +130,7 @@ Interface
   option allows entire sets of the above to be specified, again with one being
   randomly selected.
 * In tiles, the tile_player_tile option allows you to specify an arbitrary
-  monster tile to display for your character. The options tile_weapon_offets
+  monster tile to display for your character. The options tile_weapon_offsets
   and tile_shield_offsets can be used to adjust the player weapon and shield
   location when using these custom tiles.
 
