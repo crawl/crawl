@@ -16,6 +16,10 @@ Character
 * Demigods now have innate Sustain Abilities.
 * All species can now choose 'unarmed' when playing backgrounds that allow a
   weapon choice.
+* Wanderers now receive a randart spellbook with exactly two spells whose
+  levels total at most 4 in place of starting with a Level 1 spell memorized.
+* Wanderers can start with one elemental evoker or a box of beasts instead of
+  a wand.
 
 Monsters
 --------
@@ -77,7 +81,7 @@ Gods
     temporarily neutral or incite them to join you.
   - Duplication: one non-artefact item can be duplicated at an altar.
 * New god: Ru the Awakened. Ru is a temple god, with an altar either in
-  Temple or on D:2-9.
+  Temple or on D:2-9. Ru's abilities can be used while silenced.
   - Periodically offers the player a choice of three permanent sacrifices in
     exchange for piety; all abilities scale with piety; piety never decreases.
   - Leaving Ru leaves all your sacrifices in place, but incurs no wrath.
@@ -85,11 +89,11 @@ Gods
   - Enemies that hurt you may be punished with status effects.
   - Draw Out Power: restore health and mana to yourself, break free of webs and
     constriction, and cure confusion and petrification. Inflicts minor
-    self-drain and exhaustion.
+    self-drain and short exhaustion.
   - Power Leap: Blinks you three tiles and deals high AOE damage at your
-    destination. Costs exhaustion.
-  - Cataclysm: Deals very high damage to all monsters in LOS and inflicts
-    statuses. Costs heavy drain and exhaustion.
+    destination. Inflicts medium exhaustion.
+  - Apocalypse: Deals very high damage to all monsters in LOS and inflicts
+    statuses. Inflicts heavy drain and exhaustion.
 * Dithmenos worshippers are now rejected by fiery/illuminating summons.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
