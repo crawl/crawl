@@ -29,6 +29,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 bool feature_mimic_at(const coord_def &c)
@@ -644,17 +645,10 @@ void seen_monster(monster* mons)
     item_def* weapon = mons->weapon();
     if (weapon && is_range_weapon(*weapon))
         mons->flags |= MF_SEEN_RANGED;
+    mark_mon_equipment_seen(mons);
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
-
-    // mark items as seen.
-    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
-    {
-        int item_id = mons->inv[slot];
-        if (item_id != NON_ITEM)
-            mitm[item_id].flags |= ISFLAG_SEEN;
-    }
 
     if (mons->flags & MF_SEEN)
         return;
