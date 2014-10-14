@@ -25,6 +25,15 @@ ae += forbidden
 # Ignore books that you have already seen
 ae += [^n]identified.*spellbook
 
+: add_autopickup_func(function (it, name)
+:         if you.god() == "Trog" then
+:             if it.subtype() == "spellbook" then
+:                 return true
+:             end
+:         end
+: end)
+
+
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
