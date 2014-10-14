@@ -385,6 +385,66 @@ NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
 
+NAME:   uniq_cerebov
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_cerebov
+veto {{
+  if you.uniques("Cerebov") or not you.have_rune("fiery") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Cerebov
+MAP
+1
+ENDMAP
+
+NAME:   uniq_gloorx_vloq
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_gloorx_vloq
+veto {{
+  if you.uniques("Gloorx Vloq") or not you.have_rune("dark") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Gloorx Vloq
+MAP
+1
+ENDMAP
+
+NAME:   uniq_mnoleg
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_mnoleg
+veto {{
+  if you.uniques("Mnoleg") or not you.have_rune("glowing") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Mnoleg
+MAP
+1
+ENDMAP
+
+NAME:   uniq_lom_lobon
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_lom_lobon
+veto {{
+  if you.uniques("Lom Lobon") or not you.have_rune("magical") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Lom Lobon
+MAP
+1
+ENDMAP
+
 NAME:   uniq_ignacio
 DEPTH:  Pan
 CHANCE: 25%
