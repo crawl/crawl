@@ -1791,9 +1791,7 @@ bool monster_info::has_spells() const
 
     // Ghosts have a special book but may not have any spells anyways.
     if (books[0] == MST_GHOST)
-    {
         return spells.size() > 0;
-    }
 
     return true;
 }
