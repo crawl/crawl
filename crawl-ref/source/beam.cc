@@ -5710,9 +5710,6 @@ int bolt::range_used_on_hit() const
     // Generic explosion.
     else if (is_explosion || is_big_cloud)
         used = BEAM_STOP;
-    // Plant spit.
-    else if (flavour == BEAM_ACID)
-        used = BEAM_STOP;
     // Lightning goes through things.
     else if (flavour == BEAM_ELECTRICITY)
         used = 0;
