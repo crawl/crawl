@@ -1359,6 +1359,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BATTLECRY:
     case SPELL_SIGNAL_HORN:
     case SPELL_SEAL_DOORS:
+    case SPELL_BERSERK_OTHER:
         return true;
     default:
         if (check_validity)
@@ -1997,6 +1998,94 @@ static bool _seal_doors_and_stairs(const monster* warden,
     }
 
     return false;
+}
+
+static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
+{
+    if (mon->friendly() != targ->friendly())
+        return false;
+
+    // targ is guaranteed to have a foe (needs_berserk checks this).
+    // Now targ needs to be closer to *its* foe than mon is (otherwise
+    // mon might be in the way).
+
+    coord_def victim;
+    if (targ->foe == MHITYOU)
+        victim = you.pos();
+    else if (targ->foe != MHITNOT)
+    {
+        const monster* vmons = &menv[targ->foe];
+        if (!vmons->alive())
+            return false;
+        victim = vmons->pos();
+    }
+    else
+    {
+        // Should be impossible. needs_berserk should find this case.
+        die("angered by no foe");
+    }
+
+    // If mon may be blocking targ from its victim, don't try.
+    if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
+        return false;
+
+    if (!actual)
+        return true;
+
+    if (you.can_see(mon))
+    {
+        if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
+        {
+            mprf("%s calls on %s to defend %s!",
+                mon->name(DESC_THE).c_str(),
+                targ->name(DESC_THE).c_str(),
+                mon->pronoun(PRONOUN_OBJECTIVE).c_str());
+        }
+        else
+            mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
+                 targ->name(DESC_THE).c_str());
+    }
+
+    targ->go_berserk(false);
+
+    return true;
+}
+
+static bool _incite_monsters(const monster* mon, bool actual)
+{
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        return false;
+
+    // Only things both in LOS of the inciter and within radius 4.
+    const int radius_sq = 4 * 4 + 1;
+    int goaded = 0;
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (*mi == mon || !mi->needs_berserk())
+            continue;
+
+        if (is_sanctuary(mi->pos()))
+            continue;
+
+        // Cannot goad other moths of wrath!
+        if (mon->type == MONS_MOTH_OF_WRATH
+            && mi->type == MONS_MOTH_OF_WRATH
+        // Queen bees can only incite killer bees.
+            || mon->type == MONS_QUEEN_BEE
+               && mi->type != MONS_KILLER_BEE)
+        {
+            continue;
+        }
+
+        if (distance2(mon->pos(), mi->pos()) > radius_sq)
+            continue;
+
+        const bool worked = _make_monster_angry(mon, *mi, actual);
+        if (worked && (!actual || !one_chance_in(3 * ++goaded)))
+            return true;
+    }
+
+    return goaded > 0;
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -3880,7 +3969,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (!_awaken_vines(mons, true))
             return false;
     }
-    // Try to cause fear: if nothing is scared, pretend we didn't cast it.
+    //XXX: unify with the other SPELL_FOO_OTHER spells?
+    else if (spell_cast == SPELL_BERSERK_OTHER)
+    {
+        if (!_incite_monsters(mons, false))
+            return false;
+    }
+    // Ditto for cause fear
     else if (spell_cast == SPELL_CAUSE_FEAR)
     {
         if (_mons_cause_fear(mons, false) < 0)
@@ -6617,6 +6712,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _seal_doors_and_stairs(mons);
         return;
 
+    case SPELL_BERSERK_OTHER:
+        _incite_monsters(mons, true);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,

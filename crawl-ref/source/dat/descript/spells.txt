@@ -82,6 +82,11 @@ Berserker Rage spell
 
 <Berserk ability>
 %%%%
+Berserk Other spell
+
+Causes a nearby ally to fly into a berserk rage, making it stronger, faster,
+and tougher.
+%%%%
 Black Mark spell
 
 This spell empowers the caster and their nearby allies to steal the vital
