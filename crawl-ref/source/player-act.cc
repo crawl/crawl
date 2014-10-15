@@ -519,7 +519,7 @@ string player::pronoun(pronoun_type pro, bool /*force_visible*/) const
 
 string player::conj_verb(const string &verb) const
 {
-    return verb;
+    return conjugate_verb(verb, true);
 }
 
 /**

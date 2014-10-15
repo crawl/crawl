@@ -2507,7 +2507,7 @@ string monster::pronoun(pronoun_type pro, bool force_visible) const
 
 string monster::conj_verb(const string &verb) const
 {
-    return conjugate_verb(verb);
+    return conjugate_verb(verb, false);
 }
 
 string monster::hand_name(bool plural, bool *can_plural) const
