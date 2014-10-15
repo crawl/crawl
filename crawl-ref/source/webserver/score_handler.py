@@ -39,7 +39,7 @@ class ScoreTopNHandler(tornado.web.RequestHandler):
 
                 if 'end' in score:
                     # fix 0-origin month to 1-origin
-                    YYYYMMDDHHMMSS = str(int(score['end'].rstrip('S')) + 100000000)
+                    YYYYMMDDHHMMSS = str(int(score['end'].rstrip('SD')) + 100000000)
                     ptn = re.compile(r'(\d{2})(\d{2})(\d{2})(\d{2})(\d{6})')
 
                     score['dumpURL'] = ptn.sub(r'../../morgue/{name}/morgue-{name}-\1\2\3\4-\5.txt'.format(**score), YYYYMMDDHHMMSS)
