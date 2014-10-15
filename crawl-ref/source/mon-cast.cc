@@ -59,6 +59,9 @@
 #include "stringutil.h"
 #include "target.h"
 #include "teleport.h"
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#endif
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
