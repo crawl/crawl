@@ -1032,22 +1032,6 @@ bool in_inventory(const item_def &i)
     return i.pos.x == -1 && i.pos.y == -1;
 }
 
-/**
- * Does the player have an item of the given type in their inventory?
- *
- * @param item_type     The object_class_type in question.
- * @return              Whether the player currently holds any items of the
- *                      given type in their inventory.
- */
-bool type_in_inventory(int item_type)
-{
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-        if (iter->base_type == item_type)
-            return true;
-    return false;
-}
-
 string item_class_name(int type, bool terse)
 {
     if (terse)
