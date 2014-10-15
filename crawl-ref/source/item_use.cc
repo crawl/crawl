@@ -2026,6 +2026,12 @@ void drink(int slot)
         return;
     }
 
+    if (player_in_branch(BRANCH_COCYTUS))
+    {
+        mpr("It's too cold; everything's frozen solid!");
+        return;
+    }
+
     if (slot == -1)
     {
         slot = prompt_invent_item("Drink which item?",

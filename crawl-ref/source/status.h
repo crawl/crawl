@@ -44,7 +44,8 @@ enum status_type
 #endif
     STATUS_BRIBE,
     STATUS_CLOUD,
-    STATUS_LAST_STATUS = STATUS_CLOUD
+    STATUS_NO_POTIONS,
+    STATUS_LAST_STATUS = STATUS_NO_POTIONS
 };
 
 struct status_info
