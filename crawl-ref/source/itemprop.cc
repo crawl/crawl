@@ -352,10 +352,6 @@ static const weapon_def Weapon_prop[] =
         DAMV_SLICING, 2, 2 },
 
     // Range weapons
-    // Notes:
-    // - damage field is used for bonus strength damage (string tension)
-    // - slings get a bonus from dex, not str (as tension is meaningless)
-    // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
         SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 5, 0 },
