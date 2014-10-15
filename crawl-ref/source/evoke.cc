@@ -22,6 +22,7 @@
 #include "decks.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
@@ -1317,7 +1318,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
         const string message =
             make_stringf("%s %s blown away by the wind.",
                          affected_monsters.describe().c_str(),
-                         affected_monsters.count() == 1? "is" : "are");
+                         conjugate_verb("be", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else

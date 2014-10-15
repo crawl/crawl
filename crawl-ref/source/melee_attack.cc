@@ -2527,7 +2527,7 @@ void melee_attack::apply_staff_damage()
             special_damage_message =
                 make_stringf("%s %s electrocuted!",
                              defender->name(DESC_THE).c_str(),
-                             defender->is_player() ? "are" : "is");
+                             defender->conj_verb("are").c_str());
             special_damage_flavour = BEAM_ELECTRICITY;
         }
 
