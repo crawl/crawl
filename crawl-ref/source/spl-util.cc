@@ -630,7 +630,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // 3) Show n = m + k + 1 gives a uniform distribution.
         //    P(new one chosen) = m / (m + k + 1)
         //    P(any specific previous choice remaining chosen)
-        //    = [1 - P(swaped into m+k+1 position)] * P(prev. chosen)
+        //    = [1 - P(swapped into m+k+1 position)] * P(prev. chosen)
         //              m      1       m
         //    = [ 1 - ----- * --- ] * ---
         //            m+k+1    m      m+k
