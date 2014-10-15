@@ -267,8 +267,6 @@ int numcmp(const char *a, const char *b, int limit)
             a++;
             b++;
         }
-        if (!a && !b)
-            return 0;
         if (!isadigit(*a) || !isadigit(*b))
             return (*a < *b) ? -1 : (*a > *b) ? 1 : 0;
         while (*a == '0')
