@@ -3938,4 +3938,17 @@ static const struct spell_desc spelldata[] =
      false
 },
 
+{
+    SPELL_BERSERK_OTHER, "Berserk Other",
+     SPTYP_CHARMS,
+     SPFLAG_HASTY | SPFLAG_MONSTER | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     3,
+     0,
+     4, 4,
+     3, 0,
+     NULL,
+     false,
+     false
+},
+
 };

@@ -4250,6 +4250,7 @@ enum spell_type
     SPELL_SIGNAL_HORN,
     SPELL_SEAL_DOORS,
     SPELL_FLAY,
+    SPELL_BERSERK_OTHER,
     NUM_SPELLS
 };
 

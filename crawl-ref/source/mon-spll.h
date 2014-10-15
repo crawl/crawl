@@ -2298,4 +2298,19 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_MOTH_OF_WRATH,
+      {
+       { SPELL_BERSERK_OTHER, 66, MON_SPELL_NATURAL },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_QUEEN_BEE,
+      {
+       { SPELL_BERSERK_OTHER, 50, MON_SPELL_NATURAL },
+       { SPELL_BERSERK_OTHER, 75, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
+       END_OF_MONS_BOOK
+      }
+    },
 };

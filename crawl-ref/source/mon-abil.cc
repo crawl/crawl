@@ -1085,110 +1085,6 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
     return do_resist;
 }
 
-static bool _make_monster_angry(const monster* mon, monster* targ)
-{
-    if (mon->friendly() != targ->friendly())
-        return false;
-
-    // targ is guaranteed to have a foe (needs_berserk checks this).
-    // Now targ needs to be closer to *its* foe than mon is (otherwise
-    // mon might be in the way).
-
-    coord_def victim;
-    if (targ->foe == MHITYOU)
-        victim = you.pos();
-    else if (targ->foe != MHITNOT)
-    {
-        const monster* vmons = &menv[targ->foe];
-        if (!vmons->alive())
-            return false;
-        victim = vmons->pos();
-    }
-    else
-    {
-        // Should be impossible. needs_berserk should find this case.
-        die("angered by no foe");
-    }
-
-    // If mon may be blocking targ from its victim, don't try.
-    if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
-        return false;
-
-    if (you.can_see(mon))
-    {
-        if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
-        {
-            mprf("%s calls on %s to defend %s!",
-                mon->name(DESC_THE).c_str(),
-                targ->name(DESC_THE).c_str(),
-                mon->pronoun(PRONOUN_OBJECTIVE).c_str());
-        }
-        else
-            mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
-                 targ->name(DESC_THE).c_str());
-    }
-
-    targ->go_berserk(false);
-
-    return true;
-}
-
-static bool _moth_incite_monsters(const monster* mon)
-{
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
-        return false;
-
-    // Only things both in LOS of the moth and within radius 4.
-    const int radius_sq = 4 * 4 + 1;
-    int goaded = 0;
-    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (*mi == mon || !mi->needs_berserk())
-            continue;
-
-        if (is_sanctuary(mi->pos()))
-            continue;
-
-        // Cannot goad other moths of wrath!
-        if (mi->type == MONS_MOTH_OF_WRATH)
-            continue;
-
-        if (distance2(mon->pos(), (*mi)->pos()) > radius_sq)
-            continue;
-
-        if (_make_monster_angry(mon, *mi) && !one_chance_in(3 * ++goaded))
-            return true;
-    }
-
-    return goaded != 0;
-}
-
-static bool _queen_incite_worker(const monster* queen)
-{
-    ASSERT(queen->type == MONS_QUEEN_BEE);
-    if (is_sanctuary(you.pos()) || is_sanctuary(queen->pos()))
-        return false;
-
-    int goaded = 0;
-    for (monster_near_iterator mi(queen, LOS_NO_TRANS); mi; ++mi)
-    {
-        // Only goad killer bees
-        if (mi->type != MONS_KILLER_BEE)
-            continue;
-
-        if (*mi == queen || !mi->needs_berserk())
-            continue;
-
-        if (is_sanctuary(mi->pos()) || distance2(queen->pos(), mi->pos()) > 17)
-            continue;
-
-        if (_make_monster_angry(queen, *mi) && !one_chance_in(3 * ++goaded))
-            return true;
-    }
-
-    return goaded != 0;
-}
-
 static bool _lost_soul_affectable(const monster* mons)
 {
     return ((mons->holiness() == MH_UNDEAD
@@ -2840,22 +2736,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 used = true;
                 break;
             }
-        }
-        break;
-
-    case MONS_MOTH_OF_WRATH:
-        if (one_chance_in(3))
-            used = _moth_incite_monsters(mons);
-        break;
-
-    case MONS_QUEEN_BEE:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (one_chance_in(4)
-            || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
-        {
-            used = _queen_incite_worker(mons);
         }
         break;
 
