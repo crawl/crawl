@@ -114,6 +114,33 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
+/**
+ * Populate a status_info struct from the duration_data struct corresponding
+ * to the given duration_type.
+ *
+ * @param[in] dur    The duration in question.
+ * @param[out] inf   The status_info struct to be filled.
+ * @return           Whether a duration_data struct was found.
+ */
+static bool _fill_inf_from_ddef(duration_type dur, status_info* inf)
+{
+    const duration_def* ddef = _lookup_duration(dur);
+    if (!ddef)
+        return false;
+
+    inf->light_colour = ddef->light_colour;
+    inf->light_text   = ddef->light_text;
+    inf->short_text   = ddef->short_text;
+    inf->long_text    = ddef->long_text;
+    if (ddef->expire)
+    {
+        inf->light_colour = _dur_colour(inf->light_colour, dur_expiring(dur));
+        _mark_expiring(inf, dur_expiring(dur));
+    }
+
+    return true;
+}
+
 static void _describe_airborne(status_info* inf);
 static void _describe_glow(status_info* inf);
 static void _describe_hunger(status_info* inf);
@@ -143,21 +170,7 @@ bool fill_status_info(int status, status_info* inf)
         if (!you.duration[dur])
             return false;
 
-        const duration_def* ddef = _lookup_duration(dur);
-        if (ddef)
-        {
-            found = true;
-            inf->light_colour = ddef->light_colour;
-            inf->light_text   = ddef->light_text;
-            inf->short_text   = ddef->short_text;
-            inf->long_text    = ddef->long_text;
-            if (ddef->expire)
-            {
-                inf->light_colour = _dur_colour(inf->light_colour,
-                                                 dur_expiring(dur));
-                _mark_expiring(inf, dur_expiring(dur));
-            }
-        }
+        found = _fill_inf_from_ddef(dur, inf);
     }
 
     // Now treat special status types and durations, possibly
