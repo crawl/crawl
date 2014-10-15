@@ -193,26 +193,37 @@ string apostrophise_fixup(const string &msg)
  *
  * An absurd simplification of the english language, but for our purposes...
  *
- * @param verb  A plural-agreeing or infinitive verb.
- *              ("smoulder", "are", "be", etc.)
- * @return      A singular-agreeing form of the verb.
- *              ("smoulders", "is", "is", etc.)
+ * @param verb   A plural-agreeing or infinitive verb
+ *               ("smoulder", "are", "be", etc.) or phrasal verb
+ *               ("shout at", "make way for", etc.)
+ * @param plural Should we conjugate the verb for the plural rather than
+ *               the singular?
+ * @return       The singular ("smoulders", "is", "shouts at") or plural-
+ *               agreeing ("smoulder", "are", "shout at", etc.) finite form
+ *               of the verb, depending on \c plural .
  */
-string conjugate_verb(const string &verb)
+string conjugate_verb(const string &verb, bool plural)
 {
     if (!verb.empty() && verb[0] == '!')
         return verb.substr(1);
+
+    // Conjugate the first word of a phrase (e.g. "release spores at")
+    const size_t space = verb.find(" ");
+    if (space != string::npos)
+    {
+        return conjugate_verb(verb.substr(0, space), plural)
+               + verb.substr(space);
+    }
+
+    // Only one verb in English differs between infinitive and plural.
+    if (plural)
+        return verb == "be" ? "are" : verb;
 
     if (verb == "are" || verb == "be")
         return "is";
 
     if (verb == "have")
         return "has";
-
-    // Conjugate the first word of a phrase (e.g. "release spores at")
-    const size_t space = verb.find(" ");
-    if (space != string::npos)
-        return conjugate_verb(verb.substr(0, space)) + verb.substr(space);
 
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))

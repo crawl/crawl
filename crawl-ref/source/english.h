@@ -20,7 +20,7 @@ string pluralise(const string &name,
                  const char *no_of[] = NULL);
 string apostrophise(const string &name);
 string apostrophise_fixup(const string &msg);
-string conjugate_verb(const string &verb);
+string conjugate_verb(const string &verb, bool plural);
 const char *decline_pronoun(gender_type gender, pronoun_type variant);
 
 string number_in_words(unsigned number, int pow = 0);

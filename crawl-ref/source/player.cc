@@ -8667,9 +8667,7 @@ string player::hands_verb(const string &plural_verb) const
 {
     bool plural;
     const string hand = hand_name(true, &plural);
-    if (plural)
-        return hand + " " + plural_verb;
-    return hand + " " + conjugate_verb(plural_verb);
+    return hand + " " + conjugate_verb(plural_verb, plural);
 }
 
 /**

@@ -4030,7 +4030,7 @@ static string _replace_god_name(god_type god, bool need_verb = false,
     if (need_verb)
     {
         result += ' ';
-        result += (god == GOD_NO_GOD) ? "are" : "is";
+        result += conjugate_verb("be", god == GOD_NO_GOD);
     }
 
     return result;
