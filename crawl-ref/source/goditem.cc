@@ -403,25 +403,6 @@ bool is_poisoned_item(const item_def& item)
     return false;
 }
 
-bool is_illuminating_item(const item_def& item)
-{
-    // No halo for you!
-    if (is_unrandom_artefact(item, UNRAND_BRILLIANCE))
-        return true;
-
-    switch (item.base_type)
-    {
-    case OBJ_BOOKS:
-    case OBJ_RODS:
-        return _is_bookrod_type(item, is_illuminating_spell);
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 static bool _is_potentially_fiery_item(const item_def& item)
 {
     switch (item.base_type)
@@ -546,11 +527,6 @@ bool is_hasty_spell(spell_type spell)
     return flags & SPFLAG_HASTY;
 }
 
-bool is_illuminating_spell(spell_type spell)
-{
-    return spell == SPELL_CORONA;
-}
-
 bool is_fiery_spell(spell_type spell)
 {
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -637,12 +613,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_DITHMENOS:
-        if (item_type_known(item) && is_illuminating_item(item))
-            return DID_ILLUMINATE;
-
         if (item_type_known(item)
-            && (_is_potentially_fiery_item(item)
-                || is_fiery_item(item)))
+            && (_is_potentially_fiery_item(item) || is_fiery_item(item)))
         {
             return DID_FIRE;
         }

@@ -1967,15 +1967,10 @@ int monster_die(monster* mons, killer_type killer,
                                     true, mons);
                 }
 
-                // Dithmenos hates sources of illumination.
+                // Dithmenos hates sources of fire.
                 // (This is *after* the holy so that the right order of
                 //  messages appears.)
-                if (mons_is_illuminating(mons))
-                {
-                    did_god_conduct(DID_KILL_ILLUMINATING,
-                                    mons->get_experience_level(), true, mons);
-                }
-                else if (mons_is_fiery(mons))
+                if (mons_is_fiery(mons))
                 {
                     did_god_conduct(DID_KILL_FIERY, mons->get_experience_level(),
                                     true, mons);

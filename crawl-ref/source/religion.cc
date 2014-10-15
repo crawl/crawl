@@ -875,8 +875,8 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_DITHMENOS:
-        really_likes.push_back("you kill beings that bring light to the "
-                               "dungeon, through fire or other means");
+        really_likes.push_back("you kill beings that bring fire to the "
+                               "dungeon");
         break;
     default:
         break;
@@ -964,8 +964,7 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_DITHMENOS:
-        dislikes.push_back("you light up the dungeon through fire magic or "
-                           "other magical means");
+        dislikes.push_back("you use fiery magic or items");
         break;
 
     default:
@@ -3966,7 +3965,7 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
             return true;
         break;
     case GOD_DITHMENOS:
-        if (is_illuminating_spell(spell) || is_fiery_spell(spell))
+        if (is_fiery_spell(spell))
             return true;
         break;
     default:

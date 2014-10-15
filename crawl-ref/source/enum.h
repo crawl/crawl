@@ -1114,8 +1114,6 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
-    DID_ILLUMINATE,                       // Dithmenos
-    DID_KILL_ILLUMINATING,                // Dithmenos
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
