@@ -1407,7 +1407,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     // If we're not doing flavoured effects, must be preliminary
     // damage check only.
     // Do not print messages or apply any side effects!
-    int resist = 0;
     int original = hurted;
 
     switch (pbolt.flavour)
@@ -1689,33 +1688,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        resist = mons->res_hellfire();
-        if (resist > 0)
+        if (mons->res_hellfire() > 0)
         {
             if (doFlavouredEffects)
             {
                 simple_monster_message(mons,
-                                       (original > 0) ? " completely resists."
-                                                      : " appears unharmed.");
+                                       hurted ? " completely resists."
+                                              : " appears unharmed.");
             }
 
             hurted = 0;
-        }
-        else if (resist < 0)
-        {
-            if (mons->is_icy())
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(mons, " melts!");
-            }
-            else
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(mons, " is burned terribly!");
-            }
-
-            hurted *= 12;       // hellfire
-            hurted /= 10;
         }
         break;
 
