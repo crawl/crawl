@@ -53,6 +53,9 @@ void record_monster_defeat(monster* mons, killer_type killer);
 int destroy_tentacles(monster* head);
 void unawaken_vines(const monster* mons, bool quiet);
 void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
+void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
+void end_flayed_effect(monster* ghost);
+
 
 int exp_rate(int killer);
 

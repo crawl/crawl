@@ -2703,6 +2703,44 @@ void unawaken_vines(const monster* mons, bool quiet)
     }
 }
 
+void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
+{
+    if (!blood_only)
+    {
+        if (act->is_player())
+            you.duration[DUR_FLAYED] = 0;
+        else
+            act->as_monster()->del_ench(ENCH_FLAYED, true, false);
+
+        if (you.can_see(act) && !quiet)
+        {
+            mprf("The terrible wounds on %s body vanish.",
+                 act->name(DESC_ITS).c_str());
+        }
+
+        act->heal(act->props["flay_damage"].get_int());
+        act->props.erase("flay_damage");
+    }
+
+    CrawlVector &blood = act->props["flay_blood"].get_vector();
+
+    for (int i = 0; i < blood.size(); ++i)
+        env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
+    act->props.erase("flay_blood");
+}
+
+void end_flayed_effect(monster* ghost)
+{
+    if (you.duration[DUR_FLAYED] && !ghost->wont_attack())
+        heal_flayed_effect(&you);
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(ghost, *mi))
+            heal_flayed_effect(*mi);
+    }
+}
+
 // Clean up after a dead monster.
 void monster_cleanup(monster* mons)
 {

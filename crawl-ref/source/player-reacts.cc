@@ -86,6 +86,7 @@
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
