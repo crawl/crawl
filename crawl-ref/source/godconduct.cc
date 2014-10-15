@@ -1000,35 +1000,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_ILLUMINATE:
-            if (you_worship(GOD_DITHMENOS))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your accidental act of "
-                                       "illumination, just this once.");
-                    break;
-                }
-                simple_god_message(" does not appreciate your illumination!");
-                piety_change = -level;
-                if (level > 5)
-                    penance = level - 5;
-                retval = true;
-            }
-            break;
-
-        case DID_KILL_ILLUMINATING:
-            if (you_worship(GOD_DITHMENOS)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                simple_god_message(" appreciates your extinguishing a source "
-                                   "of illumination.");
-                retval = true;
-                piety_denom = level + 10;
-                piety_change = piety_denom - 6;
-            }
-            break;
-
         case DID_FIRE:
             if (you_worship(GOD_DITHMENOS))
             {
@@ -1129,8 +1100,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
-                "Illuminate", "Kill Illuminating", "Fire", "Kill Fiery",
-                "Sacrificed Love"
+                "Fire", "Kill Fiery", "Sacrificed Love"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

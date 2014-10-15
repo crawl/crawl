@@ -671,9 +671,6 @@ void bolt::apply_beam_conducts()
                                                     : 2 + random2(3),
                             god_cares());
             break;
-        case BEAM_CORONA:
-            did_god_conduct(DID_ILLUMINATE, 2 + random2(3), god_cares());
-            break;
         default:
             // Fire comes from a side-effect of the beam, not the beam itself.
             if (_is_explosive_bolt(this))
