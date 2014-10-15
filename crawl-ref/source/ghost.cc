@@ -409,6 +409,7 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
     set_resist(resists, MR_RES_ASPHYX, you.res_asphyx());
     set_resist(resists, MR_RES_ROTTING, you.res_rotting());
+    set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
     speed          = _player_ghost_base_movement_speed();
 
     damage = 4;

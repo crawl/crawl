@@ -1688,7 +1688,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        if (mons->res_hellfire() > 0)
+        if (mons->res_hellfire())
         {
             if (doFlavouredEffects)
             {
@@ -1707,7 +1707,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_AIR:
-        if (mons->res_wind() > 0)
+        if (mons->res_wind())
             hurted = 0;
         else if (mons->flight_mode())
             hurted += hurted / 2;

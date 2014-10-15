@@ -1003,7 +1003,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (mons->res_wind() > 0)
+    if (mons->res_wind())
     {
         if (mons->observable())
         {

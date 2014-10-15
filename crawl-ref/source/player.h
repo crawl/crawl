@@ -642,14 +642,14 @@ public:
     int res_elec() const;
     int res_poison(bool temp = true) const;
     int res_rotting(bool temp = true) const;
-    int res_asphyx() const;
+    bool res_asphyx() const;
     int res_water_drowning() const;
-    int res_sticky_flame() const;
+    bool res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy(bool intrinsic_only = false) const;
-    int res_torment() const;
-    int res_wind() const;
-    int res_petrify(bool temp = true) const;
+    bool res_torment() const;
+    bool res_wind() const;
+    bool res_petrify(bool temp = true) const;
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
@@ -883,8 +883,8 @@ int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
 
-int player_res_torment(bool random = true, bool temp = true);
-int player_kiku_res_torment();
+bool player_res_torment(bool random = true, bool temp = true);
+bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);

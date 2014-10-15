@@ -206,7 +206,7 @@ flight_type mons_class_flies(monster_type mc);
 flight_type mons_flies(const monster* mon, bool temp = true);
 
 bool mons_flattens_trees(const monster* mon);
-int mons_class_res_wind(monster_type mc);
+bool mons_class_res_wind(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster* mon);
