@@ -3,13 +3,13 @@
     <select name="filename">
 {% import mapping %}
 {% for fname, ttl in mapping.scores.items() %}
-{%     set selected = ' selected' if (fname == filename) else '' %}
+{%     set selected = ' selected' if (fname == "scores") else '' %}
       <option value="{{ fname }}"{{ selected }}>{{ ttl }}</option>
 {% end %}
     </select>
     <select name="version">
 {% for ver in mapping.version_path.keys() %}
-{%     set selected = ' selected' if (ver == version) else '' %}
+{%     set selected = ' selected' if (ver == "trunk") else '' %}
       <option value="{{ ver }}"{{ selected }}>{{ ver }}</option>
 {% end %}
     </select>
