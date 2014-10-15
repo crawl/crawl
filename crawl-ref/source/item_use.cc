@@ -1674,7 +1674,10 @@ static targetter *_wand_targetter(const item_def *wand)
     }
 }
 
-static int _wand_mp_cost()
+/**
+ * Returns the MP cost of zapping a wand. Usually zero.
+ */
+int wand_mp_cost()
 {
     // Update mutation-data.h when updating this value.
     return player_mutation_level(MUT_MP_WANDS) * 6;
@@ -1716,7 +1719,7 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = _wand_mp_cost();
+    const int mp_cost = wand_mp_cost();
     if (!enough_mp(mp_cost, false)) {
         return;
     }
