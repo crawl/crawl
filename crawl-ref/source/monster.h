@@ -343,22 +343,22 @@ public:
     bool is_artificial(bool temp = true) const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
-    int res_hellfire() const;
+    bool res_hellfire() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison(bool temp = true) const;
     int res_rotting(bool temp = true) const;
-    int res_asphyx() const;
+    bool res_asphyx() const;
     int res_water_drowning() const;
-    int res_sticky_flame() const;
+    bool res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy(bool intrinsic_only = false) const;
-    int res_torment() const;
+    bool res_torment() const;
     int res_acid(bool calc_unid = true) const;
-    int res_wind() const;
-    int res_petrify(bool temp = true) const;
+    bool res_wind() const;
+    bool res_petrify(bool temp = true) const;
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,

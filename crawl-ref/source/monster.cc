@@ -3899,7 +3899,7 @@ bool monster::is_insubstantial() const
     return mons_class_flag(type, M_INSUBSTANTIAL);
 }
 
-int monster::res_hellfire() const
+bool monster::res_hellfire() const
 {
     return get_mons_resist(this, MR_RES_FIRE) >= 4;
 }
@@ -4023,19 +4023,16 @@ int monster::res_elec() const
     return u;
 }
 
-int monster::res_asphyx() const
+bool monster::res_asphyx() const
 {
-    int res = get_mons_resist(this, MR_RES_ASPHYX);
-    if (is_unbreathing())
-        res += 1;
-    return res;
+    return is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX) > 0;
 }
 
 int monster::res_water_drowning() const
 {
     int rw = 0;
 
-    if (is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX))
+    if (res_asphyx())
         rw++;
 
     habitat_type hab = mons_habitat(this);
@@ -4087,14 +4084,11 @@ int monster::res_poison(bool temp) const
     return u;
 }
 
-int monster::res_sticky_flame() const
+bool monster::res_sticky_flame() const
 {
-    int res = get_mons_resist(this, MR_RES_STICKY_FLAME);
-    if (is_insubstantial())
-        res += 1;
-    if (wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        res += 1;
-    return res;
+    return is_insubstantial()
+           || wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR)
+           || get_mons_resist(this, MR_RES_STICKY_FLAME) > 0;
 }
 
 int monster::res_rotting(bool temp) const
@@ -4189,45 +4183,25 @@ int monster::res_negative_energy(bool intrinsic_only) const
     return u;
 }
 
-int monster::res_torment() const
+bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    if (holy == MH_UNDEAD
-        || holy == MH_DEMONIC
-        || holy == MH_PLANT
-        || holy == MH_NONLIVING)
-    {
-        return 1;
-    }
-
-    return 0;
+    return holy == MH_UNDEAD
+            || holy == MH_DEMONIC
+            || holy == MH_PLANT
+            || holy == MH_NONLIVING;
 }
 
-int monster::res_wind() const
+bool monster::res_wind() const
 {
-    if (has_ench(ENCH_TORNADO))
-        return 1;
-    return mons_class_res_wind(type);
+    return has_ench(ENCH_TORNADO) || get_mons_resist(this, MR_RES_WIND) > 0;
 }
 
-int monster::res_petrify(bool temp) const
+bool monster::res_petrify(bool temp) const
 {
     UNUSED(temp);
 
-    if (is_insubstantial())
-        return 1;
-
-    if (type == MONS_CATOBLEPAS
-        || type == MONS_EARTH_ELEMENTAL
-        || type == MONS_LIGHTNING_SPIRE
-        || mons_is_statue(type))
-    {
-        return 1;
-    }
-    // Clay, etc, might be incapable of movement when hardened.
-    // Skeletons -- NetHack assumes fossilization doesn't hurt, we might
-    // want to make it that way too.
-    return 0;
+    return is_insubstantial() || get_mons_resist(this, MR_RES_PETRIFY) > 0;
 }
 
 int monster::res_constrict() const

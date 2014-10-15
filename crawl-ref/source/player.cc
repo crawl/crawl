@@ -1781,7 +1781,7 @@ bool player_control_teleport(bool temp)
  * @return          Whether the player resists a given instance of torment; if
  *                  random is passed, the result may vary from call to call.
  */
-int player_res_torment(bool random, bool temp)
+bool player_res_torment(bool random, bool temp)
 {
     if (player_mutation_level(MUT_TORMENT_RESISTANCE))
         return true;
@@ -1802,7 +1802,7 @@ int player_res_torment(bool random, bool temp)
 }
 
 // Kiku protects you from torment to a degree.
-int player_kiku_res_torment()
+bool player_kiku_res_torment()
 {
     return in_good_standing(GOD_KIKUBAAQUDGHA, 3)
            && !you.gift_timeout; // no protection during pain branding weapon
@@ -4798,7 +4798,7 @@ bool curare_hits_player(int death_source, int levels, string name,
 
     int hurted = 0;
 
-    if (you.res_asphyx() <= 0)
+    if (!you.res_asphyx())
     {
         hurted = roll_dice(levels, 6);
 
@@ -6668,13 +6668,10 @@ int player::res_water_drowning() const
     return rw;
 }
 
-int player::res_asphyx() const
+bool player::res_asphyx() const
 {
     // The unbreathing are immune to asphyxiation.
-    if (is_unbreathing())
-        return 1;
-
-    return 0;
+    return is_unbreathing();
 }
 
 int player::res_poison(bool temp) const
@@ -6709,7 +6706,7 @@ int player::res_rotting(bool temp) const
     }
 }
 
-int player::res_sticky_flame() const
+bool player::res_sticky_flame() const
 {
     return player_res_sticky_flame();
 }
@@ -6733,25 +6730,26 @@ int player::res_negative_energy(bool intrinsic_only) const
     return player_prot_life(!intrinsic_only, true, !intrinsic_only);
 }
 
-int player::res_torment() const
+bool player::res_torment() const
 {
     return player_res_torment();
 }
 
-int player::res_wind() const
+bool player::res_wind() const
 {
     // Full control of the winds around you can negate a hostile tornado.
     return duration[DUR_TORNADO] ? 1 : 0;
 }
 
-int player::res_petrify(bool temp) const
+bool player::res_petrify(bool temp) const
 {
     if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
-        return 1;
+        return true;
 
     if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
-        return 1;
-    return 0;
+        return true;
+
+    return false;
 }
 
 int player::res_constrict() const
