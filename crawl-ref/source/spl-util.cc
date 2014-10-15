@@ -963,10 +963,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     if (player_spell
         && vehumet_supports_spell(spell)
         && in_good_standing(GOD_VEHUMET, 3)
-        && spell != SPELL_STICKY_FLAME
-        && spell != SPELL_FREEZE
-        && spell != SPELL_DISCHARGE
-        && spell != SPELL_IRRADIATE
+        && maxrange > 1
         && spell != SPELL_GLACIATE)
     {
         maxrange++;
