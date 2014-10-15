@@ -17,13 +17,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
-#include "dgnevent.h" //XXX
-#include "evoke.h" // wind_blast
 #include "exclude.h" //XXX
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tilepick.h"
-#endif
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
