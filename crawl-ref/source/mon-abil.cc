@@ -3345,18 +3345,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     if (used)
         mons->lose_energy(EUT_SPECIAL);
 
-    // XXX: Unless monster dragons get abilities that are not a breath
-    // weapon...
-    if (used)
-    {
-        if (mons_genus(mons->type) == MONS_DRAGON
-            || mons_genus(mons->type) == MONS_DRAKE
-            || mons_genus(mons->type) == MONS_DRACONIAN)
-        {
-            setup_breath_timeout(mons);
-        }
-    }
-
     return used;
 }
 
