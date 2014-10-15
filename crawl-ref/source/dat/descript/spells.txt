@@ -69,7 +69,8 @@ Banishment spell
 %%%%
 Battlecry spell
 
-Inspires nearby allies of the caster to fight more aggressively.
+Inspires nearby allies of the caster to fight more aggressively, increasing
+the strength of their blows and the power of their shots.
 %%%%
 Beastly Appendage spell
 
@@ -497,8 +498,8 @@ loose an explosion that harms nearby creatures as well.
 Flay spell
 
 Opens painful illusionary wounds on the target's body, which disappear after
-a short time or on the death of the caster. Ineffective against unnatural
-targets.
+a short time or on the death of the caster. This cannot kill directly, and is
+ineffective against unnatural targets.
 %%%%
 Fire Breath spell
 
