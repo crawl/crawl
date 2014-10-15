@@ -358,7 +358,7 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     const int level = spell_difficulty(which_spell);
 
-    const int basehunger[] = { 50, 95, 160, 250, 350, 550, 700, 850, 1000 };
+    const int basehunger[] = { 50, 100, 150, 250, 400, 550, 700, 850, 1000 };
 
     int hunger;
 
