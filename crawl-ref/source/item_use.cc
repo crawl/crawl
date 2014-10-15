@@ -1674,6 +1674,12 @@ static targetter *_wand_targetter(const item_def *wand)
     }
 }
 
+static int _wand_mp_cost()
+{
+    // Update mutation-data.h when updating this value.
+    return player_mutation_level(MUT_MP_WANDS) * 6;
+}
+
 void zap_wand(int slot)
 {
     if (!form_can_use_wand())
@@ -1707,6 +1713,11 @@ void zap_wand(int slot)
     if (player_mutation_level(MUT_NO_ARTIFICE))
     {
         mpr("You cannot evoke magical items.");
+        return;
+    }
+
+    const int mp_cost = _wand_mp_cost();
+    if (!enough_mp(mp_cost, false)) {
         return;
     }
 
@@ -1850,7 +1861,9 @@ void zap_wand(int slot)
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
-    const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
+
+    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -1893,6 +1906,8 @@ void zap_wand(int slot)
             beam.range = wiz_range;
     }
 #endif
+
+    dec_mp(mp_cost, false);
 
     // zapping() updates beam.
     zapping(type_zapped, power, beam);

@@ -3506,6 +3506,7 @@ enum mutation_type
     MUT_SUSTAIN_ABILITIES,
 #endif
     MUT_METHODICAL_MAGIC,
+    MUT_MP_WANDS,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

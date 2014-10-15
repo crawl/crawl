@@ -2024,4 +2024,20 @@ static const mutation_def mut_data[] =
   "methodical spellcasting",
 },
 
+{ MUT_MP_WANDS,                        7,  3, MUTFLAG_BAD, false,
+  "MP-powered wands",
+
+  {"You expend magic power (6 MP) to slightly strengthen your wands.",
+    "You expend magic power (12 MP) to strengthen your wands.",
+    "You expend magic power (18 MP) to make your wands much stronger."},
+  {"You feel less able to contain your magic power.",
+    "You feel less able to contain your magic power.",
+    "You feel less able to contain your magic power."},
+  {"You can contain your magic power once more.",
+    "You feel more able to contain your magic power.",
+    "You feel more able to contain your magic power."},
+
+  "MP-powered wands",
+},
+
 };
