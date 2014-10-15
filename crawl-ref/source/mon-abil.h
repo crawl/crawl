@@ -31,9 +31,6 @@ void ancient_zyme_sicken(monster* mons);
 void torpor_snail_slow(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
 
-void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
-void end_flayed_effect(monster* ghost);
-
 bool lost_soul_revive(monster* mons);
 
 void treant_release_fauna(monster* mons);
