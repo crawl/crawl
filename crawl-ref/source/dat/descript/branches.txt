@@ -161,7 +161,8 @@ via the Vestibule of Hell.
 %%%%
 Cocytus
 
-Cocytus is a grim and frost-bitten wasteland.
+Cocytus is a grim and frost-bitten wasteland. In the terrible cold of this
+place, potions freeze into useless ice.
 
 Cocytus is seven levels deep and contains the icy rune. It can be accessed via
 the Vestibule of Hell.

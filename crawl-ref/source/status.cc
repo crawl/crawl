@@ -188,6 +188,17 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_colour = DARKGREY;
         break;
 
+    case STATUS_NO_POTIONS:
+        // only applies if player is in cocytus
+        // don't double the light if you have -potion already
+        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
+            break;
+        // use -Potion as a base
+        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
+        // but override a few fields
+        inf->short_text  = "frozen potions";
+        inf->long_text   = "Your potions are frozen solid.";
+        // intentional fallthrough to DUR_NO_POTIONS (for mummies)
     case DUR_NO_POTIONS:
         if (you_foodless(true))
             inf->light_colour = DARKGREY;

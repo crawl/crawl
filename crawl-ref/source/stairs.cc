@@ -21,6 +21,7 @@
 #include "godabil.h"
 #include "hints.h"
 #include "hiscores.h"
+#include "invent.h"  // type_in_inventory
 #include "itemname.h"
 #include "items.h"
 #include "libutil.h"
@@ -432,6 +433,7 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
     {
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
+
         if ((brdepth[old_level.branch] > 1
              || old_level.branch == BRANCH_VESTIBULE)
             && !you.branches_left[old_level.branch])
@@ -442,6 +444,12 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
             mark_milestone("br.exit", "left " + old_branch_string + ".",
                            old_level.describe());
             you.branches_left.set(old_level.branch);
+        }
+
+        if (old_level.branch == BRANCH_COCYTUS
+            && type_in_inventory(OBJ_POTIONS))
+        {
+            mpr("Your potions thaw.");
         }
     }
 
@@ -961,6 +969,15 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         {
             mpr("You enter the halls of Pandemonium!");
             mpr("To return, you must find a gate leading back.");
+        }
+        break;
+
+
+    case BRANCH_COCYTUS:
+        if (old_level.branch != BRANCH_COCYTUS
+            && type_in_inventory(OBJ_POTIONS))
+        {
+            mpr("Your potions freeze solid.");
         }
         break;
 
