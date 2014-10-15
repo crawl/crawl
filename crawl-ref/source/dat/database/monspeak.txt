@@ -154,8 +154,6 @@ _mercenary_guard_common_
 
 VISUAL:@The_monster@ looks very unfriendly.
 
-VISUAL:@The_monster@ looks very cold.
-
 VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams @at_foe@, "One false step and I'll kill you."
