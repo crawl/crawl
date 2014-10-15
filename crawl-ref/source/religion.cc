@@ -3053,7 +3053,7 @@ static string _sacrifice_message(string msg, const string& itname, bool glowing,
     else
         _erase_between(msg, "[", "]");
     _replace(msg, "%", (plural ? "" : "s"));
-    _replace(msg, "&", (plural ? "are" : "is"));
+    _replace(msg, "&", conjugate_verb("be", plural));
 
     const char *tag_start, *tag_end;
     switch (piety_gain)

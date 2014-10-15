@@ -765,7 +765,7 @@ static void _UNDEADHUNTER_melee_effects(item_def* item, actor* attacker,
     {
         mprf("%s %s blasted by disruptive energy!",
               defender->name(DESC_THE).c_str(),
-              defender->is_player() ? "are" : "is");
+              defender->conj_verb("be").c_str());
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }
 }

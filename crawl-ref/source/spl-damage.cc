@@ -432,7 +432,7 @@ static void _pre_refrigerate(actor* agent, bool player,
             const string message =
                 make_stringf("%s %s frozen.",
                             mons_list.describe(DESC_THE, true).c_str(),
-                            mons_list.count() == 1? "is" : "are");
+                            conjugate_verb("be", mons_list.count() > 1).c_str());
             if (strwidth(message) < get_number_of_cols() - 2)
                 mpr(message.c_str());
             else
@@ -801,7 +801,7 @@ void sonic_damage(bool scream)
         const string message =
             make_stringf("%s %s hurt by the noise.",
                          affected_monsters.describe().c_str(),
-                         affected_monsters.count() == 1? "is" : "are");
+                         conjugate_verb("be", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
