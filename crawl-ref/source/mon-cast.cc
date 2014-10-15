@@ -4924,24 +4924,6 @@ static void _mons_create_tentacles(monster* head)
     return;
 }
 
-static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
-{
-    switch (spell_cast)
-    {
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_TWISTED_RESURRECTION:
-    case SPELL_SIMULACRUM:
-        if (mons->friendly() && !_animate_dead_okay(spell_cast))
-            return true;
-        break;
-
-    default:
-        break;
-    }
-
-    return false;
-}
-
 struct branch_summon_pair
 {
     branch_type     origin;
@@ -5281,12 +5263,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
          mons->mindex(), spell_title(spell_cast), spell_cast);
 #endif
-
-    // for cancelling spells before messages are printed
-    // this is a hack, the monster should really have never chosen to cast
-    // the spell in the first place, we should never have gotten here -doy
-    if (_mon_spell_bail_out_early(mons, spell_cast))
-        return;
 
     bool orig_noise = do_noise;
 
