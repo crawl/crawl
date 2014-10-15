@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <cwctype>
 
-const char *standard_plural_qualifiers[] =
+const char * const standard_plural_qualifiers[] =
 {
     " of ", " labeled ", NULL
 };
@@ -25,7 +25,7 @@ bool is_vowel(const ucs_t chr)
 
 // Pluralises a monster or item name.  This'll need to be updated for
 // correctness whenever new monsters/items are added.
-string pluralise(const string &name, const char *qualifiers[],
+string pluralise(const string &name, const char * const qualifiers[],
                  const char *no_qualifier[])
 {
     string::size_type pos;

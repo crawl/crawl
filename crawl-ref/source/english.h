@@ -10,12 +10,13 @@
 #include "enum.h"
 #include <string>
 
-extern const char *standard_plural_qualifiers[];
+extern const char * const standard_plural_qualifiers[];
 
 bool is_vowel(const ucs_t chr);
 
 string pluralise(const string &name,
-                 const char *stock_plural_quals[] = standard_plural_qualifiers,
+                 const char * const stock_plural_quals[]
+                     = standard_plural_qualifiers,
                  const char *no_of[] = NULL);
 string apostrophise(const string &name);
 string apostrophise_fixup(const string &msg);
