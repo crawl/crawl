@@ -1003,7 +1003,8 @@ enchantments, both beneficial and harmful.
 Random Bolt spell
 
 This spell creates, at random, a bolt of venom, negative energy, fire, cold,
-dispelling energy, electricity, or a bouncing crystal bolt of fire or cold.
+dispelling energy, electricity, acid, or a bouncing crystal bolt of fire or
+cold.
 %%%%
 Recall spell
 
