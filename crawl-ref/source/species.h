@@ -36,6 +36,7 @@ species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
 
 monster_type player_species_to_mons_species(species_type species);
+string species_prayer_action(species_type species);
 
 // species_type bounds checking.
 bool is_valid_species(species_type);

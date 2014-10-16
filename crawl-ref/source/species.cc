@@ -497,6 +497,31 @@ monster_type player_species_to_mons_species(species_type species)
     }
 }
 
+/**
+ * What message should be printed when a character of the specified species
+ * prays at an altar, if not in some form?
+ * To be inserted into "You %s the altar of foo."
+ *
+ * @param species   The species in question.
+ * @return          An action to be printed when the player prays at an altar.
+ *                  E.g., "coil in front of", "kneel at", etc.
+ */
+string species_prayer_action(species_type species)
+{
+    switch (species)
+    {
+        case SP_NAGA:
+            return "coil in front of";
+        case SP_OCTOPODE:
+            return "curl up in front of";
+        case SP_FELID:
+            // < TGWi> you curl up on the altar and go to sleep
+            return "sit before";
+        default:
+            return "kneel at";
+    }
+}
+
 bool is_valid_species(species_type species)
 {
     return species >= 0 && species <= LAST_VALID_SPECIES;

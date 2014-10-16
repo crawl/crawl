@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "skills2.h"
+#include "species.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -392,6 +393,33 @@ bool Form::all_blocked(int slotflags) const
     return slotflags == (blocked_slots & slotflags);
 }
 
+/**
+ * What message should be printed when the player prays at an altar?
+ * To be inserted into "You %s the altar of foo."
+ *
+ * If the form has a valid custom action, print that; otherwise, default to the
+ * 'flying' or species-specific actions, as appropriate.
+ *
+ * @return  An action to be printed when the player prays at an altar.
+ *          E.g., "perch on", "crawl onto", "sway towards", etc.
+ */
+string Form::player_prayer_action() const
+{
+    // If the form is naturally flying & specifies an action, use that.
+    if (can_fly == FC_ENABLE && prayer_action != "")
+        return prayer_action;
+    // Otherwise, if you're flying, use the generic flying action.
+    // XXX: if we ever get a default-permaflying species again that wants to
+    // have a separate verb, we'll want to check for that right here.
+    if (you.flight_mode())
+        return "hover solemnly before";
+    // Otherwise, if you have a verb, use that...
+    if (prayer_action != "")
+        return prayer_action;
+    // Finally, default to your species' verb.
+    return species_prayer_action(you.species);
+}
+
 
 class FormNone : public Form
 {
@@ -413,6 +441,7 @@ private:
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "",              // prayer action
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -449,6 +478,7 @@ private:
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
            "hiss", -4,          // shout verb, shout volume modifier
            "front leg", "",          // hand name, foot name
+           "crawl onto",              // prayer action
            MONS_SPIDER)       // equivalent monster
     { };
 
@@ -479,6 +509,7 @@ private:
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "scythe-like blade", "",          // hand name, foot name
+           "",              // prayer action
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -569,6 +600,7 @@ private:
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "place yourself before",              // prayer action
            MONS_STATUE)       // equivalent monster
     { };
 
@@ -677,6 +709,7 @@ private:
            FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "front paw", "paw",          // hand name, foot name
+           "bow your head before",              // prayer action
            MONS_ICE_BEAST)       // equivalent monster
     { };
 
@@ -729,6 +762,7 @@ private:
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
            "roar", 6,          // shout verb, shout volume modifier
            "foreclaw", "",          // hand name, foot name
+           "bow your head before",              // prayer action
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -822,6 +856,7 @@ private:
            FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "",              // prayer action
            MONS_LICH)       // equivalent monster
     { };
 
@@ -871,6 +906,7 @@ private:
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
            "squeak", -8,          // shout verb, shout volume modifier
            "foreclaw", "",          // hand name, foot name
+           "perch on",              // prayer action
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
@@ -961,6 +997,7 @@ private:
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
            "squeal", 0,          // shout verb, shout volume modifier
            "front trotter", "trotter",          // hand name, foot name
+           "bow your head before",              // prayer action
            MONS_HOG)       // equivalent monster
     { };
 
@@ -991,6 +1028,7 @@ private:
            FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "",              // prayer action
            MONS_PLAYER)       // equivalent monster
     { };
 
@@ -1059,6 +1097,7 @@ private:
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
            "creak", 0,          // shout verb, shout volume modifier
            "branch", "root",          // hand name, foot name
+           "sway towards",              // prayer action
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
@@ -1094,6 +1133,7 @@ private:
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
            "squeak", -8,          // shout verb, shout volume modifier
            "front leg", "",          // hand name, foot name
+           "curl into a sanctuary of spikes before",           // prayer action
            MONS_PORCUPINE)       // equivalent monster
     { };
 
@@ -1124,6 +1164,7 @@ private:
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
            "whoosh", -8,          // shout verb, shout volume modifier
            "misty tendril", "strand",          // hand name, foot name
+           "swirl around",           // prayer action
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
@@ -1155,6 +1196,7 @@ private:
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "",           // prayer action
            MONS_JELLY)       // equivalent monster
     { };
 
@@ -1186,6 +1228,7 @@ private:
            FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
            "sporulate", -8,          // shout verb, shout volume modifier
            "hypha", "",          // hand name, foot name
+           "release spores on",           // prayer action
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 
@@ -1237,6 +1280,7 @@ private:
            FC_FORBID, true, true,        // can_bleed, breathes, keeps_mutations
            "", 0,          // shout verb, shout volume modifier
            "", "",          // hand name, foot name
+           "",           // prayer action
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 
@@ -1297,6 +1341,7 @@ private:
            FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
            "roar", 4,          // shout verb, shout volume modifier
            "foreclaw", "",          // hand name, foot name
+           "bow your heads before",           // prayer action
            MONS_HYDRA)       // equivalent monster
     { };
 
