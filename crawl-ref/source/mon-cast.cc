@@ -1360,6 +1360,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SIGNAL_HORN:
     case SPELL_SEAL_DOORS:
     case SPELL_BERSERK_OTHER:
+    case SPELL_SPELLFORGED_SERVITOR:
         return true;
     default:
         if (check_validity)
@@ -6715,6 +6716,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERK_OTHER:
         _incite_monsters(mons, true);
         return;
+
+    case SPELL_SPELLFORGED_SERVITOR:
+    {
+        monster* servitor = create_monster(
+            mgen_data(MONS_SPELLFORGED_SERVITOR, SAME_ATTITUDE(mons),
+                      mons, 4, spell_cast, mons->pos(), mons->foe, 0, god));
+        if (servitor)
+            init_servitor(servitor, mons);
+        else if (you.can_see(mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

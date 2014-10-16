@@ -1040,12 +1040,14 @@ static spell_type servitor_spells[] =
     SPELL_NO_SPELL,
 };
 
-void ghost_demon::init_spellforged_servitor()
+void ghost_demon::init_spellforged_servitor(actor* caster)
 {
     mon_spell_slot slot;
     slot.flags = MON_SPELL_WIZARD;
+    monster* mon = caster->is_monster() ? caster->as_monster() : NULL;
 
-    int pow = calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
+    int pow = mon ? 12 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
+                  : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     colour = LIGHTMAGENTA; // cf. mon-data.h
     speed = 10;
@@ -1061,9 +1063,10 @@ void ghost_demon::init_spellforged_servitor()
     spell_type spell = SPELL_NO_SPELL;
     while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
     {
-        int chance = 50 - spell_fail(spell);
+        int chance = mon ? 0 : 50 - spell_fail(spell);
         chance = chance * chance;
-        if (you.has_spell(spell) && x_chance_in_y(chance, 50*50))
+        if (mon && mon->has_spell(spell)
+            || !mon && you.has_spell(spell) && x_chance_in_y(chance, 50*50))
         {
             slot.spell = spell;
             spells.push_back(slot);

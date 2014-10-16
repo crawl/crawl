@@ -24,6 +24,7 @@
 #include "env.h"
 #include "target.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "godconduct.h"
 #include "goditem.h"
 #include "invent.h"
@@ -2423,6 +2424,36 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+void init_servitor(monster* servitor, actor* caster)
+{
+    ASSERT(servitor->ghost.get());
+    servitor->ghost->init_spellforged_servitor(caster);
+    servitor->ghost_demon_init();
+    servitor->props["custom_spells"].get_bool() = true;
+
+    if (you.can_see(caster))
+    {
+        mprf("%s %s a servant imbued with %s destructive magic!",
+             caster->name(DESC_THE).c_str(),
+             caster->conj_verb("summon").c_str(),
+             caster->pronoun(PRONOUN_POSSESSIVE).c_str());
+    }
+    else if (servitor)
+        simple_monster_message(servitor, " appears!");
+
+    int shortest_range = LOS_RADIUS + 1;
+    for (size_t i = 0; i < servitor->spells.size(); ++i)
+    {
+        if (servitor->spells[i].spell == SPELL_NO_SPELL)
+            continue;
+
+        int range = spell_range(servitor->spells[i].spell, 100, false);
+        if (range < shortest_range)
+            shortest_range = range;
+    }
+    servitor->props["ideal_range"].get_int() = shortest_range;
+}
+
 spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -2432,21 +2463,7 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
                     MG_AUTOFOE, god);
 
     if (monster* mon = create_monster(mdata))
-    {
-        mpr ("You summon a servant imbued with your destructive magic!");
-
-        int shortest_range = LOS_RADIUS + 1;
-        for (int i = 0; i < 5; ++i)
-        {
-            if (mon->spells[i].spell == SPELL_NO_SPELL)
-                continue;
-
-            int range = spell_range(mon->spells[i].spell, 100, false);
-            if (range < shortest_range)
-                shortest_range = range;
-        }
-        mon->props["ideal_range"].get_int() = shortest_range;
-    }
+        init_servitor(mon, &you);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

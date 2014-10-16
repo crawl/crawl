@@ -52,7 +52,7 @@ public:
     bool init_chimera_for_place(monster* mon, level_id place,
                                 monster_type chimera_type, coord_def pos);
 
-    void init_spellforged_servitor();
+    void init_spellforged_servitor(actor* caster);
 
     void ugly_thing_to_very_ugly_thing();
 
