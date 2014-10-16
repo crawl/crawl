@@ -2765,12 +2765,6 @@ void ShoppingList::display()
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
-            string prompt = make_stringf("Delete %s from shopping list? (y/N)",
-                                         describe_thing(*thing, DESC_A).c_str());
-            clrscr();
-            if (!yesno(prompt.c_str(), true, 'n'))
-                continue;
-
             const int index = shopmenu.get_entry_index(sel[0]);
             if (index == -1)
             {
