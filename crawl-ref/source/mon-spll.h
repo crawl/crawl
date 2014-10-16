@@ -2313,4 +2313,11 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_PHANTASMAL_WARRIOR,
+      {
+       { SPELL_BLINK_CLOSE, 67, MON_SPELL_NATURAL },
+       END_OF_MONS_BOOK
+      }
+    },
 };
