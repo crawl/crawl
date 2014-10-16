@@ -22,6 +22,8 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "player.h"
@@ -757,66 +759,28 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
     max_hp  = 10 + div_rand_round(power,3);
 }
 
-static bool _know_spell(spell_type spell)
-{
-    return you.has_spell(spell) && spell_fail(spell) < 50;
-}
-
-/**
- * Searches a list of ghost spells for the first one that
- * the player can cast.
- * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
- * @param ignore_up_to_spell Ignore entries in the list up to and
- *                           including this one.
- * @return  The first spell the player knows.
- */
-static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
-{
-    unsigned i = 0;
-    while (ignore_up_to_spell != SPELL_NO_SPELL
-            && spells[i] != SPELL_NO_SPELL)
-    {
-        if (spells[i++] == ignore_up_to_spell)
-            break;
-    }
-
-    while (spells[i] != SPELL_NO_SPELL)
-    {
-        if (_know_spell(spells[i]))
-            return spells[i];
-        ++i;
-    }
-
-    return SPELL_NO_SPELL;
-}
-
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast.  Death is a traumatic experience, so ghosts only
 // remember a few spells.
 void ghost_demon::add_spells()
 {
     spells.clear();
+    mon_spell_slot slot;
+    slot.flags = MON_SPELL_WIZARD;
 
-    spells[0].spell = search_spell_list(search_order_conj, SPELL_NO_SPELL);
-    spells[1].spell = search_spell_list(search_order_conj, spells[0].spell);
-    spells[2].spell = search_spell_list(search_order_third, SPELL_NO_SPELL);
-    spells[3].spell = search_spell_list(search_order_misc, SPELL_NO_SPELL);
-    spells[4].spell = search_spell_list(search_order_misc, spells[3].spell);
-
-    if (spells[3].spell == SPELL_NO_SPELL)
+    for (int i = 0; i < you.spell_no; i++)
     {
-        spells[3].spell = search_spell_list(search_order_conj, spells[1].spell);
-        if (spells[4].spell == SPELL_NO_SPELL)
-            spells[4].spell = search_spell_list(search_order_conj, spells[3].spell);
-    }
-    else if (spells[4].spell == SPELL_NO_SPELL)
-         spells[4].spell = search_spell_list(search_order_conj, spells[1].spell);
-
-    // Look for Blink or Teleport Self for the emergency slot.
-    if (_know_spell(SPELL_CONTROLLED_BLINK)
-        || _know_spell(SPELL_BLINK))
-    {
-        spells[5].spell = SPELL_CONTROLLED_BLINK;
+        int chance = spell_fail(you.spells[i]);
+        chance = chance * chance;
+        // XXX: this may require a more stringent check if there are
+        // player spells which don't work well as ghost spells
+        if (you.spells[i] != SPELL_NO_SPELL
+            && is_valid_mon_spell(you.spells[i])
+            && x_chance_in_y(chance, 50*50))
+        {
+            slot.spell = you.spells[i];
+            spells.push_back(slot);
+        }
     }
 
     for (unsigned int i = 0; i < spells.size(); ++i)
@@ -1101,7 +1065,7 @@ bool ghost_demon::populate_servitor_spells(spell_type* spell_list, bool primary,
     spell_type spell = SPELL_NO_SPELL;
     while ((spell = spell_list[i++]) != SPELL_NO_SPELL)
     {
-        if (_know_spell(spell))
+        if (you.has_spell(spell) && spell_fail(spell) < 50)
             candidates.push_back(spell);
     }
 

@@ -2329,19 +2329,20 @@ unique_books get_unique_spells(const monster_info &mi,
                  && mspell_list[msidx].spells[j].spell != SPELL_NO_SPELL);
              ++j)
         {
+            mon_spell_slot slot;
             spell_type spell;
             if (book == MST_GHOST)
-                spell = mi.spells[j].spell;
+                slot = mi.spells[j];
             else
             {
                 ASSERT(msidx < ARRAYSZ(mspell_list));
-                if (flags != MON_SPELL_NO_FLAGS
-                    && !(mspell_list[msidx].spells[j].flags & flags))
-                {
-                    continue;
-                }
-                spell = mspell_list[msidx].spells[j].spell;
+                slot = mspell_list[msidx].spells[j];
             }
+
+            if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
+                continue;
+
+            spell = slot.spell;
 
             bool match = false;
 
