@@ -55,6 +55,8 @@ struct armour_def
     equipment_type      slot;
     size_type           fit_min;
     size_type           fit_max;
+    /// Whether this armour is mundane or inherently 'special', for acq.
+    bool                mundane;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -64,96 +66,96 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,  100,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true },
     { ARM_ROBE,                 "robe",                   2,   0,   60,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -4,  150,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_RING_MAIL,            "ring mail",              5,  -7,  250,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
     { ARM_SCALE_MAIL,           "scale mail",             6, -10,  350,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -15,  400,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -18,  650,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -23, 1200,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
 
     { ARM_TROLL_HIDE,           "troll hide",             2,  -4,  220,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,  220,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,   0,  120,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    5,   0,  120,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_MOTTLED_DRAGON_HIDE,  "mottled dragon hide",    3,  -5,  150,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6,  -5,  150,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3,  -7,  200,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7,  -7,  200,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_FIRE_DRAGON_HIDE,     "fire dragon hide",       3, -11,  350,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_FIRE_DRAGON_ARMOUR,   "fire dragon armour",     8, -11,  350,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_ICE_DRAGON_HIDE,      "ice dragon hide",        4, -11,  350,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_ICE_DRAGON_ARMOUR,    "ice dragon armour",      9, -11,  350,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -11,  400,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",   10, -11,  400,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -15,  600,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,  600,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -23, 1100,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -23, 1100,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   40,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
     { ARM_GLOVES,               "gloves",                 1,   0,   20,
-        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_HELMET,               "helmet",                 1,   0,   80,
-        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_CAP,                  "cap",                    0,   0,   40,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,   40,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   30,
-        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true },
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
     { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -6,  100,
-        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
     { ARM_NAGA_BARDING,         "naga barding",           4,  -6,  100,
-        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_BUCKLER,              "buckler",                3,  -1,   90,
-        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
     { ARM_SHIELD,               "shield",                 8,  -3,  150,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG, true    },
     { ARM_LARGE_SHIELD,         "large shield",          13,  -5,  230,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT  },
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
 };
 
 /// The standard properties for a given weapon type. (E.g. falchions)
@@ -1067,6 +1069,19 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     }
 
     return false;
+}
+
+/**
+ * Is this armour considered inherently 'special' for acquirement?
+ *
+ * @param arm   The armour item in question.
+ * @return      Whether that type of armour is considered 'special'.
+ */
+bool armour_is_special(const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+
+    return !Armour_prop[ Armour_index[item.sub_type] ].mundane;
 }
 
 equipment_type get_armour_slot(const item_def &item)
