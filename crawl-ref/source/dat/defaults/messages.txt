@@ -86,6 +86,7 @@ msc += $boring:lunges up near
 force_more_message += You have reached level
 force_more_message += Your scales start
 force_more_message += You fall through a shaft
+force_more_message += Marking area around .* as unsafe
 
 ## Reduce chance of drowning because flight or form runs out:
 force_more_message += Careful!

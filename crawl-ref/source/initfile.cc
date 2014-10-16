@@ -863,8 +863,6 @@ void game_options::reset_options()
     tc_dangerous           = CYAN;
     tc_disconnected        = DARKGREY;
 
-    exclude_forces_more    = true;
-
     show_waypoints         = true;
 
     background_colour      = BLACK;
@@ -3369,7 +3367,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
     else LIST_OPTION(auto_exclude);
-    else BOOL_OPTION(exclude_forces_more);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
