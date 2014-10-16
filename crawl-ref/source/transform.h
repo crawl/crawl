@@ -88,7 +88,7 @@ protected:
          form_capability _can_bleed, bool _breathes, bool _keeps_mutations,
          string _shout_verb, int _shout_volume_modifier,
          string _hand_name, string _foot_name,
-         monster_type _equivalent_mons) :
+         string _prayer_action, monster_type _equivalent_mons) :
     short_name(_short_name), wiz_name(_wiz_name),
     duration(_duration),
     str_mod(_str_mod), dex_mod(_dex_mod),
@@ -106,7 +106,7 @@ protected:
     can_fly(_can_fly), can_swim(_can_swim),
     flat_ac(_flat_ac), power_ac(_power_ac), xl_ac(_xl_ac),
     uc_brand(_uc_brand), uc_attack(_uc_attack),
-    equivalent_mons(_equivalent_mons)
+    prayer_action(_prayer_action), equivalent_mons(_equivalent_mons)
     { };
 
 public:
@@ -184,6 +184,8 @@ public:
 
     bool player_can_fly() const;
     bool player_can_swim() const;
+
+    string player_prayer_action() const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -283,6 +285,9 @@ private:
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
+
+    /// Altar prayer action; "" uses defaults. See Form::player_prayer_action()
+    const string prayer_action;
 
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
