@@ -196,8 +196,18 @@ static brand_type _random_special_pan_lord_brand()
                          -1);
 }
 
+#define ADD_SPELL(which_spell) \
+    { \
+        slot.spell = which_spell; \
+        if (slot.spell != SPELL_NO_SPELL) \
+            spells.push_back(slot); \
+    }
+
 void ghost_demon::init_random_demon()
 {
+    mon_spell_slot slot;
+    slot.flags = MON_SPELL_DEMONIC;
+
     do name = make_name(random_int(), false);
         while (!getLongDescription(name).empty());
 
@@ -264,29 +274,29 @@ void ghost_demon::init_random_demon()
         // spell indices.  Some special monster-only spells are at the end.
 
         if (coinflip())
-            spells[0].spell = RANDOM_ELEMENT(search_order_conj);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
         // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-            spells[1].spell = RANDOM_ELEMENT(search_order_conj);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        if (!one_chance_in(4))
-            spells[2].spell = RANDOM_ELEMENT(search_order_third);
+        ADD_SPELL(one_chance_in(4) ? SPELL_SUMMON_DEMON
+                                   : RANDOM_ELEMENT(search_order_third));
 
         if (coinflip())
         {
-            spells[3].spell = RANDOM_ELEMENT(search_order_misc);
-            if (spells[3].spell == SPELL_DIG)
-                spells[3].spell = SPELL_NO_SPELL;
+            spell_type spell = RANDOM_ELEMENT(search_order_misc);
+            if (spell != SPELL_DIG)
+                ADD_SPELL(spell);
         }
 
         if (coinflip())
-            spells[4].spell = RANDOM_ELEMENT(search_order_misc);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
 
-        spells[5].spell = random_choose_weighted(2, SPELL_TELEPORT_SELF,
-                                                 1, SPELL_BLINK,
-                                                 1, SPELL_NO_SPELL,
-                                                 0);
+        ADD_SPELL(random_choose_weighted(2, SPELL_TELEPORT_SELF,
+                                         1, SPELL_BLINK,
+                                         1, SPELL_NO_SPELL,
+                                         0));
 
         // Convert the player spell indices to monster spell ones.
         // Pan lords also get their Agony upgraded to Torment.
@@ -307,52 +317,48 @@ void ghost_demon::init_random_demon()
         // Demon-summoning should be fairly common.
         if (one_chance_in(4))
         {
-            spells[0].spell = random_choose(SPELL_HELLFIRE_BURST,
-                                            SPELL_FIRE_STORM,
-                                            SPELL_GLACIATE,
-                                            SPELL_METAL_SPLINTERS,
-                   /* eye of devastation */ SPELL_ENERGY_BOLT,
-                                            SPELL_ORB_OF_ELECTRICITY,
-                                            -1);
+            ADD_SPELL(random_choose(SPELL_HELLFIRE_BURST,
+                                    SPELL_FIRE_STORM,
+                                    SPELL_GLACIATE,
+                                    SPELL_METAL_SPLINTERS,
+           /* eye of devastation */ SPELL_ENERGY_BOLT,
+                                    SPELL_ORB_OF_ELECTRICITY,
+                                    -1));
         }
 
         if (one_chance_in(25))
-            spells[1].spell = SPELL_STEAM_BALL;
+            ADD_SPELL(SPELL_STEAM_BALL);
         if (one_chance_in(25))
-            spells[1].spell = SPELL_QUICKSILVER_BOLT;
+            ADD_SPELL(SPELL_QUICKSILVER_BOLT);
         if (one_chance_in(25))
-            spells[1].spell = SPELL_HELLFIRE;
+            ADD_SPELL(SPELL_HELLFIRE);
         if (one_chance_in(25))
-            spells[1].spell = SPELL_IOOD;
+            ADD_SPELL(SPELL_IOOD);
 
         if (one_chance_in(25))
-            spells[2].spell = SPELL_SMITING;
+            ADD_SPELL(SPELL_SMITING);
         if (one_chance_in(25))
-            spells[2].spell = SPELL_HELLFIRE_BURST;
+            ADD_SPELL(SPELL_HELLFIRE_BURST);
         if (one_chance_in(22))
-            spells[2].spell = SPELL_SUMMON_HYDRA;
+            ADD_SPELL(SPELL_SUMMON_HYDRA);
         if (one_chance_in(20))
-            spells[2].spell = SPELL_SUMMON_DRAGON;
+            ADD_SPELL(SPELL_SUMMON_DRAGON);
         if (one_chance_in(12))
-            spells[2].spell = SPELL_SUMMON_GREATER_DEMON;
+            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
         if (one_chance_in(12))
-            spells[2].spell = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_SUMMON_DEMON);
         if (one_chance_in(10))
-            spells[2].spell = SPELL_SUMMON_EYEBALLS;
+            ADD_SPELL(SPELL_SUMMON_EYEBALLS);
 
         if (one_chance_in(20))
-            spells[3].spell = SPELL_SUMMON_GREATER_DEMON;
+            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
         if (one_chance_in(20))
-            spells[3].spell = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_SUMMON_DEMON);
         if (one_chance_in(20))
-            spells[3].spell = SPELL_MALIGN_GATEWAY;
-
-        // At least they can summon demons.
-        if (spells[3].spell == SPELL_NO_SPELL)
-            spells[3].spell = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_MALIGN_GATEWAY);
 
         if (one_chance_in(15))
-            spells[4].spell = SPELL_DIG;
+            ADD_SPELL(SPELL_DIG);
 
         fixup_spells(spells, xl, true, false);
     }
