@@ -72,7 +72,7 @@ static const armour_def Armour_prop[] =
 
     { ARM_RING_MAIL,            "ring mail",              5,  -7,  250,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_SCALE_MAIL,           "scale mail",             6, -11,  350,
+    { ARM_SCALE_MAIL,           "scale mail",             6, -10,  350,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -15,  400,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
