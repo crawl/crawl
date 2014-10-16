@@ -1132,7 +1132,8 @@ ORIENT:    southwest
 : pan_lord_setup(_G, 'Gloorx Vloq')
 TILE:      c = dngn_stone_wall_darkgray
 SHUFFLE:   1O
-MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
+MONS:      patrolling Gloorx Vloq, Executioner, curse skull
+MONS:      demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1145,19 +1146,19 @@ xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
 xxxx.x.xxxx+xxxxxxxxxxxx+xxxxxx.x.x
 xxxx...xx....................xx...x
-xxxx.x.x..ccccc..4..4..ccccc..x.x.x
-xxxx...x.cc.3............3.cc.x...x
+xxxx.x.x..ccccc..5..5..ccccc..x.x.x
+xxxx...x.cc.4......3.....4.cc.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x...c...ccc..ccc...c...+...x
-xxxx.x.x.3.....2..1O..2.....3.x.x.x
+xxxx.x.x.4.....2..1O..2.....4.x.x.x
 xxxx...+...c...ccc..ccc...c...x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
-xxxx...x.cc.3............3.cc.x...x
-xxxx.x.x..ccccc..4..4..ccccc..+.x.x
+xxxx...x.cc.4.....3......4.cc.x...x
+xxxx.x.x..ccccc..5..5..ccccc..+.x.x
 xxxx...xx....................xx...x
 xxxx.x.xxxx+xxxx+xxxxxxxx+xxxxx.x.x
 xxxx..............................x
@@ -1173,8 +1174,8 @@ TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southeast
 : pan_lord_setup(_G, 'Gloorx Vloq')
 TILE:      c = dngn_stone_wall_darkgray
-MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
-MONS:      soul eater, unseen horror
+MONS:      patrolling Gloorx Vloq, Executioner, curse skull
+MONS:      soul eater, shadow wraith, unseen horror
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1182,20 +1183,20 @@ MAP
 xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
 xxxxx.............................xxxxx
 xxxx...xxx.x.xxx.x.x.x.xxx.x.xxx...xxxx
-xxx....xxx.x.xxx.x3x3x.xxx.x.xxx....xxx
+xxx....xxx.x.xxx.x5x5x.xxx.x.xxx....xxx
 xx...................................xx
-x..5..ccccccccccccccccccccccccccc..5..x
+x..6..ccccccccccccccccccccccccccc..6..x
 xx...xcxxxxxxxxxxxxxxxxxxxxxxxxxcx...xx
 x.x.x.cx.x4x.x.x.x.x.x.x.x.x4x.xc.x.x.x
 x..x..cxx.x.x.x.x.xOx.x.x.x.x.xxc..x..x
 x.x.x.cx.x.x.x.x.xxxxx.x.x.x.x.xc.x.x.x
 xx...xcxx.x.x.x.x4...4x.x.x.x.xxcx...xx
-x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
+x.x.x.cx3x.x.x.x.x...x.x.x.x.x3xc.x.x.x
 x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
 x.x.x.cx.x.x2x.x.x...x.x.x2x.x.xc.x.x.x
 xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
 x.x.x.cx.x.x.x.x.x.1.x.x.x.x.x.xc.x.x.x
-x3.x.3cxx.x.x.x.x.....x.x.x.x.xxc3.x.3x
+x5.x.5cxx.x.x.x.x.....x.x.x.x.xxc5.x.5x
 x.x.x.cx2x.x.x.x.x...x.x.x.x.x2xc.x.x.x
 xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
@@ -1225,42 +1226,43 @@ SUBST:      C : ., d : +
 : end
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
-MONS:       executioner, shadow demon, shadow wraith, demonic crawler
+MONS:       executioner, curse skull, shadow demon
+MONS:       shadow wraith, demonic crawler
 KMONS:      O = demonic crawler
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.4..........................4.xx
-x4x.V.x.x.V.x.x.V.x.x.V.x.x.V.4xx
+x.5..........................5.xx
+x5x.V.x.x.V.x.x.V.x.x.V.x.x.V.5xx
 x..x.x.V.x.x.V.x2x.V.x.x.V.x2V.xx
 x.V.........................x..xx
 x..x.........................x.xx
 x.x....ccccccccccccccccccc..V..xx
 x..V...cxxxxxxxxxxxxxxxxxc...x.xx
 x.x....cxxxxxxxxxxxxxx...c..x..xx
-x..x...cxxxxxxxxxxxxx..X.c...V.xx
+x..x...cxxxxxxxxxxxxx3.X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.x..cccxxxx.............c..V..xx
-x...3c5+.2.........X.X.X.cc..x.xx
-....cc5c.................+3.x..xx
-@...cO5c1....2...X.X.X.X.dC..V.xx
-....cc5c.................+3.x..xx
-x...3c5+.2.........X.X.X.cc..x.xx
+x...4c6+.2.........X.X.X.cc..x.xx
+....cc6c.................+4.x..xx
+@...cO6c1....2...X.X.X.X.dC..V.xx
+....cc6c.................+4.x..xx
+x...4c6+.2.........X.X.X.cc..x.xx
 x.x..cccxxxx.............c..V..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx
-x..x...cxxxxxxxxxxxxx..X.c...V.xx
+x..x...cxxxxxxxxxxxxx3.X.c...V.xx
 x.x....cxxxxxxxxxxxxxx...c..x..xx
 x..V...cxxxxxxxxxxxxxxxxxc...x.xx
 x.x....ccccccccccccccccccc..V..xx
 x..x.........................x.xx
 x.V.........................x..xx
 x..x.x.V.x.x.V.x2x.V.x.x.V.x2V.xx
-x4x.V.x.x.V.x.x.V.x.x.V.x.x.V.4xx
-x.4..........................4.xx
+x5x.V.x.x.V.x.x.V.x.x.V.x.x.V.5xx
+x.5..........................5.xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1270,7 +1272,7 @@ TAGS:   gloorx_vloq uniq_gloorx_vloq
 ORIENT: west
 : pan_lord_setup(_G, 'Gloorx Vloq')
 TILE:   c = dngn_stone_wall_darkgray
-MONS:   patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
+MONS:   patrolling Gloorx Vloq, Executioner, curse skull, demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1278,37 +1280,37 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.......................xxxxxx
-xxxxx...3.x...x...x...x...x.3...xxxx
+xxxxx...4.x...x...x...x...x.4...xxxx
 xxxx.............................xxx
 xxx...x..ccccccccccccccccc....x...xx
-xxx.3....c...x...x...x...cc....x..xx
+xxx.4....c...x...x...x...cc....x..xx
 xx.......c....x.x.x.x.x.x.cc.......x
-xx.x.x.x.c.....x...x...x...cc....3.x
-xx....4..+......x.x.x.x.x.x.cc.....x
-xx.......+.......x...x.2.x...cc..x.x
-xx....4..+......x.x.x.x.x.x.x.cc...x
+xx.x.x.x.c.....x...x...x...cc....4.x
+xx....5..+......x.x.x.x.x.x.cc.....x
+xx.......+.......x...x.2.x.3.cc..x.x
+xx....5..+......x.x.x.x.x.x.x.cc...x
 xx.x.x.x.c.....x...x...x...x...c...x
 xxx.....xc....ccccccccc.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
 xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
-xx.x.x.x.cc........x...x...x...c.4.x
+xx.x.x.x.cc........x...x...x...c.5.x
 xxx.x.x.xc.c......x.x.x.x.x.x.xc....
 xx.x.x.x.cOc.1...x...x.2.x...xcc.x.@
 xxx.x.x.xc.c......x.x.x.x.x.x.xc....
-xx.x.x.x.cc........x...x...x...c.4.x
+xx.x.x.x.cc........x...x...x...c.5.x
 xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
 xxx.....xc....ccccccccc.x.x.x.xc...x
 xx.x.x.x.c.....x...x...x...x...c...x
-xx....4..+......x.x.x.x.x.x.x.cc...x
-xx.......+.......x...x.2.x...cc..x.x
-xx....4..+......x.x.x.x.x.x.cc.....x
-xx.x.x.x.c.....x...x...x...cc....3.x
+xx....5..+......x.x.x.x.x.x.x.cc...x
+xx.......+.......x...x.2.x.3.cc..x.x
+xx....5..+......x.x.x.x.x.x.cc.....x
+xx.x.x.x.c.....x...x...x...cc....4.x
 xx.......c....x.x.x.x.x.x.cc.......x
-xxx.3....c...x...x...x...cc....x..xx
+xxx.4....c...x...x...x...cc....x..xx
 xxx...x..ccccccccccccccccc....x...xx
 xxxx.............................xxx
-xxxxx...3.x...x...x...x...x.3...xxxx
+xxxxx...4.x...x...x...x...x.4...xxxx
 xxxxxxx.......................xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
