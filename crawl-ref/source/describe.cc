@@ -338,7 +338,9 @@ static vector<string> _randart_propnames(const item_def& item,
                 break;
             case 1: // e.g. F++
             {
-                const int sval = min(abs(val), 3);
+                // XXX: actually handle absurd values instead of displaying
+                // the wrong number of +s or -s
+                const int sval = min(abs(val), 6);
                 work << propanns[i].name
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;

@@ -442,6 +442,9 @@ void artefact_desc_properties(const item_def &item,
         case ARM_STORM_DRAGON_ARMOUR:
             ++proprt[ARTP_ELECTRICITY];
             break;
+        case ARM_SHADOW_DRAGON_ARMOUR:
+            proprt[ARTP_STEALTH] += 4;
+            break;
         case ARM_GOLD_DRAGON_ARMOUR:
             ++proprt[ARTP_POISON];
             ++proprt[ARTP_FIRE];
@@ -1072,8 +1075,9 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_COLD] = -1;
             break;
         case 7:                     // less stealthy
-            if (aclass == OBJ_JEWELLERY
+            if ((aclass == OBJ_JEWELLERY
                 && (atype == RING_LOUDNESS || atype == RING_STEALTH))
+                || (aclass == OBJ_ARMOUR && atype == ARM_SHADOW_DRAGON_ARMOUR))
             {
                 break;
             }

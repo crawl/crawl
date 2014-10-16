@@ -321,6 +321,7 @@ static void _create_monster_hide(const item_def corpse)
         case MONS_GOLDEN_DRAGON:  type = ARM_GOLD_DRAGON_HIDE;    break;
         case MONS_SWAMP_DRAGON:   type = ARM_SWAMP_DRAGON_HIDE;   break;
         case MONS_PEARL_DRAGON:   type = ARM_PEARL_DRAGON_HIDE;   break;
+        case MONS_SHADOW_DRAGON:  type = ARM_SHADOW_DRAGON_HIDE;  break;
         default:
             die("an unknown hide drop");
     }

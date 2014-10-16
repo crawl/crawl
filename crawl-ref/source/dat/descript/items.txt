@@ -1398,6 +1398,18 @@ within its rock. Those creatures standing near to walls will be pelted with
 falling rubble as the rocky surface heaves and crumbles, while others may be
 swallowed up by cracks in the earth itself.
 %%%%
+shadow dragon armour
+
+Armour made from the scales of a great umbral dragon. It is heavier than most
+dragon-scale armours, but despite this, blends in so well with the shadows
+as to provide a substantial benefit to the wearer's stealth.
+%%%%
+shadow dragon hide
+
+The hide of a great umbral dragon, covered in extremely hard blue-black scales.
+In its raw form it does not provide much protection, but with magical means, it
+may be used to make excellent armour.
+%%%%
 storm dragon armour
 
 Armour made from the scales of a lightning-breathing dragon. It is heavier than
