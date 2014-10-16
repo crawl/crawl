@@ -822,8 +822,10 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         wpn->flags |= ISFLAG_THROWN;
     }
     item_def cp = *wpn;
-    // Self-casting haunts yourself!
-    const bool friendly = force_friendly || !target_is_player;
+    // If sac love, the weapon will go after you, not the target.
+    const bool sac_love = player_mutation_level(MUT_NO_LOVE);
+    // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
+    const bool friendly = (force_friendly || !target_is_player) && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
@@ -831,8 +833,8 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
                  &you,
                  dur, SPELL_TUKIMAS_DANCE,
                  target->pos(),
-                 target_is_player ? MHITYOU : target->mindex(),
-                 MG_FORCE_BEH);
+                 (target_is_player || sac_love) ? MHITYOU : target->mindex(),
+                 sac_love ? 0 : MG_FORCE_BEH);
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -845,8 +847,8 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         return;
     }
 
-    // Don't haunt yourself if the weapon is friendly
-    if (!force_friendly)
+    // Don't haunt yourself if the weapon is friendly or if sac love.
+    if (!force_friendly && !sac_love)
     {
         mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                    INFINITE_DURATION));
