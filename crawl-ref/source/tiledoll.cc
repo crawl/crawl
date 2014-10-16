@@ -350,7 +350,13 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
+            else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+        }
         else if (item == -1)
             result.parts[TILEP_PART_HAND1] = 0;
         else
@@ -361,7 +367,13 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
         if (you.form == TRAN_BLADE_HANDS)
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+                result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+                result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
+            else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
+        }
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
         else
