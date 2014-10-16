@@ -4498,7 +4498,9 @@ enum daction_type
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
     DACT_ALLY_MAKHLEB,
+#if TAG_MAJOR_VERSION == 34
     DACT_ALLY_SACRIFICE_LOVE,
+#endif
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

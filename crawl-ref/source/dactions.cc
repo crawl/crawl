@@ -142,9 +142,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
 
-    case DACT_ALLY_SACRIFICE_LOVE:
-        return mon->attitude != ATT_HOSTILE;
-
     default:
         return false;
     }
@@ -201,7 +198,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_PLANT:
         case DACT_ALLY_TROG:
         case DACT_ALLY_MAKHLEB:
-        case DACT_ALLY_SACRIFICE_LOVE:
             dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
@@ -217,8 +213,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
             // No global message for Trog, Makhleb, or Ru.
             if (local && (act == DACT_ALLY_TROG
-                          || act == DACT_ALLY_MAKHLEB
-                          || act == DACT_ALLY_SACRIFICE_LOVE))
+                          || act == DACT_ALLY_MAKHLEB))
             {
                 simple_monster_message(mon, " turns against you!");
             }
@@ -297,7 +292,6 @@ static void _apply_daction(daction_type act)
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
-    case DACT_ALLY_SACRIFICE_LOVE:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
@@ -377,6 +371,7 @@ static void _apply_daction(daction_type act)
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
+    case DACT_ALLY_SACRIFICE_LOVE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

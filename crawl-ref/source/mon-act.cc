@@ -2690,6 +2690,19 @@ static void _clear_monster_flags()
         menv[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
 }
 
+/**
+* On each monster turn, check to see if we need to update monster attitude.
+* At the time of writing, it just checks for MUT_NO_LOVE from Ru Sacrifice Love.
+*
+* @param mon     The targeted monster
+* @return        Void
+**/
+static void _update_monster_attitude(monster *mon)
+{
+    if (player_mutation_level(MUT_NO_LOVE))
+        mon->attitude = ATT_HOSTILE;
+}
+
 //---------------------------------------------------------------
 //
 // handle_monsters
@@ -2722,6 +2735,8 @@ void handle_monsters(bool with_noise)
 
         if (invalid_monster(mon) || !mon->alive() || !mon->has_action_energy())
             continue;
+
+        _update_monster_attitude(mon);
 
         // Only move the monster if nothing else has played with its energy
         // during their turn.

@@ -5582,7 +5582,6 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 return false;
             }
-            add_daction(DACT_ALLY_SACRIFICE_LOVE);
             mark_milestone("sacrifice", "sacrificed love!");
             break;
         case ABIL_RU_SACRIFICE_ARCANA:
