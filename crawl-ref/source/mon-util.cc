@@ -2643,18 +2643,10 @@ void define_monster(monster* mons)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
-    {
-        ghost_demon ghost;
-        mons->set_ghost(ghost);
-    }
-
     case MONS_SPELLFORGED_SERVITOR:
     {
         ghost_demon ghost;
-        ghost.init_spellforged_servitor();
         mons->set_ghost(ghost);
-        mons->ghost_demon_init();
-        mons->props["custom_spells"].get_bool() = true;
         break;
     }
 
