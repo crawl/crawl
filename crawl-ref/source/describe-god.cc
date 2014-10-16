@@ -285,8 +285,8 @@ static const char *divine_title[NUM_GODS][8] =
         "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
     // Yredelemnul -- zombie death.
-    {"Traitor",            "Zealot",                "Exhumer",                  "Fey @Genus@",
-        "Soul Tainter",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
+    {"Traitor",            "Tainted",                "Torchbearer",                  "Fey @Genus@",
+        "Black Crusader",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
 
     // Xom.
     {"Toy",                "Toy",                   "Toy",                      "Toy",
@@ -294,14 +294,14 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Vehumet -- battle mage theme.
     {"Meek",               "Sorcerer's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
-        "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
+        "Traumaturge",    "Battlemage",               "Warlock",              "Luminary of Lethal Lore"},
 
     // Okawaru -- battle theme.
     {"Coward",             "Struggler",             "Combatant",                "Warrior",
         "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
 
     // Makhleb -- chaos theme.
-    {"Orderly",            "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
+    {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction", "Fanfare of Bloodshed",
         "Fiendish",           "Demolition @Genus@",    "Pandemonic",               "Champion of Chaos"},
 
     // Sif Muna -- scholarly theme.
@@ -317,8 +317,8 @@ static const char *divine_title[NUM_GODS][8] =
         "Soothsayer",         "Magus",                 "Cardsharp",                "Hand of Fortune"},
 
     // Elyvilon.
-    {"Sinner",             "Comforter",             "Caregiver",                "Practitioner",
-        "Pacifier",           "Purifying @Genus@",     "Faith Healer",             "Bringer of Life"},
+    {"Sinner",                "Practitioner",             "Comforter",             "Caregiver",
+        "Mender",           "Pacifist",     "Purifying @Genus@",             "Bringer of Life"},
 
     // Lugonu -- distortion theme.
     {"Pure",               "Abyss-Baptised",        "Unweaver",                 "Distorting @Genus@",
@@ -329,24 +329,24 @@ static const char *divine_title[NUM_GODS][8] =
         "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
 
     // Jiyva -- slime and jelly theme.
-    {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
-        "Putrid Slime",       "Consuming @Genus@",     "Archjelly",                "Royal Jelly"},
+    {"Scum",               "Squelcher",                 "Ooze",                "Jelly",
+        "Slime Creature",     "Consuming @Genus@",                "Blob",       "Royal Jelly"},
 
     // Fedhas Madash -- nature theme.
-    {"@Walking@ Fertiliser", "Green @Genus@",       "Inciter",                  "Photosynthesist",
-        "Cultivator",         "Green Death",           "Nimbus",                   "Force of Nature"},
+    {"@Walking@ Fertiliser", "Fungal",       "Green @Genus@",                  "Cultivator",
+        "Fruitful",         "Photosynthesist",           "Green Death",                   "Force of Nature"},
 
     // Cheibriados -- slow theme
-    {"Unwound @Genus@",    "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
-        "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"},
+    {"Hasty",    "Sluggish @Genus@",      "Deliberate",        "Unhurried",
+     "Contemplative",        "Epochal",        "Timeless",       "@Adj@ Eon"},
 
     // Ashenzari -- divination theme
-    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
-        "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
+    {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",
+        "Seer",         "Oracle",                "Illuminatus",              "Omniscient"},
 
     // Dithmenos -- darkness theme
-    {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
-        "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
+    {"Ember",        "Gloomy",                "Darkened",                  "Extinguished",
+        "Caliginous",           "Umbral",              "Hand of Shadow",                "Eternal Night"},
 
     // Gozag -- entrepreneur theme
     {"Profligate",         "Pauper",                "Entrepreneur",             "Capitalist",
