@@ -1893,7 +1893,7 @@ static int _stealth_breakpoint(int stealth)
     else if (stealth >= 450)
         return 9;
     else
-        return 1 + stealth / 50;
+        return 1 + stealth / STEALTH_PIP;
 }
 
 static string _stealth_bar(int sw) {

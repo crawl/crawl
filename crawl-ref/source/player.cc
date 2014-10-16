@@ -3652,16 +3652,16 @@ int check_stealth()
         stealth -= penalty;
     }
 
-    stealth += 50 * you.scan_artefacts(ARTP_STEALTH);
+    stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
 
-    stealth += 50 * you.wearing(EQ_RINGS, RING_STEALTH);
-    stealth -= 50 * you.wearing(EQ_RINGS, RING_LOUDNESS);
+    stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
+    stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
     if (you.duration[DUR_STEALTH])
-        stealth += 80;
+        stealth += STEALTH_PIP * 2;
 
     if (you.duration[DUR_AGILITY])
-        stealth += 50;
+        stealth += STEALTH_PIP;
 
     if (!you.airborne())
     {
@@ -3669,13 +3669,13 @@ int check_stealth()
         {
             // Merfolk can sneak up on monsters underwater -- bwr
             if (you.fishtail || you.species == SP_OCTOPODE)
-                stealth += 50;
+                stealth += STEALTH_PIP;
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
 
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += 50;
+            stealth += STEALTH_PIP;
 
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
@@ -3693,12 +3693,13 @@ int check_stealth()
     // this penalty is dependent on the actual amount of ambient noise
     // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50 + current_level_ambient_noise();
+        stealth -= STEALTH_PIP + current_level_ambient_noise();
 
     // Mutations.
-    stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
-    stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
-    stealth += 40 * player_mutation_level(MUT_CAMOUFLAGE);
+    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += (STEALTH_PIP / 2)
+                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
 

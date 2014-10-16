@@ -33,7 +33,12 @@
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
+/// The standard unit of stealth; one level in %/@ screens
+static const int STEALTH_PIP = 50;
+
+/// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
+// relevant for swiftness, etc
 
 class targetter;
 
