@@ -95,6 +95,12 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6,  -5,  150,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+    { ARM_QUICKSILVER_DRAGON_HIDE,   "quicksilver dragon hide",
+                                                          3,  -6,  200,
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+    { ARM_QUICKSILVER_DRAGON_ARMOUR, "quicksilver dragon armour",
+                                                         10,  -6,  200,
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3,  -7,  200,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7,  -7,  200,
@@ -1012,6 +1018,10 @@ bool hide2armour(item_def &item)
     case ARM_SHADOW_DRAGON_HIDE:
         item.sub_type = ARM_SHADOW_DRAGON_ARMOUR;
         break;
+
+    case ARM_QUICKSILVER_DRAGON_HIDE:
+        item.sub_type = ARM_QUICKSILVER_DRAGON_ARMOUR;
+        break;
     }
 
     return true;
@@ -1026,6 +1036,9 @@ bool hide2armour(item_def &item)
 int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
+
+    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+        return 0;
 
     const int eq_slot = get_armour_slot(item);
 
@@ -1060,6 +1073,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_SWAMP_DRAGON_ARMOUR:
     case ARM_PEARL_DRAGON_ARMOUR:
     case ARM_SHADOW_DRAGON_ARMOUR:
+    case ARM_QUICKSILVER_DRAGON_ARMOUR:
         return inc_made;
 
     case ARM_TROLL_HIDE:
@@ -1072,6 +1086,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_SWAMP_DRAGON_HIDE:
     case ARM_PEARL_DRAGON_HIDE:
     case ARM_SHADOW_DRAGON_HIDE:
+    case ARM_QUICKSILVER_DRAGON_HIDE:
         return true;
 
     default:

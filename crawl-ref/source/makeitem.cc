@@ -299,6 +299,10 @@ void item_colour(item_def &item)
         case ARM_SHADOW_DRAGON_ARMOUR:
             item.colour = mons_class_colour(MONS_SHADOW_DRAGON);
             break;
+        case ARM_QUICKSILVER_DRAGON_HIDE:
+        case ARM_QUICKSILVER_DRAGON_ARMOUR:
+            item.colour = mons_class_colour(MONS_QUICKSILVER_DRAGON);
+            break;
         default:
             item.colour = _armour_colour(item);
             break;
@@ -1675,6 +1679,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                 do_curse_item(item);
         }
 
+        // Don't let quicksilver dragon armour get minuses.
+        if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+            item.plus = 0;
+
         return true;
     }
 
@@ -2017,6 +2025,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
+
+    // Don't let quicksilver dragon armour get minuses.
+    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+        item.plus = 0;
 
     // squash boring items.
     if (!force_good && item.special == SPARM_NORMAL && item.plus > 0
