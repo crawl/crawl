@@ -1146,9 +1146,7 @@ static bool _is_armour_plain(const item_def &item)
     if (is_artefact(item))
         return false;
 
-    if (item.sub_type != ARM_ANIMAL_SKIN
-        && item.sub_type >= ARM_MIN_UNBRANDED
-        && item.sub_type <= ARM_MAX_UNBRANDED)
+    if (armour_is_special(item))
     {
         // These are always interesting, even with no brand.
         // May still be redundant, but that has another check.
