@@ -282,8 +282,11 @@ random_var player::attack_delay(const item_def *weap,
                                 bool scaled) const
 {
     random_var attk_delay = constant(15);
-    const int armour_penalty = adjusted_body_armour_penalty(20);
-    const int base_shield_penalty = adjusted_shield_penalty(20);
+    // a semi-arbitrary multiplier, to minimize loss of precision from integer
+    // math.
+    const int DELAY_SCALE = 20;
+    const int armour_penalty = adjusted_body_armour_penalty(DELAY_SCALE);
+    const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
     bool check_weapon = (!projectile && !!weap)
                         || projectile
@@ -301,7 +304,8 @@ random_var player::attack_delay(const item_def *weap,
         else
         {
             // UC/throwing attacks are slowed by heavy armour (aevp)
-            attk_delay = max(10, 7 + div_rand_round(armour_penalty, 20));
+            attk_delay = max(10, 7 + div_rand_round(armour_penalty,
+                                                    DELAY_SCALE));
 
             // ...and sped up by skill (min delay (10 - 270/54) = 5)
             skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
@@ -322,7 +326,8 @@ random_var player::attack_delay(const item_def *weap,
             const skill_type wpn_skill = item_attack_skill(*weap);
             attk_delay = constant(property(*weap, PWPN_SPEED));
             attk_delay -=
-                div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
+                div_rand_round(constant(you.skill(wpn_skill, 10)),
+                               DELAY_SCALE);
 
             // apply minimum to weapon skill modification
             attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
@@ -346,7 +351,7 @@ random_var player::attack_delay(const item_def *weap,
         shield_penalty =
             div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
                                    rv::roll_dice(1, base_shield_penalty)),
-                           20);
+                           DELAY_SCALE);
     }
     // Give unarmed shield-users a slight penalty always.
     if (!weap && player_wearing_slot(EQ_SHIELD))
