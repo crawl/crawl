@@ -702,8 +702,8 @@ Sacrifices cannot be taken back.
 Sacrifice Essence ability
 
 Adherents who choose to sacrifice their essence will be given the choice to
-agree to one of three sacrifices: reduced magic pool, MR-, or increased
-spellcasting difficulty.
+accept or deny a sacrifice. The sacrifice offered is one of the following:
+reduced magic pool, MR-, or increased spellcasting difficulty.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
@@ -712,9 +712,9 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice Health ability
 
-Adherents who choose to sacrifice their health will be given the choice to agree
-to one of three sacrifices: reduced health, penalties to Evasion, or penalties
-to AC.
+Adherents who choose to sacrifice their health will be given the choice to
+accept or deny a sacrifice. The sacrifice offered is one of the following:
+reduced health, penalties to Evasion, or penalties to AC.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
