@@ -5544,37 +5544,35 @@ static void _regenerate_tile_flavour()
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
-        env.tile_flv(*ri).wall = 0;
-        env.tile_flv(*ri).floor = 0;
-        env.tile_flv(*ri).feat = 0;
-        env.tile_flv(*ri).special = 0;
+        tile_flavour &flv = env.tile_flv(*ri);
+        flv.wall = 0;
+        flv.floor = 0;
+        flv.feat = 0;
+        flv.special = 0;
 
-        if (env.tile_flv(*ri).wall_idx)
+        if (flv.wall_idx)
         {
-            tileidx_t new_wall
-                = _get_tile_from_vector(env.tile_flv(*ri).wall_idx);
+            tileidx_t new_wall = _get_tile_from_vector(flv.wall_idx);
             if (!new_wall)
-                env.tile_flv(*ri).wall_idx = 0;
+                flv.wall_idx = 0;
             else
-                env.tile_flv(*ri).wall = new_wall;
+                flv.wall = new_wall;
         }
-        if (env.tile_flv(*ri).floor_idx)
+        if (flv.floor_idx)
         {
-            tileidx_t new_floor
-                = _get_tile_from_vector(env.tile_flv(*ri).floor_idx);
+            tileidx_t new_floor = _get_tile_from_vector(flv.floor_idx);
             if (!new_floor)
-                env.tile_flv(*ri).floor_idx = 0;
+                flv.floor_idx = 0;
             else
-                env.tile_flv(*ri).floor = new_floor;
+                flv.floor = new_floor;
         }
-        if (env.tile_flv(*ri).feat_idx)
+        if (flv.feat_idx)
         {
-            tileidx_t new_feat
-                = _get_tile_from_vector(env.tile_flv(*ri).feat_idx);
+            tileidx_t new_feat = _get_tile_from_vector(flv.feat_idx);
             if (!new_feat)
-                env.tile_flv(*ri).feat_idx = 0;
+                flv.feat_idx = 0;
             else
-                env.tile_flv(*ri).feat = new_feat;
+                flv.feat = new_feat;
         }
     }
 
