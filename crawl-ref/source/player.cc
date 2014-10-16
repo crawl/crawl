@@ -6815,6 +6815,7 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += 40 * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
+    rm += 40 * you.wearing(EQ_BODY_ARMOUR, ARM_QUICKSILVER_DRAGON_ARMOUR);
     rm += 40 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE, calc_unid);
 
     // rings of magic resistance

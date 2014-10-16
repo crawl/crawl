@@ -425,6 +425,9 @@ void artefact_desc_properties(const item_def &item,
     {
         switch (item.sub_type)
         {
+        case ARM_QUICKSILVER_DRAGON_ARMOUR:
+            ++proprt[ARTP_MAGIC];
+            break;
         case ARM_SWAMP_DRAGON_ARMOUR:
             ++proprt[ARTP_POISON];
             break;
@@ -936,7 +939,8 @@ static void _get_randart_properties(const item_def &item,
     // res magic
     if (!done_powers
         && one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC))
+        && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC)
+        && (aclass != OBJ_ARMOUR || atype != ARM_QUICKSILVER_DRAGON_ARMOUR))
     {
         proprt[ARTP_MAGIC] = one_chance_in(3) ? 2 : 1;
         power_level++;

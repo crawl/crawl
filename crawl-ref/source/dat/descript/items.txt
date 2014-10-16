@@ -946,6 +946,20 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
+quicksilver dragon armour
+
+Armour made from the scales of a quicksilver dragon. Although it does not
+provide its wearer with as much protection as the armour made from the scales
+of some heavier dragons, it is somewhat lighter and less encumbering. It is
+excellent at repelling enchantments - and therefore cannot be enchanted
+beyond its current form.
+%%%%
+quicksilver dragon hide
+
+The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
+raw form it does not provide much protection, but with magical means, it may
+be used to make excellent armour.
+%%%%
 quick blade
 
 This carefully wrought short sword is preternaturally well-balanced, making it

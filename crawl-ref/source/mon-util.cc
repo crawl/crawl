@@ -1426,6 +1426,7 @@ bool mons_class_leaves_hide(monster_type mc)
     case MONS_SWAMP_DRAGON:
     case MONS_PEARL_DRAGON:
     case MONS_SHADOW_DRAGON:
+    case MONS_QUICKSILVER_DRAGON:
         return true;
     default:
         return false;
