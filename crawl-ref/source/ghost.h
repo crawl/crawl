@@ -53,7 +53,6 @@ public:
                                 monster_type chimera_type, coord_def pos);
 
     void init_spellforged_servitor();
-    bool populate_servitor_spells(spell_type* spells, bool primary, skill_type best_skill);
 
     void ugly_thing_to_very_ugly_thing();
 
