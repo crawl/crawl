@@ -264,7 +264,6 @@ public:
     int         tc_disconnected;// Areas that are completely disconnected.
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.
-    bool        exclude_forces_more;   // Force more when setting an exclusion.
 
     int         travel_stair_cost;
 

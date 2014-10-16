@@ -20,7 +20,6 @@
 #include "options.h"
 #include "english.h"
 #include "env.h"
-#include "message.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
@@ -99,8 +98,6 @@ void set_auto_exclude(const monster* mon)
         mprf(MSGCH_WARN,
              "Marking area around %s as unsafe for travelling.",
              mon->name(DESC_THE).c_str());
-        if (Options.exclude_forces_more)
-            more();
 
 #ifdef USE_TILE
         viewwindow();
