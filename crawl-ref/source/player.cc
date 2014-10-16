@@ -3657,6 +3657,11 @@ int check_stealth()
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
     stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
+    stealth += STEALTH_PIP * 4
+               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_ARMOUR);
+    stealth += STEALTH_PIP * 4
+               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_HIDE);
+
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 

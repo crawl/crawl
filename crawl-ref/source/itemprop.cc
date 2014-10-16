@@ -115,6 +115,10 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,  600,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+    { ARM_SHADOW_DRAGON_HIDE,    "shadow dragon hide",    4, -15,  600,
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+    { ARM_SHADOW_DRAGON_ARMOUR,  "shadow dragon armour", 10, -15,  600,
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -23, 1100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -23, 1100,
@@ -1004,6 +1008,10 @@ bool hide2armour(item_def &item)
     case ARM_PEARL_DRAGON_HIDE:
         item.sub_type = ARM_PEARL_DRAGON_ARMOUR;
         break;
+
+    case ARM_SHADOW_DRAGON_HIDE:
+        item.sub_type = ARM_SHADOW_DRAGON_ARMOUR;
+        break;
     }
 
     return true;
@@ -1051,6 +1059,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_GOLD_DRAGON_ARMOUR:
     case ARM_SWAMP_DRAGON_ARMOUR:
     case ARM_PEARL_DRAGON_ARMOUR:
+    case ARM_SHADOW_DRAGON_ARMOUR:
         return inc_made;
 
     case ARM_TROLL_HIDE:
@@ -1062,6 +1071,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_GOLD_DRAGON_HIDE:
     case ARM_SWAMP_DRAGON_HIDE:
     case ARM_PEARL_DRAGON_HIDE:
+    case ARM_SHADOW_DRAGON_HIDE:
         return true;
 
     default:

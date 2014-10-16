@@ -253,6 +253,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                         ARM_STEAM_DRAGON_ARMOUR,
                         ARM_MOTTLED_DRAGON_ARMOUR,
                         ARM_STORM_DRAGON_ARMOUR,
+                        ARM_SHADOW_DRAGON_ARMOUR,
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
                         ARM_PEARL_DRAGON_ARMOUR,
@@ -322,6 +323,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                                             10, ARM_FIRE_DRAGON_ARMOUR,
                                             10, ARM_ICE_DRAGON_ARMOUR,
                                              5, ARM_STORM_DRAGON_ARMOUR,
+                                             5, ARM_SHADOW_DRAGON_ARMOUR,
                                              5, ARM_GOLD_DRAGON_ARMOUR,
                                              5, ARM_PEARL_DRAGON_ARMOUR,
                                              0);
