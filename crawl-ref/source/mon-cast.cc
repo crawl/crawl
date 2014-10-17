@@ -7389,7 +7389,7 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
     }
 
     const coord_def* const choice = random_choose_weighted(dests);
-    ASSERT(dests.size() && choice);
+    ASSERT(dests.size() && choice && in_bounds(*choice));
     return *choice;
 }
 
@@ -7404,6 +7404,8 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
 static void _tentacle_toss_to(const monster &thrower, actor &victim,
                               int pow, const coord_def &chosen_dest)
 {
+    ASSERT(in_bounds(chosen_dest));
+
     const bool thrower_seen = you.can_see(&thrower);
     const bool victim_was_seen = you.can_see(&victim);
     const string thrower_name = thrower.name(DESC_THE);
