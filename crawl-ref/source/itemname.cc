@@ -3267,8 +3267,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-            return true;
         case SCR_NOISE:
+        case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
             return !player_mutation_level(MUT_TORMENT_RESISTANCE)
