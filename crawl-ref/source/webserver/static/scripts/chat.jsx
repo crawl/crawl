@@ -136,13 +136,14 @@ function (React, comm, pubsub, user, login, misc, linkify) {
             {
                 if (i > 0) speclist.push(", ");
                 var cls = specs[i].player ? "player" : "watcher";
+                cls += " " + specs[i].nerdtype;
                 var title = user.nerd_description(specs[i].name,
                                                   specs[i].nerdtype,
                                                   specs[i].devname);
                 if (specs[i].url)
                 {
                     speclist.push(
-                      <a href={specs[i].url} target="_blank" title={title} className={cls} id={specs[i].nerdtype}>
+                      <a href={specs[i].url} target="_blank" title={title} className={cls}>
                         {specs[i].name}
                       </a>
                     );
@@ -150,7 +151,7 @@ function (React, comm, pubsub, user, login, misc, linkify) {
                 else
                 {
                     speclist.push(
-                      <span title={title} className={cls} id={specs[i].nerdtype}>{specs[i].name}</span>
+                      <span title={title} className={cls}>{specs[i].name}</span>
                     );
                 }
                 if (!specs[i].player) ++spec_count;

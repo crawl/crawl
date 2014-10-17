@@ -41,6 +41,8 @@ class Conf(object):
             for row in devteam_r:
                 self.devteam[row[0]] = row[1:]
             devteam_fh.close()
+        else:
+            self.devteam = None
 
         self.load_player_titles()
 

@@ -362,37 +362,37 @@ ol.select li:hover {
     font-weight: bold;
 }
 
-.spectator_list .player {
+.player {
     font-weight: bold;
 }
 
-.spectator_list .watcher {
+.watcher {
     font-weight: normal;
 }
 
-#admins {
+.admins {
     color: magenta;
     font-weight: bold;
 }
 
-#devteam {
+.devteam {
     color: orange;
     font-weight: bold;
 }
 
-#goodplayers {
+.goodplayers {
     color: green;
 }
 
-#greatplayers {
+.greatplayers {
     color: #0066CC
 }
 
-#greaterplayers {
+.greaterplayers {
     color: yellow;
 }
 
-#centuryplayers {
+.centuryplayers {
     color: red;
 }
 
