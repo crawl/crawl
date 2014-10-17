@@ -83,8 +83,9 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 static bool _mons_consider_tentacle_throwing(monster *mons);
-static bool _do_throw(actor *thrower, actor *victim, int pow);
-static int _throw_site_score(actor *thrower, actor *victim, coord_def site);
+static bool _do_throw(monster *thrower, actor *victim, int pow);
+static int _throw_site_score(const monster &thrower, const actor &victim,
+                             const coord_def &site);
 
 void init_mons_spells()
 {
@@ -7315,7 +7316,7 @@ static bool _mons_consider_tentacle_throwing(monster *mons)
  * @param pow      The throw power, which is the die size for damage.
  * @return         True if the victim was thrown, False otherwise.
  */
-static bool _do_throw(actor *thrower, actor *victim, int pow)
+static bool _do_throw(monster *thrower, actor *victim, int pow)
 {
     const int min_dist = 2;
     ray_def ray;
@@ -7336,7 +7337,7 @@ static bool _do_throw(actor *thrower, actor *victim, int pow)
             continue;
         }
 
-        site_score = _throw_site_score(thrower, victim,*di);
+        site_score = _throw_site_score(*thrower, *victim, *di);
         if (site_score > best_site_score)
         {
             best_site_score = site_score;
@@ -7421,36 +7422,37 @@ static bool _do_throw(actor *thrower, actor *victim, int pow)
  * @param   site     The site to score.
  * @return           An integer score >= 0
  */
-static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
+static int _throw_site_score(const monster &thrower, const actor &victim,
+                             const coord_def &site)
 {
-    ASSERT(thrower && thrower->as_monster());
-    ASSERT(victim && (victim->is_player() || victim->as_monster()));
-
     const int open_site_score = 1;
-    monster *tmons = thrower->as_monster();
-    monster *vmons = victim->as_monster();
+    const monster * const vmons = victim.as_monster();
 
     // Initial score is just as far away from player as possible, and
     // we stop there if the thrower or victim is friendly.
     int score = you.pos().distance_from(site);
-    if (tmons->friendly() || (vmons && vmons->friendly()))
+    if (thrower.friendly() || (vmons && vmons->friendly()))
         return score;
 
     for (adjacent_iterator ai(site); ai; ++ai)
     {
-        if (!thrower->see_cell(*ai))
+        if (!thrower.see_cell(*ai))
             continue;
 
-        if (victim->is_habitable(*ai))
+        // Being next to open space is bad for players, who thrive in crannies
+        // and nooks, like the vermin they are.
+        if (victim.is_habitable(*ai))
             score += open_site_score;
 
-        monster *mons = monster_at(*ai);
+        // Being next to dangerous monsters is also bad.
+        const monster * const mons = monster_at(*ai);
         if (mons && !mons->friendly()
-            && mons != tmons
+            && mons != &thrower
             && !mons_is_firewood(mons))
         {
             score += sqr(mons_threat_level(mons) + 2);
         }
     }
+
     return score;
 }
