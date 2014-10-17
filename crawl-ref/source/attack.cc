@@ -961,9 +961,7 @@ brand_type attack::random_chaos_brand()
             break;
         case SPWPN_ANTIMAGIC:
             if (!defender->antimagic_susceptible())
-            {
                 susceptible = false;
-            }
             break;
         default:
             break;
