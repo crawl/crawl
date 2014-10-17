@@ -318,8 +318,7 @@ function (React, comm, pubsub, user, misc, login, $) {
             else
                 idle_time = null;
             var title = user.nerd_description(g.username, g.nerdtype, g.devname);
-            var watch = <a href={"/watch/" + g.username}
-                           id={g.nerdtype}
+            var watch = <a href={"/watch/" + g.username} className={g.nerdtype}
                            onClick={this.handle_click} title={title}>{g.username}</a>;
             return <tr>
                      <td>{watch}</td>
