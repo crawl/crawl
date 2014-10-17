@@ -82,8 +82,8 @@ static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
-static bool _mons_consider_tentacle_throwing(monster *mons);
-static bool _do_throw(monster *thrower, actor *victim, int pow);
+static bool _mons_consider_tentacle_throwing(const monster &mons);
+static bool _do_throw(const monster &thrower, actor &victim, int pow);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 
@@ -3989,7 +3989,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             return false;
     }
     else if (spell_cast == SPELL_TENTACLE_THROW)
-        return _mons_consider_tentacle_throwing(mons);
+        return _mons_consider_tentacle_throwing(*mons);
     // Check use of LOS attack spells.
     else if (spell_cast == SPELL_DRAIN_LIFE
              || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
@@ -7254,13 +7254,13 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
  * @return          The mid_t of the best victim for the monster to throw.
  *                  Could be player, another monster, or 0 (none).
  */
-static mid_t _get_tentacle_throw_victim(monster *mons)
+static mid_t _get_tentacle_throw_victim(const monster &mons)
 {
     mid_t throw_choice = 0;
     int highest_dur = -1;
 
-    for (actor::constricting_t::iterator co = mons->constricting->begin();
-         co != mons->constricting->end(); ++co)
+    for (actor::constricting_t::iterator co = mons.constricting->begin();
+         co != mons.constricting->end(); ++co)
     {
         const actor* const victim = actor_by_mid(co->first);
         // Only throw real, living victims.
@@ -7268,7 +7268,7 @@ static mid_t _get_tentacle_throw_victim(monster *mons)
             continue;
 
         // Don't try to throw anything constricting you.
-        if (mons->is_constricted() &&  mons->constricted_by == co->first)
+        if (mons.is_constricted() &&  mons.constricted_by == co->first)
             continue;
 
         // Always throw the player, if we can.
@@ -7292,9 +7292,9 @@ static mid_t _get_tentacle_throw_victim(monster *mons)
  * @param mons       The monster doing the throwing.
  * @return           Whether a throw attempt was made.
  */
-static bool _mons_consider_tentacle_throwing(monster *mons)
+static bool _mons_consider_tentacle_throwing(const monster &mons)
 {
-    if (!mons->is_constricting())
+    if (!mons.is_constricting())
         return false;
 
     const mid_t throw_choice = _get_tentacle_throw_victim(mons);
@@ -7302,7 +7302,7 @@ static bool _mons_consider_tentacle_throwing(monster *mons)
     if (!victim)
         return false;
 
-    return _do_throw(mons, victim, mons->get_hit_dice() * 4);
+    return _do_throw(mons, *victim, mons.get_hit_dice() * 4);
 }
 
 /**
@@ -7316,28 +7316,29 @@ static bool _mons_consider_tentacle_throwing(monster *mons)
  * @param pow      The throw power, which is the die size for damage.
  * @return         True if the victim was thrown, False otherwise.
  */
-static bool _do_throw(monster *thrower, actor *victim, int pow)
+static bool _do_throw(const monster &thrower, actor &victim,
+                      int pow)
 {
     const int min_dist = 2;
     ray_def ray;
     int best_site_score = -1;
     int site_score = -1;
     vector<coord_def> best_sites;
-    distance_iterator di(thrower->pos(), true, true, LOS_RADIUS);
+    distance_iterator di(thrower.pos(), true, true, LOS_RADIUS);
     for (; di; ++di)
     {
         // Unusable landing sites.
-        if (victim->pos().distance_from(*di) < min_dist
+        if (victim.pos().distance_from(*di) < min_dist
             || actor_at(*di)
-            || !thrower->see_cell(*di)
-            || !victim->see_cell(*di)
-            || !victim->is_habitable(*di)
-            || !find_ray(victim->pos(), *di, ray, opc_solid_see))
+            || !thrower.see_cell(*di)
+            || !victim.see_cell(*di)
+            || !victim.is_habitable(*di)
+            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
         {
             continue;
         }
 
-        site_score = _throw_site_score(*thrower, *victim, *di);
+        site_score = _throw_site_score(thrower, victim, *di);
         if (site_score > best_site_score)
         {
             best_site_score = site_score;
@@ -7354,18 +7355,17 @@ static bool _do_throw(monster *thrower, actor *victim, int pow)
 
     coord_def best_site = best_sites[random2(best_sites.size())];
     vector<coord_weight> dests;
-    find_ray(victim->pos(), best_site, ray, opc_solid_see);
+    find_ray(victim.pos(), best_site, ray, opc_solid_see);
     while (ray.advance())
     {
-        if (victim->pos().distance_from(ray.pos()) >= min_dist
+        if (victim.pos().distance_from(ray.pos()) >= min_dist
             && !actor_at(ray.pos())
-            && victim->is_habitable(ray.pos())
-            && thrower->see_cell(ray.pos())
-            && victim->see_cell(ray.pos()))
+            && victim.is_habitable(ray.pos())
+            && thrower.see_cell(ray.pos())
+            && victim.see_cell(ray.pos()))
         {
-            int weight;
-            int dist = victim->pos().distance_from(ray.pos());
-            weight = sqr(LOS_RADIUS - dist + 1);
+            const int dist = victim.pos().distance_from(ray.pos());
+            const int weight = sqr(LOS_RADIUS - dist + 1);
             dests.push_back(coord_weight(ray.pos(), weight));
         }
         if (ray.pos() == best_site)
@@ -7376,25 +7376,24 @@ static bool _do_throw(monster *thrower, actor *victim, int pow)
     ASSERT(dests.size() && choice);
     coord_def chosen_dest = *choice;
 
-    bool thrower_seen = you.can_see(thrower);
-    bool victim_was_seen = you.can_see(victim);
-    const string thrower_name = thrower->name(DESC_THE);
+    const bool thrower_seen = you.can_see(&thrower);
+    const bool victim_was_seen = you.can_see(&victim);
+    const string thrower_name = thrower.name(DESC_THE);
 
-    int dam = victim->apply_ac(random2(pow));
-    victim->stop_being_constricted(true);
-    if (victim->is_player())
+    const int dam = victim.apply_ac(random2(pow));
+    victim.stop_being_constricted(true);
+    if (victim.is_player())
     {
-        monster *tmon = thrower->as_monster();
         mprf("%s throws you!",
              (thrower_seen ? thrower_name.c_str() : "Something"));
         move_player_to_grid(chosen_dest, false);
-        ouch(dam, tmon->mindex(), KILLED_BY_BEING_THROWN);
+        ouch(dam, thrower.mindex(), KILLED_BY_BEING_THROWN);
     }
     else
     {
-        monster *vmon = victim->as_monster();
-        const string victim_name = victim->name(DESC_THE);
-        coord_def old_pos = vmon->pos();
+        monster * const vmon = victim.as_monster();
+        const string victim_name = victim.name(DESC_THE);
+        const coord_def old_pos = victim.pos();
 
         if (!(vmon->flags & MF_WAS_IN_VIEW))
             vmon->seen_context = SC_THROWN_IN;
@@ -7408,7 +7407,7 @@ static bool _do_throw(monster *thrower, actor *victim, int pow)
                  (victim_was_seen ? victim_name.c_str() : "something"),
                  (you.can_see(vmon) ? "" : "out of view"));
         }
-        victim->hurt(thrower, dam, BEAM_NONE, true);
+        victim.hurt(&thrower, dam, BEAM_NONE, true);
     }
     return true;
 }
