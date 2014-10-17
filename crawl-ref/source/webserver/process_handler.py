@@ -356,6 +356,10 @@ class CrawlProcessHandlerBase(object):
         if "options" in game:
             call += game["options"]
 
+        dir_path = self.config_path("dir_path")
+        if dir_path:
+            call += ['-dir', dir_path]
+
         return call
 
     def note_activity(self):

@@ -116,6 +116,7 @@ morgue_path = "./rcs/%n"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
+# dir_path = "./"  # optional
 send_json_options = true
 # morgue_url = ""
 
