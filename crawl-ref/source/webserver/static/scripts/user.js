@@ -1,6 +1,25 @@
 define(["comm", "pubsub"], function (comm, pubsub) {
     var username = null;
 
+    function nerd_description(name, nerdtype, devname)
+    {
+        if (nerdtype == "normal")
+            return "";
+
+        var desc = {"admins" : "a Server Administrator",
+                    "devteam" : "a DCSS Developer",
+                    "goodplayers" : "a goodplayer (10+ wins)",
+                    "greatplayers" : "a greatplayer (has won every species)",
+                    "greaterplayers" : "a greaterplayer (has won every species " +
+                                      "and background)",
+                    "centuryplayers" : "a centuryplayer (greaterplayer with 100+ wins)"};
+
+        var fullname = name;
+        if (nerdtype == "devteam" && name !== devname)
+            fullname = fullname + " (" + devname + ")";
+        return fullname + " is " + desc[nerdtype];
+    }
+
     function logged_in(data)
     {
         username = data.username;
@@ -75,6 +94,7 @@ define(["comm", "pubsub"], function (comm, pubsub) {
             return username;
         },
         login: login,
-        logout: logout
+        logout: logout,
+        nerd_description: nerd_description,
     };
 });

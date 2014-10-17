@@ -75,6 +75,10 @@ class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop=None):
         self.game_params = game_params
         self.username = username
+        self.devname = None
+        nt = self.get_nerdtype(username)
+        self.nerdtype = nt[0]
+        self.devname = nt[1]
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
         self.io_loop = io_loop or IOLoop.instance()
@@ -107,6 +111,18 @@ class CrawlProcessHandlerBase(object):
 
     def _process_log_msg(self, msg, kwargs):
         return "P%-5s %s" % (self.id, msg), kwargs
+
+    def get_nerdtype(self, username):
+        if config.is_server_admin(username):
+            return ["admins", None]
+        devname = config.get_devname(username)
+        if devname:
+            return ["devteam", devname]
+        title = config.get_player_title(username)
+        if title:
+            return [title, None]
+        return ["normal", None]
+
 
     def format_path(self, path):
         return dgl_format_str(path, self.username, self.game_params)
@@ -155,10 +171,7 @@ class CrawlProcessHandlerBase(object):
             receiver.crawl_ended()
 
     def update_watcher_description(self):
-        try:
-            player_url = config.player_url
-        except:
-            player_url = None
+        player_url = config.get("player_url")
         watchers = []
         for w in self._receivers:
             if not w.username:
@@ -167,6 +180,10 @@ class CrawlProcessHandlerBase(object):
                      "player": w.process is not None}
             if player_url:
                 wdata["url"] = player_url % (w.username.lower());
+            nt = self.get_nerdtype(w.username.lower())
+            wdata["nerdtype"] = nt[0]
+            if nt[1]:
+                wdata["devname"] = nt[1]
             watchers.append(wdata)
         anon_count = len(self._receivers) - len(watchers)
         self.send_to_all("update_spectators", anon_count=anon_count,
@@ -293,6 +310,8 @@ class CrawlProcessHandlerBase(object):
         entry = {
             "id": self.id,
             "username": self.username,
+            "nerdtype": self.nerdtype,
+            "devname": self.devname,
             "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
             "game_id": self.game_params["id"],

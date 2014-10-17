@@ -135,6 +135,10 @@ def usr1_handler(signum, frame):
         logging.error("Error in config file", exc_info=True)
     scan_titles()
 
+def usr2_handler(signum, frame):
+    logging.info("Received USR2, reloading player title data.")
+    config.load_player_titles()
+
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()
     ioloop = tornado.ioloop.IOLoop.instance()
@@ -237,6 +241,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGUSR1, usr1_handler)
+    signal.signal(signal.SIGUSR2, usr2_handler)
 
     if config.get("umask") is not None:
         os.umask(config.umask)
