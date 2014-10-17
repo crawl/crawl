@@ -2074,35 +2074,6 @@ void melee_attack::rot_defender(int amount, int immediate)
     }
 }
 
-/**
- * Attempt to move a set of stairs from one place to another.
- *
- * @param orig      The current location of the stiars.
- * @param dest      The desired destination.
- * @return          Whether the stairs were moved.
- */
-static bool _move_stairs(coord_def orig, coord_def dest)
-{
-    const dungeon_feature_type stair_feat = grd(orig);
-
-    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
-        return false;
-
-    // The player can't use shops to escape, so don't bother.
-    if (stair_feat == DNGN_ENTER_SHOP)
-        return false;
-
-    // Don't move around notable terrain the player is aware of if it's
-    // out of sight.
-    if (is_notable_terrain(stair_feat)
-        && env.map_knowledge(orig).known() && !you.see_cell(orig))
-    {
-        return false;
-    }
-
-    return slide_feature_over(orig, dest);
-}
-
 // XXX:
 //  * Noise should probably scale non-linearly with damage_done, and
 //    maybe even non-linearly with noise_factor.
@@ -2952,10 +2923,6 @@ bool melee_attack::mons_attack_effects()
     special_damage = 0;
     special_damage_message.clear();
     special_damage_flavour = BEAM_NONE;
-
-    const bool chaos_attack = damage_brand == SPWPN_CHAOS
-                              || (attk_flavour == AF_CHAOS
-                                  && attacker != defender);
 
     // Defender banished.  Bail since the defender is still alive in the
     // Abyss.
