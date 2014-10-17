@@ -83,7 +83,7 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
-static bool _do_throw(const monster &thrower, actor &victim, int pow);
+static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 
@@ -7302,7 +7302,7 @@ static bool _mons_consider_tentacle_throwing(const monster &mons)
     if (!victim)
         return false;
 
-    return _do_throw(mons, *victim, mons.get_hit_dice() * 4);
+    return _tentacle_toss(mons, *victim, mons.get_hit_dice() * 4);
 }
 
 static const int MIN_TENTACLE_THROW_DIST = 2;
@@ -7317,8 +7317,8 @@ static const int MIN_TENTACLE_THROW_DIST = 2;
  *                      possible landing sites for a toss.
  *                      If no valid site is found, returns the origin (0,0).
  */
-static coord_def _choose_tentacle_toss_site(const monster &thrower,
-                                            const actor &victim)
+static coord_def _choose_tentacle_toss_target(const monster &thrower,
+                                              const actor &victim)
 {
     int best_site_score = -1;
     vector<coord_def> best_sites;
@@ -7356,26 +7356,22 @@ static coord_def _choose_tentacle_toss_site(const monster &thrower,
 }
 
 /**
- * The actor throws the victim to a habitable square within LOS of the victim
- * and at least as far as a distance of 2 from the thrower, which deals
- * AC-checking damage. A hostile monster prefers to throw the player into a
- * dangerous spot, and a monster throwing another monster prefers to throw far
- * from the player, regardless of alignment.
- * @param thrower  The thrower.
- * @param victim   The victim.
- * @param pow      The throw power, which is the die size for damage.
- * @return         True if the victim was thrown, False otherwise.
+ * Find the actual landing place for a tentacle toss.
+ *
+ * @param thrower       The monster performing the toss.
+ * @param victim        The actor being thrown.
+ * @param target_site   The intended destination.
+ * @return              The actual destination, somewhere along a ray between
+ *                      the victim's initial position and the intended
+ *                      destination.
  */
-static bool _do_throw(const monster &thrower, actor &victim,
-                      int pow)
+static coord_def _choose_tentacle_toss_dest(const monster &thrower,
+                                            const actor &victim,
+                                            const coord_def &target_site)
 {
-    const coord_def throw_site = _choose_tentacle_toss_site(thrower, victim);
-    if (throw_site.origin())
-        return false;
-
     ray_def ray;
     vector<coord_weight> dests;
-    find_ray(victim.pos(), throw_site, ray, opc_solid_see);
+    find_ray(victim.pos(), target_site, ray, opc_solid_see);
     while (ray.advance())
     {
         if (victim.pos().distance_from(ray.pos()) >= MIN_TENTACLE_THROW_DIST
@@ -7388,14 +7384,26 @@ static bool _do_throw(const monster &thrower, actor &victim,
             const int weight = sqr(LOS_RADIUS - dist + 1);
             dests.push_back(coord_weight(ray.pos(), weight));
         }
-        if (ray.pos() == throw_site)
+        if (ray.pos() == target_site)
             break;
     }
 
-    coord_def* choice = random_choose_weighted(dests);
+    const coord_def* const choice = random_choose_weighted(dests);
     ASSERT(dests.size() && choice);
-    coord_def chosen_dest = *choice;
+    return *choice;
+}
 
+/**
+ * Actually perform a tentacle throw to the specified destination.
+ *
+ * @param thrower       The monster doing the tossing.
+ * @param victim        The tossee.
+ * @param pow           The power of the throw; determines damage.
+ * @param chosen_dest   The final destination of the victim.
+ */
+static void _tentacle_toss_to(const monster &thrower, actor &victim,
+                              int pow, const coord_def &chosen_dest)
+{
     const bool thrower_seen = you.can_see(&thrower);
     const bool victim_was_seen = you.can_see(&victim);
     const string thrower_name = thrower.name(DESC_THE);
@@ -7429,6 +7437,29 @@ static bool _do_throw(const monster &thrower, actor &victim,
         }
         victim.hurt(&thrower, dam, BEAM_NONE, true);
     }
+}
+
+/**
+ * The actor throws the victim to a habitable square within LOS of the victim
+ * and at least as far as a distance of 2 from the thrower, which deals
+ * AC-checking damage. A hostile monster prefers to throw the player into a
+ * dangerous spot, and a monster throwing another monster prefers to throw far
+ * from the player, regardless of alignment.
+ * @param thrower  The thrower.
+ * @param victim   The victim.
+ * @param pow      The throw power, which is the die size for damage.
+ * @return         True if the victim was thrown, False otherwise.
+ */
+static bool _tentacle_toss(const monster &thrower, actor &victim, int pow)
+{
+    const coord_def throw_target = _choose_tentacle_toss_target(thrower,
+                                                                victim);
+    if (throw_target.origin())
+        return false;
+
+    const coord_def chosen_dest = _choose_tentacle_toss_dest(thrower, victim,
+                                                             throw_target);
+    _tentacle_toss_to(thrower, victim, pow, chosen_dest);
     return true;
 }
 
