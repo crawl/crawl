@@ -114,7 +114,6 @@ private:
     void do_minotaur_retaliation();
 
     /* Brand / Attack Effects */
-    void chaos_affects_attacker();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
 

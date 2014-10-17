@@ -241,10 +241,6 @@ bool melee_attack::handle_phase_attempted()
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
         xom_is_stimulated(attacker == defender ? 200 : 10);
-
-        if (damage_brand == SPWPN_CHAOS)
-            chaos_affects_attacker();
-
         return false;
     }
     // Non-fumbled self-attacks due to confusion are still pretty funny, though.
@@ -910,12 +906,7 @@ bool melee_attack::attack()
     }
 
     if (attacker->is_player())
-    {
-        if (damage_brand == SPWPN_CHAOS)
-            chaos_affects_attacker();
-
         do_miscast();
-    }
 
     adjust_noise();
     // don't crash on banishment
@@ -2112,75 +2103,6 @@ static bool _move_stairs(coord_def orig, coord_def dest)
     return slide_feature_over(orig, dest);
 }
 
-void melee_attack::chaos_affects_attacker()
-{
-    if (miscast_level >= 1 || !attacker->alive())
-        return;
-
-    coord_def dest(-1, -1);
-    // Prefer to send it under the defender.
-    if (defender->alive() && defender->pos() != attack_position)
-        dest = defender->pos();
-
-    // Move stairs out from under the attacker.
-    if (one_chance_in(100) && _move_stairs(attack_position, dest))
-    {
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-        take_note(Note(NOTE_MESSAGE, 0, 0,
-                       "CHAOS affects attacker: move stairs"), true);
-#endif
-        DID_AFFECT();
-    }
-
-    // Create a colourful cloud.
-    if (weapon && one_chance_in(1000))
-    {
-        mprf("Smoke pours forth from %s!", wep_name(DESC_YOUR).c_str());
-        big_cloud(random_smoke_type(), &you, attack_position, 20,
-                  4 + random2(8));
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-        take_note(Note(NOTE_MESSAGE, 0, 0,
-                       "CHAOS affects attacker: smoke"), true);
-#endif
-        DID_AFFECT();
-    }
-
-    // Make a loud noise.
-    if (weapon && player_can_hear(attack_position)
-        && one_chance_in(200))
-    {
-        string msg = "";
-        if (!you.can_see(attacker))
-        {
-            string noise = getSpeakString("weapon_noise");
-            if (!noise.empty())
-                msg = "You hear " + maybe_pick_random_substring(noise);
-        }
-        else
-        {
-            msg = getSpeakString("weapon_noises");
-            string wepname = wep_name(DESC_YOUR);
-            if (!msg.empty())
-            {
-                msg = maybe_pick_random_substring(msg);
-                msg = replace_all(msg, "@Your_weapon@", wepname);
-                msg = replace_all(msg, "@The_weapon@", wepname);
-            }
-        }
-
-        if (!msg.empty())
-        {
-            mprf(MSGCH_SOUND, "%s", msg.c_str());
-            noisy(15, attack_position, attacker->mindex());
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-            take_note(Note(NOTE_MESSAGE, 0, 0,
-                           "CHAOS affects attacker: noise"), true);
-#endif
-            DID_AFFECT();
-        }
-    }
-}
-
 // XXX:
 //  * Noise should probably scale non-linearly with damage_done, and
 //    maybe even non-linearly with noise_factor.
@@ -3039,18 +2961,12 @@ bool melee_attack::mons_attack_effects()
     // Abyss.
     if (defender->is_banished())
     {
-        if (chaos_attack && attacker->alive())
-            chaos_affects_attacker();
-
         do_miscast();
         return false;
     }
 
     if (!defender->alive())
     {
-        if (chaos_attack && attacker->alive())
-            chaos_affects_attacker();
-
         do_miscast();
         return true;
     }
@@ -3068,15 +2984,9 @@ bool melee_attack::mons_attack_effects()
 
     if (!defender->alive())
     {
-        if (chaos_attack && attacker->alive())
-            chaos_affects_attacker();
-
         do_miscast();
         return true;
     }
-
-    if (chaos_attack && attacker->alive())
-        chaos_affects_attacker();
 
     if (miscast_target == defender)
         do_miscast();
