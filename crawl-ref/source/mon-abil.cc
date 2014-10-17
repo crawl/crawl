@@ -43,7 +43,6 @@
 #include "cloud.h"
 #include "mon-speak.h"
 #include "random.h"
-#include "random-weight.h"
 #include "religion.h"
 #include "spl-damage.h"
 #include "spl-miscast.h"
@@ -69,8 +68,6 @@
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 static bool _slime_split_merge(monster* thing);
-static bool _do_throw(actor *thrower, actor *victim, int pow);
-static int _throw_site_score(actor *thrower, actor *victim, coord_def site);
 
 template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
@@ -3121,40 +3118,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_OCTOPODE_CRUSHER:
-        if (mons->is_constricting() && x_chance_in_y(2, 5))
-        {
-
-            mid_t throw_choice = 0;
-            int highest_dur = -1;
-            actor::constricting_t::iterator co = mons->constricting->begin();
-            actor* victim = nullptr;
-            for (; co != mons->constricting->end(); ++co)
-            {
-                victim = actor_by_mid(co->first);
-                if (victim && victim->alive()
-                    // Always throw the player, if we can, otherwise
-                    // throw whomever we've been constricting the
-                    // longest.
-                    && (victim->is_player() || co->second > highest_dur)
-                    && (!mons->is_constricted()
-                        || mons->constricted_by != co->first))
-
-                {
-                    throw_choice = co->first;
-                    highest_dur = co->second;
-                    if (victim->is_player())
-                        break;
-                }
-            }
-            victim = actor_by_mid(throw_choice);
-            if (!victim)
-                break;
-            used = _do_throw(mons, actor_by_mid(throw_choice),
-                             mons->get_hit_dice() * 4);
-        }
-        break;
-
     default:
         if (mons_class_flag(mclass, M_BLINKER)
             && !mons->no_tele(true, false)
@@ -3738,155 +3701,4 @@ void guardian_golem_bond(monster* mons)
             mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, mons, INFINITE_DURATION));
         }
     }
-}
-
-/**
- * The actor throws the victim to a habitable square within LOS of the victim
- * and at least as far as a distance of 2 from the thrower, which deals
- * AC-checking damage. A hostile monster prefers to throw the player into a
- * dangerous spot, and a monster throwing another monster prefers to throw far
- * from the player, regardless of alignment.
- * @param thrower  The thrower.
- * @param victim   The victim.
- * @param pow      The throw power, which is the die size for damage.
- * @return         True if the victim was thrown, False otherwise.
- */
-static bool _do_throw(actor *thrower, actor *victim, int pow)
-{
-    const int min_dist = 2;
-    ray_def ray;
-    int best_site_score = -1;
-    int site_score = -1;
-    vector<coord_def> best_sites;
-    distance_iterator di(thrower->pos(), true, true, LOS_RADIUS);
-    for (; di; ++di)
-    {
-        // Unusable landing sites.
-        if (victim->pos().distance_from(*di) < min_dist
-            || actor_at(*di)
-            || !thrower->see_cell(*di)
-            || !victim->see_cell(*di)
-            || !victim->is_habitable(*di)
-            || !find_ray(victim->pos(), *di, ray, opc_solid_see))
-        {
-            continue;
-        }
-
-        site_score = _throw_site_score(thrower, victim,*di);
-        if (site_score > best_site_score)
-        {
-            best_site_score = site_score;
-            best_sites.clear();
-            best_sites.push_back(*di);
-        }
-        else if (site_score == best_site_score)
-            best_sites.push_back(*di);
-    }
-
-    // No valid landing site found.
-    if (!best_sites.size())
-        return false;
-
-    coord_def best_site = best_sites[random2(best_sites.size())];
-    vector<coord_weight> dests;
-    find_ray(victim->pos(), best_site, ray, opc_solid_see);
-    while (ray.advance())
-    {
-        if (victim->pos().distance_from(ray.pos()) >= min_dist
-            && !actor_at(ray.pos())
-            && victim->is_habitable(ray.pos())
-            && thrower->see_cell(ray.pos())
-            && victim->see_cell(ray.pos()))
-        {
-            int weight;
-            int dist = victim->pos().distance_from(ray.pos());
-            weight = sqr(LOS_RADIUS - dist + 1);
-            dests.push_back(coord_weight(ray.pos(), weight));
-        }
-        if (ray.pos() == best_site)
-            break;
-    }
-
-    coord_def* choice = random_choose_weighted(dests);
-    ASSERT(dests.size() && choice);
-    coord_def chosen_dest = *choice;
-
-    bool thrower_seen = you.can_see(thrower);
-    bool victim_was_seen = you.can_see(victim);
-    const string thrower_name = thrower->name(DESC_THE);
-
-    int dam = victim->apply_ac(random2(pow));
-    victim->stop_being_constricted(true);
-    if (victim->is_player())
-    {
-        monster *tmon = thrower->as_monster();
-        mprf("%s throws you!",
-             (thrower_seen ? thrower_name.c_str() : "Something"));
-        move_player_to_grid(chosen_dest, false);
-        ouch(dam, tmon->mindex(), KILLED_BY_BEING_THROWN);
-    }
-    else
-    {
-        monster *vmon = victim->as_monster();
-        const string victim_name = victim->name(DESC_THE);
-        coord_def old_pos = vmon->pos();
-
-        if (!(vmon->flags & MF_WAS_IN_VIEW))
-            vmon->seen_context = SC_THROWN_IN;
-        vmon->move_to_pos(chosen_dest);
-        vmon->apply_location_effects(old_pos);
-        vmon->check_redraw(old_pos);
-        if (thrower_seen || victim_was_seen)
-        {
-            mprf("%s throws %s%s!",
-                 (thrower_seen ? thrower_name.c_str() : "Something"),
-                 (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(vmon) ? "" : "out of view"));
-        }
-        victim->hurt(thrower, dam, BEAM_NONE, true);
-    }
-    return true;
-}
-
-/**
- * Score a landing site for purposes of throwing the victim. This uses monster
- * difficulty and number of open (habitable) squares as a score if the victim
- * is the player, or distance from player otherwise.
- * @param   thrower  The thrower.
- * @param   victim   The victim.
- * @param   site     The site to score.
- * @return           An integer score >= 0
-*/
-static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
-{
-    ASSERT(thrower && thrower->as_monster());
-    ASSERT(victim && (victim->is_player() || victim->as_monster()));
-
-    const int open_site_score = 1;
-    monster *tmons = thrower->as_monster();
-    monster *vmons = victim->as_monster();
-
-    // Initial score is just as far away from player as possible, and
-    // we stop there if the thrower or victim is friendly.
-    int score = you.pos().distance_from(site);
-    if (tmons->friendly() || (vmons && vmons->friendly()))
-        return score;
-
-    for (adjacent_iterator ai(site); ai; ++ai)
-    {
-        if (!thrower->see_cell(*ai))
-            continue;
-
-        if (victim->is_habitable(*ai))
-            score += open_site_score;
-
-        monster *mons = monster_at(*ai);
-        if (mons && !mons->friendly()
-            && mons != tmons
-            && !mons_is_firewood(mons))
-        {
-            score += sqr(mons_threat_level(mons) + 2);
-        }
-    }
-    return score;
 }

@@ -2022,6 +2022,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_OCTOPODE_CRUSHER,
       {
        { SPELL_IRON_SHOT, 26, MON_SPELL_WIZARD },
+       { SPELL_TENTACLE_THROW, 80, MON_SPELL_NATURAL },
        END_OF_MONS_BOOK
       }
     },
