@@ -370,6 +370,32 @@ ol.select li:hover {
     font-weight: normal;
 }
 
+#admins {
+    color: magenta;
+    font-weight: bold;
+}
+
+#devteam {
+    color: orange;
+    font-weight: bold;
+}
+
+#goodplayers {
+    color: green;
+}
+
+#greatplayers {
+    color: #0066CC
+}
+
+#greaterplayers {
+    color: yellow;
+}
+
+#centuryplayers {
+    color: red;
+}
+
 .chat_body form {
     display: flex;
 }
