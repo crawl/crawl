@@ -3913,19 +3913,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_NO_SPELL, "nonexistent spell",
-     0,
-     SPFLAG_TESTING,
-     1,
-     0,
-     -1, -1,
-     1, 0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_FLAY, "Flay",
      SPTYP_NECROMANCY,
      SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER | SPFLAG_UNHOLY,
@@ -3949,6 +3936,32 @@ static const struct spell_desc spelldata[] =
      NULL,
      false,
      false
+},
+
+{
+    SPELL_TENTACLE_THROW, "Tentacle Throw",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_MONSTER | SPFLAG_NOT_SELF,
+    5,
+    200,
+    1, 1,
+    0, 5,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_NO_SPELL, "nonexistent spell",
+    0,
+    SPFLAG_TESTING,
+    1,
+    0,
+    -1, -1,
+    1, 0,
+    NULL,
+    false,
+    false
 },
 
 };

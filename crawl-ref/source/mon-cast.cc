@@ -46,6 +46,7 @@
 #include "mon-speak.h"
 #include "ouch.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -81,6 +82,9 @@ static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
+static bool _mons_consider_tentacle_throwing(monster *mons);
+static bool _do_throw(actor *thrower, actor *victim, int pow);
+static int _throw_site_score(actor *thrower, actor *victim, coord_def site);
 
 void init_mons_spells()
 {
@@ -1361,6 +1365,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SEAL_DOORS:
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_TENTACLE_THROW:
         return true;
     default:
         if (check_validity)
@@ -3982,6 +3987,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (_mons_cause_fear(mons, false) < 0)
             return false;
     }
+    else if (spell_cast == SPELL_TENTACLE_THROW)
+        return _mons_consider_tentacle_throwing(mons);
     // Check use of LOS attack spells.
     else if (spell_cast == SPELL_DRAIN_LIFE
              || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
@@ -7237,4 +7244,213 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
     }
+}
+
+/**
+ * Find the best creature for the given monster to toss with its tentacles.
+ *
+ * @param mons      The monster thinking about tentacle-throwing.
+ * @return          The mid_t of the best victim for the monster to throw.
+ *                  Could be player, another monster, or 0 (none).
+ */
+static mid_t _get_tentacle_throw_victim(monster *mons)
+{
+    mid_t throw_choice = 0;
+    int highest_dur = -1;
+
+    for (actor::constricting_t::iterator co = mons->constricting->begin();
+         co != mons->constricting->end(); ++co)
+    {
+        const actor* const victim = actor_by_mid(co->first);
+        // Only throw real, living victims.
+        if (!victim || !victim->alive())
+            continue;
+
+        // Don't try to throw anything constricting you.
+        if (mons->is_constricted() &&  mons->constricted_by == co->first)
+            continue;
+
+        // Always throw the player, if we can.
+        if (victim->is_player())
+            return co->first;
+
+        // otherwise throw whomever we've been constricting the longest.
+        if (co->second > highest_dur)
+        {
+            throw_choice = co->first;
+            highest_dur = co->second;
+        }
+    }
+
+    return throw_choice;
+}
+
+/**
+ * Make the given monster try to throw a constricted victim, if possible.
+ *
+ * @param mons       The monster doing the throwing.
+ * @return           Whether a throw attempt was made.
+ */
+static bool _mons_consider_tentacle_throwing(monster *mons)
+{
+    if (!mons->is_constricting())
+        return false;
+
+    const mid_t throw_choice = _get_tentacle_throw_victim(mons);
+    actor* victim = actor_by_mid(throw_choice);
+    if (!victim)
+        return false;
+
+    return _do_throw(mons, victim, mons->get_hit_dice() * 4);
+}
+
+/**
+ * The actor throws the victim to a habitable square within LOS of the victim
+ * and at least as far as a distance of 2 from the thrower, which deals
+ * AC-checking damage. A hostile monster prefers to throw the player into a
+ * dangerous spot, and a monster throwing another monster prefers to throw far
+ * from the player, regardless of alignment.
+ * @param thrower  The thrower.
+ * @param victim   The victim.
+ * @param pow      The throw power, which is the die size for damage.
+ * @return         True if the victim was thrown, False otherwise.
+ */
+static bool _do_throw(actor *thrower, actor *victim, int pow)
+{
+    const int min_dist = 2;
+    ray_def ray;
+    int best_site_score = -1;
+    int site_score = -1;
+    vector<coord_def> best_sites;
+    distance_iterator di(thrower->pos(), true, true, LOS_RADIUS);
+    for (; di; ++di)
+    {
+        // Unusable landing sites.
+        if (victim->pos().distance_from(*di) < min_dist
+            || actor_at(*di)
+            || !thrower->see_cell(*di)
+            || !victim->see_cell(*di)
+            || !victim->is_habitable(*di)
+            || !find_ray(victim->pos(), *di, ray, opc_solid_see))
+        {
+            continue;
+        }
+
+        site_score = _throw_site_score(thrower, victim,*di);
+        if (site_score > best_site_score)
+        {
+            best_site_score = site_score;
+            best_sites.clear();
+            best_sites.push_back(*di);
+        }
+        else if (site_score == best_site_score)
+            best_sites.push_back(*di);
+    }
+
+    // No valid landing site found.
+    if (!best_sites.size())
+        return false;
+
+    coord_def best_site = best_sites[random2(best_sites.size())];
+    vector<coord_weight> dests;
+    find_ray(victim->pos(), best_site, ray, opc_solid_see);
+    while (ray.advance())
+    {
+        if (victim->pos().distance_from(ray.pos()) >= min_dist
+            && !actor_at(ray.pos())
+            && victim->is_habitable(ray.pos())
+            && thrower->see_cell(ray.pos())
+            && victim->see_cell(ray.pos()))
+        {
+            int weight;
+            int dist = victim->pos().distance_from(ray.pos());
+            weight = sqr(LOS_RADIUS - dist + 1);
+            dests.push_back(coord_weight(ray.pos(), weight));
+        }
+        if (ray.pos() == best_site)
+            break;
+    }
+
+    coord_def* choice = random_choose_weighted(dests);
+    ASSERT(dests.size() && choice);
+    coord_def chosen_dest = *choice;
+
+    bool thrower_seen = you.can_see(thrower);
+    bool victim_was_seen = you.can_see(victim);
+    const string thrower_name = thrower->name(DESC_THE);
+
+    int dam = victim->apply_ac(random2(pow));
+    victim->stop_being_constricted(true);
+    if (victim->is_player())
+    {
+        monster *tmon = thrower->as_monster();
+        mprf("%s throws you!",
+             (thrower_seen ? thrower_name.c_str() : "Something"));
+        move_player_to_grid(chosen_dest, false);
+        ouch(dam, tmon->mindex(), KILLED_BY_BEING_THROWN);
+    }
+    else
+    {
+        monster *vmon = victim->as_monster();
+        const string victim_name = victim->name(DESC_THE);
+        coord_def old_pos = vmon->pos();
+
+        if (!(vmon->flags & MF_WAS_IN_VIEW))
+            vmon->seen_context = SC_THROWN_IN;
+        vmon->move_to_pos(chosen_dest);
+        vmon->apply_location_effects(old_pos);
+        vmon->check_redraw(old_pos);
+        if (thrower_seen || victim_was_seen)
+        {
+            mprf("%s throws %s%s!",
+                 (thrower_seen ? thrower_name.c_str() : "Something"),
+                 (victim_was_seen ? victim_name.c_str() : "something"),
+                 (you.can_see(vmon) ? "" : "out of view"));
+        }
+        victim->hurt(thrower, dam, BEAM_NONE, true);
+    }
+    return true;
+}
+
+/**
+ * Score a landing site for purposes of throwing the victim. This uses monster
+ * difficulty and number of open (habitable) squares as a score if the victim
+ * is the player, or distance from player otherwise.
+ * @param   thrower  The thrower.
+ * @param   victim   The victim.
+ * @param   site     The site to score.
+ * @return           An integer score >= 0
+ */
+static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
+{
+    ASSERT(thrower && thrower->as_monster());
+    ASSERT(victim && (victim->is_player() || victim->as_monster()));
+
+    const int open_site_score = 1;
+    monster *tmons = thrower->as_monster();
+    monster *vmons = victim->as_monster();
+
+    // Initial score is just as far away from player as possible, and
+    // we stop there if the thrower or victim is friendly.
+    int score = you.pos().distance_from(site);
+    if (tmons->friendly() || (vmons && vmons->friendly()))
+        return score;
+
+    for (adjacent_iterator ai(site); ai; ++ai)
+    {
+        if (!thrower->see_cell(*ai))
+            continue;
+
+        if (victim->is_habitable(*ai))
+            score += open_site_score;
+
+        monster *mons = monster_at(*ai);
+        if (mons && !mons->friendly()
+            && mons != tmons
+            && !mons_is_firewood(mons))
+        {
+            score += sqr(mons_threat_level(mons) + 2);
+        }
+    }
+    return score;
 }
