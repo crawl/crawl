@@ -989,7 +989,7 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         really_dislikes.push_back("you transform yourself");
         really_dislikes.push_back("you polymorph monsters");
         really_dislikes.push_back("you use unclean or chaotic magic or items");
-        really_dislikes.push_back("you eat the flesh of sentient beings");
+        really_dislikes.push_back("you butcher sentient beings");
         dislikes.push_back("you or your allies attack monsters in a "
                            "sanctuary");
         break;

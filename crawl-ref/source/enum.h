@@ -1090,7 +1090,7 @@ enum conduct_type
     DID_SPELL_PRACTISE,
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
-    DID_EAT_SOULED_BEING,                 // Zin
+    DID_DESECRATE_SOULED_BEING,           // Zin
     DID_DELIBERATE_MUTATING,              // Zin
     DID_CAUSE_GLOWING,                    // Zin
     DID_UNCLEAN,                          // Zin (used unclean weapon/magic)
