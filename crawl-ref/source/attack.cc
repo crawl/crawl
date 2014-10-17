@@ -811,7 +811,7 @@ void attack::chaos_affects_defender()
 
         miscast_level  = level;
         miscast_type   = SPTYP_RANDOM;
-        miscast_target = one_chance_in(3) ? attacker : defender;
+        miscast_target = defender;
         break;
     }
 
