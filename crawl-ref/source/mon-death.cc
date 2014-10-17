@@ -211,15 +211,9 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
     }
 
-    int ntries = 0;
-
+    // spray some blood
     if (corpse.base_type != OBJ_GOLD)
     {
-        corpse.base_type = OBJ_FOOD;
-        corpse.sub_type  = FOOD_CHUNK;
-        if (is_bad_food(corpse))
-            corpse.flags |= ISFLAG_DROPPED;
-
         int blood = nchunks * 3;
 
         if (food_is_rotten(corpse))
@@ -228,10 +222,24 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         blood_spray(where, corpse.mon_type, blood);
     }
 
-    while (nchunks > 0 && ntries < 10000)
-    {
-        ++ntries;
+    // Don't let the player evade food conducts by using OOD (!) or /disint
+    // Spray blood, but no chunks. (The mighty hand of your God squashes them
+    // in mid-flight...!)
+    if (is_forbidden_food(corpse))
+        return true;
 
+    // turn the corpse into chunks
+    if (corpse.base_type != OBJ_GOLD)
+    {
+        corpse.base_type = OBJ_FOOD;
+        corpse.sub_type  = FOOD_CHUNK;
+        if (is_bad_food(corpse))
+            corpse.flags |= ISFLAG_DROPPED;
+    }
+
+    // spray chunks everywhere!
+    for (int ntries = 0; nchunks > 0 && ntries < 10000; ++ntries)
+    {
         coord_def cp = where;
         cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
         cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
