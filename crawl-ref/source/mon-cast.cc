@@ -7305,6 +7305,56 @@ static bool _mons_consider_tentacle_throwing(const monster &mons)
     return _do_throw(mons, *victim, mons.get_hit_dice() * 4);
 }
 
+static const int MIN_TENTACLE_THROW_DIST = 2;
+
+/**
+ * Choose a landing site for a tentacle toss. (Not necessarily the destination
+ * of the toss, but the place that the monster is aiming for when throwing.)
+ *
+ * @param thrower       The monster performing the toss.
+ * @param victim        The actor being thrown.
+ * @return              The coord_def of one of the best (most dangerous)
+ *                      possible landing sites for a toss.
+ *                      If no valid site is found, returns the origin (0,0).
+ */
+static coord_def _choose_tentacle_toss_site(const monster &thrower,
+                                            const actor &victim)
+{
+    int best_site_score = -1;
+    vector<coord_def> best_sites;
+
+    for (distance_iterator di(thrower.pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        ray_def ray;
+        // Unusable landing sites.
+        if (victim.pos().distance_from(*di) < MIN_TENTACLE_THROW_DIST
+            || actor_at(*di)
+            || !thrower.see_cell(*di)
+            || !victim.see_cell(*di)
+            || !victim.is_habitable(*di)
+            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
+        {
+            continue;
+        }
+
+        const int site_score = _throw_site_score(thrower, victim, *di);
+        if (site_score > best_site_score)
+        {
+            best_site_score = site_score;
+            best_sites.clear();
+        }
+        if (site_score == best_site_score)
+            best_sites.push_back(*di);
+    }
+
+    // No valid landing site found.
+    if (!best_sites.size())
+        return coord_def(0,0);
+
+    const coord_def best_site = best_sites[random2(best_sites.size())];
+    return best_site;
+}
+
 /**
  * The actor throws the victim to a habitable square within LOS of the victim
  * and at least as far as a distance of 2 from the thrower, which deals
@@ -7319,46 +7369,16 @@ static bool _mons_consider_tentacle_throwing(const monster &mons)
 static bool _do_throw(const monster &thrower, actor &victim,
                       int pow)
 {
-    const int min_dist = 2;
-    ray_def ray;
-    int best_site_score = -1;
-    int site_score = -1;
-    vector<coord_def> best_sites;
-    distance_iterator di(thrower.pos(), true, true, LOS_RADIUS);
-    for (; di; ++di)
-    {
-        // Unusable landing sites.
-        if (victim.pos().distance_from(*di) < min_dist
-            || actor_at(*di)
-            || !thrower.see_cell(*di)
-            || !victim.see_cell(*di)
-            || !victim.is_habitable(*di)
-            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
-        {
-            continue;
-        }
-
-        site_score = _throw_site_score(thrower, victim, *di);
-        if (site_score > best_site_score)
-        {
-            best_site_score = site_score;
-            best_sites.clear();
-            best_sites.push_back(*di);
-        }
-        else if (site_score == best_site_score)
-            best_sites.push_back(*di);
-    }
-
-    // No valid landing site found.
-    if (!best_sites.size())
+    const coord_def throw_site = _choose_tentacle_toss_site(thrower, victim);
+    if (throw_site.origin())
         return false;
 
-    coord_def best_site = best_sites[random2(best_sites.size())];
+    ray_def ray;
     vector<coord_weight> dests;
-    find_ray(victim.pos(), best_site, ray, opc_solid_see);
+    find_ray(victim.pos(), throw_site, ray, opc_solid_see);
     while (ray.advance())
     {
-        if (victim.pos().distance_from(ray.pos()) >= min_dist
+        if (victim.pos().distance_from(ray.pos()) >= MIN_TENTACLE_THROW_DIST
             && !actor_at(ray.pos())
             && victim.is_habitable(ray.pos())
             && thrower.see_cell(ray.pos())
@@ -7368,7 +7388,7 @@ static bool _do_throw(const monster &thrower, actor &victim,
             const int weight = sqr(LOS_RADIUS - dist + 1);
             dests.push_back(coord_weight(ray.pos(), weight));
         }
-        if (ray.pos() == best_site)
+        if (ray.pos() == throw_site)
             break;
     }
 
