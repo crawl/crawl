@@ -1062,15 +1062,23 @@ int contamination_ratio(corpse_effect_type chunk_effect)
     return ratio;
 }
 
-static mon_intel_type _chunk_intelligence(const item_def &chunk)
+/**
+ * How intelligent was the monster that the given corpse came from?
+ *
+ * @param   The corpse being examined.
+ * @return  The mon_intel_type of the monster that the given corpse was
+ *          produced from.
+ */
+mon_intel_type corpse_intelligence(const item_def &corpse)
 {
     // An optimising compiler can assume an enum value is in range, so
     // check the range on the uncast value.
-    const bool bad = chunk.orig_monnum < 0 || chunk.orig_monnum >= NUM_MONSTERS;
-    const monster_type orig_mt = static_cast<monster_type>(chunk.orig_monnum);
+    const bool bad = corpse.orig_monnum < 0
+                     || corpse.orig_monnum >= NUM_MONSTERS;
+    const monster_type orig_mt = static_cast<monster_type>(corpse.orig_monnum);
     const monster_type type = bad || invalid_monster_type(orig_mt)
-                            ? chunk.mon_type
-                            : orig_mt;
+                                ? corpse.mon_type
+                                : orig_mt;
     return mons_class_intel(type);
 }
 
@@ -1078,11 +1086,7 @@ static mon_intel_type _chunk_intelligence(const item_def &chunk)
 // through food:determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(item_def& food)
 {
-    const bool cannibal  = is_player_same_genus(food.mon_type);
-    const int intel      = _chunk_intelligence(food) - I_ANIMAL;
     const bool rotten    = food_is_rotten(food);
-    const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
-    const bool holy      = (mons_class_holiness(food.mon_type) == MH_HOLY);
     corpse_effect_type chunk_effect = mons_corpse_effect(food.mon_type);
     chunk_effect = determine_chunk_effect(chunk_effect, rotten);
 
@@ -1145,16 +1149,6 @@ static void _eat_chunk(item_def& food)
         mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
         break;
     }
-
-    if (cannibal)
-        did_god_conduct(DID_CANNIBALISM, 10);
-    else if (intel > 0)
-        did_god_conduct(DID_EAT_SOULED_BEING, intel);
-
-    if (orc)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    if (holy)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
     if (do_eat)
     {
@@ -1496,13 +1490,21 @@ bool is_preferred_food(const item_def &food)
     return false;
 }
 
+/**
+ * Is the given food item forbidden to the player by their god?
+ *
+ * @param food  The food item in question.
+ * @return      Whether your god hates you eating it.
+ */
 bool is_forbidden_food(const item_def &food)
 {
-    if (food.base_type != OBJ_CORPSES
-        && (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK))
-    {
+    // no food is forbidden to the player who does not yet exist
+    if (!crawl_state.need_save)
         return false;
-    }
+
+    // Only corpses are only forbidden, now.
+    if (food.base_type != OBJ_CORPSES)
+        return false;
 
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
@@ -1519,7 +1521,7 @@ bool is_forbidden_food(const item_def &food)
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you_worship(GOD_ZIN) && _chunk_intelligence(food) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_NORMAL)
         return true;
 
     // Everything else is allowed.

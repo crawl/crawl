@@ -1718,9 +1718,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            if (is_forbidden_food(*this))
-                buff << "anathema ";
-            else if (food_is_rotten(*this))
+            if (food_is_rotten(*this))
                 buff << "rotting ";
             else if (is_poisonous(*this))
                 buff << "poisonous ";
@@ -3787,11 +3785,6 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
             break;
-        if (is_forbidden_food(item))
-        {
-            prefixes.push_back("evil_eating"); // compat with old configs
-            prefixes.push_back("forbidden");
-        }
 
         if (is_inedible(item))
             prefixes.push_back("inedible");

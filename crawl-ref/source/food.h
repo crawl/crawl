@@ -42,6 +42,7 @@ bool is_forbidden_food(const item_def &food);
 corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
 int contamination_ratio(corpse_effect_type chunk_effect);
+mon_intel_type corpse_intelligence(const item_def &corpse);
 
 bool can_ingest(const item_def &food, bool suppress_msg,
                 bool check_hunger = true);

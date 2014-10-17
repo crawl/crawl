@@ -95,8 +95,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
             case GOD_BEOGH:
-                piety_change = -level;
-                penance = level;
+                simple_god_message(" expects more respect for your departed"
+                                   " relatives.");
+                piety_change = -level * 5;
+                penance = level * 3;
                 retval = true;
                 break;
             default:
@@ -125,35 +127,31 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
-            switch (you.religion)
-            {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (!known && thing_done != DID_ATTACK_HOLY
-                    && thing_done != DID_DESECRATE_HOLY_REMAINS)
-                {
-                    simple_god_message(" forgives your inadvertent unholy act, "
-                                       "just this once.");
-                    break;
-                }
-
-                if (thing_done == DID_ATTACK_HOLY
-                    && victim
-                    && !testbits(victim->flags, MF_NO_REWARD)
-                    && !testbits(victim->flags, MF_WAS_NEUTRAL))
-                {
-                    break;
-                }
-
-                piety_change = -level;
-                penance = level * ((you_worship(GOD_SHINING_ONE)) ? 2
-                                                                     : 1);
-                retval = true;
+            if (!is_good_god(you.religion))
                 break;
-            default:
+
+            if (!known && thing_done != DID_ATTACK_HOLY
+                && thing_done != DID_DESECRATE_HOLY_REMAINS)
+            {
+                simple_god_message(" forgives your inadvertent unholy act, "
+                                   "just this once.");
                 break;
             }
+
+            if (thing_done == DID_ATTACK_HOLY
+                && victim
+                && !testbits(victim->flags, MF_NO_REWARD)
+                && !testbits(victim->flags, MF_WAS_NEUTRAL))
+            {
+                break;
+            }
+
+            if (thing_done == DID_DESECRATE_HOLY_REMAINS)
+                simple_god_message(" expects more respect for holy creatures!");
+
+            piety_change = -level;
+            penance = level * ((you_worship(GOD_SHINING_ONE)) ? 2 : 1);
+            retval = true;
             break;
 
         case DID_HOLY:
@@ -863,31 +861,30 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // level depends on intelligence: normal -> 1, high -> 2
-        // cannibalism is still worse
-        case DID_EAT_SOULED_BEING:
-            if (you_worship(GOD_ZIN))
-            {
-                piety_change = -level * 5;
-                if (level > 1)
-                    penance = 5;
-                retval = true;
-            }
+        case DID_DESECRATE_SOULED_BEING:
+            if (!you_worship(GOD_ZIN))
+                break;
+
+            simple_god_message(" expects more respect for this departed soul.");
+            piety_change = -level * 5;
+            penance = level * 3;
+            retval = true;
             break;
 
         case DID_UNCLEAN:
-            if (you_worship(GOD_ZIN))
+            if (!you_worship(GOD_ZIN))
+                break;
+
+            retval = true;
+            if (!known)
             {
-                retval = true;
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent unclean "
-                                       "act, just this once.");
-                    break;
-                }
-                piety_change = -level;
-                penance      = level;
+                simple_god_message(" forgives your inadvertent unclean act,"
+                                   " just this once.");
+                break;
             }
+
+            piety_change = -level;
+            penance      = level;
             break;
 
         case DID_CHAOS:
@@ -909,6 +906,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (you_worship(GOD_ZIN))
             {
                 piety_change = -level;
+                penance      = level;
                 retval = true;
             }
             break;

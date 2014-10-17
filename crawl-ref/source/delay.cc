@@ -985,49 +985,23 @@ static void _finish_delay(const delay_queue_item &delay)
                 break;
             }
 
+            const bool was_holy = mons_class_holiness(item.mon_type) == MH_HOLY;
+            const bool was_intelligent = corpse_intelligence(item) >= I_NORMAL;
+            const bool was_same_genus = is_player_same_genus(item.mon_type);
+
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
                 mpr("You finish bottling this corpse's blood.");
-
-                const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-                const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
                 if (mons_skeleton(item.mon_type) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
                 else
                     turn_corpse_into_blood_potions(item);
-
-                if (was_orc)
-                    did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-                if (was_holy)
-                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
             else
             {
                 mprf("You finish butchering %s.",
                      mitm[delay.parm1].name(DESC_THE).c_str());
-
-                if (god_hates_cannibalism(you.religion)
-                    && is_player_same_genus(item.mon_type))
-                {
-                    simple_god_message(" expects more respect for your"
-                                       " departed relatives.");
-                }
-                else if (is_good_god(you.religion)
-                    && mons_class_holiness(item.mon_type) == MH_HOLY)
-                {
-                    simple_god_message(" expects more respect for holy"
-                                       " creatures!");
-                }
-                else if (you_worship(GOD_ZIN)
-                         && mons_class_intel(item.mon_type) >= I_NORMAL)
-                {
-                    simple_god_message(" expects more respect for this"
-                                       " departed soul.");
-                }
-
-                const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-                const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
                 butcher_corpse(item);
 
@@ -1037,12 +1011,14 @@ static void _finish_delay(const delay_queue_item &delay)
                     mpr("You enjoyed that.");
                     you.berserk_penalty = 0;
                 }
-
-                if (was_orc)
-                    did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-                if (was_holy)
-                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
+
+            if (was_same_genus)
+                did_god_conduct(DID_CANNIBALISM, 2);
+            else if (was_holy)
+                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
+            else if (was_intelligent)
+                did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
 
             // Don't autopickup chunks/potions if there's still another
             // delay (usually more corpses to butcher or a weapon-swap)
