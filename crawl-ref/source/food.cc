@@ -156,7 +156,7 @@ bool you_foodless(bool can_eat)
 
 bool you_foodless_normally()
 {
-    return you.undead_state(false)
+    return you.undead_state(false) == US_UNDEAD
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI
 #endif
