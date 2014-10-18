@@ -2401,7 +2401,7 @@ static vector<formatted_string> _get_overview_resistances(
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
-    const int rmagi = player_res_magic(calc_unid) / 40;
+    const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
     out += _stealth_bar(get_number_of_cols()) + "\n";

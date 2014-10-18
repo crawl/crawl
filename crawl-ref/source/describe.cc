@@ -3372,8 +3372,8 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
         return;
     }
 
-    const int max_mr = 200; // export this? is this already?
-    const int bar_scale = 40; // likewise export this per player stuff?
+    const int max_mr = 200; // export this? is this already exported?
+    const int bar_scale = MR_PIP;
     _print_bar(mi.res_magic(), max_mr, bar_scale, "MR", result);
 }
 
