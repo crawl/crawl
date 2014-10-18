@@ -33,6 +33,8 @@
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
+/// The standard unit of MR; one level in %/@ screens
+static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 

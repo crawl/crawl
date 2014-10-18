@@ -6812,26 +6812,27 @@ int player_res_magic(bool calc_unid, bool temp)
     }
 
     // randarts
-    rm += 40 * you.scan_artefacts(ARTP_MAGIC, calc_unid);
+    rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += 40 * you.wearing(EQ_BODY_ARMOUR, ARM_QUICKSILVER_DRAGON_ARMOUR);
-    rm += 40 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE, calc_unid);
+    rm += MR_PIP * you.wearing(EQ_BODY_ARMOUR, ARM_QUICKSILVER_DRAGON_ARMOUR);
+    rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                   calc_unid);
 
     // rings of magic resistance
-    rm += 40 * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
+    rm += MR_PIP * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Mutations
-    rm += 40 * player_mutation_level(MUT_MAGIC_RESISTANCE);
-    rm -= 40 * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
+    rm += MR_PIP * player_mutation_level(MUT_MAGIC_RESISTANCE);
+    rm -= MR_PIP * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
     if (you.form == TRAN_LICH && temp)
-        rm += 40;
+        rm += MR_PIP;
 
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
-        rm += 80;
+        rm += MR_PIP * 2;
 
     // Enchantment effect
     if (you.duration[DUR_LOWERED_MR] && temp)
