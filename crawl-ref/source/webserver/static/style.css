@@ -362,37 +362,37 @@ ol.select li:hover {
     font-weight: bold;
 }
 
-.player {
+.spectator_list .player {
     font-weight: bold;
 }
 
-.watcher {
+.spectator_list .watcher {
     font-weight: normal;
 }
 
-.admins {
+.spectator_list .admins, .player_list .admins {
     color: magenta;
     font-weight: bold;
 }
 
-.devteam {
+.spectator_list .devteam, .player_list .devteam {
     color: orange;
     font-weight: bold;
 }
 
-.goodplayers {
+.spectator_list .goodplayers, .player_list .goodplayers {
     color: green;
 }
 
-.greatplayers {
+.spectator_list .greatplayers, .player_list .goodplayers {
     color: #0066CC
 }
 
-.greaterplayers {
+.spectator_list .greaterplayers, .player_list .greaterplayers {
     color: yellow;
 }
 
-.centuryplayers {
+.spectator_list .centuryplayers, .player_list .centuryplayers {
     color: red;
 }
 
