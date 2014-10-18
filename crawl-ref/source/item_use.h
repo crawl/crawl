@@ -41,6 +41,7 @@ bool wield_weapon(bool auto_wield, int slot = -1,
 
 bool item_is_worn(int inv_slot);
 
+int wand_mp_cost();
 void zap_wand(int slot = -1);
 
 bool enchant_weapon(item_def &wpn, bool quiet);
