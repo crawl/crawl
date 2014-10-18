@@ -237,8 +237,11 @@ function general_item_setup(e)
     swamp dragon armour plus:5 good_item not_cursed ident:all /\
     mottled dragon armour plus:8 not_cursed ident:all /\
     mottled dragon armour plus:4 good_item not_cursed ident:all /\
-    storm dragon armour plus:12 not_cursed ident:all /\
-    storm dragon armour plus:8 good_item not_cursed ident:all /\
+    quicksilver dragon armour good_item not_cursed ident:all w:5 /\
+    storm dragon armour plus:12 not_cursed ident:all w:5 /\
+    storm dragon armour plus:8 good_item not_cursed ident:all w:5 /\
+    shadow dragon armour plus:12 not_cursed ident:all w:5 /\
+    shadow dragon armour plus:8 good_item not_cursed ident:all w:5 /\
     gold dragon armour plus:14 not_cursed ident:all /\
     gold dragon armour plus:10 good_item not_cursed ident:all /\
     pair of gloves plus:4 not_cursed ident:all /\
@@ -297,7 +300,9 @@ function general_item_setup(e)
     ice dragon armour plus:7 not_cursed ident:all /\
     swamp dragon armour plus:5 not_cursed ident:all /\
     mottled dragon armour plus:5 not_cursed ident:all /\
-    storm dragon armour plus:6 not_cursed ident:all /\
+    quicksilver dragon armour not_cursed ident:all w:5 /\
+    storm dragon armour plus:6 not_cursed ident:all w:5 /\
+    shadow dragon armour plus:6 not_cursed ident:all w:5 /\
     gold dragon armour plus:8 not_cursed ident:all /\
     pair of gloves plus:2 not_cursed ident:all /\
     pair of gloves plus:0 good_item not_cursed ident:all /\
@@ -446,7 +451,8 @@ function armoury_setup(e)
           ice dragon armour plus:4 not_cursed ident:all /\
           swamp dragon armour plus:2 not_cursed ident:all /\
           mottled dragon armour plus:2 not_cursed ident:all /\
-          storm dragon armour plus:3 not_cursed ident:all /\
+          storm dragon armour plus:3 not_cursed ident:all w:5 /\
+          shadow dragon armour plus:3 not_cursed ident:all w:5 /\
           gold dragon armour plus:2 not_cursed ident:all /\
           large shield plus:1 not_cursed ident:all /\
           any armour good_item ident:all w:20")

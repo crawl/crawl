@@ -718,6 +718,7 @@ KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
               storm dragon armour mundane not_cursed ident:all plus:5, \
+              shadow dragon armour mundane not_cursed ident:all plus:5, \
               gold dragon armour mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
