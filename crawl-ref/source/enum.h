@@ -3503,6 +3503,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_SUSTAIN_ABILITIES,
 #endif
+    MUT_MP_WANDS,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
