@@ -1,3 +1,17 @@
+Stone Soup 0.15.2 (20141018)
+----------------------------
+* Assorted crash fixes, bug fixes, and display cleanups.
+* Always weight formicid weapon acquirement towards two-handed weapons.
+* Allow in-game updates to the mon_glyph option to change the glyph.
+* Allow the option syntax of mon_glyph = <mon1>:<mon2> in order to set the
+  color/glyph of one monster using the base values of another monster.
+* In tiles, the tile_player_tile option allows you to specify an arbitrary
+  monster tile to display for your character. The options tile_weapon_offsets
+  and tile_shield_offsets can be used to adjust the player weapon and shield
+  location when using these custom tiles.
+* For use with tile_player_tile: the old orb guardian tile, a new monster
+  vampire tile, and weapon/shield offsets for various monster tiles.
+
 Stone Soup 0.15.1 (20140915)
 ----------------------------
 * Assorted crash fixes.
