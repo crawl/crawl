@@ -5446,6 +5446,12 @@ bool monster::can_mutate() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
+    if (type == MONS_CHAOS_SPAWN)
+        return false;
+
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return true;
+
     const mon_holy_type holi = holiness();
 
     return holi != MH_UNDEAD && holi != MH_NONLIVING;
@@ -5458,6 +5464,12 @@ bool monster::can_safely_mutate(bool temp) const
 
 bool monster::can_polymorph() const
 {
+    if (type == MONS_CHAOS_SPAWN)
+        return true;
+
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return false;
+
     return can_mutate();
 }
 
@@ -5481,27 +5493,23 @@ bool monster::is_stationary() const
  */
 bool monster::malmutate(const string &/*reason*/)
 {
+    // aside from abominations, nothing that can't mutate can mutate
     if (!can_mutate())
         return false;
 
-    // already mutated wrecks (can_mutate() is true since they can be poly'd)
-    if (type == MONS_CHAOS_SPAWN)
-        return false;
-
-    // Ugly things merely change colour.
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
-    {
-        ugly_thing_mutate(this);
-        return true;
-    }
-
     // tile change, already mutated wrecks
-    // FIXME - doesn't seem to currently do anything?
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
     {
 #ifdef USE_TILE
         props[TILE_NUM_KEY].get_short() = random2(256);
 #endif
+        return true;
+    }
+
+    // Ugly things merely change colour.
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    {
+        ugly_thing_mutate(this);
         return true;
     }
 
