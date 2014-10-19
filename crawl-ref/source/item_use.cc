@@ -2001,12 +2001,26 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot], true);
 }
 
+static bool _check_blood_corpses_on_ground()
+{
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+            && !food_is_rotten(*si)
+            && mons_has_blood(si->mon_type))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void _vampire_corpse_help()
 {
     if (you.species != SP_VAMPIRE)
         return;
 
-    if (check_blood_corpses_on_ground())
+    if (_check_blood_corpses_on_ground())
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
