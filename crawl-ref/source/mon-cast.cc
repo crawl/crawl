@@ -2102,7 +2102,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
 static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
 {
     spell_type monspell = slot.spell;
-    bool ret = false;
     actor *foe = mon->get_foe();
 
     // Keep friendly summoners from spamming summons constantly.
@@ -2145,147 +2144,105 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
                    && grd(foe->pos()) == DNGN_DEEP_WATER);
 
     case SPELL_BRAIN_FEED:
-        ret = (!foe || !foe->is_player());
-        break;
+        return !foe || !foe->is_player();
 
     case SPELL_VAMPIRIC_DRAINING:
         if (!foe
             || mon->hit_points + 1 >= mon->max_hit_points
             || !adjacent(mon->pos(), foe->pos()))
         {
-            ret = true;
+            return true;
         }
     // fall through
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_MALIGN_OFFERING:
-        if (!foe || _foe_should_res_negative_energy(foe))
-            ret = true;
-        break;
+        return !foe || _foe_should_res_negative_energy(foe);
+
     case SPELL_MIASMA_BREATH:
-        ret = (!foe || foe->res_rotting());
-        break;
+        return !foe || foe->res_rotting();
 
     case SPELL_DISPEL_UNDEAD:
         // [ds] How is dispel undead intended to interact with vampires?
-        ret = (!foe || foe->holiness() != MH_UNDEAD);
-        break;
+        return !foe || foe->holiness() != MH_UNDEAD;
 
     case SPELL_CORONA:
-        ret = (!foe || foe->backlit() || foe->glows_naturally()
-               || mons_class_flag(foe->type, M_SHADOW));
-        break;
+        return !foe || foe->backlit() || foe->glows_naturally()
+                    || mons_class_flag(foe->type, M_SHADOW);
 
     case SPELL_BERSERKER_RAGE:
-        if (!mon->needs_berserk(false))
-            ret = true;
-        break;
+        return !mon->needs_berserk(false);
 
     case SPELL_FRENZY:
-        if (!mon->can_go_frenzy())
-            ret = true;
-        break;
+        return !mon->can_go_frenzy();
 
     case SPELL_HASTE:
-        if (mon->has_ench(ENCH_HASTE))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_HASTE);
 
     case SPELL_MIGHT:
-        if (mon->has_ench(ENCH_MIGHT))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_MIGHT);
 
     case SPELL_SWIFTNESS:
-        if (mon->has_ench(ENCH_SWIFT))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_SWIFT);
 
     case SPELL_REGENERATION:
-        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR)
-            || mon->holiness() == MH_UNDEAD)
-        {
-            ret = true;
-        }
-        break;
+        return mon->has_ench(ENCH_REGENERATION)
+               || mon->has_ench(ENCH_DEATHS_DOOR)
+               || mon->holiness() == MH_UNDEAD;
 
     case SPELL_INJURY_MIRROR:
-        if (mon->has_ench(ENCH_MIRROR_DAMAGE)
-            || (mon->props.exists("mirror_recast_time")
-                && you.elapsed_time < mon->props["mirror_recast_time"].get_int()))
-        {
-            ret = true;
-        }
-        break;
+        return mon->has_ench(ENCH_MIRROR_DAMAGE)
+               || mon->props.exists("mirror_recast_time")
+                  && you.elapsed_time < mon->props["mirror_recast_time"].get_int();
 
     case SPELL_TROGS_HAND:
-        if (mon->has_ench(ENCH_RAISED_MR) || mon->has_ench(ENCH_REGENERATION))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_RAISED_MR)
+               || mon->has_ench(ENCH_REGENERATION);
 
     case SPELL_STONESKIN:
-        if (mon->has_ench(ENCH_STONESKIN))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_STONESKIN);
 
     case SPELL_INVISIBILITY:
-        if (mon->has_ench(ENCH_INVIS)
-            || mon->glows_naturally()
-            || mon->friendly() && !you.can_see_invisible(false))
-        {
-            ret = true;
-        }
-        break;
+        return mon->has_ench(ENCH_INVIS)
+               || mon->glows_naturally()
+               || mon->friendly() && !you.can_see_invisible(false);
 
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
-        if (mon->hit_points > mon->max_hit_points / 2)
-            ret = true;
-        break;
+        return mon->hit_points > mon->max_hit_points / 2;
 
     case SPELL_TELEPORT_SELF:
         // Monsters aren't smart enough to know when to cancel teleport.
-        if (mon->has_ench(ENCH_TP) || mon->no_tele(true, false))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_TP) || mon->no_tele(true, false);
 
     case SPELL_BLINK_CLOSE:
         if (!foe || adjacent(mon->pos(), foe->pos()))
-            ret = true;
+            return true;
+        // intentional fall-through
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         // Prefer to keep a tornado going rather than blink.
-        if (mon->no_tele(true, false) || mon->has_ench(ENCH_TORNADO))
-            ret = true;
-        break;
+        return mon->no_tele(true, false) || mon->has_ench(ENCH_TORNADO);
 
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
-        if (!foe)
-            ret = true;
-        else if (foe->is_monster()
-            && foe->as_monster()->has_ench(ENCH_DIMENSION_ANCHOR))
-            ret = true;
-        else if (foe->is_player() && you.duration[DUR_DIMENSION_ANCHOR])
-            ret = true;
-        break;
+        return !foe
+                || foe->is_monster()
+                    && foe->as_monster()->has_ench(ENCH_DIMENSION_ANCHOR)
+                || foe->is_player()
+                    && you.duration[DUR_DIMENSION_ANCHOR];
 
     case SPELL_TELEPORT_OTHER:
         // Monsters aren't smart enough to know when to cancel teleport.
-        if (mon->foe == MHITYOU)
+        if (!foe
+            || foe->is_player() && you.duration[DUR_TELEPORT]
+            || foe->is_monster() && foe->as_monster()->has_ench(ENCH_TP))
         {
-            ret = you.duration[DUR_TELEPORT];
-            break;
-        }
-        else if (mon->foe != MHITNOT)
-        {
-            ret = (menv[mon->foe].has_ench(ENCH_TP));
-            break;
+            return true;
         }
         // intentional fall-through
-
     case SPELL_SLOW:
     case SPELL_CONFUSE:
     case SPELL_PAIN:
@@ -2299,35 +2256,25 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
         if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
             && (!foe || foe->asleep() || !foe->can_sleep()))
         {
-            ret = true;
-            break;
+            return true;
         }
 
         // Occasionally we don't estimate... just fire and see.
         if (one_chance_in(5))
-        {
-            ret = false;
-            break;
-        }
+            return false;
 
         // Only intelligent monsters estimate.
         int intel = mons_intel(mon);
         if (intel < I_NORMAL)
-        {
-            ret = false;
-            break;
-        }
+            return false;
 
         // We'll estimate the target's resistance to magic, by first getting
         // the actual value and then randomising it.
-        int est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
+        int est_magic_resist = 10000;
 
-        if (mon->foe != MHITNOT)
+        if (foe != NULL)
         {
-            if (mon->foe == MHITYOU)
-                est_magic_resist = you.res_magic();
-            else
-                est_magic_resist = menv[mon->foe].res_magic();
+            est_magic_resist = foe->res_magic();
 
             // now randomise (normal intels less accurate than high):
             if (intel == I_NORMAL)
@@ -2347,50 +2294,32 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
                     || monspell == SPELL_SLOW
                     || monspell == SPELL_CONFUSE) ? 0 : 50;
 
-        if (est_magic_resist - power > diff)
-            ret = true;
-        break;
+        return est_magic_resist - power > diff;
     }
 
     case SPELL_SUMMON_ILLUSION:
-        if (!foe || !actor_is_illusion_cloneable(foe))
-            ret = true;
-        break;
+        return !foe || !actor_is_illusion_cloneable(foe);
 
     case SPELL_AWAKEN_FOREST:
-        if (mon->has_ench(ENCH_AWAKEN_FOREST)
-            || env.forest_awoken_until > you.elapsed_time
-            || !forest_near_enemy(mon)
-            || you_worship(GOD_FEDHAS))
-        {
-            ret = true;
-        }
-        break;
+        return mon->has_ench(ENCH_AWAKEN_FOREST)
+               || env.forest_awoken_until > you.elapsed_time
+               || !forest_near_enemy(mon)
+               || you_worship(GOD_FEDHAS);
 
     case SPELL_DEATHS_DOOR:
         // The caster may be an (undead) enslaved soul.
-        if (mon->holiness() == MH_UNDEAD
-            || mon->has_ench(ENCH_DEATHS_DOOR)
-            || mon->has_ench(ENCH_FATIGUE))
-        {
-            ret = true;
-        }
-        break;
+        return mon->holiness() == MH_UNDEAD
+               || mon->has_ench(ENCH_DEATHS_DOOR)
+               || mon->has_ench(ENCH_FATIGUE);
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (mon->has_ench(ENCH_OZOCUBUS_ARMOUR))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
 
     case SPELL_BATTLESPHERE:
-        if (find_battlesphere(mon))
-            ret = true;
-        break;
+        return find_battlesphere(mon);
 
     case SPELL_SPECTRAL_WEAPON:
-        if (find_spectral_weapon(mon))
-            ret = true;
-        break;
+        return find_spectral_weapon(mon);
 
     case SPELL_INJURY_BOND:
         for (monster_iterator mi; mi; ++mi)
@@ -2402,31 +2331,23 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
                     return false; // We found at least one target; that's enough.
             }
         }
-        ret = true;
-        break;
+        return true;
 
     case SPELL_GHOSTLY_FIREBALL:
-        ret = (!foe || foe->holiness() == MH_UNDEAD);
-        break;
+        return !foe || foe->holiness() == MH_UNDEAD;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
-    {
-        if (!mon->get_foe() || mon->get_foe() && !mon->can_see(mon->get_foe()))
+        if (!foe || !mon->can_see(foe))
             return true;
 
-        const coord_def foepos = mon->get_foe()->pos();
-
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-        {
-            if (_valid_encircle_ally(mon, *mi, foepos))
+            if (_valid_encircle_ally(mon, *mi, foe->pos()))
                 return false; // We found at least one valid ally; that's enough.
-        }
         return true;
-    }
 
     case SPELL_AWAKEN_VINES:
-    if (!mon->get_foe() || (mon->has_ench(ENCH_AWAKEN_VINES)
-                            && mon->props["vines_awakened"].get_int() >= 3))
+    if (!foe || mon->has_ench(ENCH_AWAKEN_VINES)
+                && mon->props["vines_awakened"].get_int() >= 3)
     {
         return true;
     }
@@ -2440,8 +2361,8 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
         }
         if (count > 2)
             return true;
+        return false;
     }
-    break;
 
     case SPELL_CONTROL_WINDS:
         return mon->has_ench(ENCH_CONTROL_WINDS);
@@ -2483,23 +2404,17 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
             return true;
 
     case SPELL_STRIP_RESISTANCE:
-        if (foe)
-        {
-            if (foe->is_monster() && foe->as_monster()->has_ench(ENCH_LOWERED_MR))
-                return true;
-            else if (foe->is_player() && you.duration[DUR_LOWERED_MR])
-                return true;
-            else
-                return false;
-        }
-        return true;
+        return !foe
+               || foe->is_monster()
+                  && foe->as_monster()->has_ench(ENCH_LOWERED_MR)
+               || foe->is_player() && you.duration[DUR_LOWERED_MR];
 
     case SPELL_BROTHERS_IN_ARMS:
         return mon->props.exists("brothers_count")
                && mon->props["brothers_count"].get_int() >= 2;
 
     case SPELL_SUMMON_MUSHROOMS:
-        return mon->get_foe() == NULL;
+        return !foe;
 
     case SPELL_FREEZE:
         return !foe || !adjacent(mon->pos(), foe->pos());
@@ -2507,10 +2422,8 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
     case SPELL_DRUIDS_CALL:
         // Don't cast unless there's at least one valid target
         for (monster_iterator mi; mi; ++mi)
-        {
             if (_valid_druids_call_target(mon, *mi))
                 return false;
-        }
         return true;
 
     // Don't spam mesmerisation if you're already mesmerised
@@ -2520,14 +2433,7 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
     case SPELL_DISCHARGE:
         // TODO: possibly check for friendlies nearby?
         // Perhaps it will be used recklessly like chain lightning...
-        if ((mon->foe == MHITYOU || mon->foe == MHITNOT)
-            && !adjacent(you.pos(), mon->pos())
-            || (mon->foe != MHITYOU && mon->foe != MHITNOT
-                && !adjacent(menv[mon->foe].pos(), mon->pos())))
-        {
-            ret = true;
-        }
-        break;
+        return !foe || !adjacent(foe->pos(), mon->pos());
 
     case SPELL_PORTAL_PROJECTILE:
     {
@@ -2535,65 +2441,45 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
         beam.source      = mon->pos();
         beam.target      = mon->target;
         beam.beam_source = mon->mindex();
-        ret = !handle_throw((monster *)mon, beam, true, true);
-        break;
+        return !handle_throw((monster *)mon, beam, true, true);
     }
 
     case SPELL_VIRULENCE:
-        return foe && foe->res_poison(false) >= 3;
+        return !foe || foe->res_poison(false) >= 3;
 
     case SPELL_IGNITE_POISON_SINGLE:
         return !foe || !ignite_poison_affects(foe);
 
     case SPELL_FLASH_FREEZE:
-        if (!foe
-            || (foe->is_player() && you.duration[DUR_FROZEN])
-            || (foe->is_monster() && foe->as_monster()->has_ench(ENCH_FROZEN)))
-        {
-            ret = true;
-        }
-        break;
+        return !foe
+               || foe->is_player() && you.duration[DUR_FROZEN]
+               || foe->is_monster()
+                  && foe->as_monster()->has_ench(ENCH_FROZEN);
 
     case SPELL_LEGENDARY_DESTRUCTION:
-        if (!foe || mon->hit_points <= 10)
-            ret = true;
-        break;
+        return !foe || mon->hit_points <= 10;
 
     case SPELL_BLACK_MARK:
-        if (mon->has_ench(ENCH_BLACK_MARK))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_BLACK_MARK);
 
     case SPELL_GRAND_AVATAR:
-        if (mon->has_ench(ENCH_GRAND_AVATAR))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_GRAND_AVATAR);
 
-     // No need to spam cantrips if we're just travelling around
+    // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
-        if (mon->friendly() && mon->foe == MHITYOU)
-            ret = true;
-        break;
+        return !foe;
 
     case SPELL_BLINK_ALLIES_AWAY:
-    {
-        if (!mon->get_foe() || mon->get_foe() && !mon->can_see(mon->get_foe()))
+        if (!foe || !mon->can_see(foe))
             return true;
 
-        const coord_def foepos = mon->get_foe()->pos();
-
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-        {
-            if (_valid_blink_away_ally(mon, *mi, foepos))
+            if (_valid_blink_away_ally(mon, *mi, foe->pos()))
                 return false;
-        }
         return true;
-    }
 
     case SPELL_SHROUD_OF_GOLUBRIA:
-        if (mon->has_ench(ENCH_SHROUD))
-            ret = true;
-        break;
+        return mon->has_ench(ENCH_SHROUD);
 
     // Don't let clones duplicate anything, to prevent exponential explosion
     case SPELL_FAKE_MARA_SUMMON:
@@ -2616,7 +2502,7 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
 
     case SPELL_THROW_BARBS:
         // Don't fire barbs in melee range.
-        return !foe || foe->pos().distance_from(mon->pos()) < 2;
+        return !foe || adjacent(mon->pos(), foe->pos());
 
     case SPELL_BATTLECRY:
         return !_battle_cry(mon, true);
@@ -2638,14 +2524,11 @@ static bool _ms_waste_of_time(const monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_ELEMENTAL:
 #endif
     case SPELL_NO_SPELL:
-        ret = true;
-        break;
+        return true;
 
     default:
-        break;
+        return false;
     }
-
-    return ret;
 }
 
 // Spells a monster may want to cast if fleeing from the player, and
