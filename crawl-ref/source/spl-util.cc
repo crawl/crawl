@@ -1428,14 +1428,8 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
 
 bool spell_no_hostile_in_range(spell_type spell, bool rod)
 {
-    int minRange = get_dist_to_nearest_monster();
-    if (minRange < 0)
-        return false;
-
     const int range = calc_spell_range(spell, 0, rod);
-    if (range < 0)
-        return false;
-
+    const int minRange = get_dist_to_nearest_monster();
     switch (spell)
     {
     // These don't target monsters.
@@ -1452,6 +1446,11 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
     case SPELL_FIRE_STORM:
         return false;
+
+    case SPELL_CHAIN_LIGHTNING:
+    case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return minRange > LOS_RADIUS_SQ;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1491,6 +1490,9 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     default:
         break;
     }
+
+    if (minRange < 0 || range < 0)
+        return false;
 
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
