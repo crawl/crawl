@@ -5493,7 +5493,6 @@ bool monster::is_stationary() const
  */
 bool monster::malmutate(const string &/*reason*/)
 {
-    // aside from abominations, nothing that can't mutate can mutate
     if (!can_mutate())
         return false;
 
