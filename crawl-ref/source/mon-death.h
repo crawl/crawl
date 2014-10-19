@@ -50,7 +50,6 @@ int place_monster_corpse(const monster* mons, bool silent, bool force = false);
 void monster_cleanup(monster* mons);
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void record_monster_defeat(monster* mons, killer_type killer);
-int destroy_tentacles(monster* head);
 void unawaken_vines(const monster* mons, bool quiet);
 void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);

@@ -35,6 +35,7 @@
 #include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

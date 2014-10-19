@@ -22,6 +22,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "monster.h"
 #include "player.h"
 #include "random.h"

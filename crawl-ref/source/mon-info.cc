@@ -26,6 +26,7 @@
 #include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"

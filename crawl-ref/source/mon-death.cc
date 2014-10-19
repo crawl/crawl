@@ -52,6 +52,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "random.h"
@@ -949,6 +950,227 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     }
 }
 
+template<typename valid_T, typename connect_T>
+static void _search_dungeon(const coord_def & start,
+                    valid_T & valid_target,
+                    connect_T & connecting_square,
+                    set<position_node> & visited,
+                    vector<set<position_node>::iterator> & candidates,
+                    bool exhaustive = true,
+                    int connect_mode = 8)
+{
+    if (connect_mode < 1 || connect_mode > 8)
+        connect_mode = 8;
+
+    // Ordering the default compass index this way gives us the non
+    // diagonal directions as the first four elements - so by just
+    // using the first 4 elements instead of the whole array we
+    // can have 4-connectivity.
+    int compass_idx[] = {0, 2, 4, 6, 1, 3, 5, 7};
+
+    position_node temp_node;
+    temp_node.pos = start;
+    temp_node.last = NULL;
+
+    queue<set<position_node>::iterator > fringe;
+
+    set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
+
+    bool done = false;
+    while (!fringe.empty())
+    {
+        current = fringe.front();
+        fringe.pop();
+
+        shuffle_array(compass_idx, connect_mode);
+
+        for (int i=0; i < connect_mode; ++i)
+        {
+            coord_def adjacent = current->pos + Compass[compass_idx[i]];
+            if (in_bounds(adjacent))
+            {
+                temp_node.pos = adjacent;
+                temp_node.last = &(*current);
+                pair<set<position_node>::iterator, bool > res;
+                res = visited.insert(temp_node);
+
+                if (!res.second)
+                    continue;
+
+                if (valid_target(adjacent))
+                {
+                    candidates.push_back(res.first);
+                    if (!exhaustive)
+                    {
+                        done = true;
+                        break;
+                    }
+
+                }
+
+                if (connecting_square(adjacent))
+                {
+//                    if (res.second)
+                    fringe.push(res.first);
+                }
+            }
+        }
+        if (done)
+            break;
+    }
+}
+
+static bool _ballisto_at(const coord_def & target)
+{
+    monster* mons = monster_at(target);
+    return mons && mons->type == MONS_BALLISTOMYCETE
+           && mons->alive();
+}
+
+static bool _player_at(const coord_def & target)
+{
+    return you.pos() == target;
+}
+
+static bool _mold_connected(const coord_def & target)
+{
+    return is_moldy(target) || _ballisto_at(target);
+}
+
+// If 'monster' is a ballistomycete or spore, activate some number of
+// ballistomycetes on the level.
+static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
+                                      bool player_kill)
+{
+    if (!mons || mons->is_summoned()
+              || mons->mons_species() != MONS_BALLISTOMYCETE
+                 && mons->type != MONS_GIANT_SPORE)
+    {
+        return;
+    }
+
+    // If a spore or inactive ballisto died we will only activate one
+    // other ballisto. If it was an active ballisto we will distribute
+    // its count to others on the level.
+    int activation_count = 1;
+    if (mons->type == MONS_BALLISTOMYCETE)
+        activation_count += mons->number;
+    if (mons->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        activation_count = 0;
+
+    int non_activable_count = 0;
+    int ballisto_count = 0;
+
+    bool any_friendly = mons->attitude == ATT_FRIENDLY;
+    bool fedhas_mode  = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->mindex() != mons->mindex() && mi->alive())
+        {
+            if (mi->type == MONS_BALLISTOMYCETE)
+                ballisto_count++;
+            else if (mi->type == MONS_GIANT_SPORE
+                     || mi->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            {
+                non_activable_count++;
+            }
+
+            if (mi->attitude == ATT_FRIENDLY)
+                any_friendly = true;
+        }
+    }
+
+    bool exhaustive = true;
+    bool (*valid_target)(const coord_def &) = _ballisto_at;
+    bool (*connecting_square) (const coord_def &) = _mold_connected;
+
+    set<position_node> visited;
+    vector<set<position_node>::iterator > candidates;
+
+    if (you_worship(GOD_FEDHAS))
+    {
+        if (non_activable_count == 0
+            && ballisto_count == 0
+            && any_friendly
+            && mons->type == MONS_BALLISTOMYCETE)
+        {
+            mpr("Your fungal colony was destroyed.");
+            dock_piety(5, 0);
+        }
+
+        fedhas_mode = true;
+        activation_count = 1;
+        exhaustive = false;
+        valid_target = _player_at;
+    }
+
+    _search_dungeon(origin, valid_target, connecting_square, visited,
+                    candidates, exhaustive);
+
+    if (candidates.empty())
+    {
+        if (!fedhas_mode
+            && non_activable_count == 0
+            && ballisto_count == 0
+            && mons->attitude == ATT_HOSTILE)
+        {
+            if (player_kill)
+                mpr("The fungal colony is destroyed.");
+
+            // Get rid of the mold, so it'll be more useful when new fungi
+            // spawn.
+            for (rectangle_iterator ri(1); ri; ++ri)
+                remove_mold(*ri);
+        }
+
+        return;
+    }
+
+    // A (very) soft cap on colony growth, no activations if there are
+    // already a lot of ballistos on level.
+    if (candidates.size() > 25)
+        return;
+
+    shuffle_array(candidates);
+
+    int index = 0;
+
+    for (int i = 0; i < activation_count; ++i)
+    {
+        index = i % candidates.size();
+
+        monster* spawner = monster_at(candidates[index]->pos);
+
+        // This may be the players position, in which case we don't
+        // have to mess with spore production on anything
+        if (spawner && !fedhas_mode)
+        {
+            spawner->number++;
+
+            // Change color and start the spore production timer if we
+            // are moving from 0 to 1.
+            if (spawner->number == 1)
+            {
+                spawner->colour = LIGHTMAGENTA;
+                // Reset the spore production timer.
+                spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
+                spawner->add_ench(ENCH_SPORE_PRODUCTION);
+            }
+        }
+
+        const position_node* thread = &(*candidates[index]);
+        while (thread)
+        {
+            if (!one_chance_in(3))
+                env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
+
+            thread = thread->last;
+        }
+        env.level_state |= LSTATE_GLOW_MOLD;
+    }
+}
+
 static void _setup_base_explosion(bolt & beam, const monster& origin)
 {
     beam.is_tracer    = false;
@@ -1176,7 +1398,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else
         beam.explode();
 
-    activate_ballistomycetes(mons, beam.target, YOU_KILL(beam.killer()));
+    _activate_ballistomycetes(mons, beam.target, YOU_KILL(beam.killer()));
     // Monster died in explosion, so don't re-attach it to the grid.
     return true;
 }
@@ -1219,65 +1441,6 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
     if (cloud != CLOUD_NONE)
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
-}
-
-// When given either a tentacle end or segment, kills the end and all segments
-// of that tentacle.
-static int _destroy_tentacle(monster* mons)
-{
-    int seen = 0;
-
-    monster* head = mons_is_tentacle_segment(mons->type)
-            ? mons_get_parent_monster(mons) : mons;
-
-    //If we tried to find the head, but failed (probably because it is already
-    //dead), cancel trying to kill this tentacle
-    if (head == NULL)
-        return 0;
-
-    // Some issue with using monster_die leading to DEAD_MONSTER
-    // or w/e. Using hurt seems to cause more problems though.
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_child_tentacle_of(head))
-        {
-            if (mons_near(*mi))
-                seen++;
-            //mi->hurt(*mi, INSTANT_DEATH);
-            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
-        }
-    }
-
-    if (mons != head)
-    {
-        if (mons_near(head))
-                seen++;
-
-        //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
-        //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
-        monster_die(head, KILL_MISC, NON_MONSTER, true);
-    }
-
-    return seen;
-}
-
-int destroy_tentacles(monster* head)
-{
-    int seen = 0;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_child_tentacle_of(head))
-        {
-            if (_destroy_tentacle(*mi))
-                seen++;
-            if (!mi->is_child_tentacle_segment())
-            {
-                monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
-                seen++;
-            }
-        }
-    }
-    return seen;
 }
 
 static string _killer_type_name(killer_type killer)
@@ -2481,7 +2644,7 @@ int monster_die(monster* mons, killer_type killer,
                     awakener->props["vines_awakened"].get_int()--;
             }
         }
-        _destroy_tentacle(mons);
+        destroy_tentacle(mons);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
@@ -2519,7 +2682,7 @@ int monster_die(monster* mons, killer_type killer,
 
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
-        activate_ballistomycetes(mons, mons->pos(),
+        _activate_ballistomycetes(mons, mons->pos(),
                                  YOU_KILL(killer) || pet_kill);
     }
 

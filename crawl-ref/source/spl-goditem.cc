@@ -30,6 +30,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "options.h"
 #include "random.h"

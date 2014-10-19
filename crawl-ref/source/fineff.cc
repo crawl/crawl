@@ -5,9 +5,13 @@
 **/
 
 #include "AppHdr.h"
+
+#include "act-iter.h"
 #include "bloodspatter.h"
 #include "coord.h"
+#include "coordit.h"
 #include "dactions.h"
+#include "directn.h"
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
@@ -15,8 +19,10 @@
 #include "libutil.h"
 #include "mgen_data.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
@@ -336,18 +342,135 @@ void deferred_damage_fineff::fire()
     }
 }
 
+static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
+{
+    // Combine enchantment durations.
+    merge_ench_durations(initial_mass, merge_to);
+
+    merge_to->number += initial_mass->number;
+    merge_to->max_hit_points += initial_mass->max_hit_points;
+    merge_to->hit_points += initial_mass->hit_points;
+
+    // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
+    // passed on if the merged slime subsequently splits.  Hopefully
+    // this won't do anything weird.
+    merge_to->flags |= initial_mass->flags;
+
+    // Overwrite the state of the slime getting merged into, because it
+    // might have been resting or something.
+    merge_to->behaviour = initial_mass->behaviour;
+    merge_to->foe = initial_mass->foe;
+
+    behaviour_event(merge_to, ME_EVAL);
+
+    // Have to 'kill' the slime doing the merging.
+    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+
+    return true;
+}
+
 void starcursed_merge_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive())
-        starcursed_merge(defender()->as_monster(), true);
+    if (!defend || !defend->alive())
+        return;
+
+    monster *mon = defend->as_monster();
+    //Find a random adjacent starcursed mass
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    shuffle_array(compass_idx, 8);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = mon->pos() + Compass[compass_idx[i]];
+        monster* mergee = monster_at(target);
+        if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
+        {
+            simple_monster_message(mon, " shudders and is absorbed by its neighbour.");
+            if (_do_merge_masses(mon, mergee))
+                return;
+        }
+    }
+
+    // If there was nothing adjacent to merge with, at least try to move toward
+    // another starcursed mass
+    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    {
+        monster* ally = monster_at(*di);
+        if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
+            && mon->can_see(ally))
+        {
+            bool moved = false;
+
+            coord_def sgn = (*di - mon->pos()).sgn();
+            if (mon_can_move_to_pos(mon, sgn))
+            {
+                mon->move_to_pos(mon->pos()+sgn, false);
+                moved = true;
+            }
+            else if (abs(sgn.x) != 0)
+            {
+                coord_def dx(sgn.x, 0);
+                if (mon_can_move_to_pos(mon, dx))
+                {
+                    mon->move_to_pos(mon->pos()+dx, false);
+                    moved = true;
+                }
+            }
+            else if (abs(sgn.y) != 0)
+            {
+                coord_def dy(0, sgn.y);
+                if (mon_can_move_to_pos(mon, dy))
+                {
+                    mon->move_to_pos(mon->pos()+dy, false);
+                    moved = true;
+                }
+            }
+
+            if (moved)
+            {
+                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
+                mon->speed_increment -= 10;
+            }
+        }
+    }
 }
 
 void shock_serpent_discharge_fineff::fire()
 {
-    actor *defend = defender();
-    shock_serpent_discharge((defend ? defend->as_monster() : NULL), position,
-                             power, attitude);
+    monster* serpent = defender() ? defender()->as_monster() : NULL;
+    int range = min(3, power);
+
+    vector <actor*> targets;
+    for (actor_near_iterator ai(position); ai; ++ai)
+    {
+        if (ai->pos().distance_from(position) <= range
+            && !mons_atts_aligned(attitude, ai->is_player() ? ATT_FRIENDLY
+                                                            : mons_attitude(ai->as_monster()))
+            && ai->res_elec() < 3)
+        {
+            targets.push_back(*ai);
+        }
+    }
+
+    if (serpent && you.can_see(serpent))
+    {
+        mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
+             power < 4 ? "" : " violently");
+    }
+    else if (you.see_cell(position))
+        mpr("The air sparks with electricity!");
+
+    // FIXME: should merge the messages.
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        int amount = roll_dice(3, 4 + power * 3 / 2);
+        amount = targets[i]->apply_ac(amount, 0, AC_HALF);
+
+        if (you.see_cell(targets[i]->pos()))
+            mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
+        targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
+    }
 }
 
 void delayed_action_fineff::fire()

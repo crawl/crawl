@@ -28,6 +28,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mgen_data.h"
 #include "ng-init.h"
 #include "options.h"

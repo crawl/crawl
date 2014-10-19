@@ -46,6 +46,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-transit.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mgen_data.h"
 #include "random.h"
@@ -6812,36 +6813,6 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     }
 
     return true;
-}
-
-bool monster::is_child_tentacle() const
-{
-    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-        || type == MONS_MNOLEG_TENTACLE;
-}
-
-bool monster::is_child_tentacle_segment() const
-{
-    return type == MONS_KRAKEN_TENTACLE_SEGMENT
-           || type == MONS_STARSPAWN_TENTACLE_SEGMENT
-           || type == MONS_MNOLEG_TENTACLE_SEGMENT;
-}
-
-bool monster::is_child_monster() const
-{
-    return is_child_tentacle() || is_child_tentacle_segment();
-}
-
-bool monster::is_child_tentacle_of(const monster* mons) const
-{
-    return mons_base_type(mons) == mons_tentacle_parent_type(this)
-           && (int) number == mons->mindex();
-}
-
-bool monster::is_parent_monster_of(const monster* mons) const
-{
-    return mons_base_type(this) == mons_tentacle_parent_type(mons)
-           && (int) mons->number == mindex();
 }
 
 bool monster::is_illusion() const

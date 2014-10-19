@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"

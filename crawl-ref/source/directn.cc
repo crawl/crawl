@@ -44,6 +44,7 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-info.h"
+#include "mon-tentacle.h"
 #include "output.h"
 #include "prompt.h"
 #include "shopping.h"

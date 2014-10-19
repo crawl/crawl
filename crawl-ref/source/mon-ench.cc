@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-poly.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
