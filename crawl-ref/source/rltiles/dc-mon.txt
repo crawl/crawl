@@ -597,6 +597,10 @@ fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
+## For tile_player_tile
+%sdir mon/unique
+jormungandr MONS_JORMUNGANDR
+
 
 ## Dragons ('D')
 %sdir mon/unique
