@@ -874,7 +874,7 @@ static void _finish_delay(const delay_queue_item &delay)
             if (mons_skeleton(item.mon_type) && one_chance_in(3))
             {
                 turn_corpse_into_skeleton(item);
-                item_check(false);
+                item_check();
             }
             else
             {

@@ -165,7 +165,7 @@ public:
     virtual string foot_name(bool plural, bool *can_plural = NULL) const = 0;
     virtual string arm_name(bool plural, bool *can_plural = NULL) const = 0;
 
-    virtual bool fumbles_attack(bool verbose = true) = 0;
+    virtual bool fumbles_attack() = 0;
 
     virtual bool fights_well_unarmed(int heavy_armour_penalty)
     {

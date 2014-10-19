@@ -69,7 +69,7 @@ void destroy_item(item_def &item, bool never_created = false);
 void destroy_item(int dest, bool never_created = false);
 void lose_item_stack(const coord_def& where);
 
-void item_check(bool verbose);
+void item_check();
 void request_autopickup(bool do_pickup = true);
 
 bool player_on_single_stack();

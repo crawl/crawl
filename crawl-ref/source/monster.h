@@ -305,7 +305,7 @@ public:
     string foot_name(bool plural, bool *can_plural = NULL) const;
     string arm_name(bool plural, bool *can_plural = NULL) const;
 
-    bool fumbles_attack(bool verbose = true);
+    bool fumbles_attack();
     bool cannot_fight() const;
 
     int  skill(skill_type skill, int scale = 1,
