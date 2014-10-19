@@ -7388,8 +7388,10 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
             break;
     }
 
+    ASSERT(dests.size());
     const coord_def* const choice = random_choose_weighted(dests);
-    ASSERT(dests.size() && choice && in_bounds(*choice));
+    ASSERT(choice);
+    ASSERT(in_bounds(*choice));
     return *choice;
 }
 
