@@ -31,6 +31,14 @@
 
 extern ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES];
 
+enum god_desc_type
+{
+    GDESC_OVERVIEW,
+    GDESC_DETAILED,
+    GDESC_WRATH,
+    NUM_GDESCS
+};
+
 static bool _print_final_god_abil_desc(int god, const string &final_msg,
                                        const ability_type abil)
 {
@@ -1178,14 +1186,9 @@ static void _god_overview_description(god_type which_god, bool give_title)
     }
 }
 
-void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
+static god_desc_type _describe_god_by_type(god_type which_god, bool give_title,
+                                           god_desc_type gdesc)
 {
-    if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
-    {
-        mpr("You are not religious.");
-        return;
-    }
-
     switch (gdesc)
     {
     case GDESC_OVERVIEW:
@@ -1202,9 +1205,20 @@ void describe_god(god_type which_god, bool give_title, god_desc_type gdesc)
     }
 
     if (_check_description_cycle(gdesc))
+        return static_cast<god_desc_type>((gdesc + 1) % NUM_GDESCS);
+    else
+        return NUM_GDESCS;
+}
+
+void describe_god(god_type which_god, bool give_title)
+{
+    if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
-        const god_desc_type new_desc =
-            static_cast<god_desc_type>((gdesc + 1) % NUM_GDESCS);
-        describe_god(which_god, give_title, new_desc);
+        mpr("You are not religious.");
+        return;
     }
+
+    god_desc_type gdesc = GDESC_OVERVIEW;
+    while ((gdesc = _describe_god_by_type(which_god, give_title, gdesc))
+            != NUM_GDESCS);
 }
