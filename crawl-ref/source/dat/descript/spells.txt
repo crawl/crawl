@@ -335,6 +335,12 @@ This spell instills a corruption within a target, temporarily mutating their
 body in an adverse fashion. It cannot affect artificial beings, and the undead
 will decompose if affected.
 %%%%
+Corrupting Pulse spell
+
+This spell instills a corruption within all visible targets, temporarily
+mutating their bodies in an adverse fashion. It cannot affect artificial
+beings, and the undead will decompose if affected.
+%%%%
 Crystal Bolt spell
 
 This spell launches a penetrating projectile with peculiar magical properties.

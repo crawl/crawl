@@ -3952,6 +3952,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CORRUPTING_PULSE, "Corrupting Pulse",
+    SPTYP_HEXES | SPTYP_TRANSMUTATION,
+    SPFLAG_AREA | SPFLAG_MONSTER,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0, 0,
+    NULL,
+    false,
+    false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,

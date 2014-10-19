@@ -37,7 +37,6 @@
 #include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-util.h"
-#include "mutation.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "cloud.h"
@@ -2820,38 +2819,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         used = _siren_sing(mons, spl);
         break;
     }
-
-    case MONS_WRETCHED_STAR:
-        if (is_sanctuary(mons->pos()))
-            break;
-
-        if (one_chance_in(5))
-        {
-            if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
-            {
-                targetter_los hitfunc(mons, LOS_SOLID);
-                flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
-                simple_monster_message(mons, " pulses with an eldritch light!");
-
-                if (!is_sanctuary(you.pos())
-                        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
-                {
-                    int num_mutations = 2 + random2(3);
-                    for (int i = 0; i < num_mutations; ++i)
-                        temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
-                }
-            }
-
-            for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
-            {
-                monster *m = monster_at(*ri);
-                if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
-                    m->corrupt();
-            }
-
-            used = true;
-        }
-        break;
 
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3)

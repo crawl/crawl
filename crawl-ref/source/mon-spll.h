@@ -1449,6 +1449,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WRETCHED_STAR,
       {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 60, MON_SPELL_MAGICAL },
+       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_NATURAL }, // XXX: _MAGICAL?
        END_OF_MONS_BOOK
       }
     },
