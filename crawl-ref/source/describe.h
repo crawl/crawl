@@ -46,7 +46,7 @@ struct describe_info
 
 void append_spells(string &desc, const item_def &item);
 
-bool is_dumpable_artefact(const item_def &item, bool verbose);
+bool is_dumpable_artefact(const item_def &item);
 
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool noquote = false);

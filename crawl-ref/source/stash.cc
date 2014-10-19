@@ -656,7 +656,7 @@ bool Stash::matches_search(const string &prefix,
             continue;
         }
 
-        if (is_dumpable_artefact(item, false))
+        if (is_dumpable_artefact(item))
         {
             const string desc =
                 munge_description(get_item_description(item, false, true));
@@ -784,7 +784,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
         fprintf(f, "  %s%s%s\n", OUTS(buf), OUTS(ann),
             (!verified && (items.size() > 1 || i) ? " (still there?)" : ""));
 
-        if (is_dumpable_artefact(item, false))
+        if (is_dumpable_artefact(item))
         {
             string desc =
                 munge_description(get_item_description(item, false, true));
@@ -900,7 +900,7 @@ string ShopInfo::shop_item_desc(const shop_item &si) const
     if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
-    if (is_dumpable_artefact(si.item, false))
+    if (is_dumpable_artefact(si.item))
     {
         desc = munge_description(get_item_description(si.item, false, true));
         trim_string(desc);
