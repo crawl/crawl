@@ -484,8 +484,6 @@ bool melee_attack::handle_phase_hit()
     // Check if some hit-effect killed the monster.
     if (attacker->is_player())
         stop_hit = !player_monattk_hit_effects();
-    else if (defender->is_player())
-        consider_decapitation(damage_done);
 
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
