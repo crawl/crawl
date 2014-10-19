@@ -67,10 +67,10 @@ void tile_new_level(bool first_time, bool init_unseen)
 
 void tile_init_default_flavour()
 {
-    tile_default_flv(you.where_are_you, env.tile_default);
+    tile_default_flv(you.where_are_you, you.depth, env.tile_default);
 }
 
-void tile_default_flv(branch_type br, tile_flavour &flv)
+void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;
     flv.floor   = TILE_FLOOR_NORMAL;
@@ -78,6 +78,8 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     flv.wall_idx = 0;
     flv.floor_idx = 0;
+
+    uint32_t seed = you.birth_time + br + (depth << 8);
 
     switch (br)
     {
@@ -167,11 +169,13 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SNAKE:
-        flv.wall  = TILE_WALL_SNAKE;
-        flv.floor = random_choose(TILE_FLOOR_SNAKE_A,
-                                  TILE_FLOOR_SNAKE_C,
-                                  TILE_FLOOR_SNAKE_D,
-                                  -1);
+        {
+            flv.wall  = TILE_WALL_SNAKE;
+            tileidx_t choices[3] = {TILE_FLOOR_SNAKE_A,
+                                    TILE_FLOOR_SNAKE_C,
+                                    TILE_FLOOR_SNAKE_D};
+            flv.floor = choices[hash_rand(3, seed)];
+        }
         return;
 
     case BRANCH_SWAMP:
@@ -223,7 +227,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_PANDEMONIUM:
-        switch (random2(9))
+        switch (hash_rand(9, seed, 0))
         {
             default:
             case 0: flv.wall = TILE_WALL_BARS_RED; break;
@@ -238,7 +242,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
             case 8: flv.wall = TILE_WALL_FLESH; break;
         }
 
-        switch (random2(8))
+        switch (hash_rand(8, seed, 1))
         {
             default:
             case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
@@ -362,7 +366,7 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
+static tileidx_t _pick_dngn_tile(tileidx_t idx, int value)
 {
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
@@ -370,7 +374,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
         return idx;
 
     const int total = tile_dngn_probs(idx + count - 1);
-    const int rand  = (value == -1 ? random2(total) : value % total);
+    const int rand  = value % total;
 
     for (int i = 0; i < count; ++i)
     {
@@ -382,7 +386,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     return idx;
 }
 
-static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int value = -1)
+static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 {
     ASSERT(!candidates.empty());
 
@@ -392,7 +396,7 @@ static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int 
         const unsigned int count = tile_dngn_count(candidates[i]);
         total += tile_dngn_probs(candidates[i] + count - 1);
     }
-    int rand = (value == -1 ? random2(total) : value % total);
+    int rand = value % total;
 
     for (unsigned int i = 0; i < candidates.size(); ++i)
     {
@@ -425,20 +429,26 @@ void tile_init_flavour(const coord_def &gc)
     if (!map_bounds(gc))
         return;
 
+    uint32_t seed = you.birth_time + you.where_are_you +
+        (you.depth << 8) + (gc.x << 16) + (gc.y << 24);
+
+    int rand1 = hash_rand(INT_MAX, seed, 0);
+    int rand2 = hash_rand(INT_MAX, seed, 1);
+
     if (!env.tile_flv(gc).floor)
     {
         tileidx_t floor_base = env.tile_default.floor;
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
+        env.tile_flv(gc).floor = _pick_dngn_tile(floor_base, rand1);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
              && env.tile_flv(gc).floor != TILE_HALO_VAULT
              && env.tile_flv(gc).floor != TILE_HALO_DIRT)
     {
-        env.tile_flv(gc).floor = _pick_random_dngn_tile(env.tile_flv(gc).floor);
+        env.tile_flv(gc).floor = _pick_dngn_tile(env.tile_flv(gc).floor, rand1);
     }
 
     if (!env.tile_flv(gc).wall)
@@ -451,7 +461,7 @@ void tile_init_flavour(const coord_def &gc)
                 _get_depths_wall_tiles_by_depth(you.depth, tile_candidates);
             else
                 _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
-            env.tile_flv(gc).wall = _pick_random_dngn_tile_multi(tile_candidates);
+            env.tile_flv(gc).wall = _pick_dngn_tile_multi(tile_candidates, rand2);
         }
         else
         {
@@ -459,11 +469,11 @@ void tile_init_flavour(const coord_def &gc)
             int colour = env.grid_colours(gc);
             if (colour)
                 wall_base = tile_dngn_coloured(wall_base, colour);
-            env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
+            env.tile_flv(gc).wall = _pick_dngn_tile(wall_base, rand2);
         }
     }
     else
-        env.tile_flv(gc).wall = _pick_random_dngn_tile(env.tile_flv(gc).wall);
+        env.tile_flv(gc).wall = _pick_dngn_tile(env.tile_flv(gc).wall, rand2);
 
     if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
     {
@@ -505,7 +515,7 @@ void tile_init_flavour(const coord_def &gc)
             env.tile_flv(gc).special = 0;
     }
     else if (!env.tile_flv(gc).special)
-        env.tile_flv(gc).special = random2(256);
+        env.tile_flv(gc).special = hash_rand(256, seed, 10);
 }
 
 enum SpecialIdx
@@ -1269,9 +1279,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.wall;
     else if (orig == TILE_DNGN_STONE_WALL)
     {
-        *bg = _pick_random_dngn_tile(tile_dngn_coloured(orig,
-                                                        env.grid_colours(gc)),
-                                     flv.special);
+        *bg = _pick_dngn_tile(tile_dngn_coloured(orig,
+                                                 env.grid_colours(gc)),
+                              flv.special);
     }
     else if (is_door_tile(orig))
     {
@@ -1298,7 +1308,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = orig + 6 + flv.special % 6;
     }
     else if (orig < TILE_DNGN_MAX)
-        *bg = _pick_random_dngn_tile(orig, flv.special);
+        *bg = _pick_dngn_tile(orig, flv.special);
 
     *bg |= flag;
 }
