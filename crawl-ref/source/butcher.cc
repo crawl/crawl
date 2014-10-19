@@ -477,20 +477,6 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
     }
 }
 
-bool check_blood_corpses_on_ground()
-{
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-            && !food_is_rotten(*si)
-            && mons_has_blood(si->mon_type))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 // Deliberately don't check for rottenness here, so this check
 // can also be used to verify whether you *could* have bottled
 // a now rotten corpse.
