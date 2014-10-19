@@ -419,6 +419,7 @@ armour_mummy ARMOUR_MUMMY
 dragonsc_green DRAGONSC_GREEN
 dragonsc_white DRAGONSC_WHITE
 dragonsc_magenta DRAGONSC_MAGENTA
+dragonsc_quicksilver DRAGONSC_QUICKSILVER
 dragonsc_cyan DRAGONSC_CYAN
 dragonsc_brown DRAGONSC_BROWN
 dragonsc_blue DRAGONSC_BLUE
@@ -428,6 +429,7 @@ dragonsc_pearl DRAGONSC_PEARL
 dragonarm_green DRAGONARM_GREEN
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
