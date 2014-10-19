@@ -282,8 +282,6 @@ mon_energy_usage mons_class_energy(monster_type mc);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster* mon);
 
-bool get_tentacle_head(const monster*& mon);
-
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster* mon);
 bool mons_class_fast_regen(monster_type mc);
@@ -459,21 +457,11 @@ int get_dist_to_nearest_monster();
 bool monster_nearby();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
-bool mons_is_tentacle_head(monster_type mc);
-bool mons_is_child_tentacle(monster_type mc);
-bool mons_is_child_tentacle_segment(monster_type mc);
-bool mons_is_tentacle(monster_type mc);
-bool mons_is_tentacle_segment(monster_type mc);
-bool mons_is_tentacle_or_tentacle_segment(monster_type mc);
 bool mons_is_recallable(actor* caller, monster* targ);
-monster* mons_get_parent_monster(monster* mons);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
-monster_type mons_tentacle_parent_type(const monster* mons);
-monster_type mons_tentacle_child_type(const monster* mons);
-bool mons_tentacle_adjacent(const monster* parent, const monster* child);
 mon_threat_level_type mons_threat_level(const monster *mon,
                                         bool real = false);
 int count_monsters(monster_type mtyp, bool friendly_only);

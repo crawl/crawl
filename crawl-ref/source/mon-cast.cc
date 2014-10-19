@@ -38,6 +38,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-project.h"
+#include "mon-tentacle.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "mon-act.h"

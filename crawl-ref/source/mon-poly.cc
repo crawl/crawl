@@ -25,6 +25,7 @@
 #include "mon-death.h"
 #include "mon-message.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"

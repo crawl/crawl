@@ -45,6 +45,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-project.h"
+#include "mon-tentacle.h"
 #include "mgen_data.h"
 #include "mon-util.h"
 #include "notes.h"
@@ -2630,6 +2631,93 @@ void monster::struggle_against_net()
     }
 }
 
+static void _ancient_zyme_sicken(monster* mons)
+{
+    if (is_sanctuary(mons->pos()))
+        return;
+
+    if (!is_sanctuary(you.pos())
+        && you.res_rotting() <= 0
+        && !you.duration[DUR_DIVINE_STAMINA]
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.disease)
+        {
+            if (!you.duration[DUR_SICKENING])
+            {
+                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
+                    mons->name(DESC_THE).c_str());
+            }
+
+            you.duration[DUR_SICKENING] += (2 + random2(4)) * BASELINE_DELAY;
+            if (you.duration[DUR_SICKENING] > 100)
+            {
+                you.sicken(40 + random2(30));
+                you.duration[DUR_SICKENING] = 0;
+            }
+        }
+        else
+        {
+            if (x_chance_in_y(you.time_taken, 60))
+                you.sicken(15 + random2(30));
+        }
+    }
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && !is_sanctuary(*ri))
+        {
+            m->sicken(2 * you.time_taken);
+        }
+    }
+}
+
+/**
+ * Apply the torpor snail slowing effect.
+ *
+ * @param mons      The snail applying the effect.
+ */
+static void _torpor_snail_slow(monster* mons)
+{
+    // XXX: might be nice to refactor together with _ancient_zyme_sicken().
+    // XXX: also with torpor_slowed().... so many duplicated checks :(
+
+    if (is_sanctuary(mons->pos())
+        || mons->attitude != ATT_HOSTILE
+        || mons->has_ench(ENCH_CHARM))
+    {
+        return;
+    }
+
+    if (!is_sanctuary(you.pos())
+        && !you.stasis()
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.duration[DUR_SLOW])
+        {
+            mprf("Being near %s leaves you feeling lethargic.",
+                 mons->name(DESC_THE).c_str());
+        }
+
+        if (you.duration[DUR_SLOW] <= 1)
+            you.set_duration(DUR_SLOW, 1);
+        you.props[TORPOR_SLOWED_KEY] = true;
+    }
+
+    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        monster *m = *ri;
+        if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
+            && !m->is_stationary() && !is_sanctuary(m->pos()))
+        {
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
+            m->props[TORPOR_SLOWED_KEY] = true;
+        }
+    }
+}
+
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
@@ -2641,10 +2729,10 @@ static void _post_monster_move(monster* mons)
         mons->struggle_against_net();
 
     if (mons->type == MONS_ANCIENT_ZYME)
-        ancient_zyme_sicken(mons);
+        _ancient_zyme_sicken(mons);
 
     if (mons->type == MONS_TORPOR_SNAIL)
-        torpor_snail_slow(mons);
+        _torpor_snail_slow(mons);
 
     if (mons->type == MONS_ASMODEUS)
     {
@@ -3573,6 +3661,70 @@ static void _jelly_grows(monster* mons)
     _jelly_divide(mons);
 }
 
+/**
+ * Possibly place mold & ballistomycetes in giant spores' wake.
+ *
+ * @param mons      The giant spore in question.
+ * @param position  Its last location. (Where to place the ballistomycete.)
+ */
+static void _ballisto_on_move(monster* mons, const coord_def& position)
+{
+    if (mons->type != MONS_GIANT_SPORE
+        || crawl_state.game_is_zotdef()
+        || mons->is_summoned())
+    {
+        return;
+    }
+
+    // place mold under the spore's current tile, if there isn't any now.
+    const dungeon_feature_type current_ftype = env.grid(mons->pos());
+    if (current_ftype == DNGN_FLOOR)
+        env.pgrid(mons->pos()) |= FPROP_MOLD;
+
+    // The number field is used as a cooldown timer for this behavior.
+    if (mons->number > 0)
+    {
+        mons->number--;
+        return;
+    }
+
+    if (!one_chance_in(4))
+        return;
+
+    // try to make a ballistomycete.
+    const beh_type attitude = attitude_creation_behavior(mons->attitude);
+    monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
+                                              NULL, 0, 0, position, MHITNOT,
+                                              MG_FORCE_PLACE));
+
+    if (!plant)
+        return;
+
+    if (mons_is_god_gift(mons, GOD_FEDHAS))
+    {
+        plant->flags |= MF_NO_REWARD; // XXX: is this needed?
+
+        if (attitude == BEH_FRIENDLY)
+        {
+            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+            mons_make_god_gift(plant, GOD_FEDHAS);
+        }
+    }
+
+    // Don't leave mold on squares we place ballistos on
+    remove_mold(position);
+
+    if (you.can_see(plant))
+    {
+        mprf("%s grows in the wake of %s.",
+             plant->name(DESC_A).c_str(), mons->name(DESC_THE).c_str());
+    }
+
+    // reset the cooldown.
+    mons->number = 40;
+}
+
 bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
 {
     if (delta.origin())
@@ -3770,7 +3922,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     mgrd(mons->pos()) = mons->mindex();
 
     mons->check_clinging(true);
-    ballisto_on_move(mons, old_pos);
+    _ballisto_on_move(mons, old_pos);
 
     // Let go of all constrictees; only stop *being* constricted if we are now
     // too far away.

@@ -43,6 +43,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "notes.h"
 #include "options.h"
 #include "random.h"
@@ -1395,33 +1396,6 @@ int mons_class_colour(monster_type mc)
 bool mons_class_can_regenerate(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_REGEN);
-}
-
-bool get_tentacle_head(const monster*& mon)
-{
-    // For tentacle segments, find the associated tentacle.
-    if (mon->is_child_tentacle_segment())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    // For tentacles, find the associated head.
-    if (mon->is_child_tentacle())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    return true;
 }
 
 bool mons_can_regenerate(const monster* mon)
@@ -4583,55 +4557,6 @@ monster *monster_by_mid(mid_t m)
     return 0;
 }
 
-bool mons_is_tentacle_head(monster_type mc)
-{
-    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN
-        || mc == MONS_MNOLEG;
-}
-
-bool mons_is_child_tentacle(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE
-        || mc == MONS_STARSPAWN_TENTACLE
-        || mc == MONS_SNAPLASHER_VINE
-        || mc == MONS_MNOLEG_TENTACLE;
-}
-
-bool mons_is_child_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mc == MONS_SNAPLASHER_VINE_SEGMENT
-        || mc == MONS_MNOLEG_TENTACLE_SEGMENT;
-}
-
-bool mons_is_tentacle(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE || mons_is_child_tentacle(mc);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mons_is_child_tentacle_segment(mc);
-}
-
-bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
-{
-    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
-}
-
-monster* mons_get_parent_monster(monster* mons)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_parent_monster_of(mons))
-            return mi->as_monster();
-    }
-
-    return 0;
-}
-
 void init_anon()
 {
     monster &mon = menv[ANON_FRIENDLY_MONSTER];
@@ -4678,66 +4603,6 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-monster_type mons_tentacle_parent_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-        case MONS_KRAKEN_TENTACLE:
-            return MONS_KRAKEN;
-        case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return MONS_KRAKEN_TENTACLE;
-        case MONS_STARSPAWN_TENTACLE:
-            return MONS_TENTACLED_STARSPAWN;
-        case MONS_STARSPAWN_TENTACLE_SEGMENT:
-            return MONS_STARSPAWN_TENTACLE;
-        case MONS_ELDRITCH_TENTACLE_SEGMENT:
-            return MONS_ELDRITCH_TENTACLE;
-        case MONS_SNAPLASHER_VINE_SEGMENT:
-            return MONS_SNAPLASHER_VINE;
-        case MONS_MNOLEG_TENTACLE:
-            return MONS_MNOLEG;
-        case MONS_MNOLEG_TENTACLE_SEGMENT:
-            return MONS_MNOLEG_TENTACLE;
-        default:
-            return MONS_PROGRAM_BUG;
-    }
-}
-
-monster_type mons_tentacle_child_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-    case MONS_KRAKEN:
-        return MONS_KRAKEN_TENTACLE;
-    case MONS_KRAKEN_TENTACLE:
-        return MONS_KRAKEN_TENTACLE_SEGMENT;
-    case MONS_TENTACLED_STARSPAWN:
-        return MONS_STARSPAWN_TENTACLE;
-    case MONS_STARSPAWN_TENTACLE:
-        return MONS_STARSPAWN_TENTACLE_SEGMENT;
-    case MONS_ELDRITCH_TENTACLE:
-        return MONS_ELDRITCH_TENTACLE_SEGMENT;
-    case MONS_SNAPLASHER_VINE:
-        return MONS_SNAPLASHER_VINE_SEGMENT;
-    case MONS_MNOLEG:
-        return MONS_MNOLEG_TENTACLE;
-    case MONS_MNOLEG_TENTACLE:
-        return MONS_MNOLEG_TENTACLE_SEGMENT;
-    default:
-        return MONS_PROGRAM_BUG;
-    }
-}
-
-//Returns whether a given monster is a tentacle segment immediately attached
-//to the parent monster
-bool mons_tentacle_adjacent(const monster* parent, const monster* child)
-{
-    return mons_is_tentacle_head(mons_base_type(parent))
-           && mons_is_tentacle_segment(child->type)
-           && child->props.exists("inwards")
-           && child->props["inwards"].get_int() == parent->mindex();
 }
 
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)

@@ -15,6 +15,7 @@
 #include "los.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"

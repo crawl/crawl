@@ -56,6 +56,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
+#include "mon-tentacle.h"
 #include "mon-info.h"
 #include "ng-setup.h"
 #include "notes.h"

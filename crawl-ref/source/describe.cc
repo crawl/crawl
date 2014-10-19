@@ -50,6 +50,7 @@
 #include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
