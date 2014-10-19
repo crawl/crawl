@@ -6876,8 +6876,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_REGENERATION:
         return mon->has_ench(ENCH_REGENERATION)
-               || mon->has_ench(ENCH_DEATHS_DOOR)
-               || mon->holiness() == MH_UNDEAD;
+               || mon->has_ench(ENCH_DEATHS_DOOR);
 
     case SPELL_INJURY_MIRROR:
         return mon->has_ench(ENCH_MIRROR_DAMAGE)
@@ -6893,8 +6892,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_INVISIBILITY:
         return mon->has_ench(ENCH_INVIS)
-               || mon->glows_naturally()
-               || friendly && !you.can_see_invisible(false);
+               || mon->glows_naturally();
 
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
@@ -7253,13 +7251,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_ENGLACIATION:
         return !foe
-                || !mon->see_cell_no_trans(foe->pos())
-                || foe->res_cold() > 0
-                || (foe->is_monster()
-                    && (mons_is_firewood(foe->as_monster())
-                        || foe->as_monster()->has_ench(ENCH_SLOW)))
-                || (!foe->is_monster()
-                    && you.duration[DUR_SLOW] > 0);
+               || !mon->see_cell_no_trans(foe->pos())
+               || foe->res_cold() > 0;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return mon->has_ench(ENCH_TOXIC_RADIANCE)
