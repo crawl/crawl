@@ -3035,7 +3035,11 @@ static armour_type _get_random_armour_type(int item_level)
                                               ARM_SWAMP_DRAGON_HIDE,
                                               ARM_SWAMP_DRAGON_ARMOUR,
                                               ARM_PEARL_DRAGON_HIDE,
-                                              ARM_PEARL_DRAGON_ARMOUR, };
+                                              ARM_PEARL_DRAGON_ARMOUR,
+                                              ARM_SHADOW_DRAGON_HIDE,
+                                              ARM_SHADOW_DRAGON_ARMOUR,
+                                              ARM_QUICKSILVER_DRAGON_HIDE,
+                                              ARM_QUICKSILVER_DRAGON_ARMOUR, };
 
         armtype = RANDOM_ELEMENT(morehiarmours);
 
