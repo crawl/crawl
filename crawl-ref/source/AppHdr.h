@@ -475,4 +475,8 @@ static inline void UNUSED(const volatile T &)
 
 #endif // !defined __OBJC__
 
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+    TypeName(const TypeName&);   \
+    void operator=(const TypeName&)
+
 #endif // APPHDR_H
