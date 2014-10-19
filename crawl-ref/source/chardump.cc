@@ -757,7 +757,7 @@ static void _sdump_inventory(dump_params &par)
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
-                        if (is_dumpable_artefact(you.inv[j], false)
+                        if (is_dumpable_artefact(you.inv[j])
                             || Options.dump_book_spells
                                && you.inv[j].base_type == OBJ_BOOKS)
                         {

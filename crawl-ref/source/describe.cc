@@ -1622,21 +1622,9 @@ void append_spells(string &desc, const item_def &item)
 //      Public Functions
 // ========================================================================
 
-bool is_dumpable_artefact(const item_def &item, bool verbose)
+bool is_dumpable_artefact(const item_def &item)
 {
-    if (is_known_artefact(item))
-        return item_ident(item, ISFLAG_KNOW_PROPERTIES);
-    else if (!verbose || !item_type_known(item))
-        return false;
-    else if (item.base_type == OBJ_ARMOUR)
-    {
-        const int spec_ench = get_armour_ego_type(item);
-        return spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_ARCHMAGI;
-    }
-    else if (item.base_type == OBJ_JEWELLERY)
-        return true;
-
-    return false;
+    return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
 }
 
 //---------------------------------------------------------------
