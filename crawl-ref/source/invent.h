@@ -218,7 +218,7 @@ unsigned char get_invent(int invent_type, bool redraw = true);
 bool in_inventory(const item_def &i);
 
 string item_class_name(int type, bool terse = false);
-const char* item_slot_name(equipment_type type, bool terse);
+const char* item_slot_name(equipment_type type);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
