@@ -321,7 +321,8 @@ public:
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool is_stationary() const;
-    bool malmutate(const string &reason);
+    bool malmutate(const string &/*reason*/);
+    void corrupt();
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,

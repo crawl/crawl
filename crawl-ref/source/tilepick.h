@@ -8,6 +8,8 @@
 
 #include "tiledef_defines.h"
 
+#define TILE_NUM_KEY "tile_num"
+
 struct bolt;
 struct cloud_info;
 struct coord_def;
