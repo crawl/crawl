@@ -35,6 +35,9 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "traps.h"
 
 #include <algorithm>
@@ -228,7 +231,9 @@ static bool _is_public_key(string key)
      || key == "glyph"
      || key == "dbname"
      || key == "monster_tile"
-     || key == "tile_num"
+#ifdef USE_TILE
+     || key == TILE_NUM_KEY
+#endif
      || key == "tile_idx"
      || key == "chimera_part_2"
      || key == "chimera_part_3"
