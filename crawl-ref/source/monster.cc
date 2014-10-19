@@ -62,6 +62,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
+#include "tilepick.h"
 #include "tileview.h"
 #endif
 #include "traps.h"
@@ -5432,6 +5433,14 @@ bool monster::has_lifeforce() const
     return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
+/**
+ * Can the monster be mutated?
+ *
+ * Nonliving (e.g. statue) monsters & the undead are safe, as are a very few
+ * other weird types of monsters.
+ *
+ * @return Whether the monster can be mutated in any way.
+ */
 bool monster::can_mutate() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
@@ -5462,9 +5471,21 @@ bool monster::is_stationary() const
     return mons_class_is_stationary(type) || has_ench(ENCH_WITHDRAWN);
 }
 
-bool monster::malmutate(const string &reason)
+/**
+ * Malmutate the monster.
+ *
+ * Gives a temporary 'wretched' effect, generally. Some monsters have special
+ * interactions.
+ *
+ * @return Whether the monster was mutated in any way.
+ */
+bool monster::malmutate(const string &/*reason*/)
 {
     if (!can_mutate())
+        return false;
+
+    // already mutated wrecks (can_mutate() is true since they can be poly'd)
+    if (type == MONS_CHAOS_SPAWN)
         return false;
 
     // Ugly things merely change colour.
@@ -5474,9 +5495,34 @@ bool monster::malmutate(const string &reason)
         return true;
     }
 
+    // tile change, already mutated wrecks
+    // FIXME - doesn't seem to currently do anything?
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    {
+#ifdef USE_TILE
+        props[TILE_NUM_KEY].get_short() = random2(256);
+#endif
+        return true;
+    }
+
     simple_monster_message(this, " twists and deforms.");
     add_ench(mon_enchant(ENCH_WRETCHED, 1, nullptr, INFINITE_DURATION));
     return true;
+}
+
+/**
+ * Corrupt the monster's body.
+ *
+ * Analogous to effects that give the player temp mutations, like wretched star
+ * pulses & demonspawn corruptors. Currently identical to malmutate. (Writing
+ * this function anyway, since they probably shouldn't be identical.)
+ *
+ * XXX: adjust duration to differentiate? (make malmut's duration longer, or
+ * corrupt's shorter?)
+ */
+void monster::corrupt()
+{
+    malmutate("");
 }
 
 bool monster::polymorph(int pow)

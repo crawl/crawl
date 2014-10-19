@@ -2845,29 +2845,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
             for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
             {
                 monster *m = monster_at(*ri);
-                if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
-                    && m->can_mutate())
-                {
-                    switch (m->type)
-                    {
-                    // colour/attack/resistances change
-                    case MONS_UGLY_THING:
-                    case MONS_VERY_UGLY_THING:
-                        m->malmutate("wretched star");
-                        break;
-
-                    // tile change, already mutated wrecks
-                    case MONS_ABOMINATION_SMALL:
-                    case MONS_ABOMINATION_LARGE:
-                        m->props["tile_num"].get_short() = random2(256);
-                    case MONS_WRETCHED_STAR:
-                    case MONS_CHAOS_SPAWN:
-                        break;
-
-                    default:
-                        m->add_ench(mon_enchant(ENCH_WRETCHED, 1));
-                    }
-                }
+                if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+                    m->corrupt();
             }
 
             used = true;

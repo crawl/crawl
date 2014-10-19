@@ -5713,26 +5713,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_CORRUPT_BODY:
-        if (mon->can_mutate())
-        {
-            switch (mon->type)
-            {
-                case MONS_UGLY_THING:
-                case MONS_VERY_UGLY_THING:
-                    mon->malmutate("corrupt body");
-                    break;
-                case MONS_ABOMINATION_SMALL:
-                case MONS_ABOMINATION_LARGE:
-                    mon->props["tile_num"].get_short() = random2(256);
-                    break;
-                case MONS_WRETCHED_STAR:
-                case MONS_CHAOS_SPAWN:
-                    break;
-                default:
-                    mon->add_ench(mon_enchant(ENCH_WRETCHED, 1));
-                    break;
-            }
-        }
+        mon->corrupt();
         break;
 
     case BEAM_DRAIN_MAGIC:
