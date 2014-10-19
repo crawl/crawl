@@ -157,7 +157,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
-        ? attacker->as_monster()->number + MAX_NUM_ATTACKS - 1
+        ? attacker->heads() + MAX_NUM_ATTACKS - 1
         : MAX_NUM_ATTACKS;
     coord_def pos = defender->pos();
 
@@ -450,7 +450,7 @@ bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
         return false;
 
     if (attacker.is_player()
-        && you.form == TRAN_HYDRA && hydra_form_heads() > 1)
+        && you.form == TRAN_HYDRA && you.heads() > 1)
     {
         return true;
     }

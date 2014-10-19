@@ -459,6 +459,7 @@ public:
     bool is_skeletal() const;
 
     bool tengu_flight() const;
+    int heads() const;
 
     int spell_hp_cost() const;
     bool spellcasting_unholy() const;

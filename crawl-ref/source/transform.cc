@@ -1301,24 +1301,15 @@ public:
     }
 };
 
-
-/**
- * How many heads does the player's hydra form currently have?
- */
-int hydra_form_heads()
-{
-    ASSERT(you.props.exists(HYDRA_FORM_HEADS_KEY));
-    return you.props[HYDRA_FORM_HEADS_KEY].get_int();
-}
-
 /**
  * Set the number of hydra heads that the player currently has.
  *
- * @param pow   The power of the form.
+ * @param heads the new number of heads you should have.
  */
 void set_hydra_form_heads(int heads)
 {
     you.props[HYDRA_FORM_HEADS_KEY] = min(MAX_HYDRA_HEADS, max(1, heads));
+    you.wield_change = true;
 }
 
 class FormHydra : public Form
@@ -1356,7 +1347,7 @@ public:
      */
     string get_transform_description() const
     {
-        return make_stringf("a %d-headed hydra.", hydra_form_heads());
+        return make_stringf("a %d-headed hydra.", you.heads());
     }
 
     /**
@@ -1374,7 +1365,7 @@ public:
      */
     string get_uc_attack_name(string default_name) const
     {
-        return make_stringf("Bite (x%d)", hydra_form_heads());
+        return make_stringf("Bite (x%d)", you.heads());
     }
 
     /**
@@ -1383,10 +1374,10 @@ public:
     int get_base_unarmed_damage() const
     {
         // 3 damage per head for 1-10
-        const int normal_heads_damage = min(hydra_form_heads(), 10) * 3;
+        const int normal_heads_damage = min(you.heads(), 10) * 3;
         // 3/2 damage per head for 11-20 (they get in each-other's way)
             // (and also a 62-base-damage form scares me)
-        const int too_many_heads_damage = max(0, hydra_form_heads() - 10)
+        const int too_many_heads_damage = max(0, you.heads() - 10)
                                             * 3 / 2;
         // 2-47 (though more like 14-32 in practical ranges...)
         return 2 + normal_heads_damage + too_many_heads_damage;

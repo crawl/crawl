@@ -971,3 +971,11 @@ int player::constriction_damage() const
 {
     return roll_dice(2, div_rand_round(strength(), 5));
 }
+
+int player::heads() const
+{
+    if (form != TRAN_HYDRA)
+        return 1; // not actually always true
+    ASSERT(props.exists(HYDRA_FORM_HEADS_KEY));
+    return props[HYDRA_FORM_HEADS_KEY].get_int();
+}

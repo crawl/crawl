@@ -329,7 +329,6 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
-int hydra_form_heads();
 void set_hydra_form_heads(int heads);
 const char* transform_name(transformation_type form = you.form);
 
