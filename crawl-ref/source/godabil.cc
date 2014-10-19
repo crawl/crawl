@@ -5390,6 +5390,12 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
         return "a trivial";
 }
 
+static void _apply_ru_sacrifice(mutation_type sacrifice)
+{
+    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    you.sacrifices[sacrifice] += 1;
+}
+
 static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
         const char* message)
 {
@@ -5403,8 +5409,7 @@ static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
         return false;
     }
 
-    perma_mutate(sacrifice, 1, "Ru sacrifice");
-    you.sacrifices[sacrifice] += 1;
+    _apply_ru_sacrifice(sacrifice);
     return true;
 }
 
@@ -5612,7 +5617,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
             {
                 mutation_type arcane_sacrifice =
                     AS_MUT(current_arcane_sacrifices[i]);
-                perma_mutate(arcane_sacrifice, 1, "Ru sacrifice");
+                _apply_ru_sacrifice(arcane_sacrifice);
 
                 // gain one piety for every 50 skill points
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
