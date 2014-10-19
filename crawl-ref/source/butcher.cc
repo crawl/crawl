@@ -509,11 +509,8 @@ bool can_bottle_blood_from_corpse(monster_type mons_class)
     return false;
 }
 
-int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
+int num_blood_potions_from_corpse(monster_type mons_class)
 {
-    if (chunk_type == -1)
-        chunk_type = mons_corpse_effect(mons_class);
-
     // Max. amount is about one third of the max. amount for chunks.
     const int max_chunks = get_max_corpse_chunks(mons_class);
 

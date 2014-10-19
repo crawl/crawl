@@ -1295,7 +1295,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     // Use number of potions per corpse to calculate total nutrition, which
     // then gets distributed over the entire duration.
     int food_value = CHUNK_BASE_NUTRITION
-                     * num_blood_potions_from_corpse(mons_type, chunk_type);
+                     * num_blood_potions_from_corpse(mons_type);
 
     bool start_feeding   = false;
     bool end_feeding     = false;
