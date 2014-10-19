@@ -1057,8 +1057,13 @@ static void _remove_amulet_of_faith(item_def &item)
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        you.props["ru_sacrifice_delay"] =
-            you.props["ru_sacrifice_delay"].get_int() * 3;
+        if (you.piety >= piety_breakpoint(6))
+        {
+            you.props["ru_sacrifice_delay"] =
+                you.props["ru_sacrifice_delay"].get_int() * 3;
+            simple_god_message(" reconsiders your readiness for further "
+                "sacrifices.");
+        }
     }
     else if (!you_worship(GOD_NO_GOD)
         && !you_worship(GOD_XOM))
@@ -1154,10 +1159,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
-        mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
+       if (!(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5)))
+            mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
              (you_worship(GOD_NO_GOD))
                 ? "strange " : "");
-        if (you_worship(GOD_GOZAG))
+        else if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");
         break;
 
