@@ -563,6 +563,10 @@ Shock shock serpent cast
 Static Discharge shock serpent cast
 
 @The_monster@ crackles with electricity!
+%%%%
+Corrupting Pulse wretched star cast
+
+@The_monster@ pulses with an eldritch light!
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

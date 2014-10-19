@@ -44,6 +44,7 @@
 #include "mon-book.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "random.h"
 #include "random-weight.h"
@@ -1367,6 +1368,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_TENTACLE_THROW:
+    case SPELL_CORRUPTING_PULSE:
         return true;
     default:
         if (check_validity)
@@ -3183,6 +3185,36 @@ static bool _wall_of_brambles(monster* mons)
     return true;
 }
 
+/**
+ * Make the given monster cast the spell "Corrupting Pulse", corrupting
+ * (temporarily malmutating) all creatures in LOS.
+ *
+ * @param mons  The monster in question.
+ */
+static void _corrupting_pulse(monster *mons)
+{
+    if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
+    {
+        targetter_los hitfunc(mons, LOS_SOLID);
+        flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
+
+        if (!is_sanctuary(you.pos())
+            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
+        {
+            int num_mutations = 2 + random2(3);
+            for (int i = 0; i < num_mutations; ++i)
+                temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
+        }
+    }
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+            m->corrupt();
+    }
+}
+
 // Returns the clone just created (null otherwise)
 monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ_type)
 {
@@ -3282,6 +3314,11 @@ static bool _torment_vulnerable(actor* victim)
 static bool _elec_vulnerable(actor* victim)
 {
     return victim->res_elec() < 3;
+}
+
+static bool _mutation_vulnerable(actor* victim)
+{
+    return victim->can_mutate();
 }
 
 static bool _dummy_vulnerable(actor* victim)
@@ -3828,7 +3865,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                          && !player_res_torment(false)
                          && !player_kiku_res_torment())
                      || (spell_cast == SPELL_OZOCUBUS_REFRIGERATION
-                         && !player_res_cold(false)))
+                         && !player_res_cold(false))
+                    || spell_cast == SPELL_CORRUPTING_PULSE)
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
@@ -4107,6 +4145,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     else if (spell_cast == SPELL_CHAIN_OF_CHAOS)
     {
         if (!_trace_los(mons, _dummy_vulnerable))
+            return false;
+    }
+    else if (spell_cast == SPELL_CORRUPTING_PULSE)
+    {
+        if (!_trace_los(mons, _mutation_vulnerable))
             return false;
     }
 
@@ -6736,6 +6779,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             canned_msg(MSG_NOTHING_HAPPENS);
         return;
     }
+
+    case SPELL_CORRUPTING_PULSE:
+        _corrupting_pulse(mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
