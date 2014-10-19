@@ -282,7 +282,7 @@ static int l_item_do_subtype(lua_State *ls)
 
     const char *s = NULL;
     if (item->base_type == OBJ_ARMOUR)
-        s = item_slot_name(get_armour_slot(*item), true);
+        s = item_slot_name(get_armour_slot(*item));
     if (item->base_type == OBJ_BOOKS)
     {
         if (item->sub_type == BOOK_MANUAL)
