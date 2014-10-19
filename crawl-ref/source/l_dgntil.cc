@@ -41,30 +41,6 @@ tileidx_t get_tile_idx(lua_State *ls, int arg)
     return idx;
 }
 
-LUAFN(dgn_lev_floortile)
-{
-    LEVEL(br, 1);
-    int depth = luaL_checkint(ls, 2);
-
-    tile_flavour flv;
-    tile_default_flv(br, depth, flv);
-
-    const char *tile_name = tile_dngn_name(flv.floor);
-    PLUARET(string, tile_name);
-}
-
-LUAFN(dgn_lev_rocktile)
-{
-    LEVEL(br, 1);
-    int depth = luaL_checkint(ls, 2);
-
-    tile_flavour flv;
-    tile_default_flv(br, depth, flv);
-
-    const char *tile_name = tile_dngn_name(flv.wall);
-    PLUARET(string, tile_name);
-}
-
 LUAFN(dgn_lrocktile)
 {
     MAP(ls, 1, map);
@@ -203,8 +179,6 @@ const struct luaL_reg dgn_tile_dlib[] =
 { "tile", dgn_tile },
 { "change_rock_tile", dgn_change_rock_tile },
 { "change_floor_tile", dgn_change_floor_tile },
-{ "lev_floortile", dgn_lev_floortile },
-{ "lev_rocktile", dgn_lev_rocktile },
 { "tile_feat_changed", dgn_tile_feat_changed },
 { "tile_floor_changed", dgn_tile_floor_changed },
 
