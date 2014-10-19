@@ -755,7 +755,7 @@ static void _maybe_give_corpse_hint(const item_def item)
     }
 }
 
-void item_check(bool verbose)
+void item_check()
 {
     describe_floor();
     origin_set(you.pos());
@@ -767,11 +767,7 @@ void item_check(bool verbose)
     item_list_on_square(items, you.visible_igrd(you.pos()));
 
     if (items.empty())
-    {
-        if (verbose)
-            strm << "There are no items here." << endl;
         return;
-    }
 
     if (items.size() == 1)
     {
@@ -829,7 +825,7 @@ void item_check(bool verbose)
         done_init_line = true;
     }
 
-    if (verbose || items.size() <= msgwin_lines() - 1)
+    if (items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
@@ -2961,7 +2957,7 @@ static void _do_autopickup()
 
     if (!can_autopickup())
     {
-        item_check(false);
+        item_check();
         return;
     }
 
@@ -3024,7 +3020,7 @@ static void _do_autopickup()
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
 
-    item_check(false);
+    item_check();
 
     explore_pickup_event(n_did_pickup, n_tried_pickup);
 }

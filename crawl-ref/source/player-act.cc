@@ -690,7 +690,7 @@ string player::unarmed_attack_name() const
     return get_form()->get_uc_attack_name(default_name);
 }
 
-bool player::fumbles_attack(bool verbose)
+bool player::fumbles_attack()
 {
     bool did_fumble = false;
 
@@ -699,8 +699,7 @@ bool player::fumbles_attack(bool verbose)
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
-            if (verbose)
-                mpr("Your unstable footing causes you to fumble your attack.");
+            mpr("Your unstable footing causes you to fumble your attack.");
             did_fumble = true;
         }
         if (floundering())

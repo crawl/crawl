@@ -580,7 +580,7 @@ public:
     string arm_name(bool plural, bool *can_plural = NULL) const;
     string unarmed_attack_name() const;
 
-    bool fumbles_attack(bool verbose = true);
+    bool fumbles_attack();
     bool cannot_fight() const;
     bool fights_well_unarmed(int heavy_armour_penalty);
 

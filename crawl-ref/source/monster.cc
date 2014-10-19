@@ -2830,21 +2830,18 @@ void monster::moveto(const coord_def& c, bool clear_net)
     clear_far_constrictions();
 }
 
-bool monster::fumbles_attack(bool verbose)
+bool monster::fumbles_attack()
 {
     if (floundering() && one_chance_in(4))
     {
-        if (verbose)
+        if (you.can_see(this))
         {
-            if (you.can_see(this))
-            {
-                mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
-                     ? "becomes momentarily stuck in the liquid earth."
-                     : "splashes around in the water.");
-            }
-            else if (player_can_hear(pos(), LOS_RADIUS))
-                mprf(MSGCH_SOUND, "You hear a splashing noise.");
+            mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
+                 ? "becomes momentarily stuck in the liquid earth."
+                 : "splashes around in the water.");
         }
+        else if (player_can_hear(pos(), LOS_RADIUS))
+            mprf(MSGCH_SOUND, "You hear a splashing noise.");
 
         return true;
     }
