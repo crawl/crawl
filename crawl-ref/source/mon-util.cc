@@ -1651,7 +1651,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     const bool zombified = mons_is_zombified(mon);
 
     if (mon->has_hydra_multi_attack())
-        attk_number -= mon->number - 1;
+        attk_number -= mon->heads() - 1;
 
     if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS)
         attk_number = 0;

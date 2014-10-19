@@ -246,6 +246,8 @@ public:
 
     bool torpor_slowed() const;
 
+    virtual int heads() const = 0;
+
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
 

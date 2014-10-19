@@ -886,7 +886,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + min((int)mon.number, 5) - 1;
+                     + min(mon->heads(), 5) - 1;
             break;
         }
         else if ((mons_genus(subtype) == MONS_GIANT_LIZARD

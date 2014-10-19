@@ -2161,10 +2161,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
         return true;
     }
 
-    // XXX: deduplicate this headcount
-    const int heads = defender->is_monster() ?
-                        defender->as_monster()->number :
-                        hydra_form_heads();
+    int heads = defender->heads();
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
 
@@ -2178,7 +2175,6 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     {
         mpr("You grow two more!");
         set_hydra_form_heads(heads + 2);
-        you.wield_change        = true;
     }
 
     return false;
@@ -2280,9 +2276,7 @@ void melee_attack::decapitate(int dam_type)
         verb = RANDOM_ELEMENT(slice_verbs);
     }
 
-    const int heads = defender->is_monster() ?
-                        defender->as_monster()->number :
-                        hydra_form_heads();
+    int heads = defender->heads();
     if (heads == 1) // will be zero afterwards
     {
         if (defender_visible)
@@ -2320,10 +2314,7 @@ void melee_attack::decapitate(int dam_type)
     }
 
     if (defender->is_player())
-    {
         set_hydra_form_heads(heads - 1);
-        you.wield_change        = true;
-    }
     else
         defender->as_monster()->number--;
 }

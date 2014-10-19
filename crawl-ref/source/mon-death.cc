@@ -1331,7 +1331,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             shapeshift = ENCH_GLOWING_SHAPESHIFTER;
 
         // Headless hydras cannot be made spectral hydras, sorry.
-        if (spectre_type == MONS_HYDRA && mons->number == 0)
+        if (spectre_type == MONS_HYDRA && mons->heads() == 0)
         {
             mpr("A glowing mist gathers momentarily, then fades.");
             return;

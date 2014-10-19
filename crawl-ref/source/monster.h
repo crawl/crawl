@@ -120,6 +120,7 @@ public:
 
     // Has a hydra-like variable number of attacks based on mons->number.
     bool has_hydra_multi_attack() const;
+    int  heads() const;
     bool has_multitargeting() const;
 
     // Has the 'spellcaster' flag (may not actually have any spells).

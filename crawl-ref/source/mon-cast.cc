@@ -4805,9 +4805,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
         ASSERT(idx < (int)ARRAYSZ(serpent_of_hell_breaths));
         ASSERT(idx >= 0);
-        ASSERT(mons->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
+        ASSERT(mons->heads() == ARRAYSZ(serpent_of_hell_breaths[idx]));
 
-        for (unsigned int i = 0; i < mons->number; ++i)
+        for (int i = 0; i < mons->heads(); ++i)
         {
             spell_type head_spell = serpent_of_hell_breaths[idx][i];
             setup_mons_cast(mons, pbolt, head_spell);

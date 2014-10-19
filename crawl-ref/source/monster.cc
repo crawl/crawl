@@ -5039,6 +5039,18 @@ bool monster::has_hydra_multi_attack() const
         || mons_species(false) == MONS_SERPENT_OF_HELL;
 }
 
+int monster::heads() const
+{
+    if (has_hydra_multi_attack())
+        return number;
+    else if (mons_shouts(mons_species(true)) == S_SHOUT2)
+        return 2;
+    // There are lots of things with more or fewer heads, but the return value
+    // here doesn't actually matter for non-hydra-type monsters.
+    else
+        return 1;
+}
+
 bool monster::has_multitargeting() const
 {
     if (mons_wields_two_weapons(this))
