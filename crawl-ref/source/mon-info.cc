@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "mon-book.h"
 #include "mon-chimera.h"
+#include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -235,7 +236,7 @@ static bool _is_public_key(string key)
      || key == "chimera_wings"
      || key == "chimera_legs"
      || key == "custom_spells"
-     || key == "elven_twin_is_energized")
+     || key == ELVEN_IS_ENERGIZED_KEY)
     {
         return true;
     }
