@@ -5899,8 +5899,6 @@ bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    dist beam;
-
     if (crawl_state.is_repeating_cmd())
     {
         crawl_state.cant_cmd_repeat("You can't repeat power leap.");
@@ -5910,15 +5908,18 @@ bool ru_power_leap()
     }
 
     // query for location:
+    int range = 3;
+    int explosion_size = 1;
+    dist beam;
+    bolt fake_beam;
+
     while (1)
     {
-        direction_chooser_args args;
-        args.restricts = DIR_LEAP;
-        args.needs_path = false;
-        args.may_target_monster = false;
-        args.top_prompt = "Leap to where?";
-        args.range = 3;
-        direction(beam, args);
+        targetter_smite tgt(&you, range, explosion_size, explosion_size);
+        if (!spell_direction(beam, fake_beam, DIR_LEAP, TARG_ANY,
+                             range, false, false, false, NULL,
+                             "Aiming: <white>Power Leap</white>", true,
+                             &tgt))
 
         if (crawl_state.seen_hups)
         {
