@@ -3215,7 +3215,7 @@ static string _monster_spell_type_description(const monster_info& mi,
 
         // Display spells for this book
         if (num_books > 1)
-            result << set_name << i+1 << ": ";
+            result << set_name << i+1 << " : ";
 
         for (size_t j = 0; j < book_spells.size(); ++j)
         {
