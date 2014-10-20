@@ -803,7 +803,8 @@ Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
 %%%%
 Lehudib's Crystal Spear spell
 
-This spell hurls a lethally sharp bolt of crystal.
+This spell hurls a lethally sharp bolt of crystal, capable of piercing through
+its victims.
 %%%%
 Lightning Bolt spell
 

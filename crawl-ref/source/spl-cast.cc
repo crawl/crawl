@@ -1439,6 +1439,10 @@ static spret_type _do_cast(spell_type spell, int powc,
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
     {
+        // XXX
+        if (zap == ZAP_LEHUDIBS_CRYSTAL_SPEAR)
+            beam.hit_verb = "pierces through";
+
         spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
                                  NULL, fail);
 

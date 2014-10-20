@@ -5683,6 +5683,9 @@ int bolt::range_used_on_hit() const
     // Lightning goes through things.
     else if (flavour == BEAM_ELECTRICITY)
         used = 0;
+    // Piercing projectiles (LCS), well, pierce.
+    else if (hit_verb == "pierces through")
+        used = 0;
     else
         used = 1;
 

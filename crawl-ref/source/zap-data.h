@@ -356,7 +356,7 @@ static const zap_info zap_data[] =
     BEAM_MMISSILE,
     DCHAR_FIRED_MISSILE,
     true,
-    false,
+    true,
     false,
     8
 },
