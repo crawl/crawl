@@ -1021,3 +1021,214 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
 
     fixup_spells(spells, 150);
 }
+
+typedef struct
+{
+  spschool_flag_type school;
+  mon_spell_slot     spells[4];
+} lich_spell_set;
+
+// Primary spells form the core of an ancient lich spell set.
+lich_spell_set lich_primary_spells[] =
+{
+  { SPTYP_CONJURATION,
+    {
+     { SPELL_IOOD, 12, MON_SPELL_WIZARD },
+     { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_FIRE,
+    {
+     { SPELL_HELLFIRE, 12, MON_SPELL_WIZARD },
+     { SPELL_HELLFIRE_BURST, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_ICE,
+    {
+     { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
+     { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_EARTH,
+    {
+     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_AIR,
+    {
+     { SPELL_CHAIN_LIGHTNING, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_POISON,
+    {
+     { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
+     { SPELL_CORROSIVE_BOLT, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_SUMMONING,
+    {
+     { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
+     { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
+     { SPELL_TWISTED_RESURRECTION, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+};
+
+// Secondary spells are an ancient lich's backup set; liches get two
+// secondary spell sets.
+lich_spell_set lich_secondary_spells[] =
+{
+  { SPTYP_CONJURATION,
+    {
+     { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+     { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
+     { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_FIRE,
+    {
+     { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
+     { SPELL_FIRE_ELEMENTALS, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_ICE,
+    {
+     { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+     { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
+     { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_EARTH,
+    {
+     { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+     { SPELL_LRD, 12, MON_SPELL_WIZARD },
+     { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_AIR,
+    {
+     { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+     { SPELL_AIRSTRIKE, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_POISON,
+    {
+     { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
+     { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
+     { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_SUMMONING,
+    {
+     { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD },
+     { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_TRANSLOCATION,
+    {
+     { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
+     { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_HEXES,
+    {
+     { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
+     { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
+     { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+};
+
+static spschool_flag_type _add_lich_spells(monster_spells &spells,
+                                           lich_spell_set *spellset,
+                                           size_t set_size,
+                                           spschool_flag_type restricted)
+{
+    size_t which = 0;
+    do
+    {
+        which = random2(set_size);
+    } while (spellset[which].school == restricted);
+
+    for (size_t i = 0; spellset[which].spells[i].spell != SPELL_NO_SPELL; i++)
+    {
+        spells.push_back(spellset[which].spells[i]);
+    }
+
+    return spellset[which].school;
+}
+
+void ghost_demon::init_lich(monster_type type)
+{
+    monsterentry* me = get_monster_data(type);
+    ASSERT(me);
+
+    colour = me->colour;
+    speed = me->speed;
+    ev = me->ev;
+    ac = me->AC;
+    xl = me->hpdice[0];
+    max_hp = hit_points(xl, me->hpdice[1], me->hpdice[2]);
+    damage = me->attack[0].damage;
+    att_type = me->attack[0].type;
+    att_flav = me->attack[0].flavour;
+
+    spschool_flag_type school = SPTYP_NONE;
+
+    size_t count = 0;
+
+    if (type == MONS_ANCIENT_LICH)
+    {
+        count++;
+        school = _add_lich_spells(spells, lich_primary_spells,
+                                  ARRAYSZ(lich_primary_spells), school);
+    }
+
+    while (count++ < 2)
+    {
+        school = _add_lich_spells(spells, lich_secondary_spells,
+                                  ARRAYSZ(lich_secondary_spells), school);
+    }
+
+    mon_spell_slot emergency;
+    emergency.spell = random_choose(SPELL_HASTE,
+                                    SPELL_INVISIBILITY,
+                                    SPELL_TELEPORT_SELF,
+                                    -1);
+    emergency.freq  = 12;
+    emergency.flags = MON_SPELL_WIZARD;
+    if (emergency.spell == SPELL_TELEPORT_SELF)
+        emergency.flags |= MON_SPELL_EMERGENCY;
+
+    spells.push_back(emergency);
+}
