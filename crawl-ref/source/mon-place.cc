@@ -1545,6 +1545,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_SHROUD_OF_GOLUBRIA))
         mon->add_ench(ENCH_SHROUD);
 
+    if (mon->has_spell(SPELL_REPEL_MISSILES))
+        mon->add_ench(ENCH_REPEL_MISSILES);
+
+    if (mon->has_spell(SPELL_DEFLECT_MISSILES))
+        mon->add_ench(ENCH_DEFLECT_MISSILES);
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.

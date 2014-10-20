@@ -101,8 +101,7 @@ const uint64_t M_NO_SKELETON       = 1<<30;
 // worth 0 xp
 const uint64_t M_NO_EXP_GAIN       = (uint64_t)1<<31;
 
-// has a deflection effect
-const uint64_t M_DEFLECT_MISSILES  = (uint64_t)1<<32;
+                                   //(uint64_t)1<<32;
 
 // phase shift (EV bonus not included)
 const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;

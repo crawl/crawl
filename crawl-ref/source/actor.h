@@ -268,6 +268,7 @@ public:
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *foe);
     virtual int missile_deflection() const = 0; // 1 = RMsl, 2 = DMsl
+    virtual void ablate_deflection() = 0;
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;
