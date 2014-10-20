@@ -3452,13 +3452,18 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // Try to avoid deliberately blocking the player's line of fire.
     if (mons->type == MONS_SPELLFORGED_SERVITOR)
     {
-        // Only check if our target is something the player could theoretically
+        const actor * const summoner = actor_by_mid(mons->summoner);
+
+        if (!summoner) // XXX
+            return false;
+
+        // Only check if our target is something the caster could theoretically
         // be aiming at.
-        if (mons->get_foe() && mons->target != you.pos()
-                            && you.see_cell_no_trans(mons->target))
+        if (mons->get_foe() && mons->target != summoner->pos()
+                            && summoner->see_cell_no_trans(mons->target))
         {
             ray_def ray;
-            if (find_ray(you.pos(), mons->target, ray, opc_immob))
+            if (find_ray(summoner->pos(), mons->target, ray, opc_immob))
             {
                 while (ray.advance())
                 {
