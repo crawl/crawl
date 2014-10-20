@@ -2168,13 +2168,13 @@ bool monster::pickup_scroll(item_def &item, int near)
     return pickup(item, MSLOT_SCROLL, near);
 }
 
-bool monster::pickup_potion(item_def &item, int near)
+bool monster::pickup_potion(item_def &item, int near, bool force)
 {
     // Only allow monsters to pick up potions if they can actually use
     // them.
     const potion_type ptype = static_cast<potion_type>(item.sub_type);
 
-    if (!can_drink_potion(ptype))
+    if (!force && !can_drink_potion(ptype))
         return false;
 
     return pickup(item, MSLOT_POTION, near);
@@ -2268,7 +2268,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     case OBJ_SCROLLS:
         return pickup_scroll(item, near);
     case OBJ_POTIONS:
-        return pickup_potion(item, near);
+        return pickup_potion(item, near, force);
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
         // Monsters can't use any miscellaneous items right now, so don't
