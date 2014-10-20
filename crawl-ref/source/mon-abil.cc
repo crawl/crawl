@@ -104,6 +104,15 @@ void draconian_change_colour(monster* drac)
     default:
         break;
     }
+
+    // Get rid of the old breath weapon first.
+    monster_spells oldspells = drac->spells;
+    drac->spells.clear();
+    for (size_t i = 0; i < oldspells.size(); i++)
+        if (!(oldspells[i].flags & MON_SPELL_BREATH))
+            drac->spells.push_back(oldspells[i]);
+
+    add_drac_breath(drac);
 }
 
 bool ugly_thing_mutate(monster* ugly, bool proximity)

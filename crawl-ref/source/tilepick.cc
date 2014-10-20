@@ -4900,7 +4900,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CRYSTAL_BOLT:             return TILEG_CRYSTAL_BOLT;
     case SPELL_DIMENSION_ANCHOR:         return TILEG_DIMENSION_ANCHOR;
     case SPELL_DISINTEGRATE:             return TILEG_DISINTEGRATE;
-    case SPELL_DRACONIAN_BREATH:         return TILEG_DRACONIAN_BREATH;
     case SPELL_DRUIDS_CALL:              return TILEG_DRUIDS_CALL;
     case SPELL_EARTH_ELEMENTALS:         return TILEG_EARTH_ELEMENTALS;
     case SPELL_ENERGY_BOLT:              return TILEG_ENERGY_BOLT;

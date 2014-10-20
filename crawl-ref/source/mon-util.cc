@@ -1053,6 +1053,7 @@ int mons_demon_tier(monster_type mc)
     }
 }
 
+// Beware; returns false for Tiamat!
 bool mons_is_draconian(monster_type mc)
 {
     return mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN;
@@ -2290,6 +2291,33 @@ unique_books get_unique_spells(const monster_info &mi,
     return result;
 }
 
+void add_drac_breath(monster* drac)
+{
+    const monster_type drac_type = draco_or_demonspawn_subspecies(drac);
+    spell_type sp;
+    switch (drac_type)
+    {
+    case MONS_BLACK_DRACONIAN:   sp = SPELL_LIGHTNING_BOLT; break;
+    case MONS_MOTTLED_DRACONIAN: sp = SPELL_STICKY_FLAME_SPLASH; break;
+    case MONS_YELLOW_DRACONIAN:  sp = SPELL_SPIT_ACID; break;
+    case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
+    case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
+    case MONS_RED_DRACONIAN:     sp = SPELL_FIRE_BREATH; break;
+    case MONS_WHITE_DRACONIAN:   sp = SPELL_COLD_BREATH; break;
+    case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
+    case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
+
+    default:
+        die("Invalid draconian subrace: %d", drac_type);
+    }
+
+    mon_spell_slot slot;
+    slot.spell = sp;
+    slot.freq = 62;
+    slot.flags = MON_SPELL_NATURAL | MON_SPELL_BREATH;
+    if (sp != SPELL_NO_SPELL)
+        drac->spells.push_back(slot);
+}
 static void _mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
@@ -2299,6 +2327,9 @@ static void _mons_load_spells(monster* mon)
         return mon->load_ghost_spells();
 
     mon->spells.clear();
+    if (mons_genus(mon->type) == MONS_DRACONIAN)
+        add_drac_breath(mon);
+
     if (book == MST_NO_SPELLS)
         return;
 

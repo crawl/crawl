@@ -214,7 +214,6 @@ error CREATE_TENTACLES
 error CRYSTAL_BOLT
 error DIMENSION_ANCHOR
 error DISINTEGRATE
-error DRACONIAN_BREATH
 error DRUIDS_CALL
 %sdir gui/spells/monster
 earth_elementals EARTH_ELEMENTALS
