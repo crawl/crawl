@@ -816,6 +816,17 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_AZRAEL,
+      {
+       { SPELL_BOLT_OF_FIRE, 13, MON_SPELL_DEMONIC },
+       { SPELL_STICKY_FLAME_RANGE, 13, MON_SPELL_DEMONIC },
+       { SPELL_FIREBALL, 13, MON_SPELL_DEMONIC },
+       { SPELL_HELLFIRE, 13, MON_SPELL_DEMONIC },
+       { SPELL_HELLFIRE_BURST, 13, MON_SPELL_DEMONIC },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_DRAC_SCORCHER,
       {
        { SPELL_DRACONIAN_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
