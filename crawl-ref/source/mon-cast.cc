@@ -1885,7 +1885,6 @@ static bool _seal_doors_and_stairs(const monster* warden,
                                    bool check_only = false)
 {
     ASSERT(warden);
-    ASSERT(warden->type == MONS_VAULT_WARDEN);
 
     int num_closed = 0;
     int seal_duration = 80 + random2(80);
