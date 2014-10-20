@@ -3373,10 +3373,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return true;
     }
 
-    {
-            return false;
-    }
-
     if (mons->type == MONS_BALL_LIGHTNING)
         mons->suicide();
 
