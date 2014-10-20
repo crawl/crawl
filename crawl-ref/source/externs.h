@@ -512,7 +512,9 @@ struct item_def
     /// +to hit/dam, charges, corpse mon id
     union { short plus; monster_type mon_type:16; };
 #pragma pack(pop)
-    short          plus2;          ///< sub-sub type for boots/helms, net wear
+    short          plus2;          ///< net wear, deck draws, wand zap count,
+                                   //   corpse butcher amount, rod max charge,
+                                   //   evoker cooldown, book generation code
     int            special;        ///< special stuff
     colour_t       colour;         ///< item colour
     uint8_t        rnd;            ///< random number, used for tile choice
