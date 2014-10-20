@@ -6889,9 +6889,7 @@ static void _siren_sing(monster* mons, bool avatar)
     noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
-    {
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
-    }
 
     if (you.can_see(mons))
     {
