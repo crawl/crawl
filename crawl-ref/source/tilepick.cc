@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-death.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
