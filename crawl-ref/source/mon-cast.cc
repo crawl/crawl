@@ -88,6 +88,7 @@ static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
+static void _siren_sing(monster* mons, bool avatar);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 
 void init_mons_spells()
@@ -1371,6 +1372,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_TENTACLE_THROW:
     case SPELL_CORRUPTING_PULSE:
+    case SPELL_SIREN_SONG:
+    case SPELL_AVATAR_SONG:
         return true;
     default:
         if (check_validity)
@@ -6007,6 +6010,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TENTACLE_THROW:
         _mons_consider_tentacle_throwing(*mons);
         return;
+
+    case SPELL_SIREN_SONG:
+        _siren_sing(mons, false);
+        return;
+
+    case SPELL_AVATAR_SONG:
+        _siren_sing(mons, true);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -6782,6 +6793,111 @@ static int _throw_site_score(const monster &thrower, const actor &victim,
     return score;
 }
 
+/**
+ * Check if a siren or merfolk avatar should sing its song.
+ *
+ * @param mons   The singing monster.
+ * @param avatar Whether to use the more powerful "avatar song".
+ * @return       Whether the song should be sung.
+ */
+static bool _should_siren_sing(monster* mons, bool avatar)
+{
+    // Don't behold observer in the arena.
+    if (crawl_state.game_is_arena())
+        return false;
+
+    // Don't behold player already half down or up the stairs.
+    if (!you.delay_queue.empty())
+    {
+        const delay_queue_item delay = you.delay_queue.front();
+
+        if (delay.type == DELAY_ASCENDING_STAIRS
+            || delay.type == DELAY_DESCENDING_STAIRS)
+        {
+            dprf("Taking stairs, don't mesmerise.");
+            return false;
+        }
+    }
+
+    // Won't sing if either of you silenced, or it's friendly,
+    // confused, fleeing, or leaving the level.
+    if (mons->has_ench(ENCH_CONFUSION)
+        || mons_is_fleeing(mons)
+        || mons->pacified()
+        || mons->friendly()
+        || !player_can_hear(mons->pos()))
+    {
+        return false;
+    }
+
+    // Don't even try on berserkers. Sirens know their limits.
+    // (merfolk avatars should still sing since their song has other effects)
+    if (!avatar && you.berserk())
+        return false;
+
+    // If the mer is trying to mesmerise you anew, only sing half as often.
+    if (!you.beheld_by(mons) && mons->foe == MHITYOU && you.can_see(mons)
+        && coinflip())
+    {
+        return false;
+    }
+
+    // We can do it!
+    return true;
+}
+
+/**
+ * Have a siren or merfolk avatar attempt to mesmerize the player.
+ *
+ * @param mons   The singing monster.
+ * @param avatar Whether to use the more powerful "avatar song".
+ */
+static void _siren_sing(monster* mons, bool avatar)
+{
+    const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
+                                                       : MSGCH_MONSTER_SPELL);
+    const bool already_mesmerised = you.beheld_by(mons);
+
+    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
+
+    if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
+    {
+        mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
+    }
+
+    if (you.can_see(mons))
+    {
+        const char * const song_adj = already_mesmerised ? "its luring"
+                                                         : "a haunting";
+        const string song_desc = make_stringf(" chants %s song.", song_adj);
+        simple_monster_message(mons, song_desc.c_str(), spl);
+    }
+    else
+    {
+        mprf(MSGCH_SOUND, "You hear %s.",
+                          already_mesmerised ? "a luring song" :
+                          coinflip()         ? "a haunting song"
+                                             : "an eerie melody");
+
+        // If you're already mesmerised by an invisible siren, it
+        // can still prolong the enchantment.
+        if (!already_mesmerised)
+            return;
+    }
+
+    // Once mesmerised by a particular monster, you cannot resist anymore.
+    if (you.duration[DUR_MESMERISE_IMMUNE]
+        || !already_mesmerised
+           && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
+               || you.clarity()))
+    {
+        canned_msg(you.clarity() ? MSG_YOU_UNAFFECTED : MSG_YOU_RESIST);
+        return;
+    }
+
+    you.add_beholder(mons);
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 {
@@ -7295,6 +7411,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_LEDAS_LIQUEFACTION:
         return !mon->stand_on_solid_ground()
                 || liquefied(mon->pos());
+
+    case SPELL_SIREN_SONG:
+        return !_should_siren_sing(mon, false);
+
+    case SPELL_AVATAR_SONG:
+        return !_should_siren_sing(mon, true);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
