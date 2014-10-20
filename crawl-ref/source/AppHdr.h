@@ -33,10 +33,16 @@ static inline T Move(T x) { return x; } // good enough for our purposes
 # ifndef nullptr // clang in the OS X 10.9 SDK #defines this in C++03 mode
 #  define nullptr NULL
 # endif
+# define DELETED_METHOD
 #else
 # define Unique_ptr unique_ptr
 # define Move move
+# define DELETED_METHOD = delete
 #endif
+
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+    TypeName(const TypeName&) DELETED_METHOD;   \
+    void operator=(const TypeName&) DELETED_METHOD
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -474,9 +480,5 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #endif // !defined __OBJC__
-
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-    TypeName(const TypeName&);   \
-    void operator=(const TypeName&)
 
 #endif // APPHDR_H
