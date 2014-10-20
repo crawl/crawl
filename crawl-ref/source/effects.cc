@@ -83,6 +83,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -2825,8 +2826,10 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
-        if (item_is_equipped(rod, true))
+        if (item_equip_slot(rod) == EQ_WEAPON)
             you.wield_change = true;
+        if (item_is_quivered(rod))
+            you.redraw_quiver = true;
     }
 
     rod.plus += rate;

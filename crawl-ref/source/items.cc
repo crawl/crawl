@@ -71,6 +71,7 @@
 #include "stash.h"
 #include "state.h"
 #include "terrain.h"
+#include "throw.h"
 #include "travel.h"
 #include "hints.h"
 #include "unwind.h"
@@ -3110,8 +3111,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too && in_inventory(item)
-              && item.link == you.m_quiver->get_fire_item();
+           || quiver_too && item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
