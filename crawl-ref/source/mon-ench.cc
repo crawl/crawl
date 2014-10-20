@@ -22,6 +22,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -1258,6 +1259,264 @@ bool monster::clear_far_engulf(void)
     return nonadj;
 }
 
+static void _entangle_actor(actor* act)
+{
+    if (act->is_player())
+    {
+        you.duration[DUR_GRASPING_ROOTS] = 10;
+        you.redraw_evasion = true;
+        if (you.duration[DUR_FLIGHT] ||  you.attribute[ATTR_PERM_FLIGHT])
+        {
+            you.duration[DUR_FLIGHT] = 0;
+            you.attribute[ATTR_PERM_FLIGHT] = 0;
+            land_player(true);
+        }
+    }
+    else
+    {
+        monster* mact = act->as_monster();
+        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, NULL, INFINITE_DURATION));
+    }
+}
+
+// Returns true if there are any affectable hostiles are in range of the effect
+// (whether they were affected or not this round)
+static bool _apply_grasping_roots(monster* mons)
+{
+    if (you.see_cell(mons->pos()) && one_chance_in(12))
+    {
+        mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
+                "Tangled roots snake along the ground.",
+                "The ground creaks as gnarled roots bulge its surface.",
+                "A root reaches out and grasps at passing movement.",
+                0));
+    }
+
+    bool found_hostile = false;
+    for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (mons_aligned(mons, *ai) || ai->is_insubstantial()
+            || !ai->visible_to(mons))
+        {
+            continue;
+        }
+
+        found_hostile = true;
+
+        // Roots can't reach things over deep water or lava
+        if (!feat_has_solid_floor(grd(ai->pos())))
+            continue;
+
+        // Some messages are suppressed for monsters, to reduce message spam.
+        if (ai->flight_mode())
+        {
+            if (x_chance_in_y(3, 5))
+                continue;
+
+            if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
+            {
+                if (ai->is_player())
+                    mpr("Roots rise up to grasp you, but you nimbly evade.");
+                continue;
+            }
+
+            if (you.can_see(*ai))
+            {
+                mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
+                     ai->name(DESC_THE).c_str(),
+                     ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                     ai->is_monster() ? "" : "back ");
+            }
+        }
+        else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
+        {
+            mprf("Roots grasp at your %s, making movement difficult.",
+                 you.foot_name(true).c_str());
+        }
+
+        _entangle_actor(*ai);
+    }
+
+    return found_hostile;
+}
+
+// Returns true if you resist the merfolk avatar's call.
+static bool _merfolk_avatar_movement_effect(const monster* mons)
+{
+    bool do_resist = (you.attribute[ATTR_HELD]
+                      || you.duration[DUR_TIME_STEP]
+                      || you.cannot_act()
+                      || you.clarity()
+                      || you.is_stationary());
+
+    if (!do_resist)
+    {
+        // We use a beam tracer here since it is better at navigating
+        // obstructing walls than merely comparing our relative positions
+        bolt tracer;
+        tracer.is_beam = true;
+        tracer.affects_nothing = true;
+        tracer.target = mons->pos();
+        tracer.source = you.pos();
+        tracer.range = LOS_RADIUS;
+        tracer.is_tracer = true;
+        tracer.aimed_at_spot = true;
+        tracer.fire();
+
+        const coord_def newpos = tracer.path_taken[0];
+
+        if (!in_bounds(newpos)
+            || is_feat_dangerous(grd(newpos))
+            || !you.can_pass_through_feat(grd(newpos))
+            || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
+        {
+            do_resist = true;
+        }
+        else
+        {
+            bool swapping = false;
+            monster* mon = monster_at(newpos);
+            if (mon)
+            {
+                coord_def swapdest;
+                if (mon->wont_attack()
+                    && !mon->is_stationary()
+                    && !mon->is_projectile()
+                    && !mon->cannot_act()
+                    && !mon->asleep()
+                    && swap_check(mon, swapdest, true))
+                {
+                    swapping = true;
+                }
+                else if (!mon->submerged())
+                    do_resist = true;
+            }
+
+            if (!do_resist)
+            {
+                const coord_def oldpos = you.pos();
+                mpr("The pull of its song draws you forwards.");
+
+                if (swapping)
+                {
+                    if (monster_at(oldpos))
+                    {
+                        mprf("Something prevents you from swapping places "
+                             "with %s.",
+                             mon->name(DESC_THE).c_str());
+                        return do_resist;
+                    }
+
+                    int swap_mon = mgrd(newpos);
+                    // Pick the monster up.
+                    mgrd(newpos) = NON_MONSTER;
+                    mon->moveto(oldpos);
+
+                    // Plunk it down.
+                    mgrd(mon->pos()) = swap_mon;
+
+                    mprf("You swap places with %s.",
+                         mon->name(DESC_THE).c_str());
+                }
+                move_player_to_grid(newpos, true);
+
+                if (swapping)
+                    mon->apply_location_effects(newpos);
+            }
+        }
+    }
+
+    return do_resist;
+}
+
+static void _merfolk_avatar_song(monster* mons)
+{
+    // First, attempt to pull the player, if mesmerised
+    if (you.beheld_by(mons) && coinflip())
+    {
+        // Don't pull the player if they walked forward voluntarily this
+        // turn (to avoid making you jump two spaces at once)
+        if (!mons->props["foe_approaching"].get_bool())
+        {
+            _merfolk_avatar_movement_effect(mons);
+
+            // Reset foe tracking position so that we won't automatically
+            // veto pulling on a subsequent turn because you 'approached'
+            mons->props["foe_pos"].get_coord() = you.pos();
+        }
+    }
+
+    // Only call up drowned souls if we're largely alone; otherwise our
+    // mesmerisation can support the present allies well enough.
+    int ally_hd = 0;
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (*mi != mons && mons_aligned(mons, *mi) && !mons_is_firewood(*mi)
+            && mi->type != MONS_DROWNED_SOUL)
+        {
+            ally_hd += mi->get_experience_level();
+        }
+    }
+    if (ally_hd > mons->get_experience_level())
+    {
+        if (mons->props.exists("merfolk_avatar_call"))
+        {
+            // Normally can only happen if allies of the merfolk avatar show up
+            // during a song that has already summoned drowned souls (though is
+            // technically possible if some existing ally gains HD instead)
+            if (you.see_cell(mons->pos()))
+                mpr("The shadowy forms in the deep grow still as others approach.");
+            mons->props.erase("merfolk_avatar_call");
+        }
+
+        return;
+    }
+
+    // Can only call up drowned souls if there's free deep water nearby
+    vector<coord_def> deep_water;
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+        if (grd(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
+            deep_water.push_back(*ri);
+
+    if (deep_water.size())
+    {
+        if (!mons->props.exists("merfolk_avatar_call"))
+        {
+            if (you.see_cell(mons->pos()))
+            {
+                mprf("Shadowy forms rise from the deep at %s song!",
+                     mons->name(DESC_ITS).c_str());
+            }
+            mons->props["merfolk_avatar_call"].get_bool() = true;
+        }
+
+        if (coinflip())
+        {
+            int num = 1 + one_chance_in(4);
+            shuffle_array(deep_water);
+
+            int existing = 0;
+            for (monster_near_iterator mi(mons); mi; ++mi)
+            {
+                if (mi->type == MONS_DROWNED_SOUL)
+                    existing++;
+            }
+            num = min(min(num, 5 - existing), int(deep_water.size()));
+
+            for (int i = 0; i < num; ++i)
+            {
+                monster* soul = create_monster(mgen_data(MONS_DROWNED_SOUL,
+                                 SAME_ATTITUDE(mons), mons, 1, SPELL_NO_SPELL,
+                                 deep_water[i], mons->foe, MG_FORCE_PLACE));
+
+                // Scale down drowned soul damage for low level merfolk avatars
+                if (soul)
+                    soul->set_hit_dice(mons->get_hit_dice());
+            }
+        }
+    }
+}
+
 void monster::apply_enchantment(const mon_enchant &me)
 {
     enchant_type en = me.ench;
@@ -1886,7 +2145,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_GRASPING_ROOTS_SOURCE:
-        if (!apply_grasping_roots(this))
+        if (!_apply_grasping_roots(this))
             decay_enchantment(en);
         break;
 
@@ -1926,7 +2185,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        merfolk_avatar_song(this);
+        _merfolk_avatar_song(this);
 
         // The merfolk avatar will stop singing without her audience
         if (!see_cell_no_trans(you.pos()))
