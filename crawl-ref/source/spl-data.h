@@ -2308,6 +2308,7 @@ static const struct spell_desc spelldata[] =
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DRACONIAN_BREATH, "Draconian Breath",
      SPTYP_CONJURATION,
@@ -2321,6 +2322,7 @@ static const struct spell_desc spelldata[] =
      false
 },
 
+#endif
 {
     SPELL_WATER_ELEMENTALS, "Summon Water Elementals",
      SPTYP_SUMMONING,

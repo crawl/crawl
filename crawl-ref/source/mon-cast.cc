@@ -127,58 +127,23 @@ bool is_valid_mon_spell(spell_type spell)
 
 static void _scale_draconian_breath(bolt& beam, monster_type drac_type)
 {
-    int scaling = 100;
-    switch (drac_type)
+    if (drac_type == MONS_RED_DRACONIAN
+        && beam.origin_spell == SPELL_FIRE_BREATH)
     {
-    case MONS_RED_DRACONIAN:
-        beam.name       = "searing blast";
-        beam.aux_source = "blast of searing breath";
-        scaling         = 65;
-        break;
-
-    case MONS_WHITE_DRACONIAN:
-        beam.name       = "chilling blast";
-        beam.aux_source = "blast of chilling breath";
-        beam.short_name = "frost";
-        scaling         = 65;
-        beam.ac_rule    = AC_NONE;
-        break;
-
-    case MONS_PLAYER_GHOST: // draconians only
-        beam.name       = "blast of negative energy";
-        beam.aux_source = "blast of draining breath";
-        beam.flavour    = BEAM_NEG;
-        beam.colour     = DARKGREY;
-        scaling         = 65;
-        break;
-
-    default:
-        break;
+        beam.name        = "searing blast";
+        beam.aux_source  = "blast of searing breath";
+        beam.damage.size = 65 * beam.damage.size / 100;
     }
-    beam.damage.size = scaling * beam.damage.size / 100;
-}
-
-// Not static so monster can see this
-spell_type draco_type_to_breath(monster_type drac_type)
-{
-    switch (drac_type)
+    else if (drac_type == MONS_WHITE_DRACONIAN
+             && beam.origin_spell == SPELL_COLD_BREATH)
     {
-    case MONS_BLACK_DRACONIAN:   return SPELL_LIGHTNING_BOLT;
-    case MONS_MOTTLED_DRACONIAN: return SPELL_STICKY_FLAME_SPLASH;
-    case MONS_YELLOW_DRACONIAN:  return SPELL_SPIT_ACID;
-    case MONS_GREEN_DRACONIAN:   return SPELL_POISONOUS_CLOUD;
-    case MONS_PURPLE_DRACONIAN:  return SPELL_QUICKSILVER_BOLT;
-    case MONS_RED_DRACONIAN:     return SPELL_FIRE_BREATH;
-    case MONS_WHITE_DRACONIAN:   return SPELL_COLD_BREATH;
-    case MONS_GREY_DRACONIAN:    return SPELL_NO_SPELL;
-    case MONS_PALE_DRACONIAN:    return SPELL_STEAM_BALL;
-
-    // Handled later.
-    case MONS_PLAYER_GHOST:      return SPELL_DRACONIAN_BREATH;
-
-    default:
-        die("Invalid monster using draconian breath spell");
+        beam.name        = "chilling blast";
+        beam.aux_source  = "blast of chilling breath";
+        beam.short_name  = "frost";
+        beam.damage.size = 65 * beam.damage.size / 100;
+        beam.ac_rule     = AC_NONE;
     }
+
 }
 
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
@@ -297,13 +262,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.range = spell_range(spell_cast, power, false);
     }
 
-    const monster_type drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                    ? draco_or_demonspawn_subspecies(mons) : mons->type;
-
     spell_type real_spell = spell_cast;
-
-    if (spell_cast == SPELL_DRACONIAN_BREATH)
-        real_spell = draco_type_to_breath(drac_type);
 
     if (spell_cast == SPELL_MAJOR_DESTRUCTION)
     {
@@ -895,12 +854,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
-    case SPELL_DRACONIAN_BREATH:
-        beam.damage      = dice_def(3, (mons->get_hit_dice() * 2));
-        beam.hit         = 30;
-        beam.is_beam     = true;
-        break;
-
     case SPELL_PORKALATOR:
         beam.name     = "porkalator";
         beam.glyph    = 0;
@@ -1182,8 +1135,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     if (spell_cast == SPELL_AGONY)
         beam.name = "agony";
 
-    if (spell_cast == SPELL_DRACONIAN_BREATH)
-        _scale_draconian_breath(beam, drac_type);
+    const monster_type drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
+                                    ? draco_or_demonspawn_subspecies(mons) : mons->type;
+
+    _scale_draconian_breath(beam, drac_type);
 
     return beam;
 }
@@ -6474,34 +6429,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 {
     bool force_silent = false;
 
-    spell_type actual_spell = spell_cast;
-
-    if (spell_cast == SPELL_DRACONIAN_BREATH)
-    {
-        monster_type type = mons->type;
-        if (mons_genus(type) == MONS_DRACONIAN)
-            type = draco_or_demonspawn_subspecies(mons);
-
-        switch (type)
-        {
-        case MONS_MOTTLED_DRACONIAN:
-            actual_spell = SPELL_STICKY_FLAME_SPLASH;
-            break;
-
-        case MONS_YELLOW_DRACONIAN:
-            actual_spell = SPELL_SPIT_ACID;
-            break;
-
-        case MONS_PLAYER_GHOST:
-            // Draining breath is silent.
-            force_silent = true;
-            break;
-
-        default:
-            break;
-        }
-    }
-    else if (mons->type == MONS_SHADOW_DRAGON)
+    if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
         force_silent = true;
 
@@ -6511,16 +6439,16 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     if (unseen && silent)
         return;
 
-    int noise = _noise_level(mons, actual_spell, silent, slot_flags);
+    int noise = _noise_level(mons, spell_cast, silent, slot_flags);
 
-    const unsigned int spell_flags = get_spell_flags(actual_spell);
+    const unsigned int spell_flags = get_spell_flags(spell_cast);
     const bool targeted = (spell_flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible());
 
     vector<string> key_list;
     unsigned int num_spell_keys =
-        _speech_keys(key_list, mons, pbolt, actual_spell,
+        _speech_keys(key_list, mons, pbolt, spell_cast,
                      slot_flags, targeted);
 
     string msg = _speech_message(key_list, num_spell_keys, silent, unseen);
@@ -7459,9 +7387,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_AVATAR_SONG:
         return !_should_siren_sing(mon, true);
-
-    case SPELL_DRACONIAN_BREATH:
-        return draco_type_to_breath(draco_or_demonspawn_subspecies(mon)) == SPELL_NO_SPELL;
 
     case SPELL_REPEL_MISSILES:
         return mon->has_ench(ENCH_REPEL_MISSILES);

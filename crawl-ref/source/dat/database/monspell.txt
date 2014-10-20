@@ -205,14 +205,22 @@ You hear a roar.
 Cold Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
-%%%%%
-Draconian Breath cast
+%%%%
+Lightning Bolt draconian cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Electrical Bolt cast
+Steam Ball draconian cast
 
-@The_monster@ shoots out a bolt of @beam@ @at@ @target@!
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Quicksilver Bolt draconian cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Poisonous Cloud draconian cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 unseen Fire Breath cast
 
@@ -222,10 +230,10 @@ Fire Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%%
-unseen Draconian Breath cast
+Electrical Bolt cast
 
-You hear a roar.
-%%%%
+@The_monster@ shoots out a bolt of @beam@ @at@ @target@!
+%%%%%
 Spit Lava cast
 
 @The_monster@ spits lava @at@ @target@.
