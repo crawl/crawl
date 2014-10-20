@@ -1609,25 +1609,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_SNORG:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (mons->foe == MHITNOT
-            || mons->foe == MHITYOU && mons->friendly())
-        {
-            break;
-        }
-
-        // There's a 5% chance of Snorg spontaneously going berserk that
-        // increases to 20% once he is wounded.
-        if (mons->hit_points == mons->max_hit_points && !one_chance_in(4))
-            break;
-
-        if (one_chance_in(5))
-            mons->go_berserk(true);
-        break;
-
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
         {

@@ -2329,4 +2329,11 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_SNORG,
+      {
+       { SPELL_BERSERKER_RAGE, 40, MON_SPELL_NATURAL },
+       END_OF_MONS_BOOK
+      }
+    },
 };
