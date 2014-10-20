@@ -2709,33 +2709,34 @@ xxxXXX+CCCxxx
 ENDMAP
 
 # If the berserker scares you, use the escape hatch.
-NAME:  grunt_temple_overflow_bloody_war
-TAGS:  temple_overflow_2 temple_overflow_okawaru temple_overflow_trog
-TAGS:  patrolling
-DEPTH: D:3-9
-KFEAT: A = altar_okawaru
-KFEAT: B = altar_trog
-KPROP: . = bloody / nothing
-# The guard is generate_awake because the potion fails to generate if the
-# monster is asleep at the time it's generated (can't berserk when asleep).
+NAME:   grunt_temple_overflow_bloody_war
+TAGS:   temple_overflow_2 temple_overflow_okawaru temple_overflow_trog
+TAGS:   patrolling
+DEPTH:  D:4-9
+WEIGHT: 5
+KFEAT:  A = altar_okawaru
+KFEAT:  B = altar_trog
+KPROP:  . = bloody / nothing
 : if you.absdepth() < 8 then
-MONS: gnoll generate_awake ; club | spear | nothing . potion of berserk rage / \
-      orc generate_awake ; club | hand axe | short sword . \
-                           leather armour | nothing . potion of berserk rage
+MONS:   gnoll ; club | spear | nothing . potion of berserk rage / \
+        orc ; club | hand axe | short sword . \
+              leather armour | nothing . potion of berserk rage
 : else
-MONS: orc warrior generate_awake ; club | hand axe | short sword . \
-                                   leather armour | ring mail . \
-                                   potion of berserk rage
+MONS:   orc warrior ; club | hand axe | short sword . \
+                      leather armour | ring mail . \
+                      potion of berserk rage
 : end
 MAP
-xxxxx
-xA.Bx
-x.1.x
-x...x
-x...x
-x...x
-xx+xx
- .@<
+xxxxxxx
+xxxxxxx
+xxA.Bxx
+xx.1.xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xxx+xxx
+  .@<
 ENDMAP
 
 NAME:    grunt_temple_overflow_magic_moments
