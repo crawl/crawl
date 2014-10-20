@@ -6057,10 +6057,10 @@ static int _noise_level(const monster* mons, spell_type spell,
     return noise;
 }
 
-static unsigned int _noise_keys(vector<string>& key_list,
-                                const monster* mons, const bolt& pbolt,
-                                spell_type spell, bool priest, bool wizard,
-                                bool innate, bool targeted)
+static unsigned int _speech_keys(vector<string>& key_list,
+                                 const monster* mons, const bolt& pbolt,
+                                 spell_type spell, bool priest, bool wizard,
+                                 bool innate, bool targeted)
 {
     const string cast_str = " cast";
 
@@ -6172,9 +6172,9 @@ static unsigned int _noise_keys(vector<string>& key_list,
     return num_spell_keys;
 }
 
-static string _noise_message(const vector<string>& key_list,
-                             unsigned int num_spell_keys,
-                             bool silent, bool unseen)
+static string _speech_message(const vector<string>& key_list,
+                              unsigned int num_spell_keys,
+                              bool silent, bool unseen)
 {
     string prefix;
     if (silent)
@@ -6237,9 +6237,9 @@ static string _noise_message(const vector<string>& key_list,
     return msg;
 }
 
-static void _noise_fill_target(string& targ_prep, string& target,
-                               const monster* mons, const bolt& pbolt,
-                               bool gestured)
+static void _speech_fill_target(string& targ_prep, string& target,
+                                const monster* mons, const bolt& pbolt,
+                                bool gestured)
 {
     targ_prep = "at";
     target    = "nothing";
@@ -6476,10 +6476,10 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     vector<string> key_list;
     unsigned int num_spell_keys =
-        _noise_keys(key_list, mons, pbolt, actual_spell,
-                    priest, wizard, innate, targeted);
+        _speech_keys(key_list, mons, pbolt, actual_spell,
+                     priest, wizard, innate, targeted);
 
-    string msg = _noise_message(key_list, num_spell_keys, silent, unseen);
+    string msg = _speech_message(key_list, num_spell_keys, silent, unseen);
 
     if (msg.empty())
     {
@@ -6500,7 +6500,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     string target    = "NO_TARGET";
 
     if (targeted)
-        _noise_fill_target(targ_prep, target, mons, pbolt, gestured);
+        _speech_fill_target(targ_prep, target, mons, pbolt, gestured);
 
     msg = replace_all(msg, "@at@",     targ_prep);
     msg = replace_all(msg, "@target@", target);
