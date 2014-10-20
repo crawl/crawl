@@ -1245,7 +1245,9 @@ bool mons_is_ghost_demon(monster_type mc)
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
             || mons_class_is_chimeric(mc)
-            || mc == MONS_SPELLFORGED_SERVITOR;
+            || mc == MONS_SPELLFORGED_SERVITOR
+            || mc == MONS_LICH
+            || mc == MONS_ANCIENT_LICH;
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -2141,14 +2143,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_HELL_KNIGHT_II);
         break;
 
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        books.push_back(MST_LICH_I);
-        books.push_back(MST_LICH_II);
-        books.push_back(MST_LICH_III);
-        books.push_back(MST_LICH_IV);
-        break;
-
     case MONS_NECROMANCER:
         books.push_back(MST_NECROMANCER_I);
         books.push_back(MST_NECROMANCER_II);
@@ -2602,6 +2596,18 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
+        break;
+    }
+
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+    {
+        ghost_demon ghost;
+        ghost.init_lich(mcls);
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
+        mons->bind_melee_flags();
+        mons->bind_spell_flags();
         break;
     }
 
