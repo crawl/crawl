@@ -966,6 +966,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_PRINCE_RIBBIT,
       {
+       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
        { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
@@ -1008,6 +1009,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_OZOCUBUS_REFRIGERATION, 20, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
     },
@@ -1185,6 +1187,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MARA,
       {
+       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
        { SPELL_BOLT_OF_FIRE, 14, MON_SPELL_DEMONIC },
        { SPELL_FAKE_MARA_SUMMON, 14, MON_SPELL_DEMONIC  },
        { SPELL_SUMMON_ILLUSION, 14, MON_SPELL_DEMONIC },
@@ -1995,6 +1998,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD },
+       { SPELL_SHROUD_OF_GOLUBRIA, 11, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
     },
@@ -2347,6 +2351,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_MERFOLK_AVATAR,
       {
        { SPELL_AVATAR_SONG, 160, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_BLINKER,
+      {
+       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
        END_OF_MONS_BOOK
       }
     },

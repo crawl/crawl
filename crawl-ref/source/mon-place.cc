@@ -1534,7 +1534,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
     }
 
-    if (mons_class_flag(mg.cls, M_OZOCUBUS_ARMOUR))
+    if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
     {
         const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
         mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
@@ -1542,7 +1542,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                   mon));
     }
 
-    if (mons_class_flag(mg.cls, M_SHROUD))
+    if (mon->has_spell(SPELL_SHROUD_OF_GOLUBRIA))
         mon->add_ench(ENCH_SHROUD);
 
     mon->flags |= MF_JUST_SUMMONED;

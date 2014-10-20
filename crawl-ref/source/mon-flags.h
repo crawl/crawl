@@ -152,14 +152,11 @@ const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
-// blinks around randomly (was M_VIGILANT)
-const uint64_t M_BLINKER           = (uint64_t)1<<50;
+                                             //1<<50;
 
-// monster starts with Ozocubu's Armour
-const uint64_t M_OZOCUBUS_ARMOUR   = (uint64_t)1<<51;
+                                             //1<<51;
 
-// monster starts with a Shroud of Golubria
-const uint64_t M_SHROUD            = (uint64_t)1<<52;
+                                             //1<<52;
 
 // monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
 const uint64_t M_SHADOW            = (uint64_t)1<<53;
