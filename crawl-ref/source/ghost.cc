@@ -1045,7 +1045,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
     {
         if (mon && mon->has_spell(spell)
-            || !mon && spell_fail(spell) < 50)
+            || !mon && you.has_spell(spell) && spell_fail(spell) < 50)
         {
             slot.spell = spell;
             spells.push_back(slot);
