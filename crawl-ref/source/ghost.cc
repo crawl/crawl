@@ -1063,10 +1063,8 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     spell_type spell = SPELL_NO_SPELL;
     while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
     {
-        int chance = mon ? 0 : 50 - spell_fail(spell);
-        chance = chance * chance;
         if (mon && mon->has_spell(spell)
-            || !mon && you.has_spell(spell) && x_chance_in_y(chance, 50*50))
+            || !mon && spell_fail(spell) < 50)
         {
             slot.spell = spell;
             spells.push_back(slot);
