@@ -7468,7 +7468,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DEFLECT_MISSILES:
         return mon->has_ench(ENCH_DEFLECT_MISSILES);
->>>>>>> Give M_DEFLECT_MISSILES the M_SHROUD et al. treatment.
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
