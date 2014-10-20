@@ -1565,7 +1565,7 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 {
     unrand_index -= UNRAND_START;
 
-    if (unrand_index <= -1 || unrand_index >= NO_UNRANDARTS)
+    if (unrand_index <= -1 || unrand_index >= NUM_UNRANDARTS)
         return &unranddata[0];  // dummy unrandart
     else
         return &unranddata[unrand_index];
@@ -1577,7 +1577,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 
     // Pick randomly among not-yet-existing unrandarts with the proper
     // base_type and sub_type.
-    for (int i = 0, count = 0; i < NO_UNRANDARTS; i++)
+    for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -2007,7 +2007,7 @@ static void _make_octoring(item_def &item)
 
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
-    ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NO_UNRANDARTS));
+    ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NUM_UNRANDARTS));
 
     item.special = unrand_index;
 

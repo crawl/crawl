@@ -682,7 +682,7 @@ sub write_enums
  * to be hunted down and eaten by dire rattlesnakes.
  **********************************************************************/
 
-#define NO_UNRANDARTS @{ [ scalar(@all_artefacts) ] }
+#define NUM_UNRANDARTS @{ [ scalar(@all_artefacts) ] }
 
 enum unrand_type
 {

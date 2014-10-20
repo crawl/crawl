@@ -3188,17 +3188,17 @@ static void tag_read_you_items(reader &th)
 
     // how many unique items?
     count = unmarshallUByte(th);
-    COMPILE_CHECK(NO_UNRANDARTS <= 256);
-    for (j = 0; j < count && j < NO_UNRANDARTS; ++j)
+    COMPILE_CHECK(NUM_UNRANDARTS <= 256);
+    for (j = 0; j < count && j < NUM_UNRANDARTS; ++j)
     {
         you.unique_items[j] =
             static_cast<unique_item_status_type>(unmarshallByte(th));
     }
     // # of unrandarts could certainly change.
     // If it does, the new ones won't exist yet - zero them out.
-    for (; j < NO_UNRANDARTS; j++)
+    for (; j < NUM_UNRANDARTS; j++)
         you.unique_items[j] = UNIQ_NOT_EXISTS;
-    for (j = NO_UNRANDARTS; j < count; j++)
+    for (j = NUM_UNRANDARTS; j < count; j++)
         unmarshallByte(th);
 
     // how many books?
