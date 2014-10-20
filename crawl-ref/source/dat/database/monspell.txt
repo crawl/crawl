@@ -484,6 +484,10 @@ Bolt of Magma molten gargoyle cast
 Primal Wave elemental wellspring cast
 
 A great wave of water rises up through @The_monster@!
+%%%%
+Invisibility shadow cast
+
+@The_monster@ slips into darkness.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

@@ -2322,4 +2322,11 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_SHADOW,
+      {
+       { SPELL_INVISIBILITY, 33, MON_SPELL_NATURAL },
+       END_OF_MONS_BOOK
+      }
+    },
 };
