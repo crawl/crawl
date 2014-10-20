@@ -806,7 +806,7 @@ NAME:      lom_lobon_spiral_st
 TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, titan, lightning spire, wizard
+MONS:      patrolling Lom Lobon, titan, shock serpent, wizard
 KMONS:     S = storm dragon
 KMONS:     d = draconian annihilator
 KMONS:     e = deep elf annihilator
