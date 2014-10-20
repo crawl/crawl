@@ -125,7 +125,7 @@ bool is_valid_mon_spell(spell_type spell)
     return _valid_mon_spells[spell];
 }
 
-static void _scale_draconian_breath(bolt& beam, int drac_type)
+static void _scale_draconian_breath(bolt& beam, monster_type drac_type)
 {
     int scaling = 100;
     switch (drac_type)
@@ -151,11 +151,15 @@ static void _scale_draconian_breath(bolt& beam, int drac_type)
         beam.colour     = DARKGREY;
         scaling         = 65;
         break;
+
+    default:
+        break;
     }
     beam.damage.size = scaling * beam.damage.size / 100;
 }
 
-static spell_type _draco_type_to_breath(int drac_type)
+// Not static so monster can see this
+spell_type draco_type_to_breath(monster_type drac_type)
 {
     switch (drac_type)
     {
@@ -174,10 +178,7 @@ static spell_type _draco_type_to_breath(int drac_type)
 
     default:
         die("Invalid monster using draconian breath spell");
-        break;
     }
-
-    return SPELL_DRACONIAN_BREATH;
 }
 
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
@@ -296,13 +297,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.range = spell_range(spell_cast, power, false);
     }
 
-    const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
-                            ? draco_or_demonspawn_subspecies(mons) : mons->type;
+    const monster_type drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
+                                    ? draco_or_demonspawn_subspecies(mons) : mons->type;
 
     spell_type real_spell = spell_cast;
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
-        real_spell = _draco_type_to_breath(drac_type);
+        real_spell = draco_type_to_breath(drac_type);
 
     if (spell_cast == SPELL_MAJOR_DESTRUCTION)
     {

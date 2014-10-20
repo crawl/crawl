@@ -33,6 +33,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
+spell_type draco_type_to_breath(monster_type drac_type);
+
 void mons_cast_haunt(monster* mons);
 unsigned short mons_word_of_recall(monster* mons, unsigned short recall_target);
 void mons_cast_spectral_orcs(monster* mons);
