@@ -38,8 +38,7 @@
 
 vector<ghost_demon> ghosts;
 
-// Order for looking for conjurations for the 1st & 2nd spell slots,
-// when finding spells to be remembered by a player's ghost.
+// Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
@@ -81,13 +80,12 @@ static spell_type search_order_conj[] =
     SPELL_NO_SPELL,                        // end search
 };
 
-// Order for looking for summonings and self-enchants for the 3rd spell
-// slot.
-static spell_type search_order_third[] =
+// Pan lord self-enchantment / summoning spell list.
+static spell_type search_order_selfench[] =
 {
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
-    SPELL_DRAGON_CALL,
+    SPELL_SUMMON_DRAGON,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
@@ -106,29 +104,23 @@ static spell_type search_order_third[] =
     SPELL_CALL_IMP,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_MALIGN_GATEWAY,
-    SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
     // No Simulacrum: iffy for pghosts (picking up material components),
     // largely useless on Pan lords.
 };
 
-// Order for looking for enchants for the 4th & 5th spell slots.  If
-// this fails, go through conjurations.  Note: Dig must be in misc2
-// (5th) position to work.
+// Pan lord misc spell list.
 static spell_type search_order_misc[] =
 {
-    SPELL_TORNADO,
     SPELL_SHATTER,
-    SPELL_AGONY,
+    SPELL_SYMBOL_OF_TORMENT,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
-    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_MASS_CONFUSION,
     SPELL_ENGLACIATION,
     SPELL_DISPEL_UNDEAD,
-    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
@@ -281,7 +273,7 @@ void ghost_demon::init_random_demon()
             ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
         ADD_SPELL(one_chance_in(4) ? SPELL_SUMMON_DEMON
-                                   : RANDOM_ELEMENT(search_order_third));
+                                   : RANDOM_ELEMENT(search_order_selfench));
 
         if (coinflip())
         {
@@ -297,21 +289,6 @@ void ghost_demon::init_random_demon()
                                          1, SPELL_BLINK,
                                          1, SPELL_NO_SPELL,
                                          0));
-
-        // Convert the player spell indices to monster spell ones.
-        // Pan lords also get their Agony upgraded to Torment.
-        for (unsigned int i = 0; i < spells.size(); ++i)
-        {
-            spells[i].spell = translate_spell(spells[i].spell);
-            if (spells[i].spell == SPELL_AGONY)
-                spells[i].spell = SPELL_SYMBOL_OF_TORMENT;
-            if (spells[i].spell == SPELL_CONJURE_BALL_LIGHTNING
-                || spells[i].spell == SPELL_OZOCUBUS_REFRIGERATION
-                || spells[i].spell == SPELL_TORNADO)
-            {
-                spells[i].spell = SPELL_NO_SPELL;
-            }
-        }
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
