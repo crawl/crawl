@@ -55,6 +55,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "traps.h"
 #include "unicode.h"
 #include "view.h"
@@ -1642,6 +1643,8 @@ static bool _rod_spell(item_def& irod, bool check_range)
     make_hungry(food, true, true);
     irod.plus -= mana;
     you.wield_change = true;
+    if (item_is_quivered(irod))
+        you.redraw_quiver = true;
     you.turn_is_over = true;
 
     return true;
