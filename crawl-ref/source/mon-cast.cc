@@ -6059,10 +6059,16 @@ static int _noise_level(const monster* mons, spell_type spell,
 
 static unsigned int _speech_keys(vector<string>& key_list,
                                  const monster* mons, const bolt& pbolt,
-                                 spell_type spell, bool priest, bool wizard,
-                                 bool innate, bool targeted)
+                                 spell_type spell,
+                                 const unsigned short slot_flags,
+                                 bool targeted)
 {
     const string cast_str = " cast";
+
+    const bool wizard = slot_flags & MON_SPELL_WIZARD;
+    const bool priest = slot_flags & MON_SPELL_PRIEST;
+    const bool innate = slot_flags & MON_SPELL_INNATE_MASK;
+    const bool demon  = slot_flags & MON_SPELL_DEMONIC;
 
     const mon_body_shape shape = get_mon_shape(mons);
     const string    spell_name = spell_title(spell);
@@ -6091,7 +6097,7 @@ static unsigned int _speech_keys(vector<string>& key_list,
     }
     else if (priest)
         key_list.push_back(spell_name + " priest" + cast_str);
-    else if (mons_is_demon(mons->type))
+    else if (demon)
         key_list.push_back(spell_name + " demon" + cast_str);
 
     // Now try just the spell's name.
@@ -6149,7 +6155,7 @@ static unsigned int _speech_keys(vector<string>& key_list,
     }
     else if (priest)
         key_list.push_back("priest" + cast_str);
-    else if (mons_is_demon(mons->type))
+    else if (demon)
         key_list.push_back("demon" + cast_str);
 
     if (targeted)
@@ -6463,10 +6469,6 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     if (unseen && silent)
         return;
 
-    const bool priest = slot_flags & MON_SPELL_PRIEST;
-    const bool wizard = slot_flags & MON_SPELL_WIZARD;
-    const bool innate = slot_flags & MON_SPELL_INNATE_MASK;
-
     int noise = _noise_level(mons, actual_spell, silent, slot_flags);
 
     const unsigned int spell_flags = get_spell_flags(actual_spell);
@@ -6477,7 +6479,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     vector<string> key_list;
     unsigned int num_spell_keys =
         _speech_keys(key_list, mons, pbolt, actual_spell,
-                     priest, wizard, innate, targeted);
+                     slot_flags, targeted);
 
     string msg = _speech_message(key_list, num_spell_keys, silent, unseen);
 
