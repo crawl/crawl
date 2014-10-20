@@ -448,7 +448,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormNone);
 public:
-    static const FormNone instance;
+    static const FormNone &instance() { static FormNone inst; return inst; }
 
     /**
      * Get a string describing the form you're turning into. (If not the same
@@ -483,7 +483,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormSpider);
 public:
-    static const FormSpider instance;
+    static const FormSpider &instance() { static FormSpider inst; return inst; }
 };
 
 class FormBlade : public Form
@@ -512,7 +512,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormBlade);
 public:
-    static const FormBlade instance;
+    static const FormBlade &instance() { static FormBlade inst; return inst; }
 
     /**
      * Find the player's base unarmed damage in this form.
@@ -601,7 +601,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormStatue);
 public:
-    static const FormStatue instance;
+    static const FormStatue &instance() { static FormStatue inst; return inst; }
 
     /**
      * The AC bonus of the form, multiplied by 100 to match
@@ -708,7 +708,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormIce);
 public:
-    static const FormIce instance;
+    static const FormIce &instance() { static FormIce inst; return inst; }
 
     /**
      * Get a message for untransforming from this form.
@@ -759,7 +759,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormDragon);
 public:
-    static const FormDragon instance;
+    static const FormDragon &instance() { static FormDragon inst; return inst; }
 
     /**
      * Get an monster type corresponding to the transformation.
@@ -851,7 +851,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormLich);
 public:
-    static const FormLich instance;
+    static const FormLich &instance() { static FormLich inst; return inst; }
 
     /**
      * Get a message for transforming into this form.
@@ -899,7 +899,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormBat);
 public:
-    static const FormBat instance;
+    static const FormBat &instance() { static FormBat inst; return inst; }
 
     /**
      * Get an monster type corresponding to the transformation.
@@ -988,7 +988,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormPig);
 public:
-    static const FormPig instance;
+    static const FormPig &instance() { static FormPig inst; return inst; }
 };
 
 class FormAppendage : public Form
@@ -1017,7 +1017,11 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormAppendage);
 public:
-    static const FormAppendage instance;
+    static const FormAppendage &instance()
+    {
+        static FormAppendage inst;
+        return inst;
+    }
 
     string get_description(bool past_tense) const
     {
@@ -1084,7 +1088,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormTree);
 public:
-    static const FormTree instance;
+    static const FormTree &instance() { static FormTree inst; return inst; }
 
     /**
      * Get a message for untransforming from this form.
@@ -1118,7 +1122,11 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormPorcupine);
 public:
-    static const FormPorcupine instance;
+    static const FormPorcupine &instance()
+    {
+        static FormPorcupine inst;
+        return inst;
+    }
 };
 
 class FormWisp : public Form
@@ -1147,7 +1155,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormWisp);
 public:
-    static const FormWisp instance;
+    static const FormWisp &instance() { static FormWisp inst; return inst; }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1177,7 +1185,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormJelly);
 public:
-    static const FormJelly instance;
+    static const FormJelly &instance() { static FormJelly inst; return inst; }
 };
 #endif
 
@@ -1207,7 +1215,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormFungus);
 public:
-    static const FormFungus instance;
+    static const FormFungus &instance() { static FormFungus inst; return inst; }
 
     /**
      * Can the player wear the given item while in this form?
@@ -1257,7 +1265,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormShadow);
 public:
-    static const FormShadow instance;
+    static const FormShadow &instance() { static FormShadow inst; return inst; }
 
     /**
      * Get a message for untransforming from this form.
@@ -1307,7 +1315,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(FormHydra);
 public:
-    static const FormHydra instance;
+    static const FormHydra &instance() { static FormHydra inst; return inst; }
 
     /**
      * Get a string describing the form you're turning into.
@@ -1352,54 +1360,30 @@ public:
 
 };
 
-// Static const members.
-const FormNone FormNone::instance = FormNone();
-const FormSpider FormSpider::instance = FormSpider();
-const FormBlade FormBlade::instance = FormBlade();
-const FormStatue FormStatue::instance = FormStatue();
-
-const FormIce FormIce::instance = FormIce();
-const FormLich FormLich::instance = FormLich();
-const FormDragon FormDragon::instance = FormDragon();
-const FormBat FormBat::instance = FormBat();
-
-const FormPig FormPig::instance = FormPig();
-const FormAppendage FormAppendage::instance = FormAppendage();
-const FormTree FormTree::instance = FormTree();
-const FormPorcupine FormPorcupine::instance = FormPorcupine();
-
-const FormWisp FormWisp::instance = FormWisp();
-#if TAG_MAJOR_VERSION == 34
-const FormJelly FormJelly::instance = FormJelly();
-#endif
-const FormFungus FormFungus::instance = FormFungus();
-const FormShadow FormShadow::instance = FormShadow();
-const FormHydra FormHydra::instance = FormHydra();
-
 static const Form* forms[] =
 {
-    &FormNone::instance,
-    &FormSpider::instance,
-    &FormBlade::instance,
-    &FormStatue::instance,
+    &FormNone::instance(),
+    &FormSpider::instance(),
+    &FormBlade::instance(),
+    &FormStatue::instance(),
 
-    &FormIce::instance,
-    &FormDragon::instance,
-    &FormLich::instance,
-    &FormBat::instance,
+    &FormIce::instance(),
+    &FormDragon::instance(),
+    &FormLich::instance(),
+    &FormBat::instance(),
 
-    &FormPig::instance,
-    &FormAppendage::instance,
-    &FormTree::instance,
-    &FormPorcupine::instance,
+    &FormPig::instance(),
+    &FormAppendage::instance(),
+    &FormTree::instance(),
+    &FormPorcupine::instance(),
 
-    &FormWisp::instance,
+    &FormWisp::instance(),
 #if TAG_MAJOR_VERSION == 34
-    &FormJelly::instance,
+    &FormJelly::instance(),
 #endif
-    &FormFungus::instance,
-    &FormShadow::instance,
-    &FormHydra::instance,
+    &FormFungus::instance(),
+    &FormShadow::instance(),
+    &FormHydra::instance(),
 };
 
 const Form* get_form(transformation_type form)
