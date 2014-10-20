@@ -1377,6 +1377,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
     case SPELL_AVATAR_SONG:
+    case SPELL_REPEL_MISSILES:
+    case SPELL_DEFLECT_MISSILES:
         return true;
     default:
         if (check_validity)
@@ -6048,6 +6050,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AVATAR_SONG:
         _siren_sing(mons, true);
         return;
+
+    case SPELL_REPEL_MISSILES:
+        simple_monster_message(mons, " begins repelling missiles!");
+        mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES));
+        return;
+
+    case SPELL_DEFLECT_MISSILES:
+        simple_monster_message(mons, " begins deflecting missiles!");
+        mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7450,6 +7462,13 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DRACONIAN_BREATH:
         return draco_type_to_breath(draco_or_demonspawn_subspecies(mon)) == SPELL_NO_SPELL;
+
+    case SPELL_REPEL_MISSILES:
+        return mon->has_ench(ENCH_REPEL_MISSILES);
+
+    case SPELL_DEFLECT_MISSILES:
+        return mon->has_ench(ENCH_DEFLECT_MISSILES);
+>>>>>>> Give M_DEFLECT_MISSILES the M_SHROUD et al. treatment.
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

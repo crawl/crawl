@@ -130,6 +130,7 @@ enum monster_info_flags
     MB_SLOW_MOVEMENT,
     MB_LIGHTLY_DRAINED,
     MB_HEAVILY_DRAINED,
+    MB_REPEL_MSL,
     NUM_MB_FLAGS
 };
 

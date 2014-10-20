@@ -1861,6 +1861,8 @@ enum enchant_type
     ENCH_CORROSION,
     ENCH_GOLD_LUST,
     ENCH_DRAINED,
+    ENCH_REPEL_MISSILES,
+    ENCH_DEFLECT_MISSILES,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

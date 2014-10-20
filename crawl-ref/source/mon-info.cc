@@ -206,6 +206,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
+    case ENCH_REPEL_MISSILES:
+        return MB_REPEL_MSL;
+    case ENCH_DEFLECT_MISSILES:
+        return MB_DEFLECT_MSL;
     default:
         return NUM_MB_FLAGS;
     }
@@ -656,10 +660,6 @@ monster_info::monster_info(const monster* m, int milev)
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
     }
-
-    // fake enchantment (permanent)
-    if (mons_class_flag(type, M_DEFLECT_MISSILES))
-        mb.set(MB_DEFLECT_MSL);
 
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
@@ -1488,6 +1488,8 @@ vector<string> monster_info::attributes() const
         v.push_back("paralysed");
     if (is(MB_BLEEDING))
         v.push_back("bleeding");
+    if (is(MB_REPEL_MSL))
+        v.push_back("repelling missiles");
     if (is(MB_DEFLECT_MSL))
         v.push_back("deflecting missiles");
     if (is(MB_FEAR_INSPIRING))

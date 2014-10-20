@@ -4843,6 +4843,7 @@ void bolt::affect_monster(monster* mon)
     // 4.0 to-hit system (which had very little love for monsters).
     if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, defl, r))
     {
+        const bool deflected = _test_beam_hit(beam_hit, rand_ev, is_beam, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
@@ -4868,6 +4869,8 @@ void bolt::affect_monster(monster* mon)
                             << mon->name(DESC_THE) << '.' << endl;
             }
         }
+        if (deflected)
+            mon->ablate_deflection();
         return;
     }
 

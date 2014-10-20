@@ -1001,6 +1001,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " seems less drained.");
         break;
 
+    case ENCH_REPEL_MISSILES:
+        if (!quiet)
+            simple_monster_message(this, " is no longer repelling missiles.");
+        break;
+
+    case ENCH_DEFLECT_MISSILES:
+        if (!quiet)
+            simple_monster_message(this, " is no longer deflecting missiles.");
+        break;
+
     default:
         break;
     }
@@ -2360,7 +2370,8 @@ static const char *enchant_names[] =
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
-    "corrosion", "gold_lust", "drained", "buggy",
+    "corrosion", "gold_lust", "drained", "repel missiles",
+    "deflect missiles", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
