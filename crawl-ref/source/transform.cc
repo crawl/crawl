@@ -446,9 +446,7 @@ private:
            MONS_PLAYER)       // equivalent monster
     { };
 
-    // Deleted
-    FormNone(const FormNone &);
-    FormNone &operator=(const FormNone &);
+    DISALLOW_COPY_AND_ASSIGN(FormNone);
 public:
     static const FormNone instance;
 
@@ -483,9 +481,7 @@ private:
            MONS_SPIDER)       // equivalent monster
     { };
 
-    // Deleted
-    FormSpider(const FormSpider &);
-    FormSpider &operator=(const FormSpider &);
+    DISALLOW_COPY_AND_ASSIGN(FormSpider);
 public:
     static const FormSpider instance;
 };
@@ -514,9 +510,7 @@ private:
            MONS_PLAYER)       // equivalent monster
     { };
 
-    // Deleted
-    FormBlade(const FormBlade &);
-    FormBlade &operator=(const FormBlade &);
+    DISALLOW_COPY_AND_ASSIGN(FormBlade);
 public:
     static const FormBlade instance;
 
@@ -605,9 +599,7 @@ private:
            MONS_STATUE)       // equivalent monster
     { };
 
-    // Deleted
-    FormStatue(const FormStatue &);
-    FormStatue &operator=(const FormStatue &);
+    DISALLOW_COPY_AND_ASSIGN(FormStatue);
 public:
     static const FormStatue instance;
 
@@ -714,9 +706,7 @@ private:
            MONS_ICE_BEAST)       // equivalent monster
     { };
 
-    // Deleted
-    FormIce(const FormIce &);
-    FormIce &operator=(const FormIce &);
+    DISALLOW_COPY_AND_ASSIGN(FormIce);
 public:
     static const FormIce instance;
 
@@ -767,9 +757,7 @@ private:
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
-    // Deleted
-    FormDragon(const FormDragon &);
-    FormDragon &operator=(const FormDragon &);
+    DISALLOW_COPY_AND_ASSIGN(FormDragon);
 public:
     static const FormDragon instance;
 
@@ -861,9 +849,7 @@ private:
            MONS_LICH)       // equivalent monster
     { };
 
-    // Deleted
-    FormLich(const FormLich &);
-    FormLich &operator=(const FormLich &);
+    DISALLOW_COPY_AND_ASSIGN(FormLich);
 public:
     static const FormLich instance;
 
@@ -911,9 +897,7 @@ private:
            MONS_PROGRAM_BUG)       // equivalent monster
     { };
 
-    // Deleted
-    FormBat(const FormBat &);
-    FormBat &operator=(const FormBat &);
+    DISALLOW_COPY_AND_ASSIGN(FormBat);
 public:
     static const FormBat instance;
 
@@ -1002,9 +986,7 @@ private:
            MONS_HOG)       // equivalent monster
     { };
 
-    // Deleted
-    FormPig(const FormPig &);
-    FormPig &operator=(const FormPig &);
+    DISALLOW_COPY_AND_ASSIGN(FormPig);
 public:
     static const FormPig instance;
 };
@@ -1033,9 +1015,7 @@ private:
            MONS_PLAYER)       // equivalent monster
     { };
 
-    // Deleted
-    FormAppendage(const FormAppendage &);
-    FormAppendage &operator=(const FormAppendage &);
+    DISALLOW_COPY_AND_ASSIGN(FormAppendage);
 public:
     static const FormAppendage instance;
 
@@ -1102,9 +1082,7 @@ private:
            MONS_ANIMATED_TREE)       // equivalent monster
     { };
 
-    // Deleted
-    FormTree(const FormTree &);
-    FormTree &operator=(const FormTree &);
+    DISALLOW_COPY_AND_ASSIGN(FormTree);
 public:
     static const FormTree instance;
 
@@ -1138,9 +1116,7 @@ private:
            MONS_PORCUPINE)       // equivalent monster
     { };
 
-    // Deleted
-    FormPorcupine(const FormPorcupine &);
-    FormPorcupine &operator=(const FormPorcupine &);
+    DISALLOW_COPY_AND_ASSIGN(FormPorcupine);
 public:
     static const FormPorcupine instance;
 };
@@ -1169,9 +1145,7 @@ private:
            MONS_INSUBSTANTIAL_WISP)       // equivalent monster
     { };
 
-    // Deleted
-    FormWisp(const FormWisp &);
-    FormWisp &operator=(const FormWisp &);
+    DISALLOW_COPY_AND_ASSIGN(FormWisp);
 public:
     static const FormWisp instance;
 };
@@ -1201,9 +1175,7 @@ private:
            MONS_JELLY)       // equivalent monster
     { };
 
-    // Deleted
-    FormJelly(const FormJelly &);
-    FormJelly &operator=(const FormJelly &);
+    DISALLOW_COPY_AND_ASSIGN(FormJelly);
 public:
     static const FormJelly instance;
 };
@@ -1233,9 +1205,7 @@ private:
            MONS_WANDERING_MUSHROOM)       // equivalent monster
     { };
 
-    // Deleted
-    FormFungus(const FormFungus &);
-    FormFungus &operator=(const FormFungus &);
+    DISALLOW_COPY_AND_ASSIGN(FormFungus);
 public:
     static const FormFungus instance;
 
@@ -1285,9 +1255,7 @@ private:
            MONS_PLAYER_SHADOW)       // equivalent monster
     { };
 
-    // Deleted
-    FormShadow(const FormShadow &);
-    FormShadow &operator=(const FormShadow &);
+    DISALLOW_COPY_AND_ASSIGN(FormShadow);
 public:
     static const FormShadow instance;
 
@@ -1337,9 +1305,7 @@ private:
            MONS_HYDRA)       // equivalent monster
     { };
 
-    // Deleted
-    FormHydra(const FormHydra &);
-    FormHydra &operator=(const FormHydra &);
+    DISALLOW_COPY_AND_ASSIGN(FormHydra);
 public:
     static const FormHydra instance;
 
