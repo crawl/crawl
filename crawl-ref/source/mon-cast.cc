@@ -6566,6 +6566,9 @@ static mid_t _get_tentacle_throw_victim(const monster &mons)
     mid_t throw_choice = 0;
     int highest_dur = -1;
 
+    if (!mons.constricting)
+        return throw_choice;
+
     for (actor::constricting_t::iterator co = mons.constricting->begin();
          co != mons.constricting->end(); ++co)
     {
