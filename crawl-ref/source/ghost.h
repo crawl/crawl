@@ -71,7 +71,7 @@ private:
     void ugly_thing_add_resistance(bool very_ugly,
                                    attack_flavour u_att_flav);
 
-    void _apply_chimera_part(monster* mon, monster_type part, int partnum);
+    bool _apply_chimera_part(monster* mon, monster_type part, int partnum);
 };
 
 bool debug_check_ghosts();
