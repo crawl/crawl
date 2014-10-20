@@ -7448,6 +7448,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_AVATAR_SONG:
         return !_should_siren_sing(mon, true);
 
+    case SPELL_DRACONIAN_BREATH:
+        return draco_type_to_breath(draco_or_demonspawn_subspecies(mon)) == SPELL_NO_SPELL;
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
