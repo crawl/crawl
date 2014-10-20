@@ -6604,9 +6604,6 @@ static mid_t _get_tentacle_throw_victim(const monster &mons)
  */
 static bool _mons_consider_tentacle_throwing(const monster &mons)
 {
-    if (!mons.is_constricting())
-        return false;
-
     const mid_t throw_choice = _get_tentacle_throw_victim(mons);
     actor* victim = actor_by_mid(throw_choice);
     if (!victim)
