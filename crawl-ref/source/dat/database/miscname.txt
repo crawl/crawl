@@ -211,6 +211,8 @@ pill bug
 
 slug
 
+wumpus
+
 yak
 %%%%
 # random uselessness: "You hear XXX."
