@@ -120,6 +120,8 @@ enum tag_minor_version
     TAG_MINOR_DISPLAY_MON_AC_EV,   // Marshall & unmarshall ac/ev in monster_info
     TAG_MINOR_PLACE_UNPACK,        // Some packed places are level_ids.
     TAG_MINOR_NO_JUMP,             // Removal of jump-attack.
+    TAG_MINOR_MONSTER_SPELL_SLOTS, // Introduce monster spell slot flags/freqs
+    TAG_MINOR_ARB_SPELL_SLOTS,     // Arbitrary number of monster spell slots.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

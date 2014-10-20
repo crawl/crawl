@@ -8,8 +8,7 @@
 // constants.
 const uint64_t M_NO_FLAGS = 0;
 
-// any non-physical-attack powers,
-const uint64_t M_SPELLCASTER       = 1<< 0;
+//1<< 0;
 
 // monster is a wizard (hated by Trog; affected by silence)
 const uint64_t M_ACTUAL_SPELLS     = 1<< 1;
@@ -92,12 +91,9 @@ const uint64_t M_FAST_REGEN        = 1<<26;
 // cannot regenerate
 const uint64_t M_NO_REGEN          = 1<<27;
 
-// cannot cast spells when silenced; even though it's not a priest or
-// wizard
-const uint64_t M_SPELL_NO_SILENT   = 1<<28;
+                                   //1<<28;
 
-// casting makes noise even if an innate ability (no effect on silence)
-const uint64_t M_NOISY_SPELLS      = 1<<29;
+                                   //1<<29;
 
 // boneless corpses
 const uint64_t M_NO_SKELETON       = 1<<30;
@@ -114,8 +110,7 @@ const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
 // not a valid polymorph target (but can be polymorphed)
 const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
 
-// has special abilities coded as spells which are entirely non-magical
-const uint64_t M_FAKE_SPELLS       = (uint64_t)1<<35;
+                                   //(uint64_t)1<<35;
 
 // always leaves a corpse
 const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
@@ -214,14 +209,9 @@ const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
 const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
 const uint64_t MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER;
 
-    // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally spellcasters (in vaults).
-const uint64_t MF_SPELLCASTER        = BIT(23);
-const uint64_t MF_ACTUAL_SPELLS      = BIT(24); // Can use spells and is a spellcaster for
-                                     // Trog purposes.
-const uint64_t MF_PRIEST             = BIT(25); // Is a priest (divine spells)
-                                     // for the conduct.
-const uint64_t MF_SPELL_MASK         = MF_SPELLCASTER|MF_ACTUAL_SPELLS|MF_PRIEST;
+                                     //BIT(23);
+                                     //BIT(24);
+                                     //BIT(25);
 
 const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
 

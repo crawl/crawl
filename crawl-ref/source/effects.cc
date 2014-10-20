@@ -571,6 +571,100 @@ void direct_effect(monster* source, spell_type spell,
 
         break;
 
+    case SPELL_FLAY:
+    {
+        bool was_flayed = false;
+        if (defender->is_player())
+        {
+            damage_taken = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
+            damage_taken = min(damage_taken,
+                               max(0, you.hp - 25 - random2(15)));
+            if (damage_taken < 10)
+                return;
+
+            if (you.duration[DUR_FLAYED])
+                was_flayed = true;
+
+            you.duration[DUR_FLAYED] = max(you.duration[DUR_FLAYED],
+                                           55 + random2(66));
+        }
+        else
+        {
+            monster* mon = defender->as_monster();
+
+            damage_taken = (6 + (mon->hit_points * 18 / mon->max_hit_points))
+                           * mon->max_hit_points / 100;
+            damage_taken = min(damage_taken,
+                               max(0, mon->hit_points - 25 - random2(15)));
+            if (damage_taken < 10)
+                return;
+
+            if (mon->has_ench(ENCH_FLAYED))
+            {
+                was_flayed = true;
+                mon_enchant flayed = mon->get_ench(ENCH_FLAYED);
+                flayed.duration = min(flayed.duration + 30 + random2(50), 150);
+                mon->update_ench(flayed);
+            }
+            else
+            {
+                mon_enchant flayed(ENCH_FLAYED, 1, source, 30 + random2(50));
+                mon->add_ench(flayed);
+            }
+        }
+
+        if (you.can_see(defender))
+        {
+            if (was_flayed)
+            {
+                mprf("Terrible wounds spread across more of %s body!",
+                     defender->name(DESC_ITS).c_str());
+            }
+            else
+            {
+                mprf("Terrible wounds open up all over %s body!",
+                     defender->name(DESC_ITS).c_str());
+            }
+        }
+
+        if (defender->is_player())
+        {
+            // Bypassing ::hurt so that flay damage can ignore guardian spirit
+            ouch(damage_taken, source->mindex(), KILLED_BY_MONSTER,
+                 "flay_damage", you.can_see(source));
+        }
+        else
+            defender->hurt(source, damage_taken, BEAM_NONE, true);
+        defender->props["flay_damage"].get_int() += damage_taken;
+
+        vector<coord_def> old_blood;
+        CrawlVector &new_blood = defender->props["flay_blood"].get_vector();
+
+        // Find current blood spatters
+        for (radius_iterator ri(defender->pos(), LOS_SOLID); ri; ++ri)
+        {
+            if (env.pgrid(*ri) & FPROP_BLOODY)
+                old_blood.push_back(*ri);
+        }
+
+        blood_spray(defender->pos(), defender->type, 20);
+
+        // Compute and store new blood spatters
+        unsigned int i = 0;
+        for (radius_iterator ri(defender->pos(), LOS_SOLID); ri; ++ri)
+        {
+            if (env.pgrid(*ri) & FPROP_BLOODY)
+            {
+                if (i < old_blood.size() && old_blood[i] == *ri)
+                    ++i;
+                else
+                    new_blood.push_back(*ri);
+            }
+        }
+        damage_taken = 0;
+        break;
+    }
+
     default:
         die("unknown direct_effect spell: %d", spell);
     }

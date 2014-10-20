@@ -664,6 +664,7 @@ public:
                  bool blink = false) const;
     string no_tele_reason(bool calc_unid = true, bool blink = false) const;
     bool no_tele_print_reason(bool calc_unid = true, bool blink = false) const;
+    bool antimagic_susceptible() const;
 
     bool gourmand(bool calc_unid = true, bool items = true) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;

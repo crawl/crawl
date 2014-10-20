@@ -50,6 +50,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -795,7 +796,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
             {
                 if (one_chance_in(3))
                     effect = ZIN_BLIND;
-                else if (mons_antimagic_affected(mon))
+                else if (mon->antimagic_susceptible())
                     effect = ZIN_ANTIMAGIC;
                 else
                     effect = ZIN_SILVER_CORONA;
@@ -1806,9 +1807,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
-    // If the original monster type has melee, spellcasting or priestly
-    // abilities, make sure its spectral thing has them as well.
-    mon->flags |= orig.flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+    // If the original monster type has melee abilities, make sure
+    // its spectral thing has them as well.
+    mon->flags |= orig.flags & MF_MELEE_MASK;
     mon->spells = orig.spells;
 
     name_zombie(mon, &orig);
@@ -3158,6 +3159,13 @@ void fedhas_evolve_flora()
 
     if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         plant->add_ench(ENCH_EXPLODING);
+    else if (plant->type == MONS_OKLOB_PLANT)
+    {
+        plant->spells.clear();
+        plant->spells.push_back(mon_spell_slot());
+        plant->spells[0].spell = SPELL_SPIT_ACID;
+        plant->spells[0].flags = MON_SPELL_NATURAL;
+    }
 
     plant->set_hit_dice(plant->get_experience_level()
                         + you.skill_rdiv(SK_INVOCATIONS));
@@ -3687,8 +3695,7 @@ monster* shadow_monster(bool equip)
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
     mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                    | MF_WAS_IN_VIEW | MF_HARD_RESET
-                    | MF_ACTUAL_SPELLS;
+                    | MF_WAS_IN_VIEW | MF_HARD_RESET;
     mon->hit_points = you.hp;
     mon->set_hit_dice(min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
@@ -3826,7 +3833,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     beem.target = target;
     mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
          mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, shadow_spell, false, false);
+    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
 }
@@ -5823,7 +5830,7 @@ void ru_do_retribution(monster* mons, int damage)
         + damage - (2 * mons->get_hit_dice()));
     const actor* act = &you;
 
-    if (power > 50 && (mons->can_use_spells() || mons->is_actual_spellcaster()))
+    if (power > 50 && (mons->has_spells() || mons->is_actual_spellcaster()))
     {
         simple_monster_message(mons, " is muted in retribution by your aura!",
             MSGCH_GOD);
@@ -6064,7 +6071,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     switch (effect)
     {
         case 0:
-            if (mons->can_use_spells() || mons->is_actual_spellcaster())
+            if (mons->has_spells() || mons->is_actual_spellcaster())
             {
                 simple_monster_message(mons, " is muted by your wave of power!");
                 mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));

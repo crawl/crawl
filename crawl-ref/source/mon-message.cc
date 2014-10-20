@@ -13,6 +13,7 @@
 #include "libutil.h"
 #include "monster.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "view.h"
 
 // Note that this function *completely* blocks messaging for monsters

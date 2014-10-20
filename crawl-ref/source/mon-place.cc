@@ -35,6 +35,7 @@
 #include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -2007,11 +2008,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     // Turn off all melee ability flags except dual-wielding.
     mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
-
-    // Turn off all spellcasting and priestly ability flags.
-    // Hack - kraken get to keep their spell-like ability.
-    if (mon->base_monster != MONS_KRAKEN)
-        mon->flags   &= ~MF_SPELL_MASK;
 
     // Turn off regeneration if the base monster cannot regenerate.
     // This is needed for e.g. spectral things of non-regenerating

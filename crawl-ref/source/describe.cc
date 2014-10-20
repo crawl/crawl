@@ -51,6 +51,7 @@
 #include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -3186,41 +3187,26 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
-static string _monster_spells_description(const monster_info& mi)
+static string _monster_spell_type_description(const monster_info& mi,
+                                              mon_spell_slot_flags flags,
+                                              string set_name,
+                                              string desc_singular,
+                                              string desc_plural)
 {
-    // Show a generic message for pan lords, since they're secret.
-    if (mi.type == MONS_PANDEMONIUM_LORD)
-        return "It may possess any of a vast number of diabolical powers.\n";
-
-    // Show monster spells and spell-like abilities.
-    if (!mi.is_spellcaster() || !mi.has_spells())
-        return "";
-
-    unique_books books = get_unique_spells(mi);
+    unique_books books = get_unique_spells(mi, flags);
     const size_t num_books = books.size();
 
-    const bool caster  = mi.is_actual_spellcaster();
-    const bool priest  = mi.is_priest();
-    const bool natural = mi.is_natural_caster();
-    string adj = priest ? "divine" : natural ? "special" : "magical";
+    if (num_books == 0)
+        return "";
 
     ostringstream result;
+
     result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
-    // cjo: the division here gets really arbitrary. For example, wretched
-    // stars cast mystic blast, but are not flagged with M_ACTUAL_SPELLS.
-    // Possibly these should be combined.
-    if (caster && num_books > 1)
-        result << " has mastered one of the following spellbooks:\n";
-    else if (caster)
-        result << " has mastered the following spells: ";
-    else if (num_books == 1)
-        result << " possesses the following " << adj << " abilities: ";
+    if (num_books > 1)
+        result << desc_plural;
     else
-    {
-        result << " possesses one of the following sets of " << adj
-               << " abilities: \n";
-    }
+        result << desc_singular;
 
     // Loop through books and display spells/abilities for each of them
     for (size_t i = 0; i < num_books; ++i)
@@ -3229,7 +3215,7 @@ static string _monster_spells_description(const monster_info& mi)
 
         // Display spells for this book
         if (num_books > 1)
-            result << (caster ? " Book " : " Set ") << i+1 << ": ";
+            result << set_name << i+1 << ": ";
 
         for (size_t j = 0; j < book_spells.size(); ++j)
         {
@@ -3240,6 +3226,42 @@ static string _monster_spells_description(const monster_info& mi)
         }
         result << "\n";
     }
+
+    return result.str();
+}
+
+static string _monster_spells_description(const monster_info& mi)
+{
+    // Show a generic message for pan lords, since they're secret.
+    if (mi.type == MONS_PANDEMONIUM_LORD)
+        return "It may possess any of a vast number of diabolical powers.\n";
+
+    // Show monster spells and spell-like abilities.
+    if (!mi.has_spells())
+        return "";
+
+    ostringstream result;
+
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_NATURAL, "Set",
+        " possesses the following special abilities: ",
+        " possesses one of the following sets of special abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_MAGICAL, "Set",
+        " possesses the following magical abilities: ",
+        " possesses one of the following sets of magical abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_DEMONIC, "Set",
+        " possesses the following demonic abilities: ",
+        " possesses one of the following sets of demonic abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_PRIEST, "Set",
+        " possesses the following divine abilities: ",
+        " possesses one of the following sets of divine abilities:\n");
+    result << _monster_spell_type_description(
+        mi, MON_SPELL_WIZARD, "Book",
+        " has mastered the following spells: ",
+        " has mastered one of the following spellbooks:\n");
 
     return result.str();
 }
@@ -3871,27 +3893,35 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                                                  "; ", "; ");
     }
 
-    if (mons.can_use_spells())
+    const monster_spells &hspell_pass = mons.spells;
+    bool found_spell = false;
+
+    for (unsigned int i = 0; i < hspell_pass.size(); ++i)
     {
-        const monster_spells &hspell_pass = mons.spells;
-        bool found_spell = false;
-
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (!found_spell)
         {
-            if (hspell_pass[i] != SPELL_NO_SPELL)
-            {
-                if (!found_spell)
-                {
-                    inf.body << "\n\nMonster Spells:\n";
-                    found_spell = true;
-                }
-
-                inf.body << "    " << i << ": "
-                         << spell_title(hspell_pass[i])
-                         << " (" << static_cast<int>(hspell_pass[i])
-                         << ")";
-            }
+            inf.body << "\n\nMonster Spells:\n";
+            found_spell = true;
         }
+
+        inf.body << "    " << i << ": "
+                 << spell_title(hspell_pass[i].spell)
+                 << " (";
+        if (hspell_pass[i].flags & MON_SPELL_EMERGENCY)
+            inf.body << "emergency, ";
+        if (hspell_pass[i].flags & MON_SPELL_NATURAL)
+            inf.body << "natural, ";
+        if (hspell_pass[i].flags & MON_SPELL_DEMONIC)
+            inf.body << "demonic, ";
+        if (hspell_pass[i].flags & MON_SPELL_MAGICAL)
+            inf.body << "magical, ";
+        if (hspell_pass[i].flags & MON_SPELL_WIZARD)
+            inf.body << "wizard, ";
+        if (hspell_pass[i].flags & MON_SPELL_PRIEST)
+            inf.body << "priest, ";
+        if (hspell_pass[i].flags & MON_SPELL_BREATH)
+            inf.body << "breath, ";
+        inf.body << (int) hspell_pass[i].freq << ")";
     }
 
     bool has_item = false;

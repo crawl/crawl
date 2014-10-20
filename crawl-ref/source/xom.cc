@@ -44,6 +44,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"

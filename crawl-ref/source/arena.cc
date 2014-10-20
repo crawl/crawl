@@ -28,6 +28,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mgen_data.h"
 #include "ng-init.h"
 #include "options.h"
@@ -141,13 +142,16 @@ namespace arena
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        for (monster_spells::iterator it = spells.begin();
+             it != spells.end(); it++)
         {
-            spell_type sp = spells[i];
-            if (no_summons && spell_typematch(sp, SPTYP_SUMMONING))
-                spells[i] = SPELL_NO_SPELL;
-            else if (no_animate && sp == SPELL_ANIMATE_DEAD)
-                spells[i] = SPELL_NO_SPELL;
+            spell_type sp = it->spell;
+            if (no_summons && spell_typematch(sp, SPTYP_SUMMONING)
+                || no_animate && sp == SPELL_ANIMATE_DEAD)
+            {
+                spells.erase(it);
+                it = spells.begin() - 1;
+            }
         }
     }
 
@@ -168,7 +172,7 @@ namespace arena
 
         vector<int> items;
 
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        for (unsigned int i = 0; i < NUM_MONSTER_SLOTS; i++)
             if (mon->inv[i] != NON_ITEM)
                 items.push_back(mon->inv[i]);
 

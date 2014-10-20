@@ -1060,8 +1060,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
                                        int dam)
 {
     // Only cause miscasts if the target has magic to disrupt.
-    if ((defender->is_player()
-         || mons_antimagic_affected(defender->as_monster()))
+    if (defender->antimagic_susceptible()
         && !mondied)
     {
         int school = SPTYP_NONE;
@@ -1073,8 +1072,8 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
         else
         {
             const monster* mons = defender->as_monster();
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-                school |= get_spell_disciplines(mons->spells[i]);
+            for (unsigned i = 0; i < mons->spells.size(); i++)
+                school |= get_spell_disciplines(mons->spells[i].spell);
         }
         if (school != SPTYP_NONE)
         {
