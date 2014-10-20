@@ -1159,10 +1159,12 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
-       if (!(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5)))
+        if (!(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5)))
+        {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-             (you_worship(GOD_NO_GOD))
+                (you_worship(GOD_NO_GOD))
                 ? "strange " : "");
+        }
         else if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");
         break;
