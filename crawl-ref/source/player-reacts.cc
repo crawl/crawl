@@ -306,9 +306,7 @@ static int _current_horror_level()
         const monster* const mon = monster_at(*ri);
 
         if (mon == NULL
-            || mons_is_projectile(mon->type)
-            || mon->friendly()
-            || mon->good_neutral()
+            || mons_aligned(mon, &you)
             || mons_is_firewood(mon)
             || !you.can_see(mon))
         {
