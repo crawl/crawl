@@ -3475,35 +3475,6 @@ bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
     return false;
 }
 
-static bool _mons_has_ranged_ability(const monster* mon)
-{
-    // [ds] FIXME: Get rid of special abilities and remove this.
-    switch (mon->type)
-    {
-    case MONS_ACID_BLOB:
-    case MONS_BURNING_BUSH:
-    case MONS_DRACONIAN:
-    case MONS_FIRE_DRAGON:
-    case MONS_ICE_DRAGON:
-    case MONS_HELL_HOUND:
-    case MONS_LINDWURM:
-    case MONS_FIRE_DRAKE:
-    case MONS_XTAHUA:
-    case MONS_FIRE_CRAB:
-    case MONS_APOCALYPSE_CRAB:
-    case MONS_GHOST_CRAB:
-    case MONS_ELECTRIC_EEL:
-    case MONS_LAVA_SNAKE:
-    case MONS_MANTICORE:
-    case MONS_OKLOB_PLANT:
-    case MONS_OKLOB_SAPLING:
-    case MONS_LIGHTNING_SPIRE:
-        return true;
-    default:
-        return false;
-    }
-}
-
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
@@ -3525,7 +3496,7 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
 
 bool mons_has_ranged_attack(const monster* mon)
 {
-    return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
+    return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(mon);
 }
 
@@ -3598,10 +3569,9 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
 
 bool mons_has_known_ranged_attack(const monster* mon)
 {
-    return _mons_has_ranged_ability(mon)
-        || mon->flags & MF_SEEN_RANGED
-        || _mons_starts_with_ranged_weapon(mon->type)
-            && !(mon->flags & MF_KNOWN_SHIFTER);
+    return mon->flags & MF_SEEN_RANGED
+           || _mons_starts_with_ranged_weapon(mon->type)
+              && !(mon->flags & MF_KNOWN_SHIFTER);
 }
 
 bool mons_can_attack(const monster* mon)
