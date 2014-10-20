@@ -1990,6 +1990,15 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->type         = ztype;
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
+
+    // Zombies and such can't cast spells, except they should still be
+    // able to make tentacles!
+    monster_spells oldspells = mon->spells;
+    mon->spells.clear();
+    for (size_t i = 0; i < oldspells.size(); i++)
+        if (oldspells[i].spell == SPELL_CREATE_TENTACLES)
+            mon->spells.push_back(oldspells[i]);
+
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
     if (mons_is_job(ztype) || mons_is_ghost_demon(ztype))
