@@ -2298,7 +2298,14 @@ static bool _should_recall(monster* caller)
         return false;
 }
 
-unsigned short mons_word_of_recall(monster* mons, unsigned short recall_target)
+/**
+ * Recall a bunch of monsters!
+ *
+ * @param mons[in] the monster doing the recall
+ * @param recall_target the max number of monsters to recall.
+ * @returns whether anything was recalled.
+ */
+bool mons_word_of_recall(monster* mons, int recall_target)
 {
     unsigned short num_recalled = 0;
     vector<monster* > mon_list;

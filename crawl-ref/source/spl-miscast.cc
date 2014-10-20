@@ -3115,7 +3115,7 @@ void MiscastEffect::_zot()
             invalidate_agrid(true);
             break;
         case 13:
-            if (mons_word_of_recall(NULL, 2 + random2(3)) == 0)
+            if (!mons_word_of_recall(NULL, 2 + random2(3)))
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
