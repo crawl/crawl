@@ -5068,6 +5068,21 @@ void unmarshallMonster(reader &th, monster& m)
                            mons_class_flag(m.type, M_PRIEST)
 #endif
                          );
+#if TAG_MAJOR_VERSION == 34
+    monster_spells oldspells = m.spells;
+    m.spells.clear();
+    for (size_t i = 0; i < oldspells.size(); i++)
+    {
+        if (!(m.type == MONS_AZRAEL
+              && oldspells[i].spell == SPELL_DRACONIAN_BREATH)
+            && !(mons_is_zombified(&m)
+                 && !mons_enslaved_soul(&m)
+                 && oldspells[i].spell != SPELL_CREATE_TENTACLES))
+        {
+            m.spells.push_back(oldspells[i]);
+        }
+    }
+#endif
     }
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
