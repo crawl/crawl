@@ -52,6 +52,12 @@ This spell causes the caster to continuously abjure nearby hostile summoned
 creatures for a short while, rapidly sending each of them back where they came
 from.
 %%%%
+Avatar Song spell
+
+Sings a powerfully haunting song; in addition to making nearby victims
+unwilling to move away from the singer, it calls forth drowned souls from
+any nearby bodies of water.
+%%%%
 Awaken Forest spell
 
 This spell allows the caster to give some very limited motility to surrounding
@@ -67,6 +73,11 @@ Banishment spell
 
 <Banish ability>
 %%%%
+Battlecry spell
+
+Inspires nearby allies of the caster to fight more aggressively, increasing
+the strength of their blows and the power of their shots.
+%%%%
 Beastly Appendage spell
 
 This spell makes the caster temporarily replace one or a pair of appendages
@@ -76,6 +87,11 @@ enough to meld armour.
 Berserker Rage spell
 
 <Berserk ability>
+%%%%
+Berserk Other spell
+
+Causes a nearby ally to fly into a berserk rage, making it stronger, faster,
+and tougher.
 %%%%
 Black Mark spell
 
@@ -325,6 +341,12 @@ This spell instills a corruption within a target, temporarily mutating their
 body in an adverse fashion. It cannot affect artificial beings, and the undead
 will decompose if affected.
 %%%%
+Corrupting Pulse spell
+
+This spell instills a corruption within all visible targets, temporarily
+mutating their bodies in an adverse fashion. It cannot affect artificial
+beings, and the undead will decompose if affected.
+%%%%
 Crystal Bolt spell
 
 This spell launches a penetrating projectile with peculiar magical properties.
@@ -451,6 +473,10 @@ Druid's Call spell
 This spell allows a druid to recall woodland creatures from elsewhere on the
 same dungeon level.
 %%%%
+Electrical Bolt spell
+
+Throws a bolt of electricity at the target.
+%%%%
 Energy Bolt spell
 
 This spell fires a beam of highly destructive energy. It can blow rock into
@@ -486,6 +512,12 @@ Explosive Bolt spell
 This spell hurls a bolt containing fiery energy; on piercing a target, it lets
 loose an explosion that harms nearby creatures as well.
 %%%%
+Flay spell
+
+Opens painful illusionary wounds on the target's body, which disappear after
+a short time or on the death of the caster. This cannot kill directly, and is
+ineffective against unnatural targets.
+%%%%
 Fire Breath spell
 
 <Breathe Fire ability>
@@ -508,6 +540,10 @@ spell levels if the learner already knows Delayed Fireball.
 Flame Tongue spell
 
 This spell creates a short burst of flame.
+%%%%
+Flaming Cloud spell
+
+This spell conjures up a large cloud of roaring flames.
 %%%%
 Flash Freeze spell
 
@@ -1044,6 +1080,11 @@ This ability taints the victim's ability to cast spells; casting a spell while
 afflicted with this condition causes them to lose control over their magic,
 progressively hindering their chances of success as more spells are cast.
 %%%%
+Seal Doors spell
+
+Imparts seals on nearby doors and stairs, preventing those not allied with
+the caster from traversing them.
+%%%%
 Searing Ray spell
 
 This spell fires a continuous ray of arcane energy from the caster's hands.
@@ -1091,6 +1132,10 @@ them from some blows by redirecting their force to the air nearby. Ranged
 attacks move too quickly to be diverted in this way. The shroud is highly
 unstable, and may fall apart unexpectedly under stress.
 %%%%
+Signal Horn spell
+
+Generates a loud noise, alerting nearby enemies.
+%%%%
 Silence spell
 
 This spell eliminates all sound near the caster. This makes actions such as
@@ -1110,6 +1155,11 @@ This spell creates a icy replica from the corpse of the original being. This
 magic is unstable, so eventually the replica will sublimate into a freezing
 cloud, if it isn't hacked or melted into a small puddle of water first. Note
 that simulacra are incapable of leaving the level they were created on.
+%%%%
+Siren Song spell
+
+Sings a haunting song, making nearby victims unwilling to move away from the
+singer.
 %%%%
 Sleep spell
 
@@ -1168,6 +1218,10 @@ difficult in this form.
 Spit Acid spell
 
 <Spit Acid ability>
+%%%%
+Spit Lava spell
+
+Spit lava at a targeted enemy.
 %%%%
 Spit Poison spell
 
@@ -1396,9 +1450,18 @@ Teleport Other spell
 
 This spell randomly translocates another creature.
 %%%%
+Tentacle Throw spell
+
+Hurls a tentacle-constricted foe a considerable distance, injuring them.
+%%%%
 Teleport Self spell
 
 This spell teleports the caster to a random location.
+%%%%
+Throw Barbs spell
+
+Fires a volley of barbs at the target, skewering them and making movement
+painful.
 %%%%
 Throw Flame spell
 

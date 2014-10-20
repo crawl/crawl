@@ -2679,8 +2679,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     else
     {
         int tile_num = 0;
-        if (mon.props.exists("tile_num"))
-            tile_num = mon.props["tile_num"].get_short();
+        if (mon.props.exists(TILE_NUM_KEY))
+            tile_num = mon.props[TILE_NUM_KEY].get_short();
 
         int type = mon.type;
 
@@ -5828,8 +5828,8 @@ void tile_init_props(monster* mon)
     }
 
     // Already overridden or set.
-    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
+    if (mon->props.exists("monster_tile") || mon->props.exists(TILE_NUM_KEY))
         return;
 
-    mon->props["tile_num"] = short(random2(256));
+    mon->props[TILE_NUM_KEY] = short(random2(256));
 }

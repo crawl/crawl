@@ -22,6 +22,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"

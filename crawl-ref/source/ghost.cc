@@ -22,6 +22,8 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "player.h"
@@ -194,8 +196,18 @@ static brand_type _random_special_pan_lord_brand()
                          -1);
 }
 
+#define ADD_SPELL(which_spell) \
+    { \
+        slot.spell = which_spell; \
+        if (slot.spell != SPELL_NO_SPELL) \
+            spells.push_back(slot); \
+    }
+
 void ghost_demon::init_random_demon()
 {
+    mon_spell_slot slot;
+    slot.flags = MON_SPELL_DEMONIC;
+
     do name = make_name(random_int(), false);
         while (!getLongDescription(name).empty());
 
@@ -253,7 +265,7 @@ void ghost_demon::init_random_demon()
     else
         speed = 8 + roll_dice(2,5);
 
-    spells.init(SPELL_NO_SPELL);
+    spells.clear();
 
     if (spellcaster)
     {
@@ -262,42 +274,42 @@ void ghost_demon::init_random_demon()
         // spell indices.  Some special monster-only spells are at the end.
 
         if (coinflip())
-            spells[0] = RANDOM_ELEMENT(search_order_conj);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
         // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-            spells[1] = RANDOM_ELEMENT(search_order_conj);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        if (!one_chance_in(4))
-            spells[2] = RANDOM_ELEMENT(search_order_third);
+        ADD_SPELL(one_chance_in(4) ? SPELL_SUMMON_DEMON
+                                   : RANDOM_ELEMENT(search_order_third));
 
         if (coinflip())
         {
-            spells[3] = RANDOM_ELEMENT(search_order_misc);
-            if (spells[3] == SPELL_DIG)
-                spells[3] = SPELL_NO_SPELL;
+            spell_type spell = RANDOM_ELEMENT(search_order_misc);
+            if (spell != SPELL_DIG)
+                ADD_SPELL(spell);
         }
 
         if (coinflip())
-            spells[4] = RANDOM_ELEMENT(search_order_misc);
+            ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
 
-        spells[5] = random_choose_weighted(2, SPELL_TELEPORT_SELF,
-                                           1, SPELL_BLINK,
-                                           1, SPELL_NO_SPELL,
-                                           0);
+        ADD_SPELL(random_choose_weighted(2, SPELL_TELEPORT_SELF,
+                                         1, SPELL_BLINK,
+                                         1, SPELL_NO_SPELL,
+                                         0));
 
         // Convert the player spell indices to monster spell ones.
         // Pan lords also get their Agony upgraded to Torment.
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        for (unsigned int i = 0; i < spells.size(); ++i)
         {
-            spells[i] = translate_spell(spells[i]);
-            if (spells[i] == SPELL_AGONY)
-                spells[i] = SPELL_SYMBOL_OF_TORMENT;
-            if (spells[i] == SPELL_CONJURE_BALL_LIGHTNING
-                || spells[i] == SPELL_OZOCUBUS_REFRIGERATION
-                || spells[i] == SPELL_TORNADO)
+            spells[i].spell = translate_spell(spells[i].spell);
+            if (spells[i].spell == SPELL_AGONY)
+                spells[i].spell = SPELL_SYMBOL_OF_TORMENT;
+            if (spells[i].spell == SPELL_CONJURE_BALL_LIGHTNING
+                || spells[i].spell == SPELL_OZOCUBUS_REFRIGERATION
+                || spells[i].spell == SPELL_TORNADO)
             {
-                spells[i] = SPELL_NO_SPELL;
+                spells[i].spell = SPELL_NO_SPELL;
             }
         }
 
@@ -305,52 +317,50 @@ void ghost_demon::init_random_demon()
         // Demon-summoning should be fairly common.
         if (one_chance_in(4))
         {
-            spells[0] = random_choose(SPELL_HELLFIRE_BURST,
-                                      SPELL_FIRE_STORM,
-                                      SPELL_GLACIATE,
-                                      SPELL_METAL_SPLINTERS,
-             /* eye of devastation */ SPELL_ENERGY_BOLT,
-                                      SPELL_ORB_OF_ELECTRICITY,
-                                      -1);
+            ADD_SPELL(random_choose(SPELL_HELLFIRE_BURST,
+                                    SPELL_FIRE_STORM,
+                                    SPELL_GLACIATE,
+                                    SPELL_METAL_SPLINTERS,
+           /* eye of devastation */ SPELL_ENERGY_BOLT,
+                                    SPELL_ORB_OF_ELECTRICITY,
+                                    -1));
         }
 
         if (one_chance_in(25))
-            spells[1] = SPELL_STEAM_BALL;
+            ADD_SPELL(SPELL_STEAM_BALL);
         if (one_chance_in(25))
-            spells[1] = SPELL_QUICKSILVER_BOLT;
+            ADD_SPELL(SPELL_QUICKSILVER_BOLT);
         if (one_chance_in(25))
-            spells[1] = SPELL_HELLFIRE;
+            ADD_SPELL(SPELL_HELLFIRE);
         if (one_chance_in(25))
-            spells[1] = SPELL_IOOD;
+            ADD_SPELL(SPELL_IOOD);
 
         if (one_chance_in(25))
-            spells[2] = SPELL_SMITING;
+            ADD_SPELL(SPELL_SMITING);
         if (one_chance_in(25))
-            spells[2] = SPELL_HELLFIRE_BURST;
+            ADD_SPELL(SPELL_HELLFIRE_BURST);
         if (one_chance_in(22))
-            spells[2] = SPELL_SUMMON_HYDRA;
+            ADD_SPELL(SPELL_SUMMON_HYDRA);
         if (one_chance_in(20))
-            spells[2] = SPELL_SUMMON_DRAGON;
+            ADD_SPELL(SPELL_SUMMON_DRAGON);
         if (one_chance_in(12))
-            spells[2] = SPELL_SUMMON_GREATER_DEMON;
+            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
         if (one_chance_in(12))
-            spells[2] = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_SUMMON_DEMON);
         if (one_chance_in(10))
-            spells[2] = SPELL_SUMMON_EYEBALLS;
+            ADD_SPELL(SPELL_SUMMON_EYEBALLS);
 
         if (one_chance_in(20))
-            spells[3] = SPELL_SUMMON_GREATER_DEMON;
+            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
         if (one_chance_in(20))
-            spells[3] = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_SUMMON_DEMON);
         if (one_chance_in(20))
-            spells[3] = SPELL_MALIGN_GATEWAY;
-
-        // At least they can summon demons.
-        if (spells[3] == SPELL_NO_SPELL)
-            spells[3] = SPELL_SUMMON_DEMON;
+            ADD_SPELL(SPELL_MALIGN_GATEWAY);
 
         if (one_chance_in(15))
-            spells[4] = SPELL_DIG;
+            ADD_SPELL(SPELL_DIG);
+
+        fixup_spells(spells, xl, true, false);
     }
 
     // Does demon cycle colours?
@@ -759,80 +769,41 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
     max_hp  = 10 + div_rand_round(power,3);
 }
 
-static bool _know_spell(spell_type spell)
-{
-    return you.has_spell(spell) && spell_fail(spell) < 50;
-}
-
-/**
- * Searches a list of ghost spells for the first one that
- * the player can cast.
- * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
- * @param ignore_up_to_spell Ignore entries in the list up to and
- *                           including this one.
- * @return  The first spell the player knows.
- */
-static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
-{
-    unsigned i = 0;
-    while (ignore_up_to_spell != SPELL_NO_SPELL
-            && spells[i] != SPELL_NO_SPELL)
-    {
-        if (spells[i++] == ignore_up_to_spell)
-            break;
-    }
-
-    while (spells[i] != SPELL_NO_SPELL)
-    {
-        if (_know_spell(spells[i]))
-            return spells[i];
-        ++i;
-    }
-
-    return SPELL_NO_SPELL;
-}
-
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast.  Death is a traumatic experience, so ghosts only
 // remember a few spells.
 void ghost_demon::add_spells()
 {
-    spells.init(SPELL_NO_SPELL);
+    spells.clear();
+    mon_spell_slot slot;
+    slot.flags = MON_SPELL_WIZARD;
 
-    spells[0] = search_spell_list(search_order_conj, SPELL_NO_SPELL);
-    spells[1] = search_spell_list(search_order_conj, spells[0]);
-    spells[2] = search_spell_list(search_order_third, SPELL_NO_SPELL);
-    spells[3] = search_spell_list(search_order_misc, SPELL_NO_SPELL);
-    spells[4] = search_spell_list(search_order_misc, spells[3]);
-
-    if (spells[3] == SPELL_NO_SPELL)
+    for (int i = 0; i < you.spell_no; i++)
     {
-        spells[3] = search_spell_list(search_order_conj, spells[1]);
-        if (spells[4] == SPELL_NO_SPELL)
-            spells[4] = search_spell_list(search_order_conj, spells[3]);
-    }
-    else if (spells[4] == SPELL_NO_SPELL)
-         spells[4] = search_spell_list(search_order_conj, spells[1]);
-
-    // Look for Blink or Teleport Self for the emergency slot.
-    if (_know_spell(SPELL_CONTROLLED_BLINK)
-        || _know_spell(SPELL_BLINK))
-    {
-        spells[5] = SPELL_CONTROLLED_BLINK;
+        int chance = spell_fail(you.spells[i]);
+        chance = chance * chance;
+        // XXX: this may require a more stringent check if there are
+        // player spells which don't work well as ghost spells
+        if (you.spells[i] != SPELL_NO_SPELL
+            && is_valid_mon_spell(you.spells[i])
+            && x_chance_in_y(chance, 50*50))
+        {
+            slot.spell = you.spells[i];
+            spells.push_back(slot);
+        }
     }
 
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        spells[i] = translate_spell(spells[i]);
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        spells[i].spell = translate_spell(spells[i].spell);
+
+    fixup_spells(spells, xl, true, false);
 
     spellcaster = has_spells();
 }
 
 bool ghost_demon::has_spells() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL)
-            return true;
-    return false;
+    return spells.size() > 0;
 }
 
 // When passed the number for a player spell, returns the equivalent
@@ -989,8 +960,8 @@ bool debug_check_ghosts()
             return false;
 
         // Check for non-existing spells.
-        for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
-            if (ghost.spells[sp] < 0 || ghost.spells[sp] >= NUM_SPELLS)
+        for (unsigned int sp = 0; sp < ghost.spells.size(); ++sp)
+            if (ghost.spells[sp].spell < 0 || ghost.spells[sp].spell >= NUM_SPELLS)
                 return false;
     }
     return true;
@@ -1034,8 +1005,9 @@ int ghost_rank_to_level(const int rank)
     }
 }
 
-static spell_type servitor_spells_primary[] =
+static spell_type servitor_spells[] =
 {
+    // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
     SPELL_IRON_SHOT,
@@ -1049,11 +1021,7 @@ static spell_type servitor_spells_primary[] =
     SPELL_THROW_ICICLE,
     SPELL_STONE_ARROW,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_NO_SPELL,                        // end search
-};
-
-static spell_type servitor_spells_secondary[] =
-{
+    // secondary spells
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_FIREBALL,
     SPELL_AIRSTRIKE,
@@ -1063,11 +1031,7 @@ static spell_type servitor_spells_secondary[] =
     SPELL_FORCE_LANCE,
     SPELL_DAZZLING_SPRAY,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_NO_SPELL,                        // end search
-};
-
-static spell_type servitor_spells_fallback[] =
-{
+    // fallback spells
     SPELL_STICKY_FLAME,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
@@ -1076,77 +1040,18 @@ static spell_type servitor_spells_fallback[] =
     SPELL_STING,
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
-    SPELL_NO_SPELL,                        // end search
+    // end search
+    SPELL_NO_SPELL,
 };
 
-static spell_type _best_aligned_spell(vector<spell_type> spells, skill_type skill)
+void ghost_demon::init_spellforged_servitor(actor* caster)
 {
-    for (unsigned int i = 0; i < spells.size(); ++i)
-    {
-        if (spell_typematch(spells[i], skill))
-            return spells[i];
-    }
+    mon_spell_slot slot;
+    slot.flags = MON_SPELL_WIZARD;
+    monster* mon = caster->is_monster() ? caster->as_monster() : NULL;
 
-    // If we couldn't find any that match, just pick the first one
-    return spells[0];
-}
-
-// Select servitor spells based on those known to the player
-// (Primary determines whether we are populating the first 3 or next 2 slots)
-bool ghost_demon::populate_servitor_spells(spell_type* spell_list, bool primary,
-                                           skill_type primary_skill)
-{
-    vector<spell_type> candidates;
-    const unsigned int num = (primary ? 3 : 2);
-    const unsigned int offset = (primary ? 0 : 3);
-
-    int i = 0;
-    spell_type spell = SPELL_NO_SPELL;
-    while ((spell = spell_list[i++]) != SPELL_NO_SPELL)
-    {
-        if (_know_spell(spell))
-            candidates.push_back(spell);
-    }
-
-    if (candidates.size() >= num)
-    {
-        for (unsigned int j = offset; j < offset + num; ++j)
-            spells[j] = candidates[j - offset];
-    }
-    else if (candidates.size() > 0)
-    {
-        // Choose the highest-level spell best aligned with our spell
-        // skills to duplicate
-        const spell_type copy_spell = _best_aligned_spell(candidates,
-                                                            primary_skill);
-
-        for (unsigned int j = offset; j < offset + num; ++j)
-        {
-            if (candidates.size() > j - offset)
-                spells[j] = candidates[j - offset];
-            else
-                spells[j] = copy_spell;
-        }
-    }
-
-    return candidates.size() > 0;
-}
-
-void ghost_demon::init_spellforged_servitor()
-{
-    // Determine highest magic skill (used for solving some tie-breakers)
-    skill_type best_magic_skill = NUM_SKILLS;
-    int skill_level = -1;
-    for (int i = SK_FIRE_MAGIC; i <= SK_POISON_MAGIC; ++i)
-    {
-        if (you.skill((skill_type)i) >= skill_level)
-        {
-            skill_level = you.skill((skill_type)i);
-            best_magic_skill = (skill_type)i;
-        }
-    }
-
-    int pow = calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
+    int pow = mon ? 12 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
+                  : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     colour = LIGHTMAGENTA; // cf. mon-data.h
     speed = 10;
@@ -1158,13 +1063,17 @@ void ghost_demon::init_spellforged_servitor()
     damage = 0;
     att_type = AT_NONE;
 
-    // Give the servitor its spells
-    bool primary   = populate_servitor_spells(servitor_spells_primary, true,
-                                              best_magic_skill);
-    bool secondary = populate_servitor_spells(servitor_spells_secondary, false,
-                                              best_magic_skill);
+    int i = 0;
+    spell_type spell = SPELL_NO_SPELL;
+    while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
+    {
+        if (mon && mon->has_spell(spell)
+            || !mon && spell_fail(spell) < 50)
+        {
+            slot.spell = spell;
+            spells.push_back(slot);
+        }
+    }
 
-    if (!primary && !secondary)
-        populate_servitor_spells(servitor_spells_fallback, true, best_magic_skill);
-
+    fixup_spells(spells, 150, true, false);
 }

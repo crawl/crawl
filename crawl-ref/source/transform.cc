@@ -28,6 +28,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-death.h"
 #include "mon-enum.h" // stealing their resist flags
 #include "mutation.h"
 #include "newgame.h"

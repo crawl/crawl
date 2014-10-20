@@ -27,6 +27,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-pick.h"
@@ -515,7 +516,7 @@ static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
     beam.target = you.pos();
     beam.aimed_at_feet = true;
     beam.source_name = avatar->mname;
-    mons_cast(avatar, beam, spell, false, false);
+    mons_cast(avatar, beam, spell, MON_SPELL_PRIEST, false);
 }
 
 /**

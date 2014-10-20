@@ -52,8 +52,7 @@ public:
     bool init_chimera_for_place(monster* mon, level_id place,
                                 monster_type chimera_type, coord_def pos);
 
-    void init_spellforged_servitor();
-    bool populate_servitor_spells(spell_type* spells, bool primary, skill_type best_skill);
+    void init_spellforged_servitor(actor* caster);
 
     void ugly_thing_to_very_ugly_thing();
 
@@ -72,7 +71,7 @@ private:
     void ugly_thing_add_resistance(bool very_ugly,
                                    attack_flavour u_att_flav);
 
-    void _apply_chimera_part(monster* mon, monster_type part, int partnum);
+    bool _apply_chimera_part(monster* mon, monster_type part, int partnum);
 };
 
 bool debug_check_ghosts();

@@ -945,6 +945,12 @@ bool player::can_cling_to_walls() const
     return false;
 }
 
+bool player::antimagic_susceptible() const
+{
+    // Maybe check for having non-zero (max) MP?
+    return true;
+}
+
 bool player::is_web_immune() const
 {
     // Spider form

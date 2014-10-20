@@ -39,6 +39,7 @@
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
 #include "mon-clone.h"
@@ -46,6 +47,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-transit.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mgen_data.h"
 #include "random.h"
@@ -62,6 +64,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
+#include "tilepick.h"
 #include "tileview.h"
 #endif
 #include "traps.h"
@@ -124,7 +127,7 @@ void monster::reset()
     ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
-    spells.init(SPELL_NO_SPELL);
+    spells.clear();
 
     mid             = 0;
     flags           = 0;
@@ -777,14 +780,19 @@ bool monster::can_speak()
     return shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA;
 }
 
+bool monster::is_silenced() const
+{
+    return silenced(pos())
+            || has_ench(ENCH_MUTE)
+            || has_ench(ENCH_WATER_HOLD)
+               && !res_water_drowning();
+}
+
 bool monster::has_spell_of_type(unsigned disciplines) const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    for (unsigned int i = 0; i < spells.size(); ++i)
     {
-        if (spells[i] == SPELL_NO_SPELL)
-            continue;
-
-        if (spell_typematch(spells[i], disciplines))
+        if (spell_typematch(spells[i].spell, disciplines))
             return true;
     }
     return false;
@@ -806,18 +814,6 @@ void monster::bind_melee_flags()
 
 void monster::bind_spell_flags()
 {
-    // Bind spellcaster / priest flags from the base type. These may be
-    // overridden by vault defs for individual monsters.
-
-    // Alas, we don't know if the mon is zombified at the moment, if it
-    // is, the flags will be removed later.
-    if (mons_class_flag(type, M_SPELLCASTER))
-        flags |= MF_SPELLCASTER;
-    if (mons_class_flag(type, M_ACTUAL_SPELLS))
-        flags |= MF_ACTUAL_SPELLS;
-    if (mons_class_flag(type, M_PRIEST))
-        flags |= MF_PRIEST;
-
     if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(this))
         flags |= MF_SEEN_RANGED;
 }
@@ -2811,6 +2807,14 @@ int monster::mindex() const
 void monster::set_hit_dice(int new_hit_dice)
 {
     hit_dice = new_hit_dice;
+
+    // XXX: this is unbelievably hacky to preserve old behaviour
+    if (type == MONS_OKLOB_PLANT && !spells.empty())
+    {
+        ASSERT(spells[0].spell == SPELL_SPIT_ACID);
+        spells[0].freq = 200 * hit_dice
+                         / (crawl_state.game_is_zotdef() ? 40 : 30);
+    }
 }
 
 void monster::moveto(const coord_def& c, bool clear_net)
@@ -3019,26 +3023,32 @@ void monster::banish(actor *agent, const string &)
 
 bool monster::has_spells() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL)
-            return true;
-
-    return false;
+    return spells.size() > 0;
 }
 
 bool monster::has_spell(spell_type spell) const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] == spell)
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (spells[i].spell == spell)
             return true;
 
     return false;
 }
 
+unsigned short monster::spell_slot_flags(spell_type spell) const
+{
+    unsigned short slot_flags = MON_SPELL_NO_FLAGS;
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (spells[i].spell == spell)
+            slot_flags |= spells[i].flags;
+
+    return slot_flags;
+}
+
 bool monster::has_unholy_spell() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unholy_spell(spells[i]))
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (is_unholy_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3046,8 +3056,8 @@ bool monster::has_unholy_spell() const
 
 bool monster::has_evil_spell() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_evil_spell(spells[i]))
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (is_evil_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3055,8 +3065,8 @@ bool monster::has_evil_spell() const
 
 bool monster::has_unclean_spell() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unclean_spell(spells[i]))
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (is_unclean_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3064,8 +3074,8 @@ bool monster::has_unclean_spell() const
 
 bool monster::has_chaotic_spell() const
 {
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_chaotic_spell(spells[i]))
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (is_chaotic_spell(spells[i].spell))
             return true;
 
     return false;
@@ -3073,8 +3083,8 @@ bool monster::has_chaotic_spell() const
 
 bool monster::has_corpse_violating_spell() const
 {
-     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_corpse_violating_spell(spells[i]))
+    for (unsigned int i = 0; i < spells.size(); ++i)
+        if (is_corpse_violating_spell(spells[i].spell))
             return true;
 
     return false;
@@ -4296,6 +4306,15 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     return false;
 }
 
+bool monster::antimagic_susceptible() const
+{
+    for (unsigned int i = 0; i < spells.size(); ++i)
+       if (spells[i].flags & MON_SPELL_ANTIMAGIC_MASK)
+           return true;
+
+    return false;
+}
+
 flight_type monster::flight_mode() const
 {
     // Checking class flags is not enough - see mons_flies().
@@ -5014,7 +5033,7 @@ void monster::load_ghost_spells()
 {
     if (!ghost.get())
     {
-        spells.init(SPELL_NO_SPELL);
+        spells.clear();
         return;
     }
 
@@ -5022,10 +5041,10 @@ void monster::load_ghost_spells()
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_MONPLACE, "Ghost spells:");
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+    for (unsigned int i = 0; i < spells.size(); i++)
     {
         dprf(DIAG_MONPLACE, "Spell #%d: %d (%s)",
-             i, spells[i], spell_title(spells[i]));
+             i, spells[i].spell, spell_title(spells[i].spell));
     }
 #endif
 }
@@ -5059,14 +5078,15 @@ bool monster::has_multitargeting() const
            || type == MONS_ELECTRIC_GOLEM;
 }
 
-bool monster::can_use_spells() const
-{
-    return flags & MF_SPELLCASTER;
-}
-
 bool monster::is_priest() const
 {
-    return flags & MF_PRIEST;
+    for (unsigned int i = 0; i < spells.size(); ++i)
+    {
+       if (spells[i].flags & MON_SPELL_PRIEST)
+           return true;
+    }
+
+    return false;
 }
 
 bool monster::is_fighter() const
@@ -5081,7 +5101,11 @@ bool monster::is_archer() const
 
 bool monster::is_actual_spellcaster() const
 {
-    return flags & MF_ACTUAL_SPELLS;
+    for (unsigned int i = 0; i < spells.size(); ++i)
+       if (spells[i].flags & MON_SPELL_WIZARD)
+           return true;
+
+    return false;
 }
 
 bool monster::is_shapeshifter() const
@@ -5091,13 +5115,13 @@ bool monster::is_shapeshifter() const
 
 void monster::forget_random_spell()
 {
-    int which_spell = -1;
-    int count = 0;
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL && one_chance_in(++count))
-            which_spell = i;
-    if (which_spell != -1)
-        spells[which_spell] = SPELL_NO_SPELL;
+    if (spells.size() <= 0)
+        return;
+    int which_spell = random2(spells.size());
+    monster_spells::iterator it = spells.begin();
+    for (; which_spell > 0; which_spell--)
+      it++;
+    spells.erase(it);
 }
 
 void monster::scale_hp(int num, int den)
@@ -5285,10 +5309,10 @@ bool monster::needs_berserk(bool check_spells) const
 
     if (check_spells)
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        for (unsigned int i = 0; i < spells.size(); ++i)
         {
-            const int spell = spells[i];
-            if (spell != SPELL_NO_SPELL && spell != SPELL_BERSERKER_RAGE)
+            const int spell = spells[i].spell;
+            if (spell != SPELL_BERSERKER_RAGE)
                 return false;
         }
     }
@@ -5351,10 +5375,24 @@ bool monster::has_lifeforce() const
     return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
+/**
+ * Can the monster be mutated?
+ *
+ * Nonliving (e.g. statue) monsters & the undead are safe, as are a very few
+ * other weird types of monsters.
+ *
+ * @return Whether the monster can be mutated in any way.
+ */
 bool monster::can_mutate() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
+
+    if (type == MONS_CHAOS_SPAWN)
+        return false;
+
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return true;
 
     const mon_holy_type holi = holiness();
 
@@ -5368,6 +5406,12 @@ bool monster::can_safely_mutate(bool temp) const
 
 bool monster::can_polymorph() const
 {
+    if (type == MONS_CHAOS_SPAWN)
+        return true;
+
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return false;
+
     return can_mutate();
 }
 
@@ -5381,10 +5425,27 @@ bool monster::is_stationary() const
     return mons_class_is_stationary(type) || has_ench(ENCH_WITHDRAWN);
 }
 
-bool monster::malmutate(const string &reason)
+/**
+ * Malmutate the monster.
+ *
+ * Gives a temporary 'wretched' effect, generally. Some monsters have special
+ * interactions.
+ *
+ * @return Whether the monster was mutated in any way.
+ */
+bool monster::malmutate(const string &/*reason*/)
 {
     if (!can_mutate())
         return false;
+
+    // tile change, already mutated wrecks
+    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    {
+#ifdef USE_TILE
+        props[TILE_NUM_KEY].get_short() = random2(256);
+#endif
+        return true;
+    }
 
     // Ugly things merely change colour.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
@@ -5396,6 +5457,21 @@ bool monster::malmutate(const string &reason)
     simple_monster_message(this, " twists and deforms.");
     add_ench(mon_enchant(ENCH_WRETCHED, 1));
     return true;
+}
+
+/**
+ * Corrupt the monster's body.
+ *
+ * Analogous to effects that give the player temp mutations, like wretched star
+ * pulses & demonspawn corruptors. Currently identical to malmutate. (Writing
+ * this function anyway, since they probably shouldn't be identical.)
+ *
+ * XXX: adjust duration to differentiate? (make malmut's duration longer, or
+ * corrupt's shorter?)
+ */
+void monster::corrupt()
+{
+    malmutate("");
 }
 
 bool monster::polymorph(int pow)
@@ -6369,12 +6445,12 @@ void monster::steal_item_from_player()
 
             if (has_ench(ENCH_TP))
             {
-                mons_cast_noise(this, beem, SPELL_BLINK);
+                mons_cast_noise(this, beem, SPELL_BLINK, MON_SPELL_WIZARD);
                 // this can kill us, delay the call
                 (new blink_fineff(this))->schedule();
             }
             else
-                mons_cast(this, beem, SPELL_TELEPORT_SELF);
+                mons_cast(this, beem, SPELL_TELEPORT_SELF, MON_SPELL_WIZARD);
 
             return;
         }
@@ -6678,36 +6754,6 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     }
 
     return true;
-}
-
-bool monster::is_child_tentacle() const
-{
-    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-        || type == MONS_MNOLEG_TENTACLE;
-}
-
-bool monster::is_child_tentacle_segment() const
-{
-    return type == MONS_KRAKEN_TENTACLE_SEGMENT
-           || type == MONS_STARSPAWN_TENTACLE_SEGMENT
-           || type == MONS_MNOLEG_TENTACLE_SEGMENT;
-}
-
-bool monster::is_child_monster() const
-{
-    return is_child_tentacle() || is_child_tentacle_segment();
-}
-
-bool monster::is_child_tentacle_of(const monster* mons) const
-{
-    return mons_base_type(mons) == mons_tentacle_parent_type(this)
-           && (int) number == mons->mindex();
-}
-
-bool monster::is_parent_monster_of(const monster* mons) const
-{
-    return mons_base_type(this) == mons_tentacle_parent_type(mons)
-           && (int) mons->number == mindex();
 }
 
 bool monster::is_illusion() const

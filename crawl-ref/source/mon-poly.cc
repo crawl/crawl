@@ -25,6 +25,7 @@
 #include "mon-death.h"
 #include "mon-message.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
@@ -160,7 +161,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // Don't polymorph things without Gods into priests.
-        || (mons_class_flag(new_mclass, MF_PRIEST) && mons->god == GOD_NO_GOD)
+        || mons_class_flag(new_mclass, M_PRIEST) && mons->god == GOD_NO_GOD
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
@@ -235,7 +236,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
-                           | MF_MELEE_MASK | MF_SPELL_MASK);
+                           | MF_MELEE_MASK);
     flags |= MF_POLYMORPHED;
     string name;
 
@@ -325,9 +326,9 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     monster_spells spl    = mons->spells;
     const bool need_save_spells
-            = (!name.empty()
-               && (!mons->can_use_spells() || mons->is_actual_spellcaster())
-               && !slimified);
+            =  old_mon_unique && !slimified
+               && mons_class_intel(targetc) >= I_NORMAL
+               && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;
 
@@ -365,7 +366,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // swamp drake he'll breathe fumes and, if polymorphed further,
     // won't remember his spells anymore.
     if (need_save_spells
-        && (!mons->can_use_spells() || mons->is_actual_spellcaster()))
+        && (!mons->has_spells() || mons->is_actual_spellcaster()))
     {
         mons->spells = spl;
     }

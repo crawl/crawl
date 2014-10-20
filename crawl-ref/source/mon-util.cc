@@ -44,6 +44,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "notes.h"
 #include "options.h"
 #include "random.h"
@@ -672,24 +673,15 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
 // Dithmenos also hates fire users and generally fiery beings.
 bool mons_is_fiery(const monster* mon)
 {
-    // This chain of checks is for fire breath weapons and special
-    // abilities.
-    if (mons_species(mon->type) == MONS_FIRE_DRAGON
-        || mon->type == MONS_BURNING_BUSH
-        || (mons_genus(mon->type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(mon) == MONS_RED_DRACONIAN)
-        || mon->type == MONS_HELL_HOUND
-        || mon->type == MONS_FIRE_DRAKE
-        || mon->type == MONS_LINDWURM
-        || mon->type == MONS_FIRE_CRAB)
+    if (mons_genus(mon->type) == MONS_DRACONIAN
+        && draco_or_demonspawn_subspecies(mon) == MONS_RED_DRACONIAN)
     {
         return true;
     }
     return mon->has_attack_flavour(AF_FIRE)
            || mon->has_attack_flavour(AF_PURE_FIRE)
            || mon->has_attack_flavour(AF_STICKY_FLAME)
-           || (mon->has_spell_of_type(SPTYP_FIRE)
-               && mon->can_use_spells());
+           || mon->has_spell_of_type(SPTYP_FIRE);
 }
 
 bool mons_is_projectile(monster_type mc)
@@ -1369,33 +1361,6 @@ bool mons_class_can_regenerate(monster_type mc)
     return !mons_class_flag(mc, M_NO_REGEN);
 }
 
-bool get_tentacle_head(const monster*& mon)
-{
-    // For tentacle segments, find the associated tentacle.
-    if (mon->is_child_tentacle_segment())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    // For tentacles, find the associated head.
-    if (mon->is_child_tentacle())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    return true;
-}
-
 bool mons_can_regenerate(const monster* mon)
 {
     get_tentacle_head(mon);
@@ -1962,7 +1927,7 @@ int exper_value(const monster* mon, bool real)
     const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mon->can_use_spells();
+    const bool spellcaster = mon->has_spells();
 
     // Early out for no XP monsters.
     if (mons_class_flag(mc, M_NO_EXP_GAIN))
@@ -1978,9 +1943,9 @@ int exper_value(const monster* mon, bool real)
     {
         const monster_spells &hspell_pass = mon->spells;
 
-        for (int i = 0; i < 6; ++i)
+        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
         {
-            switch (hspell_pass[i])
+            switch (hspell_pass[i].spell)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
@@ -2234,9 +2199,9 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         break;
 
     case MONS_GREATER_MUMMY:
-        books.push_back(MST_MUMMY);
         books.push_back(MST_GREATER_MUMMY_I);
         books.push_back(MST_GREATER_MUMMY_II);
+        books.push_back(MST_GREATER_MUMMY_III);
         break;
 
     default:
@@ -2261,9 +2226,11 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
     return books;
 }
 
-// get a list of unique spells from a monster's preset spellbooks
+// Get a list of unique spells from a monster's preset spellbooks
 // or in the case of ghosts their actual spells.
-unique_books get_unique_spells(const monster_info &mi)
+// If flags is non-zero, it returns only spells that match those flags.
+unique_books get_unique_spells(const monster_info &mi,
+                               mon_spell_slot_flags flags)
 {
     // No entry for MST_GHOST
     COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
@@ -2283,16 +2250,26 @@ unique_books get_unique_spells(const monster_info &mi)
 
         vector<spell_type> spells;
 
-        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        for (unsigned int j = 0;
+             (book == MST_GHOST && j < mi.spells.size())
+             || (book != MST_GHOST
+                 && mspell_list[msidx].spells[j].spell != SPELL_NO_SPELL);
+             ++j)
         {
+            mon_spell_slot slot;
             spell_type spell;
             if (book == MST_GHOST)
-                spell = mi.spells[j];
+                slot = mi.spells[j];
             else
             {
                 ASSERT(msidx < ARRAYSZ(mspell_list));
-                spell = mspell_list[msidx].spells[j];
+                slot = mspell_list[msidx].spells[j];
             }
+
+            if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
+                continue;
+
+            spell = slot.spell;
 
             bool match = false;
 
@@ -2303,6 +2280,9 @@ unique_books get_unique_spells(const monster_info &mi)
             if (!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE)
                 spells.push_back(spell);
         }
+
+        if (spells.size() == 0)
+            continue;
 
         result.push_back(spells);
     }
@@ -2318,7 +2298,7 @@ static void _mons_load_spells(monster* mon)
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
-    mon->spells.init(SPELL_NO_SPELL);
+    mon->spells.clear();
     if (book == MST_NO_SPELLS)
         return;
 
@@ -2329,8 +2309,12 @@ static void _mons_load_spells(monster* mon)
     {
         if (mspell_list[i].type == book)
         {
-            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-                mon->spells[j] = mspell_list[i].spells[j];
+            for (unsigned int j = 0;
+                 mspell_list[i].spells[j].spell != SPELL_NO_SPELL;
+                 ++j)
+            {
+                mon->spells.push_back(mspell_list[i].spells[j]);
+            }
             break;
         }
     }
@@ -2591,18 +2575,10 @@ void define_monster(monster* mons)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
-    {
-        ghost_demon ghost;
-        mons->set_ghost(ghost);
-    }
-
     case MONS_SPELLFORGED_SERVITOR:
     {
         ghost_demon ghost;
-        ghost.init_spellforged_servitor();
         mons->set_ghost(ghost);
-        mons->ghost_demon_init();
-        mons->props["custom_spells"].get_bool() = true;
         break;
     }
 
@@ -3409,12 +3385,9 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mons_has_los_ability(mon->type))
         return true;
 
-    if (mon->can_use_spells())
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
-                return true;
-    }
+    for (unsigned int i = 0; i < mon->spells.size(); ++i)
+        if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
+            return true;
 
     return false;
 }
@@ -3428,12 +3401,9 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    if (!mon->can_use_spells())
-        return false;
-
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    for (unsigned int i = 0; i < mon->spells.size(); ++i)
     {
-        switch (mon->spells[i])
+        switch (mon->spells[i].spell)
         {
         case SPELL_SLEEP:
             if (foe->can_sleep())
@@ -3463,35 +3433,6 @@ bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
     return false;
 }
 
-static bool _mons_has_ranged_ability(const monster* mon)
-{
-    // [ds] FIXME: Get rid of special abilities and remove this.
-    switch (mon->type)
-    {
-    case MONS_ACID_BLOB:
-    case MONS_BURNING_BUSH:
-    case MONS_DRACONIAN:
-    case MONS_FIRE_DRAGON:
-    case MONS_ICE_DRAGON:
-    case MONS_HELL_HOUND:
-    case MONS_LINDWURM:
-    case MONS_FIRE_DRAKE:
-    case MONS_XTAHUA:
-    case MONS_FIRE_CRAB:
-    case MONS_APOCALYPSE_CRAB:
-    case MONS_GHOST_CRAB:
-    case MONS_ELECTRIC_EEL:
-    case MONS_LAVA_SNAKE:
-    case MONS_MANTICORE:
-    case MONS_OKLOB_PLANT:
-    case MONS_OKLOB_SAPLING:
-    case MONS_LIGHTNING_SPIRE:
-        return true;
-    default:
-        return false;
-    }
-}
-
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
@@ -3513,7 +3454,7 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
 
 bool mons_has_ranged_attack(const monster* mon)
 {
-    return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
+    return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(mon);
 }
 
@@ -3586,10 +3527,9 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
 
 bool mons_has_known_ranged_attack(const monster* mon)
 {
-    return _mons_has_ranged_ability(mon)
-        || mon->flags & MF_SEEN_RANGED
-        || _mons_starts_with_ranged_weapon(mon->type)
-            && !(mon->flags & MF_KNOWN_SHIFTER);
+    return mon->flags & MF_SEEN_RANGED
+           || _mons_starts_with_ranged_weapon(mon->type)
+              && !(mon->flags & MF_KNOWN_SHIFTER);
 }
 
 bool mons_can_attack(const monster* mon)
@@ -4528,55 +4468,6 @@ monster *monster_by_mid(mid_t m)
     return 0;
 }
 
-bool mons_is_tentacle_head(monster_type mc)
-{
-    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN
-        || mc == MONS_MNOLEG;
-}
-
-bool mons_is_child_tentacle(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE
-        || mc == MONS_STARSPAWN_TENTACLE
-        || mc == MONS_SNAPLASHER_VINE
-        || mc == MONS_MNOLEG_TENTACLE;
-}
-
-bool mons_is_child_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mc == MONS_SNAPLASHER_VINE_SEGMENT
-        || mc == MONS_MNOLEG_TENTACLE_SEGMENT;
-}
-
-bool mons_is_tentacle(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE || mons_is_child_tentacle(mc);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mons_is_child_tentacle_segment(mc);
-}
-
-bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
-{
-    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
-}
-
-monster* mons_get_parent_monster(monster* mons)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_parent_monster_of(mons))
-            return mi->as_monster();
-    }
-
-    return 0;
-}
-
 void init_anon()
 {
     monster &mon = menv[ANON_FRIENDLY_MONSTER];
@@ -4623,66 +4514,6 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-monster_type mons_tentacle_parent_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-        case MONS_KRAKEN_TENTACLE:
-            return MONS_KRAKEN;
-        case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return MONS_KRAKEN_TENTACLE;
-        case MONS_STARSPAWN_TENTACLE:
-            return MONS_TENTACLED_STARSPAWN;
-        case MONS_STARSPAWN_TENTACLE_SEGMENT:
-            return MONS_STARSPAWN_TENTACLE;
-        case MONS_ELDRITCH_TENTACLE_SEGMENT:
-            return MONS_ELDRITCH_TENTACLE;
-        case MONS_SNAPLASHER_VINE_SEGMENT:
-            return MONS_SNAPLASHER_VINE;
-        case MONS_MNOLEG_TENTACLE:
-            return MONS_MNOLEG;
-        case MONS_MNOLEG_TENTACLE_SEGMENT:
-            return MONS_MNOLEG_TENTACLE;
-        default:
-            return MONS_PROGRAM_BUG;
-    }
-}
-
-monster_type mons_tentacle_child_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-    case MONS_KRAKEN:
-        return MONS_KRAKEN_TENTACLE;
-    case MONS_KRAKEN_TENTACLE:
-        return MONS_KRAKEN_TENTACLE_SEGMENT;
-    case MONS_TENTACLED_STARSPAWN:
-        return MONS_STARSPAWN_TENTACLE;
-    case MONS_STARSPAWN_TENTACLE:
-        return MONS_STARSPAWN_TENTACLE_SEGMENT;
-    case MONS_ELDRITCH_TENTACLE:
-        return MONS_ELDRITCH_TENTACLE_SEGMENT;
-    case MONS_SNAPLASHER_VINE:
-        return MONS_SNAPLASHER_VINE_SEGMENT;
-    case MONS_MNOLEG:
-        return MONS_MNOLEG_TENTACLE;
-    case MONS_MNOLEG_TENTACLE:
-        return MONS_MNOLEG_TENTACLE_SEGMENT;
-    default:
-        return MONS_PROGRAM_BUG;
-    }
-}
-
-//Returns whether a given monster is a tentacle segment immediately attached
-//to the parent monster
-bool mons_tentacle_adjacent(const monster* parent, const monster* child)
-{
-    return mons_is_tentacle_head(mons_base_type(parent))
-           && mons_is_tentacle_segment(child->type)
-           && child->props.exists("inwards")
-           && child->props["inwards"].get_int() == parent->mindex();
 }
 
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
@@ -4878,13 +4709,6 @@ bool mons_is_player_shadow(const monster* mon)
            && mon->mname.empty();
 }
 
-bool mons_antimagic_affected(const monster* mons)
-{
-    return mons->can_use_spells()
-           && !mons->is_priest()
-           && !mons_class_flag(mons->type, M_FAKE_SPELLS);
-}
-
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster* mon)
 {
@@ -4961,4 +4785,46 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].glyph = get_glyph_override(md.ch);
     if (md.col)
         monster_symbols[mtype].colour = md.col;
+}
+
+void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
+{
+    unsigned count = 0;
+    for (unsigned int i = 0; i < spells.size(); i++)
+    {
+        if (spells[i].spell == SPELL_NO_SPELL)
+            continue;
+
+        count++;
+
+        if (wizard)
+            spells[i].flags |= MON_SPELL_WIZARD;
+        else if (priest)
+            spells[i].flags |= MON_SPELL_PRIEST;
+        else
+            spells[i].flags |= MON_SPELL_MAGICAL; // rip
+
+        if (i == NUM_MONSTER_SPELL_SLOTS - 1)
+            spells[i].flags |= MON_SPELL_EMERGENCY;
+    }
+
+    if (!count)
+    {
+        spells.clear();
+        return;
+    }
+
+    unsigned one_freq = (hd + 50) / count;
+    for (unsigned int i = 0; i < spells.size(); i++)
+        spells[i].freq = one_freq;
+
+    for (monster_spells::iterator it = spells.begin();
+         it != spells.end(); it++)
+    {
+        if (it->spell == SPELL_NO_SPELL)
+        {
+            spells.erase(it);
+            it = spells.begin() - 1;
+        }
+    }
 }
