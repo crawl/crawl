@@ -182,34 +182,21 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
         spells = dummy.spells;
         return;
     }
+
+    // Add spells and abilities from the current part.
+    for (monster_spells::iterator it = dummy.spells.begin();
+         it != dummy.spells.end(); it++)
+    {
+        if (it->spell != SPELL_NO_SPELL)
+            spells.push_back(*it);
+    }
+
     // Make sure resulting chimera can use spells
     // TODO: Spell usage might still be a bit of a mess, especially with
     // things like human/animal hybrids. Could perhaps do with some kind
     // of ghost demon structure to manage and track everything better.
     if (dummy.has_spells())
         spellcaster = true;
-
-    // XXX: It'd be nice to flood fill all available spell slots with spells
-    // from parts 2 and 3. But since this would conflict with special
-    // slots (emergency, enchantment, etc.) some juggling is needed, until
-    // spell slots can be made more sensible.
-
-    // Use misc slots (3+4) for the primary spells of parts 1 & 2
-    const int boltslot = partnum + 1;
-    // Overwrite the base monster's misc spells if they had any
-    if (dummy.spells[0].spell != SPELL_NO_SPELL)
-        spells[boltslot] = dummy.spells[0];
-
-    // Other spell slots overwrite if the base monster(s) didn't have one
-    // Enchantment
-    if (spells[1].spell == SPELL_NO_SPELL && dummy.spells[1].spell != SPELL_NO_SPELL)
-        spells[1] = dummy.spells[1];
-    // Self-enchantment
-    if (spells[2].spell == SPELL_NO_SPELL && dummy.spells[2].spell != SPELL_NO_SPELL)
-        spells[2] = dummy.spells[2];
-    // Emergency
-    if (spells[5].spell == SPELL_NO_SPELL && dummy.spells[5].spell != SPELL_NO_SPELL)
-        spells[5] = dummy.spells[5];
 }
 
 monster_type get_chimera_part(const monster* mon, int partnum)
