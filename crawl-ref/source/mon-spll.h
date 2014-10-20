@@ -2336,4 +2336,18 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_SIREN,
+      {
+       { SPELL_SIREN_SONG, 160, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_MERFOLK_AVATAR,
+      {
+       { SPELL_AVATAR_SONG, 160, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       END_OF_MONS_BOOK
+      }
+    },
 };

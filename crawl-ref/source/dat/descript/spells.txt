@@ -52,6 +52,12 @@ This spell causes the caster to continuously abjure nearby hostile summoned
 creatures for a short while, rapidly sending each of them back where they came
 from.
 %%%%
+Avatar Song spell
+
+Sings a powerfully haunting song; in addition to making nearby victims
+unwilling to move away from the singer, it calls forth drowned souls from
+any nearby bodies of water.
+%%%%
 Awaken Forest spell
 
 This spell allows the caster to give some very limited motility to surrounding
@@ -1130,6 +1136,11 @@ This spell creates a icy replica from the corpse of the original being. This
 magic is unstable, so eventually the replica will sublimate into a freezing
 cloud, if it isn't hacked or melted into a small puddle of water first. Note
 that simulacra are incapable of leaving the level they were created on.
+%%%%
+Siren Song spell
+
+Sings a haunting song, making nearby victims unwilling to move away from the
+singer.
 %%%%
 Sleep spell
 

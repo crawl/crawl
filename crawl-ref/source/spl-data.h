@@ -3977,4 +3977,30 @@ static const struct spell_desc spelldata[] =
     false
 },
 
+{
+    SPELL_SIREN_SONG, "Siren Song",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     4, 0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_AVATAR_SONG, "Avatar Song",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     4, 0,
+     NULL,
+     false,
+     false
+},
+
 };

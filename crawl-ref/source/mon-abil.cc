@@ -1435,101 +1435,6 @@ void merfolk_avatar_song(monster* mons)
     }
 }
 
-/**
- * Have a siren or merfolk avatar attempt to mesmerize the player.
- *
- * @param mons  The singing monster.
- * @param spl   The channel to print messages in.
- * @return      Whether the ability was used.
- */
-static bool _siren_sing(monster* mons, msg_channel_type spl)
-{
-    // Don't behold observer in the arena.
-    if (crawl_state.game_is_arena())
-        return false;
-
-    // Don't behold player already half down or up the stairs.
-    if (!you.delay_queue.empty())
-    {
-        const delay_queue_item delay = you.delay_queue.front();
-
-        if (delay.type == DELAY_ASCENDING_STAIRS
-            || delay.type == DELAY_DESCENDING_STAIRS)
-        {
-            dprf("Taking stairs, don't mesmerise.");
-            return false;
-        }
-    }
-
-    // Won't sing if either of you silenced, or it's friendly,
-    // confused, fleeing, or leaving the level.
-    if (mons->has_ench(ENCH_CONFUSION)
-        || mons_is_fleeing(mons)
-        || mons->pacified()
-        || mons->friendly()
-        || !player_can_hear(mons->pos()))
-    {
-        return false;
-    }
-
-    // Don't even try on berserkers. Sirens know their limits.
-    // (merfolk avatars should still sing since their song has other effects)
-    if (mons->type != MONS_MERFOLK_AVATAR && you.berserk())
-        return false;
-
-    const bool already_mesmerised = you.beheld_by(mons);
-
-    // If the mer is trying to mesmerize you anew, sing 60% of the time.
-    // Otherwise, only sing 20% of the time.
-    const bool can_mesm_you = !already_mesmerised && mons->foe == MHITYOU
-                              && you.can_see(mons);
-
-    if (x_chance_in_y(can_mesm_you ? 2 : 4, 5))
-        return false;
-
-    // Sing! Beyond this point, we should always return true.
-    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
-
-    if (mons->type == MONS_MERFOLK_AVATAR
-        && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
-    {
-        mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
-    }
-
-    if (you.can_see(mons))
-    {
-        const char * const song_adj = already_mesmerised ? "its luring"
-                                                         : "a haunting";
-        const string song_desc = make_stringf(" chants %s song.", song_adj);
-        simple_monster_message(mons, song_desc.c_str(), spl);
-    }
-    else
-    {
-        mprf(MSGCH_SOUND, "You hear %s.",
-                          already_mesmerised ? "a luring song" :
-                          coinflip()         ? "a haunting song"
-                                             : "an eerie melody");
-
-        // If you're already mesmerised by an invisible siren, it
-        // can still prolong the enchantment.
-        if (!already_mesmerised)
-            return true;
-    }
-
-    // Once mesmerised by a particular monster, you cannot resist anymore.
-    if (you.duration[DUR_MESMERISE_IMMUNE]
-        || !already_mesmerised
-           && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
-               || you.clarity()))
-    {
-        canned_msg(you.clarity() ? MSG_YOU_UNAFFECTED : MSG_YOU_RESIST);
-        return true;
-    }
-
-    you.add_beholder(mons);
-    return true;
-}
-
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -1554,9 +1459,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     {
         return false;
     }
-
-    const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
-                                                   : MSGCH_MONSTER_SPELL);
 
     switch (mclass)
     {
@@ -1667,13 +1569,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
         }
         break;
-
-    case MONS_SIREN:
-    case MONS_MERFOLK_AVATAR:
-    {
-        used = _siren_sing(mons, spl);
-        break;
-    }
 
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3)
