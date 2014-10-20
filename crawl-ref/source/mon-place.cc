@@ -3436,6 +3436,8 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_GLOORX_VLOQ:
         if (which == 1)
+            return MONS_CURSE_SKULL;
+        if (which == 2)
             return MONS_EXECUTIONER;
 
         return random_choose_weighted(1, MONS_SHADOW_DEMON,
