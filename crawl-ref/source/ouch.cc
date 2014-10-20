@@ -780,7 +780,7 @@ static void _maybe_fog(int dam)
         mpr("You emit a cloud of dark smoke.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
     }
-    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 5 * upper_threshold))
+    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_MAGIC_TRAIL, &you, you.pos(), 50, 4 + random2(5),
