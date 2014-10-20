@@ -68,8 +68,7 @@ private:
     // These are unimplemented, as a C++03-friendly form of = delete
     // (that is only checked at link time).
     Form();
-    Form(const Form &f);
-    Form &operator=(const Form &f);
+    DISALLOW_COPY_AND_ASSIGN(Form);
 protected:
     Form(string _short_name, string _long_name, string _wiz_name,
          string _description,
