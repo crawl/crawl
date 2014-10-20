@@ -1,6 +1,6 @@
 # This file contains the definitions of undrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
-# art-data.h, and also updates the enumeration and NO_UNRANDARTS in
+# art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
 # artefact.h.  C/C++ functions which give unrandarts non-standard
 # behaviour are in art-func.h; util/art-data.pl scans art-func.h and
 # puts the function names found into art-data.h.

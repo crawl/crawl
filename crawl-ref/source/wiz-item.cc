@@ -610,7 +610,7 @@ void wizard_create_all_artefacts()
     int octorings = 8;
 
     // Create all unrandarts.
-    for (int i = 0; i < NO_UNRANDARTS; ++i)
+    for (int i = 0; i < NUM_UNRANDARTS; ++i)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = get_unrand_entry(index);

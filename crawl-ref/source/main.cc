@@ -3862,7 +3862,7 @@ static void _compile_time_asserts()
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.
-    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS);
+    COMPILE_CHECK(NUM_UNRANDARTS < MAX_UNRANDARTS);
 
     // Non-artefact brands and unrandart indexes both go into
     // item.special, so make sure they don't overlap.
