@@ -22,6 +22,3 @@ inv += $inedible:.*inedible.*
 
 # Mutagenic corpses/chunks
 inv += $mutagenic:.*mutagenic.*
-
-# Contaminated corpses/chunks
-inv += $contaminated:.*contaminated.*

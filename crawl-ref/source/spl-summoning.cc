@@ -2237,10 +2237,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                 if (mons_class_holiness(si->mon_type) == MH_HOLY)
                     num_holy++;
 
-                if (food_is_rotten(*si))
-                    total_mass += mons_weight(si->mon_type) / 4;
-                else
-                    total_mass += mons_weight(si->mon_type);
+                total_mass += mons_weight(si->mon_type);
 
                 ++num_corpses;
                 item_was_destroyed(*si);

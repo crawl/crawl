@@ -1718,9 +1718,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            if (food_is_rotten(*this))
-                buff << "rotting ";
-            else if (is_poisonous(*this))
+            if (is_poisonous(*this))
                 buff << "poisonous ";
             else if (is_mutagenic(*this))
                 buff << "mutagenic ";
@@ -1982,9 +1980,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
-
-        if (food_is_rotten(*this) && !dbname)
-            buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;
 
@@ -3571,8 +3566,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_THE_GOURMAND:
             return player_likes_chunks(true) == 3
-                     && you.species != SP_GHOUL // makes clean chunks
-                                                // contaminated
                    || player_mutation_level(MUT_GOURMAND) > 0
                    || player_mutation_level(MUT_HERBIVOROUS) == 3
                    || you.undead_state(temp) && you.species != SP_GHOUL;
@@ -3797,8 +3790,6 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("mutagenic");
         else if (causes_rot(item))
             prefixes.push_back("rot-inducing"), prefixes.push_back("inedible");
-        else if (is_contaminated(item))
-            prefixes.push_back("contaminated");
         break;
 
     case OBJ_POTIONS:

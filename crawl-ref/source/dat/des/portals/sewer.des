@@ -1272,15 +1272,12 @@ KMONS:  1  = rat
 KMONS:  4  = rat w:85 / green rat w:13 / orange rat w:2
 KMONS:  23 = big kobold spells:animate_dead name:necromancer n_suf \
              col:white ; dagger | club . robe
-: dgn.delayed_decay(_G, '%', 'rat skeleton w:40 / rat corpse w:20 /' ..
-:    'rotting rat corpse w:20')
-: dgn.delayed_decay(_G, '^', 'rat skeleton w:16 / rat corpse w:8 /' ..
-:    'rotting rat corpse w:8 / green rat skeleton w:10 /' ..
-:    'green rat corpse w:5 / rotting green rat corpse w:5')
-: dgn.delayed_decay(_G, '&', 'green rat skeleton w:24 /' ..
-:    'green rat corpse w:12 / rotting green rat corpse w:12 /' ..
-:    'orange rat skeleton w:2 / orange rat corpse w:1 /' ..
-:    'rotting orange rat corpse w:1')
+: dgn.delayed_decay(_G, '%', 'rat skeleton w:60 / rat corpse w:20')
+: dgn.delayed_decay(_G, '^', 'rat skeleton w:24 / rat corpse w:8 /' ..
+:    'green rat skeleton w:15 / green rat corpse w:5')
+: dgn.delayed_decay(_G, '&', 'green rat skeleton w:36 /' ..
+:    'green rat corpse w:12 /' ..
+:    'orange rat skeleton w:3 / orange rat corpse w:1')
 KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
              potion of magic / potion of haste w:5 /\
              potion of brilliance w:5

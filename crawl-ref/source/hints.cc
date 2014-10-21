@@ -1354,7 +1354,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         // NOTE: This is called when a corpse is first seen as well as when
         //       first picked up, since a new player might not think to pick
         //       up a corpse.
-        // TODO: Specialcase skeletons and rotten corpses!
+        // TODO: Specialcase skeletons!
 
         if (gc.x <= 0 || gc.y <= 0)
             text << "Ah, a corpse!";
@@ -1395,8 +1395,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "\nYou can also offer corpses to "
                  << god_name(you.religion)
-                 << " by <w>%</w>raying over them. Note that the gods will not "
-                    "accept rotting flesh.";
+                 << " by <w>%</w>raying over them.";
             cmd.push_back(CMD_PRAY);
         }
         text << "\nIn hint mode you can reread this information at "
@@ -2028,22 +2027,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             cmd.push_back(CMD_SEARCH_STASHES);
             cmd.push_back(CMD_SEARCH_STASHES);
         }
-        break;
-
-    case HINT_ROTTEN_FOOD:
-        if (!crawl_state.game_is_hints())
-        {
-            text << "One or more of the chunks you carry has started to rot. "
-                    "While some species can eat rotten meat, you can't.";
-            break;
-        }
-        text << "One or more of the chunks you carry has started to rot. Few "
-                "species can digest these, so you might just as well "
-                "<w>%</w>rop them now. "
-                "When selecting items from a menu, there's a shortcut "
-                "(<w>,</w>) to select all items in your inventory at once "
-                "that are useless to you.";
-        cmd.push_back(CMD_DROP);
         break;
 
     case HINT_MAKE_CHUNKS:
@@ -3434,41 +3417,18 @@ void hints_describe_item(const item_def &item)
             break;
 
         case OBJ_FOOD:
-            if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
-            {
-                ostr << "You can't eat rotten chunks, so you might just as "
-                        "well ";
-                if (!in_inventory(item))
-                    ostr << "ignore them. ";
-                else
-                {
-                    ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "rotten chunks in your inventory. ";
-                    cmd.push_back(CMD_DROP);
-                    cmd.push_back(CMD_DROP);
-                }
-            }
-            else
-            {
-                ostr << "Food can simply be <w>%</w>aten"
+            ostr << "Food can simply be <w>%</w>aten"
 #ifdef USE_TILE
-                        ", something you can also do by <w>left clicking</w> "
-                        "on it"
+                    ", something you can also do by <w>left clicking</w> "
+                    "on it"
 #endif
-                        ". ";
-                cmd.push_back(CMD_EAT);
+                    ". ";
+            cmd.push_back(CMD_EAT);
 
-                if (item.sub_type == FOOD_CHUNK)
-                {
-                    ostr << "Note that most species refuse to eat raw meat "
-                            "unless hungry. ";
-
-                    if (food_is_rotten(item))
-                    {
-                        ostr << "Even fewer can safely digest rotten meat, and "
-                             "you're probably not part of that group.";
-                    }
-                }
+            if (item.sub_type == FOOD_CHUNK)
+            {
+                ostr << "Note that most species refuse to eat raw meat "
+                        "unless hungry. ";
             }
             Hints.hints_events[HINT_SEEN_FOOD] = false;
             break;
@@ -3639,14 +3599,6 @@ void hints_describe_item(const item_def &item)
                 ostr << "Skeletons can be used as components for certain "
                         "necromantic spells. Apart from that, they are "
                         "largely useless.";
-
-                if (in_inventory(item))
-                {
-                    ostr << " In the drop menu you can select all rotten "
-                            " chunks in your inventory at once with "
-                            "<w>%&</w>.";
-                    cmd.push_back(CMD_DROP);
-                }
                 break;
             }
 
@@ -3654,7 +3606,7 @@ void hints_describe_item(const item_def &item)
                     "produce chunks for food (though they may be unhealthy)";
             cmd.push_back(CMD_BUTCHER);
 
-            if (!food_is_rotten(item) && god_likes_fresh_corpses(you.religion))
+            if (god_likes_fresh_corpses(you.religion))
             {
                 ostr << ", or offered as a sacrifice to "
                      << god_name(you.religion)
@@ -3663,21 +3615,6 @@ void hints_describe_item(const item_def &item)
             }
             ostr << ". ";
 
-            if (food_is_rotten(item))
-            {
-                ostr << "Rotten corpses won't be of any use to you, though, so "
-                        "you might just as well ";
-                if (!in_inventory(item))
-                    ostr << "ignore them. ";
-                else
-                {
-                    ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
-                            "rotten chunks in your inventory. ";
-                    cmd.push_back(CMD_DROP);
-                    cmd.push_back(CMD_DROP);
-                }
-                ostr << "No god will accept such rotten sacrifice, either.";
-            }
             if (!in_inventory(item))
                 break;
 

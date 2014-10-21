@@ -18,7 +18,6 @@ enum corpse_effect_type
     CE_POISONOUS,
     CE_ROT,
     CE_MUTAGEN,
-    CE_ROTTEN,
 };
 
 // TODO: Unify this and a player_equivalent (if applicable)

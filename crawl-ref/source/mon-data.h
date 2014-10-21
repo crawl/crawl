@@ -77,7 +77,6 @@
      CE_POISONOUS,       inedible to characters without poison resistance
      CE_ROT,             causes rotting in non-Ghouls
      CE_MUTAGEN,         mutagenic
-     CE_ROTTEN           always causes sickness (good for Ghouls)
 
    zombie_size
      Z_NOZOMBIE

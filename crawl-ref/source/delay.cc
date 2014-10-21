@@ -636,32 +636,6 @@ void handle_delay()
             }
             else
             {
-                if (food_is_rotten(mitm[delay.parm1]))
-                {
-                    // Only give the rotting message if the corpse wasn't
-                    // previously rotten. (special < 100 is the rottenness check).
-                    if (delay.parm2 >= 100)
-                    {
-                        mprf(MSGCH_ROTTEN_MEAT, "The corpse rots.");
-                        if (!you_foodless()
-                            && player_mutation_level(MUT_SAPROVOROUS) < 3)
-                        {
-                            _xom_check_corpse_waste();
-                        }
-                    }
-
-                    delay.parm2 = 99; // Don't give the message twice.
-
-                    // Vampires won't continue bottling rotting corpses.
-                    if (delay.type == DELAY_BOTTLE_BLOOD)
-                    {
-                        mpr("You stop bottling this corpse's foul-smelling "
-                            "blood!");
-                        _pop_delay();
-                        return;
-                    }
-                }
-
                 // Mark work done on the corpse in case we stop. -- bwr
                 mitm[ delay.parm1 ].plus2++;
             }
@@ -676,8 +650,7 @@ void handle_delay()
     }
     else if (delay.type == DELAY_MULTIDROP)
     {
-        // Throw away invalid items; items usually go invalid because
-        // of chunks rotting away.
+        // Throw away invalid items. XXX: what are they?
         while (!items_for_multidrop.empty()
                // Don't look for gold in inventory
                && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
@@ -764,13 +737,6 @@ void handle_delay()
         {
             item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                             : mitm[delay.parm2]);
-            if (food_is_rotten(corpse))
-            {
-                mprf(MSGCH_ROTTEN_MEAT, "This corpse has started to rot.");
-                _xom_check_corpse_waste();
-                stop_delay();
-                return;
-            }
             mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
             vampire_nutrition_per_turn(corpse, 0);
             break;

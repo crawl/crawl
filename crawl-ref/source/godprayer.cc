@@ -733,9 +733,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         else if (item_orig == MONS_ORC_PRIEST)
             chance += 4;
 
-        if (food_is_rotten(item))
-            chance--;
-        else if (item.sub_type == CORPSE_SKELETON)
+        if (item.sub_type == CORPSE_SKELETON)
             chance -= 2;
 
         gain_piety(chance, 20);

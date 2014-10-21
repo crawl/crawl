@@ -40,7 +40,7 @@ manipulation or the use of armour or weapons.
 %%%%
 Ghoul
 
-An undead, damned to rot eternally. They are always looking for rotten food to
+An undead, damned to rot eternally. They are always looking for meaty chunks to
 eat, hacking away with their claws.
 %%%%
 Gargoyle
