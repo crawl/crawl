@@ -3519,11 +3519,13 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.permanent_flight();
 
         case POT_PORRIDGE:
+            return you.species == SP_VAMPIRE
+                   || player_mutation_level(MUT_CARNIVOROUS) == 3;
         case POT_BLOOD:
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
 #endif
-            return !can_ingest(item, true, false);
+            return player_mutation_level(MUT_HERBIVOROUS) == 3;
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_POISON:

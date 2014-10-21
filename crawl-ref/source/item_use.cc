@@ -3244,7 +3244,7 @@ void tile_item_eat_floor(int idx)
         || mitm[idx].base_type == OBJ_FOOD
             && you.undead_state() != US_UNDEAD && you.species != SP_VAMPIRE)
     {
-        if (can_ingest(mitm[idx], false))
+        if (can_eat(mitm[idx], false))
             eat_item(mitm[idx]);
     }
 }

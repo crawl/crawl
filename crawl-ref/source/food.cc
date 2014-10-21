@@ -189,8 +189,6 @@ bool prompt_eat_inventory_item(int slot)
             return false;
     }
 
-    // This conditional can later be merged into food::can_ingest() when
-    // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
     item_def &item(you.inv[which_inventory_slot]);
     if (item.base_type != OBJ_FOOD)
     {
@@ -198,7 +196,7 @@ bool prompt_eat_inventory_item(int slot)
         return false;
     }
 
-    if (!can_ingest(item, false))
+    if (!can_eat(item, false))
         return false;
 
     eat_item(item);
@@ -547,7 +545,7 @@ int eat_from_floor(bool skip_chunks)
         if (is_bad_food(*si))
             continue;
 
-        if (!can_ingest(*si, true))
+        if (!can_eat(*si, true))
         {
             if (!inedible_food)
             {
@@ -585,7 +583,7 @@ int eat_from_floor(bool skip_chunks)
             if (!check_warning_inscriptions(*item, OPER_EAT))
                 break;
 
-            if (can_ingest(*item, false))
+            if (can_eat(*item, false))
                 return eat_item(*item);
         }
 #else
@@ -612,7 +610,7 @@ int eat_from_floor(bool skip_chunks)
                 if (!check_warning_inscriptions(*item, OPER_EAT))
                     break;
 
-                if (can_ingest(*item, false))
+                if (can_eat(*item, false))
                     return eat_item(*item);
                 need_more = true;
                 break;
@@ -641,7 +639,7 @@ int eat_from_floor(bool skip_chunks)
             {
                 ASSERT(wonteat.defined());
                 // Use the normal cannot ingest message.
-                if (can_ingest(wonteat, false))
+                if (can_eat(wonteat, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
                          wonteat.name(DESC_PLAIN).c_str());
@@ -687,7 +685,7 @@ bool eat_from_inventory()
         if (is_bad_food(*item))
             continue;
 
-        if (!can_ingest(*item, true))
+        if (!can_eat(*item, true))
         {
             if (!inedible_food)
             {
@@ -732,7 +730,7 @@ bool eat_from_inventory()
                 return false;
             case 'e':
             case 'y':
-                if (can_ingest(*item, false))
+                if (can_eat(*item, false))
                     return eat_item(*item);
                 break;
             default:
@@ -752,7 +750,7 @@ bool eat_from_inventory()
             {
                 ASSERT(wonteat->defined());
                 // Use the normal cannot ingest message.
-                if (can_ingest(*wonteat, false))
+                if (can_eat(*wonteat, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
                          wonteat->name(DESC_PLAIN).c_str());
@@ -880,7 +878,7 @@ int prompt_eat_chunks(bool only_auto)
                 return -2;
             case 'e':
             case 'y':
-                if (can_ingest(*item, false))
+                if (can_eat(*item, false))
                 {
                     if (autoeat)
                     {
@@ -1354,7 +1352,7 @@ bool is_inedible(const item_def &item)
         return true;
 
     if (item.base_type == OBJ_FOOD
-        && !can_ingest(item, true, false))
+        && !can_eat(item, true, false))
     {
         return true;
     }
@@ -1461,168 +1459,72 @@ bool is_forbidden_food(const item_def &food)
     return false;
 }
 
-bool can_ingest(const item_def &food, bool suppress_msg, bool check_hunger)
+/** Can the player eat this item?
+ *
+ *  @param food the item (must be a corpse or food item)
+ *  @param suppress_msg whether to print why you can't eat it
+ *  @param check_hunger whether to check how hungry you are currently
+ */
+bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 {
-    if (check_hunger)
-    {
-        if (is_poisonous(food))
-        {
-            if (!suppress_msg)
-                mpr("It contains deadly poison!");
-            return false;
-        }
-        if (causes_rot(food))
-        {
-            if (!suppress_msg)
-                mpr("It is caustic! Not only inedible but also greatly harmful!");
-            return false;
-        }
-    }
+#define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
+    int sub_type = food.sub_type;
+    ASSERT(food.base_type == OBJ_FOOD || food.base_type == OBJ_CORPSES);
+
     // special case mutagenic chunks to skip hunger checks, as they don't give
     // nutrition and player can get hungry by using spells etc. anyway
-    return can_ingest(food.base_type, food.sub_type, suppress_msg,
-                      is_mutagenic(food) ? false : check_hunger);
-}
-
-bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
-                bool check_hunger, bool rotten)
-{
-    bool survey_says = false;
+    if (is_mutagenic(food))
+        check_hunger = false;
 
     // [ds] These redundant checks are now necessary - Lua might be calling us.
     if (!_eat_check(check_hunger, suppress_msg))
         return false;
 
+    if (check_hunger)
+    {
+        if (is_poisonous(food))
+            FAIL("It contains deadly poison!");
+        if (causes_rot(food))
+            FAIL("It is caustic! Not only inedible but also greatly harmful!");
+    }
+
     if (you.species == SP_VAMPIRE)
     {
-        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
+        if (food.base_type == OBJ_CORPSES && sub_type == CORPSE_BODY)
             return true;
 
-        if (what_isit == OBJ_POTIONS
-            && (kindof_thing == POT_BLOOD
-#if TAG_MAJOR_VERSION == 34
-                || kindof_thing == POT_BLOOD_COAGULATED
-#endif
-                ))
-        {
-            return true;
-        }
-
-        if (!suppress_msg)
-            mpr("Blech - you need blood!");
-
-        return false;
+        FAIL("Blech - you need blood!")
     }
+    else if (food.base_type == OBJ_CORPSES)
+        return false;
 
-    bool ur_carnivorous = player_mutation_level(MUT_CARNIVOROUS) == 3;
-    bool ur_herbivorous = player_mutation_level(MUT_HERBIVOROUS) == 3;
-
-    // ur_chunkslover not defined in terms of ur_carnivorous because
-    // a player could be one and not the other IMHO - 13mar2000 {dlb}
-    bool ur_chunkslover = check_hunger ? you.hunger_state < HS_SATIATED
-                          + player_likes_chunks() : true;
-
-    switch (what_isit)
+    if (food_is_veggie(food))
     {
-    case OBJ_FOOD:
-    {
-        if (food_is_veggie(kindof_thing))
-        {
-            if (ur_carnivorous)
-            {
-                if (!suppress_msg)
-                    mpr("Sorry, you're a carnivore.");
-                return false;
-            }
-            else
-                return true;
-        }
-        else if (food_is_meaty(kindof_thing))
-        {
-            if (ur_herbivorous)
-            {
-                if (!suppress_msg)
-                    mpr("Sorry, you're a herbivore.");
-                return false;
-            }
-            else if (kindof_thing == FOOD_CHUNK)
-            {
-                if (rotten && !_player_can_eat_rotten_meat(!suppress_msg))
-                    return false;
-
-                if (ur_chunkslover)
-                    return true;
-
-                if (you_min_hunger() == you_max_hunger())
-                    return true;
-
-                if (!suppress_msg)
-                    mpr("You aren't quite hungry enough to eat that!");
-
-                return false;
-            }
-        }
-        // Any food types not specifically handled until here (e.g. meat
-        // rations for non-herbivores) are okay.
-        return true;
-    }
-
-    case OBJ_CORPSES:
-        if (you.species == SP_VAMPIRE)
-        {
-            if (kindof_thing == CORPSE_BODY)
-                return true;
-            else
-            {
-                if (!suppress_msg)
-                    mpr("Blech - you need blood!");
-                return false;
-            }
-        }
-        return false;
-
-    case OBJ_POTIONS: // called by lua
-        if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
+        if (player_mutation_level(MUT_CARNIVOROUS) == 3)
+            FAIL("Sorry, you're a carnivore.")
+        else
             return true;
-
-        switch (kindof_thing)
+    }
+    else if (food_is_meaty(food))
+    {
+        if (player_mutation_level(MUT_HERBIVOROUS) == 3)
+            FAIL("Sorry, you're a herbivore.")
+        else if (sub_type == FOOD_CHUNK)
         {
-            case POT_BLOOD:
-#if TAG_MAJOR_VERSION == 34
-            case POT_BLOOD_COAGULATED:
-#endif
-                if (ur_herbivorous)
-                {
-                    if (!suppress_msg)
-                        mpr("Sorry, you're a herbivore.");
-                    return false;
-                }
+            if (!check_hunger
+                || you.hunger_state < HS_SATIATED
+                || player_likes_chunks())
+            {
                 return true;
-             case POT_PORRIDGE:
-                if (you.species == SP_VAMPIRE)
-                {
-                    if (!suppress_msg)
-                        mpr("Blech - you need blood!");
-                    return false;
-                }
-                else if (ur_carnivorous)
-                {
-                    if (!suppress_msg)
-                        mpr("Sorry, you're a carnivore.");
-                    return false;
-                }
-             default:
-                return true;
-        }
+            }
 
-    // Other object types are set to return false for now until
-    // someone wants to recode the eating code to permit consumption
-    // of things other than just food.
-    default:
-        return false;
+            FAIL("You aren't quite hungry enough to eat that!")
+        }
     }
 
-    return survey_says;
+    // Any food types not specifically handled until here (e.g. meat
+    // rations for non-herbivores) are okay.
+    return true;
 }
 
 bool chunk_is_poisonous(int chunktype)

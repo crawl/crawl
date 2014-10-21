@@ -361,8 +361,8 @@ static int you_gold(lua_State *ls)
 static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls,
-                    can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
-                    || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
+                     player_mutation_level(MUT_HERBIVOROUS) < 3
+                     && !you_foodless(true)
                   );
     return 1;
 }

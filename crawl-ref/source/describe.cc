@@ -2356,7 +2356,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        if (can_ingest(item, true, false))
+        if (can_eat(item, true, false))
             actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
