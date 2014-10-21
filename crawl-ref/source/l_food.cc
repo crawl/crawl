@@ -68,7 +68,7 @@ static int food_can_eat(lua_State *ls)
     if (lua_isboolean(ls, 2))
         hungercheck = lua_toboolean(ls, 2);
 
-    bool edible = item && can_ingest(*item, true, hungercheck);
+    bool edible = item && can_eat(*item, true, hungercheck);
     lua_pushboolean(ls, edible);
     return 1;
 }
@@ -78,15 +78,8 @@ static int food_eat(lua_State *ls)
     LUA_ITEM(ls, item, 1);
 
     bool eaten = false;
-    if (!you.turn_is_over)
-    {
-        // Nasty special case: can_ingest() allows potions (why???), so we need
-        // to weed them away here; we wouldn't be able to return success status
-        // otherwise.
-        if (item && can_ingest(*item, false) && item->base_type != OBJ_POTIONS)
-            eaten = eat_item(*item);
-
-    }
+    if (!you.turn_is_over && item && can_eat(*item, false))
+        eaten = eat_item(*item);
     lua_pushboolean(ls, eaten);
     return 1;
 }
