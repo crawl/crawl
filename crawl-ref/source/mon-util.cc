@@ -2304,6 +2304,7 @@ void add_drac_breath(monster* drac)
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_FIRE_BREATH; break;
     case MONS_WHITE_DRACONIAN:   sp = SPELL_COLD_BREATH; break;
+    case MONS_DRACONIAN:
     case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
     case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
 
