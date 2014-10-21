@@ -1409,7 +1409,7 @@ bool is_forbidden_food(const item_def &food)
     if (food.base_type != OBJ_CORPSES)
         return false;
 
-    return god_hates_eating(you.religion, food.mon_type)
+    return god_hates_eating(you.religion, food.mon_type);
 }
 
 /** Can the player eat this item?
