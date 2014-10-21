@@ -1361,7 +1361,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->flags |= MF_GOD_GIFT;
     }
     // Not a god gift, give priestly monsters a god.
-    else if (mons_class_flag(mg.cls, M_PRIEST))
+    else if (mon->is_priest())
     {
         // Berserkers belong to Trog.
         if (mg.cls == MONS_SPRIGGAN_BERSERKER)
