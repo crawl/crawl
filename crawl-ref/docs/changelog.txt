@@ -26,8 +26,8 @@ Monsters
 --------
 * Mnoleg now has a pair of tentacles, acting similarly to eldritch tentacles;
   as such Mnoleg no longer has Malign Gateway.
-* The great Lords of Pandemonium will reappear on later floors of Pandemonium
-  once their rune is stolen, unless and until the player kills them.
+* The Great Lords of Pandemonium (Cerebov, et al) will reappear on later floors
+  of Pandemonium if their rune is stolen, unless and until they are slain.
 * The Serpent of Hell is considerably tougher; it now has three heads which
   can attack and/or breathe separately and can also summon backup.
 * Mimics now cackle and vanish (forever) when discovered.
@@ -75,6 +75,7 @@ Items
     with much better AC & MR+, but unenchantable. (Always +0.)
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
+* Scale mail now only has 10 ER, down from 11.
 * Unrand changes:
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
@@ -115,7 +116,8 @@ Gods
   - 5*: Apocalypse: Deals very high damage to all monsters in LOS and inflicts
         statuses. Inflicts heavy drain and exhaustion.
   - Ru's abilities can be used while silenced.
-* Dithmenos worshippers are now rejected by fiery/illuminating summons.
+* Dithmenos now specifically hates fire; Corona and related effects are now
+  permitted to Dithmenos's worshippers.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
    - Hell effect protection halved; now capping out at 50%, down from 100%.
