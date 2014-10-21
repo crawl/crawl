@@ -51,11 +51,11 @@ The contents of this text are:
 3-g     Command Enhancements.
                 auto_switch, easy_open, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
-                confirm_butcher, easy_eat_chunks, auto_drop_chunks,
-                easy_quit_item_prompts, easy_exit_menu, sort_menus, spell_slot,
-                autofight_stop, autofight_throw, autofight_throw_nomove,
-                autofight_fire_stop, autofight_caught, automagic_enable,
-                automagic_slot, automagic_fight, automagic_stop
+                confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
+                easy_exit_menu, sort_menus, spell_slot, autofight_stop,
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
+                autofight_caught, automagic_enable, automagic_slot,
+                automagic_fight, automagic_stop
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -977,14 +977,6 @@ easy_eat_chunks = false
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
-
-auto_drop_chunks = (never | yes)
-        If you try to pick something up but cannot due to burden, this
-        option will try dropping useless chunks to make room. Normally,
-        dropping chunks is a waste of time (as the problem will soon rot
-        away) so this is done only at pick up time. If fully enabled, chunks
-        that would spoil before you would need them will be dropped as well,
-        ordered by quality and age.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing

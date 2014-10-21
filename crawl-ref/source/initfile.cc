@@ -803,7 +803,6 @@ void game_options::reset_options()
     jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
-    auto_drop_chunks       = ADC_NEVER;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -2621,15 +2620,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
-    else if (key == "auto_drop_chunks")
-    {
-        if (field == "never")
-            auto_drop_chunks = ADC_NEVER;
-        else if (field == "yes" || field == "true")
-            auto_drop_chunks = ADC_YES;
-        else
-            report_error("Invalid auto_drop_chunks: \"%s\"", field.c_str());
-    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS

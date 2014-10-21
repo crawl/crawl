@@ -1940,7 +1940,7 @@ bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
     }
 
     // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
+    if (inv_count() >= ENDOFPACK)
         return false;
 
     inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
