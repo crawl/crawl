@@ -33,12 +33,13 @@ enum spflag_type
                                                  // is still a battle spell
     SPFLAG_SELFENCH             = 0x020000,      // monsters use as selfench
     SPFLAG_MONSTER              = 0x040000,      // monster-only spell
-                                //0x080000,
+    SPFLAG_NEEDS_TRACER         = 0x080000,      // monster casting needs tracer
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
     SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
     SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas
     SPFLAG_ALLOW_SELF           = 0x800000,      // Not helpful, but may want to
                                                  // target self
+    SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
 };
 
 enum spret_type

@@ -1420,8 +1420,8 @@ static bool _animate_dead_okay(spell_type spell)
 // non-beam spells.
 static bool _ms_direct_nasty(spell_type monspell)
 {
-    return spell_needs_foe(monspell)
-           && !spell_typematch(monspell, SPTYP_SUMMONING);
+    return !(get_spell_flags(monspell) & SPFLAG_UTILITY
+             || spell_typematch(monspell, SPTYP_SUMMONING));
 }
 
 // Can be affected by the 'Haste Plants' spell
@@ -3266,7 +3266,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             // beam-type spells requiring tracers
-            if (spell_needs_tracer(spell_cast))
+            if (get_spell_flags(spell_cast) & SPFLAG_NEEDS_TRACER)
             {
                 const bool explode =
                     spell_is_direct_explosion(spell_cast);
@@ -3370,7 +3370,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         const int orig_hp = (foe) ? foe->stat_hp() : 0;
         const bool battlesphere = mons->props.exists("battlesphere");
-        if (spell_needs_foe(spell_cast))
+        if (!(get_spell_flags(spell_cast) & SPFLAG_UTILITY))
             make_mons_stop_fleeing(mons);
 
         if (battlesphere)
