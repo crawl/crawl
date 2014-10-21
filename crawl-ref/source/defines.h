@@ -140,7 +140,7 @@ const int LABYRINTH_BORDER = 4;
 #define ENV_SHOW_OFFSET LOS_MAX_RANGE
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
-#define VIEW_BASE_WIDTH 33      // FIXME: never used
+#define VIEW_BASE_WIDTH 33
 #define VIEW_MIN_WIDTH  ENV_SHOW_DIAMETER
 #define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
 #define MSG_MIN_HEIGHT  5
@@ -192,11 +192,9 @@ const int MAG_IMMUNE = 5000;
 // This is the damage amount used to signal insta-death
 const int INSTANT_DEATH = -9999;
 
-// Maximum enchantment on weapons/armour/secondary armours
-const int MAX_WPN_ENCHANT = 9;
-
+// Maximum enchantment on weapons/secondary armours
 // Note: use armour_max_enchant(item) to get the correct limit for item
-const int MAX_ARM_ENCHANT = 8;
+const int MAX_WPN_ENCHANT = 9;
 const int MAX_SEC_ENCHANT = 2;
 
 // The time (in aut) for a staff of power to decay 1 mp.

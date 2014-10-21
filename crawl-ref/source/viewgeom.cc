@@ -291,7 +291,7 @@ void crawl_view_buffer::clear()
 
 crawl_view_geometry::crawl_view_geometry()
     : termp(1, 1), termsz(80, 24),
-      viewp(1, 1), viewsz(33, 17),
+      viewp(1, 1), viewsz(VIEW_BASE_WIDTH, 17),
       hudp(40, 1), hudsz(-1, -1),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
