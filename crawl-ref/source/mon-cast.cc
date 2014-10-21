@@ -7275,10 +7275,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
         if (friendly && !_animate_dead_okay(monspell))
-            return false;
+            return true;
 
         if (mon->is_summoned())
-            return false;
+            return true;
 
         return monspell == SPELL_ANIMATE_DEAD
                && !animate_dead(mon, 100, SAME_ATTITUDE(mon),
