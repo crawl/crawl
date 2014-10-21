@@ -292,8 +292,10 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
         all_gone = dec_mitm_item_quantity(slot, destroyed_count);
 
     if (!all_gone)
+    {
         _compare_stack_quantity(it);
-    ASSERT(!stack_timer.empty());
+        ASSERT(!stack_timer.empty());
+    }
 
     return destroyed_count;
 }
