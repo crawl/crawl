@@ -1214,11 +1214,15 @@ aff_type targetter_cone::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targetter_shotgun::targetter_shotgun(const actor* act, int range)
+targetter_shotgun::targetter_shotgun(const actor* act, size_t beam_count,
+                                     int range)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    num_beams = beam_count;
+    for (size_t i = 0; i < num_beams; i++)
+        rays.push_back(ray_def());
     range2 = dist_range(range);
 }
 
@@ -1238,7 +1242,6 @@ bool targetter_shotgun::valid_aim(coord_def a)
 bool targetter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
-    rays.init(ray_def());
 
     if (!targetter::set_aim(a))
         return false;
@@ -1248,13 +1251,16 @@ bool targetter_shotgun::set_aim(coord_def a)
     coord_def p;
     bool hit = false;
 
-    const double spread_range = PI / 4.0;
-    for (int i = 0; i < SHOTGUN_BEAMS; i++)
+    const double spread_range = (double)(num_beams - 1) * PI / 40.0;
+    for (size_t i = 0; i < num_beams; i++)
     {
         hit = true;
-        double spread = -(spread_range / 2.0)
-                        + (spread_range * (double)i)
-                                        / (double)(SHOTGUN_BEAMS - 1);
+        double spread = (num_beams == 1)
+                        ? 0.0
+                        : -(spread_range / 2.0)
+                          + (spread_range * (double)i)
+                                          / (double)(num_beams - 1);
+        rays[i] = ray_def();
         rays[i].r.start = orig_ray.r.start;
         rays[i].r.dir.x =
              orig_ray.r.dir.x * cos(spread) + orig_ray.r.dir.y * sin(spread);
@@ -1281,9 +1287,9 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     if ((loc - origin).abs() > range2)
         return AFF_NO;
 
-    return (zapped[loc] >= SHOTGUN_BEAMS) ? AFF_YES :
-           (zapped[loc] > 0)              ? AFF_MAYBE
-                                          : AFF_NO;
+    return (zapped[loc] >= num_beams) ? AFF_YES :
+           (zapped[loc] > 0)          ? AFF_MAYBE
+                                      : AFF_NO;
 }
 
 targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)

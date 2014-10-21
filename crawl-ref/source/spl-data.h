@@ -2416,6 +2416,7 @@ static const struct spell_desc spelldata[] =
      NULL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_MELEE, "Melee",
      0,
@@ -2426,6 +2427,7 @@ static const struct spell_desc spelldata[] =
      1, 0,
      NULL,
 },
+#endif
 
 {
     SPELL_FIRE_SUMMON, "Fire Summon",
@@ -3491,6 +3493,17 @@ static const struct spell_desc spelldata[] =
      7,
      100,
      -1, -1,
+     6, 0,
+     NULL,
+},
+
+{
+    SPELL_SCATTERSHOT, "Scattershot",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     6,
+     200,
+     6, 6,
      6, 0,
      NULL,
 },

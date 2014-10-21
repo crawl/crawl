@@ -4473,8 +4473,12 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
-    if (YOU_KILL(thrower) && mons_near(mon))
+    // Suppress the message for scattershot.
+    if (YOU_KILL(thrower) && mons_near(mon)
+        && name != "burst of metal fragments")
+    {
         print_wounds(mon);
+    }
 
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
@@ -4866,7 +4870,7 @@ void bolt::affect_monster(monster* mon)
     {
         const bool deflected = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
-        if (mon->observable())
+        if (mon->observable() && name != "burst of metal fragments")
         {
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))

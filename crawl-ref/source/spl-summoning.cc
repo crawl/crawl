@@ -3432,7 +3432,7 @@ bool grand_avatar_check_melee(monster* mons, actor* target)
 void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
                           const int old_hp)
 {
-    const bool melee = (spell == SPELL_MELEE);
+    const bool melee = (spell == SPELL_NO_SPELL);
     ASSERT(mons->has_ench(ENCH_GRAND_AVATAR));
 
     actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();

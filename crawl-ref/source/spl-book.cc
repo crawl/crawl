@@ -58,12 +58,12 @@ static int _rod_spells[NUM_RODS][2] =
     { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
     { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
 #if TAG_MAJOR_VERSION == 34
-    { ROD_WARDING,     SPELL_MELEE },
+    { ROD_WARDING,     SPELL_NO_SPELL },
 #endif
     { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
-    { ROD_STRIKING,    SPELL_MELEE },
+    { ROD_IRON,        SPELL_SCATTERSHOT },
 #if TAG_MAJOR_VERSION == 34
-    { ROD_VENOM,       SPELL_MELEE },
+    { ROD_VENOM,       SPELL_NO_SPELL },
 #endif
 };
 

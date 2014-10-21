@@ -1106,6 +1106,11 @@ This ability taints the victim's ability to cast spells; casting a spell while
 afflicted with this condition causes them to lose control over their magic,
 progressively hindering their chances of success as more spells are cast.
 %%%%
+Scattershot spell
+
+This spell generates metallic fragments, blasting a cone-shaped area in front
+of the caster.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with

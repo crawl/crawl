@@ -1179,4 +1179,20 @@ static const zap_info zap_data[] =
     0
 },
 
+{
+    ZAP_SCATTERSHOT,
+    "burst of metal fragments",
+    200,
+    new calcdice_calculator<9, 8, 3, 8>,
+    new tohit_calculator<7, 1, 15>,
+    CYAN,
+    false,
+    BEAM_FRAG,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    false,
+    6
+},
+
 };
