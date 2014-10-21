@@ -470,7 +470,7 @@ bool eat_item(item_def &food)
     you.turn_is_over = true;
 
     count_action(CACT_EAT, food.sub_type);
-    if (is_perishable_stack(food))
+    if (is_perishable_stack(food)) // chunks
         remove_oldest_perishable_item(food);
     if (in_inventory(food))
         dec_inv_item_quantity(link, 1);

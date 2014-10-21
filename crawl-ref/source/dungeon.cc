@@ -70,6 +70,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "rot.h"
 #include "show.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
@@ -4481,7 +4482,10 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     }
 
     if (ispec.qty && ispec.base_type == OBJ_FOOD)
+    {
         corpse.quantity = ispec.qty;
+        init_perishable_stack(corpse);
+    }
 
     return corpse_index;
 }

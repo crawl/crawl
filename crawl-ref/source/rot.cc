@@ -36,7 +36,7 @@ static void _rot_floor_gold(item_def &it, int rot_time);
 static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
 static int _rot_stack(item_def &it, int slot, bool in_inv);
 
-static void _compare_stack_quantity(item_def &stack, int timer_size);
+static void _compare_stack_quantity(item_def &stack);
 
 static void _print_chunk_messages(int num_chunks, int num_chunks_gone);
 
@@ -110,8 +110,9 @@ void init_perishable_stack(item_def &stack, int age)
 
     // For a newly created stack, all potions/chunks use the same timer.
 #ifdef DEBUG_BLOOD_POTIONS
-    mprf(MSGCH_DIAGNOSTICS, "newly created stack will time out at aut %d",
-         max_age);
+    mprf(MSGCH_DIAGNOSTICS,
+         "newly created stack of size %d will time out at aut %d",
+         stack.quantity, max_age);
 #endif
     for (int i = 0; i < stack.quantity; i++)
         timer.push_back(max_age);
@@ -205,16 +206,28 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
  * @param stack         The stack to be potentially initialized.
  * @param timer_size    The # of timers the stack's current props have.
  */
-static void _compare_stack_quantity(item_def &stack, int timer_size)
+static void _compare_stack_quantity(item_def &stack)
 {
+    CrawlVector &stack_timer = stack.props[TIMER_KEY].get_vector();
+    const int timer_size = stack_timer.size();
     if (timer_size != stack.quantity)
     {
         mprf(MSGCH_WARN,
              "ERROR: stack quantity (%d) doesn't match timer (%d)",
              stack.quantity, timer_size);
 
-        // sanity measure
-        stack.quantity = timer_size;
+        // sanity measure; sync stack/timer size
+
+        // more items than timers
+        const int default_timer = _get_initial_stack_longevity(stack)
+                                  + you.elapsed_time;
+        while (stack.quantity > stack_timer.size())
+            stack_timer.push_back(default_timer);
+        // more timers than items
+        while (stack_timer.size() > stack.quantity)
+            stack_timer.pop_back();
+
+        ASSERT(stack.quantity == stack_timer.size());
     }
 }
 
@@ -236,7 +249,7 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     ASSERT(it.props.exists(TIMER_KEY));
 
     CrawlVector &stack_timer = it.props[TIMER_KEY].get_vector();
-    _compare_stack_quantity(it, stack_timer.size());
+    _compare_stack_quantity(it);
     ASSERT(!stack_timer.empty());
 
     int destroyed_count = 0;    // # of items decayed away entirely
@@ -259,7 +272,8 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     if (!destroyed_count)
         return 0; // Nothing to be done.
 
-    dprf("%d items rotted away", destroyed_count);
+    dprf("%d items rotted away (timer size %d)",
+         destroyed_count, stack_timer.size());
 
     if (in_inv)
     {
@@ -276,7 +290,8 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
         all_gone = dec_mitm_item_quantity(slot, destroyed_count);
 
     if (!all_gone)
-         _compare_stack_quantity(it, stack_timer.size());
+        _compare_stack_quantity(it);
+    ASSERT(!stack_timer.empty());
 
     return destroyed_count;
 }
@@ -400,11 +415,18 @@ int remove_oldest_perishable_item(item_def &stack)
         init_perishable_stack(stack);
     ASSERT(props.exists(TIMER_KEY));
     CrawlVector &timer = props[TIMER_KEY].get_vector();
-    ASSERT(!timer.empty());
+    if (timer.empty())
+    {
+        dprf("Malformed stack; trying to pop from an empty timer list!");
+        return -1;
+    }
 
     // Assuming already sorted, and first (oldest) potion valid.
     const int val = timer[timer.size() - 1].get_int();
     timer.pop_back();
+
+    dprf("Removed oldest item: %d timers, stack size %d",
+         timer.size(), stack.quantity);
 
     // The quantity will be decreased elsewhere.
     return val;
@@ -444,6 +466,9 @@ void remove_newest_perishable_item(item_def &stack, int quant)
 
     // ... and re-sort.
     _sort_cvec<int>(timer);
+
+    dprf("Removed newest item: %d timers, stack size %d",
+         timer.size(), stack.quantity);
 }
 
 void merge_perishable_stacks(const item_def &source, item_def &dest, int quant)
