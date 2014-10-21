@@ -121,7 +121,7 @@ The contents of this text are:
                 note_chat_messages, note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
-                mouse_input, wiz_mode, char_set, colour, cset, feature,
+                mouse_input, wiz_mode, char_set, colour, display_char, feature,
                 mon_glyph, item_glyph, use_fake_player_cursor,
                 show_player_species
 
@@ -2205,8 +2205,8 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
 
         The list in {...} specifies the appearance of the dungeon
         feature(s), and should be self-explanatory. <symbol> can be used
-        to override the above cset options, or also to distinguish among
-        subtypes of a character.
+        to override the above display_char options, or also to distinguish
+        among subtypes of a character.
 
         'magic' always refers to magic mapping. So the <magicmap symbol>
         entry determines what symbol will be used for features only
@@ -2233,7 +2233,7 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
              feature = stone staircase leading up {,,,,green}
              feature = stone staircase leading down {,,,,red}
 
-        Symbols can be specified as with cset:
+        Symbols can be specified as with display_char:
              feature = metal wall {#}
              feature = metal wall {35}
              feature = metal wall {x23}
