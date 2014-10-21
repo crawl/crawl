@@ -2068,7 +2068,15 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "\n"
+            "<h>Autofight:\n"
+            "<w>Tab</w>       : attack nearest monster,\n"
+            "            moving if necessary\n"
+            "<w>Shift-Tab</w> : attack nearest monster\n"
+            "            without moving\n",
+            true, true, _cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
             "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
