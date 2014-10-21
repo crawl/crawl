@@ -2212,20 +2212,6 @@ void melee_attack::apply_staff_damage()
     if (player_mutation_level(MUT_NO_ARTIFICE))
         return;
 
-    if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)
-    {
-        if (weapon->plus < ROD_CHARGE_MULT)
-            return;
-
-        weapon->plus -= ROD_CHARGE_MULT;
-        if (attacker->is_player())
-            you.wield_change = true;
-
-        special_damage = 1 + random2(attacker->skill(SK_EVOCATIONS, 150)) / 100;
-        special_damage = apply_defender_ac(special_damage);
-        return;
-    }
-
     if (weapon->base_type != OBJ_STAVES)
         return;
 

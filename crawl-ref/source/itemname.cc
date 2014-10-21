@@ -1117,7 +1117,7 @@ static const char* rod_type_name(int type)
     case ROD_WARDING:         return "warding";
 #endif
     case ROD_LIGHTNING:       return "lightning";
-    case ROD_STRIKING:        return "striking";
+    case ROD_IRON:            return "iron";
     case ROD_SHADOWS:         return "shadows";
 #if TAG_MAJOR_VERSION == 34
     case ROD_VENOM:           return "venom";
@@ -1837,6 +1837,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
+            else if (item_typ == ROD_IRON)
+                buff << "iron rod";
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }

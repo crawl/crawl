@@ -103,8 +103,11 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        if (spell == SPELL_MELEE
-            || setup_mons_cast(&fake_mon, pbolt, spell, true))
+        if (
+#if TAG_MAJOR_VERSION == 34
+            spell == SPELL_MELEE ||
+#endif
+            setup_mons_cast(&fake_mon, pbolt, spell, true))
         {
             _valid_mon_spells[i] = true;
         }
@@ -970,6 +973,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_CONJURE_FLAME:         // ditto
     case SPELL_FULMINANT_PRISM:       // ditto
+    case SPELL_SCATTERSHOT:           // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -2911,7 +2915,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
 {
-    targetter_shotgun hitfunc(agent,
+    targetter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
                               spell_range(SPELL_CLOUD_CONE, power));
 
     hitfunc.set_aim(pos);
@@ -3100,6 +3104,34 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     }
 
     return target;
+}
+
+bool scattershot_tracer(monster *caster, int pow, coord_def aim)
+{
+    targetter_shotgun hitfunc(caster, shotgun_beam_count(pow),
+                              spell_range(SPELL_SCATTERSHOT, pow));
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (map<coord_def, size_t>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        const actor *victim = actor_at(p->first);
+        if (!victim)
+            continue;
+
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += victim->get_experience_level();
+        else
+            enemy += victim->get_experience_level();
+    }
+
+    return enemy > friendly;
 }
 
 /** Chooses a matching spell from this spell list, based on frequency.
@@ -6192,6 +6224,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                      mons->foe, 0, god));
         }
         return;
+
+    case SPELL_SCATTERSHOT:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_scattershot(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        return;
+    }
     }
 
     case SPELL_HUNTING_CRY:
@@ -7602,6 +7642,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_CONTROL_UNDEAD:
         return _mons_control_undead(mon, false) < 0;
+
+    case SPELL_SCATTERSHOT:
+        return !foe
+               || !scattershot_tracer(mon, 12 * mon->spell_hd(monspell),
+                                      foe->pos());
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

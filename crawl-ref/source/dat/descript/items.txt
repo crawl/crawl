@@ -647,6 +647,10 @@ The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
 %%%%
+iron rod
+
+This rod allows its wielder to fire powerful blasts of metallic shrapnel.
+%%%%
 javelin
 
 This lightweight spear is designed for throwing and can cause serious injury.
@@ -1132,12 +1136,6 @@ power.
 rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
-%%%%
-rod of striking
-
-This rod is designed for melee combat, releasing its charges to deal additional
-damage dependent on Evocations skill when it strikes a foe. Maces & Flails
-skill will help improve your basic effectiveness with the weapon.
 %%%%
 rod of the swarm
 
