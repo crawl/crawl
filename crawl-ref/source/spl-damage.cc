@@ -175,7 +175,6 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.ench_power        = pow;      // used for radius
     beam.hit               = 20 + pow / 10;
     beam.damage            = calc_dice(6, 30 + pow);
-    beam.can_see_invis     = you.can_see_invisible();
     beam.smart_monster     = true;
     beam.attitude          = ATT_FRIENDLY;
     beam.friend_info.count = 0;

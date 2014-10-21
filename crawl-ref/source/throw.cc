@@ -548,8 +548,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.is_beam      = false;
     beam.aux_source.clear();
 
-    beam.can_see_invis = agent->can_see_invisible();
-
     beam.name = item.name(DESC_PLAIN, false, false, false);
     ammo_name = item.name(DESC_PLAIN);
 

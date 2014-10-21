@@ -290,11 +290,11 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
-    pbolt.can_see_invis  = you.can_see_invisible();
-    pbolt.nightvision    = you.nightvision();
+    pbolt.beam_source    = MHITYOU;
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
     pbolt.thrower        = KILL_YOU_MISSILE;
+
 
     // Init tracer variables.
     pbolt.friend_info.reset();
@@ -2163,8 +2163,6 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.is_tracer     = true;
     pbolt.source        = mons->pos();
     pbolt.beam_source   = mons->mindex();
-    pbolt.can_see_invis = mons->can_see_invisible();
-    pbolt.nightvision   = mons->nightvision();
     pbolt.smart_monster = (mons_intel(mons) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(mons);
 
@@ -2674,7 +2672,7 @@ void bolt::drop_object()
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = (is_tracer && !can_see_invis
+    const bool needs_fuzz = (is_tracer && !can_see_invis()
                              && you.invisible() && !YOU_KILL(thrower));
     const int dist = needs_fuzz? 2 : 0;
 
@@ -3176,6 +3174,16 @@ bool bolt::is_reflectable(const item_def *it) const
     return it && is_shield(*it) && shield_reflects(*it);
 }
 
+bool bolt::nightvision() const
+{
+    return agent() && agent()->nightvision();
+}
+
+bool bolt::can_see_invis() const
+{
+    return agent() && agent()->can_see_invisible();
+}
+
 coord_def bolt::leg_source() const
 {
     if (bounces > 0 && map_bounds(bounce_pos))
@@ -3240,7 +3248,7 @@ void bolt::tracer_affect_player()
             }
         }
     }
-    else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
+    else if (can_see_invis() || !you.invisible() || fuzz_invis_tracer())
     {
         if (mons_att_wont_attack(attitude))
         {
@@ -3289,7 +3297,7 @@ bool bolt::misses_player()
     if (real_tohit != AUTOMATIC_HIT)
     {
         // Monsters shooting at an invisible player are very inaccurate.
-        if (you.invisible() && !can_see_invis)
+        if (you.invisible() && !can_see_invis())
             real_tohit /= 2;
 
         // Backlit is easier to hit:
@@ -3297,7 +3305,7 @@ bool bolt::misses_player()
             real_tohit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && you.umbra())
+        if (!nightvision() && you.umbra())
             real_tohit -= 2 + random2(4);
     }
 
@@ -4112,7 +4120,7 @@ void bolt::update_hurt_or_helped(monster* mon)
             if (!is_tracer && !effect_known && !mons_is_firewood(mon))
             {
                 const int interest =
-                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
+                    (flavour == BEAM_INVISIBILITY && can_see_invis()) ? 25 : 100;
                 xom_is_stimulated(interest);
             }
         }
@@ -4818,7 +4826,7 @@ void bolt::affect_monster(monster* mon)
 
     if (beam_hit != AUTOMATIC_HIT)
     {
-        if (mon->invisible() && !can_see_invis)
+        if (mon->invisible() && !can_see_invis())
             beam_hit /= 2;
 
         // Backlit is easier to hit:
@@ -4826,7 +4834,7 @@ void bolt::affect_monster(monster* mon)
             beam_hit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision && mon->umbra())
+        if (!nightvision() && mon->umbra())
             beam_hit -= 2 + random2(4);
     }
 
@@ -6280,7 +6288,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                is_targeting(false), aimed_at_feet(false), msg_generated(false),
                noise_generated(false), passed_target(false),
                in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
                reflections(0), reflector(-1), auto_hit(false)

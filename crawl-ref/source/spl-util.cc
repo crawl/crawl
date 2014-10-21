@@ -1520,7 +1520,6 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         beam.friend_info.dont_stop = true;
         beam.foe_info.dont_stop = true;
         beam.attitude = ATT_FRIENDLY;
-        beam.can_see_invis = you.can_see_invisible();
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif

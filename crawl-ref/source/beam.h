@@ -123,8 +123,6 @@ struct bolt
     bool        passed_target;   // Beam progressed beyond target.
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
-    bool        can_see_invis;   // tracer firer can see invisible?
-    bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected
@@ -209,6 +207,8 @@ private:
     bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
+    bool can_see_invis() const;
+    bool nightvision() const;
 
     const actor* beam_source_as_target() const;
 
