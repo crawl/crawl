@@ -2637,22 +2637,6 @@ static void tag_read_you(reader &th)
 
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS)
-    {
-        if (you.species == SP_LAVA_ORC || you.species == SP_HILL_ORC
-            || you.species == SP_OGRE || you.species == SP_KOBOLD)
-        {
-           you.mutation[MUT_SAPROVOROUS] =
-           you.innate_mutation[MUT_SAPROVOROUS] = 0;
-        }
-        if (you.species == SP_OGRE)
-        {
-            // Remove the innate level of fast metabolism
-            you.mutation[MUT_FAST_METABOLISM] -= 1;
-            you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
-        }
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_CE_HA_DIET)
     {
         if (you.species == SP_CENTAUR)
@@ -2690,12 +2674,12 @@ static void tag_read_you(reader &th)
         && you.species == SP_DEMONSPAWN
         && you.innate_mutation[MUT_SAPROVOROUS])
     {
-        you.mutation[MUT_SAPROVOROUS] =
-        you.innate_mutation[MUT_SAPROVOROUS] = 0;
-
         you.mutation[MUT_ROT_IMMUNITY] =
         you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
     }
+
+    you.mutation[MUT_SAPROVOROUS] =
+    you.innate_mutation[MUT_SAPROVOROUS] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
         && you.species == SP_DEMONSPAWN)

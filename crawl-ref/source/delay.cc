@@ -621,10 +621,7 @@ void handle_delay()
                 if (delay.type == DELAY_BUTCHER
                     || delay.type == DELAY_BOTTLE_BLOOD) // Shouldn't happen.
                 {
-                    if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                        _xom_check_corpse_waste();
-                    else
-                        xom_is_stimulated(25);
+                    _xom_check_corpse_waste();
                     delay.duration = 0;
                 }
                 else
@@ -943,10 +940,7 @@ static void _finish_delay(const delay_queue_item &delay)
                      (delay.type == DELAY_BOTTLE_BLOOD ? "bottling its blood"
                                                        : "butchering"));
 
-                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                    _xom_check_corpse_waste();
-                else
-                    xom_is_stimulated(50);
+                _xom_check_corpse_waste();
 
                 break;
             }
