@@ -167,26 +167,6 @@ bool InvEntry::is_item_equipped() const
     return false;
 }
 
-// Returns values < 0 for edible chunks (non-rotten except for Saprovores),
-// 0 for non-chunks, and values > 0 for rotten chunks for non-Saprovores.
-int InvEntry::item_freshness() const
-{
-    if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
-        return 0;
-
-    int freshness = item->special;
-
-    if (freshness >= 100 || player_mutation_level(MUT_SAPROVOROUS))
-        freshness -= 300;
-
-    // Ensure that chunk freshness is never zero, since zero means
-    // that the item isn't a chunk.
-    if (freshness >= 0) // possibly rotten chunks
-        freshness++;
-
-    return freshness;
-}
-
 void InvEntry::select(int qty)
 {
     if (item && item->quantity < qty)
@@ -319,15 +299,6 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     get_class_hotkeys(type, glyphs);
     for (unsigned int k = 0; k < glyphs.size(); ++k)
         add_hotkey(glyphs[k]);
-
-    // Hack to make rotten chunks answer to '&' as well.
-    // Check for uselessness rather than inedibility to cover the spells
-    // that use chunks.
-    if (i.base_type == OBJ_FOOD && i.sub_type == FOOD_CHUNK
-        && is_useless_item(i))
-    {
-        add_hotkey('&');
-    }
 }
 
 bool InvEntry::show_cursor = false;
@@ -760,7 +731,6 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
           { "slot",      compare_item_fn<int, sort_item_slot> },
-          { "freshness", compare_item<int, &InvEntry::item_freshness> }
       };
 
     list.clear();
@@ -1040,7 +1010,6 @@ string item_class_name(int type, bool terse)
         {
         case OBJ_STAVES:     return "magical staff";
         case OBJ_MISCELLANY: return "misc";
-        case OBJ_CORPSES:    return "carrion";
         default:             return base_type_string((object_class_type) type);
         }
     }
@@ -1062,7 +1031,6 @@ string item_class_name(int type, bool terse)
         case OBJ_RODS:       return "Rods";
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
-        case OBJ_CORPSES:    return "Carrion";
         }
     }
     return "";
