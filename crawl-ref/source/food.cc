@@ -880,7 +880,9 @@ static const char *_chunk_flavour_phrase(bool likes_chunks)
 {
     const char *phrase = "tastes terrible.";
 
-    if (likes_chunks)
+    if (you.species == SP_GHOUL)
+        phrase = "tastes great!";
+    else if (likes_chunks)
         phrase = "tastes great.";
     else
     {
@@ -950,24 +952,6 @@ static int _chunk_nutrition(int likes_chunks)
     return _apply_herbivore_nutrition_effects(effective_nutrition);
 }
 
-int contamination_ratio(corpse_effect_type chunk_effect)
-{
-    int ratio = 0;
-    if (chunk_effect == CE_ROT)
-        return 1000;
-
-    if (you.gourmand())
-    {
-        int left = GOURMAND_MAX - you.duration[DUR_GOURMAND];
-        if (you.species == SP_GHOUL)
-            ratio = 1000 - (1000 - ratio) * left / GOURMAND_MAX;
-        else
-            ratio = ratio * left / GOURMAND_MAX;
-    }
-
-    return ratio;
-}
-
 /**
  * How intelligent was the monster that the given corpse came from?
  *
@@ -1000,12 +984,6 @@ static void _eat_chunk(item_def& food)
     bool suppress_msg = false; // do we display the chunk nutrition message?
     bool do_eat       = false;
 
-    if (you.species == SP_GHOUL)
-    {
-        nutrition    = CHUNK_BASE_NUTRITION;
-        suppress_msg = true;
-    }
-
     switch (chunk_effect)
     {
     case CE_MUTAGEN:
@@ -1023,24 +1001,14 @@ static void _eat_chunk(item_def& food)
 
     case CE_CLEAN:
     {
-        int contam = contamination_ratio(chunk_effect);
         if (you.species == SP_GHOUL)
         {
-            mprf("This flesh tastes %s!",
-                 x_chance_in_y(contam, 1000) ? "delicious" : "good");
-            if (you.species == SP_GHOUL)
-            {
-                int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-                _heal_from_food(hp_amt, x_chance_in_y(3, 4));
-            }
-        }
-        else
-        {
-            mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
-
-            nutrition = nutrition * (1000 - contam) / 1000;
+            suppress_msg = true;
+            int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
+            _heal_from_food(hp_amt, x_chance_in_y(3, 4));
         }
 
+        mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
         do_eat = true;
         break;
     }
@@ -1270,11 +1238,7 @@ bool is_mutagenic(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return false;
 
-    // Has no effect on ghouls.
-    if (you.species == SP_GHOUL)
-        return false;
-
-    return mons_corpse_effect(food.mon_type) == CE_MUTAGEN;
+    return determine_chunk_effect(mons_corpse_effect(food.mon_type)) == CE_MUTAGEN;
 }
 
 // Returns true if a food item (or corpse) will cause rotting.
@@ -1283,11 +1247,7 @@ bool causes_rot(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return false;
 
-    // Has no effect on ghouls.
-    if (you.species == SP_GHOUL)
-        return false;
-
-    return mons_corpse_effect(food.mon_type) == CE_ROT;
+    return determine_chunk_effect(mons_corpse_effect(food.mon_type)) == CE_ROT;
 }
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
@@ -1659,25 +1619,18 @@ static bool _compare_second(const pair<int, int> &a, const pair<int, int> &b)
 
 int corpse_badness(corpse_effect_type ce, const item_def &item)
 {
-    // Not counting poisonous chunks as useless here, caller must do that
-    // themself.
-
-    int contam = contamination_ratio(ce);
-    if (you.species == SP_GHOUL)
-        contam = -contam;
-
-    // Arbitrarily lower the value of poisonous chunks: swapping resistances
-    // is tedious.
-    if (ce == CE_POISONOUS)
-        contam = contam * 3 / 2;
+    int contam = 0;
 
     dprf("%s: to rot %d, contam %d -> badness %d",
          item.name(DESC_PLAIN).c_str(),
          item.special, contam,
          contam - 3 * item.special);
 
-    // Being almost rotten has 480 badness.
+    // Being almost rotten away has 480 badness.
     contam -= 3 * item.special;
+
+    if (ce == CE_ROT)
+        contam += 1000;
 
     // Corpses your god gives penance for messing with are absolute last
     // priority.

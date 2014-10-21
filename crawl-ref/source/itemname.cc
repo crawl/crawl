@@ -3574,7 +3574,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_likes_chunks(true) == 3
                    || player_mutation_level(MUT_GOURMAND) > 0
                    || player_mutation_level(MUT_HERBIVOROUS) == 3
-                   || you.undead_state(temp) && you.species != SP_GHOUL;
+                   || you.undead_state(temp);
 
         case AMU_FAITH:
             return you.species == SP_DEMIGOD && !you.religion;
