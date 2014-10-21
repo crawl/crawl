@@ -3115,3 +3115,47 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 
     return SPRET_SUCCESS;
 }
+
+spret_type cast_magma_blast(const actor *caster, int pow, const coord_def &pos,
+                            bool fail)
+{
+    const size_t range = spell_range(SPELL_MAGMA_BLAST, pow);
+
+    targetter_shotgun hitfunc(caster, range);
+
+    hitfunc.set_aim(pos);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "blast"))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    bolt beam;
+    beam.thrower = (caster && caster->is_player()) ? KILL_YOU :
+                   (caster)                        ? KILL_MON
+                                                   : KILL_MISC;
+    beam.range       = range;
+    beam.source      = caster->pos();
+    beam.source_id   = caster->mid;
+    beam.source_name = caster->name(DESC_PLAIN, true);
+    zappy(ZAP_MAGMA_BLAST, pow, beam);
+    beam.aux_source  = beam.name;
+
+    if (!caster->is_player())
+        beam.damage   = dice_def(3, 4 + (pow / 18));
+
+    for (size_t i = 0; i < SHOTGUN_BEAMS; i++)
+    {
+        bolt tempbeam = beam;
+        ray_def ray = hitfunc.rays[random2(SHOTGUN_BEAMS)];
+        for (size_t j = 0; j < range; j++)
+            ray.advance();
+        tempbeam.target = ray.pos();
+        tempbeam.fire();
+    }
+
+    return SPRET_SUCCESS;
+}

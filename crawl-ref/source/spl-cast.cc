@@ -1068,6 +1068,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_GLACIATE:
         return new targetter_cone(&you, range);
     case SPELL_CLOUD_CONE:
+    case SPELL_MAGMA_BLAST:
         return new targetter_shotgun(&you, range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
@@ -1883,6 +1884,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_RANDOM_BOLT:
         return cast_random_bolt(powc, beam, fail);
+
+    case SPELL_MAGMA_BLAST:
+        return cast_magma_blast(&you, powc, target, fail);
 
     default:
         return SPRET_NONE;

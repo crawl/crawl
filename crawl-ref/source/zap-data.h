@@ -1179,4 +1179,20 @@ static const zap_info zap_data[] =
     0
 },
 
+{
+    ZAP_MAGMA_BLAST,
+    "blast of magma",
+    200,
+    new calcdice_calculator<4, 5, 2, 9>,
+    new tohit_calculator<8, 1, 25>,
+    RED,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    false,
+    6
+},
+
 };

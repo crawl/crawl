@@ -859,6 +859,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
+    case SPELL_MAGMA_BLAST:           // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -2858,6 +2859,33 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     }
 
     return mons_should_fire(beam);
+}
+
+static bool _magma_blast_tracer(monster *caster, int pow, coord_def aim)
+{
+    targetter_shotgun hitfunc(caster, spell_range(SPELL_MAGMA_BLAST, pow));
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (map<coord_def, int>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        const actor *victim = actor_at(p->first);
+        if (!victim)
+            continue;
+
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += victim->get_experience_level();
+        else
+            enemy += victim->get_experience_level();
+    }
+
+    return enemy > friendly;
 }
 
 /** Chooses a matching spell from this spell list, based on frequency.
@@ -6001,6 +6029,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_HUNTING_CRY:
         return;
+
+    case SPELL_MAGMA_BLAST:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_magma_blast(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7390,6 +7426,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_HUNTING_CRY:
         return !foe;
+
+    case SPELL_MAGMA_BLAST:
+        return !foe
+               || !_magma_blast_tracer(mon, 12 * mon->spell_hd(monspell),
+                                       foe->pos());
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

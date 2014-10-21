@@ -67,4 +67,6 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail = false);
+spret_type cast_magma_blast(const actor *caster, int pow, const coord_def &pos,
+                            bool fail = false);
 #endif

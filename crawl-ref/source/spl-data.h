@@ -3476,6 +3476,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MAGMA_BLAST, "Magma Blast",
+     SPTYP_CONJURATION | SPTYP_EARTH | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     6, 6,
+     5, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,

@@ -325,7 +325,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
 {   // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_BOLT_OF_MAGMA,
+    SPELL_MAGMA_BLAST,
     SPELL_STATUE_FORM,
     SPELL_IRON_SHOT,
     SPELL_SHATTER,
@@ -349,7 +349,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_VENOM_BOLT,
-    SPELL_BOLT_OF_MAGMA,
+    SPELL_MAGMA_BLAST,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
     SPELL_NO_SPELL,
