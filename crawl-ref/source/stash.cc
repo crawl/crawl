@@ -30,6 +30,7 @@
 #include "output.h"
 #include "place.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -359,7 +360,7 @@ void Stash::update()
         // Compare these items
         if (are_items_same(first, item))
         {
-            // Replace the item to reflect seen recharging, rotting, etc.
+            // Replace the item to reflect seen recharging, etc.
             if (!are_items_same(first, item, true))
             {
                 items.erase(items.begin());
@@ -402,7 +403,7 @@ void Stash::update()
 static bool _is_rottable(const item_def &item)
 {
     return item.base_type == OBJ_CORPSES
-           || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK);
+           || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
 }
 
 static short _min_rot(const item_def &item)
@@ -416,7 +417,7 @@ static short _min_rot(const item_def &item)
     if (!mons_skeleton(item.mon_type))
         return 0;
     else
-        return -200;
+        return -(FRESHEST_CORPSE);
 }
 
 // Returns the item name for a given item, with any appropriate
@@ -438,14 +439,8 @@ string Stash::stash_item_name(const item_def &item)
     if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
         return name;
 
-    // Item was already seen to be rotten
-    if (item.special < 100)
-        return name;
-
     if (item.plus2 <= 0)
         name += " (skeletalised by now)";
-    else if (item.plus2 < 100)
-        name += " (rotten by now)";
 
     return name;
 }
