@@ -77,12 +77,6 @@ struct spell_desc
     int effect_noise;
 
     const char  *target_prompt;
-
-    // If a monster is casting this, does it need a tracer?
-    bool         ms_needs_tracer;
-
-    // The spell can be used no matter what the monster's foe is.
-    bool         ms_utility;
 };
 
 #include "spl-data.h"
@@ -381,25 +375,11 @@ int spell_hunger(spell_type which_spell, bool rod)
     return hunger;
 }
 
-// Used to determine whether or not a monster should always fire this spell
-// if selected.  If not, we should use a tracer.
-
-// Note - this function assumes that the monster is "nearby" its target!
-bool spell_needs_tracer(spell_type spell)
-{
-    return _seekspell(spell)->ms_needs_tracer;
-}
-
 // Checks if the spell is an explosion that can be placed anywhere even without
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
 {
     return spell == SPELL_FIRE_STORM || spell == SPELL_HELLFIRE_BURST;
-}
-
-bool spell_needs_foe(spell_type spell)
-{
-    return !_seekspell(spell)->ms_utility;
 }
 
 bool spell_harms_target(spell_type spell)
