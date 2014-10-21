@@ -1500,7 +1500,10 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
         if (what_isit == OBJ_POTIONS
             && (kindof_thing == POT_BLOOD
-                || kindof_thing == POT_BLOOD_COAGULATED))
+#if TAG_MAJOR_VERSION == 34
+                || kindof_thing == POT_BLOOD_COAGULATED
+#endif
+                ))
         {
             return true;
         }
@@ -1585,7 +1588,9 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         switch (kindof_thing)
         {
             case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
             case POT_BLOOD_COAGULATED:
+#endif
                 if (ur_herbivorous)
                 {
                     if (!suppress_msg)

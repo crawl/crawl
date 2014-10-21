@@ -1570,9 +1570,11 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 10;
                 break;
 
+#if TAG_MAJOR_VERSION == 34
             case POT_BLOOD_COAGULATED:
                 valued += 5;
                 break;
+#endif
             }
         }
         break;
@@ -1909,7 +1911,9 @@ bool is_worthless_consumable(const item_def &item)
         {
         // Blood potions are worthless because they are easy to make.
         case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
+#endif
         case POT_CONFUSION:
         case POT_DECAY:
         case POT_DEGENERATION:

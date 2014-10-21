@@ -383,6 +383,7 @@ static int _get_random_porridge_desc()
                                                : PDC_WHITE);
 }
 
+#if TAG_MAJOR_VERSION == 34
 static int _get_random_coagulated_blood_desc()
 {
     potion_description_qualifier_type qualifier = PDQ_NONE;
@@ -412,6 +413,7 @@ static int _get_random_coagulated_blood_desc()
             return desc;
     }
 }
+#endif
 
 static int _get_random_blood_desc()
 {
@@ -429,8 +431,10 @@ void initialise_item_descriptions()
         = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]
         = _get_random_blood_desc();
+#if TAG_MAJOR_VERSION == 34
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
         = _get_random_coagulated_blood_desc();
+#endif
 
     // The order here must match that of IDESC in describe.h
     const int max_item_number[6] = { NUM_WANDS,

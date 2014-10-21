@@ -144,18 +144,24 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
     case POT_BLOOD_COAGULATED:
+#endif
         if (you.species == SP_VAMPIRE)
         {
             // No healing anymore! (jpeg)
             int value = 840;
+#if TAG_MAJOR_VERSION == 34
             if (pot_eff == POT_BLOOD)
             {
+#endif
                 mpr("Yummy - fresh blood!");
                 value += 200;
+#if TAG_MAJOR_VERSION == 34
             }
             else // Coagulated.
                 mpr("This tastes delicious!");
+#endif
 
             lessen_hunger(value, true);
         }
