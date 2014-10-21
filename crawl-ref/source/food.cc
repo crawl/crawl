@@ -1409,26 +1409,7 @@ bool is_forbidden_food(const item_def &food)
     if (food.base_type != OBJ_CORPSES)
         return false;
 
-    // Some gods frown upon cannibalistic behaviour.
-    if (god_hates_cannibalism(you.religion)
-        && is_player_same_genus(food.mon_type))
-    {
-        return true;
-    }
-
-    // Holy gods do not like it if you are eating holy creatures
-    if (is_good_god(you.religion)
-        && mons_class_holiness(food.mon_type) == MH_HOLY)
-    {
-        return true;
-    }
-
-    // Zin doesn't like it if you eat beings with a soul.
-    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_NORMAL)
-        return true;
-
-    // Everything else is allowed.
-    return false;
+    return god_hates_eating(you.religion, food.mon_type)
 }
 
 /** Can the player eat this item?

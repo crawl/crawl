@@ -3886,21 +3886,19 @@ bool god_hates_killing(god_type god, const monster* mon)
 }
 
 /**
- * Will the given god object if you follow them & eat the given monster?
+ * Will the given god object if you eat a monster of this type?
  *
  * @param god       The god in question.
- * @param monster   The monster to be eaten.
+ * @param mc        The monster type to be eaten.
  * @return          Whether eating this monster will incur penance.
  */
-bool god_hates_eating(god_type god, const monster* mon)
+bool god_hates_eating(god_type god, monster_type mc)
 {
-    // XXX: deduplicate this with is_forbidden_food etc
-
-    if (god_hates_cannibalism(god) && is_player_same_genus(mon->type))
+    if (god_hates_cannibalism(god) && is_player_same_genus(mc))
         return true;
-    if (is_good_god(you.religion) && mons_class_holiness(mon->type) == MH_HOLY)
+    if (is_good_god(you.religion) && mons_class_holiness(mc) == MH_HOLY)
         return true;
-    if (you_worship(GOD_ZIN) && mons_intel(mon) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_NORMAL)
         return true;
     return false;
 }

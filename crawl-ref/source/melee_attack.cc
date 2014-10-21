@@ -703,7 +703,7 @@ static void _hydra_consider_devouring(monster &defender)
     dprf("shifter ok");
 
     // or food that would incur divine penance...
-    if (god_hates_eating(you.religion, &defender))
+    if (god_hates_eating(you.religion, defender.type))
         return;
 
     dprf("god ok");
