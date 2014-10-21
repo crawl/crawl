@@ -2523,7 +2523,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
-    case ENCH_EPHEMERAL_INFUSION:
     case ENCH_SAP_MAGIC:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
@@ -2635,6 +2634,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
+        break;
+    case ENCH_EPHEMERAL_INFUSION:
+        cturn = 150 / _mod_speed(25, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;
