@@ -5073,14 +5073,20 @@ void unmarshallMonster(reader &th, monster& m)
     m.spells.clear();
     for (size_t i = 0; i < oldspells.size(); i++)
     {
-        if (!(m.type == MONS_AZRAEL
-              && oldspells[i].spell == SPELL_DRACONIAN_BREATH)
-            && !(mons_is_zombified(&m)
-                 && !mons_enslaved_soul(&m)
-                 && oldspells[i].spell != SPELL_CREATE_TENTACLES))
+        if (mons_is_zombified(&m) && !mons_enslaved_soul(&m)
+            && oldspells[i].spell != SPELL_CREATE_TENTACLES)
         {
-            m.spells.push_back(oldspells[i]);
+            // zombies shouldn't have (most) spells
         }
+        else if (oldspells[i].spell == SPELL_DRACONIAN_BREATH)
+        {
+            // Replace Draconian Breath with the colour-specific spell,
+            // and remove Azrael's bad breath while we're at it.
+            if (mons_genus(m.type) == MONS_DRACONIAN)
+                add_drac_breath(&m);
+        }
+        else
+            m.spells.push_back(oldspells[i]);
     }
 #endif
     }
