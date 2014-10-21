@@ -869,7 +869,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_STORM:
         return act->res_elec() >= 3;
     case CLOUD_NEGATIVE_ENERGY:
-        return act->res_negative_energy() > 0;
+        return act->res_negative_energy() >= 3;
     default:
         return false;
     }
