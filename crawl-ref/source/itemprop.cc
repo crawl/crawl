@@ -1925,7 +1925,10 @@ bool is_blood_potion(const item_def &item)
         return false;
 
     return item.sub_type == POT_BLOOD
-           || item.sub_type == POT_BLOOD_COAGULATED;
+#if TAG_MAJOR_VERSION == 34
+           || item.sub_type == POT_BLOOD_COAGULATED
+#endif
+            ;
 }
 
 bool food_is_meaty(int food_type)

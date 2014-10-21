@@ -735,7 +735,9 @@ const char* potion_type_name(int potiontype)
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
     case POT_BLOOD:             return "blood";
+#if TAG_MAJOR_VERSION == 34
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
+#endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
@@ -3518,7 +3520,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case POT_PORRIDGE:
         case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
+#endif
             return !can_ingest(item, true, false);
         case POT_DECAY:
             return you.res_rotting(temp) > 0;

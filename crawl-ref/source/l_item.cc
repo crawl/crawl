@@ -298,8 +298,10 @@ static int l_item_do_subtype(lua_State *ls)
         {
             if (item->sub_type == POT_BLOOD)
                 s = "blood";
+#if TAG_MAJOR_VERSION == 34
             else if (item->sub_type == POT_BLOOD_COAGULATED)
                 s = "coagulated blood";
+#endif
             else if (item->sub_type == POT_PORRIDGE)
                 s = "porridge";
             else if (item->sub_type == POT_BERSERK_RAGE)

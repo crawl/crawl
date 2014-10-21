@@ -5943,7 +5943,9 @@ bool monster::can_drink_potion(potion_type ptype) const
             return holiness() != MH_NONLIVING
                    && holiness() != MH_PLANT;
         case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
+#endif
             return mons_species() == MONS_VAMPIRE;
         case POT_BERSERK_RAGE:
             return can_go_berserk();
@@ -5976,7 +5978,9 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_DEATHS_DOOR)
                && hit_points <= max_hit_points / 2;
     case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
     case POT_BLOOD_COAGULATED:
+#endif
         return hit_points <= max_hit_points / 2;
     case POT_BERSERK_RAGE:
         // this implies !berserk()
@@ -6033,7 +6037,9 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         break;
 
     case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
     case POT_BLOOD_COAGULATED:
+#endif
         if (mons_species() == MONS_VAMPIRE)
         {
             heal(10 + random2avg(28, 3));
