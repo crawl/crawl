@@ -1142,12 +1142,6 @@ enum confirm_level_type
     CONFIRM_ALL_EASY,
 };
 
-enum chunk_drop_type
-{
-    ADC_NEVER,
-    ADC_YES,
-};
-
 // When adding new delays, update their names in delay.cc
 enum delay_type
 {

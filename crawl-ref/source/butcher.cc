@@ -129,11 +129,17 @@ bool butchery(int which_corpse, bool bottle_blood)
 
             corpse_effect_type ce = determine_chunk_effect(mons_corpse_effect(
                                                             si->mon_type));
-            int badness = corpse_badness(ce, *si);
+            // Being almost rotten away has 480 badness.
+            int badness = 3 * si->special;
             if (ce == CE_POISONOUS)
                 badness += 600;
             else if (ce == CE_MUTAGEN)
                 badness += 1000;
+            else if (ce == CE_ROT)
+                badness += 1000;
+
+            if (is_forbidden_food(*si))
+                badness += 10000;
 
             if (badness < best_badness)
                 corpse_id = si->index(), best_badness = badness;

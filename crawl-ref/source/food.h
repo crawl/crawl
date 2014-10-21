@@ -70,7 +70,4 @@ bool you_foodless_normally();
 void handle_starvation();
 int hunger_bars(const int hunger);
 string hunger_cost_string(const int hunger);
-
-int corpse_badness(corpse_effect_type ce, const item_def &item);
-bool drop_spoiled_chunks();
 #endif
