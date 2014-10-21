@@ -74,36 +74,13 @@ void draconian_change_colour(monster* drac)
     if (mons_genus(drac->type) != MONS_DRACONIAN)
         return;
 
-    switch (random2(5))
-    {
-    case 0:
-        drac->colour = RED;
-        drac->base_monster = MONS_RED_DRACONIAN;
-        break;
-
-    case 1:
-        drac->colour = WHITE;
-        drac->base_monster = MONS_WHITE_DRACONIAN;
-        break;
-
-    case 2:
-        drac->colour = BLUE;
-        drac->base_monster = MONS_BLACK_DRACONIAN;
-        break;
-
-    case 3:
-        drac->colour = GREEN;
-        drac->base_monster = MONS_GREEN_DRACONIAN;
-        break;
-
-    case 4:
-        drac->colour = MAGENTA;
-        drac->base_monster = MONS_PURPLE_DRACONIAN;
-        break;
-
-    default:
-        break;
-    }
+    drac->base_monster = random_choose(MONS_RED_DRACONIAN,
+                                       MONS_WHITE_DRACONIAN,
+                                       MONS_BLACK_DRACONIAN,
+                                       MONS_GREEN_DRACONIAN,
+                                       MONS_PURPLE_DRACONIAN,
+                                       -1);
+    drac->colour = mons_class_colour(drac->base_monster);
 
     // Get rid of the old breath weapon first.
     monster_spells oldspells = drac->spells;
