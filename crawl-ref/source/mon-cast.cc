@@ -7123,8 +7123,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_AWAKEN_VINES:
-        return mon->has_ench(ENCH_AWAKEN_VINES)
-                  && mon->props["vines_awakened"].get_int() >= 3
+        return !foe
+               || mon->has_ench(ENCH_AWAKEN_VINES)
+                   && mon->props["vines_awakened"].get_int() >= 3
                || !_awaken_vines(mon, true);
 
     case SPELL_CONTROL_WINDS:
