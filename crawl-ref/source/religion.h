@@ -93,7 +93,7 @@ bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monster* mon);
-bool god_hates_eating(god_type god, const monster* mon);
+bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
