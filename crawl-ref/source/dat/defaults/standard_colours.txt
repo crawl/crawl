@@ -7,7 +7,6 @@ $rot-inducing := lightred
 $mutagenic    := magenta
 $dangerous    := magenta
 $poisonous    := lightgreen
-$contaminated := brown
 
 ### standard colours to be used for message highlighting
 $danger   := lightred

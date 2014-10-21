@@ -184,7 +184,7 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
 
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
-    const bool same = a.base_type == b.base_type
+    return a.base_type == b.base_type
         && a.sub_type == b.sub_type
         // Ignore Gozag's gold flag, and rod charges.
         && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
@@ -194,14 +194,6 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
         && a.colour == b.colour
         && a.flags == b.flags
         && a.quantity == b.quantity;
-
-    // Account for rotting meat when comparing items.
-    return same
-           || (!exact && a.base_type == b.base_type
-               && (a.base_type == OBJ_CORPSES
-                   || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
-                       && b.sub_type == FOOD_CHUNK))
-               && a.plus == b.plus);
 }
 
 bool Stash::unverified() const

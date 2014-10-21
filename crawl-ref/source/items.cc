@@ -1421,8 +1421,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
 
     if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
         && (mons_corpse_effect(item1.mon_type) !=
-            mons_corpse_effect(item2.mon_type)
-            || food_is_rotten(item1) != food_is_rotten(item2)))
+            mons_corpse_effect(item2.mon_type)))
     {
         return false;
     }
@@ -3767,23 +3766,12 @@ bool get_item_by_name(item_def *item, char* specs,
         if (is_blood_potion(*item))
         {
             const char* prompt;
-            if (item->sub_type == POT_BLOOD)
-            {
-                prompt = "# turns away from coagulation? "
-                         "[ENTER for fully fresh] ";
-            }
-            else
-            {
-                prompt = "# turns away from rotting? "
-                         "[ENTER for fully fresh] ";
-            }
+            prompt = "# turns away from rotting? "
+                     "[ENTER for fully fresh] ";
             int age = prompt_for_int(prompt, false);
 
             if (age <= 0)
                 age = -1;
-            else if (item->sub_type == POT_BLOOD)
-                age += ROTTING_BLOOD;
-
             init_perishable_stack(*item, age);
         }
         break;
@@ -3944,7 +3932,7 @@ item_info get_item_info(const item_def& item)
         if (ii.sub_type == FOOD_CHUNK)
         {
             ii.plus = item.plus; // monster
-            ii.special = food_is_rotten(item) ? 99 : 100;
+            ii.special = 100;
         }
         if (ii.sub_type == FOOD_FRUIT)
             ii.rnd = item.rnd; //appearance
@@ -3952,7 +3940,7 @@ item_info get_item_info(const item_def& item)
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
         ii.plus = item.plus; // monster
-        ii.special = food_is_rotten(item) ? 99 : 100;
+        ii.special = 100;
         break;
     case OBJ_SCROLLS:
         if (item_type_known(item))

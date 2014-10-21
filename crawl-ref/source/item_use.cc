@@ -2006,7 +2006,6 @@ static bool _check_blood_corpses_on_ground()
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-            && !food_is_rotten(*si)
             && mons_has_blood(si->mon_type))
         {
             return true;
@@ -3198,8 +3197,7 @@ bool stasis_blocks_effect(bool calc_unid,
 void tile_item_use_floor(int idx)
 {
     if (mitm[idx].base_type == OBJ_CORPSES
-        && mitm[idx].sub_type != CORPSE_SKELETON
-        && !food_is_rotten(mitm[idx]))
+        && mitm[idx].sub_type != CORPSE_SKELETON)
     {
         butchery(idx);
     }
@@ -3348,8 +3346,7 @@ void tile_item_use(int idx)
 
         case OBJ_CORPSES:
             if (you.species != SP_VAMPIRE
-                || item.sub_type == CORPSE_SKELETON
-                || food_is_rotten(item))
+                || item.sub_type == CORPSE_SKELETON)
             {
                 break;
             }

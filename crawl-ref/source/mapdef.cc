@@ -4958,12 +4958,9 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
 item_spec item_list::parse_corpse_spec(item_spec &result, string s)
 {
     const bool never_decay = strip_tag(s, "never_decay");
-    const bool rotting = strip_tag(s, "rotting");
 
     if (never_decay)
         result.props[CORPSE_NEVER_DECAYS].get_bool() = true;
-    if (rotting)
-        result.item_special = ROTTING_CORPSE;
 
     const bool corpse = strip_suffix(s, "corpse");
     const bool skeleton = !corpse && strip_suffix(s, "skeleton");

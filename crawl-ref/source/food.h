@@ -34,13 +34,11 @@ void set_hunger(int new_hunger_level, bool suppress_msg);
 bool is_bad_food(const item_def &food);
 bool is_poisonous(const item_def &food);
 bool is_mutagenic(const item_def &food);
-bool is_contaminated(const item_def &food);
 bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
-                                                  bool rotten_chunk);
+corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype);
 int contamination_ratio(corpse_effect_type chunk_effect);
 mon_intel_type corpse_intelligence(const item_def &corpse);
 

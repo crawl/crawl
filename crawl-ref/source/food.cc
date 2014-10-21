@@ -463,12 +463,7 @@ bool eat_item(item_def &food)
             return false;
     }
     else if (food.sub_type == FOOD_CHUNK)
-    {
-        if (food_is_rotten(food) && !_player_can_eat_rotten_meat(true))
-            return false;
-
         _eat_chunk(food);
-    }
     else
         _eating(food);
 
@@ -552,13 +547,7 @@ int eat_from_floor(bool skip_chunks)
         if (is_bad_food(*si))
             continue;
 
-        if (!skip_chunks && food_is_rotten(*si)
-            && !_player_can_eat_rotten_meat())
-        {
-            rotten_food++;
-            continue;
-        }
-        else if (!can_ingest(*si, true))
+        if (!can_ingest(*si, true))
         {
             if (!inedible_food)
             {
@@ -698,12 +687,7 @@ bool eat_from_inventory()
         if (is_bad_food(*item))
             continue;
 
-        if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
-        {
-            rotten_food++;
-            continue;
-        }
-        else if (!can_ingest(*item, true))
+        if (!can_ingest(*item, true))
         {
             if (!inedible_food)
             {
@@ -820,9 +804,6 @@ int prompt_eat_chunks(bool only_auto)
         else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
             continue;
 
-        if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
-            continue;
-
         // Don't prompt for bad food types.
         if (is_bad_food(*si))
             continue;
@@ -844,9 +825,6 @@ int prompt_eat_chunks(bool only_auto)
             continue;
 
         if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
-            continue;
-
-        if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
             continue;
 
         // Don't prompt for bad food types.
@@ -1029,26 +1007,9 @@ int contamination_ratio(corpse_effect_type chunk_effect)
 {
     int sapro = player_mutation_level(MUT_SAPROVOROUS);
     int ratio = 0;
-    switch (chunk_effect)
-    {
-    case CE_ROT:
+    if (chunk_effect == CE_ROT)
         return 1000;
-    case CE_ROTTEN:
-        switch (sapro)
-        {
-        default: ratio = 1000; break;
-        case 1:  ratio =  200; break;
-        case 2:  ratio =   66; break;
-        }
-        break;
-    default:
-        break;
-    }
 
-    // The amulet of the gourmand will permit consumption of
-    // rotted meat as though it were "clean" meat - level 3
-    // saprovores get rotting meat effect from clean chunks, since they
-    // love rotting meat.
     if (you.gourmand())
     {
         int left = GOURMAND_MAX - you.duration[DUR_GOURMAND];
@@ -1086,9 +1047,8 @@ mon_intel_type corpse_intelligence(const item_def &corpse)
 // through food:determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(item_def& food)
 {
-    const bool rotten    = food_is_rotten(food);
     corpse_effect_type chunk_effect = mons_corpse_effect(food.mon_type);
-    chunk_effect = determine_chunk_effect(chunk_effect, rotten);
+    chunk_effect = determine_chunk_effect(chunk_effect);
 
     int likes_chunks  = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
@@ -1116,21 +1076,17 @@ static void _eat_chunk(item_def& food)
             xom_is_stimulated(random2(100));
         break;
 
-    case CE_ROTTEN:
     case CE_CLEAN:
     {
         int contam = contamination_ratio(chunk_effect);
         if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
-            mprf("This %s flesh tastes %s!",
-                 chunk_effect == CE_ROTTEN   ? "rotting"   : "raw",
+            mprf("This flesh tastes %s!",
                  x_chance_in_y(contam, 1000) ? "delicious" : "good");
             if (you.species == SP_GHOUL)
             {
                 int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-                if (!x_chance_in_y(contam + 4000, 5000))
-                    hp_amt = 0;
-                _heal_from_food(hp_amt, !one_chance_in(4));
+                _heal_from_food(hp_amt, x_chance_in_y(3, 4));
             }
         }
         else
@@ -1279,7 +1235,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 {
     const monster_type mons_type = corpse.mon_type;
     const int chunk_type = determine_chunk_effect(
-                                mons_corpse_effect(mons_type), false);
+                                mons_corpse_effect(mons_type));
 
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
@@ -1376,19 +1332,6 @@ bool is_mutagenic(const item_def &food)
     return mons_corpse_effect(food.mon_type) == CE_MUTAGEN;
 }
 
-// Returns true if a food item (or corpse) is contaminated and thus
-// gives less nutrition.
-bool is_contaminated(const item_def &food)
-{
-    if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
-            && food.base_type != OBJ_CORPSES)
-    {
-        return false;
-    }
-
-    return food_is_rotten(food) && player_mutation_level(MUT_SAPROVOROUS) < 3;
-}
-
 // Returns true if a food item (or corpse) will cause rotting.
 bool causes_rot(const item_def &food)
 {
@@ -1409,12 +1352,6 @@ bool is_inedible(const item_def &item)
     // Mummies and liches don't eat.
     if (you_foodless(true))
         return true;
-
-    if (food_is_rotten(item)
-        && !player_mutation_level(MUT_SAPROVOROUS))
-    {
-        return true;
-    }
 
     if (item.base_type == OBJ_FOOD
         && !can_ingest(item, true, false))
@@ -1475,10 +1412,6 @@ bool is_preferred_food(const item_def &food)
     // Poisoned, mutagenic, etc. food should never be marked as "preferred".
     if (is_bad_food(food))
         return false;
-
-    // Ghouls specifically like rotten food.
-    if (you.species == SP_GHOUL)
-        return food_is_rotten(food);
 
     if (player_mutation_level(MUT_CARNIVOROUS) == 3)
         return food_is_meaty(food.sub_type);
@@ -1548,8 +1481,7 @@ bool can_ingest(const item_def &food, bool suppress_msg, bool check_hunger)
     // special case mutagenic chunks to skip hunger checks, as they don't give
     // nutrition and player can get hungry by using spells etc. anyway
     return can_ingest(food.base_type, food.sub_type, suppress_msg,
-                      is_mutagenic(food) ? false : check_hunger,
-                      food_is_rotten(food));
+                      is_mutagenic(food) ? false : check_hunger);
 }
 
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
@@ -1697,8 +1629,7 @@ bool chunk_is_poisonous(int chunktype)
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
 // Unidentified rPois gear is ignored here
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
-                                                  bool rotten_chunk)
+corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
 {
     // Determine the initial effect of eating a particular chunk. {dlb}
     switch (chunktype)
@@ -1718,10 +1649,6 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
         break;
     }
 
-    // Determine effects of rotting on base chunk effect {dlb}:
-    if (rotten_chunk && chunktype == CE_CLEAN)
-        chunktype = CE_ROTTEN;
-
     return chunktype;
 }
 
@@ -1738,12 +1665,6 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     if (!mons_has_blood(corpse.mon_type))
     {
         mpr("There is no blood in this body!");
-        return false;
-    }
-
-    if (food_is_rotten(corpse))
-    {
-        mpr("It's not fresh enough.");
         return false;
     }
 
@@ -1917,7 +1838,7 @@ int corpse_badness(corpse_effect_type ce, const item_def &item)
 
     dprf("%s: to rot %d, contam %d -> badness %d",
          item.name(DESC_PLAIN).c_str(),
-         item.special - ROTTING_CORPSE, contam,
+         item.special, contam,
          contam - 3 * item.special);
 
     // Being almost rotten has 480 badness, contamination usually 333.
@@ -1953,13 +1874,8 @@ bool drop_spoiled_chunks()
             continue;
         }
 
-        bool rotten = food_is_rotten(item);
-        if (rotten && !you.mutation[MUT_SAPROVOROUS])
-            return drop_item(slot, item.quantity);
-
         corpse_effect_type ce = determine_chunk_effect(mons_corpse_effect(
-                                                            item.mon_type),
-                                                        rotten);
+                                                            item.mon_type));
         if (ce == CE_MUTAGEN || ce == CE_ROT)
             continue; // no nutrition from those
 

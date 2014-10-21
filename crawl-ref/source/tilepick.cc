@@ -3368,28 +3368,6 @@ static tileidx_t _tileidx_armour(const item_def &item)
 
 static tileidx_t _tileidx_chunk(const item_def &item)
 {
-    if (food_is_rotten(item))
-    {
-        if (!is_inedible(item))
-        {
-            if (is_poisonous(item))
-                return TILE_FOOD_CHUNK_ROTTEN_POISONED;
-
-            if (is_mutagenic(item))
-                return TILE_FOOD_CHUNK_ROTTEN_MUTAGENIC;
-
-            if (causes_rot(item))
-                return TILE_FOOD_CHUNK_ROTTEN_ROTTING;
-
-            if (is_forbidden_food(item))
-                return TILE_FOOD_CHUNK_ROTTEN_FORBIDDEN;
-
-            if (is_contaminated(item))
-                return TILE_FOOD_CHUNK_ROTTEN_CONTAMINATED;
-        }
-        return TILE_FOOD_CHUNK_ROTTEN;
-    }
-
     if (is_inedible(item))
         return TILE_FOOD_CHUNK;
 
@@ -3404,9 +3382,6 @@ static tileidx_t _tileidx_chunk(const item_def &item)
 
     if (is_forbidden_food(item))
         return TILE_FOOD_CHUNK_FORBIDDEN;
-
-    if (is_contaminated(item))
-        return TILE_FOOD_CHUNK_CONTAMINATED;
 
     return TILE_FOOD_CHUNK;
 }
@@ -5590,19 +5565,8 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return 0;
 
-    const bool rotten       = food_is_rotten(item);
-    const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
-
     // Vampires are only interested in fresh blood.
-    if (you.species == SP_VAMPIRE
-        && (rotten || !mons_has_blood(item.mon_type)))
-    {
-        return TILE_FOOD_INEDIBLE;
-    }
-
-    // Rotten corpses' chunk effects are meaningless if we are not
-    // saprovorous.
-    if (rotten && !saprovorous)
+    if (you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type))
         return TILE_FOOD_INEDIBLE;
 
     // Harmful chunk effects > religious rules > reduced nutrition.
@@ -5617,14 +5581,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
 
     if (is_forbidden_food(item))
         return TILE_FOOD_FORBIDDEN;
-
-    if (is_contaminated(item))
-        return TILE_FOOD_CONTAMINATED;
-
-    // If no special chunk effects, mark corpse as inedible
-    // unless saprovorous.
-    if (rotten && !saprovorous)
-        return TILE_FOOD_INEDIBLE;
 
     return 0;
 }

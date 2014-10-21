@@ -1834,26 +1834,6 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_FOOD:
         if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
-            if (food_is_rotten(item))
-            {
-                if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                    description << "It looks nice and ripe.";
-                else
-                {
-                    description << "In fact, it is rotting away before your "
-                                   "eyes.";
-
-                    if (you.undead_state() == US_ALIVE
-                        && !player_mutation_level(MUT_SAPROVOROUS))
-                    {
-                        description << " Eating it is completely out of the "
-                                       "question!";
-                    }
-                }
-            }
-            else if (player_mutation_level(MUT_SAPROVOROUS) < 3)
-                description << "It looks rather unpleasant.";
-
             switch (mons_corpse_effect(item.mon_type))
             {
             case CE_POISONOUS:

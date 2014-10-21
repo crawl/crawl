@@ -213,14 +213,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     // spray some blood
     if (corpse.base_type != OBJ_GOLD)
-    {
-        int blood = nchunks * 3;
-
-        if (food_is_rotten(corpse))
-            blood /= 3;
-
-        blood_spray(where, corpse.mon_type, blood);
-    }
+        blood_spray(where, corpse.mon_type, nchunks * 3);
 
     // Don't let the player evade food conducts by using OOD (!) or /disint
     // Spray blood, but no chunks. (The mighty hand of your God squashes them

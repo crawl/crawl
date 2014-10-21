@@ -3212,8 +3212,7 @@ bool god_likes_item(god_type god, const item_def& item)
     if (god_likes_fresh_corpses(god))
     {
         return item.base_type == OBJ_CORPSES
-               && item.sub_type == CORPSE_BODY
-               && !food_is_rotten(item);
+               && item.sub_type == CORPSE_BODY;
     }
 
     switch (god)
