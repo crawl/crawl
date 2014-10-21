@@ -601,21 +601,11 @@ ITEM:     (list of items, separated by comma)
           "griffon chunk".
 
           Corpses, skeletons and chunks are by default created with maximum
-          freshness (210). They can be created already-rotting (freshness
-          99) with the "rotting" property:
-
-          ITEM: rotting griffon corpse
-
-          Corpses may still rot away before the player finds your vault.
-          To prevent corpses from decaying, you can define them using a
+          freshness (210). They may still rot away before the player finds your
+          vault. To prevent corpses from decaying, you can define them using a
           "never_decay" property as:
 
           ITEM: never_decay griffon corpse
-
-          Or combining the two, for a corpse that starts out rotten but
-          never rots away:
-
-          ITEM: rotting never_decay griffon corpse
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.
