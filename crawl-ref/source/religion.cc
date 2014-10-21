@@ -2260,6 +2260,11 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
     return true;
 }
 
+/** Punish the character for some divine transgression.
+ *
+ * @param piety_loss The amount of penance imposed; may be scaled.
+ * @param penance The amount of penance imposed; may be scaled.
+ */
 void dock_piety(int piety_loss, int penance)
 {
     static int last_piety_lecture   = -1;
@@ -2570,6 +2575,13 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
     return true;
 }
 
+/** Reduce piety and handle side-effects.
+ *
+ * Appropriate for cases where the player has not sinned, but must lose piety
+ * anyway, such as costs for abilities.
+ *
+ * @param pgn The precise amount of piety lost.
+ */
 void lose_piety(int pgn)
 {
     if (pgn <= 0)
