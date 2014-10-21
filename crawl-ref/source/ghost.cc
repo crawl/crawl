@@ -58,7 +58,6 @@ static spell_type search_order_conj[] =
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_FIREBALL,
-    SPELL_DELAYED_FIREBALL,
     SPELL_VENOM_BOLT,
     SPELL_IRON_SHOT,
     SPELL_LRD,
