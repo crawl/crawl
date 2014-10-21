@@ -422,17 +422,6 @@ static void _describe_food_change(int food_increment)
     mpr(msg.c_str());
 }
 
-static bool _player_can_eat_rotten_meat(bool need_msg = false)
-{
-    if (player_mutation_level(MUT_SAPROVOROUS))
-        return true;
-
-    if (need_msg)
-        mpr("You refuse to eat that rotten meat.");
-
-    return false;
-}
-
 bool eat_item(item_def &food)
 {
     int link;
@@ -527,7 +516,6 @@ int eat_from_floor(bool skip_chunks)
         return 0;
 
     bool need_more = false;
-    int rotten_food = 0;
     int inedible_food = 0;
     item_def wonteat;
     bool found_valid = false;
@@ -625,30 +613,21 @@ int eat_from_floor(bool skip_chunks)
         }
 #endif
     }
-    else
+    else if (inedible_food)
     {
-        // Give a message about why these food items can not actually be eaten.
-        if (rotten_food)
+        if (inedible_food == 1)
         {
-            _player_can_eat_rotten_meat(true);
-            need_more = true;
-        }
-        else if (inedible_food)
-        {
-            if (inedible_food == 1)
+            ASSERT(wonteat.defined());
+            // Use the normal cannot ingest message.
+            if (can_eat(wonteat, false))
             {
-                ASSERT(wonteat.defined());
-                // Use the normal cannot ingest message.
-                if (can_eat(wonteat, false))
-                {
-                    mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                         wonteat.name(DESC_PLAIN).c_str());
-                }
+                mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
+                     wonteat.name(DESC_PLAIN).c_str());
             }
-            else // Several different food items.
-                mpr("You refuse to eat these food items.");
-            need_more = true;
         }
+        else // Several different food items.
+            mpr("You refuse to eat these food items.");
+        need_more = true;
     }
 
     if (need_more)
@@ -666,7 +645,6 @@ bool eat_from_inventory()
     if (you.species == SP_VAMPIRE)
         return 0;
 
-    int rotten_food = 0;
     int inedible_food = 0;
     item_def *wonteat = NULL;
     bool found_valid = false;
@@ -739,26 +717,20 @@ bool eat_from_inventory()
             }
         }
     }
-    else
+    else if (inedible_food)
     {
-        // Give a message about why these food items can not actually be eaten.
-        if (rotten_food)
-            _player_can_eat_rotten_meat(true);
-        else if (inedible_food)
+        if (inedible_food == 1)
         {
-            if (inedible_food == 1)
+            ASSERT(wonteat->defined());
+            // Use the normal cannot ingest message.
+            if (can_eat(*wonteat, false))
             {
-                ASSERT(wonteat->defined());
-                // Use the normal cannot ingest message.
-                if (can_eat(*wonteat, false))
-                {
-                    mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                         wonteat->name(DESC_PLAIN).c_str());
-                }
+                mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
+                    wonteat->name(DESC_PLAIN).c_str());
             }
-            else // Several different food items.
-                mpr("You refuse to eat these food items.");
         }
+        else // Several different food items.
+            mpr("You refuse to eat these food items.");
     }
 
     return false;
