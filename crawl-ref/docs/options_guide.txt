@@ -1083,13 +1083,6 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           The inventory letter for items in inventory; irrelevant for
           items on the floor.
 
-        * freshness:
-          The freshness of chunks of meat; irrelevant for everything
-          else. It makes the oldest chunks of meat show up first.
-          If this sort criteria is placed before (or in the absence of)
-          basename and qualname, then non-chunk food items will be
-          sorted after chunks.
-
         * charged:
           Makes wands known or assumed to have some charges left appear
           before wands known to be empty; irrelevant for all other item
