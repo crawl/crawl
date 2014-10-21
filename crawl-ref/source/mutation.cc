@@ -324,6 +324,7 @@ string describe_mutations(bool center_title)
 
     case SP_GHOUL:
         result += "Your body is rotting away.\n";
+        result += "You thrive on raw meat.\n";
         have_any = true;
         break;
 
