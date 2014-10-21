@@ -468,19 +468,28 @@ void merge_perishable_stacks(const item_def &source, item_def &dest, int quant)
 
     ASSERT(timer2.size() == dest.quantity);
 
+    const int default_timer = _get_initial_stack_longevity(source)
+                              + you.elapsed_time;
     // Update timer2
     for (int i = 0; i < quant; i++)
     {
         const int timer_index = source.quantity - 1 - i;
-        int timer_value = -1;
+        int timer_value = default_timer;
+
         if (props.exists(TIMER_KEY))
-            timer_value = props[TIMER_KEY].get_vector()[timer_index].get_int();
-        else
         {
-            timer_value = _get_initial_stack_longevity(source)
-                          + you.elapsed_time;
+            const CrawlVector &timer = props[TIMER_KEY].get_vector();
+            if (timer.size() > timer_index)
+                timer_value = timer[timer_index].get_int();
+            else if (timer.size())
+            {
+                dprf("Source stack has truncated timer; using first elem");
+                timer_value = timer[0].get_int();
+            }
+            else
+                dprf("Source stack has empty timer; using 'fresh' age");
         }
-        ASSERT(timer_value != -1);
+
         timer2.push_back(timer_value);
     }
 
