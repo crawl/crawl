@@ -2746,12 +2746,6 @@ static bool _dummy_vulnerable(actor* victim)
 
 static bool _should_ephemeral_infusion(monster* agent)
 {
-    if (agent->has_ench(ENCH_EPHEMERAL_INFUSION)
-        || agent->hit_points == agent->max_hit_points)
-    {
-        return false;
-    }
-
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (agent == *ai || !ai->visible_to(agent)
@@ -2788,7 +2782,7 @@ static void _cast_ephemeral_infusion(monster* agent)
                 * BASELINE_DELAY;
             mon->add_ench(
                 mon_enchant(ENCH_EPHEMERAL_INFUSION,
-                            2 * agent->spell_hd(SPELL_EPHEMERAL_INFUSION),
+                            4 * agent->spell_hd(SPELL_EPHEMERAL_INFUSION),
                             agent, dur));
         }
     }
