@@ -487,7 +487,6 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
         return true;
 
     // At this point, we know both are corpses or chunks, edible
-    // (not rotten, or player is saprovore).
 
     // Always offer poisonous/mutagenic chunks last.
     if (is_bad_food(*food1) && !is_bad_food(*food2))
@@ -1701,7 +1700,7 @@ int corpse_badness(corpse_effect_type ce, const item_def &item)
          item.special, contam,
          contam - 3 * item.special);
 
-    // Being almost rotten has 480 badness, contamination usually 333.
+    // Being almost rotten has 480 badness.
     contam -= 3 * item.special;
 
     // Corpses your god gives penance for messing with are absolute last
@@ -1744,10 +1743,6 @@ bool drop_spoiled_chunks()
         nchunks += item.quantity;
         chunk_slots.push_back(pair<int,int>(slot, badness));
     }
-
-    // No rotten ones to drop, and we're not allowed to drop others.
-    if (Options.auto_drop_chunks == ADC_ROTTEN)
-        return false;
 
     nchunks -= _chunks_needed();
     if (nchunks <= 0)

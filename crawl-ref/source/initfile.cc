@@ -2625,8 +2625,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "never")
             auto_drop_chunks = ADC_NEVER;
-        else if (field == "rotten")
-            auto_drop_chunks = ADC_ROTTEN;
         else if (field == "yes" || field == "true")
             auto_drop_chunks = ADC_YES;
         else

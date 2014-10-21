@@ -1145,7 +1145,6 @@ enum confirm_level_type
 enum chunk_drop_type
 {
     ADC_NEVER,
-    ADC_ROTTEN,
     ADC_YES,
 };
 
