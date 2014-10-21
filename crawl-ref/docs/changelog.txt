@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1291-g8fa6bee)
+Stone Soup 0.16 (up to 0.16-a0-1503-gb61f0ef)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -26,6 +26,8 @@ Monsters
 --------
 * Mnoleg now has a pair of tentacles, acting similarly to eldritch tentacles;
   as such Mnoleg no longer has Malign Gateway.
+* The great Lords of Pandemonium will reappear on later floors of Pandemonium
+  once their rune is stolen, unless and until the player kills them.
 * The Serpent of Hell is considerably tougher; it now has three heads which
   can attack and/or breathe separately and can also summon backup.
 * Mimics now cackle and vanish (forever) when discovered.
@@ -41,6 +43,7 @@ Monsters
   draining, and holy; when killed, explodes into ghostly flame and instantly
   returns to life (once).
 * Monster malmutations are now temporary, but more significant.
+* Player ghosts & spellforged servitors can now have more than six spells.
 * Player ghosts now have their weapon brands displayed.
 * Frederick is now a demigod.
 * Magic immunity no longer confers confusion immunity to monsters.
@@ -65,6 +68,11 @@ Items
     charges.
   - Wand type is auto-identified on pickup.
   - Many weak wands have had their max charge count increased.
+* New items:
+  - Shadow Dragon Armour: as heavy as Storm Dragon Armour, but has Stlth++++
+    in place of rElec.
+  - Quicksilver Dragon Armour: slightly heavier than Mottled Dragon Armour,
+    with much better AC & MR+, but unenchantable. (Always +0.)
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
 * Unrand changes:
