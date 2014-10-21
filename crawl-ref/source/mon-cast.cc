@@ -125,27 +125,6 @@ bool is_valid_mon_spell(spell_type spell)
     return _valid_mon_spells[spell];
 }
 
-static void _scale_draconian_breath(bolt& beam, monster_type drac_type)
-{
-    if (drac_type == MONS_RED_DRACONIAN
-        && beam.origin_spell == SPELL_FIRE_BREATH)
-    {
-        beam.name        = "searing blast";
-        beam.aux_source  = "blast of searing breath";
-        beam.damage.size = 65 * beam.damage.size / 100;
-    }
-    else if (drac_type == MONS_WHITE_DRACONIAN
-             && beam.origin_spell == SPELL_COLD_BREATH)
-    {
-        beam.name        = "chilling blast";
-        beam.aux_source  = "blast of chilling breath";
-        beam.short_name  = "frost";
-        beam.damage.size = 65 * beam.damage.size / 100;
-        beam.ac_rule     = AC_NONE;
-    }
-
-}
-
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 {
     switch (flavour)
@@ -820,6 +799,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit        = 30;
         beam.flavour    = BEAM_FIRE;
         beam.is_beam    = true;
+        if (mons_genus(mons->type) == MONS_DRACONIAN
+            && draco_or_demonspawn_subspecies(mons) == MONS_RED_DRACONIAN)
+        {
+            beam.name        = "searing blast";
+            beam.aux_source  = "blast of searing breath";
+            beam.damage.size = 65 * beam.damage.size / 100;
+        }
         break;
 
     case SPELL_CHAOS_BREATH:
@@ -842,6 +828,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit        = 30;
         beam.flavour    = BEAM_COLD;
         beam.is_beam    = true;
+        if (mons_genus(mons->type) == MONS_DRACONIAN
+            && draco_or_demonspawn_subspecies(mons) == MONS_WHITE_DRACONIAN)
+        {
+            beam.name        = "chilling blast";
+            beam.aux_source  = "blast of chilling breath";
+            beam.short_name  = "frost";
+            beam.damage.size = 65 * beam.damage.size / 100;
+            beam.ac_rule     = AC_NONE;
+        }
         break;
 
     case SPELL_HOLY_BREATH:
@@ -1134,11 +1129,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     if (spell_cast == SPELL_AGONY)
         beam.name = "agony";
-
-    const monster_type drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                    ? draco_or_demonspawn_subspecies(mons) : mons->type;
-
-    _scale_draconian_breath(beam, drac_type);
 
     return beam;
 }

@@ -2609,8 +2609,14 @@ void bolt::affect_endpoint()
     if (cloud != CLOUD_NONE)
         big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
 
-    if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
-        || name == "searing blast") // monster and player red draconian breath abilities
+    if (name == "fiery breath" && you.species == SP_RED_DRACONIAN
+        || origin_spell == SPELL_FIRE_BREATH
+           && agent()
+           && agent()->is_monster()
+           && (agent()->type == MONS_XTAHUA
+               || mons_genus(agent()->type) == MONS_DRACONIAN
+                  && draco_or_demonspawn_subspecies(agent()->as_monster())
+                       == MONS_RED_DRACONIAN))
     {
         if (!cell_is_solid(pos()))
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
