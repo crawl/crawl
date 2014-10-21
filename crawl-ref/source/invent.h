@@ -102,7 +102,6 @@ public:
     bool         is_item_ego() const;
     bool         is_item_art() const;
     bool         is_item_equipped() const;
-    int          item_freshness() const;
 
     virtual int highlight_colour() const
     {
