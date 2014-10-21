@@ -628,7 +628,8 @@ function TroveMarker:accept_nopiety ()
   if you.god() ~= "No God" then
     local piety_loss = you.piety() - 15
     if piety_loss > 0 then
-      you.dock_piety(piety_loss, 0)
+      crawl.mpr("You feel utterly alone.")
+      you.lose_piety(piety_loss)
     end
   end
 end
