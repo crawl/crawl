@@ -1304,7 +1304,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MENNAS,
       {
-       { SPELL_CONFUSE, 17, MON_SPELL_WIZARD },
+       { SPELL_MASS_CONFUSION, 17, MON_SPELL_WIZARD },
        { SPELL_SILENCE, 17, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 34, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
