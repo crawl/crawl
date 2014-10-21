@@ -1905,11 +1905,12 @@ bool kiku_receive_corpses(int pow)
 
         ASSERT(valid_corpse >= 0);
 
-        // Higher piety means fresher corpses.  One out of ten corpses
-        // will always be rotten.
+        // Higher piety means fresher corpses.
         int rottedness = 200 -
             (!one_chance_in(10) ? random2(200 - you.piety)
                                 : random2(100 + random2(75)));
+        rottedness = rottedness / 2 + 1; // hack to adjust for rotten corpse
+                                         // removal
         mitm[index_of_corpse_created].special = rottedness;
 
         // Place the corpse.
