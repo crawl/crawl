@@ -800,8 +800,7 @@ the 'c' command. Being hungry helps you choke down the raw flesh. Cutting off th
 best parts will take some turns and produce a number of 'chunks' eventually.
 These can be eaten with the 'e' command as above.
 
-Kobolds, Trolls and Ghouls care less than others about the quality of the corpse,
-and are happy to eat raw meat at any time.
+Kobolds, Trolls and Ghouls are happy to eat raw meat at any time.
 
 Vampires are a special case. Members of this species can try to drink blood from
 a fresh corpse (use the 'e' command). Once they have reached experience level 6,
@@ -1779,8 +1778,8 @@ Mummies
 Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
-  living, they must eat flesh to survive. Raw flesh is preferred, especially
-  rotting or tainted meat, and Ghouls gain resilience from consuming it.
+  living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
+  heal and reverse the effects of their eternal rotting by consuming it.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
