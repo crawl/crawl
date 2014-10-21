@@ -5085,7 +5085,7 @@ void unmarshallMonster(reader &th, monster& m)
             if (mons_genus(m.type) == MONS_DRACONIAN)
                 add_drac_breath(&m);
         }
-        else
+        else if (oldspells[i].spell != SPELL_DELAYED_FIREBALL)
             m.spells.push_back(oldspells[i]);
     }
 #endif
