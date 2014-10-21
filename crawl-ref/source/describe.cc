@@ -775,8 +775,8 @@ static string _describe_demon(const string& name, flight_type fly)
                 break;
             case 2:
                 description << " It smells like rotting flesh"
-                            << (player_mutation_level(MUT_SAPROVOROUS) == 3 ?
-                                " - yum!" : ".");
+                            << (you.species == SP_GHOUL ? " - yum!"
+                                                       : ".");
                 break;
             }
         }

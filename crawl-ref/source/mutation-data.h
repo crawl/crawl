@@ -911,7 +911,7 @@ static const mutation_def mut_data[] =
   "big wings",
 },
 
-// species-dependent innate mutations
+#if TAG_MAJOR_VERSION == 34
 { MUT_SAPROVOROUS,                    0,  3, MUTFLAG_GOOD, false,
   "saprovore",
 
@@ -928,6 +928,8 @@ static const mutation_def mut_data[] =
   "saprovorous",
 },
 
+#endif
+// species-dependent innate mutations
 { MUT_ROT_IMMUNITY,                 0,  1, MUTFLAG_GOOD, false,
   "rot immunity",
 

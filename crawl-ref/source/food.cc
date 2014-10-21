@@ -878,24 +878,7 @@ int prompt_eat_chunks(bool only_auto)
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)
 {
-    const char *phrase;
-    const int level = player_mutation_level(MUT_SAPROVOROUS);
-
-    switch (level)
-    {
-    case 1:
-    case 2:
-        phrase = "tastes unpleasant.";
-        break;
-
-    case 3:
-        phrase = "tastes good.";
-        break;
-
-    default:
-        phrase = "tastes terrible.";
-        break;
-    }
+    const char *phrase = "tastes terrible.";
 
     if (likes_chunks)
         phrase = "tastes great.";
@@ -967,14 +950,8 @@ static int _chunk_nutrition(int likes_chunks)
     return _apply_herbivore_nutrition_effects(effective_nutrition);
 }
 
-static void _say_chunk_flavour(bool likes_chunks)
-{
-    mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
-}
-
 int contamination_ratio(corpse_effect_type chunk_effect)
 {
-    int sapro = player_mutation_level(MUT_SAPROVOROUS);
     int ratio = 0;
     if (chunk_effect == CE_ROT)
         return 1000;
@@ -982,8 +959,7 @@ int contamination_ratio(corpse_effect_type chunk_effect)
     if (you.gourmand())
     {
         int left = GOURMAND_MAX - you.duration[DUR_GOURMAND];
-        // [dshaligram] Level 3 saprovores relish contaminated meat.
-        if (sapro == 3)
+        if (you.species == SP_GHOUL)
             ratio = 1000 - (1000 - ratio) * left / GOURMAND_MAX;
         else
             ratio = ratio * left / GOURMAND_MAX;
@@ -1048,7 +1024,7 @@ static void _eat_chunk(item_def& food)
     case CE_CLEAN:
     {
         int contam = contamination_ratio(chunk_effect);
-        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
+        if (you.species == SP_GHOUL)
         {
             mprf("This flesh tastes %s!",
                  x_chance_in_y(contam, 1000) ? "delicious" : "good");
@@ -1060,7 +1036,7 @@ static void _eat_chunk(item_def& food)
         }
         else
         {
-            _say_chunk_flavour(likes_chunks);
+            mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
 
             nutrition = nutrition * (1000 - contam) / 1000;
         }
@@ -1687,7 +1663,7 @@ int corpse_badness(corpse_effect_type ce, const item_def &item)
     // themself.
 
     int contam = contamination_ratio(ce);
-    if (you.mutation[MUT_SAPROVOROUS] == 3)
+    if (you.species == SP_GHOUL)
         contam = -contam;
 
     // Arbitrarily lower the value of poisonous chunks: swapping resistances
