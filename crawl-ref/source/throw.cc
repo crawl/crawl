@@ -842,10 +842,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (is_perishable_stack(item) && thrown.quantity > 1)
     {
         // Initialise thrown item with oldest item in stack.
-        int val = remove_oldest_perishable_item(thrown);
-        val -= you.num_turns;
+        const int rot_timer = remove_oldest_perishable_item(thrown);
         item.props.clear();
-        init_perishable_stack(item, val);
+        init_perishable_stack(item, rot_timer);
     }
 
     // Even though direction is allowed, we're throwing so we
