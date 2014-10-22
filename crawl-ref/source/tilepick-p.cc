@@ -146,8 +146,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_FALCHION:
         tile = TILEP_HAND1_FALCHION;
         break;
-    case WPN_CUTLASS:
-        tile = TILEP_HAND1_CUTLASS;
+    case WPN_RAPIER:
+        tile = TILEP_HAND1_RAPIER;
         break;
     case WPN_DEMON_BLADE:
         tile = TILEP_HAND1_DEMON_BLADE;

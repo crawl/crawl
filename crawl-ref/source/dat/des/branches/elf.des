@@ -611,7 +611,7 @@ ENDMAP
 NAME:    minmay_elf_blademastery
 DEPTH:   Elf:$
 ORIENT:  float
-MONS:    deep elf fighter; falchion | long sword | scimitar | cutlass / nothing w:15
+MONS:    deep elf fighter; falchion | long sword | scimitar | rapier / nothing w:15
 MONS:    deep elf blademaster
 MONS:    training dummy tile:mons_training_dummy
 KITEM:   d = long sword, long sword / nothing, \
@@ -620,8 +620,8 @@ KITEM:   e = falchion, falchion / nothing, \
              falchion / nothing, falchion / nothing
 KITEM:   f = scimitar, scimitar / nothing, \
              scimitar / nothing, scimitar / nothing
-KITEM:   g = cutlass, cutlass / nothing, \
-             cutlass / nothing, cutlass / nothing
+KITEM:   g = rapier, rapier / nothing, \
+             rapier / nothing, rapier / nothing
 SHUFFLE: defg
 MAP
 xxxxxxxxxx+xxx

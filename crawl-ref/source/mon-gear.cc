@@ -482,7 +482,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_DUVESSA:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(30, WPN_SHORT_SWORD,
-                                               10, WPN_CUTLASS,
+                                               10, WPN_RAPIER,
                                                0);
         break;
 
@@ -523,7 +523,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type = weap->sub_type;
         else
         {
-            item.sub_type = random_choose_weighted(40, WPN_CUTLASS,
+            item.sub_type = random_choose_weighted(40, WPN_RAPIER,
                                                    10, WPN_SHORT_SWORD,
                                                    2,  WPN_QUICK_BLADE,
                                                    0);
@@ -545,7 +545,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_DEEP_ELF_SUMMONER:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_CUTLASS,
+                                       WPN_SHORT_SWORD, WPN_RAPIER,
                                        WPN_DAGGER,
                                        -1);
         break;
@@ -556,7 +556,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_DRACONIAN_CALLER:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_CUTLASS,
+                                       WPN_SHORT_SWORD, WPN_RAPIER,
                                        WPN_DAGGER,      WPN_WHIP,
                                        -1);
         break;
@@ -835,7 +835,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_MERFOLK_AQUAMANCER:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_CUTLASS;
+        item.sub_type  = WPN_RAPIER;
         if (coinflip())
             level = MAKE_GOOD_ITEM;
         break;
@@ -1182,13 +1182,13 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_EUSTACHIO:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_CUTLASS);
+        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_RAPIER);
         break;
 
     case MONS_NIKOLA:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_CUTLASS;
+        item.sub_type  = WPN_RAPIER;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
         item.plus      = random2(5);
         item.flags    |= ISFLAG_KNOW_TYPE;
@@ -1280,7 +1280,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         // no quick blades for mooks
         item.sub_type  = random_choose(WPN_DAGGER, WPN_SHORT_SWORD,
-                                       WPN_CUTLASS, -1);
+                                       WPN_RAPIER, -1);
         break;
 
     case MONS_SPRIGGAN_RIDER:
@@ -1301,7 +1301,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 12, WPN_WAR_AXE,
                                                  5, WPN_BROAD_AXE,
                                                  8, WPN_FLAIL,
-                                                10, WPN_CUTLASS,
+                                                10, WPN_RAPIER,
                                                  0);
         if (one_chance_in(4))
         {
@@ -1321,7 +1321,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LAJATANG,
                                        WPN_QUICK_BLADE,
-                                       WPN_CUTLASS,
+                                       WPN_RAPIER,
                                        WPN_DEMON_WHIP,
                                        WPN_FLAIL,
                                        -1);
@@ -1427,7 +1427,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                || is_blessed_weapon_type(item.sub_type)
                || is_magic_weapon_type(item.sub_type)
                || is_giant_club_type(item.sub_type)
-               || item.sub_type == WPN_HAMMER);
+               || item.sub_type == WPN_HAMMER       // these two shouldn't
+               || item.sub_type == WPN_CUTLASS);    // generate outside vaults
 
         if (one_chance_in(100))
         {

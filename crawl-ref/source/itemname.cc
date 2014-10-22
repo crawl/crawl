@@ -510,7 +510,6 @@ static const char* _vorpal_brand_name(const item_def &item, bool terse)
         case DVORP_PIERCING: return terse ? "pierce" : "piercing";
         case DVORP_CHOPPING: return terse ? "chop" : "chopping";
         case DVORP_SLASHING: return terse ? "slash" :"slashing";
-        case DVORP_STABBING: return terse ? "stab" : "stabbing";
         default:             return terse ? "buggy vorpal"
                                           : "buggy destruction";
     }

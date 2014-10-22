@@ -46,20 +46,22 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
 
         case WPN_DAGGER:      return WPN_FALCHION;
         case WPN_SHORT_SWORD: return WPN_LONG_SWORD;
-        case WPN_CUTLASS:     return WPN_SCIMITAR;
+        case WPN_RAPIER:      return WPN_SCIMITAR;
         case WPN_FALCHION:    return WPN_LONG_SWORD;
         case WPN_LONG_SWORD:  return WPN_SCIMITAR;
         case WPN_SCIMITAR:    return !has_shield ? WPN_GREAT_SWORD   :
                                      highlevel   ? WPN_DOUBLE_SWORD :
                                                    WPN_SCIMITAR;
-        case WPN_GREAT_SWORD: return highlevel ? WPN_TRIPLE_SWORD : WPN_GREAT_SWORD;
+        case WPN_GREAT_SWORD: return highlevel ? WPN_TRIPLE_SWORD :
+                                                 WPN_GREAT_SWORD;
 
         case WPN_HAND_AXE:    return WPN_WAR_AXE;
             // Low level orcs shouldn't get fairly rare items.
         case WPN_WAR_AXE:     return !highlevel  ? WPN_WAR_AXE   :
                                      has_shield  ? WPN_BROAD_AXE :
                                                    WPN_BATTLEAXE;
-        case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE : WPN_BATTLEAXE;
+        case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE :
+                                                 WPN_BATTLEAXE;
 
         case WPN_SPEAR:       return WPN_TRIDENT;
         case WPN_TRIDENT:     return has_shield ? WPN_TRIDENT : WPN_HALBERD;

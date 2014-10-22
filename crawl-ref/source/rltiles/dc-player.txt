@@ -581,8 +581,8 @@ sword_black SWORD_BLACK
 sword_twist SWORD_TWIST
 knife KNIFE
 heavy_sword HEAVY_SWORD
-cutlass CUTLASS
-cutlass2
+rapier RAPIER
+rapier2
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
@@ -895,8 +895,8 @@ bladehands BLADEHAND
 # enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
 dagger DAGGER
 dagger2 DAGGER_1
-cutlass CUTLASS
-cutlass2 CUTLASS_1
+rapier RAPIER
+rapier2 RAPIER_1
 short_sword_slant SHORT_SWORD_SLANT
 short_sword_slant2 SHORT_SWORD_SLANT_1
 flail_great GREAT_FLAIL

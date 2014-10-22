@@ -767,7 +767,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_WAR_AXE,
                              WPN_TRIDENT,
                              WPN_FLAIL,
-                             WPN_CUTLASS,
+                             WPN_RAPIER,
                              -1);
     }
     else
@@ -913,7 +913,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             // **** intentional fall through here ****
 
         case WPN_SHORT_SWORD:
-        case WPN_CUTLASS:
+        case WPN_RAPIER:
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 

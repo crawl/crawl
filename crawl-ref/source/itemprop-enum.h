@@ -470,7 +470,10 @@ enum weapon_type
     WPN_DAGGER,
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
+    WPN_RAPIER,
+#if TAG_MAJOR_VERSION > 34
     WPN_CUTLASS,
+#endif
 
     WPN_FALCHION,
     WPN_LONG_SWORD,
@@ -540,6 +543,8 @@ enum weapon_type
     WPN_GREATSLING,
     WPN_HAND_CROSSBOW,
     WPN_TRIPLE_CROSSBOW,
+
+    WPN_CUTLASS,
 #endif
 
     NUM_WEAPONS,
@@ -570,7 +575,7 @@ enum vorpal_damage_type
     DAM_BLUDGEON        = 0x0001,       // crushing
     DAM_SLICE           = 0x0002,       // slicing/chopping
     DAM_PIERCE          = 0x0004,       // stabbing/piercing
-    DAM_WHIP            = 0x0008,       // whip slashing (no butcher)
+    DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
     // These are used for vorpal weapon descriptions.  You shouldn't set
@@ -581,10 +586,9 @@ enum vorpal_damage_type
     DVORP_PIERCING      = 0x3000,
     DVORP_CHOPPING      = 0x4000,       // used for axes
     DVORP_SLASHING      = 0x5000,       // used for whips
-    DVORP_STABBING      = 0x6000,       // used for knives/daggers
 
-    DVORP_CLAWING       = 0x7000,       // claw damage
-    DVORP_TENTACLE      = 0x8000,       // tentacle damage
+    DVORP_CLAWING       = 0x6000,       // claw damage
+    DVORP_TENTACLE      = 0x7000,       // tentacle damage
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
     // as above, setting more than one vorpal type is trouble.
@@ -594,7 +598,6 @@ enum vorpal_damage_type
     DAMV_PIERCING       = DVORP_PIERCING | DAM_PIERCE,
     DAMV_CHOPPING       = DVORP_CHOPPING | DAM_SLICE,
     DAMV_SLASHING       = DVORP_SLASHING | DAM_WHIP,
-    DAMV_STABBING       = DVORP_STABBING | DAM_PIERCE,
 
     DAM_MASK            = 0x0fff,       // strips vorpal specification
     DAMV_MASK           = 0xf000,       // strips non-vorpal specification

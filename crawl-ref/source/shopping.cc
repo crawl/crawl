@@ -1094,7 +1094,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BROAD_AXE:
-        case WPN_CUTLASS:
+        case WPN_RAPIER:
         case WPN_DIRE_FLAIL:
         case WPN_HALBERD:
         case WPN_MORNINGSTAR:
