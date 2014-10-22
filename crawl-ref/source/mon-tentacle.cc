@@ -27,15 +27,13 @@ const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 bool monster::is_child_tentacle() const
 {
-    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-        || type == MONS_MNOLEG_TENTACLE;
+    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE;
 }
 
 bool monster::is_child_tentacle_segment() const
 {
     return type == MONS_KRAKEN_TENTACLE_SEGMENT
-           || type == MONS_STARSPAWN_TENTACLE_SEGMENT
-           || type == MONS_MNOLEG_TENTACLE_SEGMENT;
+        || type == MONS_STARSPAWN_TENTACLE_SEGMENT;
 }
 
 bool monster::is_child_monster() const
@@ -57,24 +55,21 @@ bool monster::is_parent_monster_of(const monster* mons) const
 
 bool mons_is_tentacle_head(monster_type mc)
 {
-    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN
-        || mc == MONS_MNOLEG;
+    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN;
 }
 
 bool mons_is_child_tentacle(monster_type mc)
 {
     return mc == MONS_KRAKEN_TENTACLE
         || mc == MONS_STARSPAWN_TENTACLE
-        || mc == MONS_SNAPLASHER_VINE
-        || mc == MONS_MNOLEG_TENTACLE;
+        || mc == MONS_SNAPLASHER_VINE;
 }
 
 bool mons_is_child_tentacle_segment(monster_type mc)
 {
     return mc == MONS_KRAKEN_TENTACLE_SEGMENT
         || mc == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mc == MONS_SNAPLASHER_VINE_SEGMENT
-        || mc == MONS_MNOLEG_TENTACLE_SEGMENT;
+        || mc == MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 bool mons_is_tentacle(monster_type mc)
@@ -120,10 +115,6 @@ monster_type mons_tentacle_parent_type(const monster* mons)
             return MONS_ELDRITCH_TENTACLE;
         case MONS_SNAPLASHER_VINE_SEGMENT:
             return MONS_SNAPLASHER_VINE;
-        case MONS_MNOLEG_TENTACLE:
-            return MONS_MNOLEG;
-        case MONS_MNOLEG_TENTACLE_SEGMENT:
-            return MONS_MNOLEG_TENTACLE;
         default:
             return MONS_PROGRAM_BUG;
     }
@@ -145,10 +136,6 @@ monster_type mons_tentacle_child_type(const monster* mons)
         return MONS_ELDRITCH_TENTACLE_SEGMENT;
     case MONS_SNAPLASHER_VINE:
         return MONS_SNAPLASHER_VINE_SEGMENT;
-    case MONS_MNOLEG:
-        return MONS_MNOLEG_TENTACLE;
-    case MONS_MNOLEG_TENTACLE:
-        return MONS_MNOLEG_TENTACLE_SEGMENT;
     default:
         return MONS_PROGRAM_BUG;
     }
