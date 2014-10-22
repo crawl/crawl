@@ -1936,11 +1936,10 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\n\nThe device is presently inert.";
                 if (evoker_is_charging(item))
                     description << " Gaining experience will recharge it.";
-                else
+                else if (in_inventory(item))
                 {
                     description << " Another item of the same type is"
-                                   " charging; this will begin to charge once"
-                                   " that one has finished.";
+                                   " currently charging.";
                 }
             }
         }
