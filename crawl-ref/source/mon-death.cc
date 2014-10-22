@@ -525,8 +525,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         if (o != NON_ITEM && !silent)
         {
             const bool poison =
-                (chunk_is_poisonous(mons_corpse_effect(corpse_class))
-                 && player_res_poison() <= 0);
+                (carrion_is_poisonous(corpse) && player_res_poison() <= 0);
             hints_dissection_reminder(!poison);
         }
     }

@@ -1719,11 +1719,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            if (is_poisonous(*this))
+            if (carrion_is_poisonous(*this))
                 buff << "poisonous ";
-            else if (is_mutagenic(*this))
+            else if (carrion_is_mutagenic(*this))
                 buff << "mutagenic ";
-            else if (causes_rot(*this))
+            else if (carrion_is_necrotic(*this))
                 buff << "putrefying ";
             buff << "chunk of flesh";
             break;
