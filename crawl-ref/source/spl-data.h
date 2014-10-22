@@ -2816,6 +2816,8 @@ static const struct spell_desc spelldata[] =
     SPELL_MALIGN_OFFERING, "Malign Offering",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+     5,
+     200,
      LOS_RADIUS, LOS_RADIUS,
      4, 10,
      NULL,
