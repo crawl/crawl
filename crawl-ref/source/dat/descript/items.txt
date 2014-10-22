@@ -759,6 +759,10 @@ The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
 proper armour by magical means. Its smooth surface lets sticky flames flow off
 it like water.
 %%%%
+mutagenic chunk of flesh
+
+<chunk of flesh>
+%%%%
 naga barding
 
 A special armour made for nagas, to wear over their tails.
@@ -809,6 +813,10 @@ plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
+%%%%
+poisonous chunk of flesh
+
+<chunk of flesh>
 %%%%
 potion of agility
 
@@ -930,6 +938,10 @@ A potion which slows your actions.
 potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
+%%%%
+putrefying chunk of flesh
+
+<chunk of flesh>
 %%%%
 quad damage
 
