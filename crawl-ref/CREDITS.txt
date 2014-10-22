@@ -160,7 +160,6 @@
     Dom Light
     Rob Lund
     Michael Lynn
-    John McCartney
     Peter McLarnan
     Lain I. W. Madreisz
     Markus Maier
@@ -262,6 +261,7 @@ The Dungeon Crawl Stone Soup development team is:
     Nat Lanza
     Jesse Luehrs
     Shmuale Mark
+    John McCartney
     Steve Melenchuk
     Neil Middleton
     Neil Moore
