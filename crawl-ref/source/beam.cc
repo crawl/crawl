@@ -2612,6 +2612,7 @@ void bolt::affect_endpoint()
     if (name == "fiery breath" && you.species == SP_RED_DRACONIAN
         || origin_spell == SPELL_FIRE_BREATH
            && agent()
+           && agent()->alive()
            && agent()->is_monster()
            && (agent()->type == MONS_XTAHUA
                || mons_genus(agent()->type) == MONS_DRACONIAN
@@ -3182,12 +3183,12 @@ bool bolt::is_reflectable(const item_def *it) const
 
 bool bolt::nightvision() const
 {
-    return agent() && agent()->nightvision();
+    return agent() && agent()->alive() && agent()->nightvision();
 }
 
 bool bolt::can_see_invis() const
 {
-    return agent() && agent()->can_see_invisible();
+    return agent() && agent()->alive() && agent()->can_see_invisible();
 }
 
 coord_def bolt::leg_source() const

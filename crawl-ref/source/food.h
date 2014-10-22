@@ -42,7 +42,6 @@ corpse_effect_type determine_chunk_effect(const item_def &carrion,
                                           bool innate_only = false);
 corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
                                           bool innate_only = false);
-int contamination_ratio(corpse_effect_type chunk_effect);
 mon_intel_type corpse_intelligence(const item_def &corpse);
 
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);

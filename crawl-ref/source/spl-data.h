@@ -2160,7 +2160,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CALL_TIDE, "Call Tide",
      SPTYP_TRANSLOCATION,
-     SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
+     SPFLAG_MONSTER,
      7,
      0,
      -1, -1,
