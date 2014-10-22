@@ -1565,12 +1565,12 @@ static int _battle_cry(const monster* chief, bool check_only = false)
                 && (mi->get_hit_dice() < chief->get_hit_dice()
                     || type == BATTLECRY_HOLY))
             {
-                if (check_only)
-                    return 1; // just need to check
-
                 mon_enchant ench = mi->get_ench(battlecry);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
+                    if (check_only)
+                        return 1; // just need to check
+
                     const int dur =
                         random_range(12, 20) * speed_to_duration(mi->speed);
 
