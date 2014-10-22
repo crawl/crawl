@@ -1677,7 +1677,6 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         if (is_perishable_stack(it) && quant_got != it.quantity)
             for (int i = 0; i < quant_got; i++)
                 remove_oldest_perishable_item(it);
-        dec_mitm_item_quantity(obj, quant_got);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
