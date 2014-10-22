@@ -1112,7 +1112,7 @@ STEALTH: -1
 
 NAME:     arc blade
 INSCRIP:  discharge,
-OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+OBJ:      OBJ_WEAPONS/WPN_RAPIER
 PLUS:     +4
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
