@@ -56,7 +56,7 @@ static bool _fire_validate_item(int selected, string& err);
 
 bool item_is_quivered(const item_def &item)
 {
-    return item.link == you.m_quiver->get_fire_item();
+    return in_inventory(item) && item.link == you.m_quiver->get_fire_item();
 }
 
 int get_next_fire_item(int current, int direction)
