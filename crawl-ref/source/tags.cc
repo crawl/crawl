@@ -5077,6 +5077,14 @@ void unmarshallMonster(reader &th, monster& m)
             if (mons_genus(m.type) == MONS_DRACONIAN)
                 add_drac_breath(&m);
         }
+        // Give Mnoleg back malign gateway in place of tentacles.
+        else if (oldspells[i].spell == SPELL_CREATE_TENTACLES
+                 && m.type == MONS_MNOLEG)
+        {
+            oldspells[i].spell = SPELL_MALIGN_GATEWAY;
+            oldspells[i].freq = 27;
+            m.spells.push_back(oldspells[i]);
+        }
         else if (oldspells[i].spell != SPELL_DELAYED_FIREBALL)
             m.spells.push_back(oldspells[i]);
     }

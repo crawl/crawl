@@ -1094,7 +1094,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_MNOLEG,
       {
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_DEMONIC },
-       { SPELL_CREATE_TENTACLES, 27, MON_SPELL_DEMONIC },
+       { SPELL_MALIGN_GATEWAY, 27, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_DEMONIC },
        END_OF_MONS_BOOK
       }
