@@ -15,10 +15,11 @@ inv += $preferred:.*preferred.*
 # Corpses of undead (necrophages etc.)
 inv += $rot-inducing:.*rot-inducing.*
 
-# Poisonous corpses/chunks
-inv += $poisonous:.*poisonous.*
+# Poisonous corpses/chunks; only match the prefix (which comes before
+# the "food" prefix) and not the item name ("poisonous chunk of flesh").
+inv += $poisonous:.*poisonous.*food.*
 
 inv += $inedible:.*inedible.*
 
-# Mutagenic corpses/chunks
-inv += $mutagenic:.*mutagenic.*
+# Mutagenic corpses/chunks. Same deal as with "poisonous" above.
+inv += $mutagenic:.*mutagenic.*food.*
