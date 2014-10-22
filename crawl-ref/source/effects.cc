@@ -3060,21 +3060,7 @@ void slime_wall_damage(actor* act, int delay)
 void recharge_xp_evokers(int exp)
 {
     FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item(you.inv[i]);
-        if (is_xp_evoker(item) && item.plus2 > 0)
-        {
-            // Only recharge one of each type of evoker at a time.
-            if (evokers[item.sub_type]
-                && evokers[item.sub_type]->plus2 <= item.plus2)
-            {
-                continue;
-            }
-
-            evokers[item.sub_type] = &item;
-        }
-    }
+    list_charging_evokers(evokers);
 
     int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
                              you.experience_level * 425),
