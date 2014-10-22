@@ -1246,7 +1246,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
     if (m_equ_tile)
     {
         if (draco)
-            dinfo[i++].set(m_equ_tile, -2, 0);
+            dinfo[i++].set(m_equ_tile, -3, -1);
         else
             dinfo[i++].set(m_equ_tile, -1, 0);
     }
