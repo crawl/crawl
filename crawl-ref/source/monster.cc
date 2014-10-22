@@ -4583,8 +4583,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 int split = amount / 2;
                 if (split > 0)
                 {
-                    (new deferred_damage_fineff(agent, guardian,
-                                                split, false))->schedule();
+                    deferred_damage_fineff::schedule(agent, guardian,
+                                                     split, false);
                     amount -= split;
                 }
             }
@@ -4633,7 +4633,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE)
             && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
         {
-            (new mirror_damage_fineff(agent, this, amount * 2 / 3))->schedule();
+            mirror_damage_fineff::schedule(agent, this, amount * 2 / 3);
         }
 
         blame_damage(agent, amount);
@@ -6182,12 +6182,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
-            (new shock_serpent_discharge_fineff(this, pos(), pow))->schedule();
+            shock_serpent_discharge_fineff::schedule(this, pos(), pow);
     }
 
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
-        (new trj_spawn_fineff(oppressor, this, pos(), damage))->schedule();
+        trj_spawn_fineff::schedule(oppressor, this, pos(), damage);
 
     // Damage sharing from the spectral weapon to its owner
     // The damage shared should not be directly lethal, though like the
@@ -6218,8 +6218,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
                 // Share damage using a fineff, so that it's non-fatal
                 // regardless of processing order in an AoE attack.
-                (new deferred_damage_fineff(oppressor, owner,
-                                           shared_damage, false, false))->schedule();
+                deferred_damage_fineff::schedule(oppressor, owner,
+                                                 shared_damage, false, false);
             }
         }
     }
@@ -6229,8 +6229,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && !invalid_monster_index(number)
              && menv[number].is_parent_monster_of(this))
     {
-        (new deferred_damage_fineff(oppressor, &menv[number],
-                                    damage, false))->schedule();
+        deferred_damage_fineff::schedule(oppressor, &menv[number], damage,
+                                         false);
     }
 
     if (!alive())
@@ -6304,7 +6304,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
     else if (type == MONS_STARCURSED_MASS)
-        (new starcursed_merge_fineff(this))->schedule();
+        starcursed_merge_fineff::schedule(this);
     else if (mons_is_demonspawn(type)
              && draco_or_demonspawn_subspecies(this)
                     == MONS_TORTUROUS_DEMONSPAWN
@@ -6343,7 +6343,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         if (!props.exists("emergency_clone"))
         {
-            (new rakshasa_clone_fineff(this, pos()))->schedule();
+            rakshasa_clone_fineff::schedule(this, pos());
             props["emergency_clone"].get_bool() = true;
         }
     }
@@ -6468,7 +6468,7 @@ void monster::steal_item_from_player()
             {
                 mons_cast_noise(this, beem, SPELL_BLINK, MON_SPELL_WIZARD);
                 // this can kill us, delay the call
-                (new blink_fineff(this))->schedule();
+                blink_fineff::schedule(this);
             }
             else
                 mons_cast(this, beem, SPELL_TELEPORT_SELF, MON_SPELL_WIZARD);

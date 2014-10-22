@@ -3213,7 +3213,7 @@ void pikel_band_neutralise()
     else if (visible_slaves > 1)
         final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
 
-    (new delayed_action_fineff(DACT_PIKEL_SLAVES,final_msg))->schedule();
+    delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
 }
 
 /**
@@ -3291,7 +3291,7 @@ void hogs_to_humans()
                         "original forms!";
     }
 
-    (new kirke_death_fineff(final_msg))->schedule();
+    kirke_death_fineff::schedule(final_msg);
 }
 
 /**
