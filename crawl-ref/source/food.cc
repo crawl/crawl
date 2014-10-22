@@ -976,8 +976,7 @@ mon_intel_type corpse_intelligence(const item_def &corpse)
 // through food:determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(item_def& food)
 {
-    corpse_effect_type chunk_effect = mons_corpse_effect(food.mon_type);
-    chunk_effect = determine_chunk_effect(chunk_effect);
+    const corpse_effect_type chunk_effect = determine_chunk_effect(food);
 
     int likes_chunks  = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
@@ -1147,8 +1146,7 @@ void finished_eating_message(int food_type)
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 {
     const monster_type mons_type = corpse.mon_type;
-    const int chunk_type = determine_chunk_effect(
-                                mons_corpse_effect(mons_type));
+    const corpse_effect_type chunk_type = determine_chunk_effect(corpse);
 
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
@@ -1238,7 +1236,7 @@ bool is_mutagenic(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return false;
 
-    return determine_chunk_effect(mons_corpse_effect(food.mon_type)) == CE_MUTAGEN;
+    return determine_chunk_effect(food) == CE_MUTAGEN;
 }
 
 // Returns true if a food item (or corpse) will cause rotting.
@@ -1247,7 +1245,7 @@ bool causes_rot(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return false;
 
-    return determine_chunk_effect(mons_corpse_effect(food.mon_type)) == CE_ROT;
+    return determine_chunk_effect(food) == CE_ROT;
 }
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
@@ -1426,31 +1424,37 @@ bool carrion_is_poisonous(const item_def &food)
 }
 
 /**
- * Is a given chunk or corpse mutagenic, independent of the player's status?
+ * Determine the 'effective' chunk type for a given piece of carrion (chunk or
+ * corpse), for the player.
+ * E.g., ghouls treat rotting and mutagenic chunks as normal chunks, and
+ * players with rPois treat poisonous chunks as clean.
  *
- * (I.e., excluding resists, holiness, etc - even those from species)
+ * @param carrion       The actual chunk or corpse.
+ * @param innate        Whether to consider to only consider player species,
+ *                      rather than items, forms, mutations, etc (for rPois).
+ * @return              A chunk type corresponding to the effect eating the
+ *                      given item will have on the player.
  */
-bool carrion_is_mutagenic(const item_def &food)
+corpse_effect_type determine_chunk_effect(const item_def &carrion,
+                                          bool innate_only)
 {
-    return mons_corpse_effect(food.mon_type) == CE_MUTAGEN;
+    return determine_chunk_effect(mons_corpse_effect(carrion.mon_type),
+                                                     innate_only);
 }
 
 /**
- * Is a given chunk or corpse necrotic (rot-causing), independent of the
- * player's status?
+ * Determine the 'effective' chunk type for a given input for the player.
+ * E.g., ghouls treat rotting and mutagenic chunks as normal chunks, and
+ * players with rPois treat poisonous chunks as clean.
  *
- * (I.e., excluding resists, holiness, etc - even those from species)
+ * @param chunktype     The actual chunk type.
+ * @param innate        Whether to consider to only consider player species,
+ *                      rather than items, forms, mutations, etc (for rPois).
+ * @return              A chunk type corresponding to the effect eating a chunk
+ *                      of the given type will have on the player.
  */
-bool carrion_is_necrotic(const item_def &food)
-{
-    return mons_corpse_effect(food.mon_type) == CE_ROT;
-}
-
-// See if you can follow along here -- except for the amulet of the gourmand
-// addition (long missing and requested), what follows is an expansion of how
-// chunks were handled in the codebase up to this date ... {dlb}
-// Unidentified rPois gear is ignored here
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
+corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
+                                          bool innate_only)
 {
     // Determine the initial effect of eating a particular chunk. {dlb}
     switch (chunktype)
@@ -1462,8 +1466,13 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
         break;
 
     case CE_POISONOUS:
-        if (player_res_poison(false) > 0)
+        // XXX: find somewhere else to pull the species list from
+        if (you.species == SP_GHOUL
+            || you.species == SP_GARGOYLE
+            || !innate_only && player_res_poison(false) > 0)
+        {
             chunktype = CE_CLEAN;
+        }
         break;
 
     default:

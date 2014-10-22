@@ -1420,8 +1420,8 @@ bool items_similar(const item_def &item1, const item_def &item2)
         return false;
 
     if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
-        && (mons_corpse_effect(item1.mon_type) !=
-            mons_corpse_effect(item2.mon_type)))
+        && determine_chunk_effect(item1, true) !=
+           determine_chunk_effect(item2, true))
     {
         return false;
     }

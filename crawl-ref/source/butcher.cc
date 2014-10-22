@@ -127,8 +127,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                 break;
             }
 
-            corpse_effect_type ce = determine_chunk_effect(mons_corpse_effect(
-                                                            si->mon_type));
+            const corpse_effect_type ce = determine_chunk_effect(*si);
             // Being almost rotten away has 480 badness.
             int badness = 3 * si->special;
             if (ce == CE_POISONOUS)
