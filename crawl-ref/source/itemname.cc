@@ -1876,7 +1876,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else if (is_xp_evoker(*this) && !evoker_is_charged(*this)
                      && !dbname)
             {
-                buff << " (inert)";
+                if (evoker_is_charging(*this))
+                    buff << " (inert, charging)";
+                else
+                    buff << " (inert)";
             }
         }
         break;

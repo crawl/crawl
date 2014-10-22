@@ -2190,3 +2190,45 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         return false;
     }
 }
+
+/**
+ * What xp-charged evocable items is the player currently devoting XP to, if
+ * any?
+ *
+ * @param[out] evokers  A vector, to be filled with a list of the elemental
+ *                      evokers that the player is currently charging.
+ *                      (Only one of a type is charged at a time.)
+ */
+void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        item_def& item(you.inv[i]);
+        // can't charge non-evokers, or evokers that are full
+        if (!is_xp_evoker(item) || item.plus2 == 0)
+            continue;
+
+        // Only recharge one of each type of evoker at a time.
+        // Prioritizes by which one is most nearly charged.
+        if (evokers[item.sub_type]
+            && evokers[item.sub_type]->plus2 <= item.plus2)
+        {
+            continue;
+        }
+
+        evokers[item.sub_type] = &item;
+    }
+}
+
+/**
+ * Is the given elemental evoker currently charging?
+ *
+ * @param item      The evoker in question.
+ * @return          Whether the player gaining xp will help recharge this item.
+ */
+bool evoker_is_charging(const item_def &item)
+{
+    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
+    list_charging_evokers(evokers);
+    return evokers[item.sub_type] == &item;
+}
