@@ -1004,8 +1004,8 @@ static void _eat_chunk(item_def& food)
         if (you.species == SP_GHOUL)
         {
             suppress_msg = true;
-            int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-            _heal_from_food(hp_amt, x_chance_in_y(3, 4));
+            const int hp_amt = 1 + random2avg(5 + you.experience_level, 3);
+            _heal_from_food(hp_amt, true);
         }
 
         mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
