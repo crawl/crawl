@@ -101,7 +101,7 @@ bool attack::handle_phase_damaged()
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
         if (blood)
-            (new blood_fineff(defender, defender->pos(), blood))->schedule();
+            blood_fineff::schedule(defender, defender->pos(), blood);
     }
 
     announce_hit();
@@ -541,7 +541,7 @@ bool attack::distortion_affects_defender()
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
-            (new blink_fineff(defender))->schedule();
+            blink_fineff::schedule(defender);
         return false;
     }
 
@@ -556,7 +556,7 @@ bool attack::distortion_affects_defender()
                 canned_msg(MSG_STRANGE_STASIS);
         }
         else if (coinflip())
-            (new distortion_tele_fineff(defender))->schedule();
+            distortion_tele_fineff::schedule(defender);
         else
             defender->teleport();
         return false;

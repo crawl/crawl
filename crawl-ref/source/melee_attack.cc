@@ -3118,7 +3118,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))
-            (new blink_fineff(attacker))->schedule();
+            blink_fineff::schedule(attacker);
         break;
 
     case AF_CONFUSE:
@@ -3793,7 +3793,7 @@ bool melee_attack::do_knockback(bool trample)
         // is a player, a shaft trap will unload the level.  If trampling will
         // somehow fail, move attempt will be ignored.
         if (trample)
-            (new trample_follow_fineff(attacker, old_pos))->schedule();
+            trample_follow_fineff::schedule(attacker, old_pos);
 
         if (defender->as_player())
             move_player_to_grid(new_pos, false);

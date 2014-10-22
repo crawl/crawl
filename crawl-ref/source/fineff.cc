@@ -31,19 +31,19 @@
 #include "transform.h"
 #include "view.h"
 
-void final_effect::schedule()
+/*static*/ void final_effect::schedule(final_effect *eff)
 {
     for (vector<final_effect *>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end(); ++fi)
     {
-        if ((*fi)->mergeable(*this))
+        if ((*fi)->mergeable(*eff))
         {
-            (*fi)->merge(*this);
-            delete this;
+            (*fi)->merge(*eff);
+            delete eff;
             return;
         }
     }
-    env.final_effects.push_back(this);
+    env.final_effects.push_back(eff);
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
