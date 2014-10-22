@@ -1540,13 +1540,13 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
     }
     else if (item.base_type == OBJ_CORPSES &&
              item.sub_type == CORPSE_BODY &&
-             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+             carrion_is_poisonous(item))
     {
         strength = mons_weight(item.mon_type) / 25;
     }
     else if (item.base_type == OBJ_FOOD &&
              item.sub_type == FOOD_CHUNK &&
-             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+             carrion_is_poisonous(item))
     {
         strength += 30 * item.quantity;
     }
@@ -1836,7 +1836,7 @@ static bool maybe_abort_ignite()
         }
         else if (item.base_type == OBJ_CORPSES
                  && item.sub_type == CORPSE_BODY
-                 && chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+                 && carrion_is_poisonous(item))
         {
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
@@ -1845,7 +1845,7 @@ static bool maybe_abort_ignite()
         }
         else if (item.base_type == OBJ_FOOD &&
                  item.sub_type == FOOD_CHUNK &&
-                 chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+                 carrion_is_poisonous(item))
         {
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));

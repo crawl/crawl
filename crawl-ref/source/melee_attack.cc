@@ -4107,7 +4107,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_is_poisonous(chunk_type))
+        else if (chunk_type == CE_POISONOUS)
             food_value = 15 + random2avg(29, 2);
 
         // Bats get rather less nutrition out of it.
@@ -4142,5 +4142,5 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 
     // Don't drink poisonous or mutagenic blood.
     return chunk_type == CE_CLEAN
-           || (chunk_is_poisonous(chunk_type) && player_res_poison());
+           || (chunk_type == CE_POISONOUS && player_res_poison());
 }

@@ -1229,7 +1229,7 @@ bool is_poisonous(const item_def &food)
     if (player_res_poison(false) > 0)
         return false;
 
-    return chunk_is_poisonous(mons_corpse_effect(food.mon_type));
+    return carrion_is_poisonous(food);
 }
 
 // Returns true if a food item (or corpse) is mutagenic.
@@ -1415,9 +1415,35 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
     return true;
 }
 
-bool chunk_is_poisonous(int chunktype)
+/**
+ * Is a given chunk or corpse poisonous, independent of the player's status?
+ *
+ * (I.e., excluding resists, holiness, etc - even those from species)
+ */
+bool carrion_is_poisonous(const item_def &food)
 {
-    return chunktype == CE_POISONOUS;
+    return mons_corpse_effect(food.mon_type) == CE_POISONOUS;
+}
+
+/**
+ * Is a given chunk or corpse mutagenic, independent of the player's status?
+ *
+ * (I.e., excluding resists, holiness, etc - even those from species)
+ */
+bool carrion_is_mutagenic(const item_def &food)
+{
+    return mons_corpse_effect(food.mon_type) == CE_MUTAGEN;
+}
+
+/**
+ * Is a given chunk or corpse necrotic (rot-causing), independent of the
+ * player's status?
+ *
+ * (I.e., excluding resists, holiness, etc - even those from species)
+ */
+bool carrion_is_necrotic(const item_def &food)
+{
+    return mons_corpse_effect(food.mon_type) == CE_ROT;
 }
 
 // See if you can follow along here -- except for the amulet of the gourmand

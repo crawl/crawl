@@ -44,7 +44,10 @@ mon_intel_type corpse_intelligence(const item_def &corpse);
 
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
 
-bool chunk_is_poisonous(int chunktype);
+bool carrion_is_poisonous(const item_def &food);
+bool carrion_is_mutagenic(const item_def &food);
+bool carrion_is_necrotic(const item_def &food);
+
 bool eat_item(item_def &food);
 
 int eat_from_floor(bool skip_chunks = true);

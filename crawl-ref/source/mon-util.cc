@@ -839,7 +839,7 @@ bool mons_is_abyssal_only(monster_type mc)
 
 bool mons_is_poisoner(const monster* mon)
 {
-    if (chunk_is_poisonous(mons_corpse_effect(mon->type)))
+    if (mons_corpse_effect(mon->type) == CE_POISONOUS)
         return true;
 
     if (mon->has_attack_flavour(AF_POISON)
