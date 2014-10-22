@@ -870,7 +870,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_RESTRICTED;
 
     case WPN_SHORT_SWORD:
-    case WPN_CUTLASS:
+    case WPN_RAPIER:
         switch (ng.species)
         {
         case SP_NAGA:

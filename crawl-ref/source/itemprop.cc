@@ -253,16 +253,20 @@ static const weapon_def Weapon_prop[] =
     // Short Blades
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
-        DAMV_STABBING | DAM_SLICE, 10, 10 },
+        DAMV_PIERCING, 10, 10 },
     { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
-        DAMV_STABBING | DAM_SLICE, 0, 2 },
+        DAMV_PIERCING, 0, 2 },
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
-        DAMV_SLICING | DAM_PIERCE, 8, 10 },
-    { WPN_CUTLASS,           "cutlass",             7,  4, 12,  90,  2,
+        DAMV_PIERCING, 8, 10 },
+    { WPN_RAPIER,           "rapier",               7,  4, 12,  90,  2,
+        SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
+        DAMV_PIERCING, 8, 10 },
+    { WPN_CUTLASS,          "cutlass",              7,  4, 12,  90,  2,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 8, 10 },
+
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  3,

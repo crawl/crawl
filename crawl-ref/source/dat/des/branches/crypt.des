@@ -1503,7 +1503,7 @@ KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective               \
             name_adjective tile:mons_withered_plant
 ####### hidden skeleton; sometimes good pain weapon, or draining short sword
 KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
-                               w:2 cutlass ego:pain | w:1 quick blade ego:pain
+                               w:2 rapier ego:pain | w:1 quick blade ego:pain
 KFEAT:  o = granite_statue
 SUBST:  B = b %
 KITEM:  b = any book

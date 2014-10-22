@@ -1007,13 +1007,6 @@ crocodile
   With gently smiling jaws!”
     -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
 %%%%
-cutlass
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
-%%%%
 daeva
 
 “Between these twain the Daevas also chose not aright, for infatuation came
@@ -2121,6 +2114,13 @@ shoulders were broad like the neck of a tree; his ears were like unto arrows,
 and his features were frightful.”
     -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
+%%%%
+rapier
+
+“Who was the first that forged the deadly blade?
+ Of rugged steel his savage soul was made...”
+    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
+     trans. James Grainger, 1822.
 %%%%
 raven
 

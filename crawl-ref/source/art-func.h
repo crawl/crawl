@@ -1272,7 +1272,7 @@ static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
         item_def *wpn = defender->as_monster()->disarm();
         if (wpn)
         {
-            mprf("You knock %s %s to the ground with your cutlass!",
+            mprf("You knock %s %s to the ground with your rapier!",
                  apostrophise(defender->name(DESC_THE)).c_str(),
                  wpn->name(DESC_PLAIN).c_str());
         }

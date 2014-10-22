@@ -695,8 +695,8 @@ KMONS:   E = deep elf annihilator ; robe randart | mundane ice dragon armour | \
                                   scimitar ego:flaming | scimitar ego:freezing
 KMONS:   F = tengu reaver
 KMONS:   G = deep elf blademaster ; mundane crystal plate armour . \
-                                  cutlass ego:flaming ident:type . \
-                                  cutlass ego:freezing ident:type
+                                  rapier ego:flaming ident:type . \
+                                  rapier ego:freezing ident:type
 KMONS:   H = ancient lich w:5 / lich
 KMONS:   I = titan
 KMONS:   J = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \

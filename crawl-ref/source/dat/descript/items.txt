@@ -81,10 +81,6 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
-double sword
-
-A magical weapon with two razor-sharp blades.
-%%%%
 battleaxe
 
 A large war axe with a formidable double-sided head.
@@ -398,11 +394,6 @@ chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
-triple sword
-
-A magical weapon with three great razor-sharp blades, requiring great skill to
-use effectively.
-%%%%
 cloak
 
 A cloth cloak.
@@ -496,6 +487,10 @@ disc of storms
 This extremely powerful item can unleash a destructive storm of electricity.
 Its effectiveness greatly improves in the hands of one skilled in using magical
 devices.
+%%%%
+double sword
+
+A magical weapon with two razor-sharp blades.
 %%%%
 eggplant
 
@@ -962,8 +957,12 @@ be used to make excellent armour.
 %%%%
 quick blade
 
-This carefully wrought short sword is preternaturally well-balanced, making it
+This carefully wrought dagger is preternaturally well-balanced, making it
 much easier for even inexperienced handlers to attack with it quickly.
+%%%%
+rapier
+
+A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
 ring mail
 
@@ -1307,7 +1306,7 @@ A curved piece of wood and string, for shooting arrows.
 %%%%
 short sword
 
-A small, double-edged blade with a short grip.
+Also known as a 'small sword'; a personal stabbing weapon with a short grip.
 %%%%
 slice of pizza
 
@@ -1477,6 +1476,11 @@ triple crossbow
 Initially designed as a siege weapon and then scaled down, this crossbow uses
 three strings arranged in series to provide exceptional power. It takes a
 considerable amount of time to load and fire.
+%%%%
+triple sword
+
+A magical weapon with three great razor-sharp blades, requiring great skill to
+use effectively.
 %%%%
 trishula
 

@@ -5918,8 +5918,8 @@ KMONS:   A = Blork the orc / orc warrior ; great sword . chain mail | plate armo
                              orc warrior ; great sword . chain mail | plate armour / nothing
 KMONS:   B = Eustachio / orc warrior ; long sword | falchion . chain mail . shield, \
                          orc warrior ; long sword | falchion . chain mail . shield / nothing
-KMONS:   C = Urug / orc knight ; cutlass | long sword . leather armour . buckler | nothing, \
-                    orc knight ; cutlass | long sword . leather armour . buckler | nothing / nothing
+KMONS:   C = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
+                    orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
 KMONS:   D = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
                       orc knight ; long sword | scimitar . chain mail . shield / nothing
 KMONS:   E = Erica / wizard ; long sword . robe | leather armour . shield, \
@@ -5936,7 +5936,7 @@ KMONS:   M = Wiglaf / ancient champion, ancient champion / nothing
 KMONS:   N = Frederick / draconian knight, draconian knight / nothing
 KMONS:   O = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   W = gnoll sergeant ; trident . scale mail | chain mail . shield
-KMONS:   X = deep elf fighter ; cutlass | long sword . robe | leather armour . buckler | nothing
+KMONS:   X = deep elf fighter ; rapier | long sword . robe | leather armour . buckler | nothing
 KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item triple sword / good_item double sword

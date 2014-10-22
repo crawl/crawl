@@ -62,9 +62,9 @@ dagger3
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
-cutlass1 WPN_CUTLASS
-cutlass2
-cutlass3
+rapier1 WPN_RAPIER
+rapier2
+rapier3
 quickblade1 WPN_QUICK_BLADE
 quickblade2
 quickblade3

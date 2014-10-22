@@ -734,7 +734,7 @@ KITEM:    F = demon whip mundane not_cursed ident:all plus:5, \
               giant club mundane not_cursed ident:all plus:5, \
               giant spiked club mundane not_cursed ident:all plus:5
 KITEM:    G = dagger mundane not_cursed ident:all plus:5, \
-              cutlass mundane not_cursed ident:all plus:5, \
+              rapier mundane not_cursed ident:all plus:5, \
               quick blade mundane not_cursed ident:all plus:5
 KITEM:    H = demon blade mundane not_cursed ident:all plus:5, \
               double sword mundane not_cursed ident:all plus:5, \

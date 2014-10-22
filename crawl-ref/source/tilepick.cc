@@ -3087,13 +3087,13 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DAGGER:                return TILE_WPN_DAGGER;
     case WPN_SHORT_SWORD:           return TILE_WPN_SHORT_SWORD;
     case WPN_QUICK_BLADE:           return TILE_WPN_QUICK_BLADE;
-    case WPN_CUTLASS:               return TILE_WPN_CUTLASS;
+    case WPN_RAPIER:                return TILE_WPN_RAPIER;
     case WPN_FALCHION:              return TILE_WPN_FALCHION;
     case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
     case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
     case WPN_SCIMITAR:              return TILE_WPN_SCIMITAR;
-    case WPN_DOUBLE_SWORD:         return TILE_WPN_DOUBLE_SWORD;
-    case WPN_TRIPLE_SWORD:              return TILE_WPN_TRIPLE_SWORD;
+    case WPN_DOUBLE_SWORD:          return TILE_WPN_DOUBLE_SWORD;
+    case WPN_TRIPLE_SWORD:          return TILE_WPN_TRIPLE_SWORD;
     case WPN_HAND_AXE:              return TILE_WPN_HAND_AXE;
     case WPN_WAR_AXE:               return TILE_WPN_WAR_AXE;
     case WPN_BROAD_AXE:             return TILE_WPN_BROAD_AXE;
@@ -3139,8 +3139,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLESSED_LONG_SWORD:    return TILE_WPN_LONG_SWORD;
     case WPN_BLESSED_SCIMITAR:      return TILE_WPN_SCIMITAR;
     case WPN_BLESSED_GREAT_SWORD:   return TILE_WPN_GREAT_SWORD;
-    case WPN_BLESSED_DOUBLE_SWORD: return TILE_WPN_BLESSED_DOUBLE_SWORD;
-    case WPN_BLESSED_TRIPLE_SWORD:      return TILE_WPN_BLESSED_TRIPLE_SWORD;
+    case WPN_BLESSED_DOUBLE_SWORD:  return TILE_WPN_BLESSED_DOUBLE_SWORD;
+    case WPN_BLESSED_TRIPLE_SWORD:  return TILE_WPN_BLESSED_TRIPLE_SWORD;
     }
 
     return TILE_ERROR;
