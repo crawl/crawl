@@ -1719,12 +1719,21 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            if (carrion_is_poisonous(*this))
-                buff << "poisonous ";
-            else if (carrion_is_mutagenic(*this))
-                buff << "mutagenic ";
-            else if (carrion_is_necrotic(*this))
-                buff << "putrefying ";
+            switch (determine_chunk_effect(*this, true))
+            {
+                case CE_POISONOUS:
+                    buff << "poisonous ";
+                    break;
+                case CE_MUTAGEN:
+                    buff << "mutagenic ";
+                    break;
+                case CE_ROT:
+                    buff << "putrefying ";
+                    break;
+                default:
+                    break;
+            }
+
             buff << "chunk of flesh";
             break;
 #if TAG_MAJOR_VERSION == 34
