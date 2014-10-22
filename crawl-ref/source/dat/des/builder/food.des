@@ -224,9 +224,9 @@ KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
 KITEM:    C = slice of pizza q:3 no_mimic
 KITEM:    E = falchion ego:flaming ident:type / \
-              short sword ego:flaming ident:type
+              hand axe ego:flaming ident:type
 KITEM:    H = meat ration q:2 no_mimic
-KITEM:    I = rapier
+KITEM:    I = halberd
 KFEAT:    EF = shallow_water
 MAP
 cccccccccc
