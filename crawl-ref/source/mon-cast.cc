@@ -1350,15 +1350,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                 false);
         }
     }
-
-    // Eyeballs get to gaze at anything reliably in LOS.
-    if ((mons_genus(mons->type) == MONS_GIANT_EYEBALL
-         || mons->type == MONS_GHOST_MOTH)
-        && theBeam.is_enchantment())
-    {
-        theBeam.use_target_as_pos = true;
-    }
-
     bolt_parent_init(&theBeam, &pbolt);
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
@@ -3264,8 +3255,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             // beam-type spells requiring tracers
-            if (get_spell_flags(spell_cast) & SPFLAG_NEEDS_TRACER
-                && beem.use_target_as_pos == false)
+            if (get_spell_flags(spell_cast) & SPFLAG_NEEDS_TRACER)
             {
                 const bool explode =
                     spell_is_direct_explosion(spell_cast);
@@ -3284,11 +3274,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                        &you : foe)) // foe=get_foe() is NULL for friendlies
                 {                   // targeting you, which is bad here.
                     spellOK = false;
-                }
-                else if (beem.use_target_as_pos)
-                {
-                    // Eyeball gaze cannot go through transparent walls.
-                    spellOK = mons->see_cell_no_trans(beem.target);
                 }
                 else if (mons->foe == MHITYOU || mons->foe == MHITNOT)
                 {
@@ -6016,11 +6001,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.in_explosion_phase = false;
         pbolt.refine_for_explosion();
         pbolt.explode(need_more);
-    }
-    else if (pbolt.use_target_as_pos)
-    {
-        pbolt.affect_cell();
-        pbolt.affect_endpoint();
     }
     else
         pbolt.fire();
