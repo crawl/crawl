@@ -81,6 +81,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
+static bool _mons_consider_goblin_tossing(const monster &mons);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 static void _siren_sing(monster* mons, bool avatar);
@@ -1448,6 +1449,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_TENTACLE_THROW:
+    case SPELL_GOBLIN_TOSS:
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
     case SPELL_AVATAR_SONG:
@@ -1634,44 +1636,99 @@ static bool _mirrorable(const monster* agent, const monster* mon)
 
 enum battlecry_type
 {
+    BATTLECRY_GOBLIN,
     BATTLECRY_ORC,
     BATTLECRY_HOLY,
     BATTLECRY_NATURAL,
     NUM_BATTLECRIES
 };
 
-static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
+/**
+ * Is the given monster affected by the given type of battlecry?
+ *
+ * @param mons   The monster to be affected.
+ * @param type   What type of battlecry is being loosed.
+ * @return       Whether the given monster will be buffed by the battlecry.
+ */
+static bool _is_battlecry_compatible(const monster& mons, battlecry_type type)
 {
     switch (type)
     {
+        case BATTLECRY_GOBLIN:
+            return mons_genus(mons.type) == MONS_GOBLIN;
         case BATTLECRY_ORC:
-            return mons_genus(mons->type) == MONS_ORC;
+            return mons_genus(mons.type) == MONS_ORC;
         case BATTLECRY_HOLY:
-            return mons->holiness() == MH_HOLY;
+            return mons.holiness() == MH_HOLY;
         case BATTLECRY_NATURAL:
-            return mons->holiness() == MH_NATURAL;
+            return mons.holiness() == MH_NATURAL;
         default:
             return false;
     }
 }
 
-static int _battle_cry(const monster* chief, bool check_only = false)
+
+/**
+ * What type of cry does the given monster perform?
+ *
+ * @param crier  The monster letting loose a mighty battlecry.
+ * @return       The battlecry type, which corresponds to different sets of
+ *               affected monsters, messages, and (technically) enchantments.
+ */
+static battlecry_type _get_cry_type(const monster& crier)
 {
-    battlecry_type type =
-        (mons_genus(chief->type) == MONS_ORC) ? BATTLECRY_ORC :
-        (chief->holiness() == MH_HOLY)        ? BATTLECRY_HOLY
-                                              : BATTLECRY_NATURAL;
-    const actor *foe = chief->get_foe();
-    int affected = 0;
+    if (mons_genus(crier.type) == MONS_GOBLIN)
+        return BATTLECRY_GOBLIN;
+    if (mons_genus(crier.type) == MONS_ORC)
+        return BATTLECRY_ORC;
+    if (crier.holiness() == MH_HOLY)
+        return BATTLECRY_HOLY;
+    return BATTLECRY_NATURAL;
+}
 
-    enchant_type battlecry = (type == BATTLECRY_ORC ? ENCH_BATTLE_FRENZY
-                                                    : ENCH_ROUSED);
+/**
+ * What enchantment is granted by a given battlecry?
+ *
+ * @param type   The type of battlecry.
+ * @return       The corresponding enchantment type; either 'battle frenzy' or
+ *               'roused'.
+ *               XXX: these enchantments are almost exactly identical, and
+ *               should be merged.
+ */
+static enchant_type _enchant_from_cry(battlecry_type type)
+{
+    switch (type)
+    {
+        case BATTLECRY_GOBLIN:
+        case BATTLECRY_ORC:
+            return ENCH_BATTLE_FRENZY;
+        case BATTLECRY_HOLY:
+        case BATTLECRY_NATURAL:
+        default:
+            return ENCH_ROUSED;
+    }
+}
 
+/**
+ * Print the message that the player sees after a battlecry goes off.
+ *
+ * @param chief             The monster letting out the battlecry.
+ * @param seen_affected     The affected monsters that are visible to the
+ *                          player.
+ */
+static void _print_battlecry_announcement(const monster& chief,
+                                          vector<monster*> &seen_affected)
+{
     // Columns 0 and 1 should have one instance of %s (for the monster),
     // column 2 two (for a determiner and the monsters), and column 3 none.
     enum { AFFECT_ONE, AFFECT_MANY, GENERIC_ALLIES };
     static const char * const messages[][3] =
     {
+        {
+            "%s goes into a battle-frenzy!",
+            "%s %s go into a battle-frenzy!",
+            "goblins"
+        },
         {
             "%s goes into a battle-frenzy!",
             "%s %s go into a battle-frenzy!",
@@ -1690,92 +1747,133 @@ static int _battle_cry(const monster* chief, bool check_only = false)
     };
     COMPILE_CHECK(ARRAYSZ(messages) == NUM_BATTLECRIES);
 
-    if (foe
-        && (!foe->is_player() || !chief->friendly())
-        && !silenced(chief->pos())
-        && !chief->has_ench(ENCH_MUTE)
-        && chief->can_see(foe))
+    const battlecry_type type = _get_cry_type(chief);
+    // Disabling detailed frenzy announcement because it's so spammy.
+    const msg_channel_type channel = chief.friendly() ? MSGCH_MONSTER_ENCHANT
+                                                      : MSGCH_FRIEND_ENCHANT;
+
+    string who;
+    if (seen_affected.size() == 1)
     {
-        const int level = chief->get_hit_dice() > 12? 2 : 1;
-        vector<monster* > seen_affected;
-        for (monster_near_iterator mi(chief, LOS_NO_TRANS); mi; ++mi)
-        {
-            if (*mi != chief
-                && _is_battlecry_compatible(*mi, type)
-                && mons_aligned(chief, *mi)
-                && !mi->berserk_or_insane()
-                && !mi->has_ench(ENCH_MIGHT)
-                && !mi->cannot_move()
-                && !mi->confused()
-                && (mi->get_hit_dice() < chief->get_hit_dice()
-                    || type == BATTLECRY_HOLY))
-            {
-                mon_enchant ench = mi->get_ench(battlecry);
-                if (ench.ench == ENCH_NONE || ench.degree < level)
-                {
-                    if (check_only)
-                        return 1; // just need to check
+        who = seen_affected[0]->name(DESC_THE);
+        mprf(channel, messages[type][AFFECT_ONE], who.c_str());
+    }
+    else
+    {
+        monster_type mon_type = seen_affected[0]->type;
+        // if not homogeneous, use the generic term instead
+        const bool generic = any_of(
+                                    begin(seen_affected), end(seen_affected),
+                                    [=](const monster *m)
+                                    { return m->type != mon_type; });
+        who = get_monster_data(mon_type)->name;
 
-                    const int dur =
-                        random_range(12, 20) * speed_to_duration(mi->speed);
+        mprf(channel, messages[type][AFFECT_MANY],
+             chief.friendly() ? "Your" : "The",
+             generic ? messages[type][GENERIC_ALLIES]
+             : pluralise(who).c_str());
+    }
+}
 
-                    if (ench.ench != ENCH_NONE)
-                    {
-                        ench.degree   = level;
-                        ench.duration = max(ench.duration, dur);
-                        mi->update_ench(ench);
-                    }
-                    else
-                        mi->add_ench(mon_enchant(battlecry, level, chief, dur));
+/**
+ * Let loose a mighty battlecry, inspiring & strengthening nearby foes!
+ *
+ * @param chief         The monster letting out the battlecry.
+ * @param check_only    Whether to perform a 'dry run', only checking whether
+ *                      any monsters are potentially affected.
+ * @return              Whether any monsters are (or would be) affected.
+ */
+static bool _battle_cry(const monster& chief, bool check_only = false)
+{
+    const actor *foe = chief.get_foe();
 
-                    affected++;
-                    if (you.can_see(*mi))
-                        seen_affected.push_back(*mi);
-
-                    if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
-                }
-            }
-        }
-
-        if (affected)
-        {
-            // The yell happens whether you happen to see it or not.
-            noisy(LOS_RADIUS, chief->pos(), chief->mid);
-
-            // Disabling detailed frenzy announcement because it's so spammy.
-            const msg_channel_type channel =
-                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
-                                          : MSGCH_FRIEND_ENCHANT;
-
-            if (!seen_affected.empty())
-            {
-                string who;
-                if (seen_affected.size() == 1)
-                {
-                    who = seen_affected[0]->name(DESC_THE);
-                    mprf(channel, messages[type][AFFECT_ONE], who.c_str());
-                }
-                else
-                {
-                    monster_type mon_type = seen_affected[0]->type;
-                    // if not homogeneous, use the generic term instead
-                    const bool generic = any_of(
-                            begin(seen_affected), end(seen_affected),
-                            [=](const monster *m)
-                            { return m->type != mon_type; });
-                    who = get_monster_data(mon_type)->name;
-
-                    mprf(channel, messages[type][AFFECT_MANY],
-                         chief->friendly() ? "Your" : "The",
-                         (!generic ? pluralise(who).c_str()
-                                   : messages[type][GENERIC_ALLIES]));
-                }
-            }
-        }
+    // Only let loose a battlecry if you have a valid target.
+    if (!foe
+        || foe->is_player() && chief.friendly()
+        || !chief.can_see(foe))
+    {
+        return false;
     }
 
-    return affected;
+    // Don't try to make noise when silent.
+    if (silenced(chief.pos()) || chief.has_ench(ENCH_MUTE))
+        return false;
+
+    const battlecry_type type = _get_cry_type(chief);
+    const enchant_type battlecry = _enchant_from_cry(type);
+    // magnitude of the buff (either 30% or 45% dam increase)
+    const int level = chief.get_hit_dice() > 12? 2 : 1;
+
+    int affected = 0;
+
+    vector<monster* > seen_affected;
+    for (monster_near_iterator mi(&chief, LOS_NO_TRANS); mi; ++mi)
+    {
+        const monster *mons = *mi;
+        // can't buff yourself
+        if (mons == &chief)
+            continue;
+
+        // only buff allies
+        if (!mons_aligned(&chief, mons))
+            continue;
+
+        // no buffing confused/paralysed mons
+        if (mons->berserk_or_insane()
+            || mons->confused()
+            || mons->cannot_move())
+        {
+            continue;
+        }
+
+        // already has a very similar buff (XXX: does this work in reverse?)
+        if (mons->has_ench(ENCH_MIGHT))
+            continue;
+
+        // invalid battlecry target (wrong genus/holiness, or hd too high)
+        if (!_is_battlecry_compatible(*mons, type)
+            || mons->get_hit_dice() >= chief.get_hit_dice()
+               && type != BATTLECRY_HOLY)
+        {
+            continue;
+        }
+
+        mon_enchant ench = mi->get_ench(battlecry);
+        if (ench.ench != ENCH_NONE && ench.degree >= level)
+            continue; // already buffed as high as we would
+
+        if (check_only)
+            return true; // just need to check
+
+        const int dur = random_range(12, 20) * speed_to_duration(mi->speed);
+
+        if (ench.ench != ENCH_NONE)
+        {
+            ench.degree   = level;
+            ench.duration = max(ench.duration, dur);
+            mi->update_ench(ench);
+        }
+        else
+            mi->add_ench(mon_enchant(battlecry, level, &chief, dur));
+
+        affected++;
+        if (you.can_see(*mi))
+            seen_affected.push_back(*mi);
+
+        if (mi->asleep())
+            behaviour_event(*mi, ME_DISTURB, 0, chief.pos());
+    }
+
+    if (affected == 0)
+        return false;
+
+    // The yell happens whether you happen to see it or not.
+    noisy(LOS_RADIUS, chief.pos(), chief.mid);
+
+    if (!seen_affected.empty())
+        _print_battlecry_announcement(chief, seen_affected);
+
+    return true;
 }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
@@ -6174,7 +6272,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_BATTLECRY:
-        _battle_cry(mons);
+        _battle_cry(*mons);
         return;
 
     case SPELL_SIGNAL_HORN:
@@ -6206,6 +6304,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_TENTACLE_THROW:
         _mons_consider_tentacle_throwing(*mons);
+        return;
+
+    case SPELL_GOBLIN_TOSS:
+        _mons_consider_goblin_tossing(*mons);
         return;
 
     case SPELL_SIREN_SONG:
@@ -6744,6 +6846,194 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         mons_speaks_msg(mons, msg, chan);
     }
 }
+
+/**
+ * Find the best goblin for the given monster to toss.
+ *
+ * XXX: deduplicate this with tentacle toss code
+ *
+ * @param mons      The monster thinking about goblin-tossing.
+ * @return          The mid_t of the best victim for the monster to throw.
+ *                  Could be player, another monster, or 0 (none).
+ */
+static actor* _find_goblin_to_toss(const monster &mons)
+{
+    dprf("considering goblin tossing");
+    const actor *foe = mons.get_foe();
+    if (!foe)
+        return NULL;
+
+    actor *tossee = NULL;
+    int furthest_dist = -1;
+
+    for (adjacent_iterator ai(mons.pos(), true); ai; ++ai)
+    {
+        actor* goblin = actor_at(*ai);
+
+        // Only throw real, living goblins.
+        // (But Ijyb and zombie goblins are OK, since that's funny.)
+        if (!goblin || !goblin->alive()
+            || goblin->mons_species() != MONS_GOBLIN)
+        {
+            continue;
+        }
+
+        // Don't try to throw anything constricted.
+        if (goblin->is_constricted())
+            continue;
+
+        // otherwise throw whoever's furthest from our target.
+        const int dist = distance2(goblin->pos(), foe->pos());
+        if (dist > furthest_dist)
+        {
+            tossee = goblin;
+            furthest_dist = dist;
+        }
+    }
+
+    dprf("found a goblin to toss");
+    return tossee;
+}
+
+const int MIN_GOBLIN_THROW_DIST = 2;
+
+/**
+ * Find a place adjacent to the given target monster to for the given monster
+ * to throw a goblin.
+ *
+ * XXX: deduplicate this with tentacle toss code
+ *
+ * @param tosser      The monster doing the throwing.
+ * @param goblin      The monster being tossed.
+ * @param foe_pos     The location of the foe to toss the goblin near.
+ * @return          A location for the throw; (0,0) if none was found.
+ */
+static coord_def _find_goblin_toss_target(const monster &tosser,
+                                          const monster &goblin,
+                                          const coord_def &foe_pos)
+{
+    int furthest_dist = -1;
+    vector<coord_def> best_sites;
+
+    for (adjacent_iterator ai(foe_pos, true); ai; ++ai)
+    {
+        ray_def ray;
+        // Unusable landing sites.
+        if (goblin.pos().distance_from(*ai) < MIN_GOBLIN_THROW_DIST
+            || actor_at(*ai)
+            || !tosser.see_cell(*ai)
+            || !goblin.is_habitable(*ai)
+            || !find_ray(tosser.pos(), *ai, ray, opc_solid_see))
+        {
+            continue;
+        }
+
+        const int dist = distance2(tosser.pos(), *ai);
+        if (dist > furthest_dist)
+        {
+            best_sites.clear();
+            furthest_dist = dist;
+        }
+        if (dist >= furthest_dist)
+            best_sites.push_back(*ai);
+    }
+
+    // No valid landing site found.
+    if (!best_sites.size())
+        return coord_def(0,0);
+
+    dprf("found a place to toss a goblin");
+    const coord_def best_site = best_sites[random2(best_sites.size())];
+    return best_site;
+}
+
+/**
+ * Toss a goblin at the given target, landing them in the given square after
+ * maybe dealing a pittance of damage.
+ *
+ * XXX: deduplicate this with tentacle toss code
+ *
+ * @param tosser        The monster doing the throwing.
+ * @param goblin        The monster being tossed.
+ * @param victim        The player or monster getting bopped.
+ * @param chosen_dest   The location of the square the goblin should land on.
+ */
+static void _goblin_toss_to(const monster &tosser, monster &goblin,
+                            actor &foe, const coord_def &chosen_dest)
+{
+    ASSERT(in_bounds(chosen_dest));
+    ASSERT(!goblin.is_constricted());
+
+    const int dam = foe.apply_ac(random2(tosser.get_hit_dice() * 2));
+
+    const coord_def old_pos = goblin.pos();
+    const bool thrower_seen = you.can_see(&tosser);
+    const bool victim_was_seen = you.can_see(&foe);
+
+    if (!(goblin.flags & MF_WAS_IN_VIEW))
+        goblin.seen_context = SC_THROWN_IN;
+    goblin.move_to_pos(chosen_dest);
+    goblin.apply_location_effects(old_pos);
+    goblin.check_redraw(old_pos);
+    if (thrower_seen || victim_was_seen)
+    {
+        const string victim_name = goblin.name(DESC_THE);
+        const string thrower_name = tosser.name(DESC_THE);
+        const string destination = you.can_see(&foe) ?
+                                   make_stringf("at %s",
+                                                foe.name(DESC_THE).c_str()) :
+                                   "out of sight";
+
+        mprf("%s throws %s %s!",
+             (thrower_seen ? thrower_name.c_str() : "Something"),
+             (victim_was_seen ? victim_name.c_str() : "something"),
+             destination.c_str());
+    }
+
+    if (foe.is_player())
+    {
+        const string killed_by = make_stringf("Hit by %s, thrown by %s",
+                                              goblin.name(DESC_A).c_str(),
+                                              tosser.name(DESC_PLAIN).c_str());
+        ouch(dam, KILLED_BY_BEAM, tosser.mid, killed_by.c_str());
+    }
+    else
+        foe.hurt(&tosser, dam, BEAM_NONE, true);
+}
+
+/**
+ * Make the given monster try to throw a nearby goblin, if possible.
+ *
+ * XXX: deduplicate this with tentacle toss code
+ *
+ * @param mons       The monster doing the throwing.
+ * @return           Whether a throw attempt was made.
+ */
+static bool _mons_consider_goblin_tossing(const monster &mons)
+{
+    actor *foe = mons.get_foe();
+    if (!foe)
+        return false;
+
+    actor* tossee = _find_goblin_to_toss(mons);
+    if (!tossee)
+        return false;
+
+    monster* goblin = tossee->as_monster();
+    ASSERT(goblin);
+
+    // XXX: check for a miss here? (roll vs ev......?)
+
+    const coord_def toss_target = _find_goblin_toss_target(mons, *goblin,
+                                                           foe->pos());
+    if (toss_target.origin())
+        return false;
+
+    _goblin_toss_to(mons, *goblin, *foe, toss_target);
+    return true;
+}
+
+
 
 /**
  * Find the best creature for the given monster to toss with its tentacles.
@@ -7523,7 +7813,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || adjacent(mon->pos(), foe->pos());
 
     case SPELL_BATTLECRY:
-        return !_battle_cry(mon, true);
+        return !_battle_cry(*mon, true);
 
     case SPELL_SIGNAL_HORN:
         return friendly;
@@ -7564,6 +7854,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_TENTACLE_THROW:
         return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
+
+    case SPELL_GOBLIN_TOSS:
+        return !_find_goblin_to_toss(*mon);
 
     case SPELL_CREATE_TENTACLES:
         return !mons_available_tentacles(mon);

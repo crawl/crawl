@@ -906,6 +906,7 @@ deathcap MONS_DEATHCAP
 ## Goblins ('g')
 %sdir mon/unique
 ijyb MONS_IJYB
+robin MONS_ROBIN
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon

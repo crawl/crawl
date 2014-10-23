@@ -3700,6 +3700,9 @@ bool monster_shover(const monster* m)
     // Geryon really profits from *not* pushing past hell beasts.
     if (m->type == MONS_GERYON)
         return false;
+    // Likewise, Robin and her mob.
+    if (m->type == MONS_ROBIN)
+        return false;
 
     // no dumb creatures pushing, aside from jellies, which just kind of ooze.
     return mons_intel(m) >= I_REPTILE || mons_genus(m->type) == MONS_JELLY;

@@ -632,6 +632,11 @@ fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
 %%%%
+Goblin Toss spell
+
+Throws a nearby friendly goblin in a long, beautiful arc, bopping the target on
+the head and landing the goblin nearby.
+%%%%
 Glaciate spell
 
 This spell conjures forth a mighty blast of ice; targets within its cone-shaped

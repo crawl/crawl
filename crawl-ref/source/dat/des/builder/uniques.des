@@ -259,6 +259,10 @@ NAME:   uniq_terence
 DEPTH:  D:2-3
 : place_unique(_G, "Terence")
 
+NAME:   uniq_robin
+DEPTH:  D:2-4
+: place_unique(_G, "Robin band")
+
 NAME:   uniq_urug
 DEPTH:  D:10-, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Urug")

@@ -2000,6 +2000,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ROBIN,
+      {
+        { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
+                                | MON_SPELL_NO_SILENT },
+        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL },
+        END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_SAINT_ROKA,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
