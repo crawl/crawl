@@ -3959,6 +3959,12 @@ void unmarshallItem(reader &th, item_def &item)
             item.plus2 = 0;
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_CUT_CUTLASSES)
+    {
+        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_CUTLASS)
+            item.sub_type = WPN_RAPIER;
+    }
 #endif
 
     if (is_unrandom_artefact(item))

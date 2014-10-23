@@ -122,6 +122,7 @@ enum tag_minor_version
     TAG_MINOR_NO_JUMP,             // Removal of jump-attack.
     TAG_MINOR_MONSTER_SPELL_SLOTS, // Introduce monster spell slot flags/freqs
     TAG_MINOR_ARB_SPELL_SLOTS,     // Arbitrary number of monster spell slots.
+    TAG_MINOR_CUT_CUTLASSES,       // Turn crummy cutlasses into real rapiers.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
