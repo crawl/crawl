@@ -676,7 +676,6 @@ enum canned_message_type
     MSG_CALL_DEAD,
     MSG_ANIMATE_REMAINS,
     MSG_DECK_EXHAUSTED,
-    MSG_BEING_WATCHED,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
 };

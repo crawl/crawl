@@ -6466,7 +6466,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
          mons->friendly()    ? MSGCH_FRIEND_SPELL
                              : MSGCH_MONSTER_SPELL);
 
-    if (silent)
+    if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
     else if (noisy(noise, mons->pos(), mons->mindex()) || !unseen)
     {

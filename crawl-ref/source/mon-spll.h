@@ -2320,4 +2320,26 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_GIANT_EYEBALL,
+      {
+       { SPELL_PARALYSE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_DRAIN_GAZE,
+      {
+       { SPELL_DRAIN_MAGIC, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       END_OF_MONS_BOOK
+      }
+    },
+
+    {  MST_GOLDEN_EYE,
+      {
+       { SPELL_CONFUSE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
+       END_OF_MONS_BOOK
+      }
+    },
 };
