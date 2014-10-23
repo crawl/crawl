@@ -1352,8 +1352,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     // Eyeballs get to gaze at anything reliably in LOS.
-    if (mons_genus(mons->type) == MONS_GIANT_EYEBALL
-        || mons->type == MONS_GHOST_MOTH)
+    if ((mons_genus(mons->type) == MONS_GIANT_EYEBALL
+         || mons->type == MONS_GHOST_MOTH)
+        && theBeam.is_enchantment())
     {
         theBeam.use_target_as_pos = true;
     }
