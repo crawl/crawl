@@ -265,7 +265,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_PIERCING, 8, 10 },
     { WPN_CUTLASS,          "cutlass",              7,  4, 12,  90,  2,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
-        DAMV_SLICING | DAM_PIERCE, 8, 10 },
+        DAMV_SLICING | DAM_PIERCE, 0, 0 },
 
 
     // Long Blades
