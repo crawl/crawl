@@ -485,7 +485,7 @@ public:
     int     armour_tohit_penalty(bool, int) const { return 0; }
     int     shield_tohit_penalty(bool, int) const { return 0; }
 
-    actor_type atype() const { return ACT_MONSTER; }
+    bool is_player() const { return false; }
     monster* as_monster() { return this; }
     player* as_player() { return NULL; }
     const monster* as_monster() const { return this; }

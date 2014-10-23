@@ -28,20 +28,8 @@ public:
     monster_type type;
     mid_t        mid;
     virtual int       mindex() const = 0;
-    virtual actor_type atype() const = 0;
 
-    bool is_player() const
-    {
-        ASSERT(this);
-        if (atype() == ACT_PLAYER)
-        {
-#ifndef DEBUG_GLOBALS
-            ASSERT(this == (actor*)&you); // there can be only one
-#endif
-            return true;
-        }
-        return false;
-    }
+    virtual bool is_player() const = 0;
     bool is_monster() const { return !is_player(); }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
