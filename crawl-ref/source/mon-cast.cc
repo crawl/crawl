@@ -1146,7 +1146,8 @@ static bool _los_free_spell(spell_type spell_cast)
        || spell_cast == SPELL_CHAOTIC_MIRROR
        || spell_cast == SPELL_FLAY
        || spell_cast == SPELL_PARALYSIS_GAZE
-       || spell_cast == SPELL_CONFUSION_GAZE;
+       || spell_cast == SPELL_CONFUSION_GAZE
+       || spell_cast == SPELL_DRAINING_GAZE;
 }
 
 // Set up bolt structure for monster spell casting.
@@ -1182,6 +1183,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_FLAY:
         case SPELL_PARALYSIS_GAZE:
         case SPELL_CONFUSION_GAZE:
+        case SPELL_DRAINING_GAZE:
             return true;
         default:
             // Other spells get normal setup:

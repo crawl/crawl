@@ -692,6 +692,11 @@ void direct_effect(monster* source, spell_type spell,
         break;
     }
 
+    case SPELL_DRAINING_GAZE:
+        enchant_actor_with_flavour(defender, source, BEAM_DRAIN_MAGIC,
+                                   defender->get_experience_level() * 12);
+        break;
+
     default:
         die("unknown direct_effect spell: %d", spell);
     }

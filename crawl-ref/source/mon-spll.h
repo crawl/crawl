@@ -2063,7 +2063,7 @@ static const mon_spellbook mspell_list[] =
       {
        // Not really natural, but it shouldn't be AM'd...
        { SPELL_BRAIN_FEED, 20, MON_SPELL_NATURAL },
-       { SPELL_DRAIN_MAGIC, 20, MON_SPELL_NATURAL },
+       { SPELL_DRAINING_GAZE, 20, MON_SPELL_NATURAL },
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_NATURAL },
        END_OF_MONS_BOOK
       }
@@ -2330,7 +2330,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRAIN_GAZE,
       {
-       { SPELL_DRAIN_MAGIC, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_DRAINING_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
        END_OF_MONS_BOOK
       }
     },

@@ -472,6 +472,10 @@ Drain Magic spell
 This hex causes the target's magic to leak into the air, as though they were
 hit by an antimagic weapon.
 %%%%
+Draining Gaze spell
+
+<Drain Magic spell>
+%%%%
 Druid's Call spell
 
 This spell allows a druid to recall woodland creatures from elsewhere on the
