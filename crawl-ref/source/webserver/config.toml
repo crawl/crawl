@@ -73,7 +73,7 @@ list_savegames = false
 # mutually exclusive, so they are assumed to be in an order where later titles
 # override the earlier ones.
 # title_names = ["goodplayers", "greatplayers", "greaterplayers", "centuryplayers"]
-t
+
 # Detach from session after startup?
 daemon = false
 # pidfile = "server.pid"
