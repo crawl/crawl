@@ -1340,6 +1340,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REPEL_MISSILES:
     case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
+    case SPELL_HUNTING_CRY:
         return true;
     default:
         if (check_validity)
@@ -6023,6 +6024,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+
+    case SPELL_HUNTING_CRY:
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -6436,6 +6440,10 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, unsigned short slot_flags)
 {
     bool force_silent = false;
+    noise_flag_type noise_flags = NF_NONE;
+
+    if (spell_cast == SPELL_HUNTING_CRY)
+        noise_flags = (noise_flag_type)(noise_flags | NF_HUNTING_CRY);
 
     if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
@@ -6466,7 +6474,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         if (silent)
             return;
 
-        noisy(noise, mons->pos(), mons->mindex());
+        noisy(noise, mons->pos(), mons->mindex(), noise_flags);
         return;
     }
 
@@ -6502,7 +6510,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
-    else if (noisy(noise, mons->pos(), mons->mindex()) || !unseen)
+    else if (noisy(noise, mons->pos(), mons->mindex(), noise_flags) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
@@ -6838,7 +6846,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(mons);
 
-    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
+    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), NF_SIREN);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
@@ -7402,6 +7410,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DEFLECT_MISSILES:
         return mon->has_ench(ENCH_DEFLECT_MISSILES);
+
+    case SPELL_HUNTING_CRY:
+        return !foe;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

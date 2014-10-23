@@ -2881,6 +2881,14 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(3);
         break;
 
+    case MONS_ANUBIS_GUARD:
+        if (coinflip())
+        {
+            band = BAND_ANUBIS_GUARD;
+            band_size = 1;
+        }
+        break;
+
     default: ;
     }
 
@@ -3491,6 +3499,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_DEATH_SCARABS:
         return MONS_DEATH_SCARAB;
+
+    case BAND_ANUBIS_GUARD:
+        return MONS_ANUBIS_GUARD;
 
     case BAND_RANDOM_SINGLE:
     {

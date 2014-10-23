@@ -3486,4 +3486,15 @@ static const struct spell_desc spelldata[] =
     NULL,
 },
 
+{
+    SPELL_HUNTING_CRY, "Hunting Cry",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
+     6,
+     0,
+     -1, -1,
+     25, 0,
+     NULL,
+},
+
 };

@@ -679,6 +679,10 @@ This creature can exhale a large cloud of blessed flame, shining with the glory
 of the good gods. These flames are especially dangerous to those meeting The
 Shining One's definition of evil.
 %%%%
+Hunting Cry spell
+
+Alerts nearby allies of the user to their target's location.
+%%%%
 Holy Flames spell
 
 This spell allows one to trap an enemy in a ring of blessed flame. If such a
