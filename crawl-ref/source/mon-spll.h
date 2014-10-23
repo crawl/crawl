@@ -2359,4 +2359,15 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_ANUBIS_GUARD,
+      {
+       { SPELL_HUNTING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                                | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
+       { SPELL_BOLT_OF_DRAINING, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_DISPEL_UNDEAD, 19, MON_SPELL_PRIEST },
+       { SPELL_CONFUSE, 19, MON_SPELL_PRIEST }, // Control Undead?
+       END_OF_MONS_BOOK
+      }
+    },
 };

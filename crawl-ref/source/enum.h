@@ -2430,6 +2430,8 @@ enum monster_type                      // menv[].type
     MONS_RAVEN,
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
+
+    MONS_ANUBIS_GUARD,
 #endif
     MONS_FIRE_CRAB,
 #if TAG_MAJOR_VERSION == 34
@@ -3219,6 +3221,7 @@ enum monster_type                      // menv[].type
     MONS_BENNU,
     MONS_USHABTI,
     MONS_DEATH_SCARAB,
+    MONS_ANUBIS_GUARD,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4282,6 +4285,7 @@ enum spell_type
     SPELL_DRAINING_GAZE,
     SPELL_DEATH_RATTLE,
     SPELL_SUMMON_SCARABS,
+    SPELL_HUNTING_CRY,
     NUM_SPELLS
 };
 

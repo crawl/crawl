@@ -4211,7 +4211,8 @@ bool monster::res_torment() const
     return holy == MH_UNDEAD
             || holy == MH_DEMONIC
             || holy == MH_PLANT
-            || holy == MH_NONLIVING;
+            || holy == MH_NONLIVING
+            || get_mons_resist(this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const

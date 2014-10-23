@@ -1,10 +1,12 @@
 #ifndef SHOUT_H
 #define SHOUT_H
 
+#include "noise.h"
+
 bool noisy(int loudness, const coord_def& where, int who,
-           bool siren = false, bool message_if_unseen = false);
+           noise_flag_type flags = NF_NONE);
 bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
-           int who = -1, bool siren = false, bool message_if_unseen = false,
+           int who = -1, noise_flag_type flags = NF_NONE,
            bool fake_noise = false);
 bool fake_noisy(int loudness, const coord_def& where);
 

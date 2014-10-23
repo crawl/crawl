@@ -210,6 +210,7 @@ enum mon_resist_flags
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
+    MR_RES_TORMENT       = 1 << 22,
     MR_RES_PETRIFY       = 1 << 23,
     MR_RES_ASPHYX        = 1 << 24,
 #if TAG_MAJOR_VERSION == 34
