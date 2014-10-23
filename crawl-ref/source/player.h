@@ -505,7 +505,13 @@ public:
     int mindex() const;
     int get_hit_dice() const;
     int get_experience_level() const;
-    actor_type atype() const { return ACT_PLAYER; }
+    bool is_player() const
+    {
+#ifndef DEBUG_GLOBALS
+        ASSERT(this == (actor*)&you); // there can be only one
+#endif
+        return true;
+    }
     monster* as_monster() { return NULL; }
     player* as_player() { return this; }
     const monster* as_monster() const { return NULL; }
