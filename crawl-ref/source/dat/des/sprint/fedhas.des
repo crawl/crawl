@@ -7,7 +7,8 @@ SUBVAULT: o : temple
 KMONS:  A = fungus
 KMONS:  B = spriggan hd:3
 KMONS:  C = oklob sapling hp:7
-KMONS:  D = oklob sapling hp:15 name:wizard n_suf spells:magic_dart;.;cantrip;magic_dart actual_spells
+KMONS:  D = oklob sapling hp:15 name:wizard n_suf \
+            spells:spit_acid.50.natural;magic_dart.36.wizard;cantrip.18.wizard
 KMONS:  E = scorpion
 KMONS:  F = wandering mushroom
 KMONS:  G = burning bush
@@ -15,10 +16,15 @@ KMONS:  H = killer bee
 KMONS:  I = queen bee
 KMONS:  L = oklob plant
 KMONS:  J = spriggan druid
-KMONS:  M = oklob plant hp:30 name:conjurer n_suf spells:stone_arrow;.;.;.;iskenderun's_mystic_blast actual_spells
+KMONS:  M = oklob plant hp:30 name:conjurer n_suf \
+            spells:spit_acid.67.natural;stone_arrow.30.wizard;\
+                   iskenderun's_mystic_blast.30.wizard
 KMONS:  N = giant spore
-KMONS:  O = oklob plant hp:30 name:summoner n_suf spells:call_imp;.;.;summon_swarm actual_spells
-KMONS:  P = oklob plant hp:30 name:shifter n_suf spells:blink_other;blink_other actual_spells
+KMONS:  O = oklob plant hp:30 name:summoner n_suf \
+            spells:spit_acid.67.natural;call_imp.30.wizard;\
+                   summon_swarm.30.wizard
+KMONS:  P = oklob plant hp:30 name:shifter n_suf \
+            spells:spit_acid.67.natural;blink_other.60.wizard
 KMONS:  Q = demonic crawler
 KMONS:  R = spriggan rider
 KMONS:  T = spriggan
@@ -29,9 +35,15 @@ KMONS:  X = spriggan rider ; longbow unrand:storm_bow . arrow
 KMONS:  Y = bush
 KMONS:  a = yellow wasp
 KMONS:  b = ghost moth
-KMONS:  d = oklob plant name:meteorologist n_suf spells:lightning_bolt;.;.;airstrike actual_spells
-KMONS:  e = oklob plant name:demonologist n_suf spells:summon_demon;.;.;summon_demon;.;malign_gateway actual_spells
-KMONS:  f = oklob plant name:annihilator n_suf spells:poison_arrow;orb_of_destruction;.;.;bolt_of_cold actual_spells
+KMONS:  d = oklob plant name:meteorologist n_suf \
+            spells:spit_acid.67.natural;lightning_bolt.30.wizard;\
+                   airstrike.30.wizard
+KMONS:  e = oklob plant name:demonologist n_suf \
+            spells:spit_acid.67.natural;summon_demon.40.wizard;\
+                   malign_gateway.20.wizard
+KMONS:  f = oklob plant name:annihilator n_suf \
+            spells:spit_acid.67.natural;poison_arrow.20.wizard;\
+                   orb_of_destruction.20.wizard;bolt_of_cold.20.wizard
 KMONS:  g = the Enchantress
 KMONS:  h = moth of wrath
 KMONS:  m = green rat
@@ -105,7 +117,8 @@ KFEAT:  P = altar_makhleb
 KFEAT:  Q = altar_dithmenos
 KFEAT:  R = altar_gozag
 KFEAT:  S = altar_qazlal
-KMONS:  X = oklob sapling name:priest n_suf spells:cantrip;.;cantrip;smiting priest_spells
+KMONS:  X = oklob sapling name:priest n_suf \
+            spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 
 MAP
 .T.........T.

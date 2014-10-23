@@ -725,7 +725,7 @@ lua_marker('?', tukima_marker)
 }}
 SUBST:      ? = .
 COLOUR:     +cA< = darkgrey
-KMONS:      789 = statue spells:blink_other;.;.;.;.;blink_other \
+KMONS:      789 = statue spells:blink_other.63.magical \
                   col:silver name:strange_machine n_rpl n_des \
                   hd:13 hp:70 tile:mons_statue_guardian
 # please make sure this is the book with Tukima's Dance
@@ -1239,10 +1239,12 @@ ENDMAP
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
-MONS:       deep elf mage spells:magic_dart;force_lance;iskenderun's_battlesphere;\
-            iskenderun's_mystic_blast;iskenderun's_battlesphere;.
-MONS:       statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-            name:conjurer n_adj
+MONS:       deep elf mage spells:magic_dart.11.wizard;\
+                                 force_lance.11.wizard;\
+                                 iskenderun's_battlesphere.22.wizard;\
+                                 iskenderun's_mystic_blast.11.wizard
+MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
+            tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
@@ -1435,8 +1437,10 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:brain_feed;drain_magic;mass_confusion;\
-                       shadow_creatures;shadow_creatures;.
+                spells:brain_feed.40.natural;\
+                       draining_gaze.40.natural;\
+                       mass_confusion.40.natural;\
+                       shadow_creatures.80.natural
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, \
                 potion of restore abilities ident:type
 COLOUR:     c = darkgrey

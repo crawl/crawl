@@ -1102,8 +1102,12 @@ TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 6
 KMONS:  O = tentacled monstrosity / thrashing horror / tentacled starspawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            tile:mons_hell_wizard priest_spells \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
+            tile:mons_hell_wizard \
+            spells:smiting.11.priest;\
+                   blink_other.11.priest;\
+                   invisibility.11.priest;\
+                   malign_gateway.11.priest;\
+                   blink.11.priest ; \
             robe good_item . quarterstaff ego:distortion ident:type | \
                              dagger ego:distortion ident:type
 KITEM:  O = abyssal rune of Zot
@@ -1130,8 +1134,12 @@ TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 4
 KMONS:  O : tentacled monstrosity / thrashing horror / tentacled starspawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            tile:mons_hell_wizard priest_spells \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
+            tile:mons_hell_wizard \
+            spells:smiting.11.priest;\
+                   blink_other.11.priest;\
+                   invisibility.11.priest;\
+                   malign_gateway.11.priest;\
+                   blink.11.priest ; \
             robe good_item . quarterstaff ego:distortion ident:type | \
                              dagger ego:distortion ident:type
 KITEM:  O = abyssal rune of Zot
@@ -1962,8 +1970,7 @@ ENDMAP
 # This one is really, really weird...
 NAME:  evilmike_abyss_exit_smiterflies
 TAGS:  abyss_exit
-KMONS: O = generate_awake statue spells:summon_butterflies;summon_butterflies;\
-           summon_butterflies;summon_butterflies;summon_butterflies; \
+KMONS: O = generate_awake statue spells:summon_butterflies.100.magical \
            tile:mons_statue_mage col:lightblue
 MONS:  smoke demon, deep elf priest
 : init_abyss_exit(_G, "O")

@@ -36,7 +36,7 @@ ITEM:    book of clouds
 MONS:    rat always_corpse
 MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
 MONS:    gnoll ; mace ego:none not_cursed
-MONS:    orc wizard spells:magic_dart;.;.;.;blink;blink
+MONS:    orc wizard spells:magic_dart.35.wizard;blink.18.wizard
 MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
 MARKER:  B = lua:tutorial5.msg("religion")

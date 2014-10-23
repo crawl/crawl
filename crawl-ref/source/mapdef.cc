@@ -3655,34 +3655,71 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
             }
             else
             {
-                const spell_type sp(spell_by_name(spname));
+                const vector<string> slot_vals = split_string(".", spname);
+                if (slot_vals.size() < 2)
+                {
+                    error = make_stringf(
+                        "Invalid spell slot format: '%s' in '%s'",
+                        spname.c_str(), spell_it->c_str());
+                    return;
+                }
+                const spell_type sp(spell_by_name(slot_vals[0]));
                 if (sp == SPELL_NO_SPELL)
                 {
                     error = make_stringf("Unknown spell name: '%s' in '%s'",
-                                         spname.c_str(), spell_it->c_str());
+                                         slot_vals[0].c_str(),
+                                         spell_it->c_str());
                     return;
                 }
                 if (!is_valid_mon_spell(sp))
                 {
                     error = make_stringf("Not a monster spell: '%s'",
-                                         spname.c_str());
+                                         slot_vals[0].c_str());
                     return;
                 }
                 cur_spells[i].spell = sp;
+                const int freq = atoi(slot_vals[1].c_str());
+                if (freq <= 0)
+                {
+                    error = make_stringf("Need a positive spell frequency;"
+                                         "got '%s' in '%s'",
+                                         slot_vals[1].c_str(),
+                                         spname.c_str());
+                    return;
+                }
+                cur_spells[i].freq = freq;
+                for (size_t j = 2; j < slot_vals.size(); j++)
+                {
+                    if (slot_vals[j] == "emergency")
+                        cur_spells[i].flags |= MON_SPELL_EMERGENCY;
+                    if (slot_vals[j] == "natural")
+                        cur_spells[i].flags |= MON_SPELL_NATURAL;
+                    if (slot_vals[j] == "magical")
+                        cur_spells[i].flags |= MON_SPELL_MAGICAL;
+                    if (slot_vals[j] == "demonic")
+                        cur_spells[i].flags |= MON_SPELL_DEMONIC;
+                    if (slot_vals[j] == "wizard")
+                        cur_spells[i].flags |= MON_SPELL_WIZARD;
+                    if (slot_vals[j] == "priest")
+                        cur_spells[i].flags |= MON_SPELL_PRIEST;
+                    if (slot_vals[j] == "breath")
+                        cur_spells[i].flags |= MON_SPELL_BREATH;
+                    if (slot_vals[j] == "no_silent")
+                        cur_spells[i].flags |= MON_SPELL_NO_SILENT;
+                    if (slot_vals[j] == "instant")
+                        cur_spells[i].flags |= MON_SPELL_INSTANT;
+                    if (slot_vals[j] == "noisy")
+                        cur_spells[i].flags |= MON_SPELL_NOISY;
+                }
+                if (!(cur_spells[i].flags & MON_SPELL_TYPE_MASK))
+                {
+                    error = make_stringf(
+                        "Spell slot '%s' missing a casting type",
+                        spname.c_str());
+                    return;
+                }
             }
         }
-
-        monsterentry *me = get_monster_data(spec.type);
-        const uint64_t flags = me ? me->bitfields : 0;
-
-        fixup_spells(cur_spells,
-                     spec.hd > 0 ? spec.hd :
-                     me          ? me->hpdice[0]
-                                 : 1,
-                     flags & M_ACTUAL_SPELLS
-                        || spec.props.exists("actual_spells"),
-                     flags & M_PRIEST
-                        || spec.props.exists("priest"));
 
         spec.spells.push_back(cur_spells);
     }
@@ -3790,12 +3827,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         mspec.genweight = find_weight(mon_str);
         if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
             mspec.genweight = 10;
-
-        if (strip_tag(mon_str, "priest_spells"))
-            mspec.props["priest"] = true;
-
-        if (strip_tag(mon_str, "actual_spells"))
-            mspec.props["actual_spells"] = true;
 
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");

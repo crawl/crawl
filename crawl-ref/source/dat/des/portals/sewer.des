@@ -1270,7 +1270,7 @@ ORIENT: encompass
 WEIGHT: 3
 KMONS:  1  = rat
 KMONS:  4  = rat w:85 / green rat w:13 / orange rat w:2
-KMONS:  23 = big kobold spells:animate_dead name:necromancer n_suf \
+KMONS:  23 = big kobold spells:animate_dead.55.wizard name:necromancer n_suf \
              col:white ; dagger | club . robe
 : dgn.delayed_decay(_G, '%', 'rat skeleton w:60 / rat corpse w:20')
 : dgn.delayed_decay(_G, '^', 'rat skeleton w:24 / rat corpse w:8 /' ..
@@ -1391,8 +1391,7 @@ KMONS:   3 = big kobold / quasit / nothing w:5
 KMONS:   4 = big kobold
 KMONS:   5 = Grinder, shadow imp
 KMONS:   6 = kobold demonologist name:apprentice n_adj n_noc \
-             spells:summon_minor_demon;cantrip;summon_minor_demon;\
-             cantrip;cantrip;cantrip
+             spells:summon_minor_demon.18.wizard;cantrip.36.wizard
 SHUFFLE: 456
 KITEM:   456 = star_item
 KFEAT:   - = deep_water
