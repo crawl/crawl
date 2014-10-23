@@ -3421,6 +3421,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PARALYSIS_GAZE, "Paralysis Gaze",
+     SPTYP_HEXES,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0, 0,
+     NULL,
+},
+
+{
+    SPELL_CONFUSION_GAZE, "Confusion Gaze",
+     SPTYP_HEXES,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+     3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,

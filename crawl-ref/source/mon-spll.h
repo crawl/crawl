@@ -2323,7 +2323,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GIANT_EYEBALL,
       {
-       { SPELL_PARALYSE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_PARALYSIS_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
        END_OF_MONS_BOOK
       }
     },
@@ -2337,7 +2337,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GOLDEN_EYE,
       {
-       { SPELL_CONFUSE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_CONFUSION_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
        { SPELL_BLINK, 29, MON_SPELL_NATURAL },
        END_OF_MONS_BOOK
       }

@@ -277,6 +277,10 @@ This spell enchants the caster's dominant hand with magical energy. This energy
 is released when the caster touches a monster with their bare hand, and may
 induce a state of confusion in the monster.
 %%%%
+Confusion Gaze spell
+
+<Confuse spell>
+%%%%
 Conjure Ball Lightning spell
 
 This spell allows the conjurer to create ball lightning. Using the spell is not
@@ -952,6 +956,10 @@ caster suffers minor damage from the backlash.
 Paralyse spell
 
 This spell prevents a creature from moving.
+%%%%
+Paralysis Gaze spell
+
+<Paralyse spell>
 %%%%
 Passage of Golubria spell
 

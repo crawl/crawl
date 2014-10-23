@@ -665,6 +665,33 @@ void direct_effect(monster* source, spell_type spell,
         break;
     }
 
+    case SPELL_PARALYSIS_GAZE:
+        defender->paralyse(source, 2 + random2(3));
+        break;
+
+    case SPELL_CONFUSION_GAZE:
+    {
+        int confuse_power = 2 + random2(3);
+        int res_margin =
+            defender->check_res_magic(5 * source->get_experience_level()
+                                      * confuse_power);
+        if (res_margin > 0)
+        {
+            if (defender->is_player())
+                canned_msg(MSG_YOU_RESIST);
+            else // if (defender->is_monster())
+            {
+                const monster* foe = defender->as_monster();
+                simple_monster_message(foe,
+                                       mons_resist_string(foe, res_margin));
+            }
+            break;
+        }
+
+        defender->confuse(source, 2 + random2(3));
+        break;
+    }
+
     default:
         die("unknown direct_effect spell: %d", spell);
     }
