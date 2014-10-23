@@ -21,6 +21,9 @@ enum mon_spell_slot_flags
     MON_SPELL_WIZARD    = 1 << 4, // a real spell, affected by AM and silence
     MON_SPELL_PRIEST    = 1 << 5,
 
+    MON_SPELL_TYPE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
+                             | MON_SPELL_DEMONIC | MON_SPELL_WIZARD
+                             | MON_SPELL_PRIEST,
     MON_SPELL_INNATE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
                              | MON_SPELL_DEMONIC,
     MON_SPELL_ANTIMAGIC_MASK = MON_SPELL_MAGICAL | MON_SPELL_DEMONIC

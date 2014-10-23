@@ -1166,8 +1166,8 @@ MARKER: ! = lua:fog_machine { \
             }
 KFEAT:  _ = altar_vehumet
 ## Made to be always the same hd for consistency. - HangedMan
-MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-        name:conjurer n_adj
+MONS:   statue hd:12 spells:orb_of_destruction.62.magical \
+        tile:mons_statue_mage col:vehumet name:conjurer n_adj
 : if you.absdepth() < 22 then
 MONS:   w:6 deep elf conjurer / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
 MONS:   w:3 deep elf annihilator / w:1 deep elf conjurer

@@ -585,12 +585,12 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva / w:15 angel",
                 "greater mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
-                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction",
+                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
-                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity",
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
                 "hellion / w:5 efreet"
             }
         else -- Because somehow, the above stuff was too easy.
@@ -655,12 +655,12 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva",
                 "greater mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
-                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction",
+                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
-                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity",
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
                 "hellion"
             }
         end
@@ -699,7 +699,10 @@ function arena_sprint_init_boss_table()
     else
         bs[1] = {"place:Swamp", "the lernaean hydra /\
                  wizard name:witch n_rpl n_des n_noc col:green hp:130 \
-                    spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self",
+                    spells:mephitic_cloud.15.wizard;\
+                           summon_hydra.15.wizard;\
+                           invisibility.15.wizard;\
+                           teleport_self.15.wizard.emergency",
                  "decaying rune of zot"}
     end
 
@@ -707,12 +710,13 @@ function arena_sprint_init_boss_table()
         bs[2] = {"place:Spider", "arachne hp:250 /\
                  wolf spider name:dire n_adj n_noc col:blue hp:300 /\
                  jumping spider name:phase_spider n_rpl n_des never_corpse \
-                    col:lightgreen spells:teleport_self hp:300",
+                    col:lightgreen spells:teleport_self.58.natural hp:300",
                  "gossamer rune of zot"}
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
                  merfolk avatar name:dimme tile:mons_dimme n_rpl n_des n_spe \
-                     col:lightmagenta hp:300 spells:malign_gateway",
+                     col:lightmagenta hp:300 spells:avatar_song.160.natural;\
+                                                    malign_gateway.40.natural",
                  "barnacled rune of zot"}
     end
 
@@ -723,7 +727,7 @@ function arena_sprint_init_boss_table()
                  "fannar hp:400 hd:14 /\
                  col:flash deep elf sorcerer hp:400 \
                      name:deep_elf_elementalist n_rpl n_des n_noc tile:mons_deep_elf_elementalist \
-                     spells:iron_shot;summon_air_elementals;sticky_flame_range;summon_water_elementals;haste;blink actual_spells \
+                     spells:iron_shot.10.wizard;summon_air_elementals.10.wizard;sticky_flame_range.10.wizard;summon_water_elementals.10.wizard;haste.10.wizard;blink.10.wizard actual_spells \
                      ; robe ego:fire_resistance | \
                      robe ego:cold_resistance | \
                      robe ego:resistance . dagger ego:freezing | \
@@ -775,7 +779,7 @@ function arena_sprint_init_boss_table()
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta \
-              spells:fire_storm;fire_storm;glaciate;miasma_breath;teleport_self", "demonic rune of zot"}
+              spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;teleport_self.16.wizard.emergency", "demonic rune of zot"}
     return bs
 end
 

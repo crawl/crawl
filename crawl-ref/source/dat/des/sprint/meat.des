@@ -22,17 +22,21 @@
   local tyrant =
     "lich hp:500 hd:35 name:tyrant n_rpl n_des n_spe n_zom \
     never_corpse col:lightred generate_awake \
-    spells:haste;haste;airstrike;summon_horrible_things;summon_horrible_things"
+    spells:haste.34.wizard;airstrike.17.wizard;\
+           summon_horrible_things.34.wizard"
 
   local meat_hydra =
     "eight-headed hydra hp:1000 hd:30 name:meat_hydra n_rpl n_des \
-     n_spe always_corpse col:lightred generate_awake spells:symbol_of_torment \
+     n_spe always_corpse col:lightred generate_awake \
+     spells:symbol_of_torment.80.natural \
      dbname:meat_hydra"
 
   local dread =
     "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe \
     never_corpse generate_awake \
-    col:lightred spells:symbol_of_torment;hellfire;hellfire_burst"
+    col:lightred spells:symbol_of_torment.34.natural;\
+                        hellfire.33.natural;\
+                        hellfire_burst.33.natural"
 
   local large_bag =
     "hill giant hp:400 hd:40 name:large_bag_of_meat n_rpl n_des \
@@ -45,19 +49,21 @@
   local destroyer =
     "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe \
     never_corpse col:red generate_awake \
-    spells:blink_close;blink_close;blink_close;blink_close;blink_close \
+    spells:blink_close.90.wizard \
     ; ring of slaying plus:200 not_cursed ident:all \
     no_pickup . great sword plus:9 ego:vorpal ident:all no_pickup"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe \
     never_corpse col:lightred generate_awake \
-    spells:poison_arrow;venom_bolt;poisonous_cloud"
+    spells:poison_arrow.27.natural;\
+           venom_bolt.27.natural;\
+           poisonous_cloud.27.natural"
 
   local sculptor =
     "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl \
     n_des n_spe n_zom never_corpse col:red generate_awake \
-    spells:twisted_resurrection;twisted_resurrection;twisted_resurrection \
+    spells:twisted_resurrection.80.natural \
     ; ring of slaying plus:250 not_cursed ident:all \
     no_pickup . great sword plus:9 not_cursed ego:none \
     ident:all no_pickup"
@@ -65,13 +71,14 @@
   local observer =
     "great orb of eyes hp:2000 hd:30 name:observer n_rpl n_des \
     n_spe never_corpse col:red generate_awake \
-    spells:bolt_of_fire;fireball;fireball;smiting;smiting \
+    spells:bolt_of_fire.16.natural;fireball.32.natural;\
+           smiting.32.natural \
     perm_ench:invis perm_ench:haste"
 
   local accursed =
     "greater mummy hp:500 hd:40 name:accursed n_rpl n_des n_spe \
     never_corpse col:red generate_awake \
-    spells:smiting;smiting;smiting;smiting;smiting"
+    spells:smiting.90.wizard"
 
   local meat_beast =
     "hell beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe \
@@ -80,13 +87,13 @@
   local lost_soul =
     "phantom hp:500 hd:50 name:lost_soul dbname:meat_lost_soul n_rpl n_des n_spe \
     never_corpse col:red generate_awake \
-    spells:bolt_of_draining;bolt_of_draining;dispel_undead;dispel_undead \
+    spells:bolt_of_draining.50.natural;dispel_undead.50.natural \
     perm_ench:invis"
 
   local fleshlord =
     "hell knight hp:3000 hd:60 name:fleshlord n_rpl n_des n_spe never_corpse \
     col:lightmagenta generate_awake \
-    spells:slow;haste \
+    spells:slow.55.wizard;haste.55.wizard \
     ; ring of slaying plus:400 not_cursed ident:all \
     no_pickup . great mace plus:9 not_cursed ego:none \
     ident:all no_pickup"
@@ -94,12 +101,13 @@
   local vile =
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse \
     col:lightred generate_awake perm_ench:haste \
-    spells:dig;confuse;confuse;miasma_breath;hellfire_burst"
+    spells:dig.26.natural;confuse.52.natural;\
+           miasma_breath.26.natural;hellfire_burst.26.natural"
 
   -- Uniques --
   local servant =
     "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow \
-    generate_awake never_corpse spells:.;.;.;. \
+    generate_awake never_corpse spells:none \
     ; ring of slaying plus:130 not_cursed ident:all \
     no_pickup . glaive plus:9 not_cursed ego:flaming \
     ident:all no_pickup"
@@ -107,7 +115,7 @@
   local captor =
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan \
     generate_awake never_corpse \
-    spells:sentinel's_mark;haste;ensnare \
+    spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard \
     ; ring of slaying plus:200 not_cursed ident:all \
     no_pickup . triple sword plus:9 not_cursed ego:vorpal \
     ident:all no_pickup"
@@ -115,7 +123,7 @@
   local defiler =
     "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white \
     generate_awake never_corpse \
-    spells:fireball;fireball;fireball;poisonous_cloud \
+    spells:fireball.60.natural;poisonous_cloud.20.natural \
     ; ring of slaying plus:250 not_cursed ident:all \
     no_pickup . demon whip plus:9 not_cursed ego:vorpal \
     ident:all no_pickup \
@@ -126,7 +134,7 @@
   local meatlord =
     "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta \
     generate_awake never_corpse \
-    spells:shadow_creatures;shadow_creatures;airstrike;airstrike;conjure_ball_lightning \
+    spells:shadow_creatures.44.demonic;airstrike.44.demonic;conjure_ball_lightning.22.demonic \
     ; ring of slaying plus:27000 not_cursed ident:all \
     no_pickup . mace unrand:sceptre_of_torment not_cursed \
     ident:all no_pickup"
@@ -136,7 +144,7 @@
   local avatar =
     "slime creature hp:10000 hd:100 name:The_Unspeakable \
     n_rpl col:jewel tile:mons_unspeakable generate_awake perm_ench:haste \
-    spells:shadow_creatures;shadow_creatures;shadow_creatures;airstrike;smiting;death's_door"
+    spells:shadow_creatures.25.natural;airstrike.25.natural;smiting.25.natural;death's_door.25.natural.emergency"
 
   function blood_monster_definitions(e)
     e.kmons("1 = " .. bag_of_meat .. "")
