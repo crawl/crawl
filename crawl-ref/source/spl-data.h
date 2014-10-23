@@ -3443,6 +3443,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DRAINING_GAZE, "Draining Gaze",
+     SPTYP_HEXES,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,
