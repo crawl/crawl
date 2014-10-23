@@ -1543,17 +1543,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     return used;
 }
 
-// Combines code for eyeball-type monsters, etc. to reduce clutter.
-static bool _eyeball_will_use_ability(monster* mons)
-{
-    return coinflip()
-       && !mons_is_confused(mons)
-       && !mons_is_wandering(mons)
-       && !mons_is_fleeing(mons)
-       && !mons->pacified()
-       && !player_or_mon_in_sanct(mons);
-}
-
 //---------------------------------------------------------------
 //
 // mon_nearby_ability
@@ -1603,100 +1592,6 @@ void mon_nearby_ability(monster* mons)
     case MONS_KILLER_KLOWN:
         // Choose random colour.
         mons->colour = random_colour();
-        break;
-
-    case MONS_GOLDEN_EYE:
-        if (_eyeball_will_use_ability(mons)
-            && mons->see_cell_no_trans(foe->pos()))
-        {
-            const bool can_see = you.can_see(mons);
-            if (can_see && you.can_see(foe))
-            {
-                mprf("%s blinks at %s.",
-                     mons->name(DESC_THE).c_str(),
-                     foe->name(DESC_THE).c_str());
-            }
-
-            int confuse_power = 2 + random2(3);
-
-            if (foe->is_player() && !can_see)
-            {
-                canned_msg(MSG_BEING_WATCHED);
-                interrupt_activity(AI_MONSTER_ATTACKS, mons);
-            }
-
-            int res_margin = foe->check_res_magic((mons->get_hit_dice() * 5)
-                             * confuse_power);
-            if (res_margin > 0)
-            {
-                if (foe->is_player())
-                    canned_msg(MSG_YOU_RESIST);
-                else if (foe->is_monster())
-                {
-                    const monster* foe_mons = foe->as_monster();
-                    simple_monster_message(foe_mons,
-                           mons_resist_string(foe_mons, res_margin));
-                }
-                break;
-            }
-
-            foe->confuse(mons, 2 + random2(3));
-        }
-        break;
-
-    case MONS_GIANT_EYEBALL:
-        if (_eyeball_will_use_ability(mons)
-            && mons->see_cell_no_trans(foe->pos()))
-        {
-            const bool can_see = you.can_see(mons);
-            if (can_see && you.can_see(foe))
-            {
-                mprf("%s stares at %s.",
-                     mons->name(DESC_THE).c_str(),
-                     foe->name(DESC_THE).c_str());
-            }
-
-            if (foe->is_player() && !can_see)
-                canned_msg(MSG_BEING_WATCHED);
-
-            // Subtly different from old paralysis behaviour, but
-            // it'll do.
-            foe->paralyse(mons, 2 + random2(3));
-        }
-        break;
-
-    case MONS_EYE_OF_DRAINING:
-    case MONS_GHOST_MOTH:
-        if (_eyeball_will_use_ability(mons)
-            && mons->see_cell_no_trans(foe->pos())
-            && foe->is_player())
-        {
-            if (you.can_see(mons))
-                simple_monster_message(mons, " stares at you.");
-            else
-                canned_msg(MSG_BEING_WATCHED);
-
-            interrupt_activity(AI_MONSTER_ATTACKS, mons);
-
-            int mp = 5 + random2avg(13, 3);
-#if TAG_MAJOR_VERSION == 34
-            if (you.species != SP_DJINNI)
-                mp = min(mp, you.magic_points);
-            else
-            {
-                // Cap draining somehow, otherwise a ghost moth will heal
-                // itself every turn.  Other races don't have such a problem
-                // because they drop to 0 mp nearly immediately.
-                mp = mp * (you.hp_max - you.duration[DUR_ANTIMAGIC] / 3)
-                        / you.hp_max;
-            }
-#else
-            mp = min(mp, you.magic_points);
-#endif
-            drain_mp(mp);
-
-            mons->heal(mp, true); // heh heh {dlb}
-        }
         break;
 
     case MONS_AIR_ELEMENTAL:

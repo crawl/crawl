@@ -496,6 +496,27 @@ A great wave of water rises up through @The_monster@!
 Invisibility shadow cast
 
 @The_monster@ slips into darkness.
+%%%%
+ghost moth cast targeted
+
+@The_monster@ stares @at@ @target@.
+%%%%
+ghost moth cast
+
+@The_monster@ looks around.
+%%%%
+unseen ghost moth cast targeted
+
+You feel you are being watched by something. @player_only@
+%%%%
+golden eye cast targeted
+
+@The_monster@ blinks @at@ @target@.
+%%%%
+Blink golden eye cast
+
+__NONE
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -543,6 +564,10 @@ giant eyeball cast targeted
 giant eyeball cast
 
 @The_monster@ looks around.
+%%%%
+unseen giant eyeball cast targeted
+
+You feel you are being watched by something. @player_only@
 %%%%
 guardian serpent cast targeted
 
