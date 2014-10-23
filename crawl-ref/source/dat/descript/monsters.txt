@@ -400,6 +400,13 @@ An unusually thin troll.
 
 You feel a lump in the pit of your stomach.
 %%%%
+Robin
+
+A mountain hobgoblin, recently come in search of the legendary Orb. Not
+foolhardy or reckless enough to delve into the depths of the Dungeon alone,
+Robin has built a small army of minions. Potential competitors will quickly
+find a stream of screaming goblins flying toward them - watch out!
+%%%%
 Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared

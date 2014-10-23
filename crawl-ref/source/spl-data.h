@@ -14,7 +14,7 @@ struct spell_desc
     power_cap,
     min_range, max_range, (-1 if not applicable)
     noise, effect_noise,
-    target_prompt,
+    target_prompt
 }
 */
 
@@ -3517,6 +3517,17 @@ static const struct spell_desc spelldata[] =
      6, 6,
      6, 0,
      NULL,
+},
+
+{
+    SPELL_GOBLIN_TOSS, "Goblin Toss",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_MONSTER | SPFLAG_NOT_SELF,
+    2,
+    50,
+    LOS_RADIUS, LOS_RADIUS,
+    3, 5,
+    NULL,
 },
 
 {

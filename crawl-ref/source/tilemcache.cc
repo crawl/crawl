@@ -342,6 +342,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
     case TILEP_MONS_HOBGOBLIN:
+    case TILEP_MONS_ROBIN:
     case TILEP_MONS_TIAMAT:
     case TILEP_MONS_TIAMAT+1:
     case TILEP_MONS_TIAMAT+2:

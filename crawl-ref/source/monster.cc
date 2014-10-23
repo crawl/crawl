@@ -1812,6 +1812,10 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
         if (type == MONS_NIKOLA)
             eq = EQ_SHIELD;
         break;
+    case ARM_HELMET:
+        if (type == MONS_ROBIN)
+            eq = EQ_SHIELD;
+        break;
     default:
         eq = get_armour_slot(item);
 
