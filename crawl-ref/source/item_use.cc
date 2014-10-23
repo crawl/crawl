@@ -1929,7 +1929,7 @@ void zap_wand(int slot)
 
         dprf("Wasted %d charges (wand %d -> %d)", wasted_charges,
              initial_charge, wand.plus);
-        mpr("You wasted at least one charge getting the wand working.");
+        mpr("Evoking this partially-identified wand wasted a few charges.");
     }
 
     // Zap counts count from the last recharge.
