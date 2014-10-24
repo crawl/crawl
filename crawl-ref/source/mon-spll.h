@@ -110,7 +110,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD  },
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD  },
-       { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+       { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
