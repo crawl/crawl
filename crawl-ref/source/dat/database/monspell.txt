@@ -366,7 +366,7 @@ Lehudib's Crystal Spear the Serpent of Hell cast
 %%%%
 Bolt of Draining anubis guard cast
 
-@The_monster@ breathes negative energy @at@ @target@.
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 ########################################################################
 # Individual monsters

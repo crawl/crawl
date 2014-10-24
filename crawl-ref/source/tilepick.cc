@@ -1333,6 +1333,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_DEMONIC_CRAWLER;
     case MONS_ORB_SPIDER:
         return TILEP_MONS_ORB_SPIDER;
+    case MONS_DEATH_SCARAB:
+        return TILEP_MONS_DEATH_SCARAB;
 
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
@@ -1586,6 +1588,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_TENGU_WARRIOR;
     case MONS_TENGU_REAVER:
         return TILEP_MONS_TENGU_REAVER;
+    case MONS_ANUBIS_GUARD:
+        return TILEP_MONS_ANUBIS_GUARD;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1942,6 +1946,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_ELECTRIC_GOLEM;
     case MONS_GUARDIAN_GOLEM:
         return TILEP_MONS_GUARDIAN_GOLEM;
+    case MONS_USHABTI:
+        return TILEP_MONS_USHABTI;
 
     // statues and statue-like things (also '8')
     case MONS_PILLAR_OF_SALT:
@@ -3805,6 +3811,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_TENGU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
+    case MONS_ANUBIS_GUARD:
+        return TILE_CORPSE_ANUBIS_GUARD;
     case MONS_ARACHNE:
         return TILE_CORPSE_ARACHNE;
 
