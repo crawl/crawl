@@ -115,6 +115,7 @@ private:
     bool _lose_stat(stat_type which_stat, int8_t stat_loss);
     void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _paralyse(int dur);
+    bool _sleep(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     bool _send_to_abyss();
     bool _malign_gateway();
@@ -124,7 +125,8 @@ private:
     bool avoid_lethal(int dam);
 
     void _conjuration(int severity);
-    void _enchantment(int severity);
+    void _hexes(int severity);
+    void _charms(int severity);
     void _translocation(int severity);
     void _summoning(int severity);
     void _divination_you(int severity);
