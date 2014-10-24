@@ -2185,28 +2185,6 @@ static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
     }
 }
 
-static god_type _mons_spell_god(monster* mons)
-{
-    const bool priest = mons->is_priest();
-    const bool wizard = mons->is_actual_spellcaster();
-
-    // If the monster's a priest, assume summons come from priestly
-    // abilities, in which case they'll have the same god. If the
-    // monster is neither a priest nor a wizard, assume summons come
-    // from intrinsic abilities, in which case they'll also have the
-    // same god.
-    god_type god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
-
-    // Permanent wizard summons of Yred should have the same god even
-    // though they aren't priests. This is so that e.g. the zombies of
-    // Yred's enslaved souls will properly turn on you if you abandon
-    // Yred.
-    if (mons->god == GOD_YREDELEMNUL)
-        god = mons->god;
-
-    return god;
-}
-
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
@@ -4640,7 +4618,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
-    god_type god = _mons_spell_god(mons);
+    // If this is a wizard spell, summons won't  necessarily have the
+    // same god. But intrinsic/priestly summons should.
+    god_type god = slot_flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons->god;
+
+    // Permanent wizard summons of Yred should have the same god even
+    // though they aren't priests. This is so that e.g. the zombies of
+    // Yred's enslaved souls will properly turn on you if you abandon
+    // Yred.
+    if (mons->god == GOD_YREDELEMNUL)
+        god = mons->god;
 
     switch (spell_cast)
     {
