@@ -771,7 +771,9 @@ void ghost_demon::add_spells()
 
     fixup_spells(spells, xl, true, false);
 
-    if (species_genus(species) == GENPC_DRACONIAN && species != SP_BASE_DRACONIAN)
+    if (species_genus(species) == GENPC_DRACONIAN
+        && species != SP_BASE_DRACONIAN
+        && species != SP_GREY_DRACONIAN)
     {
         slot.spell = SPELL_BOLT_OF_DRAINING;
         slot.freq  = 33; // Not too common
