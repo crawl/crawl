@@ -6052,6 +6052,9 @@ static unsigned int _speech_keys(vector<string>& key_list,
         key_list.push_back(spell_name + " priest" + cast_str);
     else if (demon)
         key_list.push_back(spell_name + " demon" + cast_str);
+    else if (innate)
+        key_list.push_back(spell_name + " innate" + cast_str);
+
 
     // Now try just the spell's name.
     if (shape <= MON_SHAPE_NAGA)
