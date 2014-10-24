@@ -249,7 +249,7 @@ Steam Ball innate cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Quicksilver Bolt inante cast
+Quicksilver Bolt innate cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
