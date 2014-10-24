@@ -756,21 +756,18 @@ void ghost_demon::add_spells()
 
     for (int i = 0; i < you.spell_no; i++)
     {
-        int chance = spell_fail(you.spells[i]);
-        chance = chance * chance;
+        const int chance = max(0, 50 - spell_fail(you.spells[i]));
+        const spell_type spell = translate_spell(you.spells[i]);
         // XXX: this may require a more stringent check if there are
         // player spells which don't work well as ghost spells
-        if (you.spells[i] != SPELL_NO_SPELL
-            && is_valid_mon_spell(you.spells[i])
-            && x_chance_in_y(chance, 50*50))
+        if (spell != SPELL_NO_SPELL
+            && is_valid_mon_spell(spell)
+            && x_chance_in_y(chance*chance, 50*50))
         {
-            slot.spell = you.spells[i];
+            slot.spell = spell;
             spells.push_back(slot);
         }
     }
-
-    for (unsigned int i = 0; i < spells.size(); ++i)
-        spells[i].spell = translate_spell(spells[i].spell);
 
     fixup_spells(spells, xl, true, false);
 
