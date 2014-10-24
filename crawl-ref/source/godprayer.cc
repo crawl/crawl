@@ -610,38 +610,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
 static piety_gain_t _sac_corpse(const item_def& item)
 {
-    if (you_worship(GOD_OKAWARU))
-    {
-        monster dummy;
-        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum
-                                                     : item.plus);
-        define_monster(&dummy);
-        if (item.props.exists(MONSTER_NUMBER))
-            dummy.number   = item.props[MONSTER_NUMBER].get_short();
-
-        // Hit dice are overridden by define_monster, so only set them now.
-        if (item.props.exists(MONSTER_HIT_DICE))
-        {
-            int hd = item.props[MONSTER_HIT_DICE].get_short();
-            const monsterentry *m = get_monster_data(dummy.type);
-            int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
-
-            dummy.set_hit_dice(hd);
-            dummy.max_hit_points = hp;
-        }
-        int gain = get_fuzzied_monster_difficulty(&dummy);
-        dprf("fuzzied corpse difficulty: %4.2f", gain*0.01);
-
-        // Shouldn't be needed, but just in case an XL:1 spriggan diver walks
-        // into a minotaur corpses vault on D:10 ...
-        if (item.props.exists("cap_sacrifice"))
-            gain = min(gain, 700 * 3);
-
-        gain_piety(gain, 700);
-        gain = div_rand_round(gain, 700);
-        return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
-    }
-
     gain_piety(13, 19);
 
     // The feedback is not accurate any longer on purpose; it only reveals

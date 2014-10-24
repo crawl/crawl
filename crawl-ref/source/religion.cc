@@ -3886,8 +3886,7 @@ bool god_likes_fresh_corpses(god_type god)
     if (god == GOD_LUGONU)
         return !player_in_branch(BRANCH_ABYSS);
 
-    return god == GOD_OKAWARU
-           || god == GOD_MAKHLEB
+    return god == GOD_MAKHLEB
            || god == GOD_TROG;
 }
 
