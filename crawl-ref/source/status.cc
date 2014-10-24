@@ -701,7 +701,7 @@ static void _describe_glow(status_info* inf)
     };
     ASSERT(cont >= 0);
 
-    const int adj_i = min((unsigned long)cont, ARRAYSZ(contam_adjectives) - 1);
+    const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
     inf->short_text = contam_adjectives[adj_i] + "contaminated";
     inf->long_text = describe_contamination(cont);
 }
