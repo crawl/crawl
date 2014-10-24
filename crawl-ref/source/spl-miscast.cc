@@ -1073,8 +1073,10 @@ void MiscastEffect::_hexes(int severity)
             if (target->is_player())
                 you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             else if (target->is_monster())
-                     target->as_monster()->add_ench(mon_enchant(ENCH_SILENCE,
-                     0, act_source, 5 + random2(11) * BASELINE_DELAY));
+            {
+                 target->as_monster()->add_ench(mon_enchant(ENCH_SILENCE,
+                 0, act_source, 5 + random2(11) * BASELINE_DELAY));
+            }
             you_msg        = "An unnatural silence engulfs you.";
             mon_msg_seen   = "An unnatural silence engulfs @The_monster@.";
             do_msg();
@@ -1105,8 +1107,10 @@ void MiscastEffect::_hexes(int severity)
                 if (target->is_player())
                     you.increase_duration(DUR_LOWERED_MR, 20 + random2(11), 50);
                 else if (target->is_monster())
-                         target->as_monster()->add_ench(mon_enchant(ENCH_LOWERED_MR,
-                         0, act_source, 20 + random2(11) * BASELINE_DELAY));
+                {
+                     target->as_monster()->add_ench(mon_enchant(ENCH_LOWERED_MR,
+                     0, act_source, 20 + random2(11) * BASELINE_DELAY));
+                }
                 do_msg();
                 reroll = false;
                 break;
@@ -2178,12 +2182,14 @@ void MiscastEffect::_transmutation(int severity)
             }
 
             if (success)
+            {
                 you_msg        = "Shape-changing energy floods out "
                                  "from your body and enlargens the floor mites!";
                 mon_msg_seen   = "Shape-changing energy floods out "
                                  "from @the_monster@ and enlargens the floor mites!";
                 mon_msg_unseen = "Shape-changing energy pours out "
                                  "from thin air and enlargens the floor mites!";
+            }
             do_msg();
             break;
         }
@@ -2217,8 +2223,10 @@ void MiscastEffect::_transmutation(int severity)
             if (target->is_player())
                 you.increase_duration(DUR_WEAK, 10 + random2(6), 50);
             else if (target->is_monster())
-                     target->as_monster()->add_ench(mon_enchant(ENCH_WEAK,
-                     0, act_source, 10 + random2(6) * BASELINE_DELAY));
+            {
+                 target->as_monster()->add_ench(mon_enchant(ENCH_WEAK,
+                 0, act_source, 10 + random2(6) * BASELINE_DELAY));
+            }
             break;
         case 4:
             contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
@@ -2608,8 +2616,10 @@ void MiscastEffect::_ice(int severity)
             if (target->is_player())
                 you.increase_duration(DUR_FROZEN, 6 + random2(11), 50);
             else if (target->is_monster())
-                     target->as_monster()->add_ench(mon_enchant(ENCH_FROZEN,
-                     0, act_source, 6 + random2(16) * BASELINE_DELAY));
+            {
+                 target->as_monster()->add_ench(mon_enchant(ENCH_FROZEN,
+                 0, act_source, 6 + random2(16) * BASELINE_DELAY));
+            }
             break;
 
             break;
@@ -3094,8 +3104,10 @@ void MiscastEffect::_poison(int severity)
             if (target->is_player())
                 you.increase_duration(DUR_POISON_VULN, 20 + random2(11), 50);
             else if (target->is_monster())
-                     target->as_monster()->add_ench(mon_enchant(ENCH_POISON_VULN,
-                     0, act_source, 20 + random2(11) * BASELINE_DELAY));
+            {
+                 target->as_monster()->add_ench(mon_enchant(ENCH_POISON_VULN,
+                 0, act_source, 20 + random2(11) * BASELINE_DELAY));
+            }
             break;
         }
         break;
