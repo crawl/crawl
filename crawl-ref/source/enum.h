@@ -1853,13 +1853,6 @@ enum enchant_type
     NUM_ENCHANTMENTS
 };
 
-enum enchant_retval
-{
-    ERV_FAIL,
-    ERV_NEW,
-    ERV_INCREASED,
-};
-
 enum energy_use_type
 {
     EUT_MOVE,
@@ -3812,14 +3805,6 @@ enum skill_focus_mode
     SKM_FOCUS_OFF,
     SKM_FOCUS_ON,
     SKM_FOCUS_TOGGLE,
-};
-
-// order is important on these (see player_speed())
-enum speed_type
-{
-    SPEED_SLOWED,
-    SPEED_NORMAL,
-    SPEED_HASTED,
 };
 
 enum species_type
