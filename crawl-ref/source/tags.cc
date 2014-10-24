@@ -5715,7 +5715,6 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.att_type);
     marshallShort(th, ghost.att_flav);
     marshallInt(th, ghost.resists);
-    marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
     marshallShort(th, ghost.fly);
@@ -5747,8 +5746,9 @@ static ghost_demon unmarshallGhost(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (ghost.resists & MR_OLD_RES_ACID)
         set_resist(ghost.resists, MR_RES_ACID, 3);
+    if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
+        unmarshallByte(th);
 #endif
-    ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
 

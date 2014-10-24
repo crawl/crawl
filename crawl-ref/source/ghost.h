@@ -29,7 +29,7 @@ public:
     attack_flavour att_flav;
     resists_t resists;
 
-    bool spellcaster, cycle_colours;
+    bool cycle_colours;
     colour_t colour;
     flight_type fly;
 

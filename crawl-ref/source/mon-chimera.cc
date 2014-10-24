@@ -212,13 +212,6 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
             spells.push_back(*it);
     }
 
-    // Make sure resulting chimera can use spells
-    // TODO: Spell usage might still be a bit of a mess, especially with
-    // things like human/animal hybrids. Could perhaps do with some kind
-    // of ghost demon structure to manage and track everything better.
-    if (dummy.has_spells())
-        spellcaster = true;
-
     return dummy.spells.size() > 0;
 }
 
