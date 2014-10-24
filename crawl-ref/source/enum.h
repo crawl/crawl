@@ -283,13 +283,6 @@ enum activity_interrupt_type
     NUM_AINTERRUPTS
 };
 
-enum actor_type
-{
-    ACT_NONE = -1,
-    ACT_PLAYER,
-    ACT_MONSTER,
-};
-
 enum attribute_type
 {
     ATTR_DIVINE_LIGHTNING_PROTECTION,
