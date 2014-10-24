@@ -569,14 +569,27 @@ static void _wanderer_startup_message()
     }
 }
 
+/**
+ * The suffix to apply to welcome_spam when looking up an entry name from the
+ * database.
+ */
+static string _welcome_spam_suffix()
+{
+    if (crawl_state.game_is_hints())
+        return " Hints";
+
+    const string type = crawl_state.game_type_name();
+    if (!type.empty())
+        return " " + type;
+    if (today_is_halloween())
+        return " Halloween";
+    return "";
+}
+
 // A one-liner upon game start to mention the orb.
 static void _announce_goal_message()
 {
-    string type = crawl_state.game_type_name();
-    if (crawl_state.game_is_hints())
-        type = "Hints";
-    if (!type.empty())
-        type = " " + type;
+    const string type = _welcome_spam_suffix();
     mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
          getMiscString("welcome_spam" + type).c_str());
 }
