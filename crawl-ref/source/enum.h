@@ -413,9 +413,6 @@ enum beam_type                  // bolt::flavour
     BEAM_LAVA,
     BEAM_ICE,
     BEAM_DEVASTATION,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_LIGHT,
-#endif
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
     BEAM_GHOSTLY_FLAME,
@@ -463,19 +460,10 @@ enum beam_type                  // bolt::flavour
     BEAM_LAST_ENCHANTMENT = BEAM_TUKIMAS_DANCE,
 
     BEAM_MEPHITIC,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_GLOOM,
-#endif
     BEAM_INK,
     BEAM_HOLY_FLAME,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_HOLY_LIGHT,
-#endif
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_BOLT_OF_ZIN,
-#endif
     BEAM_ENSNARE,
     BEAM_CRYSTAL,
     BEAM_LAST_REAL = BEAM_CRYSTAL,
@@ -487,9 +475,6 @@ enum beam_type                  // bolt::flavour
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
-#endif
 
     NUM_BEAMS
 };
@@ -4403,9 +4388,6 @@ enum zap_type
     ZAP_SLEEP,
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
-#if TAG_MAJOR_VERSION == 34
-    ZAP_HOLY_LIGHT,
-#endif
     ZAP_BREATHE_MEPHITIC,
     ZAP_INNER_FLAME,
     ZAP_DAZZLING_SPRAY,

@@ -72,6 +72,9 @@ static beam_type _cloud2beam(cloud_type flavour)
     switch (flavour)
     {
     default:
+#if TAG_MAJOR_VERSION == 34
+    case CLOUD_GLOOM:
+#endif
     case CLOUD_NONE:         return BEAM_NONE;
     case CLOUD_FIRE:         return BEAM_FIRE;
     case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
@@ -81,9 +84,6 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_STEAM:        return BEAM_STEAM;
     case CLOUD_MIASMA:       return BEAM_MIASMA;
     case CLOUD_CHAOS:        return BEAM_CHAOS;
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_GLOOM:        return BEAM_GLOOM;
-#endif
     case CLOUD_INK:          return BEAM_INK;
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
     case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
