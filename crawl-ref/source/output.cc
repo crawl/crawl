@@ -880,7 +880,15 @@ static void _print_stats_wp(int y)
     string text;
     if (you.weapon())
     {
-        const item_def& wpn = *you.weapon();
+        item_def wpn = *you.weapon();
+
+        if (you.duration[DUR_CORROSION])
+        {
+            if (wpn.base_type == OBJ_RODS)
+                wpn.special -= 3 * you.props["corrosion_amount"].get_int();
+            else
+                wpn.plus -= 3 * you.props["corrosion_amount"].get_int();
+        }
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
     else
