@@ -4057,12 +4057,12 @@ void handle_god_time(int time_delta)
         int delay;
         switch (you.religion)
         {
-        case GOD_OKAWARU:
         case GOD_TROG:
             if (one_chance_in(14))
                 lose_piety(1);
             break;
 
+        case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_BEOGH:
         case GOD_LUGONU:
