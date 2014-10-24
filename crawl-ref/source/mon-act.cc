@@ -15,6 +15,7 @@
 #include "bloodspatter.h"
 #include "butcher.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
 #include "delay.h"
@@ -25,6 +26,7 @@
 #include "food.h"
 #include "fight.h"
 #include "fineff.h"
+#include "ghost.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -45,6 +47,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-project.h"
+#include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "mgen_data.h"
 #include "mon-util.h"
@@ -1938,6 +1941,32 @@ static void _grand_avatar_act(monster* mons)
     }
 }
 
+static void _maybe_submerge(monster* mons)
+{
+    if (mons->asleep() || mons->submerged())
+        return;
+
+    if (monster_can_submerge(mons, grd(mons->pos()))
+        && !mons->caught()         // No submerging while caught.
+        && !mons->asleep()         // No submerging when asleep.
+        && !you.beheld_by(mons)    // No submerging if player entranced.
+        && !mons_is_lurking(mons)  // Handled elsewhere.
+        && mons->wants_submerge())
+    {
+        const monsterentry* entry = get_monster_data(mons->type);
+
+        mons->add_ench(ENCH_SUBMERGED);
+        mons->speed_increment -= ENERGY_SUBMERGE(entry);
+        return;
+    }
+
+    if (mons->type == MONS_AIR_ELEMENTAL && one_chance_in(5))
+    {
+        // Takes no time.
+        mons->add_ench(ENCH_SUBMERGED);
+    }
+}
+
 void handle_monster_move(monster* mons)
 {
     const monsterentry* entry = get_monster_data(mons->type);
@@ -2197,7 +2226,21 @@ void handle_monster_move(monster* mons)
             }
         }
     }
-    mon_nearby_ability(mons);
+    _maybe_submerge(mons);
+    // do we really need this check in the case of colour cycling?
+    if (!mons->asleep()
+        && !mons->submerged())
+    {
+        maybe_mons_speaks(mons);
+        if (mons->type == MONS_KILLER_KLOWN
+            || mons->type == MONS_SPATIAL_VORTEX
+            || mons->type == MONS_PANDEMONIUM_LORD
+               && mons->ghost->cycle_colours)
+        {
+            mons->colour = random_colour();
+        }
+    }
+
     if (!mons->alive())
         return;
 
