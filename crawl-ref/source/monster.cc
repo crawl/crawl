@@ -5198,24 +5198,8 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(this);
 
-    switch (type)
-    {
-    case MONS_ABOMINATION_SMALL:
-        speed = 7 + random2avg(9, 2);
-        break;
-    case MONS_ABOMINATION_LARGE:
-        speed = 6 + random2avg(7, 2);
-        break;
-    case MONS_HELL_BEAST:
-        speed = 10 + random2(8);
-        break;
-    case MONS_BOULDER_BEETLE:
-        // Boost boulder beetle speed when rolling
-        if (has_ench(ENCH_ROLLING))
-            speed = 14;
-    default:
-        break;
-    }
+    if (type == MONS_BOULDER_BEETLE && has_ench(ENCH_ROLLING))
+        speed = 14;
 
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);

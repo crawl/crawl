@@ -2425,16 +2425,19 @@ void define_monster(monster* mons)
 
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
+        mons->props["speed"] = 7 + random2avg(9, 2);
         init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
+        mons->props["speed"] = 6 + random2avg(7, 2);
         init_abomination(mons, hd);
         break;
 
     case MONS_HELL_BEAST:
         hd = 4 + random2(4);
+        mons->props["speed"] = 10 + random2(8);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -2870,6 +2873,9 @@ int mons_base_speed(const monster* mon)
 {
     if (mon->ghost.get())
         return mon->ghost->speed;
+
+    if (mon->props.exists("speed"))
+        return mon->props["speed"];
 
     if (mon->type == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
