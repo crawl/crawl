@@ -312,4 +312,6 @@ struct counted_monster_list
     string describe(description_level_type desc = DESC_THE,
                     bool force_article = false);
 };
+
+bool today_is_halloween();
 #endif

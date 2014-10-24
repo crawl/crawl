@@ -4,6 +4,7 @@
 #include "tilemcache.h"
 
 #include "env.h"
+#include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "options.h"
@@ -1288,6 +1289,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     int ac = mon.u.ghost.ac;
     ac *= (5 + hash_rand(11, seed, 1000));
     ac /= 10;
+
+    // Become uncannily spooky!
+    if (today_is_halloween())
+        m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_PUMPKIN;
 
     if (ac > 25)
         m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_PLATE_BLACK;
