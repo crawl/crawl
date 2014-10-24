@@ -971,24 +971,6 @@ static const zap_info zap_data[] =
     0
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    ZAP_HOLY_LIGHT,
-    "beam of light",
-    200,
-    new calcdice_calculator<3, 11, 1, 3>,
-    new tohit_calculator<10, 1, 25>,
-    ETC_HOLY,
-    false,
-    BEAM_HOLY_LIGHT,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    6
-},
-#endif
-
 {
     ZAP_BREATHE_STICKY_FLAME,
     "splash of liquid fire",

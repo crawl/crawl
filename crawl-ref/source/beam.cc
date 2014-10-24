@@ -5842,18 +5842,6 @@ void bolt::refine_for_explosion()
             name = "stinking cloud";
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (name == "silver bolt")
-    {
-        seeMsg  = "The silver bolt explodes into a blast of light!";
-        hearMsg = "The dungeon gets brighter for a moment.";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_BOLT_OF_ZIN;
-        ex_size = 1;
-    }
-#endif
-
     if (name == "ghostly fireball")
     {
         seeMsg  = "The ghostly flame explodes!";
@@ -6469,9 +6457,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
     case BEAM_DEVASTATION:           return "devastation";
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_LIGHT:                 return "light";
-#endif
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
     case BEAM_GHOSTLY_FLAME:         return "ghostly flame";
@@ -6502,21 +6487,11 @@ static string _beam_type_name(beam_type type)
     case BEAM_BERSERK:               return "berserk";
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_DEVOUR_FOOD:           return "devour food";
-    case BEAM_GLOOM:                 return "gloom";
-#endif
     case BEAM_INK:                   return "ink";
     case BEAM_HOLY_FLAME:            return "cleansing flame";
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_HOLY_LIGHT:            return "holy light";
-#endif
     case BEAM_AIR:                   return "air";
     case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_BOLT_OF_ZIN:           return "silver light";
-#endif
     case BEAM_ENSNARE:               return "magic web";
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
