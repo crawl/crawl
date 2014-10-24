@@ -1368,7 +1368,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->god = GOD_TROG;
         // Profane servitors and death knights belong to Yredelemnul.
         else if (mg.cls == MONS_PROFANE_SERVITOR
-                 || mg.cls == MONS_DEATH_KNIGHT)
+                 || mg.cls == MONS_DEATH_KNIGHT
+                 || mg.cls == MONS_UNBORN)
         {
             mon->god = GOD_YREDELEMNUL;
         }
@@ -1398,10 +1399,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
     }
-    // XXX: Unborn belong to Yredelemnul, but only so they'll get the right
-    // message when casting Injury Mirror.
-    else if (mg.cls == MONS_UNBORN)
-        mon->god = GOD_YREDELEMNUL;
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;
