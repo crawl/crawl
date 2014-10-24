@@ -158,7 +158,6 @@ void ghost_demon::reset()
     att_type         = AT_HIT;
     att_flav         = AF_PLAIN;
     resists          = 0;
-    spellcaster      = false;
     cycle_colours    = false;
     colour           = BLACK;
     fly              = FL_NONE;
@@ -241,7 +240,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Non-spellcasters always have branded melee and are faster instead.
-    spellcaster = x_chance_in_y(3,4);
+    const bool spellcaster = x_chance_in_y(3,4);
 
     if (one_chance_in(3) || !spellcaster)
         brand = _random_special_pan_lord_brand();
@@ -780,8 +779,6 @@ void ghost_demon::add_spells()
         slot.flags = MON_SPELL_NATURAL | MON_SPELL_BREATH;
         spells.push_back(slot);
     }
-
-    spellcaster = has_spells();
 }
 
 bool ghost_demon::has_spells() const
@@ -1042,7 +1039,6 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     ac = 10;
     xl = 9 + div_rand_round(pow, 14);
     max_hp = 80;
-    spellcaster = true;
     damage = 0;
     att_type = AT_NONE;
 
