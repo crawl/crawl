@@ -21,7 +21,6 @@
 #include "exclude.h" //XXX
 #include "fight.h"
 #include "fprop.h"
-#include "ghost.h"
 #include "itemprop.h"
 #include "losglobal.h"
 #include "libutil.h"
@@ -1541,67 +1540,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         mons->lose_energy(EUT_SPECIAL);
 
     return used;
-}
-
-//---------------------------------------------------------------
-//
-// mon_nearby_ability
-//
-// Gives monsters a chance to use a special ability when they're
-// next to the player.
-//
-//---------------------------------------------------------------
-void mon_nearby_ability(monster* mons)
-{
-    actor *foe = mons->get_foe();
-    if (!foe
-        || !mons->can_see(foe)
-        || mons->asleep()
-        || mons->submerged()
-        || !summon_can_attack(mons, foe))
-    {
-        return;
-    }
-
-    maybe_mons_speaks(mons);
-
-    if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()         // No submerging while caught.
-        && !mons->asleep()         // No submerging when asleep.
-        && !you.beheld_by(mons)    // No submerging if player entranced.
-        && !mons_is_lurking(mons)  // Handled elsewhere.
-        && mons->wants_submerge())
-    {
-        const monsterentry* entry = get_monster_data(mons->type);
-
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-
-    const monster_type mclass = mons->type == MONS_CHIMERA ?
-                                    get_chimera_part(mons, random2(3) + 1)
-                                    : mons->type;
-
-    switch (mclass)
-    {
-    case MONS_PANDEMONIUM_LORD:
-        if (!mons->ghost->cycle_colours)
-            break;
-    case MONS_SPATIAL_VORTEX:
-    case MONS_KILLER_KLOWN:
-        // Choose random colour.
-        mons->colour = random_colour();
-        break;
-
-    case MONS_AIR_ELEMENTAL:
-        if (one_chance_in(5))
-            mons->add_ench(ENCH_SUBMERGED);
-        break;
-
-    default:
-        break;
-    }
 }
 
 void guardian_golem_bond(monster* mons)
