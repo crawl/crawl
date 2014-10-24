@@ -91,7 +91,7 @@ void draconian_change_colour(monster* drac)
         if (!(oldspells[i].flags & MON_SPELL_BREATH))
             drac->spells.push_back(oldspells[i]);
 
-    add_drac_breath(drac);
+    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(drac)));
 }
 
 bool ugly_thing_mutate(monster* ugly, bool proximity)
