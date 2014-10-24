@@ -4684,7 +4684,7 @@ string describe_contamination(int cont)
     };
 
     ASSERT(cont >= 0);
-    return contam_descriptions[min((unsigned long)cont,
+    return contam_descriptions[min((size_t) cont,
                                    ARRAYSZ(contam_descriptions) - 1)];
 }
 
