@@ -682,8 +682,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SHADOW_DRAGON,
       {
-       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                      | MON_SPELL_NOISY },
+       { SPELL_BOLT_OF_DRAINING, 67, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        END_OF_MONS_BOOK
       }
     },
