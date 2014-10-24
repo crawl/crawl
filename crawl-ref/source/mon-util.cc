@@ -2257,9 +2257,7 @@ unique_books get_unique_spells(const monster_info &mi,
             const mon_spell_slot breath =
                 drac_breath(mi.draco_or_demonspawn_subspecies());
             if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
-            {
                 spells.push_back(breath.spell);
-            }
             // No other spells; quit right away.
             if (book == MST_NO_SPELLS)
             {

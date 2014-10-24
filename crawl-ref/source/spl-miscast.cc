@@ -1246,6 +1246,7 @@ void MiscastEffect::_charms(int severity)
                 mon_msg_seen   = "Magic surges out from @the_monster@!";
                 mon_msg_unseen = "Magic surges out from thin air!";
                 if (target->is_player())
+                {
                     debuff_player();
                     if (you.magic_points > 0
 #if TAG_MAJOR_VERSION == 34
@@ -1255,6 +1256,7 @@ void MiscastEffect::_charms(int severity)
                         {
                             drain_mp(4 + random2(3));
                         }
+                }
                 else if (target->is_monster())
                 {
                     debuff_monster(target_as_monster());
@@ -1954,9 +1956,7 @@ void MiscastEffect::_necromancy(int severity)
             if (!target->res_rotting())
             {
                 if (you.can_smell())
-                {
                     all_msg = "You begin to rot!";
-                }
 
                 target->rot(act_source, 1, 0, true);
             }
@@ -2245,6 +2245,7 @@ void MiscastEffect::_transmutation(int severity)
             mon_msg = "@The_monster@'s body is flooded with distortional "
                       "energies!";
             if (_ouch(3 + random2avg(18, 2)) && target->alive())
+            {
                 if (target->is_player())
                 {
                     contaminate_player(random2avg(34000, 3),
@@ -2252,6 +2253,7 @@ void MiscastEffect::_transmutation(int severity)
                 }
                 else
                     target->polymorph(0);
+            }
             break;
 
         case 1:
