@@ -4684,9 +4684,8 @@ string describe_contamination(int cont)
     };
 
     ASSERT(cont >= 0);
-    const unsigned int ucont = cont;
-    ASSERT(ucont < ARRAYSZ(contam_descriptions));
-    return contam_descriptions[cont];
+    return contam_descriptions[min((unsigned long)cont,
+                                   ARRAYSZ(contam_descriptions) - 1)];
 }
 
 // controlled is true if the player actively did something to cause
