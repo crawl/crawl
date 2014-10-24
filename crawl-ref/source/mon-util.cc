@@ -2250,6 +2250,25 @@ unique_books get_unique_spells(const monster_info &mi,
 
         vector<spell_type> spells;
 
+        // Only prepend the first time; might be misleading if a draconian
+        // ever gets multiple sets of natural abilities.
+        if (mons_genus(mi.type) == MONS_DRACONIAN && i == 0)
+        {
+            const mon_spell_slot breath =
+                drac_breath(mi.draco_or_demonspawn_subspecies());
+            if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
+            {
+                spells.push_back(breath.spell);
+            }
+            // No other spells; quit right away.
+            if (book == MST_NO_SPELLS)
+            {
+                if (spells.size())
+                    result.push_back(spells);
+                return result;
+            }
+        }
+
         for (unsigned int j = 0;
              (book == MST_GHOST && j < mi.spells.size())
              || (book != MST_GHOST
@@ -2290,9 +2309,8 @@ unique_books get_unique_spells(const monster_info &mi,
     return result;
 }
 
-void add_drac_breath(monster* drac)
+mon_spell_slot drac_breath(monster_type drac_type)
 {
-    const monster_type drac_type = draco_or_demonspawn_subspecies(drac);
     spell_type sp;
     switch (drac_type)
     {
@@ -2315,9 +2333,9 @@ void add_drac_breath(monster* drac)
     slot.spell = sp;
     slot.freq = 62;
     slot.flags = MON_SPELL_NATURAL | MON_SPELL_BREATH;
-    if (sp != SPELL_NO_SPELL)
-        drac->spells.push_back(slot);
+    return slot;
 }
+
 static void _mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
@@ -2328,7 +2346,11 @@ static void _mons_load_spells(monster* mon)
 
     mon->spells.clear();
     if (mons_genus(mon->type) == MONS_DRACONIAN)
-        add_drac_breath(mon);
+    {
+        mon_spell_slot breath = drac_breath(draco_or_demonspawn_subspecies(mon));
+        if (breath.spell != SPELL_NO_SPELL)
+            mon->spells.push_back(breath);
+    }
 
     if (book == MST_NO_SPELLS)
         return;
