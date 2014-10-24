@@ -3944,7 +3944,7 @@ void bolt::affect_player()
     hurted = check_your_resists(hurted, flavour, "", this);
 
     if (flavour == BEAM_MIASMA && hurted > 0)
-        was_affected = miasma_player(get_source_name(), name);
+        was_affected = miasma_player(agent(), name);
 
     if (flavour == BEAM_DEVASTATION) // DISINTEGRATION already handled
         blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
