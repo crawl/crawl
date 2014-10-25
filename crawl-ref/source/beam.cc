@@ -2989,12 +2989,6 @@ bool bolt::fuzz_invis_tracer()
         return false;
 
     const actor *beam_src = beam_source_as_target();
-    if (beam_src && beam_src->is_monster()
-        && mons_sense_invis(beam_src->as_monster()))
-    {
-        // Monsters that can sense invisible
-        return dist == 0;
-    }
 
     // Apply fuzz now.
     coord_def fuzz(random_range(-2, 2), random_range(-2, 2));

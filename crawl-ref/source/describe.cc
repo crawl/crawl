@@ -3482,8 +3482,6 @@ static string _monster_stat_description(const monster_info& mi)
     {
         result << uppercase_first(pronoun) << " can see invisible.\n";
     }
-    else if (mons_class_flag(mi.type, M_SENSE_INVIS))
-        result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
 
     // Unusual monster speed.
     const int speed = mi.base_speed();

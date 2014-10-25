@@ -2015,7 +2015,7 @@ void attack::player_stab_check()
     const bool roll_needed = (st != STAB_SLEEPING && st != STAB_PARALYSED);
 
     int roll = 100;
-    if (st == STAB_INVISIBLE && !mons_sense_invis(defender->as_monster()))
+    if (st == STAB_INVISIBLE)
         roll -= 10;
 
     switch (st)

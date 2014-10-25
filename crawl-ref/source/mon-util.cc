@@ -1303,11 +1303,6 @@ bool mons_is_unique(monster_type mc)
     return mons_class_flag(mc, M_UNIQUE);
 }
 
-bool mons_sense_invis(const monster* mon)
-{
-    return mons_class_flag(mon->type, M_SENSE_INVIS);
-}
-
 ucs_t mons_char(monster_type mc)
 {
     return monster_symbols[mc].glyph;

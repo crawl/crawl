@@ -7567,7 +7567,6 @@ bool player::visible_to(const actor *looker) const
 
     const monster* mon = looker->as_monster();
     return mon->friendly()
-        || (mons_sense_invis(mon) && distance2(pos(), mon->pos()) <= dist_range(4))
         || (!mon->has_ench(ENCH_BLIND)
             && (!invisible() || mon->can_see_invisible()));
 }
