@@ -48,7 +48,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 9, MON_SPELL_WIZARD  },
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
        { SPELL_MAGIC_DART, 9, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 9, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 9, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -159,7 +159,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD  },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-       { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
@@ -233,7 +233,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DISINTEGRATE, 12, MON_SPELL_MAGICAL },
        { SPELL_DRAIN_MAGIC, 12, MON_SPELL_MAGICAL },
        { SPELL_CONFUSE, 12, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_OTHER, 12, MON_SPELL_MAGICAL },
+       { SPELL_TELEPORT_OTHER, 12, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -278,7 +278,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PAIN, 17, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 17, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -333,7 +333,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -345,7 +345,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -355,9 +355,8 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD  },
-       { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
+       { SPELL_TELEPORT_OTHER, 20, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -378,7 +377,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_DEMON, 20, MON_SPELL_PRIEST  },
        { SPELL_SMITING, 10, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 10, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -811,7 +810,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -829,7 +828,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STICKY_FLAME_RANGE, 13, MON_SPELL_DEMONIC },
        { SPELL_FIREBALL, 13, MON_SPELL_DEMONIC },
        { SPELL_HELLFIRE, 13, MON_SPELL_DEMONIC },
-       { SPELL_HELLFIRE_BURST, 13, MON_SPELL_DEMONIC },
+       { SPELL_HELLFIRE_BURST, 13, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -840,7 +839,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STICKY_FLAME_RANGE, 13, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 13, MON_SPELL_WIZARD },
        { SPELL_HELLFIRE, 13, MON_SPELL_WIZARD },
-       { SPELL_HELLFIRE_BURST, 13, MON_SPELL_WIZARD },
+       { SPELL_HELLFIRE_BURST, 13, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -858,7 +857,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_OTHER, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_RANGE, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_ENCIRCLE, 15, MON_SPELL_WIZARD },
-       { SPELL_BLINK_AWAY, 15, MON_SPELL_WIZARD },
+       { SPELL_BLINK_AWAY, 15, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -894,7 +893,7 @@ static const mon_spellbook mspell_list[] =
         { SPELL_PRIMAL_WAVE, 16, MON_SPELL_WIZARD },
         { SPELL_STEAM_BALL, 16, MON_SPELL_WIZARD },
         { SPELL_THROW_ICICLE, 16, MON_SPELL_WIZARD },
-        { SPELL_BLINK, 16, MON_SPELL_WIZARD },
+        { SPELL_BLINK, 16, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
         END_OF_MONS_BOOK
       }
     },
@@ -1001,7 +1000,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_MONSTROUS_MENAGERIE, 11, MON_SPELL_WIZARD },
        { SPELL_CORONA, 11, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
@@ -1014,7 +1013,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 9, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 9, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 9, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 9, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1024,7 +1023,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 10, MON_SPELL_WIZARD },
        { SPELL_OZOCUBUS_REFRIGERATION, 20, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
@@ -1085,7 +1084,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_GREATER_DEMON, 11, MON_SPELL_DEMONIC },
        { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_DEMONIC },
        { SPELL_PARALYSE, 11, MON_SPELL_DEMONIC },
-       { SPELL_MAJOR_HEALING, 11, MON_SPELL_DEMONIC },
+       { SPELL_MAJOR_HEALING, 11, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1196,7 +1195,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_HAROLD,
       {
        { SPELL_BOLT_OF_FIRE, 30, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 29, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 29, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1247,7 +1246,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STONE_ARROW, 15, MON_SPELL_WIZARD },
        { SPELL_AWAKEN_FOREST, 15, MON_SPELL_WIZARD },
        { SPELL_DRUIDS_CALL, 15, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 15, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 15, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1373,7 +1372,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 17, MON_SPELL_WIZARD },
        { SPELL_MESMERISE, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_CLOSE, 17, MON_SPELL_WIZARD },
-       { SPELL_VAMPIRIC_DRAINING, 17, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1423,7 +1422,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CORONA, 11, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_HASTE_OTHER, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1532,7 +1531,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HASTE_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_MIGHT_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 21, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 21, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1612,7 +1611,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_WIZARD },
        { SPELL_GHOSTLY_FLAMES, 17, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_WIZARD },
-       { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD },
+       { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1621,7 +1620,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_AWAKEN_VINES, 23, MON_SPELL_WIZARD },
        { SPELL_AWAKEN_FOREST, 23, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 11, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1664,7 +1663,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1674,7 +1673,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_FLAME, 10, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1684,7 +1683,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SHOCK, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1694,7 +1693,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MEPHITIC_CLOUD, 10, MON_SPELL_WIZARD },
        { SPELL_VENOM_BOLT, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD  },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1872,7 +1871,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 10, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 10, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1884,7 +1883,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD },
+       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -2013,7 +2012,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PORTAL_PROJECTILE, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
-       { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD },
+       { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_SHROUD_OF_GOLUBRIA, 11, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
