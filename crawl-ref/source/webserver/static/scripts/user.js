@@ -12,7 +12,7 @@ define(["comm", "pubsub"], function (comm, pubsub) {
                     "greatplayers" : "a greatplayer (has won every species)",
                     "greaterplayers" : "a greaterplayer (has won every species " +
                                       "and background)",
-                    "centuryplayers" : "a centuryplayer (greaterplayer with 100+ wins)"};
+                    "centuryplayers" : "a centuryplayer (100+ wins)"};
 
         var fullname = name;
         if (nerdtype == "devteam" && name !== devname)
