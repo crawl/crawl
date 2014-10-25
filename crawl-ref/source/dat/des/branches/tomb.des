@@ -2,6 +2,45 @@
 # tomb.des: Maps for the Tomb.
 ##############################################################################
 
+{{
+function tomb_guardian_set(e, include_nothing)
+  if e.is_validating() then
+     e.mons("guardian mummy w:233 / mummy / nothing w:233")
+  end
+  if dgn.persist.tomb_guardian_sets == nil then
+    dgn.persist.tomb_guardian_sets = { 0, 0, 0 }
+  end
+  local sets =
+    {
+      "ushabti w:119 / guardian mummy w:79 / mummy w:28 / " ..
+          "ancient champion w:8 / skeletal warrior w:8 / bennu",
+      "anubis guard band w:119 / guardian mummy w:79 / mummy w:28 / " ..
+          "ancient champion w:8 / skeletal warrior w:8 / bennu",
+      "guardian mummy w:119 / death scarab band w:79 / mummy w:28 / " ..
+          "ancient champion w:8 / skeletal warrior w:8 / bennu"
+    }
+  local nothing = " / nothing w:248"
+  local which_set = 0
+  local mincount = math.min(unpack(dgn.persist.tomb_guardian_sets))
+  local count = 0
+  for i = 1, #sets do
+    if dgn.persist.tomb_guardian_sets[i] == mincount then
+      count = count + 1
+      if crawl.random2(count) == 0 then
+        which_set = i
+      end
+    end
+  end
+  dgn.persist.tomb_guardian_sets[which_set] =
+      dgn.persist.tomb_guardian_sets[which_set] + 1
+  if include_nothing then
+    e.mons(sets[which_set] .. nothing)
+  else
+    e.mons(sets[which_set])
+  end
+end
+}}
+
 ##############################################################################
 # Tomb entries
 
@@ -311,10 +350,7 @@ SUBST:    FIJKLMNOPQ = G
 SUBST:    ' = 5 .:100
 #
 MONS:     mummy / guardian mummy w:3 / nothing
-# Re 233: this used to involve "SUBST: 1 = 1 2:2 . / SUBST: 2 = 2 1:3 .";
-# the weights reflect the recursive SUBST: to keep them the same as before.
-MONS:     guardian mummy w:39 / anubis guard band w:78 / ushabti w:78 / \
-          death scarab band w:39 / mummy / nothing w:233
+: tomb_guardian_set(_G, true)
 MONS:     mummy priest / nothing, sphinx / nothing, greater mummy / nothing
 MONS:     silver statue / orange crystal statue / ice statue
 #
@@ -406,8 +442,7 @@ COLOUR:  F = yellow
 SUBST:   F = G
 #
 MONS:    mummy / guardian mummy w:3 / nothing
-MONS:    guardian mummy w:39 / anubis guard band w:78 / ushabti w:78 / \
-         death scarab band w:39 / mummy / nothing w:233
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest / nothing, greater mummy / nothing
 MONS:    silver statue / orange crystal statue / ice statue
 SUBST:   t = ~ .:50
@@ -439,9 +474,7 @@ ENDMAP
 NAME:    tomb_1_centre_grunt_parallel
 TAGS:    tomb_1_centre unrand no_hmirror
 MONS:    mummy / skeletal warrior w:1 / nothing w:11
-MONS:    guardian mummy w:33 / anubis guard band w:66 / ushabti w:66 / \
-         death scarab band w:33 / mummy w:28 / ancient champion w:8 / \
-         skeletal warrior w:8 / bennu / nothing w:248
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
 MONS:    silver statue / orange crystal statue / ice statue
@@ -478,9 +511,7 @@ ENDMAP
 NAME:    tomb_1_centre_grunt_layered
 TAGS:    tomb_1_centre unrand no_hmirror
 MONS:    mummy / skeletal warrior w:1 / nothing w:11
-MONS:    guardian mummy w:33 / anubis guard band w:66 / ushabti w:66 / \
-         death scarab band w:33 / mummy w:28 / ancient champion w:8 / \
-         skeletal warrior w:8 / bennu / nothing w:248
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
 MONS:    silver statue / orange crystal statue / ice statue
@@ -524,9 +555,7 @@ SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST: AEIMR = +, a = ), ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
 MONS: mummy / guardian mummy w:3 / nothing
-MONS: guardian mummy w:45 / anubis guard band w:90 / ushabti w:90 / \
-      death scarab band w:45 / ancient champion w:40 / bennu w:20 / mummy / \
-      nothing w:275
+: tomb_guardian_set(_G, true)
 MONS: mummy priest / lich w:1 / nothing w:11
 MONS: greater mummy / ancient lich w:1 / nothing w:11
 MAP
@@ -558,8 +587,7 @@ NAME:    tomb_1_hall_stairs_old
 TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST:   ' = 3 .:200
-MONS:    guardian mummy w:39 / anubis guard band w:78 / ushabti w:78 / \
-         death scarab band w:39 / mummy / nothing w:233
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest / nothing, greater mummy
 MAP
 ''                                   ''
@@ -584,9 +612,7 @@ SHUFFLE: EFGH / EGFH / EGHF / GEFH / GEHF / GHEF
 SUBST:   ABEF = c, CDGH = '
 SUBST:   ' = 3 .:200
 NSUBST:  < = } / ., > = ] / .
-MONS:    guardian mummy w:33 / anubis guard band w:66 / ushabti w:66 / \
-         death scarab band w:33 / mummy w:28 / ancient champion w:8 / \
-         skeletal warrior w:8 / bennu / nothing w:248
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy
 MAP
@@ -608,9 +634,7 @@ NAME:    tomb_1_hall_stairs_grunt_snakey
 TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST:   ' = 3 .:200
-MONS:    guardian mummy w:33 / anubis guard band w:66 / ushabti w:66 / \
-         death scarab band w:33 / mummy w:28 / ancient champion w:8 / \
-         skeletal warrior w:8 / bennu / nothing w:248
+: tomb_guardian_set(_G, true)
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy
 MAP
@@ -632,8 +656,7 @@ NAME: tomb_1_hall_stairs_nicolae_cartouches
 TAGS: tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST: ' = 3 .:200
-MONS: guardian mummy w:39 / anubis guard band w:78 / ushabti w:78 / \
-      death scarab band w:39 / mummy / nothing w:233
+: tomb_guardian_set(_G, true)
 MONS: mummy priest / lich w:5 / nothing, greater mummy
 MAP
 ''                                   ''
@@ -655,8 +678,7 @@ TAGS: tomb_1_hall_stairs unrand
 SHUFFLE: AaZ/BbY, pq
 SUBST: ADp = ', Y = 2, ad = +, BbEeq = c, ' = 3 .:200
 NSUBST: Z = ] / }
-MONS: guardian mummy w:39 / anubis guard band w:78 / ushabti w:78 / \
-      death scarab band w:39 / mummy / nothing w:233
+: tomb_guardian_set(_G, true)
 MONS: mummy priest / nothing, greater mummy
 MAP
 ''                                   ''
@@ -708,8 +730,7 @@ SUBST:    " = 2:3 3:1 .:96
 #                have clustering of 1, 2 in the lower area as before?
 #
 MONS: mummy
-MONS: guardian mummy / anubis guard band w:20 / ushabti w:20 / \
-      death scarab band
+: tomb_guardian_set(_G)
 MONS: mummy priest
 #
 MAP
@@ -788,10 +809,8 @@ ENDMAP
 NAME: tomb_2_ambush_old
 TAGS: tomb_2_ambush unrand
 MONS: mummy
-MONS: guardian mummy / anubis guard band w:20 / ushabti w:20 / \
-      death scarab band
-MONS: mummy priest
-MONS: greater mummy
+: tomb_guardian_set(_G)
+MONS: mummy priest, greater mummy
 MAP
 .............................
 .............................
@@ -820,8 +839,7 @@ ENDMAP
 NAME:    tomb_2_ambush_grunt_patterns
 TAGS:    tomb_2_ambush unrand
 MONS:    mummy / skeletal warrior w:2
-MONS:    guardian mummy w:12 / anubis guard band w:23 / ushabti w:23 / \
-         death scarab band w:12 / ancient champion / bennu
+: tomb_guardian_set(_G)
 MONS:    mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:    greater mummy / ancient lich w:1
 SHUFFLE: AB / Ad / dA, CD / Ce / eC, EF / Ef / fE
@@ -854,8 +872,7 @@ ENDMAP
 NAME: tomb_2_ambush_grunt_arcs
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
-MONS: guardian mummy w:12 / anubis guard band w:23 / ushabti w:23 / \
-      death scarab band w:12 / ancient champion / bennu
+: tomb_guardian_set(_G)
 MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS: greater mummy / ancient lich w:1
 MAP
@@ -897,8 +914,7 @@ SUBST:    ' = " $
 SUBST:    " = ~:1 .
 SUBST:    $ = *:2 |:1 $:17
 #
-MONS:     guardian mummy / anubis guard band w:20 / ushabti w:20 / \
-          death scarab band
+: tomb_guardian_set(_G)
 #
 KITEM:    $ = $ no_pickup
 KITEM:    * = * no_pickup
@@ -979,8 +995,7 @@ ENDMAP
 ####
 NAME:  tomb_3_rune_old
 TAGS:  tomb_3_rune unrand
-MONS:  guardian mummy / anubis guard band w:20 / ushabti w:20 / \
-       death scarab band
+: tomb_guardian_set(_G)
 MONS:  mummy priest, greater mummy
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
@@ -1009,8 +1024,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_curves
 TAGS:  tomb_3_rune unrand
-MONS:  guardian mummy w:12 / anubis guard band w:23 / ushabti w:23 / \
-       death scarab band w:12 / ancient champion / bennu
+: tomb_guardian_set(_G)
 MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:  greater mummy / ancient lich w:1
 KMASK: O = no_item_gen
@@ -1041,8 +1055,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_snapback
 TAGS:  tomb_3_rune unrand
-MONS:  guardian mummy w:12 / anubis guard band w:23 / ushabti w:23 / \
-       death scarab band w:12 / ancient champion / bennu
+: tomb_guardian_set(_G)
 MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
 MONS:  greater mummy / ancient lich w:1
 KMASK: O = no_item_gen
