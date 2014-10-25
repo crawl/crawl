@@ -146,19 +146,21 @@ const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 // derived undead can't be randomly generated
 const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 
-// 1<<48
+                                   //(uint64_t)1<<48;
 
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
-                                             //1<<50;
+                                   //(uint64_t)1<<50;
 
-                                             //1<<51;
+                                   //(uint64_t)1<<51;
 
-                                             //1<<52;
+                                   //(uint64_t)1<<52;
 
 // monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
 const uint64_t M_SHADOW            = (uint64_t)1<<53;
+
+// monster is a proxy for a charm/conjuration spell (IOOD, etc.)
 const uint64_t M_SPELL_PROXY       = (uint64_t)1<<54;
 
 // Same for flags for actual monsters.
