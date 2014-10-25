@@ -3793,6 +3793,7 @@ string item_prefix(const item_def &item, bool temp)
         }
         // intentional fall-through
     case OBJ_FOOD:
+        // this seems like a big horrible gotcha waiting to happen
         if (item.sub_type == NUM_FOODS)
             break;
 
@@ -3800,6 +3801,9 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("inedible");
         else if (is_preferred_food(item))
             prefixes.push_back("preferred");
+
+        if (is_forbidden_food(item))
+            prefixes.push_back("forbidden");
 
         if (is_poisonous(item))
             prefixes.push_back("poisonous"), prefixes.push_back("inedible");
