@@ -4996,8 +4996,6 @@ vector<ability_type> get_possible_sacrifices()
         = you.props["current_purity_sacrifice"].get_vector();
 
     vector<mutation_type> possible_purity_mutations;
-    if (player_mutation_level(MUT_DETERIORATION) <= 2)
-        possible_purity_mutations.push_back(MUT_DETERIORATION);
     if (player_mutation_level(MUT_SCREAM) <= 2)
         possible_purity_mutations.push_back(MUT_SCREAM);
     if (player_mutation_level(MUT_SLOW_HEALING) <= 2
