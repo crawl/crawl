@@ -183,6 +183,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_FIRE_GIANT,
+      {
+       { SPELL_BOLT_OF_FIRE, 29, MON_SPELL_WIZARD },
+       { SPELL_FIREBALL, 29, MON_SPELL_WIZARD },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_MARGERY,
       {
        { SPELL_BOLT_OF_FIRE, 36, MON_SPELL_WIZARD },
