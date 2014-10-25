@@ -2833,10 +2833,7 @@ static void _clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (player_mutation_level(MUT_NO_LOVE)
-        && mon->type != MONS_BALL_LIGHTNING
-        && mon->type != MONS_BATTLESPHERE
-        && mon->type != MONS_SPECTRAL_WEAPON
-        && mon->type != MONS_FULMINANT_PRISM)
+        && !mons_class_flag(mon->type, M_SPELL_PROXY))
     {
         mon->attitude = ATT_HOSTILE;
     }
