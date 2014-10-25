@@ -367,7 +367,8 @@ hybrid composed from the parts of three separate beasts.
 %%%%
 bread ration
 
-A filling meal of stale, but hearty, bread.
+A filling meal of stale, but hearty, bread. It's large enough that eating it
+will take several turns, and will leave you vulnerable to attack.
 %%%%
 broad axe
 
@@ -740,7 +741,8 @@ when carried.
 %%%%
 meat ration
 
-A filling ration of dried and preserved meats.
+A filling ration of dried and preserved meats. It's large enough that eating it
+will take several turns, and will leave you vulnerable to attack.
 %%%%
 morningstar
 
