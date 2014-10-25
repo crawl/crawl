@@ -152,11 +152,6 @@ static bool cant_see_you(const monster_info *mi)
 {
     if (mons_class_flag(mi->type, M_SEE_INVIS))
         return false;
-    if (mons_class_flag(mi->type, M_SENSE_INVIS)
-        && (you.pos() - mi->pos).abs() <= 17)
-    {
-        return false;
-    }
     if (you.in_water())
         return false;
     return you.invisible() || mi->is(MB_BLIND);

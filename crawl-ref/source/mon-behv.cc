@@ -44,7 +44,7 @@
 static void _guess_invis_foe_pos(monster* mon)
 {
     const actor* foe          = mon->get_foe();
-    const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
+    const int    guess_radius = 2;
 
     vector<coord_def> possibilities;
 

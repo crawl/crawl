@@ -31,8 +31,7 @@ const uint64_t M_INVIS             = 1<< 6;
 // can see invis
 const uint64_t M_SEE_INVIS         = 1<< 7;
 
-// can sense invisible things
-const uint64_t M_SENSE_INVIS       = 1<< 8;
+                                   //1<< 8;
 
 // uses talking code
 const uint64_t M_SPEAKS            = 1<< 9;
