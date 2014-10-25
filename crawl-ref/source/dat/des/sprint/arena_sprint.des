@@ -208,9 +208,9 @@ end
 function arena_sprint_get_monster_set(round, boss)
     if not boss then
         if round == 27 then
-            return {"place:Zot:$ / orb guardian w:70 / tiamat /\
-                        orb of fire / electric golem / killer klown /\
-                        ancient lich / moth of wrath"}
+            return {"place:Zot:$ / orb guardian w:70 / tiamat / " ..
+                       "orb of fire / electric golem / killer klown / " ..
+                       "ancient lich / moth of wrath"}
         end
 
         local mon_set = {}
@@ -659,8 +659,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
-                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice / " ..
+                  "orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
                 "hellion"
             }
         end
@@ -692,59 +692,59 @@ function arena_sprint_init_boss_table()
 
     local bs = {}
     if crawl.coinflip() then
-        bs[1] = {"place:Snake", "aizul hd:7 hp:120 /\
-                 naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 /\
-                 anaconda name:giant n_adj n_noc hp:130 col:lightred",
+        bs[1] = {"place:Snake", "aizul hd:7 hp:120 / " ..
+                 "naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 / " ..
+                 "anaconda name:giant n_adj n_noc hp:130 col:lightred",
                  "serpentine rune of zot"}
     else
-        bs[1] = {"place:Swamp", "the lernaean hydra /\
-                 wizard name:witch n_rpl n_des n_noc col:green hp:130 \
-                    spells:mephitic_cloud.15.wizard;\
-                           summon_hydra.15.wizard;\
-                           invisibility.15.wizard;\
-                           teleport_self.15.wizard.emergency",
+        bs[1] = {"place:Swamp", "the lernaean hydra / " ..
+                 "wizard name:witch n_rpl n_des n_noc col:green hp:130 " ..
+                   "spells:mephitic_cloud.15.wizard;" ..
+                          "summon_hydra.15.wizard;" ..
+                          "invisibility.15.wizard;" ..
+                          "teleport_self.15.wizard.emergency",
                  "decaying rune of zot"}
     end
 
     if crawl.coinflip() then
-        bs[2] = {"place:Spider", "arachne hp:250 /\
-                 wolf spider name:dire n_adj n_noc col:blue hp:300 /\
-                 jumping spider name:phase_spider n_rpl n_des never_corpse \
-                    col:lightgreen spells:teleport_self.58.natural hp:300",
+        bs[2] = {"place:Spider", "arachne hp:250 / " ..
+                 "wolf spider name:dire n_adj n_noc col:blue hp:300 / " ..
+                 "jumping spider name:phase_spider n_rpl n_des never_corpse " ..
+                    "col:lightgreen spells:teleport_self.58.natural hp:300",
                  "gossamer rune of zot"}
     else
-        bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
-                 merfolk avatar name:dimme tile:mons_dimme n_rpl n_des n_spe \
-                     col:lightmagenta hp:300 spells:avatar_song.160.natural;\
-                                                    malign_gateway.40.natural",
+        bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 / " ..
+                 "merfolk avatar name:dimme tile:mons_dimme n_rpl n_des n_spe " ..
+                    "col:lightmagenta hp:300 spells:avatar_song.160.natural;" ..
+                                                   "malign_gateway.40.natural",
                  "barnacled rune of zot"}
     end
 
     if crawl.coinflip() then
         -- Elementalist boss is from mu_elemental_laboratory
-        bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster /\
-                 deep elf master archer / deep elf annihilator / deep elf high priest",
-                 "fannar hp:400 hd:14 /\
-                 col:flash deep elf sorcerer hp:400 \
-                     name:deep_elf_elementalist n_rpl n_des n_noc tile:mons_deep_elf_elementalist \
-                     spells:iron_shot.10.wizard;summon_air_elementals.10.wizard;sticky_flame_range.10.wizard;summon_water_elementals.10.wizard;haste.10.wizard;blink.10.wizard actual_spells \
-                     ; robe ego:fire_resistance | \
-                     robe ego:cold_resistance | \
-                     robe ego:resistance . dagger ego:freezing | \
-                     dagger ego:flaming | dagger ego:electrocution",
+        bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster / " ..
+                 "deep elf master archer / deep elf annihilator / deep elf high priest",
+                 "fannar hp:400 hd:14 / " ..
+                 "col:flash deep elf sorcerer hp:400 " ..
+                    "name:deep_elf_elementalist n_rpl n_des n_noc tile:mons_deep_elf_elementalist " ..
+                    "spells:iron_shot.10.wizard;summon_air_elementals.10.wizard;sticky_flame_range.10.wizard;summon_water_elementals.10.wizard;haste.10.wizard;blink.10.wizard " ..
+                    "; robe ego:fire_resistance | " ..
+                    "robe ego:cold_resistance | " ..
+                    "robe ego:resistance . dagger ego:freezing | " ..
+                    "dagger ego:flaming | dagger ego:electrocution",
                  "elven rune of zot"}
     else
-        bs[3] = {"place:Forest:$ w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
-                 spriggan berserker w:5", "agnes hp:335",
+        bs[3] = {"place:Forest:$ w:50 / spriggan druid w:2 / spriggan air mage w:5 / " ..
+                 "spriggan berserker w:5", "agnes hp:335",
                  "mossy rune of zot"}
     end
 
-    bs[4] = {"place:Slime", "dissolution hp:430 /\
-             acid blob name:sulfuric n_adj col:white hp:450 /\
-             great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
+    bs[4] = {"place:Slime", "dissolution hp:430 / " ..
+             "acid blob name:sulfuric n_adj col:white hp:450 / " ..
+             "great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
              "slimy rune of zot"}
-    bs[5] = {"vault guard / place:Vaults", "mennas hp:250 / mara hp:300 /\
-             vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26",
+    bs[5] = {"vault guard / place:Vaults", "mennas hp:250 / mara hp:300 / " ..
+             "vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26",
              "silver rune of zot"}
     if crawl.coinflip() then
         bs[5], bs[4] = bs[4], bs[5]
@@ -755,18 +755,18 @@ function arena_sprint_init_boss_table()
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
     -- Pan sets are taken directly from pan.des
-    bs[10] = {"small abomination / small abomination / large abomination /\
-              large abomination / neqoxec / neqoxec / cacodemon /\
-              cacodemon / chaos spawn / chaos spawn", "mnoleg", "glowing rune of zot"}
-    bs[11] = {"hellwing / smoke demon / smoke demon / sixfirhy /\
-              Green Death / blizzard demon / smoke demon / hellwing /\
-              Green Death / hellwing", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / efreet / orange demon / orange demon /\
-              sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
+    bs[10] = {"small abomination / small abomination / large abomination / " ..
+              "large abomination / neqoxec / neqoxec / cacodemon / " ..
+              "cacodemon / chaos spawn / chaos spawn", "mnoleg", "glowing rune of zot"}
+    bs[11] = {"hellwing / smoke demon / smoke demon / sixfirhy / " ..
+              "Green Death / blizzard demon / smoke demon / hellwing / " ..
+              "Green Death / hellwing", "lom lobon", "magical rune of zot"}
+    bs[12] = {"efreet / efreet / orange demon / orange demon / " ..
+              "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"skeleton / skeleton / skeleton /\
-              skeleton / soul eater / soul eater / lorocyproca /\
-              executioner / executioner / executioner", "gloorx vloq",
+    bs[13] = {"skeleton / skeleton / skeleton / " ..
+              "skeleton / soul eater / soul eater / lorocyproca / " ..
+              "executioner / executioner / executioner", "gloorx vloq",
               "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
                "khufu hp:500", "golden rune of zot"}
@@ -778,8 +778,8 @@ function arena_sprint_init_boss_table()
 
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
-              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta \
-              spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;teleport_self.16.wizard.emergency", "demonic rune of zot"}
+              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta " ..
+              "spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;teleport_self.16.wizard.emergency", "demonic rune of zot"}
     return bs
 end
 
