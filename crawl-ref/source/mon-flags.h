@@ -159,6 +159,7 @@ const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
 // monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
 const uint64_t M_SHADOW            = (uint64_t)1<<53;
+const uint64_t M_SPELL_PROXY       = (uint64_t)1<<54;
 
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
