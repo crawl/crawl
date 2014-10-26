@@ -31,7 +31,8 @@ const uint64_t M_INVIS             = 1<< 6;
 // can see invis
 const uint64_t M_SEE_INVIS         = 1<< 7;
 
-                                   //1<< 8;
+// can't be blinded
+const uint64_t M_UNBLINDABLE       = 1<< 8;
 
 // uses talking code
 const uint64_t M_SPEAKS            = 1<< 9;

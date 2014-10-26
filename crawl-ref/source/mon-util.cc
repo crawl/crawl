@@ -1303,6 +1303,44 @@ bool mons_is_unique(monster_type mc)
     return mons_class_flag(mc, M_UNIQUE);
 }
 
+/**
+ * Can this type of monster be blinded?
+ *
+ * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
+ * or no eyes, are completely immune to blinding.
+ *
+ * Note that 'dazzling' (from dazzling spray) has additional restrictions above
+ * this.
+ *
+ * @param mc    The class of monster in question.
+ * @return      Whether monsters of this type can get ENCH_BLIND.
+ */
+bool mons_can_be_blinded(monster_type mc)
+{
+    return !mons_class_flag(mc, M_UNBLINDABLE);
+}
+
+
+/**
+ * Can this kind of monster be dazzled?
+ *
+ * The undead, nonliving, vegetative, or unblindable cannot be dazzled.
+ *
+ * @param mc    The class of monster in question.
+ * @return      Whether monsters of this type can get ENCH_BLIND from Dazzling
+ *              Spray.
+ */
+bool mons_can_be_dazzled(monster_type mc)
+{
+    // This was implemented by checking type so that we could use it in
+    // monster descriptions (which only have mon_info structs); not sure if
+    // that's useful
+
+    const mon_holy_type holiness = mons_class_holiness(mc);
+    return holiness != MH_UNDEAD && holiness != MH_NONLIVING
+           && holiness != MH_PLANT && mons_can_be_blinded(mc);
+}
+
 ucs_t mons_char(monster_type mc)
 {
     return monster_symbols[mc].glyph;
