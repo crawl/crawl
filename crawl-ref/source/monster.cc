@@ -1320,7 +1320,7 @@ bool monster::drop_item(int eslot, int near)
                  pitem->quantity > 1 ? "them" : "it");
         }
 
-        item_was_destroyed(*pitem, mindex());
+        item_was_destroyed(*pitem);
         destroy_item(item_index);
     }
     else
@@ -6444,9 +6444,9 @@ void monster::steal_item_from_player()
             }
 
             bolt beem;
-            beem.source      = pos();
-            beem.target      = pos();
-            beem.beam_source = mindex();
+            beem.source    = pos();
+            beem.target    = pos();
+            beem.source_id = mid;
 
             // Try to teleport away.
             if (no_tele())

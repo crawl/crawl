@@ -250,12 +250,12 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
         const mid_t refl_mid = mon.props["iood_reflector"].get_int64();
 
         if (refl_mid == MID_PLAYER)
-            beam.reflector = NON_MONSTER;
+            beam.reflector = MID_PLAYER;
         else
         {
             // If the reflecting monster has died, credit the original caster.
             const monster * const rmon = monster_by_mid(refl_mid);
-            beam.reflector = rmon ? rmon->mindex() : caster->mindex();
+            beam.reflector = rmon ? refl_mid : caster->mid;
         }
     }
     beam.colour = WHITE;

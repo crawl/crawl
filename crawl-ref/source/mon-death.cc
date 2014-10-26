@@ -1176,7 +1176,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
 {
     beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.beam_source  = origin.mindex();
+    beam.source_id    = origin.mid;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = origin.pos();
     beam.source_name  = origin.base_name(DESC_BASENAME, true);

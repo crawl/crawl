@@ -284,7 +284,7 @@ void handle_monster_shouts(monster* mons, bool force)
     }
 
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, mons->pos(), mons->mindex());
+    const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
 
     if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
@@ -486,7 +486,7 @@ void apply_noises()
 // noisy() has a messaging service for giving messages to the player
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
-           const char *msg, int who, noise_flag_type flags,
+           const char *msg, mid_t who, noise_flag_type flags,
            bool fake_noise)
 {
     ASSERT_IN_BOUNDS(where);
@@ -540,7 +540,7 @@ bool noisy(int original_loudness, const coord_def& where,
     return false;
 }
 
-bool noisy(int loudness, const coord_def& where, int who,
+bool noisy(int loudness, const coord_def& where, mid_t who,
            noise_flag_type flags)
 {
     return noisy(loudness, where, NULL, who, flags);
@@ -549,7 +549,7 @@ bool noisy(int loudness, const coord_def& where, int who,
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, NULL, -1, NF_NONE, true);
+    return noisy(loudness, where, NULL, MID_NOBODY, NF_NONE, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
@@ -852,7 +852,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     {
         if (mons->alive()
             && !mons_just_slept(mons)
-            && mons->mindex() != noise.noise_producer_id)
+            && mons->mid != noise.noise_producer_mid)
         {
             const coord_def perceived_position =
                 noise_perceived_position(mons, pos, noise);
@@ -1081,7 +1081,7 @@ static void _actor_apply_noise(actor *act,
     else
     {
         monster *mons = act->as_monster();
-        actor *source = actor_by_mid(noise.noise_producer_id);
+        actor *source = actor_by_mid(noise.noise_producer_mid);
         // If the noise came from the character, any nearby monster
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)

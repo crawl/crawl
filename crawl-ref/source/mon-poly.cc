@@ -76,7 +76,7 @@ void monster_drop_things(monster* mons,
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
             if (summoned_item)
             {
-                item_was_destroyed(mitm[item], mons->mindex());
+                item_was_destroyed(mitm[item]);
                 destroy_item(item);
             }
             else

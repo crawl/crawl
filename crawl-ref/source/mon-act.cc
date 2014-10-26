@@ -1114,7 +1114,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
 static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
 {
     beem.name         = from.name;
-    beem.beam_source  = mons->mindex();
+    beem.source_id    = mons->mid;
     beem.source       = mons->pos();
     beem.colour       = from.colour;
     beem.range        = from.range;
@@ -2259,9 +2259,9 @@ void handle_monster_move(monster* mons)
     {
         bolt beem;
 
-        beem.source      = mons->pos();
-        beem.target      = mons->target;
-        beem.beam_source = mons->mindex();
+        beem.source    = mons->pos();
+        beem.target    = mons->target;
+        beem.source_id = mons->mid;
 
         // XXX: Otherwise perma-confused monsters can almost never properly
         // aim spells, since their target is constantly randomized.
@@ -3061,7 +3061,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         }
 
         if (quant >= si->quantity)
-            item_was_destroyed(*si, mons->mindex());
+            item_was_destroyed(*si);
         else if (is_perishable_stack(*si))
             for (int i = 0; i < quant; ++i)
                 remove_oldest_perishable_item(*si);
@@ -4057,14 +4057,14 @@ static bool _monster_move(monster* mons)
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
                          mons->name(DESC_THE).c_str());
                 }
-                noisy(noise_level, mons->pos(), mons->mindex());
+                noisy(noise_level, mons->pos(), mons->mid);
             }
             else if (one_chance_in(5))
                 handle_monster_shouts(mons, true);
             else
             {
                 // Just be noisy without messaging the player.
-                noisy(noise_level, mons->pos(), mons->mindex());
+                noisy(noise_level, mons->pos(), mons->mid);
             }
         }
     }

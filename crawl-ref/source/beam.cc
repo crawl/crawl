@@ -137,18 +137,15 @@ void bolt::emit_message(const char* m)
 
 kill_category bolt::whose_kill() const
 {
-    if (YOU_KILL(thrower) || beam_source == YOU_FAULTLESS)
+    if (YOU_KILL(thrower) || source_id == MID_YOU_FAULTLESS)
         return KC_YOU;
     else if (MON_KILL(thrower))
     {
-        if (beam_source == ANON_FRIENDLY_MONSTER)
+        if (source_id == MID_ANON_FRIEND)
             return KC_FRIENDLY;
-        if (!invalid_monster_index(beam_source))
-        {
-            const monster* mon = &menv[beam_source];
-            if (mon->friendly())
-                return KC_FRIENDLY;
-        }
+        const monster* mon = monster_by_mid(source_id);
+        if (mon && mon->friendly())
+            return KC_FRIENDLY;
     }
     return KC_OTHER;
 }
@@ -288,12 +285,12 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
         pbolt.name = "unimportant";
     }
 
-    pbolt.is_tracer      = true;
-    pbolt.source         = you.pos();
-    pbolt.beam_source    = MHITYOU;
-    pbolt.smart_monster  = true;
-    pbolt.attitude       = ATT_FRIENDLY;
-    pbolt.thrower        = KILL_YOU_MISSILE;
+    pbolt.is_tracer     = true;
+    pbolt.source        = you.pos();
+    pbolt.source_id     = MID_PLAYER;
+    pbolt.smart_monster = true;
+    pbolt.attitude      = ATT_FRIENDLY;
+    pbolt.thrower       = KILL_YOU_MISSILE;
 
 
     // Init tracer variables.
@@ -476,7 +473,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 bool bolt::can_affect_actor(const actor *act) const
 {
     // Blinkbolt doesn't hit its caster, since they are the bolt.
-    if (origin_spell == SPELL_BLINKBOLT && act->mindex() == beam_source)
+    if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
     map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
@@ -594,9 +591,10 @@ void bolt::initialise_fire()
     ASSERT(!drop_item || item && item->defined());
     ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",
             name.c_str(),
-            ((beam_source == NON_MONSTER && source == you.pos()) ? "player"
-             : (!invalid_monster_index(beam_source)
-                ? menv[beam_source].name(DESC_PLAIN, true) : "unknown")).c_str(),
+            (source_id == MID_PLAYER ? "player" :
+                          monster_by_mid(source_id) ?
+                             monster_by_mid(source_id)->name(DESC_PLAIN, true) :
+                          "unknown").c_str(),
             (item ? item->name(DESC_PLAIN, false, true) : "none").c_str());
     ASSERT(!aimed_at_feet || source == target);
 
@@ -1003,7 +1001,7 @@ void bolt::destroy_wall_effect()
 
     if (feat == DNGN_ORCISH_IDOL)
     {
-        if (beam_source == NON_MONSTER || beam_source == MHITYOU)
+        if (source_id == MID_PLAYER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
     else if (feat_is_tree(feat))
@@ -1380,7 +1378,7 @@ void bolt::do_fire()
     }
 
     // Reactions if a monster zapped the beam.
-    if (!invalid_monster_index(beam_source))
+    if (monster_by_mid(source_id))
     {
         if (foe_info.hurt == 0 && friend_info.hurt > 0)
             xom_is_stimulated(100);
@@ -1390,11 +1388,11 @@ void bolt::do_fire()
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
-        const monster* mon = &menv[beam_source];
+        const monster* mon = monster_by_mid(source_id);
         if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
-            you.pet_target = beam_source;
+            you.pet_target = mon->mindex();
         }
     }
 }
@@ -2163,7 +2161,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
     pbolt.source        = mons->pos();
-    pbolt.beam_source   = mons->mindex();
+    pbolt.source_id     = mons->mid;
     pbolt.smart_monster = (mons_intel(mons) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(mons);
 
@@ -2268,7 +2266,7 @@ void bolt_parent_init(bolt *parent, bolt *child)
     child->name           = parent->name;
     child->short_name     = parent->short_name;
     child->aux_source     = parent->aux_source;
-    child->beam_source    = parent->beam_source;
+    child->source_id      = parent->source_id;
     child->origin_spell   = parent->origin_spell;
     child->glyph          = parent->glyph;
     child->colour         = parent->colour;
@@ -2565,7 +2563,7 @@ void bolt::affect_endpoint()
         // Digging can target squares on the map boundary, though it
         // won't remove them of course.
         const coord_def noise_position = clamp_in_bounds(pos());
-        noisy(loudness, noise_position, beam_source);
+        noisy(loudness, noise_position, source_id);
         noise_generated = true;
     }
 
@@ -2649,9 +2647,9 @@ void bolt::drop_object()
         {
             mprf("%s %s!",
                  item->name(DESC_THE).c_str(),
-                 summoned_poof_msg(beam_source, *item).c_str());
+                 summoned_poof_msg(agent()->as_monster(), *item).c_str());
         }
-        item_was_destroyed(*item, beam_source);
+        item_was_destroyed(*item);
         return;
     }
 
@@ -2673,7 +2671,7 @@ void bolt::drop_object()
         copy_item_to_grid(*item, pos(), 1);
     }
     else
-        item_was_destroyed(*item, NON_MONSTER);
+        item_was_destroyed(*item);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -2935,8 +2933,7 @@ void bolt::affect_place_explosion_clouds()
 void bolt::internal_ouch(int dam)
 {
     monster* monst = NULL;
-    if (!invalid_monster_index(beam_source))
-        monst = &menv[beam_source];
+    monst = monster_by_mid(source_id);
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
 
@@ -2955,18 +2952,20 @@ void bolt::internal_ouch(int dam)
                        || monst->type == MONS_BALL_LIGHTNING
                        || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
-        ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
+        ouch(dam, actor_to_death_source(agent()), KILLED_BY_SPORE,
+             aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
-        ouch(dam, beam_source, KILLED_BY_DISINT, what, true,
+        ouch(dam, actor_to_death_source(agent()), KILLED_BY_DISINT, what, true,
              source_name.empty() ? NULL : source_name.c_str());
     }
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
         if (reflections > 0)
-            ouch(dam, reflector, KILLED_BY_REFLECTION, name.c_str());
+            ouch(dam, actor_to_death_source(actor_by_mid(reflector)),
+                 KILLED_BY_REFLECTION, name.c_str());
         else if (bounces > 0)
             ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE, name.c_str());
         else
@@ -2978,10 +2977,12 @@ void bolt::internal_ouch(int dam)
         }
     }
     else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
-        ouch(dam, beam_source, KILLED_BY_BEAM, aux_source.c_str(), true,
+        ouch(dam, actor_to_death_source(agent()), KILLED_BY_BEAM,
+             aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
-        ouch(dam, beam_source, KILLED_BY_WILD_MAGIC, aux_source.c_str());
+        ouch(dam, actor_to_death_source(agent()), KILLED_BY_WILD_MAGIC,
+             aux_source.c_str());
 }
 
 // [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
@@ -3037,7 +3038,7 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
 
 string bolt::zapper() const
 {
-    const actor* beam_src = beam_source_as_target();
+    const actor* beam_src = agent();
     if (!beam_src)
         return "";
     else if (beam_src->is_player())
@@ -3212,12 +3213,12 @@ void bolt::reflect()
     bounce_pos.reset();
 
     if (pos() == you.pos())
-        reflector = NON_MONSTER;
+        reflector = MID_PLAYER;
     else if (monster* m = monster_at(pos()))
-        reflector = m->mindex();
+        reflector = m->mid;
     else
     {
-        reflector = -1;
+        reflector = MID_NOBODY;
 #ifdef DEBUG
         dprf(DIAG_BEAM, "Bolt reflected by neither player nor "
              "monster (bolt = %s, item = %s)", name.c_str(),
@@ -3418,10 +3419,10 @@ void bolt::affect_player_enchantment(bool resistible)
 
         // Give a message.
         bool need_msg = true;
-        if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
+        if (thrower != KILL_YOU_MISSILE)
         {
-            monster* mon = &menv[beam_source];
-            if (!mon->observable())
+            const monster* mon = monster_by_mid(source_id);
+            if (mon && !mon->observable())
             {
                 mprf("Something tries to affect you, but you %s.",
                      you.res_magic() == MAG_IMMUNE ? "are unaffected"
@@ -3789,7 +3790,7 @@ void bolt::affect_player_enchantment(bool resistible)
         if (mons_att_wont_attack(attitude))
         {
             friend_info.hurt++;
-            if (beam_source == NON_MONSTER)
+            if (source_id == MID_PLAYER)
             {
                 // Beam from player rebounded and hit player.
                 if (!aimed_at_feet)
@@ -3966,7 +3967,7 @@ void bolt::affect_player()
         {
             if (player_caught_in_net())
             {
-                if (beam_source != NON_MONSTER)
+                if (monster_by_mid(source_id))
                     xom_is_stimulated(50);
                 was_affected = true;
             }
@@ -4036,7 +4037,7 @@ void bolt::affect_player()
             // Beam from player rebounded and hit player.
             // Xom's amusement at the player's being damaged is handled
             // elsewhere.
-            if (beam_source == NON_MONSTER)
+            if (source_id == MID_PLAYER)
             {
                 if (!aimed_at_feet)
                     xom_is_stimulated(200);
@@ -4052,7 +4053,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        splash_with_acid(5, beam_source, affects_items);
+        splash_with_acid(5, actor_to_death_source(agent()), affects_items);
 
     extra_range_used += range_used_on_hit();
 
@@ -4104,20 +4105,6 @@ int bolt::apply_AC(const actor *victim, int hurted)
     return victim->apply_ac(hurted, 0, ac_rule);
 }
 
-const actor* bolt::beam_source_as_target() const
-{
-    // This looks totally wrong. Preserving old behaviour for now, but it
-    // probably needs to be investigated and rewritten (like most of beam
-    // blaming). -- 1KB
-    if (MON_KILL(thrower) || thrower == KILL_MISCAST)
-    {
-        if (beam_source == MHITYOU)
-            return &you;
-        return invalid_monster_index(beam_source) ? 0 : &menv[beam_source];
-    }
-    return thrower == KILL_MISC ? 0 : &you;
-}
-
 void bolt::update_hurt_or_helped(monster* mon)
 {
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -4143,7 +4130,7 @@ void bolt::update_hurt_or_helped(monster* mon)
             friend_info.hurt++;
 
             // Harmful beam from this monster rebounded and hit the monster.
-            if (!is_tracer && mon->mindex() == beam_source)
+            if (!is_tracer && mon->mid == source_id)
                 xom_is_stimulated(100);
         }
         else if (nice_to(mon))
@@ -4390,10 +4377,10 @@ void bolt::enchantment_affect_monster(monster* mon)
             }
         }
         if (flavour != BEAM_HIBERNATION || !mon->asleep())
-            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+            behaviour_event(mon, ME_ANNOY, agent());
     }
     else
-        behaviour_event(mon, ME_ALERT, beam_source_as_target());
+        behaviour_event(mon, ME_ALERT, agent());
 
     enable_attack_conducts(conducts);
 
@@ -4460,7 +4447,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
 }
 
 static void _glaciate_freeze(monster* mon, killer_type englaciator,
-                             int beam_source)
+                             int kindex)
 {
     const coord_def where = mon->pos();
     const monster_type pillar_type =
@@ -4471,7 +4458,7 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
     simple_monster_message(mon, " is frozen into a solid block of ice!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
-    int corpse = monster_die(mon, englaciator, beam_source);
+    int corpse = monster_die(mon, englaciator, kindex);
     if (corpse != -1)
         destroy_item(corpse);
 
@@ -4511,7 +4498,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
         // Don't immediately turn insane monsters hostile.
         if (m_brand != SPMSL_FRENZY)
-            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+            behaviour_event(mon, ME_ANNOY, agent());
 
         // Don't allow needles of sleeping to awaken monsters.
         if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
@@ -4632,7 +4619,8 @@ void bolt::beam_hits_actor(actor *act)
         if (act->is_monster())
             act->as_monster()->speed_increment -= random2(6) + 4;
 
-        act->apply_location_effects(oldpos, killer(), beam_source);
+        act->apply_location_effects(oldpos, killer(),
+                                    actor_to_death_source(agent()));
     }
 }
 
@@ -4903,7 +4891,7 @@ void bolt::affect_monster(monster* mon)
     // Also exempting miscast explosions from this conduct -cao
     if (you_worship(GOD_FEDHAS)
         && (flavour == BEAM_SPORE
-            || beam_source == NON_MONSTER
+            || source_id == MID_PLAYER
                && aux_source.find("your miscasting") != string::npos))
     {
         conducts[0].enabled = false;
@@ -4911,7 +4899,7 @@ void bolt::affect_monster(monster* mon)
 
     if (!is_explosion && !noise_generated)
     {
-        heard = noisy(loudness, pos(), beam_source) || heard;
+        heard = noisy(loudness, pos(), source_id) || heard;
         noise_generated = true;
     }
 
@@ -4978,15 +4966,16 @@ void bolt::affect_monster(monster* mon)
     {
         // Preserve name of the source monster if it winds up killing
         // itself.
-        if (mon->mindex() == beam_source && source_name.empty())
+        if (mon->mid == source_id && source_name.empty())
             source_name = mon->name(DESC_A, true);
 
+        int kindex = actor_to_death_source(agent());
         if (name == "great icy blast"
             && !mon->is_insubstantial()
             && x_chance_in_y(3, 5))
         {
             // Includes monster_die as part of converting to block of ice.
-            _glaciate_freeze(mon, thrower, beam_source);
+            _glaciate_freeze(mon, thrower, kindex);
         }
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
@@ -5000,13 +4989,12 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            monster_die(mon, KILL_MON, /*beam_source_as_target()*/beam_source);
+            monster_die(mon, KILL_MON, kindex);
         }
         else
         {
             killer_type ref_killer = thrower;
-            int kindex = /*beam_source_as_target()*/beam_source;
-            if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
+            if (!YOU_KILL(thrower) && reflector == MID_PLAYER)
             {
                 ref_killer = KILL_YOU_MISSILE;
                 kindex = YOU_FAULTLESS;
@@ -5708,7 +5696,7 @@ int bolt::range_used_on_hit() const
         used = 1;
 
     // Assume we didn't hit, after all.
-    if (is_tracer && beam_source == NON_MONSTER && used > 0
+    if (is_tracer && source_id == MID_PLAYER && used > 0
         && hit < AUTOMATIC_HIT)
     {
         return 0;
@@ -5975,7 +5963,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
         const coord_def noise_position = clamp_in_bounds(pos());
-        bool heard_expl = noisy(loudness, noise_position, beam_source);
+        bool heard_expl = noisy(loudness, noise_position, source_id);
 
         heard = heard || heard_expl;
 
@@ -6150,8 +6138,10 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             continue;
 
         // If we were at a wall, only move to visible squares.
-        coord_def caster_pos = (invalid_monster_index(beam_source) ? you.pos()
-                                                     : menv[beam_source].pos());
+        coord_def caster_pos = actor_by_mid(source_id) ?
+                                   actor_by_mid(source_id)->pos() :
+                                   you.pos();
+
         if (at_wall && !cell_see_cell(caster_pos, loc + Compass[i], LOS_NO_TRANS))
             continue;
 
@@ -6275,7 +6265,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
                real_flavour(BEAM_MAGIC), drop_item(false), item(NULL),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
-               thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT),
+               thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
                loudness(0), noise_msg(), is_beam(false), is_explosion(false),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
@@ -6296,7 +6286,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
-               reflections(0), reflector(-1), auto_hit(false)
+               reflections(0), reflector(MID_NOBODY), auto_hit(false)
 {
 }
 
@@ -6357,33 +6347,30 @@ void bolt::set_agent(actor *actor)
     if (!actor)
         return;
 
+    source_id = actor->mid;
+
     if (actor->is_player())
         thrower = KILL_YOU_MISSILE;
     else
-    {
         thrower = KILL_MON_MISSILE;
-        beam_source = actor->mindex();
-    }
 }
 
 actor* bolt::agent(bool ignore_reflection) const
 {
     killer_type nominal_ktype = thrower;
-    int nominal_source = beam_source;
+    mid_t nominal_source = source_id;
 
     // If the beam was reflected report a different point of origin
     if (reflections > 0 && !ignore_reflection)
     {
-        if (reflector == NON_MONSTER || beam_source == NON_MONSTER)
+        if (reflector == MID_PLAYER || source_id == MID_PLAYER)
             return &menv[YOU_FAULTLESS];
         nominal_source = reflector;
     }
     if (YOU_KILL(nominal_ktype))
         return &you;
-    else if (!invalid_monster_index(nominal_source))
-        return &menv[nominal_source];
     else
-        return NULL;
+        return actor_by_mid(nominal_source);
 }
 
 bool bolt::is_enchantment() const

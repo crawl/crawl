@@ -873,7 +873,7 @@ void attack::chaos_affects_defender()
         if (beam.thrower == KILL_YOU || attacker->as_monster()->friendly())
             beam.attitude = ATT_FRIENDLY;
 
-        beam.beam_source = attacker->mindex();
+        beam.source_id = attacker->mid;
 
         beam.source = defender->pos();
         beam.target = defender->pos();
@@ -1819,9 +1819,9 @@ bool attack::apply_damage_brand(const char *what)
 
         // Declaring these just to pass to the enchant function.
         bolt beam_temp;
-        beam_temp.thrower = attacker->is_player() ? KILL_YOU : KILL_MON;
-        beam_temp.flavour = BEAM_CONFUSION;
-        beam_temp.beam_source = attacker->mindex();
+        beam_temp.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
+        beam_temp.flavour   = BEAM_CONFUSION;
+        beam_temp.source_id = attacker->mid;
         beam_temp.apply_enchantment_to_monster(defender->as_monster());
         obvious_effect = beam_temp.obvious_effect;
 

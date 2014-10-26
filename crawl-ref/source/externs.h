@@ -282,10 +282,11 @@ struct run_check_dir
  */
 typedef uint32_t mid_t;
 #define PRImidt PRIu32
-#define MID_PLAYER      ((mid_t)0xffffffff)
+#define MID_NOBODY        ((mid_t)0x00000000)
+#define MID_PLAYER        ((mid_t)0xffffffff)
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.
-#define MID_ANON_FRIEND ((mid_t)0xffff0000)
+#define MID_ANON_FRIEND   ((mid_t)0xffff0000)
 #define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
 /// Upper bound on the number of monsters that can ever exist in a game.
 #define MID_FIRST_NON_MONSTER MID_ANON_FRIEND

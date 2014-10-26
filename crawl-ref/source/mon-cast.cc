@@ -281,7 +281,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
-    beam.beam_source = mons->mindex();
+    beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
@@ -1159,7 +1159,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // Setting this to a more realistic number now that that bug is
     // squashed.
     pbolt.ench_power = 4 * mons->spell_hd(spell_cast);
-    pbolt.beam_source = mons->mindex();
+    pbolt.source_id = mons->mid;
 
     // Convenience for the hapless innocent who assumes that this
     // damn function does all possible setup. [ds]
@@ -1603,7 +1603,7 @@ static int _battle_cry(const monster* chief, bool check_only = false)
         if (affected)
         {
             // The yell happens whether you happen to see it or not.
-            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
+            noisy(LOS_RADIUS, chief->pos(), chief->mid);
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
@@ -2818,7 +2818,7 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
 
     bolt tracer;
     tracer.foe_ratio = 80;
-    tracer.beam_source = agent->mindex();
+    tracer.source_id = agent->mid;
     tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
@@ -6451,7 +6451,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         if (silent)
             return;
 
-        noisy(noise, mons->pos(), mons->mindex(), noise_flags);
+        noisy(noise, mons->pos(), mons->mid, noise_flags);
         return;
     }
 
@@ -6487,7 +6487,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
-    else if (noisy(noise, mons->pos(), mons->mindex(), noise_flags) || !unseen)
+    else if (noisy(noise, mons->pos(), mons->mid, noise_flags) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
@@ -6499,11 +6499,11 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
  *
  * @param mons      The monster thinking about tentacle-throwing.
  * @return          The mid_t of the best victim for the monster to throw.
- *                  Could be player, another monster, or 0 (none).
+ *                  Could be player, another monster, or MID_NOBODY (none).
  */
 static mid_t _get_tentacle_throw_victim(const monster &mons)
 {
-    mid_t throw_choice = 0;
+    mid_t throw_choice = MID_NOBODY;
     int highest_dur = -1;
 
     if (!mons.constricting)
@@ -6823,7 +6823,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(mons);
 
-    noisy(LOS_RADIUS, mons->pos(), mons->mindex(), NF_SIREN);
+    noisy(LOS_RADIUS, mons->pos(), mons->mid, NF_SIREN);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
@@ -7195,9 +7195,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_PORTAL_PROJECTILE:
     {
         bolt beam;
-        beam.source      = mon->pos();
-        beam.target      = mon->target;
-        beam.beam_source = mon->mindex();
+        beam.source    = mon->pos();
+        beam.target    = mon->target;
+        beam.source_id = mon->mid;
         return !handle_throw(mon, beam, true, true);
     }
 
@@ -7299,7 +7299,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return _mons_mass_confuse(mon, false) < 0;
 
     case SPELL_TENTACLE_THROW:
-        return !_get_tentacle_throw_victim(*mon);
+        return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
 
     case SPELL_CREATE_TENTACLES:
         return !_mons_available_tentacles(mon);

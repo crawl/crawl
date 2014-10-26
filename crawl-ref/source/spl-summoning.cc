@@ -2835,7 +2835,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         else
         {
             testbeam.thrower = KILL_MON_MISSILE;
-            testbeam.beam_source = agent->mindex();
+            testbeam.source_id = agent->mid;
         }
 
         testbeam.is_tracer = true;

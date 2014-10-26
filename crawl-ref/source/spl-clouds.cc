@@ -115,7 +115,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour     = BEAM_MEPHITIC;
     beem.ench_power  = pow;
-    beem.beam_source = MHITYOU;
+    beem.source_id   = MID_PLAYER;
     beem.thrower     = KILL_YOU;
     beem.is_beam     = false;
     beem.is_explosion = true;

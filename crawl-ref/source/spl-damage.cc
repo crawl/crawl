@@ -105,7 +105,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.real_flavour = beam.flavour;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
-    beam.beam_source  = source->mindex();
+    beam.source_id    = source->mid;
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
         source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
@@ -167,7 +167,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTRED;
-    beam.beam_source       = MHITYOU;
+    beam.source_id         = MID_PLAYER;
     beam.thrower           = KILL_YOU;
     beam.obvious_effect    = false;
     beam.is_beam           = false;
@@ -223,7 +223,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             die("buggy chain spell %d cast", spell_cast);
             break;
     }
-    beam.beam_source    = caster->mindex();
+    beam.source_id      = caster->mid;
     beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
@@ -626,7 +626,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     int total_damage = 0;
 
     bolt beam;
-    beam.beam_source = (mons) ? mons->mindex() : MHITNOT;
+    beam.source_id = agent->mid;
     beam.foe_ratio = 80;
 
     switch (spell)
@@ -1347,7 +1347,7 @@ bool mons_shatter(monster* caster, bool actual)
         }
         else
         {
-            noisy(spell_effect_noise(SPELL_SHATTER), caster->pos(), caster->mindex());
+            noisy(spell_effect_noise(SPELL_SHATTER), caster->pos(), caster->mid);
             mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
                  caster->name(DESC_THE).c_str());
         }
@@ -2057,7 +2057,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 {
     beam.flavour     = BEAM_FRAG;
     beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.beam_source = caster->mindex();
+    beam.source_id   = caster->mid;
     beam.thrower     = caster->is_player() ? KILL_YOU : KILL_MON;
     beam.ex_size     = 1;
     beam.source      = you.pos();
@@ -3023,7 +3023,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     beam.colour            = WHITE;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
-    beam.beam_source       = caster->mindex();
+    beam.source_id         = caster->mid;
     beam.hit_verb          = "engulfs";
     beam.set_agent(caster);
 #ifdef USE_TILE

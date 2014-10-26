@@ -631,12 +631,12 @@ void item_was_lost(const item_def &item)
     xom_check_lost_item(item);
 }
 
-void item_was_destroyed(const item_def &item, int cause)
+void item_was_destroyed(const item_def &item)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
-    xom_check_destroyed_item(item, cause);
+    xom_check_destroyed_item(item);
 }
 
 void lose_item_stack(const coord_def& where)
@@ -2014,7 +2014,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item);
         destroy_item(ob);
         ob = NON_ITEM;
 
@@ -2139,7 +2139,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
         if (item_is_spellbook(item))
             destroy_spellbook(item);
 
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item);
 
         return true;
     }

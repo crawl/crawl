@@ -4603,7 +4603,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 
     bolt beam;
     beam.name        = "****";
-    beam.beam_source = you.mindex();
+    beam.source_id   = MID_PLAYER;
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
     beam.range       = LOS_RADIUS;
@@ -6014,7 +6014,7 @@ bool ru_power_leap()
     wave.thrower = KILL_YOU;
     wave.name = "power leap";
     wave.source_name = "you";
-    wave.beam_source = you.mindex();
+    wave.source_id = MID_PLAYER;
     wave.flavour = BEAM_VISUAL;
     wave.colour = BROWN;
     wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
