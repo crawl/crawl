@@ -4563,10 +4563,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     int sumcount2;
     int duration = 0;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
+    dprf("Mon #%d casts %s (#%d)",
          mons->mindex(), spell_title(spell_cast), spell_cast);
-#endif
 
     bool orig_noise = do_noise;
 
