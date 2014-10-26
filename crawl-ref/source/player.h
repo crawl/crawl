@@ -256,10 +256,10 @@ public:
 
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
-  vector<int> beholders;
+  vector<mid_t> beholders;
 
   // monsters causing fear to the player; see above
-  vector<int> fearmongers;
+  vector<mid_t> fearmongers;
 
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.

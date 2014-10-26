@@ -1552,11 +1552,11 @@ static void tag_construct_you(writer &th)
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
-         marshallShort(th, you.beholders[k]);
+         _marshall_as_int<mid_t>(th, you.beholders[k]);
 
     marshallShort(th, you.fearmongers.size());
     for (unsigned int k = 0; k < you.fearmongers.size(); k++)
-        marshallShort(th, you.fearmongers[k]);
+        _marshall_as_int<mid_t>(th, you.fearmongers[k]);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -2924,13 +2924,33 @@ static void tag_read_you(reader &th)
     count = unmarshallShort(th);
     ASSERT(count >= 0);
     for (i = 0; i < count; i++)
-        you.beholders.push_back(unmarshallShort(th));
+    {
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MID_BEHOLDERS)
+    {
+        unmarshallShort(th);
+        you.duration[DUR_MESMERISED] = 0;
+    }
+    else
+#endif
+        you.beholders.push_back(unmarshall_int_as<mid_t>(th));
+    }
 
     // Also usually empty.
     count = unmarshallShort(th);
     ASSERT(count >= 0);
     for (i = 0; i < count; i++)
-        you.fearmongers.push_back(unmarshallShort(th));
+    {
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MID_BEHOLDERS)
+    {
+        unmarshallShort(th);
+        you.duration[DUR_AFRAID] = 0;
+    }
+    else
+#endif
+        you.fearmongers.push_back(unmarshall_int_as<mid_t>(th));
+    }
 
     you.piety_hysteresis = unmarshallByte(th);
 
