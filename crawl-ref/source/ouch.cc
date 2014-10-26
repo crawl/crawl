@@ -251,7 +251,16 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
+        {
+            if (hurted < original)
+                canned_msg(MSG_YOU_RESIST);
+            else if (hurted > original)
+            {
+                mpr("The negative energy saps you greatly!");
+                xom_is_stimulated(200);
+            }
             drain_player(min(75, 35 + original * 2 / 3), true);
+        }
         break;
 
     case BEAM_ICE:
@@ -340,6 +349,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                           hurted, true);
             if (hurted < original && doEffects)
                 canned_msg(MSG_YOU_PARTIALLY_RESIST);
+            else if (hurted > original && doEffects)
+            {
+                mpr("The flames sap you greatly!");
+                xom_is_stimulated(200);
+            }
         }
     }
 

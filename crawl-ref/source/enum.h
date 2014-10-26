@@ -1716,6 +1716,7 @@ enum duration_type
     DUR_FORTITUDE,
     DUR_HORROR,
     DUR_NO_SCROLLS,
+    DUR_NEGATIVE_VULN,
     NUM_DURATIONS
 };
 
@@ -1856,6 +1857,7 @@ enum enchant_type
     ENCH_DRAINED,
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
+    ENCH_NEGATIVE_VULN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
