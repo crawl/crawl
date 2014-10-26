@@ -108,9 +108,8 @@ function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
 end
 
 function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
-  local pos = dgn.point(marker:pos())
-  slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                             data.teleport_spot)
+  local slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                   data.teleport_spot)
   you.teleport_to(slaves[1].x, slaves[1].y)
   crawl.mpr("Your surroundings suddenly seem different.")
 end
