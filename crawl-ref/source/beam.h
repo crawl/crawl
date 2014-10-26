@@ -210,8 +210,6 @@ private:
     bool can_see_invis() const;
     bool nightvision() const;
 
-    string zapper() const;
-
     set<string> message_cache;
     void emit_message(const char* msg);
     void step();
