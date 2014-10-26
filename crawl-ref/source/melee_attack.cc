@@ -2966,6 +2966,8 @@ void melee_attack::mons_apply_attack_flavour()
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOS)
         flavour = random_chaos_attack_flavour();
+    if (flavour == AF_SCARAB && coinflip())
+        flavour = AF_VAMPIRIC;
 
     switch (flavour)
     {
@@ -3362,19 +3364,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_SPEED:
-        if (x_chance_in_y(3, 5) && !defender->res_negative_energy())
-        {
-            if (needs_message)
-            {
-                mprf("%s %s %s vigor!",
-                     atk_name(DESC_THE).c_str(),
-                     attacker->conj_verb("drain").c_str(),
-                     def_name(DESC_ITS).c_str());
-            }
-
-            special_damage = 1 + random2(damage_done) / 2;
-            defender->slow_down(attacker, 5 + random2(7));
-        }
+        if (x_chance_in_y(3, 5))
+            drain_defender_speed();
         break;
 
     case AF_VULN:
@@ -3475,6 +3466,14 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         defender->expose_to_element(BEAM_FIRE, 2);
+        break;
+
+    case AF_SCARAB:
+        // vampiric case handled earlier
+        if (coinflip())
+            drain_defender();
+        else
+            drain_defender_speed();
         break;
     }
 }
