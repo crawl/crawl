@@ -1,5 +1,5 @@
-# Please remove the following on a TAG_MAJOR_VERSION bump.
-
+# Please remove the following code when the next line is false.
+# TAG_MAJOR_VERSION == 34
 {{
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
   -- the victims don't spawn before; do nothing
