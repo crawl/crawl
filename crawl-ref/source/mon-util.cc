@@ -3335,10 +3335,10 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
     // FIXME: this can cause problems with reflection, bounces, etc.
     // It would be better to have the monster fire logic never reach
     // this point for friendlies.
-    if (!invalid_monster_index(beam.beam_source))
+    if (monster_by_mid(beam.source_id))
     {
-        monster& m = menv[beam.beam_source];
-        if (m.alive() && m.friendly() && beam.target == you.pos())
+        monster* m = monster_by_mid(beam.source_id);
+        if (m->alive() && m->friendly() && beam.target == you.pos())
             return false;
     }
 

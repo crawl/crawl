@@ -372,13 +372,13 @@ void cleansing_flame(int pow, int caster, coord_def where,
 
     if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
     {
-        beam.thrower     = KILL_MISC;
-        beam.beam_source = NON_MONSTER;
+        beam.thrower   = KILL_MISC;
+        beam.source_id = MID_NOBODY;
     }
     else if (attacker && attacker->is_player())
     {
-        beam.thrower     = KILL_YOU;
-        beam.beam_source = NON_MONSTER;
+        beam.thrower   = KILL_YOU;
+        beam.source_id = MID_PLAYER;
     }
     else
     {
@@ -386,8 +386,8 @@ void cleansing_flame(int pow, int caster, coord_def where,
         // CLEANSING_FLAME_{GENERIC,TSO} which we handled above.
         ASSERT(attacker);
 
-        beam.thrower     = KILL_MON;
-        beam.beam_source = attacker->mindex();
+        beam.thrower   = KILL_MON;
+        beam.source_id = attacker->mid;
     }
 
     beam.explode();
@@ -557,7 +557,7 @@ void direct_effect(monster* source, spell_type spell,
         if (x_chance_in_y(4, 10))
         {
             pbolt.name = "reflection of chaos";
-            pbolt.beam_source = source->mindex();
+            pbolt.source_id = source->mid;
             pbolt.aux_source = "chaotic mirror";
             pbolt.hit = AUTOMATIC_HIT;
             pbolt.is_beam = true;
@@ -713,8 +713,9 @@ void direct_effect(monster* source, spell_type spell,
         if (def)
             def->hurt(source, damage_taken);
         else
-            ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM,
-                 pbolt.aux_source.c_str());
+            ouch(damage_taken,
+                 actor_to_death_source(actor_by_mid(pbolt.source_id)),
+                 KILLED_BY_BEAM, pbolt.aux_source.c_str());
     }
 }
 
@@ -1908,7 +1909,8 @@ static void _magic_contamination_effects()
         beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
         beam.target       = you.pos();
         beam.name         = "magical storm";
-        beam.beam_source  = NON_MONSTER;
+        //XXX: Should this be MID_PLAYER?
+        beam.source_id    = MID_NOBODY;
         beam.aux_source   = "a magical explosion";
         beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
         beam.ench_power   = div_rand_round(contam, 200);

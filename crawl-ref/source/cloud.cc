@@ -605,7 +605,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;
-    mid_t source        = 0;
+    mid_t source        = MID_NOBODY;
     if (agent && agent->is_player())
         whose = KC_YOU, killer = KILL_YOU_MISSILE, source = MID_PLAYER;
     else if (agent && agent->is_monster())
@@ -968,7 +968,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             beam.thrower = cloud.killer;
 
             if (cloud.whose == KC_FRIENDLY)
-                beam.beam_source = ANON_FRIENDLY_MONSTER;
+                beam.source_id = MID_ANON_FRIEND;
 
             if (mons_class_is_confusable(mons->type)
                 && _mephitic_cloud_roll(mons))
@@ -997,7 +997,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             beam.thrower = cloud.killer;
 
             if (cloud.whose == KC_FRIENDLY)
-                beam.beam_source = ANON_FRIENDLY_MONSTER;
+                beam.source_id = MID_ANON_FRIEND;
 
             beam.apply_enchantment_to_monster(mons);
             return true;

@@ -526,7 +526,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (agent->is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
-        beam.beam_source   = NON_MONSTER;
         beam.smart_monster = true;
         beam.thrower       = KILL_YOU_MISSILE;
     }
@@ -535,11 +534,11 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
-        beam.beam_source   = mon->mindex();
         beam.smart_monster = (mons_intel(mon) >= I_NORMAL);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
+    beam.source_id = agent->mid;
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
@@ -664,7 +663,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     if (act->is_player() || you.can_see(act))
         msg = NULL;
 
-    noisy(level, act->pos(), msg, act->mindex());
+    noisy(level, act->pos(), msg, act->mid);
 }
 
 // throw_it - currently handles player throwing only.  Monster
@@ -1010,7 +1009,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
 {
     // FIXME we should use a sensible range here
     beam.range = you.current_vision;
-    beam.beam_source = mons->mindex();
+    beam.source_id = mons->mid;
 
     beam.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
     beam.flavour = BEAM_MISSILE;

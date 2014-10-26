@@ -1511,7 +1511,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     {
         bolt tempbeam;
         bool found = false;
-        beam.beam_source = MHITYOU;
+        beam.source_id = MID_PLAYER;
         beam.range = range;
         beam.is_tracer = true;
         beam.is_targeting = true;

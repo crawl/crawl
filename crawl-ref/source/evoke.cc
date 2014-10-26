@@ -406,7 +406,7 @@ static void _fiery_explosion()
     beam.is_explosion  = true;
     beam.effect_known  = true;
     beam.thrower       = KILL_YOU;
-    beam.beam_source   = NON_MONSTER;
+    beam.source_id     = MID_NOBODY;
 
     beam.explode();
 }
@@ -1075,16 +1075,16 @@ static bool _lamp_of_fire()
             if (beams[n].source == beams[n].target)
                 continue;
 
-            beams[n].flavour     = BEAM_FIRE;
-            beams[n].colour      = RED;
-            beams[n].beam_source = MHITYOU;
-            beams[n].thrower     = KILL_YOU;
-            beams[n].is_beam     = true;
-            beams[n].name        = "trail of fire";
-            beams[n].hit         = 10 + (pow/8);
-            beams[n].damage      = dice_def(2, 5 + pow/4);
-            beams[n].ench_power  = 1 + (pow/10);
-            beams[n].loudness    = 5;
+            beams[n].flavour    = BEAM_FIRE;
+            beams[n].colour     = RED;
+            beams[n].source_id  = MID_PLAYER;
+            beams[n].thrower    = KILL_YOU;
+            beams[n].is_beam    = true;
+            beams[n].name       = "trail of fire";
+            beams[n].hit        = 10 + (pow/8);
+            beams[n].damage     = dice_def(2, 5 + pow/4);
+            beams[n].ench_power = 1 + (pow/10);
+            beams[n].loudness   = 5;
             beams[n].fire();
         }
 
@@ -1417,18 +1417,18 @@ static bool _stone_of_tremors()
     noisy(15, you.pos());
 
     bolt rubble;
-    rubble.name        = "falling rubble";
-    rubble.range       = 1;
-    rubble.hit         = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 2);
-    rubble.damage      = dice_def(3, 5 + you.skill(SK_EVOCATIONS));
-    rubble.beam_source = MHITYOU;
-    rubble.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
-    rubble.colour      = LIGHTGREY;
-    rubble.flavour     = BEAM_MMISSILE;
-    rubble.thrower     = KILL_YOU;
-    rubble.is_beam     = false;
-    rubble.loudness    = 10;
-    rubble.draw_delay  = 0;
+    rubble.name       = "falling rubble";
+    rubble.range      = 1;
+    rubble.hit        = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 2);
+    rubble.damage     = dice_def(3, 5 + you.skill(SK_EVOCATIONS));
+    rubble.source_id  = MID_PLAYER;
+    rubble.glyph      = dchar_glyph(DCHAR_FIRED_MISSILE);
+    rubble.colour     = LIGHTGREY;
+    rubble.flavour    = BEAM_MMISSILE;
+    rubble.thrower    = KILL_YOU;
+    rubble.is_beam    = false;
+    rubble.loudness   = 10;
+    rubble.draw_delay = 0;
 
     // Hit the affected area with falling rubble.
     for (unsigned int i = 0; i < rubble_pos.size(); ++i)

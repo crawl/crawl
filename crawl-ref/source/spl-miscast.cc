@@ -252,8 +252,12 @@ void MiscastEffect::init()
     if (cause.empty())
         cause = get_default_cause(false);
     beam.aux_source  = cause;
-    beam.beam_source = (0 <= kill_source && kill_source <= MHITYOU)
-                       ? kill_source : MHITNOT;
+    if (!invalid_monster_index(kill_source))
+        beam.source_id = menv[kill_source].mid;
+    else if (kill_source == MHITYOU)
+        beam.source_id = MID_PLAYER;
+    else
+        beam.source_id = MID_NOBODY;
     beam.thrower     = kt;
 }
 
@@ -499,9 +503,9 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     {
         // Those monsters of normal or greater intelligence will realize that they
         // were the source of the sound.
-        int src = target->is_player() ? you.mindex()
-                : mons_intel(target_as_monster()) >= I_NORMAL ? target->mindex()
-                : -1;
+        mid_t src = target->is_player() ? MID_PLAYER
+                    : mons_intel(target_as_monster()) >= I_NORMAL ? target->mid
+                    : MID_NOBODY;
         noisy(sound_loudness, target->pos(), src);
     }
 }

@@ -676,8 +676,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
-            int source = !m ? you.mindex() :
-                         mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
+            mid_t source = !m ? MID_PLAYER :
+                            mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
 
             noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
             if (crawl_state.game_is_zotdef())

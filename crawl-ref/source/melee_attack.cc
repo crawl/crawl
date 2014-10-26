@@ -2108,7 +2108,7 @@ void melee_attack::handle_noise(const coord_def & pos)
     level = min(12, level);
 
     if (level > 0)
-        noisy(level, pos, attacker->mindex());
+        noisy(level, pos, attacker->mid);
 
     noise_factor = 0;
 }

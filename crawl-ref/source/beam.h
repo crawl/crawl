@@ -63,9 +63,9 @@ struct bolt
     killer_type thrower;               // what kind of thing threw this?
     int         ex_size;               // explosion radius (0==none)
 
-    // beam_source can be -GOD_ENUM_VALUE besides monster indices
-    // and MHITNOT, MHITYOU.
-    int         beam_source;           // NON_MONSTER or monster index #
+    mid_t       source_id;             // The mid of the source (MID_NOBODY
+                                       // if not coming from a player or a
+                                       // monster).
     string      source_name;           // The name of the source, if it
                                        // should be different from
                                        // actor->name(), or the actor dies
@@ -139,7 +139,7 @@ struct bolt
                                  // reset if a reflection happens
 
     int         reflections;     // # times beam reflected off shields
-    int         reflector;       // latest thing to reflect beam
+    mid_t       reflector;       // latest thing to reflect beam
 
     bool        use_target_as_pos; // pos() should return ::target()
     bool        auto_hit;
@@ -209,8 +209,6 @@ private:
     bool need_regress() const;
     bool can_see_invis() const;
     bool nightvision() const;
-
-    const actor* beam_source_as_target() const;
 
     string zapper() const;
 

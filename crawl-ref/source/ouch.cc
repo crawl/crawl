@@ -1187,6 +1187,9 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
 
 int actor_to_death_source(const actor* agent)
 {
+    if (!agent)
+        return NON_MONSTER;
+
     if (agent->is_player())
         return NON_MONSTER;
     else if (agent->is_monster())

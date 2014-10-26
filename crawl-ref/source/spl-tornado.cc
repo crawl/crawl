@@ -384,7 +384,7 @@ void tornado_damage(actor *caster, int dur)
         }
     }
 
-    noisy(noise, org, caster->mindex());
+    noisy(noise, org, caster->mid);
 
     if (dur <= 0)
         return;

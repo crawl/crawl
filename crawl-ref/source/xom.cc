@@ -1850,7 +1850,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     beam.name         = "blast of lightning";
     beam.colour       = LIGHTCYAN;
     beam.thrower      = KILL_MISC;
-    beam.beam_source  = NON_MONSTER;
+    beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
     beam.ex_size      = 2;
     beam.is_explosion = true;
@@ -2150,7 +2150,7 @@ static int _xom_destruction(int sever, bool debug = false)
             beam.name         = "fireball";
             beam.colour       = RED;
             beam.thrower      = KILL_MISC;
-            beam.beam_source  = NON_MONSTER;
+            beam.source_id    = MID_NOBODY;
             beam.aux_source   = "Xom's destruction";
             beam.ex_size      = 1;
             beam.is_explosion = true;
@@ -3902,7 +3902,7 @@ void xom_check_lost_item(const item_def& item)
         xom_is_stimulated(50, "Xom snickers loudly.", true);
 }
 
-void xom_check_destroyed_item(const item_def& item, int cause)
+void xom_check_destroyed_item(const item_def& item)
 {
     int amusement = 0;
 

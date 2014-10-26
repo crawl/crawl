@@ -1700,7 +1700,7 @@ void zap_wand(int slot)
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 
-    beam.beam_source = MHITYOU;
+    beam.source_id = MID_PLAYER;
 
     if (inv_count() < 1)
     {
