@@ -1333,8 +1333,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_DEMONIC_CRAWLER;
     case MONS_ORB_SPIDER:
         return TILEP_MONS_ORB_SPIDER;
-    case MONS_DEATH_SCARAB:
-        return TILEP_MONS_DEATH_SCARAB;
 
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
@@ -1482,6 +1480,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILEP_MONS_BORING_BEETLE;
+    case MONS_DEATH_SCARAB:
+        return TILEP_MONS_DEATH_SCARAB;
 
     // cyclopes and giants ('C')
     case MONS_GIANT:
