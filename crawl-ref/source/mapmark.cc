@@ -852,7 +852,7 @@ map_cloud_spreader_marker::map_cloud_spreader_marker(const coord_def &p,
     }
     else
     {
-        agent_mid = NON_ENTITY;
+        agent_mid = 0;
         kcat = KC_OTHER;
     }
 }
