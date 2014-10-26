@@ -267,7 +267,8 @@ xxxxxxx
 ENDMAP
 
 NAME:  nrook_mini_backslash
-TAGS:  extra decor
+# "transparent" for connectivity checks, so neither side is isolated.
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf
 MAP
 ..xxx....
