@@ -6,7 +6,7 @@
 name = Abyss_walker
 species = mu
 background = ck
-weapon = flail
+weapon = mace
 restart_after_game = false
 show_more = false
 autofight_stop = 0
@@ -52,11 +52,12 @@ function ready()
     crawl.sendkeys("&tga2" .. eol .. esc)
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
+    crawl.sendkeys("&~J5" .. eol)
     --# re-enable monsters
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)
     --# exit the Abyss then go back, so it's not the special starting Abyss
-    crawl.sendkeys("&" .. string.char(2))
+    --crawl.sendkeys("&" .. string.char(2))
   elseif bot_start then
     bot_start = false
     crawl.enable_more(false)
