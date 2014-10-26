@@ -2654,6 +2654,17 @@ MAP
       ......      ......
 ENDMAP
 
+NAME: amethyst_killhole
+TAGS: extra decor
+DEPTH: D, Elf
+MAP
+x@xx
+xx.xxxx
+ xx.x.x
+  xx.xx
+   xxx 
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
