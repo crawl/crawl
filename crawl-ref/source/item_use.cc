@@ -43,6 +43,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "output.h"
+#include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -2877,8 +2878,7 @@ void read_scroll(int slot)
     }
 
     // Imperfect vision prevents players from reading actual content {dlb}:
-    if (player_mutation_level(MUT_BLURRY_VISION)
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
+    if (does_vision_blur())
     {
         mpr("The writing blurs in front of your eyes.");
         return;

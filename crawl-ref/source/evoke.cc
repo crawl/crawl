@@ -42,6 +42,7 @@
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "player.h"
 #include "player-stats.h"
 #include "godconduct.h"
 #include "shout.h"
@@ -426,8 +427,7 @@ void tome_of_power(int slot)
 
     you.turn_is_over = true;
 
-    if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
+    if (does_vision_blur())
     {
         mpr("The page is too blurry for you to read.");
         return;
