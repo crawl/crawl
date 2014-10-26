@@ -267,6 +267,19 @@ struct run_check_dir
     coord_def delta;
 };
 
+/**
+ * Persistent unique identifier for an actor.
+ *
+ * An mid_t is a persistent (across levels and across save/restore)
+ * and unique (within a given game) identifier for a monster, player,
+ * or fake actor.  The value 0 indicates "no actor", and any value
+ * greater than or equal to 0xffff0000 indicates an actor other than
+ * a monster.
+ *
+ * mid_t should be used for anything that needs to remember monster
+ * identity from one turn to the next, as mindexes may be reused 
+ * if a monster dies, and are not unique across levels.
+ */
 typedef uint32_t mid_t;
 #define PRImidt PRIu32
 #define MID_PLAYER      ((mid_t)0xffffffff)
