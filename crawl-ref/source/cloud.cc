@@ -1820,7 +1820,7 @@ void remove_tornado_clouds(mid_t whose)
 
 static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
                           int &remaining, int ratio = 10,
-                          mid_t agent_mid = NON_ENTITY, kill_category kcat = KC_OTHER)
+                          mid_t agent_mid = 0, kill_category kcat = KC_OTHER)
 {
     bolt beam;
     beam.target = pos;
