@@ -5174,6 +5174,7 @@ void unmarshallMonster(reader &th, monster& m)
         // Don't bother trying to fix it up.
         m.type = MONS_WOOD_GOLEM; // anything removed
         m.mid = ++you.last_mid;   // sabotage the bond
+        ASSERT(m.mid < MID_FIRST_NON_MONSTER);
         parts &= MP_GHOST_DEMON;
     }
     else if (mons_class_is_chimeric(m.type)
