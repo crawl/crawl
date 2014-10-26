@@ -273,8 +273,8 @@ struct run_check_dir
  * An mid_t is a persistent (across levels and across save/restore)
  * and unique (within a given game) identifier for a monster, player,
  * or fake actor.  The value 0 indicates "no actor", and any value
- * greater than or equal to 0xffff0000 indicates an actor other than
- * a monster.
+ * greater than or equal to MID_FIRST_NON_MONSTER indicates an actor
+ * other than a monster.
  *
  * mid_t should be used for anything that needs to remember monster
  * identity from one turn to the next, as mindexes may be reused 
@@ -287,6 +287,8 @@ typedef uint32_t mid_t;
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND ((mid_t)0xffff0000)
 #define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
+/// Upper bound on the number of monsters that can ever exist in a game.
+#define MID_FIRST_NON_MONSTER MID_ANON_FRIEND
 
 static inline monster_type operator++(monster_type &x)
 {

@@ -4695,6 +4695,10 @@ void monster::set_ghost(const ghost_demon &g)
 void monster::set_new_monster_id()
 {
     mid = ++you.last_mid;
+    // Sorry, if you made 4294901759 monsters over the course of your
+    // game you deserve a crash, particularly when the game doesn't
+    // even last that many turns.
+    ASSERT(mid < MID_FIRST_NON_MONSTER);
     env.mid_cache[mid] = mindex();
 }
 
