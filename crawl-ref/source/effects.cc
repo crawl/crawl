@@ -213,6 +213,9 @@ int torment_player(actor *attacker, int taux)
         // Statue form is only partial petrification.
         if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
             hploss /= 2;
+
+        if (hploss == 0 && player_prot_life() < 0)
+            hploss = 1;
     }
 
     // Kiku protects you from torment to a degree.
@@ -243,9 +246,9 @@ int torment_player(actor *attacker, int taux)
 
     mpr("Your body is wracked with pain!");
 
-    const char *aux = "torment";
+    const char *aux = "by torment";
 
-    kill_method_type type = KILLED_BY_MONSTER;
+    kill_method_type type = KILLED_BY_BEAM;
     if (invalid_monster_index(taux))
     {
         type = KILLED_BY_SOMETHING;
@@ -266,7 +269,7 @@ int torment_player(actor *attacker, int taux)
             break;
 
         case TORMENT_SCROLL:
-            aux = "scroll of torment";
+            aux = "a scroll of torment";
             break;
 
         case TORMENT_XOM:
@@ -307,6 +310,9 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
         return retval;
 
     int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
+
+    if (!hploss && mons->res_negative_energy() < 0)
+        hploss = 1;
 
     if (hploss)
     {

@@ -1593,6 +1593,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             if (original > hurted)
                 simple_monster_message(mons, " resists.");
+            else if (original < hurted)
+                simple_monster_message(mons, " is drained terribly!");
 
             if (mons->observable())
                 pbolt.obvious_effect = true;
@@ -1736,20 +1738,19 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             const int res = mons->res_negative_energy();
             hurted = resist_adjust_damage(mons, pbolt.flavour, res, hurted, true);
 
-            if (hurted < original)
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(mons, " partially resists.");
-            }
+            if (!doFlavouredEffects)
+                break;
+
             if (!hurted)
             {
-                if (doFlavouredEffects)
-                {
-                    simple_monster_message(mons,
-                                        (original > 0) ? " completely resists."
-                                                       : " appears unharmed.");
-                }
+                simple_monster_message(mons,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
             }
+            else if (hurted < original)
+                simple_monster_message(mons, " partially resists.");
+            else if (hurted > original)
+                simple_monster_message(mons, " is drained terribly!");
         }
         break;
 

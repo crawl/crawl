@@ -849,7 +849,9 @@ A putrid undead mass of decaying flesh that spurts pestilent slime.
 death scarab
 
 A hideous swarming undead insect, exuding death and decay and feeding on the
-life energies of those unfortunate enough to encounter them.
+life energies of those unfortunate enough to encounter them. Their bites have
+the peculiar property of making their victims suffer even more greatly from
+unholy effects.
 %%%%
 death yak
 

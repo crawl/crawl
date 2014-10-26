@@ -4199,6 +4199,9 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u++;
     }
 
+    if (!intrinsic_only && has_ench(ENCH_NEGATIVE_VULN))
+        u--;
+
     if (u > 3)
         u = 3;
 

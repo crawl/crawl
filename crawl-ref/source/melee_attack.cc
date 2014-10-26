@@ -2966,8 +2966,6 @@ void melee_attack::mons_apply_attack_flavour()
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOS)
         flavour = random_chaos_attack_flavour();
-    if (flavour == AF_SCARAB && coinflip())
-        flavour = AF_VAMPIRIC;
 
     switch (flavour)
     {
@@ -3070,6 +3068,41 @@ void melee_attack::mons_apply_attack_flavour()
         defender->expose_to_element(BEAM_ELECTRICITY, 2);
         break;
 
+    case AF_SCARAB:
+        if (coinflip())
+        {
+            if (defender->is_player())
+            {
+                if (you.holiness() == MH_NATURAL
+                    && !you.duration[DUR_NEGATIVE_VULN])
+                {
+                    mpr("You feel yourself grow more vulnerable to negative"
+                        " energy.");
+                    you.increase_duration(DUR_NEGATIVE_VULN,
+                                          random_range(20, 30));
+                }
+            }
+            else
+            {
+                monster* mon = defender->as_monster();
+                if (mon->holiness() == MH_NATURAL
+                    && !mon->has_ench(ENCH_NEGATIVE_VULN)
+                    && mon->add_ench(
+                           mon_enchant(ENCH_NEGATIVE_VULN, 0, attacker,
+                                       random_range(20, 30) * BASELINE_DELAY)))
+                {
+                    simple_monster_message(mon, " grows more vulnerable to"
+                                                " negative energy.");
+                }
+            }
+        }
+
+        if (coinflip())
+            drain_defender();
+        else
+            drain_defender_speed();
+
+        // deliberate fall-through
     case AF_VAMPIRIC:
         // Only may bite non-vampiric monsters (or player) capable of bleeding.
         if (!defender->can_bleed())
@@ -3466,14 +3499,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         defender->expose_to_element(BEAM_FIRE, 2);
-        break;
-
-    case AF_SCARAB:
-        // vampiric case handled earlier
-        if (coinflip())
-            drain_defender();
-        else
-            drain_defender_speed();
         break;
     }
 }
