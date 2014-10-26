@@ -212,7 +212,8 @@ mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster* mon);
 mon_itemeat_type mons_itemeat(const monster* mon);
 
-bool mons_sense_invis(const monster* mon);
+bool mons_can_be_blinded(monster_type mc);
+bool mons_can_be_dazzled(monster_type mc);
 
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(monster_type mclass, bool demon_shout = false);

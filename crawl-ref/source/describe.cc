@@ -3476,12 +3476,21 @@ static string _monster_stat_description(const monster_info& mi)
     if (mons_class_flag(mi.type, M_SHADOW))
         result << uppercase_first(pronoun) << " is wreathed in shadows.\n";
 
-    // Seeing/sensing invisible.
+    // Seeing invisible.
     if (mons_class_flag(mi.type, M_SEE_INVIS)
             || mons_is_ghost_demon(mi.type) && mi.u.ghost.can_sinv)
     {
         result << uppercase_first(pronoun) << " can see invisible.\n";
     }
+
+    // Echolocation, wolf noses, jellies, etc
+    if (!mons_can_be_blinded(mi.type))
+        result << uppercase_first(pronoun) << " is immune to blinding.\n";
+    // XXX: could mention "immune to dazzling" here, but that's spammy, since
+    // it's true of such a huge number of monsters. (undead, statues, plants).
+    // Might be better to have some place where players can see holiness &
+    // information about holiness.......?
+
 
     // Unusual monster speed.
     const int speed = mi.base_speed();

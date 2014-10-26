@@ -131,6 +131,9 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
     }
 
+    if (ench.ench == ENCH_BLIND && !mons_can_be_blinded(type))
+        return false;
+
     if (ench.ench == ENCH_FLIGHT && has_ench(ENCH_LIQUEFYING))
     {
         del_ench(ENCH_LIQUEFYING);

@@ -5847,7 +5847,7 @@ void ru_do_retribution(monster* mons, int damage)
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
-    else if (power > 10)
+    else if (power > 10 && mons_can_be_blinded(mons->type))
     {
         simple_monster_message(mons, " is blinded in retribution by your aura!",
             MSGCH_GOD);

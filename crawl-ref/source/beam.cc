@@ -2988,8 +2988,6 @@ bool bolt::fuzz_invis_tracer()
     if (dist > 2)
         return false;
 
-    const actor *beam_src = beam_source_as_target();
-
     // Apply fuzz now.
     coord_def fuzz(random_range(-2, 2), random_range(-2, 2));
     coord_def newtarget = target + fuzz;
@@ -4441,11 +4439,8 @@ void bolt::enchantment_affect_monster(monster* mon)
 
 static bool _dazzle_monster(monster* mons, actor* act)
 {
-    if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NONLIVING
-        || mons->holiness() == MH_PLANT)
-    {
+    if (!mons_can_be_dazzled(mons->type))
         return false;
-    }
 
     if (x_chance_in_y(95 - mons->get_hit_dice() * 5 , 100))
     {
@@ -4453,6 +4448,7 @@ static bool _dazzle_monster(monster* mons, actor* act)
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
         return true;
     }
+
     return false;
 }
 
