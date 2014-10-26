@@ -8249,7 +8249,7 @@ bool does_vision_blur()
 {
     // "Ashenzari keeps your vision clear" corrects for blurry vision.
     return player_mutation_level(MUT_BLURRY_VISION)
-        && in_good_standing(GOD_ASHENZARI, 2)
+        && !in_good_standing(GOD_ASHENZARI, 2)
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5);
 }
 
