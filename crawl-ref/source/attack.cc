@@ -1408,14 +1408,14 @@ int attack::calc_stat_to_hit_base()
 
     // dex is modified by strength towards the average, by the
     // weighted amount weapon_str_weight() / 20.
-    return you.dex() + (you.strength() - you.dex()) * weight / 20;
+    return you.dex() + (10 - you.dex()) * weight / 20;
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
 int attack::calc_stat_to_dam_base()
 {
     const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
-    return you.strength() + (you.dex() - you.strength()) * weight / 20;
+    return 10 + (you.dex() - 10) * weight / 20;
 }
 
 int attack::calc_damage()
