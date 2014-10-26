@@ -3977,7 +3977,7 @@ static void _display_attack_delay()
     const item_def* ammo = NULL;
     you.m_quiver->get_desired_item(&ammo, NULL);
     const bool uses_ammo = ammo && you.weapon()
-                           && ammo->sub_type == fires_ammo_type(*you.weapon());
+                           && ammo->launched_by(*you.weapon());
     const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
                                        false, false);
 
