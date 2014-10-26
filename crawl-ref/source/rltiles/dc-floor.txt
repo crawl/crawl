@@ -90,263 +90,84 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE green
-%hue 27 140
-%hue 28 140
-%hue 29 140
-%hue 31 140
-%hue 32 140
-%hue 33 140
-%hue 34 140
-%hue 35 140
-%hue 36 140
-%hue 37 140
-%hue 38 140
-%hue 39 140
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_GREEN
+%hue 240 140
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_GREEN
 %resetcol
 
 %variation FLOOR_PEBBLE cyan
-%hue 27 180
-%hue 28 180
-%hue 29 180
-%hue 31 180
-%hue 32 180
-%hue 33 180
-%hue 34 180
-%hue 35 180
-%hue 36 180
-%hue 37 180
-%hue 38 180
-%hue 39 180
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_CYAN
+%hue 240 180
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_CYAN
 %resetcol
 
 %variation FLOOR_PEBBLE red
-%hue 27 0
-%hue 28 0
-%hue 29 0
-%hue 31 0
-%hue 32 0
-%hue 33 0
-%hue 34 0
-%hue 35 0
-%hue 36 0
-%hue 37 0
-%hue 38 0
-%hue 39 0
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_RED
+%hue 240 0
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_RED
 %resetcol
 
 %variation FLOOR_PEBBLE magenta
-%hue 27 270
-%hue 28 270
-%hue 29 270
-%hue 31 270
-%hue 32 270
-%hue 33 270
-%hue 34 270
-%hue 35 270
-%hue 36 270
-%hue 37 270
-%hue 38 270
-%hue 39 270
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_MAGENTA
+%hue 240 270
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_MAGENTA
 %resetcol
 
 %variation FLOOR_PEBBLE darkgray
-%lum 0 -10
-%desat 27
-%desat 28
-%desat 29
-%desat 31
-%desat 32
-%desat 33
-%desat 34
-%desat 35
-%desat 36
-%desat 37
-%desat 39
-%lum 11 -10
-%lum 12 -10
-%lum 13 -10
-%lum 14 -10
-%lum 15 -10
-%lum 16 -10
-%lum 17 -10
-%lum 18 -10
-%lum 19 -10
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKGRAY
+%lum 0 -5
+%repeat FLOOR_PEBBLE_LIGHTGRAY FLOOR_PEBBLE_DARKGRAY
 %resetcol
 
 %variation FLOOR_PEBBLE lightblue
-%lum 0 20
-%lum 7 20
-%hue 27 210
-%hue 28 210
-%hue 29 210
-%hue 31 210
-%hue 32 210
-%hue 33 210
-%hue 34 210
-%hue 35 210
-%hue 36 210
-%hue 37 210
-%hue 38 210
-%hue 39 210
-%lum 11 20
-%lum 14 20
-%lum 15 20
-%lum 16 20
-%lum 17 25
-%lum 18 25
-%lum 19 25
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTBLUE
+%lum 240 5
+%hue 240 210
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTBLUE
 %resetcol
 
 %variation FLOOR_PEBBLE lightgreen
-%lum 0 20
-%lum 7 20
-%lum 11 20
-%lum 14 20
-%lum 15 20
-%lum 16 20
-%lum 17 25
-%lum 18 25
-%lum 19 25
-%hue 27 110
-%hue 28 110
-%hue 29 110
-%hue 31 110
-%hue 32 110
-%hue 33 110
-%hue 34 110
-%hue 35 110
-%hue 36 110
-%hue 37 110
-%hue 38 110
-%hue 39 110
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTGREEN
+%lum 240 5
+%hue 240 110
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTGREEN
 %resetcol
 
 %variation FLOOR_PEBBLE lightcyan
-%lum 0 10
-%lum 7 20
-%lum 11 20
-%lum 14 20
-%lum 15 20
-%hue 27 180
-%hue 28 180
-%hue 29 180
-%hue 31 180
-%hue 32 180
-%hue 33 180
-%hue 34 180
-%hue 35 180
-%hue 36 180
-%hue 37 180
-%hue 38 180
-%hue 39 180
-%lum 16 20
-%lum 17 25
-%lum 18 25
-%lum 19 25
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTCYAN
+%lum 240 5
+%hue 240 180
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTCYAN
 %resetcol
 
 %variation FLOOR_PEBBLE lightred
-%lum 0 10
-%hue 27 0
-%hue 28 0
-%hue 29 0
-%hue 31 0
-%hue 32 0
-%hue 33 0
-%hue 34 0
-%hue 35 0
-%hue 36 0
-%hue 37 0
-%hue 38 0
-%hue 39 0
-%lum 7 20
-%lum 11 20
-%lum 14 20
-%lum 15 20
-%lum 16 20
-%lum 17 25
-%lum 18 25
-%lum 19 25
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTRED
+%lum 240 5
+%hue 240 0
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTRED
 %resetcol
 
 %variation FLOOR_PEBBLE lightmagenta
-%hue 27 290
-%hue 28 290
-%hue 29 290
-%hue 31 290
-%hue 32 290
-%hue 33 290
-%hue 34 290
-%hue 35 290
-%hue 36 290
-%hue 37 290
-%hue 38 290
-%hue 39 290
-%lum 7 20
-%lum 11 20
-%lum 14 20
-%lum 15 20
-%lum 16 20
-%lum 17 25
-%lum 18 25
-%lum 19 25
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTMAGENTA
+%lum 240 5
+%hue 240 290
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTMAGENTA
 %resetcol
 
 %variation FLOOR_PEBBLE yellow
-%hue 27 50
-%hue 28 50
-%hue 29 50
-%hue 31 50
-%hue 32 50
-%hue 33 50
-%hue 34 50
-%hue 35 50
-%hue 36 50
-%hue 37 50
-%hue 38 50
-%hue 39 50
-%lum 0 30
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_YELLOW
+%lum 240 7
+%hue 240 50
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_YELLOW
 %resetcol
 
 %variation FLOOR_PEBBLE white
-%desat 27
-%desat 28
-%desat 29
-%desat 30
-%desat 31
-%desat 32
-%desat 33
-%desat 34
-%desat 35
-%desat 36
-%desat 37
-%desat 39
-%lum 7 25
-%lum 11 30
-%lum 14 30
-%lum 15 30
-%lum 16 30
-%lum 17 45
-%lum 18 45
-%lum 19 45
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
+%lum 0 9
+%repeat FLOOR_PEBBLE_LIGHTGRAY FLOOR_PEBBLE_WHITE
 %resetcol
 
 # Additional variants for D cave layouts
-%lum 15 -7
-%lum 18 -7
-%lum 19 -7
+%lum 27 -3
+%lum 28 -3
+%lum 29 -3
+%lum 31 -3
+%lum 32 -3
+%lum 33 -3
+%lum 34 -3
+%lum 35 -3
+%lum 36 -3
+%lum 37 -3
+%lum 38 -3
+%lum 39 -3
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKBROWN
 %resetcol
 
