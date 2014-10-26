@@ -614,10 +614,8 @@ static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
         did_god_conduct(DID_UNHOLY, 3);
 }
 
-static void _DEMON_AXE_world_reacts(item_def *item)
+static monster* _find_nearest_possible_beholder()
 {
-    monster* closest = NULL;
-
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster *mon = monster_at(*di);
@@ -625,12 +623,20 @@ static void _DEMON_AXE_world_reacts(item_def *item)
             && you.possible_beholder(mon)
             && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
-            closest = mon;
-            goto found;
+            return mon;
         }
     }
-    return;
-found:
+
+    return NULL;
+}
+
+static void _DEMON_AXE_world_reacts(item_def *item)
+{
+
+    monster* closest = _find_nearest_possible_beholder();
+
+    if (!closest)
+        return;
 
     if (!you.beheld_by(closest))
     {
