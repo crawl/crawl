@@ -124,6 +124,7 @@ enum tag_minor_version
     TAG_MINOR_ARB_SPELL_SLOTS,     // Arbitrary number of monster spell slots.
     TAG_MINOR_CUT_CUTLASSES,       // Turn crummy cutlasses into real rapiers.
     TAG_MINOR_NO_GHOST_SPELLCASTER,// Remove an unused field in ghost_demon
+    TAG_MINOR_MID_BEHOLDERS,       // you.beholders and fearmongers store mids
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

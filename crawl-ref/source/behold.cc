@@ -46,7 +46,7 @@ void player::add_beholder(const monster* mon, bool axe)
     if (!duration[DUR_MESMERISED])
     {
         set_duration(DUR_MESMERISED, random_range(7, 15), 15);
-        beholders.push_back(mon->mindex());
+        beholders.push_back(mon->mid);
         if (!axe)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
@@ -57,7 +57,7 @@ void player::add_beholder(const monster* mon, bool axe)
     {
         increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
         if (!beheld_by(mon))
-            beholders.push_back(mon->mindex());
+            beholders.push_back(mon->mid);
     }
 }
 
@@ -72,7 +72,7 @@ bool player::beheld() const
 bool player::beheld_by(const monster* mon) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
+        if (beholders[i] == mon->mid)
             return true;
     return false;
 }
@@ -83,7 +83,8 @@ monster* player::get_beholder(const coord_def &target) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
     {
-        monster* mon = &menv[beholders[i]];
+        monster* mon = monster_by_mid(beholders[i]);
+        ASSERTM(mon, "Beheld by bad monster; mid = %d, #beholders = %d", beholders[i], beholders.size());
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
@@ -96,7 +97,7 @@ monster* player::get_beholder(const coord_def &target) const
 monster* player::get_any_beholder() const
 {
     if (!beholders.empty())
-        return &menv[beholders[0]];
+        return monster_by_mid(beholders[0]);
     else
         return NULL;
 }
@@ -105,7 +106,7 @@ monster* player::get_any_beholder() const
 void player::remove_beholder(const monster* mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
+        if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
             _removed_beholder();
@@ -202,7 +203,7 @@ void player::update_beholders()
     bool removed = false;
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
-        const monster* mon = &menv[beholders[i]];
+        const monster* mon = monster_by_mid(beholders[i]);
         if (!possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
@@ -225,7 +226,7 @@ void player::update_beholder(const monster* mon)
     if (possible_beholder(mon))
         return;
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
+        if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
             // Do this dance to clear the duration before printing messages
