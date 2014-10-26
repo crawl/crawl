@@ -3011,6 +3011,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
+#if TAG_MAJOR_VERSION == 34
             case SP_SLUDGE_ELF:
                 if (!(you.experience_level % 4) && !skip_attribute_increase)
                 {
@@ -3019,6 +3020,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                                 "level gain");
                 }
                 break;
+#endif
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
