@@ -3268,7 +3268,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_IRRADIATE, "Irradiate",
     SPTYP_CONJURATION | SPTYP_TRANSMUTATION,
-    SPFLAG_AREA,
+    SPFLAG_AREA | SPFLAG_CHAOTIC,
     5,
     200,
     1, 1,
