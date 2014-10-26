@@ -167,6 +167,7 @@ protected:
     brand_type random_chaos_brand();
     void do_miscast();
     void drain_defender();
+    void drain_defender_speed();
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);

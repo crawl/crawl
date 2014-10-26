@@ -679,7 +679,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(40, pos, msg.c_str(), source, false);
+            noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
             if (crawl_state.game_is_zotdef())
                 more();
         }

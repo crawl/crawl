@@ -1092,6 +1092,23 @@ void attack::drain_defender()
     }
 }
 
+void attack::drain_defender_speed()
+{
+    if (!defender->res_negative_energy())
+    {
+        if (needs_message)
+        {
+            mprf("%s %s %s vigor!",
+                 atk_name(DESC_THE).c_str(),
+                 attacker->conj_verb("drain").c_str(),
+                 def_name(DESC_ITS).c_str());
+        }
+
+        special_damage = 1 + random2(damage_done) / 2;
+        defender->slow_down(attacker, 5 + random2(7));
+    }
+}
+
 int attack::inflict_damage(int dam, beam_type flavour, bool clean)
 {
     if (flavour == NUM_BEAMS)

@@ -210,6 +210,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_REPEL_MSL;
     case ENCH_DEFLECT_MISSILES:
         return MB_DEFLECT_MSL;
+    case ENCH_NEGATIVE_VULN:
+        return MB_NEGATIVE_VULN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1572,6 +1574,8 @@ vector<string> monster_info::attributes() const
         v.push_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.push_back("heavily drained");
+    if (is(MB_NEGATIVE_VULN))
+        v.push_back("more vulnerable to negative energy");
     return v;
 }
 

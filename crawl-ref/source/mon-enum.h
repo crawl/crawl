@@ -121,7 +121,8 @@ enum attack_flavour
     AF_SHADOWSTAB,
     AF_DROWN,
     AF_FIREBRAND,
-    AF_CORRODE
+    AF_CORRODE,
+    AF_SCARAB,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -209,6 +210,7 @@ enum mon_resist_flags
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
+    MR_RES_TORMENT       = 1 << 22,
     MR_RES_PETRIFY       = 1 << 23,
     MR_RES_ASPHYX        = 1 << 24,
 #if TAG_MAJOR_VERSION == 34
@@ -249,6 +251,7 @@ enum shout_type
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CAW,                  // for ravens
     S_CHERUB,               // for cherubs
+    S_RUMBLE,               // for ushabti
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

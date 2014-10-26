@@ -230,6 +230,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     bool force_item = false;
     bool force_uncursed = false;
 
+    string floor_tile = "";
+    string equip_tile = "";
+
     item_def item;
     int type = mon->type;
 
@@ -1500,6 +1503,20 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                0);
         break;
 
+    case MONS_ANUBIS_GUARD:
+        // crook and flail
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(10, WPN_FLAIL,
+                                               5, WPN_DIRE_FLAIL,
+                                               15, WPN_QUARTERSTAFF,
+                                               0);
+        if (item.sub_type == WPN_QUARTERSTAFF)
+        {
+            floor_tile = "wpn_staff_mummy";
+            equip_tile = "staff_mummy";
+        }
+        break;
+
     default:
         break;
     }
@@ -1548,6 +1565,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     if (force_uncursed)
         do_uncurse_item(i, false);
+
+    if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
+    {
+        ASSERT(!equip_tile.empty());
+        mitm[thing_created].props["item_tile_name"] = floor_tile;
+        mitm[thing_created].props["worn_tile_name"] = equip_tile;
+        bind_item_tile(mitm[thing_created]);
+    }
 
     _give_monster_item(mon, thing_created, force_item);
 
@@ -2422,6 +2447,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
                                                   5, ARM_ICE_DRAGON_ARMOUR,
                                                   5, ARM_MOTTLED_DRAGON_ARMOUR,
                                                   0);
+        break;
+
+    case MONS_ANUBIS_GUARD:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_ROBE;
         break;
 
     default:

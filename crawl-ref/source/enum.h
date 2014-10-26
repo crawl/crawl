@@ -466,7 +466,8 @@ enum beam_type                  // bolt::flavour
     BEAM_PETRIFYING_CLOUD,
     BEAM_ENSNARE,
     BEAM_CRYSTAL,
-    BEAM_LAST_REAL = BEAM_CRYSTAL,
+    BEAM_DEATH_RATTLE,
+    BEAM_LAST_REAL = BEAM_DEATH_RATTLE,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -1693,6 +1694,7 @@ enum duration_type
     DUR_FORTITUDE,
     DUR_HORROR,
     DUR_NO_SCROLLS,
+    DUR_NEGATIVE_VULN,
     NUM_DURATIONS
 };
 
@@ -1833,6 +1835,7 @@ enum enchant_type
     ENCH_DRAINED,
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
+    ENCH_NEGATIVE_VULN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2400,6 +2403,8 @@ enum monster_type                      // menv[].type
     MONS_RAVEN,
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
+
+    MONS_ANUBIS_GUARD,
 #endif
     MONS_FIRE_CRAB,
 #if TAG_MAJOR_VERSION == 34
@@ -2431,6 +2436,9 @@ enum monster_type                      // menv[].type
     MONS_GOLIATH_BEETLE,
     MONS_BORING_BEETLE,
     MONS_BOULDER_BEETLE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DEATH_SCARAB,
+#endif
     MONS_GIANT_COCKROACH,
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_CENTIPEDE,
@@ -2503,6 +2511,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
+    MONS_USHABTI,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -3183,6 +3192,9 @@ enum monster_type                      // menv[].type
     MONS_MNOLEG_TENTACLE,
     MONS_MNOLEG_TENTACLE_SEGMENT,
     MONS_BENNU,
+    MONS_USHABTI,
+    MONS_DEATH_SCARAB,
+    MONS_ANUBIS_GUARD,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4236,6 +4248,9 @@ enum spell_type
     SPELL_PARALYSIS_GAZE,
     SPELL_CONFUSION_GAZE,
     SPELL_DRAINING_GAZE,
+    SPELL_DEATH_RATTLE,
+    SPELL_SUMMON_SCARABS,
+    SPELL_HUNTING_CRY,
     NUM_SPELLS
 };
 

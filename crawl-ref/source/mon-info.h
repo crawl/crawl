@@ -131,6 +131,7 @@ enum monster_info_flags
     MB_LIGHTLY_DRAINED,
     MB_HEAVILY_DRAINED,
     MB_REPEL_MSL,
+    MB_NEGATIVE_VULN,
     NUM_MB_FLAGS
 };
 
