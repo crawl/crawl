@@ -277,7 +277,7 @@ struct run_check_dir
  * other than a monster.
  *
  * mid_t should be used for anything that needs to remember monster
- * identity from one turn to the next, as mindexes may be reused 
+ * identity from one turn to the next, as mindexes may be reused
  * if a monster dies, and are not unique across levels.
  */
 typedef uint32_t mid_t;
