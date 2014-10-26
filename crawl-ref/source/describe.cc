@@ -3300,13 +3300,15 @@ static void _print_bar(int value, int max, int scale,
     const int bars = cur_bars ? cur_bars : base_bars;
     const int max_bars = max / scale;
 
-    if (!cur_bars && base_bars)
+    const bool currently_disabled = !cur_bars && base_bars;
+
+    if (currently_disabled)
         result << "(";
 
     for (int i = 0; i < min(bars, max_bars); i++)
         result << "+";
 
-    if (!cur_bars && base_bars)
+    if (currently_disabled)
         result << ")";
 
     for (int i = max_bars - 1; i >= bars; --i)
@@ -3315,6 +3317,15 @@ static void _print_bar(int value, int max, int scale,
 #ifdef DEBUG_DIAGNOSTICS
     result << " (" << value << ")";
 #endif
+
+    if (currently_disabled)
+    {
+        result << " (Normal " << name << ")";
+
+#ifdef DEBUG_DIAGNOSTICS
+        result << " (" << base_value << ")";
+#endif
+    }
 
     result << "\n";
 }
