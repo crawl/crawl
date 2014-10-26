@@ -144,6 +144,8 @@ quarterstaff3
 lajatang1 WPN_LAJATANG
 lajatang2
 lajatang3
+
+staff_mummy WPN_STAFF_MUMMY
 %rim 1
 
 

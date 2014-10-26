@@ -230,6 +230,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     bool force_item = false;
     bool force_uncursed = false;
 
+    string floor_tile = "";
+    string equip_tile = "";
+
     item_def item;
     int type = mon->type;
 
@@ -1507,6 +1510,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                5, WPN_DIRE_FLAIL,
                                                15, WPN_QUARTERSTAFF,
                                                0);
+        if (item.sub_type == WPN_QUARTERSTAFF)
+        {
+            floor_tile = "wpn_staff_mummy";
+            equip_tile = "staff_mummy";
+        }
         break;
 
     default:
@@ -1557,6 +1565,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     if (force_uncursed)
         do_uncurse_item(i, false);
+
+    if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
+    {
+        ASSERT(!equip_tile.empty());
+        mitm[thing_created].props["item_tile_name"] = floor_tile;
+        mitm[thing_created].props["worn_tile_name"] = equip_tile;
+        bind_item_tile(mitm[thing_created]);
+    }
 
     _give_monster_item(mon, thing_created, force_item);
 
