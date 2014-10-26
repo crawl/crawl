@@ -3036,17 +3036,6 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
     return attack >= defence;
 }
 
-string bolt::zapper() const
-{
-    const actor* beam_src = agent();
-    if (!beam_src)
-        return "";
-    else if (beam_src->is_player())
-        return "self";
-    else
-        return beam_src->name(DESC_PLAIN, true);
-}
-
 bool bolt::is_harmless(const monster* mon) const
 {
     // For enchantments, this is already handled in nasty_to().
@@ -3575,7 +3564,7 @@ void bolt::affect_player_enchantment(bool resistible)
             mpr("This spell isn't strong enough to banish yourself.");
             break;
         }
-        you.banish(agent(), zapper());
+        you.banish(agent(), get_source_name());
         obvious_effect = true;
         break;
 
