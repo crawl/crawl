@@ -3731,14 +3731,14 @@ static void _handle_accidental_death(const int orig_hp,
 
 int xom_acts(bool niceness, int sever, int tension, bool debug)
 {
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
+#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
     if (!debug)
     {
         // This probably seems a bit odd, but we really don't want to display
         // these when doing a heavy-duty wiz-mode debug test: just ends up
         // as message spam and the player doesn't get any further information
         // anyway. (jpeg)
-        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
+        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
              niceness, sever, tension, you.piety, you.gift_timeout);
     }
 #endif

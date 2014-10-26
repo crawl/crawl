@@ -3005,11 +3005,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (!is_item_jelly_edible(*si))
             continue;
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_EATERS)
-        mprf(MSGCH_DIAGNOSTICS,
-             "%s eating %s", mons->name(DESC_PLAIN, true).c_str(),
+        dprf("%s eating %s", mons->name(DESC_PLAIN, true).c_str(),
              si->name(DESC_PLAIN).c_str());
-#endif
 
         int quant = si->quantity;
 

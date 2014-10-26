@@ -1727,12 +1727,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-#ifdef DEBUG_DIAGNOSTICS
-            // For debugging, we don't have this silent.
-            simple_monster_message(this, " takes poison damage.",
-                                   MSGCH_DIAGNOSTICS);
-            mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam);
-#endif
+            dprf("%s takes poison damage: %d", name(DESC_THE).c_str(), dam);
 
             hurt(me.agent(), dam, BEAM_POISON);
         }

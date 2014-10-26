@@ -1232,13 +1232,12 @@ int actor_apply_cloud(actor *act)
 
     if (final_damage)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from cloud: %s.",
+        dprf("%s %s %d damage from cloud: %s.",
              act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
              cloud.cloud_name().c_str());
-#endif
+
         actor *oppressor = cloud.agent();
 
         if (player)
