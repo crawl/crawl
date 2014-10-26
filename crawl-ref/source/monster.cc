@@ -4199,6 +4199,9 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u++;
     }
 
+    if (!intrinsic_only && has_ench(ENCH_NEGATIVE_VULN))
+        u--;
+
     if (u > 3)
         u = 3;
 
@@ -4211,7 +4214,8 @@ bool monster::res_torment() const
     return holy == MH_UNDEAD
             || holy == MH_DEMONIC
             || holy == MH_PLANT
-            || holy == MH_NONLIVING;
+            || holy == MH_NONLIVING
+            || get_mons_resist(this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const

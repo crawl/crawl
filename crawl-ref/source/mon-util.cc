@@ -1186,6 +1186,8 @@ int get_shout_noise_level(const shout_type shout)
     case S_ROAR:
     case S_VERY_LOUD:
         return 12;
+    case S_RUMBLE:
+        return 16;
 
     default:
         return 8;
@@ -2235,6 +2237,7 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_GREATER_MUMMY_I);
         books.push_back(MST_GREATER_MUMMY_II);
         books.push_back(MST_GREATER_MUMMY_III);
+        books.push_back(MST_GREATER_MUMMY_IV);
         break;
 
     default:
@@ -4374,6 +4377,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "sneers",       // S_DEMON_TAUNT
         "caws",
         "says",         // S_CHERUB -- they just speak normally.
+        "rumbles",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

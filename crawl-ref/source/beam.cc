@@ -1593,6 +1593,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             if (original > hurted)
                 simple_monster_message(mons, " resists.");
+            else if (original < hurted)
+                simple_monster_message(mons, " is drained terribly!");
 
             if (mons->observable())
                 pbolt.obvious_effect = true;
@@ -1736,20 +1738,19 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             const int res = mons->res_negative_energy();
             hurted = resist_adjust_damage(mons, pbolt.flavour, res, hurted, true);
 
-            if (hurted < original)
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(mons, " partially resists.");
-            }
+            if (!doFlavouredEffects)
+                break;
+
             if (!hurted)
             {
-                if (doFlavouredEffects)
-                {
-                    simple_monster_message(mons,
-                                        (original > 0) ? " completely resists."
-                                                       : " appears unharmed.");
-                }
+                simple_monster_message(mons,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
             }
+            else if (hurted < original)
+                simple_monster_message(mons, " partially resists.");
+            else if (hurted > original)
+                simple_monster_message(mons, " is drained terribly!");
         }
         break;
 
@@ -2866,6 +2867,12 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
         place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
+
+    if (origin_spell == SPELL_DEATH_RATTLE)
+        if (coinflip())
+            place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());
+        else
+            place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -6497,6 +6504,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
+    case BEAM_DEATH_RATTLE:          return "breath of the dead";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

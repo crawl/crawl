@@ -764,11 +764,11 @@ ENDMAP
 NAME:   st_burial_chamber
 TAGS:   no_wall_fixup
 DEPTH:  Crypt
-MONS:   mummy, guardian mummy
-KMONS:  3 = guardian mummy
-KMONS:  4 = mummy priest
-KMONS:  5 = greater mummy
-SUBST:  1 = 221
+MONS:   mummy, guardian mummy, ushabti
+KMONS:  4 = guardian mummy
+KMONS:  5 = mummy priest
+KMONS:  6 = greater mummy
+SUBST:  1 = 2231
 KITEM:  345 = |
 MAP
  ccccccccccccc
@@ -776,11 +776,11 @@ cc...........cc
 cc.cccc+cccc.cc
 cc.cc1...1cc.cc
 ccxccc...cccxcc
-c3x3c1...1c3x3c
-cxxxcc...ccxxxc
 c4x4c1...1c4x4c
 cxxxcc...ccxxxc
-c4x5c1...1c5x4c
+c5x5c1...1c5x5c
+cxxxcc...ccxxxc
+c5x6c1...1c6x5c
 ccccccc+ccccccc
 .ccGcc...ccGcc.
 .......@.......
@@ -1103,7 +1103,8 @@ MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
 KMONS:   9 = revenant / unborn
-KMONS:   A = guardian mummy / skeleton w:8 / flying skull band w:6
+KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
+             skeleton w:8 / flying skull band w:6
 KMONS:   B = ancient champion
 KMONS:   C = mummy priest
 KMONS:   0 = zombie
@@ -1268,7 +1269,7 @@ MONS:   greater mummy
 MONS:   sphinx
 MONS:   mummy priest
 MONS:   mummy priest
-MONS:   guardian mummy
+MONS:   guardian mummy w:7 / ushabti w:3
 MONS:   flying skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
@@ -1522,7 +1523,7 @@ KMONS:  J = jiangshi
 KMONS:  P = vampire / zombie / skeleton
 : else
 KMONS:  H = sphinx
-KMONS:  I = guardian mummy
+KMONS:  I = guardian mummy w:7 / ushabti w:3
 KMONS:  J = guardian mummy / mummy
 KMONS:  P = skeleton / mummy
 : end
@@ -1668,7 +1669,7 @@ MONS:   patrolling zombie / nothing
 MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   raven skeleton / w:30 nothing
-MONS:   w:3 guardian mummy / w:1 mummy
+MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
 KMONS:  z = patrolling curse skull
 SHUFFLE: 9H
@@ -1834,11 +1835,11 @@ MONS:   spectral thing / simulacrum / shadow w:5 / wraith w:5 / shadow wraith / 
         spectral iron dragon w:5
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
 : else
-MONS:   patrolling guardian mummy
+MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
 MONS:   greater mummy
-MONS:   mummy priest w:8 / guardian mummy ; long sword | great sword | \
+MONS:   mummy priest w:8 / ushabti
+MONS:   guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
-MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
@@ -2028,7 +2029,7 @@ MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25
 KMONS:   8 = vampire knight
 KMONS:   9 = vampire w:6 / vampire mage w:4
 KMONS:   0 = mummy priest
-KMONS:   A = mummy w:6 / guardian mummy w:4
+KMONS:   A = guardian mummy w:6 / ushabti w:4
 SHUFFLE: 56, 89 / 0A
 SUBST:   5 = 5., 6 = 6., 9 = 99., A = AA.
 KFEAT:   Y = altar_yredelemnul

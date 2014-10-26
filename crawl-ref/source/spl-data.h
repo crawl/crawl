@@ -3454,6 +3454,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DEATH_RATTLE, "Death Rattle",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     7,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     5, 0,
+     NULL,
+},
+
+{
+    SPELL_SUMMON_SCARABS, "Summon Scarabs",
+     SPTYP_SUMMONING | SPTYP_NECROMANCY,
+     SPFLAG_NONE,
+     7,
+     100,
+     -1, -1,
+     6, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,
@@ -3462,6 +3484,17 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     1, 0,
     NULL,
+},
+
+{
+    SPELL_HUNTING_CRY, "Hunting Cry",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
+     6,
+     0,
+     -1, -1,
+     25, 0,
+     NULL,
 },
 
 };

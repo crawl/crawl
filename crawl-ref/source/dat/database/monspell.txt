@@ -300,6 +300,10 @@ Frenzy cast
 Volley of Thorns cast
 
 @The_monster@ fires a volley of thorns @at@ @target@.
+%%%%
+Hunting Cry cast
+
+@The_monster@ howls a hunting cry!
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -394,6 +398,10 @@ A stream of webbing shoots out from thin air.
 Lehudib's Crystal Spear the Serpent of Hell cast
 
 @The_monster@ spits crystal @at@ @target@.
+%%%%
+Bolt of Draining anubis guard cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 ########################################################################
 # Individual monsters
@@ -522,7 +530,6 @@ Stone Arrow gargoyle cast
 Bolt of Magma molten gargoyle cast
 
 @The_monster@ blasts magma @at@ @target@!
-
 %%%%
 Primal Wave elemental wellspring cast
 
@@ -552,6 +559,9 @@ Blink golden eye cast
 
 __NONE
 %%%%
+ushabti cast
+
+@The_monster@ shakes and rattles.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

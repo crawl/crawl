@@ -342,6 +342,10 @@ static const duration_def duration_data[] =
       false, 0, "",
       "divine shield", "",
       "You are shielded by the power of the Shining One.", false },
+    { DUR_NEGATIVE_VULN,
+      false, RED, "-rN",
+      "negative energy vulnerable", "negative energy vulnerability",
+      "You are more vulnerable to negative energy.", true },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

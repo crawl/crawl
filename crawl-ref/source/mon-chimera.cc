@@ -175,7 +175,7 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     const static mon_resist_flags resist_list[] =
         { MR_RES_FIRE, MR_RES_COLD, MR_RES_ELEC, MR_RES_POISON, MR_RES_NEG,
           MR_RES_ACID, MR_RES_STEAM, MR_RES_STICKY_FLAME, MR_RES_ASPHYX,
-          MR_RES_ROTTING, MR_RES_PETRIFY, MR_RES_WIND };
+          MR_RES_ROTTING, MR_RES_PETRIFY, MR_RES_WIND, MR_RES_TORMENT };
 
     for (unsigned int n = 0; n < ARRAYSZ(resist_list); ++n)
     {

@@ -145,6 +145,11 @@ string pluralise(const string &name, const char * const qualifiers[],
         // pluralisation.
         return name + "im";
     }
+    else if (name == "ushabti")
+    {
+        // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)
+        return name + "u";
+    }
 
     return name + "s";
 }

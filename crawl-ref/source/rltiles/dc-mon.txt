@@ -129,9 +129,13 @@ redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
 %sdir mon/demons
 demonic_crawler MONS_DEMONIC_CRAWLER
+%sdir mon/undead
+%rim 0
+death_scarab MONS_DEATH_SCARAB
 
 ## Turtles and crocodiles ('t')
 %sdir mon/animals
+%rim 1
 crocodile MONS_CROCODILE
 alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
@@ -423,6 +427,9 @@ guardian_golem MONS_GUARDIAN_GOLEM
 %rim 1
 iron_golem MONS_IRON_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
+%rim 0
+ushabti MONS_USHABTI
+%rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 # For the Eringya WizLab
@@ -664,6 +671,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+anubis_guard MONS_ANUBIS_GUARD
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR

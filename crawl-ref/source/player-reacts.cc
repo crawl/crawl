@@ -1148,6 +1148,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_POISON_VULN, delay,
                           "You feel less vulnerable to poison.");
 
+    _decrement_a_duration(DUR_NEGATIVE_VULN, delay,
+                          "You feel less vulnerable to negative energy.");
+
     if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
                               "You are no longer teleporting projectiles to their destination."))
     {
