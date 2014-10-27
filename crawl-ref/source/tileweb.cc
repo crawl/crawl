@@ -1626,7 +1626,7 @@ void TilesFramework::clrscr()
     m_text_crt.clear();
     m_text_menu.clear();
 
-    this->cgotoxy(1, 1);
+    cgotoxy(1, 1);
 
     set_need_redraw();
 }

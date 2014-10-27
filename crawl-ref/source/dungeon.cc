@@ -6801,8 +6801,8 @@ vault_placement::vault_placement()
 
 string vault_placement::map_name_at(const coord_def &where) const
 {
-    const coord_def offset = where - this->pos;
-    return this->map.name_at(offset);
+    const coord_def offset = where - pos;
+    return map.name_at(offset);
 }
 
 void vault_placement::reset()

@@ -719,9 +719,9 @@ monster_info::monster_info(const monster* m, int milev)
         spells = m->spells;
         // XXX handle here special cases for sources of magic (magic, divine, other)
         if (m->is_priest())
-            this->props["priest"] = true;
+            props["priest"] = true;
         else if (m->is_actual_spellcaster())
-            this->props["actual_spellcaster"] = true;
+            props["actual_spellcaster"] = true;
     }
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
