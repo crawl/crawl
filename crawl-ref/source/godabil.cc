@@ -67,6 +67,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "sacrifice-data.h"
 #include "skill_menu.h"
 #include "shopping.h"
 #include "shout.h"
@@ -4921,6 +4922,24 @@ bool qazlal_disaster_area()
     return true;
 }
 
+map<ability_type, sacrifice_def> sacrifice_data_map;
+
+void init_sac_index()
+{
+    for (unsigned int i = ABIL_FIRST_SACRIFICE; i <= ABIL_FINAL_SACRIFICE; ++i)
+    {
+        unsigned int sac_index = i - ABIL_FIRST_SACRIFICE;
+        const sacrifice_def sacrifice = sac_data[sac_index];
+        sacrifice_data_map[static_cast<ability_type>(i)] = sacrifice;
+    }
+}
+
+const sacrifice_def& get_sacrifice_def(ability_type sac)
+{
+    ASSERT_RANGE(sac, ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE+1);
+    return *&sacrifice_data_map[sac];
+}
+
 vector<ability_type> get_possible_sacrifices()
 {
     vector<ability_type> possible_sacrifices;
@@ -5165,76 +5184,86 @@ static int _piety_for_skill(skill_type skill)
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
-static int _get_sacrifice_piety(ability_type sacrifice)
+static int _get_sacrifice_piety(sacrifice_def sac_def)
 {
-    int piety_gain;
-    skill_type mutation_skill;
-    int arcane_mutations_size;
+    int piety_gain = sac_def.base_piety;
+    ability_type sacrifice = sac_def.sacrifice;
+    bool variable_sac = false;
+    mutation_type mut;
+    int num_sacrifices = 0;
 
-    ASSERT(you.props.exists("current_essence_sacrifice"));
-    ASSERT(you.props.exists("current_purity_sacrifice"));
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    // Initialize data
 
-    CrawlVector &current_essence_sacrifice =
-        you.props["current_essence_sacrifice"].get_vector();
-    CrawlVector &current_purity_sacrifice =
-        you.props["current_purity_sacrifice"].get_vector();
-    CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
+    if (sac_def.sacrifice_vector)
+    {
+        variable_sac = true;
+        ASSERT(you.props.exists(sac_def.sacrifice_vector));
+        CrawlVector &sacrifice_muts =
+            you.props[sac_def.sacrifice_vector].get_vector();
+        num_sacrifices = sacrifice_muts.size();
+        // mut can only meaningfully be set here if we have exactly one.
+        if (num_sacrifices == 1)
+            mut = AS_MUT(sacrifice_muts[0]);
+    }
+    else
+        mut = sac_def.mutation;
 
-    mutation_type essence_sacrifice;
-    mutation_type purity_sacrifice;
+    // Increase piety each skill point removed.
+    if (sacrifice == ABIL_RU_SACRIFICE_ARCANA)
+    {
+        skill_type arcane_skill;
+        mutation_type arcane_mut;
+        CrawlVector &sacrifice_muts =
+            you.props[sac_def.sacrifice_vector].get_vector();
+        for (int i = 0; i < num_sacrifices; i++)
+        {
+            arcane_mut = AS_MUT(sacrifice_muts[i]);
+            arcane_skill = arcane_mutation_to_skill(arcane_mut);
+            piety_gain += _piety_for_skill(arcane_skill);
+
+            // If you already sacrificed love, nothing in the summoning school
+            // helps so substact piety accordingly.
+            if (player_mutation_level(MUT_NO_LOVE)
+                    && arcane_mut == MUT_NO_SUMMONING_MAGIC)
+            {
+                piety_gain -= sac_def.base_piety / 3;
+            }
+        }
+    }
+    else if (sac_def.sacrifice_skill != SK_NONE)
+        piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
 
     switch (sacrifice)
     {
-        case ABIL_RU_SACRIFICE_WORDS:
-            return 28;
-            break;
-        case ABIL_RU_SACRIFICE_DRINK:
-            return 28;
-            break;
-        case ABIL_RU_SACRIFICE_HEALTH:
-            return 20;
-            break;
         case ABIL_RU_SACRIFICE_ESSENCE:
-            essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
-
-            if (essence_sacrifice == MUT_LOW_MAGIC)
-                return 12;
-            else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
-                return 28;
+            if (mut == MUT_LOW_MAGIC)
+                piety_gain += 12;
+            else if (mut == MUT_MAGICAL_VULNERABILITY)
+                piety_gain += 28;
             else
-                return 16;
+                piety_gain += 16;
             break;
         case ABIL_RU_SACRIFICE_PURITY:
-            purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
-
-            if (purity_sacrifice == MUT_WEAK
-                || purity_sacrifice == MUT_CLUMSY
-                || purity_sacrifice == MUT_DOPEY)
+            if (mut == MUT_WEAK
+                || mut == MUT_CLUMSY
+                || mut == MUT_DOPEY)
             {
-                return 8;
+                piety_gain += 8;
             }
             // the other sacrifices get sharply worse if you already
             // have levels of them.
-            else if (player_mutation_level(purity_sacrifice) == 2)
-                return 28;
-            else if (player_mutation_level(purity_sacrifice) == 1)
-                return 20;
+            else if (player_mutation_level(mut) == 2)
+                piety_gain += 28;
+            else if (player_mutation_level(mut) == 1)
+                piety_gain += 20;
             else
-                return 12;
-            break;
-        case ABIL_RU_SACRIFICE_STEALTH:
-            return 20 + _piety_for_skill(SK_STEALTH);
+                piety_gain += 12;
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = 60 + _piety_for_skill(SK_EVOCATIONS);
             if (player_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
-            return piety_gain;
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            piety_gain = 20 + _piety_for_skill(SK_DODGING);
             if (player_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 20;
             else if (you.species == SP_OCTOPODE
@@ -5243,55 +5272,28 @@ static int _get_sacrifice_piety(ability_type sacrifice)
             {
                 piety_gain += 28; // this sacrifice is worse for these races
             }
-            return piety_gain;
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            piety_gain = 20 + _piety_for_skill(SK_ARMOUR);
             if (player_mutation_level(MUT_NO_DODGING))
                 piety_gain += 20;
-            return piety_gain;
-            break;
-        case ABIL_RU_SACRIFICE_COURAGE:
-            return 25;
             break;
         case ABIL_RU_SACRIFICE_LOVE:
             if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
                 && player_mutation_level(MUT_NO_ARTIFICE))
             {
-                return 1; // this is virtually useless, aside from zot_tub
+                // this is virtually useless, aside from zot_tub
+                piety_gain -= 19;
             }
             else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
                 || player_mutation_level(MUT_NO_ARTIFICE))
             {
-                return 10;
+                piety_gain -= 10;
             }
-            else
-                return 20;
-            break;
-        case ABIL_RU_SACRIFICE_ARCANA:
-            piety_gain = 25;
-            arcane_mutations_size = current_arcane_sacrifices.size();
-            for (int i = 0; i < arcane_mutations_size; ++i)
-            {
-                mutation_type arcane_sacrifice =
-                    AS_MUT(current_arcane_sacrifices[i]);
-                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-                if (player_mutation_level(MUT_NO_LOVE)
-                        && arcane_sacrifice == MUT_NO_SUMMONING_MAGIC)
-                    // nothing in the summoning school helps so substact piety
-                    piety_gain -= 8;
-                else
-                    piety_gain += _piety_for_skill(mutation_skill);
-            }
-            return piety_gain;
-            break;
-        case ABIL_RU_SACRIFICE_HAND:
-            return 70 + _piety_for_skill(SK_SHIELDS);
             break;
         default:
-            return 0;
+            break;
     }
-    return 0;
+    return piety_gain;
 }
 
 // Pick three new sacrifices to offer to the player. They should be distinct
@@ -5305,8 +5307,8 @@ void ru_offer_new_sacrifices()
     // for now we'll just pick three at random
     int num_sacrifices = possible_sacrifices.size();
 
+    // This can't happen outside wizmode, but may as well handle gracefully
     if (num_sacrifices < 3)
-        // This can't happen outside wizmode, but may as well handle gracefully
         return;
 
     simple_god_message(" believes you are ready to make a new sacrifice.");
@@ -5319,6 +5321,7 @@ void ru_offer_new_sacrifices()
     int number_of_tries = 0;
     int max_tries = 20;
     int max_overpiety = 170;
+    sacrifice_def sac_def;
 
     do
     {
@@ -5329,11 +5332,10 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
+        sac_def = get_sacrifice_def(possible_sacrifices[lesser_sacrifice]);
     }
     while (lesser_sacrifice == -1
-                || you.piety + _get_sacrifice_piety(
-                    possible_sacrifices[lesser_sacrifice])
-                    > max_overpiety);
+        || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
 
     number_of_tries = 0;
     do
@@ -5345,11 +5347,11 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
+        sac_def = get_sacrifice_def(possible_sacrifices[sacrifice]);
     }
     while (sacrifice == -1
-                || sacrifice == lesser_sacrifice
-                || you.piety + _get_sacrifice_piety(
-                    possible_sacrifices[sacrifice]) > max_overpiety);
+            || sacrifice == lesser_sacrifice
+            || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
 
     number_of_tries = 0;
     do
@@ -5361,13 +5363,12 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
+        sac_def = get_sacrifice_def(possible_sacrifices[greater_sacrifice]);
     }
     while (greater_sacrifice == -1
-                || greater_sacrifice == lesser_sacrifice
-                || greater_sacrifice == sacrifice
-                || you.piety + _get_sacrifice_piety(
-                    possible_sacrifices[greater_sacrifice])
-                    > max_overpiety);
+            || greater_sacrifice == lesser_sacrifice
+            || greater_sacrifice == sacrifice
+            || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
@@ -5402,329 +5403,201 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
     you.sacrifices[sacrifice] += 1;
 }
 
-static bool _execute_sacrifice(mutation_type sacrifice, int piety_gain,
-        const char* message)
+static bool _execute_sacrifice(int piety_gain, const char* message)
 {
     mprf("Ru asks you to %s.", message);
-    mprf("This is %s sacrifice.",
-        _describe_sacrifice_piety_gain(piety_gain));
+    mprf("This is %s sacrifice.", _describe_sacrifice_piety_gain(piety_gain));
     if (!yesno("Do you really want to make this sacrifice?",
                false, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
-
-    _apply_ru_sacrifice(sacrifice);
     return true;
 }
 
-
 static void _ru_kill_skill(skill_type skill)
 {
-    change_skill_points(skill,
-        -you.skill_points[skill], true);
+    change_skill_points(skill, -you.skill_points[skill], true);
     you.stop_train.insert(skill);
 }
 
-
-bool ru_do_sacrifice(ability_type sacrifice)
+static void _extra_sacrifice_code(sacrifice_def sac_def)
 {
-    skill_type mutation_skill;
-    int arcane_mutations_size;
+    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND) {
+        equipment_type ring_slot;
 
-    ASSERT(you.props.exists("current_health_sacrifice"));
-    ASSERT(you.props.exists("current_essence_sacrifice"));
-    ASSERT(you.props.exists("current_purity_sacrifice"));
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
+        if (you.species == SP_OCTOPODE)
+            ring_slot = EQ_RING_EIGHT;
+        else
+            ring_slot = EQ_LEFT_RING;
 
-    CrawlVector &current_health_sacrifice =
-        you.props["current_health_sacrifice"].get_vector();
-    CrawlVector &current_essence_sacrifice =
-        you.props["current_essence_sacrifice"].get_vector();
-    CrawlVector &current_purity_sacrifice =
-        you.props["current_purity_sacrifice"].get_vector();
-    CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
+        item_def* const shield = you.slot_item(EQ_SHIELD, true);
+        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
+        item_def* const ring = you.slot_item(ring_slot, true);
+        int ring_inv_slot = you.equip[ring_slot];
+        bool open_ring_slot = false;
 
-    mutation_type health_sacrifice;
-    mutation_type essence_sacrifice;
-    mutation_type purity_sacrifice;
+        // Drop your shield if there is one
+        if (shield != NULL)
+        {
+            mprf("You can no longer hold %s!",
+                shield->name(DESC_YOUR).c_str());
+            unequip_item(EQ_SHIELD);
+        }
 
-    // set these up for Sac Hand
-    equipment_type ring_slot;
-
-    if (you.species == SP_OCTOPODE)
-        ring_slot = EQ_RING_EIGHT;
-    else
-        ring_slot = EQ_LEFT_RING;
-
-    item_def* const shield = you.slot_item(EQ_SHIELD, true);
-    item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-    item_def* const ring = you.slot_item(ring_slot, true);
-    int ring_inv_slot = you.equip[ring_slot];
-    bool open_ring_slot = false;
-
-    int piety_gain;
-    // by the time we apply this, we'll have either 1 or 3 (arcane).
-    int num_sacrifices = 1;
-
-    switch (sacrifice)
-    {
-        case ABIL_RU_SACRIFICE_WORDS:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-            if (!_execute_sacrifice(MUT_NO_READ, piety_gain,
-                "sacrifice your ability to read while threatened"))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice", "sacrificed words!");
-            break;
-        case ABIL_RU_SACRIFICE_DRINK:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-            if (!_execute_sacrifice(MUT_NO_DRINK, piety_gain,
-                "sacrifice your ability to drink while threatened"))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice", "sacrificed drink!");
-            break;
-        case ABIL_RU_SACRIFICE_HEALTH:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-            health_sacrifice = AS_MUT(current_health_sacrifice[0]);
-
-            if (!_execute_sacrifice(health_sacrifice, piety_gain,
-                make_stringf("corrupt yourself with %s",
-                    mutation_desc_for_text(health_sacrifice)).c_str()))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice",
-                    make_stringf("sacrificed health: %s!",
-                    mutation_desc_for_text(health_sacrifice)).c_str());
-            break;
-        case ABIL_RU_SACRIFICE_ESSENCE:
-            essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(essence_sacrifice, piety_gain,
-                make_stringf("corrupt yourself with %s",
-                    mutation_desc_for_text(essence_sacrifice)).c_str()))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice",
-                    make_stringf("sacrificed essence: %s!",
-                    mutation_desc_for_text(essence_sacrifice)).c_str());
-            break;
-        case ABIL_RU_SACRIFICE_PURITY:
-            purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(purity_sacrifice, piety_gain,
-                make_stringf("corrupt yourself with %s",
-                    mutation_desc_for_text(purity_sacrifice)).c_str()))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice",
-                    make_stringf("sacrificed purity: %s!",
-                    mutation_desc_for_text(purity_sacrifice)).c_str());
-            break;
-        case ABIL_RU_SACRIFICE_STEALTH:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_NO_STEALTH, piety_gain,
-                "sacrifice your ability to go unnoticed"))
-            {
-                return false;
-            }
-            _ru_kill_skill(SK_STEALTH);
-            mark_milestone("sacrifice", "sacrificed stealth!");
-            break;
-        case ABIL_RU_SACRIFICE_ARTIFICE:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_NO_ARTIFICE, piety_gain,
-                "sacrifice all use of magical tools"))
-            {
-                return false;
-            }
-            _ru_kill_skill(SK_EVOCATIONS);
-            mark_milestone("sacrifice", "sacrificed evocations!");
-            break;
-        case ABIL_RU_SACRIFICE_NIMBLENESS:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_NO_DODGING, piety_gain,
-                "sacrifice your ability to dodge"))
-            {
-                return false;
-            }
-            _ru_kill_skill(SK_DODGING);
-            mark_milestone("sacrifice", "sacrificed dodging!");
-            break;
-        case ABIL_RU_SACRIFICE_DURABILITY:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_NO_ARMOUR, piety_gain,
-                "sacrifice your ability to wear armour well"))
-            {
-                return false;
-            }
-            _ru_kill_skill(SK_ARMOUR);
-            mark_milestone("sacrifice", "sacrificed armour!");
-            break;
-        case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_COWARDICE, piety_gain,
-                "sacrifice your courage"))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice", "sacrificed courage!");
-            break;
-        case ABIL_RU_SACRIFICE_LOVE:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_NO_LOVE, piety_gain,
-                "sacrifice your ability to be loved"))
-            {
-                return false;
-            }
-            mark_milestone("sacrifice", "sacrificed love!");
-            break;
-        case ABIL_RU_SACRIFICE_ARCANA:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            mprf("Ru asks you to sacrifice all use of %s, %s, and %s.",
-                arcane_mutation_to_school_name(
-                    static_cast<mutation_type>(
-                        current_arcane_sacrifices[0].get_int())),
-                arcane_mutation_to_school_name(
-                    static_cast<mutation_type>(
-                        current_arcane_sacrifices[1].get_int())),
-                arcane_mutation_to_school_name(
-                    static_cast<mutation_type>(
-                        current_arcane_sacrifices[2].get_int()))
-                );
-            mprf("This is %s sacrifice.",
-                _describe_sacrifice_piety_gain(piety_gain));
-            if (!yesno("Do you really want to make this sacrifice?",
-                       false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-
-            arcane_mutations_size = current_arcane_sacrifices.size();
-            for (int i = 0; i < arcane_mutations_size; ++i)
-            {
-                mutation_type arcane_sacrifice =
-                    AS_MUT(current_arcane_sacrifices[i]);
-                _apply_ru_sacrifice(arcane_sacrifice);
-
-                // gain one piety for every 50 skill points
-                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-
-                // zero out useless skills
-                _ru_kill_skill(mutation_skill);
-
-                for (int j = 0; j < MAX_KNOWN_SPELLS; ++j)
-                {
-                    const spell_type spell = you.spells[j];
-                    if (!is_valid_spell(spell))
-                        continue;
-                    if (spell_typematch(spell,
-                                        skill2spell_type(mutation_skill)))
-                    {
-                        del_spell_from_memory_by_slot(j);
-                    }
-                }
-            }
-            num_sacrifices = 3;
-            mark_milestone("sacrifice",
-                make_stringf("sacrificed arcana: %s, %s, and %s!",
-                    mutation_desc_for_text(static_cast<mutation_type>(
-                        current_arcane_sacrifices[0].get_int())),
-                    mutation_desc_for_text(static_cast<mutation_type>(
-                        current_arcane_sacrifices[1].get_int())),
-                    mutation_desc_for_text(static_cast<mutation_type>(
-                        current_arcane_sacrifices[2].get_int()))).c_str());
-            break;
-        case ABIL_RU_SACRIFICE_HAND:
-            piety_gain = _get_sacrifice_piety(sacrifice);
-
-            if (!_execute_sacrifice(MUT_MISSING_HAND, piety_gain,
-                make_stringf("sacrifice one of your %s",
-                    you.hand_name(true).c_str()).c_str()))
-            {
-                return false;
-            }
-
-            // Drop your shield if there is one
-            if (shield != NULL)
+        // And your two-handed weapon
+        if (weapon != NULL)
+        {
+            if (you.hands_reqd(*weapon) == HANDS_TWO)
             {
                 mprf("You can no longer hold %s!",
-                    shield->name(DESC_YOUR).c_str());
-                unequip_item(EQ_SHIELD);
+                    weapon->name(DESC_YOUR).c_str());
+                unequip_item(EQ_WEAPON);
             }
+        }
 
-            // And your two-handed weapon
-            if (weapon != NULL)
+        // And one ring
+        if (ring != NULL)
+        {
+            if (you.species == SP_OCTOPODE)
             {
-                if (you.hands_reqd(*weapon) == HANDS_TWO)
+                for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
                 {
-                    mprf("You can no longer hold %s!",
-                        weapon->name(DESC_YOUR).c_str());
-                    unequip_item(EQ_WEAPON);
+                    if (!you.slot_item(static_cast<equipment_type>(eq)
+                        , true))
+                    {
+                        open_ring_slot = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (!you.slot_item(static_cast<equipment_type>(
+                    EQ_RIGHT_RING), true))
+                {
+                    open_ring_slot = true;
                 }
             }
 
-            // And one ring
-            if (ring != NULL)
+            mprf("You can no longer wear %s!",
+                ring->name(DESC_YOUR).c_str());
+            unequip_item(ring_slot);
+            if (open_ring_slot)
             {
-                if (you.species == SP_OCTOPODE)
+                mprf("You put %s back on %s %s!",
+                ring->name(DESC_YOUR).c_str(),
+                (you.species == SP_OCTOPODE ? "another" : "your other"),
+                you.hand_name(true).c_str());
+                puton_ring(ring_inv_slot, false);
+            }
+        }
+    }
+}
+
+bool ru_do_sacrifice(sacrifice_def sac_def)
+{
+    bool variable_sac;
+    mutation_type mut;
+    int num_sacrifices;
+    string offer_text;
+    string mile_text;
+    string sac_text;
+    bool is_sac_arcana = (sac_def.sacrifice == ABIL_RU_SACRIFICE_ARCANA)
+        ? true : false;
+    int piety_gain = 0;
+
+    // For variable sacrifices, we need to compose the text that will be
+    // displayed at the time of sacrifice offer and as a milestone if the
+    // sacrifice is accepted. We also need to figure out piety.
+    if (sac_def.sacrifice_vector)
+    {
+        variable_sac = true;
+        ASSERT(you.props.exists(sac_def.sacrifice_vector));
+        CrawlVector &sacrifice_muts =
+            you.props[sac_def.sacrifice_vector].get_vector();
+        num_sacrifices = sacrifice_muts.size();
+
+        for (int i = 0; i < num_sacrifices; i++)
+        {
+            mut = AS_MUT(sacrifice_muts[i]);
+
+            // format the text that will be displayed
+            if (is_sac_arcana)
+            {
+                if (i == num_sacrifices - 1)
                 {
-                    for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
-                    {
-                        if (!you.slot_item(static_cast<equipment_type>(eq)
-                            , true))
-                        {
-                            open_ring_slot = true;
-                            break;
-                        }
-                    }
+                    sac_text = make_stringf("%sand %s", sac_text.c_str(),
+                        arcane_mutation_to_school_name(mut));
                 }
                 else
                 {
-                    if (!you.slot_item(static_cast<equipment_type>(
-                        EQ_RIGHT_RING), true))
-                    {
-                        open_ring_slot = true;
-                    }
-                }
-
-                mprf("You can no longer wear %s!",
-                    ring->name(DESC_YOUR).c_str());
-                unequip_item(ring_slot);
-                if (open_ring_slot)
-                {
-                    mprf("You put %s back on %s %s!",
-                    ring->name(DESC_YOUR).c_str(),
-                    (you.species == SP_OCTOPODE ? "another" : "your other"),
-                    you.hand_name(true).c_str());
-                    puton_ring(ring_inv_slot, false);
+                    sac_text = make_stringf("%s%s, ", sac_text.c_str(),
+                        arcane_mutation_to_school_name(mut));
                 }
             }
-
-            _ru_kill_skill(SK_SHIELDS);
-            mark_milestone("sacrifice", "sacrificed a hand!");
-            break;
-        default:
-            return false;
+            else
+                sac_text = static_cast<string>(mutation_desc_for_text(mut));
+        }
+        offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
+            sac_text.c_str());
+        mile_text = make_stringf("%s: %s", sac_def.milestone_text,
+            sac_text.c_str());
     }
+    else
+    {
+        variable_sac = false;
+        mut = sac_def.mutation;
+        num_sacrifices = 1;
+        offer_text = make_stringf("%s", sac_def.sacrifice_text);
+        mile_text = make_stringf("%s", sac_def.milestone_text);
+    }
+
+    piety_gain = _get_sacrifice_piety(sac_def);
+
+    // get confirmation that the sacrifice is desired.
+    if (!_execute_sacrifice(piety_gain, offer_text.c_str()))
+        return false;
+
+    // Apply the sacrifice, starting by mutating the player.
+    if (variable_sac)
+    {
+        CrawlVector &sacrifice_muts =
+            you.props[sac_def.sacrifice_vector].get_vector();
+        for (int i = 0; i < num_sacrifices; i++)
+        {
+            mut = AS_MUT(sacrifice_muts[i]);
+            _apply_ru_sacrifice(mut);
+        }
+    }
+    else
+        _apply_ru_sacrifice(mut);
+
+    // Remove any no-longer-usable skills.
+    if (is_sac_arcana)
+    {
+        skill_type arcane_skill;
+        mutation_type arcane_mut;
+        CrawlVector &sacrifice_muts =
+            you.props[sac_def.sacrifice_vector].get_vector();
+        for (int i = 0; i < num_sacrifices; i++)
+        {
+            arcane_mut = AS_MUT(sacrifice_muts[i]);
+            arcane_skill = arcane_mutation_to_skill(arcane_mut);
+            _ru_kill_skill(arcane_skill);
+        }
+    }
+    else if (sac_def.sacrifice_skill != SK_NONE)
+        _ru_kill_skill(sac_def.sacrifice_skill);
+
+    mark_milestone("sacrifice", mile_text.c_str());
+
+    // Any special handling that's needed.
+    _extra_sacrifice_code(sac_def);
+
+    // Update how many Ru sacrifices you have. This is used to avoid giving the
+    // player extra silver damage.
     if (you.props.exists("num_sacrifice_muts"))
     {
         you.props["num_sacrifice_muts"] = num_sacrifices +
@@ -5739,6 +5612,7 @@ bool ru_do_sacrifice(ability_type sacrifice)
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);
 
+    // Clean up.
     ru_expire_sacrifices();
     ru_reset_sacrifice_timer(true);
     redraw_screen(); // pretty much everything could have changed
