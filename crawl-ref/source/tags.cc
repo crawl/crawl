@@ -5120,6 +5120,11 @@ void unmarshallMonster(reader &th, monster& m)
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
     m.foe      = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    // In 0.16 alpha we briefly allowed YOU_FAULTLESS as a monster's foe.
+    if (m.foe == YOU_FAULTLESS)
+        m.foe = MHITYOU;
+#endif
     m.foe_memory = unmarshallInt(th);
 
     m.damage_friendly = unmarshallShort(th);
