@@ -4366,7 +4366,7 @@ bool monster::poison(actor *agent, int amount, bool force)
 int monster::skill(skill_type sk, int scale, bool real, bool drained) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
-    if (mons_intel(this) < I_NORMAL && !mons_is_avatar(this->type))
+    if (mons_intel(this) < I_NORMAL && !mons_is_avatar(type))
         return 0;
 
     const int hd = scale * get_hit_dice();
@@ -4928,20 +4928,20 @@ bool monster::check_set_valid_home(const coord_def &place,
 
 bool monster::has_originating_map() const
 {
-    return this->props.exists("map");
+    return props.exists("map");
 }
 
 string monster::originating_map() const
 {
-    if (!this->has_originating_map())
+    if (!has_originating_map())
         return "";
-    return this->props["map"].get_string();
+    return props["map"].get_string();
 }
 
 void monster::set_originating_map(const string &map_name)
 {
     if (!map_name.empty())
-        this->props["map"].get_string() = map_name;
+        props["map"].get_string() = map_name;
 }
 
 #define MAX_PLACE_NEAR_DIST 8
@@ -6820,14 +6820,14 @@ int monster::spell_hd(spell_type spell) const
 void monster::align_avatars(bool force_friendly)
 {
     mon_attitude_type new_att = (force_friendly ? ATT_FRIENDLY
-                                   : this->attitude);
+                                   : attitude);
 
     // Neutral monsters don't need avatars, and in same cases would attack their
     // own avatars if they had them.
     if (new_att == ATT_NEUTRAL || new_att == ATT_STRICT_NEUTRAL
         || new_att == ATT_GOOD_NEUTRAL)
     {
-        this->remove_avatars();
+        remove_avatars();
         return;
     }
 
@@ -6845,18 +6845,18 @@ void monster::align_avatars(bool force_friendly)
         reset_battlesphere(avatar);
     }
 
-    actor* gavatar = this->get_ench(ENCH_GRAND_AVATAR).agent();
+    actor* gavatar = get_ench(ENCH_GRAND_AVATAR).agent();
     if (!gavatar)
         return;
     avatar = gavatar->as_monster();
     monster *owner = monster_by_mid(avatar->summoner);
-    if (avatar->summoner == this->mid)
+    if (avatar->summoner == mid)
     {
         avatar->attitude = new_att;
         grand_avatar_reset(avatar);
     }
     else if (!owner || !mons_aligned(this, owner))
-        this->del_ench(ENCH_GRAND_AVATAR);
+        del_ench(ENCH_GRAND_AVATAR);
 }
 
 void monster::remove_avatars()
@@ -6869,12 +6869,12 @@ void monster::remove_avatars()
     if (avatar)
         end_battlesphere(avatar, false);
 
-    actor* gavatar = this->get_ench(ENCH_GRAND_AVATAR).agent();
+    actor* gavatar = get_ench(ENCH_GRAND_AVATAR).agent();
     if (!gavatar)
         return;
     avatar = gavatar->as_monster();
-    if (avatar->summoner == this->mid)
+    if (avatar->summoner == mid)
         end_grand_avatar(avatar, false);
     else
-        this->del_ench(ENCH_GRAND_AVATAR);
+        del_ench(ENCH_GRAND_AVATAR);
 }
