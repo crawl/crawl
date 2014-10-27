@@ -2964,8 +2964,10 @@ void bolt::internal_ouch(int dam)
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
         if (reflections > 0)
+        {
             ouch(dam, actor_to_death_source(actor_by_mid(reflector)),
                  KILLED_BY_REFLECTION, name.c_str());
+        }
         else if (bounces > 0)
             ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE, name.c_str());
         else
