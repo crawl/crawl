@@ -84,7 +84,9 @@ monster* player::get_beholder(const coord_def &target) const
     for (unsigned int i = 0; i < beholders.size(); i++)
     {
         monster* mon = monster_by_mid(beholders[i]);
-        ASSERTM(mon, "Beheld by bad monster; mid = %d, #beholders = %d", beholders[i], beholders.size());
+        // The monster may have died.
+        if (!mon)
+            continue;
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
@@ -138,7 +140,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
 static void _removed_beholder_msg(const monster* mon)
 {
-    if (!mon->alive() || !mons_is_siren_beholder(mon)
+    if (!mon || !mon->alive() || !mons_is_siren_beholder(mon)
         || mon->submerged() || !you.see_cell(mon->pos()))
     {
         return;
@@ -262,7 +264,7 @@ bool player::possible_beholder(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return mon->alive() && !mon->submerged()
+    return mon && mon->alive() && !mon->submerged()
         && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
         && !mon->wont_attack() && !mon->pacified()
         && ((mons_is_siren_beholder(mon->type)
