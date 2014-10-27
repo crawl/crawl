@@ -23,6 +23,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "hiscores.h"
 #include "hints.h"
@@ -84,6 +85,7 @@ static void _initialize()
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_zap_index();
     init_mut_index();
+    init_sac_index();
     init_duration_index();
     init_mon_name_cache();
     init_mons_spells();
