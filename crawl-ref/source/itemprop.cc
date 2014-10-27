@@ -435,11 +435,6 @@ struct food_def
     int         turns;
 };
 
-// NOTE: Any food with special random messages or side effects
-// currently only takes one turn to eat (except ghouls and chunks)...
-// If this changes then those items will have to have special code
-// (like ghoul chunks) to guarantee that the special thing is only
-// done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
