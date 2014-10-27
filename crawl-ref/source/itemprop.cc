@@ -438,34 +438,34 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4 },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 3 },
     { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3 },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2 },
+    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 1 },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4 },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 3 },
 
     { FOOD_FRUIT,        "fruit",         850,  -100,    50,  20, 1 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2 },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 3 },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1 },
 
 #if TAG_MAJOR_VERSION == 34
-    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2 },
-    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2 },
-    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 2 },
-    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 2 },
-    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 2 },
-    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 2 },
-    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 2 },
-    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 2 },
-    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 2 },
-    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 2 },
-    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 2 },
-    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 2 },
+    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 1 },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 1 },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 1 },
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 1 },
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 1 },
+    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 1 },
+    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 1 },
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 1 },
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 1 },
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 1 },
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 1 },
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 1 },
     { FOOD_GRAPE,        "buggy",         100,   -20,    20,   2, 1 },
     { FOOD_SULTANA,      "buggy",          70,   -20,    20,   1, 1 },
-    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 2 },
-    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 2 },
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 1 },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 1 },
 #endif
 };
 
