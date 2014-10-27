@@ -2334,8 +2334,8 @@ int map_def::glyph_at(const coord_def &c) const
 string map_def::name_at(const coord_def &c) const
 {
     vector<string> names;
-    names.push_back(this->name);
-    for (int i = 0, nsubvaults = this->subvault_places.size();
+    names.push_back(name);
+    for (int i = 0, nsubvaults = subvault_places.size();
          i < nsubvaults; ++i)
     {
         const subvault_place &subvault = subvault_places[i];
@@ -3167,7 +3167,7 @@ void map_def::hmirror()
     default: break;
     }
 
-    for (int i = 0, nsubvaults = this->subvault_places.size();
+    for (int i = 0, nsubvaults = subvault_places.size();
          i < nsubvaults; ++i)
     {
         subvault_place &sv = subvault_places[i];
@@ -3201,7 +3201,7 @@ void map_def::vmirror()
     default: break;
     }
 
-    for (int i = 0, nsubvaults = this->subvault_places.size();
+    for (int i = 0, nsubvaults = subvault_places.size();
          i < nsubvaults; ++i)
     {
         subvault_place &sv = subvault_places[i];
@@ -3250,7 +3250,7 @@ void map_def::rotate(bool clock)
                 break;
             }
 
-        for (int i = 0, nsubvaults = this->subvault_places.size();
+        for (int i = 0, nsubvaults = subvault_places.size();
              i < nsubvaults; ++i)
         {
             subvault_place &sv = subvault_places[i];

@@ -439,9 +439,9 @@ void formatted_string::del_char()
 void formatted_string::add_glyph(cglyph_t g)
 {
     const int last_col = find_last_colour();
-    this->textcolour(g.col);
-    this->cprintf("%s", stringize_glyph(g.ch).c_str());
-    this->textcolour(last_col);
+    textcolour(g.col);
+    cprintf("%s", stringize_glyph(g.ch).c_str());
+    textcolour(last_col);
 }
 
 void formatted_string::textcolour(int colour)

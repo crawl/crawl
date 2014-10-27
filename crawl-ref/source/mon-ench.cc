@@ -167,7 +167,7 @@ bool monster::add_ench(const mon_enchant &ench)
         || ench.ench == ENCH_BRIBED
         || ench.ench == ENCH_PERMA_BRIBED)
     {
-        this->align_avatars(true);
+        align_avatars(true);
     }
     return true;
 }
@@ -2082,7 +2082,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             || has_ench(ENCH_WATER_HOLD) && !res_water_drowning()
             || has_ench(ENCH_MUTE))
         {
-            this->speed_increment += me.duration;
+            speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);
             if (you.can_see(this))
             {
