@@ -1129,6 +1129,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
+    // Monsters know to blame you for reflecting things at them.
+    if (src_idx == YOU_FAULTLESS)
+        src_idx = MHITYOU;
+
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
         mon->behaviour = BEH_FLEE;
