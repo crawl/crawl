@@ -135,7 +135,7 @@ const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
     ASSERT(mut_index[mut] != -1);
-    return *&mut_data[mut_index[mut]];
+    return mut_data[mut_index[mut]];
 }
 
 static bool _is_valid_mutation(mutation_type mut)
