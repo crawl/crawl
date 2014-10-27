@@ -71,6 +71,9 @@ monster* player::get_fearmonger(const coord_def &target) const
     for (unsigned int i = 0; i < fearmongers.size(); i++)
     {
         monster* mon = monster_by_mid(fearmongers[i]);
+        // The monster may have died.
+        if (!mon)
+            continue;
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
@@ -188,7 +191,7 @@ bool player::_possible_fearmonger(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return mon->alive()
+    return mon && mon->alive()
         && !silenced(pos()) && !silenced(mon->pos())
         && see_cell(mon->pos()) && mon->see_cell(pos())
         && !mon->submerged() && !mon->confused()
