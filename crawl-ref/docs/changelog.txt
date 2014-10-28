@@ -100,7 +100,8 @@ Items
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
-* All food other than rations and chunks now takes one turn to eat.
+* All food other than rations, chunks, and royal jellies now takes one turn
+  to eat.
 * All short blades now do piercing damage.
 * Renamed items:
     - Cutlasses are now rapiers.
