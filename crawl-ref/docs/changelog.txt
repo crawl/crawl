@@ -51,7 +51,7 @@ Monsters
     and draining clouds, and rumble deeply to alert far-away foes.
   - Anubis guards, living fanatics appearing in Tomb. They're conditioned to
     be immune to torment, and breathe draining, dispel undead, confuse, and
-    sound signal horns to alert other guards.
+    howl to alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
     bite to drain life, speed, and skill. Their bite can also apply rN-.
 * Monster malmutations are now temporary, but more significant.
