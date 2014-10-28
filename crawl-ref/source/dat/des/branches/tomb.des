@@ -900,6 +900,37 @@ MAP
 .............................
 ENDMAP
 
+NAME: tomb_2_ambush_grunt_hexed
+TAGS: tomb_2_ambush unrand
+MONS: mummy / skeletal warrior w:2
+: tomb_guardian_set(_G)
+MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS: greater mummy / ancient lich w:1
+MAP
+.............................
+..............x..............
+........4.....x.....4........
+......xx.............xx......
+.....xxx...xxxxxxx...xxx.....
+....xxx....xxxxxxx....xxx....
+...xxx..2.....1.....2..xxx...
+...xx...................xx...
+.............................
+.............................
+..3.xx........(........xx.3..
+.............................
+.............................
+...xx...................xx...
+...xxx..2.....1.....2..xxx...
+....xxx....xxxxxxx....xxx....
+.....xxx...xxxxxxx...xxx.....
+......xx.............xx......
+........4.....x.....4........
+..............x..............
+.............................
+.............................
+ENDMAP
+
 #############################################################################
 # Tomb:3
 #
@@ -1080,6 +1111,69 @@ cc...ccc........1cccccccc1........ccc...c
 cc....ccc......1..........1......ccc....c
 ccc....ccc....2....3..3....2....ccc....cc
 cccc.....c...1..............1...c.....ccc
+cccccccc+cccc................cccc+ccccccc
+             ................
+ENDMAP
+
+NAME:  tomb_3_rune_grunt_layered
+TAGS:  tomb_3_rune unrand
+: tomb_guardian_set(_G)
+MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS:  greater mummy / ancient lich w:1
+KMASK: O = no_item_gen
+KITEM: O = golden rune of Zot
+KMONS: K = Khufu w:3 / greater mummy, greater mummy
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc..............1...............ccccc
+cccc1.......3................3.......1ccc
+ccc..2..............1...............2..cc
+ccc...1cccc...cccccccccccccc...cccc1...cc
+cc....cc..........................cc....c
+cc...cc............................cc...c
+cc...c.....cccccccccccccccccccc.....c...c
+cc...c....cc........O.........cc....c...c
+cc.3.c1.21c3.1ccccccccccccc1.3.c12.1c.3.c
+cc...c....cc..................cc....c...c
+cc...c.....cccccccc.K.ccccccccc.....c...c
+cc...cc.......1............1.......cc...c
+cc....cc......1............1......cc....c
+ccc...1cccccccccccccccccccccccccccc1...cc
+ccc..2..........1........1..........2..cc
+cccc1.......3................3.......1ccc
+cccccc........1............1........ccccc
+cccccccc+cccc................cccc+ccccccc
+             ................
+ENDMAP
+
+NAME:   tomb_3_rune_grunt_doroklohe
+TAGS:   tomb_3_rune unrand
+: tomb_guardian_set(_G)
+MONS:   mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS:   greater mummy / ancient lich w:1
+NSUBST: 3 = 1:O / *:3
+KMASK:  O = no_item_gen
+KITEM:  O = golden rune of Zot
+KMONS:  O = Khufu w:3 / greater mummy, greater mummy
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc..........1.......1...........ccccc
+cccc................2.................ccc
+ccc.............1.......1..............cc
+ccc....xxx..1..xxx.....xxx..1..xxx.....cc
+cc.....+3x.....x3+.....+3x.....x3+......c
+cc.....xxx..1..xxx..2..xxx..1..xxx......c
+cc......................................c
+cc......1..x+x..1..x+x..1..x+x..1.......c
+cc.........x3x.....x3x.....x3x..........c
+cc......1..xxx..1..xxx..1..xxx..1.......c
+cc......................................c
+cc.....+xx........1....1.......xx+......c
+cc.....x3x.......1......1......x3x......c
+ccc....xxx......2........2.....xxx.....cc
+ccc............1..........1............cc
+cccc..........2............2..........ccc
+cccccc.......1..............1.......ccccc
 cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
