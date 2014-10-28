@@ -14,25 +14,6 @@
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
-struct sacrifice_def
-{
-    ability_type  sacrifice;        // The ability that executes the sacrifice.
-    mutation_type mutation;         // The mutation that will be inflicted.
-    const char*   sacrifice_text;   // Format: "sacrifice your hand"
-                                    // in case of variable sacrifices or sac
-                                    // hand, this will be extended later
-    const char*   milestone_text;   // Format: "sacrificed <foo>"
-                                    // in case of variable sacrifices this will
-                                    // be extended later
-    int           base_piety;       // The piety that will be gained, modified
-                                    // by the skill points in the skill below.
-    skill_type    sacrifice_skill;  // This skill will be eliminated.
-    const char*   sacrifice_vector; // This is used for sacrifices which give
-                                    // multiple mutations. It is a key into
-                                    // you.props, yielding a list of mutations
-                                    // granted by the sacrifice.
-};
-
 struct bolt;
 class stack_iterator;
 
@@ -130,12 +111,11 @@ void qazlal_elemental_force();
 bool qazlal_disaster_area();
 
 void init_sac_index();
-const sacrifice_def& get_sacrifice_def(ability_type sac);
 const skill_type arcane_mutation_to_skill(mutation_type mutation);
 const char* arcane_mutation_to_school_name(mutation_type mutation);
 vector<ability_type> get_possible_sacrifices();
 void ru_offer_new_sacrifices();
-bool ru_do_sacrifice(sacrifice_def sac_data);
+bool ru_do_sacrifice(ability_type sac);
 bool ru_reject_sacrifices();
 void ru_reset_sacrifice_timer(bool clear_timer = false);
 void ru_expire_sacrifices();
