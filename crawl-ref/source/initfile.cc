@@ -1458,6 +1458,7 @@ static const char* config_defaults[] =
     "defaults/standard_colours.txt",
     "defaults/food_colouring.txt",
     "defaults/menu_colours.txt",
+    "defaults/glyph_colours.txt",
     "defaults/messages.txt",
     "defaults/misc.txt",
 };

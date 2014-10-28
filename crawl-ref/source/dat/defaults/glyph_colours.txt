@@ -1,0 +1,16 @@
+# Changing colours of various glyphs (symbols on the playing field) in console mode
+
+item := item_glyph
+
+item += potion:lightgrey
+item += scroll:lightgrey
+
+# These are intentionally the same colours as for intentory (see menu_colours.txt):
+item += good_item.*(potion|scroll):cyan
+item += emergency_item.*(potion|scroll):yellow
+item += dangerous_item.*(potion|scroll):magenta
+item += forbidden.*(potion|scroll):red
+
+# Bad items purposefully become darkgrey here (not lightred as in inventory):
+item += useless.*(potion|scroll|missile|armour|weapon):darkgrey
+item += unidentified.*(potion|scroll|book|jewellery|wand|rod|magical staff).*:lightblue
