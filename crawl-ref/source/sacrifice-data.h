@@ -1,3 +1,4 @@
+// See struct sacrifice_def in godabil.cc
 static const sacrifice_def sac_data[] =
 {
 

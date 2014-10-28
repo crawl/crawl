@@ -67,7 +67,6 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
-#include "sacrifice-data.h"
 #include "skill_menu.h"
 #include "shopping.h"
 #include "shout.h"
@@ -92,6 +91,28 @@
 #ifdef USE_TILE
 #include "tiledef-main.h"
 #endif
+
+struct sacrifice_def
+{
+    ability_type  sacrifice;        // The ability that executes the sacrifice.
+    mutation_type mutation;         // The mutation that will be inflicted.
+    const char*   sacrifice_text;   // Format: "sacrifice your hand"
+                                    // in case of variable sacrifices or sac
+                                    // hand, this will be extended later
+    const char*   milestone_text;   // Format: "sacrificed <foo>"
+                                    // in case of variable sacrifices this will
+                                    // be extended later
+    int           base_piety;       // The piety that will be gained, modified
+                                    // by the skill points in the skill below.
+    skill_type    sacrifice_skill;  // This skill will be eliminated.
+    const char*   sacrifice_vector; // This is used for sacrifices which give
+                                    // multiple mutations. It is a key into
+                                    // you.props, yielding a list of mutations
+                                    // granted by the sacrifice.
+};
+
+// Load the sac_data array.
+#include "sacrifice-data.h"
 
 static void _zin_saltify(monster* mon);
 
@@ -4922,22 +4943,21 @@ bool qazlal_disaster_area()
     return true;
 }
 
-map<ability_type, sacrifice_def> sacrifice_data_map;
+static map<ability_type, const sacrifice_def *> sacrifice_data_map;
 
 void init_sac_index()
 {
     for (unsigned int i = ABIL_FIRST_SACRIFICE; i <= ABIL_FINAL_SACRIFICE; ++i)
     {
         unsigned int sac_index = i - ABIL_FIRST_SACRIFICE;
-        const sacrifice_def sacrifice = sac_data[sac_index];
-        sacrifice_data_map[static_cast<ability_type>(i)] = sacrifice;
+        sacrifice_data_map[static_cast<ability_type>(i)] = &sac_data[sac_index];
     }
 }
 
-const sacrifice_def& get_sacrifice_def(ability_type sac)
+static const sacrifice_def &_get_sacrifice_def(ability_type sac)
 {
     ASSERT_RANGE(sac, ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE+1);
-    return *&sacrifice_data_map[sac];
+    return *sacrifice_data_map[sac];
 }
 
 vector<ability_type> get_possible_sacrifices()
@@ -5184,11 +5204,11 @@ static int _piety_for_skill(skill_type skill)
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
-static int _get_sacrifice_piety(sacrifice_def sac_def)
+static int _get_sacrifice_piety(ability_type sac)
 {
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     int piety_gain = sac_def.base_piety;
     ability_type sacrifice = sac_def.sacrifice;
-    bool variable_sac = false;
     mutation_type mut;
     int num_sacrifices = 0;
 
@@ -5196,7 +5216,6 @@ static int _get_sacrifice_piety(sacrifice_def sac_def)
 
     if (sac_def.sacrifice_vector)
     {
-        variable_sac = true;
         ASSERT(you.props.exists(sac_def.sacrifice_vector));
         CrawlVector &sacrifice_muts =
             you.props[sac_def.sacrifice_vector].get_vector();
@@ -5321,7 +5340,6 @@ void ru_offer_new_sacrifices()
     int number_of_tries = 0;
     int max_tries = 20;
     int max_overpiety = 170;
-    sacrifice_def sac_def;
 
     do
     {
@@ -5332,10 +5350,9 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
-        sac_def = get_sacrifice_def(possible_sacrifices[lesser_sacrifice]);
     }
     while (lesser_sacrifice == -1
-        || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
+        || you.piety + _get_sacrifice_piety(possible_sacrifices[lesser_sacrifice]) > max_overpiety);
 
     number_of_tries = 0;
     do
@@ -5347,11 +5364,10 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
-        sac_def = get_sacrifice_def(possible_sacrifices[sacrifice]);
     }
     while (sacrifice == -1
             || sacrifice == lesser_sacrifice
-            || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
+            || you.piety + _get_sacrifice_piety(possible_sacrifices[sacrifice]) > max_overpiety);
 
     number_of_tries = 0;
     do
@@ -5363,12 +5379,11 @@ void ru_offer_new_sacrifices()
             number_of_tries = 0;
             max_overpiety += 3;
         }
-        sac_def = get_sacrifice_def(possible_sacrifices[greater_sacrifice]);
     }
     while (greater_sacrifice == -1
             || greater_sacrifice == lesser_sacrifice
             || greater_sacrifice == sacrifice
-            || you.piety + _get_sacrifice_piety(sac_def) > max_overpiety);
+            || you.piety + _get_sacrifice_piety(possible_sacrifices[greater_sacrifice]) > max_overpiety);
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
@@ -5422,9 +5437,11 @@ static void _ru_kill_skill(skill_type skill)
     you.stop_train.insert(skill);
 }
 
-static void _extra_sacrifice_code(sacrifice_def sac_def)
+static void _extra_sacrifice_code(ability_type sac)
 {
-    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND) {
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
+    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
+    {
         equipment_type ring_slot;
 
         if (you.species == SP_OCTOPODE)
@@ -5496,16 +5513,16 @@ static void _extra_sacrifice_code(sacrifice_def sac_def)
     }
 }
 
-bool ru_do_sacrifice(sacrifice_def sac_def)
+bool ru_do_sacrifice(ability_type sac)
 {
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     bool variable_sac;
     mutation_type mut;
     int num_sacrifices;
     string offer_text;
     string mile_text;
     string sac_text;
-    bool is_sac_arcana = (sac_def.sacrifice == ABIL_RU_SACRIFICE_ARCANA)
-        ? true : false;
+    const bool is_sac_arcana = sac == ABIL_RU_SACRIFICE_ARCANA;
     int piety_gain = 0;
 
     // For variable sacrifices, we need to compose the text that will be
@@ -5554,7 +5571,7 @@ bool ru_do_sacrifice(sacrifice_def sac_def)
         mile_text = make_stringf("%s", sac_def.milestone_text);
     }
 
-    piety_gain = _get_sacrifice_piety(sac_def);
+    piety_gain = _get_sacrifice_piety(sac);
 
     // get confirmation that the sacrifice is desired.
     if (!_execute_sacrifice(piety_gain, offer_text.c_str()))
@@ -5594,7 +5611,7 @@ bool ru_do_sacrifice(sacrifice_def sac_def)
     mark_milestone("sacrifice", mile_text.c_str());
 
     // Any special handling that's needed.
-    _extra_sacrifice_code(sac_def);
+    _extra_sacrifice_code(sac);
 
     // Update how many Ru sacrifices you have. This is used to avoid giving the
     // player extra silver damage.
