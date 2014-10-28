@@ -5509,8 +5509,7 @@ static void _extra_sacrifice_code(ability_type sac)
             {
                 for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
                 {
-                    if (!you.slot_item(static_cast<equipment_type>(eq)
-                        , true))
+                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
                     {
                         open_ring_slot = true;
                         break;
@@ -5532,9 +5531,9 @@ static void _extra_sacrifice_code(ability_type sac)
             if (open_ring_slot)
             {
                 mprf("You put %s back on %s %s!",
-                ring->name(DESC_YOUR).c_str(),
-                (you.species == SP_OCTOPODE ? "another" : "your other"),
-                you.hand_name(true).c_str());
+                     ring->name(DESC_YOUR).c_str(),
+                     (you.species == SP_OCTOPODE ? "another" : "your other"),
+                     you.hand_name(true).c_str());
                 puton_ring(ring_inv_slot, false);
             }
         }
@@ -5785,9 +5784,9 @@ void ru_draw_out_power()
     you.redraw_evasion = true;
 
     inc_hp(div_rand_round(you.piety, 16)
-        + roll_dice(div_rand_round(you.piety, 20), 6));
+           + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
-        + roll_dice(div_rand_round(you.piety, 40), 4));
+           + roll_dice(div_rand_round(you.piety, 40), 4));
     drain_player(25, false, true);
 }
 
@@ -5815,9 +5814,8 @@ bool ru_power_leap()
         if (!spell_direction(beam, fake_beam, DIR_LEAP, TARG_ANY,
                              range, false, false, false, NULL,
                              "Aiming: <white>Power Leap</white>", true,
-                             &tgt))
-
-        if (crawl_state.seen_hups)
+                             &tgt)
+            && crawl_state.seen_hups)
         {
             clear_messages();
             mpr("Cancelling leap due to HUP.");
@@ -5832,7 +5830,7 @@ bool ru_power_leap()
         {
             clear_messages();
             mprf("You cannot leap away from %s!",
-                beholder->name(DESC_THE, true).c_str());
+                 beholder->name(DESC_THE, true).c_str());
             continue;
         }
 
@@ -5841,7 +5839,7 @@ bool ru_power_leap()
         {
             clear_messages();
             mprf("You cannot leap closer to %s!",
-                fearmonger->name(DESC_THE, true).c_str());
+                 fearmonger->name(DESC_THE, true).c_str());
             continue;
         }
 
