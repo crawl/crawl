@@ -2148,8 +2148,9 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             // Petrifying or petrified monsters can be exploded.
             if (petrified)
             {
+                monster_info minfo(mon);
                 beam.name       = "blast of petrified fragments";
-                beam.colour     = mon->colour;
+                beam.colour     = minfo.colour();
                 beam.damage.num = 3;
                 break;
             }

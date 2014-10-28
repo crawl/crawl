@@ -212,7 +212,7 @@ public:
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate(colour_t force_colour = BLACK);
+    void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void uglything_upgrade();
     void destroy_inventory();
     void load_ghost_spells();

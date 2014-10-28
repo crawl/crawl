@@ -151,8 +151,7 @@ void ghost_demon::reset()
     att_type         = AT_HIT;
     att_flav         = AF_PLAIN;
     resists          = 0;
-    cycle_colours    = false;
-    colour           = BLACK;
+    colour           = COLOUR_UNDEF;
     fly              = FL_NONE;
     acting_part      = MONS_0;
 }
@@ -186,7 +185,7 @@ static brand_type _random_special_pan_lord_brand()
             spells.push_back(slot); \
     }
 
-void ghost_demon::init_random_demon()
+void ghost_demon::init_pandemonium_lord()
 {
     mon_spell_slot slot;
     slot.flags = MON_SPELL_DEMONIC;
@@ -331,11 +330,7 @@ void ghost_demon::init_random_demon()
         fixup_spells(spells, xl, true, false);
     }
 
-    // Does demon cycle colours?
-    cycle_colours = one_chance_in(10);
-
-    colour = random_colour();
-
+    colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
 }
 
 // Returns the movement speed for a player ghost.  Note that this is a
@@ -463,8 +458,6 @@ void ghost_demon::init_player_ghost()
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
-    // These are the same as in mon-data.h.
-    colour = WHITE;
     fly = FL_LEVITATE;
 
     add_spells();
@@ -475,13 +468,13 @@ static colour_t _ugly_thing_assign_colour(colour_t force_colour,
 {
     colour_t colour;
 
-    if (force_colour != BLACK)
+    if (force_colour != COLOUR_UNDEF)
         colour = force_colour;
     else
     {
         do
             colour = ugly_thing_random_colour();
-        while (force_not_colour != BLACK && colour == force_not_colour);
+        while (force_not_colour != COLOUR_UNDEF && colour == force_not_colour);
     }
 
     return colour;
@@ -548,7 +541,7 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
  * @param very_ugly     Whether the ugly thing is a very ugly thing.
  * @param only_mutate   Whether to mutate the ugly thing's colour away from its
  *                      old colour (the force_colour).
- * @param force_colour  The ugly thing's colour. (Default BLACK = random)
+ * @param force_colour  The ugly thing's colour. (Default COLOUR_UNDEF = random)
  */
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                   colour_t force_colour)
@@ -583,7 +576,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // before.
     colour = _ugly_thing_assign_colour(make_low_colour(force_colour),
                                        only_mutate ? make_low_colour(colour)
-                                                   : BLACK);
+                                                   : COLOUR_UNDEF);
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
@@ -915,10 +908,6 @@ bool debug_check_ghosts()
         // Only (very) ugly things get non-plain attack types and
         // flavours.
         if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
-            return false;
-
-        // Only Pandemonium lords cycle colours.
-        if (ghost.cycle_colours)
             return false;
 
         // Name validation.

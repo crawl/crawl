@@ -76,7 +76,7 @@ struct mgen_data
     // base_type.
     int             number;
 
-    // The colour of the monster, or -1 for col:any
+    // The colour of the monster, or COLOUR_UNDEF for col:any
     int             colour;
 
     // How close to or far from the player the monster should be created.
@@ -129,7 +129,7 @@ struct mgen_data
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
-              int moncolour = BLACK,
+              int moncolour = COLOUR_INHERIT,
               proximity_type prox = PROX_ANYWHERE,
               level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
@@ -188,7 +188,7 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, BLACK,
+                         genflags, ngod, base, 0, COLOUR_INHERIT,
                          PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
                          RANDOM_MONSTER);
     }

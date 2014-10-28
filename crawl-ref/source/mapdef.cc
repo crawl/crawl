@@ -3939,11 +3939,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (!colour.empty())
         {
             if (colour == "any")
-                mspec.colour = -1; // XXX: Hack
+                mspec.colour = COLOUR_UNDEF;
             else
             {
-                mspec.colour = str_to_colour(colour, BLACK);
-                if (mspec.colour == BLACK)
+                mspec.colour = str_to_colour(colour, COLOUR_UNDEF);
+                if (mspec.colour == COLOUR_UNDEF)
                 {
                     error = make_stringf("bad monster colour \"%s\" in \"%s\"",
                                          colour.c_str(), specs[i].c_str());
@@ -4123,7 +4123,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
             mspec.chimera_mons = nspec.chimera_mons;
-            if (nspec.colour && !mspec.colour)
+            if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
         }
 

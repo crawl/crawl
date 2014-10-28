@@ -4353,7 +4353,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     }
 #endif
     marshallUnsigned(th, mi.number);
-    marshallUnsigned(th, mi.colour);
+    marshallInt(th, mi._colour);
     marshallUnsigned(th, mi.attitude);
     marshallUnsigned(th, mi.threat);
     marshallUnsigned(th, mi.dam);
@@ -4438,7 +4438,12 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
     unmarshallUnsigned(th, mi.number);
-    unmarshallUnsigned(th, mi.colour);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)
+        mi._colour = int(unmarshallUnsigned(th));
+    else
+#endif
+        mi._colour = unmarshallInt(th);
     unmarshallUnsigned(th, mi.attitude);
     unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
@@ -4504,7 +4509,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         && mi.type >= MONS_MONSTROUS_DEMONSPAWN
         && mi.type <= MONS_SALAMANDER_MYSTIC)
     {
-        switch (mi.colour)
+        switch (mi.colour(true))
         {
         case BROWN:        // monstrous demonspawn, naga ritualist
             if (mi.spells[0].spell == SPELL_FORCE_LANCE)
@@ -4565,7 +4570,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
             break;
         default:
             die("Unexpected monster with type %d and colour %d",
-                mi.type, mi.colour);
+                mi.type, mi.colour(true));
         }
         if (mons_is_demonspawn(mi.type)
             && mons_species(mi.type) == MONS_DEMONSPAWN
@@ -5754,7 +5759,6 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.att_type);
     marshallShort(th, ghost.att_flav);
     marshallInt(th, ghost.resists);
-    marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
     marshallShort(th, ghost.fly);
 
@@ -5787,8 +5791,9 @@ static ghost_demon unmarshallGhost(reader &th)
         set_resist(ghost.resists, MR_RES_ACID, 3);
     if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
         unmarshallByte(th);
+    if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)
+        unmarshallByte(th);
 #endif
-    ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
 
     ghost.fly              = static_cast<flight_type>(unmarshallShort(th));

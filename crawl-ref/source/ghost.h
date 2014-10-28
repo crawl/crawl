@@ -29,7 +29,6 @@ public:
     attack_flavour att_flav;
     resists_t resists;
 
-    bool cycle_colours;
     colour_t colour;
     flight_type fly;
 
@@ -42,7 +41,7 @@ public:
     ghost_demon();
     bool has_spells() const;
     void reset();
-    void init_random_demon();
+    void init_pandemonium_lord();
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);

@@ -904,7 +904,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static colour_t ugly_colour = BLACK;
+    static colour_t ugly_colour = COLOUR_UNDEF;
 
     if (create_band)
     {
@@ -921,7 +921,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             // ugly things in a band will start with it.
             if ((band_monsters[i] == MONS_UGLY_THING
                 || band_monsters[i] == MONS_VERY_UGLY_THING)
-                    && ugly_colour == BLACK)
+                    && ugly_colour == COLOUR_UNDEF)
             {
                 ugly_colour = ugly_thing_random_colour();
             }
@@ -929,7 +929,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Set the (very) ugly thing band colour.
-    if (ugly_colour != BLACK)
+    if (ugly_colour != COLOUR_UNDEF)
         mg.colour = ugly_colour;
 
     // Returns 2 if the monster is placed near player-occupied stairs.
@@ -1052,8 +1052,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Reset the (very) ugly thing band colour.
-    if (ugly_colour != BLACK)
-        ugly_colour = BLACK;
+    if (ugly_colour != COLOUR_UNDEF)
+        ugly_colour = COLOUR_UNDEF;
 
     monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
 
@@ -1439,8 +1439,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
-    if (mg.colour != BLACK)
+    if ((mg.colour == COLOUR_INHERIT
+         && mons_class_colour(mon->type) != COLOUR_UNDEF)
+        || mg.colour > COLOUR_UNDEF)
+    {
         mon->colour = mg.colour;
+    }
 
     if (mg.mname != "")
         mon->mname = mg.mname;
@@ -1757,8 +1761,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         || mon->type == MONS_VERY_UGLY_THING)
     {
         ghost_demon ghost;
+        colour_t force_colour;
+        if (mg.colour < COLOUR_UNDEF)
+            force_colour = COLOUR_UNDEF;
+        else
+            force_colour = mg.colour;
         ghost.init_ugly_thing(mon->type == MONS_VERY_UGLY_THING, false,
-                              mg.colour);
+                              force_colour);
         mon->set_ghost(ghost);
         mon->uglything_init();
     }
@@ -2019,7 +2028,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->type         = cs;
     mon->base_monster = ztype;
 
-    mon->colour       = mons_class_colour(mon->type);
+    mon->colour       = COLOUR_INHERIT;
     mon->speed        = (cs == MONS_SPECTRAL_THING
                             ? mons_class_base_speed(mon->base_monster)
                             : mons_class_zombie_base_speed(mon->base_monster));
@@ -2045,9 +2054,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     const int old_maxhp = mon->max_hit_points;
 
     mon->type           = MONS_SKELETON;
-    mon->colour         = mons_class_colour(mon->type);
     mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
-
     roll_zombie_hp(mon);
 
     // Scale the skeleton HP to the zombie HP.

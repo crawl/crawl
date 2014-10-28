@@ -180,7 +180,7 @@ static int _get_mons_colour(const monster_info& mi)
         return dam_colour(mi) | COLFLAG_ITEM_HEAP;
     }
 
-    int col = mi.colour;
+    int col = mi.colour();
 
     // We really shouldn't store unmodified colour.  This hack compares
     // effective type, but really, all redefinitions should work instantly,

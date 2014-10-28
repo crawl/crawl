@@ -2217,19 +2217,8 @@ void handle_monster_move(monster* mons)
         }
     }
     _maybe_submerge(mons);
-    // do we really need this check in the case of colour cycling?
-    if (!mons->asleep()
-        && !mons->submerged())
-    {
+    if (!mons->asleep() && !mons->submerged())
         maybe_mons_speaks(mons);
-        if (mons->type == MONS_KILLER_KLOWN
-            || mons->type == MONS_SPATIAL_VORTEX
-            || mons->type == MONS_PANDEMONIUM_LORD
-               && mons->ghost->cycle_colours)
-        {
-            mons->colour = random_colour();
-        }
-    }
 
     if (!mons->alive())
         return;

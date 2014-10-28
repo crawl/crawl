@@ -150,7 +150,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
                  name.c_str());
         }
 
-        if (mon.colour != BLACK)
+        if (mon.colour != COLOUR_INHERIT)
         {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
                  "%s being ignored.",

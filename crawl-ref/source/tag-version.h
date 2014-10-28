@@ -130,6 +130,7 @@ enum tag_minor_version
     TAG_MINOR_INIT_RND,            // initialize rnd in more places
     TAG_MINOR_RING_PLUSSES,        // don't generate +144 rings
     TAG_MINOR_BLESSED_WPNS,        // Remove blessed long blade base types
+    TAG_MINOR_MON_COLOUR_LOOKUP,   // monster colour lookup when possible
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -284,20 +284,6 @@ void init_monster_symbols()
         if (mons_genus(mc) == MONS_STATUE)
             monster_symbols[mc].glyph = get_feat_symbol(DNGN_GRANITE_STATUE);
 
-    for (map<monster_type, cglyph_t>::iterator it = Options.mon_glyph_overrides.begin();
-         it != Options.mon_glyph_overrides.end(); ++it)
-    {
-        if (it->first == MONS_PROGRAM_BUG)
-            continue;
-
-        const cglyph_t &md = it->second;
-
-        if (md.ch)
-            monster_symbols[it->first].glyph = get_glyph_override(md.ch);
-        if (md.col)
-            monster_symbols[it->first].colour = md.col;
-    }
-
     // Validate all glyphs, even those which didn't come from an override.
     for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)
         if (wcwidth(monster_symbols[i].glyph) != 1)
@@ -1347,7 +1333,13 @@ bool mons_can_be_dazzled(monster_type mc)
 
 ucs_t mons_char(monster_type mc)
 {
-    return monster_symbols[mc].glyph;
+    if (Options.mon_glyph_overrides.count(mc)
+        && Options.mon_glyph_overrides[mc].ch)
+    {
+        return Options.mon_glyph_overrides[mc].ch;
+    }
+    else
+        return monster_symbols[mc].glyph;
 }
 
 char mons_base_char(monster_type mc)
@@ -2513,9 +2505,6 @@ void define_monster(monster* mons)
         break;
 
     case MONS_KRAKEN:
-        if (col != BLACK) // May be overwritten by the mon_glyph option.
-            break;
-
         col = element_colour(ETC_KRAKEN);
         break;
 
@@ -2579,7 +2568,7 @@ void define_monster(monster* mons)
         hp    += mbase->hpdice[3] + m->hpdice[3];
     }
 
-    if (col == BLACK) // but never give out darkgrey to monsters
+    if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
         col = random_monster_colour();
 
     // Some calculations.
@@ -2627,7 +2616,7 @@ void define_monster(monster* mons)
     case MONS_PANDEMONIUM_LORD:
     {
         ghost_demon ghost;
-        ghost.init_random_demon();
+        ghost.init_pandemonium_lord();
         mons->set_ghost(ghost);
         mons->ghost_demon_init();
         mons->flags |= MF_INTERESTING;
