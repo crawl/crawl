@@ -1945,7 +1945,7 @@ int monster_die(monster* mons, killer_type killer,
             silent = true;
     }
     else if (mons->type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !wizard)
+             && !wizard && !mons_reset)
     {
         _druid_final_boon(mons);
     }
@@ -2660,14 +2660,18 @@ int monster_die(monster* mons, killer_type killer,
     // Give the treant a last chance to release its wasps if it is killed in a
     // single blow from above half health
     else if (mons->type == MONS_SHAMBLING_MANGROVE && !was_banished
-             && !mons->pacified() && (!summoned || duration > 0) && !wizard)
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard
+             && !mons_reset)
     {
         treant_release_fauna(mons);
     }
     else if (mons->type == MONS_BENNU && !in_transit && !was_banished
-             && !mons->pacified() && (!summoned || duration > 0) && !wizard
+             && !mons_reset && !mons->pacified()
+             && (!summoned || duration > 0) && !wizard
              && mons_bennu_can_revive(mons))
+    {
         mons_bennu_revive(mons);
+    }
     else if (!mons->is_summoned())
     {
         if (mons_genus(mons->type) == MONS_MUMMY)
@@ -2680,7 +2684,7 @@ int monster_die(monster* mons, killer_type killer,
                                  YOU_KILL(killer) || pet_kill);
     }
 
-    if (!wizard && !submerged && !was_banished)
+    if (!wizard && !mons_reset && !submerged && !was_banished)
     {
         _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned
                                  && !timeout, silent, summoned);
