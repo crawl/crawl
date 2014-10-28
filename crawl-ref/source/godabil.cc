@@ -4960,7 +4960,7 @@ static const sacrifice_def &_get_sacrifice_def(ability_type sac)
     return *sacrifice_data_map[sac];
 }
 
-vector<ability_type> get_possible_sacrifices()
+static vector<ability_type> _get_possible_sacrifices()
 {
     vector<ability_type> possible_sacrifices;
 
@@ -5131,7 +5131,7 @@ vector<ability_type> get_possible_sacrifices()
     return possible_sacrifices;
 }
 
-const char* arcane_mutation_to_school_name(mutation_type mutation)
+static const char* _arcane_mutation_to_school_name(mutation_type mutation)
 {
     switch (mutation)
     {
@@ -5164,7 +5164,7 @@ const char* arcane_mutation_to_school_name(mutation_type mutation)
     }
 }
 
-const skill_type arcane_mutation_to_skill(mutation_type mutation)
+static const skill_type _arcane_mutation_to_skill(mutation_type mutation)
 {
     switch (mutation)
     {
@@ -5237,7 +5237,7 @@ static int _get_sacrifice_piety(ability_type sac)
         for (int i = 0; i < num_sacrifices; i++)
         {
             arcane_mut = AS_MUT(sacrifice_muts[i]);
-            arcane_skill = arcane_mutation_to_skill(arcane_mut);
+            arcane_skill = _arcane_mutation_to_skill(arcane_mut);
             piety_gain += _piety_for_skill(arcane_skill);
 
             // If you already sacrificed love, nothing in the summoning school
@@ -5315,13 +5315,41 @@ static int _get_sacrifice_piety(ability_type sac)
     return piety_gain;
 }
 
+// Remove the offer of sacrifices after they've been offered for sufficient
+// time or it's time to offer something new.
+static void _ru_expire_sacrifices()
+{
+    ASSERT(you.props.exists("available_sacrifices"));
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &available_sacrifices
+        = you.props["available_sacrifices"].get_vector();
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    available_sacrifices.clear();
+    current_health_sacrifice.clear();
+    current_essence_sacrifice.clear();
+    current_purity_sacrifice.clear();
+    current_arcane_sacrifices.clear();
+}
+
 // Pick three new sacrifices to offer to the player. They should be distinct
 // from one another and not offer duplicates of some options.
 void ru_offer_new_sacrifices()
 {
-    ru_expire_sacrifices();
+    _ru_expire_sacrifices();
 
-    vector<ability_type> possible_sacrifices = get_possible_sacrifices();
+    vector<ability_type> possible_sacrifices = _get_possible_sacrifices();
 
     // for now we'll just pick three at random
     int num_sacrifices = possible_sacrifices.size();
@@ -5546,12 +5574,12 @@ bool ru_do_sacrifice(ability_type sac)
                 if (i == num_sacrifices - 1)
                 {
                     sac_text = make_stringf("%sand %s", sac_text.c_str(),
-                        arcane_mutation_to_school_name(mut));
+                        _arcane_mutation_to_school_name(mut));
                 }
                 else
                 {
                     sac_text = make_stringf("%s%s, ", sac_text.c_str(),
-                        arcane_mutation_to_school_name(mut));
+                        _arcane_mutation_to_school_name(mut));
                 }
             }
             else
@@ -5601,7 +5629,7 @@ bool ru_do_sacrifice(ability_type sac)
         for (int i = 0; i < num_sacrifices; i++)
         {
             arcane_mut = AS_MUT(sacrifice_muts[i]);
-            arcane_skill = arcane_mutation_to_skill(arcane_mut);
+            arcane_skill = _arcane_mutation_to_skill(arcane_mut);
             _ru_kill_skill(arcane_skill);
         }
     }
@@ -5630,7 +5658,7 @@ bool ru_do_sacrifice(ability_type sac)
     set_piety(new_piety);
 
     // Clean up.
-    ru_expire_sacrifices();
+    _ru_expire_sacrifices();
     ru_reset_sacrifice_timer(true);
     redraw_screen(); // pretty much everything could have changed
     return true;
@@ -5645,7 +5673,7 @@ bool ru_reject_sacrifices()
         return false;
     }
 
-    ru_expire_sacrifices();
+    _ru_expire_sacrifices();
     ru_reset_sacrifice_timer(false);
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
@@ -5672,35 +5700,6 @@ void ru_reset_sacrifice_timer(bool clear_timer)
     you.props["ru_sacrifice_delay"] =
         div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
 }
-
-// Remove the offer of sacrifices after they've been offered for sufficient
-// time or it's time to offer something new.
-void ru_expire_sacrifices()
-{
-    ASSERT(you.props.exists("available_sacrifices"));
-    ASSERT(you.props.exists("current_health_sacrifice"));
-    ASSERT(you.props.exists("current_essence_sacrifice"));
-    ASSERT(you.props.exists("current_purity_sacrifice"));
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
-
-    CrawlVector &available_sacrifices
-        = you.props["available_sacrifices"].get_vector();
-    CrawlVector &current_health_sacrifice
-        = you.props["current_health_sacrifice"].get_vector();
-    CrawlVector &current_essence_sacrifice
-        = you.props["current_essence_sacrifice"].get_vector();
-    CrawlVector &current_purity_sacrifice
-        = you.props["current_purity_sacrifice"].get_vector();
-    CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
-
-    available_sacrifices.clear();
-    current_health_sacrifice.clear();
-    current_essence_sacrifice.clear();
-    current_purity_sacrifice.clear();
-    current_arcane_sacrifices.clear();
-}
-
 
 // Check to see if you're eligible to retaliate.
 //Your chance of eligiblity scales with piety.
