@@ -226,6 +226,9 @@ def check_config():
             logging.warning("The pre_options field should be a list!")
             success = False
 
+    if not os.path.isdir(config.static_path):
+        logging.warning("static_path doesn't exist on the filesystem (%s)." % config.static_path)
+        success = False
     if not scan_titles():
         logging.warning("No title images (title_*.png) found in static_path (%s)." % config.static_path)
         success = False
