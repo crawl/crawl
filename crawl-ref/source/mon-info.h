@@ -149,7 +149,7 @@ struct monster_info_base
         int slime_size;  ///< # of slimes in this one
         bool is_active;  ///< Whether this ballisto is active or not
     };
-    unsigned colour;
+    int _colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
@@ -204,7 +204,6 @@ struct monster_info : public monster_info_base
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
-        props = mi.props;
     }
 
     monster_info& operator=(const monster_info& p)
@@ -333,6 +332,8 @@ struct monster_info : public monster_info_base
     }
 
     bool has_spells() const;
+    unsigned colour(bool base_colour = false) const;
+    void set_colour(int colour);
 
 protected:
     string _core_name() const;

@@ -245,7 +245,9 @@ const int AGILITY_BONUS = 5;
 // The order is important (IRGB bit patterns).
 enum COLOURS
 {
+    COLOUR_INHERIT = -1,
     BLACK,
+    COLOUR_UNDEF = BLACK,
     BLUE,
     GREEN,
     CYAN,

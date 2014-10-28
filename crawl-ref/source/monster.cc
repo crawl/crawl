@@ -15,6 +15,7 @@
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "dgnevent.h"
@@ -74,9 +75,8 @@ monster::monster()
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
-      number(0), colour(BLACK), foe_memory(0),
-      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0),
-      hit_dice(0)
+      number(0), colour(COLOUR_INHERIT), foe_memory(0), god(GOD_NO_GOD),
+      ghost(), seen_context(SC_NONE), client_id(0), hit_dice(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -160,7 +160,7 @@ void monster::reset()
 
     // Just for completeness.
     speed           = 0;
-    colour          = 0;
+    colour         = COLOUR_INHERIT;
 }
 
 void monster::init_with(const monster& mon)

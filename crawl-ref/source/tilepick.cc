@@ -1840,7 +1840,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     case MONS_GLOWING_SHAPESHIFTER:
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
-        return _mon_mod(TILEP_MONS_KILLER_KLOWN, colour);
+        return _mon_random(TILEP_MONS_KILLER_KLOWN);
     case MONS_SLAVE:
         return TILEP_MONS_SLAVE;
     case MONS_DEMIGOD:
@@ -2829,7 +2829,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_DUVESSA:
         case MONS_DOWAN:
         {
-            const tileidx_t t = tileidx_monster_base(type, in_water, mon.colour,
+            const tileidx_t t = tileidx_monster_base(type, in_water,
+                                                     mon.colour(true),
                                                      mon.number, tile_num);
             return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
                                                                  : t;
@@ -2839,16 +2840,16 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         {
             // Should be always out of LOS, though...
             const tileidx_t t = tileidx_monster_base(type, in_water,
-                                                     mon.colour, mon.number,
-                                                     tile_num);
+                                                     mon.colour(true),
+                                                     mon.number, tile_num);
             if (t == TILEP_MONS_PROGRAM_BUG)
                 return TILE_UNSEEN_MONSTER;
             return t;
         }
 
         default:
-            return tileidx_monster_base(type, in_water, mon.colour, mon.number,
-                                        tile_num);
+            return tileidx_monster_base(type, in_water, mon.colour(true),
+                                        mon.number, tile_num);
         }
     }
 }

@@ -51,9 +51,15 @@ MIRET1(string, mname, mname.c_str())
 MIRET1(number, type, type)
 MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
-MIRET1(number, colour, colour)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 MIRET1(string, speed_description, speed_description().c_str())
+
+static int moninf_get_colour(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, mi->colour());
+    return 1;
+}
 
 #define MIRES1(field, resist) \
     static int moninf_get_##field(lua_State *ls) \

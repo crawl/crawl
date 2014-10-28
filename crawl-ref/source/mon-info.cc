@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "colour.h"
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
@@ -364,7 +365,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     else
         number = 0;
 
-    colour = mons_class_colour(type);
+    _colour = COLOUR_INHERIT;
 
     holi = mons_class_holiness(type);
 
@@ -499,7 +500,7 @@ monster_info::monster_info(const monster* m, int milev)
     else
         number = 0;
 
-    colour = m->colour;
+    _colour = m->colour;
 
     int stype = 0;
     if (m->is_summoned(0, &stype)
@@ -888,7 +889,7 @@ string monster_info::_core_name() const
             break;
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
-            s = ugly_thing_colour_name(colour) + " " + s;
+            s = ugly_thing_colour_name(_colour) + " " + s;
             break;
 
         case MONS_DRACONIAN_CALLER:
@@ -1816,6 +1817,28 @@ bool monster_info::has_spells() const
         return spells.size() > 0;
 
     return true;
+}
+
+unsigned monster_info::colour(bool base_colour) const
+{
+    if (!base_colour && Options.mon_glyph_overrides.count(type)
+        && Options.mon_glyph_overrides[type].col)
+    {
+        return Options.mon_glyph_overrides[type].col;
+    }
+    else if (_colour == COLOUR_INHERIT)
+        return mons_class_colour(type);
+    else
+    {
+        ASSERT_RANGE(_colour, 0, NUM_COLOURS);
+        return _colour;
+    }
+}
+
+void monster_info::set_colour(int col)
+{
+    ASSERT_RANGE(col, -1, NUM_COLOURS);
+    _colour = col;
 }
 
 void get_monster_info(vector<monster_info>& mons)

@@ -22,7 +22,10 @@
 
  - Some further explanations:
 
-    - colour: if BLACK, monster uses value of mons_sec
+    - colour: if COLOUR_UNDEF, a random colour will be chosen upon
+              creation. Some monsters set their colour during initialization,
+              and if a default colour isn't meaningful, they should also use
+              COLOUR_UNDEF.
     - name: if an empty string, name generated automagically (see moname)
     - mass: if zero, the monster never leaves a corpse (also corpse_thingy)
     - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
@@ -342,7 +345,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_BUTTERFLY, 'b', BLACK, "butterfly",
+    MONS_BUTTERFLY, 'b', COLOUR_UNDEF, "butterfly",
     M_CONFUSED | M_NO_EXP_GAIN,
     MR_VUL_POISON,
     0, 10, MONS_BUTTERFLY, MONS_BUTTERFLY, MH_NATURAL, 10,
@@ -1794,7 +1797,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 },
 
 {
-    MONS_KILLER_KLOWN, 'p', BLACK, "Killer Klown",
+    MONS_KILLER_KLOWN, 'p', ETC_RANDOM, "Killer Klown",
     M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN,
     MR_NO_FLAGS,
     0, 17, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 160,
@@ -2144,7 +2147,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 // NOTE: ugly things are ghost demons and thus their stats vary treacherously
 // from those below. beware!
 {
-    MONS_UGLY_THING, 'u', BLACK, "ugly thing",
+    MONS_UGLY_THING, 'u', COLOUR_UNDEF, "ugly thing",
     M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     600, 6, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, 40,
@@ -2156,7 +2159,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    MONS_VERY_UGLY_THING, 'u', BLACK, "very ugly thing",
+    MONS_VERY_UGLY_THING, 'u', COLOUR_UNDEF, "very ugly thing",
     M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     830, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, 40,
@@ -2181,7 +2184,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    MONS_SPATIAL_VORTEX, 'v', BLACK, "spatial vortex",
+    MONS_SPATIAL_VORTEX, 'v', ETC_RANDOM, "spatial vortex",
     M_CONFUSED | M_INSUBSTANTIAL | M_GLOWS_LIGHT,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 5, MONS_FIRE_VORTEX, MONS_SPATIAL_VORTEX, MH_NONLIVING, MAG_IMMUNE,
@@ -3645,7 +3648,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
 },
 
 {
-    MONS_TOADSTOOL, 'P', BLACK, "toadstool",
+    MONS_TOADSTOOL, 'P', COLOUR_UNDEF, "toadstool",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
@@ -4601,7 +4604,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 // A kraken and its tentacles get a random colour from ETC_KRAKEN.
 {
-    MONS_KRAKEN, 'X', BLACK, "kraken",
+    MONS_KRAKEN, 'X', COLOUR_UNDEF, "kraken",
     M_NO_SKELETON | M_COLD_BLOOD | M_FLEES,
     MR_NO_FLAGS,
     3000, 6, MONS_KRAKEN, MONS_KRAKEN, MH_NATURAL, 60,
@@ -4613,7 +4616,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 {
-    MONS_KRAKEN_TENTACLE, 'w', BLACK, "tentacle",
+    MONS_KRAKEN_TENTACLE, 'w', COLOUR_UNDEF, "tentacle",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE, MH_NATURAL, MAG_IMMUNE,
@@ -4625,7 +4628,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 {
-    MONS_KRAKEN_TENTACLE_SEGMENT, '*', BLACK, "tentacle segment",
+    MONS_KRAKEN_TENTACLE_SEGMENT, '*', COLOUR_UNDEF, "tentacle segment",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_SUBMERGES | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE_SEGMENT, MH_NATURAL, MAG_IMMUNE,
@@ -4773,7 +4776,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 // These are named more explicitly when they attack, also when you use 'x'
 // to examine them.
 {
-    MONS_DANCING_WEAPON, '(', BLACK, "dancing weapon",
+    MONS_DANCING_WEAPON, '(', COLOUR_UNDEF, "dancing weapon",
     M_FIGHTER,
     MR_RES_POISON | mrd(MR_RES_FIRE | MR_RES_COLD, 2) | mrd(MR_RES_ELEC, 3),
     0, 10, MONS_DANCING_WEAPON, MONS_DANCING_WEAPON, MH_NONLIVING, MAG_IMMUNE,
@@ -4799,7 +4802,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 
 // Demonic tentacle things.
 {
-    MONS_ELDRITCH_TENTACLE, 'w', BLACK, "eldritch tentacle",
+    MONS_ELDRITCH_TENTACLE, 'w', COLOUR_UNDEF, "eldritch tentacle",
     M_NO_POLY_TO | M_STATIONARY | M_SEE_INVIS,
     mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC | MR_RES_ACID, 3)
         | MR_RES_HELLFIRE | MR_RES_STICKY_FLAME,
@@ -4814,7 +4817,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 },
 
 {
-    MONS_ELDRITCH_TENTACLE_SEGMENT, '*', BLACK, "eldritch tentacle segment",
+    MONS_ELDRITCH_TENTACLE_SEGMENT, '*', COLOUR_UNDEF, "eldritch tentacle segment",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO | M_SEE_INVIS,
     mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC | MR_RES_ACID, 3)
         | MR_RES_HELLFIRE | MR_RES_STICKY_FLAME,
@@ -5638,7 +5641,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 // major demons ('&')
 // Random demon in pan - only one per level.  Stats are stored in ghost struct.
 {
-    MONS_PANDEMONIUM_LORD, '&', BLACK, "pandemonium lord",
+    MONS_PANDEMONIUM_LORD, '&', COLOUR_UNDEF, "pandemonium lord",
     // See invis is also set in ghost.cc
     M_FIGHTER | M_SPEAKS | M_HYBRID | M_SEE_INVIS,
     MR_RES_POISON,
@@ -5652,7 +5655,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 // Demon in hell.  Currently only used as genus/species for hell guardians.
 { // dummy genus monster -- used as a species so not a DUMMY
-    MONS_HELL_LORD, '&', BLACK, "hell lord",
+    MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord",
     M_FIGHTER | M_SPEAKS | M_CANT_SPAWN,
     MR_RES_POISON,
     0, 14, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, -5,
@@ -5876,7 +5879,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 // "d"raconians.
 {
-    MONS_TIAMAT, 'd', BLACK, "Tiamat",
+    MONS_TIAMAT, 'd', COLOUR_UNDEF, "Tiamat",
     M_UNIQUE | M_SEE_INVIS | M_COLD_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 140,
@@ -6045,7 +6048,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 },
 
 {
-    MONS_CRAZY_YIUF, 'g', BLACK, "Crazy Yiuf",
+    MONS_CRAZY_YIUF, 'g', COLOUR_UNDEF, "Crazy Yiuf",
     M_WARM_BLOOD | M_SPEAKS | M_UNIQUE,
     MR_NO_FLAGS,
     680, 10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 10,

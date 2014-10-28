@@ -641,7 +641,8 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    int colour; // a colour_t (BLACK for "default"), or -1 for "any"
+    int colour; // either COLOUR_INHERIT for "default", COLOUR_INDEF for any
+                // colour upon creation, or an otherwise valid colour_t value.
 
     god_type god;
     bool god_gift;
@@ -672,8 +673,8 @@ public:
         : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
-          colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
-          abjuration_duration(0), summon_type(0), items(), monname(""),
+          colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
+          hp(0), abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
           extra_monster_flags(0), initial_shifter(RANDOM_MONSTER), props()
     {
