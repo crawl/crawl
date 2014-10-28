@@ -54,7 +54,8 @@ Monsters
     howl to alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
     bite to drain life, speed, and skill. Their bite can also apply rN-.
-* Monster malmutations are now temporary, but more significant.
+* The "misshapen and mutated" status (from Malmutate and the new Irradiate
+  spell) is now temporary, but more significant.
 * Player ghosts & spellforged servitors can now have more than six spells.
 * Player ghosts now have their weapon brands displayed.
 * Xtahua's breath now creates a cloud of flames, like red draconians'.
