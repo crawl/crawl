@@ -11,7 +11,7 @@ import time
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, id_header, logger, io_loop, termsize):
+    def __init__(self, command, filename, id_header, logger, io_loop, termsize, lang):
         self.io_loop = io_loop
         self.command = command
         if filename:
@@ -38,6 +38,8 @@ class TerminalRecorder(object):
 
         if id_header:
             self.write_ttyrec_chunk(id_header)
+
+        self.lang = lang
 
         self._spawn()
 
@@ -73,6 +75,8 @@ class TerminalRecorder(object):
             env["COLUMNS"] = str(cols)
             env["LINES"]   = str(lines)
             env["TERM"]    = "linux"
+            if self.lang:
+                env['LANG'] = self.lang
             try:
                 os.execvpe(self.command[0], self.command, env)
             except OSError:
