@@ -2485,7 +2485,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_GAIN_DEXTERITY
                  || j == POT_GAIN_INTELLIGENCE
                  || j == POT_SLOWING
-                 || j == POT_STRONG_POISON))
+                 || j == POT_STRONG_POISON
+                 || j == POT_BLOOD_COAGULATED))
             {
                 continue;
             }
