@@ -229,7 +229,7 @@ def check_config():
     if not os.path.isdir(config.static_path):
         logging.warning("static_path doesn't exist on the filesystem (%s)." % config.static_path)
         success = False
-    if not scan_titles():
+    if os.path.isdir(config.static_path) and not scan_titles():
         logging.warning("No title images (title_*.png) found in static_path (%s)." % config.static_path)
         success = False
 
