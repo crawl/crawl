@@ -4548,8 +4548,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
         }
 
         // Disallow options specified more than once.
-        if (arg_seen[o] == true)
+        if (arg_seen[o])
+        {
+            fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
             return false;
+        }
 
         // Set arg to 'seen'.
         arg_seen[o] = true;
