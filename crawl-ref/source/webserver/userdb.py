@@ -83,6 +83,11 @@ def register_user(username, passwd, email): # Returns an error message or None
 
     salt = get_salt(passwd)
     crypted_pw = crypt.crypt(passwd, salt)
+    # crypt.crypt can fail if you pass in a salt it doesn't like
+    if not crypted_pw:
+        logging.warning("User registration failed -- incorrect crypt_algorithm setting?"
+            "Tested salt was '%s...'" % salt)
+        return "Internal registration error." # deliberately generic
 
     try:
         conn = sqlite3.connect(config.password_db)
