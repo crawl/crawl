@@ -3,9 +3,33 @@
 ##############################################################################
 
 {{
+function tomb_1_mummy_set(e)
+  e.mons("mummy / skeletal warrior w:1 / nothing")
+end
+
+function tomb_1_mummy_priest_set(e, chamber)
+  e.mons("mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30")
+  if chamber then
+    e.mons("greater mummy / ancient lich w:1 / nothing w:11")
+    e.mons("silver statue / orange crystal statue / ice statue")
+  else
+    e.mons("greater mummy")
+  end
+end
+
+function tomb_mummy_set(e)
+  e.mons("mummy / skeletal warrior w:2")
+end
+
+function tomb_mummy_priest_set(e)
+  e.mons("mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1")
+  e.mons("greater mummy / ancient lich w:1")
+end
+
 function tomb_guardian_set(e, include_nothing)
   if e.is_validating() then
      e.mons("guardian mummy w:233 / mummy / nothing w:233")
+     return
   end
   if dgn.persist.tomb_guardian_sets == nil then
     dgn.persist.tomb_guardian_sets = { 0, 0, 0 }
@@ -338,20 +362,20 @@ SUBVAULT: B : tomb_1_hall_stairs
 #
 SHUFFLE:  ([{
 : if crawl.coinflip() then
-SUBST:    I = I:900 6, N = N:900 6
-SUBST:    J = J:750 6, O = O:750 6
-SUBST:    K = K:550 6, P = P:550 6
-SUBST:    L = L:300 6, Q = Q:300 6
+SUBST:    I = I:900 5, N = N:900 5
+SUBST:    J = J:750 5, O = O:750 5
+SUBST:    K = K:550 5, P = P:550 5
+SUBST:    L = L:300 5, Q = Q:300 5
 : end
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 TILE:     MNOPQ = dngn_sarcophagus_pedestal_right
 COLOUR:   FIJKLMNOPQ = yellow
 SUBST:    FIJKLMNOPQ = G
-SUBST:    ' = 5 .:100
+SUBST:    ' = 2 .:100
 #
-MONS:     mummy / guardian mummy w:3 / nothing
 : tomb_guardian_set(_G, true)
-MONS:     mummy priest / nothing, sphinx / nothing, greater mummy / nothing
+MONS:     greater mummy / nothing
+MONS:     sphinx / nothing
 MONS:     silver statue / orange crystal statue / ice statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
@@ -394,28 +418,28 @@ xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
 xxxxxxxxx..........ccBBccccccccccccccAAAAAAAccccccccccccccBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBccc+++++cccBBBBBBBBBBBBBBcc.........xxxxxxxxx
-xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.1...1.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.L...Q.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
-xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.1...1.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.K...P.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
-xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.1...1.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.J...O.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.I...N.cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
-xxxxxxxxx.............................4...4............................xxxxxxxxx
+xxxxxxxxx.............................3...3............................xxxxxxxxx
 xxxxxxxxx.............................F...M............................xxxxxxxxx
-xxxxxxxxx...........................4.4...4.4..........................xxxxxxxxx
+xxxxxxxxx...........................3.3...3.3..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx...........................4..V.V..4..........................xxxxxxxxx
+xxxxxxxxx...........................3..V.V..3..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx.............................4...4............................xxxxxxxxx
+xxxxxxxxx.............................3...3............................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx...........................4.......4..........................xxxxxxxxx
+xxxxxxxxx...........................3.......3..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -441,10 +465,9 @@ TILE:    F = dngn_sarcophagus_pedestal_left
 COLOUR:  F = yellow
 SUBST:   F = G
 #
-MONS:    mummy / guardian mummy w:3 / nothing
+: tomb_1_mummy_set(_G)
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest / nothing, greater mummy / nothing
-MONS:    silver statue / orange crystal statue / ice statue
+: tomb_1_mummy_priest_set(_G, true)
 SUBST:   t = ~ .:50
 #
 : set_feature_name("granite_statue", "sarcophagus")
@@ -473,11 +496,9 @@ ENDMAP
 
 NAME:    tomb_1_centre_grunt_parallel
 TAGS:    tomb_1_centre unrand no_hmirror
-MONS:    mummy / skeletal warrior w:1 / nothing w:11
+: tomb_1_mummy_set(_G)
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
-MONS:    greater mummy / ancient lich w:1 / nothing w:11
-MONS:    silver statue / orange crystal statue / ice statue
+: tomb_1_mummy_priest_set(_G, true)
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow
@@ -510,11 +531,9 @@ ENDMAP
 
 NAME:    tomb_1_centre_grunt_layered
 TAGS:    tomb_1_centre unrand no_hmirror
-MONS:    mummy / skeletal warrior w:1 / nothing w:11
+: tomb_1_mummy_set(_G)
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
-MONS:    greater mummy / ancient lich w:1 / nothing w:11
-MONS:    silver statue / orange crystal statue / ice statue
+: tomb_1_mummy_priest_set(_G, true)
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow
@@ -554,10 +573,9 @@ SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
 SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST: AEIMR = +, a = ), ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
-MONS: mummy / guardian mummy w:3 / nothing
+: tomb_1_mummy_set(_G)
 : tomb_guardian_set(_G, true)
-MONS: mummy priest / lich w:1 / nothing w:11
-MONS: greater mummy / ancient lich w:1 / nothing w:11
+: tomb_1_mummy_priest_set(_G, true)
 MAP
 .................................
 ..cccAccc.....2...2.....cccEccc..
@@ -588,7 +606,7 @@ TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST:   ' = 3 .:200
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest / nothing, greater mummy
+: tomb_1_mummy_priest_set(_G)
 MAP
 ''                                   ''
 ''c'''''''''''           '''''''''''c''
@@ -613,8 +631,7 @@ SUBST:   ABEF = c, CDGH = '
 SUBST:   ' = 3 .:200
 NSUBST:  < = } / ., > = ] / .
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
-MONS:    greater mummy
+: tomb_1_mummy_priest_set(_G)
 MAP
 ''                                   ''
 ''c'''D''''c.<           >.c''''G'''c''
@@ -635,8 +652,7 @@ TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST:   ' = 3 .:200
 : tomb_guardian_set(_G, true)
-MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
-MONS:    greater mummy
+: tomb_1_mummy_priest_set(_G)
 MAP
 ''                                   ''
 ''''''''''''''           ''''''''''''''
@@ -657,7 +673,7 @@ TAGS: tomb_1_hall_stairs unrand
 SHUFFLE: ]}
 SUBST: ' = 3 .:200
 : tomb_guardian_set(_G, true)
-MONS: mummy priest / lich w:5 / nothing, greater mummy
+: tomb_1_mummy_priest_set(_G)
 MAP
 ''                                   ''
 ''cc''''''cccc           cccc''''''cc''
@@ -679,7 +695,7 @@ SHUFFLE: AaZ/BbY, pq
 SUBST: ADp = ', Y = 2, ad = +, BbEeq = c, ' = 3 .:200
 NSUBST: Z = ] / }
 : tomb_guardian_set(_G, true)
-MONS: mummy priest / nothing, greater mummy
+: tomb_1_mummy_priest_set(_G)
 MAP
 ''                                   ''
 ''BBBBBBBBBccc           cccBBBBBBBBB''
@@ -731,7 +747,7 @@ SUBST:    " = 2:3 3:1 .:96
 #
 MONS: mummy
 : tomb_guardian_set(_G)
-MONS: mummy priest
+: tomb_mummy_priest_set(_G)
 #
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -808,9 +824,9 @@ ENDMAP
 
 NAME: tomb_2_ambush_old
 TAGS: tomb_2_ambush unrand
-MONS: mummy
+MONS: mummy / skeletal warrior w:2
 : tomb_guardian_set(_G)
-MONS: mummy priest, greater mummy
+: tomb_mummy_priest_set(_G)
 MAP
 .............................
 .............................
@@ -840,8 +856,7 @@ NAME:    tomb_2_ambush_grunt_patterns
 TAGS:    tomb_2_ambush unrand
 MONS:    mummy / skeletal warrior w:2
 : tomb_guardian_set(_G)
-MONS:    mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS:    greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 SHUFFLE: AB / Ad / dA, CD / Ce / eC, EF / Ef / fE
 SUBST:   ABCDEF = x, def = .
 MAP
@@ -873,8 +888,7 @@ NAME: tomb_2_ambush_grunt_arcs
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
 : tomb_guardian_set(_G)
-MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS: greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 MAP
 .............................
 .............................
@@ -904,8 +918,7 @@ NAME: tomb_2_ambush_grunt_hexed
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
 : tomb_guardian_set(_G)
-MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS: greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 MAP
 .............................
 ..............x..............
@@ -1027,15 +1040,16 @@ ENDMAP
 NAME:  tomb_3_rune_old
 TAGS:  tomb_3_rune unrand
 : tomb_guardian_set(_G)
-MONS:  mummy priest, greater mummy
+: tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
+KMONS: K = Khufu w:3 / greater mummy, greater mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc.............................cccccc
 ccc...............cccccc..............ccc
 cc...............cccccccc..............cc
-cc.......3......ccccO3cccc......3......cc
+cc.......3......ccccOKcccc......3......cc
 cc............cccc......cccc...........cc
 c............cccc........cccc...........c
 c............cccc........cccc...........c
@@ -1056,8 +1070,7 @@ ENDMAP
 NAME:  tomb_3_rune_grunt_curves
 TAGS:  tomb_3_rune unrand
 : tomb_guardian_set(_G)
-MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS:  greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
 KMONS: O = Khufu w:3 / greater mummy, greater mummy
@@ -1087,8 +1100,7 @@ ENDMAP
 NAME:  tomb_3_rune_grunt_snapback
 TAGS:  tomb_3_rune unrand
 : tomb_guardian_set(_G)
-MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS:  greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
 KMONS: K = Khufu w:3 / greater mummy, greater mummy
@@ -1118,8 +1130,7 @@ ENDMAP
 NAME:  tomb_3_rune_grunt_layered
 TAGS:  tomb_3_rune unrand
 : tomb_guardian_set(_G)
-MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS:  greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
 KMONS: K = Khufu w:3 / greater mummy, greater mummy
@@ -1149,8 +1160,7 @@ ENDMAP
 NAME:   tomb_3_rune_grunt_doroklohe
 TAGS:   tomb_3_rune unrand
 : tomb_guardian_set(_G)
-MONS:   mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
-MONS:   greater mummy / ancient lich w:1
+: tomb_mummy_priest_set(_G)
 NSUBST: 3 = 1:O / *:3
 KMASK:  O = no_item_gen
 KITEM:  O = golden rune of Zot
