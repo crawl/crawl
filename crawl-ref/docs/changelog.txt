@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1503-gb61f0ef)
+Stone Soup 0.16 (up to 0.16-a0-1701-gf5abbb0)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -8,6 +8,9 @@ Branches, environment
 * Every time a player clears a ziggurat (exits from the top floor, Zig:27), all
   subsequent ziggurats become significantly harder.
 * A Hall of Blades area (not branch) is now guaranteed on Elf:2.
+* Clouds of draining now require rN+++ for immunity, up from rN+.
+* Clouds of miasma now apply the 'Rot' status, rather than causing rotting
+  directly.
 
 Character
 ---------
@@ -16,6 +19,8 @@ Character
 * Demigods now have innate Sustain Abilities.
 * All species can now choose 'unarmed' when playing backgrounds that allow a
   weapon choice.
+* Ghouls now gain as much healing from normal chunks as they previously got
+  from rotting flesh, and always cure a point of rot when eating a chunk.
 * Wanderers now receive a randart spellbook instead of starting with a Level 1
   spell memorized.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
@@ -24,28 +29,39 @@ Character
 
 Monsters
 --------
-* Mnoleg now has a pair of tentacles, acting similarly to eldritch tentacles;
-  as such Mnoleg no longer has Malign Gateway.
 * The Great Lords of Pandemonium (Cerebov, et al) will reappear on later floors
   of Pandemonium if their rune is stolen, unless and until they are slain.
 * The Serpent of Hell is considerably tougher; it now has three heads which
   can attack and/or breathe separately and can also summon backup.
+* Mnoleg now has more and more exciting attack types.
 * Mimics now cackle and vanish (forever) when discovered.
 * Mermaids have been renamed to sirens; sirens have been renamed to merfolk
   avatars.
 * Curse skulls now move - fast!
 * Changed monster: iron devils have been upgraded to rust devils, which do less
   damage but corrode with their touch.
-* New monster: elemental wellsprings, appearing in Cocytus. They fire powerful
-  waves of water which produce hostile water elementals - but deplete their
-  own 'health' in the process.
-* New monster: bennu, the divine phoenix, appearing in Tomb. Attacks with fire,
-  draining, and holy; when killed, explodes into ghostly flame and instantly
-  returns to life (once).
+* New monsters:
+  - Elemental wellsprings, appearing in Cocytus. They fire powerful waves of
+    water which produce hostile water elementals - but deplete their own
+    'health' in the process.
+  - Bennu, the divine phoenix, appearing in Tomb. Attacks with fire, draining,
+    and holy; when killed, explodes into ghostly flame and instantly returns
+    to life (once).
+  - Ushabti, funerary statues, appearing in Tomb. They breathe a mix of miasma
+    and draining clouds, and rumble deeply to alert far-away foes.
+  - Anubis guards, living fanatics appearing in Tomb. They're conditioned to
+    be immune to torment, and breathe draining, dispel undead, confuse, and
+    sound signal horns to alert other guards.
+  - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
+    bite to drain life, speed, and skill. Their bite can also apply rN-.
 * Monster malmutations are now temporary, but more significant.
 * Player ghosts & spellforged servitors can now have more than six spells.
 * Player ghosts now have their weapon brands displayed.
+* Xtahua's breath now creates a cloud of flames, like red draconians'.
+* Tiamat can now be any colour of draconian, except grey.
 * Frederick is now a demigod.
+* Sense invisibility has been simplified; monsters that had it now have see
+  invisible + blindness immunity instead.
 * Magic immunity no longer confers confusion immunity to monsters.
 
 Spells
@@ -58,9 +74,13 @@ Spells
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
+* Spell miscast effects have been hugely revamped.
 
 Items
 -----
+* Chunks are now only separated by edibility (normal, poisonous, mutagenic...),
+  rather than source monster type.
+* Rotting chunks are gone; corpses rot directly into skeletons.
 * Cleaving attacks (from axes and Hydra Form) try to hit all adjacent enemies,
   rather than being blocked by walls.
 * Wand changes:
@@ -80,11 +100,16 @@ Items
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
+* All food other than rations and chunks now takes one turn to eat.
+* All short blades now do piercing damage.
 * Renamed items:
+    - Cutlasses are now rapiers.
     - Bastard swords are now double swords.
     - Claymores are now triple swords.
     - Cloaks of darkness are now cloaks of invisibility.
-* Removed items: boots of jumping.
+* Removed items
+    - Boots of jumping.
+    - Potions of coagulated blood.
 
 Gods
 ----
@@ -116,12 +141,17 @@ Gods
   - 5*: Apocalypse: Deals very high damage to all monsters in LOS and inflicts
         statuses. Inflicts heavy drain and exhaustion.
   - Ru's abilities can be used while silenced.
+* Ashenzari's clear vision perk now also grants immunity to the negative
+  effects of blurry vision mutations.
 * Dithmenos now specifically hates fire; Corona and related effects are now
   permitted to Dithmenos's worshippers.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
    - Hell effect protection halved; now capping out at 50%, down from 100%.
    - Recite now more effective at very low Invocations.
+* Gods that hated eating various types of creature (Beogh and the good gods)
+  now hate butchering those types of creatures. Penalties for violating these
+  conducts have been raised significantly.
 
 Interface
 ---------
@@ -134,6 +164,7 @@ Interface
 * A third page has been added to the god description (^) screen, listing causes
   and effects of divine wrath.
 * Derived undead (zombies, skeletons, &c) now have their full names displayed.
+* Corrosion now visibly (temporarily) reduces weapons' enhancement bonuses.
 * Monsters no longer appear on the minimap.
 * The weapon, species, and background options allow these aspects to be
   specified in the init file, causing one to be randomly selected; a new combo
