@@ -17,10 +17,11 @@ import process_handler, userdb
 title_imgs = []
 title_regex = re.compile(r"^title_.*\.png$")
 def scan_titles():
-    del title_imgs[:]
+    title_imgs = []
     for f in os.listdir(config.static_path):
         if title_regex.match(f):
             title_imgs.append(f)
+    return title_imgs
 
 def maybe_minified(module):
     if not config.get("use_minified", True):
@@ -133,7 +134,8 @@ def usr1_handler(signum, frame):
         config.load()
     except ValueError:
         logging.error("Error in config file", exc_info=True)
-    scan_titles()
+    global title_imgs
+    title_imgs = scan_titles()
 
 def usr2_handler(signum, frame):
     logging.info("Received USR2, reloading player title data.")
@@ -223,6 +225,11 @@ def check_config():
         if type(game_data.get("pre_options", [])) is not list:
             logging.warning("The pre_options field should be a list!")
             success = False
+
+    if not scan_titles():
+        logging.warning("No title images (title_*.png) found in static_path (%s)." % config.static_path)
+        success = False
+
     return success
 
 
@@ -252,7 +259,7 @@ if __name__ == "__main__":
 
     shed_privileges()
 
-    scan_titles()
+    title_imgs = scan_titles()
 
     userdb.ensure_user_db_exists()
 
