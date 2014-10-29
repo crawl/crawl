@@ -210,18 +210,19 @@ void debug_item_scan()
         {
             _dump_item(name, i, mitm[i], "Bad item:");
         }
-        else if ((mitm[i].base_type == OBJ_WEAPONS
-                    && (abs(mitm[i].plus) > 30
-                        || abs(mitm[i].plus2) > 30
-                        || !is_artefact(mitm[i])
-                           && mitm[i].special >= NUM_SPECIAL_WEAPONS))
-
-                 || (mitm[i].base_type == OBJ_ARMOUR
-                     && (abs(mitm[i].plus) > 30
-                         || !is_artefact(mitm[i])
-                            && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
+        else if (abs(mitm[i].plus) > 30 &&
+                    (mitm[i].base_type == OBJ_WEAPONS
+                     || mitm[i].base_type == OBJ_ARMOUR))
         {
-            _dump_item(name, i, mitm[i], "Bad plus or special value:");
+            _dump_item(name, i, mitm[i], "Bad plus:");
+        }
+        else if (!is_artefact(mitm[i])
+                 && (mitm[i].base_type == OBJ_WEAPONS
+                     && mitm[i].special >= NUM_SPECIAL_WEAPONS
+                     || mitm[i].base_type == OBJ_ARMOUR
+                        && mitm[i].special >= NUM_SPECIAL_ARMOURS))
+        {
+            _dump_item(name, i, mitm[i], "Bad special value:");
         }
         else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
             _dump_item(name, i, mitm[i], "Summoned item on floor:");
