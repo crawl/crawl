@@ -122,6 +122,7 @@ static const pop_entry pop_d[] =
   { 21, 27,   25, PEAK, MONS_ORC_SORCERER },
   { 21, 27,  310, DOWN, MONS_STONE_GIANT },
   { 21, 31,  192, PEAK, MONS_ETTIN },
+  { 21, 30,   25, SEMI, MONS_CAUSTIC_WASP },
   { 22, 30,  136, SEMI, MONS_DEEP_TROLL_EARTH_MAGE },
   { 23, 27,   89, UP,   MONS_STORM_DRAGON },
   { 23, 27,   28, SEMI, MONS_ORC_WARLORD },
@@ -726,6 +727,7 @@ static const pop_entry pop_zot[] =
   {  1,  5,  192, UP,   MONS_GHOST_MOTH },
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
   {  1,  5,  150, UP,   MONS_CURSE_TOE },
+  {  1,  5,  150, SEMI, MONS_CAUSTIC_WASP },
   {  1, 11,  365, SEMI, MONS_GOLDEN_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1094,6 +1096,7 @@ static const pop_entry pop_depths[] =
   {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },
   {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },
   {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },
+  {  3, 14,   80, SEMI, MONS_CAUSTIC_WASP },
   {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },
   {  4, 14,   40, FLAT, MONS_STORM_DRAGON },
   {  4, 14,   40, FLAT, MONS_SHADOW_DRAGON },

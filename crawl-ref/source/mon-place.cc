@@ -2108,6 +2108,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
+    case MONS_CAUSTIC_WASP:
+        band = BAND_CAUSTIC_WASP;
+        band_size = 2 + random2(6);
+        break;
+
     case MONS_FLYING_SKULL:
         band = BAND_FLYING_SKULLS;
         band_size = 2 + random2(4);
@@ -2944,6 +2949,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_KILLER_BEES:
         return MONS_KILLER_BEE;
+
+    case BAND_CAUSTIC_WASP:
+        return MONS_CAUSTIC_WASP;
 
     case BAND_FLYING_SKULLS:
         return MONS_FLYING_SKULL;
