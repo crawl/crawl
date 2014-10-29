@@ -1380,6 +1380,70 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
     }
 }
 
+/**
+ * Construct the name of a given deck item.
+ *
+ * @param[in] deck      The deck item in question.
+ * @param[in] desc      The description level to be used.
+ * @param[in] ident     Whether the deck should be named as if it were
+ *                      identified.
+ * @param[out] buff     The buffer to fill with the given item name.
+ */
+static void _name_deck(const item_def &deck, description_level_type desc,
+                       bool ident, ostringstream &buff)
+{
+    const bool know_type = ident || item_type_known(deck);
+
+    const bool dbname   = desc == DESC_DBNAME;
+    const bool basename = desc == DESC_BASENAME
+                          || dbname && !know_type;
+
+    if (basename)
+    {
+        buff << "deck of cards";
+        return;
+    }
+
+    if (bad_deck(deck))
+    {
+        buff << "BUGGY deck of cards";
+        return;
+    }
+
+    if (!dbname)
+        buff << deck_rarity_name(deck_rarity(deck)) << ' ';
+
+    if (deck.sub_type == NUM_MISCELLANY)
+        buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
+    else
+        buff << misc_type_name(deck.sub_type, know_type);
+
+    // name overriden, not a stacked deck, not a deck that's been drawn from
+    if (dbname || !top_card_is_known(deck) && deck.plus2 == 0)
+        return;
+
+    buff << " {";
+    // A marked deck!
+    if (top_card_is_known(deck))
+        buff << card_name(top_card(deck));
+
+    // How many cards have been drawn, or how many are left.
+    if (deck.plus2 != 0)
+    {
+        if (top_card_is_known(deck))
+            buff << ", ";
+
+        if (deck.plus2 > 0)
+            buff << "drawn: ";
+        else
+            buff << "left: ";
+
+        buff << abs(deck.plus2);
+    }
+
+    buff << "}";
+}
+
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
@@ -1827,69 +1891,29 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (!dbname)
                 buff << rune_type_name(it_plus) << " ";
             buff << "rune of Zot";
+            break;
         }
-        else
+
+        // NUM_MISCELLANY indicates unidentified deck for item_info
+        if (is_deck(*this) || item_typ == NUM_MISCELLANY)
         {
-            // NUM_MISCELLANY indicates unidentified deck for item_info
-            if (is_deck(*this) || item_typ == NUM_MISCELLANY)
-            {
-                if (basename)
-                {
-                    buff << "deck of cards";
-                    break;
-                }
-                else if (bad_deck(*this))
-                {
-                    buff << "BUGGY deck of cards";
-                    break;
-                }
-                if (!dbname)
-                    buff << deck_rarity_name(deck_rarity(*this)) << ' ';
-            }
-            if (item_typ == NUM_MISCELLANY)
-                buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
+            _name_deck(*this, desc, ident, buff);
+            break;
+        }
+
+        if ((item_typ == MISC_BOX_OF_BEASTS
+                  || item_typ == MISC_SACK_OF_SPIDERS)
+                    && item_plus2 > 0
+                    && !dbname)
+        {
+            buff << " {used: " << item_plus2 << "}";
+        }
+        else if (is_xp_evoker(*this) && !evoker_is_charged(*this) && !dbname)
+        {
+            if (evoker_is_charging(*this))
+                buff << " (inert, charging)";
             else
-                buff << misc_type_name(item_typ, know_type);
-            if (is_deck(*this) && !dbname
-                && (top_card_is_known(*this) || plus2 != 0))
-            {
-                buff << " {";
-                // A marked deck!
-                if (top_card_is_known(*this))
-                    buff << card_name(top_card(*this));
-
-                // How many cards have been drawn, or how many are
-                // left.
-                if (plus2 != 0)
-                {
-                    if (top_card_is_known(*this))
-                        buff << ", ";
-
-                    if (plus2 > 0)
-                        buff << "drawn: ";
-                    else
-                        buff << "left: ";
-
-                    buff << abs(plus2);
-                }
-
-                buff << "}";
-            }
-            else if ((item_typ == MISC_BOX_OF_BEASTS
-                      || item_typ == MISC_SACK_OF_SPIDERS)
-                     && item_plus2 > 0
-                     && !dbname)
-            {
-                buff << " {used: " << item_plus2 << "}";
-            }
-            else if (is_xp_evoker(*this) && !evoker_is_charged(*this)
-                     && !dbname)
-            {
-                if (evoker_is_charging(*this))
-                    buff << " (inert, charging)";
-                else
-                    buff << " (inert)";
-            }
+                buff << " (inert)";
         }
         break;
 
