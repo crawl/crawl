@@ -2425,6 +2425,12 @@ unthinkable
 high
 
 action
+
+pizzabubble
+
+noodlescoop
+
+mumblescurry
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
