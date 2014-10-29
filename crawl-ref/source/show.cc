@@ -220,7 +220,7 @@ static show_item_type _item_to_show_code(const item_def &item)
         return jewellery_is_amulet(item) ? SHOW_ITEM_AMULET : SHOW_ITEM_RING;
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
-    case OBJ_STAVES:     return SHOW_ITEM_STAVE;
+    case OBJ_STAVES:     return SHOW_ITEM_STAFF;
     case OBJ_RODS:       return SHOW_ITEM_ROD;
     case OBJ_MISCELLANY:
         if (item.sub_type == MISC_RUNE_OF_ZOT)

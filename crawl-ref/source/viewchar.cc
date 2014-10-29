@@ -109,7 +109,7 @@ dungeon_char_type dchar_by_name(const string &name)
         "invis_exposed", "item_detected",
         "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
-        "item_stave", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
+        "item_staff", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
         "item_gold", "item_amulet", "cloud", "tree", "teleporter",
         "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
         "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
