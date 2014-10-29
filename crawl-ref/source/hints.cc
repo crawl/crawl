@@ -830,11 +830,8 @@ static bool _advise_use_wand()
             return true;
 
         // Empty wands are no good.
-        if (obj.plus2 == ZAPCOUNT_EMPTY
-            || item_ident(obj, ISFLAG_KNOW_PLUSES) && obj.plus <= 0)
-        {
+        if (is_known_empty_wand(obj))
             continue;
-        }
 
         // Can it be used to fight?
         switch (obj.sub_type)

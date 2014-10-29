@@ -521,14 +521,14 @@ int manual_slot_for_skill(skill_type skill)
         if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
             continue;
 
-        if (static_cast<skill_type>(iter->plus) != skill || iter->plus2 == 0)
+        if (iter->skill != skill || iter->skill_points == 0)
             continue;
 
-        if (slot != -1 && iter->plus2 > charges)
+        if (slot != -1 && iter->skill_points > charges)
             continue;
 
         slot = iter - you.inv.begin();
-        charges = iter->plus2;
+        charges = iter->skill_points;
     }
 
     return slot;
@@ -559,7 +559,7 @@ void get_all_manual_charges(vector<int> &charges)
         if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
             continue;
 
-        charges.push_back(iter->plus2);
+        charges.push_back(iter->skill_points);
     }
 }
 
@@ -573,7 +573,7 @@ void set_all_manual_charges(const vector<int> &charges)
             continue;
 
         ASSERT(charge_iter != charges.end());
-        iter->plus2 = *charge_iter;
+        iter->skill_points = *charge_iter;
         charge_iter++;
     }
     ASSERT(charge_iter == charges.end());
@@ -719,8 +719,8 @@ static bool _box_of_beasts(item_def &box)
         xom_is_stimulated(10);
         did_god_conduct(DID_CHAOS, random_range(5,10));
         // Decrease charges
-        box.plus--;
-        box.plus2++;
+        box.charges--;
+        box.used_count++;
         // Let each part announce itself
         for (int n = 0; n < NUM_CHIMERA_HEADS; ++n)
         {
@@ -808,8 +808,8 @@ static bool _sack_of_spiders(item_def &sack)
             }
         }
         // Decrease charges
-        sack.plus--;
-        sack.plus2++;
+        sack.charges--;
+        sack.used_count++;
     }
     else
         // Failed to create monster for some reason
@@ -1570,7 +1570,7 @@ static bool _phial_of_floods()
 
 static void _expend_xp_evoker(item_def &item)
 {
-    item.plus2 = 10;
+    item.evoker_debt = 10;
 }
 
 static bool _rod_spell(item_def& irod, bool check_range)

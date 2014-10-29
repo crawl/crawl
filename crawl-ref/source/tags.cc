@@ -3732,11 +3732,6 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 
 #if TAG_MAJOR_VERSION == 34
-    // Blowguns aren't supposed to have to-dam since 0.7, but they were
-    // generated with a plus2 anyway.
-    if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_BLOWGUN)
-        item.plus2 = 0;
-
     // Remove artefact autoinscriptions from the saved inscription.
     if ((th.getMinorVersion() < TAG_MINOR_AUTOINSCRIPTIONS
          || th.getMinorVersion() == TAG_MINOR_0_11) && is_artefact(item))
@@ -3831,7 +3826,7 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
         && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
     {
-        item.plus2 = 0;
+        item.evoker_debt = 0;
     }
 
     // Rescale old MR (range 35-99) to new discrete steps (40/80/120)
@@ -3950,7 +3945,7 @@ void unmarshallItem(reader &th, item_def &item)
              slay = dam < 0 ? dam : max(acc, dam);
 
             item.plus = slay;
-            item.plus2 = 0;
+            item.plus2 = 0; // probably harmless but might as well
         }
     }
 
@@ -3976,7 +3971,7 @@ void unmarshallItem(reader &th, item_def &item)
             slay = dam < 0 ? dam : max(acc,dam);
 
             item.plus = slay;
-            item.plus2 = 0;
+            item.plus2 = 0; // probably harmless but might as well
         }
     }
 

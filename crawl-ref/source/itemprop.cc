@@ -683,7 +683,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
 void set_net_stationary(item_def &item)
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
-        item.plus2 = 1;
+        item.net_placed = true;
 }
 
 /**
@@ -707,7 +707,7 @@ bool item_is_stationary(const item_def &item)
 bool item_is_stationary_net(const item_def &item)
 {
     return item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET
-        && item.plus2;
+        && item.net_placed;
 }
 
 /**
@@ -1169,7 +1169,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         // Don't offer wands already maximally charged.
         if (item_ident(it, ISFLAG_KNOW_PLUSES)
-            && it.plus >= wand_max_charges(it.sub_type))
+            && it.charges >= wand_max_charges(it.sub_type))
         {
             return false;
         }
@@ -1182,9 +1182,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
-            return it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                   || it.plus < it.plus2
-                   || it.special < MAX_WPN_ENCHANT;
+            return it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                   || it.charges < it.charge_cap
+                   || it.rod_plus < MAX_WPN_ENCHANT;
         }
         return true;
     }
@@ -1227,6 +1227,25 @@ int wand_charge_value(int type)
 int wand_max_charges(int type)
 {
     return wand_charge_value(type) * 3;
+}
+
+/**
+ * Is the given item a wand which is both empty & known to be empty?
+ *
+ * @param item  The item in question.
+ * @return      Whether the wand is charge-id'd and empty, or at least known
+ *              {empty}.
+ */
+bool is_known_empty_wand(const item_def &item)
+{
+    if (item.base_type != OBJ_WANDS)
+        return false;
+
+    // not charge-ID'd, but known empty (probably through hard experience)
+    if (item.used_count == ZAPCOUNT_EMPTY)
+        return true;
+
+    return item_ident(item, ISFLAG_KNOW_PLUSES) && item.charges <= 0;
 }
 
 bool is_offensive_wand(const item_def& item)
@@ -2796,5 +2815,5 @@ bool is_xp_evoker(const item_def &item)
 
 bool evoker_is_charged(const item_def &item)
 {
-    return item.plus2 == 0;
+    return item.evoker_debt == 0;
 }

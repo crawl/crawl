@@ -530,14 +530,10 @@ static bool _evoke_item_on_target(actor* target)
     if (item == NULL)
         return false;
 
-    if (item->base_type == OBJ_WANDS)
+    if (is_known_empty_wand(*item))
     {
-        if (item->plus2 == ZAPCOUNT_EMPTY
-            || item_type_known(*item) && item->plus <= 0)
-        {
-            mpr("That wand is empty.");
-            return false;
-        }
+        mpr("That wand is empty.");
+        return false;
     }
 
     macro_buf_add_cmd(CMD_EVOKE);

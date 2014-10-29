@@ -1447,8 +1447,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     }
     ASSERT_RANGE(num_spells, 0 + 1, SPELLBOOK_SIZE + 1);
 
-    book.plus  = level;
-    book.plus2 = num_spells;
+    book.plus       = level;
 
     book.sub_type = BOOK_RANDART_LEVEL;
     _make_book_randart(book);
@@ -1964,8 +1963,7 @@ bool make_book_theme_randart(item_def &book,
             disc2_pos = i;
     }
 
-    book.plus  = num_spells | (max_levels << 8); // NOTE: What's this do?
-    book.plus2 = disc1_pos  | (disc2_pos  << 8);
+    book.plus       = num_spells | (max_levels << 8); // NOTE: What's this do?
 
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);   // NOTE: have any spells been set here?
@@ -2259,8 +2257,7 @@ bool make_book_theme_randart(item_def &book,
     set_artefact_name(book, name);
 
     // Save primary/secondary disciplines back into the book.
-    book.plus  = max1;
-    book.plus2 = max2;
+    book.plus       = max1;
 
     return true;
 }

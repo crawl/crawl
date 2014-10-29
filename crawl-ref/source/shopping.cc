@@ -1883,7 +1883,7 @@ unsigned int item_value(item_def item, bool ident)
 
         // Both max charges and enchantment.
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            valued += 50 * (item.plus2 / ROD_CHARGE_MULT + item.special);
+            valued += 50 * (item.charge_cap / ROD_CHARGE_MULT + item.rod_plus);
         break;
 
     case OBJ_ORBS:

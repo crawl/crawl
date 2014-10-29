@@ -81,8 +81,8 @@ static int _get_initial_stack_longevity(const item_def &stack)
         return FRESHEST_BLOOD;
 
     ASSERT(_is_chunk(stack));
-    if (stack.special) // legacy chunk
-        return stack.special * ROT_TIME_FACTOR;
+    if (stack.freshness) // legacy chunk
+        return stack.freshness * ROT_TIME_FACTOR;
     return FRESHEST_CHUNK;
 }
 
@@ -119,7 +119,7 @@ void init_perishable_stack(item_def &stack, int age)
     for (int i = 0; i < stack.quantity; i++)
         timer.push_back(max_age);
 
-    stack.special = 0;
+    stack.freshness = 0;
     ASSERT(timer.size() == stack.quantity);
     props.assert_validity();
 }
@@ -166,9 +166,9 @@ static bool _item_needs_rot_check(const item_def &item)
  */
 static void _rot_floor_gold(item_def &it, int rot_time)
 {
-    const bool old_aura = it.special > 0;
-    it.special = max(0, it.special - rot_time);
-    if (old_aura && !it.special)
+    const bool old_aura = it.freshness > 0;
+    it.freshness = max(0, it.freshness - rot_time);
+    if (old_aura && !it.freshness)
     {
         invalidate_agrid(true);
         you.redraw_armour_class = true;
@@ -188,8 +188,8 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
     ASSERT(it.base_type == OBJ_CORPSES);
     ASSERT(!it.props.exists(CORPSE_NEVER_DECAYS));
 
-    it.special -= rot_time;
-    if (it.special > 0 || is_being_butchered(it))
+    it.freshness -= rot_time;
+    if (it.freshness > 0 || is_being_butchered(it))
         return;
 
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))

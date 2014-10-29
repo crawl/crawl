@@ -190,7 +190,7 @@ static bool _item_preferred_to_clean(int item)
     }
 
     if (mitm[item].base_type == OBJ_MISSILES
-        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && mitm[item].plus <= 0 && !mitm[item].net_placed // XXX: plus...?
         && !is_artefact(mitm[item]))
     {
         return true;
@@ -2793,9 +2793,7 @@ static bool _similar_wands(const item_def& pickup_item,
         return false;
 
     // Not similar if wand in inventory is known to be empty.
-    return inv_item.plus2 != ZAPCOUNT_EMPTY
-           || (item_ident(inv_item, ISFLAG_KNOW_PLUSES)
-               && inv_item.plus > 0);
+    return !is_known_empty_wand(inv_item);
 }
 
 static bool _similar_jewellery(const item_def& pickup_item,
@@ -3725,8 +3723,8 @@ bool get_item_by_name(item_def *item, char* specs,
 
             if (skill != SK_NONE)
             {
-                item->plus  = skill;
-                item->plus2 = random_range(2000, 3000);
+                item->skill        = skill;
+                item->skill_points = random_range(2000, 3000);
             }
             else
                 mpr("Sorry, no books on that skill today.");
@@ -3745,8 +3743,8 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_RODS:
-        item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-        item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->charges    = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
         init_rod_mp(*item);
         break;
 
@@ -3754,10 +3752,8 @@ bool get_item_by_name(item_def *item, char* specs,
         if (item->sub_type == MISC_BOX_OF_BEASTS
             || item->sub_type == MISC_SACK_OF_SPIDERS)
         {
-            item->plus = 50;
+            item->charges = 50;
         }
-        else if (!item_is_rune(*item) && !is_deck(*item) && !is_xp_evoker(*item))
-            item->plus2 = 50;
         break;
 
     case OBJ_POTIONS:
@@ -3891,22 +3887,21 @@ item_info get_item_info(const item_def& item)
     {
     case OBJ_MISSILES:
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus2 = item.plus2;
+            ii.net_placed = item.net_placed;
         // intentional fall-through
     case OBJ_WEAPONS:
         ii.sub_type = item.sub_type;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
-            ii.special = item.special; // brand
+            ii.brand = item.brand;
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
-        ii.plus2    = item.plus2;      // sub-subtype (helmets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
-            ii.special = item.special; // brand
+            ii.brand = item.brand;
         ii.rnd = item.rnd; // used for appearance
         break;
     case OBJ_WANDS:
@@ -3914,40 +3909,40 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_WANDS;
-        ii.special = item.special; // appearance
+        ii.appearance = item.appearance;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus; // charges
-        ii.plus2 = item.plus2; // num zapped/recharged or empty
+            ii.charges = item.charges;
+        ii.used_count = item.used_count; // num zapped/recharged or empty
         break;
     case OBJ_POTIONS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_POTIONS;
-        ii.plus = item.plus; // appearance
+        ii.consum_desc = item.consum_desc; // appearance
         break;
     case OBJ_FOOD:
         ii.sub_type = item.sub_type;
         if (ii.sub_type == FOOD_CHUNK)
         {
-            ii.plus = item.plus; // monster
-            ii.special = 100;
+            ii.mon_type = item.mon_type;
+            ii.freshness = 100;
         }
         if (ii.sub_type == FOOD_FRUIT)
             ii.rnd = item.rnd; //appearance
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
-        ii.plus = item.plus; // monster
-        ii.special = 100;
+        ii.mon_type = item.mon_type;
+        ii.freshness = 100;
         break;
     case OBJ_SCROLLS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_SCROLLS;
-        ii.special = item.special; // name seed, part 1
-        ii.plus = item.plus;  // name seed, part 2
+        ii.appearance = item.appearance;    // name seed, part 1
+        ii.consum_desc = item.consum_desc;  // name seed, part 2
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
@@ -3956,7 +3951,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
-        ii.special = item.special; // appearance
+        ii.appearance = item.appearance;
         ii.rnd = item.rnd; // randart appearance
         break;
     case OBJ_BOOKS:
@@ -3964,9 +3959,9 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_BOOKS;
-        ii.special = item.special; // appearance
+        ii.appearance = item.appearance;
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
-            ii.plus = item.plus; // manual skill
+            ii.skill = item.skill; // manual skill
         break;
     case OBJ_RODS:
         if (item_type_known(item))
@@ -3974,9 +3969,9 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
             if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             {
-                ii.special = item.special;
-                ii.plus = item.plus;
-                ii.plus2 = item.plus2;
+                ii.rod_plus = item.rod_plus;
+                ii.charges = item.charges;
+                ii.charge_cap = item.charge_cap;
             }
         }
         else
@@ -3985,7 +3980,7 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
-        ii.special = item.special; // appearance
+        ii.appearance = item.appearance;
         break;
     case OBJ_MISCELLANY:
         if (item_type_known(item))
@@ -4004,18 +3999,18 @@ item_info get_item_info(const item_def& item)
         }
 
         if (ii.sub_type == MISC_RUNE_OF_ZOT)
-            ii.plus = item.plus; // which rune
+            ii.rune_enum = item.rune_enum; // which rune
 
         if (ii.sub_type == NUM_MISCELLANY)
-            ii.special = item.special; // deck rarity
+            ii.deck_rarity = item.deck_rarity;
 
         // Preserve inert/charged state but not the actual numbers.
         if (is_xp_evoker(item))
-            ii.plus2 = !!item.plus2;
+            ii.evoker_debt = !!item.evoker_debt;
 
         if (is_deck(item))
         {
-            ii.special = item.special;
+            ii.deck_rarity = item.deck_rarity;
 
             const int num_cards = cards_in_deck(item);
             CrawlVector info_cards (SV_BYTE);

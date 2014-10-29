@@ -1421,7 +1421,7 @@ void objstat_record_item(item_def &item)
         break;
     case ITEM_RODS:
         _record_item_stat(cur_lev, itype, "RodMana",
-                             item.plus2 / ROD_CHARGE_MULT);
+                             item.charge_cap / ROD_CHARGE_MULT);
         _record_item_stat(cur_lev, itype, "RodRecharge", item.special);
         break;
     case ITEM_MISCELLANY:

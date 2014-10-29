@@ -675,12 +675,12 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     }
     else if (type == OBJ_WANDS
              && ((item.flags & ISFLAG_KNOW_PLUSES)
-                 || item.plus2 == ZAPCOUNT_EMPTY))
+                 || item.used_count == ZAPCOUNT_EMPTY))
     {
-        desc.quantity = item.plus;
+        desc.quantity = item.charges;
     }
     else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.plus / ROD_CHARGE_MULT;
+        desc.quantity = item.charges / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 

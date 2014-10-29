@@ -937,11 +937,11 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
     {
         item_def& manual(you.inv[slot]);
-        const int bonus = min<int>(bonus_left, manual.plus2);
+        const int bonus = min<int>(bonus_left, manual.skill_points);
         skill_inc += bonus;
         bonus_left -= bonus;
-        manual.plus2 -= bonus;
-        if (!manual.plus2 && !simu)
+        manual.skill_points -= bonus;
+        if (!manual.skill_points && !simu)
             finish_manual(slot);
     }
 
