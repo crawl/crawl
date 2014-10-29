@@ -7,31 +7,30 @@
 
 #include "maps.h"
 
-#include <cstring>
-#include <cstdlib>
 #include <algorithm>
-#include <sys/types.h>
+#include <cstdlib>
+#include <cstring>
 #include <sys/param.h>
-
+#include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "dbg-maps.h"
 #include "dungeon.h"
-#include "endianness.h"
 #include "end.h"
-#include "env.h"
+#include "endianness.h"
 #include "enum.h"
+#include "env.h"
 #include "files.h"
-#include "message.h"
 #include "mapdef.h"
 #include "mapmark.h"
-#include "mon-util.h"
+#include "message.h"
 #include "mon-place.h"
-#include "coord.h"
+#include "mon-util.h"
 #include "random.h"
 #include "state.h"
 #include "stringutil.h"

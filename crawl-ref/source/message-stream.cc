@@ -2,8 +2,8 @@
 
 #include "message.h"
 
-#include <streambuf>
 #include <iostream>
+#include <streambuf>
 
 namespace msg
 {

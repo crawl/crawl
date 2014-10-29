@@ -6,6 +6,8 @@
 
 #include "AppHdr.h"
 
+#include "fineff.h"
+
 #include "act-iter.h"
 #include "bloodspatter.h"
 #include "coord.h"
@@ -15,7 +17,6 @@
 #include "effects.h"
 #include "english.h"
 #include "env.h"
-#include "fineff.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "mgen_data.h"

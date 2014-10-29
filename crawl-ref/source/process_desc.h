@@ -7,8 +7,8 @@
 #define DESCRIBE_TEMPLATES_H
 
 #include "describe.h"
-#include "stringutil.h"
 #include "lang-fake.h"
+#include "stringutil.h"
 
 template<class T> void process_description(T &proc, const describe_info &inf);
 template<class T> void process_quote(T &proc, const describe_info &inf);

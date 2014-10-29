@@ -6,13 +6,12 @@
 #include "AppHdr.h"
 
 #include "view.h"
-#include "shout.h"
 
-#include <string.h>
-#include <cmath>
-#include <sstream>
 #include <algorithm>
+#include <cmath>
 #include <memory>
+#include <sstream>
+#include <string.h>
 
 #include "act-iter.h"
 #include "attitude-change.h"
@@ -45,30 +44,30 @@
 #include "mon-death.h"
 #include "mon-poly.h"
 #include "mon-util.h"
-#include "options.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "tilemcache.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+ #include "tilepick-p.h"
+ #include "tileview.h"
+#endif
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
 #include "viewchar.h"
 #include "viewmap.h"
 #include "xom.h"
-
-#ifdef USE_TILE
- #include "tilepick.h"
- #include "tilepick-p.h"
- #include "tileview.h"
-#endif
 
 //#define DEBUG_PANE_BOUNDS
 

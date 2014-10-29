@@ -7,8 +7,9 @@
 #ifndef ENGLISH_H
 #define ENGLISH_H
 
-#include "enum.h"
 #include <string>
+
+#include "enum.h"
 
 extern const char * const standard_plural_qualifiers[];
 

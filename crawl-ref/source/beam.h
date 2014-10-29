@@ -6,7 +6,6 @@
 #ifndef BEAM_H
 #define BEAM_H
 
-#include "externs.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"

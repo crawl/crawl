@@ -7,13 +7,10 @@
 
 #include "command.h"
 
-#include <stdio.h>
-#include <string.h>
 #include <sstream>
 #include <ctype.h>
-
-#include "externs.h"
-#include "options.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "ability.h"
 #include "branch.h"
@@ -25,8 +22,10 @@
 #include "describe.h"
 #include "directn.h"
 #include "english.h"
+#include "env.h"
 #include "files.h"
 #include "godmenu.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -35,8 +34,9 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-util.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
+#include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
@@ -50,19 +50,16 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "unicode.h"
-
-#include "env.h"
 #include "syscalls.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tilepick.h"
+ #include "tilepick.h"
 #endif
 #include "transform.h"
-#include "hints.h"
+#include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 static void _adjust_item();
 static void _adjust_spell();

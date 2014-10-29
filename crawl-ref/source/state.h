@@ -6,8 +6,9 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "player.h"
 #include <vector>
+
+#include "player.h"
 
 class monster;
 class mon_acting;

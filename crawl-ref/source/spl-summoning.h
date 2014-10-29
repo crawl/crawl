@@ -2,8 +2,8 @@
 #define SPL_SUMMONING_H
 
 #include "beam.h"
-#include "enum.h"
 #include "data-index.h"
+#include "enum.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
 

@@ -5,23 +5,23 @@
 
 #include "AppHdr.h"
 
-#include <sstream>
-
-#include "cluautil.h"
 #include "l_libs.h"
+
+#include <sstream>
 
 #include "artefact.h"
 #include "cluautil.h"
+#include "cluautil.h"
 #include "colour.h"
-#include "coord.h"
 #include "command.h"
-#include "env.h"
+#include "coord.h"
 #include "enum.h"
+#include "env.h"
 #include "food.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "l_defs.h"
 #include "libutil.h"
 #include "output.h"

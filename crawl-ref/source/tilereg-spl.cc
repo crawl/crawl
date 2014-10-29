@@ -3,17 +3,16 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-spl.h"
-#include "process_desc.h"
 
 #include "cio.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
+#include "process_desc.h"
 #include "prompt.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"

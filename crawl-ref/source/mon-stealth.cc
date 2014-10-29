@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "monster.h"
+
 #include "mon-util.h"
 
 static int _clamp_stealth(int stealth)

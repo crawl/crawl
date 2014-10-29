@@ -7,12 +7,10 @@
 
 #include "melee_attack.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <algorithm>
-
-#include "externs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "areas.h"
 #include "art-enum.h"
@@ -28,19 +26,23 @@
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
-#include "fineff.h"
 #include "fight.h"
-#include "fprop.h"
+#include "fineff.h"
 #include "food.h"
+#include "fprop.h"
+#include "godconduct.h"
 #include "goditem.h"
+#include "hints.h"
 #include "invent.h"
-#include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mapdef.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -49,9 +51,6 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "terrain.h"
-#include "mapdef.h" // NEVER_CORPSE_KEY
-#include "mgen_data.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -59,8 +58,8 @@
 #include "player.h"
 #include "random-var.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-clouds.h"
@@ -70,13 +69,12 @@
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
+#include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "unwind.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND

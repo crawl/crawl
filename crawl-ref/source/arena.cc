@@ -14,22 +14,21 @@
 #include "dungeon.h"
 #include "end.h"
 #include "env.h"
-#include "externs.h"
 #include "food.h"
+#include "itemname.h"
 #include "items.h"
-#include "itemname.h" // for make_name()
 #include "libutil.h"
 #include "los.h"
 #include "macro.h"
 #include "maps.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-pick.h"
-#include "mon-util.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
-#include "mgen_data.h"
+#include "mon-util.h"
 #include "ng-init.h"
 #include "options.h"
 #include "spl-miscast.h"
@@ -43,8 +42,8 @@
 #endif
 #include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 
 #define ARENA_VERBOSE
 

@@ -2,8 +2,8 @@
 #ifndef TILEREG_STAT_H
 #define TILEREG_STAT_H
 
-#include "tilereg-text.h"
 #include "tilebuf.h"
+#include "tilereg-text.h"
 
 class StatRegion : public TextRegion
 {

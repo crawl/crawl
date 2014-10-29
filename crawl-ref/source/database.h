@@ -6,7 +6,6 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "externs.h"
 #include <list>
 
 #ifdef DB_NDBM

@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "godcompanions.h"
 
+#include <algorithm>
+
 #include "actor.h"
+#include "branch.h"
 #include "mon-message.h"
 #include "mon-util.h"
 #include "religion.h"
-#include "stringutil.h"
 #include "spl-other.h"
-#include "branch.h"
+#include "stringutil.h"
 
 map<mid_t, companion> companion_list;
 

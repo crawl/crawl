@@ -2,6 +2,8 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "tilesdl.h"
+
 #include "ability.h"
 #include "artefact.h"
 #include "cio.h"
@@ -22,12 +24,12 @@
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #include "tilefont.h"
-#include "tilereg.h"
 #include "tilereg-abl.h"
 #include "tilereg-cmd.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
 #include "tilereg-doll.h"
+#include "tilereg.h"
 #include "tilereg-inv.h"
 #include "tilereg-map.h"
 #include "tilereg-mem.h"
@@ -35,19 +37,18 @@
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
 #include "tilereg-popup.h"
-#include "tilereg-spl.h"
 #include "tilereg-skl.h"
+#include "tilereg-spl.h"
 #include "tilereg-stat.h"
 #include "tilereg-tab.h"
 #include "tilereg-text.h"
 #include "tilereg-title.h"
-#include "tilesdl.h"
 #include "tileview.h"
 #include "travel.h"
 #include "unwind.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "windowmanager.h"
 
 #ifdef __ANDROID__

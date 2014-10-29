@@ -7,17 +7,14 @@
 
 #include "beam.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cstdarg>
-#include <iostream>
-#include <set>
 #include <algorithm>
 #include <cmath>
-
-#include "externs.h"
-#include "options.h"
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <set>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -32,18 +29,19 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "english.h"
-#include "env.h"
 #include "enum.h"
+#include "env.h"
 #include "exercise.h"
-#include "godabil.h"
-#include "fprop.h"
 #include "fight.h"
-#include "items.h"
+#include "fprop.h"
+#include "godabil.h"
+#include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
+#include "los.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -54,19 +52,20 @@
 #include "mon-poly.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "options.h"
 #include "ouch.h"
 #include "potion.h"
 #include "prompt.h"
 #include "ranged_attack.h"
 #include "religion.h"
-#include "godconduct.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
-#include "spl-transloc.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -80,10 +79,9 @@
 #endif
 #include "transform.h"
 #include "traps.h"
-#include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "xom.h"
 
 #define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)

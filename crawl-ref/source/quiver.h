@@ -6,7 +6,6 @@
 #ifndef QUIVER_H
 #define QUIVER_H
 
-#include "externs.h" /* item_def */
 #include <vector>
 
 class reader;

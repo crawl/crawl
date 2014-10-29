@@ -6,29 +6,29 @@
 #include "AppHdr.h"
 
 #include "shopping.h"
-#include "message.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "externs.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cio.h"
-#include "describe.h"
 #include "decks.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
+#include "env.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
-#include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
+#include "message.h"
 #include "notes.h"
 #include "output.h"
 #include "place.h"
@@ -40,12 +40,12 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
-#include "travel.h"
-#include "unwind.h"
-#include "env.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
+#include "travel.h"
+#include "unwind.h"
+
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
 
 ShoppingList shopping_list;

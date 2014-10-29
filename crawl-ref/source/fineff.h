@@ -7,6 +7,8 @@
 #ifndef FINEFF_H
 #define FINEFF_H
 
+#include "mon-util.h"
+
 class final_effect
 {
 public:

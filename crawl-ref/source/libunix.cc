@@ -15,33 +15,32 @@
 
 #include "AppHdr.h"
 
+#define _LIBUNIX_IMPLEMENTATION
+#include "libunix.h"
+
+#include <ctype.h>
+#include <langinfo.h>
+#include <locale.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <ctype.h>
 #include <term.h>
-#define _LIBUNIX_IMPLEMENTATION
-#include "libunix.h"
-#include "defines.h"
+#include <termios.h>
+#include <unistd.h>
+#include <wchar.h>
 
 #include "cio.h"
 #include "crash.h"
+#include "defines.h"
 #include "enum.h"
-#include "externs.h"
+#include "files.h"
 #include "libutil.h"
 #include "options.h"
-#include "files.h"
 #include "state.h"
 #include "unicode.h"
-#include "view.h"
 #include "viewgeom.h"
-
-#include <wchar.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <termios.h>
+#include "view.h"
 
 static struct termios def_term;
 static struct termios game_term;

@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "libconsole.h"
+
 void fakecursorxy(int x, int y);
 
 #ifdef USE_TILE_WEB

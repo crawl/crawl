@@ -4,6 +4,9 @@
 
 #include "dgl-message.h"
 
+#include <errno.h>
+#include <sys/stat.h>
+
 #include "files.h"
 #include "format.h"
 #include "initfile.h"
@@ -14,9 +17,6 @@
 #include "output.h"
 #include "stringutil.h"
 #include "syscalls.h"
-
-#include <errno.h>
-#include <sys/stat.h>
 
 static struct stat mfilestat;
 

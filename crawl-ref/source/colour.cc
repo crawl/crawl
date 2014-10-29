@@ -2,6 +2,9 @@
 
 #include "colour.h"
 
+#include <utility>
+#include <math.h>
+
 #include "areas.h"
 #include "branch.h"
 #include "cloud.h"
@@ -15,9 +18,6 @@
 #include "player.h"
 #include "random.h"
 #include "stringutil.h"
-
-#include <utility>
-#include <math.h>
 
 static element_colour_calc* element_colours[NUM_COLOURS] = {};
 static map<string, element_colour_calc*> element_colours_str;

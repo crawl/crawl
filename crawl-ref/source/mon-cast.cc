@@ -4,8 +4,10 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-cast.h"
 
+#include <algorithm>
 #include <math.h>
 
 #include "act-iter.h"
@@ -15,8 +17,8 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
-#include "delay.h"
 #include "database.h"
+#include "delay.h"
 #include "effects.h"
 #include "english.h"
 #include "env.h"
@@ -30,39 +32,39 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
-#include "misc.h"
 #include "message.h"
+#include "mgen_data.h"
+#include "misc.h"
+#include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-gear.h"
 #include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-project.h"
-#include "mon-tentacle.h"
-#include "terrain.h"
-#include "mgen_data.h"
-#include "mon-act.h"
-#include "mon-book.h"
-#include "mon-gear.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-util.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "teleport.h"
+#include "terrain.h"
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #endif
@@ -70,8 +72,6 @@
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
-
-#include <algorithm>
 
 // tentacle stuff
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;

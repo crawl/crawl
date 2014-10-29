@@ -7,7 +7,7 @@
 
 #include "godwrath.h"
 
-#include "externs.h"
+#include <sstream>
 
 #include "act-iter.h"
 #include "artefact.h"
@@ -25,18 +25,17 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "makeitem.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
-#include "mon-util.h"
 #include "mon-pick.h"
-#include "mon-poly.h"
 #include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
-#include "makeitem.h"
+#include "mon-poly.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player-stats.h"
@@ -44,6 +43,7 @@
 #include "random-weight.h"
 #include "religion.h"
 #include "shopping.h"
+#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
@@ -52,12 +52,10 @@
 #include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "transform.h"
-#include "shout.h"
 #include "view.h"
 #include "xom.h"
-
-#include <sstream>
 
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);

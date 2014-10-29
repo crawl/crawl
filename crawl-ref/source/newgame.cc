@@ -32,7 +32,6 @@
 #include "species.h"
 #include "state.h"
 #include "stringutil.h"
-
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif

@@ -9,40 +9,38 @@
 
 #include "attack.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <algorithm>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "art-enum.h"
 #include "delay.h"
-#include "exercise.h"
-#include "externs.h"
 #include "english.h"
 #include "enum.h"
 #include "env.h"
-#include "godconduct.h"
+#include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-poly.h"
-#include "mon-util.h" // for decline_pronoun
 #include "monster.h"
-#include "libutil.h"
+#include "mon-util.h"
 #include "player.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stringutil.h"
 #include "stepdown.h"
+#include "stringutil.h"
 #include "transform.h"
-
 #include "xom.h"
 
 /*

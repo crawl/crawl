@@ -1,9 +1,9 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "butcher.h"
+#include "cluautil.h"
 #include "food.h"
 #include "invent.h"
 #include "itemprop.h"

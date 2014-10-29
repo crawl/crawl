@@ -4,7 +4,6 @@
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
-#include "options.h"
 
 // How do we get access to the GL calls?
 // If other UI types use the -ogl wrapper they should
@@ -25,6 +24,8 @@
 #  endif
 # endif
 #endif
+
+#include "options.h"
 
 #ifdef __ANDROID__
 # include <android/log.h>

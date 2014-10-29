@@ -5,10 +5,10 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "branch.h"
+#include "cluautil.h"
 #include "player.h"
 
 #define BRANCH(br, pos)                                                 \

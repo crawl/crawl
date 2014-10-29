@@ -6,8 +6,6 @@
 #ifndef ROT_H
 #define ROT_H
 
-#include "externs.h"
-
 // aut / rot_time_factor = units on corpse "special" property
 #define ROT_TIME_FACTOR 20
 

@@ -2,10 +2,11 @@
 #ifndef TILEREG_DGN_H
 #define TILEREG_DGN_H
 
-#include "tilereg.h"
-#include "tiledgnbuf.h"
-#include "viewgeom.h"
 #include <vector>
+
+#include "tiledgnbuf.h"
+#include "tilereg.h"
+#include "viewgeom.h"
 
 class mcache_entry;
 

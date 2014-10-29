@@ -21,15 +21,15 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-util.h"
-#include "mon-tentacle.h"
 #include "monster.h"
+#include "mon-tentacle.h"
+#include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "travel.h"
 #include "transform.h"
+#include "travel.h"
 
 // Called whenever an already existing monster changes its attitude, possibly
 // temporarily.

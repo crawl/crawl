@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
-#include <vector>
-#include <sstream>
-#include <iomanip>
-
 #include "notes.h"
+
+#include <iomanip>
+#include <sstream>
+#include <vector>
 
 #include "branch.h"
 #include "english.h"
 #include "files.h"
-#include "kills.h"
 #include "hiscores.h"
+#include "kills.h"
 #include "libutil.h"
 #include "message.h"
 #include "mutation.h"

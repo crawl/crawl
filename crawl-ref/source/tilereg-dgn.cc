@@ -3,7 +3,6 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-dgn.h"
-#include "process_desc.h"
 
 #include "cio.h"
 #include "cloud.h"
@@ -22,16 +21,16 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
+#include "process_desc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
-
 #include "terrain.h"
+#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
-#include "tiledef-dngn.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "traps.h"

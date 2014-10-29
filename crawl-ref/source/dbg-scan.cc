@@ -7,9 +7,9 @@
 
 #include "dbg-scan.h"
 
-#include <errno.h>
 #include <cmath>
 #include <sstream>
+#include <errno.h>
 
 #include "artefact.h"
 #include "branch.h"
@@ -24,11 +24,11 @@
 #include "end.h"
 #include "env.h"
 #include "godabil.h"
-#include "items.h"
-#include "itemname.h"
-#include "itemprop.h"
 #include "initfile.h"
 #include "invent.h"
+#include "itemname.h"
+#include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -36,8 +36,8 @@
 #include "ng-init.h"
 #include "shopping.h"
 #include "state.h"
-#include "stringutil.h"
 #include "stepdown.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
 #include "version.h"

@@ -5,29 +5,26 @@
 
 #include "AppHdr.h"
 
-#include <string>
 #include <algorithm>
-
+#include <iostream>
+#include <list>
+#include <sstream>
+#include <string>
 #include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
 #  include <langinfo.h>
 # endif
 #endif
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <list>
-#include <sstream>
-#include <iostream>
-
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif
-
-#include "externs.h"
 
 #include "ability.h"
 #include "abyss.h"
@@ -35,8 +32,8 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -55,8 +52,11 @@
 #include "dbg-scan.h"
 #include "dbg-util.h"
 #include "delay.h"
-#include "describe.h"
 #include "describe-god.h"
+#include "describe.h"
+#ifdef DGL_SIMPLE_MESSAGING
+#include "dgl-message.h"
+#endif
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
@@ -82,10 +82,10 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
@@ -107,9 +107,9 @@
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"
+#include "player.h"
 #include "player-reacts.h"
 #include "player-stats.h"
-#include "player.h"
 #include "prompt.h"
 #include "quiver.h"
 #include "random.h"
@@ -136,14 +136,18 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
+#ifdef USE_TILE
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
+#endif
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "uncancel.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
@@ -153,15 +157,6 @@
 #include "wiz-you.h"
 #include "xom.h"
 #include "zotdef.h"
-
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tilepick.h"
-#endif
-
-#ifdef DGL_SIMPLE_MESSAGING
-#include "dgl-message.h"
-#endif
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed

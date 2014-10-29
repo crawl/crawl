@@ -12,9 +12,9 @@
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
+#include "religion.h"
 #include "shout.h"
 #include "terrain.h"
-#include "religion.h"
 
 static bool allow_bleeding_on_square(const coord_def& where)
 {

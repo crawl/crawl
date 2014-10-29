@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "stringutil.h"
+#include "crash.h"
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
@@ -67,14 +67,11 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 
 #endif // BACKTRACE_SUPPORTED
 
-#include "crash.h"
-
-#include "externs.h"
 #include "files.h"
 #include "initfile.h"
 #include "options.h"
 #include "state.h"
-
+#include "stringutil.h"
 #include "syscalls.h"
 #include "threads.h"
 

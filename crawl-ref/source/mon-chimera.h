@@ -6,8 +6,6 @@
 #ifndef MONCHIMERA_H
 #define MONCHIMERA_H
 
-#include "debug.h"
-
 #define NUM_CHIMERA_HEADS 3
 
 #define ASSERTPART(partnum)                                       \

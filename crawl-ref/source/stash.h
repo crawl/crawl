@@ -6,13 +6,11 @@
 #ifndef STASH_H
 #define STASH_H
 
-#include "shopping.h"
-#include <string>
-
 #include <map>
+#include <string>
 #include <vector>
 
-#include "externs.h"
+#include "shopping.h"
 
 class input_history;
 class reader;

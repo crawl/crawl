@@ -7,15 +7,15 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "art-enum.h"
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "random.h"
 #include "state.h"
-#include "areas.h"
 
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster* mon, bool axe)

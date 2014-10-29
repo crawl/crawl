@@ -10,31 +10,29 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "externs.h"
-
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "cloud.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "item_use.h"
-#include "itemname.h" // brand_type_name
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-death.h"
-#include "mon-enum.h" // stealing their resist flags
+#include "mon-enum.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "output.h"
-#include "player.h"
 #include "player-equip.h"
+#include "player.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "random.h"

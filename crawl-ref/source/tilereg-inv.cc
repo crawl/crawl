@@ -3,7 +3,6 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-inv.h"
-#include "process_desc.h"
 
 #include "butcher.h"
 #include "cio.h"
@@ -21,9 +20,9 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
+#include "process_desc.h"
 #include "rot.h"
 #include "spl-book.h"
-
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-icons.h"

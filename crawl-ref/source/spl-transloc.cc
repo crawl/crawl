@@ -5,12 +5,11 @@
 
 #include "AppHdr.h"
 
+#include "spl-transloc.h"
+
+#include <algorithm>
 #include <cmath>
 #include <vector>
-#include <algorithm>
-
-#include "spl-transloc.h"
-#include "externs.h"
 
 #include "abyss.h"
 #include "act-iter.h"
@@ -40,7 +39,6 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"

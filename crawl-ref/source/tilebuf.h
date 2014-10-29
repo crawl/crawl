@@ -1,10 +1,10 @@
 #ifndef TILEBUF_H
 #define TILEBUF_H
 
-#include "glwrapper.h"
-
 #include <string>
 #include <vector>
+
+#include "glwrapper.h"
 
 class FontWrapper;
 class formatted_string;

@@ -7,13 +7,9 @@
 
 #include "output.h"
 
-#include <stdlib.h>
 #include <sstream>
 #include <math.h>
-
-#include "externs.h"
-#include "options.h"
-#include "species.h"
+#include <stdlib.h>
 
 #include "ability.h"
 #include "areas.h"
@@ -23,6 +19,9 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
+#ifndef USE_TILE_LOCAL
+#include "directn.h"
+#endif
 #include "english.h"
 #include "env.h"
 #include "files.h"
@@ -43,25 +42,24 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "skills.h"
+#include "species.h"
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
 #include "travel.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "showsymb.h"
+#include "view.h"
 
-#ifndef USE_TILE_LOCAL
-#include "directn.h"
-#endif
 
 #ifdef USE_TILE_LOCAL
 #include "tilesdl.h"

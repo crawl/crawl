@@ -6,13 +6,12 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include "env.h"
-#include "externs.h"
-#include "mapdef.h"
-
-#include <vector>
-#include <set>
 #include <algorithm>
+#include <set>
+#include <vector>
+
+#include "env.h"
+#include "mapdef.h"
 
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"

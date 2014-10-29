@@ -3,8 +3,8 @@
 #include "dgn-swamp.h"
 
 #include "coordit.h"
-#include "dungeon.h"
 #include "dgn-height.h"
+#include "dungeon.h"
 #include "random.h"
 
 static void _swamp_slushy_patches(int depth_multiplier)

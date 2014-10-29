@@ -3,10 +3,9 @@
 
 #define USE_ZLIB
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
-
 #ifdef USE_ZLIB
 #include <zlib.h>
 #endif

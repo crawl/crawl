@@ -6,9 +6,9 @@
 #ifndef DESCRIBE_H
 #define DESCRIBE_H
 
-#include <string>
 #include <sstream>
-#include "externs.h"
+#include <string>
+
 #include "enum.h"
 #include "mon-util.h"
 

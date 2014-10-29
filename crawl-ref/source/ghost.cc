@@ -7,28 +7,27 @@
 
 #include "ghost.h"
 
+#include <vector>
+
 #include "act-iter.h"
 #include "artefact.h"
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "mon-book.h"
+#include "mon-cast.h"
+#include "mon-transit.h"
+#include "mon-util.h"
 #include "ng-input.h"
+#include "player.h"
 #include "random.h"
 #include "skills.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
-#include "mon-book.h"
-#include "mon-cast.h"
-#include "mon-util.h"
-#include "mon-transit.h"
-#include "player.h"
-
-#include <vector>
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400

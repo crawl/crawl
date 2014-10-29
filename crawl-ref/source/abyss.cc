@@ -5,12 +5,13 @@
 
 #include "AppHdr.h"
 
+#include "abyss.h"
+
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
-#include <algorithm>
 #include <queue>
 
-#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -54,8 +55,8 @@
 #include "tileview.h"
 #include "traps.h"
 #include "travel.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "xom.h"
 
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);

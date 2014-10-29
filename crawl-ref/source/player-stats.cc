@@ -5,28 +5,29 @@
 #include "artefact.h"
 #include "clua.h"
 #include "delay.h"
-#include "godpassive.h"
 #include "files.h"
+#include "godpassive.h"
+#include "hints.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
+#ifdef TOUCH_UI
+#include "menu.h"
+#endif
 #include "misc.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
-#include "transform.h"
-#include "hints.h"
-
 #ifdef TOUCH_UI
-#include "menu.h"
 #include "tiledef-gui.h"
 #include "tilepick.h"
 #endif
+#include "transform.h"
 
 // Don't make this larger than 255 without changing the type of you.stat_zero
 // in player.h as well as the associated marshalling code in tags.cc

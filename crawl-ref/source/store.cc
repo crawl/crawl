@@ -8,14 +8,13 @@
 
 #include "store.h"
 
+#include <algorithm>
+
 #include "dlua.h"
-#include "externs.h"
 #include "monster.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "travel.h"
-
-#include <algorithm>
 
 // These tend to be called from tight loops, and C++ method calls don't
 // get optimized away except for LTO -fwhole-program builds, so merely

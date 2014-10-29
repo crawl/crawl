@@ -6,10 +6,11 @@
 #ifndef KILLS_H
 #define KILLS_H
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 #include <stdio.h>
+
 #include "enum.h"
 
 class monster;

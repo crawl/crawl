@@ -5,16 +5,17 @@
 
 #include "AppHdr.h"
 
+#include "state.h"
+
 #ifndef TARGET_OS_WINDOWS
 #include <unistd.h>
 #endif
-
-#include "externs.h"
 
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
 #include "exclude.h"
+#include "hints.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -23,8 +24,6 @@
 #include "player.h"
 #include "religion.h"
 #include "showsymb.h"
-#include "state.h"
-#include "hints.h"
 #include "unwind.h"
 
 game_state::game_state()

@@ -1,10 +1,11 @@
 #include "AppHdr.h"
-#include <math.h>
 
 #include "godpassive.h"
 
-#include "art-enum.h"
+#include <math.h>
+
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "cloud.h"
 #include "coord.h"
@@ -16,10 +17,10 @@
 #include "fprop.h"
 #include "goditem.h"
 #include "godprayer.h"
-#include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "libutil.h"    // testbits
+#include "items.h"
+#include "libutil.h"
 #include "player.h"
 #include "religion.h"
 #include "shout.h"

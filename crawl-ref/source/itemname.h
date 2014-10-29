@@ -6,8 +6,6 @@
 #ifndef ITEMNAME_H
 #define ITEMNAME_H
 
-#include "externs.h"
-
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 

@@ -6,7 +6,6 @@
 #ifndef SPL_PICK_H
 #define SPL_PICK_H
 
-#include "externs.h"
 #include "random-pick.h"
 
 #define spell_entry random_pick_entry<spell_type>

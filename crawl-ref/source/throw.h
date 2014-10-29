@@ -7,7 +7,7 @@
 #define THROW_H
 
 #include <string>
-#include "externs.h"
+
 #include "enum.h"
 
 enum fire_type

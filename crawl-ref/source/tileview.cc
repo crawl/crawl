@@ -17,7 +17,6 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"

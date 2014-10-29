@@ -7,10 +7,12 @@
 
 #include "shout.h"
 
+#include <sstream>
+
 #include "act-iter.h"
-#include "art-enum.h"
-#include "artefact.h"
 #include "areas.h"
+#include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
@@ -28,11 +30,11 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "mon-pathfind.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "noise.h"
 #include "player.h"
 #include "random.h"
@@ -42,8 +44,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "view.h"
-
-#include <sstream>
 
 extern int stealth;             // defined in main.cc
 

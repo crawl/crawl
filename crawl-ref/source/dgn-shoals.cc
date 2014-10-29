@@ -1,18 +1,23 @@
 #include "AppHdr.h"
 
+#include "dgn-shoals.h"
+
+#include <algorithm>
+#include <cmath>
+#include <vector>
+
 #include "act-iter.h"
 #include "cio.h"
 #include "colour.h"
 #include "coordit.h"
-#include "dungeon.h"
-#include "dgn-shoals.h"
 #include "dgn-height.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "flood_find.h"
 #include "fprop.h"
-#include "items.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
@@ -26,10 +31,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-
-#include <algorithm>
-#include <vector>
-#include <cmath>
 
 static const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
 static const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";

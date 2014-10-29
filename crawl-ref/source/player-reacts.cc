@@ -7,12 +7,11 @@
 
 #include "player-reacts.h"
 
-// Later #includes are copy-pasted from main.cc
-// since I didn't have an automated include-
-// what-you-use program when I wrote this. -reaverb
-
-#include <string>
 #include <algorithm>
+#include <iostream>
+#include <list>
+#include <sstream>
+#include <string>
 
 #include <errno.h>
 #ifndef TARGET_OS_WINDOWS
@@ -20,14 +19,10 @@
 #  include <langinfo.h>
 # endif
 #endif
-#include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <list>
-#include <sstream>
-#include <iostream>
-
+#include <stdlib.h>
+#include <string.h>
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif
@@ -47,6 +42,9 @@
 #include "dbg-util.h"
 #include "delay.h"
 #include "describe.h"
+#ifdef DGL_SIMPLE_MESSAGING
+#include "dgl-message.h"
+#endif
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
@@ -55,7 +53,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "externs.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -70,10 +67,10 @@
 #include "hints.h"
 #include "initfile.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
@@ -93,8 +90,8 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "player-stats.h"
 #include "player.h"
+#include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -121,24 +118,19 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
-#include "transform.h"
-#include "traps.h"
-#include "travel.h"
-#include "version.h"
-#include "view.h"
-#include "viewchar.h"
-#include "viewgeom.h"
-#include "viewmap.h"
-#include "xom.h"
-
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-
-#ifdef DGL_SIMPLE_MESSAGING
-#include "dgl-message.h"
-#endif
+#include "transform.h"
+#include "traps.h"
+#include "travel.h"
+#include "version.h"
+#include "viewchar.h"
+#include "viewgeom.h"
+#include "view.h"
+#include "viewmap.h"
+#include "xom.h"
 
 /**
  * Decrement a duration by the given delay.

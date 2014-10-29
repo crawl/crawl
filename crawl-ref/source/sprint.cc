@@ -2,12 +2,11 @@
 
 #include "sprint.h"
 
-#include "externs.h"
 #include "monster.h"
 #include "mpr.h"
 #include "player.h"
-#include "religion.h"
 #include "random.h"
+#include "religion.h"
 
 int sprint_modify_exp(int exp)
 {

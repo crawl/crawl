@@ -6,7 +6,6 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 
-#include "externs.h"
 #include "enum.h"
 #include "mon-info.h"
 

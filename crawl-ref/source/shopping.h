@@ -6,8 +6,6 @@
 #ifndef SHOPPING_H
 #define SHOPPING_H
 
-#include "externs.h"
-
 int artefact_value(const item_def &item);
 
 // ident == true overrides the item ident level and gives the price

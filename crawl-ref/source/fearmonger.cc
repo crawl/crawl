@@ -7,13 +7,13 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "state.h"
-#include "areas.h"
 
 // Add a monster to the list of fearmongers.
 bool player::add_fearmonger(const monster* mon)

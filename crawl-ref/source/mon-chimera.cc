@@ -4,18 +4,18 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-chimera.h"
 
-#include "externs.h"
+#include <sstream>
+
 #include "enum.h"
 #include "ghost.h"
 #include "mgen_data.h"
 #include "mon-info.h"
-#include "mon-util.h"
 #include "mon-pick.h"
 #include "monster.h"
-
-#include <sstream>
+#include "mon-util.h"
 
 static bool is_bad_chimera_part(monster_type part);
 static bool is_valid_chimera_part(monster_type part);

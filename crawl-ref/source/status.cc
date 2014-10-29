@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "status.h"
+#include "duration-data.h"
 
 #include "areas.h"
 #include "branch.h"
@@ -23,8 +24,6 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
-
-#include "duration-data.h"
 
 static int duration_index[NUM_DURATIONS];
 

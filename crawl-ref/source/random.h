@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+
 #include "hash.h"
 
 void seed_rng();

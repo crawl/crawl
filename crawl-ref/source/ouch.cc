@@ -5,38 +5,34 @@
 
 #include "AppHdr.h"
 
-#include <cstring>
-#include <string>
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
+#include "ouch.h"
+
 #include <cctype>
 #include <cmath>
-
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <string>
 #ifdef UNIX
-#include <sys/types.h>
 #include <fcntl.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
-#include "ouch.h"
-
-#include "externs.h"
-#include "options.h"
-
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "beam.h"
-#include "colour.h"
 #include "chardump.h"
+#include "colour.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
 #include "effects.h"
 #include "end.h"
 #include "env.h"
-#include "files.h"
 #include "fight.h"
+#include "files.h"
 #include "fineff.h"
 #include "godabil.h"
 #include "godpassive.h"
@@ -52,10 +48,11 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-util.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
@@ -64,16 +61,16 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
-#include "spl-selfench.h"
 #include "spl-other.h"
+#include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 void maybe_melt_player_enchantments(beam_type flavour, int damage)

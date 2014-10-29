@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "externs.h"
-
 class formatted_string;
 class writer;
 class reader;

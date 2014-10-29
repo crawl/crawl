@@ -1,10 +1,10 @@
 #include "AppHdr.h"
 
 #include "branch.h"
-#include "externs.h"
+#include "branch-data.h"
+
 #include "player.h"
 #include "travel.h"
-#include "branch-data.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
 FixedVector<int, NUM_BRANCHES> brdepth;

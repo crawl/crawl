@@ -2,10 +2,11 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "tilereg-crt.h"
+
 #include "cio.h"
 #include "menu.h"
 #include "tilefont.h"
-#include "tilereg-crt.h"
 #include "viewgeom.h"
 
 CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(NULL)

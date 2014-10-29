@@ -5,34 +5,36 @@
 
 #include "AppHdr.h"
 
-#include <iostream>
+#include "mapdef.h"
+
+#include <algorithm>
+#include <cctype>
 #include <cstdarg>
 #include <cstdio>
-#include <cctype>
 #include <cstdlib>
-#include <algorithm>
+#include <iostream>
 
 #include "abyss.h"
 #include "artefact.h"
 #include "branch.h"
+#include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
-#include "cluautil.h"
 #include "decks.h"
 #include "describe.h"
+#include "dgn-height.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "dgn-height.h"
 #include "end.h"
 #include "english.h"
+#include "env.h"
 #include "exclude.h"
 #include "files.h"
 #include "initfile.h"
 #include "invent.h"
 #include "l_defs.h"
 #include "libutil.h"
-#include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "mon-book.h"
@@ -46,10 +48,9 @@
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
-#include "spl-util.h"
 #include "spl-book.h"
+#include "spl-util.h"
 #include "stringutil.h"
-#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"

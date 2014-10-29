@@ -11,7 +11,6 @@
 #include <functional>
 
 #include "abyss.h"
-
 #include "chardump.h"
 #include "cio.h"
 #include "dbg-util.h"
@@ -43,8 +42,8 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
-#include "view.h"
 #include "unicode.h"
+#include "view.h"
 #include "xom.h"
 
 #ifdef WIZARD

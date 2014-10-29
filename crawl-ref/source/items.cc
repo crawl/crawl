@@ -6,29 +6,28 @@
 #include "AppHdr.h"
 
 #include "items.h"
+
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "areas.h"
+#include "arena.h"
+#include "artefact.h"
+#include "art-enum.h"
+#include "beam.h"
 #include "bitary.h"
 #include "cio.h"
 #include "clua.h"
-
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-
-#include "externs.h"
-
-#include "arena.h"
-#include "art-enum.h"
-#include "artefact.h"
-#include "beam.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
-#include "describe.h"
 #include "dbg-util.h"
 #include "decks.h"
 #include "delay.h"
+#include "describe.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -39,11 +38,12 @@
 #include "godprayer.h"
 #include "godwrath.h"
 #include "hints.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -55,8 +55,8 @@
 #include "orb.h"
 #include "output.h"
 #include "place.h"
-#include "player.h"
 #include "player-equip.h"
+#include "player.h"
 #include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
@@ -65,18 +65,16 @@
 #include "showsymb.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "state.h"
-#include "stringutil.h"
-#include "areas.h"
 #include "stash.h"
 #include "state.h"
+#include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
 #include "travel.h"
-#include "hints.h"
 #include "unwind.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 #include "xom.h"
 
 static void _autoinscribe_item(item_def& item);

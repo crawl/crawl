@@ -5,24 +5,24 @@
 
 #include "AppHdr.h"
 
+#include "libutil.h"
+
+#include <sstream>
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "colour.h"
 #include "defines.h"
-#include "itemname.h" // is_vowel()
-#include "libutil.h"
-#include "externs.h"
 #include "files.h"
+#include "itemname.h"
 #include "message.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
 #include "viewgeom.h"
-
-#include <sstream>
-#include <stdio.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <string.h>
 
 #ifdef TARGET_OS_WINDOWS
     #undef ARRAYSZ

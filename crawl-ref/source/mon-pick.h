@@ -6,7 +6,6 @@
 #ifndef MONPICK_H
 #define MONPICK_H
 
-#include "externs.h"
 #include "random-pick.h"
 
 #define DEPTH_NOWHERE 999

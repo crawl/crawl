@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include <math.h>
-
 #include "mon-util.h"
+
+#include <math.h>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -51,8 +51,8 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
-#include "spl-util.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"

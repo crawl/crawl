@@ -5,25 +5,23 @@
 
 #include "AppHdr.h"
 
-#include "itemname.h"
+#include "itemprop.h"
 
 #include <algorithm>
 #include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "externs.h"
-
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
 #include "godpassive.h"
 #include "invent.h"
+#include "itemname.h"
 #include "items.h"
-#include "itemprop.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
@@ -32,11 +30,11 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
-#include "religion.h"
-#include "skills.h"
 #include "quiver.h"
 #include "random.h"
+#include "religion.h"
 #include "shopping.h"
+#include "skills.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "xom.h"

@@ -5,15 +5,14 @@
 
 #include "AppHdr.h"
 
-#include "cio.h"
+#include "hints.h"
 
 #include <cstring>
 #include <sstream>
 
-#include "hints.h"
-
 #include "ability.h"
 #include "artefact.h"
+#include "cio.h"
 #include "cloud.h"
 #include "colour.h"
 #include "command.h"
@@ -31,6 +30,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -42,7 +42,6 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "jobs.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -53,8 +52,8 @@
 #include "species.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stringutil.h"
 #include "strings.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"

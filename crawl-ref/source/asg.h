@@ -2,6 +2,7 @@
 #define __LIB_RNG_ASG_HEADER__
 
 #include <stack>
+
 class AsgKISS
 {
     public:

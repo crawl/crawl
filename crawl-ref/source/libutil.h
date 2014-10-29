@@ -6,11 +6,12 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
-#include "enum.h"
 #include <cctype>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
+#include "enum.h"
 
 bool key_is_escape(int key);
 

@@ -1,18 +1,18 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "cluautil.h"
 
 #include <cmath>
 
 #include "branch.h"
 #include "cloud.h"
+#include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "dgn-shoals.h"
 #include "env.h"
 #include "flood_find.h"
 #include "l_defs.h"

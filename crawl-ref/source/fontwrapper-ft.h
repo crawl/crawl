@@ -4,12 +4,11 @@
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
 
-#include "tilefont.h"
-
 #include <map>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include "tilefont.h"
 
 // TODO enne - Fonts could be made better by:
 //

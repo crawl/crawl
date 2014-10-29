@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "coord.h"
 #include "dungeon.h"
 #include "env.h"

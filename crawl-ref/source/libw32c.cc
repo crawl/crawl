@@ -59,6 +59,7 @@
 
 #include <string.h>
 #include <stdio.h>
+
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
@@ -66,8 +67,8 @@
 #include "state.h"
 #include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 
 wchar_t oldTitle[80];
 

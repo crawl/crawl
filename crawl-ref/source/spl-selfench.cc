@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "spl-selfench.h"
-#include "externs.h"
 
 #include "areas.h"
 #include "art-enum.h"
@@ -23,7 +22,6 @@
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-
 #include "transform.h"
 #include "view.h"
 

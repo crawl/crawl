@@ -7,14 +7,12 @@
 #include "AppHdr.h"
 
 #include "spl-monench.h"
-#include "externs.h"
 
 #include "areas.h"
 #include "env.h"
 #include "message.h"
 #include "random.h"
 #include "spl-util.h"
-
 #include "terrain.h"
 
 int englaciate(coord_def where, int pow, int, actor *agent)

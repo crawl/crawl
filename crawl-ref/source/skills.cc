@@ -10,14 +10,13 @@
 #include <algorithm>
 #include <cmath>
 #include <sstream>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "ability.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "externs.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "hints.h"

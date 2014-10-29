@@ -2,6 +2,8 @@
 
 #include "target.h"
 
+#include <math.h>
+
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
@@ -14,8 +16,6 @@
 #include "player.h"
 #include "spl-damage.h"
 #include "terrain.h"
-
-#include <math.h>
 
 #define notify_fail(x) (why_not = (x), false)
 

@@ -4,11 +4,13 @@
 **/
 
 #include "AppHdr.h"
+
+#include "dgn-irregular-box.h"
+
 #include <vector>
 
 #include "mapdef.h"
 #include "random.h"
-#include "dgn-irregular-box.h"
 
 // Adds a simple hollow box to the map with the specified
 //  coordinates, glyphs, and number of doors.  This is the

@@ -2,9 +2,9 @@
 #ifndef TILEREG_CMD_H
 #define TILEREG_CMD_H
 
-#include "tilereg-grid.h"
-
 #include <vector>
+
+#include "tilereg-grid.h"
 
 static const command_type ct_system_commands[] =
 {

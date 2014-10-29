@@ -7,10 +7,10 @@
 
 #include "fight.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <algorithm>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "art-enum.h"
 #include "cloud.h"
@@ -43,8 +43,8 @@
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
-#include "travel.h"
 #include "traps.h"
+#include "travel.h"
 
 /**
  * Handle melee combat between attacker and defender.

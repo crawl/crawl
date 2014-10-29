@@ -52,9 +52,9 @@
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
-#include "travel.h"
 #include "terrain.h"
 #include "transform.h"
+#include "travel.h"
 #include "view.h"
 #include "xom.h"
 

@@ -5,12 +5,13 @@
 
 #include "AppHdr.h"
 
-#include "enum.h"
 #include "mon-grow.h"
+
+#include "enum.h"
 #include "mon-message.h"
-#include "mon-util.h"
 #include "mon-place.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "random.h"
 
 // Base experience required by a monster to reach HD 1.

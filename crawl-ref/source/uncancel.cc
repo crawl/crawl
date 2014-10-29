@@ -5,13 +5,15 @@
 **/
 
 #include "AppHdr.h"
+
+#include "uncancel.h"
+
 #include "acquire.h"
 #include "decks.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "player.h"
 #include "state.h"
-#include "uncancel.h"
 #include "unwind.h"
 
 void add_uncancel(uncancellable_type kind, int arg)

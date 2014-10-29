@@ -6,7 +6,9 @@
 #include "AppHdr.h"
 
 #include "cio.h"
-#include "externs.h"
+
+#include <queue>
+
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -15,8 +17,6 @@
 #include "stringutil.h"
 #include "unicode.h"
 #include "viewgeom.h"
-
-#include <queue>
 
 static keycode_type _numpad2vi(keycode_type key)
 {

@@ -1,8 +1,8 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "mapdef.h"
 
 /////////////////////////////////////////////////////////////////////

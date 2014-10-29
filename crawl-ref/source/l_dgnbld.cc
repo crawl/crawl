@@ -5,19 +5,20 @@
 
 #include "AppHdr.h"
 
+#include "l_libs.h"
+
 #include <cmath>
 #include <vector>
 
-#include "dungeon.h"
-#include "dgn-delve.h"
-#include "dgn-irregular-box.h"
-#include "dgn-shoals.h"
-#include "dgn-swamp.h"
-#include "dgn-layouts.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "coordit.h"
-#include "l_libs.h"
+#include "dgn-delve.h"
+#include "dgn-irregular-box.h"
+#include "dgn-layouts.h"
+#include "dgn-shoals.h"
+#include "dgn-swamp.h"
+#include "dungeon.h"
 #include "mapdef.h"
 #include "random.h"
 #include "stringutil.h"

@@ -12,39 +12,39 @@
 */
 
 #include "AppHdr.h"
-#include "bitary.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>            // for memcpy
-#include <iterator>
+#include "tags.h"
+
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iterator>
 #include <vector>
-
 #ifdef UNIX
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
 #include "abyss.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
+#include "bitary.h"
 #include "branch.h"
 #include "butcher.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
-#include "describe.h"
 #include "dbg-scan.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "end.h"
 #include "enum.h"
+#include "env.h"
 #include "errors.h"
-#include "map_knowledge.h"
-#include "externs.h"
 #include "files.h"
 #include "ghost.h"
 #include "godcompanions.h"
@@ -52,30 +52,29 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "misc.h"
 #include "mon-book.h"
-#include "mon-death.h"
-#include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-chimera.h"
 #endif
-#include "mon-util.h"
+#include "mon-death.h"
+#include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
 #endif
 #include "mon-transit.h"
+#include "mon-util.h"
 #include "place.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills.h"
-#include "state.h"
-#include "env.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
+#include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
-#include "tags.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"

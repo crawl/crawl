@@ -8,13 +8,11 @@
 #include "artefact.h"
 #include "art-enum.h"
 
-#include <cstdlib>
-#include <climits>
-#include <string.h>
-#include <stdio.h>
 #include <algorithm>
-
-#include "externs.h"
+#include <climits>
+#include <cstdlib>
+#include <stdio.h>
+#include <string.h>
 
 #include "areas.h"
 #include "branch.h"

@@ -7,20 +7,20 @@
 
 #include "godblessing.h"
 
-#include "artefact.h"   // if_artefact()
-#include "env.h"        // mitm
-#include "itemprop.h"   // do_uncurse()
+#include "artefact.h"
+#include "env.h"
+#include "itemprop.h"
+#include "items.h"
 #include "item_use.h"
-#include "items.h"      // items_stack()
-#include "makeitem.h"   // item_set_appearance()
+#include "makeitem.h"
 #include "mgen_data.h"
+#include "mon-gear.h"
+#include "mon-place.h"
 #include "monster.h"
-#include "mon-gear.h"   // give_specific_item()
-#include "mon-place.h"  // create_monster()
-#include "mon-util.h"   // give_monster_proper_name()
+#include "mon-util.h"
 #include "religion.h"
-#include "stringutil.h"    // make_stringf
-#include "view.h"       // flash_monster_colour
+#include "stringutil.h"
+#include "view.h"
 
 /**
  * Given the weapon type, find an upgrade.

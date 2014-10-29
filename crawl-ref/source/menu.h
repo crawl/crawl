@@ -6,18 +6,16 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
+#include <algorithm>
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <stdio.h>
 #include <time.h>
-#include "externs.h"
-#include "format.h"
 
+#include "format.h"
 #ifdef USE_TILE
  #include "tiledoll.h"
 #endif
-
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif

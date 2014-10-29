@@ -6,8 +6,8 @@
 #include "AppHdr.h"
 
 #include "mon-pick.h"
+#include "mon-pick-data.h"
 
-#include "externs.h"
 #include "branch.h"
 #include "coord.h"
 #include "env.h"
@@ -17,8 +17,6 @@
 #include "mon-util.h"
 #include "place.h"
 #include "stringutil.h"
-
-#include "mon-pick-data.h"
 
 int branch_ood_cap(branch_type branch)
 {

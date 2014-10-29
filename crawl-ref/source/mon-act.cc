@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-act.h"
 
 #include "act-iter.h"
@@ -23,9 +24,9 @@
 #include "effects.h"
 #include "env.h"
 #include "evoke.h"
-#include "food.h"
 #include "fight.h"
 #include "fineff.h"
+#include "food.h"
 #include "ghost.h"
 #include "godpassive.h"
 #include "godprayer.h"
@@ -35,10 +36,11 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
+#include "los.h"
 #include "mapmark.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -49,14 +51,13 @@
 #include "mon-project.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
-#include "mgen_data.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
-#include "shopping.h" // for item values
+#include "shopping.h"
 #include "shout.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
@@ -70,8 +71,8 @@
 #include "terrain.h"
 #include "throw.h"
 #include "traps.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);

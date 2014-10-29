@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "spl-damage.h"
-#include "externs.h"
 
 #include "act-iter.h"
 #include "areas.h"
@@ -37,8 +36,8 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "options.h"
-#include "ouch.h"
 #include "options.h"
+#include "ouch.h"
 #include "player-equip.h"
 #include "prompt.h"
 #include "shout.h"
@@ -53,8 +52,8 @@
 #include "transform.h"
 #include "traps.h"
 #include "unicode.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 // This spell has two main advantages over Fireball:
 //

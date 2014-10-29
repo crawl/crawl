@@ -11,6 +11,8 @@
 
 #include "quiver.h"
 
+#include <algorithm>
+
 #include "env.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -21,8 +23,6 @@
 #include "stringutil.h"
 #include "tags.h"
 #include "throw.h"
-
-#include <algorithm>
 
 static int _get_pack_slot(const item_def&);
 static ammo_t _get_weapon_ammo_type(const item_def*);

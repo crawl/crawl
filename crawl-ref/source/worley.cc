@@ -31,11 +31,12 @@
 
 #include "AppHdr.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <stdint.h>
+#include "worley.h"
+
 #include <cfloat>
-#include "worley.h"  /* Function prototype */
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
 
 namespace worley
 {

@@ -1,9 +1,10 @@
 #ifndef DGN_HEIGHT_H
 #define DGN_HEIGHT_H
 
+#include <vector>
+
 #include "env.h"
 #include "fixedarray.h"
-#include <vector>
 
 // Sets height to the given height, iff the env.heightmap is already initialized
 void dgn_height_set_at(const coord_def &c, int height = 0);

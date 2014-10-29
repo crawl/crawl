@@ -7,12 +7,10 @@
 
 #include "mon-speak.h"
 
+#include <algorithm>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <algorithm>
-
-#include "externs.h"
 
 #include "areas.h"
 #include "beam.h"
@@ -24,8 +22,8 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-death.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
