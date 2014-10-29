@@ -27,7 +27,7 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "spl-util.h"

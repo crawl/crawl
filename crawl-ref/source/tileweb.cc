@@ -23,7 +23,7 @@
 #include "state.h"
 #include "stringutil.h"
 
-#include "skills2.h"
+#include "skills.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"

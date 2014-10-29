@@ -51,7 +51,7 @@
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"

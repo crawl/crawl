@@ -17,7 +17,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
 #include "terrain.h"

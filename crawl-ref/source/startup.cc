@@ -48,7 +48,7 @@
 #include "options.h"
 #include "output.h"
 #include "shopping.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stairs.h"

@@ -28,7 +28,7 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "view.h"

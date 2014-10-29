@@ -57,7 +57,7 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skill_menu.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"

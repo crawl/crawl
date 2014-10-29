@@ -53,7 +53,6 @@
 #include "rot.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"

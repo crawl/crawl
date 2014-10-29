@@ -60,7 +60,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "species.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"

@@ -51,7 +51,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"

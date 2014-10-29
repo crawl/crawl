@@ -8,7 +8,7 @@
 
 #include "enum.h"
 #include "menu.h"
-#include "skills2.h"
+#include "skills.h"
 
 // Skill Menu
 

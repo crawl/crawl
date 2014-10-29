@@ -35,7 +35,6 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"

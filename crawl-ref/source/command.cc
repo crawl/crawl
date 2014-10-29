@@ -43,7 +43,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
-#include "skills2.h"
+#include "skills.h"
 #include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"

@@ -23,7 +23,7 @@
 #include "player.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills2.h"
+#include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"

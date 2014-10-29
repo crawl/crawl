@@ -16,7 +16,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-miscast.h"
 
 // We need to know what brands equate with what missile brands to know if

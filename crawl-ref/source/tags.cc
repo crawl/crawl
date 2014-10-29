@@ -69,7 +69,6 @@
 #include "quiver.h"
 #include "religion.h"
 #include "skills.h"
-#include "skills2.h"
 #include "state.h"
 #include "env.h"
 #include "spl-util.h"

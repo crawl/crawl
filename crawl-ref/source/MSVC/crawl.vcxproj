@@ -467,7 +467,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\show.cc" />
     <ClCompile Include="..\showsymb.cc" />
     <ClCompile Include="..\skills.cc" />
-    <ClCompile Include="..\skills2.cc" />
     <ClCompile Include="..\skill_menu.cc" />
     <ClCompile Include="..\species.cc" />
     <ClCompile Include="..\spl-book.cc" />
@@ -835,7 +834,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\show.h" />
     <ClInclude Include="..\showsymb.h" />
     <ClInclude Include="..\skills.h" />
-    <ClInclude Include="..\skills2.h" />
     <ClInclude Include="..\skill_menu.h" />
     <ClInclude Include="..\species.h" />
     <ClInclude Include="..\spl-book.h" />

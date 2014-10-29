@@ -10,7 +10,6 @@
 #include "options.h"
 #include "output.h"
 #include "skills.h"
-#include "skills2.h"
 
 #include "tiledef-icons.h"
 #include "tilepick.h"

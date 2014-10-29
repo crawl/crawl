@@ -7,7 +7,7 @@
 #include "ng-setup.h"
 #include "player.h"
 #include "random.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 

@@ -20,7 +20,7 @@
 #include "options.h"
 #include "religion.h"
 #include "shopping.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"

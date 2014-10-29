@@ -58,7 +58,7 @@
 #include "quiver.h"
 #include "religion.h"
 #include "rot.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"

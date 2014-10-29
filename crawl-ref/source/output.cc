@@ -47,7 +47,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"

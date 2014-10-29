@@ -34,7 +34,6 @@
 #include "player-equip.h"
 #include "ranged_attack.h"
 #include "skills.h"
-#include "skills2.h"
 #include "species.h"
 #include "state.h"
 #include "stringutil.h"

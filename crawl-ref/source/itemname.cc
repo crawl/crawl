@@ -42,7 +42,7 @@
 #include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "state.h"

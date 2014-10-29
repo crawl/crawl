@@ -73,7 +73,6 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "species.h"
 #include "spl-damage.h"
 #include "spl-other.h"
