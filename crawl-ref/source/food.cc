@@ -1342,6 +1342,11 @@ bool is_forbidden_food(const item_def &food)
     if (food.base_type != OBJ_CORPSES)
         return false;
 
+    // Specific handling for intelligent monsters like Gastronok and Xtahua
+    // of a normally unintelligent class.
+    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_NORMAL)
+        return true;
+
     return god_hates_eating(you.religion, food.mon_type);
 }
 
