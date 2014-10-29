@@ -2428,7 +2428,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     item_types =
                   "<console><brown>";
-    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE));
+    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
         "staves and rods (<w>%</w>ield and e<w>%</w>oke)";

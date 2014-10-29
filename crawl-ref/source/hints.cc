@@ -1440,7 +1440,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ROD:
         text << "You have picked up a magical rod"
                 "<console> ('<w>";
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF))
              << "</w>', like staves)</console>"
                 ". It must be <w>%</w>ielded to be of use. "
                 "A rod allows the casting of "
@@ -1463,7 +1463,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up a magic staff"
                 "<console> ('<w>";
 
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF))
              << "</w>', like rods)</console>"
                 ". It must be <w>%</w>ielded to be of use. "
                 "Magicians use staves to increase their power in certain "
