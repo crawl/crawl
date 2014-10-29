@@ -661,7 +661,7 @@ static const zap_info zap_data[] =
     BEAM_ACID,
     DCHAR_FIRED_ZAP,
     true,
-    true,
+    false,
     false,
     6
 },
