@@ -25,8 +25,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 #endif
     //       φ
         '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
-    //                 †       ÷               §     ♣       ©
-        ':', '|', '}', 0x2020, 0xF7, '$', '"', 0xA7, 0x2663, 0xA9,
+    //                       †       ÷               §     ♣       ©
+        ':', '|', '\\', '}', 0x2020, 0xF7, '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
@@ -38,7 +38,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
         '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '%', '$', '"', '0', '7', '^', // book .. teleporter
+        ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', '^', // book .. teleporter
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
         '-', '|', '+', '+', '+', '+',
@@ -52,8 +52,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
     //       φ
         '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',       // orb .. missile
-    //  ∞       \                                   ♣       Ω
-        0x221e, '\\', '}', '%', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
+    //  ∞       \                                         ♣       Ω
+        0x221e, '\\', '\\', '}', '%', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',                         // fi_stick .. explosion
     //  ═       ║       ╔       ╗       ╚       ╝
@@ -68,7 +68,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     //       π      ¶     §     »          →       ¨
         '#', 0x3c0, 0xb6, 0xa7, 0xbb, '8', 0x2192, 0xa8,        // grate .. item detect
         '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '\\', '}', '%', '%', '$', '"', '#', '7', '^', // book .. teleporter
+        ':', '\\', '\\', '}', '%', '%', '$', '"', '#', '7', '^', // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
     //  ─       │       ┌       ┐       └       ┘
@@ -89,8 +89,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
     //       φ
         '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
-    //  ∞                                     §     ♣       ©
-        0x221E, '|', '}', '%', '%', '$', '"', 0xA7, 0x2663, 0xA9,
+    //  ∞                                          §     ♣       ©
+        0x221E, '|', '|', '}', '%', '%', '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
@@ -109,7 +109,7 @@ dungeon_char_type dchar_by_name(const string &name)
         "invis_exposed", "item_detected",
         "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
-        "item_stave", "item_miscellany", "item_corpse", "item_skeleton",
+        "item_stave", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
         "item_gold", "item_amulet", "cloud", "tree", "teleporter",
         "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
         "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
