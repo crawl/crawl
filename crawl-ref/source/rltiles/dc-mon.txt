@@ -167,6 +167,7 @@ yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
+caustic_wasp MONS_CAUSTIC_WASP
 %rim 0
 
 ## Aquatics (';')

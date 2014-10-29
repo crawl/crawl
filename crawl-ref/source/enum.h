@@ -3198,6 +3198,7 @@ enum monster_type                      // menv[].type
     MONS_USHABTI,
     MONS_DEATH_SCARAB,
     MONS_ANUBIS_GUARD,
+    MONS_CAUSTIC_WASP,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -739,6 +739,11 @@ joined to its body by a neck as long and loose as an emptied intestine. Man and
 beast alike would be wise to steer clear of this creature, as its fearsome
 breath is known to turn flesh into stone.
 %%%%
+caustic wasp
+
+A giant wasp covered in metallic fur, bearing a deadly barb dripping with
+corrosive acid.
+%%%%
 centaur
 
 A hybrid with the torso of a human atop the body of a large horse, centaurs are
