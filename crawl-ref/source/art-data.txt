@@ -1130,7 +1130,7 @@ TILE_EQ:  spellbinder
 MAGIC:    1
 
 NAME:    lajatang of Order
-INSCRIP: silver
+INSCRIP: silver,
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 COLOUR:  ETC_SILVER
 TILE:    urand_order
