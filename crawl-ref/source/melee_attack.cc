@@ -353,7 +353,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_ENGULF
            || flavour == AF_PURE_FIRE
            || flavour == AF_SHADOWSTAB
-           || flavour == AF_DROWN;
+           || flavour == AF_DROWN
+           || flavour == AF_CORRODE;
 }
 
 void melee_attack::apply_black_mark_effects()
