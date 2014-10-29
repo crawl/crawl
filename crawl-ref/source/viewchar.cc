@@ -42,61 +42,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
         '-', '|', '+', '+', '+', '+',
-    },
-
-    // CSET_IBM - this is ANSI 437
-    {
-    //  ▒       ▓       ░       ∙       ·     '     ■              // wall .. stairs up
-        0x2592, 0x2593, 0x2591, 0x2219, 0xb7, '\'', 0x25a0, '^', '>', '<',
-    //       ▄       ∩       ⌠       ≈
-        '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
-    //       φ
-        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',       // orb .. missile
-    //  ∞       \                                         ♣       Ω
-        0x221e, '\\', '\\', '}', '%', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
-        ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#',                         // fi_stick .. explosion
-    //  ═       ║       ╔       ╗       ╚       ╝
-        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
-    },
-
-    // CSET_DEC
-    // It's better known as "vt100 line drawing characters".
-    {
-    //  ▒       █       ♦       ·          '     ┼     // wall .. stairs up
-        0x2592, 0x2588, 0x2666, 0xb7, ':', '\'', 0x253c, '^', '>', '<',
-    //       π      ¶     §     »          →       ¨
-        '#', 0x3c0, 0xb6, 0xa7, 0xbb, '8', 0x2192, 0xa8,        // grate .. item detect
-        '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '\\', '\\', '}', '%', '%', '$', '"', '#', '7', '^', // book .. teleporter
-        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
-    //  ─       │       ┌       ┐       └       ┘
-        0x2500, 0x2502, 0x250c, 0x2510, 0x2514, 0x2518,
-    },
-
-    // CSET_OLD_UNICODE
-    /* Beware, some popular terminals (PuTTY, xterm) are incapable of coping with
-       the lack of a character in the chosen font, and most popular fonts have a
-       quite limited repertoire.  A subset that is reasonably likely to be present
-       is https://en.wikipedia.org/wiki/WGL4; we could provide a richer alternate
-       set for those on more capable terminals under a different name.
-    */
-    {
-    //  ▒       ▓       ░       ·     ◦       '     ◼
-        0x2592, 0x2593, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
-    //            ∩       ⌠       ≈                 ∆
-        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
-    //       φ
-        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
-    //  ∞                                          §     ♣       ©
-        0x221E, '|', '|', '}', '%', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-    //                                     ÷
-        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
-    //  ═       ║       ╔       ╗       ╚       ╝
-        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
-    },
+    }
 };
 
 dungeon_char_type dchar_by_name(const string &name)

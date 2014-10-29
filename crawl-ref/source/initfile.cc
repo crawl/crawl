@@ -1175,10 +1175,6 @@ ucs_t get_glyph_override(int c)
     if (c < 0)
     {
         c = -c;
-        if (Options.char_set == CSET_IBM)
-            c = (c & ~0xff) ? 0 : charset_cp437[c & 0xff];
-        else if (Options.char_set == CSET_DEC)
-            c = (c & 0x80) ? charset_vt100[c & 0x7f] : c;
     }
     if (wcwidth(c) != 1)
     {
@@ -2545,12 +2541,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "ascii")
             char_set = CSET_ASCII;
-        else if (field == "ibm")
-            char_set = CSET_IBM;
-        else if (field == "dec")
-            char_set = CSET_DEC;
-        else if (field == "utf" || field == "unicode")
-            char_set = CSET_OLD_UNICODE;
         else if (field == "default")
             char_set = CSET_DEFAULT;
         else

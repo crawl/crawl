@@ -665,9 +665,6 @@ enum char_set_type
 {
     CSET_DEFAULT,
     CSET_ASCII,         // flat 7-bit ASCII
-    CSET_IBM,           // 8-bit ANSI/Code Page 437
-    CSET_DEC,           // 8-bit DEC, 0xE0-0xFF shifted for line drawing chars
-    CSET_OLD_UNICODE,
     NUM_CSET
 };
 
