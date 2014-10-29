@@ -1752,8 +1752,8 @@ void zap_wand(int slot)
 
     const zap_type type_zapped = wand.zap();
 
-    const bool has_charges = wand.plus > 0;
-    if (!has_charges && wand.plus2 == ZAPCOUNT_EMPTY)
+    const bool has_charges = wand.charges > 0;
+    if (!has_charges && wand.used_count == ZAPCOUNT_EMPTY)
     {
         mpr("This wand has no charges.");
         return;
@@ -1846,7 +1846,7 @@ void zap_wand(int slot)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         // It's an empty wand; inscribe it that way.
-        wand.plus2 = ZAPCOUNT_EMPTY;
+        wand.used_count = ZAPCOUNT_EMPTY;
         you.turn_is_over = true;
         return;
     }
@@ -1917,7 +1917,7 @@ void zap_wand(int slot)
     zapping(type_zapped, power, beam);
 
     // Take off a charge.
-    wand.plus--;
+    wand.charges--;
     // And a few more, if you didn't know the wand's charges.
     if (wasteful)
     {
@@ -1926,23 +1926,23 @@ void zap_wand(int slot)
 #endif
 
         const int wasted_charges = 1 + random2(2); //1-2
-        wand.plus = max(0, wand.plus - wasted_charges);
+        wand.charges = max(0, wand.charges - wasted_charges);
 
         dprf("Wasted %d charges (wand %d -> %d)", wasted_charges,
-             initial_charge, wand.plus);
+             initial_charge, wand.charges);
         mpr("Evoking this partially-identified wand wasted a few charges.");
     }
 
     // Zap counts count from the last recharge.
-    if (wand.plus2 == ZAPCOUNT_RECHARGED)
-        wand.plus2 = 0;
+    if (wand.used_count == ZAPCOUNT_RECHARGED)
+        wand.used_count = 0;
     // Increment zap count.
-    if (wand.plus2 >= 0)
+    if (wand.used_count >= 0)
     {
-        wand.plus2++;
+        wand.used_count++;
         // And at least once more for wasteage
         if (wasteful)
-            wand.plus2++;
+            wand.used_count++;
     }
 
     // Identify if unknown.
@@ -1968,8 +1968,8 @@ void zap_wand(int slot)
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
     // Mark as empty if necessary.
-    if (wand.plus == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
-        wand.plus2 = ZAPCOUNT_EMPTY;
+    if (wand.charges == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
+        wand.used_count = ZAPCOUNT_EMPTY;
 
     practise(EX_DID_ZAP_WAND);
     count_action(CACT_EVOKE, EVOC_WAND);

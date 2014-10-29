@@ -1175,8 +1175,8 @@ static void _mons_fire_wand(monster* mons, item_def &wand, bolt &beem,
         }
 
         // Increment zap count.
-        if (wand.plus2 >= 0)
-            wand.plus2++;
+        if (wand.used_count >= 0)
+            wand.used_count++;
 
         mons->flags |= MF_SEEN_RANGED;
     }
@@ -1199,7 +1199,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     int rate, bool was_visible)
 {
     rod.plus -= rate;
-    dprf("rod charge: %d, %d", rod.plus, rod.plus2);
+    dprf("rod charge: %d, %d", rod.charges, rod.charge_cap);
 
     if (was_visible)
     {

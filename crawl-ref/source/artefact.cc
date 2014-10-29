@@ -1160,13 +1160,11 @@ static bool _init_artefact_book(item_def &book)
     // Plus and plus2 contain parameters to make_book_foo_randart(),
     // which might get changed after the book has been made into a
     // randart, so reset them on each iteration of the loop.
-    int  plus  = book.plus;
-    int  plus2 = book.plus2;
+    const int  plus  = book.plus;
     bool book_good = false;
     for (int i = 0; i < 4; i++)
     {
         book.plus  = plus;
-        book.plus2 = plus2;
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
         {

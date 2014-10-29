@@ -287,7 +287,7 @@ bool Stash::unmark_trapping_nets()
     bool changed = false;
     for (vector<item_def>::iterator i = items.begin(); i != items.end(); i++)
         if (item_is_stationary_net(*i))
-            i->plus2 = 0, changed = true;
+            i->net_placed = false, changed = true;
     return changed;
 }
 
@@ -436,7 +436,7 @@ string Stash::stash_item_name(const item_def &item)
     if (!_is_rottable(item))
         return name;
 
-    if (item.plus2 <= _min_rot(item))
+    if (item.stash_freshness <= _min_rot(item))
     {
         name += " (gone by now)";
         return name;
@@ -446,7 +446,7 @@ string Stash::stash_item_name(const item_def &item)
     if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
         return name;
 
-    if (item.plus2 <= 0)
+    if (item.stash_freshness <= 0)
         name += " (skeletalised by now)";
 
     return name;
@@ -695,14 +695,14 @@ void Stash::_update_corpses(int rot_time)
         if (!_is_rottable(item))
             continue;
 
-        int new_rot = static_cast<int>(item.plus2) - rot_time;
+        int new_rot = static_cast<int>(item.stash_freshness) - rot_time;
 
         if (new_rot <= _min_rot(item))
         {
             items.erase(items.begin() + i);
             continue;
         }
-        item.plus2 = static_cast<short>(new_rot);
+        item.stash_freshness = static_cast<short>(new_rot);
     }
 }
 
@@ -730,18 +730,10 @@ void Stash::add_item(const item_def &item, bool add_to_front)
     if (!_is_rottable(item))
         return;
 
-    // item.special remains unchanged in the stash, to show how fresh it
-    // was when last seen.  It's plus2 that's decayed over time.
-    if (add_to_front)
-    {
-        item_def &it = items.front();
-        it.plus2     = it.special;
-    }
-    else
-    {
-        item_def &it = items.back();
-        it.plus2     = it.special;
-    }
+    // item.freshness remains unchanged in the stash, to show how fresh it
+    // was when last seen.  It's stash_freshness that's decayed over time.
+    item_def &it = add_to_front ? items.front() : items.back();
+    it.stash_freshness     = it.freshness;
 }
 
 void Stash::write(FILE *f, int refx, int refy, string place, bool identify)

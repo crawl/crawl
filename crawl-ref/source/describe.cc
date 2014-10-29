@@ -1797,9 +1797,7 @@ string get_item_description(const item_def &item, bool verbose,
 
     case OBJ_WANDS:
     {
-        const bool known_empty = item_ident(item, ISFLAG_KNOW_PLUSES)
-                                    && item.plus == 0
-                                 || item.plus2 == ZAPCOUNT_EMPTY;
+        const bool known_empty = is_known_empty_wand(item);
 
         if (!item_ident(item, ISFLAG_KNOW_PLUSES) && !known_empty)
         {
@@ -1812,7 +1810,7 @@ string get_item_description(const item_def &item, bool verbose,
         if (item_type_known(item))
         {
             const int max_charges = wand_max_charges(item.sub_type);
-            if (item.plus < max_charges
+            if (item.charges < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
                 description << "\nIt can have at most " << max_charges
@@ -1881,7 +1879,7 @@ string get_item_description(const item_def &item, bool verbose,
             const int max_recharge_rate = MAX_WPN_ENCHANT;
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                const int num_charges = item.plus2 / ROD_CHARGE_MULT;
+                const int num_charges = item.charge_cap / ROD_CHARGE_MULT;
                 if (max_charges > num_charges)
                 {
                     description << "\nIt can currently hold " << num_charges

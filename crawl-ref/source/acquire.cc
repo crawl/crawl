@@ -1079,9 +1079,10 @@ static bool _do_book_acquirement(item_def &book, int agent)
             return false;
 
         book.sub_type = BOOK_MANUAL;
-        book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
+        book.skill = static_cast<skill_type>(
+                        choose_random_weighted(weights, weights + NUM_SKILLS));
         // Set number of bonus skill points.
-        book.plus2    = random_range(2000, 3000);
+        book.skill_points = random_range(2000, 3000);
         break;
     } // manuals
     } // switch book choice

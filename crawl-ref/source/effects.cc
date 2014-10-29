@@ -838,9 +838,9 @@ int recharge_wand(bool known, string *pre_msg)
             int charge_gain = wand_charge_value(wand.sub_type);
 
             const int new_charges =
-                max<int>(wand.plus,
+                max<int>(wand.charges,
                          min(charge_gain * 3,
-                             wand.plus +
+                             wand.charges +
                              1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
 
             const bool charged = (new_charges > wand.plus);
@@ -869,34 +869,34 @@ int recharge_wand(bool known, string *pre_msg)
             }
 
             // Reinitialise zap counts.
-            wand.plus  = new_charges;
-            wand.plus2 = ZAPCOUNT_RECHARGED;
+            wand.charges  = new_charges;
+            wand.used_count = ZAPCOUNT_RECHARGED;
         }
         else // It's a rod.
         {
             bool work = false;
 
-            if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+            if (wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
-                wand.plus2 += ROD_CHARGE_MULT * random_range(1, 2);
+                wand.charge_cap += ROD_CHARGE_MULT * random_range(1, 2);
 
-                if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
-                    wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+                if (wand.charge_cap > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+                    wand.charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
 
                 work = true;
             }
 
-            if (wand.plus < wand.plus2)
+            if (wand.charges < wand.charge_cap)
             {
-                wand.plus = wand.plus2;
+                wand.charges = wand.charge_cap;
                 work = true;
             }
 
             if (wand.special < MAX_WPN_ENCHANT)
             {
-                wand.special += random_range(1, 2);
-                if (wand.special > MAX_WPN_ENCHANT)
-                    wand.special = MAX_WPN_ENCHANT;
+                wand.rod_plus += random_range(1, 2);
+                if (wand.rod_plus > MAX_WPN_ENCHANT)
+                    wand.rod_plus = MAX_WPN_ENCHANT;
 
                 work = true;
             }
@@ -2938,7 +2938,7 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
-    if (rod.base_type != OBJ_RODS || rod.plus >= rod.plus2)
+    if (rod.base_type != OBJ_RODS || rod.charges >= rod.charge_cap)
         return;
 
     // Skill calculations with a massive scale would overflow, cap it.
@@ -2953,8 +2953,8 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
         rate += skill_bump(SK_EVOCATIONS, aut);
     rate = div_rand_round(rate, 100);
 
-    if (rate > rod.plus2 - rod.plus) // Prevent overflow
-        rate = rod.plus2 - rod.plus;
+    if (rate > rod.charge_cap - rod.charges) // Prevent overflow
+        rate = rod.charge_cap - rod.charges;
 
     // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
 
@@ -2968,7 +2968,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 
     rod.plus += rate;
 
-    if (in_inv && rod.plus == rod.plus2)
+    if (in_inv && rod.charges == rod.charge_cap)
     {
         msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
                     << endl;
@@ -3112,10 +3112,10 @@ void recharge_xp_evokers(int exp)
         item_def* evoker = evokers[i];
         if (!evoker)
             continue;
-        evoker->plus2 -= div_rand_round(exp, xp_factor);
-        if (evoker->plus2 <= 0)
+        evoker->evoker_debt -= div_rand_round(exp, xp_factor);
+        if (evoker->evoker_debt <= 0)
         {
-            evoker->plus2 = 0;
+            evoker->evoker_debt = 0;
             mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
         }
     }

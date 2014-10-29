@@ -921,7 +921,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int last_percent = 0;
     int acq_calls    = 0;
     int total_quant  = 0;
-    int max_plus     = -127;
+    short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
 
@@ -956,8 +956,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_quant += item.quantity;
         subtype_quants[item.sub_type] += item.quantity;
 
-        max_plus    = max(max_plus, item.plus + item.plus2);
-        total_plus += item.plus + item.plus2;
+        max_plus    = max(max_plus, item.plus);
+        total_plus += item.plus;
 
         if (is_artefact(item))
         {

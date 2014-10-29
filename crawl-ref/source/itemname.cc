@@ -995,7 +995,7 @@ static const char* amulet_primary_string(int p)
     }
 }
 
-const char* rune_type_name(int p)
+const char* rune_type_name(short p)
 {
     switch (static_cast<rune_type>(p))
     {
@@ -1419,7 +1419,7 @@ static void _name_deck(const item_def &deck, description_level_type desc,
         buff << misc_type_name(deck.sub_type, know_type);
 
     // name overriden, not a stacked deck, not a deck that's been drawn from
-    if (dbname || !top_card_is_known(deck) && deck.plus2 == 0)
+    if (dbname || !top_card_is_known(deck) && deck.used_count == 0)
         return;
 
     buff << " {";
@@ -1428,17 +1428,17 @@ static void _name_deck(const item_def &deck, description_level_type desc,
         buff << card_name(top_card(deck));
 
     // How many cards have been drawn, or how many are left.
-    if (deck.plus2 != 0)
+    if (deck.used_count != 0)
     {
         if (top_card_is_known(deck))
             buff << ", ";
 
-        if (deck.plus2 > 0)
+        if (deck.used_count > 0)
             buff << "drawn: ";
         else
             buff << "left: ";
 
-        buff << abs(deck.plus2);
+        buff << abs(deck.used_count);
     }
 
     buff << "}";
@@ -1451,8 +1451,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 {
     // Shortcuts
     const int item_typ   = sub_type;
-    const int it_plus    = plus;
-    const int item_plus2 = plus2;
 
     const bool know_type = ident || item_type_known(*this);
 
@@ -1516,7 +1514,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (is_unrandom_artefact(*this, UNRAND_WOE))
                 buff << "+∞ ";
             else
-                buff << make_stringf("%+d ", it_plus);
+                buff << make_stringf("%+d ", plus);
         }
 
         if (is_artefact(*this) && !dbname)
@@ -1628,9 +1626,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_pluses
             && !((armour_is_hide(*this)
                   || sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
-                 && it_plus == 0))
+                 && plus == 0))
         {
-            buff << make_stringf("%+d ", it_plus);
+            buff << make_stringf("%+d ", plus);
         }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1716,15 +1714,15 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
 
         if (know_pluses)
-            buff << " (" << it_plus << ")";
+            buff << " (" << charges << ")";
         else if (!dbname && with_inscription)
         {
-            if (item_plus2 == ZAPCOUNT_EMPTY)
+            if (used_count == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
-            else if (item_plus2 == ZAPCOUNT_RECHARGED)
+            else if (used_count == ZAPCOUNT_RECHARGED)
                 buff << " {recharged}";
-            else if (item_plus2 > 0)
-                buff << " {zapped: " << item_plus2 << '}';
+            else if (used_count > 0)
+                buff << " {zapped: " << used_count << '}';
         }
         break;
 
@@ -1739,8 +1737,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "potion of " << potion_type_name(item_typ);
         else
         {
-            const int pqual   = PQUAL(plus);
-            const int pcolour = PCOLOUR(plus);
+            const int pqual   = PQUAL(consum_desc);
+            const int pcolour = PCOLOUR(consum_desc);
 
             static const char *potion_qualifiers[] =
             {
@@ -1819,8 +1817,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         else
         {
             const uint32_t sseed =
-                special
-                + (static_cast<uint32_t>(it_plus) << 8)
+                appearance
+                + (static_cast<uint32_t>(consum_desc) << 8)
                 + (static_cast<uint32_t>(OBJ_SCROLLS) << 16);
             buff << "labeled " << make_name(sseed, true);
         }
@@ -1864,7 +1862,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
         {
             if (know_pluses && ring_has_pluses(*this))
-                buff << make_stringf("%+d ", it_plus);
+                buff << make_stringf("%+d ", plus);
 
             buff << jewellery_type_name(item_typ);
         }
@@ -1889,7 +1887,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (item_typ == MISC_RUNE_OF_ZOT)
         {
             if (!dbname)
-                buff << rune_type_name(it_plus) << " ";
+                buff << rune_type_name(rune_enum) << " ";
             buff << "rune of Zot";
             break;
         }
@@ -1905,10 +1903,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if ((item_typ == MISC_BOX_OF_BEASTS
                   || item_typ == MISC_SACK_OF_SPIDERS)
-                    && item_plus2 > 0
+                    && used_count > 0
                     && !dbname)
         {
-            buff << " {used: " << item_plus2 << "}";
+            buff << " {used: " << used_count << "}";
         }
         else if (is_xp_evoker(*this) && !evoker_is_charged(*this) && !dbname)
         {
@@ -2033,7 +2031,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << _name << " ";
         else if (!dbname && !starts_with(_name, "the "))
         {
-            const monster_type mc = static_cast<monster_type>(it_plus);
+            const monster_type mc = mon_type;
             if (!(mons_is_unique(mc) && mons_species(mc) == mc))
                 buff << mons_type_name(mc, DESC_PLAIN) << ' ';
 
@@ -2069,8 +2067,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     if (base_type == OBJ_RODS && know_type && know_pluses
         && !basename && !qualname && !dbname)
     {
-        buff << " (" << (plus / ROD_CHARGE_MULT)
-             << "/"  << (plus2 / ROD_CHARGE_MULT)
+        buff << " (" << (charges / ROD_CHARGE_MULT)
+             << "/"  << (charge_cap / ROD_CHARGE_MULT)
              << ")";
     }
 
@@ -2078,8 +2076,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     if (buff.str().length() < 3)
     {
         buff << "bad item (cl:" << static_cast<int>(base_type)
-             << ",ty:" << item_typ << ",pl:" << it_plus
-             << ",pl2:" << item_plus2 << ",sp:" << special
+             << ",ty:" << item_typ << ",pl:" << plus
+             << ",pl2:" << used_count << ",sp:" << special
              << ",qu:" << quantity << ")";
     }
 
@@ -3512,8 +3510,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        return item.plus2 == ZAPCOUNT_EMPTY
-                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
+        return is_known_empty_wand(item);
 
     case OBJ_POTIONS:
     {

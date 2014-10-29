@@ -2112,15 +2112,10 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     item.plus = random2avg(wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
-    if (item.plus == 0)
-        item.plus++;
+    if (item.charges == 0)
+        item.charges++;
 
-    // plus2 tracks how many times the player has zapped it.
-    // If it is -1, then the player knows it's empty.
-    // If it is -2, then the player has messed with it somehow
-    // (presumably by recharging), so don't bother to display
-    // the count.
-    item.plus2 = 0;
+    item.used_count = 0;
 }
 
 static void _generate_food_item(item_def& item, int force_quant, int force_type)
@@ -2348,21 +2343,25 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     if (item.sub_type == BOOK_MANUAL)
     {
         if (one_chance_in(4))
-            item.plus = SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING);
+        {
+            item.skill = static_cast<skill_type>(SK_SPELLCASTING +
+                                                 random2(NUM_SKILLS -
+                                                         SK_SPELLCASTING));
+        }
         else
 #if TAG_MAJOR_VERSION == 34
         {
-            item.plus = random2(SK_UNARMED_COMBAT);
-            if (item.plus == SK_STABBING)
-                item.plus = SK_UNARMED_COMBAT;
-            if (item.plus == SK_TRAPS)
-                item.plus = SK_STEALTH;
+            item.skill = static_cast<skill_type>(random2(SK_UNARMED_COMBAT));
+            if (item.skill == SK_STABBING)
+                item.skill = SK_UNARMED_COMBAT;
+            if (item.skill == SK_TRAPS)
+                item.skill = SK_STEALTH;
         }
 #else
             item.plus = random2(SK_UNARMED_COMBAT + 1);
 #endif
         // Set number of bonus skill points.
-        item.plus2 = random_range(2000, 3000);
+        item.skill_points = random_range(2000, 3000);
     }
 
     // Manuals and books of destruction are rare enough without replacing
@@ -2584,31 +2583,29 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                 && !one_chance_in(5)));
     }
 
-    // Pick number of beasts in the box
-    if (item.sub_type == MISC_BOX_OF_BEASTS)
+    // set initial charges
+    if (item.sub_type == MISC_BOX_OF_BEASTS
+        || item.sub_type == MISC_SACK_OF_SPIDERS)
     {
-        item.plus = random_range(5, 15, 2);
-        item.plus2 = 0;
-    }
-    // Spider sack charges
-    if (item.sub_type == MISC_SACK_OF_SPIDERS)
-    {
-        item.plus = random_range(5, 15, 2);
-        item.plus2 = 0;
+        item.charges = random_range(5, 15, 2);
+        item.used_count = 0;
     }
 
     if (is_deck(item))
     {
-        item.plus = 4 + random2(10);
+        item.initial_cards = 4 + random2(10);
 
-        if (force_ego >= DECK_RARITY_COMMON && force_ego <= DECK_RARITY_LEGENDARY)
-            item.special = force_ego;
+        if (force_ego >= DECK_RARITY_COMMON
+            && force_ego <= DECK_RARITY_LEGENDARY)
+        {
+            item.deck_rarity = force_ego;
+        }
         else
         {
-            item.special = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                                 20, DECK_RARITY_RARE,
-                                                 72, DECK_RARITY_COMMON,
-                                                  0);
+            item.deck_rarity = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                                     20, DECK_RARITY_RARE,
+                                                     72, DECK_RARITY_COMMON,
+                                                      0);
         }
         init_deck(item);
     }
@@ -2624,9 +2621,9 @@ void squash_plusses(int item_slot)
     item_def& item(mitm[item_slot]);
 
     ASSERT(!is_deck(item));
-    item.plus    = 0;
-    item.plus2   = 0;
-    item.special = 0;
+    item.plus         = 0;
+    item.used_count   = 0;
+    item.special      = 0;
     set_equip_desc(item, ISFLAG_NO_DESC);
 }
 
@@ -2885,16 +2882,16 @@ void init_rod_mp(item_def &item, int ncharges, int item_level)
 
     if (ncharges != -1)
     {
-        item.plus2 = ncharges * ROD_CHARGE_MULT;
-        item.special = 0;
+        item.charge_cap = ncharges * ROD_CHARGE_MULT;
+        item.rod_plus = 0;
     }
     else
     {
-        item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
-        item.special = _roll_rod_enchant(item_level);
+        item.charge_cap = random_range(9, 14) * ROD_CHARGE_MULT;
+        item.rod_plus = _roll_rod_enchant(item_level);
     }
 
-    item.plus = item.plus2;
+    item.charges = item.charge_cap;
 }
 
 static bool _weapon_is_visibly_special(const item_def &item)

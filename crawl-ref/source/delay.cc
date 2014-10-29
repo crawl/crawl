@@ -206,7 +206,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
     {
-        // Corpse keeps track of work in plus2 field, see handle_delay(). - bwr
+        // Corpse keeps track of work in butcher_amount field
+        // see handle_delay(). - bwr
         bool multiple_corpses    = false;
 
         for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
@@ -634,7 +635,7 @@ void handle_delay()
             else
             {
                 // Mark work done on the corpse in case we stop. -- bwr
-                mitm[ delay.parm1 ].plus2++;
+                mitm[ delay.parm1 ].butcher_amount++;
             }
         }
         else

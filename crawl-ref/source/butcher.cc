@@ -74,9 +74,9 @@ static bool _corpse_butchery(int corpse_id,
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
-        mitm[corpse_id].plus2++;
+        mitm[corpse_id].butcher_amount++;
 
-    int work_req = max(0, 4 - mitm[corpse_id].plus2);
+    int work_req = max(0, 4 - mitm[corpse_id].butcher_amount);
 
     delay_type dtype = DELAY_BUTCHER;
     // Sanity checks.

@@ -525,20 +525,48 @@ struct item_def
     object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
-    /// +to hit/dam, charges, corpse mon id
-    union { short plus; monster_type mon_type:16; };
+    union {
+        short plus;                 ///< + to hit/dam (weapons, rods)
+        monster_type mon_type:16;   ///< corpse/chunk monster type
+        skill_type skill;           ///< the skill provided by a manual
+        short charges;              ///< # of charges held by a wand, etc
+                                    // for rods, is charge * ROD_CHARGE_MULT
+        short initial_cards;        ///< the # of cards a deck *started* with
+        short consum_desc;          ///< consumable (potion/scroll) names
+                                    // scrolls also use 'appearance'
+        short rune_enum;            ///< rune_type; enum for runes of zot
+        short net_durability;       ///< damage dealt to a net
+    };
 #pragma pack(pop)
-    short          plus2;          ///< net wear, deck draws, wand zap count,
-                                   //   corpse butcher amount, rod max charge,
-                                   //   evoker cooldown, book generation code
-    int            special;        ///< special stuff
+    union {
+        short plus2;        ///< legacy/generic name for this union
+        short evoker_debt;  ///< xp~ required for evoker to finish recharging
+        short used_count;   ///< the # of known times it was used (decks, wands)
+                            // for wands, may hold negative ZAPCOUNT knowledge
+                            // info (e.g. "recharged", "empty", "unknown")
+        short butcher_amount;   ///< progress made on butchering
+        bool net_placed;    ///< is this throwing net trapping something?
+        short skill_points; ///< # of skill points a manual gives
+        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
+        short stash_freshness; ///< where stash.cc stores corpse freshness
+    };
+    union
+    {
+        int special;        ///< special stuff
+        int deck_rarity;    ///< deck rarity (plain, ornate, legendary)
+        int rod_plus;       ///< rate at which a rod recharges; +slay
+        int appearance;     ///< book, jewellery, scroll, staff, wand appearance
+                            // scrolls also use 'consum_desc'
+        int brand;          ///< weapon and armour brands; also marks artefacts
+        int freshness;      ///< remaining time until a corpse rots
+    };
     colour_t       colour;         ///< item colour
     uint8_t        rnd;            ///< random number, used for tile choice
     short          quantity;       ///< number of items
     iflags_t       flags;          ///< item status flags
 
     /// The location of the item. Items in player inventory are indicated by
-    /// pos (-1, -1), items in monster inventory by (-2, -2), and and items
+    /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
     /// Index in the mitm array of the next item in the stack. NON_ITEM for

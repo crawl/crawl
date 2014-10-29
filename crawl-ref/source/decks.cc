@@ -79,14 +79,16 @@
 #include "view.h"
 #include "xom.h"
 
-// DECK STRUCTURE: deck.plus is the number of cards the deck *started*
-// with, deck.plus2 is the number of cards drawn, deck.special is the
+// DECK STRUCTURE: deck.initial_cards is the number of cards the deck *started*
+// with, deck.used_count is* the number of cards drawn, deck.rarity is the
 // deck rarity, deck.props["cards"] holds the list of cards (with the
 // highest index card being the top card, and index 0 being the bottom
 // card), deck.props["drawn_cards"] holds the list of drawn cards
 // (with index 0 being the first drawn), deck.props["card_flags"]
 // holds the flags for each card, deck.props["num_marked"] is the
 // number of marked cards left in the deck.
+//
+// if deck.used_count is negative, it's actually -(cards_left). wtf.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
@@ -632,10 +634,10 @@ static bool _check_buggy_deck(item_def& deck)
                 strm << "Strange, this deck is already empty.";
 
                 int cards_left = 0;
-                if (deck.plus2 >= 0)
-                    cards_left = deck.plus - deck.plus2;
+                if (deck.used_count >= 0)
+                    cards_left = deck.initial_cards - deck.used_count;
                 else
-                    cards_left = -deck.plus;
+                    cards_left = -deck.used_count;
 
                 if (cards_left != 0)
                 {
@@ -691,7 +693,7 @@ static bool _check_buggy_deck(item_def& deck)
         strm << num_buggy << " buggy cards found in the deck, discarding them."
              << endl;
 
-        deck.plus2 += num_buggy;
+        deck.used_count += num_buggy;
 
         num_cards = cards.size();
         num_flags = cards.size();
@@ -715,16 +717,16 @@ static bool _check_buggy_deck(item_def& deck)
         return true;
     }
 
-    if (num_cards > deck.plus)
+    if (num_cards > deck.initial_cards)
     {
-        if (deck.plus == 0)
+        if (deck.initial_cards == 0)
             strm << "Deck was created with zero cards???" << endl;
-        else if (deck.plus < 0)
+        else if (deck.initial_cards < 0)
             strm << "Deck was created with *negative* cards?!" << endl;
         else
             strm << "Deck has more cards than it was created with?" << endl;
 
-        deck.plus = num_cards;
+        deck.initial_cards = num_cards;
         problems  = true;
     }
 
@@ -777,33 +779,33 @@ static bool _check_buggy_deck(item_def& deck)
         problems = true;
     }
 
-    if (deck.plus2 >= 0)
+    if (deck.used_count >= 0)
     {
-        if (deck.plus != (deck.plus2 + num_cards))
+        if (deck.initial_cards != (deck.used_count + num_cards))
         {
 #ifdef WIZARD
-            strm << "Have you used " << deck.plus2 << " cards, or "
-                 << (deck.plus - num_cards) << "? Oops.";
+            strm << "Have you used " << deck.used_count << " cards, or "
+                 << (deck.initial_cards - num_cards) << "? Oops.";
 #else
             strm << "Oops, book-keeping on used cards is wrong.";
 #endif
             strm << endl;
-            deck.plus2 = deck.plus - num_cards;
+            deck.used_count = deck.initial_cards - num_cards;
             problems = true;
         }
     }
     else
     {
-        if (-deck.plus2 != num_cards)
+        if (-deck.used_count != num_cards)
         {
 #ifdef WIZARD
             strm << "There are " << num_cards << " cards left, not "
-                 << (-deck.plus2) << ".  Oops.";
+                 << (-deck.used_count) << ".  Oops.";
 #else
             strm << "Oops, book-keeping on cards left is wrong.";
 #endif
             strm << endl;
-            deck.plus2 = -num_cards;
+            deck.used_count = -num_cards;
             problems = true;
         }
     }
@@ -883,7 +885,7 @@ static void _deck_lose_card(item_def& deck)
             || (flags & CFLAG_SEEN) && coinflip());
 
     _draw_top_card(deck, false, flags);
-    deck.plus2++;
+    deck.used_count++;
 }
 
 // Peek at two cards in a deck, then place them on top.
@@ -930,7 +932,7 @@ bool deck_peek()
 
         _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
         deck.props["num_marked"]++;
-        deck.plus2 = -1;
+        deck.used_count = -1; // one card left
         you.wield_change = true;
 
         return true;
@@ -1229,7 +1231,7 @@ bool stack_five(int slot)
     }
 
     CrawlHashTable &props = deck.props;
-    deck.plus2 = -num_to_stack;
+    deck.used_count = -num_to_stack;
     props["num_marked"] = static_cast<char>(num_to_stack);
     // Remember that the deck was stacked even if it is later unmarked
     // (e.g. by Nemelex abandonment).
@@ -1413,7 +1415,7 @@ bool draw_three(int slot)
     }
 
     // Note how many cards were removed from the deck.
-    deck.plus2 += num_to_draw;
+    deck.used_count += num_to_draw;
 
     // Don't forget to update the number of marked ones, too.
     // But don't reduce the number of non-brownie draws.
@@ -1559,7 +1561,7 @@ void evoke_deck(item_def& deck)
     if (flags & CFLAG_MARKED)
         props["num_marked"]--;
 
-    deck.plus2++;
+    deck.used_count++;
     _remember_drawn_card(deck, card, allow_id);
 
     // Get rid of the deck *before* the card effect because a card
@@ -3052,17 +3054,19 @@ void init_deck(item_def &item)
 
     ASSERT(is_deck(item));
     ASSERT(!props.exists("cards"));
-    ASSERT_RANGE(item.plus, 1, 128);
+    ASSERT_RANGE(item.initial_cards, 1, 128);
     ASSERT(item.special >= DECK_RARITY_COMMON
            && item.special <= DECK_RARITY_LEGENDARY);
 
     const store_flags fl = SFLAG_CONST_TYPE;
 
-    props["cards"].new_vector(SV_BYTE, fl).resize((vec_size)item.plus);
-    props["card_flags"].new_vector(SV_BYTE, fl).resize((vec_size)item.plus);
+    props["cards"].new_vector(SV_BYTE, fl).resize((vec_size)
+                                                  item.initial_cards);
+    props["card_flags"].new_vector(SV_BYTE, fl).resize((vec_size)
+                                                       item.initial_cards);
     props["drawn_cards"].new_vector(SV_BYTE, fl);
 
-    for (int i = 0; i < item.plus; ++i)
+    for (int i = 0; i < item.initial_cards; ++i)
     {
         bool      was_odd = false;
         card_type card    = _random_card(item, was_odd);
@@ -3074,13 +3078,13 @@ void init_deck(item_def &item)
         _set_card_and_flags(item, i, card, flags);
     }
 
-    ASSERT(cards_in_deck(item) == item.plus);
+    ASSERT(cards_in_deck(item) == item.initial_cards);
 
     props["num_marked"]        = (char) 0;
 
     props.assert_validity();
 
-    item.plus2  = 0;
+    item.used_count  = 0;
     item.colour = deck_rarity_to_colour((deck_rarity_type) item.special);
 }
 

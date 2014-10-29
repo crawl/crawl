@@ -329,8 +329,8 @@ static void _maybe_split_nets(item_def &item, const coord_def& where)
 
     it.base_type = item.base_type;
     it.sub_type  = item.sub_type;
-    it.plus      = item.plus;
-    it.plus2     = item.plus2;
+    it.net_durability      = item.net_durability;
+    it.net_placed  = item.net_placed;
     it.flags     = item.flags;
     it.special   = item.special;
     it.quantity  = --item.quantity;
@@ -1419,9 +1419,9 @@ void free_self_from_net()
         return;
     }
 
-    int hold = mitm[net].plus;
+    int hold = mitm[net].net_durability;
     int do_what = damage_or_escape_net(hold);
-    dprf("net.plus: %d, ATTR_HELD: %d, do_what: %d",
+    dprf("net.net_durability: %d, ATTR_HELD: %d, do_what: %d",
          hold, you.attribute[ATTR_HELD], do_what);
 
     if (do_what <= 0) // You try to destroy the net
@@ -1449,7 +1449,7 @@ void free_self_from_net()
             damage = 5;
 
         hold -= damage;
-        mitm[net].plus = hold;
+        mitm[net].net_durability = hold;
 
         if (hold < -7)
         {
@@ -1541,13 +1541,13 @@ void free_stationary_net(int item_index)
     {
         const coord_def pos = item.pos;
         // Probabilistically mulch net based on damage done, otherwise
-        // reset damage counter (ie: item.plus).
-        if (x_chance_in_y(-item.plus, 9))
+        // reset damage counter (ie: item.net_durability).
+        if (x_chance_in_y(-item.net_durability, 9))
             destroy_item(item_index);
         else
         {
-            item.plus = 0;
-            item.plus2 = 0;
+            item.net_durability = 0;
+            item.net_placed = false;
         }
 
         // Make sure we don't leave a bad trapping net in the stash
