@@ -2248,8 +2248,8 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
             mon_glyph = merged slime creature : slime creature
 
         You can specify symbols using their code points using the syntax
-        as shown in the "feature" option. If you're using
-        char_set=default, you can use unicode code points:
+        as shown in the "feature" option. You can also use Unicode code
+        points:
 
              mon_glyph = draconian scorcher : x6e9
 
