@@ -32,7 +32,7 @@
 #include "monster.h"
 #include "options.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"

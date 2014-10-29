@@ -49,7 +49,7 @@
 #include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "skills2.h"
+#include "skills.h"
 #include "species.h"
 #include "spl-book.h"
 #include "state.h"

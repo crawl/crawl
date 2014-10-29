@@ -23,7 +23,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"

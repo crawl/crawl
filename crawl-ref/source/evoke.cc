@@ -47,7 +47,6 @@
 #include "godconduct.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"

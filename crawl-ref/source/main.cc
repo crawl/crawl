@@ -117,7 +117,6 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"

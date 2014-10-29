@@ -71,7 +71,6 @@
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-clouds.h"
 #include "state.h"
 #include "stringutil.h"

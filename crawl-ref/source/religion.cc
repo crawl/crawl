@@ -72,7 +72,6 @@
 #include "rot.h"
 #include "shopping.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-miscast.h"
 #include "spl-selfench.h"

@@ -64,7 +64,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-clouds.h"
 #include "spl-selfench.h"
 #include "spl-other.h"

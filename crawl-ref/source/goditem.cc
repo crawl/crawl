@@ -20,7 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"

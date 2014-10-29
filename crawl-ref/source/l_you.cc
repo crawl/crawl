@@ -32,7 +32,6 @@
 #include "shopping.h"
 #include "species.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"

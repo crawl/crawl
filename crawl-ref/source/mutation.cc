@@ -46,7 +46,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "random.h"
-#include "skills2.h"
+#include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "transform.h"

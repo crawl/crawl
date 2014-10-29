@@ -18,7 +18,7 @@
 #include "libutil.h"
 #include "ng-input.h"
 #include "random.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"

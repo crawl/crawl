@@ -61,7 +61,7 @@
  #include "tilereg-crt.h"
 #endif
 
-#include "skills2.h"
+#include "skills.h"
 #define SCORE_VERSION "0.1"
 
 // enough memory allocated to snarf in the scorefile entries

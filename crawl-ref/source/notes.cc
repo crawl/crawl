@@ -22,7 +22,7 @@
 #include "options.h"
 #include "place.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"

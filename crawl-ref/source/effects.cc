@@ -74,7 +74,6 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"

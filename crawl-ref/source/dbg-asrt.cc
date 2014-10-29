@@ -31,7 +31,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"

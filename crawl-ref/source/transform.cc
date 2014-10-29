@@ -39,7 +39,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "species.h"
 #include "state.h"
 #include "stringutil.h"

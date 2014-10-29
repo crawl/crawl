@@ -36,7 +36,7 @@
 #include "random-weight.h"
 #include "religion.h"
 #include "rot.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
