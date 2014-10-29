@@ -1901,6 +1901,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
+        buff << misc_type_name(item_typ, know_type);
+
         if ((item_typ == MISC_BOX_OF_BEASTS
                   || item_typ == MISC_SACK_OF_SPIDERS)
                     && item_plus2 > 0
