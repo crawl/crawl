@@ -5,18 +5,17 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
-#include "libutil.h"
 #include "l_libs.h"
 
 #include "branch.h"
+#include "cluautil.h"
 #include "coord.h"
-#include "mapdef.h"
-
 #include "env.h"
+#include "libutil.h"
+#include "mapdef.h"
+#include "stringutil.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
-#include "stringutil.h"
 
 tileidx_t get_tile_idx(lua_State *ls, int arg)
 {

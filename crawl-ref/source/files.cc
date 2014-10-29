@@ -7,29 +7,23 @@
 
 #include "files.h"
 
-#include <errno.h>
-#include <string.h>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-
 #include <algorithm>
 #include <functional>
-
+#include <string>
+#include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
-#ifdef UNIX
-#include <unistd.h>
-#endif
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 #ifdef HAVE_UTIMES
 #include <sys/time.h>
 #endif
-
 #include <sys/types.h>
-#include <sys/stat.h>
-
-#include "externs.h"
+#ifdef UNIX
+#include <unistd.h>
+#endif
 
 #include "abyss.h"
 #include "act-iter.h"
@@ -41,8 +35,8 @@
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
-#include "delay.h"
 #include "dactions.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -55,6 +49,7 @@
 #include "godabil.h"
 #include "godcompanions.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "initfile.h"
 #include "items.h"
 #include "jobs.h"
@@ -67,8 +62,8 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "mon-transit.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -76,28 +71,27 @@
 #include "player.h"
 #include "prompt.h"
 #include "random.h"
-#include "show.h"
 #include "shopping.h"
+#include "show.h"
 #include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "teleport.h"
+#include "terrain.h"
 #ifdef USE_TILE
  // TODO -- dolls
  #include "tiledef-player.h"
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
-#include "teleport.h"
-#include "terrain.h"
 #include "travel.h"
-#include "hints.h"
 #include "unwind.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "xom.h"
 
 #ifdef __ANDROID__

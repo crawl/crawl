@@ -1,7 +1,8 @@
 #include "AppHdr.h"
 
-#include <wctype.h>
 #include "ng-input.h"
+
+#include <wctype.h>
 
 #include "cio.h"
 #include "end.h"

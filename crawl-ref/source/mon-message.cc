@@ -4,7 +4,9 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-message.h"
+
 #include <sstream>
 
 #include "defines.h"
@@ -12,8 +14,8 @@
 #include "env.h"
 #include "libutil.h"
 #include "monster.h"
-#include "mon-util.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "view.h"
 
 // Note that this function *completely* blocks messaging for monsters

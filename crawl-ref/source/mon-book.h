@@ -7,6 +7,7 @@
 #define MONBOOK_H
 
 #include <vector>
+
 #include "defines.h"
 #include "enum.h"
 #include "mon-mst.h"

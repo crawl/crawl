@@ -6,9 +6,9 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "exercise.h"
+
+#include <algorithm>
 
 #include "itemprop.h"
 #include "player.h"

@@ -6,8 +6,6 @@
 #ifndef CLOUD_H
 #define CLOUD_H
 
-#include "externs.h"
-
 cloud_type random_smoke_type();
 
 cloud_type cloud_type_at(const coord_def &pos);

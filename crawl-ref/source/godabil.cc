@@ -5,13 +5,15 @@
 
 #include "AppHdr.h"
 
+#include "godabil.h"
+
 #include <queue>
 #include <sstream>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
-#include "ability.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "branch.h"
@@ -19,9 +21,9 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "database.h"
 #include "delay.h"
-#include "dactions.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "effects.h"
@@ -31,22 +33,22 @@
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
-#include "losglobal.h"
+#include "item_use.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -55,7 +57,6 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "mgen_data.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -67,9 +68,9 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
-#include "skill_menu.h"
 #include "shopping.h"
 #include "shout.h"
+#include "skill_menu.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-monench.h"
@@ -82,15 +83,14 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
+#ifdef USE_TILE
+ #include "tiledef-main.h"
+#endif
 #include "traps.h"
 #include "unwind.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-
-#ifdef USE_TILE
-#include "tiledef-main.h"
-#endif
+#include "view.h"
 
 struct sacrifice_def
 {

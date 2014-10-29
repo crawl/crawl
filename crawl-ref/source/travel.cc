@@ -8,6 +8,16 @@
  */
 #include "AppHdr.h"
 
+#include "travel.h"
+
+#include <algorithm>
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <memory>
+#include <set>
+#include <sstream>
+
 #include "artefact.h"
 #include "branch.h"
 #include "cio.h"
@@ -53,18 +63,9 @@
 #include "tags.h"
 #include "terrain.h"
 #include "traps.h"
-#include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
-
-#include <algorithm>
-#include <cctype>
-#include <cstdarg>
-#include <cstdio>
-#include <memory>
-#include <set>
-#include <sstream>
 
 enum IntertravelDestination
 {

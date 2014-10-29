@@ -7,7 +7,7 @@
 #define ITEM_USE_H
 
 #include <string>
-#include "externs.h"
+
 #include "enum.h"
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);

@@ -2,8 +2,8 @@
 #define OPTIONS_H
 
 #include "feature.h"
-#include "pattern.h"
 #include "newgame_def.h"
+#include "pattern.h"
 
 enum autosac_type
 {

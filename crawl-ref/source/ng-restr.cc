@@ -7,11 +7,12 @@
 **/
 
 #include "AppHdr.h"
+
 #include "ng-restr.h"
 
+#include "jobs.h"
 #include "newgame_def.h"
 #include "species.h"
-#include "jobs.h"
 
 char_choice_restriction species_allowed(job_type job, species_type speci)
 {

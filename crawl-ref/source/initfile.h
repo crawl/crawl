@@ -6,8 +6,8 @@
 #ifndef INITFILE_H
 #define INITFILE_H
 
-#include <string>
 #include <cstdio>
+#include <string>
 
 #include "enum.h"
 #include "itemprop-enum.h"

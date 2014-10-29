@@ -7,12 +7,10 @@
 
 #include "mon-project.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <cmath>
-
-#include "externs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "areas.h"
 #include "cloud.h"

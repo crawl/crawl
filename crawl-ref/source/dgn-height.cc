@@ -5,9 +5,10 @@
 
 #include "AppHdr.h"
 
+#include "dgn-height.h"
+
 #include "coord.h"
 #include "coordit.h"
-#include "dgn-height.h"
 #include "dungeon.h"
 #include "random.h"
 

@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "externs.h"
-
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -19,9 +17,9 @@
 #include "food.h"
 #include "godconduct.h"
 #include "hints.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"

@@ -6,8 +6,6 @@
 #ifndef SPL_BOOK_H
 #define SPL_BOOK_H
 
-#include "externs.h"
-
 #define SPELLBOOK_SIZE 8
 
 class formatted_string;

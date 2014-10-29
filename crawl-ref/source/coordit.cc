@@ -10,8 +10,8 @@
 #include "coord-circle.h"
 #include "coord.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
+#include "los.h"
 #include "random.h"
 
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,

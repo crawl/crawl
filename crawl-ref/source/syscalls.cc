@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "syscalls.h"
+
 #ifdef TARGET_OS_WINDOWS
 # ifdef TARGET_COMPILER_VC
 #  include <direct.h>
@@ -23,7 +25,6 @@
 
 #include "files.h"
 #include "random.h"
-#include "syscalls.h"
 #include "unicode.h"
 
 bool lock_file(int fd, bool write, bool wait)

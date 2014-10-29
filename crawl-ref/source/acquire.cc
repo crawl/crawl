@@ -7,19 +7,18 @@
 
 #include "acquire.h"
 
-#include <cstdlib>
-#include <string.h>
-#include <stdio.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <queue>
 #include <set>
-#include <cmath>
+#include <stdio.h>
+#include <string.h>
 
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "decks.h"
 #include "dungeon.h"
-#include "externs.h"
 #include "food.h"
 #include "goditem.h"
 #include "itemname.h"

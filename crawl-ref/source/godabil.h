@@ -7,7 +7,6 @@
 #define GODABIL_H
 
 #include "enum.h"
-#include "externs.h"
 #include "spl-cast.h"
 
 #define BEOGH_WPN_GIFT_KEY "given beogh weapon"

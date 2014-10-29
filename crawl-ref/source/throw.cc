@@ -4,12 +4,11 @@
 **/
 
 #include "AppHdr.h"
-#include <sstream>
-#include <math.h>
 
 #include "throw.h"
 
-#include "externs.h"
+#include <sstream>
+#include <math.h>
 
 #include "artefact.h"
 #include "cloud.h"
@@ -48,8 +47,8 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);

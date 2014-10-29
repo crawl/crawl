@@ -4,9 +4,10 @@
 **/
 
 #include "AppHdr.h"
-#include <sstream>
 
 #include "wiz-mon.h"
+
+#include <sstream>
 
 #include "abyss.h"
 #include "act-iter.h"
@@ -34,8 +35,8 @@
 #include "mgen_data.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
-#include "mon-poly.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-speak.h"
 #include "mon-util.h"
 #include "output.h"

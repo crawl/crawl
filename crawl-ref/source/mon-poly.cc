@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-poly.h"
 
 #include "artefact.h"
@@ -20,11 +21,11 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "monster.h"
-#include "mon-flags.h"
 #include "mon-death.h"
+#include "mon-flags.h"
 #include "mon-message.h"
 #include "mon-place.h"
+#include "monster.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"

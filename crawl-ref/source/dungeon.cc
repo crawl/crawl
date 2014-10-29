@@ -5,15 +5,17 @@
 
 #include "AppHdr.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include "dungeon.h"
+
+#include <algorithm>
+#include <cmath>
 #include <list>
 #include <map>
 #include <set>
 #include <sstream>
-#include <algorithm>
-#include <cmath>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "abyss.h"
 #include "acquire.h"
@@ -25,26 +27,24 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "dbg-maps.h"
+#include "dbg-scan.h"
 #include "defines.h"
 #include "dgn-delve.h"
 #include "dgn-height.h"
-#include "dgn-shoals.h"
 #include "dgn-labyrinth.h"
 #include "dgn-overview.h"
+#include "dgn-shoals.h"
+#include "directn.h"
 #include "effects.h"
 #include "end.h"
-#include "env.h"
 #include "enum.h"
-#include "map_knowledge.h"
+#include "env.h"
+#include "files.h"
 #include "flood_find.h"
 #include "fprop.h"
-#include "externs.h"
-#include "dbg-maps.h"
-#include "dbg-scan.h"
-#include "directn.h"
-#include "dungeon.h"
-#include "files.h"
 #include "ghost.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -52,18 +52,19 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mapdef.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-chimera.h"
 #include "mon-death.h"
-#include "mon-util.h"
-#include "mon-pick.h"
-#include "mon-poly.h"
-#include "mon-place.h"
-#include "mgen_data.h"
 #include "mon-pathfind.h"
+#include "mon-pick.h"
+#include "mon-place.h"
+#include "mon-poly.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "place.h"
 #include "player.h"
@@ -80,14 +81,13 @@
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "terrain.h"
 #include "traps.h"
 #include "travel.h"
 #include "zotdef.h"
-#include "hints.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

@@ -1,11 +1,12 @@
-#include <limits.h>
-
 #include "AppHdr.h"
 
-#include "colour.h"
 #include "format.h"
-#include "libutil.h"
+
+#include <limits.h>
+
+#include "colour.h"
 #include "lang-fake.h"
+#include "libutil.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "viewchar.h"

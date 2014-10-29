@@ -2,20 +2,18 @@
 
 #include "clua.h"
 
+#include <algorithm>
+
 #include "cluautil.h"
 #include "dlua.h"
-#include "l_libs.h"
-
 #include "end.h"
 #include "files.h"
 #include "libutil.h"
+#include "l_libs.h"
 #include "state.h"
 #include "stringutil.h"
-
 #include "syscalls.h"
 #include "unicode.h"
-
-#include <algorithm>
 
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."

@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "externs.h"
-
 // Definitions for formatted_string
 
 enum fs_op_type

@@ -6,8 +6,6 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
-#include "externs.h"
-
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.
 enum item_source_type

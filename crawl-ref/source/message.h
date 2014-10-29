@@ -6,9 +6,9 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <string>
-#include <streambuf>
 #include <iostream>
+#include <streambuf>
+#include <string>
 
 #include "enum.h"
 

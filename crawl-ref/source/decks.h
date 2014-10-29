@@ -8,8 +8,6 @@
 
 #include "enum.h"
 
-#include "externs.h"
-
 // DECK STRUCTURE: deck.plus is the number of cards the deck *started*
 // with, deck.plus2 is the number of cards drawn, deck.special is the
 // deck rarity, deck.props["cards"] holds the list of cards (with the

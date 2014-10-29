@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "startup.h"
+
 #include "abyss.h"
 #include "arena.h"
 #include "branch.h"
@@ -25,8 +27,8 @@
 #include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
-#include "hiscores.h"
 #include "hints.h"
+#include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -52,21 +54,19 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stairs.h"
-#include "startup.h"
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tileview.h"
-#include "view.h"
-#include "viewchar.h"
-
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
 #endif
+#include "tileview.h"
+#include "viewchar.h"
+#include "view.h"
 
 static void _cio_init();
 

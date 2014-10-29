@@ -6,18 +6,12 @@
 #include "AppHdr.h"
 
 #include "describe.h"
-#include "process_desc.h"
-#include "database.h"
 
-#include <stdio.h>
-#include <string>
-#include <sstream>
 #include <iomanip>
 #include <numeric>
-
-#include "externs.h"
-#include "options.h"
-#include "species.h"
+#include <sstream>
+#include <string>
+#include <stdio.h>
 
 #include "ability.h"
 #include "artefact.h"
@@ -26,10 +20,13 @@
 #include "clua.h"
 #include "colour.h"
 #include "command.h"
+#include "database.h"
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"
 #include "english.h"
+#include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
@@ -37,12 +34,12 @@
 #include "goditem.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "evoke.h"
+#include "item_use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -50,33 +47,35 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-chimera.h"
-#include "mon-util.h"
+#include "mon-info.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
+#include "process_desc.h"
 #include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "rot.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-book.h"
-#include "spl-summoning.h"
-#include "state.h"
-#include "stringutil.h"
-#include "unicode.h"
-#include "env.h"
 #include "spl-cast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "stash.h"
+#include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "transform.h"
-#include "hints.h"
-#include "xom.h"
-#include "mon-info.h"
 #ifdef USE_TILE_LOCAL
-#include "tilereg-crt.h"
+ #include "tilereg-crt.h"
 #endif
+#include "transform.h"
+#include "unicode.h"
+#include "xom.h"
+
 // ========================================================================
 //      Internal Functions
 // ========================================================================

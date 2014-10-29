@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
 #include "spl-goditem.h"
 
 #include "artefact.h"
@@ -22,8 +21,8 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "map_knowledge.h"
 #include "mapdef.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -38,7 +37,6 @@
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
-
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tilepick.h"

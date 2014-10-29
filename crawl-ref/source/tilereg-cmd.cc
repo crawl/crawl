@@ -3,26 +3,26 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-cmd.h"
-#include "process_desc.h"
 
 #include "ability.h"
+#include "areas.h"
 #include "cio.h"
 #include "command.h"
-#include "process_desc.h"
 #include "enum.h"
 #include "env.h"
+#include "items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "misc.h"
+#include "process_desc.h"
+#include "process_desc.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
-#include "spl-cast.h"
-#include "items.h"
-#include "areas.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init,
                              const command_type commands[],

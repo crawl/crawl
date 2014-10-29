@@ -4,13 +4,13 @@
 
 #include "tilereg-menu.h"
 
+#ifdef TOUCH_UI
+#include "cio.h"
+#endif
 #include "menu.h"
 #include "options.h"
 #include "tilebuf.h"
 #include "tilefont.h"
-#ifdef TOUCH_UI
-#include "cio.h"
-#endif
 
 MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),

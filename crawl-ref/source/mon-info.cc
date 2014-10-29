@@ -9,6 +9,9 @@
 
 #include "mon-info.h"
 
+#include <algorithm>
+#include <sstream>
+
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -27,9 +30,9 @@
 #include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
+#include "monster.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "monster.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
@@ -41,9 +44,6 @@
 #include "tilepick.h"
 #endif
 #include "traps.h"
-
-#include <algorithm>
-#include <sstream>
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 {

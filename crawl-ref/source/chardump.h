@@ -6,8 +6,8 @@
 #ifndef CHARDUMP_H
 #define CHARDUMP_H
 
-#include <string>
 #include <cstdio>
+#include <string>
 
 enum item_origin_dump_selector
 {

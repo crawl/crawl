@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "mon-transit.h"
+
+#include <algorithm>
 
 #include "artefact.h"
 #include "coord.h"

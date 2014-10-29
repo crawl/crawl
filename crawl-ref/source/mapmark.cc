@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "mapmark.h"
+
+#include <algorithm>
 
 #include "clua.h"
 #include "cluautil.h"

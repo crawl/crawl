@@ -7,10 +7,8 @@
 #define RELIGION_H
 
 #include "enum.h"
-#include "externs.h"
-#include "player.h"
 #include "mgen_data.h"
-
+#include "player.h"
 #include "religion-enum.h"
 
 #define MAX_PIETY      200

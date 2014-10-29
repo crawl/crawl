@@ -6,9 +6,10 @@
 #ifndef MON_TRANSIT_H
 #define MON_TRANSIT_H
 
-#include "monster.h"
-#include <map>
 #include <list>
+#include <map>
+
+#include "monster.h"
 
 struct follower
 {

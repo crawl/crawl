@@ -6,15 +6,16 @@
 
 #include "AppHdr.h"
 
+#include "unicode.h"
+
+#include <string>
+#include <limits.h>
 #include <locale.h>
 #include <stdio.h>
-#include <string>
 #include <string.h>
-#include <limits.h>
 
 #include "libutil.h"
 #include "syscalls.h"
-#include "unicode.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!
 int wctoutf8(char *d, ucs_t s)

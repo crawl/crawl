@@ -5,15 +5,15 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "clua.h"
+#include "cluautil.h"
 #include "coord.h"
 #include "env.h"
 #include "libutil.h"
-#include "terrain.h"
 #include "stringutil.h"
+#include "terrain.h"
 
 #define FEATF(name, val) \
     static int name(lua_State *ls) \

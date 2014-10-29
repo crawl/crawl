@@ -5,13 +5,13 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "act-iter.h"
 #include "beam.h"
 #include "branch.h"
 #include "chardump.h"
+#include "cluautil.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "env.h"

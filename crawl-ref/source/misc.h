@@ -8,7 +8,6 @@
 
 #include "coord.h"
 #include "directn.h"
-#include "externs.h"
 
 #include <algorithm>
 #include <queue>

@@ -4,13 +4,13 @@
 **/
 
 #include "AppHdr.h"
-#include "bitary.h"
 
 #include "wiz-fsim.h"
 
 #include <errno.h>
 
 #include "beam.h"
+#include "bitary.h"
 #include "coordit.h"
 #include "dbg-util.h"
 #include "directn.h"
@@ -22,16 +22,16 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
-#include "mon-place.h"
 #include "mgen_data.h"
-#include "monster.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-place.h"
+#include "monster.h"
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
-#include "player.h"
 #include "player-equip.h"
+#include "player.h"
 #include "ranged_attack.h"
 #include "skills.h"
 #include "species.h"

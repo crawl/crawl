@@ -3,18 +3,16 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-skl.h"
-#include "process_desc.h"
 
 #include "cio.h"
 #include "libutil.h"
 #include "options.h"
 #include "output.h"
+#include "process_desc.h"
 #include "skills.h"
-
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
-
 #ifdef WIZARD
 #include "wiz-you.h"
 #endif

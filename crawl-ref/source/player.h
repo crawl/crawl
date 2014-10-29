@@ -7,17 +7,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "actor.h"
-#include "beam.h"
-#include "bitary.h"
-#include "quiver.h"
-#include "place-info.h"
-#include "religion-enum.h"
-#include "species.h"
-
 #include <list>
 #include <vector>
 
+#include "actor.h"
+#include "beam.h"
+#include "bitary.h"
+#include "place-info.h"
+#include "quiver.h"
+#include "religion-enum.h"
+#include "species.h"
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif

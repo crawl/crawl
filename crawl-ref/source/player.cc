@@ -7,21 +7,20 @@
 
 #include "player.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <math.h>
-
 #include <sstream>
 #include <algorithm>
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
-#include "branch.h"
 #include "bloodspatter.h"
+#include "branch.h"
 #ifdef DGL_WHEREIS
  #include "chardump.h"
 #endif
@@ -45,10 +44,10 @@
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
@@ -89,14 +88,14 @@
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
- #include "tileview.h"
  #include "tiledef-feat.h"
+ #include "tileview.h"
 #endif
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "xom.h"
 
 #if TAG_MAJOR_VERSION == 34

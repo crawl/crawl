@@ -21,33 +21,29 @@
 #include "AppHdr.h"
 
 #include "macro.h"
-#include "state.h"
 
-#include <string>
-#include <sstream>
-#include <map>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 #include <deque>
+#include <map>
+#include <sstream>
+#include <string>
 #include <vector>
 
-#include <cstdio>      // for snprintf
-#include <cctype>      // for tolower
-#include <cstdlib>
-
 #include "cio.h"
-#include "externs.h"
 #include "files.h"
+#include "initfile.h"
 #include "libutil.h"
+#include "message.h"
 #include "options.h"
 #include "output.h"
-#include "message.h"
+#include "state.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "unicode.h"
 #include "version.h"
-
-// for trim_string:
-#include "initfile.h"
 
 typedef deque<int> keybuf;
 typedef map<keyseq,keyseq> macromap;

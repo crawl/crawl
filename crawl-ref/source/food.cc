@@ -8,13 +8,9 @@
 #include "food.h"
 
 #include <sstream>
-
-#include <string.h>
-#include <stdio.h>
 #include <ctype.h>
-
-#include "externs.h"
-#include "options.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "artefact.h"
 #include "butcher.h"
@@ -29,22 +25,23 @@
 #include "godconduct.h"
 #include "hints.h"
 #include "invent.h"
-#include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
-#include "mgen_data.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "options.h"
 #include "output.h"
-#include "player.h"
 #include "player-equip.h"
+#include "player.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"

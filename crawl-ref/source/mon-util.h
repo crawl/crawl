@@ -6,7 +6,6 @@
 #ifndef MONUTIL_H
 #define MONUTIL_H
 
-#include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
 #include "player.h"

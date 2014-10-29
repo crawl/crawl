@@ -6,12 +6,13 @@
 #include "AppHdr.h"
 
 #include "spl-book.h"
+#include "book-data.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <algorithm>
 #include <iomanip>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "artefact.h"
 #include "cio.h"
@@ -23,7 +24,6 @@
 #include "effects.h"
 #include "end.h"
 #include "english.h"
-#include "externs.h"
 #include "food.h"
 #include "format.h"
 #include "godconduct.h"
@@ -31,8 +31,8 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemname.h"
-#include "itemprop.h"
 #include "itemprop-enum.h"
+#include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -61,9 +61,6 @@
 
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
-
-// The list of spells in spellbooks:
-#include "book-data.h"
 
 static int _rod_spells[NUM_RODS][2] =
 {

@@ -4,15 +4,13 @@
 **/
 
 #include "AppHdr.h"
-#include <math.h>
 
 #include "evoke.h"
 
 #include <algorithm>
 #include <cstdlib>
+#include <math.h>
 #include <string.h>
-
-#include "externs.h"
 
 #include "act-iter.h"
 #include "areas.h"
@@ -28,23 +26,23 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godconduct.h"
 #include "invent.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
+#include "mgen_data.h"
+#include "misc.h"
 #include "mon-chimera.h"
 #include "mon-pick.h"
 #include "mon-place.h"
-#include "mgen_data.h"
-#include "misc.h"
 #include "player.h"
 #include "player-stats.h"
-#include "godconduct.h"
 #include "shout.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -56,15 +54,14 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "traps.h"
 #include "unicode.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 #include "xom.h"
-
-#ifdef USE_TILE
-#include "tilepick.h"
-#endif
 
 void shadow_lantern_effect()
 {

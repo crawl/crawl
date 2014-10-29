@@ -5,6 +5,13 @@
 
 #include "AppHdr.h"
 
+#include "stash.h"
+
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
+#include <sstream>
+
 #include "artefact.h"
 #include "chardump.h"
 #include "cio.h"
@@ -15,11 +22,13 @@
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "env.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "invent.h"
+#include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
@@ -33,23 +42,15 @@
 #include "rot.h"
 #include "shopping.h"
 #include "spl-book.h"
-#include "stash.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
-#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "unicode.h"
 #include "viewmap.h"
-
-#include <cctype>
-#include <cstdio>
-#include <sstream>
-#include <algorithm>
 
 // Global
 StashTracker StashTrack;

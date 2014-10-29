@@ -7,24 +7,21 @@
 
 #include "spl-util.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <limits.h>
-
 #include <algorithm>
-
-#include "externs.h"
+#include <ctype.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "areas.h"
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
-#include "godabil.h"
 #include "english.h"
 #include "env.h"
+#include "godabil.h"
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
@@ -36,8 +33,8 @@
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
-#include "spl-cast.h"
 #include "spl-book.h"
+#include "spl-cast.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "spl-zap.h"

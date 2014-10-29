@@ -11,57 +11,57 @@
  */
 
 #include "AppHdr.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
+
+#include "hiscores.h"
+
 #include <algorithm>
 #include <memory>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
-#include "hiscores.h"
-
 #include "branch.h"
 #include "chardump.h"
-#include "files.h"
 #include "dungeon.h"
 #include "end.h"
 #include "english.h"
+#include "env.h"
+#include "files.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
-#include "message.h"
 #include "menu.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "jobs.h"
 #include "options.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "shopping.h"
+#include "skills.h"
 #include "species.h"
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
-#include "env.h"
 #include "tags.h"
-#include "unwind.h"
-#include "version.h"
-
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
 #endif
+#include "unwind.h"
+#include "version.h"
 
-#include "skills.h"
 #define SCORE_VERSION "0.1"
 
 // enough memory allocated to snarf in the scorefile entries

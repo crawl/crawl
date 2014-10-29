@@ -5,12 +5,14 @@
 
 #include "AppHdr.h"
 
-#include "end.h"
 #include "sqldbm.h"
-#include "syscalls.h"
+
+#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
-#include <cstring>
+
+#include "end.h"
+#include "syscalls.h"
 
 #ifdef USE_SQLITE_DBM
 

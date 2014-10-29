@@ -5,10 +5,10 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "mon-place.h"
 #include "mgen_data.h"
+
+#include <algorithm>
 
 #include "abyss.h"
 #include "areas.h"
@@ -20,11 +20,10 @@
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "env.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "externs.h"
-#include "options.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "godabil.h"
 #include "lev-pand.h"
 #include "libutil.h"
@@ -36,24 +35,24 @@
 #include "mon-pick.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
-#include "state.h"
-#include "env.h"
 #include "spl-summoning.h"
+#include "state.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tiledef-player.h"
+#endif
 #include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "unwind.h"
-#include "view.h"
 #include "viewchar.h"
-#ifdef USE_TILE
- #include "tiledef-player.h"
-#endif
+#include "view.h"
 
 band_type active_monster_band = BAND_NO_BAND;
 

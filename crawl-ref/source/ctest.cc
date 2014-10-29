@@ -17,6 +17,9 @@
 
 #include "ctest.h"
 
+#include <algorithm>
+#include <vector>
+
 #include "clua.h"
 #include "cluautil.h"
 #include "coordit.h"
@@ -33,9 +36,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "zotdef.h"
-
-#include <algorithm>
-#include <vector>
 
 static const string test_dir = "test";
 static const string script_dir = "scripts";

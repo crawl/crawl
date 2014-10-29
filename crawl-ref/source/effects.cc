@@ -7,16 +7,13 @@
 
 #include "effects.h"
 
-#include <cstdlib>
-#include <string.h>
-#include <stdio.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <queue>
 #include <set>
-#include <cmath>
-
-#include "externs.h"
-#include "options.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "abyss.h"
 #include "act-iter.h"
@@ -31,8 +28,8 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
-#include "dgn-shoals.h"
 #include "dgnevent.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
@@ -64,10 +61,11 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "player-equip.h"
-#include "player-stats.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "rot.h"

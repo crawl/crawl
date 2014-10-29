@@ -7,11 +7,11 @@ extern "C" {
 #include <lualib.h>
 }
 
-#include <cstdio>
 #include <cstdarg>
-#include <string>
+#include <cstdio>
 #include <map>
 #include <set>
+#include <string>
 
 #ifndef CLUA_MAX_MEMORY_USE
 #define CLUA_MAX_MEMORY_USE (6 * 1024)

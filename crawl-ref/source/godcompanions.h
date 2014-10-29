@@ -6,10 +6,11 @@
 #ifndef GOD_COMPANION_H
 #define GOD_COMPANION_H
 
+#include <list>
+#include <map>
+
 #include "monster.h"
 #include "mon-transit.h"
-#include <map>
-#include <list>
 
 struct companion
 {

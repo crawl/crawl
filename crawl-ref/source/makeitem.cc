@@ -5,12 +5,9 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
-#include "enum.h"
-#include "externs.h"
 #include "makeitem.h"
-#include "message.h"
+
+#include <algorithm>
 
 #include "artefact.h"
 #include "colour.h"
@@ -18,19 +15,21 @@
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "enum.h"
 #include "env.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stringutil.h"
 #include "stepdown.h"
+#include "stringutil.h"
 #include "travel.h"
 
 static armour_type _get_random_armour_type(int item_level);

@@ -2,6 +2,15 @@
 
 #ifdef USE_TILE_WEB
 
+#include "tileweb.h"
+
+#include <errno.h>
+#include <stdarg.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/un.h>
+
 #include "artefact.h"
 #include "branch.h"
 #include "coord.h"
@@ -10,6 +19,7 @@
 #include "env.h"
 #include "files.h"
 #include "itemname.h"
+#include "json.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
@@ -20,35 +30,24 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "skills.h"
 #include "state.h"
 #include "stringutil.h"
-
-#include "skills.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
+#include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
-#include "tiledef-icons.h"
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
-#include "tileweb.h"
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
-
-#include "json.h"
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <stdarg.h>
-#include <errno.h>
+#include "view.h"
 
 static unsigned int get_milliseconds()
 {

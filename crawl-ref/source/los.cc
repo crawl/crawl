@@ -44,22 +44,21 @@
 
 #include "los.h"
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 #include "areas.h"
 #include "bitary.h"
-#include "coord.h"
 #include "coord-circle.h"
+#include "coord.h"
 #include "coordit.h"
-#include "externs.h"
+#include "env.h"
 #include "geom2d.h"
 #include "losglobal.h"
 #include "losparam.h"
 #include "mon-poly.h"
 #include "player.h"
 #include "ray.h"
-#include "env.h"
 #include "terrain.h"
 
 // These determine what rays are cast in the precomputation,

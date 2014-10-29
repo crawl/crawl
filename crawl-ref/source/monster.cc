@@ -4,14 +4,17 @@
 **/
 
 #include "AppHdr.h"
-#include "bitary.h"
+
+#include <algorithm>
+#include <queue>
 
 #include "act-iter.h"
 #include "areas.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bitary.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -36,6 +39,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mgen_data.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -46,10 +50,9 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "mon-transit.h"
 #include "mon-tentacle.h"
+#include "mon-transit.h"
 #include "mon-util.h"
-#include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
@@ -57,8 +60,8 @@
 #include "shout.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
-#include "spl-util.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
@@ -70,9 +73,6 @@
 #include "traps.h"
 #include "view.h"
 #include "xom.h"
-
-#include <algorithm>
-#include <queue>
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)

@@ -6,15 +6,14 @@
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
-#include <vector>
-#include <list>
-#include <string>
-#include <map>
-#include <set>
-#include <memory>
 #include <cstdlib>
 #include <deque>
-
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
 #include <time.h>
 #include <stdint.h>
 #define __STDC_FORMAT_MACROS
@@ -26,7 +25,6 @@
 #include "mpr.h"
 #include "pattern.h"
 #include "store.h"
-
 #include "tiledef_defines.h"
 
 struct tile_flavour

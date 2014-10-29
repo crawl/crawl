@@ -5,12 +5,14 @@
 **/
 
 #include "AppHdr.h"
-#include "english.h"
-#include "stringutil.h"
 
-#include <string>
+#include "english.h"
+
 #include <cstddef>
 #include <cwctype>
+#include <string>
+
+#include "stringutil.h"
 
 const char * const standard_plural_qualifiers[] =
 {

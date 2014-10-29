@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "spl-clouds.h"
-#include "externs.h"
 
 #include <algorithm>
 
@@ -31,12 +30,12 @@
 #include "player.h"
 #include "prompt.h"
 #include "random-pick.h"
+#include "shout.h"
 #include "spl-util.h"
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
 #include "viewchar.h"
-#include "shout.h"
 
 spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 {

@@ -6,23 +6,23 @@
 #include "AppHdr.h"
 
 #include "kills.h"
-#include "l_libs.h"
 
 #include <algorithm>
 
+#include "clua.h"
 #include "describe.h"
 #include "english.h"
-#include "mon-info.h"
 #include "files.h"
 #include "ghost.h"
 #include "libutil.h"
-#include "monster.h"
+#include "l_libs.h"
 #include "mon-death.h"
-#include "place.h"
-#include "travel.h"
-#include "tags.h"
-#include "clua.h"
+#include "mon-info.h"
+#include "monster.h"
 #include "options.h"
+#include "place.h"
+#include "tags.h"
+#include "travel.h"
 #include "unwind.h"
 #include "viewchar.h"
 

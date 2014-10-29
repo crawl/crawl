@@ -1,8 +1,10 @@
 #include "AppHdr.h"
+
+#include "actor.h"
+
 #include <sstream>
 
 #include "act-iter.h"
-#include "actor.h"
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
@@ -18,8 +20,8 @@
 #include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
-#include "religion.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"

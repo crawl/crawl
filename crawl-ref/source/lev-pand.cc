@@ -5,15 +5,14 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "lev-pand.h"
 
-#include "externs.h"
+#include <algorithm>
+
 #include "colour.h"
 #include "env.h"
-#include "mon-place.h"
 #include "mgen_data.h"
+#include "mon-place.h"
 #include "random.h"
 
 static colour_t _pan_floor_colour()

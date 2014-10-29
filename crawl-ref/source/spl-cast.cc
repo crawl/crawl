@@ -5,13 +5,10 @@
 
 #include "AppHdr.h"
 
-#include <sstream>
-#include <iomanip>
-
 #include "spl-cast.h"
 
-#include "externs.h"
-#include "options.h"
+#include <iomanip>
+#include <sstream>
 
 #include "areas.h"
 #include "art-enum.h"
@@ -34,8 +31,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
-#include "misc.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
@@ -43,6 +40,7 @@
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"

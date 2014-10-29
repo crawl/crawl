@@ -6,15 +6,15 @@
 #ifndef TILEWEB_H
 #define TILEWEB_H
 
-#include "externs.h"
-#include "status.h"
-#include "tileweb-text.h"
-#include "tiledoll.h"
-#include "viewgeom.h"
-#include "map_knowledge.h"
-#include <map>
 #include <bitset>
+#include <map>
 #include <sys/un.h>
+
+#include "map_knowledge.h"
+#include "status.h"
+#include "tiledoll.h"
+#include "tileweb-text.h"
+#include "viewgeom.h"
 
 class Menu;
 

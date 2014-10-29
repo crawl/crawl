@@ -6,18 +6,18 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "l_defs.h"
 
-#include "cluautil.h"
 #include "cloud.h"
+#include "cluautil.h"
 #include "coord.h"
 #include "env.h"
+#include "l_defs.h"
 #include "mon-death.h"
 #include "player.h"
 #include "religion.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"
-#include "stringutil.h"
 #include "view.h"
 
 LUAFN(view_feature_at)

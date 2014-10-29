@@ -11,8 +11,8 @@
 
 #include "act-iter.h"
 #include "areas.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "coordit.h"
 #include "dgnevent.h"
 #include "english.h"
@@ -30,7 +30,7 @@
 #include "message.h"
 #include "misc.h"
 #include "monster.h"
-#include "mon-util.h" // for decline_pronoun
+#include "mon-util.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"

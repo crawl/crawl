@@ -20,29 +20,40 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#ifdef USE_TILE
+ #include "mon-util.h"
+#endif
 #include "options.h"
 #include "player.h"
 #include "state.h"
 #include "stringutil.h"
-#include "unicode.h"
-
+#ifdef USE_TILE
+ #include "terrain.h"
+#endif
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
- #include "tilefont.h"
- #include "tilereg-crt.h"
- #include "tilereg-menu.h"
 #endif
 #ifdef USE_TILE
- #include "mon-util.h"
- #include "terrain.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilefont.h"
+#endif
+#ifdef USE_TILE
  #include "tilepick.h"
  #include "tilepick-p.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilereg-crt.h"
+ #include "tilereg-menu.h"
+#endif
+#ifdef USE_TILE
  #include "travel.h"
 #endif
+#include "unicode.h"
 
 #ifdef USE_TILE_LOCAL
 Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)

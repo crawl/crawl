@@ -1,19 +1,22 @@
 #include "AppHdr.h"
 
 #include "player-equip.h"
+
+#include <cmath>
+
 #include "act-iter.h"
-#include "art-enum.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "delay.h"
 #include "food.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "hints.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -31,8 +34,6 @@
 #include "state.h"
 #include "transform.h"
 #include "xom.h"
-
-#include <cmath>
 
 static void _mark_unseen_monsters();
 

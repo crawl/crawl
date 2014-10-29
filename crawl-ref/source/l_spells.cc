@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "clua.h"
+#include "cluautil.h"
 #include "env.h"
 #include "food.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
-#include "spl-damage.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 
 LUAFN(l_spells_memorised)

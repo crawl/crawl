@@ -5,9 +5,10 @@
 
 #include "AppHdr.h"
 
+#include "dlua.h"
+
 #include <sstream>
 
-#include "dlua.h"
 #include "l_libs.h"
 #include "stringutil.h"
 #include "tags.h"

@@ -4,22 +4,24 @@
  **/
 
 #include "AppHdr.h"
+
 #include "prompt.h"
 
 #include "cio.h"
 #include "delay.h"
 #include "libutil.h"
 #include "macro.h"
+#ifdef TOUCH_UI
+#include "menu.h"
+#endif
 #include "message.h"
 #include "options.h"
 #include "state.h"
 #include "stringutil.h"
-#include "viewchar.h"
-
 #ifdef TOUCH_UI
-#include "menu.h"
 #include "tiledef-gui.h"
 #endif
+#include "viewchar.h"
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.

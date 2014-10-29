@@ -5,25 +5,25 @@
 
 #include "AppHdr.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#include "database.h"
+
 #include <cstdlib>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
-#include "end.h"
 #include "clua.h"
-#include "database.h"
+#include "end.h"
 #include "errors.h"
 #include "files.h"
 #include "libutil.h"
 #include "options.h"
 #include "random.h"
-#include "syscalls.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "threads.h"
 #include "unicode.h"
 

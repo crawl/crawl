@@ -9,6 +9,7 @@
 #include "viewchar.h"
 
 #include "feature-data.h"
+
 static FixedVector<feature_def, NUM_SHOW_ITEMS> item_defs;
 static int feat_index[NUM_FEATURES];
 static feature_def invis_fd, cloud_fd;

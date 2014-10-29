@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Region system implementations
-**/
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE
@@ -14,12 +9,12 @@
 #include "files.h"
 #include "mon-info.h"
 #include "options.h"
-#include "tilemcache.h"
 #include "syscalls.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
 #include "tiledef-player.h"
+#include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "transform.h"

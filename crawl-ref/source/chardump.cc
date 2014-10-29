@@ -6,25 +6,22 @@
 #include "AppHdr.h"
 
 #include "chardump.h"
-#include "clua.h"
 
 #include <string>
-#include <stdio.h>
-#include <string.h>
+#include <ctype.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
-#include <ctype.h>
-
-#include "externs.h"
-#include "options.h"
 
 #include "ability.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
+#include "clua.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
@@ -35,15 +32,16 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemprop.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
-#include "message.h"
 #include "menu.h"
+#include "message.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "place.h"
 #include "player.h"
@@ -62,8 +60,8 @@
 #include "travel.h"
 #include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 #include "xom.h"
 
 struct dump_params;

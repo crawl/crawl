@@ -1,8 +1,7 @@
 #include "AppHdr.h"
-#include <math.h>
-#include <cfloat>
 
-#include "spl-damage.h"
+#include <cfloat>
+#include <math.h>
 
 #include "areas.h"
 #include "cloud.h"
@@ -20,6 +19,7 @@
 #include "prompt.h"
 #include "shout.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "terrain.h"
 #include "transform.h"
 

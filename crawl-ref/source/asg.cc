@@ -7,6 +7,7 @@
  */
 
 #include "AppHdr.h"
+
 #include "asg.h"
 
 static AsgKISS asg_rng[2];

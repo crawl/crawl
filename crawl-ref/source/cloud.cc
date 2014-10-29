@@ -7,12 +7,11 @@
 
 #include "AppHdr.h"
 
+#include "cloud.h"
+
 #include <algorithm>
 
-#include "externs.h"
-
 #include "areas.h"
-#include "cloud.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -34,8 +33,8 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "state.h"
 #include "spl-util.h"
+#include "state.h"
 #include "terrain.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"

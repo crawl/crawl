@@ -6,18 +6,15 @@
 #include "AppHdr.h"
 
 #include "directn.h"
-#include "format.h"
 
+#include <algorithm>
 #include <cstdarg>
 #include <sstream>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <algorithm>
 
-#include "externs.h"
-#include "options.h"
-
+#include "areas.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
@@ -29,16 +26,19 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "english.h"
+#include "env.h"
 #include "food.h"
+#include "format.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
+#include "los.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -46,31 +46,29 @@
 #include "mon-death.h"
 #include "mon-info.h"
 #include "mon-tentacle.h"
+#include "options.h"
 #include "output.h"
 #include "prompt.h"
 #include "shopping.h"
 #include "show.h"
 #include "showsymb.h"
-#include "state.h"
-#include "env.h"
-#include "areas.h"
+#include "spl-goditem.h"
 #include "stash.h"
+#include "state.h"
 #include "stringutil.h"
 #include "target.h"
+#include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
-#include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "view.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
 #include "wiz-mon.h"
-#include "spl-goditem.h"
 
 enum LOSSelect
 {

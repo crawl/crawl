@@ -1,14 +1,16 @@
 #include "AppHdr.h"
+
+#include "dgn-delve.h"
+
 #include <deque>
 
-#include "env.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "env.h"
 #include "mapdef.h"
 #include "random.h"
-#include "dgn-delve.h"
 
 /* Original algorithm by Kusigrosz.
  * Kusigrosz' description:

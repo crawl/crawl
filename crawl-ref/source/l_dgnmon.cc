@@ -5,10 +5,11 @@
 
 #include "AppHdr.h"
 
+#include "l_libs.h"
+
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
-#include "l_libs.h"
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"

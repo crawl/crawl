@@ -3,13 +3,13 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-popup.h"
-#include "tilereg-menu.h"
 
-#include "menu.h"
+#include "cio.h"
 #include "macro.h"
+#include "menu.h"
 #include "tilebuf.h"
 #include "tilefont.h"
-#include "cio.h"
+#include "tilereg-menu.h"
 
 PopupRegion::PopupRegion(ImageManager *im, FontWrapper *entry) :
     MenuRegion(im, entry),

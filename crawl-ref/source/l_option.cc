@@ -1,8 +1,8 @@
 #include "AppHdr.h"
 
-#include "clua.h"
 #include "l_libs.h"
 
+#include "clua.h"
 #include "options.h"
 
 ////////////////////////////////////////////////////////////////

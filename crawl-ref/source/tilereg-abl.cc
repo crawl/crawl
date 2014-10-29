@@ -3,7 +3,6 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-abl.h"
-#include "process_desc.h"
 
 #include "ability.h"
 #include "cio.h"
@@ -11,7 +10,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-
+#include "process_desc.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"

@@ -13,17 +13,16 @@
 #ifndef __MAPDEF_H__
 #define __MAPDEF_H__
 
-#include <string>
-#include <vector>
 #include <cstdio>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "dlua.h"
 #include "enum.h"
-#include "externs.h"
-#include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
+#include "matrix.h"
 #include "mon-ench.h"
 #include "tags.h"
 #include "travel_defs.h"

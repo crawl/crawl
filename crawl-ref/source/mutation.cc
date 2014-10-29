@@ -4,27 +4,26 @@
 **/
 
 #include "AppHdr.h"
-#include "mutation.h"
 
+#include "mutation.h"
+#include "mutation-data.h"
+
+#include <sstream>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <sstream>
-
-#include "externs.h"
-
 #include "ability.h"
 #include "act-iter.h"
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "butcher.h"
 #include "cio.h"
 #include "coordit.h"
-#include "delay.h"
-#include "defines.h"
 #include "dactions.h"
+#include "defines.h"
+#include "delay.h"
 #include "effects.h"
 #include "env.h"
 #include "godabil.h"
@@ -44,8 +43,8 @@
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
-#include "religion.h"
 #include "random.h"
+#include "religion.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
@@ -53,8 +52,6 @@
 #include "unicode.h"
 #include "viewchar.h"
 #include "xom.h"
-
-#include "mutation-data.h"
 
 static const body_facet_def _body_facets[] =
 {

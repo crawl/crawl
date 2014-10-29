@@ -5,6 +5,7 @@
  */
 
 #include "AppHdr.h"
+
 #include "godmenu.h"
 
 #include "colour.h"

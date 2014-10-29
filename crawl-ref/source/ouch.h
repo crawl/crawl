@@ -8,8 +8,8 @@
 
 #define DEATH_NAME_LENGTH 10
 
-#include "enum.h"
 #include "beam.h"
+#include "enum.h"
 
 /**
  * Key for <tt>you.props</tt> indicating that the player already received a

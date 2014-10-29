@@ -1,10 +1,10 @@
 #include "AppHdr.h"
 
 #ifdef USE_TILE_LOCAL
-#include <algorithm>
 
 #include "tilereg-mon.h"
-#include "process_desc.h"
+
+#include <algorithm>
 
 #include "cio.h"
 #include "directn.h"
@@ -12,12 +12,12 @@
 #include "libutil.h"
 #include "monster.h"
 #include "output.h"
-
+#include "process_desc.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-player.h"
-#include "tilereg-dgn.h"
 #include "tilepick.h"
+#include "tilereg-dgn.h"
 #include "tileview.h"
 #include "viewgeom.h"
 

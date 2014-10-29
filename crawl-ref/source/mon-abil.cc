@@ -4,27 +4,37 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-abil.h"
 
-#include "externs.h"
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <queue>
+#include <set>
 
-#include "actor.h"
 #include "act-iter.h"
+#include "actor.h"
+#include "areas.h"
 #include "arena.h"
 #include "beam.h"
 #include "bloodspatter.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
 #include "english.h"
-#include "exclude.h" //XXX
+#include "env.h"
+#include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
 #include "itemprop.h"
-#include "losglobal.h"
+#include "items.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -36,34 +46,23 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-project.h"
-#include "mon-util.h"
-#include "terrain.h"
-#include "mgen_data.h"
-#include "cloud.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
+#include "ouch.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-damage.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "env.h"
-#include "areas.h"
-#include "view.h"
-#include "shout.h"
-#include "viewchar.h"
-#include "ouch.h"
 #include "target.h"
-#include "items.h"
 #include "teleport.h"
-
-#include <algorithm>
-#include <queue>
-#include <map>
-#include <set>
-#include <cmath>
+#include "terrain.h"
+#include "viewchar.h"
+#include "view.h"
 
 static bool _slime_split_merge(monster* thing);
 

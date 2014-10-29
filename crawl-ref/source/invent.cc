@@ -7,14 +7,11 @@
 
 #include "invent.h"
 
+#include <iomanip>
+#include <sstream>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <sstream>
-#include <iomanip>
-
-#include "externs.h"
-#include "options.h"
 
 #include "artefact.h"
 #include "clua.h"
@@ -25,12 +22,14 @@
 #include "env.h"
 #include "food.h"
 #include "initfile.h"
-#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-util.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -38,11 +37,9 @@
 #include "shopping.h"
 #include "showsymb.h"
 #include "spl-summoning.h"
-#include "stringutil.h"
-#include "mon-util.h"
 #include "state.h"
+#include "stringutil.h"
 #include "throw.h"
-
 #ifdef USE_TILE
  #include "tiledef-icons.h"
  #include "tiledef-main.h"

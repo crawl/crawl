@@ -6,22 +6,22 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "l_defs.h"
+
+#include <algorithm>
 
 #include "cluautil.h"
 #include "coord.h"
 #include "defines.h"
 #include "env.h"
+#include "l_defs.h"
 #include "libutil.h"
-#include "mon-info.h"
 #include "mon-book.h"
+#include "mon-info.h"
 #include "mon-util.h"
 #include "player.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "transform.h"
-
-#include <algorithm>
 
 #define MONINF_METATABLE "monster.info"
 

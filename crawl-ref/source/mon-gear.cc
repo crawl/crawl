@@ -5,15 +5,14 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
-#include "enum.h"
-#include "externs.h"
 #include "mon-gear.h"
 
-#include "art-enum.h"
+#include <algorithm>
+
 #include "artefact.h"
+#include "art-enum.h"
 #include "dungeon.h"
+#include "enum.h"
 #include "env.h"
 #include "itemprop.h"
 #include "items.h"

@@ -7,12 +7,10 @@
 
 #include "dgn-overview.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <algorithm>
-
-#include "externs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "branch.h"
 #include "colour.h"

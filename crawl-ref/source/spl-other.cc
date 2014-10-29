@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "spl-other.h"
-#include "externs.h"
 
 #include "act-iter.h"
 #include "coord.h"
@@ -32,7 +31,6 @@
 #include "religion.h"
 #include "rot.h"
 #include "spl-util.h"
-
 #include "terrain.h"
 #include "transform.h"
 

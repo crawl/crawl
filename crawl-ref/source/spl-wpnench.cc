@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "spl-wpnench.h"
-#include "externs.h"
 
 #include "areas.h"
 #include "artefact.h"

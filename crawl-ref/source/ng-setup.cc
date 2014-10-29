@@ -29,7 +29,6 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-
 #include "tutorial.h"
 
 #define MIN_START_STAT       3

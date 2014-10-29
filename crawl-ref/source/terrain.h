@@ -6,8 +6,9 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include "enum.h"
 #include <memory>
+
+#include "enum.h"
 
 class  actor;
 struct coord_def;

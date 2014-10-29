@@ -6,12 +6,13 @@
 #ifndef INVENT_H
 #define INVENT_H
 
-#include <stddef.h>
 #include <vector>
-#include "menu.h"
+#include <stddef.h>
+
 #include "enum.h"
 #include "itemname.h"
 #include "itemprop-enum.h"
+#include "menu.h"
 
 enum object_selector
 {

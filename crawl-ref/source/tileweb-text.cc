@@ -3,8 +3,9 @@
 
 #ifdef USE_TILE_WEB
 
-#include "stringutil.h"
 #include "tileweb-text.h"
+
+#include "stringutil.h"
 #include "tileweb.h"
 #include "unicode.h"
 

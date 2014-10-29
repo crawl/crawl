@@ -1,15 +1,12 @@
 #include "AppHdr.h"
 
-#include <math.h>
-#include "asg.h"
 #include "random.h"
-#include "syscalls.h"
 
+#include <math.h>
 #ifdef UNIX
 // for times()
 #include <sys/times.h>
 #endif
-
 // for getpid()
 #include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
@@ -17,6 +14,9 @@
 #else
 # include <process.h>
 #endif
+
+#include "asg.h"
+#include "syscalls.h"
 
 void seed_rng(uint32_t seed)
 {

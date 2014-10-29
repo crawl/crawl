@@ -7,43 +7,40 @@
 
 #include "misc.h"
 
-#include <string.h>
 #include <algorithm>
-
+#include <cfloat>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <string.h>
 #if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
 
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-#include <cfloat>
-
-#include "externs.h"
-#include "misc.h"
-
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
-#include "art-enum.h"
 #include "artefact.h"
-#include "clua.h"
+#include "art-enum.h"
 #include "cloud.h"
+#include "clua.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
-#include "dgn-shoals.h"
 #include "dgnevent.h"
+#include "dgn-shoals.h"
 #include "english.h"
 #include "env.h"
 #include "feature.h"
 #include "fight.h"
 #include "files.h"
-#include "fprop.h"
 #include "food.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -55,10 +52,10 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-death.h"
-#include "mon-place.h"
-#include "mon-pathfind.h"
-#include "mon-tentacle.h"
 #include "mon-info.h"
+#include "mon-pathfind.h"
+#include "mon-place.h"
+#include "mon-tentacle.h"
 #include "ng-setup.h"
 #include "notes.h"
 #include "ouch.h"
@@ -68,8 +65,8 @@
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
 #include "state.h"
@@ -80,9 +77,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 // Update the trackers after the player changed level.

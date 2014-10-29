@@ -25,8 +25,8 @@
 #include "state.h"
 #include "store.h"
 #include "stringutil.h"
-#include "version.h"
 #include "unicode.h"
+#include "version.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

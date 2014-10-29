@@ -12,40 +12,34 @@
 #include "AppHdr.h"
 
 #include "initfile.h"
-#include "options.h"
 
 #include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
-#include "dlua.h"
+#include "defines.h"
 #include "delay.h"
 #include "directn.h"
+#include "dlua.h"
 #include "end.h"
 #include "errors.h"
-#include "kills.h"
 #include "files.h"
-#include "defines.h"
-#ifdef USE_TILE
-#include "tilepick.h"
-#include "tiledef-player.h"
-#ifdef USE_TILE_WEB
-#include "tileweb.h"
-#endif
-#endif
 #include "invent.h"
 #include "itemprop.h"
+#include "items.h"
+#include "jobs.h"
+#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
-#include "jobs.h"
+#include "options.h"
 #include "player.h"
 #include "prompt.h"
 #include "species.h"
@@ -57,11 +51,17 @@
 #include "tags.h"
 #include "throw.h"
 #include "travel.h"
-#include "items.h"
 #include "unwind.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#include "tiledef-player.h"
+#ifdef USE_TILE_WEB
+#include "tileweb.h"
+#endif
+#endif
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS

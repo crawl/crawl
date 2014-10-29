@@ -17,7 +17,7 @@
 #include "english.h"
 #include "godabil.h"
 #include "godpassive.h"
-#include "godprayer.h" // can_do_capstone_ability()
+#include "godprayer.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"

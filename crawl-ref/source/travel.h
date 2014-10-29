@@ -5,15 +5,13 @@
 #ifndef TRAVEL_H
 #define TRAVEL_H
 
-#include "exclude.h"
-
-// For travel_distance_col and travel_distance_grid_t
-#include "travel_defs.h"
-
-#include <stdio.h>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+#include <stdio.h>
+
+#include "exclude.h"
+#include "travel_defs.h"
 
 class reader;
 class writer;

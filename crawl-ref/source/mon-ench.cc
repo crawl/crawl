@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "monster.h"
+
 #include <sstream>
 
 #include "act-iter.h"
@@ -30,8 +32,8 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-poly.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "religion.h"
 #include "rot.h"

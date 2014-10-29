@@ -1,10 +1,10 @@
 #include "AppHdr.h"
 
 #include "cluautil.h"
-#include "clua.h"
-#include "l_libs.h"
 
+#include "clua.h"
 #include "delay.h"
+#include "l_libs.h"
 
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {

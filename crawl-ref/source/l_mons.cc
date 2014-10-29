@@ -1,9 +1,9 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "areas.h"
+#include "cluautil.h"
 #include "database.h"
 #include "delay.h"
 #include "dlua.h"
@@ -11,9 +11,9 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-util.h"
 #include "mon-speak.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "stringutil.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \

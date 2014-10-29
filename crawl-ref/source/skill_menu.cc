@@ -21,7 +21,6 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
-
 #ifdef USE_TILE
  #include "tilepick.h"
  #include "tilereg-crt.h"

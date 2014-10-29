@@ -6,8 +6,9 @@
 #ifndef OVERMAP_H
 #define OVERMAP_H
 
-#include "stash.h"
 #include <vector>
+
+#include "stash.h"
 
 void overview_clear();
 

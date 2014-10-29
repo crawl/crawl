@@ -6,8 +6,6 @@
 #ifndef RANDART_H
 #define RANDART_H
 
-#include "externs.h"
-
 struct bolt;
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
