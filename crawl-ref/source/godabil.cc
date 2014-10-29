@@ -5209,7 +5209,7 @@ static int _get_sacrifice_piety(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     int piety_gain = sac_def.base_piety;
     ability_type sacrifice = sac_def.sacrifice;
-    mutation_type mut;
+    mutation_type mut = MUT_NON_MUTATION;
     int num_sacrifices = 0;
 
     // Initialize data
