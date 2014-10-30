@@ -1954,14 +1954,10 @@ bool make_book_theme_randart(item_def &book,
     ASSERT(count_bits(disc1) == 1);
     ASSERT(count_bits(disc2) == 1);
 
-    int disc1_pos = 0, disc2_pos = 0;
+    int disc2_pos = 0;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-    {
-        if (disc1 & (1 << i))
-            disc1_pos = i;
         if (disc2 & (1 << i))
             disc2_pos = i;
-    }
 
     book.plus       = num_spells | (max_levels << 8); // NOTE: What's this do?
 

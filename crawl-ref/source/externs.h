@@ -528,7 +528,7 @@ struct item_def
     union {
         short plus;                 ///< + to hit/dam (weapons, rods)
         monster_type mon_type:16;   ///< corpse/chunk monster type
-        skill_type skill;           ///< the skill provided by a manual
+        skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
                                     // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
@@ -537,7 +537,6 @@ struct item_def
         short rune_enum;            ///< rune_type; enum for runes of zot
         short net_durability;       ///< damage dealt to a net
     };
-#pragma pack(pop)
     union {
         short plus2;        ///< legacy/generic name for this union
         short evoker_debt;  ///< xp~ required for evoker to finish recharging
@@ -550,6 +549,7 @@ struct item_def
         short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
     };
+#pragma pack(pop)
     union
     {
         int special;        ///< special stuff

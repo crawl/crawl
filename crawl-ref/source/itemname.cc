@@ -1553,24 +1553,24 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_brand && !terse)
         {
-            int brand = get_weapon_brand(*this);
-            if (brand == SPWPN_VAMPIRISM)
+            const int wpn_brand = get_weapon_brand(*this);
+            if (wpn_brand == SPWPN_VAMPIRISM)
                 buff << "vampiric ";
-            else if (brand == SPWPN_ANTIMAGIC)
+            else if (wpn_brand == SPWPN_ANTIMAGIC)
                 buff << "antimagic ";
         }
         buff << item_base_name(*this);
 
         if (know_brand)
         {
-            string brand = weapon_brand_name(*this, terse);
-            if (!brand.empty())
+            const string brand_name = weapon_brand_name(*this, terse);
+            if (!brand_name.empty())
             {
                 if (!terse)
                     buff << " of ";
                 else
                     buff << " (";
-                buff << brand;
+                buff << brand_name;
                 if (terse)
                     buff << ")";
             }
