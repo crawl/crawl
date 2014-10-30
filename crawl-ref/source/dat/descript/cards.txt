@@ -41,10 +41,6 @@ the Elixir card
 
 This card rapidly restores your health or magic, or both at high power levels.
 %%%%
-Metamorphosis card
-
-This card temporarily transforms you.
-%%%%
 the Helm card
 
 This card increases your defences. It may provide boosts to armour, evasion,
