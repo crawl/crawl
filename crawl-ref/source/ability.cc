@@ -171,7 +171,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_TROG_BERSERK, ABIL_TROG_REGEN_MR, ABIL_NON_ABILITY,
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
-    { ABIL_NON_ABILITY, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITIY, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_DEAL_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
@@ -369,7 +369,6 @@ static const ability_def Ability_List[] =
       9, 0, 500, generic_cost::fixed(35), 0, ABFLAG_PAIN},
 
     // Nemelex
-    { ABIL_NEMELEX_PEEK_TWO, "Peek at Two", 3, 0, 0, 1, 0, ABFLAG_INSTANT},
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four", 8, 0, 200, 8, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_STACK_FIVE, "Stack Five", 5, 0, 250, 10, 0, ABFLAG_NONE},
@@ -1299,11 +1298,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_NEMELEX_TRIPLE_DRAW:
         invoc = true;
         failure = 60 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
-        break;
-
-    case ABIL_NEMELEX_PEEK_TWO:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_RENOUNCE_RELIGION:
@@ -2896,12 +2890,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         activate_notes(note_status);
         break;
     }
-
-    case ABIL_NEMELEX_PEEK_TWO:
-        fail_check();
-        if (!deck_peek())
-            return SPRET_ABORT;
-        break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         fail_check();
