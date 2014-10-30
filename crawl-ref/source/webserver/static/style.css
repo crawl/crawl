@@ -384,7 +384,7 @@ ol.select li:hover {
     color: green;
 }
 
-.spectator_list .greatplayers, .player_list .goodplayers {
+.spectator_list .greatplayers, .player_list .greatplayers {
     color: #0066CC
 }
 
