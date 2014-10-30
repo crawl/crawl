@@ -446,17 +446,12 @@ Transfer yourself to Lugonu's realm instantly. The effort of even using the
 ability will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
-Draw One ability
-
-Choose any deck in your inventory and draw a card from it.
-%%%%
 Peek at Two ability
 
 Discard one card from any deck in your inventory to draw two cards from the
 deck, look at them, and place them back on top of the deck. The deck will be
 identified and inscribed as containing those two cards. Note that once
-peeked at, a deck cannot be used with any of Nemelex's other abilities
-(except Draw One).
+peeked at, a deck cannot be used with any of Nemelex's other abilities.
 %%%%
 Triple Draw ability
 

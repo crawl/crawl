@@ -336,10 +336,6 @@ Te transportas al reino de Lugonu instantáneamente... a costa de reducir
 permanentemente tus máximos de vida y magia. El esfuerzo asociado a esta
 habilidad te vaciará de vida y magia.
 %%%%
-Draw One ability
-
-Elige cualquier mazo de tu inventario y saca una carta de él.
-%%%%
 Triple Draw ability
 
 Sacas tres cartas de un mazo en tu inventario, las miras, y decides cual
