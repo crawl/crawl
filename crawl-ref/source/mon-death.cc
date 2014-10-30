@@ -2684,7 +2684,7 @@ int monster_die(monster* mons, killer_type killer,
                                  YOU_KILL(killer) || pet_kill);
     }
 
-    if (!wizard && !mons_reset && !submerged && !was_banished)
+    if (!wizard && !submerged && !was_banished)
     {
         _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned
                                  && !timeout, silent, summoned);
