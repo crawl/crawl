@@ -5,7 +5,6 @@
 #include "coordit.h"
 #include "dgn-height.h"
 #include "dungeon.h"
-#include "random.h"
 
 static void _swamp_slushy_patches(int depth_multiplier)
 {

@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "libutil.h"
 #include "syscalls.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!

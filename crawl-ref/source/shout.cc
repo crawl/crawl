@@ -14,10 +14,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
-#include "cluautil.h"
-#include "coord.h"
 #include "database.h"
-#include "dlua.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
@@ -25,21 +22,12 @@
 #include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
-#include "los.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
-#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "monster.h"
-#include "mon-util.h"
-#include "noise.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
-#include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -946,8 +934,6 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
 #ifdef DEBUG_NOISE_PROPAGATION
 
-#include "options.h"
-#include "viewchar.h"
 #include <math.h>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)

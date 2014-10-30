@@ -4,10 +4,7 @@
 
 #include "coord.h"
 #include "losglobal.h"
-#include "monster.h"
-#include "player.h"
 #include "state.h"
-#include "viewgeom.h"
 
 bool actor::observable() const
 {

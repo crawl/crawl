@@ -12,7 +12,6 @@
 #include "decks.h"
 #include "godabil.h"
 #include "libutil.h"
-#include "player.h"
 #include "state.h"
 #include "unwind.h"
 

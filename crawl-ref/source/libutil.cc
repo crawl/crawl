@@ -14,14 +14,10 @@
 #include <string.h>
 
 #include "colour.h"
-#include "defines.h"
 #include "files.h"
-#include "itemname.h"
 #include "message.h"
 #include "state.h"
 #include "stringutil.h"
-#include "unicode.h"
-#include "version.h"
 #include "viewgeom.h"
 
 #ifdef TARGET_OS_WINDOWS

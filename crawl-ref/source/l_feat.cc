@@ -7,11 +7,9 @@
 
 #include "l_libs.h"
 
-#include "clua.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "env.h"
-#include "libutil.h"
 #include "stringutil.h"
 #include "terrain.h"
 

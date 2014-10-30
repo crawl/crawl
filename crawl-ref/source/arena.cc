@@ -8,12 +8,10 @@
 #include "arena.h"
 
 #include "act-iter.h"
-#include "cio.h"
 #include "colour.h"
 #include "command.h"
 #include "dungeon.h"
 #include "end.h"
-#include "env.h"
 #include "food.h"
 #include "itemname.h"
 #include "items.h"
@@ -23,16 +21,11 @@
 #include "maps.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-pick.h"
-#include "mon-place.h"
 #include "mon-tentacle.h"
-#include "mon-util.h"
 #include "ng-init.h"
-#include "options.h"
 #include "spl-miscast.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
@@ -42,7 +35,6 @@
 #endif
 #include "unicode.h"
 #include "version.h"
-#include "viewgeom.h"
 #include "view.h"
 
 #define ARENA_VERBOSE

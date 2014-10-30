@@ -5,7 +5,6 @@
 #include "areas.h"
 #include "cluautil.h"
 #include "database.h"
-#include "delay.h"
 #include "dlua.h"
 #include "libutil.h"
 #include "mon-act.h"

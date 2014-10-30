@@ -13,8 +13,6 @@
 #include "dlua.h"
 #include "monster.h"
 #include "stringutil.h"
-#include "tags.h"
-#include "travel.h"
 
 // These tend to be called from tight loops, and C++ method calls don't
 // get optimized away except for LTO -fwhole-program builds, so merely

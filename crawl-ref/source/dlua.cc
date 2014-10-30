@@ -11,7 +11,6 @@
 
 #include "l_libs.h"
 #include "stringutil.h"
-#include "tags.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
                                       size_t sz, void *ud)

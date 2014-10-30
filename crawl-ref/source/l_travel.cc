@@ -10,9 +10,6 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
-#include "exclude.h"
-#include "l_defs.h"
-#include "player.h"
 #include "terrain.h"
 #include "travel.h"
 

@@ -16,7 +16,6 @@
 #include "mon-behv.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "random.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"

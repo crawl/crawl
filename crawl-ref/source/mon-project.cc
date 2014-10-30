@@ -20,7 +20,6 @@
 #include "mgen_data.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "ouch.h"
 #include "shout.h"
 #include "stepdown.h"

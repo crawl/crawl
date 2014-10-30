@@ -7,7 +7,6 @@
 
 #include "coordit.h"
 
-#include "coord-circle.h"
 #include "coord.h"
 #include "libutil.h"
 #include "losglobal.h"

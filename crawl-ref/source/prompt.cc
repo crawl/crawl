@@ -7,7 +7,6 @@
 
 #include "prompt.h"
 
-#include "cio.h"
 #include "delay.h"
 #include "libutil.h"
 #include "macro.h"

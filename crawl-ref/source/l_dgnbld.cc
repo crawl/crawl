@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "cluautil.h"
-#include "coord.h"
 #include "coordit.h"
 #include "dgn-delve.h"
 #include "dgn-irregular-box.h"
@@ -19,9 +18,6 @@
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dungeon.h"
-#include "mapdef.h"
-#include "random.h"
-#include "stringutil.h"
 
 static const char *exit_glyphs = "{}()[]<>@";
 

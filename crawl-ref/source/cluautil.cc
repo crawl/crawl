@@ -2,7 +2,6 @@
 
 #include "cluautil.h"
 
-#include "clua.h"
 #include "delay.h"
 #include "l_libs.h"
 

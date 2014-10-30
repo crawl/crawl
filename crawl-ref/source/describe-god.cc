@@ -21,7 +21,6 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
-#include "player.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-util.h"

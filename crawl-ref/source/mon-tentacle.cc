@@ -10,8 +10,6 @@
 #include "act-iter.h"
 #include "coordit.h"
 #include "delay.h"
-#include "directn.h"
-#include "enum.h"
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
@@ -19,8 +17,6 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "monster.h"
-#include "player.h"
 #include "terrain.h"
 #include "view.h"
 

@@ -8,10 +8,8 @@
 
 #include "spl-monench.h"
 
-#include "areas.h"
 #include "env.h"
 #include "message.h"
-#include "random.h"
 #include "spl-util.h"
 #include "terrain.h"
 

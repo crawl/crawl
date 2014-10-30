@@ -3,15 +3,10 @@
 #include "map_knowledge.h"
 
 #include "coordit.h"
-#include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
-#include "feature.h"
-#include "mon-util.h"
 #include "notes.h"
-#include "options.h"
 #include "religion.h"
-#include "show.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"

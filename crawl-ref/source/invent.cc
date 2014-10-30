@@ -14,7 +14,6 @@
 #include <string.h>
 
 #include "artefact.h"
-#include "clua.h"
 #include "colour.h"
 #include "command.h"
 #include "decks.h"
@@ -28,13 +27,10 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "mon-util.h"
 #include "options.h"
 #include "output.h"
-#include "player.h"
 #include "prompt.h"
 #include "religion.h"
-#include "shopping.h"
 #include "showsymb.h"
 #include "spl-summoning.h"
 #include "state.h"

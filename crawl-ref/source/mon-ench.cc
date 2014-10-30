@@ -10,7 +10,6 @@
 #include <sstream>
 
 #include "act-iter.h"
-#include "actor.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -22,11 +21,8 @@
 #include "env.h"
 #include "fight.h"
 #include "hints.h"
-#include "itemprop.h"
-#include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
-#include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"

@@ -4,7 +4,6 @@
 
 #include "end.h"
 #include "options.h"
-#include "player.h"
 #include "state.h"
 
 

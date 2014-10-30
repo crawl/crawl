@@ -10,10 +10,8 @@
 #include <sstream>
 
 #include "areas.h"
-#include "cio.h"
 #include "colour.h"
 #include "delay.h"
-#include "format.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -23,20 +21,13 @@
 #include "menu.h"
 #include "mon-message.h"
 #include "notes.h"
-#include "options.h"
-#include "player.h"
 #include "religion.h"
-#include "shout.h"
-#include "stash.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tags.h"
 #ifdef USE_TILE_WEB
  #include "tileweb.h"
 #endif
-#include "travel.h"
 #include "unwind.h"
-#include "viewgeom.h"
 #include "view.h"
 
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,

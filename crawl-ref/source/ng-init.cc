@@ -17,16 +17,11 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
-#include "player.h"
-#include "random.h"
 #include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
-#include "store.h"
 #include "stringutil.h"
-#include "unicode.h"
-#include "version.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

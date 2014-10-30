@@ -11,11 +11,8 @@
 #include "coord.h"
 #include "coordit.h"
 #include "files.h"
-#include "hash.h"
-#include "mpr.h"
 #include "perlin.h"
 #include "terrain.h"
-#include "worley.h"
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {

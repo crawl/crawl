@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include "areas.h"
-#include "message.h"
 #include "orb.h"
+
+#include "areas.h"
 #include "shout.h"
 #include "view.h"
 

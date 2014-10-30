@@ -14,7 +14,6 @@
 #include "errors.h"
 #include "libutil.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "place.h"
 #include "stringutil.h"
 
