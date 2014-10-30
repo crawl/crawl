@@ -333,7 +333,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -345,7 +344,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -810,7 +808,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
@@ -1013,7 +1010,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 9, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 9, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 9, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        END_OF_MONS_BOOK
       }
     },
