@@ -1725,7 +1725,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!actual)
         return true;
 
-    const monster_type zombie_type = item.mon_type;
+    monster_type zombie_type = item.mon_type;
+    // hack: don't re-froggify poor prince ribbit after death
+    if (zombie_type == MONS_PRINCE_RIBBIT)
+        zombie_type = MONS_HUMAN;
 
     const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
                            item.props[MONSTER_HIT_DICE].get_short() : 0;
@@ -1749,8 +1752,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         return false;
     }
 
-    monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
-    const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
+    monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE
+                                                    : MONS_SKELETON;
+    monster_type monnum = static_cast<monster_type>(item.orig_monnum);
+    // hack: don't re-froggify poor prince ribbit after death
+    if (monnum == MONS_PRINCE_RIBBIT)
+        monnum = MONS_HUMAN;
+
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
