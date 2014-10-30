@@ -99,4 +99,3 @@ if pid:
     except:
         print(("Warning: Could not send SIGUSR2 to WebTiles process id "
                "{0}".format(pid)), file=sys.stderr)
-        
