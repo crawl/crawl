@@ -428,10 +428,6 @@ Enter the Abyss ability
 Overfører dig øjeblikkeligt til Lugonus rige. Bare det at bruge den evne vil
 tappe dit helbred og din energi.
 %%%%
-Draw One ability
-
-Vælg et hvilket som helst spil kort i din oppakning, og træk et kort fra det.
-%%%%
 Peek at Two ability
 
 Kasserer et kort fra et valgfrit spil i din oppakning for at trække to kort fra

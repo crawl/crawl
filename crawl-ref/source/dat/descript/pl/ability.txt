@@ -180,10 +180,6 @@ duże zmiany na poziomie oraz zmieniając jego zachowanie, otwiera bramy dla
 demonów z Pustki. Nie zadziała na poziomie,który już został zepsuty bądź w
 Pustce.
 %%%%
-Draw One ability
-
-Wybierz dowolny zestaw ze swojego ekwipunku i wyciągnij z niego kartę.
-%%%%
 Triple Draw ability
 
 Wyciągnij trzy karty z jakiejkolwiek talii w ekwipunku, obejrzyj je po czym

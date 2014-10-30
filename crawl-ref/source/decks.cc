@@ -808,21 +808,6 @@ static int _choose_inventory_deck(const char* prompt)
     return slot;
 }
 
-// Select a deck from inventory and draw a card from it.
-bool choose_deck_and_draw()
-{
-    const int slot = _choose_inventory_deck("Draw from which deck?");
-
-    if (slot == -1)
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    evoke_deck(you.inv[slot]);
-    return true;
-}
-
 static void _deck_ident(item_def& deck)
 {
     if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))

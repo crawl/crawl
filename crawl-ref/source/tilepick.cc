@@ -5324,8 +5324,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_LUGONU_ABYSS_ENTER:
         return TILEG_ABILITY_LUGONU_ENTER_ABYSS;
     // Nemelex
-    case ABIL_NEMELEX_DRAW_ONE:
-        return TILEG_ABILITY_NEMELEX_DRAW_ONE;
     case ABIL_NEMELEX_PEEK_TWO:
         return TILEG_ABILITY_NEMELEX_PEEK_AT_TWO;
     case ABIL_NEMELEX_TRIPLE_DRAW:

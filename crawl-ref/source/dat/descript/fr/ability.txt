@@ -446,11 +446,6 @@ Enter the Abyss ability
 Vous transfère instantanément dans le royaume de Lugonu. L'effort d'avoir
 recours à cette aptitude entamera votre santé et vos réserves magiques.
 %%%%
-Draw One ability
-
-Choisissez n'importe quel paquet de votre inventaire et tirez une carte de
-celui-ci.
-%%%%
 Peek at Two ability
 
 Défaussez une carte de n'importe quel paquet de votre inventaire et tirer deux

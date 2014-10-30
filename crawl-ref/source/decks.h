@@ -136,7 +136,6 @@ bool deck_peek();
 bool deck_deal();
 string which_decks(card_type card);
 bool deck_stack();
-bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
 void shuffle_all_decks_on_level();
 
