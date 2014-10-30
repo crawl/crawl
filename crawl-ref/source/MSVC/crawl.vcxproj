@@ -829,6 +829,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\rltiles\tiledef_defines.h" />
     <ClInclude Include="..\rot.h" />
     <ClInclude Include="..\SDLMain.h" />
+    <ClInclude Include="..\sacrifice-data.h" />
     <ClInclude Include="..\shopping.h" />
     <ClInclude Include="..\shout.h" />
     <ClInclude Include="..\show.h" />
