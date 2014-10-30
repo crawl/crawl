@@ -147,7 +147,6 @@ const deck_archetype deck_of_battle[] =
     { CARD_HELM,          {5, 5, 5} },
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
-    { CARD_DOWSING,       {5, 5, 5} },
     END_OF_DECK
 };
 
