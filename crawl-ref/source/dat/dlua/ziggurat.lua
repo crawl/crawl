@@ -384,7 +384,7 @@ end
 -- Function to find travel-safe squares, excluding closed doors.
 local dgn_passable = dgn.passable_excluding("closed_door")
 
-local function ziggurat_create_monsters(p, mfn)
+local function ziggurat_create_monsters(entry, exit, mfn)
   local depth = you.depth()
   local completed = you.zigs_completed() + 1
   local hd_pool = math.floor(10 + completed * completed + (depth * (depth + 8 * completed )) * math.max(1, completed * 0.75))
@@ -412,16 +412,16 @@ local function ziggurat_create_monsters(p, mfn)
   local function mons_place(point)
     if hd_pool <= 0 then
       return true
-    elseif not dgn.mons_at(point.x, point.y) then
+    elseif not dgn.mons_at(point.x, point.y) and entry ~= point then
       mons_do_place(point)
     end
   end
 
-  dgn.find_adjacent_point(p, mons_place, dgn_passable)
+  dgn.find_adjacent_point(exit, mons_place, dgn_passable)
 end
 
 local function ziggurat_create_loot_at(c)
-  -- Basically, loot grows linearly with depth finished zigs.
+  -- Basically, loot grows linearly with depth & zigs finished.
   local depth = you.depth()
   local completed = you.zigs_completed()
   local nloot = depth + crawl.random2(math.floor(depth * 0.5))
@@ -658,7 +658,7 @@ local function ziggurat_furnish(centre, entry, exit)
 
   ziggurat_create_loot_at(lootspot)
 
-  ziggurat_create_monsters(exit, monster_generation.fn)
+  ziggurat_create_monsters(entry, exit, monster_generation.fn)
 
   local function needs_colour(p)
     return not dgn.in_vault(p.x, p.y)
