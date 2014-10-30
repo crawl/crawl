@@ -2044,9 +2044,9 @@ bool item_is_wieldable(const item_def &item)
     if (is_weapon(item))
         return you.species != SP_FELID;
 
-    // Some misc. items need to be wielded to be evoked.
-    if (is_deck(item) || item.base_type == OBJ_MISCELLANY
-                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
+    // The lantern needs to be wielded to be used.
+    if (item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_LANTERN_OF_SHADOWS)
     {
         return true;
     }
@@ -2164,17 +2164,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         return false;
 
     case OBJ_MISCELLANY:
-        if (is_deck(item))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mprf("%s", error.c_str());
-                return false;
-            }
-            return true;
-        }
-
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
 #if TAG_MAJOR_VERSION == 34
             && item.sub_type != MISC_BUGGY_EBONY_CASKET

@@ -1549,7 +1549,7 @@ void evoke_deck(item_def& deck)
     }
 
     // Always wield change, since the number of cards used/left has
-    // changed.
+    // changed, and it might be wielded.
     you.wield_change = true;
 }
 
@@ -1945,18 +1945,6 @@ static void _helm_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _do_weapon_swap()
-{
-    // Pause before jumping to the list.
-    more();
-
-    // Don't take less time if we're swapping weapons.
-    int old_time = you.time_taken;
-    wield_weapon(false);
-    you.time_taken = old_time;
-}
-
-
 static void _blade_card(int power, deck_rarity_type rarity)
 {
     if (you.species == SP_FELID)
@@ -1964,8 +1952,6 @@ static void _blade_card(int power, deck_rarity_type rarity)
         mpr("You feel like a smilodon for a moment.");
         return;
     }
-
-    _do_weapon_swap();
 
     const int power_level = _get_power_level(power, rarity);
     brand_type brand;
@@ -2704,8 +2690,6 @@ static void _illusion_card(int power, deck_rarity_type rarity)
 
     if (!mon || monster_at(you.pos()))
         return;
-
-    _do_weapon_swap();
 
     mon->type = MONS_PLAYER;
     mon->behaviour = BEH_SEEK;
