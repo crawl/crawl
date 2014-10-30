@@ -1582,21 +1582,21 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     case OBJ_MISSILES:
     {
-        special_missile_type brand  = get_ammo_brand(*this);
+        special_missile_type msl_brand = get_ammo_brand(*this);
 
         if (!terse && !dbname)
         {
             if (props.exists(HELLFIRE_BOLT_KEY))
                 buff << "hellfire ";
-            else if (_missile_brand_is_prefix(brand))
+            else if (_missile_brand_is_prefix(msl_brand))
                 buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (brand != SPMSL_NORMAL
+        if (msl_brand != SPMSL_NORMAL
 #if TAG_MAJOR_VERSION == 34
-            && brand != SPMSL_BLINDING
+            && msl_brand != SPMSL_BLINDING
 #endif
             && !basename && !qualname && !dbname)
         {
@@ -1607,7 +1607,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 else
                     buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
             }
-            else if (_missile_brand_is_postfix(brand))
+            else if (_missile_brand_is_postfix(msl_brand))
                 buff << " of " << missile_brand_name(*this, MBN_NAME);
         }
 
