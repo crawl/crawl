@@ -1173,9 +1173,7 @@ void game_options::clear_feature_overrides()
 ucs_t get_glyph_override(int c)
 {
     if (c < 0)
-    {
         c = -c;
-    }
     if (wcwidth(c) != 1)
     {
         mprf(MSGCH_ERROR, "Invalid glyph override: %X", c);
