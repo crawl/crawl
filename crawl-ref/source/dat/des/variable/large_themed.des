@@ -1764,3 +1764,38 @@ xxxwxxxx......xxxw.xx..xxx..xxx
               xx.xxx
               xx@xxx
 ENDMAP
+
+NAME:    kennysheep_kobold_grotto
+DEPTH:   D:13-, !D:$
+TAGS:    no_monster_gen
+ORIENT:  northwest
+MONS:    big kobold, patrolling kobold demonologist, kobold, plant
+MONS:    lesser demon, silver statue
+: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
+KMONS:   g = bush
+SHUFFLE: !'
+NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
+NSUBST:  ' = 2:C / *:.
+NSUBST:  . = 10:3 / 4:5
+SUBST:  .z = .:200 W:35 4:20
+KPROP:  -C = bloody
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx!!xxxx'''xxxx'''xxxxxx
+xxxx!!!xxx''''xx'''''xxxxx
+xxxxxgxxxxggxxxxxggxxxx!!x
+xxxxx................xx!!x
+xxxx...w..............g!xx
+x'x...www.............xxx
+x'g....w.........w...xx
+x'g..........x1.wWw.1xx
+xxx....w....xx.wW6Ww..x
+xx....wGw...xx..wWw..xx
+xxx.w1.w.1wxxx...w...xx
+xxxxww.1.wwxx.1.....1xx
+ xxxx2***2xxx.......xxx
+ xxxx**|**1xxxx.....xxx
+  xxxxxxxxxxxxx.....xxx
+    xxxxxxxxxxxx....xx
+              xxx@.xx
+ENDMAP
