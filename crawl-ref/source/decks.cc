@@ -306,43 +306,32 @@ const char* card_name(card_type card)
 #if TAG_MAJOR_VERSION == 34
     case CARD_PORTAL:          return "the Portal";
     case CARD_WARP:            return "the Warp";
+    case CARD_BATTLELUST:      return "Battlelust";
+    case CARD_METAMORPHOSIS:   return "Metamorphosis";
+    case CARD_SHUFFLE:         return "Shuffle";
+    case CARD_EXPERIENCE:      return "Experience";
+    case CARD_SAGE:            return "the Sage";
+    case CARD_TROWEL:          return "the Trowel";
+    case CARD_MINEFIELD:       return "the Minefield";
+    case CARD_GENIE:           return "the Genie";
+    case CARD_WATER:           return "Water";
+    case CARD_GLASS:           return "Vitrification";
+    case CARD_BARGAIN:         return "the Bargain";
 #endif
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
     case CARD_DAMNATION:       return "Damnation";
     case CARD_SOLITUDE:        return "Solitude";
     case CARD_ELIXIR:          return "the Elixir";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_BATTLELUST:      return "Battlelust";
-    case CARD_METAMORPHOSIS:   return "Metamorphosis";
-#endif
     case CARD_HELM:            return "the Helm";
     case CARD_BLADE:           return "the Blade";
     case CARD_SHADOW:          return "the Shadow";
     case CARD_POTION:          return "the Potion";
     case CARD_FOCUS:           return "Focus";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_SHUFFLE:         return "Shuffle";
-    case CARD_EXPERIENCE:      return "Experience";
-#endif
     case CARD_HELIX:           return "the Helix";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_SAGE:            return "the Sage";
-#endif
     case CARD_DOWSING:         return "Dowsing";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_TROWEL:          return "the Trowel";
-    case CARD_MINEFIELD:       return "the Minefield";
-#endif
     case CARD_STAIRS:          return "the Stairs";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_GENIE:           return "the Genie";
-#endif
     case CARD_TOMB:            return "the Tomb";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_WATER:           return "Water";
-    case CARD_GLASS:           return "Vitrification";
-#endif
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_CRUSADE:         return "the Crusade";
@@ -365,9 +354,6 @@ const char* card_name(card_type card)
     case CARD_FORTITUDE:       return "Fortitude";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
-#if TAG_MAJOR_VERSION == 34
-    case CARD_BARGAIN:         return "the Bargain";
-#endif
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";
     case CARD_CURSE:           return "the Curse";
