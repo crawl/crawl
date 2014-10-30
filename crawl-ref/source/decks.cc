@@ -818,25 +818,6 @@ static void _deck_ident(item_def& deck)
     }
 }
 
-// This also shuffles the deck.
-static void _deck_lose_card(item_def& deck)
-{
-    uint8_t flags = 0;
-    // Seen cards are only half as likely to fall out,
-    // marked cards only one-quarter as likely (note that marked
-    // cards are also seen.)
-    do
-    {
-        _shuffle_deck(deck);
-        get_card_and_flags(deck, -1, flags);
-    }
-    while ((flags & CFLAG_MARKED) && coinflip()
-            || (flags & CFLAG_SEEN) && coinflip());
-
-    _draw_top_card(deck, false, flags);
-    deck.used_count++;
-}
-
 bool deck_identify_first(int slot)
 {
     item_def& deck(you.inv[slot]);
