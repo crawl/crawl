@@ -3102,6 +3102,34 @@ cc'nn-...-nnnnnc...cncnc...cnnnnn-...-nn'cc
      ccccc                       ccccc
 ENDMAP
 
+NAME: cheibrodos_magma_flow
+DEPTH: D:11-, !D:$, Lair:3-, !Lair:$
+ORIENT: float
+TAGS: no_item_gen no_monster_gen
+KMONS: ' = lava snake
+KMONS: ? = molten gargoyle
+KFEAT: ?-' = lava
+NSUBST: - = 2:?
+NSUBST: l = 5:'
+MAP
+                              xx@@xx
+                              xx..xxx
+         xxxxx xxxx          xxx..llx
+  xxx  xxxlllxxxllxxxx       xxx..llx
+ xx[xxxxlllx-llll..llxx     xxx..lllx
+ xx.xxllllxxxxl.....llxx    xxx..lllx
+xxl.lllllxxxxx...ll..lxx   xxxx..lllx
+xGll....lxxxx...llll.llxx xxxx..llllx
+xxl.lll...xx...lllxx..llxxxx..xxlllxx
+ xx.xxlll.....ll-xxxx........xxxllxx
+ xx(xxxxlll.lllxxx  xll...llxxxlllx
+  xxx  xxxllllxx    xxlllllxxllll-x
+         xxxxxx      xxllllllllllxx
+                      xxllllllllxx
+                       xx-lxxxxxx
+                        xxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
@@ -6465,4 +6493,92 @@ ddxxx%%.....................%%hcj........jj
 ddxxxO%.....................%%hhcj......0jj
 ddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjj
 ddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjj
+ENDMAP
+
+NAME: cheibrodos_spurs
+DEPTH: Depths
+ORIENT: float
+TAGS: no_item_gen no_monster_gen
+MONS: tentacled monstrosity
+SUBST: ; = 0:5 9:15 1:3
+NSUBST: ' = 5=* / 10=$ / *:%
+SHUFFLE: G"/TW
+SUBST: " = .
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+KMONS: 8 = 8 band
+MAP
+                     ccc
+                    cc|cc
+              cccc.cc...cc cccc
+              c''cccc.8.cccc''c
+              c'''cc.....cc'''c
+              cc'+c.;...;.c+'cc
+               ccc.........ccc
+                c...cc+cc...c
+    ccccccccc   c;.cc...cc.;c
+   cc...0...cc  cccc.""".cccc
+  cc.........cc  cc.""""".cc.@
+ cc.....0.....ccccc0""G""0cc+c
+ c....cc+cc.....;cc.""""".c..c
+ c...cc...cc0.....cc.""".cc..c
+ c..cc.""".cc.....0cc...cc...c
+ c..c.""""".cc;.....cc+cc....c
+ c+cc0""G""0ccccc.....0.....cc
+ @.cc.""""".cc  cc.........cc
+  cccc.""".cccc  cc...0...cc
+  c;.cc...cc.;c   ccccccccc
+  c...cc+cc...c
+ ccc.........ccc
+cc'+c.;...;.c+'cc
+c'''cc.....cc'''c
+c''cccc.8.cccc''c
+cccc cc...cc cccc
+      cc|cc
+       ccc
+ENDMAP
+
+####
+
+NAME:   kennysheep_gozag_temple
+DEPTH:  Depths, !Depths:$
+ORIENT: centre
+TAGS:   transparent no_monster_gen no_pool_fixup no_item_gen
+TAGS:   uniq_kennysheep_gozag_temple
+KMONS:  2 = guardian serpent
+KMONS:  B = golden dragon
+KITEM:  | = gold good_item
+KITEM:  23 = gold
+KFEAT:  B = altar_gozag
+KFEAT:  D = granite_statue
+TILE:   GD = dngn_golden_statue
+: set_feature_name("granite_statue", "golden statue")
+COLOUR: cGD = yellow
+FTILE:  .0_Gt = floor_grass
+FTILE:  $|B}+nc23-D = floor_limestone
+FTILE:  " = floor_dirt
+KFEAT:  _ = antiques shop name:Gozag greed:100 count:3 /\
+            antique weapon shop name:Gozag greed:100 count:3 /\
+            antique armour shop name:Gozag greed:100 count:3
+MAP
+      ww    @    ww
+     wwt..G"""G..tww
+    www.."""""""..www
+   wwwG.""c+++c"".Gwww
+  www..""cc---cc""..www
+  ww..t""cD---Dc""t..ww
+ ww..."""cc+++cc"""...ww
+ ww.t.""Gcc$$$ccG"".t.ww
+ ww..0""cc$$$$$cc""0..ww
+ w""""""n$$2|$$$n""""""w
+@""G.""_n$$|B|$$n_"".G""@
+ w""""".n$$$|2$$n."""""w
+ ww.0"".cc$$$$$cc.""0.ww
+ ww.."".Gcc$$$ccG.""..ww
+ ww..""..0cnnnc0..""..ww
+ ww.."""...._...."""..ww
+  wwt.""""""""""""".tww
+  wwwt.""""""""""".twww
+   wwwt...G"""G...twww
+    www     @     www
 ENDMAP

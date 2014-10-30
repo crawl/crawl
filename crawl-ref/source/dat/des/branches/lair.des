@@ -2394,6 +2394,61 @@ ZZxxxxxx%.9.xxxzx
  ZZZZZxxxxxxxxxxx
 ENDMAP
 
+NAME: cheibrodos_lair_reptile_den
+DEPTH: Lair, !Lair:$
+TAGS: no_item_gen no_monster_gen
+MONS: adder / water moccasin, komodo dragon / black mamba, plant, fungus
+SHUFFLE: "', ABC
+SUBST: A = ., B = x, C = x, D = x .:2
+NSUBST: " = 7:1
+NSUBST: ' = 2:2
+NSUBST: - = 6:3
+NSUBST: ; = 5:3
+SUBST: 3 = 3 4:5
+MAP
+  ...........
+ ..DDDDCDDDD..
+..DxxxxCxxxxD..
+.Dxxx"""""xxxD.
+.Dxx";;;;;"xAD.
+.Ax";;;;;;;"xA.
+.DA";;---;;"xD.
+.Dx";;-(-;;"xD.
+.Dx";;---;;"xD.
+.Dx";;;;;;;"xD.
+.Dxx";;;;;"BBD.
+.Dxxx"""""BBBB.
+..DxxxAxxxBBB..
+ ..DDADDDDDB..
+  ...........
+ENDMAP
+
+NAME: cheibrodos_lair_caveside_slide
+DEPTH: Lair, !Lair:$
+TAGS: extra
+MONS: fungus w:3 / nothing, plant w:3 / nothing
+SHUFFLE: 12
+SUBST: " = x.
+MAP
+    ...xx
+  ....xxx
+ xx..1Wxxx
+ xxx.1Wxxx
+ xxx".WWxxx
+  xxx.1Wxxx
+  xxx.1WWxxx
+  xxx".1WWxx
+ xxxx"".1Wxx
+xxxx""".1Wxxx
+xxx"""..1WWxx
+xxW1....1WWxx
+xxWW(111WWxxx
+xxWWWWWWWxxx
+xxxWWWWWxxx
+ xxxxxxxxx
+  xxxxxx
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################

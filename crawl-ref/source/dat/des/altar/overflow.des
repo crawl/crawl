@@ -1612,6 +1612,129 @@ zwwxwCDwx..z.
 ...........z.
 ENDMAP
 
+
+# Ru overflow altar vaults ####################################################
+
+# A few unlucky monsters permanently afflicted with Ru's various status effects.
+NAME: nicolae_ru_great_annihilating_truth
+TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent
+TAGS: no_monster_gen no_item_gen
+: interest_check(_G)
+DEPTH: D:2-9
+SHUFFLE: MCSBP
+KFEAT: _ = altar_ru
+KMONS: P = ball python perm_ench:paralysis / rat perm_ench:paralysis / \
+  giant newt perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
+  quokka perm_ench:paralysis / kobold w:5 perm_ench:paralysis / \
+  goblin w:5 perm_ench:paralysis / hobgoblin w:5 perm_ench:paralysis
+KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
+  kobold perm_ench:corona / goblin perm_ench:corona / hobgoblin perm_ench:corona
+KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
+  kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
+KMONS: B = kobold perm_ench:blind / goblin perm_ench:blind / \
+  hobgoblin perm_ench:blind / bat perm_ench:blind
+KMONS: M = orc wizard perm_ench:mute
+MAP
+@...   ...@
+.+xxxxxxx+.
+.x...x...x.
+.x.P.x.C.x.
+ x.......x
+ xxx._.xxx
+ x.......x
+.x.S.x.B.x.
+.x...x...x.
+.+xxxxxxx+.
+@...   ...@
+ENDMAP
+
+
+NAME: nicolae_ru_awakened_eye
+TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS: no_pool_fixup
+: interest_check(_G)
+DEPTH: D:2-
+KFEAT: _ = altar_ru
+MAP
+    .......
+   .ccccccc.
+  .c..WWW..c.
+ .c..W...W..c.
+.c...W._.W...c.
+ .c..W...W..c.
+  .c..WWW..c.
+   .ccccccc.
+    .......
+ENDMAP
+
+
+# Overgrown and disused, since many pilgrims find Ru's sacrifices too onerous.
+NAME: nicolae_ru_the_path_less_chosen
+TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS: no_item_gen no_monster_gen
+: interest_check(_G)
+DEPTH: D:2-
+NSUBST: r = 3:^ / 1:^p / 7:p / 2:p. / *:., i = 1:^^p. / 2:p / *:., \
+        A = . / xxp / x, B = . / xxp / x, C = xxp / .
+KFEAT: _ = altar_ru
+KFEAT: ^ = known web trap
+KMONS: p = plant / fungus w:3
+MAP
+xxxxxxx
+xrrrrrxxxxx
+xriiirxACBx
+xri_ir.A.B.@
+xriiirxACBx
+xrrrrrxxxxx
+xxxxxxx
+ENDMAP
+
+
+NAME: nicolae_ru_sacrificial_ziggurat
+TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+: interest_check(_G)
+DEPTH: D:2-
+SUBST: b = B.., @ = %@@
+KPROP: B% = bloody
+SUBST: B = ., % = @
+FTILE: ' = floor_sandstone
+FTILE: .@_ = floor_limestone
+TILE: c = wall_sandstone
+KFEAT: _ = altar_ru
+MAP
+cccccc@cccccc
+c'''''b'''''c
+c'ccccbcccc'c
+c'c'''b'''c'c
+c'c'ccbcc'c'c
+c'c'cBBBc'c'c
+@bbbbB_Bbbbb@
+c'c'cBBBc'c'c
+c'c'ccbcc'c'c
+c'c'''b'''c'c
+c'ccccbcccc'c
+c'''''b'''''c
+cccccc@cccccc
+ENDMAP
+
+
+NAME: nicolae_ru_path_of_blood
+TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS: no_monster_gen
+: interest_check(_G)
+DEPTH: D:2-
+KPROP: , = bloody
+KPROP: l = no_cloud_gen
+KFEAT: _ = altar_ru
+MAP
+@lcccccccccc
+l,......,llc
+@l,l,l,l,_lc
+l,......,llc
+@lcccccccccc
+ENDMAP
+
+
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
@@ -2988,6 +3111,26 @@ c...c...c...c...c..x
 c...c...c...c...c..x
 ...................x
 xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_overflow_crystal_walls
+TAGS: temple_overflow_generic_1 transparent
+: interest_check(_G)
+DEPTH: D:2-
+SHUFFLE: ACDE, FGHI
+SUBST: A : b, C : b., D : b., E : b., F : b, G : b., H : b., I : b.
+MAP
+AAAAA@FFFFF
+ACCCC.GGGGF
+ACDDD.HHHGF
+ACDEE.IIHGF
+ACDE...IHGF
+@....B....@
+FGHI...EDCA
+FGHII.EEDCA
+FGHHH.DDDCA
+FGGGG.CCCCA
+FFFFF@AAAAA
 ENDMAP
 
 NAME:   amethyst_overflow_temple_binary
