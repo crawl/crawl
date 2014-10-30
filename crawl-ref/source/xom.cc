@@ -129,15 +129,38 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
+/**
+ * How much does Xom like you right now?
+ *
+ * Doesn't account for boredom, or whether or not you actually worship Xom.
+ *
+ * @return An index mapping to an entry in xom_moods.
+ */
+int xom_favour_rank()
+{
+    static const int breakpoints[] = { 20, 50, 80, 120, 150, 180};
+    for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
+        if (you.piety <= breakpoints[i])
+            return i;
+    return ARRAYSZ(breakpoints);
+}
+
+static const char* xom_moods[] = {
+    "a very special plaything of Xom.",
+    "a special plaything of Xom.",
+    "a plaything of Xom.",
+    "a toy of Xom.",
+    "a favourite toy of Xom.",
+    "a beloved toy of Xom.",
+    "Xom's teddy bear."
+};
+
 static const char *describe_xom_mood()
 {
-    return (you.piety > 180) ? "Xom's teddy bear." :
-           (you.piety > 150) ? "a beloved toy of Xom." :
-           (you.piety > 120) ? "a favourite toy of Xom." :
-           (you.piety >  80) ? "a toy of Xom." :
-           (you.piety >  50) ? "a plaything of Xom." :
-           (you.piety >  20) ? "a special plaything of Xom."
-                             : "a very special plaything of Xom.";
+    const int mood = xom_favour_rank();
+    ASSERT(mood >= 0);
+    ASSERT(mood < ARRAYSZ(xom_moods));
+    return xom_moods[mood];
 }
 
 const string describe_xom_favour()
@@ -298,6 +321,7 @@ void xom_tick()
 
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
         string new_xom_favour = describe_xom_favour();
+        you.redraw_title = true; // redraw piety/boredom display
         if (old_xom_favour != new_xom_favour)
         {
             // If we entered another favour state, take a big step into
@@ -326,16 +350,10 @@ void xom_tick()
         {
             const string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
-            //updating piety status line
-            you.redraw_title = true;
         }
 
         if (you.gift_timeout == 1)
-        {
             simple_god_message(" is getting BORED.");
-            //updating piety status line
-            you.redraw_title = true;
-        }
     }
 
     if (x_chance_in_y(2 + you.faith(), 6))
@@ -3819,6 +3837,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     {
         const string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
+        you.redraw_title = true; // redraw piety/boredom display
         const string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
         {
