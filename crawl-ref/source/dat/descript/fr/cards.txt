@@ -57,10 +57,6 @@ Cette carte vous rend plus puissant en combat physique, causant l'état
 Berserker à faible puissance ou vous apporte plus de force et d'agilité à une
 puissance supérieure.
 %%%%
-Metamorphosis card
-
-Cette carte vous transforme temporairement.
-%%%%
 the Helm card
 
 Cette carte accroit votre défense. Elle peut augmenter votre armure, votre

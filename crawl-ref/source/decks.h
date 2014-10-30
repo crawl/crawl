@@ -71,8 +71,8 @@ enum card_type
     CARD_ELIXIR,                // healing
 #if TAG_MAJOR_VERSION == 34
     CARD_BATTLELUST,            // melee boosts
-#endif
     CARD_METAMORPHOSIS,         // transformation
+#endif
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills

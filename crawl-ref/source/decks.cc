@@ -143,7 +143,6 @@ const deck_archetype deck_of_battle[] =
 {
     { CARD_ELIXIR,        {5, 5, 5} },
     { CARD_POTION,        {5, 5, 5} },
-    { CARD_METAMORPHOSIS, {5, 5, 5} },
     { CARD_HELM,          {5, 5, 5} },
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
@@ -315,8 +314,8 @@ const char* card_name(card_type card)
     case CARD_ELIXIR:          return "the Elixir";
 #if TAG_MAJOR_VERSION == 34
     case CARD_BATTLELUST:      return "Battlelust";
-#endif
     case CARD_METAMORPHOSIS:   return "Metamorphosis";
+#endif
     case CARD_HELM:            return "the Helm";
     case CARD_BLADE:           return "the Blade";
     case CARD_SHADOW:          return "the Shadow";
@@ -1933,24 +1932,6 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _metamorphosis_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    transformation_type trans;
-
-    if (power_level >= 2)
-        trans = random_choose(TRAN_DRAGON, TRAN_LICH, -1);
-    else if (power_level == 1)
-        trans = random_choose(TRAN_STATUE, TRAN_HYDRA, TRAN_BLADE_HANDS, -1);
-    else
-        trans = random_choose(TRAN_SPIDER, TRAN_ICE_BEAST, TRAN_BAT, -1);
-
-    // Might fail, e.g. because of Zin's protection (!), transforming into a
-    // non-flier above lava/deep water, being undead, etc
-    if (!transform(random2(power/4), trans, true))
-        canned_msg(MSG_NOTHING_HAPPENS);
-}
-
 static void _helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2878,7 +2859,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_DAMNATION:        _damnation_card(power, rarity); break;
     case CARD_SOLITUDE:         cast_dispersal(power/4); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
-    case CARD_METAMORPHOSIS:    _metamorphosis_card(power, rarity); break;
     case CARD_HELM:             _helm_card(power, rarity); break;
     case CARD_BLADE:            _blade_card(power, rarity); break;
     case CARD_SHADOW:           _shadow_card(power, rarity); break;
@@ -2918,12 +2898,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case CARD_BARGAIN:
-        canned_msg(MSG_NOTHING_HAPPENS);
-        break;
-#endif
 
     case CARD_WILD_MAGIC:
         // Yes, high power is bad here.
@@ -2966,6 +2940,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WARP:
     case CARD_GENIE:
     case CARD_BATTLELUST:
+    case CARD_BARGAIN:
+    case CARD_METAMORPHOSIS:
         mpr("This type of card no longer exists!");
         break;
 #endif
