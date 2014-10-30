@@ -1803,8 +1803,6 @@ bool evoke_item(int slot, bool check_range)
 
         if (is_deck(item))
         {
-            ASSERT(wielded);
-
             evoke_deck(item);
             pract = 1;
             count_action(CACT_EVOKE, EVOC_DECK);

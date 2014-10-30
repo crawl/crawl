@@ -3686,17 +3686,16 @@ void hints_describe_item(const item_def &item)
             if (is_deck(item))
             {
                 ostr << "Decks of cards are powerful but dangerous magical "
-                        "items. Try <w>%</w>ielding and e<w>%</w>oking it"
+                        "items. Try e<w>%</w>oking it"
 #ifdef USE_TILE
-                        ", either of which can be done by clicking on it"
+                        ", which can be done by clicking on it"
 #endif
                         ". If you use a scroll of identify on the deck you "
                         "can discover the name of the top card, making the "
                         "deck less risky to draw from. You can read about the "
                         "effect of a card by searching the game's database "
                         "with <w>%/c</w>.";
-                cmd.push_back(CMD_WIELD_WEAPON);
-                cmd.push_back(CMD_EVOKE_WIELDED);
+                cmd.push_back(CMD_EVOKE);
                 cmd.push_back(CMD_DISPLAY_COMMANDS);
             }
             else
