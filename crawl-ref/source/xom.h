@@ -85,6 +85,7 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
 const string describe_xom_favour();
+int xom_favour_rank();
 
 static inline int xom_acts(int sever, int tension = -1)
 {

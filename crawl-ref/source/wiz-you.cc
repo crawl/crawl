@@ -415,6 +415,7 @@ void wizard_set_piety_to(int newpiety, bool force)
     if (you_worship(GOD_XOM))
     {
         you.piety = newpiety;
+        you.redraw_title = true; // redraw piety display
 
         int newinterest;
         if (!force)

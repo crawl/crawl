@@ -1086,8 +1086,8 @@ void dec_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
         }
 
@@ -1300,8 +1300,8 @@ static void _inc_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
         }
     }
@@ -2397,8 +2397,8 @@ static void _gain_piety_point()
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
 
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
@@ -2467,7 +2467,8 @@ static void _gain_piety_point()
 
     if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
-        // In case the best skill is Invocations, redraw the god title.
+        // Redraw piety display and, in case the best skill is Invocations,
+        // redraw the god title.
         you.redraw_title = true;
 
         if (!you.one_time_ability_used[you.religion])
@@ -2593,8 +2594,8 @@ void lose_piety(int pgn)
         if (you.piety < piety_breakpoint(5)
             && old_piety >= piety_breakpoint(5))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
 
             if (!you.one_time_ability_used[you.religion])
@@ -2627,8 +2628,8 @@ void lose_piety(int pgn)
             if (you.piety < piety_breakpoint(i)
                 && old_piety >= piety_breakpoint(i))
             {
-                // In case the best skill is Invocations, redraw the god
-                // title.
+                // Redraw piety display and, in case the best skill is
+                // Invocations, redraw the god title.
                 you.redraw_title = true;
 
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
@@ -4283,6 +4284,7 @@ int piety_rank(int piety)
     if (piety < 0)
         piety = you.piety;
 
+    // XXX: when is this used?
     if (you_worship(GOD_XOM))
     {
         const int breakpoints[] = { 20, 50, 80, 120, 180, INT_MAX };
