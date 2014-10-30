@@ -10,10 +10,8 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
-#include "libutil.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "traps.h"
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
 static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,

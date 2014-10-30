@@ -7,8 +7,6 @@
 #include "libutil.h"
 #include "monster.h"
 #include "mon-util.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
 #include "state.h"
 

@@ -11,8 +11,6 @@
 #include <algorithm>
 
 #include "itemprop.h"
-#include "player.h"
-#include "random.h"
 #include "skills.h"
 #include "spl-util.h"
 

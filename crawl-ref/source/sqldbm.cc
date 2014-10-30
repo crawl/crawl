@@ -12,7 +12,6 @@
 #include <unistd.h>
 
 #include "end.h"
-#include "syscalls.h"
 
 #ifdef USE_SQLITE_DBM
 

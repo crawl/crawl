@@ -13,18 +13,14 @@
 #include <string.h>
 
 #include "areas.h"
-#include "beam.h"
 #include "branch.h"
-#include "cluautil.h"
 #include "database.h"
-#include "dlua.h"
 #include "ghost.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-death.h"
 #include "monster.h"
 #include "mon-util.h"
-#include "player.h"
 #include "religion.h"
 #include "skills.h"
 #include "state.h"

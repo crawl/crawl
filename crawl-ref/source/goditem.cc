@@ -22,7 +22,6 @@
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
-#include "spl-cast.h"
 #include "spl-util.h"
 
 static bool _is_bookrod_type(const item_def& item,

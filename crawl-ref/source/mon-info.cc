@@ -13,9 +13,7 @@
 #include <sstream>
 
 #include "act-iter.h"
-#include "areas.h"
 #include "artefact.h"
-#include "coord.h"
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
@@ -30,16 +28,13 @@
 #include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
-#include "monster.h"
 #include "mon-tentacle.h"
-#include "mon-util.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
-#include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif

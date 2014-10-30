@@ -4,8 +4,6 @@
 
 #include "colour.h"
 #include "options.h"
-#include "show.h"
-#include "terrain.h"
 #include "viewchar.h"
 
 #include "feature-data.h"

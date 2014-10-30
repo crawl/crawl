@@ -8,9 +8,6 @@
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "env.h"
-#include "mapdef.h"
-#include "random.h"
 
 /* Original algorithm by Kusigrosz.
  * Kusigrosz' description:

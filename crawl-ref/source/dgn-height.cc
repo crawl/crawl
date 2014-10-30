@@ -10,7 +10,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
-#include "random.h"
 
 void dgn_initialise_heightmap(int height)
 {

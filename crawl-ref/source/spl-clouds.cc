@@ -9,32 +9,24 @@
 
 #include <algorithm>
 
-#include "act-iter.h"
-#include "beam.h"
 #include "butcher.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
 #include "items.h"
-#include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-behv.h"
-#include "mon-util.h"
 #include "ouch.h"
-#include "player.h"
 #include "prompt.h"
 #include "random-pick.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "target.h"
 #include "terrain.h"
-#include "transform.h"
 #include "viewchar.h"
 
 spret_type conjure_flame(int pow, const coord_def& where, bool fail)

@@ -8,7 +8,6 @@
 #include "l_libs.h"
 
 #include "cluautil.h"
-#include "libutil.h"
 #include "mapdef.h"
 
 static int dgn_is_subvault(lua_State *ls)

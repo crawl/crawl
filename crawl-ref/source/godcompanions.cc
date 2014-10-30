@@ -9,13 +9,11 @@
 
 #include <algorithm>
 
-#include "actor.h"
 #include "branch.h"
 #include "mon-message.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "spl-other.h"
-#include "stringutil.h"
 
 map<mid_t, companion> companion_list;
 

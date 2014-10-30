@@ -8,14 +8,12 @@
 #include "spl-wpnench.h"
 
 #include "areas.h"
-#include "artefact.h"
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills.h"
 #include "spl-miscast.h"
 
 // We need to know what brands equate with what missile brands to know if

@@ -11,12 +11,8 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "dungeon.h"
-#include "env.h"
-#include "libutil.h"
-#include "mapdef.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "stringutil.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"

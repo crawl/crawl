@@ -13,10 +13,7 @@
 #include <string.h>
 
 #include "branch.h"
-#include "colour.h"
-#include "coord.h"
 #include "describe.h"
-#include "directn.h"
 #include "env.h"
 #include "feature.h"
 #include "files.h"
@@ -26,9 +23,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
-#include "shopping.h"
 #include "stairs.h"
-#include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"

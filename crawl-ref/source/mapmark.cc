@@ -9,17 +9,14 @@
 
 #include <algorithm>
 
-#include "clua.h"
 #include "cluautil.h"
 #include "coordit.h"
-#include "directn.h"
 #include "dlua.h"
 #include "end.h"
 #include "env.h"
 #include "libutil.h"
 #include "l_libs.h"
 #include "stringutil.h"
-#include "tags.h"
 #include "terrain.h"
 #include "unwind.h"
 

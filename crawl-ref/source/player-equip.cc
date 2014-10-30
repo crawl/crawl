@@ -22,17 +22,12 @@
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
-#include "player.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
-#include "skills.h"
-#include "spl-cast.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-wpnench.h"
-#include "state.h"
-#include "transform.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();

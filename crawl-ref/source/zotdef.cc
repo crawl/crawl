@@ -9,33 +9,23 @@
 
 #include <functional>
 
-#include "bitary.h"
 #include "branch.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "env.h"
 #include "files.h"
-#include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "libutil.h"
-#include "makeitem.h"
 #include "message.h"
-#include "mgen_data.h"
 #include "mon-pick.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "place.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "traps.h"
 
 // Size of the mons_alloc array (or at least the bit of
 // it that we use).

@@ -7,15 +7,12 @@
 #include <vector>
 
 #include "act-iter.h"
-#include "cio.h"
 #include "colour.h"
 #include "coordit.h"
 #include "dgn-height.h"
 #include "dungeon.h"
 #include "english.h"
-#include "env.h"
 #include "flood_find.h"
-#include "fprop.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -24,11 +21,8 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "random.h"
 #include "state.h"
 #include "stringutil.h"
-#include "terrain.h"
 #include "traps.h"
 #include "view.h"
 

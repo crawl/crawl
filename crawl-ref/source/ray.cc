@@ -17,7 +17,6 @@
 
 #include <cmath>
 
-#include "geom2d.h"
 #include "los.h"
 
 static geom::grid diamonds(geom::lineseq(1, 1, 0.5, 1),

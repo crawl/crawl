@@ -2,7 +2,6 @@
 
 #include "viewchar.h"
 
-#include "feature.h"
 #include "options.h"
 #include "unicode.h"
 

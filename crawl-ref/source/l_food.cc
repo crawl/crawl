@@ -5,11 +5,8 @@
 #include "butcher.h"
 #include "cluautil.h"
 #include "food.h"
-#include "invent.h"
 #include "itemprop.h"
-#include "items.h"
 #include "player.h"
-#include "rot.h"
 
 /////////////////////////////////////////////////////////////////////
 // Food information.

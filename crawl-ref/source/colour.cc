@@ -9,14 +9,7 @@
 #include "branch.h"
 #include "cloud.h"
 #include "dgn-height.h"
-#include "env.h"
-#include "libutil.h"
-#include "mon-info.h"
-#include "mon-info.h"
-#include "mon-util.h"
 #include "options.h"
-#include "player.h"
-#include "random.h"
 #include "stringutil.h"
 
 static element_colour_calc* element_colours[NUM_COLOURS] = {};

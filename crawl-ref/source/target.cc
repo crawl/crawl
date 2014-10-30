@@ -4,7 +4,6 @@
 
 #include <math.h>
 
-#include "beam.h"
 #include "coord.h"
 #include "coordit.h"
 #include "english.h"
@@ -13,7 +12,6 @@
 #include "libutil.h"
 #include "los_def.h"
 #include "losglobal.h"
-#include "player.h"
 #include "spl-damage.h"
 #include "terrain.h"
 

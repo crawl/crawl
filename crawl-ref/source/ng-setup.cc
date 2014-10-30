@@ -15,21 +15,16 @@
 #include "items.h"
 #include "item_use.h"
 #include "jobs.h"
-#include "maps.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
 #include "options.h"
-#include "player.h"
 #include "prompt.h"
 #include "religion.h"
-#include "rot.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "tutorial.h"
 
 #define MIN_START_STAT       3
 

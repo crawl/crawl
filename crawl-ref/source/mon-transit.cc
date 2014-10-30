@@ -10,18 +10,13 @@
 #include <algorithm>
 
 #include "artefact.h"
-#include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
-#include "env.h"
 #include "godcompanions.h"
 #include "items.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "random.h"
 #include "religion.h"
-#include "travel.h"
 
 #define MAX_LOST 100
 

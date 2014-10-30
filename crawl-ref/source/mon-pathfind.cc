@@ -2,15 +2,11 @@
 
 #include "mon-pathfind.h"
 
-#include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "los.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
-#include "monster.h"
-#include "mon-util.h"
-#include "random.h"
 #include "religion.h"
 #include "state.h"
 #include "terrain.h"

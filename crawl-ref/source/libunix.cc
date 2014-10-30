@@ -32,14 +32,8 @@
 
 #include "cio.h"
 #include "crash.h"
-#include "defines.h"
-#include "enum.h"
-#include "files.h"
-#include "libutil.h"
-#include "options.h"
 #include "state.h"
 #include "unicode.h"
-#include "viewgeom.h"
 #include "view.h"
 
 static struct termios def_term;

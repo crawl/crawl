@@ -12,9 +12,6 @@
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
-#include "monster.h"
-#include "mon-util.h"
-#include "random.h"
 #include "state.h"
 
 // Add a monster to the list of beholders.

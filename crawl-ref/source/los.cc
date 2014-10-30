@@ -48,18 +48,10 @@
 #include <cmath>
 
 #include "areas.h"
-#include "bitary.h"
-#include "coord-circle.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
-#include "geom2d.h"
 #include "losglobal.h"
-#include "losparam.h"
-#include "mon-poly.h"
-#include "player.h"
-#include "ray.h"
-#include "terrain.h"
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.

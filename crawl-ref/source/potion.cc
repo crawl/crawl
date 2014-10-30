@@ -10,27 +10,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "areas.h"
-#include "artefact.h"
-#include "beam.h"
-#include "env.h"
 #include "food.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "item_use.h"
-#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
-#include "player.h"
 #include "player-stats.h"
 #include "skill_menu.h"
 #include "spl-goditem.h"
-#include "spl-miscast.h"
 #include "stringutil.h"
-#include "terrain.h"
 #include "transform.h"
 #include "xom.h"
 
