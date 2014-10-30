@@ -716,11 +716,7 @@ static bool _check_buggy_deck(item_def& deck)
 
     if (num_cards > num_flags)
     {
-#ifdef WIZARD
         strm << (num_cards - num_flags) << " more cards than flags.";
-#else
-        strm << "More cards than flags.";
-#endif
         strm << endl;
         for (unsigned int i = num_flags + 1; i <= num_cards; ++i)
             flags[i] = static_cast<char>(0);
@@ -729,11 +725,7 @@ static bool _check_buggy_deck(item_def& deck)
     }
     else if (num_flags > num_cards)
     {
-#ifdef WIZARD
         strm << (num_cards - num_flags) << " more cards than flags.";
-#else
-        strm << "More cards than flags.";
-#endif
         strm << endl;
 
         for (unsigned int i = num_flags; i > num_cards; --i)
@@ -750,13 +742,9 @@ static bool _check_buggy_deck(item_def& deck)
     }
     else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
     {
-#ifdef WIZARD
         strm << "Oops, counted " << static_cast<int>(num_marked)
              << " marked cards, but num_marked is "
              << (static_cast<int>(props["num_marked"].get_byte()));
-#else
-        strm << "Oops, book-keeping on marked cards is wrong.";
-#endif
         strm << endl;
 
         props["num_marked"] = static_cast<char>(num_marked);
@@ -767,12 +755,8 @@ static bool _check_buggy_deck(item_def& deck)
     {
         if (deck.initial_cards != (deck.used_count + num_cards))
         {
-#ifdef WIZARD
             strm << "Have you used " << deck.used_count << " cards, or "
                  << (deck.initial_cards - num_cards) << "? Oops.";
-#else
-            strm << "Oops, book-keeping on used cards is wrong.";
-#endif
             strm << endl;
             deck.used_count = deck.initial_cards - num_cards;
             problems = true;
@@ -782,12 +766,8 @@ static bool _check_buggy_deck(item_def& deck)
     {
         if (-deck.used_count != num_cards)
         {
-#ifdef WIZARD
             strm << "There are " << num_cards << " cards left, not "
                  << (-deck.used_count) << ".  Oops.";
-#else
-            strm << "Oops, book-keeping on cards left is wrong.";
-#endif
             strm << endl;
             deck.used_count = -num_cards;
             problems = true;
