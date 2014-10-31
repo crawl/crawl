@@ -894,44 +894,39 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_DAGGER:
-            if (one_chance_in(10))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(3))
-                rc = SPWPN_VENOM;
-            // **** intentional fall through here ****
+                                    // total weight 100
+            rc = random_choose_weighted(29, SPWPN_VENOM,
+                                        20, SPWPN_NORMAL,
+                                        10, SPWPN_SPEED,
+                                         9, SPWPN_DRAINING,
+                                         6, SPWPN_PROTECTION,
+                                         6, SPWPN_ELECTROCUTION,
+                                         5, SPWPN_HOLY_WRATH,
+                                         4, SPWPN_VAMPIRISM,
+                                         4, SPWPN_FLAMING,
+                                         4, SPWPN_FREEZING,
+                                         2, SPWPN_PAIN,
+                                         1, SPWPN_DISTORTION,
+                                         1, SPWPN_ANTIMAGIC,
+                                         0);
+            break;
 
         case WPN_SHORT_SWORD:
         case WPN_RAPIER:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(8))
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(8))
-                rc = SPWPN_PROTECTION;
-
-            if (one_chance_in(8))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(12))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(8))
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(8))
-                rc = SPWPN_SPEED;
-
-            if (one_chance_in(6))
-                rc = SPWPN_VENOM;
+                                    // total weight 100
+            rc = random_choose_weighted(33, SPWPN_NORMAL,
+                                        17, SPWPN_VENOM,
+                                        10, SPWPN_SPEED,
+                                         9, SPWPN_DRAINING,
+                                         6, SPWPN_PROTECTION,
+                                         6, SPWPN_ELECTROCUTION,
+                                         5, SPWPN_HOLY_WRATH,
+                                         4, SPWPN_VAMPIRISM,
+                                         4, SPWPN_FLAMING,
+                                         4, SPWPN_FREEZING,
+                                         1, SPWPN_DISTORTION,
+                                         1, SPWPN_ANTIMAGIC,
+                                         0);
             break;
 
         case WPN_FALCHION:
