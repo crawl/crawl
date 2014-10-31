@@ -6,13 +6,13 @@
 #ifndef STRINGS_H
 #define STRINGS_H
 
+#include "config.h"
+
 #ifdef CRAWL_HAVE_STRLCPY
 #include <cstring>
 #else
 size_t strlcpy(char *dst, const char *src, size_t n);
 #endif
-
-#include "config.h"
 
 string lowercase_string(string s);
 string &lowercase(string &s);
