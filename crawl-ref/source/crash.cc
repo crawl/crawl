@@ -72,6 +72,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 #include "options.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "threads.h"
 
 /////////////////////////////////////////////////////////////////////////////
