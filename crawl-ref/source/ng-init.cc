@@ -22,6 +22,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

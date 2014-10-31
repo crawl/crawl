@@ -48,6 +48,7 @@
 #include "stringutil.h"
 #include "transform.h"
 #include "travel.h"
+#include "unicode.h"
 #include "version.h"
 #include "viewchar.h"
 #include "view.h"
