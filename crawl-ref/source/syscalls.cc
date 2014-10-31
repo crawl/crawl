@@ -24,6 +24,7 @@
 #endif
 
 #include "files.h"
+#include "random.h"
 #include "unicode.h"
 
 bool lock_file(int fd, bool write, bool wait)
