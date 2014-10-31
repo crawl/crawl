@@ -5530,7 +5530,7 @@ bool ru_do_sacrifice(ability_type sac)
 {
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     bool variable_sac;
-    mutation_type mut;
+    mutation_type mut = MUT_NON_MUTATION;
     int num_sacrifices;
     string offer_text;
     string mile_text;
