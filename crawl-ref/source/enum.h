@@ -2437,7 +2437,7 @@ enum monster_type                      // menv[].type
     MONS_YELLOW_WASP,
     MONS_RED_WASP,
 #if TAG_MAJOR_VERSION > 34
-    MONS_CAUSTIC_WASP,
+    MONS_CAUSTIC_BEE,
 #endif
     MONS_GOLIATH_BEETLE,
     MONS_BORING_BEETLE,
@@ -3201,7 +3201,7 @@ enum monster_type                      // menv[].type
     MONS_USHABTI,
     MONS_DEATH_SCARAB,
     MONS_ANUBIS_GUARD,
-    MONS_CAUSTIC_WASP,
+    MONS_CAUSTIC_BEE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
