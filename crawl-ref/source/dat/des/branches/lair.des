@@ -18,29 +18,25 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     e.mons("plant")
     e.mons("bush")
     e.mons("fungus")
-    if you.branch() == "Forest" then
-        e.mons("spriggan w:4 / w:4 spriggan rider / w:2 spriggan druid"
-                .. " / w:3 spriggan air mage / w:3 spriggan berserker")
-        e.mons("wind drake / w:5 dryad / w:1 shambling mangrove")
-        e.ftile(".t+%*|q01234567COGTU = floor_lair")
+
+    if you.branch() == "Lair" then
+       e.mons("spriggan")
+       e.mons("wolf / black bear w:4 / yak w:2")
     else
-        if you.branch() == "Lair" then
-           e.mons("spriggan")
-           e.mons("wolf / black bear w:4 / yak w:2")
+        if you.absdepth() >= 14 then
+            e.mons("centaur warrior / hill giant")
+            e.mons("orange rat")
+        elseif you.absdepth() >= 8 then
+            e.mons("centaur / troll")
+            e.mons("porcupine")
         else
-            if you.absdepth() >= 14 then
-                e.mons("centaur warrior / hill giant")
-                e.mons("orange rat")
-            elseif you.absdepth() >= 8 then
-                e.mons("centaur / troll")
-                e.mons("porcupine")
-            else
-                e.mons("gnoll / ogre w:1")
-                e.mons("green rat")
-            end
+            e.mons("gnoll / ogre w:1")
+            e.mons("green rat")
         end
-        e.ftile(".t+%*|q01234567COGTU = floor_grass")
     end
+
+    e.ftile(".t+%*|q01234567COGTU = floor_grass")
+
     e.kfeat("O = shallow_water")
     if mist then
         e.lua_marker("O", fog_machine { pow_min = 3, pow_max = 7, delay = delaynum,
