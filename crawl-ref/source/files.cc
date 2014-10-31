@@ -1197,7 +1197,7 @@ static void _make_level(dungeon_feature_type stair_taken,
             mpr(_double_ghost_spookmessage());
             load_ghost(true);
         }
-        const bool delete_ghost = !is_halloween || one_chance_in(3);
+        const bool delete_ghost = !is_halloween;
         load_ghost(true, delete_ghost);
     }
     env.turns_on_level = 0;
