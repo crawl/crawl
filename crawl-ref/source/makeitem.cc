@@ -986,7 +986,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                                          2, SPWPN_DISTORTION,
                                          2, SPWPN_ANTIMAGIC,
                                          1, SPWPN_PAIN,
-                                         1, SPWPN_HOLY_WRATH;
+                                         1, SPWPN_HOLY_WRATH,
                                          0);
             break;
 
