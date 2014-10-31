@@ -970,39 +970,24 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WAR_AXE:
+        case WPN_HAND_AXE:
         case WPN_BROAD_AXE:
         case WPN_BATTLEAXE:
         case WPN_EXECUTIONERS_AXE:
-            if (one_chance_in(25))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(14))
-                rc = SPWPN_DRAINING;
-            // **** intentional fall through here ****
-        case WPN_HAND_AXE:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(30))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(3) && (rc == SPWPN_NORMAL || one_chance_in(5)))
-                rc = SPWPN_VORPAL;
-
-            if (one_chance_in(4))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(8))
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(12))
-                rc = SPWPN_VENOM;
+                                    // total weight 100
+            rc = random_choose_weighted(31, SPWPN_NORMAL,
+                                        16, SPWPN_VORPAL,
+                                        11, SPWPN_ELECTROCUTION,
+                                        10, SPWPN_FREEZING,
+                                        10, SPWPN_FLAMING,
+                                         8, SPWPN_VENOM,
+                                         5, SPWPN_VAMPIRISM,
+                                         3, SPWPN_DRAINING,
+                                         2, SPWPN_DISTORTION,
+                                         2, SPWPN_ANTIMAGIC,
+                                         1, SPWPN_PAIN,
+                                         1, SPWPN_HOLY_WRATH;
+                                         0);
             break;
 
         case WPN_WHIP:
