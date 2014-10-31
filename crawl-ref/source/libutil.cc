@@ -18,6 +18,7 @@
 #include "message.h"
 #include "state.h"
 #include "stringutil.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #ifdef TARGET_OS_WINDOWS
