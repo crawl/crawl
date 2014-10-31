@@ -1190,8 +1190,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_KILLER_BEE;
     case MONS_QUEEN_BEE:
         return TILEP_MONS_QUEEN_BEE;
-    case MONS_CAUSTIC_WASP:
-        return TILEP_MONS_CAUSTIC_WASP;
+    case MONS_CAUSTIC_BEE:
+        return TILEP_MONS_CAUSTIC_BEE;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -3570,8 +3570,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_KILLER_BEE;
     case MONS_QUEEN_BEE:
         return TILE_CORPSE_QUEEN_BEE;
-    case MONS_CAUSTIC_WASP:
-        return TILE_CORPSE_CAUSTIC_WASP;
+    case MONS_CAUSTIC_BEE:
+        return TILE_CORPSE_CAUSTIC_BEE;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
