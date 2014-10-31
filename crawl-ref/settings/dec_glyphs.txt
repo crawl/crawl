@@ -37,7 +37,6 @@ display_char = item_amulet:"
 display_char = cloud:#
 display_char = tree:7
 display_char = teleporter:^
-display_char = space: 
 display_char = fired_flask:!
 display_char = fired_bolt:#
 display_char = fired_chunk:%
