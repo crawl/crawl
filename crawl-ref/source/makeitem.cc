@@ -895,7 +895,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         case WPN_DAGGER:
                                     // total weight 100
-            rc = random_choose_weighted(29, SPWPN_VENOM,
+            rc = random_choose_weighted(28, SPWPN_VENOM,
                                         20, SPWPN_NORMAL,
                                         10, SPWPN_SPEED,
                                          9, SPWPN_DRAINING,
