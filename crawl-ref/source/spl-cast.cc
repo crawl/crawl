@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "describe.h"
@@ -1688,8 +1689,16 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_WEAVE_SHADOWS:
     {
-        level_id place(BRANCH_DUNGEON,
-                       min(27, max(1, div_rand_round(powc, 3))));
+        level_id place(BRANCH_DUNGEON, 1);
+        const int level = 5 + div_rand_round(powc, 3);
+        const int depthsabs = branches[BRANCH_DEPTHS].absdepth;
+        if (level >= depthsabs && x_chance_in_y(level + 1 - depthsabs, 5))
+        {
+            place.branch = BRANCH_DEPTHS;
+            place.depth = level  + 1 - depthsabs;
+        }
+        else
+            place.depth = level;
         return cast_shadow_creatures(spell, god, place, fail);
     }
 
