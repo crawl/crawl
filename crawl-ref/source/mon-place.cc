@@ -2135,7 +2135,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_VERY_UGLY_THING:
         if (env.absdepth0 < 19)
             break;
-        // fallthrough to ugly things...
+        band = BAND_VERY_UGLY_THINGS;
+        band_size = 2 + random2(4);
+        break;
     case MONS_UGLY_THING:
         if (env.absdepth0 < 13)
             break;
@@ -2973,8 +2975,10 @@ static monster_type _band_member(band_type band, int which)
         return MONS_HARPY;
 
     case BAND_UGLY_THINGS:
-        return (env.absdepth0 > 21 && one_chance_in(4)) ?
-                   MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+        return MONS_UGLY_THING;
+
+    case BAND_VERY_UGLY_THINGS:
+        return one_chance_in(4) ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
 
     case BAND_HELL_HOUNDS:
         return MONS_HELL_HOUND;
