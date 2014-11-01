@@ -1846,9 +1846,8 @@ static void _potion_card(int power, deck_rarity_type rarity)
                                              1, POT_AGILITY,
                                              1, POT_BRILLIANCE,
                                              1, POT_MIGHT,
-                                             1, POT_CONFUSION,
-                                             1, POT_SLOWING,
-                                             1, POT_DECAY,
+                                             1, POT_BERSERK_RAGE,
+                                             1, POT_INVISIBILITY,
                                              0);
 
     if (power_level >= 1 && coinflip())
@@ -1864,6 +1863,15 @@ static void _potion_card(int power, deck_rarity_type rarity)
     }
 
     potion_effect(pot, random2(power/4));
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->attitude == ATT_FRIENDLY)
+			mon->drink_potion_effect(pot, true);
+	}
+
 }
 
 static void _focus_card(int power, deck_rarity_type rarity)

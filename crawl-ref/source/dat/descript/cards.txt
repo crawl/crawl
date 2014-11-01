@@ -63,6 +63,7 @@ the Potion card
 
 This card has the same effect, positive or negative, as drinking a random
 magical potion. It is more likely to have positive effects at high power.
+Its effects will be shared with your allies if possible.
 %%%%
 Focus card
 
