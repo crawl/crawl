@@ -2202,7 +2202,7 @@ static coord_def _random_point_hittable_from(const coord_def &c,
     return coord_def();
 }
 
-static void _create_feat_splash(coord_def center,
+void create_feat_splash(coord_def center,
                                 int radius,
                                 int nattempts)
 {
@@ -2572,7 +2572,7 @@ void bolt::affect_endpoint()
         else
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
                   pos(), "You hear a splash.");
-        _create_feat_splash(pos(), 2, random_range(3, 12, 2));
+        create_feat_splash(pos(), 2, random_range(3, 12, 2));
     }
 
     if (origin_spell == SPELL_BLINKBOLT)
