@@ -1990,6 +1990,10 @@ _Boris_return_rare_
 Boris unsummoned
 
 @The_monster@ says, "You can't fire me, I quit!"
+%%%%
+friendly Boris unsummoned
+
+@Boris unsummoned@
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
