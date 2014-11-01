@@ -346,6 +346,10 @@ static const duration_def duration_data[] =
       false, RED, "-rN",
       "negative energy vulnerable", "negative energy vulnerability",
       "You are more vulnerable to negative energy.", true },
+    { DUR_CLEAVE,
+      false, LIGHTBLUE, "Cleave",
+      "cleaving", "cleave",
+      "You are cleaving through your foes.", true },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
