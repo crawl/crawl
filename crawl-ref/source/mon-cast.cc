@@ -7385,6 +7385,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_HUNTING_CRY:
         return !foe;
 
+    case SPELL_PARALYSIS_GAZE:
+    case SPELL_CONFUSION_GAZE:
+    case SPELL_DRAINING_GAZE:
+        return !foe || !mon->can_see(foe);
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
