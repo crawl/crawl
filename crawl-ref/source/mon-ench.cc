@@ -1028,6 +1028,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("%s icy shield evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
         }
+    case ENCH_RESISTANCE:
+        if (!quiet)
+            simple_monster_message(this, " is no longer unusually resistant.");
         break;
 
     default:
@@ -1141,6 +1144,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
         case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
+        case ENCH_RESISTANCE:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1638,6 +1642,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
     case ENCH_NEGATIVE_VULN:
+    case ENCH_RESISTANCE:
         decay_enchantment(en);
         break;
 
@@ -2387,7 +2392,8 @@ static const char *enchant_names[] =
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
-    "deflect missiles", "negative_vuln", "condensation_shield", "buggy",
+    "deflect missiles", "negative_vuln", "condensation_shield", "resistant",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2531,6 +2537,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_STONESKIN:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
+    case ENCH_RESISTANCE:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
