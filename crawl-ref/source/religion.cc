@@ -1454,7 +1454,8 @@ static bool _give_nemelex_gift(bool forced = false)
     {
 
         misc_item_type gift_type = random_choose_weighted(
-                                        8, MISC_DECK_OF_WAR,
+                                        4, MISC_DECK_OF_WAR,
+                                        4, MISC_DECK_OF_DESTRUCTION,
                                         2, MISC_DECK_OF_ESCAPE,
                                         0);
 
