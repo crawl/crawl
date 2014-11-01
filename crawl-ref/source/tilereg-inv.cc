@@ -666,8 +666,7 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     desc.tile = tileidx_item(item);
 
     int type = item.base_type;
-    if (type == OBJ_FOOD || type == OBJ_SCROLLS
-        || type == OBJ_POTIONS || type == OBJ_MISSILES)
+    if (is_stackable_item(item))
     {
         // -1 specifies don't display anything
         desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
