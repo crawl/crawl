@@ -935,42 +935,25 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         case WPN_FALCHION:
         case WPN_LONG_SWORD:
-            if (one_chance_in(12))
-                rc = SPWPN_VENOM;
-            // **** intentional fall through here ****
         case WPN_SCIMITAR:
-            if (one_chance_in(25))
-                rc = SPWPN_PAIN;
-            // **** intentional fall through here ****
         case WPN_GREAT_SWORD:
         case WPN_DOUBLE_SWORD:
         case WPN_TRIPLE_SWORD:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(5))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(7))
-                rc = SPWPN_PROTECTION;
-
-            if (one_chance_in(12))
-                rc = SPWPN_DRAINING;
-
-            if (one_chance_in(7))
-                rc = SPWPN_ELECTROCUTION;
-
-            if (one_chance_in(4))
-                rc = SPWPN_HOLY_WRATH;
-
-            if (one_chance_in(4) && (rc == SPWPN_NORMAL || one_chance_in(3)))
-                rc = SPWPN_VORPAL;
+                                    // total weight 100
+            rc = random_choose_weighted(23, SPWPN_HOLY_WRATH,
+                                        19, SPWPN_NORMAL,
+                                        15, SPWPN_VORPAL,
+                                        10, SPWPN_ELECTROCUTION,
+                                         8, SPWPN_PROTECTION,
+                                         5, SPWPN_FREEZING,
+                                         5, SPWPN_FLAMING,
+                                         5, SPWPN_DRAINING,
+                                         4, SPWPN_VAMPIRISM,
+                                         2, SPWPN_VENOM,
+                                         2, SPWPN_DISTORTION,
+                                         1, SPWPN_PAIN,
+                                         1, SPWPN_ANTIMAGIC,
+                                         0);
             break;
 
         case WPN_WAR_AXE:
