@@ -5973,9 +5973,10 @@ bool monster::should_drink_potion(potion_type ptype) const
 }
 
 // Return the ID status gained.
-item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
+item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff, bool card)
 {
-    simple_monster_message(this, " drinks a potion.");
+    if (!card)
+		simple_monster_message(this, " drinks a potion.");
 
     item_type_id_state_type ident = ID_MON_TRIED_TYPE;
 
