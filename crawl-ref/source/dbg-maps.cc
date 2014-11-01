@@ -221,6 +221,8 @@ bool mapstat_build_levels()
 {
     if (!generated_levels.size())
         _dungeon_places();
+    printf("Iteration: ");
+    fflush(stdout);
     for (int i = 0; i < SysEnv.map_gen_iters; ++i)
     {
         clear_messages();
@@ -231,7 +233,8 @@ bool mapstat_build_levels()
              last_error.empty() ? "" : (" (" + last_error + ")").c_str(),
              (unsigned int)use_count.size(), build_attempts, level_vetoes,
              build_attempts ? level_vetoes * 100.0 / build_attempts : 0.0);
-
+        printf("%d..", i + 1);
+        fflush(stdout);
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
@@ -243,6 +246,8 @@ bool mapstat_build_levels()
         if (crawl_state.obj_stat_gen)
             objstat_iteration_stats();
     }
+    printf("Finished.\n");
+    fflush(stdout);
     return true;
 }
 
