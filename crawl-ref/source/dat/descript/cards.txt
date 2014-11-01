@@ -48,7 +48,7 @@ shielding and resistances.
 %%%%
 the Blade card
 
-This card temporarily enchants or even animates your weapon.
+This card temporarily allows you to cleave, hitting all adjacent foes.
 %%%%
 the Shadow card
 

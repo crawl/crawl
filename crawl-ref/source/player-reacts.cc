@@ -1063,6 +1063,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SAP_MAGIC, delay,
                           "Your magic seems less tainted.");
 
+    _decrement_a_duration(DUR_CLEAVE, delay,
+                          "Your cleaving frenzy subsides.");
+
     if (_decrement_a_duration(DUR_CORROSION, delay,
                           "You repair your equipment."))
     {

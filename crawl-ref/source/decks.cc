@@ -1802,46 +1802,26 @@ static void _helm_card(int power, deck_rarity_type rarity)
 
 static void _blade_card(int power, deck_rarity_type rarity)
 {
-    if (you.species == SP_FELID)
-    {
-        mpr("You feel like a smilodon for a moment.");
-        return;
-    }
-
     const int power_level = _get_power_level(power, rarity);
-    brand_type brand;
+    const bool cleaving = you.duration[DUR_CLEAVE] > 0;
+    const item_def* const weapon = you.weapon();
+    const bool axe = weapon && item_attack_skill(*weapon) == SK_AXES;
+    const bool bladed = weapon && can_cut_meat(*weapon);
+    const bool plural = (weapon && weapon->quantity > 1) || !weapon;
+    string hand_part = "Your " + you.hand_name(true);
 
-    if (power_level >= 2)
+    you.increase_duration(DUR_CLEAVE, 10 + random2((power_level + 1) * 10));
+
+    if (!cleaving)
     {
-        cast_tukimas_dance(random2(power/4), &you, true);
-        return;
-    }
-    else if (power_level == 1)
-    {
-        brand_type brands[] = {SPWPN_DISTORTION, SPWPN_PAIN,
-            SPWPN_ANTIMAGIC, SPWPN_CHAOS, SPWPN_ELECTROCUTION};
-        brand = RANDOM_ELEMENT(brands);
+        mprf(MSGCH_DURATION,
+             "%s look%s %ssharp%s",
+             (weapon) ? weapon->name(DESC_YOUR).c_str() : hand_part.c_str(),
+             (plural) ?  "" : "s", (bladed) ? "" : "oddly ",
+             (axe) ? " (like it always does)." : ".");
     }
     else
-    {
-        brand_type brands[] = {SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM,
-            SPWPN_DRAINING, SPWPN_VORPAL};
-        brand = RANDOM_ELEMENT(brands);
-    }
-
-    if (!brand_weapon(brand, random2(power/4)))
-    {
-        item_def* wpn = you.weapon();
-
-        if (wpn)
-        {
-            mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_YOUR).c_str(),
-                 wpn->quantity == 1 ? "s" : "");
-        }
-        else
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
-    }
+        mprf(MSGCH_DURATION, "Your cleaving ability is renewed.");
 }
 
 static void _shadow_card(int power, deck_rarity_type rarity)

@@ -1698,6 +1698,7 @@ enum duration_type
     DUR_HORROR,
     DUR_NO_SCROLLS,
     DUR_NEGATIVE_VULN,
+    DUR_CLEAVE,
     NUM_DURATIONS
 };
 
