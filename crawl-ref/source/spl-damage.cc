@@ -1453,7 +1453,7 @@ static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
     }
 
     const int dice = 6;
-    const int max_dam = 35 + div_rand_round(pow, 2);
+    const int max_dam = 30 + div_rand_round(pow, 2);
     const dice_def dam_dice = calc_dice(dice, max_dam);
     const int dam = dam_dice.roll();
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
