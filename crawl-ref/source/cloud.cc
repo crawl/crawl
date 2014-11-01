@@ -1772,7 +1772,7 @@ int get_cloud_colour(int cloudno)
         break;
 
     case CLOUD_NEGATIVE_ENERGY:
-        which_colour = ETC_DEATH;
+        which_colour = ETC_INCARNADINE;
         break;
 
     default:
