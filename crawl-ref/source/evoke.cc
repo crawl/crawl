@@ -1601,14 +1601,6 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
 
-    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
-    int res_margin = victim->check_res_magic(power);
-    if (res_margin > 0)
-    {
-        simple_monster_message(victim, mons_resist_string(victim, res_margin));
-        return SPRET_FAIL;
-    }
-
     monster* mon = clone_mons(victim, true);
     if (!mon)
     {
@@ -1616,9 +1608,13 @@ static spret_type _phantom_mirror()
         return SPRET_FAIL;
     }
 
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
+                             * (100 - victim->check_res_magic(power)) / 100));
+
     mon->attitude = ATT_FRIENDLY;
-    mon->mark_summoned(min(6, you.skill(SK_EVOCATIONS, 1) / 4 + 1), true,
-                       SPELL_PHANTOM_MIRROR);
+    mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
+
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
     mon->add_ench(ENCH_PHANTOM_MIRROR);
