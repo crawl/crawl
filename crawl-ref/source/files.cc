@@ -1192,13 +1192,17 @@ static void _make_level(dungeon_feature_type stair_taken,
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
         && one_chance_in(is_halloween ? 2 : 3))
     {
-        if (is_halloween && coinflip())
-        {
-            mpr(_double_ghost_spookmessage());
-            load_ghost(true);
-        }
+        // are we loading more than one ghost? (or trying, anyway)
+        bool doubleghost = is_halloween && coinflip();
+        if (doubleghost)
+            doubleghost = load_ghost(true);
+
         const bool delete_ghost = !is_halloween;
-        load_ghost(true, delete_ghost);
+        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
+
+        // did we actually manage to load more than one ghost (file)?
+        if (doubleghost)
+            mpr(_double_ghost_spookmessage());
     }
     env.turns_on_level = 0;
     // sanctuary
