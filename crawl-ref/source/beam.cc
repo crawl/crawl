@@ -528,6 +528,7 @@ static beam_type _chaotic_reflection_flavour(bolt* beam)
             10, BEAM_BLINK,
             10, BEAM_SLEEP,
             10, BEAM_VULNERABILITY,
+            10, BEAM_RESISTANCE,
              2, BEAM_ENSNARE,
              0);
 }
