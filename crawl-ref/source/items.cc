@@ -2653,7 +2653,9 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_RUNE_OF_ZOT) ? item.sub_type : max_type;
+        return (item.sub_type == MISC_RUNE_OF_ZOT
+                || item.sub_type == MISC_PHANTOM_MIRROR)
+               ? item.sub_type : max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL || item_type_known(item))
             return item.sub_type;
