@@ -643,6 +643,11 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_ELEMENTAL, "elemental", _etc_elemental
                        ));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_INCARNADINE, "incarnadine",
+                            40,  MAGENTA,
+                            40,  RED,
+                        0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
