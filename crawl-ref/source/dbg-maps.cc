@@ -108,8 +108,19 @@ static bool _do_build_level()
 
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
+        {
             if (grd[x][y] == DNGN_RUNED_DOOR)
                 grd[x][y] = DNGN_CLOSED_DOOR;
+            // objstat tallying of monsters
+            if (crawl_state.obj_stat_gen)
+            {
+                coord_def pos(x, y);
+                monster *mons = monster_at(pos);
+                if (mons)
+                    objstat_record_monster(mons);
+            }
+        }
+
 
     // Record items for objstat
     if (crawl_state.obj_stat_gen)
