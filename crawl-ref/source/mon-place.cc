@@ -2118,7 +2118,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
                 band_size = 2 + random2(6);
                 break;
         }
-
+        break;
 
     case MONS_FLYING_SKULL:
         band = BAND_FLYING_SKULLS;
