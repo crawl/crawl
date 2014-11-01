@@ -210,6 +210,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_NEGATIVE_VULN;
     case ENCH_CONDENSATION_SHIELD:
         return MB_CONDENSATION_SHIELD;
+    case ENCH_RESISTANCE:
+		return MB_RESISTANCE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1579,6 +1581,8 @@ vector<string> monster_info::attributes() const
         v.push_back("more vulnerable to negative energy");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("protected by a disc of dense vapour");
+    if (is(MB_RESISTANCE))
+		v.push_back("unusually resistant");
     return v;
 }
 
