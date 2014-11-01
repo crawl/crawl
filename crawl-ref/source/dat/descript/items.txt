@@ -806,7 +806,8 @@ to make excellent armour.
 phantom mirror
 
 A hand mirror which can create a reflection of a nearby creature, shattering
-in the process.
+in the process. Reflections' longevity is proportionate to the mirror user's
+Evocations skill, and inversely proportionate to the target's magic resistance.
 %%%%
 phial of floods
 
