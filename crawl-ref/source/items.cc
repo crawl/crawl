@@ -1393,6 +1393,12 @@ bool is_stackable_item(const item_def &item)
         return true;
     }
 
+    if (item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_PHANTOM_MIRROR)
+    {
+        return true;
+    }
+
     return false;
 }
 

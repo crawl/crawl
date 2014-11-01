@@ -543,6 +543,10 @@ void item_colour(item_def &item)
             break;
 #endif
 
+        case MISC_PHANTOM_MIRROR:
+            item.colour = RED;
+            break;
+
         // MAGENTA is for ornate decks
 
         case MISC_STONE_OF_TREMORS:

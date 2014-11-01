@@ -38,7 +38,9 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-chimera.h"
+#include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "player.h"
@@ -1569,6 +1571,67 @@ static void _expend_xp_evoker(item_def &item)
     item.evoker_debt = 10;
 }
 
+static spret_type _phantom_mirror()
+{
+    bolt beam;
+    monster* victim = NULL;
+    dist spd;
+    targetter_smite tgt(&you, LOS_RADIUS, 0, 0);
+
+    if (!spell_direction(spd, beam, DIR_TARGET, TARG_ANY,
+                         LOS_RADIUS, false, true, false, NULL,
+                         "Aiming: <white>Phantom Mirror</white>", true,
+                         &tgt))
+    {
+        return SPRET_ABORT;
+    }
+    victim = monster_at(beam.target);
+    if (!victim || !you.can_see(victim))
+    {
+        if (beam.target == you.pos())
+            mpr("You can't use the mirror on yourself.");
+        else
+            mpr("You can't see anything there to clone.");
+        return SPRET_ABORT;
+    }
+
+    if (!actor_is_illusion_cloneable(victim))
+    {
+        mpr("The mirror can't reflect that right now.");
+        return SPRET_ABORT;
+    }
+
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    int res_margin = victim->check_res_magic(power);
+    if (res_margin > 0)
+    {
+        simple_monster_message(victim, mons_resist_string(victim, res_margin));
+        return SPRET_FAIL;
+    }
+
+    monster* mon = clone_mons(victim, true);
+    if (!mon)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_FAIL;
+    }
+
+    mon->attitude = ATT_FRIENDLY;
+    mon->mark_summoned(min(6, you.skill(SK_EVOCATIONS, 1) / 4 + 1), true,
+                       SPELL_PHANTOM_MIRROR);
+    mon->summoner = MID_PLAYER;
+    mons_add_blame(mon, "mirrored by the player character");
+    mon->add_ench(ENCH_PHANTOM_MIRROR);
+
+    mon->behaviour = BEH_SEEK;
+    set_nearest_monster_foe(mon);
+
+    mprf("You reflect %s with the mirror, and the mirror shatters!",
+         victim->name(DESC_THE).c_str());
+
+    return SPRET_SUCCESS;
+}
+
 static bool _rod_spell(item_def& irod, bool check_range)
 {
     ASSERT(irod.base_type == OBJ_RODS);
@@ -1914,6 +1977,23 @@ bool evoke_item(int slot, bool check_range)
             ASSERT(in_inventory(item));
             dec_inv_item_quantity(item.link, 1);
             invalidate_agrid(true);
+            break;
+
+        case MISC_PHANTOM_MIRROR:
+            switch (_phantom_mirror())
+            {
+                default:
+                case SPRET_ABORT:
+                    return false;
+
+                case SPRET_SUCCESS:
+                    ASSERT(in_inventory(item));
+                    dec_inv_item_quantity(item.link, 1);
+                    // deliberate fall-through
+                case SPRET_FAIL:
+                    pract = 1;
+                    break;
+            }
             break;
 
         default:

@@ -671,9 +671,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Total weight if none have been seen is 100.
     int result = random_choose_weighted(           // Decks given lowest weight.
-                                                   2, MISC_DECK_OF_WONDERS,
-                                                   3, MISC_DECK_OF_CHANGES,
-                                                   3, MISC_DECK_OF_DEFENCE,
+                                                   1, MISC_DECK_OF_WONDERS,
+                                                   2, MISC_DECK_OF_CHANGES,
+                                                   2, MISC_DECK_OF_DEFENCE,
                                                    // The player might want
                                                    // multiple of these.
     (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
@@ -683,12 +683,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
                                                    // These have charges, so
                                                    // give them a constant
                                                    // weight.
-    (player_mutation_level(MUT_NO_LOVE) ?     0 :  8), MISC_BOX_OF_BEASTS,
-    (player_mutation_level(MUT_NO_LOVE) ?     0 :  8), MISC_SACK_OF_SPIDERS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_BOX_OF_BEASTS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_SACK_OF_SPIDERS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_PHANTOM_MIRROR,
                                                    // The player never needs
                                                    // more than one.
-    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
-    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
+    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7), MISC_DISC_OF_STORMS,
+    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7), MISC_LANTERN_OF_SHADOWS,
                                                    0);
 
     // Give a crystal ball based on both evocations and either spellcasting or

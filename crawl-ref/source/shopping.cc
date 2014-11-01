@@ -1803,6 +1803,10 @@ unsigned int item_value(item_def item, bool ident)
             valued += 400;
             break;
 
+        case MISC_PHANTOM_MIRROR:
+            valued += 300;
+            break;
+
         case MISC_BOX_OF_BEASTS:
         case MISC_DISC_OF_STORMS:
         case MISC_SACK_OF_SPIDERS:
