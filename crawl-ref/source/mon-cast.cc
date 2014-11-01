@@ -3752,7 +3752,7 @@ static bool _mons_cast_freeze(monster* mons)
     {
         bolt beam;
         beam.flavour = BEAM_COLD;
-        damage = mons_adjust_flavoured(mons, beam, base_damage);
+        damage = mons_adjust_flavoured(target->as_monster(), beam, base_damage);
     }
 
     if (you.can_see(target))
