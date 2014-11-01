@@ -497,7 +497,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     int stype = 0;
     if (m->is_summoned(0, &stype)
-        && !m->has_ench(ENCH_PHANTOM_MIRROR))
+        && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
         if (stype > 0 && stype < NUM_SPELLS

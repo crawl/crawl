@@ -4022,6 +4022,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
 
+    case MISC_PHANTOM_MIRROR:
+        return TILE_MISC_PHANTOM_MIRROR;
+
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
 #if TAG_MAJOR_VERSION == 34

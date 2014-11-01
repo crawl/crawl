@@ -1067,6 +1067,7 @@ static const char* misc_type_name(int type, bool known)
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
+    case MISC_PHANTOM_MIRROR:            return "phantom mirror";
 
     case MISC_RUNE_OF_ZOT:
     default:

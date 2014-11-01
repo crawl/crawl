@@ -253,6 +253,8 @@ enum misc_item_type
     MISC_PHIAL_OF_FLOODS,
     MISC_SACK_OF_SPIDERS,
 
+    MISC_PHANTOM_MIRROR,
+
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,

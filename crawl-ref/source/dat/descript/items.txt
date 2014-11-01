@@ -803,6 +803,11 @@ The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
 form it does not provide much protection, but by magical means it may be used
 to make excellent armour.
 %%%%
+phantom mirror
+
+A hand mirror which can create a reflection of a nearby creature, shattering
+in the process.
+%%%%
 phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
