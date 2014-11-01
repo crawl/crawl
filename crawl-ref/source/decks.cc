@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "evoke.h"
 #include "food.h"
 #include "ghost.h"
 #include "godwrath.h"
@@ -53,6 +54,7 @@
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -2514,27 +2516,77 @@ static void _storm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
 
-    big_cloud(CLOUD_RAIN, &you, you.pos(),
-              30 + (power_level > 0) ? random2(20) : 0, 8 + random2(8));
-
-    if (x_chance_in_y(power_level + 1, 2))
+    if (coinflip())
     {
-        if (!you_worship(GOD_CHEIBRIADOS))
-            cast_swiftness(random2(power/4));
-        else
-            simple_god_message(" protects you from inadvertent hurry.");
+        int num_to_summ = 1 + random2(1 + power_level);
+        for (int i = 0; i < num_to_summ; ++i)
+        {
+            create_monster(
+                    mgen_data(MONS_AIR_ELEMENTAL,
+                              BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
+                              MG_AUTOFOE));
+        }
+    }
+    else
+    {
+        wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
+
+        for (radius_iterator ri(you.pos(), 5, C_ROUND, LOS_SOLID); ri; ++ri)
+        {
+            monster *mons = monster_at(*ri);
+
+            if (adjacent(*ri, you.pos()))
+                continue;
+
+            if (mons && mons->wont_attack())
+                continue;
+
+
+            if ((grd(*ri) == DNGN_FLOOR || feat_is_water(grd(*ri)))
+                && env.cgrid(*ri) == EMPTY_CLOUD)
+            {
+                place_cloud(CLOUD_STORM, *ri,
+                            5 + (power_level + 1) * random2(10), & you);
+            }
+        }
     }
 
-    if (x_chance_in_y(power_level, 3))
-    {
-         if (create_monster(
-             mgen_data(MONS_TWISTER,
-                       BEH_HOSTILE, &you, 1 + random2(power_level + 1),
-                       0, you.pos(), MHITYOU)))
-         {
-           mpr("A tornado forms.");
-         }
-     }
+	if (power_level > 1 || (power_level == 1 && coinflip()))
+	{
+        if (coinflip())
+        {
+            coord_def pos;
+            int tries = 0;
+
+            do
+            {
+                random_near_space(&you, you.pos(), pos, true);
+                tries++;
+            }
+            while (distance2(pos, you.pos()) < 3 && tries < 50);
+
+            if (tries > 50)
+                pos = you.pos();
+
+
+            if (create_monster(
+                        mgen_data(MONS_TWISTER,
+                                  BEH_HOSTILE, &you, 1 + random2(power_level + 1),
+                                  0, pos, MHITYOU, MG_FORCE_PLACE)))
+            {
+                mpr("A tornado forms.");
+            }
+		}
+        else
+        {
+            // create some water so the wellspring can place
+            create_feat_splash(you.pos(), 2, 3);
+            create_monster(
+                    mgen_data(MONS_ELEMENTAL_WELLSPRING,
+							  BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
+							  MG_AUTOFOE));
+        }
+	}
  }
 
 static void _illusion_card(int power, deck_rarity_type rarity)

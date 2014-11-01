@@ -13,7 +13,7 @@ void get_all_manual_charges(vector<int> &charges);
 void set_all_manual_charges(const vector<int> &charges);
 string manual_skill_names(bool short_text=false);
 
-void wind_blast(actor* agent, int pow, coord_def target);
+void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 
 void tome_of_power(int slot);
 
