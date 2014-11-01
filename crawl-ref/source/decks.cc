@@ -114,7 +114,6 @@ const deck_archetype deck_of_destruction[] =
     { CARD_CLOUD,    {5, 5, 5} },
     { CARD_HAMMER,   {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
-    { CARD_FORTITUDE, {5, 5, 5} },
     { CARD_STORM,    {5, 5, 5} },
     { CARD_PAIN,     {5, 5, 3} },
     { CARD_ORB,      {5, 5, 5} },
@@ -129,6 +128,7 @@ const deck_archetype deck_of_battle[] =
     { CARD_HELM,          {5, 5, 5} },
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
+    { CARD_FORTITUDE,     {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -389,7 +389,6 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
         subdecks.push_back(deck_of_punishment);
         break;
     case MISC_DECK_OF_WAR:
-        subdecks.push_back(deck_of_destruction);
         subdecks.push_back(deck_of_battle);
         subdecks.push_back(deck_of_summoning);
         break;
