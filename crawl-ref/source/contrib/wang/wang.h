@@ -59,7 +59,7 @@ void intersection(std::set<T>& output, const std::set<T>& input) {
 }
 
 /**
- * Domino Layout
+ * CornerDomino Layout
  *
  * A#B
  * ###
@@ -153,10 +153,10 @@ class Adjacency {
     std::map<Direction, std::set<uint8_t>* > permitted_;
 };
 
-class Domino {
+class CornerDomino {
   public:
-    Domino() : id_(-1) {}
-    Domino(uint8_t i, const Colours colours) :
+    CornerDomino() : id_(-1) {}
+    CornerDomino(uint8_t i, const Colours colours) :
       id_(i) {
         colours_.nw = colours.nw;
         colours_.ne = colours.ne;
@@ -164,36 +164,36 @@ class Domino {
         colours_.sw = colours.sw;
     }
 
-    bool matches(const Domino& o, Direction dir) const;
-    void intersect(const Domino& other, std::set<Direction>& directions) const; 
+    bool matches(const CornerDomino& o, Direction dir) const;
+    void intersect(const CornerDomino& other, std::set<Direction>& directions) const; 
 
     uint8_t id() {
       return id_;
     }
 
-    colour nw_color() const {
+    colour nw_colour() const {
       return colours_.nw;
     }
   
-    colour ne_color() const {
+    colour ne_colour() const {
       return colours_.ne;
     }
   
-    colour se_color() const {
+    colour se_colour() const {
       return colours_.se;
     }
 
-    colour sw_color() const {
+    colour sw_colour() const {
       return colours_.sw;
     }
 
-    friend std::ostream& operator<< (std::ostream& stream, const Domino& dir);
+    friend std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
   private:
     uint8_t id_;
     Colours colours_;
 };
 
-std::ostream& operator<< (std::ostream& stream, const Domino& dir);
+std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
 
 class DominoSet {
   public:
@@ -204,7 +204,7 @@ class DominoSet {
     uint8_t size() { return dominoes_.size(); }
     void print();
 
-    Domino get(uint8_t id) const {
+    CornerDomino get(uint8_t id) const {
       return dominoes_.find(id)->second;
     }
   private:
@@ -213,7 +213,7 @@ class DominoSet {
     void Randomise(std::set<Point> pts, std::map<Point, uint8_t>& tiling, int sz) const;
 
     uint8_t max_colour_;
-    std::map<uint8_t, Domino> dominoes_;
+    std::map<uint8_t, CornerDomino> dominoes_;
     std::map<uint8_t, Adjacency*> adjacencies_;
 };
 
