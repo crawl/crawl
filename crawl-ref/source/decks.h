@@ -149,7 +149,6 @@ card_type top_card(const item_def &item);
 
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
-deck_rarity_type deck_rarity(const item_def &item);
 colour_t deck_rarity_to_colour(deck_rarity_type rarity);
 void init_deck(item_def &item);
 

@@ -2554,7 +2554,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         if (force_ego >= DECK_RARITY_COMMON
             && force_ego <= DECK_RARITY_LEGENDARY)
         {
-            item.deck_rarity = force_ego;
+            item.deck_rarity = static_cast<deck_rarity_type>(force_ego);
         }
         else
         {

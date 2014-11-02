@@ -492,7 +492,7 @@ static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity,
 
 static card_type _random_card(const item_def& item, bool &was_oddity)
 {
-    return _random_card(item.sub_type, deck_rarity(item), was_oddity);
+    return _random_card(item.sub_type, item.deck_rarity, was_oddity);
 }
 
 static card_type _draw_top_card(item_def& deck, bool message,
@@ -1252,7 +1252,7 @@ bool draw_three(int slot)
 
     // Make deck disappear *before* the card effect, since we
     // don't want to unwield an empty deck.
-    deck_rarity_type rarity = deck_rarity(deck);
+    const deck_rarity_type rarity = deck.deck_rarity;
     if (cards_in_deck(deck) == 0)
     {
         canned_msg(MSG_DECK_EXHAUSTED);
@@ -1333,7 +1333,7 @@ void evoke_deck(item_def& deck)
 
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
 
-    const deck_rarity_type rarity = deck_rarity(deck);
+    const deck_rarity_type rarity = deck.deck_rarity;
     CrawlHashTable &props = deck.props;
 
     uint8_t flags = 0;
@@ -2796,13 +2796,6 @@ bool bad_deck(const item_def &item)
            || item.props["cards"].get_type() != SV_VEC
            || item.props["cards"].get_vector().get_type() != SV_BYTE
            || cards_in_deck(item) == 0;
-}
-
-deck_rarity_type deck_rarity(const item_def &item)
-{
-    ASSERT(item.sub_type == MISC_DECK_UNKNOWN || is_deck(item));
-
-    return static_cast<deck_rarity_type>(item.special);
 }
 
 colour_t deck_rarity_to_colour(deck_rarity_type rarity)

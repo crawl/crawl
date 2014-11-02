@@ -1428,7 +1428,7 @@ void objstat_record_item(item_def &item)
         all_plus_f = "MiscPlus";
         break;
     case ITEM_DECKS:
-        switch (deck_rarity(item))
+        switch (item.deck_rarity)
         {
         case DECK_RARITY_COMMON:
             _record_item_stat(cur_lev, itype, "PlainNum", 1);
