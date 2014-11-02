@@ -421,7 +421,18 @@ void debuff_monster(monster* mon)
         ENCH_STICKY_FLAME,
         ENCH_TP,
         ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR
+        ENCH_OZOCUBUS_ARMOUR,
+        ENCH_INJURY_BOND,
+        ENCH_DIMENSION_ANCHOR,
+        ENCH_CONTROL_WINDS,
+        ENCH_TOXIC_RADIANCE,
+        ENCH_AGILE,
+        ENCH_EPHEMERAL_INFUSION,
+        ENCH_BLACK_MARK,
+        ENCH_SHROUD,
+        ENCH_SAP_MAGIC,
+        ENCH_REPEL_MISSILES,
+        ENCH_DEFLECT_MISSILES,
     };
 
     bool dispelled = false;
