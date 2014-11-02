@@ -2687,7 +2687,7 @@ void define_monster(monster* mons)
 
 static const char *ugly_colour_names[] =
 {
-    "red", "brown", "green", "cyan", "purple", "white"
+    "red", "brown", "green", "cyan", "purple", "white", "blue",
 };
 
 string ugly_thing_colour_name(colour_t colour)
@@ -2702,7 +2702,7 @@ string ugly_thing_colour_name(colour_t colour)
 
 static const colour_t ugly_colour_values[] =
 {
-    RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
+    RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY, BLUE
 };
 
 colour_t ugly_thing_random_colour()

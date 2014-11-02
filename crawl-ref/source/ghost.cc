@@ -502,6 +502,10 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
         u_att_flav = AF_DISPEL;
         break;
 
+    case AF_DROWN:
+        u_att_flav = AF_ENGULF;
+        break;
+
     default:
         break;
     }
@@ -537,6 +541,10 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 
     case MAGENTA:
         u_att_flav = AF_ANTIMAGIC;
+        break;
+
+    case BLUE:
+        u_att_flav = AF_DROWN;
         break;
 
     default:
@@ -635,6 +643,10 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 
     case AF_COLD:
         return MR_RES_COLD * (very_ugly ? 2 : 1);
+
+    case AF_DROWN:
+    case AF_ENGULF:
+        return MR_RES_ASPHYX;
 
     default:
         return 0;
