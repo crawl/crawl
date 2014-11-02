@@ -187,16 +187,15 @@ DominoSet::DominoSet(EdgeColours* colours, uint8_t sz) {
   for (uint8_t i = 0; i < sz; ++i) {
     Adjacency* adj = new Adjacency();
     adjacencies_[i] = adj;
-    CornerDomino* domino = static_cast<CornerDomino*>(dominoes_[i]);
+    EdgeDomino* domino = static_cast<EdgeDomino*>(dominoes_[i]);
     for (size_t j = 0; j < sz; ++j) { 
       set<Direction> directions(direction_arr, direction_arr + 8);
-      CornerDomino* other = static_cast<CornerDomino*>(dominoes_[j]);
+      EdgeDomino* other = static_cast<EdgeDomino*>(dominoes_[j]);
       other->intersect(domino, directions);
       adj->add(j, directions);
     }
   }
 }
-
 
 DominoSet::~DominoSet() {
   for (uint8_t i = 0; i < adjacencies_.size(); ++i) {
