@@ -117,7 +117,44 @@ std::ostream& operator<< (std::ostream& stream, const CornerDomino& d) {
   stream
     << (int) d.nw_colour() << "#" << (int) d.ne_colour() << endl
     << "###" << endl
-    << (int) d.se_colour() << "#" << (int) d.nw_colour() << endl;
+    << (int) d.se_colour() << "#" << (int) d.nw_colour();
+  return stream;
+}
+
+bool EdgeDomino::matches(const EdgeDomino& o, Direction dir) const {
+    switch (dir) {
+      case NORTH:
+        return n_colour() == o.s_colour();
+      case EAST:
+        return e_colour() == o.w_colour();
+      case SOUTH:
+        return s_colour() == o.n_colour();
+      case WEST:
+        return w_colour() == o.e_colour();
+      case NO_DIR:
+        return false;
+      default:
+        return true;
+    }
+}
+
+void EdgeDomino::intersect(const EdgeDomino& o, set<Direction>& result) const {
+  set<Direction> allowed;
+  for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
+  {
+    Direction d = static_cast<Direction>(i);
+    if (matches(o, d)) {
+      allowed.insert(d);
+    }
+  }
+  wang::intersection(result, allowed);
+}
+
+std::ostream& operator<< (std::ostream& stream, const EdgeDomino& d) {
+  stream
+    << "#" << (int) d.n_colour() << "#" << endl
+    << (int) d.w_colour() << "#" << (int) d.e_colour() << endl
+    << "#" << (int) d.s_colour() << "#";
   return stream;
 }
 
