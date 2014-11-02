@@ -882,6 +882,7 @@ string monster_info::_core_name() const
             break;
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
+        case MONS_EXTREMELY_UGLY_THING:
             s = ugly_thing_colour_name(colour) + " " + s;
             break;
 
@@ -1302,7 +1303,7 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if (mons_genus(type) == MONS_DEMONSPAWN)
         return pluralise(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
-    else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+    else if (mons_genus(type) == MONS_UGLY_THING
              || type == MONS_DANCING_WEAPON || !fullname)
     {
         return pluralise(mons_type_name(type, DESC_PLAIN));
@@ -1654,8 +1655,12 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 int monster_info::res_magic() const
 {
     // XXX: wow, this really should go into ghost data
-    if (type == MONS_VERY_UGLY_THING && colour == MAGENTA)
+    if (mons_genus(type) == MONS_UGLY_THING
+        && type != MONS_UGLY_THING
+        && colour == MAGENTA)
+    {
         return MAG_IMMUNE;
+    }
 
     int mr = (get_monster_data(type))->resist_magic;
     if (mr == MAG_IMMUNE)

@@ -1247,8 +1247,7 @@ shout_type mons_shouts(monster_type mc, bool demon_shout)
 
 bool mons_is_ghost_demon(monster_type mc)
 {
-    return mc == MONS_UGLY_THING
-            || mc == MONS_VERY_UGLY_THING
+    return mons_genus(mc) == MONS_UGLY_THING
             || mons_is_pghost(mc)
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
@@ -1790,7 +1789,8 @@ const char* resist_margin_phrase(int margin)
 bool mons_immune_magic(const monster* mon)
 {
     // XXX
-    if (mon->type == MONS_VERY_UGLY_THING
+    if (mons_genus(mon->type) == MONS_UGLY_THING
+        && mon->type != MONS_UGLY_THING
         && mon->colour == MAGENTA)
     {
         return true;
@@ -2659,9 +2659,10 @@ void define_monster(monster* mons)
 
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
+    case MONS_EXTREMELY_UGLY_THING:
     {
         ghost_demon ghost;
-        ghost.init_ugly_thing(mcls == MONS_VERY_UGLY_THING);
+        ghost.init_ugly_thing(mcls);
         mons->set_ghost(ghost);
         mons->uglything_init();
         break;

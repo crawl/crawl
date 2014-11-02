@@ -37,6 +37,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_KOBOLD, MONS_BIG_KOBOLD),
 
     monster_level_up(MONS_UGLY_THING, MONS_VERY_UGLY_THING),
+    monster_level_up(MONS_VERY_UGLY_THING, MONS_EXTREMELY_UGLY_THING),
 
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
@@ -146,8 +147,8 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
     // An ugly thing is the only ghost demon monster that can level up.
     // If one has leveled up to a very ugly thing, upgrade it properly.
-    if (type == MONS_VERY_UGLY_THING)
-        uglything_upgrade();
+    if (mons_genus(type) == MONS_UGLY_THING)
+        uglything_upgrade(type);
 }
 
 bool monster::level_up_change()

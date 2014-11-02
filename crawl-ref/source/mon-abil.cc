@@ -124,12 +124,12 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 }
 
                 const bool ugly_type =
-                    mon_near->type == MONS_UGLY_THING
-                        || mon_near->type == MONS_VERY_UGLY_THING;
+                    mons_genus(mon_near->type) == MONS_UGLY_THING;
 
-                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
-                        mon_near->type == MONS_UGLY_THING      ? 2
-                                                               : 1;
+                int i = mon_near->type == MONS_EXTREMELY_UGLY_THING ? 4 :
+                        mon_near->type == MONS_VERY_UGLY_THING      ? 3 :
+                        mon_near->type == MONS_UGLY_THING           ? 2
+                                                                    : 1;
 
                 for (; i > 0; --i)
                 {
@@ -1194,6 +1194,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     {
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
+    case MONS_EXTREMELY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
         // to others of its kind, or to other monsters glowing with
         // radiation, can mutate it into a different (very) ugly thing.

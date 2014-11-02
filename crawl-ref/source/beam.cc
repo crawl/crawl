@@ -5195,8 +5195,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // (Very) ugly things and shapeshifters will never resist
         // polymorph beams.
         if (flavour == BEAM_POLYMORPH
-            && (mon->type == MONS_UGLY_THING
-                || mon->type == MONS_VERY_UGLY_THING
+            && (mons_genus(mon->type) == MONS_UGLY_THING
                 || mon->is_shapeshifter()))
         {
             ;
@@ -6218,8 +6217,7 @@ bool bolt::nice_to(const monster* mon) const
     // (very) ugly thing.
     if (flavour == BEAM_POLYMORPH)
     {
-        return mon->type == MONS_UGLY_THING
-               || mon->type == MONS_VERY_UGLY_THING;
+        return mons_genus(mon->type) == MONS_UGLY_THING;
     }
 
     if (flavour == BEAM_HASTE

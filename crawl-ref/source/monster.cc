@@ -3830,8 +3830,7 @@ int monster::known_chaos(bool check_spells_god) const
 {
     int chaotic = 0;
 
-    if (type == MONS_UGLY_THING
-        || type == MONS_VERY_UGLY_THING
+    if (mons_genus(type) == MONS_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
@@ -4769,13 +4768,13 @@ void monster::ghost_demon_init()
 
 void monster::uglything_mutate(colour_t force_colour)
 {
-    ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);
+    ghost->init_ugly_thing(type, true, force_colour);
     uglything_init(true);
 }
 
-void monster::uglything_upgrade()
+void monster::uglything_upgrade(monster_type type)
 {
-    ghost->ugly_thing_to_very_ugly_thing();
+    ghost->ugly_thing_to_very_ugly_thing(type);
     uglything_init();
 }
 
@@ -5445,7 +5444,7 @@ bool monster::malmutate(const string &/*reason*/)
     }
 
     // Ugly things merely change colour.
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    if (mons_genus(type) == MONS_UGLY_THING)
     {
         ugly_thing_mutate(this);
         return true;
@@ -5478,7 +5477,7 @@ bool monster::polymorph(int pow)
 
     // Polymorphing a (very) ugly thing will mutate it into a different
     // (very) ugly thing.
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    if (mons_genus(type) == MONS_UGLY_THING)
     {
         ugly_thing_mutate(this);
         return true;

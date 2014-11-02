@@ -2155,6 +2155,20 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
 },
 
+// I'm not moving this to its own section despite the distinct glyphs; it
+// belongs with its mutagenic kin. ~Grunt
+{
+    MONS_EXTREMELY_UGLY_THING, 'U', BLACK, "extremely ugly thing",
+    M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD | M_NO_GEN_DERIVED,
+    MR_NO_FLAGS,
+    1060, 10, MONS_UGLY_THING, MONS_EXTREMELY_UGLY_THING, MH_NATURAL, 40,
+    { {AT_HIT, AF_PLAIN, 37}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 24, 3, 5, 0 },
+    8, 10, MST_EXTREMELY_UGLY_THING, CE_MUTAGEN, Z_BIG, S_GURGLE,
+    I_ANIMAL, HT_LAND, FL_NONE, 10, MOVE_ENERGY(9),
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_BIG, MON_SHAPE_MISC
+},
+
 // vortices ('v')
 {
     MONS_FIRE_VORTEX, 'v', RED, "fire vortex",

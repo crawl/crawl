@@ -2314,9 +2314,9 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     const bool friendly = !one_chance_in(4 + power_level * 2);
     monster_type ugly;
     if (power_level >= 2)
-        ugly = MONS_VERY_UGLY_THING;
+        ugly = MONS_EXTREMELY_UGLY_THING;
     else if (power_level == 1)
-        ugly = coinflip() ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+        ugly = MONS_VERY_UGLY_THING;
     else
         ugly = MONS_UGLY_THING;
 

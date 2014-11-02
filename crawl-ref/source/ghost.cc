@@ -560,16 +560,14 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 /**
  * Init a ghost demon object corresponding to an ugly thing monster.
  *
- * @param very_ugly     Whether the ugly thing is a very ugly thing.
+ * @param type          What type of ugly thing this is.
  * @param only_mutate   Whether to mutate the ugly thing's colour away from its
  *                      old colour (the force_colour).
  * @param force_colour  The ugly thing's colour. (Default BLACK = random)
  */
-void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
+void ghost_demon::init_ugly_thing(monster_type type, bool only_mutate,
                                   colour_t force_colour)
 {
-    const monster_type type = very_ugly ? MONS_VERY_UGLY_THING
-                                        : MONS_UGLY_THING;
     const monsterentry* stats = get_monster_data(type);
 
     speed = stats->speed;
@@ -604,14 +602,14 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     att_flav = _ugly_thing_colour_to_flavour(colour);
 
     // Pick a compatible resistance for this attack flavour.
-    ugly_thing_add_resistance(false, att_flav);
+    ugly_thing_add_resistance(type, att_flav);
 
     // If this is a very ugly thing, upgrade it properly.
-    if (very_ugly)
-        ugly_thing_to_very_ugly_thing();
+    if (type != MONS_UGLY_THING)
+        ugly_thing_to_very_ugly_thing(type);
 }
 
-void ghost_demon::ugly_thing_to_very_ugly_thing()
+void ghost_demon::ugly_thing_to_very_ugly_thing(monster_type type)
 {
     // A very ugly thing always gets a high-intensity colour.
     colour = make_high_colour(colour);
@@ -620,29 +618,29 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     att_flav = _very_ugly_thing_flavour_upgrade(att_flav);
 
     // Pick a compatible resistance for this attack flavour.
-    ugly_thing_add_resistance(true, att_flav);
+    ugly_thing_add_resistance(type, att_flav);
 }
 
-static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
+static resists_t _ugly_thing_resists(int tier, attack_flavour u_att_flav)
 {
     switch (u_att_flav)
     {
     case AF_FIRE:
     case AF_STICKY_FLAME:
-        return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
+        return MR_RES_FIRE * tier | MR_RES_STICKY_FLAME;
 
     case AF_ACID:
         return MR_RES_ACID;
 
     case AF_POISON:
     case AF_POISON_STRONG:
-        return MR_RES_POISON * (very_ugly ? 2 : 1);
+        return MR_RES_POISON * tier;
 
     case AF_ELEC:
-        return MR_RES_ELEC * (very_ugly ? 2 : 1);
+        return MR_RES_ELEC * tier;
 
     case AF_COLD:
-        return MR_RES_COLD * (very_ugly ? 2 : 1);
+        return MR_RES_COLD * tier;
 
     case AF_DROWN:
     case AF_ENGULF:
@@ -653,10 +651,13 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     }
 }
 
-void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
+void ghost_demon::ugly_thing_add_resistance(monster_type type,
                                             attack_flavour u_att_flav)
 {
-    resists = _ugly_thing_resists(very_ugly, u_att_flav);
+    const int tier = (type == MONS_EXTREMELY_UGLY_THING) ? 3 :
+                     (type == MONS_VERY_UGLY_THING)      ? 2
+                                                         : 1;
+    resists = _ugly_thing_resists(tier, u_att_flav);
 }
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)

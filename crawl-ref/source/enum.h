@@ -2499,6 +2499,9 @@ enum monster_type                      // menv[].type
     MONS_MOLTEN_GARGOYLE,
     MONS_UGLY_THING,
     MONS_VERY_UGLY_THING,
+#if TAG_MAJOR_VERSION > 34
+    MONS_EXTREMELY_UGLY_THING,
+#endif
     MONS_ICE_BEAST,
     MONS_SKY_BEAST,
     MONS_SPHINX,
@@ -3202,6 +3205,8 @@ enum monster_type                      // menv[].type
     MONS_DEATH_SCARAB,
     MONS_ANUBIS_GUARD,
     MONS_CAUSTIC_BEE,
+
+    MONS_EXTREMELY_UGLY_THING,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -2372,4 +2372,11 @@ static const mon_spellbook mspell_list[] =
        END_OF_MONS_BOOK
       }
     },
+
+    {  MST_EXTREMELY_UGLY_THING,
+      {
+       { SPELL_IRRADIATE, 75, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       END_OF_MONS_BOOK
+      }
+    },
 };

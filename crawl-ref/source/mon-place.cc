@@ -919,9 +919,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
-            if ((band_monsters[i] == MONS_UGLY_THING
-                || band_monsters[i] == MONS_VERY_UGLY_THING)
-                    && ugly_colour == BLACK)
+            if (mons_genus(band_monsters[i]) == MONS_UGLY_THING
+                && ugly_colour == BLACK)
             {
                 ugly_colour = ugly_thing_random_colour();
             }
@@ -1746,12 +1745,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Initialise (very) ugly things and pandemonium demons.
-    if (mon->type == MONS_UGLY_THING
-        || mon->type == MONS_VERY_UGLY_THING)
+    if (mons_genus(mon->type) == MONS_UGLY_THING)
     {
         ghost_demon ghost;
-        ghost.init_ugly_thing(mon->type == MONS_VERY_UGLY_THING, false,
-                              mg.colour);
+        ghost.init_ugly_thing(mon->type, false, mg.colour);
         mon->set_ghost(ghost);
         mon->uglything_init();
     }
@@ -2131,6 +2128,10 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_YAK:
         band = BAND_YAKS;
         band_size = 2 + random2(4);
+        break;
+    case MONS_EXTREMELY_UGLY_THING:
+        band = BAND_EXTREMELY_UGLY_THINGS;
+        band_size = 3 + random2(4);
         break;
     case MONS_VERY_UGLY_THING:
         if (env.absdepth0 < 19)
@@ -2979,6 +2980,12 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_VERY_UGLY_THINGS:
         return one_chance_in(4) ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
+
+    case BAND_EXTREMELY_UGLY_THINGS:
+        return random_choose_weighted(1, MONS_EXTREMELY_UGLY_THING,
+                                      4, MONS_VERY_UGLY_THING,
+                                      1, MONS_UGLY_THING,
+                                      0);
 
     case BAND_HELL_HOUNDS:
         return MONS_HELL_HOUND;

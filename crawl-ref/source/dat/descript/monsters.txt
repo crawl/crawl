@@ -1105,6 +1105,11 @@ Executioner
 A horribly powerful and swift demon, its shape obscured by a cloud of swirling
 scythe-like blades.
 %%%%
+extremely ugly thing
+
+An extremely ugly thing. According to legend, this monstrously mutated creature
+is the otherworldly spawn of a wizard's breeding experiment. Triple yuck!
+%%%%
 eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.

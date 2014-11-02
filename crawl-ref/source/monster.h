@@ -197,7 +197,7 @@ public:
     void ghost_demon_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(colour_t force_colour = BLACK);
-    void uglything_upgrade();
+    void uglything_upgrade(monster_type type);
     void destroy_inventory();
     void load_ghost_spells();
 

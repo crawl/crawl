@@ -44,7 +44,7 @@ public:
     void reset();
     void init_random_demon();
     void init_player_ghost();
-    void init_ugly_thing(bool very_ugly, bool only_mutate = false,
+    void init_ugly_thing(monster_type type, bool only_mutate = false,
                          colour_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
     void init_spectral_weapon(const item_def& weapon, int power, int wpn_skill);
@@ -54,7 +54,7 @@ public:
 
     void init_spellforged_servitor(actor* caster);
 
-    void ugly_thing_to_very_ugly_thing();
+    void ugly_thing_to_very_ugly_thing(monster_type type);
 
 public:
     static vector<ghost_demon> find_ghosts();
@@ -68,7 +68,7 @@ private:
 private:
     void add_spells();
     spell_type translate_spell(spell_type playerspell) const;
-    void ugly_thing_add_resistance(bool very_ugly,
+    void ugly_thing_add_resistance(monster_type type,
                                    attack_flavour u_att_flav);
 
     bool _apply_chimera_part(monster* mon, monster_type part, int partnum);
