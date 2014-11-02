@@ -52,8 +52,8 @@ This card temporarily allows you to cleave, hitting all adjacent foes.
 %%%%
 the Shadow card
 
-This card lets you blend into the shadows, granting invisibility. It may
-additionally provide substantial bonuses to stealth with high power.
+This card lets you blend into the shadows, granting one or both of
+additional stealth or darkness.
 %%%%
 the Mercenary card
 
