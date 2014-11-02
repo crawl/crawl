@@ -3099,6 +3099,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
     case AF_CORRODE:         return "corrode armour";
     case AF_SCARAB:          return "reduce negative energy resistance and drain health, speed, or skills";
+    case AF_DISPEL:          return "dispel and drain magic";
     default:                 return "";
     }
 }

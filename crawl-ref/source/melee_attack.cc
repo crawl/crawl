@@ -3257,7 +3257,16 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
+    case AF_DISPEL:
         antimagic_affects_defender(attacker->get_hit_dice() * 12);
+
+        if (flavour == AF_DISPEL)
+        {
+            if (defender->is_player())
+                debuff_player(false);
+            else
+                debuff_monster(defender->as_monster());
+        }
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())

@@ -1789,6 +1789,12 @@ const char* resist_margin_phrase(int margin)
 
 bool mons_immune_magic(const monster* mon)
 {
+    // XXX
+    if (mon->type == MONS_VERY_UGLY_THING
+        && mon->colour == MAGENTA)
+    {
+        return true;
+    }
     return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
 }
 

@@ -1653,6 +1653,10 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 
 int monster_info::res_magic() const
 {
+    // XXX: wow, this really should go into ghost data
+    if (type == MONS_VERY_UGLY_THING && colour == MAGENTA)
+        return MAG_IMMUNE;
+
     int mr = (get_monster_data(type))->resist_magic;
     if (mr == MAG_IMMUNE)
         return MAG_IMMUNE;
@@ -1663,6 +1667,9 @@ int monster_info::res_magic() const
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)
         mr = hd * (-mr) * 4 / 3;
+
+    if (type == MONS_UGLY_THING && colour == MAGENTA)
+        mr *= 3;
 
     // Randarts
     mr += 40 * randarts(ARTP_MAGIC);

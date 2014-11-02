@@ -6,6 +6,7 @@
 #include "attack.h"
 #include "fight.h"
 #include "random-var.h"
+#include "spl-goditem.h"
 
 // Forward declaration of the struct
 struct mon_attack_def;

@@ -4262,6 +4262,10 @@ int monster::res_magic() const
     if (u < 0)
         u = get_hit_dice() * -u * 4 / 3;
 
+    // XXX
+    if (base_type == MONS_UGLY_THING && colour == MAGENTA)
+        u *= 3;
+
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC);
 
