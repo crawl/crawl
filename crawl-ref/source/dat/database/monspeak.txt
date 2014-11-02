@@ -5176,8 +5176,6 @@ VISUAL:@The_monster@ is caught in a moment of prayer.
 %%%%
 silenced Mennas
 
-VISUAL:@The_monster@ gestures frantically.
-
 @Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
