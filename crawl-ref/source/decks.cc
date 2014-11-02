@@ -135,7 +135,7 @@ const deck_archetype deck_of_battle[] =
 const deck_archetype deck_of_summoning[] =
 {
     { CARD_CRUSADE,         {5, 5, 5} },
-    { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
+    { CARD_ELEMENTS,   {5, 5, 5} },
     { CARD_SUMMON_DEMON,    {5, 5, 5} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
     { CARD_SUMMON_FLYING,   {5, 5, 5} },
@@ -318,7 +318,7 @@ const char* card_name(card_type card)
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_CRUSADE:         return "the Crusade";
-    case CARD_SUMMON_ANIMAL:   return "the Herd";
+    case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
     case CARD_SUMMON_WEAPON:   return "the Dance";
     case CARD_SUMMON_FLYING:   return "Foxfire";
@@ -2153,52 +2153,28 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
 
 }
 
-static void _summon_animals(int power)
+static void _elements_card(int power, deck_rarity_type rarity)
 {
-    // Maybe we should just generate a Lair monster instead (and
-    // guarantee that it is mobile)?
-    const monster_type animals[] =
+
+	const int power_level = _get_power_level(power, rarity);
+    const monster_type element_list[][3] =
     {
-        MONS_ORANGE_RAT, MONS_SHEEP, MONS_YAK,
-        MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
-        MONS_POLAR_BEAR, MONS_BLACK_BEAR,
-        MONS_BORING_BEETLE, MONS_BASILISK,
-        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND,
-        MONS_ELEPHANT, MONS_HIPPOGRIFF, MONS_GRIFFON
+       {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
+       {MONS_BASILISK, MONS_BORING_BEETLE, MONS_BOULDER_BEETLE},
+       {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER_FIREBRAND},
+       {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
 
-    int count = 0;
-    const int count_max = 8;
+    int start = random2(4);
 
-    int pow_left = power + 1;
-
-    const bool varied = coinflip();
-
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    while (pow_left >= 0 && count < count_max)
+    for (int i = 0; i < 3; ++i)
     {
-        // Pick a random monster and subtract its cost.
-        if (varied || count == 0)
-            mon = RANDOM_ELEMENT(animals);
+		create_monster(
+			mgen_data(element_list[start % 4][power_level], BEH_FRIENDLY,
+				&you, power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE));
+		start++;
+	}
 
-        const int pow_spent = mons_power(mon) * 3;
-
-        // Allow a certain degree of overuse, but not too much.
-        // Guarantee at least two summons.
-        if (pow_spent >= pow_left * 2 && count >= 2)
-            break;
-
-        pow_left -= pow_spent;
-        count++;
-
-        const bool friendly = (random2(power) > 4);
-
-        create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                      4, 0, you.pos(), MHITYOU, MG_AUTOFOE));
-    }
 }
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
@@ -2741,7 +2717,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
-    case CARD_SUMMON_ANIMAL:    _summon_animals(random2(power/3)); break;
+    case CARD_ELEMENTS:         _elements_card(power, rarity); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;

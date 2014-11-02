@@ -77,7 +77,7 @@ enum card_type
     CARD_MERCENARY,
 
     CARD_CRUSADE,
-    CARD_SUMMON_ANIMAL,
+    CARD_ELEMENTS,
     CARD_SUMMON_DEMON,
     CARD_SUMMON_WEAPON,
     CARD_SUMMON_FLYING,         // wisps and butterflies
