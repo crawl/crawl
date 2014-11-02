@@ -64,6 +64,12 @@ void intersection(std::set<T>& output, const std::set<T>& input) {
  * A#B
  * ###
  * C#D
+ *
+ * EdgeDomino Layout
+ *
+ * #N#
+ * W#E
+ * #S#
 */
 typedef uint8_t colour;
 typedef struct {
@@ -72,6 +78,13 @@ typedef struct {
   colour sw;
   colour se;
 } CornerColours;
+
+typedef struct {
+  colour n;
+  colour e;
+  colour s;
+  colour w;
+} EdgeColours;
 
 enum Direction {
   FIRST_DIRECTION = 0,
@@ -194,6 +207,48 @@ class CornerDomino {
 };
 
 std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
+
+class EdgeDomino {
+  public:
+    EdgeDomino() : id_(-1) {}
+    EdgeDomino(uint8_t i, const EdgeColours colours) :
+      id_(i) {
+        colours_.n = colours.n;
+        colours_.e = colours.e;
+        colours_.s = colours.s;
+        colours_.w = colours.w;
+    }
+
+    bool matches(const EdgeDomino& o, Direction dir) const;
+    void intersect(const EdgeDomino& other, std::set<Direction>& directions) const; 
+
+    uint8_t id() {
+      return id_;
+    }
+
+    colour n_colour() const {
+      return colours_.n;
+    }
+  
+    colour e_colour() const {
+      return colours_.e;
+    }
+  
+    colour s_colour() const {
+      return colours_.s;
+    }
+
+    colour w_colour() const {
+      return colours_.w;
+    }
+
+    friend std::ostream& operator<< (std::ostream& stream, const EdgeDomino& dir);
+  private:
+    uint8_t id_;
+    EdgeColours colours_;
+};
+
+std::ostream& operator<< (std::ostream& stream, const EdgeDomino& dir);
 
 class DominoSet {
   public:

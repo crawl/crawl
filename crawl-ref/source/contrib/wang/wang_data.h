@@ -5,6 +5,13 @@
 
 namespace wang {
 
+// This set of eight tiles trivially cover the plane.
+// See: Wang Tiles for Image and Texture Generation (Cohen, 2003)
+static EdgeColours cohen_set[8] = {
+  {0, 1, 1, 0}, {1, 0, 1, 0}, {0, 1, 0, 1}, {1, 0, 0, 1},
+  {0, 0, 1, 1}, {1, 1, 1, 1}, {0, 0, 0, 0}, {1, 1, 0, 0},
+};
+
 // This is a six-colour set of 44 tiles.
 // See: Aperiodic Sets of Square Tiles with Colored Corners (Lagae, 2006)
 static CornerColours aperiodic_set[44] = {
