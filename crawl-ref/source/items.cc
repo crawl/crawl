@@ -3420,15 +3420,15 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         MISC_DECK_OF_WAR,
         MISC_DECK_OF_CHANGES,
         MISC_DECK_OF_DEFENCE,
-        NUM_MISCELLANY
+        MISC_DECK_UNKNOWN,
     };
 
     item.special  = DECK_RARITY_COMMON;
-    item.sub_type = NUM_MISCELLANY;
+    item.sub_type = MISC_DECK_UNKNOWN;
 
     if (!type_str.empty())
     {
-        for (int i = 0; types[i] != NUM_MISCELLANY; ++i)
+        for (int i = 0; types[i] != MISC_DECK_UNKNOWN; ++i)
         {
             item.sub_type = types[i];
             item.plus     = 1;
@@ -3442,7 +3442,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    if (item.sub_type == NUM_MISCELLANY)
+    if (item.sub_type == MISC_DECK_UNKNOWN)
     {
         while (true)
         {
@@ -3998,7 +3998,7 @@ item_info get_item_info(const item_def& item)
             {
                 // Needs to be changed if we add other miscellaneous items
                 // that can be non-identified.
-                ii.sub_type = NUM_MISCELLANY;
+                ii.sub_type = MISC_DECK_UNKNOWN;
             }
             else
                 ii.sub_type = item.sub_type;
@@ -4007,7 +4007,7 @@ item_info get_item_info(const item_def& item)
         if (ii.sub_type == MISC_RUNE_OF_ZOT)
             ii.rune_enum = item.rune_enum; // which rune
 
-        if (ii.sub_type == NUM_MISCELLANY)
+        if (ii.sub_type == MISC_DECK_UNKNOWN)
             ii.deck_rarity = item.deck_rarity;
 
         // Preserve inert/charged state but not the actual numbers.

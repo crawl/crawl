@@ -1405,7 +1405,7 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     if (!dbname)
         buff << deck_rarity_name(deck_rarity(deck)) << ' ';
 
-    if (deck.sub_type == NUM_MISCELLANY)
+    if (deck.sub_type == MISC_DECK_UNKNOWN)
         buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
     else
         buff << misc_type_name(deck.sub_type, know_type);
@@ -1884,8 +1884,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
-        // NUM_MISCELLANY indicates unidentified deck for item_info
-        if (is_deck(*this) || item_typ == NUM_MISCELLANY)
+        if (is_deck(*this) || item_typ == MISC_DECK_UNKNOWN)
         {
             _name_deck(*this, desc, ident, buff);
             break;

@@ -5044,7 +5044,8 @@ static deck_rarity_type _rarity_string_to_rarity(const string& s)
     if (s == "rare")      return DECK_RARITY_RARE;
     if (s == "ornate")    return DECK_RARITY_RARE; // synonym
     if (s == "legendary") return DECK_RARITY_LEGENDARY;
-    // FIXME: log an error here.
+
+    mprf("Unknown deck rarity '%s'", s);
     return DECK_RARITY_RANDOM;
 }
 
@@ -5059,8 +5060,9 @@ static misc_item_type _deck_type_string_to_subtype(const string& s)
     if (s == "war")         return MISC_DECK_OF_WAR;
     if (s == "changes")     return MISC_DECK_OF_CHANGES;
     if (s == "defence")     return MISC_DECK_OF_DEFENCE;
-    // FIXME: log an error here.
-    return NUM_MISCELLANY;
+
+    mprf("Unknown deck type '%s'", s);
+    return MISC_DECK_UNKNOWN;
 }
 
 static misc_item_type _random_deck_subtype()
