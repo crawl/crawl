@@ -2307,10 +2307,8 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     const bool friendly = !one_chance_in(4 + power_level * 2);
     monster_type ugly;
-    if (power_level >= 2)
+    if (power_level >= 1)
         ugly = MONS_VERY_UGLY_THING;
-    else if (power_level == 1)
-        ugly = coinflip() ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
     else
         ugly = MONS_UGLY_THING;
 
@@ -2323,6 +2321,16 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     {
         mpr("You see a puff of smoke.");
     }
+
+    if (power_level == 2)
+    {
+        create_monster(mgen_data(MONS_UGLY_THING,
+                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                        &you,
+                        min(power/50 + 1, 5), 0,
+                        you.pos(), MHITYOU, MG_AUTOFOE));
+    }
+
 }
 
 static void _mercenary_card(int power, deck_rarity_type rarity)
