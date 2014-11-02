@@ -93,9 +93,9 @@ the Crusade card
 This card tries to convert nearby creatures to your cause, and abjures hostile
 summons.
 %%%%
-the Herd card
+the Elements card
 
-This card summons animals.
+This card summons beasts of the elements.
 %%%%
 the Pentagram card
 
