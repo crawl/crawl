@@ -121,7 +121,7 @@ std::ostream& operator<< (std::ostream& stream, const CornerDomino& d) {
   return stream;
 }
 
-DominoSet::DominoSet(Colours* colours, uint8_t sz) {
+DominoSet::DominoSet(CornerColours* colours, uint8_t sz) {
   max_colour_ = 0;
   for (uint8_t i = 0; i < sz; ++i) {
     CornerDomino d(i, colours[i]);

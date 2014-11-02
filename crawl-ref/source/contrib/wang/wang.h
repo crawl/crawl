@@ -71,7 +71,7 @@ typedef struct {
   colour ne;
   colour sw;
   colour se;
-} Colours;
+} CornerColours;
 
 enum Direction {
   FIRST_DIRECTION = 0,
@@ -156,7 +156,7 @@ class Adjacency {
 class CornerDomino {
   public:
     CornerDomino() : id_(-1) {}
-    CornerDomino(uint8_t i, const Colours colours) :
+    CornerDomino(uint8_t i, const CornerColours colours) :
       id_(i) {
         colours_.nw = colours.nw;
         colours_.ne = colours.ne;
@@ -190,14 +190,14 @@ class CornerDomino {
     friend std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
   private:
     uint8_t id_;
-    Colours colours_;
+    CornerColours colours_;
 };
 
 std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
 
 class DominoSet {
   public:
-    DominoSet(Colours* colours, uint8_t sz);
+    DominoSet(CornerColours* colours, uint8_t sz);
     ~DominoSet();
     bool Generate(size_t n, std::vector<uint8_t>& output);
     uint8_t num_colours() { return max_colour_ + 1; }

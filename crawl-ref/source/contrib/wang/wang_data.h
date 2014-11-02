@@ -7,7 +7,7 @@ namespace wang {
 
 // This is a six-colour set of 44 tiles.
 // See: Aperiodic Sets of Square Tiles with Colored Corners (Lagae, 2006)
-static Colours aperiodic_set[44] = {
+static CornerColours aperiodic_set[44] = {
   // Row 1
   {0, 4, 1, 2}, {0, 3, 1, 5},
   {0, 2, 1, 5}, {2, 3, 3, 4},
@@ -40,7 +40,7 @@ static Colours aperiodic_set[44] = {
 
 // This is a two-colour set of 16 tiles.
 // See: An Alternative for Wang Tiles
-static Colours periodic_set[16] = {
+static CornerColours periodic_set[16] = {
 //nw ne sw se
   {0, 0, 0, 0}, 
   {1, 0, 0, 0}, 
