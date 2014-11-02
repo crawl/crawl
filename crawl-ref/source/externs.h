@@ -551,7 +551,7 @@ struct item_def
     union
     {
         int special;        ///< special stuff
-        int deck_rarity;    ///< deck rarity (plain, ornate, legendary)
+        deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;       ///< rate at which a rod recharges; +slay
         int appearance;     ///< book, jewellery, scroll, staff, wand appearance
                             // scrolls also use 'consum_desc'

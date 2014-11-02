@@ -1403,7 +1403,7 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     }
 
     if (!dbname)
-        buff << deck_rarity_name(deck_rarity(deck)) << ' ';
+        buff << deck_rarity_name(deck.deck_rarity) << ' ';
 
     if (deck.sub_type == MISC_DECK_UNKNOWN)
         buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
