@@ -5062,8 +5062,11 @@ static vector<ability_type> _get_possible_sacrifices()
         possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
     if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
         possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
-    if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC))
-        possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
+    if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+        && !player_mutation_level(MUT_NO_LOVE))
+        {
+            possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
+        }
     if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
         possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
     num_major_mutations = possible_major_mutations.size();
@@ -5225,14 +5228,6 @@ static int _get_sacrifice_piety(ability_type sac)
             arcane_mut = AS_MUT(sacrifice_muts[i]);
             arcane_skill = _arcane_mutation_to_skill(arcane_mut);
             piety_gain += _piety_for_skill(arcane_skill);
-
-            // If you already sacrificed love, nothing in the summoning school
-            // helps so substact piety accordingly.
-            if (player_mutation_level(MUT_NO_LOVE)
-                    && arcane_mut == MUT_NO_SUMMONING_MAGIC)
-            {
-                piety_gain -= sac_def.base_piety / 3;
-            }
         }
     }
     else if (sac_def.sacrifice_skill != SK_NONE)
