@@ -166,24 +166,31 @@ class Adjacency {
     std::map<Direction, std::set<uint8_t>* > permitted_;
 };
 
-class CornerDomino {
+class Domino {
   public:
-    CornerDomino() : id_(-1) {}
-    CornerDomino(uint8_t i, const CornerColours colours) :
-      id_(i) {
+    virtual bool matches(const Domino* o, Direction dir) const = 0;
+    void intersect(const Domino* other, std::set<Direction>& directions) const; 
+    uint8_t id() {
+      return id_;
+    }
+  protected:
+    uint8_t id_;
+};
+
+class CornerDomino : public Domino {
+  public:
+    CornerDomino() {
+      id_ = -1;
+    }
+    bool matches(const Domino* o, Direction dir) const;
+    CornerDomino(uint8_t i, const CornerColours colours) {
+        id_ = i;
         colours_.nw = colours.nw;
         colours_.ne = colours.ne;
         colours_.se = colours.se;
         colours_.sw = colours.sw;
     }
-
-    bool matches(const CornerDomino& o, Direction dir) const;
-    void intersect(const CornerDomino& other, std::set<Direction>& directions) const; 
-
-    uint8_t id() {
-      return id_;
-    }
-
+ 
     colour nw_colour() const {
       return colours_.nw;
     }
@@ -202,29 +209,25 @@ class CornerDomino {
 
     friend std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
   private:
-    uint8_t id_;
     CornerColours colours_;
 };
 
 std::ostream& operator<< (std::ostream& stream, const CornerDomino& dir);
 
-class EdgeDomino {
+class EdgeDomino : public Domino {
   public:
-    EdgeDomino() : id_(-1) {}
-    EdgeDomino(uint8_t i, const EdgeColours colours) :
-      id_(i) {
-        colours_.n = colours.n;
-        colours_.e = colours.e;
-        colours_.s = colours.s;
-        colours_.w = colours.w;
+    EdgeDomino() {
+      id_ = -1;
+    }
+    EdgeDomino(uint8_t i, const EdgeColours colours) {
+      id_ = i;
+      colours_.n = colours.n;
+      colours_.e = colours.e;
+      colours_.s = colours.s;
+      colours_.w = colours.w;
     }
 
-    bool matches(const EdgeDomino& o, Direction dir) const;
-    void intersect(const EdgeDomino& other, std::set<Direction>& directions) const; 
-
-    uint8_t id() {
-      return id_;
-    }
+    bool matches(const Domino* o, Direction dir) const;
 
     colour n_colour() const {
       return colours_.n;
@@ -244,7 +247,6 @@ class EdgeDomino {
 
     friend std::ostream& operator<< (std::ostream& stream, const EdgeDomino& dir);
   private:
-    uint8_t id_;
     EdgeColours colours_;
 };
 
@@ -253,13 +255,14 @@ std::ostream& operator<< (std::ostream& stream, const EdgeDomino& dir);
 class DominoSet {
   public:
     DominoSet(CornerColours* colours, uint8_t sz);
+    DominoSet(EdgeColours* colours, uint8_t sz);
     ~DominoSet();
     bool Generate(size_t n, std::vector<uint8_t>& output);
     uint8_t num_colours() { return max_colour_ + 1; }
     uint8_t size() { return dominoes_.size(); }
     void print();
 
-    CornerDomino get(uint8_t id) const {
+    Domino* get(uint8_t id) const {
       return dominoes_.find(id)->second;
     }
   private:
@@ -268,7 +271,7 @@ class DominoSet {
     void Randomise(std::set<Point> pts, std::map<Point, uint8_t>& tiling, int sz) const;
 
     uint8_t max_colour_;
-    std::map<uint8_t, CornerDomino> dominoes_;
+    std::map<uint8_t, Domino*> dominoes_;
     std::map<uint8_t, Adjacency*> adjacencies_;
 };
 
