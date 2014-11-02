@@ -257,7 +257,7 @@ class DominoSet {
     DominoSet(CornerColours* colours, uint8_t sz);
     DominoSet(EdgeColours* colours, uint8_t sz);
     ~DominoSet();
-    bool Generate(size_t n, std::vector<uint8_t>& output);
+    bool Generate(size_t x, size_t y, std::vector<uint8_t>& output);
     uint8_t num_colours() { return max_colour_ + 1; }
     uint8_t size() { return dominoes_.size(); }
     void print();

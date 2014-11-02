@@ -297,7 +297,7 @@ int DominoSet::Best(
 }
 
 
-bool DominoSet::Generate(size_t n, vector<uint8_t>& output) {
+bool DominoSet::Generate(size_t x, size_t y, vector<uint8_t>& output) {
   set<uint8_t> all_set;
   for (uint8_t i = 0; i < dominoes_.size(); ++i) {
     all_set.insert(i);
@@ -306,16 +306,23 @@ bool DominoSet::Generate(size_t n, vector<uint8_t>& output) {
 
   map<Point, uint8_t> tiling;
   vector<Point> all_points;
-  for (int32_t i = 0; i < n; ++i) {
-    for (int32_t j = 0; j < n; ++j) {
+  for (int32_t i = 0; i < x; ++i) {
+    for (int32_t j = 0; j < y; ++j) {
       Point pt = {i, j};
       all_points.push_back(pt);
     }
   }
 
-  // Randomize all the tiles
+  // Init all the tiles
   for (auto pt : all_points) {
+    vector<uint8_t> choices;
+    Best(pt, tiling, choices);
+    if (!choices.empty()) {
+      random_shuffle(choices.begin(), choices.end());
+      tiling[pt] = choices[0];
+    } else {
       tiling[pt] = rand() % adjacencies_.size();
+    }
   }
   int trials = 10000;
   {
@@ -360,9 +367,9 @@ bool DominoSet::Generate(size_t n, vector<uint8_t>& output) {
   }
 
   cout << "Trials: " << trials << endl;
-  for (int32_t y = 0; y < n; ++y) {
-    for (int32_t x = 0; x < n; ++x) {
-      Point pt = {x, y};
+  for (int32_t i = 0; i < x; ++i) {
+    for (int32_t j = 0; j < y; ++j) {
+      Point pt = {i, j};
       Domino* d = dominoes_[tiling[pt]];
       cout << (int) d->id() << "#";
     }
