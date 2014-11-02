@@ -255,7 +255,8 @@ enum misc_item_type
 
     MISC_PHANTOM_MIRROR,
 
-    NUM_MISCELLANY, // mv: used for random generation
+    NUM_MISCELLANY,
+    MISC_DECK_UNKNOWN = NUM_MISCELLANY,
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };

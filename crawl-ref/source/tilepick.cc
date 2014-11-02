@@ -4036,7 +4036,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_DECK_OF_WAR:
     case MISC_DECK_OF_CHANGES:
     case MISC_DECK_OF_DEFENCE:
-    case NUM_MISCELLANY: // indicates unidentified deck
+    case MISC_DECK_UNKNOWN:
     {
         tileidx_t ch = TILE_ERROR;
         switch (item.special)
