@@ -78,30 +78,30 @@ void Adjacency::add(uint8_t adjacency, const set<Direction>& dir) {
   }
 }
 
-bool Domino::matches(const Domino& o, Direction dir) const {
+bool CornerDomino::matches(const CornerDomino& o, Direction dir) const {
     switch (dir) {
       case NORTH:
-        return ne_color() == o.se_color() && nw_color() == o.sw_color();
+        return ne_colour() == o.se_colour() && nw_colour() == o.sw_colour();
       case NORTH_EAST:
-        return ne_color() == o.sw_color();
+        return ne_colour() == o.sw_colour();
       case EAST:
-        return ne_color() == o.nw_color() && se_color() == o.sw_color();
+        return ne_colour() == o.nw_colour() && se_colour() == o.sw_colour();
       case SOUTH_EAST:
-        return se_color() == o.nw_color();
+        return se_colour() == o.nw_colour();
       case SOUTH:
-        return se_color() == o.ne_color() && sw_color() == o.nw_color();
+        return se_colour() == o.ne_colour() && sw_colour() == o.nw_colour();
       case SOUTH_WEST:
-        return sw_color() == o.ne_color();
+        return sw_colour() == o.ne_colour();
       case WEST:
-        return nw_color() == o.ne_color() && sw_color() == o.se_color();
+        return nw_colour() == o.ne_colour() && sw_colour() == o.se_colour();
       case NORTH_WEST:
-        return nw_color() == o.se_color();
+        return nw_colour() == o.se_colour();
       default:
         return false;
     }
 }
 
-void Domino::intersect(const Domino& o, set<Direction>& result) const {
+void CornerDomino::intersect(const CornerDomino& o, set<Direction>& result) const {
   set<Direction> allowed;
   for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
   {
@@ -113,32 +113,32 @@ void Domino::intersect(const Domino& o, set<Direction>& result) const {
   wang::intersection(result, allowed);
 }
 
-std::ostream& operator<< (std::ostream& stream, const Domino& d) {
+std::ostream& operator<< (std::ostream& stream, const CornerDomino& d) {
   stream
-    << (int) d.nw_color() << "#" << (int) d.ne_color() << endl
+    << (int) d.nw_colour() << "#" << (int) d.ne_colour() << endl
     << "###" << endl
-    << (int) d.se_color() << "#" << (int) d.nw_color() << endl;
+    << (int) d.se_colour() << "#" << (int) d.nw_colour() << endl;
   return stream;
 }
 
 DominoSet::DominoSet(Colours* colours, uint8_t sz) {
   max_colour_ = 0;
   for (uint8_t i = 0; i < sz; ++i) {
-    Domino d(i, colours[i]);
+    CornerDomino d(i, colours[i]);
     dominoes_[i] = d;
     max_colour_ = max(max_colour_,
         max(
-          max(d.se_color(), d.sw_color()),
-          max(d.ne_color(), d.nw_color())));
+          max(d.se_colour(), d.sw_colour()),
+          max(d.ne_colour(), d.nw_colour())));
   }
 
   for (uint8_t i = 0; i < sz; ++i) {
     Adjacency* adj = new Adjacency();
     adjacencies_[i] = adj;
-    Domino domino = dominoes_[i];
+    CornerDomino domino = dominoes_[i];
     for (size_t j = 0; j < sz; ++j) { 
       set<Direction> directions(direction_arr, direction_arr + 8);
-      Domino other = dominoes_[j];
+      CornerDomino other = dominoes_[j];
       other.intersect(domino, directions);
       adj->add(j, directions);
     }
@@ -154,7 +154,7 @@ DominoSet::~DominoSet() {
 int DominoSet::Conflicts(Point pt, const map<Point, uint8_t>& tiling) const {
   int conflicts = 0;
   uint8_t id = tiling.find(pt)->second;
-  Domino domino = dominoes_.find(id)->second;
+  CornerDomino domino = dominoes_.find(id)->second;
   for (int x = -1; x <= 1; ++x) {
     for (int y = -1; y <= 1; ++y) {
       if (x == 0 && y == 0) {
@@ -163,7 +163,7 @@ int DominoSet::Conflicts(Point pt, const map<Point, uint8_t>& tiling) const {
       Point nb = {pt.x + x, pt.y + y};
       Point offset = {x, y};
       if (tiling.find(nb) != tiling.end()) {
-        Domino other = dominoes_.find(tiling.find(nb)->second)->second;
+        CornerDomino other = dominoes_.find(tiling.find(nb)->second)->second;
         Direction dir;
         asDirection(offset, dir);
         if (!domino.matches(other, dir)) {
@@ -213,7 +213,7 @@ int DominoSet::Best(
       if (tiling.find(nb) != tiling.end()) {
         ++neighbors;
         set<uint8_t> allowed = all;
-        Domino other = dominoes_.find(tiling.find(nb)->second)->second;
+        CornerDomino other = dominoes_.find(tiling.find(nb)->second)->second;
         Direction dir;
         asDirection(offset, dir);
         Adjacency* adj = adjacencies_.find(other.id())->second;
@@ -310,15 +310,15 @@ bool DominoSet::Generate(size_t n, vector<uint8_t>& output) {
   for (int32_t y = 0; y < n; ++y) {
     for (int32_t x = 0; x < n; ++x) {
       Point pt = {x, y};
-      Domino d = dominoes_[tiling[pt]];
+      CornerDomino d = dominoes_[tiling[pt]];
       //cout << (int) tiling[pt] << "#";
-      cout << (int) d.nw_color() << (int) d.ne_color() << "|";
+      cout << (int) d.nw_colour() << (int) d.ne_colour() << "|";
     }
     cout << endl;
     for (int32_t x = 0; x < n; ++x) {
       Point pt = {x, y};
-      Domino d = dominoes_[tiling[pt]];
-      cout << (int) d.sw_color() << (int) d.se_color() << "|";
+      CornerDomino d = dominoes_[tiling[pt]];
+      cout << (int) d.sw_colour() << (int) d.se_colour() << "|";
     }
     cout << endl << endl;
   }
@@ -326,7 +326,7 @@ bool DominoSet::Generate(size_t n, vector<uint8_t>& output) {
   for (int32_t y = 0; y < n; ++y) {
     for (int32_t x = 0; x < n; ++x) {
       Point pt = {x, y};
-      Domino d = dominoes_[tiling[pt]];
+      CornerDomino d = dominoes_[tiling[pt]];
       cout << (int) d.id() << "#";
     }
     cout << endl;
@@ -338,9 +338,9 @@ void DominoSet::print() {
   for (uint8_t i = 0; i < dominoes_.size(); ++i) {
     auto d = dominoes_[i];
     cout << (int) i << ":" << endl;
-    cout << (int) d.nw_color() << "#" << (int) d.ne_color() << endl;
+    cout << (int) d.nw_colour() << "#" << (int) d.ne_colour() << endl;
     cout << "###" << endl;
-    cout << (int) d.sw_color() << "#" << (int) d.se_color() << endl;
+    cout << (int) d.sw_colour() << "#" << (int) d.se_colour() << endl;
     cout << endl;
   }
 }
