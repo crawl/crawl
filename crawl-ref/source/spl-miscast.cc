@@ -1421,7 +1421,10 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "@The_monster@ is crushed and pinned by an extremely "
                              "strong localised spatial distortion!";
             mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
+
             _ouch(15 + random2avg(29, 2));
+            if (!target->alive())
+                break;
 
             if (target->is_player())
                 you.increase_duration(DUR_DIMENSION_ANCHOR, 20 + random2(11), 50);
@@ -2428,8 +2431,11 @@ void MiscastEffect::_fire(int severity)
                              "The searing flames burn away @possessive@ fire resistance!";
             mon_msg_unseen = "A large flame burns hotly for a moment in the "
                              "thin air.";
+
             if (_ouch(9 + random2avg(33, 2), BEAM_FIRE) && target->alive())
                 target->expose_to_element(BEAM_FIRE, 10);
+            if (!target->alive())
+                break;
 
             if (target->is_player())
                 you.increase_duration(DUR_FIRE_VULN, 15 + random2(11), 50);
@@ -2607,8 +2613,11 @@ void MiscastEffect::_ice(int severity)
             you_msg        = "You are encased in ice!";
             mon_msg_seen   = "@The_monster@ is encased in ice!";
             mon_msg_unseen = "An unseen figure is encased in ice!";
+
             if (_ouch(9 + random2avg(23, 2), BEAM_ICE) && target->alive())
                 target->expose_to_element(BEAM_COLD, 9);
+            if (!target->alive())
+                break;
 
             if (target->is_player())
                 you.increase_duration(DUR_FROZEN, 6 + random2(11), 50);
