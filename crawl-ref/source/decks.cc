@@ -1668,7 +1668,10 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     switch (card)
     {
     case CARD_VITRIOL:
-        ztype = ZAP_BREATHE_ACID;
+		if (power_level == 2 || (power_level == 1 && coinflip()))
+			ztype = ZAP_CORROSIVE_BOLT;
+		else
+			ztype = ZAP_BREATHE_ACID;
         break;
 
     case CARD_HAMMER:  ztype = hammerzaps[power_level];  break;
@@ -1837,7 +1840,7 @@ static void _shadow_card(int power, deck_rarity_type rarity)
     }
 
     if (power_level > 0 && !you.haloed())
-		cast_darkness(duration, false);
+        cast_darkness(duration, false);
 }
 
 static void _potion_card(int power, deck_rarity_type rarity)
