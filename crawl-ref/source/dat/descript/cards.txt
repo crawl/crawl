@@ -115,7 +115,7 @@ This card summons a skeletal creature.
 %%%%
 Repulsiveness card
 
-This card summons an ugly or very ugly thing.
+This card summons an ugly or very ugly thing. Yuck.
 %%%%
 the Illusion card
 
