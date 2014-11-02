@@ -399,9 +399,9 @@ Lehudib's Crystal Spear the Serpent of Hell cast
 
 @The_monster@ spits crystal @at@ @target@.
 %%%%
-Bolt of Draining anubis guard cast
+Mennas cast
 
-@The_monster@ breathes @beam@ @at@ @target@.
+VISUAL:@The_monster@ gestures frantically.
 %%%%
 ########################################################################
 # Individual monsters
@@ -562,6 +562,10 @@ __NONE
 ushabti cast
 
 @The_monster@ shakes and rattles.
+%%%%
+Bolt of Draining anubis guard cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
