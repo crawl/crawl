@@ -4000,7 +4000,11 @@ void bolt::affect_player()
 
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
+    {
+        enchant_actor_with_flavour(&you, agent(), BEAM_DRAIN_MAGIC,
+                                   ench_power);
         debuff_player();
+    }
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
 
@@ -4518,8 +4522,13 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // purple draconian breath
-    if (name == "bolt of dispelling energy" || origin_spell == SPELL_QUICKSILVER_BOLT)
+    if (name == "bolt of dispelling energy"
+        || origin_spell == SPELL_QUICKSILVER_BOLT)
+    {
+        enchant_actor_with_flavour(mon, agent(), BEAM_DRAIN_MAGIC,
+                                   ench_power);
         debuff_monster(mon);
+    }
 
     if (dmg)
         beogh_follower_convert(mon, true);
