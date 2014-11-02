@@ -1433,6 +1433,24 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 }
 
 /**
+ * Apply side effects of casting / being hit by Irradiate.
+ *
+ * @param victim The victim of the irradiation.
+ */
+static void _irradiate_side_effects(actor *victim)
+{
+    if (victim->is_player())
+    {
+        contaminate_player(1500 + random2(1500)); // on avg, a bit under 50% of
+                                                  // yellow contam
+                                                  // another cast might or
+                                                  // might not push you over
+    }
+    else
+        victim->malmutate("");
+}
+
+/**
  * Irradiate the given cell. (Per the spell.)
  *
  * @param where     The cell in question.
@@ -1442,14 +1460,15 @@ void shillelagh(actor *wielder, coord_def where, int pow)
  */
 static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
 {
-    monster *mons = monster_at(where);
-    if (!mons)
-        return 0; // XXX: handle damaging the player for mons casts...?
+    actor *victim = actor_at(where);
+    if (!victim || victim == agent)
+        return 0;
 
-    if (you.can_see(mons))
+    if (you.can_see(victim))
     {
-        mprf("%s is blasted with magical radiation!",
-             mons->name(DESC_THE).c_str());
+        mprf("%s %s blasted with magical radiation!",
+             victim->name(DESC_THE).c_str(),
+             victim->conj_verb("are").c_str() );
     }
 
     const int dice = 6;
@@ -1459,12 +1478,21 @@ static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
-        _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+    {
+        ASSERT(victim->is_monster());
+        _player_hurt_monster(*victim->as_monster(), dam, BEAM_MMISSILE);
+    }
+    else if (victim->is_player())
+    {
+        ouch(dam, agent->mindex(), KILLED_BY_BEAM,
+             "by uncontrolled magical radiation", true,
+             agent->is_player() ? "you" : agent->name(DESC_A).c_str());
+    }
     else
-        mons->hurt(agent, dam, BEAM_MMISSILE);
+        victim->hurt(agent, dam, BEAM_MMISSILE);
 
-    if (mons->alive())
-        mons->malmutate("");
+    if (victim->alive())
+        _irradiate_side_effects(victim);
 
     return 1;
 }
@@ -1493,13 +1521,8 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
 
     apply_random_around_square(_irradiate_cell, who->pos(), true, powc, 8, who);
 
-    if (who->is_player())
-    {
-        contaminate_player(1500 + random2(1500)); // on avg, a bit under 50% of
-                                                  // yellow contam
-                                                  // another cast might or
-                                                  // might not push you over
-    }
+    _irradiate_side_effects(who);
+
     return SPRET_SUCCESS;
 }
 

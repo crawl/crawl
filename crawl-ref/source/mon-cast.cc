@@ -1324,6 +1324,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
     case SPELL_HUNTING_CRY:
+    case SPELL_IRRADIATE:
         return true;
     default:
         if (check_validity)
@@ -2852,6 +2853,40 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     }
 
     return mons_should_fire(beam);
+}
+
+static bool _should_irradiate(monster* agent)
+{
+    bolt tracer;
+    tracer.foe_ratio = 0;
+
+    for (adjacent_iterator ai(agent->pos()); ai; ++ai)
+    {
+        actor *victim = actor_at(*ai);
+
+        // These monsters are immune to malmutation, though they still
+        // will take damage from Irradiate (we just don't care).
+        if (!victim
+            || victim->type == MONS_ABOMINATION_SMALL
+            || victim->type == MONS_ABOMINATION_LARGE
+            || mons_genus(victim->type) == MONS_UGLY_THING)
+        {
+            continue;
+        }
+
+        if (mons_aligned(agent, victim))
+        {
+            tracer.friend_info.count++;
+            tracer.friend_info.power += victim->get_experience_level();
+        }
+        else
+        {
+            tracer.foe_info.count++;
+            tracer.foe_info.power += victim->get_experience_level();
+        }
+    }
+
+    return mons_should_fire(tracer);
 }
 
 /** Chooses a matching spell from this spell list, based on frequency.
@@ -5995,6 +6030,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_HUNTING_CRY:
         return;
+
+    case SPELL_IRRADIATE:
+        cast_irradiate(4 * mons->spell_hd(spell_cast), mons, false);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7389,6 +7428,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONFUSION_GAZE:
     case SPELL_DRAINING_GAZE:
         return !foe || !mon->can_see(foe);
+
+    case SPELL_IRRADIATE:
+        return !_should_irradiate(mon);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
