@@ -398,6 +398,7 @@ public:
 #if TAG_MAJOR_VERSION == 34
     int heat_radius2() const;
 #endif
+    int radiation_radius2() const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;

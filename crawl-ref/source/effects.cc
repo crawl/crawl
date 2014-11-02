@@ -1858,8 +1858,11 @@ static void _handle_magic_contamination()
         added_contamination += 13;
 
     // Normal dissipation
-    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE])
+    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE]
+        && !irradiated(you.pos()))
+    {
         added_contamination -= 25;
+    }
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,

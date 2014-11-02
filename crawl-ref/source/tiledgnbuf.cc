@@ -284,6 +284,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 #endif
             if (cell.gold_aura)
                 m_buf_feat.add(TILE_GOLD_AURA + cell.gold_aura - 1, x, y);
+            if (cell.rad_aura)
+                m_buf_feat.add(TILE_ORB_GLOW + cell.rad_aura - 1, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)

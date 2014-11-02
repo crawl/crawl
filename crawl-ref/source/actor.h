@@ -365,6 +365,7 @@ public:
 #if TAG_MAJOR_VERSION == 34
     virtual int heat_radius2() const = 0;
 #endif
+    virtual int radiation_radius2() const = 0;
 
     virtual bool glows_naturally() const = 0;
 

@@ -16,6 +16,7 @@ enum area_centre_type
     AREA_HOT,
 #endif
     AREA_GOLD,
+    AREA_RADIATION,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -56,5 +57,8 @@ bool heated(const coord_def& p);
 
 // ...or glowing with fresh gold (Gozag)?
 bool golden(const coord_def& p);
+
+// ...or glowing with nearby radiation?
+bool irradiated(const coord_def& p);
 
 #endif

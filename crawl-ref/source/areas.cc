@@ -42,6 +42,7 @@ enum areaprop_flag
     APROP_HOT           = (1 << 11),
 #endif
     APROP_GOLD          = (1 << 12),
+    APROP_RADIATION     = (1 << 13),
 };
 
 struct area_centre
@@ -87,6 +88,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 #if TAG_MAJOR_VERSION == 34
          || act->heat_radius2() > -1
 #endif
+         || act->radiation_radius2() > -1
          ))
     {
         // Not necessarily new, but certainly potentially interesting.
@@ -151,6 +153,15 @@ static void _actor_areas(actor *a)
         no_areas = false;
     }
 #endif
+
+    if ((r = a->radiation_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_RADIATION, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
+            _set_agrid_flag(*ri, APROP_RADIATION);
+        no_areas = false;
+    }
 }
 
 /**
@@ -818,4 +829,32 @@ bool golden(const coord_def& p)
         _update_agrid();
 
     return _check_agrid_flag(p, APROP_GOLD);
+}
+
+/////////////
+// Radiation aura.
+
+bool irradiated(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_RADIATION);
+}
+
+// This might be useful for something, but blocking player contam dissipation
+// right now is a bad idea.
+int player::radiation_radius2() const
+{
+    return -1;
+}
+
+int monster::radiation_radius2() const
+{
+    if (mons_class_flag(type, M_GLOWS_RADIATION))
+        return 2; // surround monster to radius of 1
+    return -1;
 }

@@ -57,6 +57,7 @@ struct cloud_info
 #define MAP_HOT           0x10000000
 #endif
 #define MAP_GOLDEN        0x20000000
+#define MAP_IRRADIATED    0x40000000
 
 /*
  * A map_cell stores what the player knows about a cell.
