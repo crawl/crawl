@@ -331,7 +331,7 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
  * Forms, buffs, debuffs, contamination, probably a few other things.
  * Flight gets an extra 11 aut before going away to minimize instadeaths.
  */
-void debuff_player()
+void debuff_player(bool include_contam)
 {
     bool need_msg = false, danger = false;
 
@@ -396,7 +396,8 @@ void debuff_player()
              danger ? "Careful! " : "");
     }
 
-    contaminate_player(-1 * (1000 + random2(4000)));
+    if (include_contam)
+        contaminate_player(-1 * (1000 + random2(4000)));
 }
 
 void debuff_monster(monster* mon)

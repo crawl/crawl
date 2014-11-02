@@ -4003,7 +4003,7 @@ void bolt::affect_player()
     {
         enchant_actor_with_flavour(&you, agent(), BEAM_DRAIN_MAGIC,
                                    ench_power);
-        debuff_player();
+        debuff_player(false);
     }
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
