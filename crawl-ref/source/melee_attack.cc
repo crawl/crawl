@@ -2966,6 +2966,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
+    case AF_STICKY_FLAME:
         base_damage = attacker->get_hit_dice()
                       + random2(attacker->get_hit_dice());
         special_damage =
@@ -2986,6 +2987,9 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         defender->expose_to_element(BEAM_FIRE, 2);
+
+        if (flavour == AF_STICKY_FLAME)
+            mons_do_napalm();
         break;
 
     case AF_COLD:
@@ -3223,10 +3227,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         defender->go_berserk(false);
-        break;
-
-    case AF_STICKY_FLAME:
-        mons_do_napalm();
         break;
 
     case AF_CHAOS:
