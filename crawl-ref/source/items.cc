@@ -3902,6 +3902,8 @@ bool item_def::is_valid(bool iinfo) const
     }
     if (get_colour() == 0)
         return false; // No black items.
+    if (!appearance_initialized())
+        return false; // no items with uninitialized rnd
     return true;
 }
 
@@ -4501,6 +4503,10 @@ item_info get_item_info(const item_def& item)
     else
         ii.pos = item.pos;
 
+    ii.rnd = item.rnd; // XXX: may (?) leak cosmetic (?) info...?
+    if (ii.rnd == 0)
+        ii.rnd = 1; // don't leave "uninitialized" item infos around
+
     // keep god number
     if (item.orig_monnum < 0)
         ii.orig_monnum = item.orig_monnum;
@@ -4541,7 +4547,6 @@ item_info get_item_info(const item_def& item)
             ii.plus = item.plus;
         if (item_type_known(item))
             ii.brand = item.brand;
-        ii.rnd = item.rnd; // used for appearance
         break;
     case OBJ_WANDS:
         if (item_type_known(item))
@@ -4567,8 +4572,6 @@ item_info get_item_info(const item_def& item)
             ii.mon_type = item.mon_type;
             ii.freshness = 100;
         }
-        if (ii.sub_type == FOOD_FRUIT)
-            ii.rnd = item.rnd; //appearance
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
@@ -4591,7 +4594,6 @@ item_info get_item_info(const item_def& item)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
         ii.appearance = item.appearance;
-        ii.rnd = item.rnd; // randart appearance
         break;
     case OBJ_BOOKS:
         if (item_type_known(item) || !item_is_spellbook(item))
@@ -4615,7 +4617,6 @@ item_info get_item_info(const item_def& item)
         }
         else
             ii.sub_type = NUM_RODS;
-        ii.rnd = item.rnd; // appearance
         break;
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
