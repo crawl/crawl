@@ -38,13 +38,12 @@ using namespace std;
 namespace wang {
 
 bool operator<(const Point& lhs, const Point& rhs) {
-  return lhs.x < rhs.x || lhs.y < rhs.y;
+  return lhs.y < rhs.y || (lhs.y == rhs.y && lhs.x < rhs.x);
 }
 
 bool operator==(const Point& lhs, const Point& rhs) {
   return lhs.x == rhs.x && lhs.y == rhs.y;
 }
-
 
 Adjacency::Adjacency() {
   for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
@@ -205,6 +204,7 @@ DominoSet::~DominoSet() {
 
 int DominoSet::Conflicts(Point pt, const map<Point, uint8_t>& tiling) const {
   int conflicts = 0;
+  int neighbors = 0;
   uint8_t id = tiling.find(pt)->second;
   Domino* domino = dominoes_.find(id)->second;
   for (int x = -1; x <= 1; ++x) {
@@ -215,6 +215,7 @@ int DominoSet::Conflicts(Point pt, const map<Point, uint8_t>& tiling) const {
       Point nb = {pt.x + x, pt.y + y};
       Point offset = {x, y};
       if (tiling.find(nb) != tiling.end()) {
+        ++neighbors;
         Domino* other = dominoes_.find(tiling.find(nb)->second)->second;
         Direction dir;
         asDirection(offset, dir);
@@ -245,7 +246,8 @@ void DominoSet::Randomise(set<Point> pts, map<Point, uint8_t>& tiling, int sz) c
 }
 
 int DominoSet::Best(
-    Point pt, const map<Point, uint8_t>& tiling,
+    Point pt,
+    const map<Point, uint8_t>& tiling,
     vector<uint8_t>& result) const {
   set<uint8_t> all_set;
   for (uint8_t i = 0; i < dominoes_.size(); ++i) {
@@ -255,6 +257,7 @@ int DominoSet::Best(
 
   map<uint8_t, int> result_map;
   uint8_t neighbors = 0;
+  uint8_t mx = 0;
   for (int x = -1; x <= 1; ++x) {
     for (int y = -1; y <= 1; ++y) {
       if (x == 0 && y == 0) {
@@ -272,6 +275,10 @@ int DominoSet::Best(
         adj->adjacent(dir, allowed);
         for (auto itr : allowed) {
           result_map[itr] += 1;
+          int val = result_map[itr];
+          if (val > mx) {
+            mx = val;
+          }
         }
       }
     }
@@ -282,17 +289,12 @@ int DominoSet::Best(
     }
     return 0;
   }
-  int max = 0;
   for (auto itr : result_map) {
-    if (itr.second > max) {
-      max = itr.second;
-      result.clear();
-    }
-    if (itr.second == max) {
+    if (itr.second == mx) {
       result.push_back(itr.first);
     }
   }
-  return 8 - max;
+  return 8 - mx;
 }
 
 
@@ -303,15 +305,17 @@ bool DominoSet::Generate(size_t x, size_t y, vector<uint8_t>& output) {
   }
   const set<uint8_t> all = all_set;
 
-  map<Point, uint8_t> tiling;
   vector<Point> all_points;
-  for (int32_t i = 0; i < x; ++i) {
-    for (int32_t j = 0; j < y; ++j) {
+  for (int32_t j = 0; j < y; ++j) {
+    for (int32_t i = 0; i < x; ++i) {
       Point pt = {i, j};
       all_points.push_back(pt);
     }
   }
 
+  bool has_conflicts = false;
+  map<Point, uint8_t> tiling;
+  assert(tiling.empty());
   // Init all the tiles
   for (auto pt : all_points) {
     vector<uint8_t> choices;
@@ -319,16 +323,20 @@ bool DominoSet::Generate(size_t x, size_t y, vector<uint8_t>& output) {
     if (!choices.empty()) {
       random_shuffle(choices.begin(), choices.end());
       tiling[pt] = choices[0];
+      assert(tiling[pt] == choices[0]);
     } else {
       tiling[pt] = rand() % adjacencies_.size();
     }
+    has_conflicts |= Conflicts(pt, tiling);
   }
-  int trials = 10000;
-  {
+  
+  // If we were unable to constructively tile the plane
+  // attempt to stochastically solve it.
+  if (has_conflicts) {
+    int trials = 10000;
     bool did_shuffle = false;
     uint32_t last_conflicts = -1;
     int sz = 1;
-    bool has_conflicts;
     do {
       set<Point> stuck;
       uint32_t conflict_count = 0;
@@ -364,17 +372,13 @@ bool DominoSet::Generate(size_t x, size_t y, vector<uint8_t>& output) {
       last_conflicts = conflict_count;
     } while (has_conflicts && trials--);
   }
-
-  cout << "Trials: " << trials << endl;
-  for (int32_t i = 0; i < x; ++i) {
-    for (int32_t j = 0; j < y; ++j) {
+  for (int32_t j = 0; j < y; ++j) {
+    for (int32_t i = 0; i < x; ++i) {
       Point pt = {i, j};
-      Domino* d = dominoes_[tiling[pt]];
-      cout << (int) d->id() << "#";
+      output.push_back(tiling[pt]);
     }
-    cout << endl;
   }
-  return true;
+  return !has_conflicts;
 }
 
 } // namespace wang

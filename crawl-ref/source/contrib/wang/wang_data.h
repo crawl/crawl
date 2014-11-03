@@ -7,10 +7,19 @@ namespace wang {
 
 // This set of eight tiles trivially cover the plane.
 // See: Wang Tiles for Image and Texture Generation (Cohen, 2003)
+#define R 0
+#define G 1
+#define B 2
+#define Y 3
 static EdgeColours cohen_set[8] = {
-  {0, 1, 1, 0}, {1, 0, 1, 0}, {0, 1, 0, 1}, {1, 0, 0, 1},
-  {0, 0, 1, 1}, {1, 1, 1, 1}, {0, 0, 0, 0}, {1, 1, 0, 0},
+  {R, Y, G, B}, {G, B, G, B}, {R, Y, R, Y}, {G, B, R, Y},
+  {R, B, G, Y}, {G, Y, G, Y}, {R, B, R, B}, {G, Y, R, B},
 };
+
+#undef R
+#undef G
+#undef B
+#undef Y
 
 // This is a six-colour set of 44 tiles.
 // See: Aperiodic Sets of Square Tiles with Colored Corners (Lagae, 2006)

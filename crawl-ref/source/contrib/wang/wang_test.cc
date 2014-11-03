@@ -32,7 +32,8 @@ int main(int argc, char** argv) {
   test_symmetry(dominoes);
   test_symmetry(aperiodic_dominoes);
   vector<uint8_t> output;
-  aperiodic_dominoes.Generate(5, 4, output);
-  cohen_dominoes.Generate(20, 15, output);
+  cohen_dominoes.Generate(60, 20, output);
+  cout << endl;
+  dominoes.Generate(10, 10, output);
   return 0;
 }
