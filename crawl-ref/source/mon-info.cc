@@ -987,9 +987,10 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA))
+    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+        && type != MONS_SENSED)
     {
-        ASSERT(num_heads);
+        ASSERT(num_heads > 0);
         if (num_heads < 11)
             ss << number_in_words(num_heads);
         else
