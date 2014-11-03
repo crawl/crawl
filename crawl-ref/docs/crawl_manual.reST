@@ -587,6 +587,30 @@ kind of threat from melee fighters. Learn from past deaths and remember which
 monsters pose the most problems. If particular monsters are giving you
 trouble, try to alter your tactics for future encounters.
 
+You can obtain information about a monster by using the 'x' (examine) command,
+moving the cursor over the monster in question, and pressing 'v' to view the
+monster's details; or by searching for a monster by name or symbol with '?/m'.
+The details screen shows:
+
+- The monster's name and description.
+- Bars indicating its:
+  * AC: armour class; how well it ignores most damage
+  * EV: evasion; how well it avoids being hit
+  * MR: magic resistance; how well it resists most Hexes and similar
+    enchantments.
+- Its difficulty level, speed (if different from average speed), size,
+  resistances, and special attacks.
+- Its spells and special abilities.  Monster spells and abilities are
+  of five types:
+  * Special abilities are innate, non-magical effects.
+  * Magical abilities are innate magical effects.  They are affected
+    by antimagic.
+  * Demonic abilities are similar to magical abilities.
+  * Divine abilities call upon the monster's god for a magical effect.
+    They are prevented by silence, but not affected by antimagic.
+  * Spells are cast using memorized magical words.  They are both
+    prevented by silence and affected by antimagic.
+
 ****************************************
 G. Items
 ****************************************
