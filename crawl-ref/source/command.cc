@@ -1149,7 +1149,7 @@ static int _do_description(string key, string type, const string &suffix,
             monster_info mi(mon_num);
             // Avoid slime creature being described as "buggy"
             if (mi.type == MONS_SLIME_CREATURE)
-                mi.number = 1;
+                mi.slime_size = 1;
             return describe_monsters(mi, true, footer);
         }
         else

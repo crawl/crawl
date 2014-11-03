@@ -2382,7 +2382,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
             return mon->base_type == monl->base_type;
 
         if (mons_genus(mon->base_type) == MONS_HYDRA)
-            return mon->number == monl->number;
+            return mon->num_heads == monl->num_heads;
     }
 
     if (mons_is_pghost(mon->type))
