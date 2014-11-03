@@ -2534,6 +2534,7 @@ void check_item_knowledge(bool unknown_items)
                     ptmp->base_type = i;
                     ptmp->sub_type  = j;
                     ptmp->quantity  = 1;
+                    ptmp->rnd       = 1;
                     if (!unknown_items)
                         ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
@@ -2568,6 +2569,7 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->base_type = i;
                 ptmp->sub_type  = get_max_subtype(i);
                 ptmp->quantity  = 1;
+                ptmp->rnd       = 1;
                 items.push_back(ptmp);
 
                 if (you.force_autopickup[i][ptmp->sub_type] == 1)
@@ -2589,6 +2591,7 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->base_type = OBJ_MISSILES;
                 ptmp->sub_type  = i;
                 ptmp->quantity  = 1;
+                ptmp->rnd       = 1;
                 items_missile.push_back(ptmp);
 
                 if (you.force_autopickup[OBJ_MISSILES][i] == 1)
@@ -2619,6 +2622,7 @@ void check_item_knowledge(bool unknown_items)
             {
                 ptmp->base_type = misc_list[i];
                 ptmp->sub_type  = misc_ST_list[i];
+                ptmp->rnd       = 1;
                 //show a good amount of gold
                 ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 
