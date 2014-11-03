@@ -20,6 +20,7 @@
 #include "mon-transit.h"
 #include "ng-input.h"
 #include "skills.h"
+#include "spl-util.h"
 #include "stringutil.h"
 
 #define MAX_GHOST_DAMAGE     50
@@ -749,9 +750,8 @@ void ghost_demon::add_spells()
     {
         const int chance = max(0, 50 - spell_fail(you.spells[i]));
         const spell_type spell = translate_spell(you.spells[i]);
-        // XXX: this may require a more stringent check if there are
-        // player spells which don't work well as ghost spells
         if (spell != SPELL_NO_SPELL
+            && !(get_spell_flags(spell) & SPFLAG_NO_GHOST)
             && is_valid_mon_spell(spell)
             && x_chance_in_y(chance*chance, 50*50))
         {
