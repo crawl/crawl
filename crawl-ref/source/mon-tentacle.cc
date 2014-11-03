@@ -629,10 +629,8 @@ static void _collect_tentacles(monster* mons,
     monster_type tentacle = mons_tentacle_child_type(mons);
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
-    {
         if (mi->tentacle_connect == mons->mindex() && mi->type == tentacle)
             tentacles.push_back(mi);
-    }
 }
 
 static void _purge_connectors(int tentacle_idx, monster_type mon_type)
