@@ -238,8 +238,7 @@ The labyrinth is a complex, ever-shifting maze designed by subtle and malicious
 minds for reasons long lost to history. Old stories say that the labyrinth was
 constructed as a prison for a fearsome minotaur. More recent stories say this
 beast dwells there still, guarding the labyrinth's sole exit — as well as a
-hoard of treasure taken from the bodies of the foolish adventurers who got lost
-inside and starved to death.
+rich hoard of treasure taken from the bodies of foolish adventurers.
 %%%%
 Bazaar
 
