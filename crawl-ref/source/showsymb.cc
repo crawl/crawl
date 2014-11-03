@@ -147,7 +147,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
 static monster_type _show_mons_type(const monster_info& mi)
 {
-    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
+    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
         return MONS_MERGED_SLIME_CREATURE;
     else if (mi.type == MONS_ZOMBIE)
     {

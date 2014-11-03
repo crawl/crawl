@@ -480,19 +480,19 @@ monster_info::monster_info(const monster* m, int milev)
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
 
-    // these use number for internal information
-    if (type == MONS_SIXFIRHY
-        || type == MONS_JIANGSHI
-        || type == MONS_KRAKEN_TENTACLE
-        || type == MONS_KRAKEN_TENTACLE_SEGMENT
-        || type == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || type == MONS_STARSPAWN_TENTACLE
-        || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+    if (type == MONS_SLIME_CREATURE)
+        slime_size = m->blob_size;
+    else if (type == MONS_BALLISTOMYCETE)
+        is_active = !!m->ballisto_activity;
+    else if (mons_genus(type) == MONS_HYDRA
+             || mons_genus(base_type) == MONS_HYDRA)
     {
-        number = 0;
+        num_heads = m->num_heads;
     }
+    // others use number for internal information
     else
-        number = m->number;
+        number = 0;
+
     colour = m->colour;
 
     int stype = 0;
@@ -877,8 +877,8 @@ string monster_info::_core_name() const
         switch (type)
         {
         case MONS_SLIME_CREATURE:
-            ASSERT(number <= ARRAYSZ(slime_sizes));
-            s = slime_sizes[number] + s;
+            ASSERT((size_t) slime_size <= ARRAYSZ(slime_sizes));
+            s = slime_sizes[slime_size] + s;
             break;
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
@@ -981,15 +981,15 @@ string monster_info::common_name(description_level_type desc) const
         ss << "sensed ";
 
     if (type == MONS_BALLISTOMYCETE)
-        ss << (number ? "active " : "");
+        ss << (is_active ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
-        && number > 0)
+    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA))
     {
-        if (number < 11)
-            ss << number_in_words(number);
+        ASSERT(num_heads);
+        if (num_heads < 11)
+            ss << number_in_words(num_heads);
         else
-            ss << make_stringf("%d", number);
+            ss << make_stringf("%d", num_heads);
 
         ss << "-headed ";
     }
@@ -1164,10 +1164,10 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
-        return m1.number > m2.number;
+        return m1.slime_size > m2.slime_size;
 
     if (m1.type == MONS_BALLISTOMYCETE)
-        return m1.number > 0 && m2.number <= 0;
+        return m1.is_active && !m2.is_active;
 
     // Shifters after real monsters of the same type.
     if (m1.is(MB_SHAPESHIFTER) != m2.is(MB_SHAPESHIFTER))
@@ -1202,9 +1202,9 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         // Both monsters are hydras or hydra zombies, sort by number of heads.
         if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
         {
-            if (m1.number > m2.number)
+            if (m1.num_heads > m2.num_heads)
                 return true;
-            else if (m1.number < m2.number)
+            else if (m1.num_heads < m2.num_heads)
                 return false;
         }
     }
@@ -1748,13 +1748,13 @@ size_type monster_info::body_size() const
     // Slime creature size is increased by the number merged.
     if (type == MONS_SLIME_CREATURE)
     {
-        if (number == 2)
+        if (slime_size == 2)
             ret = SIZE_MEDIUM;
-        else if (number == 3)
+        else if (slime_size == 3)
             ret = SIZE_LARGE;
-        else if (number == 4)
+        else if (slime_size == 4)
             ret = SIZE_BIG;
-        else if (number == 5)
+        else if (slime_size == 5)
             ret = SIZE_GIANT;
     }
 
@@ -1825,7 +1825,7 @@ void get_monster_info(vector<monster_info>& mons)
         if (!mons_class_flag(visible[i]->type, M_NO_EXP_GAIN)
             || visible[i]->is_child_tentacle()
             || visible[i]->type == MONS_BALLISTOMYCETE
-                && visible[i]->number > 0)
+                && visible[i]->ballisto_activity > 0)
         {
             mons.push_back(monster_info(visible[i]));
         }
