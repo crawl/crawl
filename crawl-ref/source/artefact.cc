@@ -394,16 +394,6 @@ void set_unique_item_status(const item_def& item,
         _set_unique_item_status(item.special, status);
 }
 
-void reveal_randapp_artefact(item_def &item)
-{
-    ASSERT(is_unrandom_artefact(item));
-    const unrandart_entry *unrand = _seekunrandart(item);
-    ASSERT(unrand);
-    ASSERT(unrand->flags & UNRAND_FLAG_RANDAPP);
-    // name and tile update themselves
-    item.colour = unrand->colour;
-}
-
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
@@ -1195,7 +1185,6 @@ void setup_unrandart(item_def &item, bool creating)
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;
     item.plus      = unrand->plus;
-    item.colour    = unrand->colour;
 }
 
 static bool _init_artefact_properties(item_def &item)

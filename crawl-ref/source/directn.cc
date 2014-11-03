@@ -1386,7 +1386,7 @@ bool direction_chooser::pickup_item()
                // TODO: check for different unidentified items of the same base type
                && (!item_type_has_unidentified(item->base_type)
                    || ii->sub_type == get_max_subtype(item->base_type))
-            || ii->colour != item->colour)
+            || ii->get_colour() != item->get_colour())
         {
             item = 0;
         }

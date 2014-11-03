@@ -1728,7 +1728,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     dancing->inv[MSLOT_WEAPON] = wpn;
     mitm[wpn].set_holding_monster(dancing->mindex());
-    dancing->colour = mitm[wpn].colour;
+    dancing->colour = mitm[wpn].get_colour();
 
     return XOM_GOOD_ANIMATE_MON_WPN;
 }

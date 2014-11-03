@@ -402,7 +402,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             show = *weapon;
             g = _get_item_override(*weapon);
             if (!g.col)
-                g.col = weapon->colour;
+                g.col = weapon->get_colour();
         }
 
         break;
@@ -448,7 +448,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         if (feat_is_water(cell.feat()))
             g.col = _cell_feat_show_colour(cell, loc, coloured);
         else if (!g.col)
-            g.col = eitem->colour;
+            g.col = eitem->get_colour();
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (cell.flags & MAP_MORE_ITEMS)
@@ -502,7 +502,7 @@ cglyph_t get_item_glyph(const item_def *item)
     if (!g.ch)
         g.ch = get_feature_def(show_type(*item)).symbol();
     if (!g.col)
-        g.col = item->colour;
+        g.col = item->get_colour();
     return g;
 }
 

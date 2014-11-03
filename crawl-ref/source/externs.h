@@ -558,8 +558,9 @@ struct item_def
         int brand;          ///< weapon and armour brands; also marks artefacts
         int freshness;      ///< remaining time until a corpse rots
     };
-    colour_t       colour;         ///< item colour
     uint8_t        rnd;            ///< random number, used for tile choice
+                                    // and randart colours
+                                    // 0 = uninitialized
     short          quantity;       ///< number of items
     iflags_t       flags;          ///< item status flags
 
@@ -584,7 +585,7 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0), colour(0), rnd(0), quantity(0), flags(0),
+                 special(0), rnd(0), quantity(0), flags(0),
                  pos(), link(NON_ITEM), slot(0), orig_place(),
                  orig_monnum(0), inscription()
     {
@@ -596,6 +597,7 @@ public:
                 iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
+    colour_t get_colour() const;
     int book_number() const;
     zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
@@ -636,6 +638,7 @@ public:
     bool held_by_monster() const;
 
     bool defined() const;
+    bool appearance_initialized() const;
     bool is_valid(bool info = false) const;
 
     /** Should this item be preserved as far as possible? */
@@ -650,6 +653,24 @@ public:
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;
+
+    colour_t randart_colour() const;
+
+    colour_t ring_colour() const;
+    colour_t amulet_colour() const;
+
+    colour_t rune_colour() const;
+
+    colour_t weapon_colour() const;
+    colour_t missile_colour() const;
+    colour_t armour_colour() const;
+    colour_t wand_colour() const;
+    colour_t food_colour() const;
+    colour_t jewellery_colour() const;
+    colour_t potion_colour() const;
+    colour_t book_colour() const;
+    colour_t miscellany_colour() const;
+    colour_t corpse_colour() const;
 };
 
 typedef item_def item_info;

@@ -147,7 +147,6 @@ void map_cell::set_detected_item()
     flags |= MAP_DETECTED_ITEM;
     _item = new item_info();
     _item->base_type = OBJ_DETECTED;
-    _item->colour    = Options.detected_item_colour;
 }
 
 static bool _floor_mf(map_feature mf)

@@ -369,7 +369,7 @@ bool turn_corpse_into_skeleton(item_def &item)
 
     item.sub_type = CORPSE_SKELETON;
     item.special  = FRESHEST_CORPSE; // reset rotting counter
-    item.colour   = LIGHTGREY;
+    item.props.clear();
     return true;
 }
 
@@ -398,6 +398,8 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.sub_type  = FOOD_CHUNK;
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
+    // specifically do not clear the props, so that we keep silly colour
+    // overrides from weirdly-coloured monsters
 
     // Don't mark it as dropped if we are forcing autopickup of chunks.
     if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0
@@ -509,6 +511,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     item.sub_type  = POT_BLOOD;
     item_colour(item);
     clear_item_pickup_flags(item);
+    item.props.clear();
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 

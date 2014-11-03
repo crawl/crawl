@@ -757,10 +757,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
     {
-        bool was_randapp = is_randapp_artefact(item);
         item.flags |= flags;
-        if (was_randapp && (flags & ISFLAG_KNOW_TYPE))
-            reveal_randapp_artefact(item);
         request_autoinscribe();
 
         if (in_inventory(item))

@@ -3239,6 +3239,640 @@ bool item_def::defined() const
 {
     return base_type != OBJ_UNASSIGNED && quantity > 0;
 }
+/**
+ * Has this item's appearance been initialized?
+ */
+bool item_def::appearance_initialized() const
+{
+    return rnd != 0;
+}
+
+
+/**
+ * Assuming this item is a randart weapon/armour, what colour is it?
+ */
+colour_t item_def::randart_colour() const
+{
+    ASSERT(is_artefact(*this));
+    static colour_t colours[] = { YELLOW, LIGHTGREEN, LIGHTRED };
+    return colours[rnd % ARRAYSZ(colours)];
+}
+
+/**
+ * Assuming this item is a weapon, what colour is it?
+ */
+colour_t item_def::weapon_colour() const
+{
+    ASSERT(base_type == OBJ_WEAPONS);
+
+    // random artefact
+    if (is_artefact(*this))
+        return randart_colour();
+
+    if (is_demonic(*this))
+        return LIGHTRED;
+
+    switch (item_attack_skill(*this))
+    {
+        case SK_BOWS:
+            return BLUE;
+        case SK_CROSSBOWS:
+            return LIGHTBLUE;
+        case SK_THROWING:
+            return WHITE;
+        case SK_SLINGS:
+            return BROWN;
+        case SK_SHORT_BLADES:
+            return CYAN;
+        case SK_LONG_BLADES:
+            return LIGHTCYAN;
+        case SK_AXES:
+            return MAGENTA;
+        case SK_MACES_FLAILS:
+            return LIGHTGREY;
+        case SK_POLEARMS:
+            return RED;
+        case SK_STAVES:
+            return GREEN;
+        default:
+            die("Unknown weapon attack skill %d", item_attack_skill(*this));
+            // XXX: give more info!
+    }
+}
+
+/**
+ * Assuming this item is a missile (stone/arrow/bolt/etc), what colour is it?
+ */
+colour_t item_def::missile_colour() const
+{
+    ASSERT(base_type == OBJ_MISSILES);
+
+    // TODO: move this into itemprop.cc
+    switch (sub_type)
+    {
+        case MI_STONE:
+            return BROWN;
+#if TAG_MAJOR_VERSION == 34
+        case MI_DART:
+#endif
+        case MI_SLING_BULLET:
+            return CYAN;
+        case MI_LARGE_ROCK:
+            return LIGHTGREY;
+        case MI_ARROW:
+            return BLUE;
+        case MI_NEEDLE:
+            return WHITE;
+        case MI_BOLT:
+            return LIGHTBLUE;
+        case MI_JAVELIN:
+            return RED;
+        case MI_THROWING_NET:
+            return MAGENTA;
+        case MI_TOMAHAWK:
+            return GREEN;
+        case NUM_SPECIAL_MISSILES:
+        case NUM_REAL_SPECIAL_MISSILES:
+        default:
+            die("invalid missile type");
+    }
+}
+
+/**
+ * Assuming this item is a piece of armour, what colour is it?
+ */
+colour_t item_def::armour_colour() const
+{
+    ASSERT(base_type == OBJ_ARMOUR);
+
+    if (is_artefact(*this))
+        return randart_colour();
+
+    // TODO: move (some of?) this into itemprop.cc
+    switch (sub_type)
+    {
+        case ARM_FIRE_DRAGON_HIDE:
+        case ARM_FIRE_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_FIRE_DRAGON);
+        case ARM_TROLL_HIDE:
+        case ARM_TROLL_LEATHER_ARMOUR:
+            return mons_class_colour(MONS_TROLL);
+        case ARM_ICE_DRAGON_HIDE:
+        case ARM_ICE_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_ICE_DRAGON);
+        case ARM_STEAM_DRAGON_HIDE:
+        case ARM_STEAM_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_STEAM_DRAGON);
+        case ARM_MOTTLED_DRAGON_HIDE:
+        case ARM_MOTTLED_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_MOTTLED_DRAGON);
+        case ARM_STORM_DRAGON_HIDE:
+        case ARM_STORM_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_STORM_DRAGON);
+        case ARM_GOLD_DRAGON_HIDE:
+        case ARM_GOLD_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_GOLDEN_DRAGON);
+        case ARM_SWAMP_DRAGON_HIDE:
+        case ARM_SWAMP_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_SWAMP_DRAGON);
+        case ARM_PEARL_DRAGON_HIDE:
+        case ARM_PEARL_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_PEARL_DRAGON);
+        case ARM_SHADOW_DRAGON_HIDE:
+        case ARM_SHADOW_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_SHADOW_DRAGON);
+        case ARM_QUICKSILVER_DRAGON_HIDE:
+        case ARM_QUICKSILVER_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_QUICKSILVER_DRAGON);
+        case ARM_CLOAK:
+            return WHITE;
+        case ARM_NAGA_BARDING:
+        case ARM_CENTAUR_BARDING:
+            return GREEN;
+        case ARM_ROBE:
+            return RED;
+#if TAG_MAJOR_VERSION == 34
+        case ARM_CAP:
+#endif
+        case ARM_HAT:
+        case ARM_HELMET:
+            return MAGENTA;
+        case ARM_BOOTS:
+            return BLUE;
+        case ARM_GLOVES:
+            return LIGHTBLUE;
+        case ARM_LEATHER_ARMOUR:
+            return BROWN;
+        case ARM_ANIMAL_SKIN:
+            return LIGHTGREY;
+        case ARM_CRYSTAL_PLATE_ARMOUR:
+            return WHITE;
+        case ARM_SHIELD:
+        case ARM_LARGE_SHIELD:
+        case ARM_BUCKLER:
+            return CYAN;
+        default:
+            return LIGHTCYAN;
+    }
+}
+
+/**
+ * Assuming this item is a wand, what colour is it?
+ */
+colour_t item_def::wand_colour() const
+{
+    ASSERT(base_type == OBJ_WANDS);
+
+    // this is very odd... a linleyism?
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (special % NDSC_WAND_PRI)
+    {
+        case 0:         //"iron wand"
+            return CYAN;
+        case 1:         //"brass wand"
+        case 5:         //"gold wand"
+            return YELLOW;
+        case 3:         //"wooden wand"
+        case 4:         //"copper wand"
+        case 7:         //"bronze wand"
+            return BROWN;
+        case 6:         //"silver wand"
+            return WHITE;
+        case 11:        //"fluorescent wand"
+            return LIGHTGREEN;
+        case 2:         //"bone wand"
+        case 8:         //"ivory wand"
+        case 9:         //"glass wand"
+        case 10:        //"lead wand"
+        default:
+            return LIGHTGREY;
+    }
+}
+
+/**
+ * Assuming this item is a potion, what colour is it?
+ */
+colour_t item_def::potion_colour() const
+{
+    ASSERT(base_type == OBJ_POTIONS);
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    static const COLOURS potion_colours[] =
+    {
+#if TAG_MAJOR_VERSION == 34
+        // clear
+        LIGHTGREY,
+#endif
+        // blue, black, silvery, cyan, purple, orange
+        BLUE, LIGHTGREY, WHITE, CYAN, MAGENTA, LIGHTRED,
+        // inky, red, yellow, green, brown, pink, white
+        BLUE, RED, YELLOW, GREEN, BROWN, LIGHTMAGENTA, WHITE,
+        // emerald, grey, pink, copper, gold, dark, puce
+        LIGHTGREEN, LIGHTGREY, LIGHTRED, YELLOW, YELLOW, BROWN, BROWN,
+        // amethyst, sapphire
+        MAGENTA, BLUE
+    };
+    COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
+    return potion_colours[consum_desc % NDSC_POT_PRI];
+}
+
+/**
+ * Assuming this item is a piece of food, what colour is it?
+ */
+colour_t item_def::food_colour() const
+{
+    ASSERT(base_type == OBJ_FOOD);
+
+    switch (sub_type)
+    {
+        case FOOD_ROYAL_JELLY:
+        case FOOD_PIZZA:
+            return YELLOW;
+        case FOOD_FRUIT:
+            return LIGHTGREEN;
+        case FOOD_CHUNK:
+        {
+            const colour_t class_colour = mons_class_colour(mon_type);
+            if (class_colour == BLACK)
+                return LIGHTRED;
+            return class_colour;
+        }
+        case FOOD_BEEF_JERKY:
+        case FOOD_BREAD_RATION:
+        case FOOD_MEAT_RATION:
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this item is a ring, what colour is it?
+ */
+colour_t item_def::ring_colour() const
+{
+    ASSERT(!jewellery_is_amulet(*this));
+    // jewellery_is_amulet asserts base type
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (appearance % NDSC_JEWEL_PRI)
+    {
+        case 1:                 // "silver ring"
+        case 8:                 // "granite ring"
+        case 9:                 // "ivory ring"
+        case 15:                // "bone ring"
+        case 16:                // "diamond ring"
+        case 20:                // "opal ring"
+        case 21:                // "pearl ring"
+        case 26:                // "onyx ring"
+            return LIGHTGREY;
+        case 3:                 // "iron ring"
+        case 4:                 // "steel ring"
+        case 13:                // "glass ring"
+            return CYAN;
+        case 5:                 // "tourmaline ring"
+        case 22:                // "coral ring"
+            return MAGENTA;
+        case 10:                // "ruby ring"
+        case 19:                // "garnet ring"
+            return RED;
+        case 11:                // "marble ring"
+        case 12:                // "jade ring"
+        case 14:                // "agate ring"
+        case 17:                // "emerald ring"
+        case 18:                // "peridot ring"
+            return GREEN;
+        case 23:                // "sapphire ring"
+        case 24:                // "cabochon ring"
+        case 28:                // "moonstone ring"
+            return BLUE;
+        case 0:                 // "wooden ring"
+        case 2:                 // "golden ring"
+        case 6:                 // "brass ring"
+        case 7:                 // "copper ring"
+        case 25:                // "gilded ring"
+        case 27:                // "bronze ring"
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this item is an amulet, what colour is it?
+ */
+colour_t item_def::amulet_colour() const
+{
+    ASSERT(jewellery_is_amulet(*this));
+    // jewellery_is_amulet asserts base type
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (appearance % NDSC_JEWEL_PRI)
+    {
+        case 0:             // "zirconium amulet"
+        case 9:             // "ivory amulet"
+        case 10:            // "bone amulet"
+        case 11:            // "platinum amulet"
+        case 16:            // "pearl amulet"
+        case 20:            // "diamond amulet"
+        case 24:            // "silver amulet"
+            return LIGHTGREY;
+        case 1:             // "sapphire amulet"
+        case 17:            // "blue amulet"
+        case 26:            // "lapis lazuli amulet"
+            return BLUE;
+        case 3:             // "emerald amulet"
+        case 12:            // "jade amulet"
+        case 18:            // "peridot amulet"
+        case 21:            // "malachite amulet"
+        case 25:            // "soapstone amulet"
+        case 28:            // "beryl amulet"
+            return GREEN;
+        case 4:             // "garnet amulet"
+        case 8:             // "ruby amulet"
+        case 19:            // "jasper amulet"
+        case 15:            // "cameo amulet"
+            return RED;
+        case 22:            // "steel amulet"
+        case 23:            // "cabochon amulet"
+        case 27:            // "filigree amulet"
+            return CYAN;
+        case 13:            // "fluorescent amulet"
+        case 14:            // "crystal amulet"
+            return MAGENTA;
+        case 2:             // "golden amulet"
+        case 5:             // "bronze amulet"
+        case 6:             // "brass amulet"
+        case 7:             // "copper amulet"
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this is a piece of jewellery (ring or amulet), what colour is it?
+ */
+colour_t item_def::jewellery_colour() const
+{
+    ASSERT(base_type == OBJ_JEWELLERY);
+
+    //randarts are bright, normal jewellery is dark
+    if (is_random_artefact(*this))
+        return LIGHTBLUE + (rnd % (WHITE - LIGHTBLUE + 1));
+
+    if (jewellery_is_amulet(*this))
+        return amulet_colour();
+    return ring_colour();
+}
+
+/**
+ * Assuming this item is a book, what colour is it?
+ */
+colour_t item_def::book_colour() const
+{
+    ASSERT(base_type == OBJ_BOOKS);
+
+    if (sub_type == BOOK_MANUAL)
+        return WHITE;
+
+    switch (appearance % NDSC_BOOK_PRI)
+    {
+        case 0:
+            return BROWN;
+        case 1:
+            return CYAN;
+        case 2:
+            return LIGHTGREY;
+        case 3:
+        case 4:
+        default:
+        {
+            // this is awful and I hate it. --pf
+            colour_t colour = DARKGREY;
+            do colour = random_colour();
+            while (colour == DARKGREY || colour == WHITE);
+            return colour;
+        }
+    }
+}
+
+/**
+ * Assuming this item is a Rune of Zot, what colour is it?
+ */
+colour_t item_def::rune_colour() const
+{
+    ASSERT(item_is_rune(*this));
+
+    switch (rune_enum)
+    {
+        case RUNE_DIS:                      // iron
+            return ETC_IRON;
+
+        case RUNE_COCYTUS:                  // icy
+            return ETC_ICE;
+
+        case RUNE_TARTARUS:                 // bone
+        case RUNE_SPIDER:
+            return ETC_BONE;
+
+        case RUNE_SLIME:                    // slimy
+            return ETC_SLIME;
+
+        case RUNE_SNAKE:                    // serpentine
+            return ETC_POISON;
+
+        case RUNE_ELF:                      // elven
+            return ETC_ELVEN;
+
+        case RUNE_VAULTS:                   // silver
+            return ETC_SILVER;
+
+        case RUNE_TOMB:                     // golden
+            return ETC_GOLD;
+
+        case RUNE_SWAMP:                    // decaying
+            return ETC_DECAY;
+
+        case RUNE_SHOALS:                   // barnacled
+            return ETC_WATER;
+
+            // This one is hardly unique, but colour isn't used for
+            // stacking, so we don't have to worry too much about this.
+            // - bwr
+        case RUNE_DEMONIC:                  // random Pandemonium lords
+        {
+            static const element_type types[] =
+            {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
+             ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+
+            return types[rnd % ARRAYSZ(types)];
+        }
+
+        case RUNE_ABYSSAL:
+            return ETC_RANDOM;
+
+        case RUNE_MNOLEG:                   // glowing
+            return ETC_MUTAGENIC;
+
+        case RUNE_LOM_LOBON:                // magical
+            return ETC_MAGIC;
+
+        case RUNE_CEREBOV:                  // fiery
+            return ETC_FIRE;
+
+        case RUNE_GEHENNA:                  // obsidian
+        case RUNE_GLOORX_VLOQ:              // dark
+        default:
+            return ETC_DARK;
+    }
+}
+
+/**
+ * Assuming this item is a miscellaneous item (evocations item or a rune), what
+ * colour is it?
+ */
+colour_t item_def::miscellany_colour() const
+{
+    ASSERT(base_type == OBJ_MISCELLANY);
+
+    if (is_deck(*this) || sub_type == MISC_DECK_UNKNOWN)
+        return deck_rarity_to_colour(deck_rarity);
+
+    if (item_is_rune(*this))
+        return rune_colour();
+
+    switch (sub_type)
+    {
+        case MISC_LANTERN_OF_SHADOWS:
+            return BLUE;
+        case MISC_FAN_OF_GALES:
+            return CYAN;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BOTTLED_EFREET:
+            return RED;
+#endif
+        case MISC_PHANTOM_MIRROR:
+            return RED;
+        case MISC_STONE_OF_TREMORS:
+            return BROWN;
+        case MISC_DISC_OF_STORMS:
+            return LIGHTGREY;
+        case MISC_PHIAL_OF_FLOODS:
+            return LIGHTBLUE;
+        case MISC_BOX_OF_BEASTS:
+            return LIGHTGREEN; // ugh, but we're out of other options
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            return LIGHTCYAN;
+        case MISC_HORN_OF_GERYON:
+            return LIGHTRED;
+        case MISC_LAMP_OF_FIRE:
+            return YELLOW;
+        case MISC_SACK_OF_SPIDERS:
+            return WHITE;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_EBONY_CASKET:
+            return DARKGREY;
+#endif
+        case MISC_QUAD_DAMAGE:
+            return ETC_DARK;
+        default:
+            return LIGHTGREEN;
+    }
+}
+
+/**
+ * Assuming this item is a corpse, what colour is it?
+ */
+colour_t item_def::corpse_colour() const
+{
+    ASSERT(base_type == OBJ_CORPSES);
+
+    switch (sub_type)
+    {
+        case CORPSE_SKELETON:
+            return LIGHTGREY;
+        case CORPSE_BODY:
+        {
+            const colour_t class_colour = mons_class_colour(mon_type);
+#if TAG_MAJOR_VERSION == 34
+            if (class_colour == BLACK)
+                return LIGHTRED;
+#else
+            ASSERT(class_colour != BLACK);
+#endif
+            return class_colour;
+        }
+        default:
+            die("Unknown corpse type: %d", sub_type); // XXX: add more info
+    }
+}
+
+/**
+ * What colour is this item?
+ *
+ * @return The colour that the item should be displayed as.
+ *         Used for console glyphs.
+ */
+colour_t item_def::get_colour() const
+{
+    // props take first priority
+    if (props.exists(FORCED_ITEM_COLOUR_KEY))
+        return props[FORCED_ITEM_COLOUR_KEY].get_int();
+
+    // unrands get to override everything else (wrt colour)
+    // ...except for un-ID'd random-appearance artefacts (Misfortune)
+    if (is_unrandom_artefact(*this) && !is_randapp_artefact(*this))
+    {
+        const unrandart_entry *unrand = get_unrand_entry(
+                                            find_unrandart_index(*this));
+        ASSERT(unrand);
+        return unrand->colour;
+    }
+
+    switch (base_type)
+    {
+        case OBJ_WEAPONS:
+            return weapon_colour();
+        case OBJ_MISSILES:
+            return missile_colour();
+        case OBJ_ARMOUR:
+            return armour_colour();
+        case OBJ_WANDS:
+            return wand_colour();
+        case OBJ_POTIONS:
+            return potion_colour();
+        case OBJ_FOOD:
+            return food_colour();
+        case OBJ_JEWELLERY:
+            return jewellery_colour();
+        case OBJ_SCROLLS:
+            return LIGHTGREY;
+        case OBJ_BOOKS:
+            return book_colour();
+        case OBJ_RODS:
+            return YELLOW;
+        case OBJ_STAVES:
+            return BROWN;
+        case OBJ_ORBS:
+            return ETC_MUTAGENIC;
+        case OBJ_CORPSES:
+            return corpse_colour();
+        case OBJ_MISCELLANY:
+            return miscellany_colour();
+        case OBJ_GOLD:
+            return YELLOW;
+        case OBJ_DETECTED:
+            return Options.detected_item_colour;
+        case NUM_OBJECT_CLASSES:
+        case OBJ_UNASSIGNED:
+        case OBJ_RANDOM: // not sure what to do with these three
+        default:
+            return LIGHTGREY;
+    }
+}
 
 bool item_type_has_unidentified(object_class_type base_type)
 {
@@ -3266,7 +3900,7 @@ bool item_def::is_valid(bool iinfo) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
             return false;
     }
-    if (colour == 0)
+    if (get_colour() == 0)
         return false; // No black items.
     return true;
 }
@@ -3852,7 +4486,6 @@ item_info get_item_info(const item_def& item)
 
     ii.base_type = item.base_type;
     ii.quantity = item.quantity;
-    ii.colour = item.colour;
     ii.inscription = item.inscription;
     ii.flags = item.flags & (0
             | ISFLAG_IDENT_MASK | ISFLAG_BLESSED_WEAPON | ISFLAG_SEEN_CURSED

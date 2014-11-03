@@ -532,7 +532,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = item.colour;
+    beam.colour       = item.get_colour();
     beam.flavour      = BEAM_MISSILE;
     beam.is_beam      = false;
     beam.aux_source.clear();
