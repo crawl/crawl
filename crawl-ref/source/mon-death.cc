@@ -853,7 +853,7 @@ void fire_monster_death_event(monster* mons,
 
     los_monster_died(mons);
 
-    if (type == MONS_ROYAL_JELLY && !polymorph)
+    if (type == MONS_ROYAL_JELLY && !mons->is_summoned() && !polymorph)
     {
         you.royal_jelly_dead = true;
 
