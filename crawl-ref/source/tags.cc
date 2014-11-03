@@ -3674,16 +3674,18 @@ void unmarshallItem(reader &th, item_def &item)
     item.quantity    = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
-    {
         /* item.colour = */ unmarshallUByte(th);
-        item.rnd          = unmarshallUByte(th);
+#endif
+
+    item.rnd          = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CORPSE_CRASH)
+    {
         // 0 is now reserved to indicate that rnd is uninitialized
         if (item.rnd == 0)
             item.rnd = 1 + random2(255);
     }
-    else
 #endif
-        item.rnd         = unmarshallUByte(th);
 
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
