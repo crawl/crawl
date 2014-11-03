@@ -3276,9 +3276,6 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
                                               DESC_A, false));
     }
 
-    if (mi.type == MONS_SHOCK_SERPENT && mi.number == 5)
-        descs.push_back("bristling with violent electricity");
-
     return descs;
 }
 
