@@ -6816,7 +6816,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || mon->has_ench(ENCH_REGENERATION);
 
     case SPELL_STONESKIN:
-        return mon->has_ench(ENCH_STONESKIN);
+        return mon->is_insubstantial() || mon->has_ench(ENCH_STONESKIN);
 
     case SPELL_INVISIBILITY:
         return mon->has_ench(ENCH_INVIS)
@@ -6929,7 +6929,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || mon->has_ench(ENCH_FATIGUE);
 
     case SPELL_OZOCUBUS_ARMOUR:
-        return mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
+        return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
 
     case SPELL_BATTLESPHERE:
         return find_battlesphere(mon);
