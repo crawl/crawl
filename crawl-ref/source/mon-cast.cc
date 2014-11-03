@@ -5935,11 +5935,10 @@ static int _noise_level(const monster* mons, spell_type spell,
     return noise;
 }
 
-static unsigned int _speech_keys(vector<string>& key_list,
-                                 const monster* mons, const bolt& pbolt,
-                                 spell_type spell,
-                                 const unsigned short slot_flags,
-                                 bool targeted)
+static void _speech_keys(vector<string>& key_list,
+                         const monster* mons, const bolt& pbolt,
+                         spell_type spell, const unsigned short slot_flags,
+                         bool targeted)
 {
     const string cast_str = " cast";
 
@@ -5989,35 +5988,10 @@ static unsigned int _speech_keys(vector<string>& key_list,
         if (mons_intel(mons) >= I_NORMAL)
             key_list.push_back(spell_name + cast_str + " gestures");
     }
-    else if (real_spell)
-    {
-        // A real spell being cast by something with no hands?  Maybe
-        // it's a polymorphed spellcaster which kept its original spells.
-        // If so, the cast message for its new type/species/genus probably
-        // won't look right.
-        if (!mons_class_flag(mons->type, M_ACTUAL_SPELLS | M_PRIEST))
-        {
-            // XXX: We should probably include the monster's shape,
-            // to get a variety of messages.
-            if (wizard)
-            {
-                string key = "polymorphed wizard" + cast_str;
-                if (targeted)
-                    key_list.push_back(key + " targeted");
-                key_list.push_back(key);
-            }
-            else if (priest)
-            {
-                string key = "polymorphed priest" + cast_str;
-                if (targeted)
-                    key_list.push_back(key + " targeted");
-                key_list.push_back(key);
-            }
-        }
-    }
 
     key_list.push_back(spell_name + cast_str);
 
+    // Only postfix "targeted" after this point.
     const unsigned int num_spell_keys = key_list.size();
 
     // Next the monster type name, then species name, then genus name.
@@ -6055,12 +6029,9 @@ static unsigned int _speech_keys(vector<string>& key_list,
             key_list.push_back("beam catchall cast");
         }
     }
-
-    return num_spell_keys;
 }
 
 static string _speech_message(const vector<string>& key_list,
-                              unsigned int num_spell_keys,
                               bool silent, bool unseen)
 {
     string prefix;
@@ -6085,15 +6056,6 @@ static string _speech_message(const vector<string>& key_list,
             msg = "";
             break;
         }
-        else if (msg == "__NEXT")
-        {
-            msg = "";
-            if (i < num_spell_keys)
-                i = num_spell_keys - 1;
-            else if (ends_with(key, " targeted"))
-                i++;
-            continue;
-        }
         else if (!msg.empty())
             break;
 
@@ -6107,15 +6069,6 @@ static string _speech_message(const vector<string>& key_list,
         {
             msg = "";
             break;
-        }
-        else if (msg == "__NEXT")
-        {
-            msg = "";
-            if (i < num_spell_keys)
-                i = num_spell_keys - 1;
-            else if (ends_with(key, " targeted"))
-                i++;
-            continue;
         }
         else if (!msg.empty())
             break;
@@ -6335,11 +6288,9 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                                || pbolt.visible());
 
     vector<string> key_list;
-    unsigned int num_spell_keys =
-        _speech_keys(key_list, mons, pbolt, spell_cast,
-                     slot_flags, targeted);
+    _speech_keys(key_list, mons, pbolt, spell_cast, slot_flags, targeted);
 
-    string msg = _speech_message(key_list, num_spell_keys, silent, unseen);
+    string msg = _speech_message(key_list, silent, unseen);
 
     if (msg.empty())
     {
