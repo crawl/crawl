@@ -3637,7 +3637,7 @@ colour_t item_def::book_colour() const
     if (sub_type == BOOK_MANUAL)
         return WHITE;
 
-    switch (appearance % NDSC_BOOK_PRI)
+    switch (rnd % NDSC_BOOK_PRI)
     {
         case 0:
             return BROWN;
@@ -3649,11 +3649,12 @@ colour_t item_def::book_colour() const
         case 4:
         default:
         {
-            // this is awful and I hate it. --pf
-            colour_t colour = DARKGREY;
-            do colour = random_colour();
-            while (colour == DARKGREY || colour == WHITE);
-            return colour;
+            /// everything but BLACK, WHITE (manuals), and DARKGREY (useless)
+            static const colour_t colours[] = {
+                BLUE, GREEN, CYAN, RED, MAGENTA, BROWN, LIGHTGREY, LIGHTBLUE,
+                LIGHTGREEN, LIGHTCYAN, LIGHTRED, LIGHTMAGENTA, YELLOW
+            };
+            return colours[rnd % ARRAYSZ(colours)];
         }
     }
 }
