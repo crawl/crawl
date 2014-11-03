@@ -26,20 +26,21 @@ const Branch* branch_iterator::operator*() const
     static const branch_type branch_order[] = {
         BRANCH_DUNGEON,
         BRANCH_TEMPLE,
-        BRANCH_ORC,
-        BRANCH_ELF,
-#if TAG_MAJOR_VERSION == 34
-        BRANCH_DWARF,
-#endif
         BRANCH_LAIR,
         BRANCH_SWAMP,
         BRANCH_SHOALS,
         BRANCH_SNAKE,
         BRANCH_SPIDER,
         BRANCH_SLIME,
+        BRANCH_ORC,
+        BRANCH_ELF,
+#if TAG_MAJOR_VERSION == 34
+        BRANCH_DWARF,
+#endif
         BRANCH_VAULTS,
 #if TAG_MAJOR_VERSION == 34
         BRANCH_BLADE,
+        BRANCH_FOREST,
 #endif
         BRANCH_CRYPT,
         BRANCH_TOMB,
@@ -50,9 +51,6 @@ const Branch* branch_iterator::operator*() const
         BRANCH_COCYTUS,
         BRANCH_TARTARUS,
         BRANCH_ZOT,
-#if TAG_MAJOR_VERSION == 34
-        BRANCH_FOREST,
-#endif
         BRANCH_ABYSS,
         BRANCH_PANDEMONIUM,
         BRANCH_ZIGGURAT,
