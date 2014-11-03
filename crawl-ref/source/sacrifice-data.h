@@ -1,4 +1,22 @@
-// See struct sacrifice_def in godabil.cc
+struct sacrifice_def
+{
+    ability_type  sacrifice;        // The ability that executes the sacrifice.
+    mutation_type mutation;         // The mutation that will be inflicted.
+    const char*   sacrifice_text;   // Format: "sacrifice your hand"
+                                    // in case of variable sacrifices or sac
+                                    // hand, this will be extended later
+    const char*   milestone_text;   // Format: "sacrificed <foo>"
+                                    // in case of variable sacrifices this will
+                                    // be extended later
+    int           base_piety;       // The piety that will be gained, modified
+                                    // by the skill points in the skill below.
+    skill_type    sacrifice_skill;  // This skill will be eliminated.
+    const char*   sacrifice_vector; // This is used for sacrifices which give
+                                    // multiple mutations. It is a key into
+                                    // you.props, yielding a list of mutations
+                                    // granted by the sacrifice.
+};
+
 static const sacrifice_def sac_data[] =
 {
 
