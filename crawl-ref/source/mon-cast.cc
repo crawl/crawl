@@ -25,6 +25,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "items.h"
 #include "libutil.h"
@@ -1135,7 +1136,8 @@ static bool _los_free_spell(spell_type spell_cast)
        || spell_cast == SPELL_FLAY
        || spell_cast == SPELL_PARALYSIS_GAZE
        || spell_cast == SPELL_CONFUSION_GAZE
-       || spell_cast == SPELL_DRAINING_GAZE;
+       || spell_cast == SPELL_DRAINING_GAZE
+       || spell_cast == SPELL_UPHEAVAL;
 }
 
 // Set up bolt structure for monster spell casting.
@@ -1172,6 +1174,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_PARALYSIS_GAZE:
         case SPELL_CONFUSION_GAZE:
         case SPELL_DRAINING_GAZE:
+        case SPELL_UPHEAVAL:
             return true;
         default:
             // Other spells get normal setup:
@@ -1319,6 +1322,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
     case SPELL_HUNTING_CRY:
+    case SPELL_DISASTER_AREA:
         return true;
     default:
         if (check_validity)
@@ -2847,6 +2851,39 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     }
 
     return mons_should_fire(beam);
+}
+
+/** Is it a good idea to Upheaval this position?
+ *
+ * @param[in]   target     Where we're trying to target.
+ * @returns                true if it's a good target; false otherwise.
+ */
+static bool _should_upheaval(monster* mon, coord_def target)
+{
+    bolt tracer;
+    tracer.foe_ratio = 80;
+    tracer.source_id = mon->mid;
+
+    const int rad = qazlal_upheaval_radius(6 * mon->get_hit_dice());
+    for (radius_iterator ri(target, rad, C_ROUND); ri; ++ri)
+    {
+        actor *victim = actor_at(*ri);
+        if (!victim)
+            continue;
+
+        if (mons_aligned(mon, victim))
+        {
+            tracer.friend_info.count++;
+            tracer.friend_info.power += victim->get_experience_level();
+        }
+        else
+        {
+            tracer.foe_info.count++;
+            tracer.foe_info.power += victim->get_experience_level();
+        }
+    }
+
+    return mons_should_fire(tracer);
 }
 
 /** Chooses a matching spell from this spell list, based on frequency.
@@ -5896,6 +5933,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_HUNTING_CRY:
         return;
+
+    case SPELL_DISASTER_AREA:
+        qazlal_disaster_area(mons, 6 * mons->get_experience_level());
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7241,6 +7282,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONFUSION_GAZE:
     case SPELL_DRAINING_GAZE:
         return !foe || !mon->can_see(foe);
+
+    case SPELL_UPHEAVAL:
+        return !foe || !_should_upheaval(mon, foe->pos());
+
+    case SPELL_DISASTER_AREA:
+        return !_trace_los(mon, _dummy_vulnerable); // not 100% accurate, but.
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

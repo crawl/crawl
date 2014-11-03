@@ -3497,4 +3497,26 @@ static const struct spell_desc spelldata[] =
      NULL,
 },
 
+{
+    SPELL_UPHEAVAL, "Upheaval",
+     SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_ICE | SPTYP_EARTH | SPTYP_AIR,
+     SPFLAG_GRID | SPFLAG_MONSTER,
+     6,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0, 0, // noise done by spell functions
+     NULL,
+},
+
+{
+    SPELL_DISASTER_AREA, "Disaster Area",
+     SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_ICE | SPTYP_EARTH | SPTYP_AIR,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     9,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0, 0, // noise done by spell functions
+     NULL,
+},
+
 };

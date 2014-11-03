@@ -4585,16 +4585,23 @@ bool gozag_bribe_branch()
     return false;
 }
 
-spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
+int qazlal_upheaval_radius(int pow)
 {
-    int pow = you.skill(SK_INVOCATIONS, 6);
-    const int max_radius = pow >= 100 ? 2 : 1;
+    return pow >= 100 ? 2 : 1;
+}
+
+spret_type qazlal_upheaval(actor* agent, int pow, coord_def target, bool quiet,
+                           bool fail)
+{
+    const int max_radius = qazlal_upheaval_radius(pow);
+
+    bool seen = false;
 
     bolt beam;
     beam.name        = "****";
-    beam.source_id   = MID_PLAYER;
-    beam.source_name = "you";
-    beam.thrower     = KILL_YOU;
+    beam.source_id   = agent->mid;
+    beam.source_name = agent->name(DESC_A, true);
+    beam.thrower     = agent->is_player() ? KILL_YOU : KILL_MON;
     beam.range       = LOS_RADIUS;
     beam.damage      = calc_dice(3, 27 + div_rand_round(2 * pow, 5));
     beam.hit         = AUTOMATIC_HIT;
@@ -4605,7 +4612,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 #endif
     beam.draw_delay  = 0;
 
-    if (target.origin())
+    if (agent->is_player() && target.origin())
     {
         dist spd;
         targetter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
@@ -4639,33 +4646,39 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     switch (random2(4))
     {
         case 0:
-            beam.name     = "blast of magma";
-            beam.flavour  = BEAM_LAVA;
-            beam.colour   = RED;
-            beam.hit_verb = "engulfs";
-            message       = "Magma suddenly erupts from the ground!";
+            beam.name       = "blast of magma";
+            beam.aux_source = "by a blast of magma";
+            beam.flavour    = BEAM_LAVA;
+            beam.colour     = RED;
+            beam.hit_verb   = "engulfs";
+            message         = "Magma suddenly erupts from the ground!";
             break;
         case 1:
-            beam.name    = "blast of ice";
-            beam.flavour = BEAM_ICE;
-            beam.colour  = WHITE;
-            message      = "A blizzard blasts the area with ice!";
+            beam.name       = "blast of ice";
+            beam.aux_source = "by a blast of ice";
+            beam.flavour    = BEAM_ICE;
+            beam.colour     = WHITE;
+            message         = "A blizzard blasts the area with ice!";
             break;
         case 2:
-            beam.name    = "cutting wind";
-            beam.flavour = BEAM_AIR;
-            beam.colour  = LIGHTGRAY;
-            message      = "A storm cloud blasts the area with cutting wind!";
+            beam.name       = "cutting wind";
+            beam.aux_source = "by cutting wind";
+            beam.flavour    = BEAM_AIR;
+            beam.colour     = LIGHTGRAY;
+            message         = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
-            beam.name    = "blast of rubble";
-            beam.flavour = BEAM_FRAG;
-            beam.colour  = BROWN;
-            message      = "The ground shakes violently, spewing rubble!";
+            beam.name       = "blast of rubble";
+            beam.aux_source = "by a blast of rubble";
+            beam.flavour    = BEAM_FRAG;
+            beam.colour     = BROWN;
+            message         = "The ground shakes violently, spewing rubble!";
             break;
         default:
             break;
     }
+
+    beam.aux_source = "by " + beam.name;
 
     vector<coord_def> affected;
     affected.push_back(beam.target);
@@ -4683,7 +4696,11 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         if (adj && max_radius > 1 || x_chance_in_y(chance, 100))
         {
             if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
+            {
                 affected.push_back(*ri);
+                if (you.see_cell(*ri))
+                    seen = true;
+            }
         }
     }
 
@@ -4693,12 +4710,12 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         if (!quiet)
             scaled_delay(25);
     }
-    if (!quiet)
+    if (seen && !quiet)
     {
         scaled_delay(100);
-        mprf(MSGCH_GOD, "%s", message.c_str());
+        mprf(MSGCH_GOD, GOD_QAZLAL, "%s", message.c_str());
     }
-    else
+    else if (seen)
         scaled_delay(25);
 
     int wall_count = 0;
@@ -4717,7 +4734,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
-                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        pow / (6 * BASELINE_DELAY),
                         TERRAIN_CHANGE_FLOOD);
                 }
                 break;
@@ -4726,8 +4743,8 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
                     && coinflip())
                 {
                     place_cloud(CLOUD_STORM, pos,
-                                random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4)),
-                                &you);
+                                random2(div_rand_round(pow, 24)),
+                                agent);
                 }
                 break;
             case BEAM_FRAG:
@@ -4743,7 +4760,8 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
                 {
                     noisy(30, pos);
                     destroy_wall(pos);
-                    wall_count++;
+                    if (!silenced(pos))
+                        wall_count++;
                 }
                 break;
             default:
@@ -4751,8 +4769,13 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         }
     }
 
-    if (wall_count && !quiet)
-        mpr("Ka-crash!");
+    if (wall_count && !quiet && !silenced(you.pos()))
+    {
+        if (seen)
+            mpr("Ka-crash!");
+        else
+            mpr("You hear a loud crash!");
+    }
 
     return SPRET_SUCCESS;
 }
@@ -4846,24 +4869,26 @@ void qazlal_elemental_force()
         canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
 }
 
-bool qazlal_disaster_area()
+bool qazlal_disaster_area(actor *agent, int pow)
 {
     bool friendlies = false;
+    const bool checks = agent->is_player();
     vector<coord_def> targets;
     vector<int> weights;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
+    for (radius_iterator ri(agent->pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS,
+                            true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
         const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-        if (m && mons_att_wont_attack(m->attitude)
+        if (checks && m && mons_att_wont_attack(m->attitude)
             && !mons_is_projectile(m->type))
         {
             friendlies = true;
         }
-        const int dist = distance2(you.pos(), *ri);
+        const int dist = distance2(agent->pos(), *ri);
         if (dist <= 8)
             continue;
 
@@ -4873,11 +4898,12 @@ bool qazlal_disaster_area()
 
     if (targets.empty())
     {
-        mpr("There isn't enough space here!");
+        if (checks)
+            mpr("There isn't enough space here!");
         return false;
     }
 
-    if (friendlies
+    if (checks && friendlies
         && !yesno("There are friendlies around; are you sure you want to hurt "
                   "them?", true, 'n'))
     {
@@ -4885,11 +4911,17 @@ bool qazlal_disaster_area()
         return false;
     }
 
-    mprf(MSGCH_GOD, "Nature churns violently around you!");
+    if (you.can_see(agent))
+    {
+        mprf(MSGCH_GOD, GOD_QAZLAL, "Nature churns violently around %s!",
+             agent->name(DESC_THE).c_str());
+    }
+    else if (you.see_cell(agent->pos()))
+        mprf(MSGCH_GOD, GOD_QAZLAL, "Nature suddenly churns violently!");
 
     int count = max(1, min((int)targets.size(),
-                            max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
-                                random2avg(you.skill(SK_INVOCATIONS, 2), 2))));
+                            max(div_rand_round(pow, 12),
+                                random2avg(pow / 3, 2))));
     vector<coord_def> victims;
     for (int i = 0; i < count; i++)
     {
@@ -4901,7 +4933,7 @@ bool qazlal_disaster_area()
             if (adjacent(targets[which], victims[j]))
                 break;
         if (j == victims.size())
-            qazlal_upheaval(targets[which], true);
+            qazlal_upheaval(agent, pow, targets[which], true);
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }

@@ -680,6 +680,12 @@ void direct_effect(monster* source, spell_type spell,
                                    defender->get_experience_level() * 12);
         break;
 
+    case SPELL_UPHEAVAL:
+        ASSERT(source->is_monster());
+        qazlal_upheaval(source, 6 * source->get_experience_level(),
+                        defender->pos());
+        break;
+
     default:
         die("unknown direct_effect spell: %d", spell);
     }
