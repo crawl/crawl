@@ -67,16 +67,11 @@
 #include "viewchar.h"
 #include "xom.h"
 
-// tentacle stuff
-const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
-const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
-
 static bool _valid_mon_spells[NUM_SPELLS];
 
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
-static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
@@ -4125,100 +4120,6 @@ static void _blink_allies_away(const monster* mon)
     }
 }
 
-static int _max_tentacles(const monster* mon)
-{
-    if (mons_base_type(mon) == MONS_KRAKEN)
-        return MAX_ACTIVE_KRAKEN_TENTACLES;
-    else if (mon->type == MONS_TENTACLED_STARSPAWN)
-        return MAX_ACTIVE_STARSPAWN_TENTACLES;
-    else
-        return 0;
-}
-
-static int _mons_available_tentacles(monster* head)
-{
-    int tentacle_count = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_child_tentacle_of(head))
-            tentacle_count++;
-    }
-
-    return _max_tentacles(head) - tentacle_count;
-}
-
-static void _mons_create_tentacles(monster* head)
-{
-    int head_index = head->mindex();
-    if (invalid_monster_index(head_index))
-    {
-        mprf(MSGCH_ERROR, "Error! Tentacle head is not a part of the current environment!");
-        return;
-    }
-
-    int possible_count = _mons_available_tentacles(head);
-
-    if (possible_count <= 0)
-        return;
-
-    monster_type tent_type = mons_tentacle_child_type(head);
-
-    vector<coord_def> adj_squares;
-
-    // Collect open adjacent squares. Candidate squares must be
-    // unoccupied.
-    for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
-    {
-        if (monster_habitable_grid(tent_type, grd(*adj_it))
-            && !actor_at(*adj_it))
-        {
-            adj_squares.push_back(*adj_it);
-        }
-    }
-
-    if (unsigned(possible_count) > adj_squares.size())
-        possible_count = adj_squares.size();
-    else if (adj_squares.size() > unsigned(possible_count))
-        shuffle_array(adj_squares);
-
-    int visible_count = 0;
-
-    for (int i = 0 ; i < possible_count; ++i)
-    {
-        if (monster *tentacle = create_monster(
-            mgen_data(tent_type, SAME_ATTITUDE(head), head,
-                        0, 0, adj_squares[i], head->foe,
-                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
-                        head->colour, PROX_CLOSE_TO_PLAYER)))
-        {
-            if (you.can_see(tentacle))
-                visible_count++;
-
-            tentacle->props["inwards"].get_int() = head_index;
-
-            if (head->holiness() == MH_UNDEAD)
-                tentacle->flags |= MF_FAKE_UNDEAD;
-        }
-    }
-
-    if (mons_base_type(head) == MONS_KRAKEN)
-    {
-        if (visible_count == 1)
-            mpr("A tentacle rises from the water!");
-        else if (visible_count > 1)
-            mpr("Tentacles burst out of the water!");
-    }
-    else if (head->type == MONS_TENTACLED_STARSPAWN)
-    {
-        if (visible_count == 1)
-            mpr("A tentacle flies out from the starspawn's body!");
-        else if (visible_count > 1)
-            mpr("Tentacles burst from the starspawn's body!");
-    }
-    return;
-}
-
 struct branch_summon_pair
 {
     branch_type     origin;
@@ -4839,7 +4740,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CREATE_TENTACLES:
-        _mons_create_tentacles(mons);
+        mons_create_tentacles(mons);
         return;
 
     case SPELL_FAKE_MARA_SUMMON:
@@ -7296,7 +7197,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
 
     case SPELL_CREATE_TENTACLES:
-        return !_mons_available_tentacles(mon);
+        return !mons_available_tentacles(mon);
 
     case SPELL_WORD_OF_RECALL:
         return !_should_recall(mon);

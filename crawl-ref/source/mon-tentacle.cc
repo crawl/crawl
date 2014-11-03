@@ -21,6 +21,8 @@
 #include "view.h"
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
+const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
+const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
 bool monster::is_child_tentacle() const
 {
@@ -1246,4 +1248,98 @@ int destroy_tentacles(monster* head)
         }
     }
     return seen;
+}
+
+static int _max_tentacles(const monster* mon)
+{
+    if (mons_base_type(mon) == MONS_KRAKEN)
+        return MAX_ACTIVE_KRAKEN_TENTACLES;
+    else if (mon->type == MONS_TENTACLED_STARSPAWN)
+        return MAX_ACTIVE_STARSPAWN_TENTACLES;
+    else
+        return 0;
+}
+
+int mons_available_tentacles(monster* head)
+{
+    int tentacle_count = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_child_tentacle_of(head))
+            tentacle_count++;
+    }
+
+    return _max_tentacles(head) - tentacle_count;
+}
+
+void mons_create_tentacles(monster* head)
+{
+    int head_index = head->mindex();
+    if (invalid_monster_index(head_index))
+    {
+        mprf(MSGCH_ERROR, "Error! Tentacle head is not a part of the current environment!");
+        return;
+    }
+
+    int possible_count = mons_available_tentacles(head);
+
+    if (possible_count <= 0)
+        return;
+
+    monster_type tent_type = mons_tentacle_child_type(head);
+
+    vector<coord_def> adj_squares;
+
+    // Collect open adjacent squares. Candidate squares must be
+    // unoccupied.
+    for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
+    {
+        if (monster_habitable_grid(tent_type, grd(*adj_it))
+            && !actor_at(*adj_it))
+        {
+            adj_squares.push_back(*adj_it);
+        }
+    }
+
+    if (unsigned(possible_count) > adj_squares.size())
+        possible_count = adj_squares.size();
+    else if (adj_squares.size() > unsigned(possible_count))
+        shuffle_array(adj_squares);
+
+    int visible_count = 0;
+
+    for (int i = 0 ; i < possible_count; ++i)
+    {
+        if (monster *tentacle = create_monster(
+            mgen_data(tent_type, SAME_ATTITUDE(head), head,
+                        0, 0, adj_squares[i], head->foe,
+                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
+                        head->colour, PROX_CLOSE_TO_PLAYER)))
+        {
+            if (you.can_see(tentacle))
+                visible_count++;
+
+            tentacle->props["inwards"].get_int() = head_index;
+
+            if (head->holiness() == MH_UNDEAD)
+                tentacle->flags |= MF_FAKE_UNDEAD;
+        }
+    }
+
+    if (mons_base_type(head) == MONS_KRAKEN)
+    {
+        if (visible_count == 1)
+            mpr("A tentacle rises from the water!");
+        else if (visible_count > 1)
+            mpr("Tentacles burst out of the water!");
+    }
+    else if (head->type == MONS_TENTACLED_STARSPAWN)
+    {
+        if (visible_count == 1)
+            mpr("A tentacle flies out from the starspawn's body!");
+        else if (visible_count > 1)
+            mpr("Tentacles burst from the starspawn's body!");
+    }
+    return;
 }
