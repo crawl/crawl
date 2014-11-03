@@ -307,6 +307,11 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
+    // Don't copy death triggers - phantom royal jellies should not open the
+    // Slime vaults on death.
+    if (mons->props.exists(MONSTER_DIES_LUA_KEY))
+        mons->props.erase(MONSTER_DIES_LUA_KEY);
+
     mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
