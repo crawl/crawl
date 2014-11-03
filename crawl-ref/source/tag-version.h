@@ -126,6 +126,7 @@ enum tag_minor_version
     TAG_MINOR_NO_GHOST_SPELLCASTER,// Remove an unused field in ghost_demon
     TAG_MINOR_MID_BEHOLDERS,       // you.beholders and fearmongers store mids
     TAG_MINOR_REMOVE_ITEM_COLOUR,  // don't store item colour as state
+    TAG_MINOR_CORPSE_CRASH,        // don't crash when loading corpses
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
