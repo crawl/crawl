@@ -14,6 +14,8 @@
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
 
+#define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
+
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)

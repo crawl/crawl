@@ -1674,11 +1674,11 @@ int monster_die(monster* mons, killer_type killer,
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
-    if (mons->props.exists("monster_dies_lua_key"))
+    if (mons->props.exists(MONSTER_DIES_LUA_KEY))
     {
         lua_stack_cleaner clean(dlua);
 
-        dlua_chunk &chunk = mons->props["monster_dies_lua_key"];
+        dlua_chunk &chunk = mons->props[MONSTER_DIES_LUA_KEY];
 
         if (!chunk.load(dlua))
         {
