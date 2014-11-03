@@ -3244,7 +3244,7 @@ bool item_def::defined() const
  */
 bool item_def::appearance_initialized() const
 {
-    return rnd != 0;
+    return rnd != 0 || is_unrandom_artefact(*this);
 }
 
 

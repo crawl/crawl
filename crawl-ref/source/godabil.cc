@@ -3688,6 +3688,7 @@ monster* shadow_monster(bool equip)
             new_item.sub_type  = wpn->sub_type;
         }
         new_item.quantity = 1;
+        new_item.rnd = 1;
         new_item.flags   |= ISFLAG_SUMMONED;
     }
 
@@ -3789,6 +3790,7 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
         new_item.base_type = item.base_type;
         new_item.sub_type  = item.sub_type;
         new_item.quantity  = 1;
+        new_item.rnd = 1;
         new_item.flags    |= ISFLAG_SUMMONED;
         mon->inv[MSLOT_MISSILE] = ammo_index;
 

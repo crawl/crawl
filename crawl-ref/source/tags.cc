@@ -3679,7 +3679,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.rnd          = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_CORPSE_CRASH)
+    if (th.getMinorVersion() < TAG_MINOR_INIT_RND)
     {
         // 0 is now reserved to indicate that rnd is uninitialized
         if (item.rnd == 0)
