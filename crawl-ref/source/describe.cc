@@ -1636,6 +1636,7 @@ string get_item_description(const item_def &item, bool verbose,
                     << " special: " << item.special
                     << "\n"
                     << "quant: " << item.quantity
+                    << " rnd?: " << static_cast<int>(item.rnd)
                     << " flags: " << hex << setw(8) << item.flags
                     << dec << "\n"
                     << "x: " << item.pos.x << " y: " << item.pos.y
