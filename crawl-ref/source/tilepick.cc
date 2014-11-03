@@ -3694,7 +3694,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     {
         const tileidx_t ugly_corpse_tile = (type == MONS_VERY_UGLY_THING) ?
             TILE_CORPSE_VERY_UGLY_THING : TILE_CORPSE_UGLY_THING;
-        int colour_offset = ugly_thing_colour_offset(item.colour);
+        int colour_offset = ugly_thing_colour_offset(item.get_colour());
 
         if (colour_offset == -1)
             colour_offset = 0;
@@ -4088,10 +4088,10 @@ tileidx_t tileidx_item(const item_def &item)
     if (item.props.exists("item_tile"))
         return item.props["item_tile"].get_short();
 
-    int clas    = item.base_type;
-    int type    = item.sub_type;
-    int special = item.special;
-    int colour  = item.colour;
+    const int clas    = item.base_type;
+    const int type    = item.sub_type;
+    const int special = item.special;
+    const int colour  = item.get_colour();
 
     switch (clas)
     {

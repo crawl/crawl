@@ -1583,7 +1583,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             return 0;
         }
         else
-            mon->colour = wpn->colour;
+            mon->colour = wpn->get_colour();
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {

@@ -2705,7 +2705,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
                    GOD_NO_GOD,
                    MONS_NO_MONSTER,
                    0,
-                   corpse.colour);
+                   corpse.get_colour());
 
     float target_arc_len = 2 * sqrtf(2.0f);
 
@@ -2804,7 +2804,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
                                   GOD_NO_GOD,
                                   MONS_NO_MONSTER,
                                   0,
-                                  corpse.colour),
+                                  corpse.get_colour()),
                                   false);
 
             if (mushroom)

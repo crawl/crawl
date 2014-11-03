@@ -181,7 +181,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
                              || a.base_type == OBJ_RODS && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
-        && a.colour == b.colour
+        && a.get_colour() == b.get_colour() // ????????
         && a.flags == b.flags
         && a.quantity == b.quantity;
 

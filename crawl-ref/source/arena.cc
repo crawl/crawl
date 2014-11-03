@@ -1140,12 +1140,6 @@ void arena_placed_monster(monster* mons)
             item_def &item(mitm[it]);
             item.flags |= ISFLAG_IDENT_MASK;
 
-            // Don't leak info on wands or potions.
-            if (item.base_type == OBJ_WANDS
-                || item.base_type == OBJ_POTIONS)
-            {
-                item.colour = random_colour();
-            }
             // Set the "drop" time here in case the monster drops the
             // item without dying, like being polymorphed.
             arena::item_drop_times[it] = arena::turns;

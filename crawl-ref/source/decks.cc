@@ -2855,7 +2855,6 @@ void init_deck(item_def &item)
     props.assert_validity();
 
     item.used_count  = 0;
-    item.colour = deck_rarity_to_colour((deck_rarity_type) item.special);
 }
 
 static void _unmark_deck(item_def& deck)

@@ -78,7 +78,7 @@ string god_prayer_reaction()
     return result;
 }
 
-static bool _bless_weapon(god_type god, brand_type brand, int colour)
+static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true, false);
@@ -117,7 +117,6 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-    wpn.colour = colour;
 
     const bool is_cursed = wpn.cursed();
 
@@ -157,6 +156,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     take_note(Note(NOTE_ID_ITEM, 0, 0,
               wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
+    wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
 

@@ -72,7 +72,7 @@ static void _give_monster_item(monster* mon, int thing,
         return;
     ASSERT(mthing.holding_monster() == mon);
 
-    if (!force_item || mthing.colour == BLACK)
+    if (!force_item || !mthing.appearance_initialized())
         item_colour(mthing);
 }
 

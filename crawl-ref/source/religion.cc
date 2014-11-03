@@ -1479,11 +1479,11 @@ static bool _give_nemelex_gift(bool forced = false)
             //   160:  23.00%, 49.00%, 28.00%
             //   180:  14.00%, 54.50%, 31.50%
             //   200:   5.00%, 60.00%, 35.00%
-            int common_weight = 95 - (90 * you.piety / MAX_PIETY);
-            int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
-            int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
+            const int common_weight = 95 - (90 * you.piety / MAX_PIETY);
+            const int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
+            const int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
 
-            deck_rarity_type rarity = random_choose_weighted(
+            const deck_rarity_type rarity = random_choose_weighted(
                 common_weight, DECK_RARITY_COMMON,
                 rare_weight,   DECK_RARITY_RARE,
                 legend_weight, DECK_RARITY_LEGENDARY,
@@ -1491,8 +1491,7 @@ static bool _give_nemelex_gift(bool forced = false)
 
             item_def &deck(mitm[thing_created]);
 
-            deck.special = rarity;
-            deck.colour  = deck_rarity_to_colour(rarity);
+            deck.deck_rarity = rarity;
             deck.flags |= ISFLAG_KNOW_TYPE;
 
             simple_god_message(" grants you a gift!");

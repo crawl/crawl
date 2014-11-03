@@ -649,7 +649,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     if (power > 100)
         power = 100;
 
-    colour = weapon.colour;
+    colour = weapon.get_colour();
     fly = FL_LEVITATE;
 
     // We want Tukima to reward characters who invest heavily in
@@ -662,7 +662,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // Bardiche:          speed 10, 40+20 damage, 18 AC, 40 HP, 15 EV
     // Dagger:            speed 20,  8+ 4 damage,  4 AC, 20 HP, 20 EV
     // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 14 HP, 22 EV
-    // Cutlass:           speed 18, 14+ 7 damage,  7 AC, 24 HP, 19 EV
+    // Rapier:            speed 18, 14+ 7 damage,  7 AC, 24 HP, 19 EV
 
     xl = 15;
 
@@ -693,7 +693,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
     if (wpn_skill > 270)
         wpn_skill = 270;
 
-    colour = weapon.colour;
+    colour = weapon.get_colour();
     fly = FL_LEVITATE;
 
     // Hit dice (to hit) scales with weapon skill alone.

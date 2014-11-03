@@ -2533,7 +2533,6 @@ void check_item_knowledge(bool unknown_items)
                 {
                     ptmp->base_type = i;
                     ptmp->sub_type  = j;
-                    ptmp->colour    = 1;
                     ptmp->quantity  = 1;
                     if (!unknown_items)
                         ptmp->flags |= ISFLAG_KNOW_TYPE;
@@ -2568,7 +2567,6 @@ void check_item_knowledge(bool unknown_items)
             {
                 ptmp->base_type = i;
                 ptmp->sub_type  = get_max_subtype(i);
-                ptmp->colour    = 1;
                 ptmp->quantity  = 1;
                 items.push_back(ptmp);
 
@@ -2590,7 +2588,6 @@ void check_item_knowledge(bool unknown_items)
             {
                 ptmp->base_type = OBJ_MISSILES;
                 ptmp->sub_type  = i;
-                ptmp->colour    = 1;
                 ptmp->quantity  = 1;
                 items_missile.push_back(ptmp);
 
@@ -2622,7 +2619,6 @@ void check_item_knowledge(bool unknown_items)
             {
                 ptmp->base_type = misc_list[i];
                 ptmp->sub_type  = misc_ST_list[i];
-                ptmp->colour    = 2;
                 //show a good amount of gold
                 ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 

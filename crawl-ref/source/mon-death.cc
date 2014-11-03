@@ -139,11 +139,11 @@ monster_type fill_out_corpse(const monster* mons,
             corpse.props[NEVER_HIDE_KEY] = true;
     }
 
-    corpse.colour = mons_class_colour(corpse_class);
-    if (corpse.colour == BLACK)
+    const colour_t class_colour = mons_class_colour(corpse_class);
+    if (class_colour == BLACK)
     {
         if (mons)
-            corpse.colour = mons->colour;
+            corpse.props[FORCED_ITEM_COLOUR_KEY] = mons->colour;
         else
         {
             // [ds] Ick: no easy way to get a monster's colour
@@ -151,7 +151,7 @@ monster_type fill_out_corpse(const monster* mons,
             monster m;
             m.type = mtype;
             define_monster(&m);
-            corpse.colour = m.colour;
+            corpse.props[FORCED_ITEM_COLOUR_KEY] = m.colour;
         }
     }
 

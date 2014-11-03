@@ -3631,7 +3631,6 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
     marshallInt(th, item.special);
     marshallShort(th, item.quantity);
 
-    marshallByte(th, item.colour);
     marshallByte(th, item.rnd);
     marshallShort(th, item.pos.x);
     marshallShort(th, item.pos.y);
@@ -3673,8 +3672,18 @@ void unmarshallItem(reader &th, item_def &item)
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
-    item.colour      = unmarshallUByte(th);
-    item.rnd         = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
+    {
+        /* item.colour = */ unmarshallUByte(th);
+        item.rnd          = unmarshallUByte(th);
+        // 0 is now reserved to indicate that rnd is uninitialized
+        if (item.rnd == 0)
+            item.rnd = 1 + random2(255);
+    }
+    else
+#endif
+        item.rnd         = unmarshallUByte(th);
 
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
