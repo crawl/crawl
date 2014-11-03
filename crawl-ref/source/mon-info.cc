@@ -357,7 +357,11 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                  mons_genus(type) == MONS_DEMONSPAWN ? MONS_DEMONSPAWN
                                                      : type;
 
-    number = 0;
+    if (mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+        num_heads = 1;
+    else
+        number = 0;
+
     colour = mons_class_colour(type);
 
     holi = mons_class_holiness(type);
