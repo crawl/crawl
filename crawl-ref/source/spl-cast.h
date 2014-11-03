@@ -40,6 +40,7 @@ enum spflag_type
     SPFLAG_ALLOW_SELF           = 0x800000,      // Not helpful, but may want to
                                                  // target self
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
+    SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
 };
 
 enum spret_type
