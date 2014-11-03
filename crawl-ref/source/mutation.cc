@@ -54,6 +54,41 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
 
+static const int conflict[][3] =
+{
+#if TAG_MAJOR_VERSION == 34
+    { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
+#endif
+    { MUT_STRONG,              MUT_WEAK,                   1},
+    { MUT_CLEVER,              MUT_DOPEY,                  1},
+    { MUT_AGILE,               MUT_CLUMSY,                 1},
+    { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
+    { MUT_ROBUST,              MUT_FRAIL,                  1},
+    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
+    { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,           1},
+    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
+    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
+    { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
+    { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
+    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
+    { MUT_FAST,                MUT_SLOW,                   0},
+    { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
+    { MUT_UNBREATHING,         MUT_BREATHE_POISON,         0},
+    { MUT_FANGS,               MUT_BEAK,                  -1},
+    { MUT_ANTENNAE,            MUT_HORNS,                 -1},
+    { MUT_HOOVES,              MUT_TALONS,                -1},
+    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
+    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},
+    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,    -1},
+    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
+    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
+    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
+};
+
 equipment_type beastly_slot(int mut)
 {
     switch (mut)
@@ -1037,6 +1072,26 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
     return NUM_MUTATIONS;
 }
 
+int mut_check_conflict(mutation_type mut)
+{
+    for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
+    {
+        if (conflict[i][0] == mut || conflict[i][1] == mut)
+        {
+            int level = player_mutation_level(
+                static_cast<mutation_type>(conflict[i][1]));
+            if (conflict[i][0] == mut && level)
+                return level;
+
+            level = player_mutation_level(
+                static_cast<mutation_type>(conflict[i][0]));
+            if (conflict[i][1] == mut && level)
+                return level;
+        }
+    }
+    return 0;
+}
+
 // Tries to give you the mutation by deleting a conflicting
 // one, or clears out conflicting mutations if we should give
 // you the mutation anyway.
@@ -1049,41 +1104,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                                          const string &reason,
                                          bool temp = false)
 {
-    const int conflict[][3] =
-    {
-#if TAG_MAJOR_VERSION == 34
-        { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
-#endif
-        { MUT_STRONG,              MUT_WEAK,                   1},
-        { MUT_CLEVER,              MUT_DOPEY,                  1},
-        { MUT_AGILE,               MUT_CLUMSY,                 1},
-        { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
-        { MUT_ROBUST,              MUT_FRAIL,                  1},
-        { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
-        { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,           1},
-        { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
-        { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-        { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
-        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
-        { MUT_FAST,                MUT_SLOW,                   1},
-        { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-        { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
-        { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-        { MUT_FAST,                MUT_SLOW,                   0},
-        { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
-        { MUT_UNBREATHING,         MUT_BREATHE_POISON,         0},
-        { MUT_FANGS,               MUT_BEAK,                  -1},
-        { MUT_ANTENNAE,            MUT_HORNS,                 -1},
-        { MUT_HOOVES,              MUT_TALONS,                -1},
-        { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
-        { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
-        { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},
-        { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,    -1},
-        { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
-        { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
-        { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
-        };
-
     // If we have one of the pair, delete all levels of the other,
     // and continue processing.
     for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
