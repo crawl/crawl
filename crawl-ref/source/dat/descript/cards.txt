@@ -35,7 +35,7 @@ its position being revealed at high power.
 %%%%
 the Shaft card
 
-This card creates a shaft beneath you.
+This card creates a shaft beneath you, and possibly beneath your enemies.
 %%%%
 the Elixir card
 
