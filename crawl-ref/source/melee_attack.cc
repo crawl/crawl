@@ -2133,7 +2133,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (defender->is_monster())
     {
         simple_monster_message(defender->as_monster(), " grows two more!");
-        defender->as_monster()->number += 2;
+        defender->as_monster()->num_heads += 2;
         defender->heal(8 + random2(8), true);
     }
     else
@@ -2281,7 +2281,7 @@ void melee_attack::decapitate(int dam_type)
     if (defender->is_player())
         set_hydra_form_heads(heads - 1);
     else
-        defender->as_monster()->number--;
+        defender->as_monster()->num_heads--;
 }
 
 /**

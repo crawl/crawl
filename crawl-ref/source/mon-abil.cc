@@ -229,8 +229,8 @@ void merge_ench_durations(monster* initial, monster* merge_to, bool usehd)
 {
     mon_enchant_list::iterator i;
 
-    int initial_count = usehd ? initial->get_hit_dice() : initial->number;
-    int merge_to_count = usehd ? merge_to->get_hit_dice() : merge_to->number;
+    int initial_count = usehd ? initial->get_hit_dice() : initial->blob_size;
+    int merge_to_count = usehd ? merge_to->get_hit_dice() : merge_to->blob_size;
     int total_count = initial_count + merge_to_count;
 
     for (i = initial->enchantments.begin();
@@ -273,8 +273,8 @@ void merge_ench_durations(monster* initial, monster* merge_to, bool usehd)
 static void _stats_from_blob_count(monster* slime, float max_per_blob,
                                    float current_per_blob)
 {
-    slime->max_hit_points = (int)(slime->number * max_per_blob);
-    slime->hit_points = (int)(slime->number * current_per_blob);
+    slime->max_hit_points = (int)(slime->blob_size * max_per_blob);
+    slime->hit_points = (int)(slime->blob_size * current_per_blob);
 }
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
@@ -317,12 +317,12 @@ static monster* _do_split(monster* thing, coord_def & target)
     if (thing->props.exists("blame"))
         new_slime->props["blame"] = thing->props["blame"].get_vector();
 
-    int split_off = thing->number / 2;
-    float max_per_blob = thing->max_hit_points / float(thing->number);
-    float current_per_blob = thing->hit_points / float(thing->number);
+    int split_off = thing->blob_size / 2;
+    float max_per_blob = thing->max_hit_points / float(thing->blob_size);
+    float current_per_blob = thing->hit_points / float(thing->blob_size);
 
-    thing->number -= split_off;
-    new_slime->number = split_off;
+    thing->blob_size -= split_off;
+    new_slime->blob_size = split_off;
 
     new_slime->set_hit_dice(thing->get_experience_level());
 
@@ -505,7 +505,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // Combine enchantment durations.
     merge_ench_durations(initial_slime, merge_to);
 
-    merge_to->number += initial_slime->number;
+    merge_to->blob_size += initial_slime->blob_size;
     merge_to->max_hit_points += initial_slime->max_hit_points;
     merge_to->hit_points += initial_slime->hit_points;
 
@@ -623,7 +623,7 @@ static bool _slime_merge(monster* thing)
         {
             // We can potentially merge if doing so won't take us over
             // the merge cap.
-            int new_blob_count = other_thing->number + thing->number;
+            int new_blob_count = other_thing->blob_size + thing->blob_size;
             if (new_blob_count <= max_slime_merge)
                 merge_target = other_thing;
         }
@@ -695,7 +695,7 @@ static bool _slime_can_spawn(const coord_def target)
 // we can find a square to place the new slime creature on.
 static monster *_slime_split(monster* thing, bool force_split)
 {
-    if (!thing || thing->number <= 1 || thing->hit_points < 4
+    if (!thing || thing->blob_size <= 1 || thing->hit_points < 4
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
         || _disabled_merge(thing))
     {
@@ -773,10 +773,10 @@ bool slime_creature_polymorph(monster* slime)
 {
     ASSERT(slime->type == MONS_SLIME_CREATURE);
 
-    if (slime->number > 1 && x_chance_in_y(4, 5))
+    if (slime->blob_size > 1 && x_chance_in_y(4, 5))
     {
         int count = 0;
-        while (slime->number > 1 && count <= 10)
+        while (slime->blob_size > 1 && count <= 10)
         {
             if (monster *splinter = _slime_split(slime, true))
                 slime_creature_polymorph(splinter);
@@ -792,7 +792,7 @@ bool slime_creature_polymorph(monster* slime)
 static bool _starcursed_split(monster* mon)
 {
     if (!mon
-        || mon->number <= 1
+        || mon->blob_size <= 1
         || mon->type != MONS_STARCURSED_MASS)
     {
         return false;
@@ -1048,7 +1048,7 @@ bool lost_soul_revive(monster* mons)
 
 void treant_release_fauna(monster* mons)
 {
-    int count = mons->number;
+    int count = mons->mangrove_pests;
     bool created = false;
 
     monster_type base_t = (one_chance_in(3) ? MONS_YELLOW_WASP
@@ -1077,7 +1077,7 @@ void treant_release_fauna(monster* mons)
                 fauna->add_ench(abj);
 
             created = true;
-            mons->number--;
+            mons->mangrove_pests--;
         }
     }
 
@@ -1301,7 +1301,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_STARCURSED_MASS:
-        if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3)
+        if (x_chance_in_y(mons->blob_size,8) && x_chance_in_y(2,3)
             && mons->hit_points >= 8)
         {
             _starcursed_split(mons), used = true;
@@ -1494,7 +1494,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_SHAMBLING_MANGROVE:
     {
-        if (mons->hit_points * 2 < mons->max_hit_points && mons->number > 0)
+        if (mons->hit_points * 2 < mons->max_hit_points
+            && mons->mangrove_pests > 0)
         {
             treant_release_fauna(mons);
             // Intentionally takes no energy; the creatures are flying free

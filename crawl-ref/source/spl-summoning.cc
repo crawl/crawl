@@ -2706,8 +2706,8 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         else
             mpr("You imbue your battlesphere with additional charge.");
 
-        battlesphere->number = min(20, (int) battlesphere->number
-                                   + 4 + random2(pow + 10) / 10);
+        battlesphere->battlecharge = min(20, (int) battlesphere->battlecharge
+                                              + 4 + random2(pow + 10) / 10);
 
         // Increase duration
         mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
@@ -2750,7 +2750,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                     simple_monster_message(battlesphere, " appears!");
                 battlesphere->props["band_leader"].get_int() = agent->mid;
             }
-            battlesphere->number = 4 + random2(pow + 10) / 10;
+            battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
             battlesphere->foe = agent->mindex();
             battlesphere->target = agent->pos();
         }
@@ -2777,7 +2777,7 @@ void end_battlesphere(monster* mons, bool killed)
         {
             if (you.can_see(mons))
             {
-                if (mons->number == 0)
+                if (mons->battlecharge == 0)
                 {
                     mpr("Your battlesphere expends the last of its energy"
                         " and dissipates.");
@@ -2981,7 +2981,7 @@ bool fire_battlesphere(monster* mons)
 
     bool used = false;
 
-    if (mons->props.exists("firing") && mons->number > 0)
+    if (mons->props.exists("firing") && mons->battlecharge > 0)
     {
         if (mons->props.exists("tracking"))
         {
@@ -3053,7 +3053,7 @@ bool fire_battlesphere(monster* mons)
 
             used = true;
             // Decrement # of volleys left and possibly expire the battlesphere.
-            if (--mons->number == 0)
+            if (--mons->battlecharge == 0)
                 end_battlesphere(mons, false);
 
             mons->props.erase("firing");

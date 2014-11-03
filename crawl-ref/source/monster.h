@@ -51,7 +51,23 @@ public:
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
-    unsigned int  number;              // #heads (hydra), etc.
+    union {
+        unsigned int number;   ///< General purpose number variable
+        int blob_size;         ///< # of slimes/masses in this one
+        int num_heads;         ///< Hydra-like head number
+        int ballisto_activity; ///< How active is this ballistomycete?
+        int spore_cooldown;    ///< Can this make ballistos (if 0)
+        int mangrove_pests;    ///< # of animals in shambling mangrove
+        int prism_charge;      ///< Turns this prism has existed
+        int battlecharge;      ///< Charges of battlesphere
+        int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
+        int swift_cooldown;    ///< When alligator last casted Swift
+        monster_type orc_type; ///< Orc type of Nergalle's spectral orc.
+        int tentacle_connect;  ///< mindex() of monster this tentacle is
+                               //   connected to: for segments, this is the
+                               //   tentacle; for tentacles, the head.
+                               //   FIXME: use a mid
+    };
     int           colour;
     mid_t         summoner;
 
@@ -118,7 +134,7 @@ public:
     int  foe_distance() const;
     bool needs_berserk(bool check_spells = true) const;
 
-    // Has a hydra-like variable number of attacks based on mons->number.
+    // Has a hydra-like variable number of attacks based on num_heads.
     bool has_hydra_multi_attack() const;
     int  heads() const;
     bool has_multitargeting() const;

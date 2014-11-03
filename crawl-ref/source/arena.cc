@@ -1255,7 +1255,7 @@ void arena_monster_died(monster* mons, killer_type killer,
                 && (fac->members.get_monster(member_idx).type
                     == MONS_SLIME_CREATURE))
             {
-                for (unsigned int i = 1; i < mons->number; i++)
+                for (int i = 1; i < mons->blob_size; i++)
                 {
                     fac->respawn_list.push_back(member_idx);
                     fac->respawn_pos.push_back(mons->pos());

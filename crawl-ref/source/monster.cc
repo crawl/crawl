@@ -396,8 +396,8 @@ int monster::body_weight(bool /*base*/) const
     }
 
     // Slime creature weight is multiplied by the number merged.
-    if (mc == MONS_SLIME_CREATURE && number > 1)
-        weight *= number;
+    if (mc == MONS_SLIME_CREATURE && blob_size > 1)
+        weight *= blob_size;
 
     return weight;
 }
@@ -5071,7 +5071,7 @@ bool monster::has_hydra_multi_attack() const
 int monster::heads() const
 {
     if (has_hydra_multi_attack())
-        return number;
+        return num_heads;
     else if (mons_shouts(mons_species(true)) == S_SHOUT2)
         return 2;
     // There are lots of things with more or fewer heads, but the return value
@@ -6204,11 +6204,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     else if (mons_is_tentacle_or_tentacle_segment(type)
              && type != MONS_ELDRITCH_TENTACLE
              && flavour != BEAM_TORMENT_DAMAGE
-             && !invalid_monster_index(number)
-             && menv[number].is_parent_monster_of(this))
+             && !invalid_monster_index(tentacle_connect)
+             && menv[tentacle_connect].is_parent_monster_of(this))
     {
-        deferred_damage_fineff::schedule(oppressor, &menv[number], damage,
-                                         false);
+        deferred_damage_fineff::schedule(oppressor, &menv[tentacle_connect],
+                                         damage, false);
     }
 
     if (!alive())

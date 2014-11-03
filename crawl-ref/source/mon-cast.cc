@@ -3201,7 +3201,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // (not in _ms_waste_of_time since it is not deterministic)
             if (spell_cast == SPELL_SWIFTNESS
                 && mons->type == MONS_ALLIGATOR
-                && ((int) mons->number + random2avg(170, 5) >=
+                && (mons->swift_cooldown + random2avg(170, 5) >=
                     you.num_turns))
             {
                 spell_cast = SPELL_NO_SPELL;
@@ -3657,7 +3657,7 @@ void mons_cast_spectral_orcs(monster* mons)
                 orc->mname = mons_type_name(mon, DESC_PLAIN);
                 orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
             }
-            orc->number = (int) mon;
+            orc->orc_type = mon;
 
             // give gear using the base type
             give_item(orc, env.absdepth0, true, true);
@@ -4684,7 +4684,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_SWIFT);
         if (mons->type == MONS_ALLIGATOR)
         {
-            mons->number = you.num_turns;
+            mons->swift_cooldown = you.num_turns;
             simple_monster_message(mons, " puts on a burst of speed!");
         }
         else

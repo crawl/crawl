@@ -2022,8 +2022,8 @@ void handle_monster_move(monster* mons)
 
     if (mons->type == MONS_FULMINANT_PRISM)
     {
-        ++mons->number;
-        if (mons->number == 2)
+        ++mons->prism_charge;
+        if (mons->prism_charge == 2)
             mons->suicide();
         else
         {
@@ -2067,9 +2067,9 @@ void handle_monster_move(monster* mons)
 
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
-           && ++mons->number / 8 % 3 != 2  // but are not helpless
+           && ++mons->move_spurt / 8 % 3 != 2  // but are not helpless
         || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
-            && (++mons->number / 6 % 3 == 1 || mons->number / 3 % 5 == 1))
+            && (++mons->move_spurt / 6 % 3 == 1 || mons->move_spurt / 3 % 5 == 1))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2490,12 +2490,13 @@ void handle_monster_move(monster* mons)
     {
         move_child_tentacles(mons);
 
-        mons->number += (old_energy - mons->speed_increment)
-                        * _tentacle_move_speed(mons_base_type(mons));
-        while (mons->number >= 100)
+        mons->move_spurt += (old_energy - mons->speed_increment)
+                             * _tentacle_move_speed(mons_base_type(mons));
+        ASSERT(mons->move_spurt > 0);
+        while (mons->move_spurt >= 100)
         {
             move_child_tentacles(mons);
-            mons->number -= 100;
+            mons->move_spurt -= 100;
         }
     }
 }
@@ -3709,10 +3710,9 @@ static void _ballisto_on_move(monster* mons, const coord_def& position)
     if (current_ftype == DNGN_FLOOR)
         env.pgrid(mons->pos()) |= FPROP_MOLD;
 
-    // The number field is used as a cooldown timer for this behavior.
-    if (mons->number > 0)
+    if (mons->spore_cooldown > 0)
     {
-        mons->number--;
+        mons->spore_cooldown--;
         return;
     }
 
@@ -3750,7 +3750,7 @@ static void _ballisto_on_move(monster* mons, const coord_def& position)
     }
 
     // reset the cooldown.
-    mons->number = 40;
+    mons->spore_cooldown = 40;
 }
 
 bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)

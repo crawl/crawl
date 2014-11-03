@@ -41,13 +41,13 @@ bool monster::is_child_monster() const
 bool monster::is_child_tentacle_of(const monster* mons) const
 {
     return mons_base_type(mons) == mons_tentacle_parent_type(this)
-           && (int) number == mons->mindex();
+           && tentacle_connect == mons->mindex();
 }
 
 bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
-           && (int) mons->number == mindex();
+           && mons->tentacle_connect == mindex();
 }
 
 bool mons_is_tentacle_head(monster_type mc)
@@ -153,23 +153,23 @@ bool get_tentacle_head(const monster*& mon)
     // For tentacle segments, find the associated tentacle.
     if (mon->is_child_tentacle_segment())
     {
-        if (invalid_monster_index(mon->number))
+        if (invalid_monster_index(mon->tentacle_connect))
             return false;
-        if (invalid_monster(&menv[mon->number]))
+        if (invalid_monster(&menv[mon->tentacle_connect]))
             return false;
 
-        mon = &menv[mon->number];
+        mon = &menv[mon->tentacle_connect];
     }
 
     // For tentacles, find the associated head.
     if (mon->is_child_tentacle())
     {
-        if (invalid_monster_index(mon->number))
+        if (invalid_monster_index(mon->tentacle_connect))
             return false;
-        if (invalid_monster(&menv[mon->number]))
+        if (invalid_monster(&menv[mon->tentacle_connect]))
             return false;
 
-        mon = &menv[mon->number];
+        mon = &menv[mon->tentacle_connect];
     }
 
     return true;
@@ -630,8 +630,10 @@ static void _collect_tentacles(monster* mons,
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (int (mi->number) == mons->mindex() && mi->type == tentacle)
+        if (mi->tentacle_connect == mons->mindex() && mi->type == tentacle)
+        {
             tentacles.push_back(mi);
+        }
     }
 }
 
@@ -639,8 +641,7 @@ static void _purge_connectors(int tentacle_idx, monster_type mon_type)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if ((int) mi->number == tentacle_idx
-            && mi->type == mon_type)
+        if (mi->tentacle_connect == tentacle_idx && mi->type == mon_type)
         {
             int hp = menv[mi->mindex()].hit_points;
             if (hp > 0 && hp < menv[tentacle_idx].hit_points)
@@ -723,7 +724,7 @@ static int _collect_connection_data(monster* start_monster,
             && menv[next_idx].is_child_tentacle_of(start_monster))
         {
             current_mon = &menv[next_idx];
-            if (int(current_mon->number) != start_monster->mindex())
+            if (current_mon->tentacle_connect != start_monster->mindex())
                 mpr("link information corruption!!! tentacle in chain doesn't match mindex");
             if (!retract_found)
             {

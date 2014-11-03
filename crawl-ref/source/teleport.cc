@@ -256,14 +256,14 @@ void mons_relocated(monster* mons)
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
         int base_id = mons->type == MONS_ELDRITCH_TENTACLE
-                      ? mons->mindex() : mons->number;
+                      ? mons->mindex() : mons->tentacle_connect;
 
         monster_die(&menv[base_id], KILL_RESET, -1, true, false);
 
         for (monster_iterator mit; mit; ++mit)
         {
             if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && (int) mit->number == base_id)
+                && mit->tentacle_connect == base_id)
             {
                 monster_die(*mit, KILL_RESET, -1, true, false);
             }

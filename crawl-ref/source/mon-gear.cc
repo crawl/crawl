@@ -238,7 +238,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     item.quantity = 1;
 
     if (spectral_orcs)
-        type = mon->number;
+        type = mon->orc_type;
 
     switch (type)
     {
@@ -1991,7 +1991,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     int type = mon->type;
 
     if (spectral_orcs)
-        type = mon->number;
+        type = mon->orc_type;
 
     switch (type)
     {
