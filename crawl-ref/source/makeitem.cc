@@ -75,7 +75,7 @@ void item_colour(item_def &item)
     {
     case OBJ_WANDS:
         // TODO: remove this
-        item.special = you.item_description[IDESC_WANDS][item.sub_type];
+        item.appearance = you.item_description[IDESC_WANDS][item.sub_type];
         break;
 
     case OBJ_POTIONS:
@@ -91,7 +91,7 @@ void item_colour(item_def &item)
     case OBJ_SCROLLS:
         // TODO: remove both of these
         item.appearance = you.item_description[IDESC_SCROLLS][item.sub_type];
-        item.plus = you.item_description[IDESC_SCROLLS_II][item.sub_type];
+        item.consum_desc = you.item_description[IDESC_SCROLLS_II][item.sub_type];
         break;
 
     case OBJ_STAVES:

@@ -3821,7 +3821,11 @@ colour_t item_def::get_colour() const
 {
     // props take first priority
     if (props.exists(FORCED_ITEM_COLOUR_KEY))
-        return props[FORCED_ITEM_COLOUR_KEY].get_int();
+    {
+        const colour_t colour = props[FORCED_ITEM_COLOUR_KEY].get_int();
+        ASSERT(colour);
+        return colour;
+    }
 
     // unrands get to override everything else (wrt colour)
     // ...except for un-ID'd random-appearance artefacts (Misfortune)
@@ -3830,6 +3834,7 @@ colour_t item_def::get_colour() const
         const unrandart_entry *unrand = get_unrand_entry(
                                             find_unrandart_index(*this));
         ASSERT(unrand);
+        ASSERT(unrand->colour);
         return unrand->colour;
     }
 
@@ -3892,19 +3897,40 @@ bool item_type_has_unidentified(object_class_type base_type)
 bool item_def::is_valid(bool iinfo) const
 {
     if (base_type == OBJ_DETECTED)
+    {
+        if (!iinfo)
+            dprf("weird detected item");
         return iinfo;
+    }
     else if (!defined())
+    {
+        dprf("undefined");
         return false;
+    }
     const int max_sub = get_max_subtype(base_type);
     if (max_sub != -1 && sub_type >= max_sub)
     {
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
+        {
+            if (!iinfo)
+                dprf("weird subtype and no info");
+            if (sub_type > max_sub)
+                dprf("huge subtype");
+            if (!item_type_has_unidentified(base_type))
+                dprf("unided item of a type that can't be");
             return false;
+        }
     }
     if (get_colour() == 0)
+    {
+        dprf("black item");
         return false; // No black items.
+    }
     if (!appearance_initialized())
+    {
+        dprf("no rnd");
         return false; // no items with uninitialized rnd
+    }
     return true;
 }
 
