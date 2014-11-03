@@ -729,6 +729,18 @@ limestone7
 limestone8
 limestone9
 
+%sdir dngn/floor
+white_marble0 FLOOR_W_MARBLE
+white_marble1
+white_marble2
+white_marble3
+white_marble4
+white_marble5
+white_marble6
+white_marble7
+white_marble8
+white_marble9
+
 sigil_curve_N_E SIGIL_CURVE_N_E
 sigil_curve_N_W SIGIL_CURVE_N_W
 sigil_curve_S_E SIGIL_CURVE_S_E

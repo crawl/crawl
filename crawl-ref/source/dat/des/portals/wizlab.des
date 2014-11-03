@@ -735,7 +735,7 @@ SHUFFLE:    XxLl / HhIi, YyRr / JjKK
 SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
-LFLOORTILE: floor_pebble_white
+LFLOORTILE: floor_w_marble
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
