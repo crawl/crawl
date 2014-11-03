@@ -68,6 +68,9 @@ void item_colour(item_def &item)
     // Compute random tile/colour choice.
     item.rnd = 1 + random2(255); // reserve 0 for uninitialized
 
+    if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
+        return; // don't stomp on item.special!
+
     switch (item.base_type)
     {
     case OBJ_WANDS:
