@@ -9,7 +9,10 @@
  * 'Aperiodic Set of Square Tiles with Colored Corners' (Lagae 2006)
  * 'An Alternative for Wang Tiles: Colored Edges versus Color Corners'
  * (Lagae 2006)
- * TODO 'Recursive Wang Tiles for Real-Time Blue Noise' (Kopf 2006)
+ * 'Wang Tiles for Image and Texture Generation' (Cohen 2003)
+ * 'Recursive Wang Tiles for Real-Time Blue Noise' (Kopf 2006)
+ *
+ * TODO Pass around a RNG so this is actually deterministic.
  *
  * Copyright (c) 2014 Brendan Hickey
  * All rights reserved.
