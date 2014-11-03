@@ -3254,7 +3254,7 @@ bool item_def::appearance_initialized() const
 colour_t item_def::randart_colour() const
 {
     ASSERT(is_artefact(*this));
-    static colour_t colours[] = { YELLOW, LIGHTGREEN, LIGHTRED };
+    static colour_t colours[] = { YELLOW, LIGHTGREEN, LIGHTRED, LIGHTMAGENTA };
     return colours[rnd % ARRAYSZ(colours)];
 }
 
