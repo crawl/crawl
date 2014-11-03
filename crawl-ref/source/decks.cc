@@ -1592,14 +1592,27 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _shaft_card()
+static void _shaft_card(int power, deck_rarity_type rarity)
 {
-    if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
+    const int power_level = _get_power_level(power, rarity);
+
+    if (is_valid_shaft_level())
     {
-        if (place_specific_trap(you.pos(), TRAP_SHAFT))
+        if (grd(you.pos()) == DNGN_FLOOR
+            && place_specific_trap(you.pos(), TRAP_SHAFT))
         {
             find_trap(you.pos())->reveal();
             mpr("A shaft materialises beneath you!");
+        }
+
+        for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+        {
+            monster *mons = monster_at(*di);
+
+            if (mons && !mons->wont_attack()
+                && grd(mons->pos()) == DNGN_FLOOR
+                && !mons->airborne() && x_chance_in_y(power_level, 3))
+                mons->do_shaft();
         }
     }
     else
@@ -2724,7 +2737,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
-    case CARD_SHAFT:            _shaft_card(); break;
+    case CARD_SHAFT:            _shaft_card(power, rarity); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false); break;
     case CARD_WRATH:            _godly_wrath(); break;
