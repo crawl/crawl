@@ -14,6 +14,7 @@
 #ifdef TOUCH_UI
 #include "menu.h"
 #endif
+#include "message.h"
 #include "misc.h"
 #include "monster.h"
 #include "mon-util.h"

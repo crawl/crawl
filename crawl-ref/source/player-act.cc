@@ -24,6 +24,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
+#include "message.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"

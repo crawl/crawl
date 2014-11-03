@@ -165,7 +165,6 @@
     <ClCompile Include="..\mon-gear.cc" />
     <ClCompile Include="..\mon-grow.cc" />
     <ClCompile Include="..\mon-info.cc" />
-    <ClCompile Include="..\mon-message.cc" />
     <ClCompile Include="..\mon-movetarget.cc" />
     <ClCompile Include="..\mon-pathfind.cc" />
     <ClCompile Include="..\mon-pick.cc" />
@@ -474,7 +473,6 @@
     <ClInclude Include="..\mon-gear.h" />
     <ClInclude Include="..\mon-grow.h" />
     <ClInclude Include="..\mon-info.h" />
-    <ClInclude Include="..\mon-message.h" />
     <ClInclude Include="..\mon-movetarget.h" />
     <ClInclude Include="..\mon-pathfind.h" />
     <ClInclude Include="..\mon-pick.h" />

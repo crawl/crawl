@@ -14,7 +14,7 @@
 #include "itemprop.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-message.h"
+#include "mon-util.h"
 #include "monster.h"
 #include "player.h"
 #include "stringutil.h"

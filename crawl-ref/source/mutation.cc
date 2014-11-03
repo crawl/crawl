@@ -29,6 +29,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "menu.h"
+#include "message.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "notes.h"

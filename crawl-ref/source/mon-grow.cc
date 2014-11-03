@@ -7,7 +7,7 @@
 
 #include "mon-grow.h"
 
-#include "mon-message.h"
+#include "message.h"
 #include "mon-place.h"
 #include "monster.h"
 #include "mon-util.h"
