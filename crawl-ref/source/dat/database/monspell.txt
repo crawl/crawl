@@ -2,26 +2,26 @@
 # "The wizard mumbles some strange words."  The messages are looked
 # up in the following order by the following keys:
 #
-# 1) If the monster is a wizard or priest which has been polymorphed into
-#    a wizard without hands which is trying to cast a spell it kept across
-#    the polymorph, then the first key will be "polymorphed wizard" or
-#    "polymorphed priest".
-# 2) The name of the spell being cast:
-#   a) If being cast by a wizard or priest monster with arms, first try
+# 1) The name of the spell being cast:
+#   a) First try with the type, then the species, the the genus.
+#   b) If a wizard, "wizard"; similarly for priest, demon, and innate.
+#   c) If being cast by a wizard or priest monster with arms, first try
 #      with the suffix "real".
-#   b) If being cast by a monster of normal or higher intelligence with arms,
+#   d) If being cast by a monster of normal or higher intelligence with arms,
 #      try with the suffix "gestures".
-#   c) Next, try without any suffix.
-# 3) The name of the monster's type.
-# 4) The name of the monster's species.
-# 5) The name of the monster's genus.
-# 6) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
+#   e) Next, try without any suffix.
+# 2) The name of the monster's type, then species, then genus.
+# 3) "priest" if the spell is an invocation, "wizard" if it's a wizard spell,
 #    or "demon" if it's demonic.
-# 7) If the spell uses a targeted, visible beam, it will try
-#    "<beam_short_name> beam cast", then "beam catchall cast".
+# 4) If the spell uses a targeted, visible beam:
+#   a) "<beam_short_name> beam".
+#   b) "beam catchall".
 #
-# For 1 and 3 to 6, if the spell has a target it will first add the suffix
+# For 2 and 3, if the spell has a target it will first add the suffix
 # "targeted" to the lookup key before trying without the suffix.
+#
+# For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
+# instead of "wizard."
 #
 # For example, a greater naga casting Teleport Self:
 # * Teleport Self greater naga cast
@@ -60,8 +60,7 @@
 # no results it will try again without the prefix, assuming that the
 # spell has no sound component.
 #
-# To give no message use the string "__NONE", and to skip the current
-# lookup method and move onto the next one use the string "__NEXT".
+# To give no message use the string "__NONE".
 
 #####################################################
 # Individual spells.
@@ -107,29 +106,6 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
-Lesser Healing cast real
-
-__NEXT
-%%%%
-Lesser Healing cast gestures
-
-@The_monster@ briefly glows while making a small gesture.
-%%%%
-Lesser Healing cast
-
-@The_monster@ briefly glows.
-%%%%
-Greater Healing cast real
-
-__NEXT
-%%%%
-Greater Healing cast gestures
-
-@The_monster@ briefly glows brightly while making a large gesture.
-%%%%
-Greater Healing cast
-
-@The_monster@ briefly glows brightly.
 %%%%
 Mara Summon cast
 
