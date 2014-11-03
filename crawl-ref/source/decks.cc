@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "act-iter.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -2220,10 +2221,11 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         if (power_level == 0)
         {
             // Wimpy, negative-enchantment weapon.
-            wpn.plus = -random2(4);
-            wpn.sub_type = (coinflip() ? WPN_SHORT_SWORD : WPN_HAND_AXE);
+            wpn.plus = random2(3) - 2;
+            wpn.sub_type = (coinflip() ? WPN_QUARTERSTAFF : WPN_HAND_AXE);
 
-            set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+            set_item_ego_type(wpn, OBJ_WEAPONS,
+                              coinflip() ? SPWPN_VENOM : SPWPN_NORMAL);
         }
         else if (power_level == 1)
         {
@@ -2243,13 +2245,20 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         {
             // Rare and powerful.
             wpn.plus = random2(4) + 2;
-            wpn.sub_type = (coinflip() ? WPN_DIRE_FLAIL : WPN_EXECUTIONERS_AXE);
+            wpn.sub_type = (coinflip() ? WPN_DEMON_TRIDENT : WPN_EXECUTIONERS_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS,
                               coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
         }
 
         item_colour(wpn);
+
+        // sometimes give a randart instead
+        if (one_chance_in(3))
+        {
+            make_item_randart(wpn, true);
+            set_ident_flags(wpn, ISFLAG_KNOW_PROPERTIES| ISFLAG_KNOW_TYPE);
+        }
 
         mon->flags |= MF_HARD_RESET;
 
