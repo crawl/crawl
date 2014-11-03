@@ -1048,7 +1048,7 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
     // its count to others on the level.
     int activation_count = 1;
     if (mons->type == MONS_BALLISTOMYCETE)
-        activation_count += mons->number;
+        activation_count += mons->ballisto_activity;
     if (mons->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         activation_count = 0;
 
@@ -1139,11 +1139,11 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
         // have to mess with spore production on anything
         if (spawner && !fedhas_mode)
         {
-            spawner->number++;
+            spawner->ballisto_activity++;
 
             // Change color and start the spore production timer if we
             // are moving from 0 to 1.
-            if (spawner->number == 1)
+            if (spawner->ballisto_activity == 1)
             {
                 spawner->colour = LIGHTMAGENTA;
                 // Reset the spore production timer.
@@ -1215,12 +1215,12 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_MMISSILE;
-    beam.damage  = (origin.number == 2 ?
+    beam.damage  = (origin.prism_charge == 2 ?
                         dice_def(3, 6 + origin.get_hit_dice() * 7 / 4)
                         : dice_def(2, 6 + origin.get_hit_dice() * 7 / 4));
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
-    beam.ex_size = origin.number;
+    beam.ex_size = origin.prism_charge;
 }
 
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
@@ -1796,14 +1796,14 @@ int monster_die(monster* mons, killer_type killer,
     if (mons->type == MONS_GIANT_SPORE
         || mons->type == MONS_BALL_LIGHTNING
         || mons->type == MONS_LURKING_HORROR
-        || (mons->type == MONS_FULMINANT_PRISM && mons->number > 0)
+        || (mons->type == MONS_FULMINANT_PRISM && mons->prism_charge > 0)
         || mons->type == MONS_BENNU
         || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
             _explode_monster(mons, killer, killer_index, pet_kill, wizard);
     }
-    else if (mons->type == MONS_FULMINANT_PRISM && mons->number == 0)
+    else if (mons->type == MONS_FULMINANT_PRISM && mons->prism_charge == 0)
     {
         if (!silent && !hard_reset && !was_banished)
         {
@@ -2635,12 +2635,13 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
     {
-        if (!invalid_monster_index(mons->number)
-             && mons_base_type(&menv[mons->number]) == MONS_ELDRITCH_TENTACLE
-             && menv[mons->number].alive())
+        if (!invalid_monster_index(mons->tentacle_connect)
+             && mons_base_type(&menv[mons->tentacle_connect])
+                 == MONS_ELDRITCH_TENTACLE
+             && menv[mons->tentacle_connect].alive())
         {
-            monster_die(&menv[mons->number], killer, killer_index, silent,
-                        wizard, fake);
+            monster_die(&menv[mons->tentacle_connect], killer, killer_index,
+                        silent, wizard, fake);
         }
     }
     else if (mons_is_elven_twin(mons))

@@ -1447,8 +1447,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
                 const monster* mons = monster_at(it->first);
                 if (mons && !mons->wont_attack()
                     && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
-                        || (mons->type == MONS_BALLISTOMYCETE
-                            && mons->number != 0)))
+                        || mons->type == MONS_BALLISTOMYCETE
+                            && mons->ballisto_activity))
                 {
                     return false;
                 }

@@ -1763,8 +1763,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
 
     // Slime creature attacks are multiplied by the number merged.
-    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
-        attk.damage *= mon->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
+        attk.damage *= mon->blob_size;
 
     return zombified ? _downscale_zombie_attack(mon, attk) : attk;
 }
@@ -1953,8 +1953,8 @@ int exper_value(const monster* mon, bool real)
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
-    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
-        maxhp /= mon->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
+        maxhp /= mon->blob_size;
 
     // These are some values we care about.
     const int speed       = mons_base_speed(mon);
@@ -2084,7 +2084,7 @@ int exper_value(const monster* mon, bool real)
 
     // Scale starcursed mass exp by what percentage of the whole it represents
     if (mon->type == MONS_STARCURSED_MASS)
-        x_val = (x_val * mon->number) / 12;
+        x_val = (x_val * mon->blob_size) / 12;
 
     // Further reduce xp from zombies
     if (mons_is_zombified(mon))
@@ -2100,8 +2100,8 @@ int exper_value(const monster* mon, bool real)
     // of blobs merged. -cao
     // Has to be after the stepdown to prevent issues with 4-5 merged slime
     // creatures. -pf
-    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
-        x_val *= mon->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
+        x_val *= mon->blob_size;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
@@ -2461,7 +2461,6 @@ bool init_abomination(monster* mon, int hd)
 void define_monster(monster* mons)
 {
     monster_type mcls         = mons->type;
-    int monnumber             = mons->number;
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
@@ -2498,17 +2497,17 @@ void define_monster(monster* mons)
 
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
-        monnumber = 1;
+        mons->blob_size = 1;
         break;
 
     case MONS_HYDRA:
         // Hydras start off with 4 to 8 heads.
-        monnumber = random_range(4, 8);
+        mons->num_heads = random_range(4, 8);
         break;
 
     case MONS_LERNAEAN_HYDRA:
         // The Lernaean hydra starts off with 27 heads.
-        monnumber = 27;
+        mons->num_heads = 27;
         break;
 
     case MONS_KRAKEN:
@@ -2526,24 +2525,24 @@ void define_monster(monster* mons)
         break;
 
     case MONS_STARCURSED_MASS:
-        monnumber = 12;
+        mons->blob_size = 12;
         break;
 
     // Randomize starting speed burst clock
     case MONS_SIXFIRHY:
     case MONS_JIANGSHI:
-        monnumber = random2(360);
+        mons->move_spurt = random2(360);
         break;
 
     case MONS_SHAMBLING_MANGROVE:
-        monnumber = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
+        mons->mangrove_pests = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
         break;
 
     case MONS_SERPENT_OF_HELL:
     case MONS_SERPENT_OF_HELL_COCYTUS:
     case MONS_SERPENT_OF_HELL_DIS:
     case MONS_SERPENT_OF_HELL_TARTARUS:
-        monnumber = 3;
+        mons->num_heads = 3;
         break;
 
     default:
@@ -2600,8 +2599,6 @@ void define_monster(monster* mons)
     {
         mons->base_monster = monbase;
     }
-    if (mons->number == 0)
-        mons->number = monnumber;
 
     mons->flags      = 0;
     mons->experience = 0;
@@ -4519,7 +4516,7 @@ int get_dist_to_nearest_monster()
 
         // Plants/fungi don't count.
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0))
+            && !(mon->type == MONS_BALLISTOMYCETE && mon->ballisto_activity))
         {
             continue;
         }

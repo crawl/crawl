@@ -1876,7 +1876,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         }
 
                         plant->behaviour = BEH_WANDER;
-                        plant->number = 20;
+                        plant->spore_cooldown = 20;
 
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
