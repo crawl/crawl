@@ -631,9 +631,7 @@ static void _collect_tentacles(monster* mons,
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->tentacle_connect == mons->mindex() && mi->type == tentacle)
-        {
             tentacles.push_back(mi);
-        }
     }
 }
 
