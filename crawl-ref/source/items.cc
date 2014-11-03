@@ -3620,7 +3620,7 @@ colour_t item_def::jewellery_colour() const
 
     //randarts are bright, normal jewellery is dark
     if (is_random_artefact(*this))
-        return LIGHTBLUE + (rnd % (WHITE - LIGHTBLUE + 1));
+        return LIGHTGREEN + (rnd % (WHITE - LIGHTGREEN + 1));
 
     if (jewellery_is_amulet(*this))
         return amulet_colour();
