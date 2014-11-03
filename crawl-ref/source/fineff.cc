@@ -17,6 +17,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"

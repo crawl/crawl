@@ -5,6 +5,7 @@
 #include "fight.h"
 #include "godwrath.h"
 #include "libutil.h"
+#include "message.h"
 #include "monster.h"
 #include "mon-util.h"
 #include "religion.h"

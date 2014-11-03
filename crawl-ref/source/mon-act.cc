@@ -34,6 +34,7 @@
 #include "losglobal.h"
 #include "los.h"
 #include "mapmark.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"

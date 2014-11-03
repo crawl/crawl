@@ -489,4 +489,24 @@ monster *choose_random_monster_on_level(
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
 void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest);
+
+enum mon_dam_level_type
+{
+    MDAM_OKAY,
+    MDAM_LIGHTLY_DAMAGED,
+    MDAM_MODERATELY_DAMAGED,
+    MDAM_HEAVILY_DAMAGED,
+    MDAM_SEVERELY_DAMAGED,
+    MDAM_ALMOST_DEAD,
+    MDAM_DEAD,
+};
+
+void print_wounds(const monster* mons);
+bool wounded_damaged(mon_holy_type holi);
+
+mon_dam_level_type mons_get_damage_level(const monster* mons);
+
+string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
+bool mons_class_can_display_wounds(monster_type mc);
+bool mons_can_display_wounds(const monster* mon);
 #endif

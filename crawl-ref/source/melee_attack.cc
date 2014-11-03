@@ -31,6 +31,7 @@
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-poly.h"

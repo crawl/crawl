@@ -13,6 +13,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "makeitem.h"
+#include "message.h"
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "religion.h"

@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "message.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-movetarget.h"

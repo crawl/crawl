@@ -18,6 +18,7 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "religion.h"
 #include "stepdown.h"

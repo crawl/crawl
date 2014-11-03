@@ -23,6 +23,7 @@
 #include "hints.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"

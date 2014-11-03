@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "colour.h"
 #include "delay.h"
+#include "english.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -19,7 +20,8 @@
  #include "luaterp.h"
 #endif
 #include "menu.h"
-#include "mon-message.h"
+#include "monster.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "religion.h"
 #include "state.h"
@@ -1660,6 +1662,41 @@ void canned_msg(canned_message_type which_message)
             mpr_nojoin(MSGCH_PLAIN, "You die...");
             break;
     }
+}
+
+// Note that this function *completely* blocks messaging for monsters
+// distant or invisible to the player ... look elsewhere for a function
+// permitting output of "It" messages for the invisible {dlb}
+// Intentionally avoids info and str_pass now. - bwr
+bool simple_monster_message(const monster* mons, const char *event,
+                            msg_channel_type channel,
+                            int param,
+                            description_level_type descrip)
+{
+    if (mons_near(mons)
+        && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
+            || mons->visible_to(&you)))
+    {
+        string msg = mons->name(descrip);
+        msg += event;
+        msg = apostrophise_fixup(msg);
+
+        if (channel == MSGCH_PLAIN && mons->wont_attack())
+            channel = MSGCH_FRIEND_ACTION;
+
+        mprf(channel, param, "%s", msg.c_str());
+        return true;
+    }
+
+    return false;
+}
+
+// yet another wrapper for mpr() {dlb}:
+void simple_god_message(const char *event, god_type which_deity)
+{
+    string msg = uppercase_first(god_name(which_deity)) + event;
+    msg = apostrophise_fixup(msg);
+    god_speaks(which_deity, msg.c_str());
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)

@@ -35,6 +35,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "message.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"

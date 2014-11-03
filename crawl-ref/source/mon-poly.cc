@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"

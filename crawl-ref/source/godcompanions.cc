@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #include "branch.h"
-#include "mon-message.h"
+#include "message.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "spl-other.h"

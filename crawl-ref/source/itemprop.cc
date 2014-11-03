@@ -21,6 +21,7 @@
 #include "invent.h"
 #include "items.h"
 #include "item_use.h"
+#include "message.h"
 #include "misc.h"
 #include "notes.h"
 #include "options.h"

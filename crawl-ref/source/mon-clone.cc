@@ -13,6 +13,7 @@
 #include "directn.h"
 #include "env.h"
 #include "items.h"
+#include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
 #include "mon-death.h"

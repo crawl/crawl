@@ -15,6 +15,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-transit.h"
