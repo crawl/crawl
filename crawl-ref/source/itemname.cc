@@ -2634,6 +2634,13 @@ void check_item_knowledge(bool unknown_items)
                     ptmp->mon_type = MONS_RAT;
                 }
 
+                // stupid fake decks
+                if (is_deck(*ptmp) || ptmp->base_type == OBJ_MISCELLANY
+                                      && ptmp->sub_type == NUM_MISCELLANY)
+                {
+                    ptmp->deck_rarity = DECK_RARITY_COMMON;
+                }
+
                 items_other.push_back(ptmp);
 
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
