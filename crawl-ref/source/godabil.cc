@@ -5200,6 +5200,9 @@ static int _get_sacrifice_piety(ability_type sac)
     ability_type sacrifice = sac_def.sacrifice;
     mutation_type mut = MUT_NON_MUTATION;
     int num_sacrifices = 0;
+    const int piety_for_lost_muts = 15;
+    const int piety_for_lost_stat_muts = 6;
+
 
     // Initialize data
 
@@ -5248,6 +5251,7 @@ static int _get_sacrifice_piety(ability_type sac)
                 || mut == MUT_CLUMSY
                 || mut == MUT_DOPEY)
             {
+                if (player_mutation_level(MUT_STRONG) && mut == MUT_WEAK)
                 piety_gain += 8;
             }
             // the other sacrifices get sharply worse if you already
@@ -5258,6 +5262,7 @@ static int _get_sacrifice_piety(ability_type sac)
                 piety_gain += 20;
             else
                 piety_gain += 12;
+
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
             if (player_mutation_level(MUT_NO_LOVE))
@@ -5293,6 +5298,21 @@ static int _get_sacrifice_piety(ability_type sac)
         default:
             break;
     }
+
+    // Award piety for any mutations removed by adding new innate muts
+    // These can only be removed positive mutations, so we'll always give piety.
+    if (sacrifice == ABIL_RU_SACRIFICE_PURITY
+        || sacrifice == ABIL_RU_SACRIFICE_HEALTH
+        || sacrifice == ABIL_RU_SACRIFICE_ESSENCE)
+    {
+        int existing_mut_val = 0;
+        if (mut == MUT_STRONG || mut == MUT_CLEVER || mut == MUT_AGILE)
+            existing_mut_val = piety_for_lost_stat_muts;
+        else
+            existing_mut_val = piety_for_lost_muts;
+        piety_gain += existing_mut_val * mut_check_conflict(mut);
+    }
+
     return piety_gain;
 }
 
