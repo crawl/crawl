@@ -3678,14 +3678,6 @@ void unmarshallItem(reader &th, item_def &item)
 #endif
 
     item.rnd          = unmarshallUByte(th);
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_INIT_RND)
-    {
-        // 0 is now reserved to indicate that rnd is uninitialized
-        if (item.rnd == 0)
-            item.rnd = 1 + random2(255);
-    }
-#endif
 
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
@@ -3974,6 +3966,19 @@ void unmarshallItem(reader &th, item_def &item)
     {
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_CUTLASS)
             item.sub_type = WPN_RAPIER;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_INIT_RND)
+    {
+        // 0 is now reserved to indicate that rnd is uninitialized
+        if (item.rnd == 0)
+            item.rnd = 1 + random2(255);
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_RING_PLUSSES)
+    {
+        if (item.base_type == OBJ_JEWELLERY && item.plus > 9)
+            item.plus = 6;
     }
 #endif
 
