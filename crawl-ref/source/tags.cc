@@ -4397,6 +4397,8 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
+    // Default value.
+    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType_Info(th);
     if (mons_genus(mi.type) == MONS_DEMONSPAWN
         && th.getMinorVersion() < TAG_MINOR_DEMONSPAWN)
@@ -4412,6 +4414,8 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #else
     mi.type = unmarshallMonType(th);
     ASSERT(!invalid_monster_type(mi.type));
+    // Default value.
+    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType(th);
     if (mons_genus(mi.type) == MONS_DRACONIAN
         || mons_genus(mi.type) == MONS_DEMONSPAWN)
