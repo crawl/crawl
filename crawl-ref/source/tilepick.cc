@@ -888,7 +888,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + min(mon.num_heads, 5U) - 1;
+                     + min(mon.num_heads, 5) - 1;
             break;
         }
         else if ((mons_genus(subtype) == MONS_GIANT_LIZARD
@@ -2713,7 +2713,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             else
                 return _mon_mod(TILEP_MONS_BUSH, tile_num);
         case MONS_BALLISTOMYCETE:
-            if (mon.ballisto_activity)
+            if (mon.is_active)
                 return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
             else
                 return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
