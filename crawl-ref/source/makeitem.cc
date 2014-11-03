@@ -83,6 +83,7 @@ void item_colour(item_def &item)
     case OBJ_JEWELLERY:
         // TODO: remove this
         item.appearance = you.item_description[IDESC_RINGS][item.sub_type];
+        break;
 
     case OBJ_SCROLLS:
         // TODO: remove both of these
