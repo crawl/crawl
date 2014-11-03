@@ -771,7 +771,7 @@ static const zap_info zap_data[] =
     WHITE,
     false,
     BEAM_ICE,
-    DCHAR_FIRED_ZAP,
+    DCHAR_FIRED_MISSILE,
     false,
     false,
     false,
