@@ -131,16 +131,10 @@ static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
         convert2good(wpn);
 
         if (is_blessed_convertible(wpn))
-        {
             origin_acquired(wpn, GOD_SHINING_ONE);
-            wpn.flags |= ISFLAG_BLESSED_WEAPON;
-        }
     }
     else if (is_evil_god(god))
-    {
         convert2bad(wpn);
-        wpn.flags &= ~ISFLAG_BLESSED_WEAPON;
-    }
 
     you.wield_change = true;
     you.one_time_ability_used.set(god);
