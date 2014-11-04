@@ -2014,7 +2014,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
-    ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
+                             //0x00000200,  // was: ISFLAG_BLESSED
     ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 

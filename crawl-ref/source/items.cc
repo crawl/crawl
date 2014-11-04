@@ -4517,7 +4517,7 @@ item_info get_item_info(const item_def& item)
     ii.quantity = item.quantity;
     ii.inscription = item.inscription;
     ii.flags = item.flags & (0
-            | ISFLAG_IDENT_MASK | ISFLAG_BLESSED_WEAPON | ISFLAG_SEEN_CURSED
+            | ISFLAG_IDENT_MASK | ISFLAG_SEEN_CURSED
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
             | ISFLAG_COSMETIC_MASK);
 
