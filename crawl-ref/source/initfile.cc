@@ -4007,7 +4007,6 @@ enum commandline_option_type
     CLO_NAME,
     CLO_RACE,
     CLO_CLASS,
-    CLO_PLAIN,
     CLO_DIR,
     CLO_RC,
     CLO_RCDIR,
@@ -4053,7 +4052,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scores", "name", "species", "background", "plain", "dir", "rc",
+    "scores", "name", "species", "background", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version", "sprint",
@@ -4751,17 +4750,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     Options.game.job = str_to_job(string(next_arg));
             }
             nextUsed = true;
-            break;
-
-        case CLO_PLAIN:
-            if (next_is_param)
-                return false;
-
-            if (!rc_only)
-            {
-                Options.char_set = CSET_ASCII;
-                init_char_table(Options.char_set);
-            }
             break;
 
         case CLO_RCDIR:

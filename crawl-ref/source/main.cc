@@ -478,7 +478,6 @@ static void _show_commandline_options_help()
     puts("  -name <string>        character name");
     puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
     puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
-    puts("  -plain                don't use IBM extended characters");
     puts("  -dir <path>           crawl directory");
     puts("  -rc <file>            init file name");
     puts("  -rcdir <dir>          directory that contains (included) rc files");
