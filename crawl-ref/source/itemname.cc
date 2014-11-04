@@ -651,7 +651,7 @@ static const char* _wand_type_name(int wandtype)
 
 static const char* wand_secondary_string(int s)
 {
-    switch (s)
+    switch (s % 16)
     {
     case 0:  return "";
     case 1:  return "jewelled ";
@@ -675,7 +675,7 @@ static const char* wand_secondary_string(int s)
 
 static const char* wand_primary_string(int p)
 {
-    switch (p)
+    switch (p % 12)
     {
     case 0:  return "iron";
     case 1:  return "brass";
@@ -873,7 +873,7 @@ static string jewellery_type_name(int jeweltype)
 
 static const char* ring_secondary_string(int s)
 {
-    switch (s)
+    switch (s % 13)
     {
     case 1:  return "encrusted ";
     case 2:  return "glowing ";
@@ -893,7 +893,7 @@ static const char* ring_secondary_string(int s)
 
 static const char* ring_primary_string(int p)
 {
-    switch (p)
+    switch (p % 29)
     {
     case 0:  return "wooden";
     case 1:  return "silver";
@@ -930,7 +930,7 @@ static const char* ring_primary_string(int p)
 
 static const char* amulet_secondary_string(int s)
 {
-    switch (s)
+    switch (s % 13)
     {
     case 0:  return "dented ";
     case 1:  return "square ";
@@ -951,7 +951,7 @@ static const char* amulet_secondary_string(int s)
 
 static const char* amulet_primary_string(int p)
 {
-    switch (p)
+    switch (p % 29)
     {
     case 0:  return "zirconium";
     case 1:  return "sapphire";
@@ -1163,7 +1163,7 @@ static const char* _book_type_name(int booktype)
 
 static const char* staff_secondary_string(int p)
 {
-    switch (p) // general descriptions
+    switch (p % 10) // general descriptions
     {
     case 0:  return "crooked ";
     case 1:  return "knobbly ";
@@ -1181,7 +1181,7 @@ static const char* staff_secondary_string(int p)
 
 static const char* staff_primary_string(int p)
 {
-    switch (p) // special attributes
+    switch (p % 4) // special attributes
     {
     case 0:  return "glowing ";
     case 1:  return "jewelled ";
