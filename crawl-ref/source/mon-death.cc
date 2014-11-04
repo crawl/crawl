@@ -1410,7 +1410,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     string prefix = " ";
     if (corpse)
     {
-        if (mons_weight(mons_species(mons->type)) == 0)
+        if (!mons_class_can_leave_corpse(mons_species(mons->type)))
             return;
 
         prefix = "'s corpse ";

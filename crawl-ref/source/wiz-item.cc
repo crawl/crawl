@@ -164,7 +164,7 @@ void wizard_create_spec_object()
             return;
         }
 
-        if (mons_weight(mon) == 0)
+        if (!mons_class_can_leave_corpse(mon))
         {
             if (!yesno("That monster doesn't leave corpses; make one "
                        "anyway?", true, 'y'))
