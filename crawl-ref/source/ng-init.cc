@@ -465,10 +465,21 @@ void initialise_item_descriptions()
                     you.item_description[i][j] = _random_potion_description();
                     break;
 
+
+#if TAG_MAJOR_VERSION == 34
+                case IDESC_SCROLLS_II: // unused but validated
+#endif
                 case IDESC_SCROLLS: // scrolls: random seed for the name
-                case IDESC_SCROLLS_II:
-                    you.item_description[i][j] = random2(151);
+                {
+                    // this is very weird and probably a linleyism.
+                    const int seed_1 = random2(151); // why 151?
+                    const int seed_2 = random2(151);
+                    const int seed_3 = OBJ_SCROLLS; // yes, really
+                    you.item_description[i][j] =   seed_1
+                                                | (seed_2 << 8)
+                                                | (seed_3 << 16);
                     break;
+                }
 
                 case IDESC_RINGS: // rings and amulets
                     you.item_description[i][j] = random2(NDSC_JEWEL_PRI

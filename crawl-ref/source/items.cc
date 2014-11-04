@@ -3475,7 +3475,7 @@ colour_t item_def::potion_colour() const
         MAGENTA, BLUE
     };
     COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
-    return potion_colours[consum_desc % NDSC_POT_PRI];
+    return potion_colours[appearance % NDSC_POT_PRI];
 }
 
 /**
@@ -4597,7 +4597,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_POTIONS;
-        ii.consum_desc = item.consum_desc; // appearance
+        ii.appearance = item.appearance;
         break;
     case OBJ_FOOD:
         ii.sub_type = item.sub_type;
@@ -4617,8 +4617,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_SCROLLS;
-        ii.appearance = item.appearance;    // name seed, part 1
-        ii.consum_desc = item.consum_desc;  // name seed, part 2
+        ii.appearance = item.appearance;    // name seed
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
