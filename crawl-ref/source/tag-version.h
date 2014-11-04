@@ -132,6 +132,7 @@ enum tag_minor_version
     TAG_MINOR_BLESSED_WPNS,        // Remove blessed long blade base types
     TAG_MINOR_MON_COLOUR_LOOKUP,   // monster colour lookup when possible
     TAG_MINOR_CONSUM_APPEARANCE,   // Stop storing item appearance in .plus
+    TAG_MINOR_NEG_IDESC,           // Fix a sign conversion error
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
