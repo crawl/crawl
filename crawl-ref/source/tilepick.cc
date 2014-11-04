@@ -4875,6 +4875,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CHAIN_OF_CHAOS:           return TILEG_CHAIN_OF_CHAOS;
     case SPELL_CHAOS_BREATH:             return TILEG_CHAOS_BREATH;
     case SPELL_CHAOTIC_MIRROR:           return TILEG_CHAOTIC_MIRROR;
+    case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
     case SPELL_CORRUPT_BODY:             return TILEG_CORRUPT_BODY;
@@ -4892,6 +4893,7 @@ tileidx_t tileidx_spell(spell_type spell)
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:     return TILEG_FAKE_RAKSHASA_SUMMON;
 #endif
+    case SPELL_SEARING_BREATH:
     case SPELL_FIRE_BREATH:              return TILEG_FIRE_BREATH;
     case SPELL_FIRE_ELEMENTALS:          return TILEG_FIRE_ELEMENTALS;
     case SPELL_FIRE_SUMMON:              return TILEG_FIRE_SUMMON;

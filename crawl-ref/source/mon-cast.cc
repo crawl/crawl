@@ -619,8 +619,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         if (real_spell != SPELL_STICKY_FLAME)
             beam.hit      = 18 + power / 15;
         beam.colour   = RED;
-        beam.name     = "sticky flame";
-        // FIXME: splash needs to be "splash of liquid fire"
+        beam.name     = real_spell == SPELL_STICKY_FLAME_SPLASH ?
+                        "splash of liquid fire" : "sticky flame";
         beam.damage   = dice_def(3, 3 + power / 50);
         beam.flavour  = BEAM_FIRE;
         break;
@@ -779,6 +779,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FIRE_BREATH:
+    case SPELL_SEARING_BREATH:
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
         beam.short_name = "flames";
@@ -787,12 +788,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit        = 30;
         beam.flavour    = BEAM_FIRE;
         beam.is_beam    = true;
-        if (mons_genus(mons->type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(mons) == MONS_RED_DRACONIAN)
+        if (real_spell == SPELL_SEARING_BREATH)
         {
             beam.name        = "searing blast";
             beam.aux_source  = "blast of searing breath";
-            beam.damage.size = 65 * beam.damage.size / 100;
+            if (mons->type != MONS_XTAHUA)
+                beam.damage.size = 65 * beam.damage.size / 100;
         }
         break;
 
@@ -807,6 +808,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
+    case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:
         beam.name       = "blast of cold";
         beam.aux_source = "blast of icy breath";
@@ -816,14 +818,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit        = 30;
         beam.flavour    = BEAM_COLD;
         beam.is_beam    = true;
-        if (mons_genus(mons->type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(mons) == MONS_WHITE_DRACONIAN)
+        if (real_spell == SPELL_CHILLING_BREATH)
         {
             beam.name        = "chilling blast";
             beam.aux_source  = "blast of chilling breath";
             beam.short_name  = "frost";
             beam.damage.size = 65 * beam.damage.size / 100;
-            beam.ac_rule     = AC_NONE;
         }
         break;
 

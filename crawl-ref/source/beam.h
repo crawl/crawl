@@ -103,6 +103,8 @@ struct bolt
 #ifdef DEBUG_DIAGNOSTICS
     bool        quiet_debug;           // Disable any debug spam.
 #endif
+    bool        drac_breath;           // Whether to give special draconian
+                                       // effects.
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?

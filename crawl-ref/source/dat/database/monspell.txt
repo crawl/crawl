@@ -212,6 +212,13 @@ Cold Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+unseen Chilling Breath cast
+
+You hear a roar.
+%%%%
+Chilling Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
 # Drac ghost breath
 Bolt of Draining innate cast
 
@@ -238,6 +245,14 @@ unseen Fire Breath cast
 You hear a roar.
 %%%%
 Fire Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+unseen Searing Breath cast
+
+You hear a roar.
+%%%%
+Searing Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%%
