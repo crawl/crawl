@@ -55,6 +55,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -262,14 +263,6 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     zappy(ztype, power, pbolt);
 
-    // Special cases so that tracers behave properly.
-    if (pbolt.name != "orb of energy"
-        && pbolt.name != "orb of electricity"
-        && !pbolt.can_affect_wall(DNGN_TREE))
-    {
-        pbolt.name = "unimportant";
-    }
-
     pbolt.is_tracer     = true;
     pbolt.source        = you.pos();
     pbolt.source_id     = MID_PLAYER;
@@ -449,8 +442,12 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     if (z_type == ZAP_EXPLOSIVE_BOLT)
         pbolt.ench_power = power;
-    else if (z_type == ZAP_BREATHE_FROST)
-        pbolt.ac_rule = AC_NONE;
+
+    pbolt.origin_spell = zap_to_spell(z_type);
+
+    if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN)
+        pbolt.origin_spell = SPELL_SEARING_BREATH;
+
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }
@@ -506,7 +503,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
              2, BEAM_ENSNARE,
             0);
     }
-    while (beam->name == "arc of chaos"
+    while (beam->origin_spell == SPELL_CHAIN_OF_CHAOS
            && (flavour == BEAM_BANISH
                || flavour == BEAM_POLYMORPH));
 
@@ -2286,6 +2283,7 @@ void bolt_parent_init(bolt *parent, bolt *child)
 #ifdef DEBUG_DIAGNOSTICS
     child->quiet_debug    = parent->quiet_debug;
 #endif
+    child->drac_breath    = parent->drac_breath;
 }
 
 static void _imb_explosion(bolt *parent, coord_def center)
@@ -2388,6 +2386,7 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
     beam.is_explosion = true;
     beam.source       = pos;
     beam.target       = pos;
+    beam.origin_spell = SPELL_EXPLOSIVE_BOLT;
     beam.refine_for_explosion();
     beam.explode();
     parent->friend_info += beam.friend_info;
@@ -2433,10 +2432,10 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
 
 cloud_type bolt::get_cloud_type()
 {
-    if (name == "noxious blast")
+    if (origin_spell == SPELL_NOXIOUS_CLOUD)
         return CLOUD_MEPHITIC;
 
-    if (name == "blast of poison")
+    if (origin_spell == SPELL_POISONOUS_CLOUD)
         return CLOUD_POISON;
 
     if (origin_spell == SPELL_HOLY_BREATH)
@@ -2448,14 +2447,10 @@ cloud_type bolt::get_cloud_type()
     if (origin_spell == SPELL_CHAOS_BREATH)
         return CLOUD_CHAOS;
 
-    if (name == "foul vapour")
-    {
-        // death drake; swamp drakes handled earlier
-        ASSERT(flavour == BEAM_MIASMA);
+    if (origin_spell == SPELL_MIASMA_BREATH)
         return CLOUD_MIASMA;
-    }
 
-    if (name == "freezing blast")
+    if (origin_spell == SPELL_FREEZING_CLOUD)
         return CLOUD_COLD;
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
@@ -2466,8 +2461,11 @@ cloud_type bolt::get_cloud_type()
 
 int bolt::get_cloud_pow()
 {
-    if (name == "freezing blast" || name == "blast of poison")
+    if (origin_spell == SPELL_FREEZING_CLOUD
+        || origin_spell == SPELL_POISONOUS_CLOUD)
+    {
         return random_range(10, 15);
+    }
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
         return random_range(12, 20);
@@ -2477,8 +2475,12 @@ int bolt::get_cloud_pow()
 
 int bolt::get_cloud_size(bool min, bool max)
 {
-    if (name == "foul vapour" || name == "freezing blast")
+    if (origin_spell == SPELL_MEPHITIC_CLOUD
+        || origin_spell == SPELL_MIASMA_BREATH
+        || origin_spell == SPELL_FREEZING_CLOUD)
+    {
         return 10;
+    }
 
     if (min)
         return 8;
@@ -2518,7 +2520,7 @@ void bolt::affect_endpoint()
 
     if (is_tracer)
     {
-        if (name == "orb of energy")
+        if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
             _imb_explosion(this, pos());
         if (cloud != CLOUD_NONE)
         {
@@ -2583,7 +2585,7 @@ void bolt::affect_endpoint()
     }
 
     // FIXME: why doesn't this just have is_explosion set?
-    if (name == "orb of electricity")
+    if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
     {
         target = pos();
         refine_for_explosion();
@@ -2593,21 +2595,10 @@ void bolt::affect_endpoint()
     if (cloud != CLOUD_NONE)
         big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
 
-    if (name == "fiery breath" && you.species == SP_RED_DRACONIAN
-        || origin_spell == SPELL_FIRE_BREATH
-           && agent()
-           && agent()->alive()
-           && agent()->is_monster()
-           && (agent()->type == MONS_XTAHUA
-               || mons_genus(agent()->type) == MONS_DRACONIAN
-                  && draco_or_demonspawn_subspecies(agent()->as_monster())
-                       == MONS_RED_DRACONIAN))
-    {
-        if (!cell_is_solid(pos()))
-            place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
-    }
+    if (origin_spell == SPELL_SEARING_BREATH)
+        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
-    if (name == "orb of energy")
+    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
         _imb_explosion(this, pos());
 }
 
@@ -2734,11 +2725,11 @@ bool bolt::is_superhot() const
     if (!is_fiery() && flavour != BEAM_ELECTRICITY)
         return false;
 
-    return name == "bolt of fire"
-           || name == "bolt of magma"
-           || name == "fireball"
-           || name == "bolt of lightning"
-           || name.find("hellfire") != string::npos
+    return origin_spell == SPELL_BOLT_OF_FIRE
+           || origin_spell == SPELL_BOLT_OF_MAGMA
+           || origin_spell == SPELL_FIREBALL
+           || origin_spell == SPELL_LIGHTNING_BOLT
+           || flavour == BEAM_HELLFIRE
               && in_explosion_phase;
 }
 
@@ -2808,7 +2799,7 @@ void bolt::affect_place_clouds()
     // No clouds here, free to make new ones.
     const dungeon_feature_type feat = grd(p);
 
-    if (name == "blast of poison")
+    if (origin_spell == SPELL_POISONOUS_CLOUD)
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
@@ -2830,11 +2821,12 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
     }
 
-    if (name == "ball of steam")
-        place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
-
     if (flavour == BEAM_MIASMA)
         place_cloud(CLOUD_MIASMA, p, random2(5) + 2, agent());
+
+    //XXX: these use the name for a gameplay effect.
+    if (name == "ball of steam")
+        place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
 
     if (name == "poison gas")
         place_cloud(CLOUD_POISON, p, random2(4) + 3, agent());
@@ -2842,11 +2834,11 @@ void bolt::affect_place_clouds()
     if (name == "blast of choking fumes")
         place_cloud(CLOUD_MEPHITIC, p, random2(4) + 3, agent());
 
-    if (name == "blast of calcifying dust")
-        place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
-
     if (name == "trail of fire")
         place_cloud(CLOUD_FIRE, p, random2(ench_power) + ench_power, agent());
+
+    if (origin_spell == SPELL_PETRIFYING_CLOUD)
+        place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
         place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
@@ -2880,11 +2872,7 @@ void bolt::affect_place_explosion_clouds()
         }
     }
 
-    // then check for more specific explosion cloud types.
-    if (name == "ice storm")
-        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), agent());
-
-    if (name == "great blast of fire")
+    if (origin_spell == SPELL_FIRE_STORM)
     {
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
@@ -3565,7 +3553,7 @@ void bolt::affect_player_enchantment(bool resistible)
         if (aux_source.empty())
             aux_source = "by nerve-wracking pain";
 
-        if (name.find("agony") != string::npos)
+        if (origin_spell == SPELL_AGONY)
         {
             if (you.res_negative_energy()) // Agony has no effect with rN.
             {
@@ -3885,7 +3873,7 @@ void bolt::affect_player()
     int hurted = 0;
 
     // Roll the damage.
-    if (name != "flash freeze" || !you.duration[DUR_FROZEN])
+    if (!(origin_spell == SPELL_FLASH_FREEZE && you.duration[DUR_FROZEN]))
         hurted += damage.roll();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3971,7 +3959,9 @@ void bolt::affect_player()
     }
 
     // Sticky flame.
-    if (name == "sticky flame")
+    if (origin_spell == SPELL_STICKY_FLAME
+        || origin_spell == SPELL_STICKY_FLAME_RANGE
+        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
     {
         if (!player_res_sticky_flame())
         {
@@ -3981,7 +3971,7 @@ void bolt::affect_player()
     }
 
     // Manticore spikes
-    if (name == "volley of spikes" && hurted > 0)
+    if (origin_spell == SPELL_THROW_BARBS && hurted > 0)
     {
         mpr("The barbed spikes become lodged in your body.");
         if (!you.duration[DUR_BARBS])
@@ -4038,13 +4028,13 @@ void bolt::affect_player()
 
     else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
-    else if (name == "flash freeze"
+    else if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
-             || name == "great icy blast" && !is_explosion)
+             || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
         if (you.duration[DUR_FROZEN])
         {
-            if (name == "flash freeze")
+            if (origin_spell == SPELL_FLASH_FREEZE)
                 canned_msg(MSG_YOU_UNAFFECTED);
         }
         else
@@ -4053,7 +4043,7 @@ void bolt::affect_player()
             you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
         }
     }
-    else if (name == "spray of energy"
+    else if (origin_spell == SPELL_DAZZLING_SPRAY
              && !(you.holiness() == MH_UNDEAD
                   || you.holiness() == MH_NONLIVING
                   || you.holiness() == MH_PLANT))
@@ -4076,6 +4066,9 @@ int bolt::apply_AC(const actor *victim, int hurted)
         ac_rule = AC_TRIPLE; break;
     default: ;
     }
+
+    if (origin_spell == SPELL_CHILLING_BREATH)
+        ac_rule = AC_NONE;
 
     // beams don't obey GDR -> max_damage is 0
     return victim->apply_ac(hurted, 0, ac_rule);
@@ -4144,7 +4137,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     preac = postac = final = 0;
 
     const bool freeze_immune =
-        (name == "flash freeze" && mon->has_ench(ENCH_FROZEN));
+        origin_spell == SPELL_FLASH_FREEZE && mon->has_ench(ENCH_FROZEN);
 
     // [ds] Changed how tracers determined damage: the old tracer
     // model took the average damage potential, subtracted the average
@@ -4323,7 +4316,7 @@ void bolt::tracer_affect_monster(monster* mon)
     else
         tracer_nonenchantment_affect_monster(mon);
 
-    if (name == "orb of energy")
+    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
         _imb_explosion(this, pos());
 }
 
@@ -4482,12 +4475,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // Sticky flame.
-    if (name == "sticky flame" || name == "splash of liquid fire")
+    if (origin_spell == SPELL_STICKY_FLAME
+        || origin_spell == SPELL_STICKY_FLAME_RANGE
+        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
 
-        if (name == "splash of liquid fire")
+        if (origin_spell == SPELL_STICKY_FLAME_SPLASH)
             for (adjacent_iterator ai(source); ai; ++ai)
             {
                 // the breath weapon can splash to adjacent people
@@ -4518,7 +4513,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // purple draconian breath
-    if (name == "bolt of dispelling energy" || origin_spell == SPELL_QUICKSILVER_BOLT)
+    if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_monster(mon);
 
     if (dmg)
@@ -4529,15 +4524,15 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     else if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 
-    if (name == "spray of energy")
+    if (origin_spell == SPELL_DAZZLING_SPRAY)
         _dazzle_monster(mon, agent());
-    else if (name == "flash freeze"
+    else if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
-             || name == "great icy blast" && !is_explosion)
+             || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
         if (mon->has_ench(ENCH_FROZEN))
         {
-            if (name == "flash freeze")
+            if (origin_spell == SPELL_FLASH_FREEZE)
                 simple_monster_message(mon, " is unaffected.");
         }
         else
@@ -4553,7 +4548,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             simple_monster_message(mon, " is bolstered by the flame.");
     }
 
-    if (name == "volley of spikes" && dmg > 0
+    if (origin_spell == SPELL_THROW_BARBS && dmg > 0
         && !(mon->is_insubstantial() || mons_genus(mon->type) == MONS_JELLY))
     {
         mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(), random_range(5, 7) * 10));
@@ -4563,8 +4558,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
-
-    const bool drac_breath = (name == "freezing breath" || name == "chilling blast");
 
     if (knockback_actor(act))
     {
@@ -4586,8 +4579,8 @@ void bolt::beam_hits_actor(actor *act)
             }
         }
 
-        //Force lance can knockback up to two spaces
-        if (name == "lance of force" && coinflip())
+        // Force lance can knockback up to two spaces
+        if (origin_spell == SPELL_FORCE_LANCE && coinflip())
             knockback_actor(act);
 
         // Stun the monster briefly so that it doesn't look as though it wasn't
@@ -4773,17 +4766,11 @@ void bolt::affect_monster(monster* mon)
     {
         if (YOU_KILL(thrower) && final > 0)
         {
-            // It's not the player's fault if he didn't see the monster
-            // or the monster was caught in an unexpected blast of
-            // ?immolation.
-            const bool okay =
-                (!you.can_see(mon)
-                    || aux_source == "scroll of immolation" && !god_cares());
-
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
 
-            set_attack_conducts(conducts, mon, !okay);
+            // It's not the player's fault if the monster couldn't be seen
+            set_attack_conducts(conducts, mon, !you.can_see(mon));
         }
     }
 
@@ -4946,7 +4933,7 @@ void bolt::affect_monster(monster* mon)
             source_name = mon->name(DESC_A, true);
 
         int kindex = actor_to_death_source(agent());
-        if (name == "great icy blast"
+        if (origin_spell == SPELL_GLACIATE
             && !mon->is_insubstantial()
             && x_chance_in_y(3, 5))
         {
@@ -5018,11 +5005,11 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
 
     // Fire storm creates these, so we'll avoid affecting them.
-    if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+    if (origin_spell == SPELL_FIRE_STORM && mon->type == MONS_FIRE_VORTEX)
         return true;
 
     // Don't blow up blocks of ice with the spell that creates them.
-    if (name == "great icy blast" && mon->type == MONS_BLOCK_OF_ICE)
+    if (origin_spell == SPELL_GLACIATE && mon->type == MONS_BLOCK_OF_ICE)
         return true;
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
@@ -5289,7 +5276,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (simple_monster_message(mon, " convulses in agony!"))
             obvious_effect = true;
 
-        if (name.find("agony") != string::npos) // agony
+        if (origin_spell == SPELL_AGONY)
             mon->hurt(agent(), min((mon->hit_points+1)/2, mon->hit_points-1), BEAM_TORMENT_DAMAGE);
         else                    // pain
             mon->hurt(agent(), damage.roll(), flavour);
@@ -5660,7 +5647,7 @@ int bolt::range_used_on_hit() const
     else if (is_enchantment())
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
     // Hellfire stops for nobody!
-    else if (name.find("hellfire") != string::npos)
+    else if (flavour == BEAM_HELLFIRE)
         used = 0;
     // Generic explosion.
     else if (is_explosion || is_big_cloud)
@@ -5751,7 +5738,7 @@ void bolt::refine_for_explosion()
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
 
-    if (name.find("hellfire") != string::npos)
+    if (origin_spell == SPELL_HELLFIRE || origin_spell == SPELL_HELLFIRE_BURST)
     {
         seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion!";
@@ -5760,7 +5747,7 @@ void bolt::refine_for_explosion()
         flavour = BEAM_HELLFIRE;
     }
 
-    if (name == "fireball")
+    if (origin_spell == SPELL_FIREBALL)
     {
         seeMsg  = "The fireball explodes!";
         hearMsg = "You hear an explosion!";
@@ -5770,7 +5757,7 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
-    if (name == "orb of electricity")
+    if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
     {
         seeMsg  = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
@@ -5781,7 +5768,7 @@ void bolt::refine_for_explosion()
         ex_size    = 2;
     }
 
-    if (name == "great blast of fire")
+    if (origin_spell == SPELL_FIRE_STORM)
     {
         seeMsg  = "A raging storm of fire appears!";
         hearMsg = "You hear a raging storm!";
@@ -5789,13 +5776,7 @@ void bolt::refine_for_explosion()
         // Everything else is handled elsewhere...
     }
 
-    if (name == "stinking cloud")
-    {
-        seeMsg     = "The beam explodes into a vile cloud!";
-        hearMsg    = "You hear a loud \'bang\'!";
-    }
-
-    if (name == "foul vapour")
+    if (origin_spell == SPELL_MEPHITIC_CLOUD)
     {
         seeMsg     = "The ball explodes into a vile cloud!";
         hearMsg    = "You hear a loud \'bang\'!";
@@ -5803,7 +5784,7 @@ void bolt::refine_for_explosion()
             name = "stinking cloud";
     }
 
-    if (name == "ghostly fireball")
+    if (origin_spell == SPELL_GHOSTLY_FIREBALL)
     {
         seeMsg  = "The ghostly flame explodes!";
         hearMsg = "You hear the shriek of haunting fire!";
@@ -5812,7 +5793,8 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
-    if (name == "fiery explosion")
+    if (origin_spell == SPELL_EXPLOSIVE_BOLT)
+
     {
         seeMsg  = "The explosive bolt releases an explosion!";
         hearMsg = "You hear an explosion!";
@@ -6254,6 +6236,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
 #endif
+               drac_breath(false),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                is_targeting(false), aimed_at_feet(false), msg_generated(false),
@@ -6374,8 +6357,13 @@ string bolt::get_short_name() const
         return _beam_type_name(real_flavour);
     }
 
-    if (flavour == BEAM_FIRE && name == "sticky fire")
+    if (flavour == BEAM_FIRE
+        && (origin_spell == SPELL_STICKY_FLAME
+            || origin_spell == SPELL_STICKY_FLAME_RANGE
+            || origin_spell == SPELL_STICKY_FLAME_SPLASH))
+    {
         return "sticky fire";
+    }
 
     if (flavour == BEAM_ELECTRICITY && is_beam)
         return "lightning";
@@ -6498,10 +6486,10 @@ string bolt::get_source_name() const
 */
 bool bolt::can_knockback(const actor *act, int dam) const
 {
-    return((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-           || (name == "freezing breath" && (!act || act->flight_mode()))
-           || (name == "lance of force" && (dam < 0 || dam > 0))
-           || name == "flood of elemental water");
+    return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
+           || origin_spell == SPELL_CHILLING_BREATH
+              && (!act || act->flight_mode())
+           || origin_spell == SPELL_FORCE_LANCE && dam;
 }
 
 void clear_zap_info_on_exit()

@@ -2143,6 +2143,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_XTAHUA,
+      {
+       { SPELL_SEARING_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                    | MON_SPELL_NOISY },
+       END_OF_MONS_BOOK
+      }
+    },
+
     {  MST_HELL_HOUND,
       {
        { SPELL_FIRE_BREATH, 20, MON_SPELL_NATURAL | MON_SPELL_BREATH },

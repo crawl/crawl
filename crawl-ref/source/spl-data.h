@@ -15,8 +15,6 @@ struct spell_desc
     min_range, max_range, (-1 if not applicable)
     noise, effect_noise,
     target_prompt,
-    monster spell: needs tracer?,
-    monster spell: utility spell?
 }
 */
 
@@ -1944,6 +1942,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SEARING_BREATH, "Searing Breath",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+     5,
+     0,
+     6, 6,
+     5, 0,
+     NULL,
+},
+
+{
     SPELL_CHAOS_BREATH, "Chaos Breath",
      SPTYP_CONJURATION | SPTYP_RANDOM,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
@@ -1956,6 +1965,17 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_COLD_BREATH, "Cold Breath",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+     5,
+     0,
+     6, 6,
+     5, 0,
+     NULL,
+},
+
+{
+    SPELL_CHILLING_BREATH, "Chilling Breath",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
      5,

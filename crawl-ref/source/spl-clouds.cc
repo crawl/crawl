@@ -129,6 +129,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.thrower     = KILL_YOU;
     beem.is_beam     = false;
     beem.is_explosion = true;
+    beem.origin_spell = SPELL_MEPHITIC_CLOUD;
     beem.aux_source.clear();
 
     // Fire tracer.
@@ -202,6 +203,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.is_big_cloud      = true;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
+    beam.origin_spell      = spl;
     beam.affect_endpoint();
     if (beam.beam_cancelled)
         return SPRET_ABORT;

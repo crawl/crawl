@@ -103,6 +103,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.ench_power   = pow;      // used for radius
     beam.hit          = 20 + pow / 10;
     beam.damage       = calc_dice(8, 5 + pow);
+    beam.origin_spell = SPELL_FIRE_STORM;
 }
 
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
@@ -217,6 +218,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
     beam.is_beam        = false;       // since we want to stop at our target
     beam.is_explosion   = false;
     beam.is_tracer      = false;
+    beam.origin_spell   = spell_cast;
 
     if (const monster* mons = caster->as_monster())
         beam.source_name = mons->name(DESC_PLAIN, true);
@@ -3012,6 +3014,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     beam.hit               = AUTOMATIC_HIT;
     beam.source_id         = caster->mid;
     beam.hit_verb          = "engulfs";
+    beam.origin_spell      = SPELL_GLACIATE;
     beam.set_agent(caster);
 #ifdef USE_TILE
     beam.tile_beam = -1;
