@@ -433,6 +433,7 @@ void debuff_monster(monster* mon)
         ENCH_SAP_MAGIC,
         ENCH_REPEL_MISSILES,
         ENCH_DEFLECT_MISSILES,
+        ENCH_CONDENSATION_SHIELD,
     };
 
     bool dispelled = false;

@@ -1561,9 +1561,6 @@ int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
  */
 bool attack::attack_shield_blocked(bool verbose)
 {
-    if (!defender_shield && !defender->is_player())
-        return false;
-
     if (defender->incapacitated())
         return false;
 

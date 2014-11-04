@@ -558,7 +558,7 @@ private:
     bool level_up_change();
     bool pickup(item_def &item, int slot, int near);
     void equip_weapon(item_def &item, int near, bool msg = true);
-    void equip_armour(item_def &item, int near);
+    void equip_armour(item_def &item, int slot, int near);
     void equip_jewellery(item_def &item, int near);
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);

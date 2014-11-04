@@ -962,7 +962,7 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
     return armour_ac + armour_plus;
 }
 
-void monster::equip_armour(item_def &item, int near)
+void monster::equip_armour(item_def &item, int slot, int near)
 {
     if (need_message(near))
     {
@@ -970,6 +970,9 @@ void monster::equip_armour(item_def &item, int near)
                  item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
+
+    if (slot == EQ_SHIELD && has_ench(ENCH_CONDENSATION_SHIELD))
+        del_ench(ENCH_CONDENSATION_SHIELD);
 }
 
 void monster::equip_jewellery(item_def &item, int near)
@@ -1019,7 +1022,7 @@ void monster::equip(item_def &item, int slot, int near)
         break;
     }
     case OBJ_ARMOUR:
-        equip_armour(item, near);
+        equip_armour(item, slot, near);
         break;
 
     case OBJ_JEWELLERY:
@@ -2966,6 +2969,17 @@ void monster::expose_to_element(beam_type flavour, int strength,
                      apostrophise(name(DESC_THE)).c_str());
             }
         }
+        if (has_ench(ENCH_CONDENSATION_SHIELD))
+        {
+            const int amount = strength ? strength : 10;
+            if (!lose_ench_levels(get_ench(ENCH_CONDENSATION_SHIELD),
+                                  amount * BASELINE_DELAY, true)
+                && you.can_see(this))
+            {
+                mprf("The heat melts %s icy shield.",
+                     apostrophise(name(DESC_THE)).c_str());
+            }
+        }
         if (has_ench(ENCH_ICEMAIL))
             del_ench(ENCH_ICEMAIL);
         break;
@@ -3258,23 +3272,33 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield();
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD);
 }
 
 int monster::shield_bonus() const
 {
+    if (incapacitated())
+        return -100;
+
+    int sh = -100;
     const item_def *shld = const_cast<monster* >(this)->shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
-        if (incapacitated())
-            return -100;
 
         int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
-        return random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
+        sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
-    return -100;
+    if (has_ench(ENCH_CONDENSATION_SHIELD))
+    {
+        int condensation_shield = get_hit_dice() / 2;
+        if (sh < 0)
+            sh = condensation_shield;
+        else
+            sh += condensation_shield;
+    }
+    return sh;
 }
 
 int monster::shield_block_penalty() const
