@@ -137,7 +137,7 @@ static const pop_entry pop_d[] =
   { 25, 27,   12, UP,   MONS_CRYSTAL_GUARDIAN },
   { 27, 27,   18, FLAT, MONS_SHADOW_DRAGON },
   { 27, 27,    8, FLAT, MONS_IRON_DRAGON },
-  { 30, 30,   25, UP,   MONS_CAUSTIC_BEE },
+  { 30, 30,   25, UP,   MONS_CAUSTIC_SHRIKE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1095,7 +1095,7 @@ static const pop_entry pop_depths[] =
   {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },
   {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },
   {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },
-  {  3, 14,   80, FLAT, MONS_CAUSTIC_BEE },
+  {  3, 14,   80, FLAT, MONS_CAUSTIC_SHRIKE },
   {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },
   {  4, 14,   40, FLAT, MONS_STORM_DRAGON },
   {  4, 14,   40, FLAT, MONS_SHADOW_DRAGON },

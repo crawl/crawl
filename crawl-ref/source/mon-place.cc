@@ -2115,13 +2115,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_CAUSTIC_BEE:
+    case MONS_CAUSTIC_SHRIKE:
         switch (you.where_are_you)
         {
             case BRANCH_DUNGEON:
                 break;
             default:
-                band = BAND_CAUSTIC_BEE;
+                band = BAND_CAUSTIC_SHRIKE;
                 band_size = 2 + random2(6);
                 break;
         }
@@ -2966,8 +2966,8 @@ static monster_type _band_member(band_type band, int which)
     case BAND_KILLER_BEES:
         return MONS_KILLER_BEE;
 
-    case BAND_CAUSTIC_BEE:
-        return MONS_CAUSTIC_BEE;
+    case BAND_CAUSTIC_SHRIKE:
+        return MONS_CAUSTIC_SHRIKE;
 
     case BAND_FLYING_SKULLS:
         return MONS_FLYING_SKULL;

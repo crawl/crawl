@@ -105,7 +105,7 @@ yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
-caustic_bee CORPSE_CAUSTIC_BEE
+caustic_shrike CORPSE_CAUSTIC_SHRIKE
 
 ## Aquatics (';')
 %sdir mon/aquatic
