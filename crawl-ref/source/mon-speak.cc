@@ -77,8 +77,7 @@ static string __try_exact_string(const vector<string> &prefixes,
                 continue;
             religion = true;
         }
-        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES
-                 || prefixes[i] == "Dungeon")
+        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
         {
             if (ignore_branch)
                 continue;
@@ -537,7 +536,7 @@ bool mons_speaks(monster* mons)
 
     // Include our current branch, too. It can make speech vary by branch for
     // uniques and other monsters! Specifically, Donald.
-    prefixes.push_back(string(branches[you.where_are_you].shortname));
+    prefixes.push_back(string(branches[you.where_are_you].abbrevname));
 
 #ifdef DEBUG_MONSPEAK
     {
