@@ -1077,7 +1077,7 @@ static const char* misc_type_name(int type, bool known)
 
 static const char* book_secondary_string(int s)
 {
-    switch (s)
+    switch (s % 12)
     {
     case 0:  return "";
     case 1:  return "chunky ";
@@ -1097,7 +1097,7 @@ static const char* book_secondary_string(int s)
 
 static const char* book_primary_string(int p)
 {
-    switch (p)
+    switch (p % 7)
     {
     case 0:  return "paperback ";
     case 1:  return "hardcover ";
