@@ -551,15 +551,15 @@ struct item_def
         int special;        ///< special stuff
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;       ///< rate at which a rod recharges; +slay
-        int appearance;     ///< seed for appearance of un-ID'd items, by
-                            /// subtype. book, jewellery, scroll, staff, wand,
-                            /// & potions use this
+        int subtype_rnd;    ///< appearance of un-ID'd items, by subtype.
+                            /// jewellery, scroll, staff, wand, potions
+                            // see comment in item_colour()
         int brand;          ///< weapon and armour brands; also marks artefacts
         int freshness;      ///< remaining time until a corpse rots
     };
-    uint8_t        rnd;            ///< random number, used for tile choice
-                                    // and randart colours
-                                    // 0 = uninitialized
+    uint8_t        rnd;            ///< random number, used for tile choice,
+                                   /// randart colours, and other per-item
+                                   /// random cosmetics. 0 = uninitialized
     short          quantity;       ///< number of items
     iflags_t       flags;          ///< item status flags
 

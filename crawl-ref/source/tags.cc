@@ -4023,13 +4023,13 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
     {
         if (item.base_type == OBJ_POTIONS)
-            item.appearance = item.plus; // was consum_desc
+            item.subtype_rnd = item.plus; // was consum_desc
         else if (item.base_type == OBJ_SCROLLS)
         {
             // faithfully preserve weirdness
-            item.appearance = item.appearance
-                              | (item.plus << 8) // was consum_desc
-                              | (OBJ_SCROLLS << 16);
+            item.subtype_rnd = item.subtype_rnd
+                               | (item.plus << 8) // was consum_desc
+                               | (OBJ_SCROLLS << 16);
         }
     }
 #endif

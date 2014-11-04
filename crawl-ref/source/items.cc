@@ -3475,7 +3475,7 @@ colour_t item_def::potion_colour() const
         MAGENTA, BLUE
     };
     COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
-    return potion_colours[appearance % NDSC_POT_PRI];
+    return potion_colours[subtype_rnd % NDSC_POT_PRI];
 }
 
 /**
@@ -3517,7 +3517,7 @@ colour_t item_def::ring_colour() const
 
     // TODO: associate colours directly with names
     // (use an array of [name, colour] tuples/structs)
-    switch (appearance % NDSC_JEWEL_PRI)
+    switch (subtype_rnd % NDSC_JEWEL_PRI)
     {
         case 1:                 // "silver ring"
         case 8:                 // "granite ring"
@@ -3569,7 +3569,7 @@ colour_t item_def::amulet_colour() const
 
     // TODO: associate colours directly with names
     // (use an array of [name, colour] tuples/structs)
-    switch (appearance % NDSC_JEWEL_PRI)
+    switch (subtype_rnd % NDSC_JEWEL_PRI)
     {
         case 0:             // "zirconium amulet"
         case 9:             // "ivory amulet"
@@ -4587,7 +4587,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_WANDS;
-        ii.appearance = item.appearance;
+        ii.subtype_rnd = item.subtype_rnd;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.charges = item.charges;
         ii.used_count = item.used_count; // num zapped/recharged or empty
@@ -4597,7 +4597,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_POTIONS;
-        ii.appearance = item.appearance;
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_FOOD:
         ii.sub_type = item.sub_type;
@@ -4617,7 +4617,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_SCROLLS;
-        ii.appearance = item.appearance;    // name seed
+        ii.subtype_rnd = item.subtype_rnd;    // name seed
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
@@ -4626,14 +4626,14 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
-        ii.appearance = item.appearance;
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:
         if (item_type_known(item) || !item_is_spellbook(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_BOOKS;
-        ii.appearance = item.appearance;
+        ii.subtype_rnd = item.subtype_rnd;
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
             ii.skill = item.skill; // manual skill
         break;
@@ -4653,7 +4653,7 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
-        ii.appearance = item.appearance;
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_MISCELLANY:
         if (item_type_known(item))
