@@ -356,7 +356,7 @@ static int _player_ghost_base_movement_speed()
     return speed;
 }
 
-void ghost_demon::init_player_ghost()
+void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     name   = you.your_name;
     max_hp = ((get_real_hp(false) >= MAX_GHOST_HP)
@@ -460,7 +460,7 @@ void ghost_demon::init_player_ghost()
 
     fly = FL_LEVITATE;
 
-    add_spells();
+    add_spells(actual_ghost);
 }
 
 static colour_t _ugly_thing_assign_colour(colour_t force_colour,
@@ -733,7 +733,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast.  Death is a traumatic experience, so ghosts only
 // remember a few spells.
-void ghost_demon::add_spells()
+void ghost_demon::add_spells(bool actual_ghost)
 {
     spells.clear();
     mon_spell_slot slot;
@@ -757,7 +757,9 @@ void ghost_demon::add_spells()
 
     if (species_genus(species) == GENPC_DRACONIAN
         && species != SP_BASE_DRACONIAN
-        && species != SP_GREY_DRACONIAN)
+        && species != SP_GREY_DRACONIAN
+        // Don't give pillusions extra breath
+        && actual_ghost)
     {
         slot.spell = SPELL_BOLT_OF_DRAINING;
         slot.freq  = 33; // Not too common
