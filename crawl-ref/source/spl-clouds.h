@@ -5,7 +5,8 @@
 
 struct bolt;
 
-spret_type conjure_flame(int pow, const coord_def& where, bool fail);
+spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
+                         bool fail);
 spret_type stinking_cloud(int pow, bolt &beam, bool fail);
 
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,

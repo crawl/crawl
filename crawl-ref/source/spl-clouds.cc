@@ -29,21 +29,26 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-spret_type conjure_flame(int pow, const coord_def& where, bool fail)
+spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
+                         bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
-    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
-                                                      pow))
+    if (distance2(where, agent->pos()) > dist_range(
+            spell_range(SPELL_CONJURE_FLAME, pow))
         || !in_bounds(where))
     {
-        mpr("That's too far away.");
+        if (agent->is_player())
+            mpr("That's too far away.");
         return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
     {
-        const char *feat = feat_type_name(grd(where));
-        mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        if (agent->is_player())
+        {
+            const char *feat = feat_type_name(grd(where));
+            mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        }
         return SPRET_ABORT;
     }
 
@@ -51,45 +56,59 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
     {
-        mpr("There's already a cloud there!");
+        if (agent->is_player())
+            mpr("There's already a cloud there!");
         return SPRET_ABORT;
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monster* mons = monster_at(where);
-    if (mons)
+    actor* victim = actor_at(where);
+    if (victim)
     {
-        if (you.can_see(mons))
+        if (agent->can_see(victim))
         {
-            mpr("You can't place the cloud on a creature.");
+            if (agent->is_player())
+                mpr("You can't place the cloud on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
         // FIXME: maybe should do _paranoid_option_disable() here?
-        mpr("You see a ghostly outline there, and the spell fizzles.");
+        if (agent->is_player())
+            mpr("You see a ghostly outline there, and the spell fizzles.");
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
     fail_check();
 
-    did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
+    if (agent->is_player())
+        did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
 
     if (cloud != EMPTY_CLOUD)
     {
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
-        mpr("The fire roars with new energy!");
+        if (you.see_cell(where))
+            mpr("The fire roars with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         env.cloud[cloud].decay += extra_dur * 5;
-        env.cloud[cloud].set_whose(KC_YOU);
+        env.cloud[cloud].source = agent->mid;
+        if (agent->is_player())
+            env.cloud[cloud].set_whose(KC_YOU);
+        else
+            env.cloud[cloud].set_killer(KILL_MON_MISSILE);
     }
     else
     {
         const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, &you);
-        mpr("The fire roars!");
+        place_cloud(CLOUD_FIRE, where, durat, agent);
+        if (you.see_cell(where))
+        {
+            if (agent->is_player())
+                mpr("The fire roars!");
+            else
+                mpr("A cloud of flames roars to life!");
+        }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
 
