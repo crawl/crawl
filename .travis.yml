@@ -29,4 +29,3 @@ notifications:
         channels: "chat.freenode.net##crawl-dev"
         on_success: change
         use_notice: true
-        skip_join: true
