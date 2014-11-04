@@ -4001,12 +4001,13 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_RING_PLUSSES)
-        if (item.base_type == OBJ_JEWELLERY && item.plus > 9)
+        if (item.base_type == OBJ_JEWELLERY && item.plus > 6)
             item.plus = 6;
 
     if (th.getMinorVersion() < TAG_MINOR_BLESSED_WPNS
         && item.base_type == OBJ_WEAPONS)
     {
+        const int initial_type = item.sub_type;
         switch (item.sub_type)
         {
         case WPN_BLESSED_FALCHION:     item.sub_type = WPN_FALCHION; break;
@@ -4017,7 +4018,8 @@ void unmarshallItem(reader &th, item_def &item)
         case WPN_BLESSED_TRIPLE_SWORD: item.sub_type = WPN_TRIPLE_SWORD; break;
         default:                       break;
         }
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+        if (initial_type != item.sub_type)
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     }
 
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
