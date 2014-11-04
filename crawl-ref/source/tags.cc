@@ -3153,11 +3153,18 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
         {
             if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
-                you.item_description[i][j] = unmarshallByte(th);
+                you.item_description[i][j] = unmarshallUByte(th);
             else
 #endif
                 you.item_description[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
+            // We briefly had a problem where we sign-extended the old
+            // 8-bit item_descriptions on conversion.  Fix those up.
+            if (th.getMinorVersion() < TAG_MINOR_NEG_IDESC
+                && (int)you.item_description[i][j] < 0)
+            {
+                you.item_description[i][j] &= 0xff;
+            }
         }
 #endif
     for (i = 0; i < count; ++i)
