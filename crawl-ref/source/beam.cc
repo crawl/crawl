@@ -2286,8 +2286,13 @@ void bolt_parent_init(bolt *parent, bolt *child)
     child->drac_breath    = parent->drac_breath;
 }
 
-static void _imb_explosion(bolt *parent, coord_def center)
+static void _maybe_imb_explosion(bolt *parent, coord_def center)
 {
+    if (parent->origin_spell != SPELL_ISKENDERUNS_MYSTIC_BLAST
+        || parent->in_explosion_phase)
+    {
+        return;
+    }
     const int dist = grid_distance(parent->source, center);
     if (dist == 0 || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
         return;
@@ -2302,6 +2307,8 @@ static void _imb_explosion(bolt *parent, coord_def center)
     beam.obvious_effect = true;
     beam.is_beam        = false;
     beam.is_explosion   = false;
+    // So as not to recur infinitely
+    beam.origin_spell = SPELL_NO_SPELL;
     beam.passed_target  = true; // The centre was the target.
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
@@ -2520,8 +2527,7 @@ void bolt::affect_endpoint()
 
     if (is_tracer)
     {
-        if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
-            _imb_explosion(this, pos());
+        _maybe_imb_explosion(this, pos());
         if (cloud != CLOUD_NONE)
         {
             targetter_cloud tgt(agent(), range, get_cloud_size(true),
@@ -2598,8 +2604,7 @@ void bolt::affect_endpoint()
     if (origin_spell == SPELL_SEARING_BREATH)
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
-    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
-        _imb_explosion(this, pos());
+    _maybe_imb_explosion(this, pos());
 }
 
 bool bolt::stop_at_target() const
@@ -4316,8 +4321,7 @@ void bolt::tracer_affect_monster(monster* mon)
     else
         tracer_nonenchantment_affect_monster(mon);
 
-    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
-        _imb_explosion(this, pos());
+    _maybe_imb_explosion(this, pos());
 }
 
 void bolt::enchantment_affect_monster(monster* mon)
