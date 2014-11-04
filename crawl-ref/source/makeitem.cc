@@ -2192,7 +2192,11 @@ int items(bool allow_uniques,
     item.link = NON_ITEM;
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERT(mitm[p].is_valid());
+    ASSERTM(mitm[p].is_valid(),
+            "idx: %d, qty: %hd, base: %d, sub: %d, spe: %d, col: %d, rnd: %d",
+            item.index(), item.quantity,
+            (int)item.base_type, (int)item.sub_type, item.special,
+            (int)item.get_colour(), (int)item.rnd);
     return p;
 }
 
