@@ -403,7 +403,7 @@ static int _get_random_coagulated_blood_desc()
         potion_description_colour_type colour = (coinflip() ? PDC_RED
                                                             : PDC_BROWN);
 
-        int desc = PDESCQ(qualifier, colour);
+        uint32_t desc = PDESCQ(qualifier, colour);
 
         if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
             return desc;
