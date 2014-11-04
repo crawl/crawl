@@ -232,7 +232,7 @@ enum ability_type
 #endif
     ABIL_MAKE_ICE_STATUE,
     ABIL_MAKE_OCS,
-    ABIL_MAKE_SILVER_STATUE,
+    ABIL_MAKE_OBSIDIAN_STATUE,
     ABIL_MAKE_CURSE_SKULL,
     ABIL_MAKE_TELEPORT,
     ABIL_MAKE_ARROW_TRAP,
@@ -2771,7 +2771,7 @@ enum monster_type                      // menv[].type
 
     // Statuary
     MONS_ORANGE_STATUE,
-    MONS_SILVER_STATUE,
+    MONS_OBSIDIAN_STATUE,
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,

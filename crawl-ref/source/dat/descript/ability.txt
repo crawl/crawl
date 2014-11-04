@@ -900,7 +900,7 @@ Make lightning spire ability
 Construct a lightning spire with the ability to throw electricity at the
 targeted location.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Construct a statue with the ability to summon friendly demons at the targeted
 location.

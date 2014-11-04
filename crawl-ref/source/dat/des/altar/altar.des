@@ -181,7 +181,7 @@ DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
 SUBST: F = G
 : end
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / obsidian statue / ice statue
 : interest_check(_G)
 KMASK: _>C = opaque
 MAP

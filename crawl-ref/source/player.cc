@@ -3401,7 +3401,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             if (you.experience_level == 19)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of lightning spires.");
             if (you.experience_level == 20)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of silver statues.");
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of obsidian statues.");
             // gold and bazaars gained together
             if (you.experience_level == 21)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of bazaars.");

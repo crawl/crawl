@@ -30,7 +30,7 @@
         e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
                "storm dragon w:5 / shock serpent w:5 / " ..
                "blizzard demon w:15 / salamander firebrand w:15")
-        e.mons("silver statue / ice statue / w:1 orange crystal statue")
+        e.mons("obsidian statue / ice statue / w:1 orange crystal statue")
         e.mons("glowing shapeshifter")
         e.mons("ugly thing / very ugly thing w:5")
         e.mons("ball lightning")

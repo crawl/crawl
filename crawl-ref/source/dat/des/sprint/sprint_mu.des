@@ -797,7 +797,7 @@ TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
 MONS: yaktaur / yaktaur captain, giant eyeball, orc priest / \
  orc high priest hd:5 hp:70
 MONS: spriggan defender hd:5 hp:55 ; dagger
-MONS: silver statue / orange crystal statue
+MONS: obsidian statue / orange crystal statue
 MONS: crystal guardian hd:10 hp:45, skeletal warrior
 KMONS: 2 = giant eyeball
 KITEM: 2 = q:10 scroll of identify ident:all
@@ -918,7 +918,7 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
       titan / fire giant / frost giant
 MONS: skeletal warrior
-KMONS: 8 = silver statue
+KMONS: 8 = obsidian statue
 KMONS: f = butterfly
 KMONS: U = Norris ; morningstar ego:vorpal . large shield ego:reflection / \
            Frederick ; trident ego:freezing . large shield ego:reflection

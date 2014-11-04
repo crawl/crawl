@@ -518,7 +518,7 @@ Make lightning spire ability
 
 해당 지역에 전기를 발사하는 능력을 가진 번개탑을 설치한다.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 해당 지역에 동료 악마를 소환하는 석상을 설치한다.
 %%%%

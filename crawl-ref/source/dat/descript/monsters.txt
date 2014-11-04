@@ -2166,11 +2166,10 @@ The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
 %%%%
-silver statue
+obsidian statue
 
-A beautiful statue of an unknown creature, glistening with a silvery hue. Its
-eyes glow with an otherworldly, malignant radiance. If approached, it may call
-forth demons to defend itself.
+A beautiful statue of an unknown creature, jet-black like a tear in reality.
+Its eyes glow with an otherworldly, malignant radiance.
 %%%%
 simulacrum
 

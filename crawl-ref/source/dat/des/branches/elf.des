@@ -765,7 +765,7 @@ DEPTH: Elf:2-
 MONS:  deep elf knight / deep elf priest
 MONS:  deep elf high priest
 SUBST: F = G:6 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / obsidian statue / ice statue
 SUBST: ? = .1$%*
 MAP
 xxxxxxxxxxx

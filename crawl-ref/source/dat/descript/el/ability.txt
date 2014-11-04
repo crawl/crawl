@@ -474,7 +474,7 @@ Make lightning spire ability
 
 Κατασκεύασε έναν ηλεκτρικό πυλώνα με την ικανότητα να εκτοξεύει ηλεκτρισμό.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Κατασκεύασε ένα άγαλμα με την ικανότητα να καλεί φιλικούς δαίμονες.
 %%%%

@@ -681,7 +681,7 @@ Make lightning spire ability
 Construit une lance de foudre , qui peut tirer des éclairs, sur la position
 ciblée.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Construit une statue, avec la capacité d'invoquer des démons familiers, sur la
 position ciblée.

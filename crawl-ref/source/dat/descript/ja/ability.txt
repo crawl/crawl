@@ -522,7 +522,7 @@ Make lightning spire ability
 
 指定した位置に電撃を放射する稲光の尖塔を建築する。
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 友好的な悪魔を召喚する能力を持った像を指定した位置に建てる。
 %%%%

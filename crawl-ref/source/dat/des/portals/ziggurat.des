@@ -337,7 +337,7 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: curse skull / ice statue / orange crystal statue / silver statue
+MONS: curse skull / ice statue / orange crystal statue / obsidian statue
 MAP
 1
 ENDMAP

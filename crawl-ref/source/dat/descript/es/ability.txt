@@ -534,7 +534,7 @@ Make lightning spire ability
 Construyes una espiral de rayos con la habilidad de lanzar electricidad en la
 posición señalada.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Construyes una estatua con la habilidad de convocar demonios amistosos en la
 posición señalada.

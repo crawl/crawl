@@ -319,7 +319,7 @@ ENDMAP
 
 NAME:   sprint2_obstacle_3
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-KMONS:  a = silver statue
+KMONS:  a = obsidian statue
 SHUFFLE:  l.
 MARKER: a = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 3, \

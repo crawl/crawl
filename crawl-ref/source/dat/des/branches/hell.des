@@ -192,7 +192,7 @@ MONS:   ice devil / sun demon / soul eater / w:30 nothing
 MONS:   shadow demon / blizzard demon / hell beast
 ITEM:   skeleton
 KFEAT:  b = .
-KMONS:  A = silver statue
+KMONS:  A = obsidian statue
 MARKER: A = lua:fog_machine { cloud_type = "grey smoke", \
             pow_min = 20, pow_max = 30, delay = 50, \
             size = 1, walk_dist = 3, start_clouds = 1 }
