@@ -1510,7 +1510,7 @@ void objstat_record_monster(monster *mons)
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
     // Record chunks/nutrition if monster leaves a corpse.
-    if (chunk_effect != CE_NOCORPSE && mons_weight(mons->type))
+    if (chunk_effect != CE_NOCORPSE && mons_class_can_leave_corpse(mons->type))
     {
         // copied from turn_corpse_into_chunks()
         double chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),

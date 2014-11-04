@@ -1417,7 +1417,7 @@ static monster_type _choose_random_monster_corpse()
                                         random2(NUM_MONSTERS)));
         if (mons_class_flag(spc, M_NO_POLY_TO | M_CANT_SPAWN))
             continue;
-        if (mons_weight(spc) > 0)        // drops a corpse
+        if (mons_class_can_leave_corpse(spc))
             return spc;
     }
 
