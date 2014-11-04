@@ -1716,8 +1716,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "potion of " << potion_type_name(item_typ);
         else
         {
-            const int pqual   = PQUAL(appearance);
-            const int pcolour = PCOLOUR(appearance);
+            const int pqual   = PQUAL(subtype_rnd);
+            const int pcolour = PCOLOUR(subtype_rnd);
 
             static const char *potion_qualifiers[] =
             {
@@ -1794,7 +1794,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-            buff << "labeled " << make_name(appearance, true);
+            buff << "labeled " << make_name(subtype_rnd, true);
         break;
 
     case OBJ_JEWELLERY:
@@ -1901,8 +1901,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
         {
-            buff << book_secondary_string(special / NDSC_BOOK_PRI)
-                 << book_primary_string(special % NDSC_BOOK_PRI)
+            buff << book_secondary_string(rnd / NDSC_BOOK_PRI)
+                 << book_primary_string(rnd % NDSC_BOOK_PRI)
                  << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else

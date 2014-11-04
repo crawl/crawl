@@ -85,23 +85,23 @@ void item_colour(item_def &item)
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        item.appearance = you.item_description[IDESC_WANDS][item.sub_type];
+        item.subtype_rnd = you.item_description[IDESC_WANDS][item.sub_type];
         break;
 
     case OBJ_POTIONS:
-        item.appearance = you.item_description[IDESC_POTIONS][item.sub_type];
+        item.subtype_rnd = you.item_description[IDESC_POTIONS][item.sub_type];
         break;
 
     case OBJ_JEWELLERY:
-        item.appearance = you.item_description[IDESC_RINGS][item.sub_type];
+        item.subtype_rnd = you.item_description[IDESC_RINGS][item.sub_type];
         break;
 
     case OBJ_SCROLLS:
-        item.appearance = you.item_description[IDESC_SCROLLS][item.sub_type];
+        item.subtype_rnd = you.item_description[IDESC_SCROLLS][item.sub_type];
         break;
 
     case OBJ_STAVES:
-        item.appearance = you.item_description[IDESC_STAVES][item.sub_type];
+        item.subtype_rnd = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 
     default:
