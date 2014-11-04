@@ -1021,6 +1021,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
+       { SPELL_CONDENSATION_SHIELD, 10, MON_SPELL_WIZARD },
        END_OF_MONS_BOOK
       }
     },

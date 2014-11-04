@@ -1022,6 +1022,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_CONDENSATION_SHIELD:
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s icy shield evaporates.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+        break;
+
     default:
         break;
     }
@@ -2378,7 +2386,7 @@ static const char *enchant_names[] =
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
-    "deflect missiles", "negative_vuln", "buggy",
+    "deflect missiles", "negative_vuln", "condensation_shield", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

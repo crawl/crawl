@@ -1839,6 +1839,7 @@ enum enchant_type
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
     ENCH_NEGATIVE_VULN,
+    ENCH_CONDENSATION_SHIELD,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
