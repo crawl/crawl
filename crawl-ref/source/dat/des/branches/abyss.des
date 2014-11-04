@@ -1808,11 +1808,11 @@ XxxxxxxxX
 XXXxxxXXX
 ENDMAP
 
-# Orange crystal and silver statue are very rare here...
+# Orange crystal and obsidian statue are very rare here...
 # I want most characters to be able to actually use this exit
 NAME:  evilmike_abyss_exit_13
 TAGS:  abyss_exit unrand allow_dup
-KMONS: O = w:1 orange crystal statue / w:2 silver statue / w: 20 ice statue / w: 15 oklob plant
+KMONS: O = w:1 orange crystal statue / w:2 obsidian statue / w: 20 ice statue / w: 15 oklob plant
 : init_abyss_exit(_G, "O")
 MAP
 O

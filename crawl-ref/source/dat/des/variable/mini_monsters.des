@@ -2523,7 +2523,7 @@ NAME:   hangedman_devilish_allure
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths
 WEIGHT: 5
-MONS:   silver statue, lesser demon, common demon
+MONS:   obsidian statue, lesser demon, common demon
 MONS:   efreet / large abomination / rakshasa
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
@@ -2554,7 +2554,7 @@ ENDMAP
 
 NAME:  minmay_statue_bubble
 DEPTH: D:9-
-MONS:  silver statue / orange crystal statue / ice statue w:5
+MONS:  obsidian statue / orange crystal statue / ice statue w:5
 SUBST: ? = bbb.
 MAP
  .......
@@ -2570,7 +2570,7 @@ ENDMAP
 
 NAME:  minmay_protected_statue
 DEPTH: D:9-, Depths, !Depths:$
-MONS:  silver statue / orange crystal statue, plant, bush
+MONS:  obsidian statue / orange crystal statue, plant, bush
 SUBST: n : n:20 G 2:1 3:1
 KFEAT: n = iron_grate
 MAP
@@ -2585,7 +2585,7 @@ ENDMAP
 
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-
-MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
+MONS:   orange crystal statue w:30 / obsidian statue / ice statue w:5
 MAP
       .....
     ...b=b...
@@ -2688,7 +2688,7 @@ ENDMAP
 
 NAME:   statue_in_the_mist_lemuel
 TAGS:   extra no_exits
-MONS:   orange crystal statue / silver statue / ice statue
+MONS:   orange crystal statue / obsidian statue / ice statue
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
@@ -2702,7 +2702,7 @@ ENDMAP
 NAME:    david_greed
 DEPTH:   D:10-, Elf
 WEIGHT:  4
-MONS:    silver statue / orange crystal statue / ice statue
+MONS:    obsidian statue / orange crystal statue / ice statue
 ITEM:    nothing / any good_item
 SHUFFLE: d|
 MAP
@@ -2745,7 +2745,7 @@ ENDMAP
 
 NAME:  minmay_more_statues
 DEPTH: D:12-
-MONS:  ice statue w:5 / silver statue / orange crystal statue
+MONS:  ice statue w:5 / obsidian statue / orange crystal statue
 MAP
 cccbcccccbcccccbccc
 c.....c%*|*%c.....c
@@ -2827,15 +2827,15 @@ DEPTH:    D:10-, Lair, Snake, Shoals, Depths
 WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
 WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
 : if you.branch() == "Snake" or you.branch() == "Shoals" then
-MONS:     oklob plant / silver statue / orange crystal statue / ice statue /\
+MONS:     oklob plant / obsidian statue / orange crystal statue / ice statue /\
           w:1 Roxanne
 : elseif you.branch() == "Dungeon" or you.branch() == "Lair" then
 MONS:     oklob plant, electric eel
 SHUFFLE:  1" / 22
 : elseif you.branch() == "Vaults" then
-MONS:     silver statue / orange crystal statue / ice statue / w:1 Roxanne
+MONS:     obsidian statue / orange crystal statue / ice statue / w:1 Roxanne
 : elseif you.branch() == "Depths" then
-MONS:     silver statue / orange crystal statue / ice statue / w:3 Roxanne
+MONS:     obsidian statue / orange crystal statue / ice statue / w:3 Roxanne
 SUBST:    " = 1
 : end
 #
@@ -5888,7 +5888,7 @@ NAME:   minmay_guarded_unrand_mage
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Depths
 WEIGHT: 3
-MONS:   wizard, orange crystal statue / silver statue
+MONS:   wizard, orange crystal statue / obsidian statue
 KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage no_pickup
 KPROP:  32' = no_tele_into
@@ -6000,7 +6000,7 @@ NAME:   grunt_guarded_unrand_obsidian_axe
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:$, Depths
 WEIGHT: 3
-MONS:   silver statue
+MONS:   obsidian statue
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
@@ -6126,7 +6126,7 @@ NAME: minivault_8
 DEPTH: D:9-, Elf:1-2
 MONS: patrolling molten gargoyle
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / obsidian statue / ice statue
 MAP
 x.x.x.x.x.x.
 .c.c.c.c.c.x
@@ -6249,7 +6249,7 @@ DEPTH: D:9-, Elf, Abyss
 SHUFFLE: AB, CD, EH/FG
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / obsidian statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
@@ -6268,7 +6268,7 @@ ENDMAP
 # Lava pond
 NAME:  minivault_15
 TAGS:  extra
-KMONS: 1 = silver statue / ice statue
+KMONS: 1 = obsidian statue / ice statue
 KFEAT: 1 = <
 MAP
 .........
@@ -6286,7 +6286,7 @@ NAME:   minivault_16
 TAGS:   allow_dup extra luniq
 WEIGHT: 40
 # as this replaces the former statue only minivaults
-MONS:   orange crystal statue / silver statue / ice statue
+MONS:   orange crystal statue / obsidian statue / ice statue
 SUBST:  G = G111
 MAP
 ...........

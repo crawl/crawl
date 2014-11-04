@@ -921,7 +921,7 @@ bool invalid_monster_index(int i)
 bool mons_is_statue(monster_type mc)
 {
     return mc == MONS_ORANGE_STATUE
-           || mc == MONS_SILVER_STATUE
+           || mc == MONS_OBSIDIAN_STATUE
            || mc == MONS_ICE_STATUE
            || mc == MONS_ROXANNE;
 }

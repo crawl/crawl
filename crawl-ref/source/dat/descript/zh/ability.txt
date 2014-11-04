@@ -488,7 +488,7 @@ Make lightning spire ability
 
 在目标地点建造一座会发射电流束的闪电塔。
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 在目标地点建造一尊会召唤恶魔来协助战斗的雕像。
 %%%%

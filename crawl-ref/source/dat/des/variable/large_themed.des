@@ -1284,14 +1284,14 @@ MONS:    oklob plant
 MONS:    jelly
 MONS:    trapdoor spider / wolf spider
 MONS:    guardian serpent
-MONS:    silver statue
+MONS:    obsidian statue
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
 KFEAT:   = = closed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .
-# With 25% chance, have lava and silver statue instead of water and oklobs:
+# With 25% chance, have lava and obsidian statue instead of water and oklobs:
 SUBST:   w : Ww.
 SUBST:   w = W.
 SHUFFLE: wU3 / wU3 / wU3 / l7L
@@ -1770,7 +1770,7 @@ DEPTH:   D:13-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
 MONS:    big kobold, patrolling kobold demonologist, kobold, plant
-MONS:    lesser demon, silver statue
+MONS:    lesser demon, obsidian statue
 : dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
 KMONS:   g = bush
 SHUFFLE: !'

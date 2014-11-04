@@ -90,7 +90,7 @@ NAME:    vault_1
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
 MONS:    shapeshifter, shapeshifter, glowing shapeshifter
-MONS:    silver statue, nothing
+MONS:    obsidian statue, nothing
 SUBST:   E=E.
 SHUFFLE: abcd, $*, |ABCDE, nm, 45
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0

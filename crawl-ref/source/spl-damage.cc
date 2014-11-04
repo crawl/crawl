@@ -1085,7 +1085,7 @@ static int _shatter_mon_dice(const monster *mon)
     case MONS_IRON_GOLEM:
     case MONS_WAR_GARGOYLE:
     case MONS_CRYSTAL_GUARDIAN:
-    case MONS_SILVER_STATUE:
+    case MONS_OBSIDIAN_STATUE:
     case MONS_ORANGE_STATUE:
     case MONS_ROXANNE:
         return 6;
@@ -2114,16 +2114,16 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.damage.num = 3;
             break;
 
-        case MONS_SILVER_STATUE:
+        case MONS_OBSIDIAN_STATUE:
         case MONS_ORANGE_STATUE:
         case MONS_CRYSTAL_GUARDIAN:
         case MONS_ROXANNE:
             beam.ex_size    = 2;
             beam.damage.num = 4;
-            if (mon->type == MONS_SILVER_STATUE)
+            if (mon->type == MONS_OBSIDIAN_STATUE)
             {
-                beam.name       = "blast of silver fragments";
-                beam.colour     = WHITE;
+                beam.name       = "blast of obsidian shards";
+                beam.colour     = DARKGREY;
             }
             else if (mon->type == MONS_ORANGE_STATUE)
             {

@@ -11,7 +11,7 @@ function tomb_1_mummy_priest_set(e, chamber)
   e.mons("mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30")
   if chamber then
     e.mons("greater mummy / ancient lich w:1 / nothing w:11")
-    e.mons("silver statue / orange crystal statue / ice statue")
+    e.mons("obsidian statue / orange crystal statue / ice statue")
   else
     e.mons("greater mummy")
   end
@@ -376,7 +376,7 @@ SUBST:    ' = 2 .:100
 : tomb_guardian_set(_G, true)
 MONS:     greater mummy / nothing
 MONS:     sphinx / nothing
-MONS:     silver statue / orange crystal statue / ice statue
+MONS:     obsidian statue / orange crystal statue / ice statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
 MAP

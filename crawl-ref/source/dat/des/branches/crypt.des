@@ -1180,7 +1180,7 @@ NAME: cheibrodos_crypt_eye_of_stone
 DEPTH: Crypt, !Crypt:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-MONS: giant eyeball / curse skull, silver statue / orange crystal statue
+MONS: giant eyeball / curse skull, obsidian statue / orange crystal statue
 MONS: ancient champion, skeletal warrior
 SHUFFLE: AB / CD
 SUBST: A = G, B = 1, C = ., D = 2
@@ -1455,7 +1455,7 @@ MONS:   flying skull / skeletal warrior / w:40 nothing
 MONS:   ancient champion
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:99 F:1
-KMONS:  F = orange crystal statue / silver statue / ice statue
+KMONS:  F = orange crystal statue / obsidian statue / ice statue
 {{
 lua_marker("|",
            Triggerable.synchronized_markers(

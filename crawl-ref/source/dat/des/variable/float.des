@@ -1221,7 +1221,7 @@ MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 SUBST:   F = G:99 F:1
-KMONS:   F = orange crystal statue / silver statue / ice statue
+KMONS:   F = orange crystal statue / obsidian statue / ice statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
@@ -3231,7 +3231,7 @@ ENDMAP
 NAME:    minmay_separated_statues
 DEPTH:   D:8-
 ORIENT:  float
-MONS:    silver statue, orange crystal statue, ice statue
+MONS:    obsidian statue, orange crystal statue, ice statue
 SHUFFLE: 123
 MAP
      ......
@@ -3252,7 +3252,7 @@ ENDMAP
 NAME:    minmay_statue_hallways
 DEPTH:   D:8-
 ORIENT:  float
-MONS:    orange crystal statue / silver statue / ice statue
+MONS:    orange crystal statue / obsidian statue / ice statue
 MAP
            xxx
            x1x

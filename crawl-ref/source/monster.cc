@@ -378,7 +378,7 @@ int monster::body_weight(bool /*base*/) const
             break;
 
         case MONS_QUICKSILVER_DRAGON:
-        case MONS_SILVER_STATUE:
+        case MONS_OBSIDIAN_STATUE:
         case MONS_STATUE:
             weight *= 4;
             break;

@@ -1036,7 +1036,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
-MONS:   ice statue / silver statue / orange crystal statue / \
+MONS:   ice statue / obsidian statue / orange crystal statue / \
         curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
@@ -2425,7 +2425,7 @@ SUBST:    F = .
 
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
-MONS:     ancient lich, orange crystal statue / silver statue / ice statue
+MONS:     ancient lich, orange crystal statue / obsidian statue / ice statue
 SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?

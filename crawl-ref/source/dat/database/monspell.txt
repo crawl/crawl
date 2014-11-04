@@ -428,7 +428,7 @@ orb of fire cast
 
 @The_monster@ emits a lurid red light.
 %%%%
-silver statue cast
+obsidian statue cast
 
 @The_monster@'s eyes glow briefly.
 %%%%

@@ -843,7 +843,7 @@ ENDMAP
 
 NAME: nicolae_vaults_statue_guard
 TAGS: vaults_hard vaults_orient_e
-MONS: silver statue / ice statue / orange crystal statue
+MONS: obsidian statue / ice statue / orange crystal statue
 KPROP: % = no_rtele_into
 SUBST: % = %%%*
 MAP

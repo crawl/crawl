@@ -6525,9 +6525,9 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
-default silver statue
+default obsidian statue
 
-VISUAL:@The_monster@ glitters argentine in the dim dungeon light.
+VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
 %%%%
 ################## Sheep ###################################
 sheep

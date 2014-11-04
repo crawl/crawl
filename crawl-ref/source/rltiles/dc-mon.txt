@@ -445,7 +445,7 @@ block_of_ice MONS_BLOCK_OF_ICE
 block_of_ice2
 training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
-silver_statue MONS_SILVER_STATUE
+obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
