@@ -11,7 +11,7 @@ namespace wang {
 #define G 1
 #define B 2
 #define Y 3
-static EdgeColours cohen_set[8] = {
+static EdgeDomino cohen_set[8] = {
   {R, Y, G, B}, {G, B, G, B}, {R, Y, R, Y}, {G, B, R, Y},
   {R, B, G, Y}, {G, Y, G, Y}, {R, B, R, B}, {G, Y, R, B},
 };
@@ -23,7 +23,7 @@ static EdgeColours cohen_set[8] = {
 
 // This is a six-colour set of 44 tiles.
 // See: Aperiodic Sets of Square Tiles with Colored Corners (Lagae, 2006)
-static CornerColours aperiodic_set[44] = {
+static CornerDomino aperiodic_set[44] = {
   // Row 1
   {0, 4, 1, 2}, {0, 3, 1, 5},
   {0, 2, 1, 5}, {2, 3, 3, 4},
@@ -56,7 +56,7 @@ static CornerColours aperiodic_set[44] = {
 
 // This is a two-colour set of 16 tiles.
 // See: An Alternative for Wang Tiles
-static CornerColours periodic_set[16] = {
+static CornerDomino periodic_set[16] = {
 //nw ne sw se
   {0, 0, 0, 0}, 
   {1, 0, 0, 0}, 
