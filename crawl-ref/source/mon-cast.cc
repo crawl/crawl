@@ -1055,6 +1055,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour      = LIGHTCYAN;
         beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.flavour     = BEAM_ELECTRICITY;
+        beam.is_beam     = true;
         break;
 
     case SPELL_FLAMING_CLOUD:
