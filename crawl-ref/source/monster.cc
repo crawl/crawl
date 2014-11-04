@@ -4779,7 +4779,8 @@ void monster::ghost_demon_init()
     hit_points      = max_hit_points;
     speed           = ghost->speed;
     speed_increment = 70;
-    colour          = ghost->colour;
+    if (ghost->colour != COLOUR_UNDEF)
+        colour = ghost->colour;
 
     // And re-equip it.
     if (wpn)
