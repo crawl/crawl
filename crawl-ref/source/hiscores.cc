@@ -1452,7 +1452,7 @@ void scorefile_entry::init(time_t dt)
     name    = you.your_name;
 
     /*
-     *  old scoring system:
+     *  old scoring system (0.1-0.3):
      *
      *    Gold
      *    + 0.7 * Experience
@@ -1460,7 +1460,7 @@ void scorefile_entry::init(time_t dt)
      *    + value of Inventory, for winners only
      *
      *
-     *  new scoring system, as suggested by Lemuel:
+     *  0.4 scoring system, as suggested by Lemuel:
      *
      *    Gold
      *    + 0.7 * Experience up to 250,000
@@ -1469,9 +1469,14 @@ void scorefile_entry::init(time_t dt)
      *    + 0.1 * Experience above 3,000,000
      *    + (distinct Runes +2)^2 * 1000, winners with distinct runes >= 3 only
      *    + value of Inventory, for winners only
-     *      changed to 250k (Orb) + 10k per rune
      *    + (250,000 * d. runes) * (25,000/(turns/d. runes)), for winners only
      *
+     *  current scoring system (mostly the same as above):
+     *
+     *    Experience terms as above
+     *    + runes * (runes + 12) * 1000        (for everyone)
+     *    + (250000 + 2 * (runes + 2) * 1000)  (winners only)
+     *    + 250000 * 25000 * runes^2 / turns   (winners only)
      */
 
     // do points first.
