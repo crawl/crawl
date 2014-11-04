@@ -4534,6 +4534,13 @@ item_info get_item_info(const item_def& item)
     if (ii.rnd == 0)
         ii.rnd = 1; // don't leave "uninitialized" item infos around
 
+    // item colour is public
+    if (item.props.exists(FORCED_ITEM_COLOUR_KEY))
+    {
+        ii.props[FORCED_ITEM_COLOUR_KEY] =
+            item.props[FORCED_ITEM_COLOUR_KEY].get_int();
+    }
+
     // keep god number
     if (item.orig_monnum < 0)
         ii.orig_monnum = item.orig_monnum;
