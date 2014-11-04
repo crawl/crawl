@@ -2633,7 +2633,7 @@ void define_monster(monster* mons)
     case MONS_PLAYER_ILLUSION:
     {
         ghost_demon ghost;
-        ghost.init_player_ghost();
+        ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
         mons->set_ghost(ghost);
         mons->ghost_init(!mons->props.exists("fake"));
         mons->bind_melee_flags();
