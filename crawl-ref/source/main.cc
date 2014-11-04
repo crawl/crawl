@@ -3856,7 +3856,7 @@ static void _update_replay_state()
             crawl_state.prev_cmd_keys = repeat_again_rec.keys;
     }
 
-    if (!is_processing_macro())
+    //if (!is_processing_macro())
         repeat_again_rec.clear();
 }
 
