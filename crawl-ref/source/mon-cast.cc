@@ -63,6 +63,7 @@
 #include "tiledef-dngn.h"
 #endif
 #include "traps.h"
+#include "travel.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -73,6 +74,7 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
+static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static int _throw_site_score(const monster &thrower, const actor &victim,
@@ -848,6 +850,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
+    case SPELL_CONJURE_FLAME:         // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -1374,6 +1377,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             pbolt.target = _mons_fragment_target(mons);
             pbolt.aimed_at_spot = true; // to get noise to work properly
+        }
+        else if (spell_cast == SPELL_CONJURE_FLAME)
+        {
+            pbolt.target = _mons_conjure_flame_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
         }
      }
 
@@ -2851,6 +2859,75 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     return mons_should_fire(beam);
 }
 
+/**
+ * Pick a target for conjuring a flame.
+ *
+ * @param[in] mon The monster casting this.
+ * @param[in] foe The victim whose movement we are trying to impede.
+ * @return A position for conjuring a cloud.
+ */
+static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
+{
+    // Don't bother if our target is sufficiently fire-resistant.
+    if (foe->res_fire() >= 3)
+        return coord_def();
+
+    const int pow = 6 * mon->spell_hd(SPELL_CONJURE_FLAME);
+    const coord_def foe_pos = foe->pos();
+    const coord_def a = foe_pos - mon->pos();
+    vector<coord_def> targets;
+
+    const int range = spell_range(SPELL_CONJURE_FLAME, pow, false);
+    for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
+    {
+        // Our target needs to be in LOS, and we can't have a creature or
+        // cloud there. Technically we can target flame clouds, but that's
+        // usually not very constructive where monsters are concerned.
+        if (!cell_see_cell(mon->pos(), *di, LOS_SOLID)
+            || cell_is_solid(*di)
+            || (actor_at(*di) && mon->can_see(actor_at(*di))))
+        {
+            continue;
+        }
+
+        const int cloud = env.cgrid(*di);
+        if (cloud != EMPTY_CLOUD)
+            continue;
+
+        // Conjure flames *behind* the target; blocking the target from
+        // accessing us just lets them run away, which is bad if our target
+        // is usually the player.
+        coord_def b = *di - foe_pos;
+        int dot = (a.x * b.x + a.y * b.y);
+        if (dot < 0)
+            continue;
+
+        // Try to block off a hallway.
+        int floor_count = 0;
+        for (adjacent_iterator ai(*di); ai; ++ai)
+        {
+            if (feat_is_traversable(grd(*ai))
+                && (env.cgrid(*ai) == EMPTY_CLOUD
+                    || !is_damaging_cloud(env.cloud[env.cgrid(*ai)].type)))
+            {
+                floor_count++;
+            }
+        }
+
+        if (floor_count != 2)
+            continue;
+
+        targets.push_back(*di);
+    }
+
+    // If we found something, pick a square at random to block.
+    const int count = targets.size();
+    if (!count)
+        return coord_def();
+
+    return targets[random2(count)];
+}
+
 /** Chooses a matching spell from this spell list, based on frequency.
  *
  *  @param[in]  spells     the monster spell list to search
@@ -3216,7 +3293,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-            if (spell_cast == SPELL_LRD && !in_bounds(beem.target))
+            if ((spell_cast == SPELL_LRD || spell_cast == SPELL_CONJURE_FLAME)
+                && !in_bounds(beem.target))
             {
                 spell_cast = SPELL_NO_SPELL;
                 continue;
@@ -4012,8 +4090,8 @@ static coord_def _mons_fragment_target(monster *mons)
     {
         bool temp;
         bolt beam;
-        if (!setup_fragmentation_beam(beam, pow, mons, mons->target, false,
-                                      true, true, NULL, temp, temp))
+                if (!setup_fragmentation_beam(beam, pow, mons, mons->target, false,
+                                              true, true, NULL, temp, temp))
         {
             return target;
         }
@@ -5910,6 +5988,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD,
                                    15 + random2(power),
                                    mons));
+
+        return;
+    }
+
+    case SPELL_CONJURE_FLAME:
+    {
+        if (in_bounds(pbolt.target))
+        {
+            if (conjure_flame(mons, 6 * mons->spell_hd(spell_cast),
+                              pbolt.target, false) != SPRET_SUCCESS)
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+            }
+        }
+        else if (you.can_see(mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
     }
