@@ -71,31 +71,36 @@ void item_colour(item_def &item)
     if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
         return; // don't stomp on item.special!
 
+    // initialize item appearance.
+    // we don't actually *need* to store this now, but we *do* need to store
+    // it in appearance at some point, since sub_type isn't public information
+    // for un-id'd items, and therefore can't be used to do a lookup at the
+    // time item names/colours are calculated.
+    // it would probably be better to store this at the time that item_info is
+    // generated (get_item_info), but that requires some save compat work (and
+    // would be wrong if we ever try to get item colour/names directly...?)
+    // possibly a todo for a later date.
+
+    // TODO: move this into a lookup table
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        // TODO: remove this
         item.appearance = you.item_description[IDESC_WANDS][item.sub_type];
         break;
 
     case OBJ_POTIONS:
-        // TODO: remove this
-        item.consum_desc = you.item_description[IDESC_POTIONS][item.sub_type];
+        item.appearance = you.item_description[IDESC_POTIONS][item.sub_type];
         break;
 
     case OBJ_JEWELLERY:
-        // TODO: remove this
         item.appearance = you.item_description[IDESC_RINGS][item.sub_type];
         break;
 
     case OBJ_SCROLLS:
-        // TODO: remove both of these
         item.appearance = you.item_description[IDESC_SCROLLS][item.sub_type];
-        item.consum_desc = you.item_description[IDESC_SCROLLS_II][item.sub_type];
         break;
 
     case OBJ_STAVES:
-        // TODO: remove this
         item.appearance = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 

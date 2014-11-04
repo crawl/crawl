@@ -1716,8 +1716,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "potion of " << potion_type_name(item_typ);
         else
         {
-            const int pqual   = PQUAL(consum_desc);
-            const int pcolour = PCOLOUR(consum_desc);
+            const int pqual   = PQUAL(appearance);
+            const int pcolour = PCOLOUR(appearance);
 
             static const char *potion_qualifiers[] =
             {
@@ -1794,13 +1794,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-        {
-            const uint32_t sseed =
-                appearance
-                + (static_cast<uint32_t>(consum_desc) << 8)
-                + (static_cast<uint32_t>(OBJ_SCROLLS) << 16);
-            buff << "labeled " << make_name(sseed, true);
-        }
+            buff << "labeled " << make_name(appearance, true);
         break;
 
     case OBJ_JEWELLERY:

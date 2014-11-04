@@ -170,7 +170,7 @@ public:
 
   int exp_docked, exp_docked_total; // Ashenzari's wrath
 
-  FixedArray<uint8_t, 6, MAX_SUBTYPES> item_description;
+  FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedBitVector<NUM_MONSTERS> unique_creatures;
 

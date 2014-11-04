@@ -530,8 +530,6 @@ struct item_def
         short charges;              ///< # of charges held by a wand, etc
                                     // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
-        short consum_desc;          ///< consumable (potion/scroll) names
-                                    // scrolls also use 'appearance'
         short rune_enum;            ///< rune_type; enum for runes of zot
         short net_durability;       ///< damage dealt to a net
     };
@@ -553,8 +551,9 @@ struct item_def
         int special;        ///< special stuff
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;       ///< rate at which a rod recharges; +slay
-        int appearance;     ///< book, jewellery, scroll, staff, wand appearance
-                            // scrolls also use 'consum_desc'
+        int appearance;     ///< seed for appearance of un-ID'd items, by
+                            /// subtype. book, jewellery, scroll, staff, wand,
+                            /// & potions use this
         int brand;          ///< weapon and armour brands; also marks artefacts
         int freshness;      ///< remaining time until a corpse rots
     };

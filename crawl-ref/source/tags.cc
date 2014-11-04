@@ -1636,7 +1636,7 @@ static void tag_construct_you_items(writer &th)
     marshallUByte(th, MAX_SUBTYPES);
     for (i = 0; i < NUM_IDESC; ++i)
         for (j = 0; j < MAX_SUBTYPES; ++j)
-            marshallByte(th, you.item_description[i][j]);
+            marshallInt(th, you.item_description[i][j]);
 
     marshallUByte(th, NUM_OBJECT_CLASSES);
     for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
@@ -3150,7 +3150,16 @@ static void tag_read_you_items(reader &th)
     ASSERT(count2 <= MAX_SUBTYPES);
     for (i = 0; i < count; ++i)
         for (j = 0; j < count2; ++j)
-            you.item_description[i][j] = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+        {
+            if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
+                you.item_description[i][j] = unmarshallByte(th);
+            else
+#endif
+                you.item_description[i][j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        }
+#endif
     for (i = 0; i < count; ++i)
         for (j = count2; j < MAX_SUBTYPES; ++j)
             you.item_description[i][j] = 0;
@@ -3268,6 +3277,22 @@ static void tag_read_you_items(reader &th)
     }
     if (you.species == SP_FORMICID)
         remove_one_equip(EQ_HELMET, false, true);
+
+    if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
+    {
+        // merge scroll seeds
+        for (int subtype = 0; subtype < MAX_SUBTYPES; subtype++)
+        {
+            const int seed1 = you.item_description[IDESC_SCROLLS][subtype]
+                              & 0xff;
+            const int seed2 = you.item_description[IDESC_SCROLLS_II][subtype]
+                              & 0xff;
+            const int seed3 = OBJ_SCROLLS & 0xff;
+            you.item_description[IDESC_SCROLLS][subtype] =    seed1
+                                                           | (seed2 << 8)
+                                                           | (seed3 << 16);
+        }
+    }
 #endif
 }
 
@@ -3993,6 +4018,19 @@ void unmarshallItem(reader &th, item_def &item)
         default:                       break;
         }
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
+    {
+        if (item.base_type == OBJ_POTIONS)
+            item.appearance = item.plus; // was consum_desc
+        else if (item.base_type == OBJ_SCROLLS)
+        {
+            // faithfully preserve weirdness
+            item.appearance = item.appearance
+                              | (item.plus << 8) // was consum_desc
+                              | (OBJ_SCROLLS << 16);
+        }
     }
 #endif
 
