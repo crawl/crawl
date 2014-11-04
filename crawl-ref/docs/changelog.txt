@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1701-gf5abbb0)
+Stone Soup 0.16 (up to 0.16-a0-1857-g6c74090)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -41,6 +41,8 @@ Monsters
 * Changed monster: iron devils have been upgraded to rust devils, which do less
   damage but corrode with their touch.
 * New monsters:
+  - Caustic shrikes, appearing in Depths. Metallic birds that travel in flocks,
+    attacking with acid-dripping claws that sear through armour & flesh alike.
   - Elemental wellsprings, appearing in Cocytus. They fire powerful waves of
     water which produce hostile water elementals - but deplete their own
     'health' in the process.
@@ -60,6 +62,7 @@ Monsters
 * Player ghosts now have their weapon brands displayed.
 * Xtahua's breath now creates a cloud of flames, like red draconians'.
 * Tiamat can now be any colour of draconian, except grey.
+* Fannar can now cast Condensation Shield.
 * Frederick is now a demigod.
 * Sense invisibility has been simplified; monsters that had it now have see
   invisible + blindness immunity instead.
@@ -94,6 +97,8 @@ Items
     in place of rElec.
   - Quicksilver Dragon Armour: slightly heavier than Mottled Dragon Armour,
     with much better AC & MR+, but unenchantable. (Always +0.)
+  - Phantom mirrors: one-use evocables that create a temporary friendly clone
+    of targeted monsters.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
 * Scale mail now only has 10 ER, down from 11.
@@ -109,9 +114,18 @@ Items
     - Bastard swords are now double swords.
     - Claymores are now triple swords.
     - Cloaks of darkness are now cloaks of invisibility.
-* Removed items
+* Removed items:
     - Boots of jumping.
     - Potions of coagulated blood.
+    - Blessed Blades.
+
+
+Cards
+-----
+* All characters can now evoke decks from the inventory.
+* Dowsing is no longer in the Deck of Battle.
+* Removed cards:
+    - Metamorphosis.
 
 Gods
 ----
@@ -147,6 +161,8 @@ Gods
   effects of blurry vision mutations.
 * Dithmenos now specifically hates fire; Corona and related effects are now
   permitted to Dithmenos's worshippers.
+* Nemelex Xobeh:
+  - Draw One and Peek at Two are no more.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
    - Hell effect protection halved; now capping out at 50%, down from 100%.
