@@ -24,6 +24,8 @@ butterfly CORPSE_BUTTERFLY
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
 raven CORPSE_RAVEN
+caustic_shrike CORPSE_CAUSTIC_SHRIKE
+
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
@@ -105,7 +107,6 @@ yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
-caustic_shrike CORPSE_CAUSTIC_SHRIKE
 
 ## Aquatics (';')
 %sdir mon/aquatic

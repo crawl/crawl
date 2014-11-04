@@ -61,6 +61,7 @@ fire_bat MONS_FIRE_BAT
 %rim 1
 raven MONS_RAVEN
 bennu MONS_BENNU
+caustic_shrike MONS_CAUSTIC_SHRIKE
 %sdir mon/vault
 %rim 0
 microbat MONS_MICROBAT
@@ -167,7 +168,6 @@ yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
-caustic_shrike MONS_CAUSTIC_SHRIKE
 %rim 0
 
 ## Aquatics (';')
