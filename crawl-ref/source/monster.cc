@@ -2969,17 +2969,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
                      apostrophise(name(DESC_THE)).c_str());
             }
         }
-        if (has_ench(ENCH_CONDENSATION_SHIELD))
-        {
-            const int amount = strength ? strength : 10;
-            if (!lose_ench_levels(get_ench(ENCH_CONDENSATION_SHIELD),
-                                  amount * BASELINE_DELAY, true)
-                && you.can_see(this))
-            {
-                mprf("The heat melts %s icy shield.",
-                     apostrophise(name(DESC_THE)).c_str());
-            }
-        }
         if (has_ench(ENCH_ICEMAIL))
             del_ench(ENCH_ICEMAIL);
         break;

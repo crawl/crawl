@@ -79,15 +79,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
         || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
         || flavour == BEAM_STEAM)
     {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            you.duration[DUR_CONDENSATION_SHIELD] -= damage * BASELINE_DELAY;
-            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
-                remove_condensation_shield();
-            else
-                you.props[MELT_SHIELD_KEY] = true;
-        }
-
         if (you.mutation[MUT_ICEMAIL])
         {
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
