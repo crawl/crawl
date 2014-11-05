@@ -531,7 +531,9 @@ ITEM:     (list of items, separated by comma)
             "good_item"). If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
             vault's level number).
-          * "damaged" sets the item plusses to -1..-4.
+          * "damaged" sets the item plusses to -1..-4. This modifier (and
+            the corresponding effect of the "cursed" modifier) does not
+            affect jewellery.
           * "cursed" gets a curse plus plusses as in "damaged".
           * "not_cursed" forces an item to have any curse placed on it to be
             removed.

@@ -5259,7 +5259,10 @@ item_spec item_list::parse_single_spec(string s)
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "cursed"))
+    {
         result.level = ISPEC_BAD; // damaged + cursed, actually
+        result.props["cursed"] = bool(true);
+    }
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
     if (strip_tag(s, "not_cursed"))
