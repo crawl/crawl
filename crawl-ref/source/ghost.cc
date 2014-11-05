@@ -144,6 +144,7 @@ void ghost_demon::reset()
     ac               = 0;
     damage           = 0;
     speed            = 10;
+    move_energy      = 10;
     see_invis        = false;
     brand            = SPWPN_NORMAL;
     att_type         = AT_HIT;
