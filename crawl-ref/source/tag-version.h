@@ -133,6 +133,7 @@ enum tag_minor_version
     TAG_MINOR_MON_COLOUR_LOOKUP,   // monster colour lookup when possible
     TAG_MINOR_CONSUM_APPEARANCE,   // Stop storing item appearance in .plus
     TAG_MINOR_NEG_IDESC,           // Fix a sign conversion error
+    TAG_MINOR_GHOST_ENERGY,        // ghost_demon has move_energy field
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
