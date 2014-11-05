@@ -109,9 +109,9 @@ Foxfire card
 
 This card summons flying creatures.
 %%%%
-the Bones card
+the Rangers card
 
-This card summons a skeletal creature.
+This card summons several archers.
 %%%%
 Repulsiveness card
 

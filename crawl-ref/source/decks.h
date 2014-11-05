@@ -77,11 +77,15 @@ enum card_type
     CARD_MERCENARY,
 
     CARD_CRUSADE,
-    CARD_ELEMENTS,
+#if TAG_MAJOR_VERSION == 34
+    CARD_SUMMON_ANIMAL,
+#endif
     CARD_SUMMON_DEMON,
     CARD_SUMMON_WEAPON,
     CARD_SUMMON_FLYING,         // wisps and butterflies
+#if TAG_MAJOR_VERSION == 34
     CARD_SUMMON_SKELETON,
+#endif
     CARD_SUMMON_UGLY,
 
     CARD_POTION,
@@ -119,8 +123,11 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
+
     CARD_ILLUSION,
     CARD_DEGEN,
+    CARD_ELEMENTS,
+    CARD_RANGERS,
 
     NUM_CARDS
 };
