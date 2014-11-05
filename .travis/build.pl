@@ -41,7 +41,9 @@ sub try {
             exit 1;
         }
         elsif ($?) {
-            printf "'$cmd' returned exit value %d", ($? >> 8);
+            my $exit = $? >> 8;
+            printf "'$cmd' returned exit value %d", $exit;
+            exit $exit;
         }
     }
 }
