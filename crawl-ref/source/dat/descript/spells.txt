@@ -246,6 +246,11 @@ Chaotic Mirror spell
 This spell mirrors a wild and unpredictable effect onto both the target and the
 caster.
 %%%%
+Chilling Breath spell
+
+This creatue can breath a blast of frost that bypasses any armour the unfortunate
+victim may have, and might even knock it backwards if in flight.
+%%%%
 Cloud Cone spell
 
 This spell blasts the area near the caster with various destructive clouds. At
@@ -1113,6 +1118,10 @@ Though initially mild, so long as the caster maintains focus upon the spell and
 supplies it with magical power (by waiting in place and not taking any other
 actions), the ray will grow in strength until it becomes a surging beam able to
 tear clean through the ranks of the caster's foes.
+%%%%
+Searing Breath spell
+
+Breathes a blast of flame that leaves a cloud of fire where it ends up.
 %%%%
 Sentinel's Mark spell
 
