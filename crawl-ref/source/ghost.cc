@@ -556,6 +556,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     ev = stats->ev;
     ac = stats->AC;
     damage = stats->attack[0].damage;
+    move_energy = stats->energy_usage.move;
 
     // If we're mutating an ugly thing, leave its experience level, hit
     // dice and maximum hit points as they are.
