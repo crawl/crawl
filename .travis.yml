@@ -16,9 +16,7 @@ env:
 git:
     submodules: false
 install: perl .travis/deps.pl
-script:
-    - perl .travis/build.pl
-    - ls crawl-ref/source/morgues/*.txt | xargs cat
+script: perl .travis/build.pl
 notifications:
 #    email:
 #        - crawl-ref-commits@lists.sourceforge.net
