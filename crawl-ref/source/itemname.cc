@@ -659,7 +659,7 @@ static const char* _wand_type_name(int wandtype)
     }
 }
 
-static const char* wand_secondary_string(int s)
+static const char* wand_secondary_string(uint32_t s)
 {
     switch (s % NDSC_WAND_SEC)
     {
@@ -683,7 +683,7 @@ static const char* wand_secondary_string(int s)
     }
 }
 
-static const char* wand_primary_string(int p)
+static const char* wand_primary_string(uint32_t p)
 {
     switch (p % NDSC_WAND_PRI)
     {
@@ -881,7 +881,7 @@ static string jewellery_type_name(int jeweltype)
 }
 
 
-static const char* ring_secondary_string(int s)
+static const char* ring_secondary_string(uint32_t s)
 {
     switch (s % NDSC_JEWEL_SEC)
     {
@@ -901,7 +901,7 @@ static const char* ring_secondary_string(int s)
     }
 }
 
-static const char* ring_primary_string(int p)
+static const char* ring_primary_string(uint32_t p)
 {
     switch (p % NDSC_JEWEL_PRI)
     {
@@ -938,7 +938,7 @@ static const char* ring_primary_string(int p)
     }
 }
 
-static const char* amulet_secondary_string(int s)
+static const char* amulet_secondary_string(uint32_t s)
 {
     switch (s % NDSC_JEWEL_SEC)
     {
@@ -959,7 +959,7 @@ static const char* amulet_secondary_string(int s)
     }
 }
 
-static const char* amulet_primary_string(int p)
+static const char* amulet_primary_string(uint32_t p)
 {
     switch (p % NDSC_JEWEL_PRI)
     {
@@ -1085,7 +1085,7 @@ static const char* misc_type_name(int type, bool known)
     }
 }
 
-static const char* book_secondary_string(int s)
+static const char* book_secondary_string(uint32_t s)
 {
     switch (s % 12) // larger than NDSC_BOOK_SEC?
     {
@@ -1105,7 +1105,7 @@ static const char* book_secondary_string(int s)
     }
 }
 
-static const char* book_primary_string(int p)
+static const char* book_primary_string(uint32_t p)
 {
     switch (p % 7) // smaller than NDSC_BOOK_PRI??
     {
@@ -1171,7 +1171,7 @@ static const char* _book_type_name(int booktype)
     }
 }
 
-static const char* staff_secondary_string(int p)
+static const char* staff_secondary_string(uint32_t p)
 {
     switch (p % NDSC_STAVE_SEC) // general descriptions
     {
@@ -1189,7 +1189,7 @@ static const char* staff_secondary_string(int p)
     }
 }
 
-static const char* staff_primary_string(int p)
+static const char* staff_primary_string(uint32_t p)
 {
     switch (p % NDSC_STAVE_PRI) // special attributes
     {
@@ -1697,8 +1697,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "wand of " << _wand_type_name(item_typ);
         else
         {
-            buff << wand_secondary_string(special / NDSC_WAND_PRI)
-                 << wand_primary_string(special % NDSC_WAND_PRI)
+            buff << wand_secondary_string(subtype_rnd / NDSC_WAND_PRI)
+                 << wand_primary_string(subtype_rnd % NDSC_WAND_PRI)
                  << " wand";
         }
 
@@ -1853,14 +1853,14 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (jewellery_is_amulet(*this))
             {
-                buff << amulet_secondary_string(special / NDSC_JEWEL_PRI)
-                     << amulet_primary_string(special % NDSC_JEWEL_PRI)
+                buff << amulet_secondary_string(subtype_rnd / NDSC_JEWEL_PRI)
+                     << amulet_primary_string(subtype_rnd % NDSC_JEWEL_PRI)
                      << " amulet";
             }
             else  // i.e., a ring
             {
-                buff << ring_secondary_string(special / NDSC_JEWEL_PRI)
-                     << ring_primary_string(special % NDSC_JEWEL_PRI)
+                buff << ring_secondary_string(subtype_rnd / NDSC_JEWEL_PRI)
+                     << ring_primary_string(subtype_rnd % NDSC_JEWEL_PRI)
                      << " ring";
             }
         }
@@ -1975,8 +1975,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (!basename)
             {
-                buff << staff_secondary_string(special / NDSC_STAVE_PRI)
-                     << staff_primary_string(special % NDSC_STAVE_PRI);
+                buff << staff_secondary_string(subtype_rnd / NDSC_STAVE_PRI)
+                     << staff_primary_string(subtype_rnd % NDSC_STAVE_PRI);
             }
 
             buff << "staff";
