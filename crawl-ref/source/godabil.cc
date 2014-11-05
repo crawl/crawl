@@ -5576,8 +5576,8 @@ bool ru_do_sacrifice(ability_type sac)
         variable_sac = false;
         mut = sac_def.mutation;
         num_sacrifices = 1;
-        offer_text = make_stringf("%s", sac_def.sacrifice_text);
-        mile_text = make_stringf("%s", sac_def.milestone_text);
+        offer_text = make_stringf("%s.", sac_def.sacrifice_text);
+        mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 
     piety_gain = _get_sacrifice_piety(sac);
