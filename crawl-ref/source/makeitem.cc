@@ -648,6 +648,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 {
                     force_type = item.sub_type;
                     item.clear();
+                    item.quantity = 1;
                     item.base_type = OBJ_WEAPONS;
                     item.sub_type = force_type;
                     continue;
