@@ -34,16 +34,16 @@ sub try {
     if (system $cmd) {
         if ($? == -1) {
             print "failed to execute '$cmd': $!\n";
-            exit 1;
+            error(1);
         }
         elsif ($? & 127) {
             printf "'$cmd' died with signal %d", ($? & 127);
-            exit 1;
+            error(1);
         }
         elsif ($?) {
             my $exit = $? >> 8;
             printf "'$cmd' returned exit value %d", $exit;
-            exit $exit;
+            error($exit);
         }
     }
 }
