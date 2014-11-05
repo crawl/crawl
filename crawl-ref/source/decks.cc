@@ -136,11 +136,11 @@ const deck_archetype deck_of_battle[] =
 const deck_archetype deck_of_summoning[] =
 {
     { CARD_CRUSADE,         {5, 5, 5} },
-    { CARD_ELEMENTS,   {5, 5, 5} },
+    { CARD_ELEMENTS,        {5, 5, 5} },
     { CARD_SUMMON_DEMON,    {5, 5, 5} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
     { CARD_SUMMON_FLYING,   {5, 5, 5} },
-    { CARD_SUMMON_SKELETON, {5, 5, 5} },
+    { CARD_RANGERS,         {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     { CARD_ILLUSION,        {5, 5, 5} },
     END_OF_DECK
@@ -301,6 +301,8 @@ const char* card_name(card_type card)
     case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
     case CARD_BARGAIN:         return "the Bargain";
+    case CARD_SUMMON_ANIMAL:   return "the Herd";
+    case CARD_SUMMON_SKELETON: return "the Bones";
 #endif
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
@@ -323,7 +325,7 @@ const char* card_name(card_type card)
     case CARD_SUMMON_DEMON:    return "the Pentagram";
     case CARD_SUMMON_WEAPON:   return "the Dance";
     case CARD_SUMMON_FLYING:   return "Foxfire";
-    case CARD_SUMMON_SKELETON: return "the Bones";
+    case CARD_RANGERS:         return "the Rangers";
     case CARD_SUMMON_UGLY:     return "Repulsiveness";
     case CARD_XOM:             return "Xom";
     case CARD_FAMINE:          return "Famine";
@@ -2166,9 +2168,9 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     }
 
     create_monster(
-			mgen_data(dct2,
-					  BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
-					  MG_AUTOFOE));
+		    mgen_data(dct2,
+                      BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
+                      MG_AUTOFOE));
 
 }
 
@@ -2305,23 +2307,59 @@ static void _summon_flying(int power, deck_rarity_type rarity)
         mpr("You sense the presence of something unfriendly.");
 }
 
-static void _summon_skeleton(int power, deck_rarity_type rarity)
+static void _summon_rangers(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    const bool friendly = !one_chance_in(4 + power_level * 2);
-    const monster_type skeltypes[] =
-    {
-        MONS_SKELETON, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
-    };
+    monster_type dctr, dctr2, dctr3, dctr4;
+    monster_type base_choice, big_choice, mid_choice, placed_choice;
+    dctr = random_choose(MONS_CENTAUR, MONS_YAKTAUR, -1);
+    dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN, -1);
+    dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN, MONS_NAGA_SHARPSHOOTER, -1);
+    dctr4 = random_choose(MONS_SATYR, MONS_MERFOLK_JAVELINEER,
+                          MONS_DEEP_ELF_MASTER_ARCHER, -1);
+    const int launch_count = 1 + random2(2);
 
-    if (!create_monster(mgen_data(skeltypes[power_level],
-                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                  min(power/50 + 1, 5), 0,
-                                  you.pos(), MHITYOU, MG_AUTOFOE),
-                        false))
+    if (power_level >= 2)
     {
-        mpr("You see a puff of smoke.");
+        base_choice = dctr2;
+        big_choice  = dctr4;
+        mid_choice  = dctr3;
     }
+    else
+    {
+        base_choice = dctr;
+        {
+            if (power_level == 1)
+            {
+                big_choice  = dctr3;
+                mid_choice  = dctr2;
+            }
+            else
+            {
+                big_choice  = dctr;
+                mid_choice  = dctr;
+            }
+        }
+    }
+
+    if (launch_count < 2)
+        placed_choice = big_choice;
+    else
+        placed_choice = mid_choice;
+
+    for (int i = 0; i < launch_count; ++i)
+    {
+        create_monster(
+            mgen_data(base_choice,
+                      BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
+                      MG_AUTOFOE));
+    }
+
+    create_monster(
+        mgen_data(placed_choice,
+                  BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
+                  MG_AUTOFOE));
+
 }
 
 static void _summon_ugly(int power, deck_rarity_type rarity)
@@ -2753,9 +2791,9 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
     case CARD_ELEMENTS:         _elements_card(power, rarity); break;
+    case CARD_RANGERS:          _summon_rangers(power, rarity); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
-    case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
@@ -2819,6 +2857,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_BATTLELUST:
     case CARD_BARGAIN:
     case CARD_METAMORPHOSIS:
+    case CARD_SUMMON_ANIMAL:
+    case CARD_SUMMON_SKELETON:
         mpr("This type of card no longer exists!");
         break;
 #endif
