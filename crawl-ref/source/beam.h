@@ -215,6 +215,7 @@ private:
     void emit_message(const char* msg);
     void step();
     bool hit_wall();
+    void hit_shield(actor* victim) const;
 
     int apply_AC(const actor* victim, int hurted);
 
