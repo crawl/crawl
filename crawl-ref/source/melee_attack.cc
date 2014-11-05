@@ -3745,69 +3745,58 @@ void melee_attack::do_minotaur_retaliation()
 
 bool melee_attack::do_knockback(bool trample)
 {
-    do
-    {
-        if (defender->is_stationary())
-            return false; // don't even print a message
+    if (defender->is_stationary())
+        return false; // don't even print a message
 
-        int size_diff =
-            attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
-        if (!x_chance_in_y(size_diff + 3, 6))
-            break;
+    const int size_diff =
+        attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
+    const coord_def old_pos = defender->pos();
+    const coord_def new_pos = old_pos + old_pos - attack_position;
 
-        coord_def old_pos = defender->pos();
-        coord_def new_pos = defender->pos() + defender->pos() - attack_position;
-
+    if (!x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
-        if (!feat_has_solid_floor(grd(new_pos))
-            && !defender->is_habitable_feat(grd(new_pos)))
-        {
-            break;
-        }
-
+        || !feat_has_solid_floor(grd(new_pos))
+           && !defender->is_habitable_feat(grd(new_pos))
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
-        if (actor_at(new_pos))
-            break;
-
+        || actor_at(new_pos)
         // Prevent trample/drown combo when flight is expiring
-        if (defender->is_player() && need_expiration_warning(new_pos))
-            break;
-
+        || defender->is_player() && need_expiration_warning(new_pos))
+    {
         if (needs_message)
         {
-            mprf("%s %s backwards!",
+            mprf("%s %s %s ground!",
                  defender_name(false).c_str(),
-                 defender->conj_verb("stumble").c_str());
+                 defender->conj_verb("hold").c_str(),
+                 defender->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
 
-        // Schedule following _before_ actually trampling -- if the defender
-        // is a player, a shaft trap will unload the level.  If trampling will
-        // somehow fail, move attempt will be ignored.
-        if (trample)
-            trample_follow_fineff::schedule(attacker, old_pos);
-
-        if (defender->as_player())
-            move_player_to_grid(new_pos, false);
-        else
-            defender->move_to_pos(new_pos);
-
-        // Interrupt stair travel and passwall.
-        if (defender->is_player())
-            stop_delay(true);
-
-        return true;
-    } while (0);
+        return false;
+    }
 
     if (needs_message)
     {
-        mprf("%s %s %s ground!",
+        mprf("%s %s backwards!",
              defender_name(false).c_str(),
-             defender->conj_verb("hold").c_str(),
-             defender->pronoun(PRONOUN_POSSESSIVE).c_str());
+             defender->conj_verb("stumble").c_str());
     }
 
-    return false;
+    // Schedule following _before_ actually trampling -- if the defender
+    // is a player, a shaft trap will unload the level.  If trampling will
+    // somehow fail, move attempt will be ignored.
+    if (trample)
+        trample_follow_fineff::schedule(attacker, old_pos);
+
+    if (defender->is_player())
+    {
+        move_player_to_grid(new_pos, false);
+        // Interrupt stair travel and passwall.
+        stop_delay(true);
+    }
+    else
+        defender->move_to_pos(new_pos);
+
+    return true;
 }
 
 /**
