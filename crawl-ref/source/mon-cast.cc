@@ -3446,6 +3446,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
     }
 
+    // Reflection, fireballs, wellspring self-damage, etc.
+    if (!mons->alive())
+        return true;
+
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
