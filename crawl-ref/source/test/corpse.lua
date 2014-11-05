@@ -36,7 +36,7 @@ ok("hippogriff skeleton")
 for i = 1,100 do
   ok("any corpse", "corpse")
 end
-ok("rat chunk", "chunk of rat")
+ok("rat chunk", "chunk of flesh")
 fail("zombie chunk")
 fail("giant eyeball corpse")
 ok("orc warrior corpse", "orc corpse")
