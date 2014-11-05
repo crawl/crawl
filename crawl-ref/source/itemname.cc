@@ -1811,11 +1811,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         const bool is_randart = is_artefact(*this);
 
-        if (know_curse)
+        if (know_curse && !terse)
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !terse && desc != DESC_PLAIN
+            else if (Options.show_uncursed && desc != DESC_PLAIN
                      && (!is_randart || !know_type)
                      && (!ring_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
@@ -1854,6 +1854,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                      << " ring";
             }
         }
+        if (know_curse && cursed() && terse)
+            buff << " (curse)";
         break;
     }
     case OBJ_MISCELLANY:
