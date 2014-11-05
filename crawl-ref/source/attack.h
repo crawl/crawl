@@ -80,11 +80,6 @@ public:
     string     special_damage_message;
     string     aux_attack, aux_verb;
 
-    // Adjusted EV penalties for defender and attacker
-    int             defender_body_armour_penalty;
-    int             defender_shield_penalty;
-    int             attacker_body_armour_penalty;
-    int             attacker_shield_penalty;
     // Combined to-hit penalty from armour and shield.
     int             attacker_armour_tohit_penalty;
     int             attacker_shield_tohit_penalty;
