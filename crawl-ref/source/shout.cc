@@ -117,9 +117,6 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_GURGLE:
         default_msg_key = "__GURGLE";
         break;
-    case S_WHINE:
-        default_msg_key = "__WHINE";
-        break;
     case S_CROAK:
         default_msg_key = "__CROAK";
         break;

@@ -1200,14 +1200,13 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     // For Pandemonium lords, almost everything is fair game.  It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
-        return shout != S_BUZZ && shout != S_WHINE && shout != S_CROAK;
+        return shout != S_BUZZ && shout != S_CROAK;
 
     switch (shout)
     {
-    // 2-headed ogres, bees or mosquitos never fit.
+    // Two-headed ogres or bees never fit.
     case S_SHOUT2:
     case S_BUZZ:
-    case S_WHINE:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
         return false;
@@ -4371,7 +4370,6 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "buzzes",
         "moans",
         "gurgles",
-        "whines",
         "croaks",
         "growls",
         "hisses",

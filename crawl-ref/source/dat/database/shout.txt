@@ -106,14 +106,6 @@ __GURGLE seen
 
 SOUND:@The_monster@ gurgles horribly!
 %%%%
-__WHINE unseen
-
-SOUND:You hear an irritating high-pitched whine.
-%%%%
-__WHINE seen
-
-SOUND:@The_monster@ gives an irritating high-pitched whine.
-%%%%
 __CROAK unseen
 
 SOUND:You hear a loud, deep croak!
