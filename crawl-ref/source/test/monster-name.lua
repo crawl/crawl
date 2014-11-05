@@ -101,4 +101,4 @@ local name_checks = {
 }
 check_names(name_checks)
 
-test.eq(itemname("hydra chunk q:10"), "10 chunks of hydra flesh")
+test.eq(itemname("hydra chunk q:10"), "10 poisonous chunks of flesh")
