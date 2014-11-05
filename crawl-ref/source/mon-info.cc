@@ -991,7 +991,9 @@ string monster_info::common_name(description_level_type desc) const
         ss << (is_active ? "active " : "");
 
     if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
-        && type != MONS_SENSED)
+        && type != MONS_SENSED
+        && type != MONS_BLOCK_OF_ICE
+        && type != MONS_PILLAR_OF_SALT)
     {
         ASSERT(num_heads > 0);
         if (num_heads < 11)
