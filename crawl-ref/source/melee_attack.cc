@@ -2792,9 +2792,7 @@ void melee_attack::mons_do_napalm()
 void melee_attack::splash_defender_with_acid(int strength)
 {
     if (defender->is_player())
-    {
         mpr("You are splashed with acid!");
-    }
     else
     {
         special_damage += roll_dice(2, 4);
