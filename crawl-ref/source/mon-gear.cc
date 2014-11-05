@@ -1423,8 +1423,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                || is_blessed_weapon_type(item.sub_type)
                || is_magic_weapon_type(item.sub_type)
                || is_giant_club_type(item.sub_type)
-               || item.sub_type == WPN_HAMMER       // these two shouldn't
-               || item.sub_type == WPN_CUTLASS);    // generate outside vaults
+               || !property(item, PWPN_ACQ_WEIGHT)); // extra-weird weapons
 
         if (one_chance_in(100))
         {
