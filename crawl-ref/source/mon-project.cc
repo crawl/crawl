@@ -101,15 +101,20 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
 
     // Move away from the caster's square.
     iood_act(*mon, true);
-    // We need to take at least one full move (for the above), but let's
-    // randomize it and take more so players won't get guaranteed instant
-    // damage.
-    mon->lose_energy(EUT_MOVE, 2, random2(3)+2);
 
-    // Multi-orbs don't home during the first move, they'd likely
-    // immediately explode otherwise.
-    if (foe != MHITNOT)
-        mon->foe = foe;
+    // If the foe was adjacent to the caster, that might have destroyed it.
+    if (mon->alive())
+    {
+        // We need to take at least one full move (for the above), but let's
+        // randomize it and take more so players won't get guaranteed instant
+        // damage.
+        mon->lose_energy(EUT_MOVE, 2, random2(3)+2);
+
+        // Multi-orbs don't home during the first move, they'd likely
+        // immediately explode otherwise.
+        if (foe != MHITNOT)
+            mon->foe = foe;
+    }
 
     return SPRET_SUCCESS;
 }
