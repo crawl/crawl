@@ -7235,7 +7235,8 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         if (post_res_dam < dam)
             canned_msg(MSG_YOU_RESIST);
 
-        ouch(post_res_dam, evildoer->mindex(), KILLED_BY_ACID);
+        ouch(post_res_dam, evildoer ? evildoer->mindex() : NON_MONSTER,
+             KILLED_BY_ACID);
     }
 }
 
