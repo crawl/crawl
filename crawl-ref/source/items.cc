@@ -3426,7 +3426,7 @@ colour_t item_def::wand_colour() const
     // this is very odd... a linleyism?
     // TODO: associate colours directly with names
     // (use an array of [name, colour] tuples/structs)
-    switch (special % NDSC_WAND_PRI)
+    switch (subtype_rnd % NDSC_WAND_PRI)
     {
         case 0:         //"iron wand"
             return CYAN;

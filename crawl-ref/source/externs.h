@@ -550,10 +550,10 @@ struct item_def
     {
         int special;        ///< special stuff
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;       ///< rate at which a rod recharges; +slay
-        int subtype_rnd;    ///< appearance of un-ID'd items, by subtype.
-                            /// jewellery, scroll, staff, wand, potions
-                            // see comment in item_colour()
+        int rod_plus;           ///< rate at which a rod recharges; +slay
+        uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
+                                /// jewellery, scroll, staff, wand, potions
+                                // see comment in item_colour()
         int brand;          ///< weapon and armour brands; also marks artefacts
         int freshness;      ///< remaining time until a corpse rots
     };
