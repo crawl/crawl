@@ -55,8 +55,6 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       shield(NULL), art_props(0), unrand_entry(NULL),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
-      defender_body_armour_penalty(0), defender_shield_penalty(0),
-      attacker_body_armour_penalty(0), attacker_shield_penalty(0),
       attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
       defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
       miscast_target(NULL), fake_chaos_attack(false), simu(false),
@@ -412,9 +410,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     attacker_visible   = attacker->observable();
     defender_visible   = defender && defender->observable();
     needs_message      = (attacker_visible || defender_visible);
-
-    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(20);
-    attacker_shield_penalty = attacker->adjusted_shield_penalty(20);
 
     if (attacker->is_monster())
     {
