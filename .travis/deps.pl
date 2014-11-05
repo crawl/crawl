@@ -9,6 +9,7 @@ if ($ENV{BUILD_ALL}) {
 
     @deps = qw(
         libasound2-dev
+        libesd0-dev
     );
 }
 else {
