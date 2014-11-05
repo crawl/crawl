@@ -1085,7 +1085,7 @@ void attack::drain_defender_speed()
     {
         if (needs_message)
         {
-            mprf("%s %s %s vigor!",
+            mprf("%s %s %s vigour!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("drain").c_str(),
                  def_name(DESC_ITS).c_str());
