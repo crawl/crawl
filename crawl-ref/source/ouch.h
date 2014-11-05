@@ -72,8 +72,6 @@ enum kill_method_type
 void maybe_melt_player_enchantments(beam_type flavour, int damage);
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
-void splash_with_acid(int acid_strength, int death_source,
-                      bool allow_corrosion = true, const char* hurt_msg = nullptr);
 
 class actor;
 int actor_to_death_source(const actor* agent);

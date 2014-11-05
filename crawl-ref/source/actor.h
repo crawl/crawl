@@ -221,6 +221,10 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
+    virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
+                                  bool allow_corrosion = true,
+                                  const char* hurt_msg = NULL) = 0;
+
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;

@@ -1491,7 +1491,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-            defender->as_monster()->splash_with_acid(&you);
+            defender->splash_with_acid(&you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
@@ -2794,15 +2794,14 @@ void melee_attack::splash_defender_with_acid(int strength)
     if (defender->is_player())
     {
         mpr("You are splashed with acid!");
-        splash_with_acid(strength, attacker->mindex());
     }
     else
     {
         special_damage += roll_dice(2, 4);
         if (defender_visible)
             mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-        defender->as_monster()->splash_with_acid(attacker);
     }
+    defender->splash_with_acid(attacker, strength);
 }
 
 static void _print_resist_messages(actor* defender, int base_damage,

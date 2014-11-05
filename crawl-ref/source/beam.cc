@@ -4027,7 +4027,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        splash_with_acid(5, actor_to_death_source(agent()), affects_items);
+        you.splash_with_acid(agent(), 5, affects_items);
 
     extra_range_used += range_used_on_hit();
 

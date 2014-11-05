@@ -3050,9 +3050,9 @@ void slime_wall_damage(actor* act, int delay)
     {
         if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
         {
-            splash_with_acid(strength, NON_MONSTER, false,
-                             (walls > 1) ? "The walls burn you!"
-                                         : "The wall burns you!");
+            you.splash_with_acid(NULL, strength, false,
+                                (walls > 1) ? "The walls burn you!"
+                                            : "The wall burns you!");
         }
     }
     else

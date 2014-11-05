@@ -1044,10 +1044,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_ACID:
     {
         const actor* agent = cloud.agent();
-        if (player)
-            splash_with_acid(5, agent ? agent->mindex() : NON_MONSTER, true);
-        else
-            mons->splash_with_acid(agent);
+        act->splash_with_acid(agent, 5, true);
         return true;
     }
 

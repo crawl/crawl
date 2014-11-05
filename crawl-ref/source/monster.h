@@ -464,7 +464,9 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
-    void splash_with_acid(const actor* evildoer);
+    void splash_with_acid(const actor* evildoer, int acid_strength = -1,
+                          bool allow_corrosion = true,
+                          const char* hurt_msg = NULL);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true,
