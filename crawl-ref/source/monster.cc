@@ -4531,8 +4531,12 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
  * Attempts to either apply corrosion to a monster or make it bleed from acid
  * damage.
  */
-void monster::splash_with_acid(const actor* evildoer)
+void monster::splash_with_acid(const actor* evildoer, int acid_strength,
+                               bool allow_corrosion, const char* hurt_msg)
 {
+    UNUSED(acid_strength);
+    UNUSED(allow_corrosion);
+    UNUSED(hurt_msg);
     item_def *has_shield = mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mslot_item(MSLOT_ARMOUR);
 
