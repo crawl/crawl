@@ -31,6 +31,17 @@ if (!$ENV{TILES}) {
 sub try {
     my ($cmd) = @_;
     print "$cmd\n";
-    my $exit = system $cmd;
-    exit $exit if $exit;
+    if (system $cmd) {
+        if ($? == -1) {
+            print "failed to execute '$cmd': $!\n";
+            exit 1;
+        }
+        elsif ($? & 127) {
+            printf "'$cmd' died with signal %d", ($? & 127);
+            exit 1;
+        }
+        elsif ($?) {
+            printf "'$cmd' returned exit value %d", ($? >> 8);
+        }
+    }
 }
