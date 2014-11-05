@@ -279,6 +279,7 @@ bool mons_zombifiable(monster_type mc);
 int mons_weight(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
+mon_energy_usage mons_energy(const monster* mon);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster* mon);
 

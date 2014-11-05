@@ -5801,6 +5801,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.ac);
     marshallShort(th, ghost.damage);
     marshallShort(th, ghost.speed);
+    marshallShort(th, ghost.move_energy);
     marshallByte(th, ghost.see_invis);
     marshallShort(th, ghost.brand);
     marshallShort(th, ghost.att_type);
@@ -5828,6 +5829,12 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.ac               = unmarshallShort(th);
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_GHOST_ENERGY)
+        ghost.move_energy  = 10;
+    else
+#endif
+    ghost.move_energy      = unmarshallShort(th);
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));

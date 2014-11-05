@@ -26,8 +26,6 @@
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
 #define MAX_GHOST_EVASION    60
-#define MIN_GHOST_SPEED       6
-#define MAX_GHOST_SPEED      13
 
 vector<ghost_demon> ghosts;
 
@@ -334,26 +332,23 @@ void ghost_demon::init_pandemonium_lord()
 }
 
 // Returns the movement speed for a player ghost.  Note that this is a
-// real speed, not a movement cost, so higher is better.
-static int _player_ghost_base_movement_speed()
+// a movement cost, so lower is better.
+static int _player_ghost_movement_energy()
 {
-    int speed = 10;
+    int energy = 10;
 
     if (int fast = player_mutation_level(MUT_FAST, false))
-        speed += fast + 1;
+        energy -= fast + 1;
     if (int slow = player_mutation_level(MUT_SLOW, false))
-        speed -= slow + 1;
+        energy += slow + 1;
 
     if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
-        speed += 1;
+        energy -= 1;
 
-    // Cap speeds.
-    if (speed < MIN_GHOST_SPEED)
-        speed = MIN_GHOST_SPEED;
-    else if (speed > MAX_GHOST_SPEED)
-        speed = MAX_GHOST_SPEED;
+    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
+        energy += 1;
 
-    return speed;
+    return energy;
 }
 
 void ghost_demon::init_player_ghost(bool actual_ghost)
@@ -383,7 +378,9 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     set_resist(resists, MR_RES_ASPHYX, you.res_asphyx());
     set_resist(resists, MR_RES_ROTTING, you.res_rotting());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
-    speed          = _player_ghost_base_movement_speed();
+
+    move_energy = _player_ghost_movement_energy();
+    speed       = 10;
 
     damage = 4;
     brand = SPWPN_NORMAL;
@@ -886,8 +883,6 @@ bool debug_check_ghosts()
         if (ghost.xl < 1 || ghost.xl > 27)
             return false;
         if (ghost.ev > MAX_GHOST_EVASION)
-            return false;
-        if (ghost.speed < MIN_GHOST_SPEED || ghost.speed > MAX_GHOST_SPEED)
             return false;
         if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
             return false;

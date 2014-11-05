@@ -2912,6 +2912,14 @@ mon_energy_usage mons_class_energy(monster_type mc)
     return smc->energy_usage;
 }
 
+mon_energy_usage mons_energy(const monster* mon)
+{
+    mon_energy_usage meu = mons_class_energy(mon->type);
+    if (mon->ghost.get())
+        meu.move = meu.swim = mon->ghost->move_energy;
+    return meu;
+}
+
 int mons_class_zombie_base_speed(monster_type zombie_base_mc)
 {
     return max(3, mons_class_base_speed(zombie_base_mc) - 2);

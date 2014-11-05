@@ -5825,52 +5825,48 @@ const monsterentry *monster::find_monsterentry() const
 
 int monster::action_energy(energy_use_type et) const
 {
-    if (const monsterentry *me = find_monsterentry())
+    const mon_energy_usage &mu = mons_energy(this);
+    int move_cost = 0;
+    switch (et)
     {
-        const mon_energy_usage &mu = me->energy_usage;
-        int move_cost = 0;
-        switch (et)
-        {
-        case EUT_MOVE:    move_cost = mu.move; break;
-        // Amphibious monster speed boni are now dealt with using SWIM_ENERGY,
-        // rather than here.
-        case EUT_SWIM:    move_cost = mu.swim; break;
-        case EUT_MISSILE: return mu.missile;
-        case EUT_ITEM:    return mu.item;
-        case EUT_SPECIAL: return mu.special;
-        case EUT_SPELL:   return mu.spell;
-        case EUT_ATTACK:  return mu.attack;
-        case EUT_PICKUP:  return mu.pickup_percent;
-        }
-
-        if (has_ench(ENCH_SWIFT))
-            move_cost -= 2;
-
-        if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
-            move_cost += 1;
-
-        if (run())
-            move_cost -= 1;
-
-        // Shadows move more quickly when blended with the darkness
-        if (type == MONS_SHADOW && invisible())
-            move_cost -= 3;
-
-        // Floundering monsters get the same penalty as the player, except that
-        // player get penalty on entering water, while monster get the penalty
-        // when leaving it.
-        if (floundering())
-            move_cost += 3 + random2(8);
-
-        // If the monster cast it, it has more control and is there not
-        // as slow as when the player casts it.
-        if (has_ench(ENCH_LIQUEFYING))
-            move_cost -= 2;
-
-        // Never reduce the cost to zero
-        return max(move_cost, 1);
+    case EUT_MOVE:    move_cost = mu.move; break;
+    // Amphibious monster speed boni are now dealt with using SWIM_ENERGY,
+    // rather than here.
+    case EUT_SWIM:    move_cost = mu.swim; break;
+    case EUT_MISSILE: return mu.missile;
+    case EUT_ITEM:    return mu.item;
+    case EUT_SPECIAL: return mu.special;
+    case EUT_SPELL:   return mu.spell;
+    case EUT_ATTACK:  return mu.attack;
+    case EUT_PICKUP:  return mu.pickup_percent;
     }
-    return 10;
+
+    if (has_ench(ENCH_SWIFT))
+        move_cost -= 2;
+
+    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
+        move_cost += 1;
+
+    if (run())
+        move_cost -= 1;
+
+    // Shadows move more quickly when blended with the darkness
+    if (type == MONS_SHADOW && invisible())
+        move_cost -= 3;
+
+    // Floundering monsters get the same penalty as the player, except that
+    // player get penalty on entering water, while monster get the penalty
+    // when leaving it.
+    if (floundering())
+        move_cost += 3 + random2(8);
+
+    // If the monster cast it, it has more control and is there not
+    // as slow as when the player casts it.
+    if (has_ench(ENCH_LIQUEFYING))
+        move_cost -= 2;
+
+    // Never reduce the cost to zero
+    return max(move_cost, 1);
 }
 
 void monster::lose_energy(energy_use_type et, int div, int mult)
