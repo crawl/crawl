@@ -73,6 +73,8 @@ Go and return not
 
 Leave
 
+Out, out
+
 Quit
 
 Remove thy stench
@@ -156,6 +158,8 @@ Tremble
 
 Relinquish hope
 
+Repent
+
 Taste defeat
 %%%%
 whilst_thou_can
@@ -219,6 +223,8 @@ throat
 
 neck
 
+gizzard
+
 skull
 
 spine
@@ -246,6 +252,8 @@ sanity
 fortitude
 
 life force
+
+vitality
 %%%%
 meal
 
@@ -321,6 +329,8 @@ clouted
 craven
 
 currish
+
+defiled
 
 dankish
 
@@ -398,7 +408,6 @@ puking
 
 puny
 
-
 pandering
 
 pecksniffian
@@ -468,6 +477,8 @@ delicate
 
 fragile
 
+frumpy
+
 brittle
 
 tender
@@ -515,6 +526,8 @@ crummy
 
 daggy
 
+feral
+
 stray
 
 sticky
@@ -551,6 +564,8 @@ leprous
 cankerous
 
 decaying
+
+decrepit
 
 decomposing
 
@@ -850,6 +865,8 @@ high-strung
 
 straight-laced
 
+grave-robbed
+
 w:30
 @insult undead adj2@
 %%%%
@@ -927,6 +944,8 @@ bloater
 boar-pig
 
 bounder
+
+brigand
 
 bugbear
 
@@ -1265,6 +1284,8 @@ donkey
 
 four-legs
 
+gelding
+
 hack
 
 half-breed
@@ -1374,6 +1395,8 @@ dirt collector
 dust catcher
 
 trash-dump
+
+refuse
 
 rubbish heap
 
