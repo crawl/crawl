@@ -24,13 +24,13 @@ the milestone and player location display in the lobby.
 2. Running the server for testing purposes
 ------------------------------------------
 Compile Crawl with WEBTILES=y, make sure you've got Python and
-Tornado, then run "python webserver/server.py" from the source
-directory. Then open localhost:8080 with a browser, and you should see
-the lobby.
+Tornado, copy webserver/config.toml.sample to webserver/config.toml,
+then run "python webserver/server.py" from the source directory. Then
+open localhost:8080 with a browser, and you should see the lobby.
 
 3. Running a real server
 ------------------------
-The server can be configured by modifying the file config.json. When
+The server can be configured by modifying the file config.toml. When
 looking for this file, the server first looks at the WEBTILES_CONF
 environment variable, then in the working directory, and then the
 directory containing the server's python code.

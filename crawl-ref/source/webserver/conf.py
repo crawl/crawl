@@ -17,7 +17,9 @@ class Conf(object):
                                     "config.toml")
 
         if not os.path.exists(path):
-            errmsg = "Could not find config file!"
+            errmsg = "Could not find the config file (config.toml)!"
+            if os.path.exists(path + ".sample"):
+                errmsg += " Maybe copy config.toml.sample to config.toml."
             logging.error(errmsg)
             sys.exit(errmsg)
 

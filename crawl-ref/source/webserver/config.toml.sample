@@ -113,7 +113,8 @@ morgue_path = "./rcs/%n"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
-# dir_path = "./"  # optional
+# dir_path = "./"
+# env_lang = "en_US.UTF8"
 send_json_options = true
 # morgue_url = ""
 
@@ -132,7 +133,6 @@ morgue_path = "./rcs/%n"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
-#dir_path = "./"  # optional
 send_json_options = true
 
 [[games]]
@@ -150,7 +150,6 @@ morgue_path = "./rcs/%n"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
-#dir_path = "./"  # optional
 send_json_options = true
 
 [[games]]
@@ -168,8 +167,6 @@ morgue_path = "./rcs/%n"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
-#env_lang = "en_US.UTF8"  # optional
-#dir_path = "./"  # optional
 send_json_options = true
 
 [game_link_settings]
