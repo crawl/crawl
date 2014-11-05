@@ -5829,7 +5829,8 @@ const monsterentry *monster::find_monsterentry() const
 
 int monster::action_energy(energy_use_type et) const
 {
-    ASSERT(find_monsterentry());
+    if (!find_monsterentry())
+        return 10;
 
     const mon_energy_usage &mu = mons_energy(this);
     int move_cost = 0;
