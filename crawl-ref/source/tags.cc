@@ -5835,6 +5835,11 @@ static ghost_demon unmarshallGhost(reader &th)
     else
 #endif
     ghost.move_energy      = unmarshallShort(th);
+    // fix up ghost_demons that forgot to have move_energy initialized
+    // i don't think there are any ghost_demons that intentionally have a
+    // move_energy of 0, so this should probably be safe
+    if (ghost.move_energy == 0)
+        ghost.move_energy = 10;
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
