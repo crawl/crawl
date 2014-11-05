@@ -334,6 +334,7 @@ void ghost_demon::init_pandemonium_lord()
 
 // Returns the movement speed for a player ghost.  Note that this is a
 // a movement cost, so lower is better.
+//FIXME: deduplicate with player_movement_speed()
 static int _player_ghost_movement_energy()
 {
     int energy = 10;
@@ -341,13 +342,16 @@ static int _player_ghost_movement_energy()
     if (int fast = player_mutation_level(MUT_FAST, false))
         energy -= fast + 1;
     if (int slow = player_mutation_level(MUT_SLOW, false))
-        energy += slow + 1;
+        energy += slow + 2;
 
     if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
         energy -= 1;
 
     if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         energy += 1;
+
+    if (energy < FASTEST_PLAYER_MOVE_SPEED)
+        energy = FASTEST_PLAYER_MOVE_SPEED;
 
     return energy;
 }
