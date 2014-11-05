@@ -1375,6 +1375,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_NECROMANCY:
             if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "La Petite Mort";
+            else if (god == GOD_KIKUBAAQUDGHA)
+                result = god_title((god_type)god, (species_type)species, piety);
+            break;
+
+        case SK_EVOCATIONS:
+            if (god == GOD_NEMELEX_XOBEH)
+                result = god_title((god_type)god, (species_type)species, piety);
             break;
 
         default:
