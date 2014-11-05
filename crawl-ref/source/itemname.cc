@@ -353,6 +353,16 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             buff << "}";
         }
     }
+    // These didn't have "cursed " prepended; add them here so that
+    // it comes after the inscription.
+    if (terse && descrip != DESC_DBNAME && descrip != DESC_BASENAME
+        && descrip != DESC_QUALNAME
+        && is_artefact(*this) && cursed()
+        && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
+        && (ident || item_ident(*this, ISFLAG_KNOW_CURSE)))
+    {
+        buff << " (curse)";
+    }
 
     return buff.str();
 }
