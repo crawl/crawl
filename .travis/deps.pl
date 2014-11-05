@@ -2,16 +2,17 @@
 use strict;
 use warnings;
 
+my @deps;
+
 if ($ENV{BUILD_ALL}) {
-    my @deps = qw(
+    system "git submodule update --init --recursive";
+
+    @deps = qw(
         libasound2-dev
     );
-
-    exec "sudo apt-get install @deps";
-    exec "git submodule update --init --recursive";
 }
 else {
-    my @deps = qw(
+    @deps = qw(
         liblua5.1-0-dev
     );
 
@@ -19,6 +20,6 @@ else {
         libsdl1.2-dev
         libsdl-image1.2-dev
     ) if $ENV{TILES} || $ENV{WEBTILES};
-
-    exec "sudo apt-get install @deps";
 }
+
+exec "sudo apt-get install @deps";
