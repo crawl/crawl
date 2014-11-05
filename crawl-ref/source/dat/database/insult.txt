@@ -943,6 +943,8 @@ bloater
 
 boar-pig
 
+bootlicker
+
 bounder
 
 brigand
@@ -1057,6 +1059,8 @@ pignut
 
 pimple
 
+pissant
+
 pot-faker
 
 prigger-of-prances
@@ -1068,6 +1072,8 @@ puttock
 pumpion
 
 ratsbane
+
+reprobate
 
 scavenger
 
@@ -1100,6 +1106,8 @@ tinkerer
 tiddler
 
 tiler
+
+toady
 
 urchin
 
