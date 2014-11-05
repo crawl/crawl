@@ -3,6 +3,11 @@ use strict;
 use warnings;
 
 if ($ENV{BUILD_ALL}) {
+    my @deps = qw(
+        libasound2-dev
+    );
+
+    exec "sudo apt-get install @deps";
     exec "git submodule update --init --recursive";
 }
 else {
