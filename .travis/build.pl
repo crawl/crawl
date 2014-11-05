@@ -47,3 +47,9 @@ sub try {
         }
     }
 }
+
+sub error {
+    my ($exitcode) = @_;
+    system "cat morgue/crash-*.txt";
+    exit $exitcode;
+}
