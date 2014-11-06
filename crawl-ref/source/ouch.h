@@ -79,11 +79,11 @@ int actor_to_death_source(const actor* agent);
 string morgue_name(string char_name, time_t when_crawl_got_even);
 
 void reset_damage_counters();
-void ouch(int dam, int death_source, kill_method_type death_type,
+void ouch(int dam, kill_method_type death_type, mid_t source = MID_NOBODY,
           const char *aux = NULL, bool see_source = true,
           const char *death_source_name = NULL);
 
-void lose_level(int death_source, const char* aux);
+void lose_level();
 bool drain_player(int power = 25, bool announce_full = true,
                   bool ignore_protection = false);
 

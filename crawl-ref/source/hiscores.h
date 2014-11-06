@@ -69,7 +69,7 @@ private:
     uint8_t     best_skill_lvl;     // best skill level
     string      title;              // title
     int         death_type;
-    int         death_source;       // NON_MONSTER or monster mindex()
+    mid_t       death_source;       // killer (maybe be MID_NOBODY)
     string      death_source_name;  // overrides death_source
     set<string> death_source_flags; // misc flags about killer
     string      auxkilldata;        // weapon wielded, spell cast, etc
@@ -127,7 +127,7 @@ private:
 
 public:
     scorefile_entry();
-    scorefile_entry(int damage, int death_source, int death_type,
+    scorefile_entry(int damage, mid_t death_source, int death_type,
                     const char *aux, bool death_cause_only = false,
                     const char *death_source_name = NULL,
                     time_t death_time = 0);
@@ -135,7 +135,7 @@ public:
 
     scorefile_entry &operator = (const scorefile_entry &other);
 
-    void init_death_cause(int damage, int death_source, int death_type,
+    void init_death_cause(int damage, mid_t death_source, int death_type,
                           const char *aux, const char *death_source_name);
     void init(time_t death_time = 0);
     void reset();

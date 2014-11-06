@@ -452,7 +452,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
         mpr("You feel very cold.");
         if (agent && !agent->is_player())
         {
-            ouch(hurted, agent->as_monster()->mindex(), KILLED_BY_BEAM,
+            ouch(hurted, KILLED_BY_BEAM, agent->mid,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
             expose_player_to_element(BEAM_COLD, 5, added_effects);
@@ -463,7 +463,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
         }
         else
         {
-            ouch(hurted, NON_MONSTER, KILLED_BY_FREEZING);
+            ouch(hurted, KILLED_BY_FREEZING);
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
         }
     }
@@ -535,8 +535,8 @@ static int _drain_player(actor* agent, int pow, int avg,
     if (actual)
     {
         monster* mons = agent ? agent->as_monster() : 0;
-        ouch(avg, mons ? mons->mindex() : NON_MONSTER,
-             KILLED_BY_BEAM, "by drain life");
+        ouch(avg, KILLED_BY_BEAM, mons ? mons->mid : MID_NOBODY,
+             "by drain life");
     }
 
     return avg;
@@ -1313,9 +1313,9 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
         mpr(damage > 15 ? "You shudder from the earth-shattering force."
                         : "You shudder.");
         if (devastator)
-            ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+            ouch(damage, KILLED_BY_MONSTER, wielder->mid);
         else
-            ouch(damage, wielder->mindex(), KILLED_BY_BEAM, "by Shatter");
+            ouch(damage, KILLED_BY_BEAM, wielder->mid, "by Shatter");
     }
 
     return damage;
@@ -1755,7 +1755,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
             else
                 mpr("The poison in your system burns!");
 
-            ouch(damage, agent->as_monster()->mindex(), KILLED_BY_MONSTER,
+            ouch(damage, KILLED_BY_MONSTER, agent->mid,
                 agent->as_monster()->name(DESC_A).c_str());
 
             if (you.duration[DUR_POISONING] > 0)
@@ -1930,8 +1930,7 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by static electricity",
-             true,
+        ouch(damage, KILLED_BY_BEAM, agent->mid, "by static electricity", true,
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
     }
     else if (victim->res_elec() > 0)
@@ -2374,7 +2373,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     {
         mpr("You shatter!");
 
-        ouch(beam.damage.roll(), caster->mindex(), KILLED_BY_BEAM,
+        ouch(beam.damage.roll(), KILLED_BY_BEAM, caster->mid,
              "by Lee's Rapid Deconstruction", true,
              caster->is_player() ? "you"
                                  : caster->name(DESC_A).c_str());
@@ -2642,7 +2641,7 @@ void forest_damage(const actor *mon)
 
                 if (foe->is_player())
                 {
-                    ouch(dmg, mon->mindex(), KILLED_BY_BEAM,
+                    ouch(dmg, KILLED_BY_BEAM, mon->mid,
                          "by angry trees", true);
                 }
                 else
@@ -2890,7 +2889,7 @@ void toxic_radiance_effect(actor* agent, int mult)
             // still get poisoned
             if (!agent->is_player())
             {
-                ouch(dam, agent->as_monster()->mindex(), KILLED_BY_BEAM,
+                ouch(dam, KILLED_BY_BEAM, agent->mid,
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 

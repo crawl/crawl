@@ -739,7 +739,7 @@ void revive()
         you.lives = 0;
         mpr("You are too frail to live.");
         // possible only with an extreme abuse of Borgnjor's
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, KILLED_BY_DRAINING);
     }
 
     mpr("You rejoin the land of the living...");
@@ -1180,7 +1180,7 @@ void entered_malign_portal(actor* act)
 
     act->blink(false);
     if (act->is_player())
-        ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
+        ouch(roll_dice(2, 4), KILLED_BY_WILD_MAGIC, MID_NOBODY, "a malign gateway");
     else
         act->hurt(NULL, roll_dice(2, 4));
 }

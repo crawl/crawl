@@ -2142,7 +2142,7 @@ void process_command(command_type cmd)
         if (crawl_state.disables[DIS_CONFIRMATIONS]
             || yes_or_no("Are you sure you want to abandon this character and quit the game?"))
         {
-            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
+            ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }
         else
             canned_msg(MSG_OK);
@@ -2379,7 +2379,7 @@ void world_reacts()
         // Please do not give it a custom ktyp or make it cool in any way
         // whatsoever, because players are insane.  Usually, not being dragged
         // down by sanity is good, but this is not the case here.
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
+        ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
     }
 
     handle_time();
@@ -3512,8 +3512,7 @@ static void _move_player(coord_def move)
         {
             mprf(MSGCH_WARN,"The barbed spikes dig painfully into your body "
             "as you move.");
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NON_MONSTER,
-                 KILLED_BY_BARBS);
+            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
             bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
 
             // Sometimes decrease duration even when we move.

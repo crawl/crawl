@@ -2904,14 +2904,14 @@ static void _felid_extra_life()
  *                                stat gains. Currently only used by wizmode
  *                                commands.
  */
-void level_change(int source, const char* aux, bool skip_attribute_increase)
+void level_change(bool skip_attribute_increase)
 {
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
     you.redraw_experience = true;
 
     while (you.experience < exp_needed(you.experience_level))
-        lose_level(source, aux);
+        lose_level();
 
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))
@@ -4230,7 +4230,7 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     // fatal, somebody else is doing the bookkeeping, and we don't want to mess
     // with that.
     if (!fatal && aux)
-        ouch(hp_loss, NON_MONSTER, KILLED_BY_SOMETHING, aux);
+        ouch(hp_loss, KILLED_BY_SOMETHING, MID_NOBODY, aux);
     else
         you.hp -= hp_loss;
 
@@ -4439,7 +4439,7 @@ void rot_hp(int hp_loss)
     calc_hp();
 
     // Kill the player if they reached 0 maxhp.
-    ouch(0, NON_MONSTER, KILLED_BY_ROTTING);
+    ouch(0, KILLED_BY_ROTTING);
 
     if (you.species != SP_GHOUL)
         xom_is_stimulated(hp_loss * 25);
@@ -4797,7 +4797,7 @@ bool curare_hits_player(int death_source, int levels, string name,
             you.increase_duration(DUR_BREATH_WEAPON, hurted,
                                   10*levels + random2(10*levels));
             mpr("You have difficulty breathing.");
-            ouch(hurted, death_source, KILLED_BY_CURARE,
+            ouch(hurted, KILLED_BY_CURARE, menv[death_source].mid,
                  "curare-induced apnoea");
         }
     }
@@ -4969,7 +4969,7 @@ void handle_player_poison(int delay)
     if (do_dmg && dmg > 0)
     {
         int oldhp = you.hp;
-        ouch(dmg, NON_MONSTER, KILLED_BY_POISON);
+        ouch(dmg, KILLED_BY_POISON);
         if (you.hp < oldhp)
             mprf(channel, "You feel %ssick.", adj);
     }
@@ -5150,7 +5150,7 @@ void dec_napalm_player(int delay)
     const int hurted = resist_adjust_damage(&you, BEAM_FIRE, player_res_fire(),
                                             random2avg(9, 2) + 1);
 
-    ouch(hurted * delay / BASELINE_DELAY, NON_MONSTER, KILLED_BY_BURNING);
+    ouch(hurted * delay / BASELINE_DELAY, KILLED_BY_BURNING);
 
     you.duration[DUR_LIQUID_FLAMES] -= delay;
     if (you.duration[DUR_LIQUID_FLAMES] <= 0)
@@ -5492,7 +5492,7 @@ void handle_player_drowning(int delay)
                 div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
                                 * delay,
                                 BASELINE_DELAY * 10);
-            ouch(dam, mons->mindex(), KILLED_BY_WATER);
+            ouch(dam, KILLED_BY_WATER, mons->mid);
             mprf(MSGCH_WARN, "Your lungs strain for air!");
         }
     }
@@ -7098,15 +7098,15 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, NON_MONSTER, KILLED_BY_MONSTER, "",
+        ouch(amount, KILLED_BY_MONSTER, MID_NOBODY, "",
              false, "posthumous revenge");
     }
     else if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
-        ouch(amount, mon->mindex(),
+        ouch(amount,
              flavour == BEAM_WATER ? KILLED_BY_WATER : KILLED_BY_MONSTER,
-             "", mon->visible_to(this), NULL);
+             mon->mid, "", mon->visible_to(this), NULL);
     }
     else
     {
@@ -7235,8 +7235,8 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         if (post_res_dam < dam)
             canned_msg(MSG_YOU_RESIST);
 
-        ouch(post_res_dam, evildoer ? evildoer->mindex() : NON_MONSTER,
-             KILLED_BY_ACID);
+        ouch(post_res_dam, KILLED_BY_ACID,
+             evildoer ? evildoer->mid : MID_NOBODY);
     }
 }
 

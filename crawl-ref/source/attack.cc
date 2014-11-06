@@ -1111,7 +1111,7 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     }
     if (defender->is_player())
     {
-        ouch(dam, responsible->mindex(), kill_type, aux_source.c_str(),
+        ouch(dam, kill_type, responsible->mid, aux_source.c_str(),
              you.can_see(attacker));
         return dam;
     }

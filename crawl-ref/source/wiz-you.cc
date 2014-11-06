@@ -919,7 +919,7 @@ static void debug_uptick_xl(int newxl, bool train)
         train_skills();
     }
     you.experience = exp_needed(newxl);
-    level_change(NON_MONSTER, NULL, true);
+    level_change(true);
 }
 
 /**

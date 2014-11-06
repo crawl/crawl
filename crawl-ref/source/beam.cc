@@ -2362,7 +2362,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
     if (victim->is_player())
-        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by a malign offering");
+        ouch(damage, KILLED_BY_BEAM, agent->mid, "by a malign offering");
     else
         damage = victim->hurt(agent, damage, BEAM_NEG);
 
@@ -2924,7 +2924,7 @@ void bolt::internal_ouch(int dam)
     if (monst && monst->type == MONS_PLAYER_SHADOW
         && !monst->mname.empty())
     {
-        ouch(dam, NON_MONSTER, KILLED_BY_DIVINE_WRATH,
+        ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
              aux_source.empty() ? NULL : aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     }
@@ -2932,39 +2932,37 @@ void bolt::internal_ouch(int dam)
                        || monst->type == MONS_BALL_LIGHTNING
                        || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
-        ouch(dam, actor_to_death_source(agent()), KILLED_BY_SPORE,
+        ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
-        ouch(dam, actor_to_death_source(agent()), KILLED_BY_DISINT, what, true,
+        ouch(dam, KILLED_BY_DISINT, source_id, what, true,
              source_name.empty() ? NULL : source_name.c_str());
     }
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
         if (reflections > 0)
         {
-            ouch(dam, actor_to_death_source(actor_by_mid(reflector)),
-                 KILLED_BY_REFLECTION, name.c_str());
+            ouch(dam, KILLED_BY_REFLECTION, reflector, name.c_str());
         }
         else if (bounces > 0)
-            ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE, name.c_str());
+            ouch(dam, KILLED_BY_BOUNCE, MID_PLAYER, name.c_str());
         else
         {
             if (aimed_at_feet && effect_known)
-                ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
+                ouch(dam, KILLED_BY_SELF_AIMED, MID_PLAYER, name.c_str());
             else
-                ouch(dam, NON_MONSTER, KILLED_BY_TARGETING, name.c_str());
+                ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
         }
     }
     else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
-        ouch(dam, actor_to_death_source(agent()), KILLED_BY_BEAM,
+        ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
-        ouch(dam, actor_to_death_source(agent()), KILLED_BY_WILD_MAGIC,
-             aux_source.c_str());
+        ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
 
 // [ds] Apply a fuzz if the monster lacks see invisible and is trying to target

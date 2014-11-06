@@ -2339,7 +2339,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     if (you.hp <= 0)
     {
-        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+        ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
              make_stringf("gaining the %s transformation",
                           transform_name(which_trans)).c_str());
     }
@@ -2490,7 +2490,7 @@ void untransform(bool skip_move)
 
     if (you.hp <= 0)
     {
-        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+        ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
              make_stringf("losing the %s form",
                           transform_name(old_form)).c_str());
     }

@@ -1131,7 +1131,7 @@ static void _spellcasting_corruption(spell_type spell)
     const char * source = NULL;
     if (player_equip_unrand(UNRAND_MAJIN))
         source = "the Majin-Bo"; // for debugging
-    ouch(hp_cost, NON_MONSTER, KILLED_BY_SOMETHING, source);
+    ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
 /**

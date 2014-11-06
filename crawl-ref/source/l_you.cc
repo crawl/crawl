@@ -674,7 +674,7 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
-LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
+LUAWRAP(_you_die,ouch(INSTANT_DEATH, KILLED_BY_SOMETHING))
 
 static int _you_piety(lua_State *ls)
 {

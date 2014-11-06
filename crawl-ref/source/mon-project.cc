@@ -223,7 +223,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 
         int dam = victim->apply_ac(roll_dice(3, 20));
         if (victim->is_player())
-            ouch(dam, mon.mindex(), KILLED_BY_ROLLING);
+            ouch(dam, KILLED_BY_ROLLING, mon.mid);
         else
             victim->hurt(&mon, dam);
     }
