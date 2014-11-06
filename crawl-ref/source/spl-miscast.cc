@@ -547,7 +547,8 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
             method = KILLED_BY_SOMETHING;
 
         bool see_source = act_source && you.can_see(act_source);
-        ouch(dam, kill_source, method, cause.c_str(), see_source);
+        ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
+             cause.c_str(), see_source);
     }
 
     return true;

@@ -107,7 +107,7 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
         break;
     }
 
-    ouch(hploss, NON_MONSTER, type, aux);
+    ouch(hploss, type, MID_NOBODY, aux);
 
     return;
 }
@@ -260,7 +260,7 @@ int torment_player(actor *attacker, int taux)
         }
     }
 
-    ouch(hploss, attacker? attacker->mindex() : MHITNOT, type, aux);
+    ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
 
     return 1;
 }
@@ -613,7 +613,7 @@ void direct_effect(monster* source, spell_type spell,
         if (defender->is_player())
         {
             // Bypassing ::hurt so that flay damage can ignore guardian spirit
-            ouch(damage_taken, source->mindex(), KILLED_BY_MONSTER,
+            ouch(damage_taken, KILLED_BY_MONSTER, source->mid,
                  "flay_damage", you.can_see(source));
         }
         else
@@ -690,9 +690,8 @@ void direct_effect(monster* source, spell_type spell,
         if (def)
             def->hurt(source, damage_taken);
         else
-            ouch(damage_taken,
-                 actor_to_death_source(actor_by_mid(pbolt.source_id)),
-                 KILLED_BY_BEAM, pbolt.aux_source.c_str());
+            ouch(damage_taken, KILLED_BY_BEAM, pbolt.source_id,
+                 pbolt.aux_source.c_str());
     }
 }
 

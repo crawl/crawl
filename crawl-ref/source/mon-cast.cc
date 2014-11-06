@@ -3784,7 +3784,7 @@ static bool _mons_vampiric_drain(monster *mons)
 
     if (target->is_player())
     {
-        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, "by vampiric draining");
+        ouch(hp_cost, KILLED_BY_BEAM, mons->mid, "by vampiric draining");
         if (mons->heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
@@ -6627,7 +6627,7 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
         mprf("%s throws you!",
              (thrower_seen ? thrower_name.c_str() : "Something"));
         move_player_to_grid(chosen_dest, false);
-        ouch(dam, thrower.mindex(), KILLED_BY_BEING_THROWN);
+        ouch(dam, KILLED_BY_BEING_THROWN, thrower.mid);
     }
     else
     {

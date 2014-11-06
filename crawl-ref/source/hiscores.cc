@@ -644,7 +644,7 @@ static kill_method_type _str_to_kill_method(const string &s)
 //////////////////////////////////////////////////////////////////////////
 // scorefile_entry
 
-scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
+scorefile_entry::scorefile_entry(int dam, mid_t dsource, int dtype,
                                  const char *aux, bool death_cause_only,
                                  const char *dsource_name, time_t dt)
 {
@@ -1174,7 +1174,7 @@ static bool _strip_to(string &str, const char *infix)
     return false;
 }
 
-void scorefile_entry::init_death_cause(int dam, int dsrc,
+void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
                                        int dtype, const char *aux,
                                        const char *dsrc_name)
 {
@@ -1182,8 +1182,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     death_type   = dtype;
     damage       = dam;
 
-    const monster *source_monster =
-        !invalid_monster_index(death_source) ? &menv[death_source] : NULL;
+    const monster *source_monster = monster_by_mid(death_source);
     if (source_monster)
         killer_map = source_monster->originating_map();
 
@@ -1194,14 +1193,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     else
         auxkilldata = aux;
 
-    if (!invalid_monster_index(death_source)
-        && !env.mons[death_source].alive()
-        && death_type != KILLED_BY_SPORE
-        && death_type != KILLED_BY_WATER
-        && auxkilldata != "exploding inner flame")
-    {
-        death_source = NON_MONSTER;
-    }
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_HEADBUTT
@@ -1218,10 +1209,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
             || death_type == KILLED_BY_BEING_THROWN)
-        && !invalid_monster_index(death_source)
-        && menv[death_source].type != MONS_NO_MONSTER)
+        && monster_by_mid(death_source))
     {
-        const monster* mons = &menv[death_source];
+        const monster* mons = monster_by_mid(death_source);
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
@@ -1350,7 +1340,7 @@ void scorefile_entry::reset()
     best_skill_lvl       = 0;
     title.clear();
     death_type           = KILLED_BY_SOMETHING;
-    death_source         = NON_MONSTER;
+    death_source         = MID_NOBODY;
     death_source_name.clear();
     auxkilldata.clear();
     indirectkiller.clear();
@@ -2829,7 +2819,7 @@ void mark_milestone(const string &type, const string &milestone,
 
     const string milestone_file =
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
-    const scorefile_entry se(0, 0, KILL_MISC, NULL);
+    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, NULL);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     if (!origin_level.empty())
@@ -2857,7 +2847,7 @@ void mark_milestone(const string &type, const string &milestone,
 #ifdef DGL_WHEREIS
 string xlog_status_line()
 {
-    const scorefile_entry se(0, 0, KILL_MISC, NULL);
+    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, NULL);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     xl.add_field("time", "%s", make_date_string(time(NULL)).c_str());

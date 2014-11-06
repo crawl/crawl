@@ -184,7 +184,7 @@ void mirror_damage_fineff::fire()
     if (att == MID_PLAYER)
     {
         mpr("Your damage is reflected back at you!");
-        ouch(damage, NON_MONSTER, KILLED_BY_MIRROR_DAMAGE);
+        ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
     else if (def == MID_PLAYER)
     {

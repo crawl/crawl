@@ -877,7 +877,7 @@ static void _starcursed_scream(monster* mon, actor* target)
     else
     {
         mprf(MSGCH_MONSTER_SPELL, "%s", message);
-        ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
+        ouch(dam, KILLED_BY_BEAM, mon->mid, "accursed screaming");
     }
 
     if (stun && target->alive())

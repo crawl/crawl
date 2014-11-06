@@ -1556,7 +1556,7 @@ void handle_starvation()
         if (you.hunger <= 0)
         {
             mprf(MSGCH_FOOD, "You have starved to death.");
-            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
+            ouch(INSTANT_DEATH, KILLED_BY_STARVATION);
             if (!you.dead) // if we're still here...
                 set_hunger(HUNGER_DEFAULT, true);
         }

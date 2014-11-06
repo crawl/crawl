@@ -1470,7 +1470,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
             mpr("You burn to ash...");
         else
             mpr("The lava burns you to a cinder!");
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
+        ouch(INSTANT_DEATH, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
@@ -1481,7 +1481,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         else
             mpr("You drown...");
 
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
+        ouch(INSTANT_DEATH, KILLED_BY_WATER);
     }
 }
 

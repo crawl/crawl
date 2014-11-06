@@ -1980,7 +1980,7 @@ static void _god_smites_you(god_type god, const char *message,
             divine_hurt += random2(you.experience_level);
 
         simple_god_message(" smites you!", god);
-        ouch(divine_hurt, NON_MONSTER, death_type, aux.c_str());
+        ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
         dec_penance(god, 1);
     }
 }

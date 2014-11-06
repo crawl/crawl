@@ -2317,7 +2317,7 @@ void melee_attack::attacker_sustain_passive_damage()
     else if (attacker->is_player())
     {
         mprf("Your %s burn!", you.hand_name(true).c_str());
-        ouch(roll_dice(1, acid_strength), defender->mindex(), KILLED_BY_ACID);
+        ouch(roll_dice(1, acid_strength), KILLED_BY_ACID, defender->mid);
     }
     else
     {
@@ -3632,7 +3632,7 @@ void melee_attack::do_spines()
                                                         : "spines");
             }
             if (attacker->is_player())
-                ouch(hurt, defender->mindex(), KILLED_BY_SPINES);
+                ouch(hurt, KILLED_BY_SPINES, defender->mid);
             else
                 attacker->hurt(defender, hurt);
         }
@@ -3697,7 +3697,7 @@ void melee_attack::do_minotaur_retaliation()
             if (hurt > 0)
             {
                 if (attacker->is_player())
-                    ouch(hurt, defender->mindex(), KILLED_BY_HEADBUTT);
+                    ouch(hurt, KILLED_BY_HEADBUTT, defender->mid);
                 else
                     attacker->hurt(defender, hurt);
             }

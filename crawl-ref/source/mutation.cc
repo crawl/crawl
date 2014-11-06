@@ -1460,7 +1460,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 lose_stat(STAT_RANDOM, 1, false, reason);
             else
             {
-                ouch(3, NON_MONSTER, KILLED_BY_ROTTING, reason.c_str());
+                ouch(3, KILLED_BY_ROTTING, MID_NOBODY, reason.c_str());
                 rot_hp(roll_dice(1, 3));
             }
 
@@ -1710,7 +1710,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         if (you.hp <= 0)
         {
-            ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+            ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
                  make_stringf("gaining the %s mutation",
                               mutation_name(mutat)).c_str());
         }
@@ -1800,7 +1800,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     if (you.hp <= 0)
     {
-        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+        ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
              make_stringf("losing the %s mutation", mutation_name(mutat)).c_str());
     }
 

@@ -373,7 +373,7 @@ public:
   string escaped_death_aux;
 
   int turn_damage;   // cumulative damage per turn
-  int damage_source; // death source of last damage done to player
+  mid_t damage_source; // death source of last damage done to player
   int source_damage; // cumulative damage for you.damage_source
 
   // When other levels are loaded (e.g. viewing), is the player on this level?
@@ -965,8 +965,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_can_open_doors();
 
-void level_change(int source = NON_MONSTER, const char *aux = NULL,
-                  bool skip_attribute_increase = false);
+void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,

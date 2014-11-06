@@ -51,7 +51,7 @@ static void _calc_hp_artefact()
     set_hp(min(hp / 100, you.hp_max));
     you.hit_points_regeneration = hp % 100;
     if (you.hp_max <= 0) // Borgnjor's abusers...
-        ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
+        ouch(0, KILLED_BY_DRAINING);
 }
 
 // Fill an empty equipment slot.
