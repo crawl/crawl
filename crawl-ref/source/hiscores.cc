@@ -1522,7 +1522,7 @@ void scorefile_entry::init(time_t dt)
     lvl            = you.experience_level;
     best_skill     = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_lvl = you.skills[ best_skill ];
-    title          = player_title();
+    title          = player_title(false);
 
     // Note all skills at level 27, and also all skills at level >= 15.
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)

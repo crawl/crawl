@@ -1387,7 +1387,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_NECROMANCY:
             if (species == SP_SPRIGGAN && skill_rank == 5)
-                result = "La Petite Mort";
+                result = "Petite Mort";
             else if (god == GOD_KIKUBAAQUDGHA)
                 result = god_title(god, species, piety);
             break;
@@ -1413,10 +1413,18 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                           : result;
 }
 
-string player_title()
+/** What is the player's current title.
+ *
+ *  @param the whether to prepend a definite article.
+ *  @returns the title.
+ */
+string player_title(bool the)
 {
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    return skill_title_by_rank(best, get_skill_rank(you.skills[ best ]));
+    const string title =
+            skill_title_by_rank(best, get_skill_rank(you.skills[best]));
+    const string article = !the ? "" : title == "Petite Mort" ? "La " : "the ";
+    return article + title;
 }
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
