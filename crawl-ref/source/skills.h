@@ -68,11 +68,6 @@ int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 
-string skill_title(
-    skill_type best_skill, uint8_t skill_lev,
-    // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1,
-    int piety = you.piety);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
