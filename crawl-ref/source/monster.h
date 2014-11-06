@@ -63,10 +63,9 @@ public:
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
         int swift_cooldown;    ///< When alligator last casted Swift
         monster_type orc_type; ///< Orc type of Nergalle's spectral orc.
-        int tentacle_connect;  ///< mindex() of monster this tentacle is
+        mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
-                               //   FIXME: use a mid
     };
     int           colour;
     mid_t         summoner;

@@ -13,7 +13,6 @@ bool mons_is_tentacle(monster_type mc);
 bool mons_is_tentacle_segment(monster_type mc);
 bool mons_is_tentacle_or_tentacle_segment(monster_type mc);
 
-monster* mons_get_parent_monster(monster* mons);
 monster_type mons_tentacle_parent_type(const monster* mons);
 monster_type mons_tentacle_child_type(const monster* mons);
 

@@ -2403,13 +2403,12 @@ void handle_monster_move(monster* mons)
         //segment, kill the segment and adjust connectivity data.
         if (targ && mons_tentacle_adjacent(mons, targ))
         {
-            bool basis = targ->props.exists("outwards");
-            int out_idx = basis ? targ->props["outwards"].get_int() : -1;
-            if (out_idx != -1)
-                menv[out_idx].props["inwards"].get_int() = mons->mindex();
+            const bool basis = targ->props.exists("outwards");
+            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : NULL;
+            if (outward)
+                outward->props["inwards"].get_int() = mons->mid;
 
-            monster_die(targ,
-                        KILL_MISC, NON_MONSTER, true);
+            monster_die(targ, KILL_MISC, NON_MONSTER, true);
             targ = NULL;
         }
 

@@ -43,13 +43,13 @@ bool monster::is_child_monster() const
 bool monster::is_child_tentacle_of(const monster* mons) const
 {
     return mons_base_type(mons) == mons_tentacle_parent_type(this)
-           && tentacle_connect == mons->mindex();
+           && tentacle_connect == mons->mid;
 }
 
 bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
-           && mons->tentacle_connect == mindex();
+           && mons->tentacle_connect == mid;
 }
 
 bool mons_is_tentacle_head(monster_type mc)
@@ -87,15 +87,15 @@ bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
     return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
 }
 
-monster* mons_get_parent_monster(monster* mons)
+static monster* _mons_get_parent_monster(monster* mons)
 {
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->is_parent_monster_of(mons))
-            return mi->as_monster();
+            return *mi;
     }
 
-    return 0;
+    return NULL;
 }
 
 monster_type mons_tentacle_parent_type(const monster* mons)
@@ -147,7 +147,7 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
     return mons_is_tentacle_head(mons_base_type(parent))
            && mons_is_tentacle_segment(child->type)
            && child->props.exists("inwards")
-           && child->props["inwards"].get_int() == parent->mindex();
+           && child->props["inwards"].get_int() == (int) parent->mid;
 }
 
 bool get_tentacle_head(const monster*& mon)
@@ -155,30 +155,28 @@ bool get_tentacle_head(const monster*& mon)
     // For tentacle segments, find the associated tentacle.
     if (mon->is_child_tentacle_segment())
     {
-        if (invalid_monster_index(mon->tentacle_connect))
-            return false;
-        if (invalid_monster(&menv[mon->tentacle_connect]))
+        monster* tentacle = monster_by_mid(mon->tentacle_connect);
+        if (!tentacle)
             return false;
 
-        mon = &menv[mon->tentacle_connect];
+        mon = tentacle;
     }
 
     // For tentacles, find the associated head.
     if (mon->is_child_tentacle())
     {
-        if (invalid_monster_index(mon->tentacle_connect))
-            return false;
-        if (invalid_monster(&menv[mon->tentacle_connect]))
+        monster* head = monster_by_mid(mon->tentacle_connect);
+        if (!head)
             return false;
 
-        mon = &menv[mon->tentacle_connect];
+        mon = head;
     }
 
     return true;
 }
 
-static void _establish_connection(int tentacle,
-                                  int head,
+static void _establish_connection(monster* tentacle,
+                                  monster* head,
                                   set<position_node>::iterator path,
                                   monster_type connector_type)
 {
@@ -190,33 +188,30 @@ static void _establish_connection(int tentacle,
     {
         // This is a little awkward now. Oh well. -cao
         if (tentacle != head)
-            menv[tentacle].props["inwards"].get_int() = head;
+            tentacle->props["inwards"].get_int() = head->mid;
         else
-            menv[tentacle].props["inwards"].get_int() = -1;
+            tentacle->props["inwards"].get_int() = MID_NOBODY;
 
-     //   mprf ("null tentacle thing, res %d", menv[tentacle].props["inwards"].get_int());
         return;
     }
-
-    monster* main = &env.mons[head];
 
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
         if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(main), main,
-                      0, 0, last->pos, main->foe,
-                      MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, PROX_CLOSE_TO_PLAYER)))
+            mgen_data(connector_type, SAME_ATTITUDE(head), head,
+                      0, 0, last->pos, head->foe,
+                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
+                      head->colour, PROX_CLOSE_TO_PLAYER)))
         {
-            connect->props["inwards"].get_int()  = -1;
-            connect->props["outwards"].get_int() = -1;
+            connect->props["inwards"].get_int() = MID_NOBODY;
+            connect->props["outwards"].get_int() = MID_NOBODY;
 
-            if (main->holiness() == MH_UNDEAD)
+            if (head->holiness() == MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
-            connect->max_hit_points = menv[tentacle].max_hit_points;
-            connect->hit_points = menv[tentacle].hit_points;
+            connect->max_hit_points = tentacle->max_hit_points;
+            connect->hit_points = tentacle->hit_points;
         }
         else
         {
@@ -235,35 +230,34 @@ static void _establish_connection(int tentacle,
             mpr("Error! failed to place monster in tentacle connect change");
             break;
         }
-        int last_mon_idx = last_mon->mindex();
 
         // Monster at the current square, should be the end of the line if there
         monster* current_mons = monster_at(current->pos);
         if (current_mons)
         {
             // Todo verify current monster type
-            current_mons->props["inwards"].get_int() = last_mon_idx;
-            last_mon->props["outwards"].get_int() = current_mons->mindex();
+            current_mons->props["inwards"].get_int() = last_mon->mid;
+            last_mon->props["outwards"].get_int() = current_mons->mid;
             break;
         }
 
          // place a connector
         if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(main), main,
-                      0, 0, current->pos, main->foe,
-                      MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, PROX_CLOSE_TO_PLAYER)))
+            mgen_data(connector_type, SAME_ATTITUDE(head), head,
+                      0, 0, current->pos, head->foe,
+                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
+                      head->colour, PROX_CLOSE_TO_PLAYER)))
         {
-            connect->max_hit_points = menv[tentacle].max_hit_points;
-            connect->hit_points = menv[tentacle].hit_points;
+            connect->max_hit_points = tentacle->max_hit_points;
+            connect->hit_points = tentacle->hit_points;
 
-            connect->props["inwards"].get_int() = last_mon_idx;
-            connect->props["outwards"].get_int() = -1;
+            connect->props["inwards"].get_int() = last_mon->mid;
+            connect->props["outwards"].get_int() = MID_NOBODY;
 
             if (last_mon->type == connector_type)
-                menv[last_mon_idx].props["outwards"].get_int() = connect->mindex();
+                last_mon->props["outwards"].get_int() = connect->mid;
 
-            if (main->holiness() == MH_UNDEAD)
+            if (head->holiness() == MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
             if (monster_can_submerge(connect, env.grid(connect->pos())))
@@ -485,7 +479,7 @@ struct target_position
     }
 };
 
-struct target_monster
+/*struct target_monster
 {
     int target_mindex;
 
@@ -497,7 +491,7 @@ struct target_monster
         return true;
 
     }
-};
+};*/
 
 struct multi_target
 {
@@ -572,8 +566,8 @@ static bool _tentacle_pathfind(monster* tentacle,
 
 static bool _try_tentacle_connect(const coord_def & new_pos,
                                   const coord_def & base_position,
-                                  int tentacle_idx,
-                                  int base_idx,
+                                  monster* tentacle,
+                                  monster* head,
                                   tentacle_connect_constraints & connect_costs,
                                   monster_type connect_type)
 {
@@ -581,10 +575,10 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     // Except fix the tentacle end's pointer, idiot.
     if (base_position == new_pos)
     {
-        if (tentacle_idx == base_idx)
-            menv[tentacle_idx].props["inwards"].get_int() = -1;
+        if (tentacle == head)
+            tentacle->props["inwards"].get_int() = MID_NOBODY;
         else
-            menv[tentacle_idx].props["inwards"].get_int() = base_idx;
+            tentacle->props["inwards"].get_int() = head->mid;
         return true;
     }
 
@@ -620,7 +614,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     if (candidates.empty())
         return false;
 
-    _establish_connection(tentacle_idx, base_idx,candidates[0], connect_type);
+    _establish_connection(tentacle, head, candidates[0], connect_type);
 
     return true;
 }
@@ -628,27 +622,26 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
 static void _collect_tentacles(monster* mons,
                                vector<monster_iterator> & tentacles)
 {
-    monster_type tentacle = mons_tentacle_child_type(mons);
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
-        if (mi->tentacle_connect == mons->mindex() && mi->type == tentacle)
+        if (mons->is_parent_monster_of(*mi))
             tentacles.push_back(mi);
 }
 
-static void _purge_connectors(int tentacle_idx, monster_type mon_type)
+static void _purge_connectors(monster* tentacle)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->tentacle_connect == tentacle_idx && mi->type == mon_type)
+        if (mi->is_child_tentacle_of(tentacle))
         {
-            int hp = menv[mi->mindex()].hit_points;
-            if (hp > 0 && hp < menv[tentacle_idx].hit_points)
-                menv[tentacle_idx].hit_points = hp;
+            int hp = mi->hit_points;
+            if (hp > 0 && hp < tentacle->hit_points)
+                tentacle->hit_points = hp;
 
-            monster_die(&env.mons[mi->mindex()],
-                    KILL_MISC, NON_MONSTER, true);
+            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
     }
+    ASSERT(tentacle->alive());
 }
 
 struct complicated_sight_check
@@ -681,7 +674,7 @@ static void _collect_foe_positions(monster* mons,
 
     for (monster_iterator mi; mi; ++mi)
     {
-        monster* test = &menv[mi->mindex()];
+        monster* test = *mi;
         if (!mons_is_firewood(test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
@@ -716,13 +709,12 @@ static int _collect_connection_data(monster* start_monster,
         }
 
         bool basis = current_mon->props.exists("inwards");
-        int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
+        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
 
-        if (next_idx != -1 && menv[next_idx].alive()
-            && menv[next_idx].is_child_tentacle_of(start_monster))
+        if (next && next->is_child_tentacle_of(start_monster))
         {
-            current_mon = &menv[next_idx];
-            if (current_mon->tentacle_connect != start_monster->mindex())
+            current_mon = next;
+            if (current_mon->tentacle_connect != start_monster->mid)
                 mpr("link information corruption!!! tentacle in chain doesn't match mindex");
             if (!retract_found)
             {
@@ -750,11 +742,8 @@ void move_solo_tentacle(monster* tentacle)
         return;
     }
 
-    monster_type segment_type = mons_tentacle_child_type(tentacle);
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-
-    int tentacle_idx = tentacle->mindex();
 
     vector<coord_def> foe_positions;
 
@@ -784,7 +773,7 @@ void move_solo_tentacle(monster* tentacle)
 
     bool retract_found = retract_pos.x != -1 && retract_pos.y != -1;
 
-    _purge_connectors(tentacle->mindex(), segment_type);
+    _purge_connectors(tentacle);
 
     if (severed)
     {
@@ -972,9 +961,9 @@ void move_solo_tentacle(monster* tentacle)
     connect_costs.base_monster = tentacle;
 
     bool connected = _try_tentacle_connect(new_pos, base_position,
-                                           tentacle_idx, tentacle_idx,
+                                           tentacle, tentacle,
                                            connect_costs,
-                                           segment_type);
+                                           mons_tentacle_child_type(tentacle));
 
     if (!connected)
     {
@@ -983,9 +972,7 @@ void move_solo_tentacle(monster* tentacle)
         mprf("tentacle connect failed! What the heck!  severed status %d",
              tentacle->has_ench(ENCH_SEVERED));
         mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y,
-             old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
-
-//      mgrd(tentacle->pos()) = tentacle->mindex();
+             old_pos.x, old_pos.y, tentacle->mid, visited_count);
 
         // Is it ok to purge the tentacle here?
         monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
@@ -1048,13 +1035,13 @@ void move_child_tentacles(monster* mons)
             }
 
             bool basis = current_mon->props.exists("inwards");
-            int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
+            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
 
-            if (next_idx != -1 && menv[next_idx].alive()
-                && (menv[next_idx].is_child_tentacle_of(tentacle)
-                    || menv[next_idx].is_parent_monster_of(tentacle)))
+            if (inward
+                && (inward->is_child_tentacle_of(tentacle)
+                    || inward->is_parent_monster_of(tentacle)))
             {
-                current_mon = &menv[next_idx];
+                current_mon = inward;
                 if (!retract_found
                     && current_mon->is_child_tentacle_of(tentacle))
                 {
@@ -1067,9 +1054,7 @@ void move_child_tentacles(monster* mons)
             current_count++;
         }
 
-        int tentacle_idx = tentacle->mindex();
-
-        _purge_connectors(tentacle_idx, mons_tentacle_child_type(tentacle));
+        _purge_connectors(tentacle);
 
         if (no_foe
             && grid_distance(tentacle->pos(), mons->pos()) == 1)
@@ -1172,7 +1157,7 @@ void move_child_tentacles(monster* mons)
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
         bool connected = _try_tentacle_connect(new_pos, mons->pos(),
-                                tentacle_idx, mons->mindex(),
+                                tentacle, mons,
                                 connect_costs,
                                 mons_tentacle_child_type(tentacle));
 
@@ -1198,7 +1183,7 @@ int destroy_tentacle(monster* mons)
     int seen = 0;
 
     monster* head = mons_is_tentacle_segment(mons->type)
-            ? mons_get_parent_monster(mons) : mons;
+            ? _mons_get_parent_monster(mons) : mons;
 
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
@@ -1223,8 +1208,6 @@ int destroy_tentacle(monster* mons)
         if (mons_near(head))
                 seen++;
 
-        //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
-        //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
 
@@ -1275,13 +1258,6 @@ int mons_available_tentacles(monster* head)
 
 void mons_create_tentacles(monster* head)
 {
-    int head_index = head->mindex();
-    if (invalid_monster_index(head_index))
-    {
-        mprf(MSGCH_ERROR, "Error! Tentacle head is not a part of the current environment!");
-        return;
-    }
-
     int possible_count = mons_available_tentacles(head);
 
     if (possible_count <= 0)
@@ -1314,13 +1290,14 @@ void mons_create_tentacles(monster* head)
         if (monster *tentacle = create_monster(
             mgen_data(tent_type, SAME_ATTITUDE(head), head,
                         0, 0, adj_squares[i], head->foe,
-                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
-                        head->colour, PROX_CLOSE_TO_PLAYER)))
+                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                        head->mid, head->colour,
+                        PROX_CLOSE_TO_PLAYER)))
         {
             if (you.can_see(tentacle))
                 visible_count++;
 
-            tentacle->props["inwards"].get_int() = head_index;
+            tentacle->props["inwards"].get_int() = head->mid;
 
             if (head->holiness() == MH_UNDEAD)
                 tentacle->flags |= MF_FAKE_UNDEAD;

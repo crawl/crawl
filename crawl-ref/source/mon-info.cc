@@ -326,12 +326,9 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
     if (!m->props.exists(key))
         return;
 
-    const int h_idx = m->props[key].get_int();
-    monster *other = NULL; // previous or next segment
-    if (h_idx != -1)
+    const monster* other = monster_by_mid(m->props[key].get_int());
+    if (other)
     {
-        ASSERT(!invalid_monster_index(h_idx));
-        other = &menv[h_idx];
         coord_def h_pos = other->pos();
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
