@@ -1134,7 +1134,7 @@ static bool _need_stats_printed()
 static void _redraw_title(const string &your_name, const string &job_name)
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = your_name + " the " + job_name;
+    string title = your_name + " " + job_name;
 
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
@@ -2025,7 +2025,7 @@ static void _print_overview_screen_equip(column_composer& cols,
 static string _overview_screen_title(int sw)
 {
     char title[50];
-    snprintf(title, sizeof title, " the %s ", player_title().c_str());
+    snprintf(title, sizeof title, " %s ", player_title().c_str());
 
     char species_job[50];
     snprintf(species_job, sizeof species_job,

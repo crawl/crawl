@@ -268,7 +268,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
      */
     function update_stats_pane()
     {
-        $("#stats_titleline").text(player.name + " the " + player.title);
+        $("#stats_titleline").text(player.name + " " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
         var do_temperature = false;
