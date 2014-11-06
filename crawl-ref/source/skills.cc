@@ -1413,17 +1413,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                           : result;
 }
 
-string skill_title(skill_type best_skill, uint8_t skill_lev,
-                   int species, int str, int dex, int god, int piety)
-{
-    return skill_title_by_rank(best_skill, get_skill_rank(skill_lev),
-                               species, str, dex, god, piety);
-}
-
 string player_title()
 {
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    return skill_title(best, you.skills[ best ]);
+    return skill_title_by_rank(best, get_skill_rank(you.skills[ best ]));
 }
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
