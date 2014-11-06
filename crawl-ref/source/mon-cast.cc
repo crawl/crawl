@@ -5047,7 +5047,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_SYMBOL_OF_TORMENT:
-        torment(mons, mons->mindex(), mons->pos());
+        torment(mons, TORMENT_SPELL, mons->pos());
         return;
 
     case SPELL_MESMERISE:

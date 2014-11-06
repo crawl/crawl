@@ -1349,7 +1349,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
     // Explosion side-effects.
     if (type == MONS_LURKING_HORROR)
-        torment(mons, mons->mindex(), mons->pos());
+        torment(mons, TORMENT_LURKING_HORROR, mons->pos());
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)

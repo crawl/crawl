@@ -2041,7 +2041,7 @@ void MiscastEffect::_necromancy(int severity)
                 do_msg();
             }
             else
-                torment_monsters(target->pos(), 0, TORMENT_GENERIC);
+                torment(NULL, TORMENT_MISCAST, target->pos());
             break;
 
         case 1:

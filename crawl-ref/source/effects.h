@@ -50,9 +50,8 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker = NULL);
 
-int torment(actor *attacker, int taux, const coord_def& where);
-int torment_player(actor *attacker, int taux);
-int torment_monsters(coord_def where, actor *attacker, int taux);
+void torment(actor *attacker, torment_source_type taux, const coord_def& where);
+void torment_player(actor *attacker, torment_source_type taux);
 
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = NULL);
