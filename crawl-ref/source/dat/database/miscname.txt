@@ -386,6 +386,8 @@ eating_pizza
 {{
 if you.race() == "Ghoul" then
     return "Anchovies... pretty bad, even for you."
+elseif you.race() == "Felid" then
+    return "Anchovies! Purrfect..."
 else
     return "Yeuchh! Anchovies."
 end
