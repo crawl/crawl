@@ -1302,15 +1302,25 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+/**
+ * What title will the player get at the given rank of the given skill?
+ *
+ * @param best_skill    The skill used to determine the title.
+ * @param skill_rank    The player's rank in the given skill.
+ * @param species_      The player's species_type.
+ * @param str           The player's strength.
+ * @param dex           The player's dex.
+ * @param god_          The god_type of the god the player follows.
+ * @param piety         The player's piety with the given god.
+ * @return              An appropriate and/or humorous title.
+ */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           int species, int str, int dex, int god, int piety)
+                           int species_, int str, int dex, int god_, int piety)
 {
+
     // paranoia
     if (is_invalid_skill(best_skill))
         return "Adventurer";
-
-    if (species == -1)
-        species = you.species;
 
     if (str == -1)
         str = you.base_stats[STAT_STR];
@@ -1318,8 +1328,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     if (dex == -1)
         dex = you.base_stats[STAT_DEX];
 
-    if (god == -1)
-        god = you.religion;
+    const species_type species = species_ != -1 ?
+                                 static_cast<species_type>(species_) :
+                                 you.species;
+
+    const god_type god = god_ != -1 ?
+                         static_cast<god_type>(god_) :
+                         you.religion;
 
     // Increment rank by one to "skip" skill name in array {dlb}:
     ++skill_rank;
@@ -1345,8 +1360,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SHORT_BLADES:
-            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species))
-                && skill_rank == 5)
+            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1355,12 +1369,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_INVOCATIONS:
             if (god != GOD_NO_GOD)
-                result = god_title((god_type)god, (species_type)species, piety);
+                result = god_title(god, species, piety);
             break;
 
         case SK_BOWS:
-            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species))
-                && skill_rank == 5)
+            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1376,12 +1389,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "La Petite Mort";
             else if (god == GOD_KIKUBAAQUDGHA)
-                result = god_title((god_type)god, (species_type)species, piety);
+                result = god_title(god, species, piety);
             break;
 
         case SK_EVOCATIONS:
             if (god == GOD_NEMELEX_XOBEH)
-                result = god_title((god_type)god, (species_type)species, piety);
+                result = god_title(god, species, piety);
             break;
 
         default:
@@ -1392,8 +1405,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     }
 
     {
-        unwind_var<species_type> sp(Skill_Species,
-                                    static_cast<species_type>(species));
+        unwind_var<species_type> sp(Skill_Species, species);
         result = _replace_skill_keys(result);
     }
 
