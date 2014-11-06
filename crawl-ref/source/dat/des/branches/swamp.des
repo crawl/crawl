@@ -225,7 +225,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool3
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool no_exits
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
 MAP
@@ -252,7 +252,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool5
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool no_exits
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
 WEIGHT: 500
