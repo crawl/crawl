@@ -131,7 +131,7 @@ bool TilesFramework::initialise()
     sockaddr_un addr;
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, m_sock_name.c_str());
-    if (bind(m_sock, (sockaddr*) &addr, sizeof(sockaddr_un)))
+    if (::bind(m_sock, (sockaddr*) &addr, sizeof(sockaddr_un)))
         die("Can't bind the webtiles socket!");
 
     int bufsize = 64 * 1024;
