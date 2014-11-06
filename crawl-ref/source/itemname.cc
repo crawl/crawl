@@ -661,46 +661,23 @@ static const char* _wand_type_name(int wandtype)
 
 static const char* wand_secondary_string(uint32_t s)
 {
-    switch (s % NDSC_WAND_SEC)
-    {
-    case 0:  return "";
-    case 1:  return "jewelled ";
-    case 2:  return "curved ";
-    case 3:  return "long ";
-    case 4:  return "short ";
-    case 5:  return "twisted ";
-    case 6:  return "crooked ";
-    case 7:  return "forked ";
-    case 8:  return "shiny ";
-    case 9:  return "blackened ";
-    case 10: return "tapered ";
-    case 11: return "glowing ";
-    case 12: return "worn ";
-    case 13: return "encrusted ";
-    case 14: return "runed ";
-    case 15: return "sharpened ";
-    default: return "buggily ";
-    }
+    static const char* const secondary_strings[] = {
+        "", "jewelled ", "curved ", "long ", "short ", "twisted ", "crooked ",
+        "forked ", "shiny ", "blackened ", "tapered ", "glowing ", "worn ",
+        "encrusted ", "runed ", "sharpened "
+    };
+    COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_WAND_SEC);
+    return secondary_strings[s % NDSC_WAND_SEC];
 }
 
 static const char* wand_primary_string(uint32_t p)
 {
-    switch (p % NDSC_WAND_PRI)
-    {
-    case 0:  return "iron";
-    case 1:  return "brass";
-    case 2:  return "bone";
-    case 3:  return "wooden";
-    case 4:  return "copper";
-    case 5:  return "gold";
-    case 6:  return "silver";
-    case 7:  return "bronze";
-    case 8:  return "ivory";
-    case 9:  return "glass";
-    case 10: return "lead";
-    case 11: return "fluorescent";
-    default: return "buggy";
-    }
+    static const char* const primary_strings[] = {
+        "iron", "brass", "bone", "wooden", "copper", "gold", "silver",
+        "bronze", "ivory", "glass", "lead", "fluorescent"
+    };
+    COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_WAND_PRI);
+    return primary_strings[p % NDSC_WAND_PRI];
 }
 
 const char* potion_type_name(int potiontype)
@@ -883,117 +860,50 @@ static string jewellery_type_name(int jeweltype)
 
 static const char* ring_secondary_string(uint32_t s)
 {
-    switch (s % NDSC_JEWEL_SEC)
-    {
-    case 1:  return "encrusted ";
-    case 2:  return "glowing ";
-    case 3:  return "tubular ";
-    case 4:  return "runed ";
-    case 5:  return "blackened ";
-    case 6:  return "scratched ";
-    case 7:  return "small ";
-    case 8:  return "large ";
-    case 9:  return "twisted ";
-    case 10: return "shiny ";
-    case 11: return "notched ";
-    case 12: return "knobbly ";
-    default: return "";
-    }
+    static const char* const secondary_strings[] = {
+        "", "encrusted ", "glowing ", "tubular ", "runed ", "blackened ",
+        "scratched ", "small ", "large ", "twisted ", "shiny ", "notched ",
+        "knobbly "
+    };
+    COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
+    return secondary_strings[s % NDSC_JEWEL_SEC];
 }
 
 static const char* ring_primary_string(uint32_t p)
 {
-    switch (p % NDSC_JEWEL_PRI)
-    {
-    case 0:  return "wooden";
-    case 1:  return "silver";
-    case 2:  return "golden";
-    case 3:  return "iron";
-    case 4:  return "steel";
-    case 5:  return "tourmaline";
-    case 6:  return "brass";
-    case 7:  return "copper";
-    case 8:  return "granite";
-    case 9:  return "ivory";
-    case 10: return "ruby";
-    case 11: return "marble";
-    case 12: return "jade";
-    case 13: return "glass";
-    case 14: return "agate";
-    case 15: return "bone";
-    case 16: return "diamond";
-    case 17: return "emerald";
-    case 18: return "peridot";
-    case 19: return "garnet";
-    case 20: return "opal";
-    case 21: return "pearl";
-    case 22: return "coral";
-    case 23: return "sapphire";
-    case 24: return "cabochon";
-    case 25: return "gilded";
-    case 26: return "onyx";
-    case 27: return "bronze";
-    case 28: return "moonstone";
-    default: return "buggy";
-    }
+    static const char* const primary_strings[] = {
+        "wooden", "silver", "golden", "iron", "steel", "tourmaline", "brass",
+        "copper", "granite", "ivory", "ruby", "marble", "jade", "glass",
+        "agate", "bone", "diamond", "emerald", "peridot", "garnet", "opal",
+        "pearl", "coral", "sapphire", "cabochon", "gilded", "onyx", "bronze",
+        "moonstone"
+    };
+    COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
+    return primary_strings[p % NDSC_JEWEL_PRI];
 }
 
 static const char* amulet_secondary_string(uint32_t s)
 {
-    switch (s % NDSC_JEWEL_SEC)
-    {
-    case 0:  return "dented ";
-    case 1:  return "square ";
-    case 2:  return "thick ";
-    case 3:  return "thin ";
-    case 4:  return "runed ";
-    case 5:  return "blackened ";
-    case 6:  return "glowing ";
-    case 7:  return "small ";
-    case 8:  return "large ";
-    case 9:  return "twisted ";
-    case 10: return "tiny ";
-    case 11: return "triangular ";
-    case 12: return "lumpy ";
-    default: return "";
-    }
+    static const char* const secondary_strings[] = {
+        "dented ", "square ", "thick ", "thin ", "runed ", "blackened ",
+        "glowing ", "small ", "large ", "twisted ", "tiny ", "triangular ",
+        "lumpy "
+    };
+    COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
+    return secondary_strings[s % NDSC_JEWEL_SEC];
 }
 
 static const char* amulet_primary_string(uint32_t p)
 {
-    switch (p % NDSC_JEWEL_PRI)
-    {
-    case 0:  return "zirconium";
-    case 1:  return "sapphire";
-    case 2:  return "golden";
-    case 3:  return "emerald";
-    case 4:  return "garnet";
-    case 5:  return "bronze";
-    case 6:  return "brass";
-    case 7:  return "copper";
-    case 8:  return "ruby";
-    case 9:  return "ivory";
-    case 10: return "bone";
-    case 11: return "platinum";
-    case 12: return "jade";
-    case 13: return "fluorescent";
-    case 14: return "crystal";
-    case 15: return "cameo";
-    case 16: return "pearl";
-    case 17: return "blue";
-    case 18: return "peridot";
-    case 19: return "jasper";
-    case 20: return "diamond";
-    case 21: return "malachite";
-    case 22: return "steel";
-    case 23: return "cabochon";
-    case 24: return "silver";
-    case 25: return "soapstone";
-    case 26: return "lapis lazuli";
-    case 27: return "filigree";
-    case 28: return "beryl";
-    default: return "buggy";
-    }
+    static const char* const primary_strings[] = {
+        "zirconium", "sapphire", "golden", "emerald", "garnet", "bronze",
+        "brass", "copper", "ruby", "ivory", "bone", "platinum", "jade",
+        "fluorescent", "crystal", "cameo", "pearl", "blue", "peridot",
+        "jasper", "diamond", "malachite", "steel", "cabochon", "silver",
+        "soapstone", "lapis lazuli", "filigree", "beryl"
+    };
+    COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
+    return primary_strings[p % NDSC_JEWEL_PRI];
 }
 
 const char* rune_type_name(short p)
@@ -1004,14 +914,14 @@ const char* rune_type_name(short p)
     case RUNE_GEHENNA:     return "obsidian";
     case RUNE_COCYTUS:     return "icy";
     case RUNE_TARTARUS:    return "bone";
-    case RUNE_SLIME:  return "slimy";
+    case RUNE_SLIME:       return "slimy";
     case RUNE_VAULTS:      return "silver";
-    case RUNE_SNAKE:   return "serpentine";
-    case RUNE_ELF: return "elven";
+    case RUNE_SNAKE:       return "serpentine";
+    case RUNE_ELF:         return "elven";
     case RUNE_TOMB:        return "golden";
     case RUNE_SWAMP:       return "decaying";
     case RUNE_SHOALS:      return "barnacled";
-    case RUNE_SPIDER: return "gossamer";
+    case RUNE_SPIDER:      return "gossamer";
     case RUNE_FOREST:      return "mossy";
 
     // pandemonium and abyss runes:
@@ -1087,37 +997,22 @@ static const char* misc_type_name(int type, bool known)
 
 static const char* book_secondary_string(uint32_t s)
 {
-    switch (s % 12) // larger than NDSC_BOOK_SEC?
-    {
-    case 0:  return "";
-    case 1:  return "chunky ";
-    case 2:  return "thick ";
-    case 3:  return "thin ";
-    case 4:  return "wide ";
-    case 5:  return "glowing ";
-    case 6:  return "dog-eared ";
-    case 7:  return "oblong ";
-    case 8:  return "runed ";
-    case 9:  return "";
-    case 10: return "";
-    case 11: return "";
-    default: return "buggily ";
-    }
+    // larger than NDSC_BOOK_SEC?
+    static const char* const secondary_strings[] = {
+        "", "chunky ", "thick ", "thin ", "wide ", "glowing ",
+        "dog-eared ", "oblong ", "runed ", "", "", ""
+    };
+    return secondary_strings[s % ARRAYSZ(secondary_strings)];
 }
 
 static const char* book_primary_string(uint32_t p)
 {
-    switch (p % 7) // smaller than NDSC_BOOK_PRI??
-    {
-    case 0:  return "paperback ";
-    case 1:  return "hardcover ";
-    case 2:  return "leatherbound ";
-    case 3:  return "metal-bound ";
-    case 4:  return "papyrus ";
-    case 5:  return "";
-    case 6:  return "";
-    default: return "buggy ";
-    }
+    // smaller than NDSC_BOOK_PRI??
+    static const char* const primary_strings[] = {
+        "paperback ", "hardcover ", "leatherbound ", "metal-bound ",
+        "papyrus ", "", ""
+    };
+    return primary_strings[p % ARRAYSZ(primary_strings)];
 }
 
 static const char* _book_type_name(int booktype)
@@ -1171,34 +1066,23 @@ static const char* _book_type_name(int booktype)
     }
 }
 
-static const char* staff_secondary_string(uint32_t p)
+static const char* staff_secondary_string(uint32_t s)
 {
-    switch (p % NDSC_STAVE_SEC) // general descriptions
-    {
-    case 0:  return "crooked ";
-    case 1:  return "knobbly ";
-    case 2:  return "weird ";
-    case 3:  return "gnarled ";
-    case 4:  return "thin ";
-    case 5:  return "curved ";
-    case 6:  return "twisted ";
-    case 7:  return "thick ";
-    case 8:  return "long ";
-    case 9:  return "short ";
-    default: return "buggily ";
-    }
+    static const char* const secondary_strings[] = {
+        "crooked ", "knobbly ", "weird ", "gnarled ", "thin ", "curved ",
+        "twisted ", "thick ", "long ", "short ",
+    };
+    COMPILE_CHECK(NDSC_STAVE_SEC == ARRAYSZ(secondary_strings));
+    return secondary_strings[s % ARRAYSZ(secondary_strings)];
 }
 
 static const char* staff_primary_string(uint32_t p)
 {
-    switch (p % NDSC_STAVE_PRI) // special attributes
-    {
-    case 0:  return "glowing ";
-    case 1:  return "jewelled ";
-    case 2:  return "runed ";
-    case 3:  return "smoking ";
-    default: return "buggy ";
-    }
+    static const char* const primary_strings[] = {
+        "glowing ", "jewelled ", "runed ", "smoking "
+    };
+    COMPILE_CHECK(NDSC_STAVE_PRI == ARRAYSZ(primary_strings));
+    return primary_strings[p % ARRAYSZ(primary_strings)];
 }
 
 static const char* staff_type_name(int stafftype)
