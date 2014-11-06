@@ -239,9 +239,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         aux = "Symbol of Torment";
         break;
 
-    case TORMENT_SPWLD:
-        // XXX: If we ever make any other weapon / randart eligible
-        // to torment, this will be incorrect.
+    case TORMENT_SCEPTRE:
         aux = "Sceptre of Torment";
         break;
 
