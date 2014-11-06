@@ -126,9 +126,9 @@ Vitriol card
 
 This card unleashes a corrosive attack spell.
 %%%%
-Cloud card
+the Cloud card
 
-This card creates flames or freezing vapours around you.
+This card imprisons your foes in a ring of clouds.
 %%%%
 the Hammer card
 
