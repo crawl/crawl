@@ -600,6 +600,9 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
     if (feat_is_branch_exit(feat))
         return false;
 
+    if (feat == DNGN_ENTER_ZIGGURAT)
+        return false;
+
     if (feat_is_portal(feat) || feat_is_gate(feat))
         return true;
 
