@@ -177,7 +177,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
         holy_word_monsters(*ri, pow, source, attacker);
 }
 
-int torment_player(actor *attacker, int taux)
+void torment_player(actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -218,73 +218,72 @@ int torment_player(actor *attacker, int taux)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return 0;
+        return;
     }
 
     mpr("Your body is wracked with pain!");
 
-    const char *aux = "by torment";
 
     kill_method_type type = KILLED_BY_BEAM;
-    if (invalid_monster_index(taux))
+    if (crawl_state.is_god_acting())
+        type = KILLED_BY_DIVINE_WRATH;
+    else if (taux == TORMENT_MISCAST)
+        type = KILLED_BY_WILD_MAGIC;
+
+    const char *aux = "";
+
+    switch (taux)
     {
-        type = KILLED_BY_SOMETHING;
-        if (crawl_state.is_god_acting())
-            type = KILLED_BY_DIVINE_WRATH;
+    case TORMENT_CARDS:
+    case TORMENT_SPELL:
+        aux = "Symbol of Torment";
+        break;
 
-        switch (taux)
-        {
-        case TORMENT_CARDS:
-        case TORMENT_SPELL:
-            aux = "Symbol of Torment";
-            break;
+    case TORMENT_SPWLD:
+        // XXX: If we ever make any other weapon / randart eligible
+        // to torment, this will be incorrect.
+        aux = "Sceptre of Torment";
+        break;
 
-        case TORMENT_SPWLD:
-            // XXX: If we ever make any other weapon / randart eligible
-            // to torment, this will be incorrect.
-            aux = "Sceptre of Torment";
-            break;
+    case TORMENT_SCROLL:
+        aux = "a scroll of torment";
+        break;
 
-        case TORMENT_SCROLL:
-            aux = "a scroll of torment";
-            break;
+    case TORMENT_XOM:
+        type = KILLED_BY_XOM;
+        aux = "Xom's torment";
+        break;
 
-        case TORMENT_XOM:
-            type = KILLED_BY_XOM;
-            aux = "Xom's torment";
-            break;
+    case TORMENT_KIKUBAAQUDGHA:
+        aux = "Kikubaaqudgha's torment";
+        break;
 
-        case TORMENT_KIKUBAAQUDGHA:
-            aux = "Kikubaaqudgha's torment";
-            break;
-        }
+    case TORMENT_LURKING_HORROR:
+        type = KILLED_BY_SPORE;
+        aux = "an exploding lurking horror";
+
+    case TORMENT_MISCAST:
+        aux = "by torment";
+        break;
     }
 
     ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
 
-    return 1;
+    return;
 }
 
-// torment_monsters() is called with power 0 because torment is
-// UNRESISTABLE except for having torment resistance!  Even if we used
-// maximum power of 1000, high level monsters and characters would save
-// too often.  (GDL)
-
-int torment_monsters(coord_def where, actor *attacker, int taux)
+static void _torment_stuff_at(coord_def where, actor *attacker,
+                       torment_source_type taux)
 {
-    int retval = 0;
-
     // Is the player in this cell?
     if (where == you.pos())
-        retval = torment_player(attacker, taux);
+        torment_player(attacker, taux);
+    // Don't return, since you could be standing on a monster.
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
-    if (mons == NULL)
-        return retval;
-
-    if (!mons->alive() || mons->res_torment())
-        return retval;
+    if (!mons || !mons->alive() || mons->res_torment())
+        return;
 
     int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
 
@@ -303,19 +302,12 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
-
-    if (hploss)
-        retval = 1;
-
-    return retval;
 }
 
-int torment(actor *attacker, int taux, const coord_def& where)
+void torment(actor *attacker, torment_source_type taux, const coord_def& where)
 {
-    int r = 0;
     for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
-        r += torment_monsters(*ri, attacker, taux);
-    return r;
+        _torment_stuff_at(*ri, attacker, taux);
 }
 
 void cleansing_flame(int pow, int caster, coord_def where,
