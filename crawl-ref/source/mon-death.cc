@@ -2630,14 +2630,8 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
     {
-        if (!invalid_monster_index(mons->tentacle_connect)
-             && mons_base_type(&menv[mons->tentacle_connect])
-                 == MONS_ELDRITCH_TENTACLE
-             && menv[mons->tentacle_connect].alive())
-        {
-            monster_die(&menv[mons->tentacle_connect], killer, killer_index,
-                        silent, wizard, fake);
-        }
+       monster_die(monster_by_mid(mons->tentacle_connect), killer,
+                   killer_index, silent, wizard, fake);
     }
     else if (mons_is_elven_twin(mons))
         elven_twin_died(mons, in_transit, killer, killer_index);

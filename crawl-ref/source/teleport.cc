@@ -212,11 +212,6 @@ void mons_relocated(monster* mons)
     // If the main body teleports get rid of the tentacles
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
-        int headnum = mons->mindex();
-
-        if (invalid_monster_index(headnum))
-            return;
-
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->is_child_tentacle_of(mons))
@@ -233,42 +228,28 @@ void mons_relocated(monster* mons)
     // If a tentacle/segment is relocated just kill the tentacle
     else if (mons->is_child_monster())
     {
-        int base_id = mons->mindex();
-
-        monster* tentacle = mons;
-
-        if (mons->is_child_tentacle_segment()
-                && !::invalid_monster_index(base_id)
-                && menv[base_id].is_parent_monster_of(mons))
-        {
-            tentacle = &menv[base_id];
-        }
-
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->is_child_tentacle_of(tentacle))
+            if (connect->is_child_tentacle_of(mons))
                 monster_die(*connect, KILL_RESET, -1, true, false);
         }
 
-        monster_die(tentacle, KILL_RESET, -1, true, false);
+        monster_die(mons, KILL_RESET, -1, true, false);
     }
+    // Kill an eldritch tentacle and all its segments.
     else if (mons->type == MONS_ELDRITCH_TENTACLE
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
-        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
-                      ? mons->mindex() : mons->tentacle_connect;
-
-        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+        monster* tentacle = mons->type == MONS_ELDRITCH_TENTACLE
+                            ? mons : monster_by_mid(mons->tentacle_connect);
 
         for (monster_iterator mit; mit; ++mit)
         {
-            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && mit->tentacle_connect == base_id)
-            {
+            if (mit->is_child_tentacle_of(tentacle))
                 monster_die(*mit, KILL_RESET, -1, true, false);
-            }
         }
 
+        monster_die(tentacle, KILL_RESET, -1, true, false);
     }
 
     mons->clear_clinging();

@@ -29,6 +29,7 @@
 #endif
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -54,6 +55,8 @@
 #include "mon-death.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
+ #include "mon-tentacle.h"
+ #include "mon-util.h"
 #endif
 #include "place.h"
 #include "religion.h"
@@ -5539,6 +5542,30 @@ static void tag_read_level_monsters(reader &th)
         && th.getMinorVersion() >= TAG_MINOR_OPTIONAL_PARTS)
     {
         _fix_missing_constrictions();
+    }
+    if (th.getMinorVersion() < TAG_MINOR_TENTACLE_MID)
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->props.exists("inwards"))
+            {
+                const int old_midx = mi->props["inwards"].get_int();
+                if (invalid_monster_index(old_midx))
+                    mi->props["inwards"].get_int() = MID_NOBODY;
+                else
+                    mi->props["inwards"].get_int() = menv[old_midx].mid;
+            }
+            if (mi->props.exists("outwards"))
+            {
+                const int old_midx = mi->props["outwards"].get_int();
+                if (invalid_monster_index(old_midx))
+                    mi->props["outwards"].get_int() = MID_NOBODY;
+                else
+                    mi->props["outwards"].get_int() = menv[old_midx].mid;
+            }
+            if (mons_is_tentacle_or_tentacle_segment(mi->type))
+                mi->tentacle_connect = menv[mi->tentacle_connect].mid;
+        }
     }
 #endif
 }
