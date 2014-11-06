@@ -4180,9 +4180,11 @@ tileidx_t tileidx_item(const item_def &item)
         switch (rnd % NDSC_BOOK_PRI)
         {
         case 0:
-            return TILE_BOOK_LEATHER_OFFSET + rnd / NDSC_BOOK_PRI;
+            return TILE_BOOK_LEATHER_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_LEATHER_OFFSET);
         case 1:
-            return TILE_BOOK_METAL_OFFSET + rnd / NDSC_BOOK_PRI;
+            return TILE_BOOK_METAL_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_METAL_OFFSET);
         case 2:
             return TILE_BOOK_PAPYRUS;
         case 3:
