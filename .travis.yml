@@ -23,4 +23,5 @@ notifications:
     irc:
         channels: "chat.freenode.net##crawl-dev"
         on_success: change
+        on_failure: always
         use_notice: true
