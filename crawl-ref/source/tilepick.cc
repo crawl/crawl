@@ -4083,10 +4083,11 @@ tileidx_t tileidx_item(const item_def &item)
     if (item.props.exists("item_tile"))
         return item.props["item_tile"].get_short();
 
-    const int clas    = item.base_type;
-    const int type    = item.sub_type;
-    const int special = item.special;
-    const int colour  = item.get_colour();
+    const int clas        = item.base_type;
+    const int type        = item.sub_type;
+    const int subtype_rnd = item.subtype_rnd;
+    const int rnd         = item.rnd;
+    const int colour      = item.get_colour();
 
     switch (clas)
     {
@@ -4109,7 +4110,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_WAND_ID_FIRST + type;
         else
-            return TILE_WAND_OFFSET + special % NDSC_WAND_PRI;
+            return TILE_WAND_OFFSET + subtype_rnd % NDSC_WAND_PRI;
 
     case OBJ_FOOD:
         return _tileidx_food(item);
@@ -4125,14 +4126,18 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_JEWELLERY:
         if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
-        else if (type <= NUM_RINGS)
+
+        // rings
+        if (!jewellery_is_amulet(item))
         {
             if (is_artefact(item))
             {
-                int offset = item.rnd % tile_main_count(TILE_RING_RANDART_OFFSET);
+                const int offset = item.rnd
+                                   % tile_main_count(TILE_RING_RANDART_OFFSET);
                 return TILE_RING_RANDART_OFFSET + offset;
             }
-            else if (item.flags & ISFLAG_KNOW_TYPE)
+
+            if (item.flags & ISFLAG_KNOW_TYPE)
             {
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING
 #if TAG_MAJOR_VERSION == 34
@@ -4140,57 +4145,58 @@ tileidx_t tileidx_item(const item_def &item)
 #endif
                     ;
             }
-            else
-                return TILE_RING_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
+
+            return TILE_RING_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
         }
-        else
+
+        // amulets
+        if (is_artefact(item))
         {
-            if (is_artefact(item))
-            {
-                int offset = item.rnd % tile_main_count(TILE_AMU_RANDOM_OFFSET);
-                return TILE_AMU_RANDOM_OFFSET + offset;
-            }
-            else if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
-            else
-                return TILE_AMU_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
+            const int offset = item.rnd
+                               % tile_main_count(TILE_AMU_RANDOM_OFFSET);
+            return TILE_AMU_RANDOM_OFFSET + offset;
         }
+
+        if (item.flags & ISFLAG_KNOW_TYPE)
+            return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
+        return TILE_AMU_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
 
     case OBJ_POTIONS:
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_POT_ID_FIRST + type;
         else
-            return TILE_POTION_OFFSET + item.plus % NDSC_POT_PRI;
+            return TILE_POTION_OFFSET + item.subtype_rnd % NDSC_POT_PRI;
 
     case OBJ_BOOKS:
         if (is_random_artefact(item))
         {
-            int offset = special % tile_main_count(TILE_BOOK_RANDART_OFFSET);
+            const int offset = rnd % tile_main_count(TILE_BOOK_RANDART_OFFSET);
             return TILE_BOOK_RANDART_OFFSET + offset;
         }
 
         if (item.sub_type == BOOK_MANUAL)
-            return TILE_BOOK_MANUAL + special % tile_main_count(TILE_BOOK_MANUAL);
+            return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
 
-        switch (special % NDSC_BOOK_PRI)
+        switch (rnd % NDSC_BOOK_PRI)
         {
-        default:
         case 0:
+            return TILE_BOOK_LEATHER_OFFSET + rnd / NDSC_BOOK_PRI;
         case 1:
-            return TILE_BOOK_PAPER_OFFSET + colour;
+            return TILE_BOOK_METAL_OFFSET + rnd / NDSC_BOOK_PRI;
         case 2:
-            return TILE_BOOK_LEATHER_OFFSET + special / NDSC_BOOK_PRI;
-        case 3:
-            return TILE_BOOK_METAL_OFFSET + special / NDSC_BOOK_PRI;
-        case 4:
             return TILE_BOOK_PAPYRUS;
+        case 3:
+        case 4:
+        default:
+            return TILE_BOOK_PAPER_OFFSET + colour;
         }
 
     case OBJ_STAVES:
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_STAFF_ID_FIRST + type;
 
-        return TILE_STAFF_OFFSET + (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        return TILE_STAFF_OFFSET
+               + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
     case OBJ_RODS:
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
