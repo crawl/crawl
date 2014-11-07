@@ -195,7 +195,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
-		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
@@ -1077,6 +1077,10 @@ ifdef BUILD_FREETYPE
 CONTRIBS += freetype
 CONTRIB_LIBS += $(LIBFREETYPE)
 endif
+ifdef BUILD_SDL2IMAGE
+CONTRIBS += sdl2-image
+CONTRIB_LIBS += $(LIBSDL2IMAGE)
+endif
 ifdef BUILD_SDL2
 CONTRIBS += sdl2
 CONTRIB_LIBS += $(LIBSDL2)
@@ -1084,10 +1088,6 @@ endif
 ifdef BUILD_LIBPNG
 CONTRIBS += libpng
 CONTRIB_LIBS += $(LIBPNG)
-endif
-ifdef BUILD_SDL2IMAGE
-CONTRIBS += sdl2-image
-CONTRIB_LIBS += $(LIBSDL2IMAGE)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib
