@@ -930,7 +930,7 @@ brand_type get_weapon_brand(const item_def &item)
     if (is_artefact(item))
         return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
 
-    return static_cast<brand_type>(item.special);
+    return static_cast<brand_type>(item.brand);
 }
 
 special_missile_type get_ammo_brand(const item_def &item)
@@ -939,7 +939,7 @@ special_missile_type get_ammo_brand(const item_def &item)
     if (item.base_type != OBJ_MISSILES || is_artefact(item))
         return SPMSL_NORMAL;
 
-    return static_cast<special_missile_type>(item.special);
+    return static_cast<special_missile_type>(item.brand);
 }
 
 special_armour_type get_armour_ego_type(const item_def &item)
@@ -954,7 +954,7 @@ special_armour_type get_armour_ego_type(const item_def &item)
                    artefact_wpn_property(item, ARTP_BRAND));
     }
 
-    return static_cast<special_armour_type>(item.special);
+    return static_cast<special_armour_type>(item.brand);
 }
 
 // Armour information and checking functions.
