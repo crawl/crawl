@@ -25,6 +25,7 @@
 #include "database.h"
 #include "delay.h"
 #include "dgn-shoals.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"

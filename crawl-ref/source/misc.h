@@ -7,14 +7,11 @@
 #define MISC_H
 
 #include "coord.h"
-#include "directn.h"
 
 #include <algorithm>
 #include <queue>
 
-struct bolt;
-class dist;
-struct activity_interrupt_data;
+extern const struct coord_def Compass[9];
 
 void trackers_init_new_level(bool transit);
 

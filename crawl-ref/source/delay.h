@@ -88,6 +88,8 @@ bool is_delay_interruptible(delay_type delay);
 const char *delay_name(int delay);
 delay_type get_delay(const string &);
 
+void run_macro(const char *macroname = NULL);
+
 void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a

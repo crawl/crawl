@@ -20,6 +20,7 @@
 #include "dbg-util.h"
 #endif
 #include "delay.h"
+#include "directn.h"
 #include "effects.h"
 #include "english.h"
 #include "env.h"

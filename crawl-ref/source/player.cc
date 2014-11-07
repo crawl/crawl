@@ -28,6 +28,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "directn.h"
 #include "effects.h"
 #include "english.h"
 #include "env.h"

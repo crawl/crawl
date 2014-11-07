@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "env.h"
 #include "files.h"
 #include "fprop.h"

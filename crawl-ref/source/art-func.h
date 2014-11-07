@@ -29,7 +29,6 @@
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
-#include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"

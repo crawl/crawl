@@ -13,6 +13,7 @@
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
+#include "directn.h"
 #include "effects.h"
 #include "english.h"
 #include "env.h"

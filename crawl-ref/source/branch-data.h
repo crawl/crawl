@@ -1,6 +1,4 @@
 #include "colour.h"
-#include "enum.h"
-#include "mon-pick.h"
 
 const Branch branches[NUM_BRANCHES] =
 {

@@ -59,6 +59,7 @@
 #endif
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
+#include "directn.h"
 #include "dlua.h"
 #include "dungeon.h"
 #include "effects.h"

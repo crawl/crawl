@@ -25,6 +25,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "evoke.h"

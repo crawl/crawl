@@ -81,8 +81,6 @@ bool has_pending_input();
 
 int get_macro_buf_size();
 
-void run_macro(const char *macroname = NULL);
-
 ///////////////////////////////////////////////////////////////
 // Keybinding stuff
 

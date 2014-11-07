@@ -6,8 +6,6 @@
 #ifndef RANDART_H
 #define RANDART_H
 
-struct bolt;
-
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"

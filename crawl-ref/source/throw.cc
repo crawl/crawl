@@ -12,6 +12,7 @@
 
 #include "artefact.h"
 #include "command.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
