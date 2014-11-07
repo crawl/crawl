@@ -121,9 +121,7 @@ void shuffle_array(T* arr, int n)
 template <typename T>
 void shuffle_array(vector<T> &vec)
 {
-    // &vec[0] is undefined behaviour, and vec.data() is C++11-only.
-    if (!vec.empty())
-        shuffle_array(&vec[0], vec.size());
+    shuffle_array(vec.data(), vec.size());
 }
 
 /**
