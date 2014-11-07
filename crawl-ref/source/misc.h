@@ -7,6 +7,7 @@
 #define MISC_H
 
 #include "coord.h"
+#include "target.h"
 
 #include <algorithm>
 #include <queue>
