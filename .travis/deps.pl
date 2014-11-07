@@ -21,8 +21,8 @@ else {
     );
 
     push @deps, qw(
-        libsdl1.2-dev
-        libsdl-image1.2-dev
+        libsdl2-dev
+        libsdl2-image-dev
     ) if $ENV{TILES} || $ENV{WEBTILES};
 }
 
