@@ -246,6 +246,11 @@ void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum
     if (cellnum < 0)
         cellnum = cellnum_est(world, ngb_min, ngb_max);
 
+    if (cellnum > world)
+        cellnum = world;
+    if (cellnum == 0) // no digging needed
+        return;
+
     ASSERT(cellnum <= world);
 
     int delved = 0;
