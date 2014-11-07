@@ -853,7 +853,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         if (!zin && !monster_at(*ai))
         {
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true)
+                    || feat_is_stone_stair(grd(*ai)))
                     proceed = true;
         }
         else if (zin && !cell_is_solid(*ai))
