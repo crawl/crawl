@@ -795,7 +795,6 @@ static map<level_id, FixedVector<map<int, map<string, double> >, NUM_ITEM_BASE_T
 // weapon_brands[level_id][item.base_type][item.sub_type][antiquity_level][brand];
 // arte_sum is 0 for ordinary, 1 for artefact, or 2 for all
 static map<level_id, vector <vector< vector< vector< int> > > > > equip_brands;
-static map<level_id, vector< vector< vector< int> > > > armour_brands;
 static map<level_id, vector< vector< int> > > missile_brands;
 
 static FixedVector< vector<string>, NUM_ITEM_BASE_TYPES> item_fields;
