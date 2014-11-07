@@ -72,7 +72,6 @@ int spell_effect_noise(spell_type spell);
 const char *get_spell_target_prompt(spell_type which_spell);
 
 bool spell_is_direct_explosion(spell_type spell);
-bool spell_needs_foe(spell_type spell);
 bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
 int spell_levels_required(spell_type which_spell);

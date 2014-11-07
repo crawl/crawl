@@ -20,7 +20,6 @@ void free_self_from_net();
 void mons_clear_trapping_net(monster* mon);
 void free_stationary_net(int item_index);
 
-void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
 const char* held_status(actor *act = NULL);
 bool monster_caught_in_net(monster* mon, actor *agent);

@@ -1317,9 +1317,9 @@ enum dungeon_char_type
 // * check the feat_* functions in terrain.cc and make sure
 //      they return sane values for your new feature.
 
-// * edit dungeon.cc and add a symbol to _glyph_to_feat() for the feature,
-//      if you want vault maps to be able to use it. If you do, also update
-//      docs/develop/levels/syntax.txt with the new symbol.
+// * edit mapdef.cc and add a symbol to _glyph_to_feat() for the feature,
+//      if you want vault maps to be able to use it directly . If you do, also
+//      update docs/develop/levels/syntax.txt with the new symbol.
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,

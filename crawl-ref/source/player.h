@@ -494,7 +494,6 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(transformation_type tform) const;
     string shout_verb(bool directed = false) const;
     int shout_volume() const;
 
@@ -853,7 +852,6 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 void move_player_to_grid(const coord_def& p, bool stepped);
 
 bool is_map_persistent();
-bool player_in_mappable_area();
 bool player_in_connected_branch();
 bool player_in_hell();
 
@@ -874,8 +872,6 @@ bool player_effectively_in_light_armour();
 
 int player_energy();
 
-int player_raw_body_armour_evasion_penalty();
-int player_adjusted_shield_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
@@ -1057,8 +1053,6 @@ bool player_weapon_wielded();
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
                        bool ignore_flight = false);
-
-void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, dungeon_feature_type feat);

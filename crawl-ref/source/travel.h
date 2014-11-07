@@ -93,8 +93,6 @@ void start_travel(const coord_def& p);
 
 command_type travel();
 
-int travel_direction(uint8_t branch, int subdungeondepth);
-
 void prevent_travel_to(const string &dungeon_feature_name);
 
 // Sort dungeon features as appropriate.

@@ -13,6 +13,7 @@
 class monster;
 class mon_acting;
 class targetter;
+struct activity_interrupt_data;
 
 struct god_act_state
 {
@@ -244,5 +245,8 @@ public:
 private:
     monster* mon;
 };
+
+bool interrupt_cmd_repeat(activity_interrupt_type ai,
+                          const activity_interrupt_data &at);
 
 #endif

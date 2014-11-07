@@ -318,9 +318,6 @@ bool transform(int pow, transformation_type which_trans,
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
 
-size_type transform_size(int psize = PSIZE_BODY,
-                         transformation_type form = you.form);
-
 void remove_one_equip(equipment_type eq, bool meld = true,
                       bool mutation = false);
 void unmeld_one_equip(equipment_type eq);

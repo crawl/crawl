@@ -2688,6 +2688,67 @@ static void _append_spell_stats(const spell_type spell,
     description += "\n";
 }
 
+string get_skill_description(skill_type skill, bool need_title)
+{
+    string lookup = skill_name(skill);
+    string result = "";
+
+    if (need_title)
+    {
+        result = lookup;
+        result += "\n\n";
+    }
+
+    result += getLongDescription(lookup);
+
+    switch (skill)
+    {
+        case SK_INVOCATIONS:
+            if (you.species == SP_DEMIGOD)
+            {
+                result += "\n";
+                result += "How on earth did you manage to pick this up?";
+            }
+            else if (you_worship(GOD_TROG))
+            {
+                result += "\n";
+                result += "Note that Trog doesn't use Invocations, due to its "
+                          "close connection to magic.";
+            }
+            else if (you_worship(GOD_NEMELEX_XOBEH))
+            {
+                result += "\n";
+                result += "Note that Nemelex uses Evocations rather than "
+                          "Invocations.";
+            }
+            break;
+
+        case SK_EVOCATIONS:
+            if (you_worship(GOD_NEMELEX_XOBEH))
+            {
+                result += "\n";
+                result += "This is the skill all of Nemelex's abilities rely "
+                          "on.";
+            }
+            break;
+
+        case SK_SPELLCASTING:
+            if (you_worship(GOD_TROG))
+            {
+                result += "\n";
+                result += "Keep in mind, though, that Trog will greatly "
+                          "disapprove of this.";
+            }
+            break;
+        default:
+            // No further information.
+            break;
+    }
+
+    return result;
+}
+
+
 // Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
 // forget it and BOOK_NEITHER if you can do neither
 static int _get_spell_description(const spell_type spell,

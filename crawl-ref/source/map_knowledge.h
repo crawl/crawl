@@ -322,4 +322,6 @@ void clear_map(bool clear_items = true, bool clear_mons = true);
 
 map_feature get_cell_map_feature(const map_cell& cell);
 
+void reautomap_level();
+
 #endif

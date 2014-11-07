@@ -1312,8 +1312,6 @@ void clear_subvault_stack();
 
 void map_register_flag(const string &flag);
 
-string escape_string(string in, const string &toesc, const string &escapewith);
-
 string mapdef_split_key_item(const string &s, string *key, int *separator,
                              string *arg, int key_max_len = 1);
 

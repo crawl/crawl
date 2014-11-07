@@ -192,7 +192,6 @@ void write_level_connectivity(writer &th);
 
 bool builder(bool enable_random_maps = true,
              dungeon_feature_type dest_stairs_type = NUM_FEATURES);
-void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);
 void dgn_erase_unused_vault_placements();

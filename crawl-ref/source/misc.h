@@ -65,9 +65,6 @@ void revive();
 
 int speed_to_duration(int speed);
 
-bool interrupt_cmd_repeat(activity_interrupt_type ai,
-                          const activity_interrupt_data &at);
-
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
                 coord_def attack_pos = coord_def(0, 0),
@@ -85,7 +82,6 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
 void swap_with_monster(monster *mon_to_swap);
 
-bool maybe_id_weapon(item_def &item, const char *msg = 0);
 void auto_id_inventory();
 
 int apply_chunked_AC(int dam, int ac);
