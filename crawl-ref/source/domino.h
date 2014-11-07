@@ -13,20 +13,22 @@
  * 'Recursive Wang Tiles for Real-Time Blue Noise' (Kopf 2006)
  *
  * TODO Pass around a RNG so this is actually deterministic.
- *
+ **/
+
+/**
  * Copyright (c) 2014 Brendan Hickey
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -39,8 +41,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-#ifndef __WANG_H__
-#define __WANG_H__
+#ifndef __DOMINO_H__
+#define __DOMINO_H__
 
 #include <algorithm>
 #include <map>
@@ -48,7 +50,7 @@
 #include <stdint.h>
 #include <vector>
 
-namespace wang {
+namespace domino {
 
   // Helper function to set handle intersections.
   template <class T>
@@ -103,28 +105,6 @@ namespace wang {
     NO_DIR          = -1,
   };
 
-  static std::ostream& operator<< (std::ostream& stream, const Direction& dir) {
-    static std::string directions[8] = {
-      "N", "NE", "E", "SE", "S", "SW", "W", "NW"
-    };
-    stream << directions[dir];
-    return stream;
-  }
-
-  static Direction reverse(const Direction& dir) {
-    switch (dir) {
-      case NORTH: return SOUTH;
-      case NORTH_EAST: return SOUTH_WEST;
-      case EAST: return WEST;
-      case SOUTH_EAST: return NORTH_WEST;
-      case SOUTH: return NORTH;
-      case SOUTH_WEST: return NORTH_EAST;
-      case WEST: return EAST;
-      case NORTH_WEST: return SOUTH_EAST;
-      case NO_DIR: return NO_DIR;
-    }
-  }
-
   static const Direction direction_arr[8] = {
     NORTH,
     NORTH_EAST,
@@ -171,8 +151,8 @@ namespace wang {
 
   class Domino {
     public:
-      void set_id(uint8_t id) {
-        id_ = id;
+      void set_id(uint8_t i) {
+        id_ = i;
       }
       uint8_t id() {
         return id_;
@@ -189,7 +169,7 @@ namespace wang {
       ~CornerDomino() {}
 
       bool matches(const CornerDomino& o, Direction dir) const;
-      void intersect(const CornerDomino& other, std::set<Direction>& directions) const; 
+      void intersect(const CornerDomino& other, std::set<Direction>& directions) const;
 
       CornerDomino(const CornerColours colours) {
         colours_.nw = colours.nw;
@@ -249,7 +229,7 @@ namespace wang {
       ~EdgeDomino() {}
 
       bool matches(const EdgeDomino& o, Direction dir) const;
-      void intersect(const EdgeDomino& other, std::set<Direction>& directions) const; 
+      void intersect(const EdgeDomino& other, std::set<Direction>& directions) const;
 
       colour n_colour() const {
         return colours_.n;
@@ -288,7 +268,7 @@ namespace wang {
             Adjacency* adj = new Adjacency();
             adjacencies_[i] = adj;
             T domino = dominoes_[i];
-            for (size_t j = 0; j < sz; ++j) { 
+            for (size_t j = 0; j < sz; ++j) {
               std::set<Direction> directions(direction_arr, direction_arr + 8);
               T other = dominoes_[j];
               other.intersect(domino, directions);
@@ -495,4 +475,4 @@ namespace wang {
 
 };
 
-#endif // __WANG_H__
+#endif // __DOMINO_H__
