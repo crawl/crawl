@@ -26,13 +26,12 @@ const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
 bool monster::is_child_tentacle() const
 {
-    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE;
+    return mons_is_child_tentacle(type);
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return type == MONS_KRAKEN_TENTACLE_SEGMENT
-        || type == MONS_STARSPAWN_TENTACLE_SEGMENT;
+    return mons_is_child_tentacle_segment(type);
 }
 
 bool monster::is_child_monster() const
@@ -60,26 +59,27 @@ bool mons_is_tentacle_head(monster_type mc)
 bool mons_is_child_tentacle(monster_type mc)
 {
     return mc == MONS_KRAKEN_TENTACLE
-        || mc == MONS_STARSPAWN_TENTACLE
-        || mc == MONS_SNAPLASHER_VINE;
+        || mc == MONS_STARSPAWN_TENTACLE;
 }
 
 bool mons_is_child_tentacle_segment(monster_type mc)
 {
     return mc == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mc == MONS_SNAPLASHER_VINE_SEGMENT;
+        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT;
 }
 
 bool mons_is_tentacle(monster_type mc)
 {
-    return mc == MONS_ELDRITCH_TENTACLE || mons_is_child_tentacle(mc);
+    return mc == MONS_ELDRITCH_TENTACLE
+           || mc == MONS_SNAPLASHER_VINE
+           || mons_is_child_tentacle(mc);
 }
 
 bool mons_is_tentacle_segment(monster_type mc)
 {
     return mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mons_is_child_tentacle_segment(mc);
+           || mc == MONS_SNAPLASHER_VINE_SEGMENT
+           || mons_is_child_tentacle_segment(mc);
 }
 
 bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
