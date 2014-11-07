@@ -615,9 +615,9 @@ static piety_gain_t _sac_corpse(const item_def& item)
         monster dummy;
         dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum
                                                      : item.plus);
+        define_monster(&dummy);
         if (item.props.exists(MONSTER_NUMBER))
             dummy.number   = item.props[MONSTER_NUMBER].get_short();
-        define_monster(&dummy);
 
         // Hit dice are overridden by define_monster, so only set them now.
         if (item.props.exists(MONSTER_HIT_DICE))
