@@ -15,6 +15,8 @@
 
 #define HELLFIRE_BOLT_KEY "hellfire_bolt"
 
+struct bolt;
+
 enum unrand_flag_type
 {
     UNRAND_FLAG_NONE             = 0x00,
