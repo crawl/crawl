@@ -1554,8 +1554,8 @@ static void _increase_depth()
     double depth_change = delta * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
     abyssal_state.depth += depth_change;
     abyssal_state.phase += delta / 100.0;
-    if (abyssal_state.phase > M_PI)
-        abyssal_state.phase -= M_PI;
+    if (abyssal_state.phase > PI)
+        abyssal_state.phase -= PI;
 }
 
 void abyss_morph()
