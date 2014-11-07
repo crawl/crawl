@@ -1841,6 +1841,14 @@ static void _helm_card(int power, deck_rarity_type rarity)
             mpr("A magical shield forms in front of you.");
         you.increase_duration(DUR_MAGIC_SHIELD, random2(power/6) + 1);
     }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->wont_attack() && x_chance_in_y(power_level, 2))
+            mon->add_ench(coinflip() ? ENCH_STONESKIN : ENCH_SHROUD);
+    }
 }
 
 static void _blade_card(int power, deck_rarity_type rarity)
