@@ -1,10 +1,10 @@
 #include <assert.h>
 #include <iostream>
 
-#include "wang.h"
-#include "wang_data.h"
+#include "domino.h"
+#include "domino_data.h"
 
-using namespace wang;
+using namespace domino;
 using namespace std;
 
 template <class T>
@@ -27,9 +27,9 @@ void test_symmetry(DominoSet<T>& dominoes) {
 }
 
 int main(int argc, char** argv) {
-  DominoSet<CornerDomino> dominoes(wang::periodic_set, 16);
-  DominoSet<CornerDomino> aperiodic_dominoes(wang::aperiodic_set, 44);
-  DominoSet<EdgeDomino> cohen_dominoes(wang::cohen_set, 8);
+  DominoSet<CornerDomino> dominoes(domino::periodic_set, 16);
+  DominoSet<CornerDomino> aperiodic_dominoes(domino::aperiodic_set, 44);
+  DominoSet<EdgeDomino> cohen_dominoes(domino::cohen_set, 8);
   test_symmetry(dominoes);
   test_symmetry(aperiodic_dominoes);
   vector<uint8_t> output;
