@@ -64,7 +64,7 @@
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
-#    You also need libpng, sdl, sdl-image and libfreetype -- if you got your
+#    You also need libpng, sdl2, sdl2-image and libfreetype -- if you got your
 #    source from git, you can 'git submodule update' to fetch them; you can also
 #    ask for a package with convenience libraries instead -- we'll try to provide
 #    them somewhere in the near future.
@@ -195,10 +195,10 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
-		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
 		BUILD_FREETYPE = YesPlease
-		BUILD_SDL = YesPlease
-		BUILD_SDLIMAGE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -214,10 +214,10 @@ ifeq ($(uname_S),Darwin)
 	BUILD_SQLITE = YesPlease
 	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDLmain.a
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDL2main.a
 		BUILD_FREETYPE = YesPlease
-		BUILD_SDL = YesPlease
-		BUILD_SDLIMAGE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -234,8 +234,8 @@ endif
 ifdef BUILD_ALL
 	BUILD_FREETYPE = YesPlease
 	BUILD_PCRE = YesPlease
-	BUILD_SDL = YesPlease
-	BUILD_SDLIMAGE = YesPlease
+	BUILD_SDL2 = YesPlease
+	BUILD_SDL2IMAGE = YesPlease
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
 	BUILD_LIBPNG = YesPlease
@@ -246,9 +246,9 @@ endif
 all: greet check-fonts $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
-LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
+LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
-LIBSDLIMAGE := contrib/install/$(ARCH)/lib/libSDL_image.a
+LIBSDL2IMAGE := contrib/install/$(ARCH)/lib/libSDL2_image.a
 LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
 LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
 ifdef USE_LUAJIT
@@ -583,7 +583,7 @@ ifdef ANDROID
   BUILD_LUA=
   BUILD_SQLITE=
   BUILD_ZLIB=
-  BUILD_SDL=
+  BUILD_SDL2=
   BUILD_FREETYPE=
   NO_PKGCONFIG=Y
 else
@@ -672,8 +672,8 @@ ifdef TOUCH_UI
 DEFINES_L += -DTOUCH_UI
 endif
 
-ifdef BUILD_SDL
-INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL
+ifdef BUILD_SDL2
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL2
 endif
 ifdef BUILD_FREETYPE
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/freetype2
@@ -695,11 +695,11 @@ FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I | sed -e 's/-
 FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
 FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
 
-SDL_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isystem /')
-SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
-SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
+SDL2_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isystem /')
+SDL2_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
+SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
 
-LIBS += -lSDL2_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -713,8 +713,8 @@ endif
 endif
 endif
 
-DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
-INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
+DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL2_CFLAGS)
+INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL2_INCLUDE)
 
 endif # TILES
 
@@ -725,7 +725,7 @@ CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w
 CFWARN   += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
-CFOTHERS_L = -std=c++0x $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
+CFOTHERS_L = -std=c++0x $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
@@ -1077,17 +1077,17 @@ ifdef BUILD_FREETYPE
 CONTRIBS += freetype
 CONTRIB_LIBS += $(LIBFREETYPE)
 endif
-ifdef BUILD_SDLIMAGE
-CONTRIBS += sdl-image
-CONTRIB_LIBS += $(LIBSDLIMAGE)
-endif
-ifdef BUILD_SDL
-CONTRIBS += sdl
-CONTRIB_LIBS += $(LIBSDL)
+ifdef BUILD_SDL2
+CONTRIBS += sdl2
+CONTRIB_LIBS += $(LIBSDL2)
 endif
 ifdef BUILD_LIBPNG
 CONTRIBS += libpng
 CONTRIB_LIBS += $(LIBPNG)
+endif
+ifdef BUILD_SDL2IMAGE
+CONTRIBS += sdl2-image
+CONTRIB_LIBS += $(LIBSDL2IMAGE)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib

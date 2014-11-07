@@ -1,6 +1,6 @@
 PREFIX := install
 
-SUBDIRS = sqlite sdl sdl-image freetype libpng pcre zlib
+SUBDIRS = sqlite sdl2 sdl2-image freetype libpng pcre zlib
 ARCH = unknown
 
 ifdef USE_LUAJIT
