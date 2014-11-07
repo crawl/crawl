@@ -206,8 +206,6 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             else
                 mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
-            // Change type from player ghost.
-            clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
