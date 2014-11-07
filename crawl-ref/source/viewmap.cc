@@ -1274,6 +1274,7 @@ bool emphasise(const coord_def& where)
 #ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
+// Except that that function doesn't exist...
 static cglyph_t _get_feat_glyph(const coord_def& gc)
 {
     // XXX: it's unclear whether we want to display all features

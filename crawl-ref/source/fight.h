@@ -33,14 +33,12 @@ int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
-int calc_heavy_armour_penalty(bool random_factor);
 
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
 
 bool actor_can_cleave(const actor &attacker, skill_type attack_skill);
 
-void chaos_affect_actor(actor *victim);
 void get_cleave_targets(const actor* attacker, const coord_def& def,
                         list<actor*> &targets);
 void get_all_cleave_targets(const actor* attacker, const coord_def& def,

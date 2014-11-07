@@ -5,7 +5,6 @@
 
 int englaciate(coord_def where, int pow, int, actor *agent);
 spret_type cast_englaciation(int pow, bool fail);
-void cast_tame_beasts(int pow);
 bool backlight_monsters(coord_def where, int pow, int garbage);
 
 //returns true if it slowed the monster

@@ -1725,18 +1725,6 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 }
 
 /**
- * What size is the player, when in the given form?
- *
- * @param tform     The type of transformation in question.
- * @return          The size of the player when in the given form; may be
- *                  SIZE_CHARACTER (unchanged).
- */
-size_type player::transform_size(transformation_type tform) const
-{
-    return get_form()->size;
-}
-
-/**
  * Get an monster type corresponding to the player's current form.
  *
  * (Used for console player glyphs.)

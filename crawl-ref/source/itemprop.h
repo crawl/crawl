@@ -79,7 +79,6 @@ void ident_reflector(item_def *item);
 // weapon functions:
 int weapon_rarity(int w_type) IMMUTABLE;
 
-int   cmp_weapon_size(const item_def &item, size_type size) PURE;
 bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
