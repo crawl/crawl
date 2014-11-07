@@ -760,7 +760,7 @@ const string colour_to_str(colour_t colour)
         return cols[colour];
 }
 
-// Returns -1 if unmatched else returns 0-15.
+// Returns default_colour (default -1) if unmatched else returns 0-15.
 int str_to_colour(const string &str, int default_colour, bool accept_number)
 {
     int ret;

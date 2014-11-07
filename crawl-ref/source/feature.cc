@@ -47,25 +47,6 @@ ucs_t feature_def::magic_symbol() const
         return symbol();
 }
 
-/** Give a feature_def some reasonable defaults.
- *
- *  XXX: This is kind of what a default constructor is for, but until
- *  we allow C++11-only features we can't have aggregate initialisation
- *  (in feature-data.h) as well as a constructor.
- *
- *  @param[out] fd The new feature_def to be given values.
- */
-void init_fd(feature_def &fd)
-{
-    fd.feat = DNGN_UNSEEN;
-    fd.name = fd.vaultname = "";
-    fd.dchar = fd.magic_dchar = NUM_DCHAR_TYPES;
-    fd.colour = fd.seen_colour = fd.em_colour = fd.seen_em_colour = BLACK;
-    fd.map_colour = DARKGREY;
-    fd.flags = FFT_NONE;
-    fd.minimap = MF_UNSEEN;
-}
-
 /** Do the default colour relations on a feature_def.
  *
  *  @param[out] f The feature_def to be filled out.
@@ -136,19 +117,16 @@ void init_show_table()
         show_item_type si = static_cast<show_item_type>(i);
         // SHOW_ITEM_NONE is bogus, but "invis exposed" is an ok placeholder
         COMPILE_CHECK(DCHAR_ITEM_AMULET - DCHAR_ITEM_DETECTED + 2 == NUM_SHOW_ITEMS);
-        init_fd(item_defs[si]);
         item_defs[si].minimap = MF_ITEM;
         item_defs[si].dchar = static_cast<dungeon_char_type>(i
             + DCHAR_ITEM_DETECTED - SHOW_ITEM_DETECTED);
         _create_colours(item_defs[si]);
     }
 
-    init_fd(invis_fd);
     invis_fd.dchar = DCHAR_INVIS_EXPOSED;
     invis_fd.minimap = MF_MONS_HOSTILE;
     _create_colours(invis_fd);
 
-    init_fd(cloud_fd);
     cloud_fd.dchar = DCHAR_CLOUD;
     cloud_fd.minimap = MF_SKIP;
     _create_colours(cloud_fd);
