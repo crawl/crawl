@@ -40,6 +40,7 @@ This card creates a shaft beneath you, and possibly beneath your enemies.
 the Elixir card
 
 This card rapidly restores your health or magic, or both at high power levels.
+It will also grant your allies temporary vitality.
 %%%%
 the Helm card
 

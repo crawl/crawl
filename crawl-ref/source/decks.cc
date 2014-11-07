@@ -1761,6 +1761,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 static void _elixir_card(int power, deck_rarity_type rarity)
 {
     int power_level = _get_power_level(power, rarity);
+    const int dur = random2avg(10 * (power_level + 1), 2) * BASELINE_DELAY;
 
     you.duration[DUR_ELIXIR_HEALTH] = 0;
     you.duration[DUR_ELIXIR_MAGIC] = 0;
@@ -1783,6 +1784,15 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     {
         you.set_duration(DUR_ELIXIR_HEALTH, 10);
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->wont_attack())
+            mon->add_ench(mon_enchant(ENCH_EPHEMERAL_INFUSION, 50 * (power_level + 1),
+                                      &you, dur));
     }
 }
 
