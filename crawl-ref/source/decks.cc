@@ -1451,6 +1451,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
     const int power_level = _get_power_level(power, rarity);
     bool did_something = false;
+    enchant_type for_allies = ENCH_NONE, for_hostiles = ENCH_NONE;
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
@@ -1469,6 +1470,28 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         did_something = true;
     }
 
+    switch(power_level)
+    {
+        case 0:
+                switch(random2(3))
+                {
+                    case 0: for_allies = for_hostiles = ENCH_SLOW; break;
+                    case 1: for_allies = for_hostiles = ENCH_HASTE; break;
+                    case 2: for_allies = for_hostiles = ENCH_SWIFT; break;
+                }
+                break;
+
+        case 1:
+                if (coinflip())
+                    for_allies = ENCH_HASTE;
+                else
+                    for_hostiles = ENCH_SLOW;
+                break;
+
+        case 2: for_allies = ENCH_HASTE; for_hostiles = ENCH_SLOW;
+        break;
+    }
+
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
@@ -1476,55 +1499,58 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         if (mon && !mons_immune_magic(mon))
         {
             const bool hostile = !mon->wont_attack();
-            const bool was_hasted = mon->has_ench(ENCH_HASTE);
             const bool haste_immune = (mon->check_stasis(false)
                                 || mons_is_immotile(mon));
 
             bool did_haste = false;
+            bool did_swift = false;
 
-            // Explanatory variables.
-            const int speed = mon->speed;
-            const bool slow = speed < BASELINE_DELAY;
-            const bool fast = speed > BASELINE_DELAY;
-            const bool normal = speed == BASELINE_DELAY;
-
-
-            // benefits the player
-            if (x_chance_in_y(power_level + 1, 3))
+            if (hostile)
             {
-                if (hostile && (fast || normal))
+                if (for_hostiles != ENCH_NONE)
                 {
-                    do_slow_monster(mon, &you);
-                    did_something = true;
+                    if (for_hostiles == ENCH_SLOW)
+                    {
+                        do_slow_monster(mon, &you);
+                        did_something = true;
+                    }
+                    else if(!(for_hostiles == ENCH_HASTE && haste_immune))
+                    {
+                        mon->add_ench(for_hostiles);
+                        did_something = true;
+                        if (for_hostiles == ENCH_HASTE)
+                            did_haste = true;
+                        else if (for_hostiles == ENCH_SWIFT)
+                            did_swift = true;
+                    }
                 }
-                else if (!hostile && !haste_immune && (slow || normal))
-                {
-                    mon->add_ench(ENCH_HASTE);
-                    did_something = true;
-
-                if (!was_hasted)
-                    did_haste = true;
-                }
-            }   // doesn't benefit the player
-            else if (x_chance_in_y(2 - power_level, 4))
+            }
+            else //allies
             {
-                if (slow && hostile)
+                if (for_allies != ENCH_NONE)
                 {
-                    mon->add_ench(ENCH_HASTE);
-                    did_something = true;
-
-                    if (!was_hasted)
-                        did_haste = true;
-                }
-                else if (fast && !hostile)
-                {
-                    do_slow_monster(mon, &you);
-                    did_something = true;
+                    if (for_allies == ENCH_SLOW)
+                    {
+                        do_slow_monster(mon, &you);
+                        did_something = true;
+                    }
+                    else if(!(for_allies == ENCH_HASTE && haste_immune))
+                    {
+                        mon->add_ench(for_allies);
+                        did_something = true;
+                        if (for_allies == ENCH_HASTE)
+                            did_haste = true;
+                        else if (for_allies == ENCH_SWIFT)
+                            did_swift = true;
+                    }
                 }
             }
 
             if (did_haste)
                 simple_monster_message(mon, " seems to speed up.");
+
+            if (did_swift)
+                simple_monster_message(mon, " is moving somewhat quickly.");
         }
     }
 
