@@ -370,7 +370,7 @@ bool turn_corpse_into_skeleton(item_def &item)
     item.sub_type = CORPSE_SKELETON;
     item.special  = FRESHEST_CORPSE; // reset rotting counter
     item.rnd = 1 + random2(255); // not sure this is necessary, but...
-    item.props.clear();
+    item.props.erase(FORCED_ITEM_COLOUR_KEY);
     return true;
 }
 
