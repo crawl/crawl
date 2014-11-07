@@ -355,7 +355,7 @@ struct cell_travel_safety
 };
 
 typedef FixedArray<cell_travel_safety, GXM, GYM> travel_safe_grid;
-static Unique_ptr<travel_safe_grid> _travel_safe_grid;
+static unique_ptr<travel_safe_grid> _travel_safe_grid;
 
 class precompute_travel_safety_grid
 {
@@ -368,7 +368,7 @@ public:
         if (!_travel_safe_grid.get())
         {
             did_compute = true;
-            Unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
+            unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
             travel_safe_grid &safegrid(*tsgrid);
             for (rectangle_iterator ri(1); ri; ++ri)
             {
@@ -378,7 +378,7 @@ public:
                 ts.safe_if_ignoring_hostile_terrain =
                     _is_travelsafe_square(p, true);
             }
-            _travel_safe_grid = Move(tsgrid);
+            _travel_safe_grid = move(tsgrid);
         }
     }
     ~precompute_travel_safety_grid()

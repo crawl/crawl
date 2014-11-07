@@ -255,20 +255,20 @@ string SQL_DBM::query(const string &key)
     return result;
 }
 
-Unique_ptr<string> SQL_DBM::firstkey()
+unique_ptr<string> SQL_DBM::firstkey()
 {
     if (init_iterator() != SQLITE_OK)
     {
-        Unique_ptr<string> result;
+        unique_ptr<string> result;
         return result;
     }
 
     return nextkey();
 }
 
-Unique_ptr<string> SQL_DBM::nextkey()
+unique_ptr<string> SQL_DBM::nextkey()
 {
-    Unique_ptr<string> result;
+    unique_ptr<string> result;
     if (s_iterator)
     {
         if (ec(sqlite3_step(s_iterator)) == SQLITE_ROW)
@@ -416,9 +416,9 @@ sql_datum dbm_fetch(SQL_DBM *db, const sql_datum &key)
     return sql_datum(ans);
 }
 
-static sql_datum dbm_key(SQL_DBM *db, Unique_ptr<string> (SQL_DBM::*key)())
+static sql_datum dbm_key(SQL_DBM *db, unique_ptr<string> (SQL_DBM::*key)())
 {
-    Unique_ptr<string> res = (db->*key)();
+    unique_ptr<string> res = (db->*key)();
     if (res.get())
         return sql_datum(*res.get());
     else

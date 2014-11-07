@@ -699,7 +699,7 @@ coord_def get_random_stair()
     return st[random2(st.size())];
 }
 
-static Unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
+static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {

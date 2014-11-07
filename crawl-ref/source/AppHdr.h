@@ -24,25 +24,9 @@
 namespace std {};
 using namespace std;
 
-#if !defined(TARGET_COMPILER_VC) && defined(__cplusplus) && __cplusplus < 201103
-// Use uppercase names so we don't conflict with pre-C++11 implementations.
-# define Unique_ptr auto_ptr
-template<typename T>
-static inline T Move(T x) { return x; } // good enough for our purposes
-# include <cstddef>
-# ifndef nullptr // clang in the OS X 10.9 SDK #defines this in C++03 mode
-#  define nullptr NULL
-# endif
-# define DELETED_METHOD
-#else
-# define Unique_ptr unique_ptr
-# define Move move
-# define DELETED_METHOD = delete
-#endif
-
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-    TypeName(const TypeName&) DELETED_METHOD;   \
-    void operator=(const TypeName&) DELETED_METHOD
+    TypeName(const TypeName&) = delete;   \
+    void operator=(const TypeName&) = delete
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -109,10 +93,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
-#endif
-
-#if !defined(__cplusplus) || __cplusplus < 201103
-# define constexpr const
 #endif
 
 // =========================================================================
