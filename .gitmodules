@@ -32,3 +32,9 @@
 	path = crawl-ref/source/contrib/sdl-android
 	url = git://gitorious.org/crawl/sdl-android.git
 	update = none
+[submodule "crawl-ref/source/contrib/sdl2"]
+	path = crawl-ref/source/contrib/sdl2
+	url = git://gitorious.org/crawl/crawl-sdl2.git
+[submodule "crawl-ref/source/contrib/sdl2-image"]
+	path = crawl-ref/source/contrib/sdl2-image
+	url = git://gitorious.org/crawl/crawl-sdl2-image.git
