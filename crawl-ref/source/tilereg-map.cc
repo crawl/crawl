@@ -9,6 +9,7 @@
 #include "food.h"
 #include "libutil.h"
 #include "misc.h"
+#include "player.h"
 #include "options.h"
 #include "tilesdl.h"
 #include "travel.h"

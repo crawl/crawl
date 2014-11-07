@@ -8,6 +8,7 @@
 #include "cloud.h"
 #include "command.h"
 #include "coord.h"
+#include "directn.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
