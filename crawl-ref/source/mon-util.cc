@@ -2394,12 +2394,7 @@ static void _mons_load_spells(monster* mon)
     {
         if (mspell_list[i].type == book)
         {
-            for (unsigned int j = 0;
-                 mspell_list[i].spells[j].spell != SPELL_NO_SPELL;
-                 ++j)
-            {
-                mon->spells.push_back(mspell_list[i].spells[j]);
-            }
+            mon->spells = mspell_list[i].spells;
             break;
         }
     }
