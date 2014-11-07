@@ -44,8 +44,8 @@ It will also grant your allies temporary vitality.
 %%%%
 the Helm card
 
-This card increases your defences. It may provide boosts to armour, evasion,
-shielding and resistances.
+This card increases your and your allies' defences. It may provide boosts to armour,
+evasion, shielding and resistances.
 %%%%
 the Blade card
 
