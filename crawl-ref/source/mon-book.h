@@ -43,7 +43,7 @@ enum mon_spell_slot_flags
 struct mon_spellbook
 {
     mon_spellbook_type type;
-    mon_spell_slot spells[256]; // because it needs to be stored in a byte
+    vector<mon_spell_slot> spells;
 };
 
 #define END_OF_MONS_BOOK { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
