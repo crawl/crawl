@@ -1532,6 +1532,20 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
+static void _banshee_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && !mon->wont_attack())
+            mon->drain_exp(&you, false, 3 * (power_level + 1));
+    }
+    mass_enchantment(ENCH_FEAR, power);
+}
+
 static void _damnation_card(int power, deck_rarity_type rarity)
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -2808,7 +2822,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
-    case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
+    case CARD_BANSHEE:          _banshee_card(power, rarity); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
