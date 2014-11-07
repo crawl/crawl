@@ -34,6 +34,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "end.h"

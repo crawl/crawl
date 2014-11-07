@@ -25,6 +25,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "delay.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "english.h"

@@ -18,6 +18,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"

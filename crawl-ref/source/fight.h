@@ -8,8 +8,6 @@
 
 #include <list>
 
-#include "random-var.h"
-
 enum stab_type
 {
     STAB_NO_STAB,                    //    0

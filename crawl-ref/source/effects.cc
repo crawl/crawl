@@ -26,6 +26,7 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "dgn-shoals.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"

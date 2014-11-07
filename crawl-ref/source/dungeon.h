@@ -221,7 +221,6 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
 void level_clear_vault_memory();
 void run_map_epilogues();
 
-struct trap_spec;
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;

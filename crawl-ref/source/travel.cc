@@ -24,6 +24,7 @@
 #include "command.h"
 #include "coordit.h"
 #include "dactions.h"
+#include "directn.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "english.h"

@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "food.h"

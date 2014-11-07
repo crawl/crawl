@@ -18,6 +18,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "directn.h"
 #include "effects.h"
 #include "english.h"
 #include "env.h"

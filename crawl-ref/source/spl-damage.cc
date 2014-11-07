@@ -14,6 +14,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"

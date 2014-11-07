@@ -27,6 +27,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "directn.h"
 #include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "dgn-delve.h"

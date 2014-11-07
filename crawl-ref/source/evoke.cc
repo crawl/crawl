@@ -18,6 +18,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "english.h"

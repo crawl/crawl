@@ -17,6 +17,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "itemprop.h"
 #include "items.h"
