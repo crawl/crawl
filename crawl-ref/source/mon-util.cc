@@ -1386,7 +1386,16 @@ mon_itemeat_type mons_itemeat(const monster* mon)
 int mons_class_colour(monster_type mc)
 {
     ASSERT_smc();
-    return monster_symbols[mc].colour;
+    // Player monster is a dummy monster used only for display purposes, so
+    // it's ok to override it here.
+    if (mc == MONS_PLAYER
+        && Options.mon_glyph_overrides.count(MONS_PLAYER)
+        && Options.mon_glyph_overrides[MONS_PLAYER].col)
+    {
+        return Options.mon_glyph_overrides[MONS_PLAYER].col;
+    }
+    else
+        return monster_symbols[mc].colour;
 }
 
 bool mons_class_can_regenerate(monster_type mc)
