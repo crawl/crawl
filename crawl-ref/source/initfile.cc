@@ -1628,14 +1628,14 @@ game_options::game_options()
 {
     lang = LANG_EN;
     lang_name = 0;
-#ifndef TARGET_OS_WINDOWS
+#if 0
     if (Version::ReleaseType == VER_ALPHA)
     {
         set_lang(getenv("LC_ALL"))
         || set_lang(getenv("LC_MESSAGES"))
         || set_lang(getenv("LANG"));
     }
-#elif defined USE_TILE_LOCAL
+//#elif defined USE_TILE_LOCAL
     if (Version::ReleaseType == VER_ALPHA)
     {
         char ln[30];
