@@ -20,11 +20,11 @@ endif
 
 ifdef TILES
   ifndef CONTRIB_SDL
-    SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
-    SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
+    SDL2_CFLAGS := $(shell sdl2-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL2")
+    SDL2_LDFLAGS := $(shell sdl2-config --libs 2> /dev/null && echo "-lSDL2_image" || echo "../contrib/install/$(ARCH)/lib/libSDL2.a ../contrib/install/$(ARCH)/lib/libSDL2main.a ../contrib/install/$(ARCH)/lib/libSDL2_image.a")
   else
-    SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
-    SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
+    SDL2_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL2
+    SDL2_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL2.a ../contrib/install/$(ARCH)/lib/libSDL2main.a ../contrib/install/$(ARCH)/lib/libSDL2_image.a
   endif
 
   ifndef NO_PKGCONFIG
@@ -35,8 +35,8 @@ ifdef TILES
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
   endif
 
-  CFLAGS += $(SDL_CFLAGS) $(PNG_INCLUDE)
-  LDFLAGS += $(SDL_LDFLAGS) $(PNG_LIB)
+  CFLAGS += $(SDL2_CFLAGS) $(PNG_INCLUDE)
+  LDFLAGS += $(SDL2_LDFLAGS) $(PNG_LIB)
 
   CFLAGS += -DUSE_TILE
 endif
