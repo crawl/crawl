@@ -56,8 +56,8 @@ public:
     int open(const string &db = "");
     void close();
 
-    Unique_ptr<string> firstkey();
-    Unique_ptr<string> nextkey();
+    unique_ptr<string> firstkey();
+    unique_ptr<string> nextkey();
 
     string query(const string &key);
     int insert(const string &key, const string &value);

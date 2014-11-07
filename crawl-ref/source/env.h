@@ -45,13 +45,13 @@ struct crawl_environment
 
     vault_placement_refv                     level_vaults;
 
-    Unique_ptr<grid_heightmap>               heightmap;
+    unique_ptr<grid_heightmap>               heightmap;
 
     map_bitmask                              map_seen;
     // Player-remembered terrain and LOS
     MapKnowledge                             map_knowledge;
     // Forgotten map knowledge (X^F)
-    Unique_ptr<MapKnowledge>                 map_forgotten;
+    unique_ptr<MapKnowledge>                 map_forgotten;
     set<coord_def> visible;
 
     vector<coord_def>                        travel_trail;

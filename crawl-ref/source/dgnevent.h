@@ -129,7 +129,7 @@ private:
 
 private:
     unsigned global_event_mask;
-    Unique_ptr<dgn_square_alarm> grid_triggers[GXM][GYM];
+    unique_ptr<dgn_square_alarm> grid_triggers[GXM][GYM];
     list<dgn_listener_def> listeners;
 };
 

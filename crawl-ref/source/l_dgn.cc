@@ -1446,7 +1446,7 @@ static int dgn_register_lua_marker(lua_State *ls)
     return 0;
 }
 
-static Unique_ptr<lua_datum> _dgn_map_safe_bounds_fn;
+static unique_ptr<lua_datum> _dgn_map_safe_bounds_fn;
 
 static bool _lua_map_place_valid(const map_def &map,
                                  const coord_def &c,
