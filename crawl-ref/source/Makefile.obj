@@ -52,7 +52,6 @@ dgn-swamp.o \
 dgnevent.o \
 directn.o \
 dlua.o \
-domino.o \
 dungeon.o \
 effects.o \
 end.o \
