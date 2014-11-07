@@ -2613,12 +2613,6 @@ void define_monster(monster* mons)
     mons->ench_cache.reset();
     mons->ench_countdown = 0;
 
-    // NOTE: For player ghosts and (very) ugly things this just ensures
-    // that the monster instance is valid and won't crash when used,
-    // though the (very) ugly thing generated should actually work.  The
-    // player ghost and (very) ugly thing code is currently only used
-    // for generating a monster for MonsterMenuEntry in
-    // _find_description() in command.cc.
     switch (mcls)
     {
     case MONS_PANDEMONIUM_LORD:

@@ -1850,6 +1850,7 @@ bool load_ghost(bool creating_level, bool delete_file)
     {
         mons->set_new_monster_id();
         mons->set_ghost(ghosts[0]);
+        mons->type = MONS_PLAYER_GHOST;
         mons->ghost_init();
         mons->bind_melee_flags();
         if (mons->has_spells())
