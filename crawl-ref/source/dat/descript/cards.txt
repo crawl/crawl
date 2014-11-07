@@ -17,7 +17,7 @@ levels, the tomb may be imperfect. Use with caution!
 %%%%
 the Banshee card
 
-The wail of the Banshee instils fear in nearby creatures.
+The wail of the Banshee instils fear and drains life from nearby creatures.
 %%%%
 Damnation card
 
