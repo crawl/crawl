@@ -458,7 +458,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         // monsters weighing more than this give more than base gold
         const int baseline_weight = 550; // MONS_HUMAN
         const int base_gold = max(min_base_gold,
-                                  (me->weight - baseline_weight) / 27
+                                  (me->weight - baseline_weight) / 40
                                     + min_base_gold);
         corpse.clear();
         corpse.base_type = OBJ_GOLD;
