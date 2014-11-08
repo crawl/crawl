@@ -2054,7 +2054,7 @@ just below its surface, ready to burst forth at the slightest touch.
 rust devil
 
 A hideous humanoid figure with rust-spotted metal skin. Its touch causes armour
-and weapons to rust and decay, crumbling into uselessness.
+and weapons to rust and decay, becoming nearly useless until repaired.
 %%%%
 salamander
 
