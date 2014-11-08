@@ -10,7 +10,7 @@
 
 {{
 function elven_blade_entry(e)
-  e.tags("blade_entry no_monster_gen unrand")
+  e.tags("elf_blade_entry no_monster_gen unrand")
   e.mons("patrolling dancing weapon ; dagger good_item | mundane falchion w:6")
   e.ftile("- = floor_vault")
   e.colour("- = lightgrey")
@@ -1306,7 +1306,7 @@ COLOUR:   - = lightgrey
 SUBST:    - = .
 # Previously for Blade: NSUBST:  . : 6:0 / 6 = 0. / 6 = 0... / *:.
 NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
-SUBVAULT: A : blade_entry
+SUBVAULT: A : elf_blade_entry
 SUBST:    A : x"", ' = .
 CLEAR:    "
 veto {{
@@ -1376,7 +1376,7 @@ FTILE:    - = floor_vault
 COLOUR:   - = lightgrey
 SUBST:    - = .
 NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
-SUBVAULT: A : blade_entry
+SUBVAULT: A : elf_blade_entry
 SUBST:    A : x"", ' = .
 CLEAR:    "
 veto {{
