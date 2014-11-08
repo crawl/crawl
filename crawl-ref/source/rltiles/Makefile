@@ -49,7 +49,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lgdi32 -lwinmm
 endif
 ifeq ($(uname_S),Darwin)
-LDFLAGS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL
+LDFLAGS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL
 endif
 ifeq ($(uname_S),Linux)
 LDFLAGS += -ldl -lpthread
