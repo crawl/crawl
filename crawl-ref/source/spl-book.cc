@@ -244,7 +244,6 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_ENCHANTMENTS:
     case BOOK_PARTY_TRICKS:
-    case BOOK_FEN: // XXX: move this to weight 12 after the honeymoon
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
@@ -268,6 +267,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_BURGLARY:
     case BOOK_ALCHEMY:
     case BOOK_DREAMS:
+    case BOOK_FEN:
         return 12;
 
     case BOOK_ENVENOMATIONS:
