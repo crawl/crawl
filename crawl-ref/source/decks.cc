@@ -2102,19 +2102,19 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 
     if (things_to_do[0])
-        magic_mapping(random2(power/8) + 18, random2(power), false);
+        magic_mapping(random2(power/2) + 18, random2(power*2), false);
     if (things_to_do[1])
     {
-        if (detect_traps(random2(power/4)))
+        if (detect_traps(random2(power)))
             mpr("You sense traps nearby.");
-        if (detect_items(random2(power/4)))
+        if (detect_items(random2(power)))
             mpr("You sense items nearby.");
     }
     if (things_to_do[2])
     {
-        you.set_duration(DUR_TELEPATHY, random2(power/4), 0,
+        you.set_duration(DUR_TELEPATHY, random2(power), 0,
                          "You feel telepathic!");
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] / 2 / BASELINE_DELAY,
+        detect_creatures(1 + you.duration[DUR_TELEPATHY] * 2 / BASELINE_DELAY,
                          true);
     }
 }
