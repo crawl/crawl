@@ -454,7 +454,12 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     if (!force && in_good_standing(GOD_GOZAG))
     {
         const monsterentry* me = get_monster_data(corpse_class);
-        const int base_gold = max(3, (me->weight - 200) / 27);
+        const int min_base_gold = 13;
+        // monsters weighing more than this give more than base gold
+        const int baseline_weight = 550; // MONS_HUMAN
+        const int base_gold = max(min_base_gold,
+                                  (me->weight - baseline_weight) / 27
+                                    + min_base_gold);
         corpse.clear();
         corpse.base_type = OBJ_GOLD;
         corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
