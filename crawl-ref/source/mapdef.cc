@@ -4977,10 +4977,10 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
     return true;
 }
 
-item_spec item_list::parse_corpse_spec(item_spec &result, string s)
+bool item_list::parse_corpse_spec(item_spec &result, string s)
 {
     const bool never_decay = strip_tag(s, "never_decay");
-
+    
     if (never_decay)
         result.props[CORPSE_NEVER_DECAYS].get_bool() = true;
 
@@ -5000,7 +5000,7 @@ item_spec item_list::parse_corpse_spec(item_spec &result, string s)
     if (!mons_parse_err.empty())
     {
         error = mons_parse_err;
-        return result;
+        return false;
     }
 
     // Get the actual monster spec:
@@ -5010,12 +5010,12 @@ item_spec item_list::parse_corpse_spec(item_spec &result, string s)
     {
         error = make_stringf("Requested corpse '%s' is invalid",
                              s.c_str());
-        return result;
+        return false;
     }
 
     // Ok, looking good, the caller can have their requested toy.
     result.set_corpse_monster_spec(spec);
-    return result;
+    return true;
 }
 
 // Strips the first word from s and returns it.
@@ -5138,10 +5138,8 @@ void item_list::build_deck_spec(string s, item_spec* spec)
         spec->sub_type = _random_deck_subtype();
 }
 
-item_spec item_list::parse_single_spec(string s)
+bool item_list::parse_single_spec(item_spec& result, string s)
 {
-    item_spec result;
-
     // If there's a colon, this must be a generation weight.
     int weight = find_weight(s);
     if (weight != TAG_UNFOUND)
@@ -5151,7 +5149,7 @@ item_spec item_list::parse_single_spec(string s)
         {
             error = make_stringf("Bad item generation weight: '%d'",
                                  result.genweight);
-            return result;
+            return false;
         }
     }
 
@@ -5178,7 +5176,7 @@ item_spec item_list::parse_single_spec(string s)
         catch (const string &err)
         {
             error = err;
-            return result;
+            return false;
         }
     }
 
@@ -5197,7 +5195,7 @@ item_spec item_list::parse_single_spec(string s)
             result.base_type = OBJ_RANDOM;
         else
             parse_random_by_class(s, result);
-        return result;
+        return true;
     }
 
     string ego_str  = strip_tag_prefix(s, "ego:");
@@ -5223,7 +5221,7 @@ item_spec item_list::parse_single_spec(string s)
             else
             {
                 error = make_stringf("Bad identify status: %s", id_str.c_str());
-                return result;
+                return false;
             }
         }
         result.props["ident"].get_int() = id;
@@ -5242,7 +5240,7 @@ item_spec item_list::parse_single_spec(string s)
                 && number != ISPEC_DAMAGED && number != ISPEC_BAD)
             {
                 error = make_stringf("Bad item level: %d", number);
-                return result;
+                return false;
             }
 
             result.level = number;
@@ -5306,7 +5304,7 @@ item_spec item_list::parse_single_spec(string s)
             if (uniq <= 0)
             {
                 error = make_stringf("Bad uniq level: %d", uniq);
-                return result;
+                return false;
             }
             result.allow_uniques = uniq;
         }
@@ -5332,7 +5330,7 @@ item_spec item_list::parse_single_spec(string s)
             if (disc1 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc1.c_str());
-                return result;
+                return false;
             }
         }
 
@@ -5343,7 +5341,7 @@ item_spec item_list::parse_single_spec(string s)
             if (disc2 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
-                return result;
+                return false;
             }
         }
 
@@ -5353,7 +5351,7 @@ item_spec item_list::parse_single_spec(string s)
             {
                 error = make_stringf("Bad combination of spell schools: %s & %s.",
                                     st_disc1.c_str(), st_disc2.c_str());
-                return result;
+                return false;
             }
         }
 
@@ -5371,7 +5369,7 @@ item_spec item_list::parse_single_spec(string s)
         else if (num_spells <= 0 || num_spells > SPELLBOOK_SIZE)
         {
             error = make_stringf("Bad spellbook size: %d", num_spells);
-            return result;
+            return false;
         }
 
         short slevels = strip_number_tag(s, "slevels:");
@@ -5380,7 +5378,7 @@ item_spec item_list::parse_single_spec(string s)
         else if (slevels == 0)
         {
             error = make_stringf("Bad slevels: %d.", slevels);
-            return result;
+            return false;
         }
 
         const string title = replace_all_of(strip_tag_prefix(s, "title:"),
@@ -5399,7 +5397,7 @@ item_spec item_list::parse_single_spec(string s)
             if (spell == SPELL_NO_SPELL)
             {
                 error = make_stringf("Bad spell: %s", spell_list[i].c_str());
-                return result;
+                return false;
             }
             incl_spells.push_back(spell);
         }
@@ -5418,13 +5416,13 @@ item_spec item_list::parse_single_spec(string s)
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
-        return result;
+        return true;
     }
 
     if (s.find("deck") != string::npos)
     {
         build_deck_spec(s, &result);
-        return result;
+        return true;
     }
 
     string tile = strip_tag_prefix(s, "tile:");
@@ -5434,7 +5432,7 @@ item_spec item_list::parse_single_spec(string s)
         if (!tile_main_index(tile.c_str(), &index))
         {
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
-            return result;
+            return false;
         }
         result.props["item_tile_name"].get_string() = tile;
     }
@@ -5446,7 +5444,7 @@ item_spec item_list::parse_single_spec(string s)
         if (!tile_player_index(tile.c_str(), &index))
         {
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
-            return result;
+            return false;
         }
         result.props["worn_tile_name"].get_string() = tile;
     }
@@ -5459,33 +5457,36 @@ item_spec item_list::parse_single_spec(string s)
 
     // Completely random?
     if (s == "random" || s == "any" || s == "%")
-        return result;
+        return true;
 
     if (s == "*" || s == "star_item")
     {
         result.level = ISPEC_GOOD;
-        return result;
+        return true;
     }
     else if (s == "|" || s == "superb_item")
     {
         result.level = ISPEC_SUPERB;
-        return result;
+        return true;
     }
     else if (s == "$" || s == "gold")
     {
         if (!ego_str.empty())
+        {
             error = "Can't set an ego for gold.";
+            return false;
+        }
 
         result.base_type = OBJ_GOLD;
         result.sub_type  = OBJ_RANDOM;
-        return result;
+        return true;
     }
 
     if (s == "nothing")
     {
         error.clear();
         result.base_type = OBJ_UNASSIGNED;
-        return result;
+        return true;
     }
 
     error.clear();
@@ -5507,7 +5508,7 @@ item_spec item_list::parse_single_spec(string s)
         parse_raw_name(s, result);
 
     if (!error.empty())
-        return result;
+        return false;
 
     if (!unrand_str.empty())
     {
@@ -5515,14 +5516,14 @@ item_spec item_list::parse_single_spec(string s)
         if (result.ego == SPWPN_NORMAL)
         {
             error = make_stringf("Unknown unrand art: %s", unrand_str.c_str());
-            return result;
+            return false;
         }
         result.ego = -result.ego;
-        return result;
+        return true;
     }
 
     if (ego_str.empty())
-        return result;
+        return true;
 
     if (result.base_type != OBJ_WEAPONS
         && result.base_type != OBJ_MISSILES
@@ -5530,13 +5531,13 @@ item_spec item_list::parse_single_spec(string s)
     {
         error = "An ego can only be applied to a weapon, missile or "
             "armour.";
-        return result;
+        return false;
     }
 
     if (ego_str == "none")
     {
         result.ego = -1;
-        return result;
+        return true;
     }
 
     const int ego = _str_to_ego(result, ego_str);
@@ -5544,13 +5545,13 @@ item_spec item_list::parse_single_spec(string s)
     if (ego == 0)
     {
         error = make_stringf("No such ego as: %s", ego_str.c_str());
-        return result;
+        return false;
     }
     else if (ego == -1)
     {
         error = make_stringf("Ego '%s' is invalid for item '%s'.",
                              ego_str.c_str(), s.c_str());
-        return result;
+        return false;
     }
     else if (result.sub_type == OBJ_RANDOM)
     {
@@ -5565,11 +5566,10 @@ item_spec item_list::parse_single_spec(string s)
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
-        return result;
+        return false;
     }
     result.ego = ego;
-
-    return result;
+    return true;
 }
 
 void item_list::parse_random_by_class(string c, item_spec &spec)
@@ -5660,7 +5660,11 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
     vector<string> specifiers = split_string("/", spec);
 
     for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
-        list.ilist.push_back(parse_single_spec(specifiers[i]));
+    {
+        item_spec result;
+        if (parse_single_spec(result, specifiers[i]))
+            list.ilist.push_back(result);
+    }
 
     return list;
 }

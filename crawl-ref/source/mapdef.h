@@ -614,12 +614,12 @@ private:
     item_spec item_by_specifier(const string &spec);
     item_spec_slot parse_item_spec(string spec);
     void build_deck_spec(string s, item_spec* spec);
-    item_spec parse_single_spec(string s);
+    bool parse_single_spec(item_spec &result, string s);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);
-    item_spec parse_corpse_spec(item_spec &result, string s);
+    bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
                                  bool corpse, bool skeleton, bool chunk);
 
