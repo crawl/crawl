@@ -248,7 +248,8 @@ static int _translate_keysym(SDL_Keysym &keysym)
 
         return ret;
     }
-    else if (keysym.sym >= SDLK_0 && keysym.sym <= SDLK_9)
+    else if (keysym.sym >= SDLK_0 && keysym.sym <= SDLK_9
+             && (mod & MOD_SHIFT))
     {
         switch (keysym.sym)
         {
