@@ -924,7 +924,7 @@ static void _handle_wizard_command()
         mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
-        if (!yesno("Do you really want to enter wizard mode?", false, 'n'))
+        if (!yes_or_no("Do you really want to enter wizard mode?"))
         {
             canned_msg(MSG_OK);
             return;
