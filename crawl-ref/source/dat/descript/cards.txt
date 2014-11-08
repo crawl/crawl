@@ -137,7 +137,8 @@ This card unleashes an physical attack spell.
 %%%%
 Venom card
 
-This card unleashes a poisonous attack spell.
+This card unleashes a poisonous attack spell. At lower power, attuning one's
+self with poison will also leave the user briefly vulnerable to it.
 %%%%
 the Storm card
 
