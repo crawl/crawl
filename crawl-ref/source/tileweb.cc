@@ -828,8 +828,8 @@ void TilesFramework::_send_player(bool force_full)
     json_open_object("equip");
     for (unsigned int i = 0; i < NUM_EQUIP; ++i)
     {
-        _update_int(force_full, c.equip[i], you.equip[i],
-                    make_stringf("%d", i));
+        const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
+        _update_int(force_full, c.equip[i], equip, make_stringf("%d", i));
     }
     json_close_object(true);
 
