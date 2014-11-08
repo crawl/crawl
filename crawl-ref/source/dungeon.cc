@@ -6080,7 +6080,7 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
 
 double dgn_degrees_to_radians(int degrees)
 {
-    return degrees * M_PI / 180;
+    return degrees * PI / 180;
 }
 
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
