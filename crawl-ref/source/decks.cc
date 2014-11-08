@@ -1715,23 +1715,33 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     zap_type ztype = ZAP_DEBUGGING_RAY;
     const zap_type hammerzaps[3]  = { ZAP_STONE_ARROW, ZAP_IRON_SHOT,
                                       ZAP_LEHUDIBS_CRYSTAL_SPEAR };
-    const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
-                                     ZAP_POISON_ARROW };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
     const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
                                      ZAP_IOOD };
+    bool venom_vuln = false;
 
     switch (card)
     {
     case CARD_VITRIOL:
-		if (power_level == 2 || (power_level == 1 && coinflip()))
-			ztype = ZAP_CORROSIVE_BOLT;
-		else
-			ztype = ZAP_BREATHE_ACID;
+        if (power_level == 2 || (power_level == 1 && coinflip()))
+            ztype = ZAP_CORROSIVE_BOLT;
+        else
+            ztype = ZAP_BREATHE_ACID;
         break;
 
+    case CARD_VENOM:
+        {
+        if (power_level < 2)
+            venom_vuln = true;
+
+        if (power_level == 2 || (power_level == 1 && coinflip()))
+            ztype = ZAP_POISON_ARROW;
+        else
+            ztype = ZAP_VENOM_BOLT;
+        break;
+        }
+
     case CARD_HAMMER:  ztype = hammerzaps[power_level];  break;
-    case CARD_VENOM:   ztype = venomzaps[power_level];   break;
     case CARD_ORB:     ztype = orbzaps[power_level];     break;
 
     case CARD_PAIN:
@@ -1776,6 +1786,11 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         }
         else
             zapping(ztype, power/6, beam);
+            if (venom_vuln)
+            {
+                mpr("Releasing that poison leaves you vulnerable to poison.");
+                you.increase_duration(DUR_POISON_VULN, 10 - power_level * 5 + random2(6), 50);
+            }
     }
     else if (ztype == ZAP_IOOD && power_level == 2)
     {
@@ -1948,8 +1963,8 @@ static void _potion_card(int power, deck_rarity_type rarity)
         monster* mon = monster_at(*ri);
 
         if (mon && mon->attitude == ATT_FRIENDLY)
-			mon->drink_potion_effect(pot, true);
-	}
+            mon->drink_potion_effect(pot, true);
+    }
 
 }
 
@@ -2195,21 +2210,21 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
               MONS_HELL_BEAST, MONS_REAPER, MONS_LOROCYPROCA,
               MONS_HELLION, MONS_TORMENTOR, -1);
         dct2 = MONS_PANDEMONIUM_LORD;
-	}
+    }
     else if (power_level == 1)
     {
         dct = random_choose(MONS_SUN_DEMON, MONS_ICE_DEVIL,
               MONS_SOUL_EATER, MONS_CHAOS_SPAWN, MONS_SMOKE_DEMON,
               MONS_YNOXINUL, MONS_NEQOXEC, -1);
         dct2 = MONS_RAKSHASA;
-	}
+    }
     else
     {
         dct = random_choose(MONS_RED_DEVIL, MONS_BLUE_DEVIL,
               MONS_RUST_DEVIL, MONS_HELLWING, MONS_ORANGE_DEMON,
               MONS_SIXFIRHY, -1);
         dct2 = MONS_HELL_HOUND;
-	}
+    }
 
     // FIXME: The manual testing for message printing is there because
     // we can't rely on create_monster() to do it for us. This is
@@ -2226,7 +2241,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     }
 
     create_monster(
-		    mgen_data(dct2,
+            mgen_data(dct2,
                       BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
                       MG_AUTOFOE));
 
@@ -2235,7 +2250,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
 static void _elements_card(int power, deck_rarity_type rarity)
 {
 
-	const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const monster_type element_list[][3] =
     {
        {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
@@ -2248,11 +2263,11 @@ static void _elements_card(int power, deck_rarity_type rarity)
 
     for (int i = 0; i < 3; ++i)
     {
-		create_monster(
-			mgen_data(element_list[start % 4][power_level], BEH_FRIENDLY,
-				&you, power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE));
-		start++;
-	}
+        create_monster(
+            mgen_data(element_list[start % 4][power_level], BEH_FRIENDLY,
+                &you, power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE));
+        start++;
+    }
 
 }
 
@@ -2680,8 +2695,8 @@ static void _storm_card(int power, deck_rarity_type rarity)
         }
     }
 
-	if (power_level > 1 || (power_level == 1 && coinflip()))
-	{
+    if (power_level > 1 || (power_level == 1 && coinflip()))
+    {
         if (coinflip())
         {
             coord_def pos;
@@ -2705,17 +2720,17 @@ static void _storm_card(int power, deck_rarity_type rarity)
             {
                 mpr("A tornado forms.");
             }
-		}
+        }
         else
         {
             // create some water so the wellspring can place
             create_feat_splash(you.pos(), 2, 3);
             create_monster(
                     mgen_data(MONS_ELEMENTAL_WELLSPRING,
-							  BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
-							  MG_AUTOFOE));
+                              BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
+                              MG_AUTOFOE));
         }
-	}
+    }
  }
 
 static void _illusion_card(int power, deck_rarity_type rarity)
