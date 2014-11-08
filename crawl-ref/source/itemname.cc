@@ -2313,19 +2313,15 @@ public:
 
 static MenuEntry *known_item_mangle(MenuEntry *me)
 {
-    InvEntry *ie = dynamic_cast<InvEntry*>(me);
-    KnownEntry *newme = new KnownEntry(ie);
-    delete me;
-
+    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
+    KnownEntry *newme = new KnownEntry(ie.get());
     return newme;
 }
 
 static MenuEntry *unknown_item_mangle(MenuEntry *me)
 {
-    InvEntry *ie = dynamic_cast<InvEntry*>(me);
-    UnknownEntry *newme = new UnknownEntry(ie);
-    delete me;
-
+    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
+    UnknownEntry *newme = new UnknownEntry(ie.get());
     return newme;
 }
 
@@ -2565,13 +2561,9 @@ void check_item_knowledge(bool unknown_items)
 
     char last_char = menu.getkey();
 
-    vector<const item_def*>::iterator iter;
-    for (iter = items.begin(); iter != items.end(); ++iter)
-         delete *iter;
-    for (iter = items_missile.begin(); iter != items_missile.end(); ++iter)
-         delete *iter;
-    for (iter = items_other.begin(); iter != items_other.end(); ++iter)
-         delete *iter;
+    deleteAll(items);
+    deleteAll(items_missile);
+    deleteAll(items_other);
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
         check_item_knowledge(!unknown_items);
@@ -2631,11 +2623,7 @@ void display_runes()
     menu.getkey();
     redraw_screen();
 
-    for (vector<const item_def*>::iterator iter = items.begin();
-         iter != items.end(); ++iter)
-    {
-         delete *iter;
-    }
+    deleteAll(items);
 }
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts

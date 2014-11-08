@@ -815,9 +815,8 @@ void full_describe_view()
     if (!list_items.empty())
     {
         // Unset show_glyph for other menus.
-        InvEntry *me = new InvEntry(list_items[0]);
-        me->set_show_glyph(false);
-        delete me;
+        InvEntry me(list_items[0]);
+        me.set_show_glyph(false);
     }
 #endif
 #ifdef USE_TILE
