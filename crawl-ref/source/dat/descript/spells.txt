@@ -931,7 +931,7 @@ Olgreb's Toxic Radiance spell
 
 This spell causes the caster to radiate toxic energy, continuously inflicting
 poison on everything nearby for as long as the spell lasts. Be warned that this
-magic is baleful for its user, as the epicenter of the aura is potent enough to
+magic is baleful for its user, as the centre of the aura is potent enough to
 afflict even those otherwise resistant to poison.
 %%%%
 Orb of Destruction spell
