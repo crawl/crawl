@@ -211,7 +211,7 @@ KPROP:  . = no_tele_into
 SUBST:  . = ....x1
 COLOUR: 1. = lightgreen
 COLOUR: x = yellow
-FTILE:  1. = floor_snake_a / floor_snake_c / floor_snake_d
+FTILE:  1. = floor_mosaic
 RTILE:  x = wall_snake
 MAP
 ...

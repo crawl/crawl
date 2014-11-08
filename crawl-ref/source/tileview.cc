@@ -168,13 +168,8 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         return;
 
     case BRANCH_SNAKE:
-        {
-            flv.wall  = TILE_WALL_SNAKE;
-            tileidx_t choices[3] = {TILE_FLOOR_SNAKE_A,
-                                    TILE_FLOOR_SNAKE_C,
-                                    TILE_FLOOR_SNAKE_D};
-            flv.floor = choices[hash_rand(3, seed)];
-        }
+        flv.wall  = TILE_WALL_SNAKE;
+        flv.floor = TILE_FLOOR_MOSAIC;
         return;
 
     case BRANCH_SWAMP:
