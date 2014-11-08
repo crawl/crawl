@@ -5664,6 +5664,8 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
         item_spec result;
         if (parse_single_spec(result, specifiers[i]))
             list.ilist.push_back(result);
+        else
+          dprf(DIAG_DNGN, "Failed to parse: %s", specifiers[i].c_str());
     }
 
     return list;
