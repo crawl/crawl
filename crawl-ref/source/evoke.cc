@@ -631,11 +631,11 @@ static const pop_entry pop_beasts[] =
   { 15, 27,  100, PEAK, MONS_DEATH_YAK },
   { 16, 27,  100, PEAK, MONS_ANACONDA },
   { 16, 27,   50, PEAK, MONS_RAVEN },
-  { 18, 27,   50, UP,   MONS_DIRE_ELEPHANT },
-  { 20, 27,   50, UP,   MONS_FIRE_DRAGON },
-  { 23, 27,   10, UP,   MONS_APIS },
-  { 23, 27,   10, UP,   MONS_HELLEPHANT },
-  { 23, 27,   10, UP,   MONS_GOLDEN_DRAGON },
+  { 18, 29,   50, UP,   MONS_DIRE_ELEPHANT },
+  { 20, 29,   50, UP,   MONS_FIRE_DRAGON },
+  { 23, 32,   10, UP,   MONS_APIS },
+  { 23, 32,   10, UP,   MONS_HELLEPHANT },
+  { 23, 32,   10, UP,   MONS_GOLDEN_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -677,12 +677,13 @@ static bool _box_of_beasts(item_def &box)
     if (!one_chance_in(3))
     {
         // Invoke mon-pick with the custom list
-        int pick_level = max(1, you.skill(SK_EVOCATIONS));
+        const int pick_level = you.skill(SK_EVOCATIONS) + 5;
         monster_type mon = pick_monster_from(pop_beasts, pick_level,
                                              _box_of_beasts_veto_mon);
 
         // Second monster might be only half as good
-        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)), pick_level);
+        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)),
+                                        pick_level);
         monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
                                               _box_of_beasts_veto_mon);
 
