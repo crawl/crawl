@@ -225,8 +225,7 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
 
 Menu::~Menu()
 {
-    for (int i = 0, count = items.size(); i < count; ++i)
-        delete items[i];
+    deleteAll(items);
     delete title;
     if (title2)
         delete title2;

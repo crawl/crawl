@@ -519,11 +519,8 @@ void fire_final_effects()
     while (!env.final_effects.empty())
     {
         // Remove it first so nothing can merge with it.
-        final_effect *eff = env.final_effects.back();
+        unique_ptr<final_effect> eff(env.final_effects.back());
         env.final_effects.pop_back();
-
         eff->fire();
-
-        delete eff;
     }
 }
