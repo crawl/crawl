@@ -24,7 +24,7 @@ ifdef TILES
     SDL2_LDFLAGS := $(shell sdl2-config --libs 2> /dev/null && echo "-lSDL2_image" || echo "../contrib/install/$(ARCH)/lib/libSDL2.a ../contrib/install/$(ARCH)/lib/libSDL2main.a ../contrib/install/$(ARCH)/lib/libSDL2_image.a")
   else
     SDL2_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL2
-    SDL2_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL2.a ../contrib/install/$(ARCH)/lib/libSDL2main.a ../contrib/install/$(ARCH)/lib/libSDL2_image.a
+    SDL2_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL2main.a  ../contrib/install/$(ARCH)/lib/libSDL2_image.a ../contrib/install/$(ARCH)/lib/libSDL2.a
   endif
 
   ifndef NO_PKGCONFIG
@@ -46,7 +46,7 @@ CFLAGS += -O0 -DDEBUG -ggdb
 endif
 
 ifneq (,$(findstring MINGW,$(uname_S)))
-LDFLAGS += -lgdi32 -lwinmm
+LDFLAGS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid 
 endif
 ifeq ($(uname_S),Darwin)
 LDFLAGS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL
