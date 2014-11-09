@@ -232,26 +232,26 @@ def check_config():
     success = True
     for game_data in config.get("games"):
         if not os.path.exists(game_data["crawl_binary"]):
-            logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
+            logging.error("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False
 
         if ("client_path" in game_data and
                 not os.path.exists(game_data["client_path"])):
-            logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
+            logging.error("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
 
         if type(game_data.get("options", [])) is not list:
-            logging.warning("The options field should be a list!")
+            logging.error("The options field should be a list!")
             success = False
         if type(game_data.get("pre_options", [])) is not list:
-            logging.warning("The pre_options field should be a list!")
+            logging.error("The pre_options field should be a list!")
             success = False
 
     if not os.path.isdir(config.static_path):
-        logging.warning("static_path doesn't exist on the filesystem (%s)." % config.static_path)
+        logging.error("static_path doesn't exist on the filesystem (%s)." % config.static_path)
         success = False
     if os.path.isdir(config.static_path) and not scan_titles():
-        logging.warning("No title images (title_*.png) found in static_path (%s)." % config.static_path)
+        logging.error("No title images (title_*.png) found in static_path (%s)." % config.static_path)
         success = False
 
     return success
