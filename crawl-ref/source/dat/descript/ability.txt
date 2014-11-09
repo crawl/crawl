@@ -734,8 +734,8 @@ Sacrifice Love ability
 
 Adherents who choose to sacrifice love are despised by all. All creatures,
 even those summoned by the adherent, become hostile. Monsters that are spell
-residue and which do not act independently such as orbs of destruction and
-spectral weapons are the only things which can remain allied.
+residue and which do not act independently, such as orbs of destruction and
+spectral weapons, are the only things which can remain friendly.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
