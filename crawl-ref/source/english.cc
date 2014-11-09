@@ -258,24 +258,6 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
     return _pronoun_declension[gender][variant];
 }
 
-static string _pow_in_words(int pow)
-{
-    switch (pow)
-    {
-    case 0:
-        return "";
-    case 3:
-        return " thousand";
-    case 6:
-        return " million";
-    case 9:
-        return " billion";
-    case 12:
-    default:
-        return " trillion";
-    }
-}
-
 static string _tens_in_words(unsigned num)
 {
     static const char *numbers[] =
@@ -313,18 +295,25 @@ static string _hundreds_in_words(unsigned num)
     return join_strings(sdreds, stens);
 }
 
-static string _number_in_words(unsigned num, int pow)
+static string _number_in_words(unsigned num, unsigned period)
 {
-    if (pow == 12)
-        return _number_in_words(num, 0) + _pow_in_words(pow);
+    static const char * const periods[] = {
+        "", " thousand", " million", " billion", " trillion"
+    };
+
+    ASSERT(period < ARRAYSZ(periods));
+
+    // Handle "eighteen million trillion", should unsigned go that high.
+    if (period == ARRAYSZ(periods) - 1)
+        return _number_in_words(num, 0) + periods[period];
 
     unsigned thousands = num % 1000, rest = num / 1000;
     if (!rest && !thousands)
         return "zero";
 
-    return join_strings((rest? _number_in_words(rest, pow + 3) : ""),
+    return join_strings((rest? _number_in_words(rest, period + 1) : ""),
                         (thousands? _hundreds_in_words(thousands)
-                                    + _pow_in_words(pow)
+                                    + periods[period]
                                   : ""));
 }
 
