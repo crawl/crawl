@@ -235,8 +235,8 @@ static vector<string> _randart_propnames(const item_def& item,
         { "AC",     ARTP_AC,                    0 },
         { "EV",     ARTP_EVASION,               0 },
         { "Str",    ARTP_STRENGTH,              0 },
-        { "Dex",    ARTP_DEXTERITY,             0 },
         { "Int",    ARTP_INTELLIGENCE,          0 },
+        { "Dex",    ARTP_DEXTERITY,             0 },
         { "Slay",   ARTP_SLAYING,               0 },
 
         // Qualitative attributes (and Stealth)
