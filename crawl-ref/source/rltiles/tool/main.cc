@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include "tile_list_processor.h"
 
-#ifdef USE_TILE
-  #include <SDL_main.h>
-#endif
-
 static void _usage(const char *fname)
 {
     fprintf(stderr, "Usage: %s [-i] [-c] (tile_list.txt)\n", fname);
