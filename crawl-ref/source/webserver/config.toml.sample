@@ -1,3 +1,10 @@
+# ===============================================
+# DUNGEON CRAWL STONE SOUP WEBTILES CONFIGURATION
+# ===============================================
+
+# Base Configuration
+# ==================
+
 # Server name, so far only used in the ttyrec metadata
 server_id = ""
 
@@ -73,8 +80,10 @@ list_savegames = false
 
 # Detach from session after startup?
 daemon = false
+
 # pidfile = "server.pid"
 
+# Set these options to drop privileges for security
 # uid =
 # gid =
 # umask =
@@ -99,9 +108,13 @@ address = ""
 # port = 8081
 # address = "localhost"
 
-games_conf_d = "webserver/games.conf.d/"
+
+# Game Configuration
+# ==================
 
 # You can specify [[games]] sections here or in *.toml files in the games_conf_d directory
+games_conf_d = "webserver/games.conf.d/"
+
 [[games]]
 id = "dcss-web-trunk"
 name = "DCSS trunk"
@@ -176,9 +189,14 @@ send_json_options = true
 [game_link_settings]
 hide_versions = []
 
+
+# Logging Configuration
+# =====================
+
 [logging_config]
 # filename = "webtiles.log"
 format = "%(asctime)s %(levelname)s: %(message)s"
+# 10, 20, 30, 40 = DEBUG, INFO, WARNING, ERROR
 level = 20
 # Enable logging of requests & websocket connect/disconnect events
 enable_access_log = true
