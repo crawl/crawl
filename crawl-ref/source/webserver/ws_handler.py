@@ -11,6 +11,7 @@ import time, datetime
 import codecs
 import random
 import zlib
+import urlparse
 
 from conf import config
 import checkoutput, userdb
@@ -213,9 +214,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                               + "connections has been reached, sorry :(")
             self.close()
         else:
-            host = self.request.protocol + "://" + self.request.host
             # don't allow cookie authentication from cross-site requests
-            if self.request.headers.get("Origin") != host:
+            # (protocol mismatch is fine)
+            origin_host = urlparse.urlsplit(self.request.headers.get("Origin", '')).netloc
+            if origin_host != self.request.host:
+                logging.warning("Cross-site cookie authentication attempt from"
+                                " %s (origin: %s) (host: %s)" % (self.request.remote_ip,
+                                                                 origin_host,
+                                                                 self.request.host))
                 return
 
             if self.get_cookie("sid"):
