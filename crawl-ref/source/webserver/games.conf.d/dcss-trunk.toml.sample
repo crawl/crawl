@@ -1,0 +1,69 @@
+[[games]]
+id = "dcss-web-trunk"
+name = "DCSS trunk"
+version = "trunk"
+mode = "Dungeon Crawl"
+comment = "Start a standard game of Crawl."
+crawl_binary = "./crawl"
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+# dir_path = "./"
+# env_lang = "en_US.UTF8"
+send_json_options = true
+# morgue_url = ""
+
+[[games]]
+id = "sprint-web-trunk"
+name = "Sprint trunk"
+version = "trunk"
+mode = "Dungeon Sprint"
+comment = "Start one of several single-map challenge mode games of Crawl."
+crawl_binary = "./crawl"
+options = ["-sprint"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+
+[[games]]
+id = "zd-web-trunk"
+name = "Zot Defense trunk"
+version = "trunk"
+mode = "Zot Defence"
+comment = "Start one of several \"tower defence\"-style games of Crawl."
+crawl_binary = "./crawl"
+options = ["-zotdef"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true
+
+[[games]]
+id = "tut-web-trunk"
+name = "Tutorial trunk"
+version = "trunk"
+mode = "Tutorial"
+comment = "Start one of several specialised tutorials to learn how to play."
+crawl_binary = "./crawl"
+options = ["-tutorial"]
+inprogress_path = "./rcs/running"
+rcfile_path = "./rcs/"
+socket_path = "./rcs"
+morgue_path = "./rcs/%n"
+client_path = "./webserver/game_data/"
+macro_path = "./rcs/"
+ttyrec_path = "./rcs/ttyrecs/%n"
+send_json_options = true

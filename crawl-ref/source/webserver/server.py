@@ -149,6 +149,7 @@ def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     try:
         config.load()
+        config.init_games()
     except ValueError:
         logging.error("Error in config file", exc_info=True)
     global title_imgs

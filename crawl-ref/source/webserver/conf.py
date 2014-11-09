@@ -5,6 +5,9 @@ import logging
 import sys
 
 
+if os.environ.get('WEBTILES_DEBUG'):
+    logging.getLogger().setLevel(logging.DEBUG)
+
 class Conf(object):
     def __init__(self, path=''):
         self.data = None
@@ -14,22 +17,24 @@ class Conf(object):
         if path:
             self.path = path
         elif os.environ.get("WEBTILES_CONF"):
-            path = os.environ["WEBTILES_CONF"]
+            self.path = os.environ["WEBTILES_CONF"]
         else:
+            # Try to find the config file
             if os.path.exists("./config.toml"):
-                path = "./config.toml"
+                self.path = "./config.toml"
             else:
-                path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                self.path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "config.toml")
 
-        if not os.path.exists(path):
+        if not os.path.exists(self.path):
             errmsg = "Could not find the config file (config.toml)!"
-            if os.path.exists(path + ".sample"):
+            if os.path.exists(self.path + ".sample"):
                 errmsg += " Maybe copy config.toml.sample to config.toml."
             logging.error(errmsg)
             sys.exit(errmsg)
 
         self.load()
+        self.init_games()
 
     def load(self):
         try:
@@ -41,12 +46,11 @@ class Conf(object):
             logging.error(errmsg)
             sys.exit(1)
 
-        self.load_games()
-
         try:
             devteam_file = self.get("devteam_file")
         except:
             devteam_file = None
+
         if devteam_file:
             if not os.path.exists(devteam_file):
                 errmsg = "Could not find devteam file {0}".format(devteam_file)
@@ -64,6 +68,52 @@ class Conf(object):
             self.devteam = None
 
         self.load_player_titles()
+
+    def init_games(self):
+        self.games = {}
+        # If there are no games in config.toml, this won't be defined
+        if not self.data.get('games'):
+            self.data['games'] = []
+        # Load games specified in main config file first
+        for game in self.data["games"]:
+            if game["id"] in self.games:
+                logging.warning("Skipping duplicate game definition '%s' in '%s'" % (game["id"], self.path))
+                continue
+            self.games[game["id"]] = game
+            logging.info("Loaded game '%s'" % game["id"])
+
+        # Load from games_conf_d
+        games_conf_d = self.get("games_conf_d")
+        if games_conf_d and os.path.isdir(games_conf_d):
+            for f in os.listdir(games_conf_d):
+                f_path = os.path.join(games_conf_d, f)
+                if not os.path.isfile(f_path):
+                    logging.warning("Skipping non-file in games_conf_d: %s" % f_path)
+                    continue
+                if not f.endswith('.toml'):
+                    logging.info("Skipping non-toml file in games_conf_d: %s" % f_path)
+                    continue
+
+                logging.debug("Loading %s" % f_path)
+                data = toml.load(open(f_path, "r"))
+                if "games" not in data:
+                    logging.warning("No games specifications found in %s, skipping." % f_path)
+                    continue
+
+                games = {data["id"]: data for data in data["games"]}
+                for game in games.values():
+                    if game["id"] in self.games:
+                        logging.warning("Skipping duplicate game definition '%s' in '%s'" % (game["id"], f_path))
+                        continue
+
+                    self.games[game["id"]] = game
+                    # Note: We also have to append these the raw TOML
+                    # representation of config.toml, which is used for
+                    # determining lobby display order.
+                    self.data['games'].append(game)
+                    logging.info("Loaded game '%s'" % game["id"])
+        elif games_conf_d and not os.path.isdir(games_conf_d):
+            logging.warning("games_conf_d is not a directory, ignoring")
 
     def load_player_titles(self):
         # Don't bother loading titles if we don't have the title sets defined.

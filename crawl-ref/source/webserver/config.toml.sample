@@ -99,6 +99,9 @@ address = ""
 # port = 8081
 # address = "localhost"
 
+games_conf_d = "webserver/games.conf.d/"
+
+# You can specify [[games]] sections here or in *.toml files in the games_conf_d directory
 [[games]]
 id = "dcss-web-trunk"
 name = "DCSS trunk"
