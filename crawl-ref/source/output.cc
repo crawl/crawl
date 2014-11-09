@@ -1393,9 +1393,6 @@ static string _level_description_string_hud()
 
     if (brdepth[place.branch] > 1)
         short_name += make_stringf(":%d", you.depth);
-    // Definite articles
-    else if (place.branch == BRANCH_ABYSS)
-        short_name.insert(0, "The ");
     // Indefinite articles
     else if (place.branch != BRANCH_PANDEMONIUM && !is_connected_branch(place.branch))
         short_name = article_a(short_name);
