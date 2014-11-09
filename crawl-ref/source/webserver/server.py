@@ -198,6 +198,7 @@ def bind_server():
         server = tornado.httpserver.HTTPServer(application, **kwargs)
         for bind in config.binds:
             server.listen(bind["port"], bind["address"])
+            logging.debug("Listening on %s:%s" % (bind["address"], bind["port"]))
         servers.append(server)
     if config.get("ssl_options"):
         # TODO: allow different ssl_options per bind pair
@@ -205,6 +206,7 @@ def bind_server():
                                                ssl_options=config.ssl_options, **kwargs)
         for bind in config.get("ssl_binds", []):
             server.listen(bind["port"], bind["address"])
+            logging.debug("Listening on %s:%s (SSL)" % (bind["address"], bind["port"]))
         servers.append(server)
 
     return servers
