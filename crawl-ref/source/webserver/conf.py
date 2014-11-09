@@ -46,11 +46,7 @@ class Conf(object):
             logging.error(errmsg)
             sys.exit(1)
 
-        try:
-            devteam_file = self.get("devteam_file")
-        except:
-            devteam_file = None
-
+        devteam_file = self.get("devteam_file")
         if devteam_file:
             if not os.path.exists(devteam_file):
                 errmsg = "Could not find devteam file {0}".format(devteam_file)
