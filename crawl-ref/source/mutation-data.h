@@ -1276,9 +1276,9 @@ static const mutation_def mut_data[] =
 { MUT_TRANSLUCENT_SKIN,               0,  3, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "translucent skin",
 
-  {"Your transparent skin slightly reduces the accuracy of your foes (Stlth).",
-   "Your transparent skin reduces the accuracy of your foes (Stlth).",
-   "Your transparent skin greatly reduces the accuracy of your foes (Stlth)."},
+  {"Your skin is partially translucent (Stealth, -foe acc).",
+   "Your skin is mostly translucent (Stealth, -foe acc).",
+   "Your skin is entirely transparent (Stealth, -foe acc)."},
 
   {"Your skin becomes partially translucent.",
    "Your skin becomes more translucent.",
