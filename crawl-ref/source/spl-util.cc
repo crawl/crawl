@@ -1115,11 +1115,12 @@ bool spell_is_form(spell_type spell)
  *                  (status effects, mana, gods, items, etc.)
  * @param prevent   Whether to only check for effects which prevent casting,
  *                  rather than just ones that make it unproductive.
+ * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
  * @return          Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent)
+bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked)
 {
-    return spell_uselessness_reason(spell, temp, prevent) != "";
+    return spell_uselessness_reason(spell, temp, prevent, evoked) != "";
 }
 
 /**
@@ -1131,7 +1132,7 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent)
  *                  (status effects, mana, gods, items, etc.)
  * @param prevent   Whether to only check for effects which prevent casting,
  *                  rather than just ones that make it unproductive.
- * @param evoked    Is the spell being evoked from an item?
+ * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
  * @return          The reason a spell is useless to the player, if it is;
  *                  "" otherwise;
  */
@@ -1142,7 +1143,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (you.duration[DUR_CONF] > 0)
             return "You're too confused.";
-        if (!enough_mp(spell_mana(spell), true, false))
+        if (!enough_mp(spell_mana(spell), true, false) && !evoked)
             return "You don't have enough magic.";
         if (!prevent && spell_no_hostile_in_range(spell))
             return "You can't see any valid targets.";
