@@ -532,6 +532,7 @@ struct item_def
         short initial_cards;        ///< the # of cards a deck *started* with
         short rune_enum;            ///< rune_type; enum for runes of zot
         short net_durability;       ///< damage dealt to a net
+        short book_param;           ///< level of spells in a monolevel book
     };
     union {
         short plus2;        ///< legacy/generic name for this union

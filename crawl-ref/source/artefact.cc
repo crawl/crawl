@@ -1136,25 +1136,23 @@ static bool _init_artefact_book(item_def &book)
 {
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL
            || book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(book.plus != 0);
+    ASSERT(book.book_param != 0);
 
     god_type god;
     bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
 
-    // Plus and plus2 contain parameters to make_book_foo_randart(),
-    // which might get changed after the book has been made into a
-    // randart, so reset them on each iteration of the loop.
-    const int  plus  = book.plus;
+    // plus contains a parameter to make_book_foo_randart(), which might get
+    // changed after the book has been made into a randart, so reset it on each
+    // iteration of the loop.
+    // XXX: ...is this really necessary...?
+    const int book_param = book.book_param;
     bool book_good = false;
     for (int i = 0; i < 4; i++)
     {
-        book.plus  = plus;
+        book.book_param = book_param;
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
-        {
-            // The parameters to this call are in book.plus and plus2.
-            book_good = make_book_level_randart(book, book.plus);
-        }
+            book_good = make_book_level_randart(book, book.book_param);
         else
             book_good = make_book_theme_randart(book);
 

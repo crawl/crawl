@@ -403,7 +403,7 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-        ASSERT_RANGE(book.plus, 1, 10); // book's level
+        ASSERT_RANGE(book.book_param, 1, 10); // book's level
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
@@ -1401,6 +1401,16 @@ static void _make_book_randart(item_def &book)
     }
 }
 
+/**
+ * Turn the given book into a randomly-generated spellbook ("randbook"),
+ * containing only spells of a given level.
+ *
+ * @param book[out]    The book in question.
+ * @param level        The level of the spells. If -1, choose a level randomly.
+ * @param owner        An "owner" for the book; used for naming. If the empty
+ *                     string, choose randomly (may choose no owner).
+ * @return             Whether the book was successfully transformed.
+ */
 bool make_book_level_randart(item_def &book, int level, string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
@@ -1427,7 +1437,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
                                 18 - 2*level));
     ASSERT_RANGE(num_spells, 0 + 1, SPELLBOOK_SIZE + 1);
 
-    book.plus       = level;
+    book.book_param = level;
 
     book.sub_type = BOOK_RANDART_LEVEL;
     _make_book_randart(book);
@@ -1436,6 +1446,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     int uncastable_discard = 0;
 
     vector<spell_type> spells;
+    // Which spells are valid choices?
     _get_spell_list(spells, level, god, !completely_random,
                     god_discard, uncastable_discard);
 
@@ -1934,7 +1945,7 @@ bool make_book_theme_randart(item_def &book,
     ASSERT(count_bits(disc1) == 1);
     ASSERT(count_bits(disc2) == 1);
 
-    book.plus       = num_spells | (max_levels << 8); // NOTE: What's this do?
+    book.book_param = num_spells | (max_levels << 8); // NOTE: What's this do?
 
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);   // NOTE: have any spells been set here?
@@ -2228,7 +2239,7 @@ bool make_book_theme_randart(item_def &book,
     set_artefact_name(book, name);
 
     // Save primary/secondary disciplines back into the book.
-    book.plus       = max1;
+    book.book_param = max1;
 
     return true;
 }
