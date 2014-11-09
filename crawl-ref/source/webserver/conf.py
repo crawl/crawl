@@ -1,15 +1,16 @@
 import csv, os, os.path, toml, logging, sys
 
 class Conf(object):
-    def __init__(self):
+    def __init__(self, path=''):
         self.data = None
         self.dev_team = None
         self.player_titles = None
-        self.load()
 
-    def load(self):
-        path = os.environ.get("WEBTILES_CONF")
-        if path is None:
+        if path:
+            self.path = path
+        elif os.environ.get("WEBTILES_CONF"):
+            path = os.environ["WEBTILES_CONF"]
+        else:
             if os.path.exists("./config.toml"):
                 path = "./config.toml"
             else:
@@ -23,8 +24,19 @@ class Conf(object):
             logging.error(errmsg)
             sys.exit(errmsg)
 
-        self.data = toml.load(open(path, "r"))
-        self.games = {data["id"]: data for data in self.data["games"]}
+        self.load()
+
+    def load(self):
+        try:
+            self.data = toml.load(open(self.path, "r"))
+        except OSError as e:
+            errmsg = ("Couldn't open config file %s (%s)" % (self.path, e))
+            if os.path.exists(path + ".sample"):
+                errmsg += (". Maybe copy config.toml.sample to config.toml.")
+            logging.error(errmsg)
+            sys.exit(1)
+
+        self.load_games()
 
         try:
             devteam_file = self.get("devteam_file")
