@@ -1021,7 +1021,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     case BOOK_RANDART_LEVEL:
     {
         book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level, -1, owner))
+        if (!make_book_level_randart(book, level, owner))
             return false;
         break;
     }
