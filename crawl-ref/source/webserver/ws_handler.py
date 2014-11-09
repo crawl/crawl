@@ -41,6 +41,8 @@ def remove_in_lobbys(process):
 
 
 def write_dgl_status_file():
+    if not config.get("dgl_status_file"):
+        return
     f = None
     try:
         f = open(config.dgl_status_file, "w")

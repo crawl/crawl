@@ -258,6 +258,17 @@ def check_config():
         logging.error("No title images (title_*.png) found in static_path (%s)." % config.static_path)
         success = False
 
+    if config.get('dgl_status_file') and not os.path.isfile(config.dgl_status_file):
+        try:
+            f = open(config.dgl_status_file, 'w')
+            f.close()
+        except (OSError, IOError) as e:
+            logging.error("dgl_status_file (%s) doesn't exist and couldn't create (%s)" %
+                    (config.dgl_status_file, e))
+            success = False
+        else:
+            logging.warning("Created dgl_status_file (%s)" % config.dgl_status_file)
+
     return success
 
 

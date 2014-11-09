@@ -37,9 +37,9 @@ recording_term_size = [80, 24]
 # Watch socket dirs for games not started by the server
 watch_socket_dirs = false
 
-# Status file containing information about the currently running games
-dgl_status_file = "./rcs/status"
-status_file_update_rate = 5
+# Optional: status file containing information about the currently running games
+#dgl_status_file = "./rcs/status"
+#status_file_update_rate = 5
 
 milestone_files = ["./milestones"]
 list_savegames = false
