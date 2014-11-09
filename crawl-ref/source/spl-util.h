@@ -130,7 +130,7 @@ spell_type zap_type_to_spell(zap_type zap);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,
-                      bool prevent = false) PURE;
+                      bool prevent = false, bool evoked = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
                                 bool prevent = false, bool evoked = false) PURE;
 

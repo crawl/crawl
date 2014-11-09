@@ -2801,10 +2801,11 @@ static int _get_spell_description(const spell_type spell,
         description += "The spell is scrawled in ancient runes that are beyond "
                        "your current level of understanding.\n";
     }
-    if (spell_is_useless(spell) && you_can_memorise(spell))
+    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
     {
-        description += "This spell will have no effect right now: "
-                        + spell_uselessness_reason(spell) + "\n";
+        description += "\nThis spell will have no effect right now: "
+        + spell_uselessness_reason(spell, true, false, rod)
+        + "\n";
     }
 
     _append_spell_stats(spell, description, rod);
