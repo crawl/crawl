@@ -383,10 +383,14 @@ bool tile::load(const string &new_filename)
         return false;
 
     // Read and check PNG signature
-    png_byte sig[8];
-    fread(sig, 1, 8, fp);
-    if (!png_check_sig(sig, 8))
+    const unsigned sig_bytes = 8;
+    png_byte sig[sig_bytes];
+    if (fread(sig, 1, sig_bytes, fp) < sig_bytes
+        || !png_check_sig(sig, sig_bytes))
+    {
+        fclose(fp);
         return false;
+    }
 
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
                                                  NULL, NULL, NULL);
@@ -402,7 +406,7 @@ bool tile::load(const string &new_filename)
     png_init_io(png_ptr, fp);
 
     // let libpng know we already read the first 8 bytes
-    png_set_sig_bytes(png_ptr, 8);
+    png_set_sig_bytes(png_ptr, sig_bytes);
 
     png_read_info(png_ptr, info_ptr);
 
