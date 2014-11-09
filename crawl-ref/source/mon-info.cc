@@ -211,7 +211,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CONDENSATION_SHIELD:
         return MB_CONDENSATION_SHIELD;
     case ENCH_RESISTANCE:
-		return MB_RESISTANCE;
+        return MB_RESISTANCE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1582,7 +1582,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
-		v.push_back("unusually resistant");
+        v.push_back("unusually resistant");
     return v;
 }
 
