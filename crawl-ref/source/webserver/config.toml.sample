@@ -8,9 +8,9 @@
 # Server name, so far only used in the ttyrec metadata
 server_id = ""
 
-# Script to initialize a user, e.g. make sure the paths
-# and the rc file exist. This is not done by the server
-# at the moment.
+# Optional script to initialize a user, e.g. make sure the
+# paths and the rc file exist. This is not done by the
+# server at the moment.
 init_player_program = "./util/webtiles-init-player.sh"
 
 password_db = "./webserver/passwd.db3"

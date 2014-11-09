@@ -379,10 +379,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         update_global_status()
 
     def init_user(self):
-        with open("/dev/null", "w") as f:
-            result = subprocess.call([config.init_player_program, self.username],
-                                     stdout = f, stderr = subprocess.STDOUT)
-            return result == 0
+        if not config.get('init_player_program'):
+            return True
+        try:
+            output = subprocess.check_output([config.init_player_program, self.username],
+                                     stderr = subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            logging.error("init_player_program failed for user '%s', output: %s" %
+                          (self.username, e.output.replace('\n', ' ')))
+            return False
+        else:
+            if output.strip():
+                logging.debug("init_player_program succeeded for user '%s', output: %s" %
+                              (self.username, output.replace('\n', ' ')))
+            return True
 
     def stop_watching(self):
         if self.watched_game:
@@ -405,7 +415,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = username
         self.logger.extra["username"] = username
         if not self.init_user():
-            msg = ("Could not initialize your rc and morgue!<br>" +
+            msg = ("Could not initialize your account!<br>" +
                    "This probably means there is something wrong " +
                    "with the server configuration.")
             self.send_message("close", reason = msg)

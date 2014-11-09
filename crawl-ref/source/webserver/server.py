@@ -281,6 +281,11 @@ def check_config():
             logging.error("Can't create password_db, parent directory doesn't exist (%s)" % config.password_db)
             success = False
 
+    init_prog = config.get('init_player_program')
+    if init_prog and not os.access(config.init_player_program, os.X_OK):
+        logging.error("init_player_program (%s) is not executable" % init_prog)
+        success = False
+
     return success
 
 
