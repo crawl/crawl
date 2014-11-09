@@ -128,6 +128,7 @@ enum card_type
     CARD_DEGEN,
     CARD_ELEMENTS,
     CARD_RANGERS,
+    CARD_PLACID_MAGIC,
 
     NUM_CARDS
 };
