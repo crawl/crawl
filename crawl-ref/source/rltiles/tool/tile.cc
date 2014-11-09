@@ -400,6 +400,7 @@ bool tile::load(const string &new_filename)
     if (setjmp(png_jmpbuf(png_ptr)))
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        fclose(fp);
         return false;
     }
 
