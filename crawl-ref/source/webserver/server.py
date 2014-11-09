@@ -274,6 +274,13 @@ def check_config():
         else:
             logging.warning("Created dgl_status_file (%s)" % config.dgl_status_file)
 
+    if not os.path.isfile(config.get('password_db')):
+        if os.path.isdir(os.path.dirname(config.password_db)):
+            logging.warning("password_db doesn't exist (%s), will create it" % config.password_db)
+        else:
+            logging.error("Can't create password_db, parent directory doesn't exist (%s)" % config.password_db)
+            success = False
+
     return success
 
 
