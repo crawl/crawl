@@ -69,7 +69,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to go unnoticed",
   "sacrificed stealth",
 
-  20,
+  15,
   SK_STEALTH,
   NULL,
 },
@@ -78,7 +78,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice all use of magical tools",
   "sacrificed evocations",
 
-  60,
+  70,
   SK_EVOCATIONS,
   NULL,
 },
@@ -87,7 +87,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  20,
+  22,
   SK_NONE,
   NULL,
 },
@@ -114,7 +114,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to dodge",
   "sacrificed dodging",
 
-  20,
+  28,
   SK_DODGING,
   NULL,
 },
@@ -123,7 +123,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to wear armour well",
   "sacrificed armour",
 
-  20,
+  28,
   SK_ARMOUR,
   NULL,
 },
