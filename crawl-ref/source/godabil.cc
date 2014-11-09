@@ -5706,31 +5706,31 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->has_spells() || mons->is_actual_spellcaster()))
     {
-        simple_monster_message(mons, " is muted in retribution by your aura!",
+        simple_monster_message(mons, " is muted in retribution by your will!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_MUTE, 1, act, power+random2(120)));
     }
     else if (power > 35)
     {
-        simple_monster_message(mons, " is paralysed in retribution by your aura!",
+        simple_monster_message(mons, " is paralysed in retribution by your will!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        simple_monster_message(mons, " is slowed in retribution by your aura!",
+        simple_monster_message(mons, " is slowed in retribution by your will!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
     else if (power > 10 && mons_can_be_blinded(mons->type))
     {
-        simple_monster_message(mons, " is blinded in retribution by your aura!",
+        simple_monster_message(mons, " is blinded in retribution by your will!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        simple_monster_message(mons, " is illuminated in retribution by your aura!",
+        simple_monster_message(mons, " is illuminated in retribution by your will!",
             MSGCH_GOD);
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
@@ -5946,20 +5946,20 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
         case 0:
             if (mons->has_spells() || mons->is_actual_spellcaster())
             {
-                simple_monster_message(mons, " is muted by your wave of power!");
+                simple_monster_message(mons, " is rendered silent by the truth!");
                 mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));
                 dmg += roll_dice(die_size, 4);
                 break;
             } // if not a spellcaster, fall through to paralysis.
 
         case 1:
-            simple_monster_message(mons, " is paralysed by your wave of power!");
+            simple_monster_message(mons, " is paralysed by terrible understanding!");
             mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
             dmg += roll_dice(die_size, 4);
             break;
 
         case 2:
-            simple_monster_message(mons, " is slowed by your wave of power!");
+            simple_monster_message(mons, " slows down under the weight of truth!");
             mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
             dmg += roll_dice(die_size, 6);
             break;
