@@ -1,4 +1,9 @@
-import csv, os, os.path, toml, logging, sys
+import csv
+import os
+import toml
+import logging
+import sys
+
 
 class Conf(object):
     def __init__(self, path=''):
@@ -60,9 +65,8 @@ class Conf(object):
 
         self.load_player_titles()
 
-
     def load_player_titles(self):
-        ## Don't bother loading titles if we don't have the title sets defined.
+        # Don't bother loading titles if we don't have the title sets defined.
         title_names = self.get("title_names")
         if not title_names:
             return
@@ -104,11 +108,11 @@ class Conf(object):
         if not title_names:
             return None
 
-        ## The titles are mutually exclusive, so we use the last title
-        ## applicable to the player.
+        # The titles are mutually exclusive, so we use the last title
+        # applicable to the player.
         title = None
         for t in title_names:
-            if not t in self.player_titles:
+            if t not in self.player_titles:
                 continue
             if username.lower() in self.player_titles[t]:
                 title = t

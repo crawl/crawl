@@ -1,18 +1,26 @@
 #!/usr/bin/env python
-import os, os.path, errno, sys, re, random
+
+import os
+import errno
+import sys
+import re
+import random
 
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.template
 
-import logging, logging.handlers
+import logging
+import logging.handlers
 
 from conf import config
 from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
-import process_handler, userdb
+import process_handler
+import userdb
+
 
 title_imgs = []
 title_regex = re.compile(r"^title_.*\.png$")
@@ -23,6 +31,7 @@ def scan_titles():
             title_imgs.append(f)
     return title_imgs
 
+
 def maybe_minified(module):
     if not config.get("use_minified", True):
         return "/static/" + module
@@ -31,6 +40,7 @@ def maybe_minified(module):
         return "/static/" + module + ".min"
     else:
         return "/static/" + module
+
 
 class MainHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, action):
@@ -43,15 +53,18 @@ class MainHandler(tornado.web.RequestHandler):
                     maybe_minified=maybe_minified,
                     use_cdn=config.get("use_cdn", True))
 
+
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
         self.set_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.set_header("Pragma", "no-cache")
         self.set_header("Expires", "0")
 
+
 def err_exit(errmsg):
     logging.error(errmsg)
     sys.exit(errmsg)
+
 
 def daemonize():
     try:
@@ -74,6 +87,7 @@ def daemonize():
         os.dup2(f.fileno(), sys.stdin.fileno())
         os.dup2(f.fileno(), sys.stdout.fileno())
         os.dup2(f.fileno(), sys.stderr.fileno())
+
 
 def write_pidfile():
     pidfile = config.get("pidfile")
@@ -101,6 +115,7 @@ def write_pidfile():
     with open(pidfile, "w") as f:
         f.write(str(os.getpid()))
 
+
 def remove_pidfile():
     pidfile = config.get("pidfile")
     if not pidfile:
@@ -115,6 +130,7 @@ def remove_pidfile():
     except:
         logging.error("Failed to delete pidfile!")
 
+
 def shed_privileges():
     if config.get("gid") is not None:
         os.setgid(config.get("gid"))
@@ -128,6 +144,7 @@ def signal_handler(signum, frame):
     if len(sockets) == 0:
         ioloop.stop()
 
+
 def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     try:
@@ -137,15 +154,18 @@ def usr1_handler(signum, frame):
     global title_imgs
     title_imgs = scan_titles()
 
+
 def usr2_handler(signum, frame):
     logging.info("Received USR2, reloading player title data.")
     config.load_player_titles()
+
 
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.add_timeout(time.time() + 60 * 60 * 24,
                        purge_login_tokens_timeout)
+
 
 def bind_server():
     settings = {
@@ -157,12 +177,12 @@ def bind_server():
         settings["static_handler_class"] = NoCacheHandler
 
     application = tornado.web.Application([
-            (r"/", MainHandler, {"action": "lobby"}),
-            (r"/play/(.*)", MainHandler, {"action": "play"}),
-            (r"/watch/(.*)", MainHandler, {"action": "watch"}),
-            (r"/socket", CrawlWebSocket),
-            (r"/gamedata/(.*)/(.*)", GameDataHandler)
-            ], gzip=True, **settings)
+        (r"/", MainHandler, {"action": "lobby"}),
+        (r"/play/(.*)", MainHandler, {"action": "play"}),
+        (r"/watch/(.*)", MainHandler, {"action": "watch"}),
+        (r"/socket", CrawlWebSocket),
+        (r"/gamedata/(.*)/(.*)", GameDataHandler)
+        ], gzip=True, **settings)
 
     kwargs = {}
     if config.get("http_connection_timeout") is not None:
@@ -178,12 +198,13 @@ def bind_server():
     if config.get("ssl_options"):
         # TODO: allow different ssl_options per bind pair
         server = tornado.httpserver.HTTPServer(application,
-                                               ssl_options = config.ssl_options, **kwargs)
+                                               ssl_options=config.ssl_options, **kwargs)
         for bind in config.get("ssl_binds", []):
             server.listen(bind["port"], bind["address"])
         servers.append(server)
 
     return servers
+
 
 def init_logging(logging_config):
     filename = logging_config.get("filename")
@@ -215,7 +236,7 @@ def check_config():
             success = False
 
         if ("client_path" in game_data and
-            not os.path.exists(game_data["client_path"])):
+                not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
 
@@ -282,9 +303,10 @@ if __name__ == "__main__":
         ioloop.start()
     except KeyboardInterrupt:
         logging.info("Received keyboard interrupt, shutting down.")
-        for server in servers: server.stop()
+        for server in servers:
+            server.stop()
         shutdown()
         ioloop.add_timeout(time.time() + 2, ioloop.stop)
-        ioloop.start() # We'll wait until all crawl processes have ended.
+        ioloop.start()  # We'll wait until all crawl processes have ended.
 
     remove_pidfile()
