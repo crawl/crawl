@@ -313,19 +313,24 @@ static string _hundreds_in_words(unsigned num)
     return join_strings(sdreds, stens);
 }
 
-string number_in_words(unsigned num, int pow)
+static string _number_in_words(unsigned num, int pow)
 {
     if (pow == 12)
-        return number_in_words(num, 0) + _pow_in_words(pow);
+        return _number_in_words(num, 0) + _pow_in_words(pow);
 
     unsigned thousands = num % 1000, rest = num / 1000;
     if (!rest && !thousands)
         return "zero";
 
-    return join_strings((rest? number_in_words(rest, pow + 3) : ""),
+    return join_strings((rest? _number_in_words(rest, pow + 3) : ""),
                         (thousands? _hundreds_in_words(thousands)
                                     + _pow_in_words(pow)
                                   : ""));
+}
+
+string number_in_words(unsigned num)
+{
+    return _number_in_words(num, 0);
 }
 
 static string _number_to_string(unsigned number, bool in_words)
