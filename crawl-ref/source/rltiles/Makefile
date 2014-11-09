@@ -19,14 +19,6 @@ ifdef ANDROID
 endif
 
 ifdef TILES
-  ifndef CONTRIB_SDL
-    SDL2_CFLAGS := $(shell sdl2-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL2")
-    SDL2_LDFLAGS := $(shell sdl2-config --libs 2> /dev/null && echo "-lSDL2_image" || echo "../contrib/install/$(ARCH)/lib/libSDL2.a ../contrib/install/$(ARCH)/lib/libSDL2main.a ../contrib/install/$(ARCH)/lib/libSDL2_image.a")
-  else
-    SDL2_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL2
-    SDL2_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL2main.a  ../contrib/install/$(ARCH)/lib/libSDL2_image.a ../contrib/install/$(ARCH)/lib/libSDL2.a
-  endif
-
   ifndef NO_PKGCONFIG
     PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
     PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
@@ -35,8 +27,8 @@ ifdef TILES
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
   endif
 
-  CFLAGS += $(SDL2_CFLAGS) $(PNG_INCLUDE)
-  LDFLAGS += $(SDL2_LDFLAGS) $(PNG_LIB)
+  CFLAGS += $(PNG_INCLUDE)
+  LDFLAGS += $(PNG_LIB)
 
   CFLAGS += -DUSE_TILE
 endif
