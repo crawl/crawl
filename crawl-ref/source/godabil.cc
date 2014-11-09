@@ -5639,6 +5639,9 @@ bool ru_do_sacrifice(ability_type sac)
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);
 
+    if (you.piety == piety_breakpoint(5))
+        simple_god_message(" indicates that your awakening is complete.");
+
     // Clean up.
     _ru_expire_sacrifices();
     ru_reset_sacrifice_timer(true);
