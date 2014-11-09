@@ -450,8 +450,8 @@ bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
         return false;
 
     if (attacker.is_player()
-        && ((you.form == TRAN_HYDRA && you.heads() > 1)
-        || you.duration[DUR_CLEAVE]))
+        && (you.form == TRAN_HYDRA && you.heads() > 1
+            || you.duration[DUR_CLEAVE]))
     {
         return true;
     }

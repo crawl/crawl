@@ -1303,10 +1303,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (agent->is_player())
     {
-		string source = "fan";
-
-		if (card)
-			source = "card";
+        const string source = card ? "card" : "fan";
 
         if (pow > 120)
             mprf("A mighty gale blasts forth from the %s!", source.c_str());

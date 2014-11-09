@@ -1474,26 +1474,23 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         did_something = true;
     }
 
-    switch(power_level)
+    switch (power_level)
     {
         case 0:
-                switch(random2(3))
-                {
-                    case 0: for_allies = for_hostiles = ENCH_SLOW; break;
-                    case 1: for_allies = for_hostiles = ENCH_HASTE; break;
-                    case 2: for_allies = for_hostiles = ENCH_SWIFT; break;
-                }
-                break;
+            for_allies = for_hostiles = random_choose(ENCH_SLOW, ENCH_HASTE,
+                                                      ENCH_SWIFT, -1);
+            break;
 
         case 1:
-                if (coinflip())
-                    for_allies = ENCH_HASTE;
-                else
-                    for_hostiles = ENCH_SLOW;
-                break;
+            if (coinflip())
+                for_allies = ENCH_HASTE;
+            else
+                for_hostiles = ENCH_SLOW;
+            break;
 
-        case 2: for_allies = ENCH_HASTE; for_hostiles = ENCH_SLOW;
-        break;
+        case 2:
+            for_allies = ENCH_HASTE; for_hostiles = ENCH_SLOW;
+            break;
     }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -1518,7 +1515,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                         do_slow_monster(mon, &you);
                         did_something = true;
                     }
-                    else if(!(for_hostiles == ENCH_HASTE && haste_immune))
+                    else if (!(for_hostiles == ENCH_HASTE && haste_immune))
                     {
                         mon->add_ench(for_hostiles);
                         did_something = true;
@@ -1538,7 +1535,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                         do_slow_monster(mon, &you);
                         did_something = true;
                     }
-                    else if(!(for_allies == ENCH_HASTE && haste_immune))
+                    else if (!(for_allies == ENCH_HASTE && haste_immune))
                     {
                         mon->add_ench(for_allies);
                         did_something = true;
@@ -1659,7 +1656,9 @@ static void _shaft_card(int power, deck_rarity_type rarity)
             if (mons && !mons->wont_attack()
                 && grd(mons->pos()) == DNGN_FLOOR
                 && !mons->airborne() && x_chance_in_y(power_level, 3))
+            {
                 mons->do_shaft();
+            }
         }
     }
     else
@@ -1734,7 +1733,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         break;
 
     case CARD_VENOM:
-        {
         if (power_level < 2)
             venom_vuln = true;
 
@@ -1743,7 +1741,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         else
             ztype = ZAP_VENOM_BOLT;
         break;
-        }
 
     case CARD_HAMMER:  ztype = hammerzaps[power_level];  break;
     case CARD_ORB:     ztype = orbzaps[power_level];     break;
@@ -1869,8 +1866,10 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         monster* mon = monster_at(*ri);
 
         if (mon && mon->wont_attack())
+        {
             mon->add_ench(mon_enchant(ENCH_EPHEMERAL_INFUSION, 50 * (power_level + 1),
                                       &you, dur));
+        }
     }
 }
 
@@ -1999,7 +1998,7 @@ static void _potion_card(int power, deck_rarity_type rarity)
     {
         monster* mon = monster_at(*ri);
 
-        if (mon && mon->attitude == ATT_FRIENDLY)
+        if (mon && mon->friendly())
             mon->drink_potion_effect(pot, true);
     }
 
@@ -2296,13 +2295,14 @@ static void _elements_card(int power, deck_rarity_type rarity)
        {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
 
-    int start = random2(4);
+    int start = random2(ARRAYSZ(element_list));
 
     for (int i = 0; i < 3; ++i)
     {
         create_monster(
-            mgen_data(element_list[start % 4][power_level], BEH_FRIENDLY,
-                &you, power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE));
+            mgen_data(element_list[start % ARRAYSZ(element_list)][power_level],
+                BEH_FRIENDLY, &you, power_level + 2, 0, you.pos(), MHITYOU,
+                MG_AUTOFOE));
         start++;
     }
 
@@ -2699,7 +2699,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
 
     if (coinflip())
     {
-        int num_to_summ = 1 + random2(1 + power_level);
+        const int num_to_summ = 1 + random2(1 + power_level);
         for (int i = 0; i < num_to_summ; ++i)
         {
             create_monster(

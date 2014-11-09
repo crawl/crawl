@@ -1028,6 +1028,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("%s icy shield evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
         }
+
     case ENCH_RESISTANCE:
         if (!quiet)
             simple_monster_message(this, " is no longer unusually resistant.");

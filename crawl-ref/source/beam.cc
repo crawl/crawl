@@ -6512,7 +6512,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
-    case BEAM_RESISTANCE:			  return "resistance";
+    case BEAM_RESISTANCE:            return "resistance";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

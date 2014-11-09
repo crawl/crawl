@@ -3944,7 +3944,7 @@ int monster::res_fire() const
         u--;
 
     if (has_ench(ENCH_RESISTANCE))
-		u++;
+        u++;
 
     if (u < -3)
         u = -3;
@@ -3995,7 +3995,7 @@ int monster::res_cold() const
     }
 
     if (has_ench(ENCH_RESISTANCE))
-		u++;
+        u++;
 
     if (u < -3)
         u = -3;
@@ -4035,7 +4035,7 @@ int monster::res_elec() const
     }
 
     if (has_ench(ENCH_RESISTANCE))
-		u++;
+        u++;
 
     // Monsters can legitimately get multiple levels of electricity resistance.
 
@@ -4097,7 +4097,7 @@ int monster::res_poison(bool temp) const
     }
 
     if (has_ench(ENCH_RESISTANCE))
-		u++;
+        u++;
 
     // Monsters can have multiple innate levels of poison resistance, but
     // like players, equipment doesn't stack.
@@ -5979,7 +5979,7 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_AGILITY:
         return !has_ench(ENCH_AGILE);
     case POT_RESISTANCE:
-		return !has_ench(ENCH_RESISTANCE);
+        return !has_ench(ENCH_RESISTANCE);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -5993,10 +5993,11 @@ bool monster::should_drink_potion(potion_type ptype) const
 }
 
 // Return the ID status gained.
-item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff, bool card)
+item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
+                                                     bool card)
 {
     if (!card)
-		simple_monster_message(this, " drinks a potion.");
+        simple_monster_message(this, " drinks a potion.");
 
     item_type_id_state_type ident = ID_MON_TRIED_TYPE;
 
