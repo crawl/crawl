@@ -1401,8 +1401,7 @@ static void _make_book_randart(item_def &book)
     }
 }
 
-bool make_book_level_randart(item_def &book, int level, int num_spells,
-                             string owner)
+bool make_book_level_randart(item_def &book, int level, string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1422,13 +1421,10 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     }
     ASSERT_RANGE(level, 0 + 1, 9 + 1);
 
-    if (num_spells == -1)
-    {
-        // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-        // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
-        num_spells = min(5 + (level - 1)/3, 18 - 2*level);
-        num_spells = max(1, num_spells);
-    }
+    // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+    // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
+    int num_spells = max(1, min(5 + (level - 1)/3,
+                                18 - 2*level));
     ASSERT_RANGE(num_spells, 0 + 1, SPELLBOOK_SIZE + 1);
 
     book.plus       = level;

@@ -46,7 +46,7 @@ vector<spell_type> get_mem_spell_list(vector<int> &books);
 int spellbook_contents(item_def &book, formatted_string *fs = NULL);
 
 bool make_book_level_randart(item_def &book, int level = -1,
-                             int num_spells = -1, string owner = "");
+                             string owner = "");
 bool make_book_theme_randart(item_def &book,
                              int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1,
