@@ -2130,6 +2130,10 @@ char_set = (default | ascii)
         Unlike previous versions of Crawl, this does not select the I/O
         encoding anymore.
 
+        You can also include ibm_glyphs.txt, dec_glyphs.txt, or old_unicode_
+        glyphs.txt to bring back some older character sets that are
+        no longer built-in.
+
         Has negligible effect in the Tiles build.
 
 colour.OLDCOLOUR = NEWCOLOUR
