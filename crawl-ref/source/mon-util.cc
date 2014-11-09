@@ -2311,9 +2311,8 @@ unique_books get_unique_spells(const monster_info &mi,
         }
 
         for (unsigned int j = 0;
-             (book == MST_GHOST && j < mi.spells.size())
-             || (book != MST_GHOST
-                 && mspell_list[msidx].spells[j].spell != SPELL_NO_SPELL);
+             book == MST_GHOST && j < mi.spells.size()
+             || book != MST_GHOST && j < mspell_list[msidx].spells.size();
              ++j)
         {
             mon_spell_slot slot;
@@ -2337,7 +2336,7 @@ unique_books get_unique_spells(const monster_info &mi,
                 if (spell == spells[k])
                     match = true;
 
-            if (!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE)
+            if (!match)
                 spells.push_back(spell);
         }
 
