@@ -844,6 +844,12 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         you.redraw_armour_class = true;
 }
 
+/**
+ * Determine whether a Ru worshipper will attempt to interfere with an attack
+ * against the player.
+ *
+ * @return bool Whether or not whether the worshipper will attempt to interfere.
+ */
 bool does_ru_wanna_redirect(monster* mon)
 {
     return you_worship(GOD_RU)
@@ -853,4 +859,26 @@ bool does_ru_wanna_redirect(monster* mon)
             && !mons_is_firewood(mon)
             && !mon->submerged()
             && !mons_is_projectile(mon->type);
+}
+
+/**
+ * Determine which, if any, action Ru takes on a possible attack.
+ *
+ * @return ru_interference
+ */
+ru_interference get_ru_attack_interference_level()
+{
+    int r = random2(100);
+    int chance = div_rand_round(you.piety, 16);
+
+    // 10% chance of stopping any attack at max piety
+    if (r < chance)
+        return DO_BLOCK_ATTACK;
+
+    // 5% chance of redirect at max piety
+    else if (r < chance + div_rand_round(chance, 2))
+        return DO_REDIRECT_ATTACK;
+
+    else
+        return DO_NOTHING;
 }
