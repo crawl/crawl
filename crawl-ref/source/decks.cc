@@ -21,6 +21,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "english.h"
 #include "evoke.h"
 #include "food.h"
 #include "ghost.h"
@@ -149,12 +150,13 @@ const deck_archetype deck_of_summoning[] =
 
 const deck_archetype deck_of_wonders[] =
 {
-    { CARD_FOCUS,      {3, 3, 3} },
-    { CARD_HELIX,      {3, 4, 5} },
-    { CARD_SHAFT,      {5, 5, 5} },
-    { CARD_DOWSING,    {5, 5, 5} },
-    { CARD_MERCENARY,  {5, 5, 5} },
-    { CARD_ALCHEMIST,  {5, 5, 5} },
+    { CARD_FOCUS,        {3, 3, 3} },
+    { CARD_HELIX,        {3, 4, 5} },
+    { CARD_SHAFT,        {5, 5, 5} },
+    { CARD_DOWSING,      {5, 5, 5} },
+    { CARD_MERCENARY,    {5, 5, 5} },
+    { CARD_ALCHEMIST,    {5, 5, 5} },
+    { CARD_PLACID_MAGIC, {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -321,6 +323,7 @@ const char* card_name(card_type card)
     case CARD_TOMB:            return "the Tomb";
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
+    case CARD_PLACID_MAGIC:    return "Placid Magic";
     case CARD_CRUSADE:         return "the Crusade";
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
@@ -2815,6 +2818,38 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
+static void _placid_magic_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    const int drain = max(you.magic_points - random2(power_level * 3), 0);
+
+    mpr("You feel magic draining away.");
+
+    drain_mp(drain);
+    debuff_player();
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+
+        if (!mons || mons->wont_attack())
+            continue;
+
+        debuff_monster(mons);
+        if (!mons->antimagic_susceptible())
+            continue;
+
+        // XXX: this should be refactored together with other effects that
+        // apply antimagic.
+        const int duration = random2(div_rand_round(power / 3,
+                                                    mons->get_hit_dice()))
+                             * BASELINE_DELAY;
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, duration));
+        mprf("%s magic leaks into the air.",
+             apostrophise(mons->name(DESC_THE)).c_str());
+    }
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2925,6 +2960,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
+    case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
