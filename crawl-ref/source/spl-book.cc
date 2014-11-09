@@ -1603,22 +1603,8 @@ bool make_book_level_randart(item_def &book, int level, string owner)
 
         if (bookname.find("@level@", 0) != string::npos)
         {
-            string number;
-            switch (level)
-            {
-            case 1: number = "One"; break;
-            case 2: number = "Two"; break;
-            case 3: number = "Three"; break;
-            case 4: number = "Four"; break;
-            case 5: number = "Five"; break;
-            case 6: number = "Six"; break;
-            case 7: number = "Seven"; break;
-            case 8: number = "Eight"; break;
-            case 9: number = "Nine"; break;
-            default:
-                number = ""; break;
-            }
-            bookname = replace_all(bookname, "@level@", number);
+            const string level_name = uppercase_first(number_in_words(level));
+            bookname = replace_all(bookname, "@level@", level_name);
         }
     }
 
