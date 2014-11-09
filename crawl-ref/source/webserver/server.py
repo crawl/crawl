@@ -91,6 +91,8 @@ def daemonize():
 
 def write_pidfile():
     pidfile = config.get("pidfile")
+    uid = config.get("uid", 0)
+    gid = config.get("gid", 0)
     if not pidfile:
         return
     if os.path.exists(pidfile):
@@ -114,6 +116,7 @@ def write_pidfile():
 
     with open(pidfile, "w") as f:
         f.write(str(os.getpid()))
+    os.chown(pidfile, uid, gid)
 
 
 def remove_pidfile():
