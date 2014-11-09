@@ -1617,7 +1617,7 @@ static void _write_level_headers(branch_type br, int num_fields)
     fprintf(stat_outf, "\n");
 }
 
-static void _write_stat_headers(branch_type br, vector<string> fields)
+static void _write_stat_headers(branch_type br, const vector<string> &fields)
 {
     unsigned int level_count = 0;
     vector<level_id> &levels = stat_branches[br];
@@ -1776,7 +1776,7 @@ static void _write_item_stats(branch_type br, item_type &item)
     int equip_ind = is_brand_equip
         ? (item.base_type == ITEM_WEAPONS ? 0 : 1) : -1;
     unsigned int level_count = 0;
-    vector <string> fields = item_fields[item.base_type];
+    const vector<string> &fields = item_fields[item.base_type];
     vector<level_id>::const_iterator li;
 
     fprintf(stat_outf, "%s", _item_name(item).c_str());
@@ -1827,7 +1827,7 @@ static void _write_monster_stats(branch_type br, monster_type mons_type,
                                     int mons_ind)
 {
     unsigned int level_count = 0;
-    vector <string> fields = monster_fields;
+    const vector<string> &fields = monster_fields;
     vector<level_id>::const_iterator li;
 
     if (mons_ind == valid_monsters[NUM_MONSTERS])
