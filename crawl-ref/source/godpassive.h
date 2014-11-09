@@ -19,6 +19,12 @@ enum jiyva_slurp_results
     JS_MP   = 4,
 };
 
+enum ru_interference {
+    DO_NOTHING,
+    DO_BLOCK_ATTACK,
+    DO_REDIRECT_ATTACK
+};
+
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
@@ -38,4 +44,5 @@ int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
 bool does_ru_wanna_redirect(monster* mon);
+ru_interference get_ru_attack_interference_level();
 #endif

@@ -3101,10 +3101,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(mons))
     {
-        int r = random2(100);
-        int chance = div_rand_round(you.piety, 16);
-        // 10% chance of stopping any attack
-        if (r < chance)
+        ru_interference interference = get_ru_attack_interference_level();
+        if (interference == DO_BLOCK_ATTACK)
         {
             if (mons->is_actual_spellcaster())
             {
@@ -3127,8 +3125,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->lose_energy(EUT_SPELL);
             return true;
         }
-        // 5% chance of redirect
-        else if (r < chance + div_rand_round(chance, 2))
+        else if (interference == DO_REDIRECT_ATTACK)
         {
             mprf(MSGCH_GOD, "You redirect %s's attack!",
                     mons->name(DESC_THE).c_str());

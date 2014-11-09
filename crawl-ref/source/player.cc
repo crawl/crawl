@@ -3691,8 +3691,9 @@ int check_stealth()
     stealth += (STEALTH_PIP / 2)
                 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
-    if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
-        stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
+    if (how_transparent)
+        stealth += 15 * (how_transparent);
 
     // it's easier to be stealthy when there's a lot of background noise
     stealth += 2 * current_level_ambient_noise();

@@ -1592,6 +1592,47 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Set item for tracer, even though it probably won't be used
     beem.item = missile;
 
+    ru_interference interference = DO_NOTHING;
+    // See if Ru worshippers block or redirect the attack.
+    if (does_ru_wanna_redirect(mons))
+    {
+        interference = get_ru_attack_interference_level();
+        if (interference == DO_BLOCK_ATTACK)
+        {
+            simple_monster_message(mons,
+                                " is stunned by your will and fails to attack.",
+                                MSGCH_GOD);
+            return false;
+        }
+        else if (interference == DO_REDIRECT_ATTACK)
+        {
+            mprf(MSGCH_GOD, "You redirect %s's attack!",
+                    mons->name(DESC_THE).c_str());
+            int pfound = 0;
+            for (radius_iterator ri(you.pos(),
+                LOS_DEFAULT); ri; ++ri)
+            {
+                monster* new_target = monster_at(*ri);
+
+                if (new_target == NULL
+                    || mons_is_projectile(new_target->type)
+                    || mons_is_firewood(new_target))
+                {
+                    continue;
+                }
+
+                ASSERT(new_target);
+
+                if (one_chance_in(++pfound))
+                {
+                    mons->target = new_target->pos();
+                    mons->foe = new_target->mindex();
+                    beem.target = mons->target;
+                }
+            }
+        }
+    }
+
     // Fire tracer.
     if (!teleport)
         fire_tracer(mons, beem);
@@ -1600,7 +1641,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     beem.damage = dice_def();
 
     // Good idea?
-    if (teleport || mons_should_fire(beem))
+    if (teleport || mons_should_fire(beem) || interference != DO_NOTHING)
     {
         if (check_only)
             return true;
@@ -2341,10 +2382,9 @@ void handle_monster_move(monster* mons)
                     // Check to see if your religion redirects the attack
                     if (does_ru_wanna_redirect(mons))
                     {
-                        int r = random2(100);
-                        int chance = div_rand_round(you.piety, 16);
-                        // stun chance maxes at 10%
-                        if (r < chance)
+                        ru_interference interference =
+                                get_ru_attack_interference_level();
+                        if (interference == DO_BLOCK_ATTACK)
                         {
                             simple_monster_message(mons,
                                 " is stunned by your will and fails to attack.",
@@ -2352,8 +2392,7 @@ void handle_monster_move(monster* mons)
                             mons->speed_increment -= non_move_energy;
                             return;
                         }
-                        // redirect maxes at 5%, given the above
-                        else if (r < chance + div_rand_round(chance, 2))
+                        else if (interference == DO_REDIRECT_ATTACK)
                         {
                             // get a target
                             int pfound = 0;
