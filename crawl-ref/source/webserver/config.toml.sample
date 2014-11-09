@@ -180,3 +180,5 @@ hide_versions = []
 # filename = "webtiles.log"
 format = "%(asctime)s %(levelname)s: %(message)s"
 level = 20
+# Enable logging of requests & websocket connect/disconnect events
+enable_access_log = true

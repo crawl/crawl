@@ -233,6 +233,9 @@ def init_logging(logging_config):
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
 
+    if not logging_config.get("enable_access_log"):
+        logging.getLogger('tornado.access').setLevel(logging.FATAL)
+
 
 def check_config():
     success = True

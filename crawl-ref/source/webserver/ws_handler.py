@@ -199,10 +199,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.deflate = False
                 compression = "deflate-frame extension"
 
-        self.logger.info("Socket opened from ip %s (fd%s, compression: %s). UA: %s.",
-                         self.request.remote_ip,
-                         self.ws_connection.stream.socket.fileno(),
-                         compression, self.request.headers.get("User-Agent"))
+        if config.get("logging_config", {}).get('enable_access_log'):
+            self.logger.info("Socket opened from ip %s (fd%s, compression: %s). UA: %s.",
+                            self.request.remote_ip,
+                            self.ws_connection.stream.socket.fileno(),
+                            compression, self.request.headers.get("User-Agent"))
         sockets.add(self)
 
         self.reset_timeout()
@@ -657,5 +658,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
 
-        self.logger.info("Socket closed. (%s bytes sent, compression ratio %s%%)",
-                         self.total_message_bytes, comp_ratio)
+        if config.get("logging_config", {}).get('enable_access_log'):
+            self.logger.info("Socket closed. (%s bytes sent, compression ratio %s%%)",
+                            self.total_message_bytes, comp_ratio)
