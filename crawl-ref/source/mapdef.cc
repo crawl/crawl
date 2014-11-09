@@ -4980,7 +4980,7 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
 bool item_list::parse_corpse_spec(item_spec &result, string s)
 {
     const bool never_decay = strip_tag(s, "never_decay");
-    
+
     if (never_decay)
         result.props[CORPSE_NEVER_DECAYS].get_bool() = true;
 
