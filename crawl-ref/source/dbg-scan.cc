@@ -873,7 +873,7 @@ static const char* missile_brand_field = "BrandNums";
 
 static map<int, int> valid_foods;
 
-static const string monster_fields[] = {
+static const vector<string> monster_fields = {
     "Num", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
     "MonsXP", "TotalXP", "MonsNumChunks", "TotalNutr"
 };
