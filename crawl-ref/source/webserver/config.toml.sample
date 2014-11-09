@@ -109,6 +109,7 @@ version = "trunk"
 mode = "Dungeon Crawl"
 comment = "Start a standard game of Crawl."
 crawl_binary = "./crawl"
+#options = ["-extra-options", "-go-here"]
 inprogress_path = "./rcs/running"
 rcfile_path = "./rcs/"
 socket_path = "./rcs"
