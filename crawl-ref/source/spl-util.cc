@@ -1141,34 +1141,34 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (temp)
     {
         if (you.duration[DUR_CONF] > 0)
-            return "You're too confused!";
+            return "You're too confused.";
         if (!enough_mp(spell_mana(spell), true, false))
-            return "You don't have enough magic!";
+            return "You don't have enough magic.";
         if (!prevent && spell_no_hostile_in_range(spell))
-            return "You can't see any valid targets!";
+            return "You can't see any valid targets.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
     if (!evoked && cannot_use_schools(get_spell_disciplines(spell)))
-        return "You cannot use spells of this school!";
+        return "You cannot use spells of this school.";
 
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
     {
         if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
-            return "You're too hot!";
+            return "You're too hot.";
 
         if (spell == SPELL_LEDAS_LIQUEFACTION)
-            return "You can't cast this while perpetually flying!";
+            return "You can't cast this while perpetually flying.";
     }
 
     if (you.species == SP_LAVA_ORC)
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
-            return "Your stony body would shatter the ice!";
+            return "Your stony body would shatter the ice.";
         if (spell == SPELL_STONESKIN)
-            return "Your skin is already made of stone!";
+            return "Your skin is already made of stone.";
 
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
@@ -1177,7 +1177,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 case SPELL_STATUE_FORM:
                 case SPELL_ICE_FORM:
                 case SPELL_CONDENSATION_SHIELD:
-                    return "You're too hot!";
+                    return "You're too hot.";
                 default:
                     break;
             }
@@ -1190,7 +1190,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
     case SPELL_CONTROL_TELEPORT:
         if (player_has_orb())
-            return "The orb interferes with controlled teleportation!";
+            return "The orb interferes with controlled teleportation.";
         // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1210,27 +1210,27 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && !prevent)
         {
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
-                return "You're already traveling as fast as you can!";
+                return "You're already traveling as fast as you can.";
             if (you.is_stationary())
-                return "You can't move!";
+                return "You can't move.";
         }
         break;
 
     case SPELL_FLY:
         if (!prevent && you.racial_permanent_flight())
-            return "You can already fly whenever you want!";
+            return "You can already fly whenever you want.";
         if (temp)
         {
             if (get_form()->forbids_flight())
-                return "Your current form prevents flight!";
+                return "Your current form prevents flight.";
             if (you.permanent_flight())
-                return "You can already fly indefinitely!";
+                return "You can already fly indefinitely.";
         }
         break;
 
     case SPELL_INVISIBILITY:
         if (!prevent && temp && you.backlit())
-            return "Invisibility won't help you when you glow in the dark!";
+            return "Invisibility won't help you when you glow in the dark.";
         break;
 
     case SPELL_DARKNESS:
@@ -1238,7 +1238,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (!prevent && temp && (you.haloed()
                                  || in_good_standing(GOD_SHINING_ONE)))
         {
-            return "Darkness is useless against divine light!";
+            return "Darkness is useless against divine light.";
         }
         break;
 
@@ -1246,7 +1246,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
                         || you.scan_artefacts(ARTP_RMSL, true)))
         {
-            return "You're already repelling missiles!";
+            return "You're already repelling missiles.";
         }
         break;
 
@@ -1261,22 +1261,22 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.undead_state(temp) == US_UNDEAD
             || you.undead_state(temp) == US_HUNGRY_DEAD)
         {
-            return "Your undead flesh cannot be transformed!";
+            return "Your undead flesh cannot be transformed.";
         }
         if (temp && you.is_lifeless_undead())
-            return "Your current blood level is not sufficient!";
+            return "Your current blood level is not sufficient.";
         break;
 
     case SPELL_REGENERATION:
         if (you.species == SP_DEEP_DWARF)
-            return "You can't regenerate without divine aid!";
+            return "You can't regenerate without divine aid.";
         if (you.undead_state(temp) == US_UNDEAD)
-            return "You're too dead to regenerate!";
+            return "You're too dead to regenerate.";
         break;
 
     case SPELL_INTOXICATE:
         if (you.undead_state(temp) == US_UNDEAD)
-            return "Your brain is too dead to use!";
+            return "Your brain is too dead to use.";
         break;
 
     case SPELL_PORTAL_PROJECTILE:
@@ -1285,7 +1285,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SURE_BLADE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
-            return "This spell is useless without hands!";
+            return "This spell is useless without hands.";
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
@@ -1293,25 +1293,25 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                         || you.duration[DUR_LIQUEFYING]
                         || liquefied(you.pos())))
         {
-            return "You must stand on solid ground to cast this!";
+            return "You must stand on solid ground to cast this.";
         }
         break;
 
     case SPELL_DELAYED_FIREBALL:
         if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
-            return "You are already charged!";
+            return "You are already charged.";
         break;
 
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_DEATHS_DOOR:
         // Prohibited to all undead.
         if (you.undead_state(temp))
-            return "You're too dead!";
+            return "You're too dead.";
         break;
     case SPELL_NECROMUTATION:
         // only prohibted to actual undead, not lichformed players
         if (you.undead_state(false))
-            return "You're too dead!";
+            return "You're too dead.";
         break;
 
     case SPELL_CURE_POISON:
@@ -1320,7 +1320,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             // allow starving vampires to memorize cpois
             && you.undead_state() != US_SEMI_UNDEAD)
         {
-            return "You can't be poisoned!";
+            return "You can't be poisoned.";
         }
         break;
 
@@ -1331,19 +1331,19 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             || you.species == SP_MUMMY
             || (temp && !form_can_bleed(you.form)))
         {
-            return "You have no blood to sublime!";
+            return "You have no blood to sublime.";
         }
         break;
 
     case SPELL_ENSLAVEMENT:
         if (player_mutation_level(MUT_NO_LOVE))
-            return "You cannot make allies!";
+            return "You cannot make allies.";
 
     case SPELL_MALIGN_GATEWAY:
         if (temp && !can_cast_malign_gateway())
         {
             return "The dungeon can only cope with one malign gateway"
-                    " at a time!";
+                    " at a time.";
         }
         break;
 
