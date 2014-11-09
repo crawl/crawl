@@ -311,6 +311,12 @@ if __name__ == "__main__":
             server.stop()
         shutdown()
         ioloop.add_timeout(time.time() + 2, ioloop.stop)
-        ioloop.start()  # We'll wait until all crawl processes have ended.
+        try:
+            ioloop.start()  # We'll wait until all crawl processes have ended.
+        except RuntimeError as e:
+            if str(e) == 'IOLoop is already running':
+                pass
+            else:
+                raise
 
     remove_pidfile()
