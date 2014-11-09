@@ -33,6 +33,7 @@
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-cast.h"
 #include "mon-clone.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -1748,7 +1749,40 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         if (power_level == 2)
         {
             mprf("You have %s %s.", participle, card_name(card));
-            torment(&you, TORMENT_CARDS, you.pos());
+
+            if (monster *ghost = create_monster(
+                                    mgen_data(MONS_FLAYED_GHOST, BEH_FRIENDLY,
+                                    &you, 3, 0, you.pos(), MHITYOU)))
+            {
+                bool msg = true;
+                bolt beem;
+
+                beem.origin_spell = SPELL_FLAY;
+                beem.source = ghost->pos();
+                beem.source_id = ghost->mid;
+                beem.range = 0;
+
+                if (!you.res_torment())
+                    dec_hp(5, false);
+
+                for (radius_iterator di(ghost->pos(), LOS_NO_TRANS); di; ++di)
+                {
+                    monster *mons = monster_at(*di);
+
+                    if (!mons || mons->wont_attack()
+                        || mons->holiness() != MH_NATURAL)
+                        continue;
+
+                        beem.target = mons->pos();
+                        ghost->foe = mons->mindex();
+                        mons_cast(ghost, beem, SPELL_FLAY,
+                                  ghost->spell_slot_flags(SPELL_FLAY), msg);
+                        msg = false;
+                }
+
+                ghost->foe = MHITYOU;
+            }
+
             return;
         }
         else
