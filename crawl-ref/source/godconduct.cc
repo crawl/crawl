@@ -1043,7 +1043,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 piety_change = get_fuzzied_monster_difficulty(victim);
                 dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
-                piety_denom = 700;
+                piety_denom = 600;
                 if (piety_change > 3200)
                     simple_god_message(" appreciates your kill.");
                 else if (piety_change > 9) // might still be miniscule
