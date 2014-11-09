@@ -745,6 +745,7 @@ const static char *stat_out_prefix = "objstat_";
 const static char *stat_out_ext = ".txt";
 #define STAT_PRECISION 2
 
+// This must match the order of item_fields
 enum item_base_type {
     ITEM_FOOD,
     ITEM_GOLD,
@@ -797,7 +798,74 @@ static map<level_id, FixedVector<map<int, map<string, double> >, NUM_ITEM_BASE_T
 static map<level_id, vector <vector< vector< vector< int> > > > > equip_brands;
 static map<level_id, vector< vector< int> > > missile_brands;
 
-static FixedVector< vector<string>, NUM_ITEM_BASE_TYPES> item_fields;
+// This must match the order of item_base_type
+static const vector<string> item_fields[NUM_ITEM_BASE_TYPES] = {
+    { // ITEM_FOOD
+        "Num", "NumMin", "NumMax", "NumSD", "NumPiles", "PileQuant",
+        "TotalNormNutr", "TotalCarnNutr", "TotalHerbNutr"
+    },
+    { // ITEM_GOLD
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "NumPiles", "PileQuant"
+    },
+    { // ITEM_SCROLLS
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "NumPiles", "PileQuant"
+    },
+    { // ITEM_POTIONS
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "NumPiles", "PileQuant"
+    },
+    { // ITEM_WANDS
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons", "WandCharges"
+    },
+    { // ITEM_WEAPONS
+        "OrdNum", "ArteNum", "AllNum", "AllNumMin",
+        "AllNumMax", "AllNumSD", "OrdEnch", "ArteEnch",
+        "AllEnch", "OrdNumCursed", "ArteNumCursed",
+        "AllNumCursed", "OrdNumBranded", "OrdNumHeldMons",
+        "ArteNumHeldMons", "AllNumHeldMons"
+    },
+    { // ITEM_MISSILES
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "NumBranded", "NumPiles", "PileQuant"
+    },
+    { // ITEM_STAVES
+        "Num", "NumMin", "NumMax", "NumSD", "NumCursed", "NumHeldMons"
+    },
+    { // ITEM_ARMOUR
+        "OrdNum", "ArteNum", "AllNum", "AllNumMin", "AllNumMax", "AllNumSD",
+        "OrdEnch", "ArteEnch", "AllEnch",
+        "OrdNumCursed", "ArteNumCursed", "AllNumCursed", "OrdNumBranded",
+        "OrdNumHeldMons", "ArteNumHeldMons", "AllNumHeldMons"
+    },
+    { // ITEM_JEWELLERY
+        "OrdNum", "ArteNum", "AllNum", "AllNumMin", "AllNumMax", "AllNumSD",
+        "OrdNumCursed", "ArteNumCursed", "AllNumCursed",
+        "OrdNumHeldMons", "ArteNumHeldMons", "AllNumHeldMons",
+        "OrdEnch", "ArteEnch", "AllEnch"
+    },
+    { // ITEM_MISCELLANY
+        "Num", "NumMin", "NumMax", "NumSD", "MiscPlus"
+    },
+    { // ITEM_RODS
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "RodMana", "RodRecharge", "NumCursed"
+    },
+    { // ITEM_DECKS
+        "PlainNum", "OrnateNum", "LegendaryNum", "AllNum",
+        "AllNumMin", "AllNumMax", "AllNumSD", "AllDeckCards"
+    },
+    { // ITEM_BOOKS
+        "Num", "NumMin", "NumMax", "NumSD"
+    },
+    { // ITEM_ARTEBOOKS
+        "Num", "NumMin", "NumMax", "NumSD"
+    },
+    { // ITEM_MANUALS
+        "Num", "NumMin", "NumMax", "NumSD"
+    },
+};
 
 static const char* equip_brand_fields[] = {"OrdBrandNums", "ArteBrandNums",
                                            "AllBrandNums"};
@@ -805,7 +873,11 @@ static const char* missile_brand_field = "BrandNums";
 
 static map<int, int> valid_foods;
 
-static vector<string> monster_fields;
+static const string monster_fields[] = {
+    "Num", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
+    "MonsXP", "TotalXP", "MonsNumChunks", "TotalNutr"
+};
+
 static map<monster_type, int> valid_monsters;
 static map<level_id, map<int, map <string, double> > > monster_recs;
 
@@ -1093,63 +1165,6 @@ item_type::item_type(item_def &item)
         sub_type = 0;
     else
         sub_type = item.sub_type;
-}
-
-// This could be done without the macros in C++11, where std::vector has a
-// constructor that takes an initializer list.
-#define INIT_VEC(vec, ...) do                                  \
-    {                                                          \
-        vector<string> &x = (vec);                             \
-        static const char *const ary[] = { __VA_ARGS__ };      \
-        x.insert(x.begin(), ary, ary + ARRAYSZ(ary));          \
-    } while (0)
-
-#define ITEM_FIELDS(name, ...) INIT_VEC(item_fields[ITEM_ ## name], __VA_ARGS__)
-
-static void _init_fields()
-{
-    ITEM_FIELDS(SCROLLS,    "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-                            "NumPiles", "PileQuant");
-    ITEM_FIELDS(POTIONS,    "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-                            "NumPiles", "PileQuant");
-    ITEM_FIELDS(FOOD,       "Num", "NumMin", "NumMax", "NumSD", "NumPiles",
-                            "PileQuant", "TotalNormNutr", "TotalCarnNutr",
-                            "TotalHerbNutr");
-    ITEM_FIELDS(GOLD,       "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-                            "NumPiles", "PileQuant");
-    ITEM_FIELDS(WANDS,      "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons", "WandCharges");
-    ITEM_FIELDS(WEAPONS,    "OrdNum", "ArteNum", "AllNum", "AllNumMin",
-                            "AllNumMax", "AllNumSD", "OrdEnch", "ArteEnch",
-                            "AllEnch", "OrdNumCursed", "ArteNumCursed",
-                            "AllNumCursed", "OrdNumBranded", "OrdNumHeldMons",
-                            "ArteNumHeldMons", "AllNumHeldMons");
-    ITEM_FIELDS(STAVES,     "Num", "NumMin", "NumMax", "NumSD", "NumCursed",
-                            "NumHeldMons");
-    ITEM_FIELDS(ARMOUR,     "OrdNum", "ArteNum", "AllNum", "AllNumMin",
-                            "AllNumMax", "AllNumSD", "OrdEnch", "ArteEnch",
-                            "AllEnch", "OrdNumCursed", "ArteNumCursed",
-                            "AllNumCursed", "OrdNumBranded", "OrdNumHeldMons",
-                            "ArteNumHeldMons", "AllNumHeldMons");
-    ITEM_FIELDS(JEWELLERY,  "OrdNum", "ArteNum", "AllNum", "AllNumMin",
-                            "AllNumMax", "AllNumSD", "OrdNumCursed",
-                            "ArteNumCursed", "AllNumCursed", "OrdNumHeldMons",
-                            "ArteNumHeldMons", "AllNumHeldMons", "OrdEnch",
-                            "ArteEnch", "AllEnch");
-    ITEM_FIELDS(RODS,       "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-                            "RodMana", "RodRecharge", "NumCursed");
-    ITEM_FIELDS(MISSILES,   "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-                            "NumBranded", "NumPiles", "PileQuant");
-    ITEM_FIELDS(MISCELLANY, "Num", "NumMin", "NumMax", "NumSD", "MiscPlus");
-    ITEM_FIELDS(DECKS,      "PlainNum", "OrnateNum", "LegendaryNum", "AllNum",
-                            "AllNumMin", "AllNumMax", "AllNumSD",
-                            "AllDeckCards");
-    ITEM_FIELDS(BOOKS,      "Num", "NumMin", "NumMax", "NumSD");
-    ITEM_FIELDS(ARTEBOOKS,  "Num", "NumMin", "NumMax", "NumSD");
-    ITEM_FIELDS(MANUALS,    "Num", "NumMin", "NumMax", "NumSD");
-
-    INIT_VEC(monster_fields, "Num", "NumMin", "NumMax", "NumSD", "MonsHD",
-                             "MonsHP", "MonsXP", "TotalXP", "MonsNumChunks",
-                             "TotalNutr");
 }
 
 static void _init_stats()
@@ -1962,7 +1977,6 @@ void objstat_generate_stats()
     fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
             "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
             num_levels, num_branches);
-    _init_fields();
     _init_foods();
     _init_monsters();
     _init_stats();
