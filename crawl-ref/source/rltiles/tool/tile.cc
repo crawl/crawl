@@ -386,7 +386,7 @@ bool tile::load(const string &new_filename)
     const unsigned sig_bytes = 8;
     png_byte sig[sig_bytes];
     if (fread(sig, 1, sig_bytes, fp) < sig_bytes
-        || !png_check_sig(sig, sig_bytes))
+        || png_sig_cmp(sig, 0, sig_bytes))
     {
         fclose(fp);
         return false;
