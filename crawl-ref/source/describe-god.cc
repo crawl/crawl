@@ -1076,22 +1076,21 @@ static void _god_overview_description(god_type which_god, bool give_title)
     if (give_title)
     {
         textcolour(WHITE);
-        const int len = numcols - strlen("Religion");
-        cprintf("%sReligion\n", string(len / 2, ' ').c_str());
+        cprintf("Religion");
         textcolour(LIGHTGREY);
     }
-
-    _print_top_line(which_god, numcols);
+    // Center top line even if it already contains "Religion" (len = 8)
+    _print_top_line(which_god, numcols - (give_title ? 2*8 : 0));
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
+    cprintf("%s\n", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))
     {
         // Print title based on piety.
-        cprintf("\nTitle - ");
+        cprintf("\nTitle  - ");
         textcolour(god_colour(which_god));
 
         string title = god_title(which_god, you.species, you.piety);
@@ -1103,7 +1102,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
     // something better, do it.
 
     textcolour(LIGHTGREY);
-    cprintf("\n\nFavour - ");
+    cprintf("\nFavour - ");
     textcolour(god_colour(which_god));
 
     //mv: Player is praying at altar without appropriate religion.
