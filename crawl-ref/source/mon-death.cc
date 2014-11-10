@@ -3425,7 +3425,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (mons_near(mons) && !death_message.empty() && mons->can_speak())
         mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
     else if (mons->can_speak())
-        mprf("%s", death_message.c_str());
+        mpr(death_message);
 
     // Upgrade the spellbook here, as elven_twin_energize
     // may not be called due to lack of visibility.

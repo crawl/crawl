@@ -4020,7 +4020,7 @@ void display_char_status()
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
         if (fill_status_info(i, &inf) && !inf.long_text.empty())
-            mprf("%s", inf.long_text.c_str());
+            mpr(inf.long_text);
     }
     string cinfo = _constriction_description();
     if (!cinfo.empty())
@@ -4694,7 +4694,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
     if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
-        mprf("%s", describe_contamination(new_level).c_str());
+        mpr(describe_contamination(new_level));
     else if (msg && new_level != old_level)
     {
         if (old_level == 1 && new_level == 0)
