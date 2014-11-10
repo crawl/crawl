@@ -578,6 +578,7 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
+    bool search_spells(function<bool (const mon_spell_slot)> func) const;
 };
 
 #endif
