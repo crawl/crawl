@@ -140,16 +140,8 @@ monster_type fill_out_corpse(const monster* mons,
             corpse.props[NEVER_HIDE_KEY] = true;
     }
 
-    if (mons)
-    {
-        monster_info minfo(mons);
-        corpse.props[FORCED_ITEM_COLOUR_KEY] = (int) minfo.colour();
-    }
-    else
-    {
-        monster_info minfo(mtype);
-        corpse.props[FORCED_ITEM_COLOUR_KEY] = (int) minfo.colour();
-    }
+    monster_info minfo(get_monster_data(mtype)->species);
+    corpse.props[FORCED_ITEM_COLOUR_KEY] = (int) minfo.colour();
 
     if (mons && !mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
     {
