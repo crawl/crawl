@@ -1891,7 +1891,7 @@ NSUBST: O = 1:O / *:|
 : vaults_end_rune(_G)
 MAP
   xxxxxxxxxxxxxxxxxxxxxxx
- ......x|****...9xxx......
+ ......x|****...9xxx.....
 x......xO|*||...xx9.......x
 x......xx|*....9x........xx
 x...x...xxx....xx........xx
@@ -1900,7 +1900,7 @@ x...x9........9x.....9xxx9x
 x...xx........xx...xxxx9..x
 x....x9......9x..xxx9.....x
 x....xx9....9xx.xx9.......x
-x.....xxx99xxx..x9.......|*x
+x.....xxx99xxx..x9......|*x
 x.......xxxx...xx.......|*x
 x..............x9.....x***x
 x...xxxx.......x9.....x||*x
