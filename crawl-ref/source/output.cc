@@ -1757,8 +1757,12 @@ int update_monster_pane()
     if (i_mons < (int)mons.size())
     {
         // Didn't get to all of them.
-        CGOTOXY(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
-        CPRINTF(" ... ");
+        CGOTOXY(crawl_view.mlistsz.x - 3, crawl_view.mlistsz.y, GOTO_MLIST);
+        textbackground(WHITE);
+        textcolour(BLACK);
+        CPRINTF("(…)");
+        textbackground(BLACK);
+        textcolour(LIGHTGREY);
     }
 
     if (mons.empty())
