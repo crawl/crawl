@@ -2316,7 +2316,8 @@ static object_selector _enchant_selector(scroll_type scroll)
 }
 
 // Returns NULL if no weapon was chosen.
-static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scroll_type scroll)
+static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
+                                       scroll_type scroll)
 {
     int item_slot;
     const bool branding = scroll == SCR_BRAND_WEAPON;
@@ -2357,15 +2358,15 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
         }
 
         // Now we're definitely using up the scroll.
-        if (pre_msg && alreadyknown)
-            mpr(*pre_msg);
+        if (alreadyknown)
+            mpr(pre_msg);
 
         return wpn;
     }
 }
 
 // Returns true if the scroll is used up.
-static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
+static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
 {
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
 
@@ -2415,7 +2416,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 }
 
 // Returns true if the scroll is used up.
-static bool _identify(bool alreadyknown, string *pre_msg)
+static bool _identify(bool alreadyknown, const string &pre_msg)
 {
     int item_slot = -1;
     while (true)
@@ -2458,8 +2459,8 @@ static bool _identify(bool alreadyknown, string *pre_msg)
             continue;
         }
 
-        if (alreadyknown && pre_msg)
-            mpr(*pre_msg);
+        if (alreadyknown)
+            mpr(pre_msg);
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2484,7 +2485,7 @@ static bool _identify(bool alreadyknown, string *pre_msg)
     }
 }
 
-static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg)
+static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
 {
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
                                              SCR_ENCHANT_WEAPON);
@@ -2569,7 +2570,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return true;
 }
 
-static int _handle_enchant_armour(bool alreadyknown, string *pre_msg)
+static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
     int item_slot = -1;
     do
@@ -2611,8 +2612,8 @@ static int _handle_enchant_armour(bool alreadyknown, string *pre_msg)
         }
 
         // Okay, we may actually (attempt to) enchant something.
-        if (pre_msg && alreadyknown)
-            mpr(*pre_msg);
+        if (alreadyknown)
+            mpr(pre_msg);
 
         int ac_change;
         bool result = enchant_armour(ac_change, false, arm);
@@ -2878,7 +2879,7 @@ void read_scroll(int slot)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    string pre_succ_msg =
+    const string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
     if (!_is_cancellable_scroll(which_scroll))
@@ -2901,7 +2902,7 @@ void read_scroll(int slot)
 
     case SCR_BLINKING:
         cancel_scroll = (blink(1000, false, false,
-                               &pre_succ_msg, alreadyknown) == -1
+                               pre_succ_msg, alreadyknown) == -1
                         && alreadyknown);
         break;
 
@@ -2916,7 +2917,7 @@ void read_scroll(int slot)
             remove_curse(false);
         }
         else
-            cancel_scroll = !remove_curse(true, &pre_succ_msg);
+            cancel_scroll = !remove_curse(true, pre_succ_msg);
         break;
 
     case SCR_ACQUIREMENT:
@@ -3013,7 +3014,7 @@ void read_scroll(int slot)
             more();
         }
 
-        cancel_scroll = !_handle_enchant_weapon(alreadyknown, &pre_succ_msg);
+        cancel_scroll = !_handle_enchant_weapon(alreadyknown, pre_succ_msg);
         break;
 
     case SCR_BRAND_WEAPON:
@@ -3025,7 +3026,7 @@ void read_scroll(int slot)
             more();
         }
 
-        cancel_scroll = !_handle_brand_weapon(alreadyknown, &pre_succ_msg);
+        cancel_scroll = !_handle_brand_weapon(alreadyknown, pre_succ_msg);
         break;
 
     case SCR_IDENTIFY:
@@ -3037,7 +3038,7 @@ void read_scroll(int slot)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, ID_KNOWN_TYPE);
         }
-        cancel_scroll = !_identify(alreadyknown, &pre_succ_msg);
+        cancel_scroll = !_identify(alreadyknown, pre_succ_msg);
         break;
 
     case SCR_RECHARGING:
@@ -3047,7 +3048,7 @@ void read_scroll(int slot)
             mpr("It is a scroll of recharging.");
             more();
         }
-        cancel_scroll = (recharge_wand(alreadyknown, &pre_succ_msg) == -1);
+        cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
@@ -3058,7 +3059,7 @@ void read_scroll(int slot)
             more();
         }
         cancel_scroll =
-            (_handle_enchant_armour(alreadyknown, &pre_succ_msg) == -1);
+            (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
         break;
 
     // Should always be identified by Ashenzari.
@@ -3066,7 +3067,7 @@ void read_scroll(int slot)
     case SCR_CURSE_JEWELLERY:
     {
         const bool armour = which_scroll == SCR_CURSE_ARMOUR;
-        cancel_scroll = !curse_item(armour, &pre_succ_msg);
+        cancel_scroll = !curse_item(armour, pre_succ_msg);
         break;
     }
 
@@ -3096,7 +3097,7 @@ void read_scroll(int slot)
         else if (!alreadyknown)
             cast_selective_amnesia();
         else
-            cancel_scroll = (cast_selective_amnesia(&pre_succ_msg) == -1);
+            cancel_scroll = (cast_selective_amnesia(pre_succ_msg) == -1);
         break;
 
     default:
