@@ -4308,14 +4308,12 @@ static string _gozag_shop_spec(int index)
                                                        index)]
                                 .get_string(), " ", "_");
     if (!suffix.empty())
-    {
         suffix = " suffix:" + suffix;
 
     return make_stringf("%s shop name:%s%s",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
                         suffix.c_str());
-    }
 
 }
 
