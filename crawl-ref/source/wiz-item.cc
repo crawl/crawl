@@ -836,7 +836,7 @@ void wizard_list_items()
             if (env.shop[i].type != SHOP_UNASSIGNED)
             {
                 for (stack_iterator si(coord_def(0, i+5)); si; ++si)
-                    mpr(si->name(DESC_PLAIN, false, false, false).c_str());
+                    mpr(si->name(DESC_PLAIN, false, false, false));
             }
 
         mpr("");

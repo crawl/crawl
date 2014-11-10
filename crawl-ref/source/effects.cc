@@ -822,7 +822,7 @@ int recharge_wand(bool known, string *pre_msg)
             }
 
             if (known && pre_msg)
-                mpr(pre_msg->c_str());
+                mpr(*pre_msg);
 
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_YOUR).c_str(),
@@ -872,7 +872,7 @@ int recharge_wand(bool known, string *pre_msg)
                 return 0;
 
             if (known && pre_msg)
-                mpr(pre_msg->c_str());
+                mpr(*pre_msg);
 
             mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
         }

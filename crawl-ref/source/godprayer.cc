@@ -547,7 +547,7 @@ static bool _zin_donate_gold()
                                                      : "noncommittal";
         result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
 
-        mpr(result.c_str());
+        mpr(result);
     }
 
     zin_recite_interrupt();

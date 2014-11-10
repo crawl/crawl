@@ -1685,7 +1685,7 @@ static bool _check_ability_possible(const ability_def& abil,
             return true;
 
         if (!quiet)
-             mpr(no_tele_reason.c_str());
+             mpr(no_tele_reason);
         return false;
     }
 

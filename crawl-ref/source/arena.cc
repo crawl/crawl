@@ -891,7 +891,7 @@ namespace arena
             msg = "---------- " + msg + " ----------";
 
         if (was_tied)
-            mpr(msg.c_str());
+            mpr(msg);
         else
             mprf(msg.c_str(),
                  faction_a.won ? faction_a.desc.c_str()

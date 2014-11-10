@@ -35,7 +35,7 @@
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
-void mpr(const char *text)
+void mpr(const string &text)
 {
     _mpr(text);
 }

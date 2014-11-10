@@ -2150,7 +2150,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         set_hydra_form_heads(div_rand_round(pow, 10));
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message(previous_trans).c_str());
+    mpr(get_form(which_trans)->transform_message(previous_trans));
 
     // Update your status.
     you.form = which_trans;

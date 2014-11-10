@@ -129,7 +129,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             status->text = pr;
 #else
             if (message)
-                mpr(pr.c_str());
+                mpr(pr);
             else
                 cprintf("\n%s\n", pr.c_str());
 #endif

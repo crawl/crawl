@@ -422,7 +422,7 @@ static void _pre_refrigerate(actor* agent, bool player,
                             mons_list.describe(DESC_THE, true).c_str(),
                             conjugate_verb("be", mons_list.count() > 1).c_str());
             if (strwidth(message) < get_number_of_cols() - 2)
-                mpr(message.c_str());
+                mpr(message);
             else
             {
                 // Exclamation mark to suggest that a lot of creatures were
@@ -791,7 +791,7 @@ void sonic_damage(bool scream)
                          affected_monsters.describe().c_str(),
                          conjugate_verb("be", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message.c_str());
+            mpr(message);
         else
         {
             // Exclamation mark to suggest that a lot of creatures were
@@ -1422,7 +1422,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "s" : "");
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message.c_str());
+            mpr(message);
         else
             mpr("There is a shattering impact!");
     }
@@ -2635,7 +2635,7 @@ void forest_damage(const actor *mon)
                     "@foe@", foe->name(DESC_THE)),
                     "@is@", foe->conj_verb("be"));
                 if (you.see_cell(foe->pos()))
-                    mpr(msg.c_str());
+                    mpr(msg);
 
                 if (dmg <= 0)
                     break;

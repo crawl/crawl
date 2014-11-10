@@ -396,7 +396,7 @@ static void _describe_food_change(int food_increment)
 
     msg += _how_hungry().c_str();
     msg += ".";
-    mpr(msg.c_str());
+    mpr(msg);
 }
 
 bool eat_item(item_def &food)

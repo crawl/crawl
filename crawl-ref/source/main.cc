@@ -2750,7 +2750,7 @@ static void _open_door(coord_def move, bool check_confused)
         // This doesn't ever seem to be triggered.
         case DNGN_OPEN_DOOR:
             if (!door_already_open.empty())
-                mpr(door_already_open.c_str());
+                mpr(door_already_open);
             else
                 mpr("It's already open!");
             break;
@@ -2770,7 +2770,7 @@ static void _open_door(coord_def move, bool check_confused)
         if (door_veto_message.empty())
             mpr("The door is shut tight!");
         else
-            mpr(door_veto_message.c_str());
+            mpr(door_veto_message);
 
         return;
     }

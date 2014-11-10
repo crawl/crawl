@@ -525,7 +525,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         fprintf(o, "%s\n", title.c_str());
 
-    mpr(title.c_str());
+    mpr(title);
 
     const int iter_limit = Options.fsim_rounds;
     for (int i = xl_mode ? 1 : 0; i <= 27; i++)
@@ -687,7 +687,7 @@ void wizard_fight_sim(bool double_scale)
             {
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
                 if (error != "")
-                    mpr(error.c_str());
+                    mpr(error);
                 break;
             }
         }

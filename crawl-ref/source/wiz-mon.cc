@@ -96,7 +96,7 @@ void wizard_create_spec_monster_name()
 
         if (!newerr.empty())
         {
-            mpr(err.c_str());
+            mpr(err);
             return;
         }
     }
@@ -1194,7 +1194,7 @@ void debug_pathfind(int idx)
             snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
             path_str += info;
         }
-        mpr(path_str.c_str());
+        mpr(path_str);
         mprf("-> path length: %u", (unsigned int)path.size());
 
         mpr("");
@@ -1207,7 +1207,7 @@ void debug_pathfind(int idx)
             snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
             path_str += info;
         }
-        mpr(path_str.c_str());
+        mpr(path_str);
         mprf("-> #waypoints: %u", (unsigned int)path.size());
     }
 }

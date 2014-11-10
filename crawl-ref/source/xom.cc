@@ -985,7 +985,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
         msg += " is briefly surrounded by a scintillating aura of "
                "random colours.";
 
-        mpr(msg.c_str());
+        mpr(msg);
     }
 
     const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS
@@ -2657,9 +2657,9 @@ static void _xom_zero_miscast()
     }
 
     if (!priority.empty() && coinflip())
-        mpr(priority[random2(priority.size())].c_str());
+        mpr(priority[random2(priority.size())]);
     else
-        mpr(messages[random2(messages.size())].c_str());
+        mpr(messages[random2(messages.size())]);
 }
 
 static void _get_hand_type(string &hand, bool &can_plural)

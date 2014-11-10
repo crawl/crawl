@@ -2358,7 +2358,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
 
         // Now we're definitely using up the scroll.
         if (pre_msg && alreadyknown)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
 
         return wpn;
     }
@@ -2459,7 +2459,7 @@ static bool _identify(bool alreadyknown, string *pre_msg)
         }
 
         if (alreadyknown && pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2612,7 +2612,7 @@ static int _handle_enchant_armour(bool alreadyknown, string *pre_msg)
 
         // Okay, we may actually (attempt to) enchant something.
         if (pre_msg && alreadyknown)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
 
         int ac_change;
         bool result = enchant_armour(ac_change, false, arm);
@@ -2883,7 +2883,7 @@ void read_scroll(int slot)
                           scroll.name(DESC_QUALNAME).c_str());
     if (!_is_cancellable_scroll(which_scroll))
     {
-        mpr(pre_succ_msg.c_str());
+        mpr(pre_succ_msg);
         // Actual removal of scroll done afterwards. -- bwr
     }
 
@@ -3007,7 +3007,7 @@ void read_scroll(int slot)
     case SCR_ENCHANT_WEAPON:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             mpr("It is a scroll of enchant weapon.");
             // Pause to display the message before jumping to the weapon list.
             more();
@@ -3019,7 +3019,7 @@ void read_scroll(int slot)
     case SCR_BRAND_WEAPON:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             mpr("It is a scroll of brand weapon.");
             // Pause to display the message before jumping to the weapon list.
             more();
@@ -3031,7 +3031,7 @@ void read_scroll(int slot)
     case SCR_IDENTIFY:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             mpr("It is a scroll of identify.");
             more();
             // Do this here so it doesn't turn up in the ID menu.
@@ -3043,7 +3043,7 @@ void read_scroll(int slot)
     case SCR_RECHARGING:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             mpr("It is a scroll of recharging.");
             more();
         }
@@ -3053,7 +3053,7 @@ void read_scroll(int slot)
     case SCR_ENCHANT_ARMOUR:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             mpr("It is a scroll of enchant armour.");
             more();
         }
@@ -3090,7 +3090,7 @@ void read_scroll(int slot)
 
     case SCR_AMNESIA:
         if (!alreadyknown)
-            mpr(pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
         if (you.spell_no == 0)
             mpr("You feel forgetful for a moment.");
         else if (!alreadyknown)
@@ -3175,7 +3175,7 @@ bool stasis_blocks_effect(bool calc_unid,
                     }
                 }
                 else
-                    mpr(message.c_str());
+                    mpr(message);
             }
         }
         return true;
