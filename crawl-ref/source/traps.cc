@@ -726,7 +726,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         msg += m->name(DESC_THE);
                     }
                     msg += "!";
-                    mpr(msg.c_str());
+                    mpr(msg);
                 }
 
                 int damage_taken = m->apply_ac(10 + random2avg(29, 2));

@@ -134,7 +134,7 @@ void game_state::cancel_cmd_repeat(string reason)
     reset_cmd_repeat();
 
     if (!reason.empty())
-        mpr(reason.c_str());
+        mpr(reason);
 }
 
 void game_state::cancel_cmd_again(string reason)
@@ -150,7 +150,7 @@ void game_state::cancel_cmd_again(string reason)
     reset_cmd_again();
 
     if (!reason.empty())
-        mpr(reason.c_str());
+        mpr(reason);
 }
 
 void game_state::cancel_cmd_all(string reason)

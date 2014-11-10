@@ -1172,7 +1172,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             str << " to " << prep << " " << dest_actor;
     }
     str << "!";
-    mpr(str.str().c_str());
+    mpr(str.str());
 }
 
 static void _announce_swap(coord_def pos1, coord_def pos2)

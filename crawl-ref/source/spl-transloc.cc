@@ -120,13 +120,13 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     if (you.no_tele(true, true, true) && !wizard_blink)
     {
         if (pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
         canned_msg(MSG_STRANGE_STASIS);
     }
     else if (you.confused() && !wizard_blink)
     {
         if (pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
         random_blink(false);
     }
     // The orb sometimes degrades controlled blinks to completely uncontrolled.
@@ -141,7 +141,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         }
 
         if (pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
         mprf(MSGCH_ORB, "The orb interferes with your control of the blink!");
         // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
@@ -159,7 +159,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         }
 
         if (pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
         mpr("A powerful magic interferes with your control of the blink.");
         // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
@@ -252,7 +252,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             return false;
 
         if (pre_msg)
-            mpr(pre_msg->c_str());
+            mpr(*pre_msg);
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.

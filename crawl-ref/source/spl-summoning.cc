@@ -1340,7 +1340,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         if (one_chance_in(5) && caster->is_player())
         {
             // if someone deletes the db, no message is ok
-            mpr(getMiscString("SHT_int_loss").c_str());
+            mpr(getMiscString("SHT_int_loss"));
             // Messages the same as for SHT, as they are currently (10/10) generic.
             lose_stat(STAT_INT, 1 + random2(3), false, "opening a malign portal");
         }
@@ -1360,7 +1360,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     if (one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
-        mpr(getMiscString("SHT_int_loss").c_str());
+        mpr(getMiscString("SHT_int_loss"));
         lose_stat(STAT_INT, 1 + random2(2), false, "summoning horrible things");
     }
 

@@ -286,7 +286,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     }
 
     if (emit_special_message)
-        mpr(msg.c_str());
+        mpr(msg);
     else
         mprf("%s flashes.", weapon.name(DESC_YOUR).c_str());
 

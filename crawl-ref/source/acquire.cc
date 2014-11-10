@@ -1546,7 +1546,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
             {
                 line.erase(0, 1);
-                mpr(line.c_str());
+                mpr(line);
                 line.clear();
             }
         }

@@ -2131,7 +2131,7 @@ static int _prompt_travel_branch(int prompt_flags)
                 if (linec == 4)
                 {
                     linec = 0;
-                    mpr(line.c_str());
+                    mpr(line);
                     line = "";
                 }
                 line += make_stringf("(%c) %-14s ",
@@ -2139,7 +2139,7 @@ static int _prompt_travel_branch(int prompt_flags)
                                      branches[br[i]].shortname);
             }
             if (!line.empty())
-                mpr(line.c_str());
+                mpr(line);
         }
 
         string shortcuts = "(";
@@ -3717,12 +3717,12 @@ void TravelCache::list_waypoints() const
         line += choice;
         if (!(++count % 5))
         {
-            mpr(line.c_str());
+            mpr(line);
             line = "";
         }
     }
     if (!line.empty())
-        mpr(line.c_str());
+        mpr(line);
 }
 
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const

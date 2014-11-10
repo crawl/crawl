@@ -211,7 +211,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     }
 
     if (msg != "")
-        mpr(msg.c_str());
+        mpr(msg);
     else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
         mpr("You cannot enter water in your current form.");
     else if (species_likes_lava(you.species) && feat_is_lava(env.grid(p)))
@@ -3884,7 +3884,7 @@ static void _display_vampire_status()
     if (!attrib.empty())
     {
         msg += comma_separated_line(attrib.begin(), attrib.end());
-        mpr(msg.c_str());
+        mpr(msg);
     }
 }
 
@@ -4024,7 +4024,7 @@ void display_char_status()
     }
     string cinfo = _constriction_description();
     if (!cinfo.empty())
-        mpr(cinfo.c_str());
+        mpr(cinfo);
 
     _display_movement_speed();
     _display_tohit();
@@ -6944,7 +6944,7 @@ bool player::no_tele_print_reason(bool calc_unid, bool blinking) const
     if (reason.empty())
         return false;
 
-    mpr(reason.c_str());
+    mpr(reason);
     return true;
 }
 

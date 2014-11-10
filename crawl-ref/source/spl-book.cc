@@ -1115,7 +1115,7 @@ static bool _learn_spell_checks(spell_type specspell)
 
     if (!you_can_memorise(specspell))
     {
-        mpr(desc_cannot_memorise_reason(specspell).c_str());
+        mpr(desc_cannot_memorise_reason(specspell));
         return false;
     }
 

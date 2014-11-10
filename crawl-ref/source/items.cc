@@ -924,7 +924,7 @@ void pickup_menu(int item_link)
 
     if (!pickup_warning.empty())
     {
-        mpr(pickup_warning.c_str());
+        mpr(pickup_warning);
         learned_something_new(HINT_FULL_INVENTORY);
     }
 
@@ -1373,7 +1373,7 @@ void pickup(bool partial_quantity)
         }
 
         if (!pickup_warning.empty())
-            mpr(pickup_warning.c_str());
+            mpr(pickup_warning);
     }
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
@@ -3014,7 +3014,7 @@ static void _do_autopickup()
     }
 
     if (!pickup_warning.empty())
-        mpr(pickup_warning.c_str());
+        mpr(pickup_warning);
 
     if (did_pickup)
         you.turn_is_over = true;
@@ -4271,7 +4271,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(item->name(DESC_PLAIN).c_str());
+                        mpr(item->name(DESC_PLAIN));
                     type_wanted = i;
                     best_index = pos;
                 }
@@ -4372,7 +4372,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     if (pos < best_index)
                     {
                         if (create_for_real)
-                            mpr(item->name(DESC_PLAIN).c_str());
+                            mpr(item->name(DESC_PLAIN));
                         special_wanted = i;
                         best_index = pos;
                     }

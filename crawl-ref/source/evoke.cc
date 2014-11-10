@@ -1321,7 +1321,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                          affected_monsters.describe().c_str(),
                          conjugate_verb("be", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message.c_str());
+            mpr(message);
         else
             mpr("The monsters around you are blown away!");
     }

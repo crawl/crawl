@@ -5243,7 +5243,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                     && (slugform.find("legs") == string::npos
                         || _legs_msg_applicable()))
                 {
-                    mpr(slugform.c_str());
+                    mpr(slugform);
                 }
             }
             else

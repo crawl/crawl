@@ -307,7 +307,7 @@ int cast_selective_amnesia(string *pre_msg)
     }
 
     if (pre_msg)
-        mpr(pre_msg->c_str());
+        mpr(*pre_msg);
 
     del_spell_from_memory_by_slot(slot);
 
