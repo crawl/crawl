@@ -4294,11 +4294,104 @@ static int _gozag_choose_shop()
     return shop_index;
 }
 
-bool gozag_call_merchant()
+/**
+ * Make a vault spec for the gozag shop offer at the given index.
+ */
+static string _gozag_shop_spec(int index)
 {
-    int max_absdepth = 0;
+    const shop_type type = _gozag_shop_type(index);
+    const string name =
+        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+
+    string suffix = replace_all(
+                                you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
+                                                       index)]
+                                .get_string(), " ", "_");
+    if (!suffix.empty())
+    {
+        suffix = " suffix:" + suffix;
+
+    return make_stringf("%s shop name:%s%s",
+                        shoptype_to_str(type),
+                        replace_all(name, " ", "_").c_str(),
+                        suffix.c_str());
+    }
+
+}
+
+/**
+ * "Place" a gozag-called shop in a level you haven't yet seen.
+ * (Mark it to be placed when the level is generated & message/annotate
+ * appropriately.)
+ *
+ * @param index         The index of the shop offer to be placed.
+ * @param candidates    Potentially viable levels to place the shop in.
+ */
+static void _gozag_place_shop_offlevel(int index, vector<level_id> &candidates)
+{
+    ASSERT(candidates.size());
+
+    vector<int> weights;
+    for (unsigned int j = 0; j < candidates.size(); j++)
+        weights.push_back(candidates.size() - j);
+    const int which = choose_random_weighted(weights.begin(), weights.end());
+    const level_id lid = candidates[which];
+
+    // "place" the shop
+    you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
+                                    .get_string() = _gozag_shop_spec(index);
+
+    const string name =
+        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+    mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
+         branches[lid.branch].longname);
+    dprf("%s", lid.describe().c_str());
+
+    mark_offlevel_shop(lid, _gozag_shop_type(index));
+}
+
+/**
+ * Place a gozag-called shop in your current location.
+ *
+ * @param index     The index of the shop offer to be placed.
+ */
+static void _gozag_place_shop_here(int index)
+{
+    ASSERT(grd(you.pos()) == DNGN_FLOOR);
+    keyed_mapspec kmspec;
+    kmspec.set_feat(_gozag_shop_spec(index), false);
+    if (!kmspec.get_feat().shop.get())
+    {
+        die("Invalid shop spec?");
+
+    place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
+    }
+    link_items();
+    env.markers.add(new map_feature_marker(you.pos(),
+                                           DNGN_ABANDONED_SHOP));
+    env.markers.clear_need_activate();
+
+    mprf(MSGCH_GOD, "A shop appears before you!");
+}
+
+/**
+ * Attempt to call the shop specified at the given index.
+ *
+ * @param index     The index of the shop (in gozag props)
+ */
+static void _gozag_place_shop(int index)
+{
+    int max_absdepth; // unused
     vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
 
+    if (candidates.size())
+        _gozag_place_shop_offlevel(index, candidates);
+    else
+        _gozag_place_shop_here(index);
+}
+
+bool gozag_call_merchant()
+{
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
@@ -4318,61 +4411,12 @@ bool gozag_call_merchant()
     you.del_gold(cost);
     you.attribute[ATTR_GOZAG_GOLD_USED] += cost;
 
-    const shop_type type = _gozag_shop_type(shop_index);
-    const string name =
-        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, shop_index)];
-
-    string suffix = replace_all(
-                         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
-                                                shop_index)]
-                             .get_string(), " ", "_");
-    if (!suffix.empty())
-        suffix = " suffix:" + suffix;
-
-    string spec =
-        make_stringf("%s shop name:%s%s",
-                     shoptype_to_str(type),
-                     replace_all(name, " ", "_").c_str(),
-                     suffix.c_str());
-
-    if (candidates.size())
-    {
-        vector<int> weights;
-        for (unsigned int j = 0; j < candidates.size(); j++)
-            weights.push_back(candidates.size() - j);
-        const int which =
-            choose_random_weighted(weights.begin(), weights.end());
-        level_id lid = candidates[which];
-        you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
-            .get_string() = spec;
-
-        mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
-             branches[lid.branch].longname);
-        dprf("%s", lid.describe().c_str());
-
-        mark_offlevel_shop(lid, type);
-    }
-    else
-    {
-        ASSERT(grd(you.pos()) == DNGN_FLOOR);
-        keyed_mapspec kmspec;
-        kmspec.set_feat(spec, false);
-        if (!kmspec.get_feat().shop.get())
-            die("Invalid shop spec?");
-
-        place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
-        link_items();
-        env.markers.add(new map_feature_marker(you.pos(),
-                                               DNGN_ABANDONED_SHOP));
-        env.markers.clear_need_activate();
-
-        mprf(MSGCH_GOD, "A shop appears before you!");
-    }
+    _gozag_place_shop(shop_index);
 
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
