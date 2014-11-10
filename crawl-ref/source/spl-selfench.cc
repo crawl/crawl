@@ -254,7 +254,7 @@ spret_type cast_teleport_control(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-int cast_selective_amnesia(string *pre_msg)
+int cast_selective_amnesia(const string &pre_msg)
 {
     if (you.spell_no == 0)
     {
@@ -306,8 +306,8 @@ int cast_selective_amnesia(string *pre_msg)
             break;
     }
 
-    if (pre_msg)
-        mpr(*pre_msg);
+    if (!pre_msg.empty())
+        mpr(pre_msg);
 
     del_spell_from_memory_by_slot(slot);
 

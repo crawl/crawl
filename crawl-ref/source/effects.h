@@ -38,7 +38,7 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
 
 void random_uselessness(int scroll_slot = -1);
 
-int recharge_wand(bool known = true, string *pre_msg = NULL);
+int recharge_wand(bool known = true, const string &pre_msg = "");
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 

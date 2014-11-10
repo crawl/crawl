@@ -755,7 +755,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-int recharge_wand(bool known, string *pre_msg)
+int recharge_wand(bool known, const string &pre_msg)
 {
     int item_slot = -1;
     do
@@ -821,8 +821,8 @@ int recharge_wand(bool known, string *pre_msg)
                 desc = info;
             }
 
-            if (known && pre_msg)
-                mpr(*pre_msg);
+            if (known && !pre_msg.empty())
+                mpr(pre_msg);
 
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_YOUR).c_str(),
@@ -871,8 +871,8 @@ int recharge_wand(bool known, string *pre_msg)
             if (!work)
                 return 0;
 
-            if (known && pre_msg)
-                mpr(*pre_msg);
+            if (known && !pre_msg.empty())
+                mpr(pre_msg);
 
             mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
         }

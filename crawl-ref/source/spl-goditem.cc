@@ -613,7 +613,7 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _selectively_remove_curse(string *pre_msg)
+static bool _selectively_remove_curse(const string &pre_msg)
 {
     bool used = false;
 
@@ -641,15 +641,15 @@ static bool _selectively_remove_curse(string *pre_msg)
             continue;
         }
 
-        if (!used && pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!used && !pre_msg.empty())
+            mpr(pre_msg);
 
         do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
 
-bool remove_curse(bool alreadyknown, string *pre_msg)
+bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
     if (you_worship(GOD_ASHENZARI) && alreadyknown)
     {
@@ -688,8 +688,8 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
 
     if (success)
     {
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
@@ -697,15 +697,15 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
         mprf(MSGCH_PROMPT, "None of your equipped items are cursed.");
     else
     {
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         mpr("You feel blessed for a moment.");
     }
 
     return success;
 }
 
-static bool _selectively_curse_item(bool armour, string *pre_msg)
+static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
     {
@@ -729,15 +729,15 @@ static bool _selectively_curse_item(bool armour, string *pre_msg)
             continue;
         }
 
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         do_curse_item(item, false);
         learned_something_new(HINT_YOU_CURSED);
         return true;
     }
 }
 
-bool curse_item(bool armour, string *pre_msg)
+bool curse_item(bool armour, const string &pre_msg)
 {
     // Make sure there's something to curse first.
     bool found = false;
