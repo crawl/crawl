@@ -46,10 +46,9 @@ Crawl Stone Soup is known to run on the following platforms as of version
 - Android.
 - Microsoft Windows 2000/XP/Vista/7/8
 
-The only officially supported compilers are gcc (4.1 or newer) and clang
-(3.0 or newer), with strong preference for the former.  On Windows, gcc is
-usually available as MinGW; and as of version 0.13, compilation with MSVC
-(Microsoft Visual Studio 2012 both Full or Express editions) is supported.
+The only officially supported compilers are gcc (4.7 or newer) and clang
+(3.4 or newer).  On Windows, gcc is usually available as MinGW; compilation
+with MSVC (Microsoft Visual Studio 2013) is supported.
 
 There's no reason Crawl shouldn't work on other modern systems, especially
 Unixy ones, although some porting may be needed.
