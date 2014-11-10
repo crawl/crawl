@@ -17,6 +17,7 @@
 #include "butcher.h"
 #include "cloud.h"
 #include "cluautil.h"
+#include "colour.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
@@ -140,8 +141,22 @@ monster_type fill_out_corpse(const monster* mons,
             corpse.props[NEVER_HIDE_KEY] = true;
     }
 
-    monster_info minfo(get_monster_data(mtype)->species);
-    corpse.props[FORCED_ITEM_COLOUR_KEY] = (int) minfo.colour();
+    monster_info minfo(mons_species(mtype));
+    int col = int(minfo.colour());
+    if (col == COLOUR_UNDEF && mons)
+    {
+        // XXX hack to avoid crashing in wiz mode.
+        if (mons_is_ghost_demon(mons->type) && !mons->ghost.get())
+            col = LIGHTRED;
+        else
+        {
+            minfo = *(new monster_info(mons));
+            col = int(minfo.colour());
+        }
+    }
+    if (col == COLOUR_UNDEF)
+        col = int(random_colour());
+    corpse.props[FORCED_ITEM_COLOUR_KEY] = col;
 
     if (mons && !mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
     {

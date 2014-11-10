@@ -3799,10 +3799,10 @@ colour_t item_def::corpse_colour() const
         {
             const colour_t class_colour = mons_class_colour(mon_type);
 #if TAG_MAJOR_VERSION == 34
-            if (class_colour == BLACK)
+            if (class_colour == COLOUR_UNDEF)
                 return LIGHTRED;
 #else
-            ASSERT(class_colour != BLACK);
+            ASSERT(class_colour != COLOUR_UNDEF);
 #endif
             return class_colour;
         }
