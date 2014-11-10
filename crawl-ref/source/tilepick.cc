@@ -3623,6 +3623,25 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
 
+    // humans ('p')
+    case MONS_HUMAN:
+    case MONS_HELL_KNIGHT:
+    case MONS_NECROMANCER:
+    case MONS_WIZARD:
+    case MONS_DEMIGOD: // haloed corpse looks abysmal
+        return TILE_CORPSE_HUMAN;
+    case MONS_HALFLING:
+        return TILE_CORPSE_HALFLING;
+    case MONS_SHAPESHIFTER:
+        return TILE_CORPSE_SHAPESHIFTER;
+    case MONS_GLOWING_SHAPESHIFTER:
+        return TILE_CORPSE_GLOWING_SHAPESHIFTER;
+    case MONS_KILLER_KLOWN:
+    {
+        const int ntile = tile_main_count(TILE_CORPSE_KILLER_KLOWN);
+        return TILE_CORPSE_KILLER_KLOWN + random2(ntile);
+    }
+
     // dwarves ('q')
     case MONS_DWARF:
         return TILE_CORPSE_DWARF;
@@ -3920,20 +3939,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // water monsters
     case MONS_ELECTRIC_EEL:
         return TILE_CORPSE_ELECTRIC_EEL;
-
-    // humans ('@')
-    case MONS_HUMAN:
-    case MONS_HELL_KNIGHT:
-    case MONS_NECROMANCER:
-    case MONS_WIZARD:
-    case MONS_DEMIGOD: // haloed corpse looks abysmal
-        return TILE_CORPSE_HUMAN;
-    case MONS_HALFLING:
-        return TILE_CORPSE_HALFLING;
-    case MONS_SHAPESHIFTER:
-        return TILE_CORPSE_SHAPESHIFTER;
-    case MONS_GLOWING_SHAPESHIFTER:
-        return TILE_CORPSE_GLOWING_SHAPESHIFTER;
 
     default:
         return TILE_ERROR;
