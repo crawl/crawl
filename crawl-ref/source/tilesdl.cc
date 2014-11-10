@@ -54,7 +54,7 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #include <GLES/gl.h>
-#include <SDL_android.h>
+//#include <SDL_android.h>
 #endif
 
 #ifdef TARGET_OS_WINDOWS
@@ -1082,12 +1082,7 @@ bool TilesFramework::is_using_small_layout()
         return false;
     case MB_MAYBE:
     default:
-#ifdef __ANDROID__
-        Options.tile_use_small_layout = (SDL_ANDROID_GetY16Inches()<40) ?
-            MB_TRUE : MB_FALSE; // about 2.5" high
-#else
         Options.tile_use_small_layout = (m_windowsz.x<=480) ? MB_TRUE : MB_FALSE;
-#endif
         return Options.tile_use_small_layout == MB_TRUE;
     }
 #else
