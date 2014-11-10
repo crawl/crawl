@@ -1331,19 +1331,17 @@ endif
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
   prefix_fp = ..
-  datadir_fp = ../AndroidData
-  savedir_fp = ../AndroidData
+  datadir_fp = android-project/assets
+  savedir_fp =
   shareddir_fp =
 endif
 
-install: all
-ifeq ($(DESTDIR)$(prefix),)
+install-data: $(GENERATED_FILES) build-rltiles
+ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
 endif
-	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
-	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+	[ -d $(datadir_fp) ] || mkdir -p $(datadir_fp)
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/clua
@@ -1397,8 +1395,6 @@ ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
-	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
-	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
@@ -1423,6 +1419,15 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
+install: all install-data
+	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
+	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+endif
+
 clean: clean-rltiles clean-webserver clean-android
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
@@ -1436,9 +1441,10 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-	$(RM) ../icon.png ../libapplication.so
-	$(RM) -r ../AndroidData
-	$(RM) -r ../bin
+ifneq ($(ANDROID),)
+	$(RM) -r $(datadir_fp)
+	@cd android-project && ant clean && ndk-build clean
+endif
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1585,7 +1591,7 @@ clean-rltiles:
 	+$(MAKE) -C $(RLTILES) distclean
 
 ifdef TILES_ANY
-$(GAME): $(DESTTILEFILES)
+install-data: $(DESTTILEFILES)
 endif
 
 .PHONY: check-fonts
@@ -1695,20 +1701,14 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
-PROJECT_DIR=contrib/sdl-android/project
-SRC_LINK=$(PROJECT_DIR)/jni/application/src
-ifeq (,$(wildcard $(PROJECT_DIR)/ant.properties))
-	GENERATED_APK=project/bin/MainActivity-debug.apk
-else
-	GENERATED_APK=project/bin/MainActivity-release.apk
+android: install-data
+ifeq ($(ANDROID),)
+	@echo Please define ANDROID to use this build.
+	@exit 1
 endif
-
-android:
-	if [ ! -e $(SRC_LINK) ]; then \
-		ln -s `cd ..; pwd` $(SRC_LINK); \
-	fi
-	@cd contrib/sdl-android && ./build.sh && \
-	mv $(GENERATED_APK) ../../crawl_tiles_android-$(SRC_VERSION).apk
+	@cd android-project && ndk-build && ant debug && \
+	cp bin/DungeonCrawlStoneSoup-debug.apk \
+	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
