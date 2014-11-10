@@ -5109,7 +5109,7 @@ bool monster::is_archer() const
 bool monster::is_actual_spellcaster() const
 {
     return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_PRIEST; } );
+                         { return slot.flags & MON_SPELL_WIZARD; } );
 }
 
 bool monster::is_shapeshifter() const
