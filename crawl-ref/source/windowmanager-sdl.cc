@@ -25,8 +25,7 @@
 #include <android/log.h>
 #include <GLES/gl.h>
 #include <signal.h>
-#include <SDL_mixer.h>
-#include <SDL_android.h>
+//#include <SDL_mixer.h>
 #endif
 
 WindowManager *wm = NULL;
@@ -37,7 +36,7 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
-#ifdef __ANDROID__
+#if 0 //def __ANDROID__
     Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
 #endif
@@ -47,7 +46,7 @@ void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
-#ifdef __ANDROID__
+#if 0 //def __ANDROID__
     Mix_CloseAudio();
     while (Mix_Init(0))
         Mix_Quit();
@@ -334,7 +333,7 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
-#ifdef __ANDROID__
+#if 0 //def __ANDROID__
 void SDLWrapper::appPutToBackground()
 {
     SDL_ANDROID_PauseAudioPlayback();
@@ -353,8 +352,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 {
 #ifdef __ANDROID__
     // set up callbacks for background/foreground events
-    SDL_ANDROID_SetApplicationPutToBackgroundCallback(
-            &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
+//    SDL_ANDROID_SetApplicationPutToBackgroundCallback(
+//            &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER
                  | SDL_INIT_NOPARACHUTE) != 0)
@@ -372,6 +371,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     _desktop_width = display_mode.w;
     _desktop_height = display_mode.h;
+
+#ifdef __ANDROID__
+    // Request OpenGL ES 1.0 context
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     glDebug("SDL_GL_DOUBLEBUFFER");
@@ -642,11 +647,6 @@ int SDLWrapper::wait_event(wm_event *event)
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
         return 0;
-
-#ifdef __ANDROID__
-    while (sdlevent.type > SDL_VIDEOEXPOSE) // last credible event type in SDL_events.h
-        if (!SDL_WaitEvent(&sdlevent)) return 0;
-#endif
 
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
