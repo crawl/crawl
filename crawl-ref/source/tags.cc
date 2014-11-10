@@ -3747,7 +3747,15 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.props.clear();
     item.props.read(th);
-
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CORPSE_COLOUR
+        && item.base_type == OBJ_CORPSES
+        && item.props.exists(FORCED_ITEM_COLOUR_KEY)
+        && !item.props[FORCED_ITEM_COLOUR_KEY].get_int())
+    {
+        item.props[FORCED_ITEM_COLOUR_KEY] = LIGHTRED;
+    }
+#endif
     // Fixup artefact props to handle reloading items when the new version
     // of Crawl has more artefact props.
     if (is_artefact(item))
