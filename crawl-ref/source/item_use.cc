@@ -2913,7 +2913,7 @@ void read_scroll(int slot)
     case SCR_REMOVE_CURSE:
         if (!alreadyknown)
         {
-            mprf("%s", pre_succ_msg.c_str());
+            mpr(pre_succ_msg);
             remove_curse(false);
         }
         else

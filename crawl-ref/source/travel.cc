@@ -4471,7 +4471,7 @@ template <class C> void explore_discoveries::say_any(
     if (strwidth(message) >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
-        mprf("%s", message.c_str());
+        mpr(message);
 }
 
 vector<string> explore_discoveries::apply_quantities(
@@ -4504,7 +4504,7 @@ bool explore_discoveries::prompt_stop() const
     const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
 
     for (unsigned int i = 0; i < marker_msgs.size(); i++)
-        mprf("%s", marker_msgs[i].c_str());
+        mpr(marker_msgs[i]);
 
     for (unsigned int i = 0; i < marked_feats.size(); i++)
         mprf("Found %s", marked_feats[i].c_str());

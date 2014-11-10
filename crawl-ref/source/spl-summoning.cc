@@ -145,7 +145,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     // Don't enchant sticks marked with {!D}.
     if (!check_warning_inscriptions(wpn, OPER_DESTROY))
     {
-        mprf("%s", abort_msg.c_str());
+        mpr(abort_msg);
         return SPRET_ABORT;
     }
 
@@ -158,7 +158,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (!item_is_snakable(wpn))
     {
-        mprf("%s", abort_msg.c_str());
+        mpr(abort_msg);
         return SPRET_ABORT;
     }
     else
@@ -191,7 +191,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (!count)
     {
-        mprf("%s", abort_msg.c_str());
+        mpr(abort_msg);
         return SPRET_SUCCESS;
     }
 

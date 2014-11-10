@@ -1027,7 +1027,7 @@ static bool _spellcasting_aborted(spell_type spell,
     }
 
     if (uncastable)
-        mprf("%s", msg.c_str());
+        mpr(msg);
 
     return uncastable;
 }

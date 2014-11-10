@@ -1071,7 +1071,7 @@ void finished_eating_message(int food_type)
             string taste = getMiscString("eating_fruit");
             if (taste.empty())
                 taste = "Eugh, buggy fruit.";
-            mprf("%s", taste.c_str());
+            mpr(taste);
             break;
         }
         default:
@@ -1089,7 +1089,7 @@ void finished_eating_message(int food_type)
         string taste = getMiscString("eating_pizza");
         if (taste.empty())
             taste = "Bleh, bug pizza.";
-        mprf("%s", taste.c_str());
+        mpr(taste);
         break;
     }
     default:

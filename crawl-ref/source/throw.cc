@@ -201,7 +201,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
     }
     else if (!err.empty())
     {
-        mprf("%s", err.c_str());
+        mpr(err);
         more();
     }
     set_prompt();

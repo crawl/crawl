@@ -67,7 +67,7 @@ static void _make_all_books()
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
 
-        mprf("%s", book.name(DESC_PLAIN).c_str());
+        mpr(book.name(DESC_PLAIN));
     }
 }
 
@@ -600,7 +600,7 @@ void wizard_value_artefact()
         if (!is_artefact(item))
             mpr("That item is not an artefact!");
         else
-            mprf("%s", debug_art_val_str(item).c_str());
+            mpr(debug_art_val_str(item));
     }
 }
 
