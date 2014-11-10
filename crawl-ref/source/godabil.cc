@@ -4155,6 +4155,39 @@ bool gozag_setup_call_merchant(bool quiet)
 }
 
 /**
+ * Is the given index within the valid range for gozag shop offers?
+ */
+static bool _gozag_valid_shop_index(int index)
+{
+    return index >= 0 && index < GOZAG_MAX_SHOPS;
+}
+
+/**
+ * What is the type of shop that gozag is offering at the given index?
+ */
+static shop_type _gozag_shop_type(int index)
+{
+    ASSERT(_gozag_valid_shop_index(index));
+    const int type =
+        you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int();
+    return static_cast<shop_type>(type);
+}
+
+/**
+ * What is the price of calling the shop that gozag is offering at the given
+ * index, including the effects of faith?
+ */
+static int _gozag_shop_price(int index)
+{
+    ASSERT(_gozag_valid_shop_index(index));
+    // the base cost
+    const int cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY,
+                                            index)].get_int();
+    // shop cost adjusted for faith (amulet, mutation)
+    return _gozag_faith_adjusted_price(cost);
+}
+
+/**
  * Does the given shop type duplicate an earlier-chosen one?
  *
  * @param cur       The index of the current shop.
@@ -4165,7 +4198,7 @@ bool gozag_setup_call_merchant(bool quiet)
 static bool _duplicate_shop_type(int cur, shop_type type)
 {
     for (int i = 0; i < cur; i++)
-        if (you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int() == type)
+        if (_gozag_shop_type(i) == type)
             return true;
 
     return false;
@@ -4203,6 +4236,64 @@ static void _setup_gozag_shop(int index)
                                     = gozag_price_for_shop();
 }
 
+/**
+ * Build a string describing the name, price & type of the shop being offered
+ * at the given index.
+ *
+ * @param index     The index of the shop to be described.
+ * @return          The shop description.
+ *                  E.g. "[a]   973 gold - Cranius' Magic Scroll Boutique"
+ */
+static string _describe_gozag_shop(int index)
+{
+    const int cost = _gozag_shop_price(index);
+
+    const char offer_letter = 'a' + index;
+    const string shop_name =
+        apostrophise(you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
+                                            index)].get_string());
+    const shop_type type = _gozag_shop_type(index);
+    const string suffix =
+        you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
+
+    return make_stringf("  [%c] %5d gold - %s %s %s",
+                        offer_letter,
+                        cost,
+                        shop_name.c_str(),
+                        shop_type_name(type).c_str(),
+                        suffix.c_str());
+}
+
+/**
+ * Let the player choose from the currently available merchants to call.
+ *
+ * @param   The index of the chosen shop; -1 if none was chosen (due to e.g.
+ *          a seen_hup).
+ */
+static int _gozag_choose_shop()
+{
+    if (crawl_state.seen_hups)
+        return -1;
+
+    clear_messages();
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
+        mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
+
+    mprf(MSGCH_PROMPT, "Fund which merchant?");
+    const int shop_index = toalower(get_ch()) - 'a';
+    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
+        return _gozag_choose_shop(); // tail recurse
+
+    if (you.gold < _gozag_shop_price(shop_index))
+    {
+        mpr("You don't have enough gold to fund that merchant!");
+        more();
+        return _gozag_choose_shop(); // tail recurse
+    }
+
+    return shop_index;
+}
+
 bool gozag_call_merchant()
 {
     int max_absdepth = 0;
@@ -4215,65 +4306,25 @@ bool gozag_call_merchant()
         for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
             _setup_gozag_shop(i);
 
-    int i = 0;
-    int cost = 0;
-    int faith_cost = 0;
-    while (true)
-    {
-        if (crawl_state.seen_hups)
-            return false;
+    const int shop_index = _gozag_choose_shop();
+    if (shop_index == -1) // hup!
+        return false;
 
-        clear_messages();
-        for (i = 0; i < GOZAG_MAX_SHOPS; i++)
-        {
-            cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-            faith_cost = _gozag_faith_adjusted_price(cost);
-            string line =
-                make_stringf("  [%c] %5d gold - %s %s %s",
-                             'a' + i,
-                             faith_cost,
-                             apostrophise(
-                                 you.props[
-                                     make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
-                                     i)].get_string()).c_str(),
-                             shop_type_name(
-                                 static_cast<shop_type>(
-                                     you.props[
-                                         make_stringf(GOZAG_SHOP_TYPE_KEY, i)]
-                                         .get_int())).c_str(),
-                             you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
-                                 .get_string().c_str());
-            mpr_nojoin(MSGCH_PLAIN, line.c_str());
-        }
-        mprf(MSGCH_PROMPT, "Fund which merchant?");
-        i = toalower(get_ch()) - 'a';
-        if (i < 0 || i > GOZAG_MAX_SHOPS - 1)
-            continue;
-        cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-        faith_cost = _gozag_faith_adjusted_price(cost);
-        if (you.gold < faith_cost)
-        {
-            mpr("You don't have enough gold to fund that merchant!");
-            more();
-            continue;
-        }
+    ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
 
-        break;
-    }
+    const int cost = _gozag_shop_price(shop_index);
+    ASSERT(you.gold >= cost);
 
-    ASSERT(you.gold >= faith_cost);
+    you.del_gold(cost);
+    you.attribute[ATTR_GOZAG_GOLD_USED] += cost;
 
-    you.del_gold(faith_cost);
-    you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
-
-    const shop_type type =
-        static_cast<shop_type>(
-            you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int());
+    const shop_type type = _gozag_shop_type(shop_index);
     const string name =
-        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)];
+        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, shop_index)];
 
     string suffix = replace_all(
-                         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
+                         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
+                                                shop_index)]
                              .get_string(), " ", "_");
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
