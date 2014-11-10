@@ -1655,7 +1655,8 @@ static void _shaft_card(int power, deck_rarity_type rarity)
 
             if (mons && !mons->wont_attack()
                 && grd(mons->pos()) == DNGN_FLOOR
-                && !mons->airborne() && x_chance_in_y(power_level, 3))
+                && !mons->airborne() && !mons_is_firewood(mons)
+                && x_chance_in_y(power_level, 3))
             {
                 mons->do_shaft();
             }
@@ -2651,7 +2652,8 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             default: cloudy = CLOUD_DEBUGGING;
         }
 
-        if (!mons || (mons && mons->wont_attack()))
+        if (!mons || (mons && (mons->wont_attack()
+            || mons_is_firewood(mons))))
             continue;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
