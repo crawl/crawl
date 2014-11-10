@@ -8,12 +8,6 @@ my @deps = qw(
 
 if ($ENV{BUILD_ALL}) {
     system "git submodule update --init --recursive";
-
-    push @deps, qw(
-        libasound2-dev
-        libesd0-dev
-        xorg-dev
-    );
 }
 else {
     push @deps, qw(
