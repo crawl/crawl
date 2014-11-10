@@ -66,9 +66,6 @@
 #include "view.h"
 #include "xom.h"
 
-// Macro that saves some typing, nothing more.
-#define smc get_monster_data(mc)
-
 monster::monster()
     : hit_points(0), max_hit_points(0),
       speed(0), speed_increment(0), target(), firing_pos(),
