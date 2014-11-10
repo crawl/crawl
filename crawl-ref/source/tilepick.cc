@@ -3638,8 +3638,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
     {
-        const int ntile = tile_main_count(TILE_CORPSE_KILLER_KLOWN);
-        return TILE_CORPSE_KILLER_KLOWN + random2(ntile);
+        const int count = tile_main_count(TILE_CORPSE_KILLER_KLOWN);
+        return TILE_CORPSE_KILLER_KLOWN + ui_random(count);
     }
 
     // dwarves ('q')
