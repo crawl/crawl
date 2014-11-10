@@ -254,19 +254,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
     if (item.special != 0)
         return static_cast<brand_type>(item.special);
 
-    const int tries = [&]
-    {
-        int _tries = 0;
+    int tries;
 
-        if (item_level >= MAKE_GIFT_ITEM)
-            _tries =  5;
-        else if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
-            _tries = 1;
-        else
-            _tries = 0;
-
-        return _tries;
-    }();
+    if (item_level >= MAKE_GIFT_ITEM)
+        tries =  5;
+    else if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
+        tries = 1;
+    else
+        tries = 0;
 
     brand_type rc         = SPWPN_NORMAL;
 
