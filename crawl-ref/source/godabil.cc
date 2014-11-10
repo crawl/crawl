@@ -4053,15 +4053,6 @@ bool gozag_potion_petition()
     return true;
 }
 
-static bool _duplicate_shop_type(int cur, shop_type type)
-{
-    for (int i = 0; i < cur; i++)
-        if (you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int() == type)
-            return true;
-
-    return false;
-}
-
 /**
  * The price to order a merchant from Gozag. Doesn't depend on the shop's
  * type or contents. The maximum possible price is used as the minimum amount
@@ -4163,6 +4154,55 @@ bool gozag_setup_call_merchant(bool quiet)
     return true;
 }
 
+/**
+ * Does the given shop type duplicate an earlier-chosen one?
+ *
+ * @param cur       The index of the current shop.
+ *                  (Assumption: shops [0,cur-1] have been chosen already.)
+ * @param type      The type of shop being considered.
+ * @return          Whether the given shop type duplicates a predecessor.
+ */
+static bool _duplicate_shop_type(int cur, shop_type type)
+{
+    for (int i = 0; i < cur; i++)
+        if (you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int() == type)
+            return true;
+
+    return false;
+}
+
+/**
+ * Initialize the set of shops currently offered to the player through Call
+ * Merchant.
+ *
+ * @param index     The index of the shop offer to be defined.
+ */
+static void _setup_gozag_shop(int index)
+{
+    ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
+
+    shop_type type = NUM_SHOPS;
+    do
+        type = static_cast<shop_type>(random2(NUM_SHOPS));
+    while (_duplicate_shop_type(index, type));
+    you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
+
+    you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()
+                                    = make_name(random_int(), false);
+
+    const bool need_suffix = type != SHOP_GENERAL
+                             && type != SHOP_GENERAL_ANTIQUE
+                             && type != SHOP_DISTILLERY;
+    you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string()
+                                    = need_suffix ?
+                                      random_choose("Shoppe", "Boutique",
+                                                    "Emporium", "Shop", NULL) :
+                                      "";
+
+    you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
+                                    = gozag_price_for_shop();
+}
+
 bool gozag_call_merchant()
 {
     int max_absdepth = 0;
@@ -4172,29 +4212,8 @@ bool gozag_call_merchant()
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
     if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, 0)))
-    {
         for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
-        {
-            shop_type type = NUM_SHOPS;
-            do
-                type = static_cast<shop_type>(random2(NUM_SHOPS));
-            while (_duplicate_shop_type(i, type));
-            you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)].get_string()
-                = make_name(random_int(), false);
-            you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int()
-                = type;
-            you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)].get_string()
-                = (type == SHOP_GENERAL
-                   || type == SHOP_GENERAL_ANTIQUE
-                   || type == SHOP_DISTILLERY)
-                   ? ""
-                   : random_choose("Shoppe", "Boutique",
-                                   "Emporium", "Shop", NULL);
-
-            you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int()
-                = gozag_price_for_shop();
-        }
-    }
+            _setup_gozag_shop(i);
 
     int i = 0;
     int cost = 0;
