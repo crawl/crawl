@@ -13,6 +13,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cio.h"
 #include "decks.h"
 #include "describe.h"
@@ -909,7 +910,8 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
     }
 
     // Shopkeepers will now place goods you can't carry outside the shop.
-    if (!move_item_to_inv(item_got, item.quantity, false))
+    if (item_is_stationary(mitm[item_got])
+        || !move_item_to_inv(item_got, item.quantity, false))
     {
         move_item_to_grid(&item_got, env.shop[shop].pos);
         return false;
@@ -1599,6 +1601,9 @@ unsigned int item_value(item_def item, bool ident)
                 break;
         }
         break;
+
+    case OBJ_CORPSES:
+        valued = get_max_corpse_chunks(item.mon_type) * 5;
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))

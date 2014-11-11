@@ -38,6 +38,7 @@
 #include "end.h"
 #include "files.h"
 #include "flood_find.h"
+#include "food.h"
 #include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -5687,6 +5688,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
         return false;
 
     const item_def &item = mitm[item_index];
+    ASSERT(item.defined());
 
     // Don't generate gold in shops! This used to be possible with
     // general stores (GDL)
@@ -5703,6 +5705,43 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
     }
 
     return true;
+}
+
+/**
+ * Attempt to make a corpse to be placed in a gozag ghoul corpse shop.
+ *
+ * TODO: unify this with kiku's code in kiku_receive_corpses()
+ *
+ * @return  The mitm index of the corpse.
+ *          If we couldn't make one, returns NON_ITEM instead.
+ */
+static int _make_delicious_corpse()
+{
+    // Choose corpses from D:<XL>
+    const level_id lev(BRANCH_DUNGEON, you.get_experience_level());
+    const monster_type mon_type = pick_local_zombifiable_monster(lev);
+
+    // Create corpse object.
+    monster dummy;
+    dummy.type = mon_type;
+    define_monster(&dummy);
+    const int index_of_corpse_created = get_mitm_slot();
+
+    if (index_of_corpse_created == NON_ITEM)
+        return NON_ITEM;
+
+    int valid_corpse = fill_out_corpse(&dummy,
+                                       dummy.type,
+                                       mitm[index_of_corpse_created],
+                                       false);
+    if (valid_corpse == -1)
+    {
+        mitm[index_of_corpse_created].clear();
+        return NON_ITEM;
+    }
+
+    mitm[index_of_corpse_created].props[NEVER_HIDE_KEY] = true;
+    return index_of_corpse_created;
 }
 
 /**
@@ -5735,11 +5774,17 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     // item index, maybe
     while (true)
     {
-        const object_class_type basetype =
-            (representative && shop_type_ == SHOP_EVOKABLES)
-                ? OBJ_WANDS
-                : item_in_shop(shop_type_);
-        const int subtype = representative? j : OBJ_RANDOM;
+        object_class_type basetype = item_in_shop(shop_type_);
+        if (representative && shop_type_ == SHOP_EVOKABLES)
+            basetype = OBJ_WANDS;
+
+        int subtype = representative? j : OBJ_RANDOM;
+
+        if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
+        {
+            basetype = OBJ_POTIONS;
+            subtype = POT_BLOOD;
+        }
 
         if (!spec.items.empty() && !spec.use_all)
         {
@@ -5753,6 +5798,11 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // shop lists ordered items; take the one at the right index
             item_index = dgn_place_item(spec.items.get_item(j), stock_loc,
                                         item_level);
+        }
+        else if (spec.gozag && shop_type_ == SHOP_FOOD
+                 && you.species == SP_GHOUL)
+        {
+            item_index = _make_delicious_corpse();
         }
         else
         {
@@ -5792,6 +5842,12 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     // please don't ask me what this does
     if (representative && item.base_type == OBJ_WANDS)
         item.plus = 7;
+
+    if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
+    {
+        ASSERT(is_blood_potion(item));
+        item.quantity += random2(3); // blood for the vampire friends :)
+    }
 
     // Set object 'position' (gah!) & ID status.
     item.pos = stock_loc;
