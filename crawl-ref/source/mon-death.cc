@@ -2600,7 +2600,8 @@ int monster_die(monster* mons, killer_type killer,
         // Like Boris, but her vault can't come back
         if (mons_is_natasha(mons))
             you.unique_creatures.set(MONS_NATASHA, false);
-        mons_felid_revive(mons);
+        if (!mons_reset && !wizard)
+            mons_felid_revive(mons);
     }
     else if (mons_is_pikel(mons))
     {
