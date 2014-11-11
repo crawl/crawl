@@ -399,7 +399,7 @@ Xom whispers "Shhh!"
 %%%%
 Xom cloud
 
-"The weather's been a too boring around here."
+"The weather's been a little too boring around here."
 
 Xom asks Qazlal to spice things up a little.
 
