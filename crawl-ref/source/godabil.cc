@@ -3885,27 +3885,17 @@ static int _gozag_faith_adjusted_price(int price)
     return price - (you.faith() * price)/3;
 }
 
-int gozag_porridge_price()
+int gozag_potion_price()
 {
     int multiplier = GOZAG_POTION_BASE_MULTIPLIER
                      + you.attribute[ATTR_GOZAG_POTIONS];
-    multiplier *= 4;
-    // These two potions currently have the same price, but just in case...
-    potion_type porridge_type = you.species == SP_VAMPIRE
-                                || player_mutation_level(MUT_CARNIVOROUS) == 3
-                                ? POT_BLOOD
-                                : POT_PORRIDGE;
-    item_def dummy;
-    dummy.base_type = OBJ_POTIONS;
-    dummy.sub_type = porridge_type;
-    dummy.quantity = 1;
-    int price = multiplier * item_value(dummy, true) / 10;
+    int price = multiplier * 15; // arbitrary
     return _gozag_faith_adjusted_price(price);
 }
 
 bool gozag_setup_potion_petition(bool quiet)
 {
-    const int gold_min = gozag_porridge_price();
+    const int gold_min = gozag_potion_price();
     if (you.gold < gold_min)
     {
         if (!quiet)
@@ -3921,8 +3911,8 @@ bool gozag_setup_potion_petition(bool quiet)
 
 bool gozag_potion_petition()
 {
-    CrawlVector *pots[4];
-    int prices[4];
+    CrawlVector *pots[GOZAG_MAX_POTIONS];
+    int prices[GOZAG_MAX_POTIONS];
 
     item_def dummy;
     dummy.base_type = OBJ_POTIONS;
@@ -3930,30 +3920,18 @@ bool gozag_potion_petition()
 
     if (!you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
     {
-        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+        bool affordable_potions = false;
+        while (!affordable_potions)
         {
-            prices[i] = 0;
-            int multiplier = GOZAG_POTION_BASE_MULTIPLIER
-                             + you.attribute[ATTR_GOZAG_POTIONS];
-            string key = make_stringf(GOZAG_POTIONS_KEY, i);
-            you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
-            pots[i] = &you.props[key].get_vector();
-            if (i == GOZAG_MAX_POTIONS - 1)
+            for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
-                if (you.species == SP_VAMPIRE
-                    || player_mutation_level(MUT_CARNIVOROUS) == 3)
-                {
-                    for (int j = 0; j < 4; j++)
-                        pots[i]->push_back(POT_BLOOD);
-                }
-                else
-                {
-                    pots[i]->push_back(POT_PORRIDGE);
-                    multiplier *= 4; // ouch
-                }
-            }
-            else
-            {
+                prices[i] = 0;
+                int multiplier = GOZAG_POTION_BASE_MULTIPLIER
+                                 + you.attribute[ATTR_GOZAG_POTIONS];
+                string key = make_stringf(GOZAG_POTIONS_KEY, i);
+                you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
+                pots[i] = &you.props[key].get_vector();
+
                 ADD_POTIONS(*pots[i], _gozag_potion_list);
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
@@ -3962,21 +3940,24 @@ bool gozag_potion_petition()
                     _gozag_add_bad_potion(*pots[i]);
                     multiplier -= 5;
                 }
-            }
 
-            for (int j = 0; j < pots[i]->size(); j++)
-            {
-                dummy.sub_type = (*pots[i])[j].get_int();
-                prices[i] += item_value(dummy, true);
-                dprf("%d", item_value(dummy, true));
+                for (int j = 0; j < pots[i]->size(); j++)
+                {
+                    dummy.sub_type = (*pots[i])[j].get_int();
+                    prices[i] += item_value(dummy, true);
+                    dprf("%d", item_value(dummy, true));
+                }
+                dprf("pre: %d", prices[i]);
+                prices[i] *= multiplier;
+                dprf("mid: %d", prices[i]);
+                prices[i] /= 10;
+                dprf("post: %d", prices[i]);
+                key = make_stringf(GOZAG_PRICE_KEY, i);
+                you.props[key].get_int() = prices[i];
+
+                if (prices[i] <= gozag_potion_price())
+                    affordable_potions = true;
             }
-            dprf("pre: %d", prices[i]);
-            prices[i] *= multiplier;
-            dprf("mid: %d", prices[i]);
-            prices[i] /= 10;
-            dprf("post: %d", prices[i]);
-            key = make_stringf(GOZAG_PRICE_KEY, i);
-            you.props[key].get_int() = prices[i];
         }
     }
     else
@@ -4037,7 +4018,7 @@ bool gozag_potion_petition()
 
     you.attribute[ATTR_GOZAG_POTIONS]++;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
         string key = make_stringf(GOZAG_POTIONS_KEY, i);
         you.props.erase(key);
