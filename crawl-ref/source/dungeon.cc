@@ -3290,7 +3290,8 @@ static void _place_gozag_shop(dungeon_feature_type stair)
     kmspec.set_feat(you.props[key].get_string(), false);
     if (!kmspec.get_feat().shop.get())
         die("Invalid shop spec?");
-    shop_spec *spec_struct = kmspec.get_feat().shop.get();
+    feature_spec feat = kmspec.get_feat();
+    shop_spec *spec_struct = feat.shop.get();
     ASSERT(spec_struct);
     place_spec_shop(*shop_place, *spec_struct);
 
