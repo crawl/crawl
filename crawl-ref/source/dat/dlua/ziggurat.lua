@@ -449,7 +449,7 @@ local function ziggurat_create_loot_at(c)
   local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
                                    "potion of experience no_pickup no_mimic w:200 /" ..
                                    "potion of cure mutation no_pickup no_mimic w:200 /" ..
-                                   "potion of porridge no_pickup no_mimic w:100 /" ..
+                                    "royal jelly q:3 no_pickup no_mimic w:100 /" ..
                                    "wand of heal wounds no_pickup no_mimic w:10 / " ..
                                    "wand of hasting no_pickup no_mimic w:10 / " ..
                                    dgn.good_scrolls)

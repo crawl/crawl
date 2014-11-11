@@ -695,6 +695,7 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
     case POT_STRONG_POISON:     return "strong poison";
+    case POT_PORRIDGE:          return "porridge";
 #endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
@@ -702,7 +703,6 @@ const char* potion_type_name(int potiontype)
     case POT_CANCELLATION:      return "cancellation";
     case POT_CONFUSION:         return "confusion";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_PORRIDGE:          return "porridge";
     case POT_DEGENERATION:      return "degeneration";
     case POT_DECAY:             return "decay";
     case POT_EXPERIENCE:        return "experience";
@@ -2368,7 +2368,7 @@ void check_item_knowledge(bool unknown_items)
             }
 
 #if TAG_MAJOR_VERSION == 34
-            // Water is never interesting either. [1KB]
+            // Items removed since the last save compat break.
             if (i == OBJ_POTIONS
                 && (j == POT_WATER
                  || j == POT_GAIN_STRENGTH
@@ -2376,7 +2376,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_GAIN_INTELLIGENCE
                  || j == POT_SLOWING
                  || j == POT_STRONG_POISON
-                 || j == POT_BLOOD_COAGULATED))
+                 || j == POT_BLOOD_COAGULATED
+                 || j == POT_PORRIDGE))
             {
                 continue;
             }
@@ -3419,13 +3420,13 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_FLIGHT:
             return you.permanent_flight();
 
+#if TAG_MAJOR_VERSION == 34
         case POT_PORRIDGE:
             return you.species == SP_VAMPIRE
-                   || player_mutation_level(MUT_CARNIVOROUS) == 3;
-        case POT_BLOOD:
-#if TAG_MAJOR_VERSION == 34
+                    || player_mutation_level(MUT_CARNIVOROUS) == 3;
         case POT_BLOOD_COAGULATED:
 #endif
+        case POT_BLOOD:
             return you.species != SP_VAMPIRE;
         case POT_DECAY:
             return you.res_rotting(temp) > 0;

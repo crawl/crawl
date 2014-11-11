@@ -2063,7 +2063,12 @@ void drink(int slot)
     const bool alreadyknown = item_type_known(potion);
 
     if (alreadyknown && you.hunger_state == HS_ENGORGED
-        && (is_blood_potion(potion) || potion.sub_type == POT_PORRIDGE))
+        && (is_blood_potion(potion)
+#if TAG_MAJOR_VERSION == 34
+            || potion.sub_type == POT_PORRIDGE
+#endif
+            )
+        )
     {
         mpr("You are much too full right now.");
         return;

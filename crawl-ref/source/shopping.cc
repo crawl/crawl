@@ -1560,9 +1560,9 @@ unsigned int item_value(item_def item, bool ident)
             case POT_DEGENERATION:
 #if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
+            case POT_PORRIDGE:
 #endif
             case POT_BLOOD:
-            case POT_PORRIDGE:
             case POT_CONFUSION:
             case POT_POISON:
             case POT_SLOWING:

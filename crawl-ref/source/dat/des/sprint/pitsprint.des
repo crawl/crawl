@@ -166,7 +166,7 @@ end
 
 
 function general_item_setup(e)
-  e.kitem("^ = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+  e.kitem("^ = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
           wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
           potion of heal wounds ident:all q:2 w:2 /\
           scroll of recharging ident:all w:1 /\
@@ -1900,7 +1900,7 @@ TILE:   v = wall_cobalt_stone
 : general_item_setup(_G)
 : base_monster_setup(_G)
 KITEM:  34CBDEJK = superb_item ident:all w:66 /\
-                   potion of porridge ident:all q:2 /\
+                   royal jelly q:6 /\
                    bread ration ident:all q:2 /\
                    meat ration ident:all q:2
 : lua_marker('_', props_marker {
