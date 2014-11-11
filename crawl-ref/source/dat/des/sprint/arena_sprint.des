@@ -1044,14 +1044,14 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
-KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
+KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
              potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
              potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5 |\
              potion of restore abilities q:10 | potion of restore abilities q:10
-KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:10 ; \
+KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:7 ; \
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\

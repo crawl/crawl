@@ -1523,39 +1523,42 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_RESISTANCE:
             case POT_HASTE:
-                valued += 70;
+                valued += 100;
                 break;
 
             case POT_MAGIC:
             case POT_INVISIBILITY:
             case POT_CANCELLATION:
-                valued += 55;
+                valued += 80;
                 break;
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
             case POT_RESTORE_ABILITIES:
-            case POT_FLIGHT:
-                valued += 30;
+                valued += 50;
                 break;
 
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
+                valued += 40;
+                break;
+
+            case POT_CURING:
+            case POT_LIGNIFY:
+            case POT_FLIGHT:
+                valued += 30;
+                break;
+
             case POT_MUTATION:
                 valued += 25;
                 break;
 
-            case POT_CURING:
             case POT_DECAY:
             case POT_DEGENERATION:
 #if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
 #endif
-            case POT_LIGNIFY:
-                valued += 20;
-                break;
-
             case POT_BLOOD:
             case POT_PORRIDGE:
             case POT_CONFUSION:
