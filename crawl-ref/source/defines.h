@@ -381,4 +381,8 @@ const int DEFAULT_VIEW_DELAY = 600;
 
 #define PI 3.14159265359f
 
+#ifdef __ANDROID__
+#define ANDROID_ASSETS "ANDROID_ASSETS"
+#endif
+
 #endif

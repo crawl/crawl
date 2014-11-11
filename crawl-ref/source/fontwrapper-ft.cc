@@ -94,7 +94,10 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     if (error == FT_Err_Unknown_File_Format)
         die_noline("Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
-        die_noline("Invalid font from file '%s'\n", font_path.c_str());
+    {
+        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+                   font_path.c_str(), size, error);
+    }
 
     error = FT_Set_Pixel_Sizes(face, font_size, font_size);
     ASSERT(!error);

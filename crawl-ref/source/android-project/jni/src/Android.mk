@@ -14,7 +14,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
                     $(LOCAL_PATH)/$(CRAWL_PATH) \
                     $(LOCAL_PATH)/$(CRAWL_PATH)/rltiles
 
-LOCAL_CFLAGS := -O2 -DWIZARD -DUSE_TILE -DUSE_TILE_LOCAL -DTOUCH_UI -DUSE_SDL -DUSE_GL -DUSE_FT -DUSE_GLES -DCLUA_BINDINGS -DMONOSPACED_FONT=\"contrib/fonts/DejaVuSansMono.ttf\" -DPROPORTIONAL_FONT=\"contrib/fonts/DejaVuSans.ttf\" -DSAVE_DIR_PATH=\"/sdcard/Android/data/org.develz.crawl/saves/\"
+LOCAL_CFLAGS := -O2 -DWIZARD -DUSE_TILE -DUSE_TILE_LOCAL -DTOUCH_UI -DUSE_SDL -DUSE_GL -DUSE_FT -DUSE_GLES -DCLUA_BINDINGS -DMONOSPACED_FONT=\"dat/tiles/DejaVuSansMono.ttf\" -DPROPORTIONAL_FONT=\"dat/tiles/DejaVuSans.ttf\" -DSAVE_DIR_PATH=\"/sdcard/Android/data/org.develz.crawl/saves/\"
 LOCAL_CXXFLAGS := -std=c++11 $(LOCAL_CFLAGS)
 
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
@@ -319,6 +319,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image freetype sqlite lua zlib
 
-LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog
+LOCAL_LDLIBS := -ldl -lGLESv1_CM -lGLESv2 -llog -landroid
 
 include $(BUILD_SHARED_LIBRARY)
