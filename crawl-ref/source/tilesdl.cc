@@ -832,6 +832,13 @@ int TilesFramework::getch_ck()
                 crawl_state.seen_hups++;
                 return ESCAPE;
 
+            case WME_RESIZE:
+                m_windowsz.x = event.resize.w;
+                m_windowsz.y = event.resize.h;
+                resize();
+                set_need_redraw();
+                break;
+
             case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
