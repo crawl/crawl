@@ -262,8 +262,7 @@ static cglyph_t _get_item_override(const item_def &item)
             return ir->second;
     }
 
-    for (vector<pair<string, cglyph_t> >::const_iterator ir =
-         Options.item_glyph_overrides.begin();
+    for (auto ir = Options.item_glyph_overrides.begin();
          ir != Options.item_glyph_overrides.end(); ++ir)
     {
         text_pattern tpat(ir->first);

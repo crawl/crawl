@@ -420,7 +420,7 @@ formatted_string formatted_string::chop(int length) const
 
 void formatted_string::del_char()
 {
-    for (oplist::iterator i = ops.begin(); i != ops.end(); ++i)
+    for (auto i = ops.begin(); i != ops.end(); ++i)
     {
         if (i->type != FSOP_TEXT)
             continue;
@@ -542,7 +542,7 @@ static int _tagged_string_printable_length(const string& s)
     int len = 0;
     bool in_tag = false;
     int last_taglen = 0;
-    for (string::const_iterator ci = s.begin(); ci != s.end(); ++ci)
+    for (auto ci = s.begin(); ci != s.end(); ++ci)
     {
         if (in_tag)
         {

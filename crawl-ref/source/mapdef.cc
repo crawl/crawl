@@ -1911,8 +1911,7 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (list<coord_def>::const_iterator i = points[cur].begin();
-             i != points[cur].end(); ++i)
+        for (auto i = points[cur].begin(); i != points[cur].end(); ++i)
         {
             const coord_def &c(*i);
 
@@ -2745,8 +2744,7 @@ string map_def::validate_temple_map()
     // TODO: check for substitutions and shuffles
 
     vector<coord_def> b_glyphs = map.find_glyph('B');
-    for (vector<coord_def>::iterator i = b_glyphs.begin();
-        i != b_glyphs.end(); ++i)
+    for (auto i = b_glyphs.begin(); i != b_glyphs.end(); ++i)
     {
         const keyed_mapspec *spec = map.mapspec_at(*i);
         if (spec != NULL && !spec->feat.feats.empty())
@@ -3561,8 +3559,7 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     int totweight = 0;
     mons_spec pick;
 
-    for (mons_spec_list::iterator i = slot.mlist.begin();
-         i != slot.mlist.end(); ++i)
+    for (auto i = slot.mlist.begin(); i != slot.mlist.end(); ++i)
     {
         const int weight = i->genweight;
         if (x_chance_in_y(weight, totweight += weight))
@@ -4702,8 +4699,7 @@ item_spec item_list::pick_item(item_spec_slot &slot)
 {
     int cumulative = 0;
     item_spec spec;
-    for (item_spec_list::const_iterator i = slot.ilist.begin();
-         i != slot.ilist.end(); ++i)
+    for (auto i = slot.ilist.begin(); i != slot.ilist.end(); ++i)
     {
         const int weight = i->genweight;
         if (x_chance_in_y(weight, cumulative += weight))
@@ -5207,8 +5203,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         vector<string> ids = split_string("|", id_str);
         int id = 0;
-        for (vector<string>::const_iterator is = ids.begin();
-             is != ids.end(); ++is)
+        for (auto is = ids.begin(); is != ids.end(); ++is)
         {
             if (*is == "curse")
                 id |= ISFLAG_KNOW_CURSE;

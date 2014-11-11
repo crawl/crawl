@@ -787,8 +787,7 @@ bool dgn_shoals_connect_point(const coord_def &point,
         const int n_points = 15;
         const int radius = 4;
 
-        for (vector<coord_def>::const_iterator i = track.begin();
-             i != track.end(); ++i)
+        for (auto i = track.begin(); i != track.end(); ++i)
         {
             int height = 0, npoints = 0;
             for (radius_iterator ri(*i, radius, C_POINTY); ri; ++ri)

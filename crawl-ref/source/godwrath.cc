@@ -1699,8 +1699,7 @@ static void _qazlal_deform_terrain()
                             random2(you.experience_level * BASELINE_DELAY),
                             TERRAIN_CHANGE_FLOOD);
 
-        for (vector<coord_weight>::iterator it = candidates.begin();
-             it != candidates.end(); ++it)
+        for (auto it = candidates.begin(); it != candidates.end(); ++it)
         {
             if (it->first == *pos)
             {

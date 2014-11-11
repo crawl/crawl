@@ -583,8 +583,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
 void SkillMenuSwitch::set_state(skill_menu_state state)
 {
     // We only set it if it's a valid state.
-    for (vector<skill_menu_state>::iterator it = m_states.begin();
-         it != m_states.end(); ++it)
+    for (auto it = m_states.begin(); it != m_states.end(); ++it)
     {
         if (*it == state)
         {
@@ -632,8 +631,7 @@ void SkillMenuSwitch::update()
     ASSERT(hotkeys.size());
     string text = make_stringf("[%s(<yellow>%c</yellow>): ",
                                m_name.c_str(), hotkeys[0]);
-    for (vector<skill_menu_state>::iterator it = m_states.begin();
-         it != m_states.end(); ++it)
+    for (auto it = m_states.begin(); it != m_states.end(); ++it)
     {
         if (it != m_states.begin())
             text += '|';
@@ -1324,8 +1322,7 @@ void SkillMenu::shift_bottom_down()
 {
     const coord_def down(0, 1);
     m_help->move(down);
-    for (map<skill_menu_switch, SkillMenuSwitch*>::iterator it
-         = m_switches.begin(); it != m_switches.end(); ++it)
+    for (auto it = m_switches.begin(); it != m_switches.end(); ++it)
     {
         it->second->move(down);
     }

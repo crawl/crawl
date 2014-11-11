@@ -203,7 +203,7 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
 static void _clear_golubria_traps()
 {
     vector<coord_def> traps = find_golubria_on_level();
-    for (vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    for (auto it = traps.begin(); it != traps.end(); ++it)
     {
         trap_def *trap = find_trap(*it);
         if (trap && trap->type == TRAP_GOLUBRIA)

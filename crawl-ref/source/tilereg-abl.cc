@@ -248,16 +248,14 @@ void AbilityRegion::update()
             return;
     }
 
-    for (vector<InventoryTile>::iterator it = m_zotdef.begin();
-         it != m_zotdef.end(); it++)
+    for (auto it = m_zotdef.begin(); it != m_zotdef.end(); it++)
     {
         m_items.push_back(*it);
         if (m_items.size() >= max_abilities)
             return;
     }
 
-    for (vector<InventoryTile>::iterator it = m_invoc.begin();
-         it != m_invoc.end(); it++)
+    for (auto it = m_invoc.begin(); it != m_invoc.end(); it++)
     {
         m_items.push_back(*it);
         if (m_items.size() >= max_abilities)

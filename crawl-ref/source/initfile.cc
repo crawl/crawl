@@ -1969,9 +1969,7 @@ int game_options::read_use_animations(const string &field) const
 {
     int animations = 0;
     vector<string> types = split_string(",", field);
-    for (vector<string>::const_iterator it = types.begin();
-         it != types.end();
-         ++it)
+    for (auto it = types.begin(); it != types.end(); ++it)
     {
         if (*it == "beam")
             animations |= UA_BEAM;
@@ -2322,8 +2320,7 @@ static void _handle_list(vector<T> &value_list, string field,
 
     vector<T> new_entries;
     vector<string> parts = split_string(",", field);
-    for (vector<string>::iterator part = parts.begin();
-         part != parts.end(); ++part)
+    for (auto part = parts.begin(); part != parts.end(); ++part)
     {
         if (part->empty())
             continue;
@@ -2388,7 +2385,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     if (plain)                                                                 \
         _opt.clear();                                                          \
     vector<string> parts = split_string(",", field);                           \
-    for (vector<string>::iterator it = parts.begin(); it != parts.end(); it++) \
+    for (auto it = parts.begin(); it != parts.end(); it++) \
     {                                                                          \
         if (minus_equal)                                                       \
         {                                                                      \

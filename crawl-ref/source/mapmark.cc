@@ -502,8 +502,7 @@ void map_wiz_props_marker::write(writer &outf) const
 {
     map_marker::write(outf);
     marshallShort(outf, properties.size());
-    for (map<string, string>::const_iterator i = properties.begin();
-         i != properties.end(); ++i)
+    for (auto i = properties.begin(); i != properties.end(); ++i)
     {
         marshallString(outf, i->first);
         marshallString(outf, i->second);
@@ -978,8 +977,7 @@ map_markers::~map_markers()
 
 void map_markers::init_from(const map_markers &c)
 {
-    for (dgn_marker_map::const_iterator i = c.markers.begin();
-         i != c.markers.end(); ++i)
+    for (auto i = c.markers.begin(); i != c.markers.end(); ++i)
     {
         add(i->second->clone());
     }
@@ -993,16 +991,14 @@ void map_markers::clear_need_activate()
 
 void map_markers::activate_all(bool verbose)
 {
-    for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end();)
+    for (auto i = markers.begin(); i != markers.end();)
     {
         map_marker *marker = i->second;
         ++i;
         marker->activate(verbose);
     }
 
-    for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end();)
+    for (auto i = markers.begin(); i != markers.end();)
     {
         map_marker *marker = i->second;
         ++i;
@@ -1038,7 +1034,7 @@ void map_markers::unlink_marker(const map_marker *marker)
 {
     pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(marker->pos);
-    for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second; ++i)
     {
         if (i->second == marker)
         {
@@ -1066,7 +1062,7 @@ void map_markers::remove_markers_at(const coord_def &c,
 {
     pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(c);
-    for (dgn_marker_map::iterator i = els.first; i != els.second;)
+    for (auto i = els.first; i != els.second;)
     {
         dgn_marker_map::iterator todel = i++;
         if (type == MAT_ANY || todel->second->get_type() == type)
@@ -1082,7 +1078,7 @@ map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 {
     pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
             return i->second;
     return NULL;
@@ -1090,8 +1086,7 @@ map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 
 map_marker *map_markers::find(map_marker_type type)
 {
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (auto i = markers.begin(); i != markers.end(); ++i)
     {
         if (type == MAT_ANY || i->second->get_type() == type)
             return i->second;
@@ -1106,15 +1101,14 @@ void map_markers::move(const coord_def &from, const coord_def &to)
         els = markers.equal_range(from);
 
     list<map_marker*> tmarkers;
-    for (dgn_marker_map::iterator i = els.first; i != els.second;)
+    for (auto i = els.first; i != els.second;)
     {
         dgn_marker_map::iterator curr = i++;
         tmarkers.push_back(curr->second);
         markers.erase(curr);
     }
 
-    for (list<map_marker*>::iterator i = tmarkers.begin();
-         i != tmarkers.end(); ++i)
+    for (auto i = tmarkers.begin(); i != tmarkers.end(); ++i)
     {
         (*i)->pos = to;
         add(*i);
@@ -1132,8 +1126,7 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
 vector<map_marker*> map_markers::get_all(map_marker_type mat)
 {
     vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (auto i = markers.begin(); i != markers.end(); ++i)
     {
         if (mat == MAT_ANY || i->second->get_type() == mat)
             rmarkers.push_back(i->second);
@@ -1145,8 +1138,7 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 {
     vector<map_marker*> rmarkers;
 
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (auto i = markers.begin(); i != markers.end(); ++i)
     {
         map_marker*  marker = i->second;
         const string prop   = marker->property(key);
@@ -1163,7 +1155,7 @@ vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
     pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
     vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return rmarkers;
 }
@@ -1173,7 +1165,7 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 {
     pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second; ++i)
     {
         const string prop = i->second->property(key);
         if (!prop.empty())
@@ -1184,7 +1176,7 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 
 void map_markers::clear()
 {
-    for (dgn_marker_map::iterator i = markers.begin(); i != markers.end(); ++i)
+    for (auto i = markers.begin(); i != markers.end(); ++i)
         delete i->second;
     markers.clear();
     check_empty();
@@ -1198,8 +1190,7 @@ void map_markers::write(writer &outf) const
     vector<unsigned char> buf;
 
     marshallShort(outf, markers.size());
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (auto i = markers.begin(); i != markers.end(); ++i)
     {
         buf.clear();
         writer tmp_outf(&buf);
@@ -1207,8 +1198,7 @@ void map_markers::write(writer &outf) const
 
         // Write the marker data, prefixed by a size
         marshallInt(outf, buf.size());
-        for (vector<unsigned char>::const_iterator bi = buf.begin();
-              bi != buf.end(); ++bi)
+        for (auto bi = buf.begin(); bi != buf.end(); ++bi)
         {
             outf.writeByte(*bi);
         }

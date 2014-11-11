@@ -1359,8 +1359,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     show_update_emphasis();
 
     // Shouldn't happen, but this is too unimportant to assert.
-    for (vector<final_effect *>::iterator i = env.final_effects.begin();
-         i != env.final_effects.end(); ++i)
+    for (auto i = env.final_effects.begin(); i != env.final_effects.end(); ++i)
     {
         if (*i)
             delete *i;
@@ -1716,8 +1715,7 @@ static vector<string> _list_bones()
 
     vector<string> filenames = get_dir_files(bonefile_dir);
     vector<string> bonefiles;
-    for (std::vector<string>::iterator it = filenames.begin();
-         it != filenames.end(); ++it)
+    for (auto it = filenames.begin(); it != filenames.end(); ++it)
     {
         const string &filename = *it;
 

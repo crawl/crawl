@@ -551,8 +551,7 @@ void debug_mons_scan()
         }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
-    for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
-         mc != env.mid_cache.end(); ++mc)
+    for (auto mc = env.mid_cache.begin(); mc != env.mid_cache.end(); ++mc)
     {
         unsigned short idx = mc->second;
         ASSERT(!invalid_monster_index(idx));

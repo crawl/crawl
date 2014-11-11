@@ -795,8 +795,7 @@ static coord_def _dgn_find_nearest_square(
     {
         // Iterate each layer of BFS in random order to avoid bias.
         shuffle_array(points[iter]);
-        for (vector<coord_def>::iterator i = points[iter].begin();
-             i != points[iter].end(); ++i)
+        for (auto i = points[iter].begin(); i != points[iter].end(); ++i)
         {
             const coord_def &p = *i;
 

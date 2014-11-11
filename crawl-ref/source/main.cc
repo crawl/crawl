@@ -2315,7 +2315,7 @@ static void _update_mold()
 static void _update_golubria_traps()
 {
     vector<coord_def> traps = find_golubria_on_level();
-    for (vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    for (auto it = traps.begin(); it != traps.end(); ++it)
     {
         trap_def *trap = find_trap(*it);
         if (trap && trap->type == TRAP_GOLUBRIA)

@@ -742,7 +742,7 @@ string actor::describe_props() const
     if (props.size() == 0)
         return "";
 
-    for (CrawlHashTable::const_iterator i = props.begin(); i != props.end(); ++i)
+    for (auto i = props.begin(); i != props.end(); ++i)
     {
         if (i != props.begin())
             oss <<  ", ";

@@ -32,7 +32,7 @@
 
 /*static*/ void final_effect::schedule(final_effect *eff)
 {
-    for (vector<final_effect *>::iterator fi = env.final_effects.begin();
+    for (auto fi = env.final_effects.begin();
          fi != env.final_effects.end(); ++fi)
     {
         if ((*fi)->mergeable(*eff))

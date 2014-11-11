@@ -292,8 +292,7 @@ void Kills::merge(const Kills &k)
     ghosts.insert(ghosts.end(), k.ghosts.begin(), k.ghosts.end());
 
     // Regular kills are messier to merge.
-    for (kill_map::const_iterator i = k.kills.begin();
-            i != k.kills.end(); ++i)
+    for (auto i = k.kills.begin(); i != k.kills.end(); ++i)
     {
         const kill_monster_desc &kmd = i->first;
         kill_def &ki = kills[kmd];
@@ -350,8 +349,7 @@ void Kills::save(writer& outf) const
     // How many kill records do we have?
     marshallInt(outf, kills.size());
 
-    for (kill_map::const_iterator iter = kills.begin();
-          iter != kills.end(); ++iter)
+    for (auto iter = kills.begin(); iter != kills.end(); ++iter)
     {
         iter->first.save(outf);
         iter->second.save(outf);
@@ -359,8 +357,7 @@ void Kills::save(writer& outf) const
 
     // How many ghosts do we have?
     marshallShort(outf, ghosts.size());
-    for (ghost_vec::const_iterator iter = ghosts.begin();
-         iter != ghosts.end(); ++iter)
+    for (auto iter = ghosts.begin(); iter != ghosts.end(); ++iter)
     {
         iter->save(outf);
     }
@@ -583,8 +580,7 @@ string kill_def::append_places(const kill_monster_desc &md,
     {
         string augmented = name;
         augmented += " (";
-        for (vector<level_id>::const_iterator iter = places.begin();
-             iter != places.end(); ++iter)
+        for (auto iter = places.begin(); iter != places.end(); ++iter)
         {
             if (iter != places.begin())
                 augmented += " ";
@@ -602,8 +598,7 @@ void kill_def::save(writer& outf) const
     marshallShort(outf, exp);
 
     marshallShort(outf, places.size());
-    for (vector<level_id>::const_iterator iter = places.begin();
-         iter != places.end(); ++iter)
+    for (auto iter = places.begin(); iter != places.end(); ++iter)
     {
         iter->save(outf);
     }

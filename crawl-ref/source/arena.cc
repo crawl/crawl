@@ -133,8 +133,7 @@ namespace arena
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
-        for (monster_spells::iterator it = spells.begin();
-             it != spells.end(); it++)
+        for (auto it = spells.begin(); it != spells.end(); it++)
         {
             spell_type sp = it->spell;
             if (no_summons && spell_typematch(sp, SPTYP_SUMMONING)

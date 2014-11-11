@@ -824,8 +824,7 @@ void ghost_demon::find_transiting_ghosts(
     const m_transit_list *mt = get_transit_list(level_id::current());
     if (mt)
     {
-        for (m_transit_list::const_iterator i = mt->begin();
-             i != mt->end() && n > 0; ++i)
+        for (auto i = mt->begin(); i != mt->end() && n > 0; ++i)
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {

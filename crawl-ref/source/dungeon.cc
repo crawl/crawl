@@ -471,8 +471,7 @@ static void _dgn_postprocess_level()
 
 void dgn_clear_vault_placements(vault_placement_refv &vps)
 {
-    for (vault_placement_refv::const_iterator i = vps.begin();
-         i != vps.end(); ++i)
+    for (auto i = vps.begin(); i != vps.end(); ++i)
     {
         delete *i;
     }
@@ -759,8 +758,7 @@ static bool _dgn_fill_zone(
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (list<coord_def>::const_iterator i = points[cur].begin();
-             i != points[cur].end(); ++i)
+        for (auto i = points[cur].begin(); i != points[cur].end(); ++i)
         {
             const coord_def &c(*i);
 
@@ -950,8 +948,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                         break;
                 }
                 if (!veto)
-                    for (vector<coord_def>::iterator it = coords.begin();
-                         it != coords.end(); it++)
+                    for (auto it = coords.begin(); it != coords.end(); it++)
                     {
                         _set_grd(*it, fill);
                     }
@@ -1044,7 +1041,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     // Find tags matching properties.
     vector<string> tags = place.map.get_tags();
 
-    for (vector<string>::const_iterator i = tags.begin(); i != tags.end(); ++i)
+    for (auto i = tags.begin(); i != tags.end(); ++i)
     {
         const feature_property_type prop = str_to_fprop(*i);
         if (prop == FPROP_NONE)
@@ -1499,8 +1496,7 @@ static void _fixup_branch_stairs()
                 coord_def coord = *(stairs.begin());
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
-                for (vector<coord_def>::iterator it = stairs.begin() + 1;
-                     it != stairs.end(); it++)
+                for (auto it = stairs.begin() + 1; it != stairs.end(); it++)
                 {
                     _set_grd(*it, DNGN_FLOOR);
                 }
@@ -2157,9 +2153,7 @@ static void _ruin_level(Iterator iter,
                 to_replace.push_back(replacement);
         }
 
-        for (coord_feats::const_iterator it = to_replace.begin();
-            it != to_replace.end();
-            ++it)
+        for (auto it = to_replace.begin(); it != to_replace.end(); ++it)
         {
             const coord_def &p(it->pos);
             replaced.push_back(p);
@@ -2215,9 +2209,7 @@ static void _ruin_level(Iterator iter,
         }
     }
 
-    for (vector<coord_def>::const_iterator it = replaced.begin();
-         it != replaced.end();
-         ++it)
+    for (auto it = replaced.begin(); it != replaced.end(); ++it)
     {
         const coord_def &p(*it);
 
@@ -2902,7 +2894,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
                 map_component * absolute_min = &intermediate_components[absolute_min_label];
 
                 absolute_min->add_coord(*pos);
-                for (set<int>::iterator i = neighbor_labels.begin();
+                for (auto i = neighbor_labels.begin();
                      i != neighbor_labels.end();i++)
                 {
                     map_component * current = &intermediate_components[*i];
@@ -2922,7 +2914,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
 
     int reindexed_label = 1;
     // Reindex root labels, and move them to output
-    for (map<int, map_component>::iterator i = intermediate_components.begin();
+    for (auto i = intermediate_components.begin();
          i != intermediate_components.end(); ++i)
     {
         if (i->second.min_equivalent == NULL)
@@ -3247,7 +3239,7 @@ static void _place_gozag_shop(dungeon_feature_type stair)
         return;
 
     bool encompass = false;
-    for (string_set::const_iterator i = env.level_layout_types.begin();
+    for (auto i = env.level_layout_types.begin();
          i != env.level_layout_types.end(); ++i)
     {
         if (*i == "encompass")
@@ -5385,8 +5377,7 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
         }
         cur.insert(cur.begin() + random2(cur.size()), *ai);
     }
-    for (vector<coord_def>::const_iterator ci = cur.begin();
-         ci != cur.end(); ci++)
+    for (auto ci = cur.begin(); ci != cur.end(); ci++)
     {
         coords.insert(*ci);
 
@@ -5452,8 +5443,7 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     const vector<coord_def> path =
         dgn_join_the_dots_pathfind(from, to, mapmask);
 
-    for (vector<coord_def>::const_iterator i = path.begin(); i != path.end();
-         ++i)
+    for (auto i = path.begin(); i != path.end(); ++i)
     {
         if (!map_masked(*i, mapmask) && overwriteable(grd(*i)))
         {
@@ -6018,8 +6008,7 @@ static bool _connect_spotty(const coord_def& from,
 
     if (!spotty_path.empty())
     {
-        for (set<coord_def>::const_iterator it = spotty_path.begin();
-             it != spotty_path.end(); ++it)
+        for (auto it = spotty_path.begin(); it != spotty_path.end(); ++it)
         {
             grd(*it) =
                 (player_in_branch(BRANCH_SWAMP) && one_chance_in(3))
@@ -6110,9 +6099,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
 
                 // make sure the iterator stays valid
                 vector<coord_def> more_to_place;
-                for (vector<coord_def>::const_iterator it = to_place.begin();
-                     it != to_place.end();
-                     ++it)
+                for (auto it = to_place.begin(); it != to_place.end(); ++it)
                 {
                     if (*rad == *it)
                         continue;
@@ -6128,9 +6115,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             }
         }
 
-        for (vector<coord_def>::const_iterator it = to_place.begin();
-             it != to_place.end();
-             ++it)
+        for (auto it = to_place.begin(); it != to_place.end(); ++it)
         {
             if (*it == *ri)
                 continue;
@@ -6470,8 +6455,7 @@ bool dgn_region::overlaps(const dgn_region &other) const
 
 bool dgn_region::overlaps_any(const dgn_region_list &regions) const
 {
-    for (dgn_region_list::const_iterator i = regions.begin();
-         i != regions.end(); ++i)
+    for (auto i = regions.begin(); i != regions.end(); ++i)
     {
         if (overlaps(*i))
             return true;
@@ -6978,8 +6962,7 @@ int vault_placement::connect(bool spotty) const
 {
     int exits_placed = 0;
 
-    for (vector<coord_def>::const_iterator i = exits.begin();
-         i != exits.end(); ++i)
+    for (auto i = exits.begin(); i != exits.end(); ++i)
     {
         if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid)
             || player_in_branch(BRANCH_SHOALS)

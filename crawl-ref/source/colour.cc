@@ -114,9 +114,7 @@ static int _randomized_element_colour(int rand, const coord_def&,
                                       random_colour_map rand_vals)
 {
     int accum = 0;
-    for (random_colour_map::const_iterator it = rand_vals.begin();
-         it != rand_vals.end();
-         ++it)
+    for (auto it = rand_vals.begin(); it != rand_vals.end(); ++it)
     {
         if ((accum += it->first) > rand)
             return it->second;

@@ -136,7 +136,7 @@ void set_terrain_visible(const coord_def c)
 
 void clear_terrain_visibility()
 {
-    for (set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
+    for (auto i = env.visible.begin(); i != env.visible.end(); ++i)
         env.map_knowledge(*i).flags &= ~MAP_VISIBLE_FLAG;
     env.visible.clear();
 }

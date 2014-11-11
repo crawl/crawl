@@ -188,8 +188,7 @@ void package::load_traces()
 
     free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
 
-    for (directory_t::iterator ch = directory.begin();
-        ch != directory.end(); ++ch)
+    for (auto ch = directory.begin(); ch != directory.end(); ++ch)
     {
         trace_chunk(ch->second);
     }
@@ -389,8 +388,7 @@ plen_t package::write_directory()
     delete_chunk("");
 
     stringstream dir;
-    for (directory_t::iterator i = directory.begin();
-         i != directory.end(); ++i)
+    for (auto i = directory.begin(); i != directory.end(); ++i)
     {
         uint8_t name_len = i->first.length();
         dir.write((const char*)&name_len, sizeof(name_len));
@@ -492,14 +490,12 @@ void package::fsck()
            (unsigned int)directory.size(), (unsigned int)block_map.size(),
            (unsigned int)free_blocks.size(), file_len);
 
-    for (fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
-        ++bl)
+    for (auto bl = free_blocks.begin(); bl != free_blocks.end(); ++bl)
     {
         printf("<at %u size %u>\n", bl->first, bl->second);
     }
 #endif
-    for (bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
-        ++bl)
+    for (auto bl = block_map.begin(); bl != block_map.end(); ++bl)
     {
 #ifdef FSCK_VERBOSE
         printf("[at %u size %u+header]\n", bl->first, bl->second.first);
@@ -574,8 +570,7 @@ vector<string> package::list_chunks()
 {
     vector<string> list;
     list.reserve(directory.size());
-    for (directory_t::iterator i = directory.begin();
-         i != directory.end(); ++i)
+    for (auto i = directory.begin(); i != directory.end(); ++i)
     {
         if (!i->first.empty())
             list.push_back(i->first);
@@ -641,7 +636,7 @@ plen_t package::get_slack()
     load_traces();
 
     plen_t slack = 0;
-    for (fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
+    for (auto bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
         slack += bl->second;
     return slack;
 }

@@ -1944,15 +1944,13 @@ void dump_prop_accesses()
 
     vector<string> props;
 
-    for (map<string, int>::const_iterator i = accesses.begin();
-         i != accesses.end(); ++i)
+    for (auto i = accesses.begin(); i != accesses.end(); ++i)
     {
         props.push_back(i->first);
     }
 
     sort(props.begin(), props.end(), _cmp);
-    for (vector<string>::const_iterator i = props.begin();
-         i != props.end(); ++i)
+    for (auto i = props.begin(); i != props.end(); ++i)
     {
         fprintf(f, "%10d %s\n", accesses[*i], i->c_str());
     }

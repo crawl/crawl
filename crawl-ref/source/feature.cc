@@ -68,8 +68,7 @@ static void _create_colours(feature_def &f)
  */
 static void _apply_feature_overrides()
 {
-    for (map<dungeon_feature_type, feature_def>::const_iterator fo
-         = Options.feature_colour_overrides.begin();
+    for (auto fo = Options.feature_colour_overrides.begin();
          fo != Options.feature_colour_overrides.end();
          ++fo)
     {
