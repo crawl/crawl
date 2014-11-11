@@ -5727,6 +5727,19 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
     return true;
 }
 
+/**
+ * Create an item and place it in a shop.
+ *
+ * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
+ *
+ * @param j                 The index of the item being created in the shop's
+ *                          inventory.
+ * @param shop_type_        The type of shop. (E.g. SHOP_FOOD.)
+ * @param stocked[in,out]   An array mapping book types to the # in the shop.
+ * @param representative    Sorry, no idea.
+ * @param spec              The specification of the shop.
+ * @param shop_index        The index of the shop in env.shop.
+ */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS], bool representative,
                              shop_spec &spec, int shop_index)
@@ -5785,7 +5798,8 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             break;
 
         // Reset object and try again.
-        mitm[item_index].clear();
+        if (item_index != NON_ITEM)
+            mitm[item_index].clear();
     }
 
     ASSERT(item_index != NON_ITEM);
