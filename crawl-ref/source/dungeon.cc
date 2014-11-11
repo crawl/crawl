@@ -5807,8 +5807,10 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         else
         {
             // make an item randomly
-            item_index = items(true, basetype, subtype,
-                               one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
+            // gozag shop items are better
+            const bool good_item = spec.gozag || one_chance_in(4);
+            const int level = good_item ? MAKE_GOOD_ITEM : item_level;
+            item_index = items(true, basetype, subtype, level);
         }
 
         // Try for a better selection for bookshops.
