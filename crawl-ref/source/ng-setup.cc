@@ -1019,12 +1019,7 @@ static void _give_starting_food()
 
     item_def item;
     item.quantity = 1;
-    if (you.species == SP_SPRIGGAN)
-    {
-        item.base_type = OBJ_POTIONS;
-        item.sub_type  = POT_PORRIDGE;
-    }
-    else if (you.species == SP_VAMPIRE)
+    if (you.species == SP_VAMPIRE)
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type  = POT_BLOOD;
@@ -1165,8 +1160,8 @@ static void _give_basic_knowledge(job_type which_job)
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
 #if TAG_MAJOR_VERSION == 34
     you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = ID_KNOWN_TYPE;
-#endif
     you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
+#endif
 
     // Won't appear unidentified anywhere.
     you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = ID_KNOWN_TYPE;

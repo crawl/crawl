@@ -332,6 +332,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case POT_PORRIDGE:
         if (you.species == SP_VAMPIRE
             || player_mutation_level(MUT_CARNIVOROUS) == 3)
@@ -344,6 +345,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             lessen_hunger(6000, true);
         }
         break;
+#endif
 
     case POT_DEGENERATION:
         if (potion)

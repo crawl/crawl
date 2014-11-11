@@ -174,7 +174,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / goliath beetle / worker ant
 MONS:   yellow wasp w:7 / boring beetle / soldier ant w:13
 ITEM:   beef jerky q:3 no_mimic / fruit q:3 no_mimic
-ITEM:   potion of porridge no_mimic, royal jelly q:6 no_mimic
+ITEM:   royal jelly q:3 no_mimic, royal jelly q:6 no_mimic
 MAP
 .xxxxxxx
 @xx.x.xcccc

@@ -1616,7 +1616,7 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              spells:shroud_of_golubria|passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              lantern of shadows / potion of haste w:5 / \
-             scroll of fog / potion of porridge / \
+             scroll of fog / royal jelly q:3 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3

@@ -815,8 +815,9 @@ TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_gozag uniq_altar_gozag
 WEIGHT: 5
 KFEAT:  _ = altar_gozag
+# sort of ruined this joke...
 KFEAT:  O = general shop name:Gozag type:Nutrition suffix:Petition greed:100 \
-        use_all ; potion of porridge | potion of blood q:4
+        use_all ; royal jelly q:3
 TILE:   G = dngn_golden_statue
 FTILE:  _-GO = floor_limestone
 RTILE:  x = wall_sandstone

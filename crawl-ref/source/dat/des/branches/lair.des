@@ -950,23 +950,6 @@ MAP
        """
 ENDMAP
 
-##############################################################################
-# Goldilocks: three bears
-#
-NAME:   minmay_lair_goldilocks
-WEIGHT: 5
-DEPTH:  Lair
-MONS:   black bear, polar bear
-ITEM:   potion of porridge
-MAP
-.......
-.xxxxx.
-.xdddx.
-.x211x.
-.xx+xx.
-.......
-ENDMAP
-
 ###############################################################################
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type

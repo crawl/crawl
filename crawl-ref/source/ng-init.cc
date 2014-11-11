@@ -371,13 +371,13 @@ multi_overflow:
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static int _get_random_porridge_desc()
 {
     return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
                                                : PDC_WHITE);
 }
 
-#if TAG_MAJOR_VERSION == 34
 static int _get_random_coagulated_blood_desc()
 {
     potion_description_qualifier_type qualifier = PDQ_NONE;
@@ -421,13 +421,13 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]
         = _get_random_blood_desc();
 #if TAG_MAJOR_VERSION == 34
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
         = _get_random_coagulated_blood_desc();
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = _get_random_porridge_desc();
 #endif
 
     // The order here must match that of IDESC in describe.h

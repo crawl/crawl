@@ -301,12 +301,8 @@ static int l_item_do_subtype(lua_State *ls)
 #if TAG_MAJOR_VERSION == 34
             else if (item->sub_type == POT_BLOOD_COAGULATED)
                 s = "coagulated blood";
-#endif
             else if (item->sub_type == POT_PORRIDGE)
                 s = "porridge";
-            else if (item->sub_type == POT_BERSERK_RAGE)
-                s = "berserk";
-#if TAG_MAJOR_VERSION == 34
             else if (item->sub_type == POT_GAIN_STRENGTH
                         || item->sub_type == POT_GAIN_DEXTERITY
                         || item->sub_type == POT_GAIN_INTELLIGENCE)
@@ -314,6 +310,8 @@ static int l_item_do_subtype(lua_State *ls)
                 s = "gain ability";
             }
 #endif
+            else if (item->sub_type == POT_BERSERK_RAGE)
+                s = "berserk";
             else if (item->sub_type == POT_CURE_MUTATION)
                 s = "cure mutation";
         }
