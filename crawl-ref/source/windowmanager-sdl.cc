@@ -480,6 +480,9 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
 #ifdef __ANDROID__
+    // This should be harmless on non-Android. IDK.
+    SDL_StartTextInput();
+
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
 #endif
     return true;
@@ -681,6 +684,11 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
 
         break;
+    case SDL_TEXTINPUT:
+        event->type = WME_KEYPRESS;
+        // XXX: handle multiple keys?
+        event->key.keysym.sym = sdlevent.text.text[0];
+        break;
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);
@@ -703,12 +711,14 @@ int SDLWrapper::wait_event(wm_event *event)
 
     // I leave these as the same, because the original tilesdl does, too
     case SDL_USEREVENT:
-    default:
         event->type = WME_CUSTOMEVENT;
         event->custom.code = sdlevent.user.code;
         event->custom.data1 = sdlevent.user.data1;
         event->custom.data2 = sdlevent.user.data2;
         break;
+
+    default:
+        return 0;
     }
 
     return 1;
@@ -760,6 +770,10 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     case WME_KEYUP:
         event = SDL_KEYUP;
+        break;
+
+    case WME_KEYPRESS:
+        event = SDL_TEXTINPUT;
         break;
 
     case WME_MOUSEMOTION:
