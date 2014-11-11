@@ -15,7 +15,7 @@ import urlparse
 
 from conf import config
 import checkoutput, userdb
-from util import *
+import util
 
 sockets = set()
 current_id = 0
@@ -83,10 +83,10 @@ def start_reading_milestones():
     files = config.milestone_files
 
     for f in files:
-        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
+        milestone_file_tailers.append(util.FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
-    data = parse_where_data(line)
+    data = util.parse_where_data(line)
     if "name" not in data: return
     game = find_running_game(data.get("name"), data.get("start"))
     if game: game.log_milestone(data)
@@ -94,7 +94,7 @@ def handle_new_milestone(line):
 def find_player_savegames(username):
     used_morgues = set()
     for game in config.get("games"):
-        morgue_path = dgl_format_str(game["morgue_path"],
+        morgue_path = util.dgl_format_str(game["morgue_path"],
                                      username, game)
         if morgue_path in used_morgues:
             continue
@@ -109,7 +109,7 @@ def find_player_savegames(username):
         if data.strip() == "": continue
 
         try:
-            info = parse_where_data(data)
+            info = util.parse_where_data(data)
         except:
             logging.warning("Exception while trying to parse where file!",
                             exc_info=True)
@@ -465,7 +465,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def rcfile_path(self, game_id):
         if game_id not in config.games: return None
         if not self.username: return None
-        path = dgl_format_str(config.games[game_id]["rcfile_path"],
+        path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                               self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
 

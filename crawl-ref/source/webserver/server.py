@@ -15,7 +15,7 @@ import logging
 import logging.handlers
 
 from conf import config
-from util import *
+import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
 import process_handler
@@ -174,7 +174,7 @@ def purge_login_tokens_timeout():
 def bind_server():
     settings = {
         "static_path": config.static_path,
-        "template_loader": DynamicTemplateLoader.get(config.template_path)
+        "template_loader": util.DynamicTemplateLoader.get(config.template_path)
         }
 
     if config.get("no_cache"):
