@@ -4053,7 +4053,12 @@ bool gozag_potion_petition()
  */
 static int _gozag_max_shops()
 {
-    return 3;
+    const int max_non_food_shops = 3;
+
+    // add a food shop if you can eat (non-mu/dj)
+    if (!you_foodless_normally())
+        return max_non_food_shops + 1;
+    return max_non_food_shops;
 }
 
 /**
@@ -4218,9 +4223,14 @@ static void _setup_gozag_shop(int index)
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
     shop_type type = NUM_SHOPS;
-    do
-        type = static_cast<shop_type>(random2(NUM_SHOPS));
-    while (_duplicate_shop_type(index, type));
+    if (index == 0 && !you_foodless_normally())
+        type = SHOP_FOOD;
+    else
+    {
+        do
+            type = static_cast<shop_type>(random2(NUM_SHOPS));
+        while (_duplicate_shop_type(index, type));
+    }
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
     you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()
