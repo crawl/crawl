@@ -3279,37 +3279,40 @@ static void _place_gozag_shop(dungeon_feature_type stair)
 
     // Player may have abandoned Gozag before arriving here; only generate
     // the shop if they're still a follower.
-    if (you_worship(GOD_GOZAG))
+    if (!you_worship(GOD_GOZAG))
     {
-        string spec = you.props[key].get_string();
-        keyed_mapspec kmspec;
-        kmspec.set_feat(you.props[key].get_string(), false);
-        if (!kmspec.get_feat().shop.get())
-            die("Invalid shop spec?");
-        place_spec_shop(*shop_place, kmspec.get_feat().shop.get());
-
-        shop_struct *shop = get_shop(*shop_place);
-        ASSERT(shop);
-
-        env.map_knowledge(*shop_place).set_feature(grd(*shop_place));
-        env.map_knowledge(*shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
-        env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
-        seen_notable_thing(grd(*shop_place), *shop_place);
-
-        string announce = make_stringf(
-            "%s invites you to visit their %s%s%s.",
-            shop->shop_name.c_str(),
-            shop_type_name(shop->type).c_str(),
-            !shop->shop_suffix_name.empty() ? " " : "",
-            shop->shop_suffix_name.c_str());
-
-        you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
-
-        env.markers.add(new map_feature_marker(*shop_place,
-                                               DNGN_ABANDONED_SHOP));
-    }
-    else
         grd(*shop_place) = DNGN_ABANDONED_SHOP;
+        return;
+    }
+
+    string spec = you.props[key].get_string();
+    keyed_mapspec kmspec;
+    kmspec.set_feat(you.props[key].get_string(), false);
+    if (!kmspec.get_feat().shop.get())
+        die("Invalid shop spec?");
+    shop_spec *spec_struct = kmspec.get_feat().shop.get();
+    ASSERT(spec_struct);
+    place_spec_shop(*shop_place, *spec_struct);
+
+    shop_struct *shop = get_shop(*shop_place);
+    ASSERT(shop);
+
+    env.map_knowledge(*shop_place).set_feature(grd(*shop_place));
+    env.map_knowledge(*shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
+    env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
+    seen_notable_thing(grd(*shop_place), *shop_place);
+
+    string announce = make_stringf(
+                                   "%s invites you to visit their %s%s%s.",
+                                   shop->shop_name.c_str(),
+                                   shop_type_name(shop->type).c_str(),
+                                   !shop->shop_suffix_name.empty() ? " " : "",
+                                   shop->shop_suffix_name.c_str());
+
+    you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
+
+    env.markers.add(new map_feature_marker(*shop_place,
+                                           DNGN_ABANDONED_SHOP));
 }
 
 // Shafts can be generated visible.
@@ -5130,7 +5133,11 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
     else if (f.shop.get())
-        place_spec_shop(where, f.shop.get());
+    {
+        shop_spec *spec = f.shop.get();
+        ASSERT(spec);
+        place_spec_shop(where, *spec);
+    }
     else
         grd(where) = DNGN_FLOOR;
 
@@ -5574,7 +5581,7 @@ void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative)
 {
     shop_spec spec(static_cast<shop_type>(force_s_type));
-    place_spec_shop(where, &spec, representative);
+    place_spec_shop(where, spec, representative);
 }
 
 int greed_for_shop_type(shop_type shop, int level_number)
@@ -5671,13 +5678,19 @@ static int _shop_num_items(shop_type type, bool representative,
     return 5 + random2avg(12, 3);
 }
 
-void place_spec_shop(const coord_def& where,
-                     shop_spec* spec, bool representative)
+/**
+ * Attempt to place a shop in a given location.
+ *
+ * @param where             The location to place the shop.
+ * @param spec              The details of the shop.
+ *                          Would be const if not for list method nonsense.
+ * @param representative    No idea, sorry.
+ */
+void place_spec_shop(const coord_def& where, shop_spec &spec,
+                     bool representative)
 {
-    ASSERT(spec); // TODO: change this to a const reference
-
     const int level_number = env.absdepth0;
-    const int force_s_type = static_cast<int>(spec->sh_type);
+    const int force_s_type = static_cast<int>(spec.sh_type);
 
     const bool note_status = notes_are_active();
     activate_notes(false);
@@ -5689,9 +5702,9 @@ void place_spec_shop(const coord_def& where,
     for (int j = 0; j < 3; j++)
         env.shop[shop_index].keeper_name[j] = 1 + random2(200);
 
-    env.shop[shop_index].shop_name = spec->name;
-    env.shop[shop_index].shop_type_name = spec->type;
-    env.shop[shop_index].shop_suffix_name = spec->suffix;
+    env.shop[shop_index].shop_name = spec.name;
+    env.shop[shop_index].shop_type_name = spec.type;
+    env.shop[shop_index].shop_suffix_name = spec.suffix;
     env.shop[shop_index].level = level_number * 2;
 
     const shop_type shop_type_ = static_cast<shop_type>(
@@ -5702,10 +5715,9 @@ void place_spec_shop(const coord_def& where,
     env.shop[shop_index].type = shop_type_;
 
     env.shop[shop_index].greed = _shop_greed(shop_type_, level_number,
-                                             spec->greed);
+                                             spec.greed);
 
-    const int num_items = _shop_num_items(shop_type_, representative,
-                                          *spec);
+    const int num_items = _shop_num_items(shop_type_, representative, spec);
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
@@ -5747,13 +5759,17 @@ void place_spec_shop(const coord_def& where,
                 : item_in_shop(shop_type_);
             const int subtype = representative? j : OBJ_RANDOM;
 
-            if (!spec->items.empty() && !spec->use_all)
+            if (!spec.items.empty() && !spec.use_all)
             {
-                orb = dgn_place_item(spec->items.random_item_weighted(),
+                orb = dgn_place_item(spec.items.random_item_weighted(),
                         stock_loc, item_level);
             }
-            else if (!spec->items.empty() && spec->use_all && j < (int)spec->items.size())
-                orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
+            else if (!spec.items.empty() && spec.use_all
+                     && j < (int)spec.items.size())
+            {
+                orb = dgn_place_item(spec.items.get_item(j), stock_loc,
+                                     item_level);
+            }
             else
             {
                 orb = items(true, basetype, subtype,
@@ -5775,7 +5791,7 @@ void place_spec_shop(const coord_def& where,
                 && (shop_type_ != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
                         && mitm[orb].base_type != OBJ_FOOD)
-                    || !spec->items.empty()))
+                    || !spec.items.empty()))
             {
                 break;
             }
