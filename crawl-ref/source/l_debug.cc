@@ -46,6 +46,18 @@ LUAFN(debug_goto_place)
         const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
         const int bind_entrance =
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
+
+        if (is_connected_branch(id.branch))
+            you.level_stack.clear();
+        else
+        {
+            for (int i = you.level_stack.size() - 1; i >= 0; i--)
+                if (you.level_stack[i].id == id)
+                    you.level_stack.resize(i);
+            if (!player_in_branch(id.branch))
+                you.level_stack.push_back(level_pos::current());
+        }
+
         you.goto_place(id);
         if (bind_entrance != -1)
             brentry[you.where_are_you].depth = bind_entrance;
