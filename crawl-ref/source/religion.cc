@@ -3615,7 +3615,7 @@ void join_religion(god_type which_god, bool immediate)
         else
             simple_god_message(" waives the service fee.");
 
-        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
+        for (size_t i = 0; i < abilities.size(); ++i)
         {
             if (you.gold >= get_gold_cost(abilities[i])
                 && _abil_chg_message(god_gain_power_messages[you.religion][i],

@@ -8042,7 +8042,7 @@ void player::set_gold(int amount)
         if (you_worship(GOD_GOZAG))
         {
             vector<ability_type> abilities = get_god_abilities(true, true);
-            for (int i = 0; i < MAX_GOD_ABILITIES; i++)
+            for (size_t i = 0; i < abilities.size(); i++)
             {
                 const int cost = get_gold_cost(abilities[i]);
                 if (gold >= cost && old_gold < cost)
