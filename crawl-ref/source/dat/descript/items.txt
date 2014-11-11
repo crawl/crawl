@@ -839,9 +839,7 @@ A potion which can send one into an incoherent rage.
 %%%%
 potion of blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat.
+A potion containing the essence of life. Vampires find it... vital.
 %%%%
 potion of brilliance
 
@@ -852,11 +850,12 @@ potion of cancellation
 
 A potion which ends most magical effects, good or bad, affecting you.
 %%%%
+# if TAG_MAJOR_VERSION == 34
 potion of coagulated blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat. The blood within won't be palatable for much longer.
+A potion containing the essence of life. Vampires find it... vital. The blood
+within won't be palatable for much longer.
+# endif
 %%%%
 potion of confusion
 

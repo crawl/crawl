@@ -3426,7 +3426,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
 #endif
-            return player_mutation_level(MUT_HERBIVOROUS) == 3;
+            return you.species != SP_VAMPIRE;
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_POISON:
