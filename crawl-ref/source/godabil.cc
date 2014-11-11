@@ -3869,17 +3869,6 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
 
-static void _gozag_add_bad_potion(CrawlVector &vec)
-{
-    const potion_type what = random_choose_weighted(20, POT_CONFUSION,
-                                                    10, POT_DECAY,
-                                                    10, POT_LIGNIFY,
-                                                     5, POT_DEGENERATION,
-                                                     2, POT_POISON,
-                                                     0);
-    vec.push_back(what);
-}
-
 static int _gozag_faith_adjusted_price(int price)
 {
     return price - (you.faith() * price)/3;
@@ -3935,11 +3924,6 @@ bool gozag_potion_petition()
                 ADD_POTIONS(*pots[i], _gozag_potion_list);
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
-                if (coinflip())
-                {
-                    _gozag_add_bad_potion(*pots[i]);
-                    multiplier -= 5;
-                }
 
                 for (int j = 0; j < pots[i]->size(); j++)
                 {
