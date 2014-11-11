@@ -1169,6 +1169,24 @@ static const struct { const pop_entry *pop; int count; } population[] =
 
 // Lists for picking zombies from.
 
+static const pop_entry pop_d_zombie[] =
+{ // Hand-picked monsters which make speed 10+ zombies
+  {  4, 10,  825, SEMI, MONS_HOUND },
+  {  4, 10,  925, FLAT, MONS_WORKER_ANT },
+  {  4, 10,  190, PEAK, MONS_WATER_MOCCASIN },
+  {  4, 10,  825, SEMI, MONS_CENTAUR },
+  {  5, 11, 1000, FLAT, MONS_GIANT_FROG },
+  {  7, 13,  190, PEAK, MONS_YELLOW_WASP },
+  {  7, 13,  500, SEMI, MONS_KILLER_BEE },
+  {  8, 15,  335, SEMI, MONS_WYVERN },
+  { 10, 17,  220, PEAK, MONS_TRAPDOOR_SPIDER },
+  { 15, 25,  220, PEAK, MONS_WOLF_SPIDER },
+  { 15, 25,  220, PEAK, MONS_REDBACK },
+  { 17, 25,  220, PEAK, MONS_HARPY },
+  { 17, 25,  220, PEAK, MONS_RED_WASP },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_generic_late_zombie[] =
 { // Extended generic zombie bases
   {  1,  27,  110, FLAT, MONS_ETTIN },
@@ -1229,7 +1247,7 @@ static const pop_entry pop_generic_late_zombie[] =
 
 static const struct { const pop_entry *pop; int count; } population_zombie[] =
 {
-    POP(d),
+    POP(d_zombie),
     POP(temple),
     POP(orc),
     POP(elf),
