@@ -5866,7 +5866,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
-    int stocked[NUM_BOOKS];
+    int stocked[NUM_BOOKS] = { 0 };
     if (shop_type_ == SHOP_BOOK)
         for (int k = 0; k < NUM_BOOKS; k++)
              stocked[k] = 0;
