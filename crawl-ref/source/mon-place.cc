@@ -1283,7 +1283,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     mon->set_new_monster_id();
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
-    mon->number       = mg.number;
 
     // Set pos and link monster into monster grid.
     if (!dont_place && !mon->move_to_pos(fpos))
@@ -1448,6 +1447,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.mname != "")
         mon->mname = mg.mname;
+
+    if (mg.number != 0)
+        mon->number = mg.number;
 
     if (mg.hd != 0)
     {
