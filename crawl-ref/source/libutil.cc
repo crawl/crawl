@@ -7,11 +7,11 @@
 
 #include "libutil.h"
 
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "colour.h"
 #include "files.h"
@@ -32,7 +32,7 @@
 #endif
 
 #ifdef UNIX
-    #include <signal.h>
+    #include <csignal>
 #endif
 
 #ifdef DGL_ENABLE_CORE_DUMP

@@ -2,7 +2,7 @@
 
 #include "target.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "coord.h"
 #include "coordit.h"

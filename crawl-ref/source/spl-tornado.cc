@@ -3,7 +3,7 @@
 #include "spl-damage.h"
 
 #include <cfloat>
-#include <math.h>
+#include <cmath>
 
 #include "cloud.h"
 #include "coord.h"

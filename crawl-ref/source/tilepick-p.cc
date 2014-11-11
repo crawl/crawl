@@ -3,7 +3,7 @@
 #ifdef USE_TILE
 #include "tilepick-p.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "artefact.h"
 #include "describe.h"

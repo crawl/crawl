@@ -7,9 +7,9 @@
 
 #include "output.h"
 
+#include <cmath>
+#include <cstdlib>
 #include <sstream>
-#include <math.h>
-#include <stdlib.h>
 
 #include "ability.h"
 #include "branch.h"

@@ -8,11 +8,11 @@
 #include "chardump.h"
 
 #include <string>
-#include <ctype.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif

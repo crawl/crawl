@@ -9,11 +9,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <functional>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "ability.h"
 #include "acquire.h"

@@ -7,7 +7,7 @@
 
 #include "wiz-fsim.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "beam.h"
 #include "bitary.h"

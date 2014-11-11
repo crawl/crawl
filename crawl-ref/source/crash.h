@@ -6,7 +6,7 @@
 #ifndef CRASH_H
 #define CRASH_H
 
-#include <stdio.h>
+#include <cstdio>
 
 void init_crash_handler();
 void dump_crash_info(FILE* file);

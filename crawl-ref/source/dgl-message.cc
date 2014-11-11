@@ -4,7 +4,7 @@
 
 #include "dgl-message.h"
 
-#include <errno.h>
+#include <cerrno>
 #include <sys/stat.h>
 
 #include "files.h"

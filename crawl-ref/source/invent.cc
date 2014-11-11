@@ -7,11 +7,11 @@
 
 #include "invent.h"
 
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "artefact.h"
 #include "colour.h"

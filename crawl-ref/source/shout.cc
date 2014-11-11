@@ -934,7 +934,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
 #ifdef DEBUG_NOISE_PROPAGATION
 
-#include <math.h>
+#include <cmath>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
 static string _hue_rgb(int hue)

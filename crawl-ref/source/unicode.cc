@@ -8,11 +8,11 @@
 
 #include "unicode.h"
 
+#include <climits>
+#include <clocale>
+#include <cstdio>
+#include <cstring>
 #include <string>
-#include <limits.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "syscalls.h"
 

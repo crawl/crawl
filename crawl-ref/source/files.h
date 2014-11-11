@@ -6,10 +6,10 @@
 #ifndef FILES_H
 #define FILES_H
 
+#include <cstdio>
 #include <set>
 #include <string>
 #include <vector>
-#include <stdio.h>
 
 struct player_save_info;
 

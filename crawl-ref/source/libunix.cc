@@ -18,17 +18,17 @@
 #define _LIBUNIX_IMPLEMENTATION
 #include "libunix.h"
 
-#include <ctype.h>
+#include <cctype>
+#include <clocale>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cwchar>
 #include <langinfo.h>
-#include <locale.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <term.h>
 #include <termios.h>
 #include <unistd.h>
-#include <wchar.h>
 
 #include "cio.h"
 #include "crash.h"

@@ -2,7 +2,7 @@
 
 #include "random.h"
 
-#include <math.h>
+#include <cmath>
 #ifdef UNIX
 // for times()
 #include <sys/times.h>

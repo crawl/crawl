@@ -2,8 +2,8 @@
 
 #include "colour.h"
 
+#include <cmath>
 #include <utility>
-#include <math.h>
 
 #include "areas.h"
 #include "branch.h"

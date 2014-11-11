@@ -8,7 +8,7 @@
 #include "mon-cast.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 
 #include "act-iter.h"
 #include "areas.h"

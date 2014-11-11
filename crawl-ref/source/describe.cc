@@ -7,11 +7,11 @@
 
 #include "describe.h"
 
+#include <cstdio>
 #include <iomanip>
 #include <numeric>
 #include <sstream>
 #include <string>
-#include <stdio.h>
 
 #include "artefact.h"
 #include "branch.h"

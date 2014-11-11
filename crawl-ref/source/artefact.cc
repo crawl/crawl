@@ -10,9 +10,9 @@
 
 #include <algorithm>
 #include <climits>
+#include <cstdio>
 #include <cstdlib>
-#include <stdio.h>
-#include <string.h>
+#include <cstring>
 
 #include "areas.h"
 #include "branch.h"

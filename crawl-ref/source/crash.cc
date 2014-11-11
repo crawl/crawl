@@ -8,12 +8,12 @@
 #include "crash.h"
 
 #ifdef USE_UNIX_SIGNALS
-#include <signal.h>
+#include <csignal>
 #include <sys/time.h>
 #endif
 
 #ifndef TARGET_OS_WINDOWS
-# include <errno.h>
+# include <cerrno>
 # include <sys/wait.h>
 #endif
 

@@ -15,10 +15,10 @@
 #include "hiscores.h"
 
 #include <algorithm>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 #include <memory>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif

@@ -5,10 +5,10 @@
 #ifndef TRAVEL_H
 #define TRAVEL_H
 
+#include <cstdio>
 #include <map>
 #include <string>
 #include <vector>
-#include <stdio.h>
 
 #include "exclude.h"
 #include "travel_defs.h"

@@ -7,10 +7,10 @@
 
 #include "food.h"
 
+#include <cctype>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "butcher.h"
 #include "database.h"

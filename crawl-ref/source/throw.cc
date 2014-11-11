@@ -7,8 +7,8 @@
 
 #include "throw.h"
 
+#include <cmath>
 #include <sstream>
-#include <math.h>
 
 #include "artefact.h"
 #include "command.h"

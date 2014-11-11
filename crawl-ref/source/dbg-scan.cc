@@ -7,9 +7,9 @@
 
 #include "dbg-scan.h"
 
+#include <cerrno>
 #include <cmath>
 #include <sstream>
-#include <errno.h>
 
 #include "artefact.h"
 #include "branch.h"

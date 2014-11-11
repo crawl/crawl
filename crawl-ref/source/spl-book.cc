@@ -9,10 +9,10 @@
 #include "book-data.h"
 
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iomanip>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "artefact.h"
 #include "colour.h"

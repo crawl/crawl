@@ -2,7 +2,7 @@
 
 #include "ng-input.h"
 
-#include <wctype.h>
+#include <cwctype>
 
 #include "cio.h"
 #include "end.h"

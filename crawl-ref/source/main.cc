@@ -6,16 +6,16 @@
 #include "AppHdr.h"
 
 #include <algorithm>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <string>
-#include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
@@ -23,7 +23,7 @@
 # endif
 #endif
 #ifdef USE_UNIX_SIGNALS
-#include <signal.h>
+#include <csignal>
 #endif
 
 #include "ability.h"
