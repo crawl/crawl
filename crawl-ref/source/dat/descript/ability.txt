@@ -594,9 +594,8 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-four lists at a time, with varying prices. One of the potion sets will always
-solely consist of a potion of porridge, which will always be affordable if the
-ability is usable. Prices will slowly increase as you purchase potions.
+three lists at a time, with varying prices. Prices will slowly increase as you
+purchase potions.
 %%%%
 Call Merchant ability
 
@@ -604,6 +603,10 @@ Through Gozag, send funds to a merchant to help them set up shop in the
 dungeon. The shop may appear in an unvisited area of the dungeon, or near your
 location if there are no other appropriate locations for a store. The cost of
 funding a shop increases with the number of shops funded.
+
+You will always have the option to fund a food shop, provided you are a race
+that requires food. Ghouls and vampires will find corpses and blood in their
+respective food shops.
 %%%%
 Bribe Branch ability
 
