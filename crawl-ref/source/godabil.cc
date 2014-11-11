@@ -4380,8 +4380,7 @@ static void _gozag_place_shop_here(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    int max_absdepth; // unused
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
+    vector<level_id> candidates = _get_gozag_shop_candidates(NULL);
 
     if (candidates.size())
         _gozag_place_shop_offlevel(index, candidates);
