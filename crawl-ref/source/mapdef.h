@@ -781,10 +781,15 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
+    bool gozag;         /**< True if this shop was created by Gozag's Call
+                         *   Merchant ability (and therefore should have better
+                         *   stock).
+                         *   */
+
     shop_spec(shop_type sh, string n="", string t="",
-              string s="", int g=-1, int ni=-1, bool u=false)
+              string s="", int g=-1, int ni=-1, bool u=false, bool goz=false)
         : sh_type(sh), name(n), type(t), suffix(s),
-          greed(g), num_items(ni), items(), use_all(u) { }
+          greed(g), num_items(ni), items(), use_all(u), gozag(goz) { }
 };
 
 /**

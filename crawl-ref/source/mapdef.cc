@@ -5968,6 +5968,8 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
 
     bool use_all = strip_tag(s, "use_all");
 
+    const bool gozag = strip_tag(s, "gozag");
+
     string shop_name = replace_all_of(strip_tag_prefix(s, "name:"), "_", " ");
     string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"),
                                            "_", " ");
@@ -6008,7 +6010,7 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     feature_spec fspec(-1, weight, mimic, no_mimic);
     fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
                                    shop_type_name, shop_suffix_name, greed,
-                                   num_items, use_all));
+                                   num_items, use_all, gozag));
     fspec.shop->items = items;
     return fspec;
 }
