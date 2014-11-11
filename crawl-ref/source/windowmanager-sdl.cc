@@ -90,7 +90,7 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
         case SDL_WINDOWEVENT_EXPOSED:
             tile_event.type = WME_EXPOSE;
             break;
-        case SDL_WINDOWEVENT_RESIZED:
+        case SDL_WINDOWEVENT_SIZE_CHANGED:
             tile_event.type = WME_RESIZE;
             tile_event.resize.w = sdl_event.data1;
             tile_event.resize.h = sdl_event.data2;
@@ -409,12 +409,13 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
 #ifdef USE_GLES
 #ifdef __ANDROID__
-    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
+    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
+                         | SDL_WINDOW_RESIZABLE;
 #else
-    unsigned int flags = 0;
+    unsigned int flags = SDL_WINDOW_RESIZABLE;
 #endif
 #else
-    unsigned int flags = SDL_WINDOW_OPENGL;
+    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 #endif
 
     bool too_small = (_desktop_width < 1024 || _desktop_height < 800);

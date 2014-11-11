@@ -205,6 +205,8 @@ void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
 
 void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
 {
+    glViewport(0, 0, m_windowsz.x, m_windowsz.y);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
