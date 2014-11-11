@@ -480,10 +480,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
 #ifdef __ANDROID__
-    // This should be harmless on non-Android. IDK.
     SDL_StartTextInput();
 
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
+#else
+    SDL_StopTextInput();
 #endif
     return true;
 }
