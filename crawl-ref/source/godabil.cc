@@ -4305,7 +4305,7 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s",
+    return make_stringf("%s shop name:%s%s gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
                         suffix.c_str());
