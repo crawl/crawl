@@ -344,7 +344,7 @@ const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 #define GOZAG_SHOP_MOD_MULTIPLIER 20
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
-#define GOZAG_MAX_POTIONS 4
+#define GOZAG_MAX_POTIONS 3
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
