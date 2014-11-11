@@ -1538,6 +1538,8 @@ Cookie Cutter
 ETAOIN SHRDLU
 
 Lorem Ipsum
+
+Plojy
 %%%%
 _plain_weapon_name_
 
