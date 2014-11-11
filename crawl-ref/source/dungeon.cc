@@ -5563,6 +5563,13 @@ static bool _need_varied_selection(shop_type shop)
     return shop == SHOP_BOOK;
 }
 
+static bool _shop_sells_antiques(shop_type type)
+{
+    return type == SHOP_WEAPON_ANTIQUE
+            || type == SHOP_ARMOUR_ANTIQUE
+            || type == SHOP_GENERAL_ANTIQUE;
+}
+
 void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative)
 {
@@ -5574,110 +5581,149 @@ int greed_for_shop_type(shop_type shop, int level_number)
 {
     if (shop == SHOP_FOOD)
         return 10 + random2(5);
-    if (shop == SHOP_WEAPON_ANTIQUE
-        || shop == SHOP_ARMOUR_ANTIQUE
-        || shop == SHOP_GENERAL_ANTIQUE)
-    {
+    if (_shop_sells_antiques(shop))
         return 15 + random2avg(19, 2) + random2(level_number);
-    }
     return 10 + random2(5) + random2(level_number / 2);
+}
+
+/**
+ * Attempts to find a free space in env.shop for a new shop to be placed.
+ *
+ * @return      An index into env.shop that isn't currently assigned, or
+ *              MAX_SHOPS if none was found.
+ */
+static int _get_free_shop_index()
+{
+    for (int i = 0; i < MAX_SHOPS; i++)
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+            return i;
+    return MAX_SHOPS;
+}
+
+/**
+ * How greedy should a given shop be? (Applies a multiplier to prices.)
+ *
+ * @param type              The type of the shop. (E.g. SHOP_FOOD.)
+ * @param level_number      The depth in which the shop is placed.
+ * @param spec_greed        An override for the greed, based on a vault
+ *                          specification; if not -1, will override other
+ *                          calculations & give a debug message.
+ * @return                  The greed for the shop.
+ */
+static int _shop_greed(shop_type type, int level_number, int spec_greed)
+{
+    const int base_greed = greed_for_shop_type(type, level_number);
+    int adj_greed = base_greed;
+
+    // Allow bargains in bazaars, prices randomly between 60% and 95%.
+    if (player_in_branch(BRANCH_BAZAAR))
+    {
+        // divided by 20, so each is 5% of original price
+        // 12-19 = 60-95%, per above
+        const int factor = random2(8) + 12;
+
+        dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
+             " discount = %d%%.",
+             type, base_greed, factor, (20-factor)*5);
+
+        adj_greed = factor * adj_greed / 20;
+    }
+
+    if (spec_greed != -1)
+    {
+        dprf(DIAG_DNGN, "Shop spec overrides greed: %d becomes %d.",
+             adj_greed, spec_greed);
+        return spec_greed;
+    }
+
+    return adj_greed;
+}
+
+/**
+ * How many items should be placed in a given shop?
+ *
+ * @param type              The type of the shop. (E.g. SHOP_FOOD.)
+ * @param representative    No idea, sorry.
+ * @param spec              A vault shop spec; may override default results.
+ * @return                  The number of items the shop should be generated
+ *                          to hold.
+ */
+static int _shop_num_items(shop_type type, bool representative,
+                           const shop_spec &spec)
+{
+    if (spec.num_items != -1)
+    {
+        dprf(DIAG_DNGN, "Shop spec overrides number of items to %d.",
+             spec.num_items);
+        return spec.num_items;
+    }
+
+    if (spec.use_all && !spec.items.empty())
+    {
+        dprf(DIAG_DNGN, "Shop spec wants all items placed: %u of them.",
+             (unsigned int)spec.items.size());
+        return (int) spec.items.size();
+    }
+
+    if (representative)
+        return type == SHOP_EVOKABLES ? NUM_WANDS : 16;
+
+    return 5 + random2avg(12, 3);
 }
 
 void place_spec_shop(const coord_def& where,
                      shop_spec* spec, bool representative)
 {
-    int level_number = env.absdepth0;
-    int force_s_type = static_cast<int>(spec->sh_type);
+    ASSERT(spec); // TODO: change this to a const reference
 
-    int orb = 0;
-    int i = 0;
-    int j = 0;                  // loop variable
-    int item_level;
+    const int level_number = env.absdepth0;
+    const int force_s_type = static_cast<int>(spec->sh_type);
 
-    bool note_status = notes_are_active();
+    const bool note_status = notes_are_active();
     activate_notes(false);
 
-    for (i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-            break;
-
-    if (i == MAX_SHOPS)
+    const int shop_index = _get_free_shop_index();
+    if (_get_free_shop_index() == MAX_SHOPS)
         return;
 
-    for (j = 0; j < 3; j++)
-        env.shop[i].keeper_name[j] = 1 + random2(200);
+    for (int j = 0; j < 3; j++)
+        env.shop[shop_index].keeper_name[j] = 1 + random2(200);
 
-    env.shop[i].shop_name = spec->name;
-    env.shop[i].shop_type_name = spec->type;
-    env.shop[i].shop_suffix_name = spec->suffix;
-    env.shop[i].level = level_number * 2;
+    env.shop[shop_index].shop_name = spec->name;
+    env.shop[shop_index].shop_type_name = spec->type;
+    env.shop[shop_index].shop_suffix_name = spec->suffix;
+    env.shop[shop_index].level = level_number * 2;
 
-    env.shop[i].type = static_cast<shop_type>(
-        (force_s_type != SHOP_RANDOM) ? force_s_type
-                                      : random2(NUM_SHOPS));
+    const shop_type shop_type_ = static_cast<shop_type>(
+                                                  force_s_type != SHOP_RANDOM ?
+                                                  force_s_type :
+                                                  random2(NUM_SHOPS)
+                                                  );
+    env.shop[shop_index].type = shop_type_;
 
-    env.shop[i].greed = greed_for_shop_type(env.shop[i].type, level_number);
+    env.shop[shop_index].greed = _shop_greed(shop_type_, level_number,
+                                             spec->greed);
 
-    // Allow bargains in bazaars, prices randomly between 60% and 95%.
-    if (player_in_branch(BRANCH_BAZAAR))
-    {
-        // Need to calculate with factor as greed (uint8_t)
-        // is capped at 255.
-        int factor = random2(8) + 12;
-
-        dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
-                        " discount = %d%%.",
-             env.shop[i].type, env.shop[i].greed, factor, (20-factor)*5);
-
-        factor *= env.shop[i].greed;
-        factor /= 20;
-        env.shop[i].greed = factor;
-    }
-
-    if (spec->greed != -1)
-    {
-        dprf(DIAG_DNGN, "Shop spec overrides greed: %d becomes %d.",
-             env.shop[i].greed, spec->greed);
-        env.shop[i].greed = spec->greed;
-    }
-
-    int num_items = 5 + random2avg(12, 3);
-    if (representative)
-        num_items = env.shop[i].type == SHOP_EVOKABLES ? NUM_WANDS : 16;
-
-    if (spec->use_all && !spec->items.empty())
-    {
-        dprf(DIAG_DNGN, "Shop spec wants all items placed: %d becomes %u.",
-             num_items, (unsigned int)spec->items.size());
-        num_items = (int) spec->items.size();
-    }
-
-    if (spec->num_items != -1)
-    {
-        dprf(DIAG_DNGN, "Shop spec overrides number of items: %d becomes %d.",
-             num_items, spec->num_items);
-        num_items = spec->num_items;
-    }
+    const int num_items = _shop_num_items(shop_type_, representative,
+                                          *spec);
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS];
-    if (_need_varied_selection(env.shop[i].type))
-    {
+    if (_need_varied_selection(shop_type_))
         for (int k = 0; k < NUM_BOOKS; k++)
              stocked[k] = 0;
-    }
 
-    coord_def stock_loc = coord_def(0, 5+i);
+    // The ''''location''' of the last selected shop item.
+    coord_def stock_loc = coord_def(0, 5+shop_index);
 
-    for (j = 0; j < num_items; j++)
+    for (int j = 0; j < num_items; j++)
     {
-        if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-            && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-            && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-        {
+        int orb = 0; // TODO: KILLME
+
+        int item_level = 0;
+        if (!_shop_sells_antiques(shop_type_))
             item_level = level_number + random2((level_number + 1) * 2);
-        }
         else
             item_level = level_number + random2((level_number + 1) * 3);
 
@@ -5696,9 +5742,9 @@ void place_spec_shop(const coord_def& where,
         while (true)
         {
             const object_class_type basetype =
-                (representative && env.shop[i].type == SHOP_EVOKABLES)
+                (representative && shop_type_ == SHOP_EVOKABLES)
                 ? OBJ_WANDS
-                : item_in_shop(env.shop[i].type);
+                : item_in_shop(shop_type_);
             const int subtype = representative? j : OBJ_RANDOM;
 
             if (!spec->items.empty() && !spec->use_all)
@@ -5715,7 +5761,7 @@ void place_spec_shop(const coord_def& where,
             }
 
             // Try for a better selection.
-            if (orb != NON_ITEM && _need_varied_selection(env.shop[i].type))
+            if (orb != NON_ITEM && _need_varied_selection(shop_type_))
             {
                 if (!one_chance_in(stocked[mitm[orb].sub_type] + 1))
                 {
@@ -5726,7 +5772,7 @@ void place_spec_shop(const coord_def& where,
 
             if (orb != NON_ITEM
                 && mitm[orb].base_type != OBJ_GOLD
-                && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
+                && (shop_type_ != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
                         && mitm[orb].base_type != OBJ_FOOD)
                     || !spec->items.empty()))
@@ -5747,7 +5793,7 @@ void place_spec_shop(const coord_def& where,
         // Increase stock of this subtype by 1, unless it is an artefact
         // (allow for several artefacts of the same underlying subtype)
         // - the latter is currently unused but would apply to e.g. jewellery.
-        if (_need_varied_selection(env.shop[i].type) && !is_artefact(item))
+        if (_need_varied_selection(shop_type_) && !is_artefact(item))
             stocked[item.sub_type]++;
 
         if (representative && item.base_type == OBJ_WANDS)
@@ -5756,16 +5802,12 @@ void place_spec_shop(const coord_def& where,
         // Set object 'position' (gah!) & ID status.
         item.pos = stock_loc;
 
-        if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-            && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-            && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-        {
+        if (!_shop_sells_antiques(shop_type_))
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
     }
 
-    env.shop[i].pos = where;
-    env.tgrid(where) = i;
+    env.shop[shop_index].pos = where;
+    env.tgrid(where) = shop_index;
 
     _set_grd(where, DNGN_ENTER_SHOP);
 
