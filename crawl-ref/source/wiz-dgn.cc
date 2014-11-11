@@ -531,7 +531,7 @@ static void _free_all_vaults()
 {
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         env.level_map_ids(*ri) = INVALID_MAP_INDEX;
-    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
+    for (auto vp = env.level_vaults.begin();
          vp != env.level_vaults.end(); ++vp)
     {
         (*vp)->seen = false;

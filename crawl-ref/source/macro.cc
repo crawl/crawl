@@ -143,7 +143,7 @@ static string get_userfunction(const keyseq &seq)
 
 static bool userfunc_referenced(int index, const macromap &mm)
 {
-    for (macromap::const_iterator i = mm.begin(); i != mm.end(); ++i)
+    for (auto i = mm.begin(); i != mm.end(); ++i)
     {
         if (userfunc_index(i->second) == index)
             return true;
@@ -365,7 +365,7 @@ static string vtostr(const keyseq &seq)
         v = &dummy;
     }
 
-    for (keyseq::const_iterator i = v->begin(); i != v->end(); ++i)
+    for (auto i = v->begin(); i != v->end(); ++i)
     {
         if (*i <= 32 || *i > 127)
         {
@@ -433,8 +433,7 @@ void macro_buf_add(const keyseq &actions, bool reverse, bool expanded)
 {
     keyseq act;
     bool need_more_reset = false;
-    for (keyseq::const_iterator i = actions.begin(); i != actions.end();
-         ++i)
+    for (auto i = actions.begin(); i != actions.end(); ++i)
     {
         int key = *i;
         if (key == KEY_MACRO_MORE_PROTECT)
@@ -647,7 +646,7 @@ int macro_buf_get()
 
 static void write_map(FILE *f, const macromap &mp, const char *key)
 {
-    for (macromap::const_iterator i = mp.begin(); i != mp.end(); ++i)
+    for (auto i = mp.begin(); i != mp.end(); ++i)
     {
         // Need this check, since empty values are added into the
         // macro struct for all used keyboard commands.
@@ -1073,9 +1072,7 @@ static void _read_macros_from(const char* filename)
 void macro_init()
 {
     const vector<string>& files = Options.additional_macro_files;
-    for (vector<string>::const_iterator it = files.begin();
-         it != files.end();
-         ++it)
+    for (auto it = files.begin(); it != files.end(); ++it)
     {
         _read_macros_from(it->c_str());
     }

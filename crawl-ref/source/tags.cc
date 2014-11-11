@@ -1381,14 +1381,14 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.ability_letter_table[i]);
 
     marshallUByte(th, you.old_vehumet_gifts.size());
-    for (set<spell_type>::iterator it = you.old_vehumet_gifts.begin();
+    for (auto it = you.old_vehumet_gifts.begin();
          it != you.old_vehumet_gifts.end(); ++it)
     {
         marshallShort(th, *it);
     }
 
     marshallUByte(th, you.vehumet_gifts.size());
-    for (set<spell_type>::iterator it = you.vehumet_gifts.begin();
+    for (auto it = you.vehumet_gifts.begin();
          it != you.vehumet_gifts.end(); ++it)
     {
         marshallShort(th, *it);
@@ -1411,14 +1411,13 @@ static void tag_construct_you(writer &th)
 
     marshallBoolean(th, you.auto_training);
     marshallByte(th, you.exercises.size());
-    for (list<skill_type>::iterator it = you.exercises.begin();
-         it != you.exercises.end(); ++it)
+    for (auto it = you.exercises.begin(); it != you.exercises.end(); ++it)
     {
         marshallInt(th, *it);
     }
 
     marshallByte(th, you.exercises_all.size());
-    for (list<skill_type>::iterator it = you.exercises_all.begin();
+    for (auto it = you.exercises_all.begin();
          it != you.exercises_all.end(); ++it)
     {
         marshallInt(th, *it);
@@ -1555,14 +1554,14 @@ static void tag_construct_you(writer &th)
 
     // Action counts.
     j = 0;
-    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
-         you.action_count.begin(); ac != you.action_count.end(); ++ac)
+    for (auto ac = you.action_count.begin();
+         ac != you.action_count.end(); ++ac)
     {
         j++;
     }
     marshallShort(th, j);
-    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
-         you.action_count.begin(); ac != you.action_count.end(); ++ac)
+    for (auto ac = you.action_count.begin();
+         ac != you.action_count.end(); ++ac)
     {
         marshallShort(th, ac->first.first);
         marshallInt(th, ac->first.second);
@@ -1802,8 +1801,7 @@ static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
     marshallShort(th, mlist.size());
 
-    for (m_transit_list::const_iterator mi = mlist.begin();
-         mi != mlist.end(); ++mi)
+    for (auto mi = mlist.begin(); mi != mlist.end(); ++mi)
     {
         marshall_follower(th, *mi);
     }
@@ -1813,8 +1811,7 @@ static void marshall_item_list(writer &th, const i_transit_list &ilist)
 {
     marshallShort(th, ilist.size());
 
-    for (i_transit_list::const_iterator ii = ilist.begin();
-         ii != ilist.end(); ++ii)
+    for (auto ii = ilist.begin(); ii != ilist.end(); ++ii)
     {
         marshallItem(th, *ii);
     }
@@ -4331,8 +4328,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
-    for (mon_enchant_list::const_iterator i = m.enchantments.begin();
-         i != m.enchantments.end(); ++i)
+    for (auto i = m.enchantments.begin(); i != m.enchantments.end(); ++i)
     {
         marshall_mon_enchant(th, i->second);
     }

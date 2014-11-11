@@ -339,8 +339,7 @@ exclude_set::iterator exclude_set::end()
 
 static void _mark_excludes_non_updated(const coord_def &p)
 {
-    for (exclude_set::iterator it = curr_excludes.begin();
-         it != curr_excludes.end(); ++it)
+    for (auto it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
     {
         travel_exclude &ex = it->second;
         ex.uptodate = ex.uptodate && !ex.in_bounds(p);
@@ -454,7 +453,7 @@ void clear_excludes()
     clear_level_exclusion_annotation();
 
 #ifdef USE_TILE
-    for (exclude_set::iterator it = excludes.begin(); it != excludes.end(); ++it)
+    for (auto it = excludes.begin(); it != excludes.end(); ++it)
         _tile_exclude_gmap_update(it->second.pos);
 #endif
 
@@ -465,8 +464,7 @@ static void _exclude_gate(const coord_def &p, bool del = false)
 {
     set<coord_def> all_doors;
     find_connected_identical(p, all_doors);
-    for (set<coord_def>::const_iterator dc = all_doors.begin();
-         dc != all_doors.end(); ++dc)
+    for (auto dc = all_doors.begin(); dc != all_doors.end(); ++dc)
     {
         if (del)
             del_exclude(*dc);
@@ -597,8 +595,7 @@ string exclude_set::get_exclusion_desc()
 {
     vector<string> desc;
     int count_other = 0;
-    for (exclmap::iterator it = exclude_roots.begin();
-         it != exclude_roots.end(); ++it)
+    for (auto it = exclude_roots.begin(); it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
 

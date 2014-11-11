@@ -42,8 +42,7 @@ void remove_companion(monster* mons)
 
 void remove_enslaved_soul_companion()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)
@@ -58,8 +57,7 @@ void remove_enslaved_soul_companion()
 
 void remove_all_companions(god_type god)
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end();)
+    for (auto i = companion_list.begin(); i != companion_list.end();)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)
@@ -86,8 +84,7 @@ void move_companion_to(const monster* mons, const level_id lid)
 
 void update_companions()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
     {
         monster* mons = monster_by_mid(i->first);
         if (mons)
@@ -104,8 +101,7 @@ void update_companions()
 
 void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
     {
         int mid = i->first;
         companion* comp = &i->second;
@@ -201,8 +197,7 @@ void wizard_list_companions()
         return;
     }
 
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i)
+    for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
     {
         companion* comp = &i->second;
         monster* mon = &comp->mons.mons;
@@ -217,8 +212,7 @@ void wizard_list_companions()
 // allow the creation of these invalid companions are fully mopped up
 void fixup_bad_companions()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end();)
+    for (auto i = companion_list.begin(); i != companion_list.end();)
     {
         if (invalid_monster_type(i->second.mons.mons.type))
             companion_list.erase(i++);

@@ -55,8 +55,7 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     // some from being used.
     if (spellcount > 1)
     {
-        for (monster_spells::iterator it = spells.begin();
-             it != spells.end(); it++)
+        for (auto it = spells.begin(); it != spells.end(); it++)
         {
             it->freq /= spellcount;
         }
@@ -203,8 +202,7 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     }
 
     // Add spells and abilities from the current part.
-    for (monster_spells::iterator it = dummy.spells.begin();
-         it != dummy.spells.end(); it++)
+    for (auto it = dummy.spells.begin(); it != dummy.spells.end(); it++)
     {
         if (it->spell != SPELL_NO_SPELL)
             spells.push_back(*it);

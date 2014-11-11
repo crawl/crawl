@@ -155,8 +155,7 @@ static void _initialise_randmons()
 
         }
 
-        for (set<monster_type>::iterator it = tmp_species.begin();
-             it != tmp_species.end(); ++it)
+        for (auto it = tmp_species.begin(); it != tmp_species.end(); ++it)
         {
             species_by_habitat[i].push_back(*it);
         }
@@ -4909,8 +4908,7 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
     for (unsigned int i = 0; i < spells.size(); i++)
         spells[i].freq = one_freq;
 
-    for (monster_spells::iterator it = spells.begin();
-         it != spells.end(); it++)
+    for (auto it = spells.begin(); it != spells.end(); it++)
     {
         if (it->spell == SPELL_NO_SPELL)
         {

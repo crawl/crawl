@@ -96,7 +96,7 @@ void dgn_build_basic_level()
         upstairs.push_back(begin);
     }
 
-    for (vector<coord_def>::iterator pathstart = upstairs.begin();
+    for (auto pathstart = upstairs.begin();
          pathstart != upstairs.end(); pathstart++)
     {
         vector<coord_def>::iterator pathend = pathstart;

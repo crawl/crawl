@@ -379,7 +379,7 @@ static counted_monster_list _counted_monster_list_from_vector(
     vector<monster *> affected_monsters)
 {
     counted_monster_list mons;
-    for (vector<monster *>::iterator it = affected_monsters.begin();
+    for (auto it = affected_monsters.begin();
          it != affected_monsters.end(); it++)
     {
         mons.add(*it);
@@ -722,7 +722,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     if (actual && pre_hook)
         (*pre_hook)(agent, affects_you, affected_monsters);
 
-    for (vector<monster *>::iterator it = affected_monsters.begin();
+    for (auto it = affected_monsters.begin();
          it != affected_monsters.end(); it++)
     {
         monster* m = (monster *)(*it);
@@ -2491,8 +2491,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
             continue;
@@ -2504,8 +2503,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
             continue;
@@ -3023,8 +3021,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     for (int i = 1; i <= range; i++)
     {
-        for (map<coord_def, aff_type>::const_iterator p =
-                 hitfunc.sweep[i].begin();
+        for (auto p = hitfunc.sweep[i].begin();
              p != hitfunc.sweep[i].end(); ++p)
         {
             if (p->second <= 0)
@@ -3048,8 +3045,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     for (int i = 1; i <= range; i++)
     {
-        for (map<coord_def, aff_type>::const_iterator p =
-                 hitfunc.sweep[i].begin();
+        for (auto p = hitfunc.sweep[i].begin();
              p != hitfunc.sweep[i].end(); ++p)
         {
             if (p->second <= 0)

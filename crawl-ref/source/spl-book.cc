@@ -708,8 +708,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_memable    = 0;
     bool         form           = false;
 
-    for (spells_to_books::iterator i = book_hash.begin();
-         i != book_hash.end(); ++i)
+    for (auto i = book_hash.begin(); i != book_hash.end(); ++i)
     {
         const spell_type spell = i->first;
 

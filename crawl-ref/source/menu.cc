@@ -2229,7 +2229,7 @@ bool PrecisionMenu::process_key(int key)
         else
         {
             // pick the first object possible
-            for (vector<MenuObject*>::iterator it = m_attached_objects.begin();
+            for (auto it = m_attached_objects.begin();
                  it != m_attached_objects.end(); ++it)
             {
                 if ((*it)->can_be_focused())
@@ -3299,8 +3299,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         else if (m_default_item == NULL)
         {
             // pick the first item possible
-            for (vector<MenuItem*>::iterator it = m_entries.begin();
-                 it != m_entries.end(); ++it)
+            for (auto it = m_entries.begin(); it != m_entries.end(); ++it)
             {
                 if ((*it)->can_be_highlighted())
                 {

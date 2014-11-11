@@ -936,9 +936,7 @@ static int _prompt_ring_to_remove(int new_ring)
     const vector<equipment_type> ring_types = _current_ring_types();
     vector<char> slot_chars;
     vector<item_def*> rings;
-    for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
-         eq_it != ring_types.end();
-         ++eq_it)
+    for (auto eq_it = ring_types.begin(); eq_it != ring_types.end(); ++eq_it)
     {
         rings.push_back(you.slot_item(*eq_it, true));
         ASSERT(rings.back());
@@ -1151,9 +1149,7 @@ static bool _swap_rings(int ring_slot)
     int available = 0;
     bool all_same = true;
     item_def* first_ring = NULL;
-    for (vector<equipment_type>::iterator eq_it = ring_types.begin();
-         eq_it != ring_types.end();
-         ++eq_it)
+    for (auto eq_it = ring_types.begin(); eq_it != ring_types.end(); ++eq_it)
     {
         item_def* ring = you.slot_item(*eq_it, true);
         if (!you_tran_can_wear(*eq_it) || you.melded[*eq_it])
@@ -1251,9 +1247,7 @@ static equipment_type _choose_ring_slot()
          "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
 
     const vector<equipment_type> slots = _current_ring_types();
-    for (vector<equipment_type>::const_iterator eq_it = slots.begin();
-         eq_it != slots.end();
-         ++eq_it)
+    for (auto eq_it = slots.begin(); eq_it != slots.end(); ++eq_it)
     {
         string msg = "<w>";
         const char key = _ring_slot_key(*eq_it);
@@ -1283,9 +1277,7 @@ static equipment_type _choose_ring_slot()
     do
     {
         c = getchm();
-        for (vector<equipment_type>::const_iterator eq_it = slots.begin();
-             eq_it != slots.end();
-             ++eq_it)
+        for (auto eq_it = slots.begin(); eq_it != slots.end(); ++eq_it)
         {
             if (c == _ring_slot_key(*eq_it)
                 || (you.slot_item(*eq_it, true)
@@ -1344,7 +1336,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     if (!is_amulet)     // i.e. it's a ring
     {
         bool need_swap = true;
-        for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
+        for (auto eq_it = ring_types.begin();
              eq_it != ring_types.end();
              ++eq_it)
         {
@@ -1405,7 +1397,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     }
     else
     {
-        for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
+        for (auto eq_it = ring_types.begin();
              eq_it != ring_types.end();
              ++eq_it)
         {
@@ -1480,7 +1472,7 @@ bool remove_ring(int slot, bool announce)
     const vector<equipment_type> ring_types = _current_ring_types();
     const vector<equipment_type> jewellery_slots = _current_jewellery_types();
 
-    for (vector<equipment_type>::const_iterator eq_it = jewellery_slots.begin();
+    for (auto eq_it = jewellery_slots.begin();
          eq_it != jewellery_slots.end();
          ++eq_it)
     {

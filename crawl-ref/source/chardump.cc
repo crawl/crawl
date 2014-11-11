@@ -1183,8 +1183,8 @@ static void _sdump_action_counts(dump_params &par)
     for (int cact = 0; cact < NUM_CACTIONS; cact++)
     {
         vector<pair<int, FixedVector<int, 28> > > action_vec;
-        for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator
-              ac = you.action_count.begin(); ac != you.action_count.end(); ++ac)
+        for (auto ac = you.action_count.begin();
+             ac != you.action_count.end(); ++ac)
         {
             if (ac->first.first != cact)
                 continue;
@@ -1199,8 +1199,7 @@ static void _sdump_action_counts(dump_params &par)
         }
         sort(action_vec.begin(), action_vec.end(), _sort_by_first);
 
-        for (vector<pair<int, FixedVector<int, 28> > >::const_iterator ac =
-                action_vec.begin(); ac != action_vec.end(); ++ac)
+        for (auto ac = action_vec.begin(); ac != action_vec.end(); ++ac)
         {
             if (ac == action_vec.begin())
             {

@@ -1466,8 +1466,7 @@ bool trog_burn_spellbooks()
         mprf("The spellbook%s fail%s to ignite!",
              totalblocked == 1 ? ""  : "s",
              totalblocked == 1 ? "s" : "");
-        for (vector<coord_def>::iterator it = mimics.begin();
-             it != mimics.end(); ++it)
+        for (auto it = mimics.begin(); it != mimics.end(); ++it)
         {
             discover_mimic(*it, false);
         }
@@ -3508,8 +3507,7 @@ void spare_beogh_convert()
     }
 
     int witc = 0;
-    for (set<mid_t>::const_iterator wit = witnesses.begin();
-         wit != witnesses.end(); ++wit)
+    for (auto wit = witnesses.begin(); wit != witnesses.end(); ++wit)
     {
         monster *orc = monster_by_mid(*wit);
         if (!orc || !orc->alive())
@@ -3559,7 +3557,7 @@ bool dithmenos_shadow_step()
          cloud_prompted = false,
          terrain_prompted = false;
 
-    for (set<coord_def>::const_iterator site = tgt.additional_sites.begin();
+    for (auto site = tgt.additional_sites.begin();
          site != tgt.additional_sites.end(); site++)
     {
         if (!cloud_prompted

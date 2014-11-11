@@ -287,7 +287,7 @@ LUAFN(moninf_get_status)
         PLUARET(string, comma_separated_line(status.begin(),
                                              status.end(), ", ").c_str());
     }
-    for (vector<string>::const_iterator i = status.begin(); i != status.end(); ++i)
+    for (auto i = status.begin(); i != status.end(); ++i)
         if (*i == which)
             PLUARET(boolean, true);
     PLUARET(boolean, false);

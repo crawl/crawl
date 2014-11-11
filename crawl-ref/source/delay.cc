@@ -107,8 +107,7 @@ static bool _is_parent_delay(delay_type delay)
 
 static int _push_delay(const delay_queue_item &delay)
 {
-    for (delay_queue_type::iterator i = you.delay_queue.begin();
-         i != you.delay_queue.end(); ++i)
+    for (auto i = you.delay_queue.begin(); i != you.delay_queue.end(); ++i)
     {
         if (_is_parent_delay(i->type))
         {
@@ -1215,8 +1214,7 @@ static void _handle_macro_delay()
 
 static void _decrement_delay(delay_type delay)
 {
-    for (delay_queue_type::iterator i = you.delay_queue.begin();
-         i != you.delay_queue.end(); ++i)
+    for (auto i = you.delay_queue.begin(); i != you.delay_queue.end(); ++i)
     {
         if (i->type == delay)
         {

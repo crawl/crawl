@@ -1272,8 +1272,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
             killerpath = "";
 
-            for (CrawlVector::const_iterator it = blame.begin();
-                 it != blame.end(); ++it)
+            for (auto it = blame.begin(); it != blame.end(); ++it)
             {
                 killerpath = killerpath + ":" + _xlog_escape(it->get_string());
             }
@@ -2589,8 +2588,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 vector<string> summoners = _xlog_split_fields(killerpath);
 
-                for (vector<string>::iterator it = summoners.begin();
-                     it != summoners.end(); ++it)
+                for (auto it = summoners.begin(); it != summoners.end(); ++it)
                 {
                     if (!semiverbose)
                     {

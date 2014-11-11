@@ -504,8 +504,7 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
 {
     vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
     vector<coord_def> candidates;
-    for (vector<map_marker*>::iterator it = markers.begin();
-         it != markers.end(); it++)
+    for (auto it = markers.begin(); it != markers.end(); it++)
     {
         if ((*it)->property("portal") != "")
         {
@@ -670,7 +669,7 @@ static bool _map_matches_layout_type(const map_def &map)
         return true;
     }
 
-    for (string_set::const_iterator i = env.level_layout_types.begin();
+    for (auto i = env.level_layout_types.begin();
          i != env.level_layout_types.end(); ++i)
     {
         if (map.has_tag("layout_" + *i))
@@ -1105,8 +1104,7 @@ _random_map_in_list(const map_selector &sel,
     if (!chosen_map)
     {
         const level_id &here(level_id::current());
-        for (mapref_vector::const_iterator i = eligible.begin();
-             i != eligible.end(); ++i)
+        for (auto i = eligible.begin(); i != eligible.end(); ++i)
         {
             const map_def &map(**i);
             const int weight = map.weight(here);
@@ -1586,8 +1584,7 @@ static weighted_map_names _find_random_vaults(
             map_counts[map->name]++;
     }
 
-    for (map_count_t::const_iterator i = map_counts.begin();
-         i != map_counts.end(); ++i)
+    for (auto i = map_counts.begin(); i != map_counts.end(); ++i)
     {
         wms.push_back(*i);
     }

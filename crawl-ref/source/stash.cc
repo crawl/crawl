@@ -274,7 +274,7 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
 bool Stash::unmark_trapping_nets()
 {
     bool changed = false;
-    for (vector<item_def>::iterator i = items.begin(); i != items.end(); i++)
+    for (auto i = items.begin(); i != items.end(); i++)
         if (item_is_stationary_net(*i))
             i->net_placed = false, changed = true;
     return changed;
@@ -1340,8 +1340,7 @@ int LevelStashes::_num_enabled_stashes() const
     if (!rawcount)
         return 0;
 
-    for (stashes_t::const_iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); ++iter)
+    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
     {
         if (!iter->second.enabled)
             --rawcount;
@@ -1385,8 +1384,7 @@ void LevelStashes::get_matching_stashes(
         return;
     }
 
-    for (stashes_t::const_iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); ++iter)
+    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
     {
         if (iter->second.enabled)
         {
@@ -1412,8 +1410,7 @@ void LevelStashes::get_matching_stashes(
 
 void LevelStashes::_update_corpses(int rot_time)
 {
-    for (stashes_t::iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); ++iter)
+    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
     {
         iter->second._update_corpses(rot_time);
     }
@@ -1421,8 +1418,7 @@ void LevelStashes::_update_corpses(int rot_time)
 
 void LevelStashes::_update_identification()
 {
-    for (stashes_t::iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); ++iter)
+    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
     {
         iter->second._update_identification();
     }
@@ -1444,8 +1440,7 @@ void LevelStashes::write(FILE *f, bool identify) const
         const Stash &s = m_stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
         string levname = short_level_name();
-        for (stashes_t::const_iterator iter = m_stashes.begin();
-             iter != m_stashes.end(); ++iter)
+        for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
         {
             iter->second.write(f, refx, refy, levname, identify);
         }
@@ -1461,8 +1456,7 @@ void LevelStashes::save(writer& outf) const
     m_place.save(outf);
 
     // And write the individual stashes
-    for (stashes_t::const_iterator iter = m_stashes.begin();
-         iter != m_stashes.end(); ++iter)
+    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
     {
         iter->second.save(outf);
     }
@@ -1590,8 +1584,7 @@ void StashTracker::write(FILE *f, bool identify) const
         fprintf(f, "  You have no stashes.\n");
     else
     {
-        for (stash_levels_t::const_iterator iter = levels.begin();
-             iter != levels.end(); ++iter)
+        for (auto iter = levels.begin(); iter != levels.end(); ++iter)
         {
             iter->second.write(f, identify);
         }
@@ -2256,8 +2249,7 @@ void StashTracker::update_corpses()
 
     last_corpse_update = you.elapsed_time;
 
-    for (stash_levels_t::iterator iter = levels.begin();
-            iter != levels.end(); ++iter)
+    for (auto iter = levels.begin(); iter != levels.end(); ++iter)
     {
         iter->second._update_corpses(rot_time);
     }
@@ -2268,8 +2260,7 @@ void StashTracker::update_identification()
     if (!you_worship(GOD_ASHENZARI))
         return;
 
-    for (stash_levels_t::iterator iter = levels.begin();
-            iter != levels.end(); ++iter)
+    for (auto iter = levels.begin(); iter != levels.end(); ++iter)
     {
         iter->second._update_identification();
     }

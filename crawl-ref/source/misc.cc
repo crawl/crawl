@@ -1216,7 +1216,7 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 void counted_monster_list::add(const monster* mons)
 {
     const string name = mons->name(DESC_PLAIN);
-    for (counted_list::iterator i = list.begin(); i != list.end(); ++i)
+    for (auto i = list.begin(); i != list.end(); ++i)
     {
         if (i->first->name(DESC_PLAIN) == name)
         {
@@ -1230,7 +1230,7 @@ void counted_monster_list::add(const monster* mons)
 int counted_monster_list::count()
 {
     int nmons = 0;
-    for (counted_list::const_iterator i = list.begin(); i != list.end(); ++i)
+    for (auto i = list.begin(); i != list.end(); ++i)
         nmons += i->second;
     return nmons;
 }
@@ -1240,7 +1240,7 @@ string counted_monster_list::describe(description_level_type desc,
 {
     string out;
 
-    for (counted_list::const_iterator i = list.begin(); i != list.end();)
+    for (auto i = list.begin(); i != list.end();)
     {
         const counted_monster &cm(*i);
         if (i != list.begin())

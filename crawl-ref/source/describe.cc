@@ -2295,8 +2295,7 @@ static command_type _get_action(int key, vector<command_type> actions)
         act_key_init = false;
     }
 
-    for (vector<command_type>::const_iterator at = actions.begin();
-         at < actions.end(); ++at)
+    for (auto at = actions.begin(); at < actions.end(); ++at)
     {
         if (key == act_key[*at])
             return *at;
@@ -2412,8 +2411,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
         act_str_init = false;
     }
 
-    for (vector<command_type>::const_iterator at = actions.begin();
-         at < actions.end(); ++at)
+    for (auto at = actions.begin(); at < actions.end(); ++at)
     {
 #ifdef USE_TILE_LOCAL
         tmp = new TextItem();
@@ -4015,8 +4013,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
         const CrawlVector& blame = mons.props["blame"].get_vector();
 
-        for (CrawlVector::const_iterator it = blame.begin();
-             it != blame.end(); ++it)
+        for (auto it = blame.begin(); it != blame.end(); ++it)
         {
             inf.body << "    " << it->get_string() << "\n";
         }

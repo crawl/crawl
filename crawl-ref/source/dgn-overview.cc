@@ -148,7 +148,7 @@ static string shoptype_to_string(shop_type s)
 
 bool overview_knows_portal(branch_type portal)
 {
-    for (portal_map_type::const_iterator pl_iter = portals_present.begin();
+    for (auto pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter)
     {
         if (pl_iter->second == portal)
@@ -161,7 +161,7 @@ bool overview_knows_portal(branch_type portal)
 int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
-    for (portal_map_type::const_iterator pl_iter = portals_present.begin();
+    for (auto pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter)
     {
         if (branches[pl_iter->second].entry_stairs == portal)
@@ -259,7 +259,7 @@ static string _get_seen_branches(bool display)
             lid = find_deepest_explored(lid);
 
             string entry_desc;
-            for (set<level_id>::iterator lit = stair_level[branch].begin();
+            for (auto lit = stair_level[branch].begin();
                  lit != stair_level[branch].end(); ++lit)
             {
                 entry_desc += " " + lit->describe(false, true);
@@ -403,7 +403,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
 
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
-        for (altar_map_type::const_iterator na_iter = altars_present.begin();
+        for (auto na_iter = altars_present.begin();
              na_iter != altars_present.end(); ++na_iter)
         {
             if (na_iter->second == god)
@@ -710,13 +710,13 @@ static void _update_unique_annotation(level_id level)
 {
     string note = "";
     string sep = ", ";
-    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
         if (i->first.find(',') != string::npos)
             sep = "; ";
     }
-    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
         if (i->second == level)
@@ -776,7 +776,7 @@ void remove_unique_annotation(monster* mons)
 {
     set<level_id> affected_levels;
     string name = unique_name(mons);
-    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {
         if (i->first == name)
@@ -788,8 +788,7 @@ void remove_unique_annotation(monster* mons)
             ++i;
     }
 
-    for (set<level_id>::iterator i = affected_levels.begin();
-         i != affected_levels.end(); ++i)
+    for (auto i = affected_levels.begin(); i != affected_levels.end(); ++i)
     {
         _update_unique_annotation(*i);
     }
@@ -916,7 +915,7 @@ void clear_level_annotations(level_id li)
         return;
 
     set<monster_annotation>::iterator next;
-    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); i = next)
     {
         next = i;
@@ -930,7 +929,7 @@ void clear_level_annotations(level_id li)
 void marshallUniqueAnnotations(writer& outf)
 {
     marshallShort(outf, auto_unique_annotations.size());
-    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
         marshallString(outf, i->first);

@@ -489,9 +489,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         return false;
 
     string item_desc = tokens[offset - 1];
-    for (vector<string>::const_iterator it = tokens.begin() + offset;
-         it != tokens.end();
-         ++it)
+    for (auto it = tokens.begin() + offset; it != tokens.end(); ++it)
     {
         item_desc.append(" ");
         item_desc.append(*it);

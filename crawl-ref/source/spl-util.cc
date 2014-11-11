@@ -1438,8 +1438,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
             if (!tgt.valid_aim(*ri))
                 continue;
             tgt.set_aim(*ri);
-            for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
-                 it != tgt.seen.end(); it++)
+            for (auto it = tgt.seen.begin(); it != tgt.seen.end(); it++)
             {
                 if (it->second == AFF_NO || it->second == AFF_TRACER)
                     continue;

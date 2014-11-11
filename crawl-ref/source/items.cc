@@ -2376,8 +2376,7 @@ void drop_last()
 {
     vector<SelItem> items_to_drop;
 
-    for (map<int,int>::iterator it = you.last_pickup.begin();
-        it != you.last_pickup.end(); ++it)
+    for (auto it = you.last_pickup.begin(); it != you.last_pickup.end(); ++it)
     {
         const item_def* item = &you.inv[it->first];
         if (item->quantity > 0)

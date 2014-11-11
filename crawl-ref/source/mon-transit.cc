@@ -35,7 +35,7 @@ static void level_place_followers(m_transit_list &m);
 static void cull_lost_mons(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
-    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end();)
+    for (auto i = mlist.begin(); i != mlist.end();)
     {
         m_transit_list::iterator finger = i++;
         if (!mons_is_unique(finger->mons.type))
@@ -56,7 +56,7 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
 static void cull_lost_items(i_transit_list &ilist, int how_many)
 {
     // First pass, drop non-artefacts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
+    for (auto i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (!is_artefact(*finger))
@@ -69,7 +69,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     }
 
     // Second pass, drop randarts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
+    for (auto i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (is_random_artefact(*finger))
@@ -82,7 +82,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     }
 
     // Third pass, drop unrandarts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
+    for (auto i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (is_unrandom_artefact(*finger))
@@ -128,7 +128,7 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
 {
     m_transit_list &mlist = the_lost_ones[lid];
 
-    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end(); ++i)
+    for (auto i = mlist.begin(); i != mlist.end(); ++i)
     {
         if (i->mons.mid == mid)
         {
@@ -168,7 +168,7 @@ static bool place_lost_monster(follower &f)
 
 static void level_place_lost_monsters(m_transit_list &m)
 {
-    for (m_transit_list::iterator i = m.begin();
+    for (auto i = m.begin();
          i != m.end();)
     {
         m_transit_list::iterator mon = i++;
@@ -192,7 +192,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
 static void level_place_followers(m_transit_list &m)
 {
-    for (m_transit_list::iterator i = m.begin(); i != m.end();)
+    for (auto i = m.begin(); i != m.end();)
     {
         m_transit_list::iterator mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
@@ -255,11 +255,10 @@ void place_transiting_items()
 
 void apply_daction_to_transit(daction_type act)
 {
-    for (monsters_in_transit::iterator i = the_lost_ones.begin();
-            i != the_lost_ones.end(); ++i)
+    for (auto i = the_lost_ones.begin(); i != the_lost_ones.end(); ++i)
     {
         m_transit_list* m = &i->second;
-        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        for (auto j = m->begin(); j != m->end(); ++j)
         {
             monster* mon = &j->mons;
             if (mons_matches_daction(mon, act))
@@ -277,11 +276,10 @@ void apply_daction_to_transit(daction_type act)
 int count_daction_in_transit(daction_type act)
 {
     int count = 0;
-    for (monsters_in_transit::iterator i = the_lost_ones.begin();
-            i != the_lost_ones.end(); ++i)
+    for (auto i = the_lost_ones.begin(); i != the_lost_ones.end(); ++i)
     {
         m_transit_list* m = &i->second;
-        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        for (auto j = m->begin(); j != m->end(); ++j)
         {
             monster* mon = &j->mons;
             if (mons_matches_daction(mon, act))

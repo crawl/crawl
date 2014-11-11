@@ -6869,8 +6869,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         bool found_nonartefact = false;
         bool found_stasis = false;
 
-        for (vector<item_def>::iterator it=notele_items.begin();
-             it < notele_items.end(); ++it)
+        for (auto it=notele_items.begin(); it < notele_items.end(); ++it)
         {
             if (it->base_type == OBJ_WEAPONS)
             {
@@ -8702,7 +8701,7 @@ void player_open_door(coord_def doorpos, bool check_confused)
     }
 
     vector<coord_def> excludes;
-    for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
+    for (auto i = all_door.begin(); i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
         // Even if some of the door is out of LOS, we want the entire

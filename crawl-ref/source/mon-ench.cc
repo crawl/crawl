@@ -1109,8 +1109,7 @@ void monster::timeout_enchantments(int levels)
         return;
 
     const mon_enchant_list ec = enchantments;
-    for (mon_enchant_list::const_iterator i = ec.begin();
-         i != ec.end(); ++i)
+    for (auto i = ec.begin(); i != ec.end(); ++i)
     {
         switch (i->first)
         {
@@ -1217,8 +1216,7 @@ void monster::timeout_enchantments(int levels)
 string monster::describe_enchantments() const
 {
     ostringstream oss;
-    for (mon_enchant_list::const_iterator i = enchantments.begin();
-         i != enchantments.end(); ++i)
+    for (auto i = enchantments.begin(); i != enchantments.end(); ++i)
     {
         if (i != enchantments.begin())
             oss << ", ";

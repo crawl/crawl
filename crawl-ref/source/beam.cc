@@ -2536,8 +2536,7 @@ void bolt::affect_endpoint()
             targetter_cloud tgt(agent(), range, get_cloud_size(true),
                                                 get_cloud_size(false, true));
             tgt.set_aim(pos());
-            for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
-                 it != tgt.seen.end(); it++)
+            for (auto it = tgt.seen.begin(); it != tgt.seen.end(); it++)
             {
                 if (it->second != AFF_YES && it->second != AFF_MAYBE)
                     continue;

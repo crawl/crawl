@@ -446,9 +446,7 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-/*            for (set<int>::iterator j = probe->second.begin();
-                 j!= probe->second.end();
-                 j++)
+/*            for (auto j = probe->second.begin(); j!= probe->second.end(); j++)
             {
                 if (*j == (test_level + 1))
                     test_level++;

@@ -103,8 +103,7 @@ bool targetter_beam::set_aim(coord_def a)
     {
         bolt tempbeam2 = beam;
         tempbeam2.target = origin;
-        for (vector<coord_def>::const_iterator i = path_taken.begin();
-             i != path_taken.end(); ++i)
+        for (auto i = path_taken.begin(); i != path_taken.end(); ++i)
         {
             if (cell_is_solid(*i) && !tempbeam.can_affect_wall(grd(*i)))
                 break;
@@ -147,8 +146,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     bool on_path = false;
     coord_def c;
     aff_type current = AFF_YES;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto i = path_taken.begin(); i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i)
             && !beam.can_affect_wall(grd(*i))
@@ -226,8 +224,7 @@ bool targetter_imb::set_aim(coord_def a)
     coord_def c;
     bool first = true;
 
-    for (vector<coord_def>::iterator i = path_taken.begin();
-         i != path_taken.end(); i++)
+    for (auto i = path_taken.begin(); i != path_taken.end(); i++)
     {
         c = *i;
         cur_path.push_back(c);
@@ -266,14 +263,12 @@ aff_type targetter_imb::is_affected(coord_def loc)
     if (from_path != AFF_NO)
         return from_path;
 
-    for (vector<coord_def>::const_iterator i = splash.begin();
-         i != splash.end(); ++i)
+    for (auto i = splash.begin(); i != splash.end(); ++i)
     {
         if (*i == loc)
             return cell_is_solid(*i) ? AFF_NO : AFF_MAYBE;
     }
-    for (vector<coord_def>::const_iterator i = splash2.begin();
-         i != splash2.end(); ++i)
+    for (auto i = splash2.begin(); i != splash2.end(); ++i)
     {
         if (*i == loc)
             return cell_is_solid(*i) ? AFF_NO : AFF_TRACER;
@@ -851,7 +846,7 @@ aff_type targetter_spray::is_affected(coord_def loc)
     {
         aff_type beam_affect = AFF_YES;
         bool beam_reached = false;
-        for (vector<coord_def>::const_iterator i = paths_taken[n].begin();
+        for (auto i = paths_taken[n].begin();
          i != paths_taken[n].end(); ++i)
         {
             c = *i;
@@ -1090,8 +1085,7 @@ bool targetter_explosive_bolt::set_aim(coord_def a)
 
     bolt tempbeam = beam;
     tempbeam.target = origin;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto i = path_taken.begin(); i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i))
             break;
@@ -1113,8 +1107,7 @@ aff_type targetter_explosive_bolt::is_affected(coord_def loc)
 {
     bool on_path = false;
     coord_def c;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto i = path_taken.begin(); i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i))
             break;

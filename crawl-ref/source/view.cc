@@ -176,8 +176,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
 {
     string message;
     unsigned int count = 1;
-    for (map<monster_type, int>::iterator it = types.begin();
-         it != types.end(); ++it)
+    for (auto it = types.begin(); it != types.end(); ++it)
     {
         string name;
         description_level_type desc;
@@ -1395,8 +1394,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         bool found = gc == you.pos();
 
         if (!found)
-            for (vector<monster *>::const_iterator it = monsters->begin();
-                it != monsters->end();
+            for (auto it = monsters->begin(); it != monsters->end();
                 ++it)
             {
                 if (gc == (*it)->pos())

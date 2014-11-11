@@ -1218,8 +1218,7 @@ static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
             continue;
@@ -3244,8 +3243,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
-    for (set<coord_def>::iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (auto i = all_door.begin(); i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
 

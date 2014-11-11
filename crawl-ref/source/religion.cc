@@ -1381,8 +1381,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     if (!force_hostile && _yred_high_level_servant(mon_type))
     {
         int current_high_level = 0;
-        for (map<mid_t, companion>::iterator i = companion_list.begin();
-             i != companion_list.end(); ++i)
+        for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
         {
             monster* mons = monster_by_mid(i->first);
             if (!mons)
@@ -1719,8 +1718,7 @@ static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
     spell_type spell = SPELL_NO_SPELL;
     int total_weight = 0;
     int this_weight = 0;
-    for (set<spell_type>::iterator it = eligible_spells.begin();
-         it != eligible_spells.end(); ++it)
+    for (auto it = eligible_spells.begin(); it != eligible_spells.end(); ++it)
     {
         this_weight = _vehumet_weighting(*it);
         total_weight += this_weight;
@@ -1958,8 +1956,7 @@ bool do_god_gift(bool forced)
                 {
                     you.vehumet_gifts = offers;
                     string prompt = " offers you knowledge of ";
-                    for (set<spell_type>::iterator it = offers.begin();
-                         it != offers.end(); ++it)
+                    for (auto it = offers.begin(); it != offers.end(); ++it)
                     {
                         if (it != offers.begin())
                         {

@@ -747,8 +747,7 @@ void reset_training()
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
-        for (list<skill_type>::iterator it = you.exercises.begin();
-             it != you.exercises.end(); ++it)
+        for (auto it = you.exercises.begin(); it != you.exercises.end(); ++it)
         {
             skill_type sk = *it;
             if (skill_trained(sk))
@@ -761,7 +760,7 @@ void reset_training()
         // We count the practise events in the other queue.
         FixedVector<unsigned int, NUM_SKILLS> exer_all;
         exer_all.init(0);
-        for (list<skill_type>::iterator it = you.exercises_all.begin();
+        for (auto it = you.exercises_all.begin();
              it != you.exercises_all.end(); ++it)
         {
             skill_type sk = *it;
@@ -908,7 +907,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
         shuffle_array(training_order);
-        for (vector<skill_type>::iterator it = training_order.begin();
+        for (auto it = training_order.begin();
              it != training_order.end(); ++it)
         {
             skill_type sk = *it;

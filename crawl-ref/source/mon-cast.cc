@@ -1647,8 +1647,7 @@ static int _battle_cry(const monster* chief, bool check_only = false)
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
-    for (set<coord_def>::const_iterator i = door.begin();
-         i != door.end(); ++i)
+    for (auto i = door.begin(); i != door.end(); ++i)
     {
         grd(*i) = feat;
         set_terrain_changed(*i);
@@ -1665,8 +1664,7 @@ static bool _can_force_door_shut(const coord_def& door)
     find_connected_identical(door, all_door);
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
-    for (set<coord_def>::const_iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (auto i = all_door.begin(); i != all_door.end(); ++i)
     {
         // Only attempt to push players and non-hostile monsters out of
         // doorways
@@ -1713,8 +1711,7 @@ static bool _should_force_door_shut(const coord_def& door)
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     bool player_in_door = false;
-    for (set<coord_def>::const_iterator i = all_door.begin();
-        i != all_door.end(); ++i)
+    for (auto i = all_door.begin(); i != all_door.end(); ++i)
     {
         if (you.pos() == *i)
         {
@@ -1864,8 +1861,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
             vector<coord_def> veto_spots;
             find_connected_identical(*ri, all_door);
             copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
-            for (set<coord_def>::const_iterator i = all_door.begin();
-                 i != all_door.end(); ++i)
+            for (auto i = all_door.begin(); i != all_door.end(); ++i)
             {
                 // If there are things in the way, push them aside
                 actor* act = actor_at(*i);
@@ -1892,8 +1888,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
             // Close the door
             bool seen = false;
             vector<coord_def> excludes;
-            for (set<coord_def>::const_iterator i = all_door.begin();
-                 i != all_door.end(); ++i)
+            for (auto i = all_door.begin(); i != all_door.end(); ++i)
             {
                 const coord_def& dc = *i;
                 grd(dc) = DNGN_CLOSED_DOOR;
@@ -1911,8 +1906,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
             if (seen)
             {
-                for (set<coord_def>::const_iterator i = all_door.begin();
-                     i != all_door.end(); ++i)
+                for (auto i = all_door.begin(); i != all_door.end(); ++i)
                 {
                     if (env.map_knowledge(*i).seen())
                     {
@@ -1933,8 +1927,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
         {
             set<coord_def> all_door;
             find_connected_identical(*ri, all_door);
-            for (set<coord_def>::const_iterator i = all_door.begin();
-                 i != all_door.end(); ++i)
+            for (auto i = all_door.begin(); i != all_door.end(); ++i)
             {
                 temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
                                     TERRAIN_CHANGE_DOOR_SEAL, warden);
@@ -2790,8 +2783,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
             continue;
@@ -2995,8 +2987,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Shapeshifters don't get 'real' spells.
         || mons->is_shapeshifter())
     {
-        for (monster_spells::iterator it = hspell_pass.begin();
-             it != hspell_pass.end(); it++)
+        for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
         {
             if (it->flags & MON_SPELL_SILENCE_MASK)
             {
@@ -3166,8 +3157,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         // Remove healing/invis/haste if we don't need them.
-        for (monster_spells::iterator it = hspell_pass.begin();
-             it != hspell_pass.end(); it++)
+        for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
         {
             if (_ms_waste_of_time(mons, *it)
                 // Should monster not have selected dig by now,
@@ -5786,8 +5776,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
             victims.push_back(*ai);
         shuffle_array(victims);
-        for (vector<actor* >::iterator it = victims.begin();
-             it != victims.end(); it++)
+        for (auto it = victims.begin(); it != victims.end(); it++)
         {
             actor* victim1 = *it;
             it++;
@@ -6468,7 +6457,7 @@ static mid_t _get_tentacle_throw_victim(const monster &mons)
     if (!mons.constricting)
         return throw_choice;
 
-    for (actor::constricting_t::iterator co = mons.constricting->begin();
+    for (auto co = mons.constricting->begin();
          co != mons.constricting->end(); ++co)
     {
         const actor* const victim = actor_by_mid(co->first);
