@@ -5641,22 +5641,22 @@ void place_spec_shop(const coord_def& where,
         env.shop[i].greed = spec->greed;
     }
 
-    int plojy = 5 + random2avg(12, 3);
+    int num_items = 5 + random2avg(12, 3);
     if (representative)
-        plojy = env.shop[i].type == SHOP_EVOKABLES ? NUM_WANDS : 16;
+        num_items = env.shop[i].type == SHOP_EVOKABLES ? NUM_WANDS : 16;
 
     if (spec->use_all && !spec->items.empty())
     {
         dprf(DIAG_DNGN, "Shop spec wants all items placed: %d becomes %u.",
-             plojy, (unsigned int)spec->items.size());
-        plojy = (int) spec->items.size();
+             num_items, (unsigned int)spec->items.size());
+        num_items = (int) spec->items.size();
     }
 
     if (spec->num_items != -1)
     {
         dprf(DIAG_DNGN, "Shop spec overrides number of items: %d becomes %d.",
-             plojy, spec->num_items);
-        plojy = spec->num_items;
+             num_items, spec->num_items);
+        num_items = spec->num_items;
     }
 
     // For books shops, store how many copies of a given book are on display.
@@ -5670,7 +5670,7 @@ void place_spec_shop(const coord_def& where,
 
     coord_def stock_loc = coord_def(0, 5+i);
 
-    for (j = 0; j < plojy; j++)
+    for (j = 0; j < num_items; j++)
     {
         if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
             && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
