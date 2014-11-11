@@ -17,7 +17,12 @@ $ENV{TRAVIS} = 1;
 $ENV{FORCE_CC} = $ENV{CC};
 $ENV{FORCE_CXX} = $ENV{CXX};
 
-try("make -j2");
+if ($ENV{FULLDEBUG}) {
+    try("make -j2 debug");
+}
+else {
+    try("make -j2");
+}
 
 if (!$ENV{TILES}) {
     if ($ENV{FULLDEBUG}) {
