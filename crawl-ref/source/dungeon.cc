@@ -9,13 +9,13 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 #include <list>
 #include <map>
 #include <set>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 #include "abyss.h"
 #include "acquire.h"

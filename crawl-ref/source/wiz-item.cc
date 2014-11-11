@@ -7,7 +7,7 @@
 
 #include "wiz-item.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "acquire.h"
 #include "act-iter.h"

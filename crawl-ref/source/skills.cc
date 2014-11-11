@@ -9,9 +9,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
-#include <stdlib.h>
-#include <string.h>
 
 #include "ability.h"
 #include "describe-god.h"

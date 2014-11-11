@@ -8,11 +8,11 @@
 #include "mutation.h"
 #include "mutation-data.h"
 
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "ability.h"
 #include "act-iter.h"

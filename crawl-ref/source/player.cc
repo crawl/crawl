@@ -7,13 +7,13 @@
 
 #include "player.h"
 
-#include <sstream>
 #include <algorithm>
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
 
 #include "ability.h"
 #include "act-iter.h"

@@ -7,7 +7,7 @@
 
 #include "end.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "abyss.h"
 #include "chardump.h"

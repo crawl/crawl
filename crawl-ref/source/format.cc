@@ -2,7 +2,7 @@
 
 #include "format.h"
 
-#include <limits.h>
+#include <climits>
 
 #include "colour.h"
 #include "lang-fake.h"

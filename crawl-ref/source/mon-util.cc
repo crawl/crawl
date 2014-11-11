@@ -7,8 +7,8 @@
 
 #include "mon-util.h"
 
+#include <cmath>
 #include <sstream>
-#include <math.h>
 
 #include "act-iter.h"
 #include "areas.h"

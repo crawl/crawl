@@ -7,9 +7,9 @@
 
 #include "errors.h"
 
-#include <errno.h>
-#include <stdarg.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdarg>
+#include <cstring>
 
 #include "stringutil.h"
 

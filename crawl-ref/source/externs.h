@@ -6,7 +6,11 @@
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
+#define __STDC_FORMAT_MACROS
+#include <cinttypes>
+#include <cstdint>
 #include <cstdlib>
+#include <ctime>
 #include <deque>
 #include <list>
 #include <map>
@@ -14,10 +18,6 @@
 #include <set>
 #include <string>
 #include <vector>
-#include <time.h>
-#include <stdint.h>
-#define __STDC_FORMAT_MACROS
-#include <inttypes.h>
 
 #include "bitary.h"
 #include "enum.h"

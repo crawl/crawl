@@ -7,9 +7,9 @@
 
 #ifdef USE_TILE_LOCAL
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "cio.h"
 #include "defines.h"

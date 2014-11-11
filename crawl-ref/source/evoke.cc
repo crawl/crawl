@@ -8,9 +8,9 @@
 #include "evoke.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
-#include <math.h>
-#include <string.h>
+#include <cstring>
 
 #include "act-iter.h"
 #include "areas.h"

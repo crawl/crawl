@@ -9,10 +9,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 #include "artefact.h"
 #include "art-enum.h"

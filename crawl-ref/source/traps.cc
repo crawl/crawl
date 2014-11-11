@@ -9,7 +9,7 @@
 #include "trap_def.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 
 #include "areas.h"
 #include "bloodspatter.h"

@@ -2,7 +2,7 @@
 
 #include "godpassive.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "artefact.h"
 #include "art-enum.h"

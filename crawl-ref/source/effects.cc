@@ -9,11 +9,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <queue>
 #include <set>
-#include <stdio.h>
-#include <string.h>
 
 #include "abyss.h"
 #include "act-iter.h"

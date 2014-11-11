@@ -7,10 +7,10 @@
 
 #include "itemname.h"
 
+#include <cctype>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <ctype.h>
-#include <string.h>
 
 #include "artefact.h"
 #include "art-enum.h"

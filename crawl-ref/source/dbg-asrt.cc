@@ -5,8 +5,8 @@
 
 #include "AppHdr.h"
 
-#include <errno.h>
-#include <signal.h>
+#include <cerrno>
+#include <csignal>
 
 #include "abyss.h"
 #include "chardump.h"

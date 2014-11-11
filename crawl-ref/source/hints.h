@@ -6,10 +6,10 @@
 #ifndef HINTS_H
 #define HINTS_H
 
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
-#include <stdio.h>
-#include <stdlib.h>
 
 class formatted_string;
 class writer;

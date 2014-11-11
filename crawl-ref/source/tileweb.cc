@@ -4,8 +4,8 @@
 
 #include "tileweb.h"
 
-#include <errno.h>
-#include <stdarg.h>
+#include <cerrno>
+#include <cstdarg>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>

@@ -9,9 +9,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <memory>
 #include <sstream>
-#include <string.h>
 
 #include "act-iter.h"
 #include "attitude-change.h"

@@ -7,10 +7,10 @@
 #define __MENU_H__
 
 #include <algorithm>
+#include <cstdio>
+#include <ctime>
 #include <string>
 #include <vector>
-#include <stdio.h>
-#include <time.h>
 
 #include "format.h"
 #ifdef USE_TILE

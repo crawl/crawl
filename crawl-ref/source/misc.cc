@@ -12,7 +12,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif

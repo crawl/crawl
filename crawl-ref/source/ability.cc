@@ -7,12 +7,12 @@
 
 #include "ability.h"
 
+#include <cctype>
 #include <cmath>
+#include <cstdio>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "abyss.h"
 #include "acquire.h"

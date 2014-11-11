@@ -7,7 +7,7 @@
 
 #include "player.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "act-iter.h"
 #include "areas.h"

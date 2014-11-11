@@ -9,10 +9,10 @@
 
 #include <algorithm>
 #include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "areas.h"
 #include "attitude-change.h"

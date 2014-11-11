@@ -6,8 +6,8 @@
 #ifndef INVENT_H
 #define INVENT_H
 
+#include <cstddef>
 #include <vector>
-#include <stddef.h>
 
 #include "enum.h"
 #include "itemname.h"
