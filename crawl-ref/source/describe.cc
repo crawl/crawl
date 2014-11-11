@@ -1944,15 +1944,19 @@ string get_item_description(const item_def &item, bool verbose,
         {
             item_def stack = static_cast<item_def>(item);
             CrawlHashTable &props = stack.props;
-            ASSERT(props.exists("timer"));
-            CrawlVector &timer = props["timer"].get_vector();
-            ASSERT(!timer.empty());
+            if (!props.exists("timer"))
+                description << "\nTimers not yet initialized.";
+            else
+            {
+                CrawlVector &timer = props["timer"].get_vector();
+                ASSERT(!timer.empty());
 
-            description << "\nQuantity: " << stack.quantity
-                        << "        Timer size: " << (int) timer.size();
-            description << "\nTimers:\n";
-            for (int i = 0; i < timer.size(); ++i)
-                 description << (timer[i].get_int()) << "  ";
+                description << "\nQuantity: " << stack.quantity
+                            << "        Timer size: " << (int) timer.size();
+                description << "\nTimers:\n";
+                for (int i = 0; i < timer.size(); ++i)
+                    description << (timer[i].get_int()) << "  ";
+            }
         }
 #endif
 
