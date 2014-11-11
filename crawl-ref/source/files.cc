@@ -385,6 +385,7 @@ static vector<string> _get_base_dirs()
         SysEnv.crawl_base + "../Resources/",
 #endif
 #ifdef __ANDROID__
+        ANDROID_ASSETS,
         "/sdcard/Android/data/org.develz.crawl/files/",
 #endif
     };
@@ -2490,9 +2491,18 @@ FILE *fopen_replace(const char *name)
 // Returns the size of the opened file with the give FILE* handle.
 off_t file_size(FILE *handle)
 {
+#ifdef __ANDROID__
+    off_t pos = ftello(handle);
+    if (fseeko(handle, 0, SEEK_END) < 0)
+        return 0;
+    off_t ret = ftello(handle);
+    fseeko(handle, pos, SEEK_SET);
+    return ret;
+#else
     struct stat fs;
     const int err = fstat(fileno(handle), &fs);
     return err? 0 : fs.st_size;
+#endif
 }
 
 vector<string> get_title_files()

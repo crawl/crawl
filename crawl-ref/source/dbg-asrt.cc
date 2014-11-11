@@ -77,6 +77,10 @@
 #endif
 #endif
 
+#ifdef __ANDROID__
+# include <android/log.h>
+#endif
+
 static string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
@@ -892,6 +896,10 @@ NORETURN void die_noline(const char *format, ...)
     va_end(args);
 
     snprintf(mesg, sizeof(mesg), "ERROR: %s", tmp);
+
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", mesg);
+#endif
 
     _assert_msg = mesg;
 
