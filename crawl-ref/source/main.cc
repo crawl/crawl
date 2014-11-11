@@ -563,6 +563,26 @@ static void _wanderer_startup_message()
     }
 }
 
+static void _wanderer_note_items()
+{
+    ostringstream equip_str;
+    equip_str << you.your_name
+            << " set off with: ";
+    bool first_item = true;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        item_def& item(you.inv[i]);
+        if (item.defined()) {
+            if (!first_item)
+                equip_str << ", ";
+            equip_str << item.name(DESC_A, false, true);
+            first_item = false;
+        }
+    }
+    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str.str().c_str()));
+}
+
 /**
  * The suffix to apply to welcome_spam when looking up an entry name from the
  * database.
@@ -633,6 +653,9 @@ static void _take_starting_note()
         notestr.clear();
     }
 #endif
+
+    if (you.char_class == JOB_WANDERER)
+        _wanderer_note_items();
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
             << " MP: " << you.magic_points << "/" << you.max_magic_points;
