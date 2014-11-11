@@ -5565,11 +5565,6 @@ static dungeon_feature_type _pick_an_altar()
     return altar_for_god(god);
 }
 
-static bool _need_varied_selection(shop_type shop)
-{
-    return shop == SHOP_BOOK;
-}
-
 static bool _shop_sells_antiques(shop_type type)
 {
     return type == SHOP_WEAPON_ANTIQUE
@@ -5679,6 +5674,142 @@ static int _shop_num_items(shop_type type, bool representative,
 }
 
 /**
+ * What 'level' should an item from the given shop type be generated at?
+ *
+ * @param shop_type_        The type of shop the item is to be sold from.
+ * @param level_number      The depth of the level the shop is on.
+ * @return                  An "item level" to generate an item at.
+ */
+static int _choose_shop_item_level(shop_type shop_type_, int level_number)
+{
+    const int shop_multiplier = _shop_sells_antiques(shop_type_) ? 3 : 2;
+    const int base_level = level_number
+                            + random2((level_number + 1) * shop_multiplier);
+
+    // Make bazaar items more valuable (up to double value).
+    if (!player_in_branch(BRANCH_BAZAAR))
+        return base_level;
+
+    const int bazaar_bonus = random2(base_level) + 1;
+    return min(base_level + bazaar_bonus, level_number * 5);
+}
+
+/**
+ * Is the given item valid for placement in the given shop?
+ *
+ * @param item_index    An index into mitm; may be NON_ITEM.
+ * @param shop_type_    The type of shop being generated.
+ * @param spec          The specification for the shop.
+ * @return              Whether the item is valid.
+ */
+static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
+                                 shop_spec &spec)
+{
+    if (item_index == NON_ITEM)
+        return false;
+
+    const item_def &item = mitm[item_index];
+
+    // Don't generate gold in shops! This used to be possible with
+    // general stores (GDL)
+    if (item.base_type == OBJ_GOLD)
+        return false;
+
+    // Don't place missiles or food in general antique shops...
+    if (shop_type_ == SHOP_GENERAL_ANTIQUE
+            && (item.base_type == OBJ_MISSILES
+                || item.base_type == OBJ_FOOD))
+    {
+        // ...unless they're specified by the item spec.
+        return !spec.items.empty();
+    }
+
+    return true;
+}
+
+static void _stock_shop_item(int j, shop_type shop_type_,
+                             int stocked[NUM_BOOKS], bool representative,
+                             shop_spec &spec, int shop_index)
+{
+    const int level_number = env.absdepth0;
+    const int item_level = _choose_shop_item_level(shop_type_, level_number);
+    const coord_def stock_loc = coord_def(0, 5+shop_index);
+
+
+    int item_index; // index into mitm (global item array)
+                    // where the generated item will be stored
+
+    // XXX: this scares the hell out of me. should it be a for (...1000)?
+    // also, it'd be nice if it was just a function that returned an
+    // item index, maybe
+    while (true)
+    {
+        const object_class_type basetype =
+            (representative && shop_type_ == SHOP_EVOKABLES)
+                ? OBJ_WANDS
+                : item_in_shop(shop_type_);
+        const int subtype = representative? j : OBJ_RANDOM;
+
+        if (!spec.items.empty() && !spec.use_all)
+        {
+            // shop spec lists a random set of items; choose one
+            item_index = dgn_place_item(spec.items.random_item_weighted(),
+                                        stock_loc, item_level);
+        }
+        else if (!spec.items.empty() && spec.use_all
+                 && j < (int)spec.items.size())
+        {
+            // shop lists ordered items; take the one at the right index
+            item_index = dgn_place_item(spec.items.get_item(j), stock_loc,
+                                        item_level);
+        }
+        else
+        {
+            // make an item randomly
+            item_index = items(true, basetype, subtype,
+                               one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
+        }
+
+        // Try for a better selection for bookshops.
+        if (item_index != NON_ITEM && shop_type_ == SHOP_BOOK)
+        {
+            // if this book type is already in the shop, maybe discard it
+            if (!one_chance_in(stocked[mitm[item_index].sub_type] + 1))
+            {
+                mitm[item_index].clear();
+                item_index = NON_ITEM; // try again
+            }
+        }
+
+        if (_valid_item_for_shop(item_index, shop_type_, spec))
+            break;
+
+        // Reset object and try again.
+        mitm[item_index].clear();
+    }
+
+    ASSERT(item_index != NON_ITEM);
+
+    item_def& item(mitm[item_index]);
+
+    // If this is a book, note it down in the stocked books array
+    // (unless it's a randbook)
+    if (shop_type_ == SHOP_BOOK && !is_artefact(item))
+        stocked[item.sub_type]++;
+
+    // please don't ask me what this does
+    if (representative && item.base_type == OBJ_WANDS)
+        item.plus = 7;
+
+    // Set object 'position' (gah!) & ID status.
+    item.pos = stock_loc;
+
+    // Identify the item, unless we don't do that.
+    if (!_shop_sells_antiques(shop_type_))
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+}
+
+/**
  * Attempt to place a shop in a given location.
  *
  * @param where             The location to place the shop.
@@ -5722,104 +5853,14 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS];
-    if (_need_varied_selection(shop_type_))
+    if (shop_type_ == SHOP_BOOK)
         for (int k = 0; k < NUM_BOOKS; k++)
              stocked[k] = 0;
 
-    // The ''''location''' of the last selected shop item.
-    coord_def stock_loc = coord_def(0, 5+shop_index);
-
     for (int j = 0; j < num_items; j++)
     {
-        int orb = 0; // TODO: KILLME
-
-        int item_level = 0;
-        if (!_shop_sells_antiques(shop_type_))
-            item_level = level_number + random2((level_number + 1) * 2);
-        else
-            item_level = level_number + random2((level_number + 1) * 3);
-
-        // Make bazaar items more valuable (up to double value).
-        if (player_in_branch(BRANCH_BAZAAR))
-        {
-            int help = random2(item_level) + 1;
-            item_level += help;
-
-            if (item_level > level_number * 5)
-                item_level = level_number * 5;
-        }
-
-        // Don't generate gold in shops! This used to be possible with
-        // general stores (see item_in_shop() below)   (GDL)
-        while (true)
-        {
-            const object_class_type basetype =
-                (representative && shop_type_ == SHOP_EVOKABLES)
-                ? OBJ_WANDS
-                : item_in_shop(shop_type_);
-            const int subtype = representative? j : OBJ_RANDOM;
-
-            if (!spec.items.empty() && !spec.use_all)
-            {
-                orb = dgn_place_item(spec.items.random_item_weighted(),
-                        stock_loc, item_level);
-            }
-            else if (!spec.items.empty() && spec.use_all
-                     && j < (int)spec.items.size())
-            {
-                orb = dgn_place_item(spec.items.get_item(j), stock_loc,
-                                     item_level);
-            }
-            else
-            {
-                orb = items(true, basetype, subtype,
-                            one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
-            }
-
-            // Try for a better selection.
-            if (orb != NON_ITEM && _need_varied_selection(shop_type_))
-            {
-                if (!one_chance_in(stocked[mitm[orb].sub_type] + 1))
-                {
-                    mitm[orb].clear();
-                    orb = NON_ITEM; // try again
-                }
-            }
-
-            if (orb != NON_ITEM
-                && mitm[orb].base_type != OBJ_GOLD
-                && (shop_type_ != SHOP_GENERAL_ANTIQUE
-                    || (mitm[orb].base_type != OBJ_MISSILES
-                        && mitm[orb].base_type != OBJ_FOOD)
-                    || !spec.items.empty()))
-            {
-                break;
-            }
-
-            // Reset object and try again.
-            if (orb != NON_ITEM)
-                mitm[orb].clear();
-        }
-
-        if (orb == NON_ITEM)
-            break;
-
-        item_def& item(mitm[orb]);
-
-        // Increase stock of this subtype by 1, unless it is an artefact
-        // (allow for several artefacts of the same underlying subtype)
-        // - the latter is currently unused but would apply to e.g. jewellery.
-        if (_need_varied_selection(shop_type_) && !is_artefact(item))
-            stocked[item.sub_type]++;
-
-        if (representative && item.base_type == OBJ_WANDS)
-            item.plus = 7;
-
-        // Set object 'position' (gah!) & ID status.
-        item.pos = stock_loc;
-
-        if (!_shop_sells_antiques(shop_type_))
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+        _stock_shop_item(j, shop_type_, stocked, representative, spec,
+                         shop_index);
     }
 
     env.shop[shop_index].pos = where;
