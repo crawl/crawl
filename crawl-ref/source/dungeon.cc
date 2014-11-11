@@ -5841,7 +5841,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
     activate_notes(false);
 
     const int shop_index = _get_free_shop_index();
-    if (_get_free_shop_index() == MAX_SHOPS)
+    if (shop_index == MAX_SHOPS)
         return;
 
     for (int j = 0; j < 3; j++)
