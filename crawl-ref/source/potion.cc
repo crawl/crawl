@@ -156,32 +156,12 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         else
         {
-            const int value = pot_eff == POT_BLOOD ? 1040 : 840;
             const int herbivorous = player_mutation_level(MUT_HERBIVOROUS);
-
             if (herbivorous < 3 && player_likes_chunks())
-            {
-                // Likes it.
                 mpr("This tastes like blood.");
-                if (you.species == SP_GHOUL && player_rotted())
-                {
-                    mpr("You feel more resilient.");
-                    unrot_hp(1);
-                }
-                lessen_hunger(value, true);
-            }
             else
-            {
                 mpr("Yuck - this tastes like blood.");
-                if (x_chance_in_y(herbivorous + 1, 4))
-                {
-                    // Full herbivores always become ill from blood.
-                    you.sicken(50 + random2(100));
-                    xom_is_stimulated(25 / xom_factor);
-                }
-                else
-                    lessen_hunger(value, true);
-            }
+            // no actual effect, just 'flavour' ha ha ha
         }
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         break;
