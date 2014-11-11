@@ -4359,11 +4359,12 @@ static void _gozag_place_shop_here(int index)
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
     if (!kmspec.get_feat().shop.get())
-    {
         die("Invalid shop spec?");
 
-    place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
-    }
+    shop_spec *spec = kmspec.get_feat().shop.get();
+    ASSERT(spec);
+    place_spec_shop(you.pos(), *spec);
+
     link_items();
     env.markers.add(new map_feature_marker(you.pos(),
                                            DNGN_ABANDONED_SHOP));
