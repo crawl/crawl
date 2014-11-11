@@ -212,31 +212,6 @@ def bind_server():
     return servers
 
 
-def init_logging(logging_config):
-    filename = logging_config.get("filename")
-    if filename:
-        max_bytes = logging_config.get("max_bytes", 10*1000*1000)
-        backup_count = logging_config.get("backup_count", 5)
-        hdlr = logging.handlers.RotatingFileHandler(
-            filename, maxBytes=max_bytes, backupCount=backup_count)
-    else:
-        hdlr = logging.StreamHandler(None)
-    fs = logging_config.get("format", "%(levelname)s:%(name)s:%(message)s")
-    dfs = logging_config.get("datefmt", None)
-    fmt = logging.Formatter(fs, dfs)
-    hdlr.setFormatter(fmt)
-    logging.getLogger().addHandler(hdlr)
-    level = logging_config.get("level")
-    if level is not None:
-        logging.getLogger().setLevel(level)
-    logging.getLogger().addFilter(TornadoFilter())
-    logging.addLevelName(logging.DEBUG, "DEBG")
-    logging.addLevelName(logging.WARNING, "WARN")
-
-    if not logging_config.get("enable_access_log"):
-        logging.getLogger('tornado.access').setLevel(logging.FATAL)
-
-
 def check_config():
     success = True
     for game_data in config.get("games"):
@@ -292,8 +267,6 @@ def check_config():
 if __name__ == "__main__":
     if config.get("chroot"):
         os.chroot(config.chroot)
-
-    init_logging(config.logging_config)
 
     if not check_config():
         err_exit("Errors in config. Exiting.")

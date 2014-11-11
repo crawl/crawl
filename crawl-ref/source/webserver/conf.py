@@ -4,6 +4,8 @@ import toml
 import logging
 import sys
 
+from util import TornadoFilter
+
 
 if os.environ.get('WEBTILES_DEBUG'):
     logging.getLogger().setLevel(logging.DEBUG)
@@ -34,6 +36,7 @@ class Conf(object):
             sys.exit(errmsg)
 
         self.load()
+        self.init_logging()
         self.init_games()
 
     def load(self):
@@ -110,6 +113,31 @@ class Conf(object):
                     logging.info("Loaded game '%s'" % game["id"])
         elif games_conf_d and not os.path.isdir(games_conf_d):
             logging.warning("games_conf_d is not a directory, ignoring")
+
+    def init_logging(self):
+        logging_config = self.logging_config
+        filename = logging_config.get("filename")
+        if filename:
+            max_bytes = logging_config.get("max_bytes", 10*1000*1000)
+            backup_count = logging_config.get("backup_count", 5)
+            hdlr = logging.handlers.RotatingFileHandler(
+                filename, maxBytes=max_bytes, backupCount=backup_count)
+        else:
+            hdlr = logging.StreamHandler(None)
+        fs = logging_config.get("format", "%(levelname)s:%(name)s:%(message)s")
+        dfs = logging_config.get("datefmt", None)
+        fmt = logging.Formatter(fs, dfs)
+        hdlr.setFormatter(fmt)
+        logging.getLogger().addHandler(hdlr)
+        level = logging_config.get("level")
+        if level is not None:
+            logging.getLogger().setLevel(level)
+        logging.getLogger().addFilter(TornadoFilter())
+        logging.addLevelName(logging.DEBUG, "DEBG")
+        logging.addLevelName(logging.WARNING, "WARN")
+
+        if not logging_config.get("enable_access_log"):
+            logging.getLogger('tornado.access').setLevel(logging.FATAL)
 
     def load_player_titles(self):
         # Don't bother loading titles if we don't have the title sets defined.
