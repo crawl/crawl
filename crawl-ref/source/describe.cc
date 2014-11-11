@@ -58,6 +58,8 @@
 #endif
 #include "unicode.h"
 
+extern const spell_type serpent_of_hell_breaths[4][3];
+
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -3248,9 +3250,30 @@ static string _monster_spell_type_description(const monster_info& mi,
         for (size_t j = 0; j < book_spells.size(); ++j)
         {
             const spell_type spell = book_spells[j];
-            if (j > 0)
-                result << ", ";
-            result << spell_title(spell);
+            if (spell == SPELL_SERPENT_OF_HELL_BREATH)
+            {
+                const int idx =
+                        mi.type == MONS_SERPENT_OF_HELL          ? 0
+                      : mi.type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
+                      : mi.type == MONS_SERPENT_OF_HELL_DIS      ? 2
+                      : mi.type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
+                      :                                           -1;
+                ASSERT(idx >= 0 && idx <= 3);
+                for (size_t k = 0;
+                     k < ARRAYSZ(serpent_of_hell_breaths[idx]);
+                     ++k)
+                {
+                    if (j > 0 || k > 0)
+                        result << ", ";
+                    result << spell_title(serpent_of_hell_breaths[idx][k]);
+                }
+            }
+            else
+            {
+                if (j > 0)
+                    result << ", ";
+                result << spell_title(spell);
+            }
         }
         result << "\n";
     }
