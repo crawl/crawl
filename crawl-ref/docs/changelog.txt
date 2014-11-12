@@ -35,7 +35,7 @@ Monsters
 * The Great Lords of Pandemonium (Cerebov, et al) will reappear on later floors
   of Pandemonium if their rune is stolen, unless and until they are slain.
 * The Serpent of Hell is considerably tougher; it now has three heads which
-  can attack and/or breathe separately and can also summon backup.
+  can attack and/or breathe separately, and can also summon backup.
 * Mnoleg now has more and more exciting attack types.
 * Mimics now cackle and vanish (forever) when discovered.
 * Mermaids have been renamed to sirens; sirens have been renamed to merfolk
@@ -169,6 +169,7 @@ Gods
   permitted to Dithmenos's worshippers.
 * Nemelex Xobeh:
   - Draw One and Peek at Two are no more.
+* Okawaru no longer supports corpse sacrifice.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
    - Hell effect protection halved; now capping out at 50%, down from 100%.
