@@ -1419,7 +1419,7 @@ bool mons_class_leaves_hide(monster_type mc)
 {
     if (mons_genus(mc) == MONS_TROLL)
         return true;
-    switch (mc)
+    switch (mons_species(mc))
     {
     case MONS_FIRE_DRAGON:
     case MONS_ICE_DRAGON:

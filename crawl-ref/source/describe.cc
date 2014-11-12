@@ -3902,13 +3902,19 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << ", and it is incapable of using stairs";
         inf.body << ".\n";
     }
-
-    if (mi.is(MB_PERM_SUMMON))
+    else if (mi.is(MB_PERM_SUMMON))
     {
         inf.body << "\n" << "This monster has been summoned in a durable "
                        "way, and only partially exists. Killing it yields no "
                        "experience, nutrition or items. You cannot easily "
                        "abjure it, though.\n";
+    }
+    else if (mons_class_leaves_hide(mi.type))
+    {
+        inf.body << "\nIf " << mi.pronoun(PRONOUN_SUBJECTIVE) << " is slain "
+        "and butchered, it may be possible to recover "
+        << mi.pronoun(PRONOUN_POSSESSIVE) << " hide, which can be "
+        "enchanted into armour.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))
