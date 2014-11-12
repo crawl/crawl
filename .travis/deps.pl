@@ -18,6 +18,10 @@ else {
         libsdl2-dev
         libsdl2-image-dev
     ) if $ENV{TILES} || $ENV{WEBTILES};
+
+    push @deps, qw(
+       libegl1-mesa-dev
+    ) if $ENV{BUILD_ALL};
 }
 
 exec "sudo apt-get install @deps";
