@@ -433,39 +433,35 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
-
-    bool vault_forced = false;
+    if (corpse_class == MONS_NO_MONSTER)
+        return -1;
 
     // Don't place a corpse?  If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
     if (mons_class_is_zombified(mons->type))
         force = true;
 
-    // "always_corpse" forces monsters to always generate a corpse upon
-    // their deaths.
-    if (mons->props.exists("always_corpse")
+    const bool vault_forced =
+        mons->props.exists("always_corpse")
         || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
         || mons_is_demonspawn(mons->type)
            && mons_class_flag(draco_or_demonspawn_subspecies(mons),
-                              M_ALWAYS_CORPSE))
-    {
-        vault_forced = true;
-    }
+                              M_ALWAYS_CORPSE);
 
-    if (corpse_class == MONS_NO_MONSTER
-        || (!force && !vault_forced && coinflip()))
-    {
+    // 50/50 chance of getting a corpse, unless it's forced by the caller or
+    // the monster's flags.
+    // gozag always gets a "corpse". (gold.)
+    if (!force && !vault_forced && !in_good_standing(GOD_GOZAG) && coinflip())
         return -1;
-    }
 
     if (!force && in_good_standing(GOD_GOZAG))
     {
         const monsterentry* me = get_monster_data(corpse_class);
-        const int min_base_gold = 13;
+        const int min_base_gold = 7;
         // monsters weighing more than this give more than base gold
         const int baseline_weight = 550; // MONS_HUMAN
         const int base_gold = max(min_base_gold,
-                                  (me->weight - baseline_weight) / 40
+                                  (me->weight - baseline_weight) / 80
                                     + min_base_gold);
         corpse.clear();
         corpse.base_type = OBJ_GOLD;
