@@ -1580,7 +1580,7 @@ static weighted_map_names _find_random_vaults(
             map_counts[map->name]++;
     }
 
-    wms.insert(wms.end(), map_counts.begin(), map_counts.end())
+    wms.insert(wms.end(), map_counts.begin(), map_counts.end());
     return wms;
 }
 
