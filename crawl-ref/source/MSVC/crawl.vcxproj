@@ -791,7 +791,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-poly.h" />
     <ClInclude Include="..\mon-project.h" />
     <ClInclude Include="..\mon-speak.h" />
-    <ClInclude Include="..\mon-spll.h" />
+    <ClInclude Include="..\mon-spell.h" />
     <ClInclude Include="..\mon-tentacle.h" />
     <ClInclude Include="..\mon-transit.h" />
     <ClInclude Include="..\mon-util.h" />

@@ -13,7 +13,7 @@
 # ENDMAP
 #
 # This assumes that the unique is defined as a monster in the files
-#   enum.h, mon-gear.cc, mon-data.h,  mon-spll.h, tilemcache.cc, tilepick.cc
+#   enum.h, mon-gear.cc, mon-data.h,  mon-spell.h, tilemcache.cc, tilepick.cc
 # Their speech is defined in
 #   dat/database/monspeak.txt
 #

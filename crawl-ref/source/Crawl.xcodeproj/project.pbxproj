@@ -1469,7 +1469,7 @@
 		E5D6403C10BD494400A99626 /* mon-place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-place.h"; sourceTree = "<group>"; };
 		E5D6403D10BD494400A99626 /* mon-speak.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-speak.cc"; sourceTree = "<group>"; };
 		E5D6403E10BD494400A99626 /* mon-speak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-speak.h"; sourceTree = "<group>"; };
-		E5D6403F10BD494400A99626 /* mon-spll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-spll.h"; sourceTree = "<group>"; };
+		E5D6403F10BD494400A99626 /* mon-spell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-spell.h"; sourceTree = "<group>"; };
 		E5D6404010BD494400A99626 /* mon-stuff.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-stuff.cc"; sourceTree = "<group>"; };
 		E5D6404110BD494400A99626 /* mon-stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-stuff.h"; sourceTree = "<group>"; };
 		E5D6404210BD494400A99626 /* mon-transit.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-transit.cc"; sourceTree = "<group>"; };
@@ -2052,7 +2052,7 @@
 				7B09F64F1133DA4D004F149D /* mon-project.h */,
 				E5D6403D10BD494400A99626 /* mon-speak.cc */,
 				E5D6403E10BD494400A99626 /* mon-speak.h */,
-				E5D6403F10BD494400A99626 /* mon-spll.h */,
+				E5D6403F10BD494400A99626 /* mon-spell.h */,
 				1F909B39148B244F00084E83 /* mon-stealth.cc */,
 				E5D6404010BD494400A99626 /* mon-stuff.cc */,
 				E5D6404110BD494400A99626 /* mon-stuff.h */,
