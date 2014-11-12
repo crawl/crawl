@@ -12,6 +12,7 @@ if ($ENV{BUILD_ALL}) {
     push @deps, qw(
        libegl1-mesa-dev
        libasound2-dev
+       libxss-dev
     );
 }
 else {
