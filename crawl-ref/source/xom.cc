@@ -1897,10 +1897,8 @@ static int _xom_change_scenery(bool debug = false)
                 // If it's a gate, add all doors belonging to the gate.
                 set<coord_def> all_door;
                 find_connected_identical(*ri, all_door);
-                for (auto dc = all_door.begin(); dc != all_door.end(); ++dc)
-                {
-                    closed_doors.push_back(*dc);
-                }
+                for (auto dc : all_door)
+                    closed_doors.push_back(dc);
             }
         }
         else if (feat == DNGN_OPEN_DOOR && !actor_at(*ri)
@@ -1924,9 +1922,9 @@ static int _xom_change_scenery(bool debug = false)
                 set<coord_def> all_door;
                 find_connected_identical(*ri, all_door);
                 bool is_blocked = false;
-                for (auto dc = all_door.begin(); dc != all_door.end(); ++dc)
+                for (auto dc : all_door)
                 {
-                    if (actor_at(*dc) || igrd(*dc) != NON_ITEM)
+                    if (actor_at(dc) || igrd(dc) != NON_ITEM)
                     {
                         is_blocked = true;
                         break;
@@ -1937,11 +1935,8 @@ static int _xom_change_scenery(bool debug = false)
                 // belonging to the gate.
                 if (!is_blocked)
                 {
-                    for (auto dc = all_door.begin();
-                         dc != all_door.end(); ++dc)
-                    {
-                        open_doors.push_back(*dc);
-                    }
+                    for (auto dc : all_door)
+                        open_doors.push_back(dc);
                 }
             }
         }

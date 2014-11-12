@@ -2315,19 +2315,19 @@ static void _update_mold()
 static void _update_golubria_traps()
 {
     vector<coord_def> traps = find_golubria_on_level();
-    for (auto it = traps.begin(); it != traps.end(); ++it)
+    for (auto c : traps)
     {
-        trap_def *trap = find_trap(*it);
+        trap_def *trap = find_trap(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
             {
-                if (you.see_cell(*it))
+                if (you.see_cell(c))
                     mpr("Your passage of Golubria closes with a snap!");
                 else
                     mprf(MSGCH_SOUND, "You hear a snapping sound.");
                 trap->destroy();
-                noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), *it);
+                noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), c);
             }
         }
     }

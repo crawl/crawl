@@ -1109,18 +1109,18 @@ void monster::timeout_enchantments(int levels)
         return;
 
     const mon_enchant_list ec = enchantments;
-    for (auto i = ec.begin(); i != ec.end(); ++i)
+    for (auto &entry : ec)
     {
-        switch (i->first)
+        switch (entry.first)
         {
         case ENCH_WITHDRAWN:
             if (hit_points >= (max_hit_points - max_hit_points / 4)
                 && !one_chance_in(3))
             {
-                del_ench(i->first);
+                del_ench(entry.first);
                 break;
             }
-            lose_ench_levels(i->second, levels);
+            lose_ench_levels(entry.second, levels);
             break;
 
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
@@ -1141,15 +1141,18 @@ void monster::timeout_enchantments(int levels)
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
         case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
-            lose_ench_levels(i->second, levels);
+            lose_ench_levels(entry.second, levels);
             break;
 
         case ENCH_SLOW:
             if (torpor_slowed())
-                lose_ench_levels(i->second, min(levels, i->second.degree - 1));
+            {
+                lose_ench_levels(entry.second,
+                                 min(levels, entry.second.degree - 1));
+            }
             else
             {
-                lose_ench_levels(i->second, levels);
+                lose_ench_levels(entry.second, levels);
                 if (props.exists(TORPOR_SLOWED_KEY))
                     props.erase(TORPOR_SLOWED_KEY);
             }
@@ -1157,7 +1160,7 @@ void monster::timeout_enchantments(int levels)
 
         case ENCH_INVIS:
             if (!mons_class_flag(type, M_INVIS))
-                lose_ench_levels(i->second, levels);
+                lose_ench_levels(entry.second, levels);
             break;
 
         case ENCH_INSANE:
@@ -1165,41 +1168,41 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
-            del_ench(i->first);
+            del_ench(entry.first);
             break;
 
         case ENCH_FATIGUE:
-            del_ench(i->first);
+            del_ench(entry.first);
             del_ench(ENCH_SLOW);
             break;
 
         case ENCH_TP:
             teleport(true);
-            del_ench(i->first);
+            del_ench(entry.first);
             break;
 
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
-                del_ench(i->first);
+                del_ench(entry.first);
             if (!is_stationary())
                 monster_blink(this, true);
             break;
 
         case ENCH_HELD:
-            del_ench(i->first);
+            del_ench(entry.first);
             break;
 
         case ENCH_TIDE:
         {
             const int actdur = speed_to_duration(speed) * levels;
-            lose_ench_duration(i->first, actdur);
+            lose_ench_duration(entry.first, actdur);
             break;
         }
 
         case ENCH_SLOWLY_DYING:
         {
             const int actdur = speed_to_duration(speed) * levels;
-            if (lose_ench_duration(i->first, actdur))
+            if (lose_ench_duration(entry.first, actdur))
                 monster_die(this, KILL_MISC, NON_MONSTER, true);
             break;
         }

@@ -471,11 +471,7 @@ static void _dgn_postprocess_level()
 
 void dgn_clear_vault_placements(vault_placement_refv &vps)
 {
-    for (auto i = vps.begin(); i != vps.end(); ++i)
-    {
-        delete *i;
-    }
-    vps.clear();
+    deleteAll(vps);
 }
 
 // Removes vaults that are not referenced in the map index mask from
@@ -758,10 +754,8 @@ static bool _dgn_fill_zone(
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (auto i = points[cur].begin(); i != points[cur].end(); ++i)
+        for (const auto &c : points[cur])
         {
-            const coord_def &c(*i);
-
             travel_point_distance[c.x][c.y] = zone;
 
             if (iswanted && iswanted(c))
@@ -948,10 +942,10 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                         break;
                 }
                 if (!veto)
-                    for (auto it = coords.begin(); it != coords.end(); it++)
-                    {
-                        _set_grd(*it, fill);
-                    }
+                {
+                    for (auto c : coords)
+                        _set_grd(c, fill);
+                }
             }
         }
     }
@@ -1041,9 +1035,9 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     // Find tags matching properties.
     vector<string> tags = place.map.get_tags();
 
-    for (auto i = tags.begin(); i != tags.end(); ++i)
+    for (const auto &tag : tags)
     {
-        const feature_property_type prop = str_to_fprop(*i);
+        const feature_property_type prop = str_to_fprop(tag);
         if (prop == FPROP_NONE)
             continue;
 
@@ -1497,9 +1491,7 @@ static void _fixup_branch_stairs()
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
                 for (auto it = stairs.begin() + 1; it != stairs.end(); it++)
-                {
                     _set_grd(*it, DNGN_FLOOR);
-                }
             }
         }
     }
@@ -2153,11 +2145,11 @@ static void _ruin_level(Iterator iter,
                 to_replace.push_back(replacement);
         }
 
-        for (auto it = to_replace.begin(); it != to_replace.end(); ++it)
+        for (const auto &cfeat : to_replace)
         {
-            const coord_def &p(it->pos);
+            const coord_def &p(cfeat.pos);
             replaced.push_back(p);
-            dungeon_feature_type replacement = it->feat;
+            dungeon_feature_type replacement = cfeat.feat;
             ASSERT(replacement != DNGN_UNSEEN);
 
             // Don't replace doors with impassable features.
@@ -2181,8 +2173,8 @@ static void _ruin_level(Iterator iter,
             {
                 // Copy the mask and properties too, so that we don't make an
                 // isolated transparent or rtele_into square.
-                env.level_map_mask(p) |= it->mask;
-                env.pgrid(p) |= it->prop;
+                env.level_map_mask(p) |= cfeat.mask;
+                env.pgrid(p) |= cfeat.prop;
                 _set_grd(p, replacement);
             }
 
@@ -2200,8 +2192,8 @@ static void _ruin_level(Iterator iter,
                     // It's always safe to replace a door with floor.
                     if (remove)
                     {
-                        env.level_map_mask(p) |= it->mask;
-                        env.pgrid(p) |= it->prop;
+                        env.level_map_mask(p) |= cfeat.mask;
+                        env.pgrid(p) |= cfeat.prop;
                         _set_grd(*wai, DNGN_FLOOR);
                     }
                 }
@@ -2209,10 +2201,8 @@ static void _ruin_level(Iterator iter,
         }
     }
 
-    for (auto it = replaced.begin(); it != replaced.end(); ++it)
+    for (const auto &p : replaced)
     {
-        const coord_def &p(*it);
-
         // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
             && feat_has_solid_floor(grd(p))
@@ -2894,10 +2884,9 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
                 map_component * absolute_min = &intermediate_components[absolute_min_label];
 
                 absolute_min->add_coord(*pos);
-                for (auto i = neighbor_labels.begin();
-                     i != neighbor_labels.end();i++)
+                for (auto i : neighbor_labels)
                 {
-                    map_component * current = &intermediate_components[*i];
+                    map_component * current = &intermediate_components[i];
 
                     while (current && current != absolute_min)
                     {
@@ -2914,13 +2903,12 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
 
     int reindexed_label = 1;
     // Reindex root labels, and move them to output
-    for (auto i = intermediate_components.begin();
-         i != intermediate_components.end(); ++i)
+    for (auto &entry : intermediate_components)
     {
-        if (i->second.min_equivalent == NULL)
+        if (entry.second.min_equivalent == NULL)
         {
-            i->second.label = reindexed_label++;
-            components.push_back(i->second);
+            entry.second.label = reindexed_label++;
+            components.push_back(entry.second);
         }
     }
 
@@ -3239,10 +3227,9 @@ static void _place_gozag_shop(dungeon_feature_type stair)
         return;
 
     bool encompass = false;
-    for (auto i = env.level_layout_types.begin();
-         i != env.level_layout_types.end(); ++i)
+    for (const auto &type : env.level_layout_types)
     {
-        if (*i == "encompass")
+        if (type == "encompass")
         {
             encompass = true;
             break;
@@ -5377,12 +5364,12 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
         }
         cur.insert(cur.begin() + random2(cur.size()), *ai);
     }
-    for (auto ci = cur.begin(); ci != cur.end(); ci++)
+    for (auto cc : cur)
     {
-        coords.insert(*ci);
+        coords.insert(cc);
 
-        const coord_def dp = *ci - c;
-        travel_point_distance[ci->x][ci->y] = (-dp.x + 2) * 4 + (-dp.y + 2);
+        const coord_def dp = cc - c;
+        travel_point_distance[cc.x][cc.y] = (-dp.x + 2) * 4 + (-dp.y + 2);
     }
 }
 
@@ -5443,12 +5430,12 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     const vector<coord_def> path =
         dgn_join_the_dots_pathfind(from, to, mapmask);
 
-    for (auto i = path.begin(); i != path.end(); ++i)
+    for (auto c : path)
     {
-        if (!map_masked(*i, mapmask) && overwriteable(grd(*i)))
+        if (!map_masked(c, mapmask) && overwriteable(grd(c)))
         {
-            grd(*i) = DNGN_FLOOR;
-            dgn_height_set_at(*i);
+            grd(c) = DNGN_FLOOR;
+            dgn_height_set_at(c);
         }
     }
 
@@ -6008,13 +5995,12 @@ static bool _connect_spotty(const coord_def& from,
 
     if (!spotty_path.empty())
     {
-        for (auto it = spotty_path.begin(); it != spotty_path.end(); ++it)
+        for (auto c : spotty_path)
         {
-            grd(*it) =
-                (player_in_branch(BRANCH_SWAMP) && one_chance_in(3))
-                ? DNGN_SHALLOW_WATER
-                : DNGN_FLOOR;
-            dgn_height_set_at(*it);
+            grd(c) = (player_in_branch(BRANCH_SWAMP) && one_chance_in(3))
+                   ? DNGN_SHALLOW_WATER
+                   : DNGN_FLOOR;
+            dgn_height_set_at(c);
         }
     }
 
@@ -6099,12 +6085,12 @@ static void _add_plant_clumps(int frequency /* = 10 */,
 
                 // make sure the iterator stays valid
                 vector<coord_def> more_to_place;
-                for (auto it = to_place.begin(); it != to_place.end(); ++it)
+                for (auto c : to_place)
                 {
-                    if (*rad == *it)
+                    if (*rad == c)
                         continue;
                     // only place plants next to previously placed plants
-                    if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
+                    if (abs(rad->x - c.x) <= 1 && abs(rad->y - c.y) <= 1)
                     {
                         if (one_chance_in(clump_density))
                             more_to_place.push_back(*rad);
@@ -6115,13 +6101,13 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             }
         }
 
-        for (auto it = to_place.begin(); it != to_place.end(); ++it)
+        for (auto c : to_place)
         {
-            if (*it == *ri)
+            if (c == *ri)
                 continue;
-            if (plant_forbidden_at(*it))
+            if (plant_forbidden_at(c))
                 continue;
-            mg.pos = *it;
+            mg.pos = c;
             mons_place(mgen_data(mg));
         }
     }
@@ -6455,11 +6441,10 @@ bool dgn_region::overlaps(const dgn_region &other) const
 
 bool dgn_region::overlaps_any(const dgn_region_list &regions) const
 {
-    for (auto i = regions.begin(); i != regions.end(); ++i)
-    {
-        if (overlaps(*i))
+    for (auto reg : regions)
+        if (overlaps(reg))
             return true;
-    }
+
     return false;
 }
 
@@ -6962,19 +6947,19 @@ int vault_placement::connect(bool spotty) const
 {
     int exits_placed = 0;
 
-    for (auto i = exits.begin(); i != exits.end(); ++i)
+    for (auto c : exits)
     {
-        if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid)
+        if (spotty && _connect_spotty(c, _feat_is_wall_floor_liquid)
             || player_in_branch(BRANCH_SHOALS)
-               && dgn_shoals_connect_point(*i, _feat_is_wall_floor_liquid)
-            || _connect_vault_exit(*i))
+               && dgn_shoals_connect_point(c, _feat_is_wall_floor_liquid)
+            || _connect_vault_exit(c))
         {
             exits_placed++;
         }
         else
         {
             dprf(DIAG_DNGN, "Warning: failed to connect vault exit (%d;%d).",
-                 i->x, i->y);
+                 c.x, c.y);
         }
     }
 

@@ -262,19 +262,18 @@ static cglyph_t _get_item_override(const item_def &item)
             return ir->second;
     }
 
-    for (auto ir = Options.item_glyph_overrides.begin();
-         ir != Options.item_glyph_overrides.end(); ++ir)
+    for (auto ir : Options.item_glyph_overrides)
     {
-        text_pattern tpat(ir->first);
+        text_pattern tpat(ir.first);
         if (tpat.matches(name))
         {
             // You may have a rule that sets the glyph but not colour for
             // axes, then another that sets colour only for artefacts
             // (useless items, etc).  Thus, apply only parts that apply.
-            if (ir->second.ch)
-                g.ch = ir->second.ch;
-            if (ir->second.col)
-                g.col = ir->second.col;
+            if (ir.second.ch)
+                g.ch = ir.second.ch;
+            if (ir.second.col)
+                g.col = ir.second.col;
         }
     }
 

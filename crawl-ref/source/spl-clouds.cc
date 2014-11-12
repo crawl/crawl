@@ -501,11 +501,11 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
     cloud_type cloud = cloud_picker.pick(cloud_cone_clouds, pow, CLOUD_NONE);
 
-    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
-        place_cloud(cloud, p->first,
+        place_cloud(cloud, entry.first,
                     5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }

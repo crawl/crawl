@@ -255,9 +255,9 @@ void place_transiting_items()
 
 void apply_daction_to_transit(daction_type act)
 {
-    for (auto i = the_lost_ones.begin(); i != the_lost_ones.end(); ++i)
+    for (auto &entry : the_lost_ones)
     {
-        m_transit_list* m = &i->second;
+        m_transit_list* m = &entry.second;
         for (auto j = m->begin(); j != m->end(); ++j)
         {
             monster* mon = &j->mons;
@@ -276,15 +276,11 @@ void apply_daction_to_transit(daction_type act)
 int count_daction_in_transit(daction_type act)
 {
     int count = 0;
-    for (auto i = the_lost_ones.begin(); i != the_lost_ones.end(); ++i)
+    for (const auto &entry : the_lost_ones)
     {
-        m_transit_list* m = &i->second;
-        for (auto j = m->begin(); j != m->end(); ++j)
-        {
-            monster* mon = &j->mons;
-            if (mons_matches_daction(mon, act))
+        for (const auto &follower : entry.second)
+            if (mons_matches_daction(&follower.mons, act))
                 count++;
-        }
     }
 
     return count;

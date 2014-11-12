@@ -2376,11 +2376,11 @@ void drop_last()
 {
     vector<SelItem> items_to_drop;
 
-    for (auto it = you.last_pickup.begin(); it != you.last_pickup.end(); ++it)
+    for (const auto &entry : you.last_pickup)
     {
-        const item_def* item = &you.inv[it->first];
+        const item_def* item = &you.inv[entry.first];
         if (item->quantity > 0)
-            items_to_drop.push_back(SelItem(it->first, it->second, item));
+            items_to_drop.push_back(SelItem(entry.first, entry.second, item));
     }
 
     if (items_to_drop.empty())

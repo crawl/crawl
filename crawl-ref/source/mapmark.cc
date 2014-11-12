@@ -502,10 +502,10 @@ void map_wiz_props_marker::write(writer &outf) const
 {
     map_marker::write(outf);
     marshallShort(outf, properties.size());
-    for (auto i = properties.begin(); i != properties.end(); ++i)
+    for (const auto &entry : properties)
     {
-        marshallString(outf, i->first);
-        marshallString(outf, i->second);
+        marshallString(outf, entry.first);
+        marshallString(outf, entry.second);
     }
 }
 
@@ -977,9 +977,9 @@ map_markers::~map_markers()
 
 void map_markers::init_from(const map_markers &c)
 {
-    for (auto i = c.markers.begin(); i != c.markers.end(); ++i)
+    for (const auto &entry : c.markers)
     {
-        add(i->second->clone());
+        add(entry.second->clone());
     }
     have_inactive_markers = c.have_inactive_markers;
 }
@@ -1086,11 +1086,10 @@ map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 
 map_marker *map_markers::find(map_marker_type type)
 {
-    for (auto i = markers.begin(); i != markers.end(); ++i)
-    {
-        if (type == MAT_ANY || i->second->get_type() == type)
-            return i->second;
-    }
+    for (const auto &entry : markers)
+        if (type == MAT_ANY || entry.second->get_type() == type)
+            return entry.second;
+
     return NULL;
 }
 
@@ -1108,10 +1107,10 @@ void map_markers::move(const coord_def &from, const coord_def &to)
         markers.erase(curr);
     }
 
-    for (auto i = tmarkers.begin(); i != tmarkers.end(); ++i)
+    for (auto mark : tmarkers)
     {
-        (*i)->pos = to;
-        add(*i);
+        mark->pos = to;
+        add(mark);
     }
 }
 
@@ -1126,10 +1125,10 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
 vector<map_marker*> map_markers::get_all(map_marker_type mat)
 {
     vector<map_marker*> rmarkers;
-    for (auto i = markers.begin(); i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
-        if (mat == MAT_ANY || i->second->get_type() == mat)
-            rmarkers.push_back(i->second);
+        if (mat == MAT_ANY || entry.second->get_type() == mat)
+            rmarkers.push_back(entry.second);
     }
     return rmarkers;
 }
@@ -1138,9 +1137,9 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 {
     vector<map_marker*> rmarkers;
 
-    for (auto i = markers.begin(); i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
-        map_marker*  marker = i->second;
+        map_marker*  marker = entry.second;
         const string prop   = marker->property(key);
 
         if (val.empty() && !prop.empty() || !val.empty() && val == prop)
@@ -1176,8 +1175,8 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 
 void map_markers::clear()
 {
-    for (auto i = markers.begin(); i != markers.end(); ++i)
-        delete i->second;
+    for (auto &entry : markers)
+        delete entry.second;
     markers.clear();
     check_empty();
 }
@@ -1190,18 +1189,16 @@ void map_markers::write(writer &outf) const
     vector<unsigned char> buf;
 
     marshallShort(outf, markers.size());
-    for (auto i = markers.begin(); i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
         buf.clear();
         writer tmp_outf(&buf);
-        i->second->write(tmp_outf);
+        entry.second->write(tmp_outf);
 
         // Write the marker data, prefixed by a size
         marshallInt(outf, buf.size());
-        for (auto bi = buf.begin(); bi != buf.end(); ++bi)
-        {
-            outf.writeByte(*bi);
-        }
+        for (auto byte : buf)
+            outf.writeByte(byte);
     }
 }
 

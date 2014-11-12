@@ -55,10 +55,8 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     // some from being used.
     if (spellcount > 1)
     {
-        for (auto it = spells.begin(); it != spells.end(); it++)
-        {
-            it->freq /= spellcount;
-        }
+        for (auto &slot : spells)
+            slot.freq /= spellcount;
     }
 
     // If one part has wings, take an average of base speed and the
@@ -202,10 +200,10 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     }
 
     // Add spells and abilities from the current part.
-    for (auto it = dummy.spells.begin(); it != dummy.spells.end(); it++)
+    for (const auto &slot : dummy.spells)
     {
-        if (it->spell != SPELL_NO_SPELL)
-            spells.push_back(*it);
+        if (slot.spell != SPELL_NO_SPELL)
+            spells.push_back(slot);
     }
 
     return dummy.spells.size() > 0;

@@ -1156,9 +1156,9 @@ static int l_item_get_items_at(lua_State *ls)
 
     const vector<item_def> items = item_list_in_stash(p);
     int index = 0;
-    for (auto i = items.begin(); i != items.end(); ++i)
+    for (const auto &item : items)
     {
-        _clua_push_item_temp(ls, *i);
+        _clua_push_item_temp(ls, item);
         lua_rawseti(ls, -2, ++index);
     }
 

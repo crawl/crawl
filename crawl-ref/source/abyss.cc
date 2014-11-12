@@ -702,9 +702,9 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
             vault_indexes.insert(vi);
     }
 
-    for (auto i = vault_indexes.begin(); i != vault_indexes.end(); ++i)
+    for (auto i : vault_indexes)
     {
-        vault_placement &vp(*env.level_vaults[*i]);
+        vault_placement &vp(*env.level_vaults[i]);
 #ifdef DEBUG_DIAGNOSTICS
         const coord_def oldp = vp.pos;
 #endif
@@ -806,11 +806,8 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
             affected_vault_indexes.insert(map_index);
     }
 
-    for (auto i = affected_vault_indexes.begin();
-         i != affected_vault_indexes.end(); ++i)
-    {
-        _abyss_expand_mask_to_cover_vault(mask, *i);
-    }
+    for (auto i : affected_vault_indexes)
+        _abyss_expand_mask_to_cover_vault(mask, i);
 }
 
 static void _abyss_invert_mask(map_bitmask *mask)

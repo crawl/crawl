@@ -79,9 +79,8 @@ void disjunction()
             return;
         // blink should be isotropic
         shuffle_array(mvec);
-        for (auto mitr = mvec.begin(); mitr != mvec.end(); mitr++)
+        for (auto mons : mvec)
         {
-            monster* mons = *mitr;
             if (!mons->alive() || mons->no_tele())
                 continue;
             coord_def p = mons->pos();

@@ -708,9 +708,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_memable    = 0;
     bool         form           = false;
 
-    for (auto i = book_hash.begin(); i != book_hash.end(); ++i)
+    for (const auto &entry : book_hash)
     {
-        const spell_type spell = i->first;
+        const spell_type spell = entry.first;
 
         if (spell == current_spell || you.has_spell(spell))
             num_known++;

@@ -551,15 +551,16 @@ void debug_mons_scan()
         }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
-    for (auto mc = env.mid_cache.begin(); mc != env.mid_cache.end(); ++mc)
+    for (const auto &entry : env.mid_cache)
     {
-        unsigned short idx = mc->second;
+        unsigned short idx = entry.second;
         ASSERT(!invalid_monster_index(idx));
-        if (menv[idx].mid != mc->first)
+        if (menv[idx].mid != entry.first)
         {
             monster &m(menv[idx]);
             die("mid cache bogosity: mid %d points to %s mindex=%d mid=%d",
-                mc->first, m.name(DESC_PLAIN, true).c_str(), m.mindex(), m.mid);
+                entry.first, m.name(DESC_PLAIN, true).c_str(), m.mindex(),
+                m.mid);
         }
     }
 

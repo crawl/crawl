@@ -1381,11 +1381,11 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     if (!force_hostile && _yred_high_level_servant(mon_type))
     {
         int current_high_level = 0;
-        for (auto i = companion_list.begin(); i != companion_list.end(); ++i)
+        for (auto &entry : companion_list)
         {
-            monster* mons = monster_by_mid(i->first);
+            monster* mons = monster_by_mid(entry.first);
             if (!mons)
-                mons = &i->second.mons.mons;
+                mons = &entry.second.mons.mons;
             if (_yred_high_level_servant(mons->type))
                 current_high_level++;
         }
@@ -1718,12 +1718,12 @@ static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
     spell_type spell = SPELL_NO_SPELL;
     int total_weight = 0;
     int this_weight = 0;
-    for (auto it = eligible_spells.begin(); it != eligible_spells.end(); ++it)
+    for (auto elig : eligible_spells)
     {
-        this_weight = _vehumet_weighting(*it);
+        this_weight = _vehumet_weighting(elig);
         total_weight += this_weight;
         if (x_chance_in_y(this_weight, total_weight))
-            spell = *it;
+            spell = elig;
     }
     return spell;
 }

@@ -267,11 +267,11 @@ void initialise_temples()
         if (!maps.empty())
         {
             int chance = 0;
-            for (auto map = maps.begin(); map != maps.end(); map++)
+            for (auto map : maps)
             {
                 // XXX: this should handle level depth better
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             overflow_weights[i] = chance;
         }
@@ -317,10 +317,10 @@ multi_overflow:
         if (overflow_weights[num] > 0)
         {
             int chance = 0;
-            for (auto map = maps.begin(); map != maps.end(); map++)
+            for (auto map : maps)
             {
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             if (!x_chance_in_y(chance, overflow_weights[num] + chance))
                 continue;

@@ -1813,10 +1813,9 @@ static bool _flying_in_new_form(transformation_type which_trans)
 
     int sources = you.evokable_flight();
     int sources_removed = 0;
-    set<equipment_type> removed = _init_equipment_removal(which_trans);
-    for (auto iter = removed.begin(); iter != removed.end(); ++iter)
+    for (auto eq : _init_equipment_removal(which_trans))
     {
-        item_def *item = you.slot_item(*iter, true);
+        item_def *item = you.slot_item(eq, true);
         if (item == NULL)
             continue;
         item_info inf = get_item_info(*item);

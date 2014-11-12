@@ -99,7 +99,7 @@ void dgn_build_basic_level()
     for (auto pathstart = upstairs.begin();
          pathstart != upstairs.end(); pathstart++)
     {
-        vector<coord_def>::iterator pathend = pathstart;
+        auto pathend = pathstart;
         pathend++;
         for (; pathend != upstairs.end(); pathend++)
             join_the_dots(*pathstart, *pathend, MMT_VAULT);

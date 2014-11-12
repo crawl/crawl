@@ -936,9 +936,9 @@ static int _prompt_ring_to_remove(int new_ring)
     const vector<equipment_type> ring_types = _current_ring_types();
     vector<char> slot_chars;
     vector<item_def*> rings;
-    for (auto eq_it = ring_types.begin(); eq_it != ring_types.end(); ++eq_it)
+    for (auto eq : ring_types)
     {
-        rings.push_back(you.slot_item(*eq_it, true));
+        rings.push_back(you.slot_item(eq, true));
         ASSERT(rings.back());
         slot_chars.push_back(index_to_letter(rings.back()->link));
     }
@@ -1149,10 +1149,10 @@ static bool _swap_rings(int ring_slot)
     int available = 0;
     bool all_same = true;
     item_def* first_ring = NULL;
-    for (auto eq_it = ring_types.begin(); eq_it != ring_types.end(); ++eq_it)
+    for (auto eq : ring_types)
     {
-        item_def* ring = you.slot_item(*eq_it, true);
-        if (!you_tran_can_wear(*eq_it) || you.melded[*eq_it])
+        item_def* ring = you.slot_item(eq, true);
+        if (!you_tran_can_wear(eq) || you.melded[eq])
             melded++;
         else if (ring != NULL)
         {
@@ -1173,12 +1173,12 @@ static bool _swap_rings(int ring_slot)
             else if (strstr(ring->inscription.c_str(), "=R"))
             {
                 inscribed++;
-                last_inscribed = you.equip[*eq_it];
+                last_inscribed = you.equip[eq];
             }
             else
             {
                 available++;
-                unwanted = you.equip[*eq_it];
+                unwanted = you.equip[eq];
             }
         }
     }
@@ -1247,25 +1247,25 @@ static equipment_type _choose_ring_slot()
          "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
 
     const vector<equipment_type> slots = _current_ring_types();
-    for (auto eq_it = slots.begin(); eq_it != slots.end(); ++eq_it)
+    for (auto eq : slots)
     {
         string msg = "<w>";
-        const char key = _ring_slot_key(*eq_it);
+        const char key = _ring_slot_key(eq);
         msg += key;
         if (key == '<')
             msg += '<';
 
-        item_def* ring = you.slot_item(*eq_it, true);
+        item_def* ring = you.slot_item(eq, true);
         if (ring)
             msg += "</w> or " + ring->name(DESC_INVENTORY);
         else
             msg += "</w> - no ring";
 
-        if (*eq_it == EQ_LEFT_RING)
+        if (eq == EQ_LEFT_RING)
             msg += " (left)";
-        else if (*eq_it == EQ_RIGHT_RING)
+        else if (eq == EQ_RIGHT_RING)
             msg += " (right)";
-        else if (*eq_it == EQ_RING_AMULET)
+        else if (eq == EQ_RING_AMULET)
             msg += " (amulet)";
         mprf_nocap("%s", msg.c_str());
     }
@@ -1277,13 +1277,13 @@ static equipment_type _choose_ring_slot()
     do
     {
         c = getchm();
-        for (auto eq_it = slots.begin(); eq_it != slots.end(); ++eq_it)
+        for (auto eq : slots)
         {
-            if (c == _ring_slot_key(*eq_it)
-                || (you.slot_item(*eq_it, true)
-                    && c == index_to_letter(you.slot_item(*eq_it, true)->link)))
+            if (c == _ring_slot_key(eq)
+                || (you.slot_item(eq, true)
+                    && c == index_to_letter(you.slot_item(eq, true)->link)))
             {
-                eqslot = *eq_it;
+                eqslot = eq;
                 c = ' ';
                 break;
             }
@@ -1336,11 +1336,9 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     if (!is_amulet)     // i.e. it's a ring
     {
         bool need_swap = true;
-        for (auto eq_it = ring_types.begin();
-             eq_it != ring_types.end();
-             ++eq_it)
+        for (auto eq : ring_types)
         {
-            if (!you.slot_item(*eq_it, true))
+            if (!you.slot_item(eq, true))
             {
                 need_swap = false;
                 break;
@@ -1397,13 +1395,11 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     }
     else
     {
-        for (auto eq_it = ring_types.begin();
-             eq_it != ring_types.end();
-             ++eq_it)
+        for (auto eq : ring_types)
         {
-            if (!you.slot_item(*eq_it, true))
+            if (!you.slot_item(eq, true))
             {
-                hand_used = *eq_it;
+                hand_used = eq;
                 break;
             }
         }
@@ -1472,11 +1468,9 @@ bool remove_ring(int slot, bool announce)
     const vector<equipment_type> ring_types = _current_ring_types();
     const vector<equipment_type> jewellery_slots = _current_jewellery_types();
 
-    for (auto eq_it = jewellery_slots.begin();
-         eq_it != jewellery_slots.end();
-         ++eq_it)
+    for (auto eq : jewellery_slots)
     {
-        if (player_wearing_slot(*eq_it))
+        if (player_wearing_slot(eq))
         {
             if (has_jewellery || Options.jewellery_prompt)
             {
@@ -1484,11 +1478,11 @@ bool remove_ring(int slot, bool announce)
                 hand_used = EQ_NONE;
             }
             else
-                hand_used = *eq_it;
+                hand_used = eq;
 
             has_jewellery = true;
         }
-        else if (you.melded[*eq_it])
+        else if (you.melded[eq])
             has_melded = true;
     }
 

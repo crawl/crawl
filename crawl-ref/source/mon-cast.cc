@@ -1647,10 +1647,10 @@ static int _battle_cry(const monster* chief, bool check_only = false)
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
-    for (auto i = door.begin(); i != door.end(); ++i)
+    for (const auto &dc : door)
     {
-        grd(*i) = feat;
-        set_terrain_changed(*i);
+        grd(dc) = feat;
+        set_terrain_changed(dc);
     }
 }
 
@@ -1664,11 +1664,11 @@ static bool _can_force_door_shut(const coord_def& door)
     find_connected_identical(door, all_door);
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
-    for (auto i = all_door.begin(); i != all_door.end(); ++i)
+    for (const auto &dc : all_door)
     {
         // Only attempt to push players and non-hostile monsters out of
         // doorways
-        actor* act = actor_at(*i);
+        actor* act = actor_at(dc);
         if (act)
         {
             if (act->is_player()
@@ -1676,7 +1676,7 @@ static bool _can_force_door_shut(const coord_def& door)
                     && act->as_monster()->attitude != ATT_HOSTILE)
             {
                 coord_def newpos;
-                if (!get_push_space(*i, newpos, act, true, &veto_spots))
+                if (!get_push_space(dc, newpos, act, true, &veto_spots))
                     return false;
                 else
                     veto_spots.push_back(newpos);
@@ -1686,9 +1686,9 @@ static bool _can_force_door_shut(const coord_def& door)
         }
         // If there are items in the way, see if there's room to push them
         // out of the way
-        else if (igrd(*i) != NON_ITEM)
+        else if (igrd(dc) != NON_ITEM)
         {
-            if (!has_push_space(*i, 0))
+            if (!has_push_space(dc, 0))
                 return false;
         }
     }
@@ -1711,9 +1711,9 @@ static bool _should_force_door_shut(const coord_def& door)
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     bool player_in_door = false;
-    for (auto i = all_door.begin(); i != all_door.end(); ++i)
+    for (const auto &dc : all_door)
     {
-        if (you.pos() == *i)
+        if (you.pos() == dc)
         {
             player_in_door = true;
             break;
@@ -1861,23 +1861,23 @@ static bool _seal_doors_and_stairs(const monster* warden,
             vector<coord_def> veto_spots;
             find_connected_identical(*ri, all_door);
             copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
-            for (auto i = all_door.begin(); i != all_door.end(); ++i)
+            for (const auto &dc : all_door)
             {
                 // If there are things in the way, push them aside
-                actor* act = actor_at(*i);
-                if (igrd(*i) != NON_ITEM || act)
+                actor* act = actor_at(dc);
+                if (igrd(dc) != NON_ITEM || act)
                 {
                     coord_def newpos;
                     // If we don't find a spot, try again ignoring tension.
                     const bool success =
-                        get_push_space(*i, newpos, act, false, &veto_spots)
-                        || get_push_space(*i, newpos, act, true, &veto_spots);
-                    ASSERTM(success, "No push space from (%d,%d)", i->x, i->y);
+                        get_push_space(dc, newpos, act, false, &veto_spots)
+                        || get_push_space(dc, newpos, act, true, &veto_spots);
+                    ASSERTM(success, "No push space from (%d,%d)", dc.x, dc.y);
 
-                    move_items(*i, newpos);
+                    move_items(dc, newpos);
                     if (act)
                     {
-                        actor_at(*i)->move_to_pos(newpos);
+                        actor_at(dc)->move_to_pos(newpos);
                         if (act->is_player())
                             player_pushed = true;
                         veto_spots.push_back(newpos);
@@ -1888,9 +1888,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
             // Close the door
             bool seen = false;
             vector<coord_def> excludes;
-            for (auto i = all_door.begin(); i != all_door.end(); ++i)
+            for (const auto &dc : all_door)
             {
-                const coord_def& dc = *i;
                 grd(dc) = DNGN_CLOSED_DOOR;
                 set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
@@ -1906,13 +1905,13 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
             if (seen)
             {
-                for (auto i = all_door.begin(); i != all_door.end(); ++i)
+                for (const auto &dc : all_door)
                 {
-                    if (env.map_knowledge(*i).seen())
+                    if (env.map_knowledge(dc).seen())
                     {
-                        env.map_knowledge(*i).set_feature(DNGN_CLOSED_DOOR);
+                        env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
-                        env.tile_bk_bg(*i) = TILE_DNGN_CLOSED_DOOR;
+                        env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
                     }
                 }
@@ -1927,9 +1926,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
         {
             set<coord_def> all_door;
             find_connected_identical(*ri, all_door);
-            for (auto i = all_door.begin(); i != all_door.end(); ++i)
+            for (const auto &dc : all_door)
             {
-                temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
+                temp_change_terrain(dc, DNGN_SEALED_DOOR, seal_duration,
                                     TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
@@ -2783,12 +2782,12 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
-        const actor *victim = actor_at(p->first);
+        const actor *victim = actor_at(entry.first);
         if (!victim)
             continue;
 
@@ -6457,27 +6456,26 @@ static mid_t _get_tentacle_throw_victim(const monster &mons)
     if (!mons.constricting)
         return throw_choice;
 
-    for (auto co = mons.constricting->begin();
-         co != mons.constricting->end(); ++co)
+    for (auto &entry : *mons.constricting)
     {
-        const actor* const victim = actor_by_mid(co->first);
+        const actor* const victim = actor_by_mid(entry.first);
         // Only throw real, living victims.
         if (!victim || !victim->alive())
             continue;
 
         // Don't try to throw anything constricting you.
-        if (mons.is_constricted() &&  mons.constricted_by == co->first)
+        if (mons.is_constricted() &&  mons.constricted_by == entry.first)
             continue;
 
         // Always throw the player, if we can.
         if (victim->is_player())
-            return co->first;
+            return entry.first;
 
         // otherwise throw whomever we've been constricting the longest.
-        if (co->second > highest_dur)
+        if (entry.second > highest_dur)
         {
-            throw_choice = co->first;
-            highest_dur = co->second;
+            throw_choice = entry.first;
+            highest_dur = entry.second;
         }
     }
 

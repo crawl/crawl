@@ -1183,19 +1183,18 @@ static void _sdump_action_counts(dump_params &par)
     for (int cact = 0; cact < NUM_CACTIONS; cact++)
     {
         vector<pair<int, FixedVector<int, 28> > > action_vec;
-        for (auto ac = you.action_count.begin();
-             ac != you.action_count.end(); ++ac)
+        for (const auto &entry : you.action_count)
         {
-            if (ac->first.first != cact)
+            if (entry.first.first != cact)
                 continue;
             FixedVector<int, 28> v;
             v[27] = 0;
             for (int i = 0; i < 27; i++)
             {
-                v[i] = ac->second[i];
+                v[i] = entry.second[i];
                 v[27] += v[i];
             }
-            action_vec.push_back(pair<int, FixedVector<int, 28> >(ac->first.second, v));
+            action_vec.push_back(pair<int, FixedVector<int, 28> >(entry.first.second, v));
         }
         sort(action_vec.begin(), action_vec.end(), _sort_by_first);
 

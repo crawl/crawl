@@ -155,10 +155,8 @@ static void _initialise_randmons()
 
         }
 
-        for (auto it = tmp_species.begin(); it != tmp_species.end(); ++it)
-        {
-            species_by_habitat[i].push_back(*it);
-        }
+        for (auto type : tmp_species)
+            species_by_habitat[i].push_back(type);
     }
     initialised_randmons = true;
 }

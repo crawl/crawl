@@ -176,19 +176,19 @@ static string _desc_mons_type_map(map<monster_type, int> types)
 {
     string message;
     unsigned int count = 1;
-    for (auto it = types.begin(); it != types.end(); ++it)
+    for (const auto &entry : types)
     {
         string name;
         description_level_type desc;
-        if (it->second == 1)
+        if (entry.second == 1)
             desc = DESC_A;
         else
             desc = DESC_PLAIN;
 
-        name = mons_type_name(it->first, desc);
-        if (it->second > 1)
+        name = mons_type_name(entry.first, desc);
+        if (entry.second > 1)
         {
-            name = make_stringf("%d %s", it->second,
+            name = make_stringf("%d %s", entry.second,
                                 pluralise(name).c_str());
         }
 
@@ -1390,14 +1390,12 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.flash_monsters)
     {
-        vector<monster *> *monsters = crawl_state.flash_monsters;
         bool found = gc == you.pos();
 
         if (!found)
-            for (auto it = monsters->begin(); it != monsters->end();
-                ++it)
+            for (auto mon : *crawl_state.flash_monsters)
             {
-                if (gc == (*it)->pos())
+                if (gc == mon->pos())
                 {
                     found = true;
                     break;

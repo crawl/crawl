@@ -542,21 +542,21 @@ static int _tagged_string_printable_length(const string& s)
     int len = 0;
     bool in_tag = false;
     int last_taglen = 0;
-    for (auto ci = s.begin(); ci != s.end(); ++ci)
+    for (auto ch : s)
     {
         if (in_tag)
         {
-            if (*ci == '<' && last_taglen == 1) // "<<" sequence
+            if (ch == '<' && last_taglen == 1) // "<<" sequence
             {
                 in_tag = false;  // this is an escape for '<'
                 ++len;           // len wasn't incremented before
             }
-            else if (*ci == '>') // tag close, still nothing printed
+            else if (ch == '>')  // tag close, still nothing printed
                 in_tag = false;
             else                 // tag continues
                 ++last_taglen;
         }
-        else if (*ci == '<')     // tag starts
+        else if (ch == '<')      // tag starts
         {
             in_tag = true;
             last_taglen = 1;

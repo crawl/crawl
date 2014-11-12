@@ -1359,12 +1359,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     show_update_emphasis();
 
     // Shouldn't happen, but this is too unimportant to assert.
-    for (auto i = env.final_effects.begin(); i != env.final_effects.end(); ++i)
-    {
-        if (*i)
-            delete *i;
-    }
-    env.final_effects.clear();
+    deleteAll(env.final_effects);
+
     los_changed();
 
     // Markers must be activated early, since they may rely on
@@ -1715,13 +1711,9 @@ static vector<string> _list_bones()
 
     vector<string> filenames = get_dir_files(bonefile_dir);
     vector<string> bonefiles;
-    for (auto it = filenames.begin(); it != filenames.end(); ++it)
-    {
-        const string &filename = *it;
-
+    for (const auto &filename : filenames)
         if (starts_with(filename, underscored_filename))
             bonefiles.push_back(bonefile_dir + filename);
-    }
 
     string old_bonefile = _get_old_bonefile_directory() + base_filename;
     if (access(old_bonefile.c_str(), F_OK) == 0)

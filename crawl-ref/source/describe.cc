@@ -2295,11 +2295,10 @@ static command_type _get_action(int key, vector<command_type> actions)
         act_key_init = false;
     }
 
-    for (auto at = actions.begin(); at < actions.end(); ++at)
-    {
-        if (key == act_key[*at])
-            return *at;
-    }
+    for (auto cmd : actions)
+        if (key == act_key[cmd])
+            return cmd;
+
     return CMD_NO_CMD;
 }
 
@@ -4013,10 +4012,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
         const CrawlVector& blame = mons.props["blame"].get_vector();
 
-        for (auto it = blame.begin(); it != blame.end(); ++it)
-        {
-            inf.body << "    " << it->get_string() << "\n";
-        }
+        for (const auto &entry : blame)
+            inf.body << "    " << entry.get_string() << "\n";
     }
 #endif
 }

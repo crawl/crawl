@@ -114,11 +114,9 @@ static int _randomized_element_colour(int rand, const coord_def&,
                                       random_colour_map rand_vals)
 {
     int accum = 0;
-    for (auto it = rand_vals.begin(); it != rand_vals.end(); ++it)
-    {
-        if ((accum += it->first) > rand)
-            return it->second;
-    }
+    for (const auto &entry : rand_vals)
+        if ((accum += entry.first) > rand)
+            return entry.second;
 
     return BLACK;
 }

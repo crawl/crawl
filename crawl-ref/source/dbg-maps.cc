@@ -275,15 +275,15 @@ static void _report_available_random_vaults(FILE *outf)
     you.uniq_map_names.clear();
 
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
-    for (auto i = generated_levels.begin(); i != generated_levels.end(); ++i)
+    for (auto lvl : generated_levels)
     {
         // The watchdog has already been activated by _do_build_level.
         // Reporting all the vaults could take a while.
         watchdog();
-        fprintf(outf, "\n%s -------------\n", i->describe().c_str());
+        fprintf(outf, "\n%s -------------\n", lvl.describe().c_str());
         clear_messages();
-        mprf("Examining random maps at %s", i->describe().c_str());
-        mapstat_report_random_maps(outf, *i);
+        mprf("Examining random maps at %s", lvl.describe().c_str());
+        mapstat_report_random_maps(outf, lvl);
         if (kbhit() && key_is_escape(getchk()))
             break;
         fprintf(outf, "---------------------------------\n");
@@ -307,11 +307,8 @@ static void _write_map_stats()
     if (!errors.empty())
     {
         fprintf(outf, "\n\nMap errors:\n");
-        for (auto i = errors.begin(); i != errors.end(); ++i)
-        {
-            fprintf(outf, "%s: %s\n",
-                    i->first.c_str(), i->second.c_str());
-        }
+        for (const auto &err : errors)
+            fprintf(outf, "%s: %s\n", err.first.c_str(), err.second.c_str());
     }
 
     vector<level_id> mapless;
@@ -356,17 +353,16 @@ static void _write_map_stats()
     {
         fprintf(outf, "\n\nMost vetoed levels:\n");
         multimap<int, level_id> sortedvetos;
-        for (auto i = map_builds.begin(); i != map_builds.end(); ++i)
+        for (const auto &entry : map_builds)
         {
-            if (!i->second.second)
+            if (!entry.second.second)
                 continue;
 
-            sortedvetos.insert(pair<int, level_id>(i->second.second, i->first));
+            sortedvetos.insert(make_pair(entry.second.second, entry.first));
         }
 
         int count = 0;
-        for (multimap<int, level_id>::reverse_iterator
-                 i = sortedvetos.rbegin(); i != sortedvetos.rend(); ++i)
+        for (auto i = sortedvetos.rbegin(); i != sortedvetos.rend(); ++i)
         {
             const int vetoes = i->first;
             const int tries  = map_builds[i->second].first;
@@ -377,16 +373,11 @@ static void _write_map_stats()
 
         fprintf(outf, "\n\nVeto reasons:\n");
         multimap<int, string> sortedreasons;
-        for (auto i = veto_messages.begin(); i != veto_messages.end(); ++i)
-        {
-            sortedreasons.insert(pair<int, string>(i->second, i->first));
-        }
+        for (const auto &entry : veto_messages)
+            sortedreasons.insert(make_pair(entry.second, entry.first));
 
-        for (multimap<int, string>::reverse_iterator
-                 i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
-        {
+        for (auto i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
             fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
-        }
     }
 
     if (!unused_maps.empty() && !SysEnv.map_gen_range.get())
@@ -397,11 +388,11 @@ static void _write_map_stats()
     }
 
     fprintf(outf, "\n\nMaps by level:\n\n");
-    for (auto i = level_mapsused.begin(); i != level_mapsused.end(); ++i)
+    for (const auto &entry : level_mapsused)
     {
         string line =
-            make_stringf("%s ------------\n", i->first.describe().c_str());
-        const set<string> &maps = i->second;
+            make_stringf("%s ------------\n", entry.first.describe().c_str());
+        const set<string> &maps = entry.second;
         for (auto j = maps.begin(); j != maps.end(); ++j)
         {
             if (j != maps.begin())
@@ -423,13 +414,12 @@ static void _write_map_stats()
 
     fprintf(outf, "\n\nMaps used:\n\n");
     multimap<int, string> usedmaps;
-    for (auto i = try_count.begin(); i != try_count.end(); ++i)
+    for (const auto &entry : try_count)
     {
-        usedmaps.insert(pair<int, string>(i->second, i->first));
+        usedmaps.insert(make_pair(entry.second, entry.first));
     }
 
-    for (multimap<int, string>::reverse_iterator i = usedmaps.rbegin();
-         i != usedmaps.rend(); ++i)
+    for (auto i = usedmaps.rbegin(); i != usedmaps.rend(); ++i)
     {
         const int tries = i->first;
         map<string, int>::const_iterator iuse = use_count.find(i->second);
@@ -441,15 +431,15 @@ static void _write_map_stats()
     }
 
     fprintf(outf, "\n\nMaps and where used:\n\n");
-    for (auto i = map_levelsused.begin(); i != map_levelsused.end(); ++i)
+    for (const auto &entry : map_levelsused)
     {
-        fprintf(outf, "%s ============\n", i->first.c_str());
+        fprintf(outf, "%s ============\n", entry.first.c_str());
         string line;
-        for (auto j = i->second.begin(); j != i->second.end(); ++j)
+        for (auto lvl : entry.second)
         {
             if (!line.empty())
                 line += ", ";
-            string level = j->describe();
+            string level = lvl.describe();
             if (line.length() + level.length() > 79)
             {
                 fprintf(outf, "%s\n", line.c_str());

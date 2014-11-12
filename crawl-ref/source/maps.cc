@@ -502,13 +502,12 @@ static bool _connected_minivault_place(const coord_def &c,
 
 coord_def find_portal_place(const vault_placement *place, bool check_place)
 {
-    vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
     vector<coord_def> candidates;
-    for (auto it = markers.begin(); it != markers.end(); it++)
+    for (auto marker : env.markers.get_all(MAT_LUA_MARKER))
     {
-        if ((*it)->property("portal") != "")
+        if (marker->property("portal") != "")
         {
-            coord_def v1((*it)->pos);
+            coord_def v1(marker->pos);
             if ((!check_place
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
@@ -669,12 +668,11 @@ static bool _map_matches_layout_type(const map_def &map)
         return true;
     }
 
-    for (auto i = env.level_layout_types.begin();
-         i != env.level_layout_types.end(); ++i)
+    for (const auto &layout : env.level_layout_types)
     {
-        if (map.has_tag("layout_" + *i))
+        if (map.has_tag("layout_" + layout))
             return true;
-        else if (map.has_tag("nolayout_" + *i))
+        else if (map.has_tag("nolayout_" + layout))
             return false;
     }
 
@@ -1082,9 +1080,8 @@ _random_map_in_list(const map_selector &sel,
     typedef set<string> tag_set;
     tag_set chance_tags;
 
-    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
+    for (auto i : filtered)
     {
-        const int i = filtered[f];
         if (!sel.ignore_chance && vdefs[i].chance(sel.place).valid())
         {
             if (_vault_chance_new(vdefs[i], sel.place, chance_tags))
@@ -1104,10 +1101,9 @@ _random_map_in_list(const map_selector &sel,
     if (!chosen_map)
     {
         const level_id &here(level_id::current());
-        for (auto i = eligible.begin(); i != eligible.end(); ++i)
+        for (auto map : eligible)
         {
-            const map_def &map(**i);
-            const int weight = map.weight(here);
+            const int weight = map->weight(here);
 
             if (weight <= 0)
                 continue;
@@ -1115,7 +1111,7 @@ _random_map_in_list(const map_selector &sel,
             rollsize += weight;
 
             if (rollsize && x_chance_in_y(weight, rollsize))
-                chosen_map = &map;
+                chosen_map = map;
         }
     }
 
@@ -1584,11 +1580,7 @@ static weighted_map_names _find_random_vaults(
             map_counts[map->name]++;
     }
 
-    for (auto i = map_counts.begin(); i != map_counts.end(); ++i)
-    {
-        wms.push_back(*i);
-    }
-
+    wms.insert(wms.end(), map_counts.begin(), map_counts.end())
     return wms;
 }
 
