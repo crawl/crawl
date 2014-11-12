@@ -129,7 +129,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
-  "sacrifice one of your",
+  "sacrifice one of your ",
   "sacrificed a hand",
 
   70,
