@@ -1749,10 +1749,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             if (sum->props.exists("blame"))
             {
                 const CrawlVector& oldblame = sum->props["blame"].get_vector();
-                for (auto i = oldblame.begin(); i != oldblame.end(); ++i)
-                {
-                    mons_add_blame(mon, i->get_string());
-                }
+                for (const auto &bl : oldblame)
+                    mons_add_blame(mon, bl.get_string());
             }
         }
     }

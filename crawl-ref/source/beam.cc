@@ -2536,14 +2536,14 @@ void bolt::affect_endpoint()
             targetter_cloud tgt(agent(), range, get_cloud_size(true),
                                                 get_cloud_size(false, true));
             tgt.set_aim(pos());
-            for (auto it = tgt.seen.begin(); it != tgt.seen.end(); it++)
+            for (const auto &entry : tgt.seen)
             {
-                if (it->second != AFF_YES && it->second != AFF_MAYBE)
+                if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
                     continue;
 
-                if (it->first == you.pos())
+                if (entry.first == you.pos())
                     tracer_affect_player();
-                else if (monster* mon = monster_at(it->first))
+                else if (monster* mon = monster_at(entry.first))
                     tracer_affect_monster(mon);
 
                 if (agent()->is_player() && beam_cancelled)

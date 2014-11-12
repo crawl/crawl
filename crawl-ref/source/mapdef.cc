@@ -1911,10 +1911,8 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (auto i = points[cur].begin(); i != points[cur].end(); ++i)
+        for (const auto &c : points[cur])
         {
-            const coord_def &c(*i);
-
             tpd[c.x][c.y] = zone;
 
             ret |= (wanted && strchr(wanted, (*this)(c)) != NULL);
@@ -2744,9 +2742,9 @@ string map_def::validate_temple_map()
     // TODO: check for substitutions and shuffles
 
     vector<coord_def> b_glyphs = map.find_glyph('B');
-    for (auto i = b_glyphs.begin(); i != b_glyphs.end(); ++i)
+    for (auto c : b_glyphs)
     {
-        const keyed_mapspec *spec = map.mapspec_at(*i);
+        const keyed_mapspec *spec = map.mapspec_at(c);
         if (spec != NULL && !spec->feat.feats.empty())
             return "Can't change feat 'B' in temple (KFEAT)";
     }
@@ -3559,11 +3557,11 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     int totweight = 0;
     mons_spec pick;
 
-    for (auto i = slot.mlist.begin(); i != slot.mlist.end(); ++i)
+    for (const auto &spec : slot.mlist)
     {
-        const int weight = i->genweight;
+        const int weight = spec.genweight;
         if (x_chance_in_y(weight, totweight += weight))
-            pick = *i;
+            pick = spec;
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -4698,22 +4696,22 @@ item_spec item_list::random_item_weighted()
 item_spec item_list::pick_item(item_spec_slot &slot)
 {
     int cumulative = 0;
-    item_spec spec;
-    for (auto i = slot.ilist.begin(); i != slot.ilist.end(); ++i)
+    item_spec pick;
+    for (const auto &spec : slot.ilist)
     {
-        const int weight = i->genweight;
+        const int weight = spec.genweight;
         if (x_chance_in_y(weight, cumulative += weight))
-            spec = *i;
+            pick = spec;
     }
 
     if (slot.fix_slot)
     {
         slot.ilist.clear();
-        slot.ilist.push_back(spec);
+        slot.ilist.push_back(pick);
         slot.fix_slot = false;
     }
 
-    return spec;
+    return pick;
 }
 
 item_spec item_list::get_item(int index)
@@ -5203,15 +5201,15 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         vector<string> ids = split_string("|", id_str);
         int id = 0;
-        for (auto is = ids.begin(); is != ids.end(); ++is)
+        for (const auto &is : ids)
         {
-            if (*is == "curse")
+            if (is == "curse")
                 id |= ISFLAG_KNOW_CURSE;
-            else if (*is == "type")
+            else if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
-            else if (*is == "pluses")
+            else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;
-            else if (*is == "properties")
+            else if (is == "properties")
                 id |= ISFLAG_KNOW_PROPERTIES;
             else
             {

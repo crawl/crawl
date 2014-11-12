@@ -613,10 +613,10 @@ static int _slowest_ally_speed()
 {
     vector<monster* > followers = get_on_level_followers();
     int min_speed = INT_MAX;
-    for (auto fol = followers.begin(); fol != followers.end(); ++fol)
+    for (auto fol : followers)
     {
-        int speed = (*fol)->speed * BASELINE_DELAY
-                    / (*fol)->action_energy(EUT_MOVE);
+        int speed = fol->speed * BASELINE_DELAY
+                    / fol->action_energy(EUT_MOVE);
         if (speed < min_speed)
             min_speed = speed;
     }
@@ -2335,10 +2335,10 @@ static level_pos _find_entrance(const level_pos &from)
     if (new_lid.is_valid()) {
         LevelInfo &li = travel_cache.get_level_info(new_lid);
         vector<stair_info> &stairs = li.get_stairs();
-        for (auto sit = stairs.begin(); sit != stairs.end(); ++sit)
-            if (sit->destination.id.branch == target_branch)
+        for (const auto &stair : stairs)
+            if (stair.destination.id.branch == target_branch)
             {
-                pos = sit->position;
+                pos = stair.position;
                 break;
             }
 
@@ -2348,10 +2348,10 @@ static level_pos _find_entrance(const level_pos &from)
     {
         LevelInfo &li = travel_cache.get_level_info(lid);
         vector<stair_info> &stairs = li.get_stairs();
-        for (auto sit = stairs.begin(); sit != stairs.end(); ++sit)
-            if (!sit->destination.id.is_valid())
+        for (const auto &stair : stairs)
+            if (!stair.destination.id.is_valid())
             {
-                pos = sit->position;
+                pos = stair.position;
                 break;
             }
 

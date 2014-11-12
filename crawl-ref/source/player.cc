@@ -6869,17 +6869,17 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         bool found_nonartefact = false;
         bool found_stasis = false;
 
-        for (auto it=notele_items.begin(); it < notele_items.end(); ++it)
+        for (const auto &item : notele_items)
         {
-            if (it->base_type == OBJ_WEAPONS)
+            if (item.base_type == OBJ_WEAPONS)
             {
                 problems.push_back(make_stringf("wielding %s",
-                                                it->name(DESC_A).c_str()));
+                                                item.name(DESC_A).c_str()));
             }
             else
-                worn_notele.push_back(it->name(DESC_A).c_str());
+                worn_notele.push_back(item.name(DESC_A).c_str());
 
-            if (it->base_type == OBJ_JEWELLERY && jewellery_is_amulet(*it))
+            if (item.base_type == OBJ_JEWELLERY && jewellery_is_amulet(item))
                 amulet_handled = true;
         }
 
@@ -8701,9 +8701,8 @@ void player_open_door(coord_def doorpos, bool check_confused)
     }
 
     vector<coord_def> excludes;
-    for (auto i = all_door.begin(); i != all_door.end(); ++i)
+    for (const auto &dc : all_door)
     {
-        const coord_def& dc = *i;
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated.  Hitting this case requires a really big
         // door!

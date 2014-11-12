@@ -68,13 +68,11 @@ static void _create_colours(feature_def &f)
  */
 static void _apply_feature_overrides()
 {
-    for (auto fo = Options.feature_colour_overrides.begin();
-         fo != Options.feature_colour_overrides.end();
-         ++fo)
+    for (const auto &entry : Options.feature_colour_overrides)
     {
-        const feature_def           &ofeat  = fo->second;
+        const feature_def &ofeat  = entry.second;
         // Replicating get_feature_def since we need not-const.
-        feature_def                 &feat   = feat_defs[feat_index[fo->first]];
+        feature_def       &feat   = feat_defs[feat_index[entry.first]];
 
         if (ofeat.colour)
             feat.colour = ofeat.colour;

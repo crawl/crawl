@@ -489,11 +489,8 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         return false;
 
     string item_desc = tokens[offset - 1];
-    for (auto it = tokens.begin() + offset; it != tokens.end(); ++it)
-    {
-        item_desc.append(" ");
-        item_desc.append(*it);
-    }
+    for (const auto &tok : tokens)
+        item_desc += " " + tok;
 
     item_def item = _item_from_string(item_desc);
     if (item.base_type == OBJ_UNASSIGNED)

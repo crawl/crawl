@@ -274,9 +274,9 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
 bool Stash::unmark_trapping_nets()
 {
     bool changed = false;
-    for (auto i = items.begin(); i != items.end(); i++)
-        if (item_is_stationary_net(*i))
-            i->net_placed = false, changed = true;
+    for (auto &item : items)
+        if (item_is_stationary_net(item))
+            item.net_placed = false, changed = true;
     return changed;
 }
 
@@ -1340,11 +1340,10 @@ int LevelStashes::_num_enabled_stashes() const
     if (!rawcount)
         return 0;
 
-    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
-    {
-        if (!iter->second.enabled)
+    for (const auto &entry : m_stashes)
+        if (!entry.second.enabled)
             --rawcount;
-    }
+
     return rawcount;
 }
 
@@ -1384,12 +1383,12 @@ void LevelStashes::get_matching_stashes(
         return;
     }
 
-    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
+    for (const auto &entry : m_stashes)
     {
-        if (iter->second.enabled)
+        if (entry.second.enabled)
         {
             stash_search_result res;
-            if (iter->second.matches_search(lplace, search, res))
+            if (entry.second.matches_search(lplace, search, res))
             {
                 res.pos.id = m_place;
                 results.push_back(res);
@@ -1410,18 +1409,14 @@ void LevelStashes::get_matching_stashes(
 
 void LevelStashes::_update_corpses(int rot_time)
 {
-    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
-    {
-        iter->second._update_corpses(rot_time);
-    }
+    for (auto &entry : m_stashes)
+        entry.second._update_corpses(rot_time);
 }
 
 void LevelStashes::_update_identification()
 {
-    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
-    {
-        iter->second._update_identification();
-    }
+    for (auto &entry : m_stashes)
+        entry.second._update_identification();
 }
 
 void LevelStashes::write(FILE *f, bool identify) const
@@ -1440,10 +1435,8 @@ void LevelStashes::write(FILE *f, bool identify) const
         const Stash &s = m_stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
         string levname = short_level_name();
-        for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
-        {
-            iter->second.write(f, refx, refy, levname, identify);
-        }
+        for (const auto &entry : m_stashes)
+            entry.second.write(f, refx, refy, levname, identify);
     }
     fprintf(f, "\n");
 }
@@ -1456,10 +1449,8 @@ void LevelStashes::save(writer& outf) const
     m_place.save(outf);
 
     // And write the individual stashes
-    for (auto iter = m_stashes.begin(); iter != m_stashes.end(); ++iter)
-    {
-        iter->second.save(outf);
-    }
+    for (const auto &entry : m_stashes)
+        entry.second.save(outf);
 
     marshallShort(outf, (short) m_shops.size());
     for (unsigned i = 0; i < m_shops.size(); ++i)
@@ -1584,10 +1575,8 @@ void StashTracker::write(FILE *f, bool identify) const
         fprintf(f, "  You have no stashes.\n");
     else
     {
-        for (auto iter = levels.begin(); iter != levels.end(); ++iter)
-        {
-            iter->second.write(f, identify);
-        }
+        for (const auto &entry : levels)
+            entry.second.write(f, identify);
     }
 }
 
@@ -1600,9 +1589,8 @@ void StashTracker::save(writer& outf) const
     marshallShort(outf, (short) levels.size());
 
     // And ask each level to write itself to the tag
-    stash_levels_t::const_iterator iter = levels.begin();
-    for (; iter != levels.end(); ++iter)
-        iter->second.save(outf);
+    for (const auto &entry : levels)
+        entry.second.save(outf);
 }
 
 void StashTracker::load(reader& inf)
@@ -2249,10 +2237,8 @@ void StashTracker::update_corpses()
 
     last_corpse_update = you.elapsed_time;
 
-    for (auto iter = levels.begin(); iter != levels.end(); ++iter)
-    {
-        iter->second._update_corpses(rot_time);
-    }
+    for (auto &entry : levels)
+        entry.second._update_corpses(rot_time);
 }
 
 void StashTracker::update_identification()
@@ -2260,10 +2246,8 @@ void StashTracker::update_identification()
     if (!you_worship(GOD_ASHENZARI))
         return;
 
-    for (auto iter = levels.begin(); iter != levels.end(); ++iter)
-    {
-        iter->second._update_identification();
-    }
+    for (auto &entry : levels)
+        entry.second._update_identification();
 }
 
 //////////////////////////////////////////////

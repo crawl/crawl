@@ -287,9 +287,10 @@ LUAFN(moninf_get_status)
         PLUARET(string, comma_separated_line(status.begin(),
                                              status.end(), ", ").c_str());
     }
-    for (auto i = status.begin(); i != status.end(); ++i)
-        if (*i == which)
+    for (const auto &st : status)
+        if (st == which)
             PLUARET(boolean, true);
+
     PLUARET(boolean, false);
 }
 

@@ -143,22 +143,19 @@ static string get_userfunction(const keyseq &seq)
 
 static bool userfunc_referenced(int index, const macromap &mm)
 {
-    for (auto i = mm.begin(); i != mm.end(); ++i)
-    {
-        if (userfunc_index(i->second) == index)
+    for (const auto &entry : mm)
+        if (userfunc_index(entry.second) == index)
             return true;
-    }
+
     return false;
 }
 
 static bool userfunc_referenced(int index)
 {
-    for (unsigned i = 0; i < ARRAYSZ(all_maps); ++i)
-    {
-        macromap *m = all_maps[i];
+    for (auto m : all_maps)
         if (userfunc_referenced(index, *m))
             return true;
-    }
+
     return false;
 }
 
@@ -365,23 +362,23 @@ static string vtostr(const keyseq &seq)
         v = &dummy;
     }
 
-    for (auto i = v->begin(); i != v->end(); ++i)
+    for (auto key : *v)
     {
-        if (*i <= 32 || *i > 127)
+        if (key <= 32 || key > 127)
         {
-            if (*i == KEY_MACRO_MORE_PROTECT)
+            if (key == KEY_MACRO_MORE_PROTECT)
                 s << "\\{!more}";
             else
             {
                 char buff[20];
-                snprintf(buff, sizeof(buff), "\\{%d}", *i);
+                snprintf(buff, sizeof(buff), "\\{%d}", key);
                 s << buff;
             }
         }
-        else if (*i == '\\')
+        else if (key == '\\')
             s << "\\\\";
         else
-            s << static_cast<char>(*i);
+            s << static_cast<char>(key);
     }
 
     return s.str();
@@ -433,9 +430,8 @@ void macro_buf_add(const keyseq &actions, bool reverse, bool expanded)
 {
     keyseq act;
     bool need_more_reset = false;
-    for (auto i = actions.begin(); i != actions.end(); ++i)
+    for (auto key : actions)
     {
-        int key = *i;
         if (key == KEY_MACRO_MORE_PROTECT)
         {
             key = KEY_MACRO_DISABLE_MORE;
@@ -646,14 +642,14 @@ int macro_buf_get()
 
 static void write_map(FILE *f, const macromap &mp, const char *key)
 {
-    for (auto i = mp.begin(); i != mp.end(); ++i)
+    for (const auto &entry : mp)
     {
         // Need this check, since empty values are added into the
         // macro struct for all used keyboard commands.
-        if (i->second.size())
+        if (entry.second.size())
         {
             fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
-                OUTS(vtostr((*i).first)), OUTS(vtostr((*i).second)));
+                OUTS(vtostr(entry.first)), OUTS(vtostr(entry.second)));
         }
     }
 }
@@ -1071,11 +1067,8 @@ static void _read_macros_from(const char* filename)
 
 void macro_init()
 {
-    const vector<string>& files = Options.additional_macro_files;
-    for (auto it = files.begin(); it != files.end(); ++it)
-    {
-        _read_macros_from(it->c_str());
-    }
+    for (const auto &fn : Options.additional_macro_files)
+        _read_macros_from(fn.c_str());
 
     _read_macros_from(get_macro_file().c_str());
 }

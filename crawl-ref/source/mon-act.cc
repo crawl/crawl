@@ -1218,12 +1218,12 @@ static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
+    for (auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
-        const actor *victim = actor_at(p->first);
+        const actor *victim = actor_at(entry.first);
         if (!victim)
             continue;
 
@@ -3243,10 +3243,8 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
-    for (auto i = all_door.begin(); i != all_door.end(); ++i)
+    for (const auto &dc : all_door)
     {
-        const coord_def& dc = *i;
-
         if (you.see_cell(dc))
             was_seen = true;
 

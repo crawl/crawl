@@ -148,12 +148,10 @@ static string shoptype_to_string(shop_type s)
 
 bool overview_knows_portal(branch_type portal)
 {
-    for (auto pl_iter = portals_present.begin();
-          pl_iter != portals_present.end(); ++pl_iter)
-    {
-        if (pl_iter->second == portal)
+    for (const auto &entry : portals_present)
+        if (entry.second == portal)
             return true;
-    }
+
     return false;
 }
 
@@ -161,10 +159,9 @@ bool overview_knows_portal(branch_type portal)
 int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
-    for (auto pl_iter = portals_present.begin();
-          pl_iter != portals_present.end(); ++pl_iter)
+    for (const auto &entry : portals_present)
     {
-        if (branches[pl_iter->second].entry_stairs == portal)
+        if (branches[entry.second].entry_stairs == portal)
             num++;
     }
 
@@ -259,11 +256,8 @@ static string _get_seen_branches(bool display)
             lid = find_deepest_explored(lid);
 
             string entry_desc;
-            for (auto lit = stair_level[branch].begin();
-                 lit != stair_level[branch].end(); ++lit)
-            {
-                entry_desc += " " + lit->describe(false, true);
-            }
+            for (auto lvl : stair_level[branch])
+                entry_desc += " " + lvl.describe(false, true);
 
             // "D" is a little too short here.
             const char *brname = (branch == BRANCH_DUNGEON
@@ -403,10 +397,9 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
 
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
-        for (auto na_iter = altars_present.begin();
-             na_iter != altars_present.end(); ++na_iter)
+        for (const auto &entry : altars_present)
         {
-            if (na_iter->second == god)
+            if (entry.second == god)
             {
                 has_altar_been_seen = true;
                 break;
@@ -710,20 +703,18 @@ static void _update_unique_annotation(level_id level)
 {
     string note = "";
     string sep = ", ";
-    for (auto i = auto_unique_annotations.begin();
-         i != auto_unique_annotations.end(); ++i)
-    {
-        if (i->first.find(',') != string::npos)
+
+    for (const auto &annot : auto_unique_annotations)
+        if (annot.first.find(',') != string::npos)
             sep = "; ";
-    }
-    for (auto i = auto_unique_annotations.begin();
-         i != auto_unique_annotations.end(); ++i)
+
+    for (const auto &annot : auto_unique_annotations)
     {
-        if (i->second == level)
+        if (annot.second == level)
         {
             if (note.length() > 0)
                 note += sep;
-            note += i->first;
+            note += annot.first;
         }
     }
     if (note.empty())
@@ -788,10 +779,8 @@ void remove_unique_annotation(monster* mons)
             ++i;
     }
 
-    for (auto i = affected_levels.begin(); i != affected_levels.end(); ++i)
-    {
-        _update_unique_annotation(*i);
-    }
+    for (auto lvl : affected_levels)
+        _update_unique_annotation(lvl);
 }
 
 void set_level_exclusion_annotation(string str, level_id li)
@@ -929,11 +918,10 @@ void clear_level_annotations(level_id li)
 void marshallUniqueAnnotations(writer& outf)
 {
     marshallShort(outf, auto_unique_annotations.size());
-    for (auto i = auto_unique_annotations.begin();
-         i != auto_unique_annotations.end(); ++i)
+    for (const auto &annot : auto_unique_annotations)
     {
-        marshallString(outf, i->first);
-        i->second.save(outf);
+        marshallString(outf, annot.first);
+        annot.second.save(outf);
     }
 }
 

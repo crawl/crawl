@@ -108,11 +108,11 @@ struct greater_second
 };
 
 template<class T>
-static void deleteAll(T& collection) {
-  for (auto it = collection.begin(); it != collection.end(); ++it) {
-    delete *it;
-  }
-  collection.clear();
+static void deleteAll(T& collection)
+{
+    for (auto ptr : collection)
+        delete ptr;
+    collection.clear();
 }
 
 static inline int sqr(int x)

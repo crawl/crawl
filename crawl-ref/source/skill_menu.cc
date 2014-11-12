@@ -583,9 +583,9 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
 void SkillMenuSwitch::set_state(skill_menu_state state)
 {
     // We only set it if it's a valid state.
-    for (auto it = m_states.begin(); it != m_states.end(); ++it)
+    for (auto candidate : m_states)
     {
-        if (*it == state)
+        if (candidate == state)
         {
             m_state = state;
             return;
@@ -1322,10 +1322,9 @@ void SkillMenu::shift_bottom_down()
 {
     const coord_def down(0, 1);
     m_help->move(down);
-    for (auto it = m_switches.begin(); it != m_switches.end(); ++it)
-    {
-        it->second->move(down);
-    }
+    for (auto &entry : m_switches)
+        entry.second->move(down);
+
     if (m_help_button)
         m_help_button->move(down);
 }

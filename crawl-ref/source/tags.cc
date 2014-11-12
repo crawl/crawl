@@ -1381,18 +1381,12 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.ability_letter_table[i]);
 
     marshallUByte(th, you.old_vehumet_gifts.size());
-    for (auto it = you.old_vehumet_gifts.begin();
-         it != you.old_vehumet_gifts.end(); ++it)
-    {
-        marshallShort(th, *it);
-    }
+    for (auto spell : you.old_vehumet_gifts)
+        marshallShort(th, spell);
 
     marshallUByte(th, you.vehumet_gifts.size());
-    for (auto it = you.vehumet_gifts.begin();
-         it != you.vehumet_gifts.end(); ++it)
-    {
-        marshallShort(th, *it);
-    }
+    for (auto spell : you.vehumet_gifts)
+        marshallShort(th, spell);
 
     CANARY;
 
@@ -1411,17 +1405,12 @@ static void tag_construct_you(writer &th)
 
     marshallBoolean(th, you.auto_training);
     marshallByte(th, you.exercises.size());
-    for (auto it = you.exercises.begin(); it != you.exercises.end(); ++it)
-    {
-        marshallInt(th, *it);
-    }
+    for (auto sk : you.exercises)
+        marshallInt(th, sk);
 
     marshallByte(th, you.exercises_all.size());
-    for (auto it = you.exercises_all.begin();
-         it != you.exercises_all.end(); ++it)
-    {
-        marshallInt(th, *it);
-    }
+    for (auto sk : you.exercises_all)
+        marshallInt(th, sk);
 
     marshallByte(th, you.skill_menu_do);
     marshallByte(th, you.skill_menu_view);
@@ -1553,20 +1542,14 @@ static void tag_construct_you(writer &th)
     CANARY;
 
     // Action counts.
-    j = 0;
-    for (auto ac = you.action_count.begin();
-         ac != you.action_count.end(); ++ac)
-    {
-        j++;
-    }
+    j = you.action_count.size();
     marshallShort(th, j);
-    for (auto ac = you.action_count.begin();
-         ac != you.action_count.end(); ++ac)
+    for (const auto &ac : you.action_count)
     {
-        marshallShort(th, ac->first.first);
-        marshallInt(th, ac->first.second);
+        marshallShort(th, ac.first.first);
+        marshallInt(th, ac.first.second);
         for (int k = 0; k < 27; k++)
-            marshallInt(th, ac->second[k]);
+            marshallInt(th, ac.second[k]);
     }
 
     marshallByte(th, NUM_BRANCHES);
@@ -1801,20 +1784,16 @@ static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
     marshallShort(th, mlist.size());
 
-    for (auto mi = mlist.begin(); mi != mlist.end(); ++mi)
-    {
-        marshall_follower(th, *mi);
-    }
+    for (const auto &follower : mlist)
+        marshall_follower(th, follower);
 }
 
 static void marshall_item_list(writer &th, const i_transit_list &ilist)
 {
     marshallShort(th, ilist.size());
 
-    for (auto ii = ilist.begin(); ii != ilist.end(); ++ii)
-    {
-        marshallItem(th, *ii);
-    }
+    for (const auto &item : ilist)
+        marshallItem(th, item);
 }
 
 static m_transit_list unmarshall_follower_list(reader &th)
@@ -4328,10 +4307,8 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
-    for (auto i = m.enchantments.begin(); i != m.enchantments.end(); ++i)
-    {
-        marshall_mon_enchant(th, i->second);
-    }
+    for (const auto &entry : m.enchantments)
+        marshall_mon_enchant(th, entry.second);
     marshallByte(th, m.ench_countdown);
 
     marshallShort(th, min(m.hit_points, MAX_MONSTER_HP));

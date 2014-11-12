@@ -1214,12 +1214,12 @@ static void _handle_macro_delay()
 
 static void _decrement_delay(delay_type delay)
 {
-    for (auto i = you.delay_queue.begin(); i != you.delay_queue.end(); ++i)
+    for (auto &delay_item : you.delay_queue)
     {
-        if (i->type == delay)
+        if (delay_item.type == delay)
         {
-            if (i->duration > 0)
-                --i->duration;
+            if (delay_item.duration > 0)
+                --delay_item.duration;
             break;
         }
     }

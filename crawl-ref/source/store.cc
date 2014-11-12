@@ -1944,16 +1944,12 @@ void dump_prop_accesses()
 
     vector<string> props;
 
-    for (auto i = accesses.begin(); i != accesses.end(); ++i)
-    {
-        props.push_back(i->first);
-    }
+    for (auto &entry : accesses)
+        props.push_back(entry.first);
 
     sort(props.begin(), props.end(), _cmp);
-    for (auto i = props.begin(); i != props.end(); ++i)
-    {
-        fprintf(f, "%10d %s\n", accesses[*i], i->c_str());
-    }
+    for (const auto &prop : props)
+        fprintf(f, "%10d %s\n", accesses[prop], prop.c_str());
     fclose(f);
 }
 #endif

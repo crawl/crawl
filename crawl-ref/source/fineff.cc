@@ -32,12 +32,11 @@
 
 /*static*/ void final_effect::schedule(final_effect *eff)
 {
-    for (auto fi = env.final_effects.begin();
-         fi != env.final_effects.end(); ++fi)
+    for (auto fe : env.final_effects)
     {
-        if ((*fi)->mergeable(*eff))
+        if (fe->mergeable(*eff))
         {
-            (*fi)->merge(*eff);
+            fe->merge(*eff);
             delete eff;
             return;
         }

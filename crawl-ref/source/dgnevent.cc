@@ -53,12 +53,9 @@ bool dgn_event_dispatcher::fire_vetoable_position_event(
     if (alarm && (alarm->eventmask & et.type))
     {
         dgn_square_alarm alcopy(*alarm);
-        for (auto i = alcopy.listeners.begin();
-             i != alcopy.listeners.end(); ++i)
-        {
-            if (!(*i)->notify_dgn_event(et))
+        for (auto listener : alcopy.listeners)
+            if (!listener->notify_dgn_event(et))
                 return false;
-        }
     }
     return true;
 }
@@ -77,11 +74,8 @@ void dgn_event_dispatcher::fire_position_event(
     if (alarm && (alarm->eventmask & et.type))
     {
         dgn_square_alarm alcopy = *alarm;
-        for (auto i = alcopy.listeners.begin();
-             i != alcopy.listeners.end(); ++i)
-        {
-            (*i)->notify_dgn_event(et);
-        }
+        for (auto listener : alcopy.listeners)
+            listener->notify_dgn_event(et);
     }
 }
 
@@ -89,12 +83,10 @@ void dgn_event_dispatcher::fire_event(const dgn_event &e)
 {
     if (global_event_mask & e.type)
     {
-        list<dgn_listener_def> lcopy = listeners;
-        for (auto i = lcopy.begin(); i != lcopy.end(); ++i)
-        {
-            if (i->eventmask & e.type)
-                i->listener->notify_dgn_event(e);
-        }
+        auto copy = listeners;
+        for (const auto &ldef : copy)
+            if (ldef.eventmask & e.type)
+                ldef.listener->notify_dgn_event(e);
     }
 }
 
@@ -112,12 +104,11 @@ void dgn_event_dispatcher::register_listener(unsigned mask,
     else
     {
         global_event_mask |= mask;
-        for (auto i = listeners.begin();
-             i != listeners.end(); ++i)
+        for (auto &ldef : listeners)
         {
-            if (i->listener == listener)
+            if (ldef.listener == listener)
             {
-                i->eventmask |= mask;
+                ldef.eventmask |= mask;
                 return;
             }
         }

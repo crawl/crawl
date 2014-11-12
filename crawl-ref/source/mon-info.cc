@@ -646,9 +646,9 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
-    for (auto e = m->enchantments.begin(); e != m->enchantments.end(); ++e)
+    for (auto &entry : m->enchantments)
     {
-        monster_info_flags flag = ench_to_mb(*m, e->first);
+        monster_info_flags flag = ench_to_mb(*m, entry.first);
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
     }

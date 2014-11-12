@@ -1272,10 +1272,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
             killerpath = "";
 
-            for (auto it = blame.begin(); it != blame.end(); ++it)
-            {
-                killerpath = killerpath + ":" + _xlog_escape(it->get_string());
-            }
+            for (const auto &bl : blame)
+                killerpath = killerpath + ":" + _xlog_escape(bl.get_string());
 
             killerpath.erase(killerpath.begin());
         }
@@ -2588,15 +2586,15 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 vector<string> summoners = _xlog_split_fields(killerpath);
 
-                for (auto it = summoners.begin(); it != summoners.end(); ++it)
+                for (const auto &sumname : summoners)
                 {
                     if (!semiverbose)
                     {
-                        desc += "... " + *it;
+                        desc += "... " + sumname;
                         desc += _hiscore_newline_string();
                     }
                     else
-                        desc += " (" + *it;
+                        desc += " (" + sumname;
                 }
 
                 if (semiverbose)

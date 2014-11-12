@@ -747,29 +747,22 @@ void reset_training()
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
-        for (auto it = you.exercises.begin(); it != you.exercises.end(); ++it)
-        {
-            skill_type sk = *it;
+        for (auto sk : you.exercises)
             if (skill_trained(sk))
             {
                 you.training[sk] += you.train[sk];
                 empty = false;
             }
-        }
 
         // We count the practise events in the other queue.
         FixedVector<unsigned int, NUM_SKILLS> exer_all;
         exer_all.init(0);
-        for (auto it = you.exercises_all.begin();
-             it != you.exercises_all.end(); ++it)
-        {
-            skill_type sk = *it;
+        for (auto sk : you.exercises_all)
             if (skill_trained(sk))
             {
                 exer_all[sk] += you.train[sk];
                 empty = false;
             }
-        }
 
         // We keep the highest of the 2 numbers.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
@@ -907,10 +900,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
         shuffle_array(training_order);
-        for (auto it = training_order.begin();
-             it != training_order.end(); ++it)
+        for (auto sk : training_order)
         {
-            skill_type sk = *it;
             int gain = 0;
 
             while (sk_exp[sk] >= cost && you.training[sk])

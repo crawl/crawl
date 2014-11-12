@@ -379,12 +379,8 @@ static counted_monster_list _counted_monster_list_from_vector(
     vector<monster *> affected_monsters)
 {
     counted_monster_list mons;
-    for (auto it = affected_monsters.begin();
-         it != affected_monsters.end(); it++)
-    {
-        mons.add(*it);
-    }
-
+    for (auto mon : affected_monsters)
+        mons.add(mon);
     return mons;
 }
 
@@ -722,11 +718,8 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     if (actual && pre_hook)
         (*pre_hook)(agent, affects_you, affected_monsters);
 
-    for (auto it = affected_monsters.begin();
-         it != affected_monsters.end(); it++)
+    for (auto m : affected_monsters)
     {
-        monster* m = (monster *)(*it);
-
         // Watch out for invalidation. Example: Ozocubu's refrigeration on
         // a bunch of giant spores that blow each other up.
         if (!m->alive())
@@ -2491,32 +2484,32 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
-        beam.draw(p->first);
+        beam.draw(entry.first);
     }
 
     scaled_delay(200);
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
-    for (auto p = hitfunc.zapped.begin(); p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
         // beams are incredibly spammy in debug mode
-        if (!actor_at(p->first))
+        if (!actor_at(entry.first))
             continue;
 
-        int arc = hitfunc.arc_length[p->first.range(hitfunc.origin)];
+        int arc = hitfunc.arc_length[entry.first.range(hitfunc.origin)];
         ASSERT(arc > 0);
-        dprf("at distance %d, arc length is %d", p->first.range(hitfunc.origin),
-                                                 arc);
-        beam.source = beam.target = p->first;
+        dprf("at distance %d, arc length is %d",
+             entry.first.range(hitfunc.origin), arc);
+        beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
         beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
@@ -3021,13 +3014,12 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     for (int i = 1; i <= range; i++)
     {
-        for (auto p = hitfunc.sweep[i].begin();
-             p != hitfunc.sweep[i].end(); ++p)
+        for (const auto &entry : hitfunc.sweep[i])
         {
-            if (p->second <= 0)
+            if (entry.second <= 0)
                 continue;
 
-            beam.draw(p->first);
+            beam.draw(entry.first);
         }
         scaled_delay(25);
     }
@@ -3045,10 +3037,9 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     for (int i = 1; i <= range; i++)
     {
-        for (auto p = hitfunc.sweep[i].begin();
-             p != hitfunc.sweep[i].end(); ++p)
+        for (const auto &entry : hitfunc.sweep[i])
         {
-            if (p->second <= 0)
+            if (entry.second <= 0)
                 continue;
 
             const int eff_range = max(3, (6 * i / LOS_RADIUS));
@@ -3060,14 +3051,14 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
                     ? calc_dice(7, (66 + 3 * pow) / eff_range)
                     : calc_dice(10, (54 + 3 * pow / 2) / eff_range);
 
-            if (actor_at(p->first))
+            if (actor_at(entry.first))
             {
-                beam.source = beam.target = p->first;
+                beam.source = beam.target = entry.first;
                 beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
                 beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
                 beam.fire();
             }
-            place_cloud(CLOUD_COLD, p->first,
+            place_cloud(CLOUD_COLD, entry.first,
                         (18 + random2avg(45,2)) / eff_range, caster);
         }
     }

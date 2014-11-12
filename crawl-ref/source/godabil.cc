@@ -1466,10 +1466,8 @@ bool trog_burn_spellbooks()
         mprf("The spellbook%s fail%s to ignite!",
              totalblocked == 1 ? ""  : "s",
              totalblocked == 1 ? "s" : "");
-        for (auto it = mimics.begin(); it != mimics.end(); ++it)
-        {
-            discover_mimic(*it, false);
-        }
+        for (auto c : mimics)
+            discover_mimic(c, false);
         return false;
     }
     else
@@ -3507,9 +3505,9 @@ void spare_beogh_convert()
     }
 
     int witc = 0;
-    for (auto wit = witnesses.begin(); wit != witnesses.end(); ++wit)
+    for (auto wit : witnesses)
     {
-        monster *orc = monster_by_mid(*wit);
+        monster *orc = monster_by_mid(wit);
         if (!orc || !orc->alive())
             continue;
 
@@ -3557,22 +3555,21 @@ bool dithmenos_shadow_step()
          cloud_prompted = false,
          terrain_prompted = false;
 
-    for (auto site = tgt.additional_sites.begin();
-         site != tgt.additional_sites.end(); site++)
+    for (auto site : tgt.additional_sites)
     {
         if (!cloud_prompted
-            && !check_moveto_cloud(*site, "shadow step", &cloud_prompted))
+            && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
         {
             return false;
         }
 
         if (!zot_trap_prompted)
         {
-            trap_def* trap = find_trap(*site);
-            if (trap && env.grid(*site) != DNGN_UNDISCOVERED_TRAP
+            trap_def* trap = find_trap(site);
+            if (trap && env.grid(site) != DNGN_UNDISCOVERED_TRAP
                 && trap->type == TRAP_ZOT)
             {
-                if (!check_moveto_trap(*site, "shadow step",
+                if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))
                 {
                     you.turn_is_over = false;
@@ -3581,7 +3578,7 @@ bool dithmenos_shadow_step()
                 zot_trap_prompted = true;
             }
             else if (!trap_prompted
-                     && !check_moveto_trap(*site, "shadow step",
+                     && !check_moveto_trap(site, "shadow step",
                                            &trap_prompted))
             {
                 you.turn_is_over = false;
@@ -3590,14 +3587,14 @@ bool dithmenos_shadow_step()
         }
 
         if (!exclusion_prompted
-            && !check_moveto_exclusion(*site, "shadow step",
+            && !check_moveto_exclusion(site, "shadow step",
                                        &exclusion_prompted))
         {
             return false;
         }
 
         if (!terrain_prompted
-            && !check_moveto_terrain(*site, "shadow step", "",
+            && !check_moveto_terrain(site, "shadow step", "",
                                      &terrain_prompted))
         {
             return false;

@@ -676,9 +676,9 @@ bool sort_item_charged(const InvEntry *a)
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
                                    const item_sort_comparators *cmps)
 {
-    for (auto i = cmps->begin(); i != cmps->end(); ++i)
+    for (const auto &comparator : *cmps)
     {
-        const int cmp = i->compare(a, b);
+        const int cmp = comparator.compare(a, b);
         if (cmp)
             return cmp < 0;
     }

@@ -1438,13 +1438,13 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
             if (!tgt.valid_aim(*ri))
                 continue;
             tgt.set_aim(*ri);
-            for (auto it = tgt.seen.begin(); it != tgt.seen.end(); it++)
+            for (const auto &entry : tgt.seen)
             {
-                if (it->second == AFF_NO || it->second == AFF_TRACER)
+                if (entry.second == AFF_NO || entry.second == AFF_TRACER)
                     continue;
 
                 // Checks here are from get_dist_to_nearest_monster().
-                const monster* mons = monster_at(it->first);
+                const monster* mons = monster_at(entry.first);
                 if (mons && !mons->wont_attack()
                     && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
                         || mons->type == MONS_BALLISTOMYCETE
