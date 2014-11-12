@@ -1423,6 +1423,14 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type == OBJ_MISSILES && item1.special != item2.special)
         return false;
 
+    // Don't merge trapping nets with other nets.
+    if (item1.base_type == OBJ_MISSILES && item1.sub_type == MI_THROWING_NET
+        && item1.net_placed != item2.net_placed)
+    {
+        return false;
+    }
+
+
     if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
         && determine_chunk_effect(item1, true) !=
            determine_chunk_effect(item2, true))
