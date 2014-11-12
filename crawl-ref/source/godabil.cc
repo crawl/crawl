@@ -5687,8 +5687,12 @@ bool ru_do_sacrifice(ability_type sac)
         variable_sac = false;
         mut = sac_def.mutation;
         num_sacrifices = 1;
-        offer_text = make_stringf("%s.", sac_def.sacrifice_text);
-        mile_text = make_stringf("%s.", sac_def.milestone_text);
+        const char* handtxt = "";
+        if (sac == ABIL_RU_SACRIFICE_HAND)
+            handtxt = you.hand_name(true).c_str();
+
+        offer_text = make_stringf("%s%s", sac_def.sacrifice_text, handtxt);
+        mile_text = make_stringf("%s%s", sac_def.milestone_text, handtxt);
     }
 
     piety_gain = _get_sacrifice_piety(sac);
