@@ -44,6 +44,6 @@ $(SUBDIRS):
 	$(MAKE) install prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH)
 
 libpng freetype: zlib
-sdl-image: sdl libpng
+sdl2-image: sdl2 libpng
 
 .PHONY: $(SUBDIRS)
