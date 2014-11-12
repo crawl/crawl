@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-1857-g6c74090)
+Stone Soup 0.16 (up to 0.16-a0-2092-g20dfb3b)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -26,6 +26,9 @@ Character
 * Wanderers can start with one elemental evoker or a box of beasts instead of
   a wand.
 * Felids no longer have a jump-attack ability, which has been removed.
+* Worshippers of Kikubaaqudgha and Nemelex Xobeh will now have titles unique
+  to those gods displayed when their highest skill is Necromancy or Evocations
+  (respectively).
 
 Monsters
 --------
@@ -109,7 +112,9 @@ Items
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
 * All food other than rations, chunks, and royal jellies now takes one turn
   to eat.
+* Potions of blood no longer give nutrition for non-vampires.
 * All short blades now do piercing damage.
+* The Box of Beasts and Rod of Shadows are now considerably stronger.
 * Renamed items:
     - Cutlasses are now rapiers.
     - Bastard swords are now double swords.
@@ -117,7 +122,7 @@ Items
     - Cloaks of darkness are now cloaks of invisibility.
 * Removed items:
     - Boots of jumping.
-    - Potions of coagulated blood.
+    - Potions of porridge and coagulated blood.
     - Blessed Blades.
 
 
