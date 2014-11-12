@@ -24,8 +24,6 @@ public:
     Stash(int xp = -1, int yp = -1);
     Stash(const Stash &other) { *this = other; };
 
-    static bool is_boring_feature(dungeon_feature_type feat);
-
     static string stash_item_name(const item_def &item);
     void update();
     bool unmark_trapping_nets();
