@@ -1,216 +1,353 @@
 %%%%
-# decks of transport -> escape
+# Transport
+Warpwright card
+
+The card depicts a heavily engraved door swinging open. The landscape beyond
+appears upside down.
+
+Drawing this card creates a teleportation trap in an adjacent square, with a
+chance of its position being revealed at high power.
+%%%%
 Swap card
 
-This card swaps your position with that of a nearby creature.
+The card depicts a hooded executioner with his head on the block, while the
+condemned gleefully raises the axe.
+
+Drawing this card swaps the user's position with that of a nearby creature, if
+possible.
 %%%%
 Velocity card
 
-This card can grant great speed or terrible slowness to foes and allies
-alike. How much you benefit from this exchange depends on card power.
-%%%%
-# decks of emergency -> escape
-the Tomb card
+The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
+coat the boots' soles.
 
-This card entombs the player in protective walls of solid rock. At lower power
-levels, the tomb may be imperfect. Use with caution!
-%%%%
-the Banshee card
-
-The wail of the Banshee instils fear and drains life from nearby creatures.
-%%%%
-Damnation card
-
-This card banishes one or more nearby creatures to the Abyss, possibly
-including you.
+Drawing this card can grant great speed or terrible slowness to foes and allies
+alike. The beneficial aspects depend on card power.
 %%%%
 Solitude card
 
-This card randomly teleports creatures that are adjacent to you.
-%%%%
-Warpwright card
+The card depicts a monk meditating atop a lonely mountain peak.
 
-This card creates a teleportation trap in an adjacent square, with a chance of
-its position being revealed at high power.
+Drawing this card randomly teleports creatures that are adjacent to the user.
+%%%%
+# Emergency
+the Tomb card
+
+The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
+
+Drawing this card entombs its user in protective, temporary walls of solid rock.
+At lower power levels or with adjacent creatures, the tomb may be imperfect.
+%%%%
+the Banshee card
+
+The card depicts a figure silhouetted against the moon, wailing in despair.
+
+Drawing this card emits the wail of the Banshee, which instils fear and drains
+life from nearby creatures.
+%%%%
+Damnation card
+
+The card depicts ceaseless hands from a yawning portal overcoming a panicked
+figure.
+
+Drawing this card will banish one or more nearby creatures to the Abyss,
+possibly including the user.
 %%%%
 the Shaft card
 
-This card creates a shaft beneath you, and possibly beneath your enemies.
-%%%%
-the Elixir card
+The card depicts a traveler plummeting into a chasm that has opened beneath
+them.
 
-This card rapidly restores your health or magic, or both at high power levels.
-It will also grant your allies temporary vitality.
-%%%%
-the Helm card
-
-This card increases your and your allies' defences. It may provide boosts to armour,
-evasion, shielding and resistances.
-%%%%
-the Blade card
-
-This card temporarily allows you to cleave, hitting all adjacent foes.
-%%%%
-the Shadow card
-
-This card lets you blend into the shadows, granting one or both of
-additional stealth or darkness.
-%%%%
-the Mercenary card
-
-This card summons a mercenary to fight by your side... for a price.
-%%%%
-the Potion card
-
-This card has the same effect, positive or negative, as drinking a random
-magical potion. It is more likely to have positive effects at high power.
-Its effects will be shared with your allies if possible.
-%%%%
-Focus card
-
-This card further boosts your strongest attribute at the cost of your worst.
-%%%%
-Wild Magic card
-
-This card causes wild magic, as if from miscasting a spell, to act upon you.
-%%%%
-Placid Magic card
-
-This card suppresses nearby magic. Your magic is drained, enchantments vanish
-and foes are rendered temporarily inept at sorcery.
-%%%%
-the Helix card
-
-This card changes your mutations. Higher power levels make the change more
-likely to be beneficial.
+Drawing this card will create a shaft beneath the user, and possibly beneath
+their enemies.
 %%%%
 the Alchemist card
 
-This card transmutes some of your gold into health and magical energy.
+The card depicts a bubbling flask left on a laboratory workbench.
+
+Drawing this card will transmute some of the user's gold into health and magical
+energy.
+%%%%
+the Elixir card
+
+The card depicts a smug smile formed out of nine chalices.
+
+This card rapidly restores the user's health or magic, or both at high power
+levels. It will also grant their allies temporary vitality.
+%%%%
+the Cloud card
+
+The card depicts an iron gate enshrouded in mist.
+
+This card imprisons the user's foes in rings of clouds. The type of clouds
+produced will improve with card power.
+%%%%
+# Destruction
+Vitriol card
+
+The card depicts an oklob plant, dripping with its distinctive corrosive sap.
+
+Drawing this card will unleash a corrosive attack spell.
+%%%%
+the Hammer card
+
+The card depicts a blacksmith raising a large hammer, shown from the
+perspective of the anvil.
+
+Drawing this card will unleash an earthen attack spell.
+%%%%
+Venom card
+
+The card depicts a snake peering out from a skull's eye sockets, dripping
+venom from its fangs.
+
+Drawing this card will unleash a poisonous attack spell. At lower power,
+attuning one's self with poison will also leave the user briefly vulnerable
+to it.
+%%%%
+the Storm card
+
+The card depicts a ship at sea sinking in a thunderstorm.
+
+Drawing it unleashes a storm -- rain, wind and the occasional tornado.
+%%%%
+Pain card
+
+The card depicts an iron wheel, menacing with spikes and rusted with blood.
+
+Drawing this card unleashes a necromantic attack spell.
+%%%%
+the Orb card
+
+The card depicts a figure surrounded by floating, glowing orbs of energy.
+
+Drawing this card unleashes one or possibly more destructive orbs of pure magic.
+%%%%
+Degeneration card
+
+The card depicts a dragon whose scales are sloughing off, revealing a sheep
+underneath.
+
+Drawing this card will attempt to polymorph and malmutate nearby enemies into
+weaker forms.
+%%%%
+# Battle
+the Potion card
+
+The card depicts a long-unvisited wine rack, with each bottle's label coated
+in dust.
+
+Drawing this card has the same effect, positive or negative, as drinking one
+of a select set of magical potions. Some particularly positive effects are
+possible at high power. Its effects will be shared with one's allies if
+possible.
+%%%%
+the Helm card
+
+The card depicts a heavily-armoured knight riding across a barren landscape,
+bearing a red pennant.
+
+Drawing this card increases the user's defences. It may provide boosts to
+armour, evasion, shielding and resistances. With high power, allies may also
+receive a mild defensive boost.
+%%%%
+the Blade card
+
+The card depicts a great sword, protruding from the back of a corpse in the
+middle of a battlefield.
+
+Drawing this card temporarily allows the user to cleave regardless of their
+method of melee, hitting all adjacent foes with each attack.
+%%%%
+the Shadow card
+
+The card depicts a pair of twins. One is dressed in royal finery while the
+other is in grey rags, with both of their hands entwined around the handle
+of a simple knife.
+
+Drawing this card lets the user blend into the shadows, granting one or both
+of additional stealth or sight-shrinking darkness.
+%%%%
+Fortitude card
+
+The card depicts a sword shattering against a bare outstretched hand.
+
+Drawing this card grants immense strength and the ability to ignore injury.
+%%%%
+# Wonders
+Focus card
+
+The card depicts a gnarled claw adjusting a slanted set of scales.
+
+Drawing this card further boosts the user's strongest attribute at the cost of
+their worst.
+%%%%
+the Helix card
+
+The card depicts figures walking up and down a double spiral staircase, becoming
+deformed as they descend and perfected as they ascend.
+
+This card changes the user's mutations. Higher power levels make the change more
+likely to be beneficial.
 %%%%
 Dowsing card
 
-This card lets you detect traps and items, reveals your surroundings, makes you
-telepathic for a short time, or some combination thereof.
+The card depicts a blindfolded, chained figure with a forehead tattoo of an eye.
+
+Drawing this card detects nearby traps and items, reveals their surroundings,
+provides short-lived telepathy, or some combination thereof.
+%%%%
+the Mercenary card
+
+The card depicts bloodied hands accepting a bag of gold.
+
+Drawing this card summons a mercenary to fight by the user's side... for a
+price.
+%%%%
+Placid Magic card
+
+The card depicts a crumpled wizard's hat, abandoned and stomped into the dirt.
+
+Drawing this card suppresses nearby magic. Your magic is drained, enchantments
+vanish, and foes are rendered temporarily inept at sorcery.
 %%%%
 # deck of summonings
 the Crusade card
 
-This card tries to convert nearby creatures to your cause, and abjures hostile
-summons.
+The card depicts a winged soldier with a flaming sword, leading a vast army.
+
+Drawing this card will try to convert nearby creatures to the user's cause, and
+abjure hostile summons.
 %%%%
 the Elements card
 
-This card summons beasts of the elements.
+The card depicts the figures of great beasts lurking in a sandstorm.
+
+Drawing this card will summon three beasts of the four elements.
 %%%%
 the Pentagram card
 
-This card summons a demon to your aid.
+The card depicts cultists marking out a ritual pentagram on the floor.
+
+Drawing this card will summon a pair of demons to the user's aid.
 %%%%
 the Dance card
 
-This card summons a dancing weapon.
+The card depicts an extravagantly-dressed, masked figure dancing alone in a
+vast room.
+
+Drawing this card will summon a dancing weapon. Its quality, brand, and
+friendliness are all affected by card power.
 %%%%
 Foxfire card
 
-This card summons flying creatures.
+The card depicts a swamp at night, suffused with an eerie glow.
+
+Drawing this card will summon forth flying swarms. Some of their members may
+be hostile.
 %%%%
 the Rangers card
 
-This card summons several archers.
+The card depicts an arrow in a bull's-eye, which has been split by a second
+arrow.
+
+Drawing this card will summon several archers.
 %%%%
 Repulsiveness card
 
-This card summons an ugly or very ugly thing. Yuck.
+The card depicts something the brain refuses to register.
+
+Drawing this card will summon an ugly, a very ugly thing, or both, with card
+power. They may be hostile, depending on card power. Yuck.
 %%%%
 the Illusion card
 
-This card summons an illusion of you. Its power will depend upon
-your own.
-%%%%
-Vitriol card
+The card depicts someone standing in a hall of mirrors, surrounded by their own
+reflections.
 
-This card unleashes a corrosive attack spell.
+Drawing this card will summon an illusion of the user. Its power will depend
+upon one's own.
 %%%%
-the Cloud card
-
-This card imprisons your foes in a ring of clouds.
-%%%%
-the Hammer card
-
-This card unleashes an physical attack spell.
-%%%%
-Venom card
-
-This card unleashes a poisonous attack spell. At lower power, attuning one's
-self with poison will also leave the user briefly vulnerable to it.
-%%%%
-the Storm card
-
-This card unleashes a storm -- rain, wind and the occasional tornado.
-%%%%
-Fortitude card
-
-This card grants immense strength and the ability to ignore injury.
-%%%%
-Pain card
-
-This card unleashes a necromantic attack spell, which may affect you as well.
-%%%%
-Torment card
-
-This card calls on the powers of darkness to cause agonising injury to any
-nearby living creature.
-%%%%
-the Orb card
-
-This card unleashes a destructive orb of pure magic, sometimes even multiple
-ones.
-%%%%
-Degeneration card
-
-This card attempts to polymorph nearby enemies into weaker forms.
-%%%%
+# Oddities
 Wrath card
 
-This card draws a god's wrath against you.
-%%%%
-the Wraith card
+The card depicts the hand of the divine, reaching down from the heavens to hurl
+furious lightning.
 
-This card will drain you.
-%%%%
-the Curse card
-
-This card places curses on your possessions.
+Drawing this card will draw a god's wrath against the user.
 %%%%
 Xom card
 
-This card draws Xom's attention to you.
-%%%%
-Famine card
+The card depicts the ceaseless, shimmering, chromatic lights of an altar to Xom.
 
-This card starves you.
-%%%%
-the Swine card
-
-This card will make you turn pink and root for truffles.
+Drawing this card draws Xom's attention to the user.
 %%%%
 the Feast card
 
-This card feeds you.
+The card depicts lords and ladies gorging themselves in a lavish banquet hall.
+
+Drawing this card will leave its user completely full.
+%%%%
+Famine card
+
+The card depicts a gaunt figure crawling along an expanse of dry, cracked
+earth.
+
+Drawing this card will leave its user on the brink of starvation.
+%%%%
+the Curse card
+
+The card depicts unravelling bandages coated in sigils.
+
+Drawing this card places curses on the user's possessions.
+%%%%
+# Punishment
+the Wraith card
+
+The card depicts absolutely nothing.
+
+Drawing this card will drain the user.
+%%%%
+Wild Magic card
+
+The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
+
+Drawing this card causes nearby magic to go wild. The user's magic is slightly
+restored, and chaotic effects (as if from miscasting a spell) will act upon its
+user and their surroundings.
+%%%%
+the Swine card
+
+The card depicts several feral hogs wallowing in a mud pit.
+
+Drawing this card will make its user turn pink and root for truffles.
+%%%%
+Torment card
+
+The card depicts a screaming figure being tortured on the rack.
+
+Drawing this card will call on the powers of darkness, causing agonising injury
+to any nearby living creature.
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card
 
-This card makes staircases slide towards or away from you. (It is a bug if you
-ever encounter this card.)
+The card depicts water flowing down a set of stairs.
+
+Drawing this card makes staircases slide towards or away from the user. It is a
+bug if one ever finds it in a deck.
 %%%%
 # buggy cards
 a buggy card
 
-Buggy (It's a bug if you ever see this.)
+The card depicts a Crawl player filing a bug report on Mantis.
+
+Drawing this card is a bug, if one ever encounters it as such.
 %%%%
 a very buggy card
 
-Buggy (It's a bug if you ever see this.)
+The card depicts several Crawl players angrily filing several bug reports on
+Mantis.
+
+Drawing this card is a bug, if one ever encounters it as such.
 %%%%
