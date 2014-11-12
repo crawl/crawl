@@ -1430,7 +1430,6 @@ bool items_similar(const item_def &item1, const item_def &item2)
         return false;
     }
 
-
     if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
         && determine_chunk_effect(item1, true) !=
            determine_chunk_effect(item2, true))

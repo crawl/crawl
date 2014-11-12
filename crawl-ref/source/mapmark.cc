@@ -978,9 +978,7 @@ map_markers::~map_markers()
 void map_markers::init_from(const map_markers &c)
 {
     for (const auto &entry : c.markers)
-    {
         add(entry.second->clone());
-    }
     have_inactive_markers = c.have_inactive_markers;
 }
 

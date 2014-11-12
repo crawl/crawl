@@ -415,9 +415,7 @@ static void _write_map_stats()
     fprintf(outf, "\n\nMaps used:\n\n");
     multimap<int, string> usedmaps;
     for (const auto &entry : try_count)
-    {
         usedmaps.insert(make_pair(entry.second, entry.first));
-    }
 
     for (auto i = usedmaps.rbegin(); i != usedmaps.rend(); ++i)
     {
