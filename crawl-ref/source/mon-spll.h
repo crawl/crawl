@@ -146,7 +146,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD  },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
@@ -157,7 +156,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 20, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 10, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
@@ -263,7 +261,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AGONY, 15, MON_SPELL_WIZARD },
        { SPELL_ANIMATE_DEAD, 15, MON_SPELL_WIZARD },
        { SPELL_SIMULACRUM, 15, MON_SPELL_WIZARD },
-       { SPELL_NO_SPELL, 0, MON_SPELL_WIZARD }
       }
     },
 
