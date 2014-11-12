@@ -20,6 +20,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "env.h"
+#include "feature.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
@@ -228,34 +229,6 @@ bool Stash::needs_stop() const
     return false;
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feature)
-{
-    switch (feature)
-    {
-    // Discard spammy dungeon features.
-    case DNGN_SHALLOW_WATER:
-    case DNGN_DEEP_WATER:
-    case DNGN_LAVA:
-    case DNGN_OPEN_DOOR:
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_SEALED_STAIRS_UP:
-    case DNGN_SEALED_STAIRS_DOWN:
-    case DNGN_ENTER_SHOP:
-    case DNGN_ABANDONED_SHOP:
-    case DNGN_UNDISCOVERED_TRAP:
-        return true;
-    default:
-        return feat_is_solid(feature);
-    }
-}
-
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return you.visible_igrd(pos) != NON_ITEM;
@@ -286,15 +259,14 @@ void Stash::update()
     feat = grd(p);
     trap = NUM_TRAPS;
 
-    if (is_boring_feature(feat))
-        feat = DNGN_FLOOR;
-
     if (feat_is_trap(feat))
     {
         trap = get_trap_type(p);
         if (trap == TRAP_WEB)
             feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
     }
+    else if (!is_notable_terrain(feat))
+        feat = DNGN_FLOOR;
 
     if (feat == DNGN_FLOOR)
         feat_desc = "";
@@ -1620,7 +1592,7 @@ void StashTracker::update_visible_stashes()
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)
-                || !Stash::is_boring_feature(feat)))
+                || is_notable_terrain(feat)))
         {
             if (!lev)
                 lev = &get_current_level();
