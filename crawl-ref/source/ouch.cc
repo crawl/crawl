@@ -774,6 +774,27 @@ void reset_damage_counters()
     you.source_damage = 0;
 }
 
+bool can_shave_damage()
+{
+    return (you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE]);
+}
+
+int do_shave_damage(int dam)
+{
+    if (you.species == SP_DEEP_DWARF)
+    {
+        // Deep Dwarves get to shave any hp loss.
+        int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
+        dprf("HP shaved: %d.", shave);
+        dam -= shave;
+    }
+
+    if (you.duration[DUR_FORTITUDE])
+        dam -= random2(10);
+        
+    return dam;
+}
+
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
 // than 4% max hp. Otherwise, they scale up with damage taken and with lower
@@ -809,19 +830,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    if ((you.duration[DUR_FORTITUDE] || you.species == SP_DEEP_DWARF)
-         && dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    if (can_shave_damage() && dam != INSTANT_DEATH
+        && death_type != KILLED_BY_POISON)
     {
-        if (you.species == SP_DEEP_DWARF)
-        {
-            // Deep Dwarves get to shave any hp loss.
-            int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
-            dprf("HP shaved: %d.", shave);
-            dam -= shave;
-        }
-
-        if (you.duration[DUR_FORTITUDE])
-            dam -= random2(10);
+        dam = do_shave_damage(dam);
 
         if (dam <= 0)
         {
