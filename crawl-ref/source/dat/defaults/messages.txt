@@ -29,10 +29,6 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 
 msc += $item_dmg:acid corrodes
-msc += $item_dmg:catch(es)? fire
-msc += $item_dmg:freezes? and shatters?
-msc += $item_dmg:covered with spores
-msc += $item_dmg:devoured!$
 msc += $item_dmg:rots? away
 
 # Less urgent, but still significant messages
@@ -80,6 +76,7 @@ msc += $boring:(prevent|prevents) you from hitting
 msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
+msc += $boring:Your air elemental.*the air
 
 ## Messages so important to require a --more--
 
