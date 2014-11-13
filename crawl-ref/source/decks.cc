@@ -1799,6 +1799,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
             {
                 bool msg = true;
                 bolt beem;
+                int dam = 5;
 
                 beem.origin_spell = SPELL_FLAY;
                 beem.source = ghost->pos();
@@ -1806,7 +1807,15 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                 beem.range = 0;
 
                 if (!you.res_torment())
-                    dec_hp(5, false);
+                {
+                    if (can_shave_damage())
+                    {
+                        dam = do_shave_damage(dam);
+                    }
+                        
+                        if (dam > 0)
+                            dec_hp(dam, false);
+                }
 
                 for (radius_iterator di(ghost->pos(), LOS_NO_TRANS); di; ++di)
                 {
