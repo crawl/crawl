@@ -690,6 +690,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_VAULT_WARDEN:
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
+    case MONS_DRACONIAN_KNIGHT:
         // being at the top has its privileges
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
@@ -698,7 +699,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_ORC_KNIGHT:
     case MONS_TENGU_WARRIOR:
         // Occasionally get crossbows, or a longbow for tengu and minotaurs.
-        if (!melee_only && mon->type != MONS_TENGU_REAVER && one_chance_in(9))
+        if (!melee_only && mon->type != MONS_TENGU_REAVER
+            && mon->type != MONS_DRACONIAN_KNIGHT && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = ((mon->type == MONS_TENGU_WARRIOR
@@ -713,7 +715,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_URUG:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
-    case MONS_DRACONIAN_KNIGHT:
     case MONS_JORY:
     {
         item.base_type = OBJ_WEAPONS;
