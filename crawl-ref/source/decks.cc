@@ -2824,7 +2824,8 @@ static void _storm_card(int power, deck_rarity_type rarity)
                 continue;
 
 
-            if ((grd(*ri) == DNGN_FLOOR || feat_is_water(grd(*ri)))
+            if ((feat_has_solid_floor(grd(*ri)) 
+                 || grd(*ri) == DNGN_DEEP_WATER)
                 && env.cgrid(*ri) == EMPTY_CLOUD)
             {
                 place_cloud(CLOUD_STORM, *ri,
