@@ -5659,7 +5659,7 @@ bool ru_do_sacrifice(ability_type sac)
         }
         offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
             sac_text.c_str());
-        mile_text = make_stringf("%s: %s", sac_def.milestone_text,
+        mile_text = make_stringf("%s: %s.", sac_def.milestone_text,
             sac_text.c_str());
     }
     else
@@ -5672,7 +5672,7 @@ bool ru_do_sacrifice(ability_type sac)
             handtxt = you.hand_name(true).c_str();
 
         offer_text = make_stringf("%s%s", sac_def.sacrifice_text, handtxt);
-        mile_text = make_stringf("%s%s", sac_def.milestone_text, handtxt);
+        mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 
     piety_gain = _get_sacrifice_piety(sac);
