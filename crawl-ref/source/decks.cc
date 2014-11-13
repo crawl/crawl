@@ -1437,6 +1437,30 @@ static int _get_power_level(int power, deck_rarity_type rarity)
     return power_level;
 }
 
+static void _suppressed_card_message(god_type god, conduct_type done)
+{
+    string forbidden_act;
+
+    switch (done)
+    {
+        case DID_NECROMANCY:
+        case DID_UNHOLY: forbidden_act = "evil"; break;
+
+        case DID_POISON: forbidden_act = "poisonous"; break;
+
+        case DID_CHAOS: forbidden_act = "chaotic"; break;
+
+        case DID_HASTY: forbidden_act = "hasty"; break;
+
+        case DID_FIRE: forbidden_act = "fiery"; break;
+
+        default: forbidden_act = "buggy"; break;
+    }
+
+    mprf("By %s power, the %s magic on the card dissipates harmlessly.",
+         apostrophise(god_name(you.religion)).c_str(), forbidden_act.c_str());
+}
+
 // Actual card implementations follow.
 
 static void _swap_monster_card(int power, deck_rarity_type rarity)
@@ -1517,12 +1541,17 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_hostiles == ENCH_HASTE && haste_immune))
                     {
-                        mon->add_ench(for_hostiles);
-                        did_something = true;
-                        if (for_hostiles == ENCH_HASTE)
-                            did_haste = true;
-                        else if (for_hostiles == ENCH_SWIFT)
-                            did_swift = true;
+                        if (you_worship(GOD_CHEIBRIADOS))
+                            _suppressed_card_message(you.religion, DID_HASTY);
+                        else
+                        {
+                            mon->add_ench(for_hostiles);
+                            did_something = true;
+                            if (for_hostiles == ENCH_HASTE)
+                                did_haste = true;
+                            else if (for_hostiles == ENCH_SWIFT)
+                                did_swift = true;
+                        }
                     }
                 }
             }
@@ -1537,12 +1566,17 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_allies == ENCH_HASTE && haste_immune))
                     {
-                        mon->add_ench(for_allies);
-                        did_something = true;
-                        if (for_allies == ENCH_HASTE)
-                            did_haste = true;
-                        else if (for_allies == ENCH_SWIFT)
-                            did_swift = true;
+                        if (you_worship(GOD_CHEIBRIADOS))
+                            _suppressed_card_message(you.religion, DID_HASTY);
+                        else
+                        {
+                            mon->add_ench(for_allies);
+                            did_something = true;
+                            if (for_allies == ENCH_HASTE)
+                                did_haste = true;
+                            else if (for_allies == ENCH_SWIFT)
+                                did_swift = true;
+                        }
                     }
                 }
             }
@@ -1563,12 +1597,15 @@ static void _banshee_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    if (!is_good_god(you.religion))
     {
-        monster* mon = monster_at(*ri);
+        for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+        {
+            monster* mon = monster_at(*ri);
 
-        if (mon && !mon->wont_attack())
-            mon->drain_exp(&you, false, 3 * (power_level + 1));
+            if (mon && !mon->wont_attack())
+                mon->drain_exp(&you, false, 3 * (power_level + 1));
+        }
     }
     mass_enchantment(ENCH_FEAR, power);
 }
@@ -1749,7 +1786,12 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     case CARD_PAIN:
         if (power_level == 2)
         {
-            mprf("You have %s %s.", participle, card_name(card));
+            if (is_good_god(you.religion))
+            {
+                mprf("You have %s %s.", participle, card_name(card));
+                _suppressed_card_message(you.religion, DID_NECROMANCY);
+                return;
+            }
 
             if (monster *ghost = create_monster(
                                     mgen_data(MONS_FLAYED_GHOST, BEH_FRIENDLY,
@@ -1802,6 +1844,19 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     bolt beam;
     beam.range = LOS_RADIUS;
+
+    if (card == CARD_VENOM && you_worship(GOD_SHINING_ONE))
+    {
+        _suppressed_card_message(you.religion, DID_POISON);
+        return;
+    }
+
+    if (card == CARD_PAIN && is_good_god(you.religion))
+    {
+        _suppressed_card_message(you.religion, DID_NECROMANCY);
+        return;
+    }
+
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
                         LOS_RADIUS, true, true, false, NULL, prompt.c_str())
         && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
@@ -2263,6 +2318,12 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
         dct2 = MONS_HELL_HOUND;
     }
 
+    if (is_good_god(you.religion))
+    {
+        _suppressed_card_message(you.religion, DID_UNHOLY);
+        return;
+    }
+
     // FIXME: The manual testing for message printing is there because
     // we can't rely on create_monster() to do it for us. This is
     // because if you are completely surrounded by walls, create_monster()
@@ -2270,7 +2331,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // and thus not print the message.
     // This hack appears later in this file as well.
     if (!create_monster(
-            mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
+            mgen_data(dct, BEH_FRIENDLY, &you,
                       5 - power_level, 0, you.pos(), MHITYOU, MG_AUTOFOE),
             false))
     {
@@ -2300,10 +2361,22 @@ static void _elements_card(int power, deck_rarity_type rarity)
 
     for (int i = 0; i < 3; ++i)
     {
+        monster_type mons_type = element_list[start % ARRAYSZ(element_list)][power_level];
+        monster hackmon;
+
+        hackmon.type = mons_type;
+        mons_load_spells(&hackmon);
+
+        if (you_worship(GOD_DITHMENOS) && mons_is_fiery(&hackmon))
+        {
+            _suppressed_card_message(you.religion, DID_FIRE);
+            start++;
+            continue;
+        }
+
         create_monster(
-            mgen_data(element_list[start % ARRAYSZ(element_list)][power_level],
-                BEH_FRIENDLY, &you, power_level + 2, 0, you.pos(), MHITYOU,
-                MG_AUTOFOE));
+            mgen_data(mons_type, BEH_FRIENDLY, &you, power_level + 2, 0,
+                      you.pos(), MHITYOU, MG_AUTOFOE));
         start++;
     }
 
@@ -2397,9 +2470,15 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     const int num_flytypes = ARRAYSZ(flytypes);
 
     // Choose what kind of monster.
-    monster_type result = flytypes[random2(num_flytypes - 2) + power_level];
+    monster_type result;
     const int how_many = 2 + random2(3) + power_level * 3;
     bool hostile_invis = false;
+
+    do
+    {
+        result = flytypes[random2(num_flytypes - 2) + power_level];
+    }
+    while (is_good_god(you.religion) && result == MONS_VAMPIRE_MOSQUITO);
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -2482,6 +2561,14 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
         ugly = MONS_VERY_UGLY_THING;
     else
         ugly = MONS_UGLY_THING;
+
+    // TODO: Handle Dithmenos and red uglies
+
+    if (you_worship(GOD_ZIN))
+    {
+        _suppressed_card_message(you.religion, DID_CHAOS);
+        return;
+    }
 
     if (!create_monster(mgen_data(ugly,
                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
@@ -2643,10 +2730,12 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             case 0: cloudy = coinflip() ? CLOUD_STEAM : CLOUD_MEPHITIC;
                     break;
 
-            case 1: cloudy = coinflip() ? CLOUD_FIRE : CLOUD_COLD;
+            case 1: cloudy = (you_worship(GOD_DITHMENOS) || coinflip())
+                              ? CLOUD_COLD : CLOUD_FIRE;
                      break;
 
-            case 2: cloudy = coinflip() ? CLOUD_MIASMA: CLOUD_ACID;
+            case 2: cloudy = (is_good_god(you.religion) || coinflip())
+                              ? CLOUD_ACID: CLOUD_MIASMA;
                     break;
 
             default: cloudy = CLOUD_DEBUGGING;
@@ -2795,6 +2884,12 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     bool effects = false;
+
+    if (you_worship(GOD_ZIN))
+    {
+        _suppressed_card_message(you.religion, DID_CHAOS);
+        return;
+    }
 
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
     {
