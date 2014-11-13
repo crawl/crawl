@@ -631,8 +631,6 @@ void item_was_lost(const item_def &item)
 
 void item_was_destroyed(const item_def &item)
 {
-    if (item.props.exists("destroy_xp"))
-        gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
     xom_check_destroyed_item(item);
 }
