@@ -106,14 +106,6 @@ bool butchery(int which_corpse)
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
 
-        // don't bottle blood from poison/mutagenic/necro corpses...
-        // ...unless they have (dragon/troll) hides.
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
-            && !mons_class_leaves_hide(si->mon_type))
-        {
-            continue;
-        }
-
         // Return pre-chosen corpse if it exists.
         if (prechosen && si->index() == which_corpse)
         {
@@ -171,18 +163,8 @@ bool butchery(int which_corpse)
 #ifdef TOUCH_UI
     vector<const item_def*> meat;
     for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-            continue;
-
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
-            && !mons_class_leaves_hide(si->mon_type))
-        {
-            continue;
-        }
-
-        meat.push_back(& (*si));
-    }
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            meat.push_back(& (*si));
 
     corpse_id = -1;
     vector<SelItem> selected =
@@ -207,12 +189,6 @@ bool butchery(int which_corpse)
     {
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
-
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
-            && !mons_class_leaves_hide(si->mon_type))
-        {
-            continue;
-        }
 
         if (butcher_all)
             corpse_id = si->index();
