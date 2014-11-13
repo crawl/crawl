@@ -776,7 +776,7 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return (you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE]);
+    return you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE];
 }
 
 int do_shave_damage(int dam)
@@ -791,7 +791,7 @@ int do_shave_damage(int dam)
 
     if (you.duration[DUR_FORTITUDE])
         dam -= random2(10);
-        
+
     return dam;
 }
 

@@ -1809,12 +1809,10 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                 if (!you.res_torment())
                 {
                     if (can_shave_damage())
-                    {
                         dam = do_shave_damage(dam);
-                    }
-                        
-                        if (dam > 0)
-                            dec_hp(dam, false);
+
+                    if (dam > 0)
+                        dec_hp(dam, false);
                 }
 
                 for (radius_iterator di(ghost->pos(), LOS_NO_TRANS); di; ++di)
@@ -1823,13 +1821,15 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
                     if (!mons || mons->wont_attack()
                         || mons->holiness() != MH_NATURAL)
+                    {
                         continue;
+                    }
 
-                        beem.target = mons->pos();
-                        ghost->foe = mons->mindex();
-                        mons_cast(ghost, beem, SPELL_FLAY,
-                                  ghost->spell_slot_flags(SPELL_FLAY), msg);
-                        msg = false;
+                    beem.target = mons->pos();
+                    ghost->foe = mons->mindex();
+                    mons_cast(ghost, beem, SPELL_FLAY,
+                             ghost->spell_slot_flags(SPELL_FLAY), msg);
+                    msg = false;
                 }
 
                 ghost->foe = MHITYOU;
@@ -2485,9 +2485,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     bool hostile_invis = false;
 
     do
-    {
         result = flytypes[random2(num_flytypes - 2) + power_level];
-    }
     while (is_good_god(you.religion) && result == MONS_VAMPIRE_MOSQUITO);
 
     for (int i = 0; i < how_many; ++i)
@@ -2735,7 +2733,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
         monster *mons = monster_at(*di);
         cloud_type cloudy;
 
-        switch(power_level)
+        switch (power_level)
         {
             case 0: cloudy = coinflip() ? CLOUD_STEAM : CLOUD_MEPHITIC;
                     break;
@@ -2753,7 +2751,9 @@ static void _cloud_card(int power, deck_rarity_type rarity)
 
         if (!mons || (mons && (mons->wont_attack()
             || mons_is_firewood(mons))))
+        {
             continue;
+        }
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
@@ -2824,7 +2824,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
                 continue;
 
 
-            if ((feat_has_solid_floor(grd(*ri)) 
+            if ((feat_has_solid_floor(grd(*ri))
                  || grd(*ri) == DNGN_DEEP_WATER)
                 && env.cgrid(*ri) == EMPTY_CLOUD)
             {
