@@ -1593,6 +1593,7 @@ clean-rltiles:
 
 ifdef TILES_ANY
 install-data: $(DESTTILEFILES)
+$(GAME): $(DESTTILEFILES)
 endif
 
 .PHONY: check-fonts
