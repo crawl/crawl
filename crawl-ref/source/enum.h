@@ -72,7 +72,9 @@ enum ability_type
     ABIL_MUMMY_RESTORATION,
     // Vampires
     ABIL_TRAN_BAT,
+#if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
+#endif
     // Deep Dwarves
     ABIL_RECHARGING,
     // Formicids
