@@ -71,6 +71,42 @@ static const FormDuration DEFAULT_DURATION = FormDuration(20, PS_DOUBLE, 100);
 static const FormDuration BAD_DURATION = FormDuration(15, PS_ONE_AND_A_HALF,
                                                       100);
 
+// Class form_entry and the formdata array
+#include "form-data.h"
+
+static const form_entry &_find_form_entry(transformation_type form)
+{
+    for (const form_entry &entry : formdata)
+        if (entry.tran == form)
+            return entry;
+    die("No formdata entry found for form %d", (int)form);
+}
+
+Form::Form(const form_entry &fe)
+    : short_name(fe.short_name), wiz_name(fe.wiz_name),
+      duration(fe.duration),
+      str_mod(fe.str_mod), dex_mod(fe.dex_mod),
+      blocked_slots(fe.blocked_slots), size(fe.size), hp_mod(fe.hp_mod),
+      can_cast(fe.can_cast), spellcasting_penalty(fe.spellcasting_penalty),
+      unarmed_hit_bonus(fe.unarmed_hit_bonus), uc_colour(fe.uc_colour),
+      uc_attack_verbs(fe.uc_attack_verbs),
+      can_bleed(fe.can_bleed), breathes(fe.breathes),
+      keeps_mutations(fe.keeps_mutations),
+      shout_verb(fe.shout_verb),
+      shout_volume_modifier(fe.shout_volume_modifier),
+      hand_name(fe.hand_name), foot_name(fe.foot_name),
+      long_name(fe.long_name), description(fe.description),
+      resists(fe.resists), stealth_mod(fe.stealth_mod),
+      base_unarmed_damage(fe.base_unarmed_damage),
+      can_fly(fe.can_fly), can_swim(fe.can_swim),
+      flat_ac(fe.flat_ac), power_ac(fe.power_ac), xl_ac(fe.xl_ac),
+      uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
+      prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons)
+{ }
+
+Form::Form(transformation_type tran)
+    : Form(_find_form_entry(tran))
+{ }
 /**
  * Is the given equipment slot available for use in this form?
  *
@@ -409,31 +445,10 @@ string Form::player_prayer_action() const
     return species_prayer_action(you.species);
 }
 
-
 class FormNone : public Form
 {
 private:
-    FormNone()
-    : Form("", "", "none", // short name, long name, wizmode name
-           "",  // description
-           EQF_NONE,  // blocked slots
-           MR_NO_FLAGS, // resists
-           FormDuration(0, PS_NONE, 0), // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
-           0, 0, 0,   // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
-           FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "",              // prayer action
-           MONS_PLAYER)       // equivalent monster
-    { };
-
+    FormNone() : Form(TRAN_NONE) { }
     DISALLOW_COPY_AND_ASSIGN(FormNone);
 public:
     static const FormNone &instance() { static FormNone inst; return inst; }
@@ -448,27 +463,7 @@ public:
 class FormSpider : public Form
 {
 private:
-    FormSpider()
-    : Form("Spider", "spider-form", "spider", // short name, long name, wizmode name
-           "a venomous arachnid creature.",  // description
-           EQF_PHYSICAL,  // blocked slots
-           MR_VUL_POISON, // resists
-           FormDuration(10, PS_DOUBLE, 60), // duration
-           0, 5,    // str mod, dex mod
-           SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
-           2, 0, 0,    // flat AC, spellpower AC, XL AC
-           true, 10,                 // can_cast, spellcasting penalty
-           10, 5, SPWPN_VENOM, LIGHTGREEN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Fangs",             // name of unarmed-combat "weapon" (in UI)
-           ANIMAL_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
-           "hiss", -4,          // shout verb, shout volume modifier
-           "front leg", "",          // hand name, foot name
-           "crawl onto",              // prayer action
-           MONS_SPIDER)       // equivalent monster
-    { };
-
+    FormSpider() : Form(TRAN_SPIDER) { }
     DISALLOW_COPY_AND_ASSIGN(FormSpider);
 public:
     static const FormSpider &instance() { static FormSpider inst; return inst; }
@@ -477,27 +472,7 @@ public:
 class FormBlade : public Form
 {
 private:
-    FormBlade()
-    : Form("Blade", "", "blade", // short name, long name, wizmode name
-           "",  // description
-           EQF_HANDS,  // blocked slots
-           MR_NO_FLAGS, // resists
-           FormDuration(10, PS_SINGLE, 100), // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           true, 20,                 // can_cast, spellcasting penalty
-           12, -1, SPWPN_NORMAL, RED,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("hit", "slash", "slice", "shred"), // verbs used for uc
-           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
-           FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "scythe-like blade", "",          // hand name, foot name
-           "",              // prayer action
-           MONS_PLAYER)       // equivalent monster
-    { };
-
+    FormBlade() : Form(TRAN_BLADE_HANDS) { }
     DISALLOW_COPY_AND_ASSIGN(FormBlade);
 public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
@@ -566,27 +541,7 @@ public:
 class FormStatue : public Form
 {
 private:
-    FormStatue()
-    : Form("Statue", "statue-form", "statue", // short name, long name, wizmode name
-           "a stone statue.",  // description
-           EQF_STATUE,  // blocked slots
-           MR_RES_ELEC | MR_RES_NEG, // resists - rrot implied by holiness
-           DEFAULT_DURATION, // duration
-           2, -2,    // str mod, dex mod
-           SIZE_CHARACTER, 13, 0,    // size, hp mod, stealth mod
-           17, 10, 0,    // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           9, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "place yourself before",              // prayer action
-           MONS_STATUE)       // equivalent monster
-    { };
-
+    FormStatue() : Form(TRAN_STATUE) { }
     DISALLOW_COPY_AND_ASSIGN(FormStatue);
 public:
     static const FormStatue &instance() { static FormStatue inst; return inst; }
@@ -673,27 +628,7 @@ public:
 class FormIce : public Form
 {
 private:
-    FormIce()
-    : Form("Ice", "ice-form", "ice", // short name, long name, wizmode name
-           "a creature of crystalline ice.",  // description
-           EQF_PHYSICAL,  // blocked slots
-           MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3), // resists
-           FormDuration(30, PS_DOUBLE, 100), // duration
-           0, 0,    // str mod, dex mod
-           SIZE_LARGE, 12, 15,    // size, hp mod, stealth mod
-           5, 7, 0,    // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           10, 12, SPWPN_FREEZING, WHITE,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_ENABLE,     // can_fly, can_swim
-           FC_FORBID, true, false,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "front paw", "paw",          // hand name, foot name
-           "bow your head before",              // prayer action
-           MONS_ICE_BEAST)       // equivalent monster
-    { };
-
+    FormIce() : Form(TRAN_ICE_BEAST) { }
     DISALLOW_COPY_AND_ASSIGN(FormIce);
 public:
     static const FormIce &instance() { static FormIce inst; return inst; }
@@ -724,27 +659,7 @@ public:
 class FormDragon : public Form
 {
 private:
-    FormDragon()
-    : Form("Dragon", "dragon-form", "dragon", // short name, long name, wizmode name
-           "a fearsome dragon!",  // description
-           EQF_PHYSICAL,  // blocked slots
-           MR_RES_POISON, // resists - most handled in functions
-           DEFAULT_DURATION, // duration
-           10, 0,    // str mod, dex mod
-           SIZE_GIANT, 15, 6,    // size, hp mod, stealth mod
-           16, 0, 0,    // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Teeth and claws",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("hit", "claw", "bite", "maul"), // verbs used for uc
-           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
-           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
-           "roar", 6,          // shout verb, shout volume modifier
-           "foreclaw", "",          // hand name, foot name
-           "bow your head before",              // prayer action
-           MONS_PROGRAM_BUG)       // equivalent monster
-    { };
-
+    FormDragon() : Form(TRAN_DRAGON) { }
     DISALLOW_COPY_AND_ASSIGN(FormDragon);
 public:
     static const FormDragon &instance() { static FormDragon inst; return inst; }
@@ -816,27 +731,7 @@ public:
 class FormLich : public Form
 {
 private:
-    FormLich()
-    : Form("Lich", "lich-form", "lich", // short name, long name, wizmode name
-           "a lich.",  // description
-           EQF_NONE,  // blocked slots
-           MR_RES_COLD | mrd(MR_RES_NEG, 3), // resists - rp & rrot implied
-           DEFAULT_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
-           6, 0, 0,   // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           10, 5, SPWPN_DRAINING, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
-           FC_FORBID, false, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "",              // prayer action
-           MONS_LICH)       // equivalent monster
-    { };
-
+    FormLich() : Form(TRAN_LICH) { }
     DISALLOW_COPY_AND_ASSIGN(FormLich);
 public:
     static const FormLich &instance() { static FormLich inst; return inst; }
@@ -864,27 +759,7 @@ public:
 class FormBat : public Form
 {
 private:
-    FormBat()
-    : Form("Bat", "bat-form", "bat", // short name, long name, wizmode name
-           "",  // description
-           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
-           MR_NO_FLAGS, // resists
-           DEFAULT_DURATION, // duration
-           -5, 5,    // str mod, dex mod
-           SIZE_TINY, 10, 17,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           false, 10,                 // can_cast, spellcasting penalty
-           12, -1, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "Teeth",             // name of unarmed-combat "weapon" (in UI)
-           ANIMAL_VERBS, // verbs used for uc
-           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
-           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
-           "squeak", -8,          // shout verb, shout volume modifier
-           "foreclaw", "",          // hand name, foot name
-           "perch on",              // prayer action
-           MONS_PROGRAM_BUG)       // equivalent monster
-    { };
-
+    FormBat() : Form(TRAN_BAT) { }
     DISALLOW_COPY_AND_ASSIGN(FormBat);
 public:
     static const FormBat &instance() { static FormBat inst; return inst; }
@@ -953,27 +828,7 @@ public:
 class FormPig : public Form
 {
 private:
-    FormPig()
-    : Form("Pig", "pig-form", "pig", // short name, long name, wizmode name
-           "a filthy swine.",  // description
-           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
-           MR_NO_FLAGS, // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_SMALL, 10, 9,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           false, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "Teeth",             // name of unarmed-combat "weapon" (in UI)
-           ANIMAL_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,  // can_fly (false for most pigs), can_swim
-           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
-           "squeal", 0,          // shout verb, shout volume modifier
-           "front trotter", "trotter",          // hand name, foot name
-           "bow your head before",              // prayer action
-           MONS_HOG)       // equivalent monster
-    { };
-
+    FormPig() : Form(TRAN_PIG) { }
     DISALLOW_COPY_AND_ASSIGN(FormPig);
 public:
     static const FormPig &instance() { static FormPig inst; return inst; }
@@ -982,27 +837,7 @@ public:
 class FormAppendage : public Form
 {
 private:
-    FormAppendage()
-    : Form("App", "appendage", "appendage", // short name, long name, wizmode name
-           "",  // description
-           EQF_NONE,  // blocked slots
-           MR_NO_FLAGS, // resists
-           FormDuration(10, PS_DOUBLE, 60), // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 0,    // size, hp mod, stealth mod
-           0, 0, 0,   // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_DEFAULT,     // can_fly, can_swim
-           FC_DEFAULT, true, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "",              // prayer action
-           MONS_PLAYER)       // equivalent monster
-    { };
-
+    FormAppendage() : Form(TRAN_APPENDAGE) { }
     DISALLOW_COPY_AND_ASSIGN(FormAppendage);
 public:
     static const FormAppendage &instance()
@@ -1053,27 +888,7 @@ public:
 class FormTree : public Form
 {
 private:
-    FormTree()
-    : Form("Tree", "tree-form", "tree", // short name, long name, wizmode name
-           "a tree.",  // description
-           EQF_LEAR | SLOTF(EQ_CLOAK),  // blocked slots
-           MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 15, 27,    // size, hp mod, stealth mod
-           20, 0, 50,     // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           10, 12, SPWPN_NORMAL, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Branches",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("hit", "smack", "pummel", "thrash"), // verbs used for uc
-           FC_FORBID, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
-           "creak", 0,          // shout verb, shout volume modifier
-           "branch", "root",          // hand name, foot name
-           "sway towards",              // prayer action
-           MONS_ANIMATED_TREE)       // equivalent monster
-    { };
-
+    FormTree() : Form(TRAN_TREE) { }
     DISALLOW_COPY_AND_ASSIGN(FormTree);
 public:
     static const FormTree &instance() { static FormTree inst; return inst; }
@@ -1087,27 +902,7 @@ public:
 class FormPorcupine : public Form
 {
 private:
-    FormPorcupine()
-    : Form("Porc",  "porcupine-form", "porcupine", // short name, long name, wizmode name
-           "a spiny porcupine.",  // description
-           EQF_ALL,  // blocked slots
-           MR_NO_FLAGS, // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_TINY, 10, 12,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           false, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "Teeth",             // name of unarmed-combat "weapon" (in UI)
-           ANIMAL_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
-           "squeak", -8,          // shout verb, shout volume modifier
-           "front leg", "",          // hand name, foot name
-           "curl into a sanctuary of spikes before",           // prayer action
-           MONS_PORCUPINE)       // equivalent monster
-    { };
-
+    FormPorcupine() : Form(TRAN_PORCUPINE) { }
     DISALLOW_COPY_AND_ASSIGN(FormPorcupine);
 public:
     static const FormPorcupine &instance()
@@ -1120,27 +915,7 @@ public:
 class FormWisp : public Form
 {
 private:
-    FormWisp()
-    : Form("Wisp",  "wisp-form", "wisp", // short name, long name, wizmode name
-           "an insubstantial wisp.",  // description
-           EQF_ALL,  // blocked slots
-           mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_POISON | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING | MR_RES_ACID, // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_TINY, 10, 21,    // size, hp mod, stealth mod
-           5, 0, 50,    // flat AC, spellpower AC, XL AC
-           false, 0,                 // can_cast, spellcasting penalty
-           10, 5, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "Misty tendrils",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("touch", "hit", "engulf", "engulf"), // verbs used for uc
-           FC_ENABLE, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
-           "whoosh", -8,          // shout verb, shout volume modifier
-           "misty tendril", "strand",          // hand name, foot name
-           "swirl around",           // prayer action
-           MONS_INSUBSTANTIAL_WISP)       // equivalent monster
-    { };
-
+    FormWisp() : Form(TRAN_WISP) { }
     DISALLOW_COPY_AND_ASSIGN(FormWisp);
 public:
     static const FormWisp &instance() { static FormWisp inst; return inst; }
@@ -1150,27 +925,7 @@ public:
 class FormJelly : public Form
 {
 private:
-    FormJelly()
-    : Form("Jelly",  "jelly-form", "jelly", // short name, long name, wizmode name
-           "a lump of jelly.",  // description
-           EQF_PHYSICAL | EQF_RINGS,  // blocked slots
-           MR_NO_FLAGS, // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 21,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           false, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, LIGHTGREY,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "",           // prayer action
-           MONS_JELLY)       // equivalent monster
-    { };
-
+    FormJelly() : Form(TRAN_JELLY) { }
     DISALLOW_COPY_AND_ASSIGN(FormJelly);
 public:
     static const FormJelly &instance() { static FormJelly inst; return inst; }
@@ -1180,27 +935,7 @@ public:
 class FormFungus : public Form
 {
 private:
-    FormFungus()
-    : Form("Fungus", "fungus-form", "fungus", // short name, long name, wizmode name
-           "a sentient fungus.",  // description
-           EQF_PHYSICAL & ~SLOTF(EQ_HELMET),  // blocked slots
-           MR_RES_POISON | mrd(MR_RES_NEG, 3), // resists
-           BAD_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_TINY, 10, 30,    // size, hp mod, stealth mod
-           12, 0, 0,    // flat AC, spellpower AC, XL AC
-           false, 0,                 // can_cast, spellcasting penalty
-           10, 12, SPWPN_CONFUSE, BROWN,  // unarmed acc bonus, damage, brand, & ui colour
-           "Spores",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("release spores at", "release spores at", "release spores at", "release spores at"), // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, false, false,        // can_bleed, breathes, keeps_mutations
-           "sporulate", -8,          // shout verb, shout volume modifier
-           "hypha", "",          // hand name, foot name
-           "release spores on",           // prayer action
-           MONS_WANDERING_MUSHROOM)       // equivalent monster
-    { };
-
+    FormFungus() : Form(TRAN_FUNGUS) { }
     DISALLOW_COPY_AND_ASSIGN(FormFungus);
 public:
     static const FormFungus &instance() { static FormFungus inst; return inst; }
@@ -1230,27 +965,7 @@ public:
 class FormShadow : public Form
 {
 private:
-    FormShadow()
-    : Form("Shadow",  "shadow-form", "shadow", // short name, long name, wizmode name
-           "a swirling mass of dark shadows.",  // description
-           EQF_NONE,  // blocked slots
-           mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING, // resists
-           DEFAULT_DURATION, // duration
-           0, 0,    // str mod, dex mod
-           SIZE_CHARACTER, 10, 30,    // size, hp mod, stealth mod
-           0, 0, 0,    // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           0, 3, SPWPN_NORMAL, MAGENTA,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           DEFAULT_VERBS, // verbs used for uc
-           FC_DEFAULT, FC_FORBID,     // can_fly, can_swim
-           FC_FORBID, true, true,        // can_bleed, breathes, keeps_mutations
-           "", 0,          // shout verb, shout volume modifier
-           "", "",          // hand name, foot name
-           "",           // prayer action
-           MONS_PLAYER_SHADOW)       // equivalent monster
-    { };
-
+    FormShadow() : Form(TRAN_SHADOW) { }
     DISALLOW_COPY_AND_ASSIGN(FormShadow);
 public:
     static const FormShadow &instance() { static FormShadow inst; return inst; }
@@ -1280,27 +995,7 @@ void set_hydra_form_heads(int heads)
 class FormHydra : public Form
 {
 private:
-    FormHydra()
-    : Form("Hydra", "hydra-form", "hydra", // short name, long name, wizmode name
-           "",  // description
-           EQF_PHYSICAL,  // blocked slots
-           MR_RES_POISON, // resists
-           FormDuration(4, PS_TENTH, 12), // duration
-           8, 0,    // str mod, dex mod
-           SIZE_BIG, 15, 6,    // size, hp mod, stealth mod
-           6, 5, 0,    // flat AC, spellpower AC, XL AC
-           true, 0,                 // can_cast, spellcasting penalty
-           10, -1, SPWPN_NORMAL, GREEN,  // unarmed acc bonus, damage, brand, & ui colour
-           "",             // name of unarmed-combat "weapon" (in UI)
-           FormAttackVerbs("nip at", "bite", "gouge", "chomp"), // verbs used for uc
-           FC_DEFAULT, FC_ENABLE,  // can_fly, can_swim
-           FC_ENABLE, true, false,        // can_bleed, breathes, keeps_mutations
-           "roar", 4,          // shout verb, shout volume modifier
-           "foreclaw", "",          // hand name, foot name
-           "bow your heads before",           // prayer action
-           MONS_HYDRA)       // equivalent monster
-    { };
-
+    FormHydra() : Form(TRAN_HYDRA) { }
     DISALLOW_COPY_AND_ASSIGN(FormHydra);
 public:
     static const FormHydra &instance() { static FormHydra inst; return inst; }

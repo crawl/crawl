@@ -25,9 +25,14 @@ class FormAttackVerbs
 {
 public:
     FormAttackVerbs(const char *_weak, const char *_medium,
-                    const char *_strong, const char *_devastating) :
-    weak(_weak), medium(_medium), strong(_strong), devastating(_devastating)
-    { };
+                    const char *_strong, const char *_devastating)
+        : weak(_weak), medium(_medium), strong(_strong),
+          devastating(_devastating)
+    { }
+
+    FormAttackVerbs(const char *msg)
+        : weak(msg), medium(msg), strong(msg), devastating(msg)
+    { }
 
 public:
     const char * const weak;
@@ -62,52 +67,15 @@ public:
     const int max;
 };
 
+class form_entry; // defined in form-data.h (private)
 class Form
 {
 private:
-    // These are unimplemented, as a C++03-friendly form of = delete
-    // (that is only checked at link time).
-    Form();
+    Form() = delete;
     DISALLOW_COPY_AND_ASSIGN(Form);
+    Form(const form_entry &fe);
 protected:
-    Form(string _short_name, string _long_name, string _wiz_name,
-         string _description,
-         int _blocked_slots,
-         int _resists,
-         FormDuration _duration,
-         int _str_mod, int _dex_mod,
-         size_type _size, int _hp_mod, int _stealth_mod,
-         int _flat_ac, int _power_ac, int _xl_ac,
-         bool _can_cast, int _spellcasting_penalty,
-         int _unarmed_hit_bonus, int _base_unarmed_damage,
-         brand_type _uc_brand, int _uc_colour,
-         string _uc_attack,
-         FormAttackVerbs _uc_attack_verbs,
-         form_capability _can_fly, form_capability _can_swim,
-         form_capability _can_bleed, bool _breathes, bool _keeps_mutations,
-         string _shout_verb, int _shout_volume_modifier,
-         string _hand_name, string _foot_name,
-         string _prayer_action, monster_type _equivalent_mons) :
-    short_name(_short_name), wiz_name(_wiz_name),
-    duration(_duration),
-    str_mod(_str_mod), dex_mod(_dex_mod),
-    blocked_slots(_blocked_slots), size(_size), hp_mod(_hp_mod),
-    can_cast(_can_cast), spellcasting_penalty(_spellcasting_penalty),
-    unarmed_hit_bonus(_unarmed_hit_bonus), uc_colour(_uc_colour),
-    uc_attack_verbs(_uc_attack_verbs),
-    can_bleed(_can_bleed), breathes(_breathes),
-    keeps_mutations(_keeps_mutations),
-    shout_verb(_shout_verb), shout_volume_modifier(_shout_volume_modifier),
-    hand_name(_hand_name), foot_name(_foot_name),
-    long_name(_long_name), description(_description),
-    resists(_resists), stealth_mod(_stealth_mod),
-    base_unarmed_damage(_base_unarmed_damage),
-    can_fly(_can_fly), can_swim(_can_swim),
-    flat_ac(_flat_ac), power_ac(_power_ac), xl_ac(_xl_ac),
-    uc_brand(_uc_brand), uc_attack(_uc_attack),
-    prayer_action(_prayer_action), equivalent_mons(_equivalent_mons)
-    { };
-
+    Form(transformation_type tran);
 public:
     bool slot_available(int slot) const;
     virtual bool can_wear_item(const item_def& item) const;
