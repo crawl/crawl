@@ -4256,9 +4256,9 @@ int monster::res_acid(bool calc_unid) const
     int u = max(get_mons_resist(this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
 
     if (has_ench(ENCH_RESISTANCE))
-		u++;
+        u++;
 
-	return u;
+    return u;
 }
 
 int monster::res_magic() const
