@@ -2042,7 +2042,8 @@ static void _potion_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_HEAL_WOUNDS : POT_MAGIC);
 
-    if (you_worship(GOD_CHEIBRIADOS) && pot == POT_HASTE)
+    if (you_worship(GOD_CHEIBRIADOS) && (pot == POT_HASTE
+        || pot == POT_BERSERK_RAGE))
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;
