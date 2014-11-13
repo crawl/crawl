@@ -265,6 +265,7 @@ enum ability_type
     NUM_ABILITIES
 };
 
+// Be sure to change activity_interrupt_names in delay.cc to match!
 enum activity_interrupt_type
 {
     AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity that can be
