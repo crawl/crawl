@@ -80,7 +80,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         {
             this.element = element;
             this.ctx = this.element.getContext("2d");
-            this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
         },
 
         set_cell_size: function(w, h)
