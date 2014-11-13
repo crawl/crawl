@@ -609,7 +609,9 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     int result = 0;
 #if TAG_MAJOR_VERSION == 34
     do
+    {
         result = random2(NUM_STAVES);
+    }
     while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
@@ -653,7 +655,9 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result;
     do
+    {
         result = random2(NUM_RODS);
+    }
     while (player_mutation_level(MUT_NO_LOVE)
               && (result == ROD_SWARM || result == ROD_SHADOWS)
 #if TAG_MAJOR_VERSION == 34

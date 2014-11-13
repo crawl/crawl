@@ -734,7 +734,9 @@ void bolt::bounce()
     }
 
     do
+    {
         ray.regress();
+    }
     while (cell_is_solid(ray.pos()));
 
     extra_range_used += range_used(true);
@@ -1114,7 +1116,9 @@ bool bolt::hit_wall()
         if (pos() != source && need_regress())
         {
             do
+            {
                 ray.regress();
+            }
             while (ray.pos() != source && cell_is_solid(ray.pos()));
 
             // target is where the explosion is centered, so update it.

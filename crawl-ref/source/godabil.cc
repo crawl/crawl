@@ -4195,7 +4195,9 @@ static void _setup_gozag_shop(int index)
     else
     {
         do
+        {
             type = static_cast<shop_type>(random2(NUM_SHOPS));
+        }
         while (_duplicate_shop_type(index, type));
     }
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;

@@ -17,7 +17,9 @@ static colour_t _pan_floor_colour()
     colour_t col;
 
     do
+    {
         col = random_colour();
+    }
     // Don't use silence or halo colours for floors.
     while (col == DARKGREY || col == CYAN || col == YELLOW);
 
@@ -29,7 +31,9 @@ static colour_t _pan_rock_colour()
     colour_t col;
 
     do
+    {
         col = random_colour();
+    }
     // Don't use stone or metal colours for walls.
     while (col == DARKGREY || col == LIGHTGREY || col == CYAN);
 

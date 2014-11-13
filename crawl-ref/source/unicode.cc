@@ -525,8 +525,10 @@ char *next_glyph(char *s)
     if (!c)
         return 0;
     do
+    {
         s += utf8towc(&c, s_cur = s);
         // And any combining ones after it.
+    }
     while (c && !wcwidth(c));
     return s_cur;
 }

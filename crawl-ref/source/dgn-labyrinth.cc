@@ -85,7 +85,9 @@ static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
     _labyrinth_maze_recurse(lab.random_point(), lab);
 
     do
+    {
         e = lab.random_point();
+    }
     while (grd(e) != DNGN_FLOOR);
 }
 

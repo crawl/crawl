@@ -2485,7 +2485,9 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     bool hostile_invis = false;
 
     do
+    {
         result = flytypes[random2(num_flytypes - 2) + power_level];
+    }
     while (is_good_god(you.religion) && result == MONS_VAMPIRE_MOSQUITO);
 
     for (int i = 0; i < how_many; ++i)
