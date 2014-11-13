@@ -130,7 +130,8 @@ static int food_isveggie(lua_State *ls)
 static int food_bottleable(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
-    lua_pushboolean(ls, item && item->base_type == OBJ_CORPSES
+    lua_pushboolean(ls, item && (item->base_type == OBJ_CORPSES
+                                 && item->sub_type == CORPSE_BODY)
                              && can_bottle_blood_from_corpse(item->mon_type));
     return 1;
 }
