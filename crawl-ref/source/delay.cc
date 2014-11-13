@@ -1697,6 +1697,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     return false;
 }
 
+// Must match the order of activity_interrupt_type in enum.h!
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue", "hungry", "message",
