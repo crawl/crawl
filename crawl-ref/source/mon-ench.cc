@@ -209,10 +209,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // something has submerged.
         if (!quiet && mons_near(this))
         {
-            if (type == MONS_AIR_ELEMENTAL && !mons_aligned(this, &you))
+            if (type == MONS_AIR_ELEMENTAL)
             {
                 mprf("%s merges itself into the air.",
-                     name(DESC_A, true).c_str());
+                     name(DESC_THE, true).c_str());
             }
             else if (type == MONS_TRAPDOOR_SPIDER)
             {
@@ -755,10 +755,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = SC_JUST_SEEN;
                 }
 
-                if (type == MONS_AIR_ELEMENTAL && !mons_aligned(this, &you))
+                if (type == MONS_AIR_ELEMENTAL)
                 {
                     mprf(channel, "%s forms itself from the air!",
-                                  name(DESC_A, true).c_str());
+                                  name(DESC_THE, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {

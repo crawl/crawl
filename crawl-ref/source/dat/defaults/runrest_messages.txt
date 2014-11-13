@@ -21,6 +21,7 @@ ignore += You .* eating
 ignore += The winds around you calm down.
 ignore += Lightning arcs down from a storm cloud
 ignore += (crumbles|melts) away\.
+ignore += our air elemental.*the air
 
 # Traps
 #
