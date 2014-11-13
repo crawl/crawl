@@ -223,7 +223,6 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, 0, ABFLAG_BREATH},
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, 0, ABFLAG_NONE}, // no costs
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
@@ -1057,10 +1056,6 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 45 - (2 * you.experience_level);
         break;
 
-    case ABIL_BOTTLE_BLOOD:
-        failure = 0;
-        break;
-
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
         break;
@@ -1798,7 +1793,6 @@ bool activate_talent(const talent& tal)
         case ABIL_STOP_SINGING:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
-        case ABIL_BOTTLE_BLOOD:
         case ABIL_ASHENZARI_END_TRANSFER:
         case ABIL_ZIN_VITALISATION:
         case ABIL_GOZAG_POTION_PETITION:
@@ -2957,12 +2951,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_BOTTLE_BLOOD:
-        fail_check();
-        if (!butchery(-1, true))
-            return SPRET_ABORT;
-        break;
-
     case ABIL_JIYVA_CALL_JELLY:
     {
         fail_check();
@@ -3611,9 +3599,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
-
-    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-        _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
     if ((you.species == SP_TENGU && you.experience_level >= 5
          || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()

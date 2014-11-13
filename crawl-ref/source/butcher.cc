@@ -39,23 +39,6 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
             canned_msg(MSG_OK);
         return false;
     }
-    else if (!bottle_blood && you.species == SP_VAMPIRE
-             && (can_bottle_blood_from_corpse(corpse.mon_type)
-                 || mons_has_blood(corpse.mon_type) && !is_bad_food(corpse)))
-    {
-        bool can_bottle = can_bottle_blood_from_corpse(corpse.mon_type);
-        const string msg = make_stringf("You could drain this corpse's blood with <w>%s</w> instead%s. Continue anyway?",
-                                        command_to_string(CMD_EAT).c_str(),
-                                        can_bottle ? ", or drain it" : "");
-        if (Options.confirm_butcher != CONFIRM_NEVER)
-        {
-            if (!yesno(msg.c_str(), true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        }
-    }
 
     return true;
 }
@@ -96,7 +79,14 @@ static string _butcher_menu_title(const Menu *menu, const string &oldt)
 }
 #endif
 
-bool butchery(int which_corpse, bool bottle_blood)
+/**
+ * Attempt to butcher a corpse.
+ *
+ * @param which_corpse      The index of the corpse. (index into what...?)
+ *                          -1 indicates that the first valid corpse should
+ *                          be chosen.
+ */
+bool butchery(int which_corpse)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
@@ -108,39 +98,46 @@ bool butchery(int which_corpse, bool bottle_blood)
     int num_corpses = 0;
     int corpse_id   = -1;
     int best_badness = INT_MAX;
-    bool prechosen  = (which_corpse != -1);
+    const bool prechosen  = (which_corpse != -1);
+    const bool bottle_blood = you.species == SP_VAMPIRE;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+        // we only care about corpses, of course.
+        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+            continue;
+
+        // don't bottle blood from poison/mutagenic/necro corpses...
+        // ...unless they have (dragon/troll) hides.
+        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
+            && !mons_class_leaves_hide(si->mon_type))
         {
-            if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type))
-                continue;
-
-            // Return pre-chosen corpse if it exists.
-            if (prechosen && si->index() == which_corpse)
-            {
-                corpse_id = si->index();
-                num_corpses = 1;
-                break;
-            }
-
-            const corpse_effect_type ce = determine_chunk_effect(*si);
-            // Being almost rotten away has 480 badness.
-            int badness = 3 * si->special;
-            if (ce == CE_POISONOUS)
-                badness += 600;
-            else if (ce == CE_MUTAGEN)
-                badness += 1000;
-            else if (ce == CE_ROT)
-                badness += 1000;
-
-            if (is_forbidden_food(*si))
-                badness += 10000;
-
-            if (badness < best_badness)
-                corpse_id = si->index(), best_badness = badness;
-            num_corpses++;
+            continue;
         }
+
+        // Return pre-chosen corpse if it exists.
+        if (prechosen && si->index() == which_corpse)
+        {
+            corpse_id = si->index();
+            num_corpses = 1;
+            break;
+        }
+
+        const corpse_effect_type ce = determine_chunk_effect(*si);
+        // Being almost rotten away has 480 badness.
+        int badness = 3 * si->freshness;
+        if (ce == CE_POISONOUS)
+            badness += 600;
+        else if (ce == CE_MUTAGEN)
+            badness += 1000;
+        else if (ce == CE_ROT)
+            badness += 1000;
+
+        if (is_forbidden_food(*si))
+            badness += 10000;
+
+        if (badness < best_badness)
+            corpse_id = si->index(), best_badness = badness;
+        num_corpses++;
     }
 
     if (num_corpses == 0)
@@ -178,8 +175,12 @@ bool butchery(int which_corpse, bool bottle_blood)
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
 
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type))
+        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
+            && !mons_class_leaves_hide(si->mon_type))
+        {
             continue;
+        }
+
         meat.push_back(& (*si));
     }
 
@@ -207,8 +208,11 @@ bool butchery(int which_corpse, bool bottle_blood)
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
 
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type))
+        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type)
+            && !mons_class_leaves_hide(si->mon_type))
+        {
             continue;
+        }
 
         if (butcher_all)
             corpse_id = si->index();
@@ -228,8 +232,10 @@ bool butchery(int which_corpse, bool bottle_blood)
             // Shall we butcher this corpse?
             do
             {
+                const bool can_bottle =
+                    can_bottle_blood_from_corpse(si->mon_type);
                 mprf(MSGCH_PROMPT, "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(q)uit/?]",
-                     bottle_blood ? "Bottle" : "Butcher",
+                     can_bottle ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
 
@@ -468,17 +474,10 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 
 bool can_bottle_blood_from_corpse(monster_type mons_class)
 {
-    if (you.species != SP_VAMPIRE || you.experience_level < 6
-        || !mons_has_blood(mons_class))
-    {
+    if (you.species != SP_VAMPIRE || !mons_has_blood(mons_class))
         return false;
-    }
 
-    int chunk_type = mons_corpse_effect(mons_class);
-    if (chunk_type == CE_CLEAN)
-        return true;
-
-    return false;
+    return mons_corpse_effect(mons_class) == CE_CLEAN;
 }
 
 int num_blood_potions_from_corpse(monster_type mons_class)

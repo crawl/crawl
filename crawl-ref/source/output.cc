@@ -2675,8 +2675,7 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_VAMPIRE:
-        if (you.experience_level >= 6)
-            mutations.push_back("bottle blood");
+        mutations.push_back("bottle blood");
         break;
 
     case SP_DEEP_DWARF:

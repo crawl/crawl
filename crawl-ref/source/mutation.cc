@@ -443,7 +443,6 @@ string describe_mutations(bool center_title)
         break;
 
     case SP_VAMPIRE:
-        have_any = true;
         if (you.hunger_state == HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
@@ -452,14 +451,9 @@ string describe_mutations(bool center_title)
             result += "<green>You heal slowly.</green>\n";
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
-        else
-            have_any = false;
 
-        if (you.experience_level >= 6)
-        {
-            result += "You can bottle blood from corpses.\n";
-            have_any = true;
-        }
+        result += "You can bottle blood from corpses.\n";
+        have_any = true;
         break;
 
     case SP_DEEP_DWARF:

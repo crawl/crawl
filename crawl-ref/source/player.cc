@@ -3074,9 +3074,6 @@ void level_change(bool skip_attribute_increase)
                              "You can now transform into a vampire bat.");
                     }
                 }
-                else if (you.experience_level == 6)
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "You can now bottle potions of blood from corpses.");
                 break;
 
             case SP_NAGA:
