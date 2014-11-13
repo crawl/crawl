@@ -21,7 +21,7 @@ sub rebrace($$$)
     my $orig = "$condition$body";
 
     # Don't add braces if it's only two lines.
-    return $orig unless $orig =~ /\n.*\n.*\n/;
+    return $orig unless ($orig =~ /\n.*\n.*\n/) or ($condition =~ /^ *do/);
 
     # Don't add braces if the "body" consists of only comments.
     return $orig unless $body =~ m&^\s++(?!//)&s;
@@ -36,13 +36,13 @@ for my $f (@files)
     close F;
 
     # Eliminate braces around one-line blocks.
-    s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
+    s&^( +(?:if|while|for|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
 
     # Add braces in blocks that need them.
     s/# $1 = the keyword and condition
       (
         # $2 = first-line indent
-        ^(\s+)   (?:if|while|for|do|else)\b \s*
+        ^(\s+)   (?:if|while|for|else)\b \s*
                  # $3 = nested parenthesised expression, possibly multi-line
                  (
                    \(
@@ -61,6 +61,22 @@ for my $f (@files)
         (?: \2 \s+ [^\n]* \n)*
       )
     /rebrace($1,$2,$4)/egsmx if $add_braces;
+
+    s/# $1 = the keyword
+      (
+        # $2 = first-line indent
+        ^(\s+) do\b \s*\n
+      )
+      # $3 = the body
+      (
+        # Higher indent than the keyword.
+        \2 \s++
+        # Not another flow control statement or braces
+        (?! { | (?:if|while|for|do|else)\b) [^\n]*\n
+        # And possibly more lines of higher indent than the keyword
+        (?: \2 \s+ [^\n]* \n)*
+      )
+    /rebrace($1,$2,$3)/egsmx if $add_braces;
 
     # return is not a function, eliminate totally enclosing parentheses.
     # This part handles parenthese-less payloads.
