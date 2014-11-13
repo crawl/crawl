@@ -69,7 +69,9 @@ colour_t random_uncommon_colour()
     colour_t result;
 
     do
+    {
         result = random_colour();
+    }
     while (result == LIGHTCYAN || result == CYAN || result == BROWN);
 
     return result;

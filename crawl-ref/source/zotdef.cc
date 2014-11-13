@@ -95,7 +95,9 @@ static branch_type _zotdef_random_branch()
     branch_type pb;
 
     do
+    {
          pb = static_cast<branch_type>(random2(NUM_BRANCHES));
+    }
     while (!_is_branch_fitting(pb, wavenum));
 
     // strong bias to main dungeon and depths

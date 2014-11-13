@@ -1471,7 +1471,9 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     else
     {
         do
+        {
             item.sub_type = _random_wand_subtype();
+        }
         while (item_level < 2 && is_high_tier_wand(item.sub_type));
     }
 
@@ -1778,7 +1780,9 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
     {
 #if TAG_MAJOR_VERSION == 34
         do
+        {
             item.sub_type = random2(NUM_STAVES);
+        }
         while (item.sub_type == STAFF_ENCHANTMENT
                || item.sub_type == STAFF_CHANNELING);
 #else
@@ -1803,7 +1807,9 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
 #if TAG_MAJOR_VERSION == 34
     {
         do
+        {
             item.sub_type = random2(NUM_RODS);
+        }
         while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
     }
 #else
@@ -1929,7 +1935,9 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     else
     {
         do
+        {
             item.sub_type = random2(NUM_MISCELLANY);
+        }
         while
             // never randomly generated
             (item.sub_type == MISC_RUNE_OF_ZOT
@@ -2308,7 +2316,9 @@ jewellery_type get_random_amulet_type()
 #if TAG_MAJOR_VERSION == 34
     int res;
     do
+    {
         res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+    }
     // Do not generate cFly or Cons
     while (res == AMU_CONTROLLED_FLIGHT || res == AMU_CONSERVATION);
 

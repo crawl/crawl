@@ -1228,7 +1228,9 @@ shout_type mons_shouts(monster_type mc, bool demon_shout)
     {
         const int max_shout = (u == S_RANDOM ? NUM_SHOUTS : NUM_LOUDNESS);
         do
+        {
             u = static_cast<shout_type>(random2(max_shout));
+        }
         while (!_shout_fits_monster(mc, u));
     }
 
@@ -2417,7 +2419,9 @@ static colour_t _random_butterfly_colour()
     colour_t col;
     // Restricted to 'light' colours.
     do
+    {
         col = random_monster_colour();
+    }
     while (is_low_colour(col));
 
     return col;
@@ -2545,7 +2549,9 @@ void define_monster(monster* mons)
         // White draconians will never be draconian scorchers, but
         // apart from that, anything goes.
         do
+        {
             monbase = random_draconian_monster_species();
+        }
         while (drac_colour_incompatible(mcls, monbase));
     }
 

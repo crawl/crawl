@@ -677,7 +677,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.base_type = OBJ_RODS;
 #if TAG_MAJOR_VERSION == 34
             do
+            {
                 item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
+            }
             while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
 #else
             item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
@@ -1419,7 +1421,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_CHAOS_CHAMPION:
         item.base_type = OBJ_WEAPONS;
         do
+        {
             item.sub_type = random2(NUM_WEAPONS);
+        }
         while (melee_only && is_ranged_weapon_type(item.sub_type)
                || is_blessed_weapon_type(item.sub_type)
                || is_magic_weapon_type(item.sub_type)

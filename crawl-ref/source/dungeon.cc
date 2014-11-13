@@ -2658,7 +2658,9 @@ static bool _pan_level()
         && !all_demons_generated)
     {
         do
+        {
             which_demon = random2(4);
+        }
         while (you.uniq_map_tags.count(string("uniq_")
                                        + pandemon_level_names[which_demon]));
     }
@@ -3836,7 +3838,9 @@ static void _place_assorted_zombies()
         bool skel = coinflip();
         monster_type z_base;
         do
+        {
             z_base = pick_random_zombie();
+        }
         while (mons_class_flag(z_base, M_NO_GEN_DERIVED)
                || !(skel ? mons_skeleton(z_base) : mons_zombifiable(z_base)));
 
@@ -5520,7 +5524,9 @@ static dungeon_feature_type _pick_an_altar()
 
         default:
             do
+            {
                 god = random_god();
+            }
             while (god == GOD_NEMELEX_XOBEH
                    || god == GOD_LUGONU
                    || god == GOD_BEOGH
@@ -6200,7 +6206,9 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
     {
         coord_def dest_pos;
         do
+        {
             dest_pos = random_in_bounds();
+        }
         while (grd(dest_pos) != DNGN_FLOOR
                || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
         if (!shaft)

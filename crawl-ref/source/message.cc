@@ -1483,7 +1483,9 @@ static void readkey_more(bool user_forced)
     mouse_control mc(MOUSE_MODE_MORE);
 
     do
+    {
         keypress = getch_ck();
+    }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)
 #ifdef TOUCH_UI

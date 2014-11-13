@@ -650,7 +650,9 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
 
         int tries = 500;
         do
+        {
             newpos = random_in_bounds();
+        }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
                    || (newpos - old_pos).abs() > dist_range(range)

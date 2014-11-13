@@ -570,7 +570,9 @@ god_type random_god(bool available)
     god_type god;
 
     do
+    {
         god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+    }
     while (available && is_unavailable_god(god));
 
     return god;

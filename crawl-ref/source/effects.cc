@@ -2034,7 +2034,9 @@ static void _jiyva_effects(int time_delta)
             // Spread jellies around the level.
             coord_def newpos;
             do
+            {
                 newpos = random_in_bounds();
+            }
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)

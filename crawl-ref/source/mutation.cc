@@ -2229,7 +2229,9 @@ try_again:
             const facet_def* next_facet;
 
             do
+            {
                 next_facet = &RANDOM_ELEMENT(_demon_facets);
+            }
             while (!_works_at_tier(*next_facet, tier)
                    || facets_used.count(next_facet)
                    || !_slot_is_unique(next_facet->muts, facets_used));
@@ -2285,7 +2287,9 @@ _order_ds_mutations(vector<demon_mutation_info> muts)
         int last = min(100, muts[i].when + 100);
         int k;
         do
+        {
             k = 10 * first + random2(10 * (last - first));
+        }
         while (time_slots[k] >= 0);
         time_slots[k] = i;
         times.push_back(k);

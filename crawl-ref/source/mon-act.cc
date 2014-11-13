@@ -1303,7 +1303,9 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     bolt theBeam;
     do
+    {
         theBeam = mons_spell_beam(mons, mzap, power, true);
+    }
     //XXX: this does fixed 3d20 by monsters, too nasty
     while (mzap == SPELL_RANDOM_BOLT
            && theBeam.origin_spell == SPELL_QUICKSILVER_BOLT);

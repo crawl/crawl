@@ -210,7 +210,9 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         {
             // any valid species will do
             do
+            {
                 ng->species = get_species(random2(ng_num_species()));
+            }
             while (!is_species_valid_choice(ng->species));
         }
         else
@@ -269,7 +271,9 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         {
             // any valid job will do
             do
+            {
                 ng->job = job_type(random2(NUM_JOBS));
+            }
             while (!is_job_valid_choice(ng->job));
         }
         else

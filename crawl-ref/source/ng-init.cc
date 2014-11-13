@@ -517,7 +517,9 @@ void initialise_item_descriptions()
 void fix_up_jiyva_name()
 {
     do
+    {
         you.jiyva_second_name = make_name(random_int(), false, 8, 'J');
+    }
     while (strncmp(you.jiyva_second_name.c_str(), "J", 1) != 0);
 
     you.jiyva_second_name = replace_all(you.jiyva_second_name, " ", "");

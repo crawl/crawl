@@ -326,7 +326,9 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
     if (basetype == RANDOM_MONSTER && one_chance_in(4))
     {
         do
+        {
             basetype = pick_random_zombie();
+        }
         while (mons_class_flag(basetype, M_NO_GEN_DERIVED)
                || !monster_habitable_grid(basetype, grd(cloud.pos)));
     }

@@ -475,7 +475,9 @@ static colour_t _ugly_thing_assign_colour(colour_t force_colour,
     else
     {
         do
+        {
             colour = ugly_thing_random_colour();
+        }
         while (force_not_colour != COLOUR_UNDEF && colour == force_not_colour);
     }
 

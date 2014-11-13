@@ -1588,7 +1588,9 @@ static int _xom_random_stickable(const int HD)
     // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10, and
     // weapon_rarity also gives us 1-10.
     do
+    {
         c = random2(HD);
+    }
     while (c >= ARRAYSZ(arr)
            || random2(HD) > weapon_rarity(arr[c]) && x_chance_in_y(c, HD));
 
