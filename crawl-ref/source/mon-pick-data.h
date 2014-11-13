@@ -1171,6 +1171,13 @@ static const struct { const pop_entry *pop; int count; } population[] =
 
 static const pop_entry pop_d_zombie[] =
 { // Hand-picked monsters which make speed 10+ zombies
+  { -2,  2,  515, SEMI, MONS_GIANT_COCKROACH },
+  { -2,  2,  190, PEAK, MONS_BALL_PYTHON },
+  {  0,  3, 1000, FLAT, MONS_BAT },
+  {  1,  4,  515, SEMI, MONS_GIANT_GECKO },
+  {  1,  4,  335, SEMI, MONS_JACKAL },
+  {  2,  5,  925, FLAT, MONS_ADDER },
+  {  2,  5,  515, SEMI, MONS_QUOKKA },
   {  4, 10,  825, SEMI, MONS_HOUND },
   {  4, 10,  925, FLAT, MONS_WORKER_ANT },
   {  4, 10,  190, PEAK, MONS_WATER_MOCCASIN },
