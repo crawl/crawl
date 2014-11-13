@@ -2197,12 +2197,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_OGRE_MAGE_V);
         break;
 
-    case MONS_DRACONIAN_KNIGHT:
-        books.push_back(MST_DRACONIAN_KNIGHT_I);
-        books.push_back(MST_DRACONIAN_KNIGHT_II);
-        books.push_back(MST_DRACONIAN_KNIGHT_III);
-        break;
-
     case MONS_ANCIENT_CHAMPION:
         books.push_back(MST_ANCIENT_CHAMPION_I);
         books.push_back(MST_ANCIENT_CHAMPION_II);
