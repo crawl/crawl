@@ -232,11 +232,12 @@ KFEAT:  r = altar_cheibriados
 KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
+KFEAT:  v = altar_ru
 MAP
 ..u.d...
 .t.g.h..
 ..k.l.s.
-.T.o.p..
+.T.o.p.v
 ..a.i.m.
 ...r.q.j
 ....n.f.
