@@ -80,11 +80,8 @@ function ($, cr, map_knowledge, options, dngn) {
             this.rows = r;
             this.view.x = this.view_center.x - Math.floor(c / 2);
             this.view.y = this.view_center.y - Math.floor(r / 2);
-            var ratio = window.devicePixelRatio;
-            this.element.width = c * this.cell_width * ratio;
-            this.element.height = r * this.cell_height * ratio;
-            this.element.style.width = c * this.cell_width + 'px';
-            this.element.style.height = r * this.cell_height + 'px';
+            this.element.width = c * this.cell_width;
+            this.element.height = r * this.cell_height;
             this.init(this.element);
             // The canvas is completely transparent after resizing;
             // make it opaque to prevent display errors when shifting
