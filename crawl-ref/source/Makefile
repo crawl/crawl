@@ -1085,6 +1085,9 @@ endif
 ifdef BUILD_SDL2
 CONTRIBS += sdl2
 CONTRIB_LIBS := $(LIBSDL2) $(CONTRIB_LIBS)
+ifeq ($(uname_S),Linux)
+LIBS += -ldl
+endif
 endif
 ifdef BUILD_SDL2IMAGE
 CONTRIBS += sdl2-image
