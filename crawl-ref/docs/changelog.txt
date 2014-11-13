@@ -75,10 +75,10 @@ Monsters
 Spells
 ------
 * New spells:
-    - Hydra Form (L6 Transmutation), a short-duration form that attacks all
-      adjacent foes & devours slain foes for nutrition and healing.
-    - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
-      malmutates nearby enemies, but also contaminates the caster.
+  - Hydra Form (L6 Transmutation), a short-duration form that attacks all
+    adjacent foes & devours slain foes for nutrition and healing.
+  - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
+    malmutates nearby enemies, but also contaminates the caster.
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
@@ -116,22 +116,67 @@ Items
 * All short blades now do piercing damage.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
 * Renamed items:
-    - Cutlasses are now rapiers.
-    - Bastard swords are now double swords.
-    - Claymores are now triple swords.
-    - Cloaks of darkness are now cloaks of invisibility.
+  - Cutlasses are now rapiers.
+  - Bastard swords are now double swords.
+  - Claymores are now triple swords.
+  - Cloaks of darkness are now cloaks of invisibility.
 * Removed items:
-    - Boots of jumping.
-    - Potions of porridge and coagulated blood.
-    - Blessed Blades.
+  - Boots of jumping.
+  - Potions of porridge and coagulated blood.
+  - Blessed Blades.
 
 
 Cards
 -----
 * All characters can now evoke decks from the inventory.
-* Dowsing is no longer in the Deck of Battle.
-* Removed cards:
-    - Metamorphosis.
+* If one's god would disapprove of a card's effects, they will block the
+  blasphemous effects in question as it is drawn.
+* New cards.
+  - Elements, which summons three beasts of the four elements.
+  - Rangers, which summons two or three ranged-missile users.
+  - Placid Magic, which removes all status effects and applies heavy antimagic
+    to all creatures in sight, including the user.
+* Revamped destruction cards:
+  - Storm has replaced rain and swiftness with summoning air elementals,
+    an elemental wellspring, or thunder clouds alongside a wind blast.
+  - Pain has lost Torment and can now summon a flayed ghost to instantly apply
+    its flaying effect to living targets.
+  - Venom has lost Sting for earlier Venom Bolts and Poison Arrows, but at low
+    power will briefly make the user vulnerable to poison.
+  - Degeneration now applies a temporary malmutated effect to targets alongside
+    the polymorphing targets down HD.
+  - Vitriol now can provide Corrosive Bolts at higher power.
+* Revamped battle cards:
+  - Potion has strictly-negative effects taken out, and will also apply the same
+    effects to any allies if possible.
+  - Blade now solely gives a cleaving status (which does not stack with the
+    reaching of polearms or the original cleaving of axes, but will otherwise
+    apply to all forms of weapon / unarmed attack.)
+  - Helm can apply Stoneskin or Shroud of Golubria effects to allies at high
+    power.
+  - Elixir gives a small amount of temporary vitality to your allies, alongside
+    its restorative effects to the user.
+  - Shadow gives the darkness status (shrinking LOS) instead of invisibility.
+  - Dowsing is now significantly stronger in duration and range.
+* Revamped summoning cards:
+  - Pentagram now summons a more constrained set of demons (stronger at
+    lower power and weaker at high power), and an additional accompanying
+    hell hound, rakshasa, or pandemonium lord.
+  - Dance has replaced its short swords with quarterstaves and its dire flails
+    with executioner's axes. It also has a chance for summoning a randart.
+  - Foxfire has lost butterflies and gained ravens.
+  - Repulsiveness can now summon both an ugly thing and a very ugly thing.
+* Revamped emergency cards:
+  - Cloud surrounds all hostile monsters with variating types of clouds,
+    instead of randomly scattering clouds in all valid places in sight.
+  - Shaft now randomly places shafts under other monsters as well.
+  - Tomb can now raise rock walls on stone stairs and deep water.
+  - Velocity will always apply a overall-positive effect (with allies present).
+  - Banshee now drains targets alongside the fear effect.
+* Dowsing is no longer in the deck of battle.
+* Decks of war have lost their set of destruction cards.
+* The Cloud card has moved from decks of destruction to decks of emergency.
+* Removed cards: Metamorphosis, Herd, Bones.
 
 Gods
 ----
@@ -169,6 +214,8 @@ Gods
   permitted to Dithmenos's worshippers.
 * Nemelex Xobeh:
   - Draw One and Peek at Two are no more.
+  - Cards have been changed thoroughly over once more.
+  - Nemelex now grants destruction decks again.
 * Okawaru no longer supports corpse sacrifice.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
