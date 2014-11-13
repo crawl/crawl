@@ -67,6 +67,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
@@ -5776,8 +5777,11 @@ void ru_reset_sacrifice_timer(bool clear_timer)
     else
         added_delay = (90 + max(100, static_cast<int>(you.piety)) - 100) / 3;
 
-    you.props["ru_sacrifice_delay"] =
-        div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
+    delay = div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
+    if (crawl_state.game_is_sprint())
+        delay /= SPRINT_MULTIPLIER;
+
+    you.props["ru_sacrifice_delay"] = delay;
 }
 
 // Check to see if you're eligible to retaliate.

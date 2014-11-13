@@ -115,12 +115,13 @@ KFEAT: K = altar_vehumet
 KFEAT: L = altar_sif_muna
 KFEAT: M = altar_gozag
 KFEAT: N = altar_qazlal
+KFEAT: O = altar_ru
 KFEAT: Y = any shop
 MAP
 xxxxx+xxxxx+x
 xxxx$$c$$$c*c
 xAMxxxc$$cc*c
-xB...Jcc+c..+
+xB..OJcc+c..+
 xC.Y..2+...Lc
 xD...NccK1x+x
 cEFGHIccx+x*x

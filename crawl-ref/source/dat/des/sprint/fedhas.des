@@ -117,6 +117,7 @@ KFEAT:  P = altar_makhleb
 KFEAT:  Q = altar_dithmenos
 KFEAT:  R = altar_gozag
 KFEAT:  S = altar_qazlal
+KFEAT:  U = altar_ru
 KMONS:  X = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 
@@ -125,5 +126,5 @@ MAP
 .A.B.C.D.E.F.
 M.N.OXP.Q.R.S
 .G.H.I.J.K.L.
-.T.........T.
+.T....U....T.
 ENDMAP

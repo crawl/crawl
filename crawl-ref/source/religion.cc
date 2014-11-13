@@ -3384,7 +3384,11 @@ void join_religion(god_type which_god, bool immediate)
         _make_empty_vec(you.props["current_purity_sacrifice"], SV_INT);
         _make_empty_vec(you.props["current_arcane_sacrifices"], SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
-        you.props["ru_sacrifice_delay"] = 50; // offer the first sacrifice fast
+        // offer the first sacrifice faster than normal;
+        int delay = 50;
+        if (crawl_state.game_is_sprint())
+          delay /= SPRINT_MULTIPLIER;
+        you.props["ru_sacrifice_delay"] = delay;
     }
     else
     {
