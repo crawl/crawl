@@ -44,12 +44,11 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
 }
 
 static bool _corpse_butchery(int corpse_id,
-                             bool first_corpse = true,
-                             bool bottle_blood = false)
+                             bool first_corpse = true)
 {
     ASSERT(corpse_id != -1);
 
-    if (!_should_butcher(corpse_id, bottle_blood))
+    if (!_should_butcher(corpse_id))
         return false;
 
     // Start work on the first corpse we butcher.
@@ -58,13 +57,10 @@ static bool _corpse_butchery(int corpse_id,
 
     int work_req = max(0, 4 - mitm[corpse_id].butcher_amount);
 
-    delay_type dtype = DELAY_BUTCHER;
-    // Sanity checks.
-    if (bottle_blood
-        && can_bottle_blood_from_corpse(mitm[corpse_id].mon_type))
-    {
-        dtype = DELAY_BOTTLE_BLOOD;
-    }
+    const bool bottle_blood =
+        you.species == SP_VAMPIRE
+        && can_bottle_blood_from_corpse(mitm[corpse_id].mon_type);
+    const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
     start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
 
@@ -153,7 +149,7 @@ bool butchery(int which_corpse)
             return false;
         }
 
-        return _corpse_butchery(corpse_id, true, bottle_blood);
+        return _corpse_butchery(corpse_id, true);
     }
 
     // Now pick what you want to butcher. This is only a problem
@@ -175,7 +171,7 @@ bool butchery(int which_corpse)
     for (int i = 0, count = selected.size(); i < count; ++i)
     {
         corpse_id = selected[i].item->index();
-        if (_corpse_butchery(corpse_id, first_corpse, bottle_blood))
+        if (_corpse_butchery(corpse_id, first_corpse))
         {
             success = true;
             first_corpse = false;
@@ -249,7 +245,7 @@ bool butchery(int which_corpse)
 
         if (corpse_id != -1)
         {
-            if (_corpse_butchery(corpse_id, first_corpse, bottle_blood))
+            if (_corpse_butchery(corpse_id, first_corpse))
             {
                 success = true;
                 first_corpse = false;
