@@ -971,10 +971,14 @@ int player::constriction_damage() const
     return roll_dice(2, div_rand_round(strength(), 5));
 }
 
+/**
+ * How many heads does the player have, in their current form?
+ *
+ * Currently only checks for hydra form.
+ */
 int player::heads() const
 {
-    if (form != TRAN_HYDRA)
-        return 1; // not actually always true
-    ASSERT(props.exists(HYDRA_FORM_HEADS_KEY));
-    return props[HYDRA_FORM_HEADS_KEY].get_int();
+    if (props.exists(HYDRA_FORM_HEADS_KEY))
+        return props[HYDRA_FORM_HEADS_KEY].get_int();
+    return 1; // not actually always true
 }
