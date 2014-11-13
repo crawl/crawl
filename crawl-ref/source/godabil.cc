@@ -3919,6 +3919,7 @@ bool gozag_potion_petition()
                 int multiplier = GOZAG_POTION_BASE_MULTIPLIER
                                  + you.attribute[ATTR_GOZAG_POTIONS];
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
+                you.props.erase(key);
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
