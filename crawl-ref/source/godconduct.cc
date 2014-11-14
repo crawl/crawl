@@ -132,15 +132,12 @@ static bool _attacking_holy_matters(const monster* victim)
 
 
 
-/// A definition of a god's response to a conduct being taken.
-struct conduct_response
+/// A definition of the way in which a god dislikes a conduct being taken.
+struct dislike_response
 {
-    /// Gain or loss in piety for triggering this conduct; multiplied by
-    /// severity-level.
+    /// Loss in piety for triggering this conduct; multiplied by 'level'.
     int piety_factor;
-    /// Not sure.
-    int piety_denom;
-    /// Penance for triggering this conduct; multiplied by severity-level.
+    /// Penance for triggering this conduct; multiplied by 'level'.
     int penance_factor;
     /// Something your god says when you accidentally triggered the conduct.
     /// Implies that unknowingly triggering the conduct is forgiven.
@@ -155,46 +152,46 @@ struct conduct_response
 
 
 /// Good gods' reaction to drinking blood.
-static const conduct_response GOOD_BLOOD_RESPONSE = {
-    -2, 1, 1, " forgives your inadvertent blood-drinking, just this once."
+static const dislike_response GOOD_BLOOD_RESPONSE = {
+    2, 1, " forgives your inadvertent blood-drinking, just this once."
 };
 
 /// Good gods', and Beogh's, response to cannibalism.
-static const conduct_response RUDE_CANNIBALISM_RESPONSE = {
-    -5, 1, 3, NULL, " expects more respect for your departed relatives."
+static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
+    5, 3, NULL, " expects more respect for your departed relatives."
 };
 
 /// Zin and Ely's responses to desecrating holy remains.
-static const conduct_response GOOD_DESECRATE_HOLY_RESPONSE = {
-    -1, 1, 1, NULL, " expects more respect for holy creatures!"
+static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
+    1, 1, NULL, " expects more respect for holy creatures!"
 };
 
 /// Zin and Ely's responses to unholy actions & necromancy.
-static const conduct_response GOOD_UNHOLY_RESPONSE = {
-    -1, 1, 1, " forgives your inadvertent unholy act, just this once."
+static const dislike_response GOOD_UNHOLY_RESPONSE = {
+    1, 1, " forgives your inadvertent unholy act, just this once."
 };
 
 /// Zin and Ely's responses to the player attacking holy creatures.
-static const conduct_response GOOD_ATTACK_HOLY_RESPONSE = {
-    -1, 1, 1, NULL, NULL, _attacking_holy_matters
+static const dislike_response GOOD_ATTACK_HOLY_RESPONSE = {
+    1, 1, NULL, NULL, _attacking_holy_matters
 };
 
 /// TSO's response to the player stabbing or poisoning monsters.
-static const conduct_response TSO_UNCHIVALRIC_RESPONSE = {
-    -1, 1, 2, " forgives your inadvertent dishonourable attack, just"
+static const dislike_response TSO_UNCHIVALRIC_RESPONSE = {
+    1, 2, " forgives your inadvertent dishonourable attack, just"
               " this once.", NULL, [] (const monster* victim) {
         return !victim || !tso_unchivalric_attack_safe_monster(victim);
     }
 };
 
 /// TSO and Ely's response to the player attacking neutral monsters.
-static const conduct_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
-    -1, 1, 1, " forgives your inadvertent attack on a neutral, just this once."
+static const dislike_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
+    1, 1, " forgives your inadvertent attack on a neutral, just this once."
 };
 
 /// Various gods' response to attacking a pal.
-static const conduct_response ATTACK_FRIEND_RESPONSE = {
-    -1, 1, 3, " forgives your inadvertent attack on an ally, just this once.",
+static const dislike_response ATTACK_FRIEND_RESPONSE = {
+    1, 3, " forgives your inadvertent attack on an ally, just this once.",
     NULL, [] (const monster* victim) {
         dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
         return god_hates_attacking_friend(you.religion, victim);
@@ -202,8 +199,8 @@ static const conduct_response ATTACK_FRIEND_RESPONSE = {
 };
 
 /// Ely response to a friend dying.
-static const conduct_response ELY_FRIEND_DEATH_RESPONSE = {
-    -1, 1, 0, NULL, NULL, [] (const monster* victim) {
+static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
+    1, 0, NULL, NULL, [] (const monster* victim) {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
@@ -214,21 +211,21 @@ static const conduct_response ELY_FRIEND_DEATH_RESPONSE = {
 };
 
 /// Fedhas's response to a friend(ly plant) dying.
-static const conduct_response FEDHAS_FRIEND_DEATH_RESPONSE = {
-    -1, 1, 0, NULL, NULL, [] (const monster* victim) {
+static const dislike_response FEDHAS_FRIEND_DEATH_RESPONSE = {
+    1, 0, NULL, NULL, [] (const monster* victim) {
         // ballistomycetes are penalized separately.
         return victim && fedhas_protects(victim)
         && victim->mons_species() != MONS_BALLISTOMYCETE;
     }
 };
 
-typedef map<conduct_type, conduct_response> conduct_map;
+typedef map<conduct_type, dislike_response> peeve_map;
 
-/// a per-god map of conducts to that god's reaction to those conducts.
-static conduct_map divine_responses[] =
+/// a per-god map of conducts to that god's angry reaction to those conducts.
+static peeve_map divine_peeves[] =
 {
     // GOD_NO_GOD
-    conduct_map(),
+    peeve_map(),
     // GOD_ZIN,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
@@ -244,16 +241,16 @@ static conduct_map divine_responses[] =
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
-            -1, 1, 2, NULL, NULL, _attacking_holy_matters
+            1, 2, NULL, NULL, _attacking_holy_matters
         } },
         { DID_DESECRATE_HOLY_REMAINS, {
-            -1, 1, 2, NULL, " expects more respect for holy creatures!"
+            1, 2, NULL, " expects more respect for holy creatures!"
         } },
         { DID_NECROMANCY, {
-            -1, 1, 2, " forgives your inadvertent unholy act, just this once."
+            1, 2, " forgives your inadvertent unholy act, just this once."
         } },
         { DID_UNHOLY, {
-            -1, 1, 2, " forgives your inadvertent unholy act, just this once."
+            1, 2, " forgives your inadvertent unholy act, just this once."
         } },
         { DID_UNCHIVALRIC_ATTACK, TSO_UNCHIVALRIC_RESPONSE },
         { DID_POISON, TSO_UNCHIVALRIC_RESPONSE },
@@ -261,29 +258,29 @@ static conduct_map divine_responses[] =
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_KIKUBAAQUDGHA,
-    conduct_map(),
+    peeve_map(),
     // GOD_YREDELEMNUL,
     {
         { DID_HOLY, {
-            -1, 1, 2, " forgives your inadvertent holy act, just this once."
+            1, 2, " forgives your inadvertent holy act, just this once."
         } },
     },
     // GOD_XOM,
-    conduct_map(),
+    peeve_map(),
     // GOD_VEHUMET,
-    conduct_map(),
+    peeve_map(),
     // GOD_OKAWARU,
     {
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_MAKHLEB,
-    conduct_map(),
+    peeve_map(),
     // GOD_SIF_MUNA,
-    conduct_map(),
+    peeve_map(),
     // GOD_TROG,
-    conduct_map(),
+    peeve_map(),
     // GOD_NEMELEX_XOBEH,
-    conduct_map(),
+    peeve_map(),
     // GOD_ELYVILON,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
@@ -297,7 +294,7 @@ static conduct_map divine_responses[] =
         { DID_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
         { DID_SOULED_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
         { DID_KILL_LIVING, {
-            -1, 1, 2, NULL, " does not appreciate your shedding blood"
+            1, 2, NULL, " does not appreciate your shedding blood"
                             " when asking for salvation!",
             [] (const monster* _) {
                 UNUSED(_);
@@ -307,7 +304,7 @@ static conduct_map divine_responses[] =
         } },
     },
     // GOD_LUGONU,
-    conduct_map(),
+    peeve_map(),
     // GOD_BEOGH,
     {
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
@@ -316,12 +313,12 @@ static conduct_map divine_responses[] =
     // GOD_JIYVA,
     {
         { DID_KILL_SLIME, {
-            -1, 1, 2, NULL, NULL, [] (const monster* victim) {
+            1, 2, NULL, NULL, [] (const monster* victim) {
                 return victim && !victim->is_shapeshifter();
             }
         } },
         { DID_ATTACK_NEUTRAL, {
-            -1, 1, 1, NULL, NULL, [] (const monster* victim) {
+            1, 1, NULL, NULL, [] (const monster* victim) {
                 return victim
                     && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
@@ -331,31 +328,32 @@ static conduct_map divine_responses[] =
     // GOD_FEDHAS,
     {
         { DID_CORPSE_VIOLATION, {
-            -1, 1, 1, " forgives your inadvertent necromancy, just this once."
+            1, 1, " forgives your inadvertent necromancy, just this once."
         } },
         { DID_KILL_PLANT, {
-            -1, 1, 0
+            1, 0
         } },
         { DID_PLANT_KILLED_BY_SERVANT, {
-            -1, 1, 0
+            1, 0
         } },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
         { DID_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
         { DID_SOULED_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
     },
     // GOD_CHEIBRIADOS,
-    conduct_map(),
+    peeve_map(),
     // GOD_ASHENZARI,
-    conduct_map(),
+    peeve_map(),
     // GOD_DITHMENOS,
-    conduct_map(),
+    peeve_map(),
     // GOD_GOZAG,
-    conduct_map(),
+    peeve_map(),
     // GOD_QAZLAL,
-    conduct_map(),
+    peeve_map(),
     // GOD_RU,
-    conduct_map(),
+    peeve_map(),
 };
+
 
 static void _handle_your_gods_response(conduct_type thing_done, int level,
                                        bool known, const monster* victim)
@@ -367,16 +365,17 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
     // handle new-style conduct responses
     // TODO: move everything into here
-    if (divine_responses[you.religion].count(thing_done))
+
+    // check for dislikes
+    COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
+    if (divine_peeves[you.religion].count(thing_done))
     {
         dprf("checking data for %s", conducts[thing_done]);
-        const conduct_response divine_response =
-            divine_responses[you.religion][thing_done];
+        const dislike_response peeve = divine_peeves[you.religion][thing_done];
 
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
-        if (divine_response.invalid_victim
-            && !divine_response.invalid_victim(victim))
+        if (peeve.invalid_victim && !peeve.invalid_victim(victim))
         {
             dprf("invalid victim for %s", conducts[thing_done]);
             return;
@@ -386,24 +385,23 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         // If the player didn't have a way to know they were going to trigger
         // the conduct, and the god cares, print a message & bail.
-        if (!known && divine_response.forgiveness_message)
+        if (!known && peeve.forgiveness_message)
         {
             dprf("conduct forgiven");
-            simple_god_message(divine_response.forgiveness_message);
+            simple_god_message(peeve.forgiveness_message);
             return;
         }
 
         // trigger the actual effects of the conduct.
 
         // a message, if we have one...
-        if (divine_response.message)
-            simple_god_message(divine_response.message);
+        if (peeve.message)
+            simple_god_message(peeve.message);
 
         dprf("applying penance beam");
         // ...and piety/penance.
-        _handle_piety_penance(divine_response.piety_factor * level,
-                              divine_response.piety_denom,
-                              divine_response.penance_factor * level,
+        _handle_piety_penance(-peeve.piety_factor * level, 1,
+                              peeve.penance_factor * level,
                               thing_done);
 
         return;
@@ -1151,8 +1149,6 @@ static void _handle_other_gods_response(conduct_type thing_done)
 void did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monster* victim)
 {
-    COMPILE_CHECK(ARRAYSZ(divine_responses) == NUM_GODS);
-
     ASSERT(!crawl_state.game_is_arena());
 
     _handle_your_gods_response(thing_done, level, known, victim);
