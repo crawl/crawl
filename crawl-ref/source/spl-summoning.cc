@@ -397,7 +397,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
                       MONS_HYDRA, heads)))
     {
         if (you.see_cell(hydra->pos()))
-            mpr("A hydra appears.");
+            mprf("%s appears.", hydra->name(DESC_A).c_str());
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
