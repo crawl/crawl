@@ -53,7 +53,6 @@
 
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
-static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 
 static const char *_god_wrath_adjectives[NUM_GODS] =
@@ -1856,22 +1855,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return true;
 }
 
-bool do_god_revenge(conduct_type thing_done)
-{
-    bool retval = false;
-
-    switch (thing_done)
-    {
-    case DID_DESTROY_ORCISH_IDOL:
-        retval = _beogh_idol_revenge();
-        break;
-    default:
-        break;
-    }
-
-    return retval;
-}
-
 // Currently only used when orcish idols have been destroyed.
 static string _get_beogh_speech(const string key)
 {
@@ -1884,31 +1867,29 @@ static string _get_beogh_speech(const string key)
 }
 
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
-static bool _beogh_idol_revenge()
+void beogh_idol_revenge()
 {
     god_acting gdact(GOD_BEOGH, true);
 
     // Beogh watches his charges closely, but for others doesn't always
     // notice.
-    if (you_worship(GOD_BEOGH)
-        || (player_genus(GENPC_ORCISH) && coinflip())
-        || one_chance_in(3))
+    if (!you_worship(GOD_BEOGH)
+        && (!player_genus(GENPC_ORCISH) || coinflip())
+        && x_chance_in_y(2, 3))
     {
-        const char *revenge;
-
-        if (you_worship(GOD_BEOGH))
-            revenge = _get_beogh_speech("idol follower").c_str();
-        else if (player_genus(GENPC_ORCISH))
-            revenge = _get_beogh_speech("idol orc").c_str();
-        else
-            revenge = _get_beogh_speech("idol other").c_str();
-
-        _god_smites_you(GOD_BEOGH, revenge);
-
-        return true;
+        return;
     }
 
-    return false;
+    const char *revenge;
+
+    if (you_worship(GOD_BEOGH))
+        revenge = _get_beogh_speech("idol follower").c_str();
+    else if (player_genus(GENPC_ORCISH))
+        revenge = _get_beogh_speech("idol orc").c_str();
+    else
+        revenge = _get_beogh_speech("idol other").c_str();
+
+    _god_smites_you(GOD_BEOGH, revenge);
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)

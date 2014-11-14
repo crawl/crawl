@@ -202,58 +202,60 @@ static conduct_map divine_responses[] =
     conduct_map(),
 };
 
-// This function is the merger of done_good() and naughty().
-// Returns true if god was interested (good or bad) in conduct.
-void did_god_conduct(conduct_type thing_done, int level, bool known,
-                     const monster* victim)
+static void _handle_your_gods_response(conduct_type thing_done, int level,
+                                       bool known, const monster* victim)
 {
-    COMPILE_CHECK(ARRAYSZ(divine_responses) == NUM_GODS);
+    // Lucy gives no piety in Abyss. :(
+    // XXX: make this not a hack...? (or remove it?)
+    if (you_worship(GOD_LUGONU) && player_in_branch(BRANCH_ABYSS))
+        return;
 
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!you_worship(GOD_NO_GOD) && !you_worship(GOD_XOM)
-        && (!you_worship(GOD_LUGONU) || !player_in_branch(BRANCH_ABYSS)))
+    // handle new-style conduct responses
+    // TODO: move everything into here
+    if (divine_responses[you.religion].count(thing_done))
     {
-        // handle new-style conduct responses
-        // TODO: move everything into here
-        if (divine_responses[you.religion].count(thing_done))
+        god_acting gdact;
+
+        const conduct_response divine_response =
+            divine_responses[you.religion][thing_done];
+
+        if (!known && divine_response.forgiveness_message)
         {
-            const conduct_response divine_response =
-                divine_responses[you.religion][thing_done];
-            if (!known && divine_response.forgiveness_message)
-            {
-                simple_god_message(divine_response.forgiveness_message);
-                return;
-            }
-
-            if (divine_response.message)
-                simple_god_message(divine_response.message);
-
-            _handle_piety_penance(divine_response.piety_factor * level,
-                                  divine_response.piety_denom,
-                                  divine_response.penance_factor * level,
-                                  thing_done);
-
-            if (divine_response.other_behavior)
-                divine_response.other_behavior(level, known, victim);
-
+            simple_god_message(divine_response.forgiveness_message);
             return;
         }
 
-        int piety_change = 0;
-        int piety_denom = 1;
-        int penance = 0;
+        if (divine_response.message)
+            simple_god_message(divine_response.message);
 
-        god_acting gdact;
+        _handle_piety_penance(divine_response.piety_factor * level,
+                              divine_response.piety_denom,
+                              divine_response.penance_factor * level,
+                              thing_done);
 
-        switch (thing_done)
-        {
+        if (divine_response.other_behavior)
+            divine_response.other_behavior(level, known, victim);
+
+        return;
+    }
+
+    if (you_worship(GOD_NO_GOD) || you_worship(GOD_XOM))
+        return;
+
+    int piety_change = 0;
+    int piety_denom = 1;
+    int penance = 0;
+
+    god_acting gdact;
+
+    switch (thing_done)
+    {
         case DID_DRINK_BLOOD:
             break; // handled in data code
 
         case DID_CANNIBALISM:
             switch (you.religion)
-            {
+        {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
@@ -265,7 +267,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_CORPSE_VIOLATION:
@@ -350,7 +352,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-       case DID_KILL_SLIME:
+        case DID_KILL_SLIME:
             if (you_worship(GOD_JIYVA) && !victim->is_shapeshifter())
             {
                 piety_change = -level;
@@ -358,8 +360,8 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-       case DID_KILL_PLANT:
-       case DID_PLANT_KILLED_BY_SERVANT:
+        case DID_KILL_PLANT:
+        case DID_PLANT_KILLED_BY_SERVANT:
             // Piety loss but no penance for killing a plant.
             if (you_worship(GOD_FEDHAS))
                 piety_change = -level;
@@ -367,7 +369,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_ATTACK_NEUTRAL:
             switch (you.religion)
-            {
+        {
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (!known)
@@ -400,7 +402,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_ATTACK_FRIEND:
@@ -431,7 +433,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
 
             switch (you.religion)
-            {
+        {
             case GOD_FEDHAS:
                 // Ballistomycetes dying is penalised separately.
                 if (victim && fedhas_protects(victim)
@@ -455,7 +457,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_BANISH:
@@ -463,7 +465,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
         case DID_KILL_LIVING:
             switch (you.religion)
-            {
+        {
             case GOD_ELYVILON:
                 // Killing is only disapproved of during prayer.
                 if (you.duration[DUR_LIFESAVING])
@@ -505,12 +507,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_KILL_UNDEAD:
             switch (you.religion)
-            {
+        {
             case GOD_SHINING_ONE:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
@@ -530,7 +532,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your kill.");
                 // Holy gods are easier to please this way.
                 piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level / 2);
+                                            you.experience_level / 2);
                 piety_change = piety_denom - 5;
                 piety_denom = max(piety_denom, 1);
                 piety_change = max(piety_change, 0);
@@ -538,12 +540,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_KILL_DEMON:
             switch (you.religion)
-            {
+        {
             case GOD_SHINING_ONE:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
@@ -565,7 +567,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your kill.");
                 // Holy gods are easier to please this way.
                 piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level / 2);
+                                            you.experience_level / 2);
                 piety_change = piety_denom - 4;
                 piety_denom = max(piety_denom, 1);
                 piety_change = max(piety_change, 0);
@@ -573,7 +575,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_KILL_NATURAL_UNHOLY:
@@ -630,7 +632,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_change = max(piety_change, 0);
 
                 const int speed_delta =
-                    cheibriados_monster_player_speed_delta(victim);
+                cheibriados_monster_player_speed_delta(victim);
                 dprf("Chei DID_KILL_FAST: %s speed delta: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
                      speed_delta);
@@ -654,12 +656,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // Note that holy deaths are special, they are always noticed...
-        // If you or any friendly kills one, you'll get the credit or
-        // the blame.
+            // Note that holy deaths are special, they are always noticed...
+            // If you or any friendly kills one, you'll get the credit or
+            // the blame.
         case DID_KILL_HOLY:
             switch (you.religion)
-            {
+        {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
@@ -706,12 +708,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
-            {
+        {
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
@@ -727,12 +729,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_HOLY_KILLED_BY_SERVANT:
             switch (you.religion)
-            {
+        {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
@@ -762,12 +764,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
             default:
                 break;
-            }
+        }
             break;
 
         case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
-            {
+        {
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
@@ -781,12 +783,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_LIVING_KILLED_BY_SERVANT:
             switch (you.religion)
-            {
+        {
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_BEOGH:
@@ -800,12 +802,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
-            {
+        {
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -817,12 +819,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_UNDEAD_KILLED_BY_SERVANT:
             switch (you.religion)
-            {
+        {
             case GOD_SHINING_ONE:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -837,12 +839,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
-            {
+        {
             case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -855,12 +857,12 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_DEMON_KILLED_BY_SERVANT:
             switch (you.religion)
-            {
+        {
             case GOD_SHINING_ONE:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -876,7 +878,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             default:
                 break;
-            }
+        }
             break;
 
         case DID_NATURAL_UNHOLY_KILLED_BY_SERVANT:
@@ -909,8 +911,8 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // Currently used only when confused undead kill artificial
-        // beings, which Yredelemnul doesn't care about.
+            // Currently used only when confused undead kill artificial
+            // beings, which Yredelemnul doesn't care about.
         case DID_ARTIFICIAL_KILLED_BY_SERVANT:
             break;
 
@@ -1081,14 +1083,14 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
                 ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
                 ASSERT(you.props.exists("available_sacrifices"));
                 int sacrifice_count =
-                    you.props["available_sacrifices"].get_vector().size();
+                you.props["available_sacrifices"].get_vector().size();
                 if (sacrifice_count == 0 && one_chance_in(100))
                 {
                     int current_progress =
-                        you.props["ru_progress_to_next_sacrifice"]
-                            .get_int();
+                    you.props["ru_progress_to_next_sacrifice"]
+                    .get_int();
                     you.props["ru_progress_to_next_sacrifice"] =
-                        current_progress + 1;
+                    current_progress + 1;
                 }
             }
             break;
@@ -1136,38 +1138,56 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
-        }
-
-        // currently no constructs and plants
-        if ((thing_done == DID_KILL_LIVING
-             || thing_done == DID_KILL_UNDEAD
-             || thing_done == DID_KILL_DEMON
-             || thing_done == DID_KILL_HOLY)
-            && !god_hates_attacking_friend(you.religion, victim))
-        {
-            if (you_worship(GOD_OKAWARU))
-            {
-                piety_change = get_fuzzied_monster_difficulty(victim);
-                dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
-                piety_denom = 600;
-                if (piety_change > 3200)
-                    simple_god_message(" appreciates your kill.");
-                else if (piety_change > 9) // might still be miniscule
-                    simple_god_message(" accepts your kill.");
-            }
-            if (you_worship(GOD_DITHMENOS))
-            {
-                // Full gains at full piety down to 2/3 at 6* piety.
-                // (piety_rank starts at 1, not 0.)
-                piety_change *= 25 - piety_rank();
-                piety_denom *= 24;
-            }
-        }
-
-        _handle_piety_penance(piety_change, piety_denom, penance, thing_done);
     }
 
-    do_god_revenge(thing_done);
+    // currently no constructs and plants
+    if ((thing_done == DID_KILL_LIVING
+         || thing_done == DID_KILL_UNDEAD
+         || thing_done == DID_KILL_DEMON
+         || thing_done == DID_KILL_HOLY)
+        && !god_hates_attacking_friend(you.religion, victim))
+    {
+        if (you_worship(GOD_OKAWARU))
+        {
+            piety_change = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
+            piety_denom = 600;
+            if (piety_change > 3200)
+                simple_god_message(" appreciates your kill.");
+            else if (piety_change > 9) // might still be miniscule
+                simple_god_message(" accepts your kill.");
+        }
+        if (you_worship(GOD_DITHMENOS))
+        {
+            // Full gains at full piety down to 2/3 at 6* piety.
+            // (piety_rank starts at 1, not 0.)
+            piety_change *= 25 - piety_rank();
+            piety_denom *= 24;
+        }
+    }
+
+    _handle_piety_penance(piety_change, piety_denom, penance, thing_done);
+}
+
+// a sad and shrunken function.
+static void _handle_other_gods_response(conduct_type thing_done)
+{
+    if (thing_done == DID_DESTROY_ORCISH_IDOL)
+        beogh_idol_revenge();
+}
+
+
+// This function is the merger of done_good() and naughty().
+// Returns true if god was interested (good or bad) in conduct.
+void did_god_conduct(conduct_type thing_done, int level, bool known,
+                     const monster* victim)
+{
+    COMPILE_CHECK(ARRAYSZ(divine_responses) == NUM_GODS);
+
+    ASSERT(!crawl_state.game_is_arena());
+
+    _handle_your_gods_response(thing_done, level, known, victim);
+    _handle_other_gods_response(thing_done);
 }
 
 // These two arrays deal with the situation where a beam hits a non-fleeing
