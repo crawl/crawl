@@ -45,6 +45,35 @@ god_conduct_trigger::~god_conduct_trigger()
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
+#ifdef DEBUG_DIAGNOSTICS
+static const char *conducts[] =
+{
+    "",
+    "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
+    "Attack Friend", "Friend Died", "Unchivalric Attack",
+    "Poison", "Kill Living", "Kill Undead",
+    "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
+    "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
+    "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
+    "Servant Kill Living", "Undead Slave Kill Undead",
+    "Servant Kill Undead", "Undead Slave Kill Demon",
+    "Servant Kill Demon", "Servant Kill Natural Unholy",
+    "Servant Kill Natural Evil", "Undead Slave Kill Holy",
+    "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
+    "Spell Practise",
+    "Drink Blood", "Cannibalism","Eat Souled Being",
+    "Deliberate Mutation", "Cause Glowing", "Use Unclean",
+    "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
+    "Kill Slime", "Kill Plant", "Servant Kill Plant",
+    "Was Hasty", "Corpse Violation",
+    "Souled Friend Died", "Servant Kill Unclean",
+    "Servant Kill Chaotic", "Attack In Sanctuary",
+    "Kill Artificial", "Undead Slave Kill Artificial",
+    "Servant Kill Artificial", "Destroy Spellbook",
+    "Exploration", "Desecrate Holy Remains", "Seen Monster",
+    "Fire", "Kill Fiery", "Sacrificed Love"
+};
+#endif
 
 /**
  * Change piety & add penance in response to a conduct.
@@ -73,33 +102,6 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
     if ((piety_change || penance)
         && thing_done != DID_EXPLORATION || old_piety != you.piety)
     {
-        static const char *conducts[] =
-        {
-            "",
-            "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
-            "Attack Friend", "Friend Died", "Unchivalric Attack",
-            "Poison", "Kill Living", "Kill Undead",
-            "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
-            "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
-            "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
-            "Servant Kill Living", "Undead Slave Kill Undead",
-            "Servant Kill Undead", "Undead Slave Kill Demon",
-            "Servant Kill Demon", "Servant Kill Natural Unholy",
-            "Servant Kill Natural Evil", "Undead Slave Kill Holy",
-            "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
-            "Spell Practise",
-            "Drink Blood", "Cannibalism","Eat Souled Being",
-            "Deliberate Mutation", "Cause Glowing", "Use Unclean",
-            "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
-            "Kill Slime", "Kill Plant", "Servant Kill Plant",
-            "Was Hasty", "Corpse Violation",
-            "Souled Friend Died", "Servant Kill Unclean",
-            "Servant Kill Chaotic", "Attack In Sanctuary",
-            "Kill Artificial", "Undead Slave Kill Artificial",
-            "Servant Kill Artificial", "Destroy Spellbook",
-            "Exploration", "Desecrate Holy Remains", "Seen Monster",
-            "Fire", "Kill Fiery", "Sacrificed Love"
-        };
 
         COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
         dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
@@ -194,6 +196,7 @@ static const conduct_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
 static const conduct_response ATTACK_FRIEND_RESPONSE = {
     -1, 1, 3, " forgives your inadvertent attack on an ally, just this once.",
     NULL, [] (const monster* victim) {
+        dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
         return god_hates_attacking_friend(you.religion, victim);
     }
 };
@@ -332,6 +335,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     // TODO: move everything into here
     if (divine_responses[you.religion].count(thing_done))
     {
+        dprf("checking data for %s", conducts[thing_done]);
         const conduct_response divine_response =
             divine_responses[you.religion][thing_done];
 
@@ -340,6 +344,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         if (divine_response.invalid_victim
             && !divine_response.invalid_victim(victim))
         {
+            dprf("invalid victim for %s", conducts[thing_done]);
             return;
         }
 
@@ -349,6 +354,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         // the conduct, and the god cares, print a message & bail.
         if (!known && divine_response.forgiveness_message)
         {
+            dprf("conduct forgiven");
             simple_god_message(divine_response.forgiveness_message);
             return;
         }
@@ -359,6 +365,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         if (divine_response.message)
             simple_god_message(divine_response.message);
 
+        dprf("applying penance beam");
         // ...and piety/penance.
         _handle_piety_penance(divine_response.piety_factor * level,
                               divine_response.piety_denom,
@@ -367,6 +374,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         return;
     }
+    dprf("no data for %s", conducts[thing_done]);
 
     if (you_worship(GOD_NO_GOD) || you_worship(GOD_XOM))
         return;
