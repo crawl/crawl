@@ -113,23 +113,18 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
 }
 
 /**
- * Good gods' reactions to the player attacking a holy creature.
+ * Whether good gods that you folow are offended by you attacking a specific
+ * holy monster.
+ *
+ * @param victim    The holy in question. (May be NULL.)
+ * @return          Whether DID_ATTACK_HOLY applies.
  */
-static void _good_attack_holy(int level, bool known, const monster* victim)
+static bool _attacking_holy_matters(const monster* victim)
 {
-    UNUSED(known);
-
     // XXX: what does this do?
-    if (victim
-        && !testbits(victim->flags, MF_NO_REWARD)
-        && !testbits(victim->flags, MF_WAS_NEUTRAL))
-    {
-        return;
-    }
-
-    // TSO cares more about these things.
-    const int penance = level * (you_worship(GOD_SHINING_ONE) ? 2 : 1);
-    _handle_piety_penance(-level, 1, penance, DID_ATTACK_HOLY);
+    return !victim
+            || testbits(victim->flags, MF_NO_REWARD)
+            || testbits(victim->flags, MF_WAS_NEUTRAL);
 }
 
 
@@ -150,8 +145,9 @@ struct conduct_response
     const char *forgiveness_message;
     /// Something your god says when you trigger this conduct. May be NULL.
     const char *message;
-    /// Nonstandard behavior triggered by the function. May be NULL.
-    void (*other_behavior)(int level, bool known, const monster* victim);
+    /// A function that checks the victim of the conduct to see if the conduct
+    /// should actually, really apply to it. If NULL, all victims are valid.
+    bool (*invalid_victim)(const monster* victim);
 };
 
 
@@ -176,9 +172,17 @@ static const conduct_response GOOD_UNHOLY_RESPONSE = {
     -1, 1, 1, " forgives your inadvertent unholy act, just this once."
 };
 
-/// Good gods' responses to the player attacking holy creatures.
+/// Zin and Ely's responses to the player attacking holy creatures.
 static const conduct_response GOOD_ATTACK_HOLY_RESPONSE = {
-    0, 1, 0, NULL, NULL, _good_attack_holy
+    -1, 1, 1, NULL, NULL, _attacking_holy_matters
+};
+
+/// TSO's response to the player stabbing or poisoning monsters.
+static const conduct_response TSO_UNCHIVALRIC_RESPONSE = {
+    -1, 1, 2, " forgives your inadvertent dishonourable attack, just"
+              " this once.", NULL, [] (const monster* victim) {
+        return !victim || !tso_unchivalric_attack_safe_monster(victim);
+    }
 };
 
 
@@ -202,7 +206,9 @@ static conduct_map divine_responses[] =
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
-        { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_ATTACK_HOLY, {
+            -1, 1, 2, NULL, NULL, _attacking_holy_matters
+        } },
         { DID_DESECRATE_HOLY_REMAINS, {
             -1, 1, 2, NULL, " expects more respect for holy creatures!"
         } },
@@ -212,6 +218,8 @@ static conduct_map divine_responses[] =
         { DID_UNHOLY, {
             -1, 1, 2, " forgives your inadvertent unholy act, just this once."
         } },
+        { DID_UNCHIVALRIC_ATTACK, TSO_UNCHIVALRIC_RESPONSE },
+        { DID_POISON, TSO_UNCHIVALRIC_RESPONSE },
     },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
@@ -284,27 +292,38 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     // TODO: move everything into here
     if (divine_responses[you.religion].count(thing_done))
     {
-        god_acting gdact;
-
         const conduct_response divine_response =
             divine_responses[you.religion][thing_done];
 
+        // if the conduct filters on affected monsters, & the relevant monster
+        // isn't valid, don't trigger the conduct's consequences.
+        if (divine_response.invalid_victim
+            && !divine_response.invalid_victim(victim))
+        {
+            return;
+        }
+
+        god_acting gdact;
+
+        // If the player didn't have a way to know they were going to trigger
+        // the conduct, and the god cares, print a message & bail.
         if (!known && divine_response.forgiveness_message)
         {
             simple_god_message(divine_response.forgiveness_message);
             return;
         }
 
+        // trigger the actual effects of the conduct.
+
+        // a message, if we have one...
         if (divine_response.message)
             simple_god_message(divine_response.message);
 
+        // ...and piety/penance.
         _handle_piety_penance(divine_response.piety_factor * level,
                               divine_response.piety_denom,
                               divine_response.penance_factor * level,
                               thing_done);
-
-        if (divine_response.other_behavior)
-            divine_response.other_behavior(level, known, victim);
 
         return;
     }
@@ -328,29 +347,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
         case DID_HOLY:
-            break; // handled in data code
-
         case DID_UNCHIVALRIC_ATTACK:
         case DID_POISON:
-            if (you_worship(GOD_SHINING_ONE))
-            {
-                if (thing_done == DID_UNCHIVALRIC_ATTACK)
-                {
-                    if (victim && tso_unchivalric_attack_safe_monster(victim))
-                        break;
-
-                    if (!known)
-                    {
-                        simple_god_message(" forgives your inadvertent "
-                                           "dishonourable attack, just this "
-                                           "once.");
-                        break;
-                    }
-                }
-                piety_change = -level;
-                penance = level * 2;
-            }
-            break;
+            break; // handled in data code
 
         case DID_KILL_SLIME:
             if (you_worship(GOD_JIYVA) && !victim->is_shapeshifter())
