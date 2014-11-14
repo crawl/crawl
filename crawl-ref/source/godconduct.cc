@@ -201,6 +201,28 @@ static const conduct_response ATTACK_FRIEND_RESPONSE = {
     }
 };
 
+/// Ely response to a friend dying.
+static const conduct_response ELY_FRIEND_DEATH_RESPONSE = {
+    -1, 1, 0, NULL, NULL, [] (const monster* victim) {
+        // For everyone but Fedhas, plants are items not creatures,
+        // and animated items are, well, items as well.
+        return victim && !mons_is_object(victim->type)
+                      && victim->holiness() != MH_PLANT
+        // Converted allies (marked as TSOites) can be martyrs.
+                      && victim->god == GOD_SHINING_ONE;
+    }
+};
+
+/// Fedhas's response to a friend(ly plant) dying.
+static const conduct_response FEDHAS_FRIEND_DEATH_RESPONSE = {
+    -1, 1, 0, NULL, NULL, [] (const monster* victim) {
+        // ballistomycetes are penalized separately.
+        return victim && fedhas_protects(victim)
+        && victim->mons_species() != MONS_BALLISTOMYCETE;
+    }
+};
+
+
 typedef map<conduct_type, conduct_response> conduct_map;
 
 /// a per-god map of conducts to that god's reaction to those conducts.
@@ -273,6 +295,8 @@ static conduct_map divine_responses[] =
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
+        { DID_SOULED_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
     },
     // GOD_LUGONU,
     conduct_map(),
@@ -308,6 +332,8 @@ static conduct_map divine_responses[] =
             -1, 1, 0
         } },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
+        { DID_SOULED_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
     },
     // GOD_CHEIBRIADOS,
     conduct_map(),
@@ -402,47 +428,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_PLANT_KILLED_BY_SERVANT:
         case DID_ATTACK_NEUTRAL:
         case DID_ATTACK_FRIEND:
-            break; // handled in data code
-
-
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:
-            if (victim && !you_worship(GOD_FEDHAS)
-                && (mons_is_object(victim->type)
-                    || victim->holiness() == MH_PLANT))
-            {
-                // For everyone but Fedhas, plants are items not creatures,
-                // and animated items are, well, items as well.
-                break;
-            }
-
-            switch (you.religion)
-        {
-            case GOD_FEDHAS:
-                // Ballistomycetes dying is penalised separately.
-                if (victim && fedhas_protects(victim)
-                    && victim->mons_species() != MONS_BALLISTOMYCETE)
-                {
-                    // level is (1 + monsterHD/2) for this conduct,
-                    // trying a fixed cost since plant HD aren't that
-                    // meaningful. -cao
-                    piety_change = -1;
-                    break;
-                }
-                break;
-
-            case GOD_ELYVILON:
-                // Converted allies (marked as TSOites) can be martyrs.
-                if (victim && victim->god == GOD_SHINING_ONE)
-                    break;
-
-                piety_change = -(level/2 + 1);
-                break;
-
-            default:
-                break;
-        }
-            break;
+            break; // handled in data code
 
         case DID_BANISH:
             if (!you_worship(GOD_LUGONU))

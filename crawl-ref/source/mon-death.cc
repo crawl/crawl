@@ -2235,11 +2235,14 @@ int monster_die(monster* mons, killer_type killer,
             if (mons->friendly() && !mons_is_object(mons->type))
             {
                 const int mon_intel = mons_class_intel(mons->type) - I_ANIMAL;
+                // plant HD aren't very meaningful. (fedhas hack)
+                const int severity = mons->holiness() == MH_PLANT ?
+                                     1 :
+                                     1 + (mons->get_experience_level() / 4);
 
                 did_god_conduct(mon_intel > 0 ? DID_SOULED_FRIEND_DIED
                                               : DID_FRIEND_DIED,
-                                1 + (mons->get_experience_level() / 2),
-                                true, mons);
+                                severity, true, mons);
             }
 
             if (pet_kill && fedhas_protects(mons))
