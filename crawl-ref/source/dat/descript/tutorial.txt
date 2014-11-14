@@ -525,7 +525,7 @@ tutorial4 spell_success
 
 To check your spell proficiency, press <input>$cmd[CMD_DISPLAY_SPELLS]</input>
 <localtiles> or <input>mouseover</input> over your memorised
-spells</localtiles>. Compare your spell success rates before and after wielding
+spells</localtiles>. Compare your spell failure rates before and after wielding
 this staff.
 %%%%
 tutorial4 mephitic_cloud
@@ -589,7 +589,7 @@ tutorial4 heavy_armour
 Heavy armour really hampers spellcasting. Try putting on that mail and shield
 (with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
 <input>clicking</input> on them</localtiles>), and compare your spellcasting
-success rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
+failure rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
 <input>mouseovering</input> your memorised spells</localtiles>. You can take
 armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
 again, via <input>mouseclick</input></localtiles>.
