@@ -985,7 +985,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         magic_gain = sprint_modify_exp_inverse(magic_gain);
 
     if (magic_gain && !simu)
-        did_god_conduct(DID_SPELL_PRACTISE, magic_gain);
+        did_god_conduct(DID_SPELL_PRACTISE, div_rand_round(magic_gain, 10));
 }
 
 bool skill_trained(int i)
