@@ -407,15 +407,18 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 #endif
 
+    SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
+
 #ifdef USE_GLES
 #ifdef __ANDROID__
-    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
-                         | SDL_WINDOW_RESIZABLE;
+    unsigned int flags = SDL_WINDOW_OPENGL
+                         | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 #else
-    unsigned int flags = SDL_WINDOW_RESIZABLE;
+    unsigned int flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 #endif
 #else
-    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+                         | SDL_WINDOW_ALLOW_HIGHDPI;
 #endif
 
     bool too_small = (_desktop_width < 1024 || _desktop_height < 800);
@@ -481,6 +484,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
 #ifdef __ANDROID__
+    int x, y;
+    SDL_GetWindowSize(m_window, &x, &y);
+    m_windowsz->x = x;
+    m_windowsz->y = y;
+
     SDL_StartTextInput();
 
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
@@ -590,7 +598,9 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
 
 void SDLWrapper::resize(coord_def &m_windowsz)
 {
-    glmanager->reset_view_for_resize(m_windowsz);
+    coord_def m_drawablesz;
+    SDL_GL_GetDrawableSize(m_window, &(m_drawablesz.x), &(m_drawablesz.y));
+    glmanager->reset_view_for_resize(m_windowsz, m_drawablesz);
 }
 
 unsigned int SDLWrapper::get_ticks() const
