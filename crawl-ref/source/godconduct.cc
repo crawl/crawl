@@ -465,6 +465,10 @@ static like_map divine_likes[] =
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_WIZARD, {
+            -6, 10, 0, " appreciates your killing of a magic user.",
+            _god_likes_killing
+        } },
     },
     // GOD_NEMELEX_XOBEH,
     like_map(),
@@ -484,6 +488,10 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_PRIEST, {
+            -6, 10, 0, " appreciates your killing of a heretic priest.",
+            _god_likes_killing
+        } },
     },
     // GOD_JIYVA,
     like_map(),
@@ -630,29 +638,10 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_NATURAL_EVIL:
         case DID_KILL_UNCLEAN:
         case DID_KILL_CHAOTIC:
+        case DID_KILL_PRIEST:
+        case DID_KILL_WIZARD:
             break; // handled in data code
 
-        case DID_KILL_PRIEST:
-            if (you_worship(GOD_BEOGH)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                simple_god_message(" appreciates your killing of a heretic "
-                                   "priest.");
-                piety_denom = level + 10;
-                piety_change = piety_denom - 6;
-            }
-            break;
-
-        case DID_KILL_WIZARD:
-            if (you_worship(GOD_TROG)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                simple_god_message(" appreciates your killing of a magic "
-                                   "user.");
-                piety_denom = level + 10;
-                piety_change = piety_denom - 6;
-            }
-            break;
 
         case DID_KILL_FAST:
             if (you_worship(GOD_CHEIBRIADOS)
