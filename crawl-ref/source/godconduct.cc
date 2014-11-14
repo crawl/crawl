@@ -498,7 +498,11 @@ static like_map divine_likes[] =
     // GOD_FEDHAS,
     like_map(),
     // GOD_CHEIBRIADOS,
-    like_map(),
+    {
+        { DID_KILL_FAST, {
+            -6, 18, 2, NULL, _god_likes_killing
+        } }
+    },
     // GOD_ASHENZARI,
     like_map(),
     // GOD_DITHMENOS,
@@ -518,6 +522,35 @@ static like_map divine_likes[] =
     // GOD_RU,
     like_map(),
 };
+
+/**
+ * What multiplier to 'base' piety gains do you
+ *
+ * This is currently a Chei thing.
+ *
+ * @param
+ */
+static int _piety_mult(conduct_type thing_done, const monster* victim)
+{
+    if (thing_done != DID_KILL_FAST)
+        return 1;
+
+    const int speed_delta =
+        cheibriados_monster_player_speed_delta(victim);
+    dprf("Chei DID_KILL_FAST: %s speed delta: %d",
+         victim->name(DESC_PLAIN, true).c_str(),
+         speed_delta);
+
+    if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+    {
+        simple_god_message(" thoroughly appreciates the change of pace.");
+        return 2;
+    }
+
+    simple_god_message(" appreciates the change of pace.");
+    return 1;
+}
+
 
 
 static void _handle_your_gods_response(conduct_type thing_done, int level,
@@ -595,8 +628,10 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         // this is all very strange, but replicates legacy behavior.
         const int denom = like.piety_denom_bonus + level
                           - you.get_experience_level() / like.xl_denom;
-        const int gain = denom + like.piety_bonus;
+        const bool gain_mult = _piety_mult(thing_done, victim);
+        const int gain = (denom + like.piety_bonus) * gain_mult;
         _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
+
         return;
     }
 
@@ -640,32 +675,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_CHAOTIC:
         case DID_KILL_PRIEST:
         case DID_KILL_WIZARD:
-            break; // handled in data code
-
-
         case DID_KILL_FAST:
-            if (you_worship(GOD_CHEIBRIADOS)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                piety_denom = level + 18 - you.experience_level / 2;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-
-                const int speed_delta =
-                cheibriados_monster_player_speed_delta(victim);
-                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
-                     victim->name(DESC_PLAIN, true).c_str(),
-                     speed_delta);
-                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
-                {
-                    piety_change *= 2;
-                    simple_god_message(" thoroughly appreciates the change of pace.");
-                }
-                else
-                    simple_god_message(" appreciates the change of pace.");
-            }
-            break;
+            break; // handled in data code
 
         case DID_KILL_ARTIFICIAL:
             if (you_worship(GOD_YREDELEMNUL)
