@@ -222,7 +222,6 @@ static const conduct_response FEDHAS_FRIEND_DEATH_RESPONSE = {
     }
 };
 
-
 typedef map<conduct_type, conduct_response> conduct_map;
 
 /// a per-god map of conducts to that god's reaction to those conducts.
@@ -297,6 +296,15 @@ static conduct_map divine_responses[] =
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
         { DID_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
         { DID_SOULED_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
+        { DID_KILL_LIVING, {
+            -1, 1, 2, NULL, " does not appreciate your shedding blood"
+                            " when asking for salvation!",
+            [] (const monster* _) {
+                UNUSED(_);
+                // Killing is only disapproved of during prayer.
+                return you.duration[DUR_LIFESAVING] != 0;
+            }
+        } },
     },
     // GOD_LUGONU,
     conduct_map(),
@@ -438,17 +446,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_LIVING:
             switch (you.religion)
         {
-            case GOD_ELYVILON:
-                // Killing is only disapproved of during prayer.
-                if (you.duration[DUR_LIFESAVING])
-                {
-                    simple_god_message(" does not appreciate your shedding "
-                                       "blood when asking for salvation!");
-                    piety_change = -level;
-                    penance = level * 2;
-                }
-                break;
-
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
             case GOD_VEHUMET:
