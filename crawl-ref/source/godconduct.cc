@@ -271,6 +271,12 @@ static conduct_map divine_responses[] =
         { DID_CORPSE_VIOLATION, {
             -1, 1, 1, " forgives your inadvertent necromancy, just this once."
         } },
+        { DID_KILL_PLANT, {
+            -1, 1, 0
+        } },
+        { DID_PLANT_KILLED_BY_SERVANT, {
+            -1, 1, 0
+        } },
     },
     // GOD_CHEIBRIADOS,
     conduct_map(),
@@ -356,14 +362,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_UNCHIVALRIC_ATTACK:
         case DID_POISON:
         case DID_KILL_SLIME:
-            break; // handled in data code
-
         case DID_KILL_PLANT:
         case DID_PLANT_KILLED_BY_SERVANT:
-            // Piety loss but no penance for killing a plant.
-            if (you_worship(GOD_FEDHAS))
-                piety_change = -level;
-            break;
+            break; // handled in data code
 
         case DID_ATTACK_NEUTRAL:
             switch (you.religion)
