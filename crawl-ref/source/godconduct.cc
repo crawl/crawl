@@ -594,7 +594,14 @@ static like_map divine_likes[] =
     // GOD_YREDELEMNUL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_HOLY, _on_kill(MH_HOLY, false,
+                                  [](int &piety, int &denom,
+                                     const monster* victim)
+            {
+                piety *= 2;
+                simple_god_message(" appreciates your killing of a holy being.");
+            }
+        ) },
         { DID_KILL_ARTIFICIAL, _on_kill(MH_NONLIVING, false) },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
@@ -710,7 +717,24 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            -6, 18, 2, NULL
+            -6, 18, 2, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                UNUSED(denom);
+
+                const int speed_delta =
+                    cheibriados_monster_player_speed_delta(victim);
+                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
+                     victim->name(DESC_PLAIN, true).c_str(),
+                     speed_delta);
+
+                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+                {
+                    simple_god_message(" thoroughly appreciates the change of pace.");
+                    piety *= 2;
+                }
+                else
+                    simple_god_message(" appreciates the change of pace.");
+            }
         } }
     },
     // GOD_ASHENZARI,
@@ -772,61 +796,6 @@ static like_map divine_likes[] =
         } },
     },
 };
-
-/**
- * What piety multiplier does chei give for killing a given monster?
- *
- * @param victim        The monster in question.
- * @return              A multiplier to piety gained from killing the monster.
- */
-static int _chei_speed_piety_mult(const monster* victim)
-{
-    const int speed_delta =
-        cheibriados_monster_player_speed_delta(victim);
-    dprf("Chei DID_KILL_FAST: %s speed delta: %d",
-         victim->name(DESC_PLAIN, true).c_str(),
-         speed_delta);
-
-    if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
-    {
-        simple_god_message(" thoroughly appreciates the change of pace.");
-        return 2;
-    }
-
-    simple_god_message(" appreciates the change of pace.");
-    return 1;
-}
-
-/**
- * What multiplier to 'base' piety gains do you get for performing a given
- * conduct, over that expressed in the data tables?
- *
- * Only affects gains.
- *
- * Currently for weird yred/chei special cases. Possibly should be pulled out
- * into a function in the table.
- *
- * @param thing_done    The conduct.
- * @param victim        The victim of the conduct. Poor thing...
- * @return              A multiplier to be applied to piety gains.
- */
-static int _piety_mult(conduct_type thing_done, const monster* victim)
-{
-    switch (thing_done)
-    {
-        case DID_KILL_FAST:
-            // assumes only chei offers this conduct
-            return _chei_speed_piety_mult(victim);
-        case DID_KILL_HOLY:
-            if (!you_worship(GOD_YREDELEMNUL))
-                return 1;
-
-            simple_god_message(" appreciates your killing of a holy being.");
-            return 2;
-        default:
-            return 1;
-    }
-}
 
 
 /**
@@ -923,8 +892,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         if (like.xl_denom)
             denom -= you.get_experience_level() / like.xl_denom;
 
-        const int gain_mult = _piety_mult(thing_done, victim);
-        int gain = (denom + like.piety_bonus) * gain_mult;
+        int gain = denom + like.piety_bonus;
 
         // handle weird special cases
         // may modify gain/denom
