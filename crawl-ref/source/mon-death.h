@@ -63,7 +63,6 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 int dismiss_monsters(string pattern);
 
 string summoned_poof_msg(const monster* mons, bool plural = false);
-string summoned_poof_msg(const int midx, const item_def &item);
 string summoned_poof_msg(const monster* mons, const item_def &item);
 
 bool mons_is_pikel(monster* mons);

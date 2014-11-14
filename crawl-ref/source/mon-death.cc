@@ -3150,14 +3150,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
     return msg;
 }
 
-string summoned_poof_msg(const int midx, const item_def &item)
-{
-    if (midx == NON_MONSTER)
-        return summoned_poof_msg(static_cast<const monster* >(NULL), item);
-    else
-        return summoned_poof_msg(&menv[midx], item);
-}
-
 string summoned_poof_msg(const monster* mons, const item_def &item)
 {
     ASSERT(item.flags & ISFLAG_SUMMONED);
