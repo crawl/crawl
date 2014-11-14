@@ -28,7 +28,7 @@ struct god_conduct_trigger
     ~god_conduct_trigger();
 };
 
-bool did_god_conduct(conduct_type thing_done, int level, bool known = true,
+void did_god_conduct(conduct_type thing_done, int level, bool known = true,
                      const monster* victim = NULL);
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known = true);
