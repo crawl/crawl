@@ -1231,7 +1231,7 @@ ifdef NEED_REBUILD
 endif
 
 .android-cflags: .cflags
-	@echo $(CXXFLAGS_L) >.android-cxxflags
+	@echo -std=c++11 $(CXXFLAGS_L) >.android-cxxflags
 	@echo $(CFLAGS_L) >.android-cflags
 
 .PHONY: .force-cflags
