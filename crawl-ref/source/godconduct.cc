@@ -259,6 +259,7 @@ static peeve_map divine_peeves[] =
         { DID_DESECRATE_SOULED_BEING, {
             5, 3
         } },
+        { DID_CAUSE_GLOWING, { 1 } },
     },
     // GOD_SHINING_ONE,
     {
@@ -823,22 +824,17 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         return;
 
     // handle new-style conduct responses
-    // TODO: move everything into here
 
     // check for dislikes
     COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
     if (divine_peeves[you.religion].count(thing_done))
     {
-        dprf("checking peeve data for %s", conducts[thing_done]);
         const dislike_response peeve = divine_peeves[you.religion][thing_done];
 
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
         if (peeve.valid_victim && !peeve.valid_victim(victim))
-        {
-            dprf("invalid victim for %s", conducts[thing_done]);
             return;
-        }
 
         god_acting gdact;
 
@@ -846,41 +842,51 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         // the conduct, and the god cares, print a message & bail.
         if (!known && peeve.forgiveness_message)
         {
-            dprf("conduct forgiven");
             simple_god_message(peeve.forgiveness_message);
             return;
         }
 
         // trigger the actual effects of the conduct.
 
+        // weird hack (to prevent spam?)
+        if (you_worship(GOD_ZIN) && thing_done == DID_CAUSE_GLOWING)
+        {
+            static int last_glowing_lecture = -1;
+            if (!level)
+            {
+                simple_god_message(" is not enthusiastic about the "
+                                   "mutagenic glow surrounding you.");
+            }
+            else if (last_glowing_lecture != you.num_turns)
+            {
+                last_glowing_lecture = you.num_turns;
+                // Increase contamination within yellow glow.
+                simple_god_message(" does not appreciate the extra "
+                                   "mutagenic glow surrounding you!");
+            }
+        }
+
         // a message, if we have one...
         if (peeve.message)
             simple_god_message(peeve.message);
 
-        dprf("applying penance beam");
         // ...and piety/penance.
         const int piety_loss = max(0, peeve.piety_factor * level);
         const int penance = max(0, peeve.penance_factor * level
                                    + peeve.penance_offset);
         _handle_piety_penance(-piety_loss, 1, penance, thing_done);
-
-        return;
     }
 
     //check for likes
     COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
     if (divine_likes[you.religion].count(thing_done))
     {
-        dprf("checking like data for %s", conducts[thing_done]);
         const like_response like = divine_likes[you.religion][thing_done];
 
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
         if (victim && !_god_likes_killing(victim))
-        {
-            dprf("invalid victim for %s", conducts[thing_done]);
             return;
-        }
 
         god_acting gdact;
 
@@ -900,115 +906,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             like.special(gain, denom, victim);
 
         _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
-
-        return;
     }
-
-    dprf("no data for %s", conducts[thing_done]);
-
-    if (you_worship(GOD_NO_GOD) || you_worship(GOD_XOM))
-        return;
-
-    int piety_change = 0;
-    int piety_denom = 1;
-    int penance = 0;
-
-    god_acting gdact;
-
-    switch (thing_done)
-    {
-        case DID_DRINK_BLOOD:
-        case DID_CANNIBALISM:
-        case DID_CORPSE_VIOLATION:
-        case DID_DESECRATE_HOLY_REMAINS:
-        case DID_NECROMANCY:
-        case DID_UNHOLY:
-        case DID_ATTACK_HOLY:
-        case DID_HOLY:
-        case DID_UNCHIVALRIC_ATTACK:
-        case DID_POISON:
-        case DID_KILL_SLIME:
-        case DID_KILL_PLANT:
-        case DID_PLANT_KILLED_BY_SERVANT:
-        case DID_ATTACK_NEUTRAL:
-        case DID_ATTACK_FRIEND:
-        case DID_FRIEND_DIED:
-        case DID_SOULED_FRIEND_DIED:
-        case DID_BANISH:
-        case DID_KILL_LIVING:
-        case DID_KILL_UNDEAD:
-        case DID_KILL_DEMON:
-        case DID_KILL_NATURAL_UNHOLY:
-        case DID_KILL_NATURAL_EVIL:
-        case DID_KILL_UNCLEAN:
-        case DID_KILL_CHAOTIC:
-        case DID_KILL_PRIEST:
-        case DID_KILL_WIZARD:
-        case DID_KILL_FAST:
-        case DID_KILL_HOLY:
-        case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
-        case DID_HOLY_KILLED_BY_SERVANT:
-        case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
-        case DID_LIVING_KILLED_BY_SERVANT:
-        case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
-        case DID_UNDEAD_KILLED_BY_SERVANT:
-        case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
-        case DID_DEMON_KILLED_BY_SERVANT:
-        case DID_NATURAL_UNHOLY_KILLED_BY_SERVANT:
-        case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
-        case DID_UNCLEAN_KILLED_BY_SERVANT:
-        case DID_CHAOTIC_KILLED_BY_SERVANT:
-        case DID_KILL_ARTIFICIAL:
-        case DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE:
-        case DID_ARTIFICIAL_KILLED_BY_SERVANT:
-        case DID_KILL_FIERY:
-        case DID_SPELL_MEMORISE:
-        case DID_SPELL_CASTING:
-        case DID_DELIBERATE_MUTATING:
-        case DID_DESECRATE_SOULED_BEING:
-        case DID_UNCLEAN:
-        case DID_CHAOS:
-        case DID_ATTACK_IN_SANCTUARY:
-        case DID_DESECRATE_ORCISH_REMAINS:
-        case DID_DESTROY_ORCISH_IDOL:
-        case DID_DESTROY_SPELLBOOK:
-        case DID_FIRE:
-        case DID_HASTY:
-        case DID_EXPLORATION:
-        case DID_SEE_MONSTER:
-        case DID_SPELL_PRACTISE:
-            break; // handled in data code
-
-
-
-        case DID_CAUSE_GLOWING:
-            if (!you_worship(GOD_ZIN))
-                break;
-
-            static int last_glowing_lecture = -1;
-            if (!level)
-            {
-                simple_god_message(" is not enthusiastic about the "
-                                   "mutagenic glow surrounding you.");
-            }
-            else if (last_glowing_lecture != you.num_turns)
-            {
-                last_glowing_lecture = you.num_turns;
-                // Increase contamination within yellow glow.
-                simple_god_message(" does not appreciate the extra "
-                                   "mutagenic glow surrounding you!");
-            }
-
-            piety_change = -level;
-            break;
-
-        case DID_SACRIFICE_LOVE:
-        case DID_NOTHING:
-        case NUM_CONDUCTS:
-            break;
-    }
-
-    _handle_piety_penance(piety_change, piety_denom, penance, thing_done);
 }
 
 // a sad and shrunken function.
