@@ -4343,7 +4343,8 @@ static void _gozag_place_shop_here(int index)
     if (!kmspec.get_feat().shop.get())
         die("Invalid shop spec?");
 
-    shop_spec *spec = kmspec.get_feat().shop.get();
+    feature_spec feat = kmspec.get_feat();
+    shop_spec *spec = feat.shop.get();
     ASSERT(spec);
     place_spec_shop(you.pos(), *spec);
 
