@@ -316,7 +316,7 @@ static ghost_demon unmarshallGhost(reader &th);
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &
 #if TAG_MAJOR_VERSION == 34
-                             , unsigned hd, bool wizard, bool priest
+                             , unsigned hd
 #endif
 );
 
@@ -5130,9 +5130,7 @@ void unmarshallMonster(reader &th, monster& m)
     {
         unmarshallSpells(th, m.spells
 #if TAG_MAJOR_VERSION == 34
-                         , m.get_experience_level(),
-                           mons_class_flag(m.type, M_ACTUAL_SPELLS),
-                           mons_class_flag(m.type, M_PRIEST)
+                         , m.get_experience_level()
 #endif
                          );
 #if TAG_MAJOR_VERSION == 34
@@ -5744,7 +5742,7 @@ static void marshallSpells(writer &th, const monster_spells &spells)
 
 static void unmarshallSpells(reader &th, monster_spells &spells
 #if TAG_MAJOR_VERSION == 34
-                             , unsigned hd, bool wizard, bool priest
+                             , unsigned hd
 #endif
                             )
 {
@@ -5789,8 +5787,10 @@ static void unmarshallSpells(reader &th, monster_spells &spells
     }
 
 #if TAG_MAJOR_VERSION == 34
+    // This will turn all old spells into wizard spells, which
+    // isn't right but is the simplest way to do this.
     if (th.getMinorVersion() < TAG_MINOR_MONSTER_SPELL_SLOTS)
-        fixup_spells(spells, hd, wizard, priest);
+        fixup_spells(spells, hd);
 #endif
 }
 
@@ -5868,7 +5868,7 @@ static ghost_demon unmarshallGhost(reader &th)
 
     unmarshallSpells(th, ghost.spells
 #if TAG_MAJOR_VERSION == 34
-                     , ghost.xl, true, false
+                     , ghost.xl
 #endif
                     );
 

@@ -4880,7 +4880,7 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].colour = md.col;
 }
 
-void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
+void fixup_spells(monster_spells &spells, int hd)
 {
     unsigned count = 0;
     for (unsigned int i = 0; i < spells.size(); i++)
@@ -4890,12 +4890,7 @@ void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest)
 
         count++;
 
-        if (wizard)
-            spells[i].flags |= MON_SPELL_WIZARD;
-        else if (priest)
-            spells[i].flags |= MON_SPELL_PRIEST;
-        else
-            spells[i].flags |= MON_SPELL_MAGICAL; // rip
+        spells[i].flags |= MON_SPELL_WIZARD;
 
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;
