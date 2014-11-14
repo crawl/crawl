@@ -874,7 +874,6 @@ bool melee_attack::attack()
     if (attacker->is_player())
         do_miscast();
 
-    adjust_noise();
     // don't crash on banishment
     if (!defender->pos().origin())
         handle_noise(defender->pos());
@@ -900,99 +899,6 @@ bool melee_attack::attack()
     enable_attack_conducts(conducts);
 
     return attack_occurred;
-}
-
-/* Initialises the noise_factor
- *
- * For both players and monsters, separately sets the noise_factor for weapon
- * attacks based on damage type or attack_type/attack_flavour respectively.
- * Sets an average noise value for unarmed combat regardless of atype().
- */
-// TODO: Unify attack_type and unarmed_attack_type, the former includes the latter
-// however formerly, attack_type was mons_attack_type and used exclusively for monster use.
-void melee_attack::adjust_noise()
-{
-    if (attacker->is_player() && weapon != NULL)
-    {
-        switch (single_damage_type(*weapon))
-        {
-        case DAM_BLUDGEON:
-        case DAM_WHIP:
-            noise_factor = 125;
-            break;
-        case DAM_SLICE:
-            noise_factor = 100;
-            break;
-        case DAM_PIERCE:
-            noise_factor = 75;
-            break;
-        }
-    }
-    else if (attacker->is_monster() && weapon == NULL)
-    {
-        switch (attk_type)
-        {
-        case AT_HEADBUTT:
-        case AT_TENTACLE_SLAP:
-        case AT_TAIL_SLAP:
-        case AT_TRAMPLE:
-        case AT_TRUNK_SLAP:
-            noise_factor = 150;
-            break;
-
-        case AT_HIT:
-        case AT_PUNCH:
-        case AT_KICK:
-        case AT_CLAW:
-        case AT_GORE:
-#if TAG_MAJOR_VERSION == 34
-        case AT_SNAP:
-        case AT_SPLASH:
-#endif
-        case AT_CHERUB:
-            noise_factor = 125;
-            break;
-
-        case AT_BITE:
-        case AT_PECK:
-        case AT_CONSTRICT:
-        case AT_POUNCE:
-            noise_factor = 100;
-            break;
-
-        case AT_STING:
-        case AT_SPORE:
-        case AT_ENGULF:
-        case AT_REACH_STING:
-            noise_factor = 75;
-            break;
-
-        case AT_TOUCH:
-            noise_factor = 0;
-            break;
-
-        case AT_WEAP_ONLY:
-            break;
-
-        // To prevent compiler warnings.
-        case AT_NONE:
-        case AT_RANDOM:
-#if TAG_MAJOR_VERSION == 34
-        case AT_SHOOT:
-#endif
-            die("Invalid attack type for noise_factor");
-            break;
-
-        default:
-            die("%d Unhandled attack type for noise_factor", attk_type);
-            break;
-        }
-
-        if (attk_flavour == AF_ELEC)
-            noise_factor += 100;
-    }
-    else if (weapon == NULL)
-        noise_factor = 150;
 }
 
 void melee_attack::check_autoberserk()
@@ -1049,20 +955,18 @@ bool melee_attack::check_unrand_effects()
     return false;
 }
 
-
-
 class AuxConstrict: public AuxAttackType
 {
 public:
     AuxConstrict()
-    : AuxAttackType(0, 10, "grab") { };
+    : AuxAttackType(0, "grab") { };
 };
 
 class AuxKick: public AuxAttackType
 {
 public:
     AuxKick()
-    : AuxAttackType(-1, 100, "kick") { };
+    : AuxAttackType(-1, "kick") { };
 
     int get_damage() const
     {
@@ -1104,7 +1008,7 @@ class AuxHeadbutt: public AuxAttackType
 {
 public:
     AuxHeadbutt()
-    : AuxAttackType(5, 100, "headbutt") { };
+    : AuxAttackType(5, "headbutt") { };
 
     int get_damage() const
     {
@@ -1116,14 +1020,14 @@ class AuxPeck: public AuxAttackType
 {
 public:
     AuxPeck()
-    : AuxAttackType(6, 75, "peck") { };
+    : AuxAttackType(6, "peck") { };
 };
 
 class AuxTailslap: public AuxAttackType
 {
 public:
     AuxTailslap()
-    : AuxAttackType(6, 125, "tail-slap") { };
+    : AuxAttackType(6, "tail-slap") { };
 
     int get_damage() const
     {
@@ -1140,7 +1044,7 @@ class AuxPunch: public AuxAttackType
 {
 public:
     AuxPunch()
-    : AuxAttackType(5, 100, "punch") { };
+    : AuxAttackType(5, "punch") { };
 
     int get_damage() const
     {
@@ -1169,23 +1073,13 @@ public:
         return name;
     }
 
-    int get_noise_factor() const
-    {
-        if (you.form == TRAN_BLADE_HANDS)
-            return 75;
-
-        if (you.has_usable_tentacles())
-            return 125;
-
-        return noise_factor;
-    }
 };
 
 class AuxBite: public AuxAttackType
 {
 public:
     AuxBite()
-    : AuxAttackType(0, 75, "bite") { };
+    : AuxAttackType(0, "bite") { };
 
     int get_damage() const
     {
@@ -1217,7 +1111,7 @@ class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, 125, "bludgeon") { };
+    : AuxAttackType(4, "bludgeon") { };
 
     int get_damage() const { return damage * you.has_usable_pseudopods(); }
 };
@@ -1226,7 +1120,7 @@ class AuxTentacles: public AuxAttackType
 {
 public:
     AuxTentacles()
-    : AuxAttackType(12, 100, "squeeze") { };
+    : AuxAttackType(12, "squeeze") { };
 };
 
 
@@ -1271,7 +1165,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     aux_damage = aux->get_damage();
     damage_brand = (brand_type)aux->get_brand();
-    noise_factor = aux->get_noise_factor();
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
@@ -2040,48 +1933,21 @@ void melee_attack::rot_defender(int amount, int immediate)
     }
 }
 
-// XXX:
-//  * Noise should probably scale non-linearly with damage_done, and
-//    maybe even non-linearly with noise_factor.
-//
-//  * Damage reduction via armour of the defender reduces noise,
-//    but shouldn't.
-//
-//  * Damage reduction because of negative damage modifiers on the
-//    weapon reduce noise, but probably shouldn't.
-//
-//  * Might want a different formula for noise generated by the
-//    player.
-//
-//  Ideas:
-//  * Each weapon type has a noise rating, like it does an accuracy
-//    rating and base delay.
-//
-//  * For player, stealth skill and/or weapon skill reducing noise.
-//
-//  * Randart property to make randart weapons louder or softer when
-//    they hit.
 void melee_attack::handle_noise(const coord_def & pos)
 {
     // Successful stabs make no noise.
     if (stab_attempt)
-    {
-        noise_factor = 0;
         return;
-    }
 
-    int level = noise_factor * damage_done / 100 / 4;
+    int loudness = damage_done / 4;
 
-    if (noise_factor > 0)
-        level = max(1, level);
+    // All non-stab melee attacks make some noise.
+    loudness = max(1, loudness);
 
     // Cap melee noise at shouting volume.
-    level = min(12, level);
+    loudness = min(12, loudness);
 
-    if (level > 0)
-        noisy(level, pos, attacker->mid);
-
-    noise_factor = 0;
+    noisy(loudness, pos, attacker->mindex());
 }
 
 /**
