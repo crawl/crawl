@@ -407,9 +407,6 @@ struct like_response
     int xl_denom;
     /// Something your god says when you trigger this conduct. May be NULL.
     const char *message;
-    /// A function that checks the victim of the conduct to see if the conduct
-    /// should actually, really apply to it. If NULL, all victims are valid.
-    bool (*valid_victim)(const monster* victim);
 };
 
 /**
@@ -429,28 +426,28 @@ static bool _god_likes_killing(const monster* victim)
 
 /// Response for gods that like killing the living.
 static const like_response KILL_LIVING_RESPONSE = {
-    -6, 18, 2, " accepts your kill.", _god_likes_killing
+    -6, 18, 2, " accepts your kill."
 };
 
 /// Response for non-good gods that like killing (?) undead.
 static const like_response KILL_UNDEAD_RESPONSE = {
-    -5, 18, 2, " accepts your kill.", _god_likes_killing
+    -5, 18, 2, " accepts your kill."
 };
 
 /// Response for non-good gods that like killing (?) demons.
 static const like_response KILL_DEMON_RESPONSE = {
-    -4, 18, 2, " accepts your kill.", _god_likes_killing
+    -4, 18, 2, " accepts your kill."
 };
 
 /// Response for TSO/Zin when you kill (most) things they hate.
 static const like_response GOOD_KILL_RESPONSE = {
-    -4, 18, 0, " accepts your kill.", _god_likes_killing
+    -4, 18, 0, " accepts your kill."
 };
 
 /// Response for non-good gods that like killing (?) holies. also, yred
 /// uses this for killing artificials.
 static const like_response KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your kill.", _god_likes_killing
+    -3, 18, 0, " accepts your kill."
 };
 // Note that holy deaths are special - they're always noticed...
 // If you or any friendly kills one, you'll get the credit/blame.
@@ -458,12 +455,12 @@ static const like_response KILL_HOLY_RESPONSE = {
 /// Response for gods that like your undead slaves killing holies.
 /// Also, Yred uses this for killing artificials.
 static const like_response UNDEAD_KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your slave's kill.", _god_likes_killing
+    -3, 18, 0, " accepts your slave's kill."
 };
 
 /// Response for gods that like your servants killing holies.
 static const like_response SERVANT_KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your collateral kill.", _god_likes_killing
+    -3, 18, 0, " accepts your collateral kill."
 };
 
 /// Response for gods that like your undead slaves killing non-holy things.
@@ -499,7 +496,7 @@ static like_map divine_likes[] =
     // GOD_SHINING_ONE,
     {
         { DID_KILL_UNDEAD, {
-            -5, 18, 0, " accepts your kill.", _god_likes_killing
+            -5, 18, 0, " accepts your kill."
         } },
         { DID_KILL_DEMON, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_UNHOLY, GOOD_KILL_RESPONSE },
@@ -564,8 +561,7 @@ static like_map divine_likes[] =
         { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_WIZARD, {
-            -6, 10, 0, " appreciates your killing of a magic user.",
-            _god_likes_killing
+            -6, 10, 0, " appreciates your killing of a magic user."
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -605,8 +601,7 @@ static like_map divine_likes[] =
         { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
         { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_PRIEST, {
-            -6, 10, 0, " appreciates your killing of a heretic priest.",
-            _god_likes_killing
+            -6, 10, 0, " appreciates your killing of a heretic priest."
         } },
     },
     // GOD_JIYVA,
@@ -616,7 +611,7 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            -6, 18, 2, NULL, _god_likes_killing
+            -6, 18, 2, NULL
         } }
     },
     // GOD_ASHENZARI,
@@ -628,8 +623,7 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_FIERY, {
-            -6, 10, 0, " appreciates your extinguishing a source of fire.",
-            _god_likes_killing
+            -6, 10, 0, " appreciates your extinguishing a source of fire."
         } },
     },
     // GOD_GOZAG,
@@ -767,7 +761,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
-        if (like.valid_victim && !like.valid_victim(victim))
+        if (victim && !_god_likes_killing(victim))
         {
             dprf("invalid victim for %s", conducts[thing_done]);
             return;
