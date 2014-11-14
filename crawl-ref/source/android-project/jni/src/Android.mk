@@ -321,4 +321,6 @@ LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image freetype sqlite lua zlib
 
 LOCAL_LDLIBS := -ldl -lGLESv1_CM -lGLESv2 -llog -landroid
 
+LOCAL_ARM_MODE := arm
+
 include $(BUILD_SHARED_LIBRARY)
