@@ -216,7 +216,11 @@ static conduct_map divine_responses[] =
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
     // GOD_YREDELEMNUL,
-    conduct_map(),
+    {
+        { DID_HOLY, {
+            -1, 1, 2, " forgives your inadvertent holy act, just this once."
+        } },
+    },
     // GOD_XOM,
     conduct_map(),
     // GOD_VEHUMET,
@@ -323,21 +327,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
-            break; // handled in data code
-
         case DID_HOLY:
-            if (you_worship(GOD_YREDELEMNUL))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent holy act, "
-                                       "just this once.");
-                    break;
-                }
-                piety_change = -level;
-                penance = level * 2;
-            }
-            break;
+            break; // handled in data code
 
         case DID_UNCHIVALRIC_ATTACK:
         case DID_POISON:
