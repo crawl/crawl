@@ -3402,38 +3402,29 @@ string get_monster_equipment_desc(const monster_info& mi,
 
         if (print_attitude)
         {
-            string str = "";
+            vector<string> attributes;
             if (mi.is(MB_CHARMED))
-                str = "charmed";
+                attributes.push_back("charmed");
             else if (mi.attitude == ATT_FRIENDLY)
-                str = "friendly";
+                attributes.push_back("friendly");
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
-                str = "peaceful";
+                attributes.push_back("peaceful");
             else if (mi.is(MB_INSANE))
-                str = "insane";
+                attributes.push_back("insane");
             else if (mi.attitude != ATT_HOSTILE)
-                str = "neutral";
+                attributes.push_back("neutral");
 
             if (mi.is(MB_SUMMONED))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "summoned";
-            }
+                attributes.push_back("summoned");
 
             if (mi.is(MB_PERM_SUMMON))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "durably summoned";
-            }
+                attributes.push_back("durably summoned");
 
             if (mi.is(MB_SUMMONED_CAPPED))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "expiring";
-            }
+                attributes.push_back("expiring");
+
+            string str = comma_separated_line(attributes.begin(),
+                                              attributes.end());
 
             if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
@@ -3448,8 +3439,6 @@ string get_monster_equipment_desc(const monster_info& mi,
                     str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
                     str += "ghost";
-                else if (mi.type == MONS_PLAYER_ILLUSION)
-                    str += "illusion";
             }
             if (!str.empty())
                 desc += " (" + str + ")";
