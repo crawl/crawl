@@ -464,7 +464,7 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
         case MH_NONLIVING: // hi, yred
             return -3;
         default:
-            die("help, I don't know what to do!");
+            die("unknown holiness type; can't give a bonus");
     }
 }
 
