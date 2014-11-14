@@ -244,6 +244,10 @@ static peeve_map divine_peeves[] =
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_NEUTRAL, {
+            1, 0,
+            " forgives your inadvertent attack on a neutral, just this once."
+        } },
         { DID_ATTACK_IN_SANCTUARY, {
             1, 1
         } },
