@@ -185,6 +185,10 @@ static const conduct_response TSO_UNCHIVALRIC_RESPONSE = {
     }
 };
 
+/// TSO and Ely's response to the player attacking neutral monsters.
+static const conduct_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
+    -1, 1, 1, " forgives your inadvertent attack on a neutral, just this once."
+};
 
 typedef map<conduct_type, conduct_response> conduct_map;
 
@@ -220,6 +224,7 @@ static conduct_map divine_responses[] =
         } },
         { DID_UNCHIVALRIC_ATTACK, TSO_UNCHIVALRIC_RESPONSE },
         { DID_POISON, TSO_UNCHIVALRIC_RESPONSE },
+        { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
     },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
@@ -251,6 +256,7 @@ static conduct_map divine_responses[] =
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
+        { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
     },
     // GOD_LUGONU,
     conduct_map(),
@@ -262,7 +268,13 @@ static conduct_map divine_responses[] =
     {
         { DID_KILL_SLIME, {
             -1, 1, 2, NULL, NULL, [] (const monster* victim) {
-                return !victim || !victim->is_shapeshifter();
+                return victim && !victim->is_shapeshifter();
+            }
+        } },
+        { DID_ATTACK_NEUTRAL, {
+            -1, 1, 1, NULL, NULL, [] (const monster* victim) {
+                return victim
+                    && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
         } },
     },
@@ -364,45 +376,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_SLIME:
         case DID_KILL_PLANT:
         case DID_PLANT_KILLED_BY_SERVANT:
-            break; // handled in data code
-
         case DID_ATTACK_NEUTRAL:
-            switch (you.religion)
-        {
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent attack on a "
-                                       "neutral, just this once.");
-                    break;
-                }
-                penance = level/2 + 1;
-                // deliberate fall through
-
-            case GOD_ZIN:
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent attack on a "
-                                       "neutral, just this once.");
-                    break;
-                }
-                piety_change = -(level/2 + 1);
-                break;
-
-            case GOD_JIYVA:
-                if (victim && mons_is_slime(victim)
-                    && !victim->is_shapeshifter())
-                {
-                    piety_change = -(level/2 + 3);
-                    penance = level/2 + 3;
-                }
-                break;
-
-            default:
-                break;
-        }
-            break;
+            break; // handled in data code
 
         case DID_ATTACK_FRIEND:
             if (god_hates_attacking_friend(you.religion, victim))
