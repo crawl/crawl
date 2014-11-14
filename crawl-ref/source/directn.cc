@@ -3458,10 +3458,6 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     string weap = "";
 
-    // We don't report rakshasa equipment in order not to give away the
-    // true rakshasa when it summons. But Mara is fine, because his weapons
-    // and armour are cloned with him.
-
     if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     else if (level == DESC_IDENTIFIED)
