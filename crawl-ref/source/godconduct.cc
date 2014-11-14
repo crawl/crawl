@@ -407,6 +407,20 @@ static peeve_map divine_peeves[] =
 };
 
 
+/**
+ * Handle Dithmenos's piety scaling based on piety rank.
+ *
+ * @param[in,out] piety    Piety gain is modified & output into this.
+ * @param[in,out] denom    Piety gain denominator is modified & output here.
+ * @param victim           Unused.
+ */
+static void _dithmenos_kill(int &piety, int &denom, const monster* /*victim*/)
+{
+    // Full gains at full piety down to 2/3 at 6* piety.
+    // (piety_rank starts at 1, not 0.)
+    piety *= 25 - piety_rank();
+    denom *= 24;
+}
 
 /// A definition of the way in which a god likes a conduct being taken.
 struct like_response
@@ -419,22 +433,10 @@ struct like_response
     int xl_denom;
     /// Something your god says when you trigger this conduct. May be NULL.
     const char *message;
+    /// Special-case code for weird likes. May modify piety bonus/denom, or
+    /// may have other side effects. If NULL, doesn't trigger, ofc.
+    void (*special)(int &piety, int &denom, const monster* victim);
 };
-
-/**
- * Will your god give you piety for killing the given monster, assuming that
- * its death triggers a conduct that the god sometimes likes?
- */
-static bool _god_likes_killing(const monster* victim)
-{
-    if (you_worship(GOD_DITHMENOS)
-        && mons_class_flag(victim->type, M_SHADOW))
-    {
-        return false;
-    }
-
-    return !god_hates_attacking_friend(you.religion, victim);
-}
 
 /// Response for gods that like killing the living.
 static const like_response KILL_LIVING_RESPONSE = {
@@ -488,6 +490,20 @@ static const like_response SERVANT_KILL_RESPONSE = {
 /// Response for TSO/Zin when your servants kill things they hate.
 static const like_response GOOD_COLLATERAL_RESPONSE = {
     -6, 10, 0, " accepts your collateral kill."
+};
+
+static const like_response OKAWARU_KILL = {
+    0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+    {
+        piety = get_fuzzied_monster_difficulty(victim);
+        dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
+        denom = 600;
+
+        if (piety > 3200)
+            simple_god_message(" appreciates your kill.");
+        else if (piety > 9) // might still be miniscule
+            simple_god_message(" accepts your kill.");
+    }
 };
 
 
@@ -546,7 +562,12 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
     // GOD_OKAWARU,
-    like_map(),
+    {
+        { DID_KILL_LIVING, OKAWARU_KILL },
+        { DID_KILL_UNDEAD, OKAWARU_KILL },
+        { DID_KILL_DEMON, OKAWARU_KILL },
+        { DID_KILL_HOLY, OKAWARU_KILL },
+    },
     // GOD_MAKHLEB,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
@@ -630,10 +651,18 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
-        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
-        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_LIVING, {
+            -6, 18, 2, " accepts your kill.", _dithmenos_kill
+        } },
+        { DID_KILL_UNDEAD, {
+            -5, 18, 2, " accepts your kill.", _dithmenos_kill
+        } },
+        { DID_KILL_DEMON, {
+            -4, 18, 2, " accepts your kill.", _dithmenos_kill
+        } },
+        { DID_KILL_HOLY, {
+            -3, 18, 2, " accepts your kill.", _dithmenos_kill
+        } },
         { DID_KILL_FIERY, {
             -6, 10, 0, " appreciates your extinguishing a source of fire."
         } },
@@ -710,6 +739,21 @@ static int _piety_mult(conduct_type thing_done, const monster* victim)
     }
 }
 
+
+/**
+ * Will your god give you piety for killing the given monster, assuming that
+ * its death triggers a conduct that the god sometimes likes?
+ */
+static bool _god_likes_killing(const monster* victim)
+{
+    if (you_worship(GOD_DITHMENOS)
+        && mons_class_flag(victim->type, M_SHADOW))
+    {
+        return false;
+    }
+
+    return !god_hates_attacking_friend(you.religion, victim);
+}
 
 
 static void _handle_your_gods_response(conduct_type thing_done, int level,
@@ -791,7 +835,12 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             denom -= you.get_experience_level() / like.xl_denom;
 
         const int gain_mult = _piety_mult(thing_done, victim);
-        const int gain = (denom + like.piety_bonus) * gain_mult;
+        int gain = (denom + like.piety_bonus) * gain_mult;
+
+        // handle weird special cases
+        // may modify gain/denom
+        if (like.special)
+            like.special(gain, denom, victim);
 
         _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
 
@@ -947,32 +996,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
-    }
-
-    // currently no constructs and plants
-    if ((thing_done == DID_KILL_LIVING
-         || thing_done == DID_KILL_UNDEAD
-         || thing_done == DID_KILL_DEMON
-         || thing_done == DID_KILL_HOLY)
-        && !god_hates_attacking_friend(you.religion, victim))
-    {
-        if (you_worship(GOD_OKAWARU))
-        {
-            piety_change = get_fuzzied_monster_difficulty(victim);
-            dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
-            piety_denom = 600;
-            if (piety_change > 3200)
-                simple_god_message(" appreciates your kill.");
-            else if (piety_change > 9) // might still be miniscule
-                simple_god_message(" accepts your kill.");
-        }
-        if (you_worship(GOD_DITHMENOS))
-        {
-            // Full gains at full piety down to 2/3 at 6* piety.
-            // (piety_rank starts at 1, not 0.)
-            piety_change *= 25 - piety_rank();
-            piety_denom *= 24;
-        }
     }
 
     _handle_piety_penance(piety_change, piety_denom, penance, thing_done);
