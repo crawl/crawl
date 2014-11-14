@@ -715,14 +715,11 @@ monster_info::monster_info(const monster* m, int milev)
     // book loading for player ghost and vault monsters
     spells.clear();
     if (m->props.exists("custom_spells") || mons_is_pghost(type))
-    {
         spells = m->spells;
-        // XXX handle here special cases for sources of magic (magic, divine, other)
-        if (m->is_priest())
-            props["priest"] = true;
-        else if (m->is_actual_spellcaster())
-            props["actual_spellcaster"] = true;
-    }
+    if (m->is_priest())
+        props["priest"] = true;
+    else if (m->is_actual_spellcaster())
+        props["actual_spellcaster"] = true;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {

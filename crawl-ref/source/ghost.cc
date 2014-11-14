@@ -326,7 +326,7 @@ void ghost_demon::init_pandemonium_lord()
         if (one_chance_in(15))
             ADD_SPELL(SPELL_DIG);
 
-        fixup_spells(spells, xl, true, false);
+        fixup_spells(spells, xl);
     }
 
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
@@ -758,7 +758,7 @@ void ghost_demon::add_spells(bool actual_ghost)
         }
     }
 
-    fixup_spells(spells, xl, true, false);
+    fixup_spells(spells, xl);
 
     if (species_genus(species) == GENPC_DRACONIAN
         && species != SP_BASE_DRACONIAN
@@ -1039,5 +1039,5 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
         }
     }
 
-    fixup_spells(spells, 150, true, false);
+    fixup_spells(spells, 150);
 }
