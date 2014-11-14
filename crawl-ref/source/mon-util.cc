@@ -4655,6 +4655,12 @@ void debug_mondata()
         if (invalid_monster_type(mc))
             continue;
         const char* name = mons_class_name(mc);
+        if (!name)
+        {
+            fails += make_stringf("Monster %d has no name\n", mc);
+            continue;
+        }
+
         const monsterentry *md = get_monster_data(mc);
 
         int MR = md->resist_magic;
@@ -4663,11 +4669,37 @@ void debug_mondata()
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
 
-        // Tests below apply only to corpses.
-        if (md->species != mc || md->bitfields & M_CANT_SPAWN)
+        // Tests below apply only to real monsters.
+        if (md->bitfields & M_CANT_SPAWN)
             continue;
 
-        // TODO: add more tests here?
+        if (md->weight < 0)
+        {
+            fails += make_stringf("%s has negative mass: %d\n", name,
+                                  md->weight);
+        } else if (md->corpse_thingy && !md->weight && md->species == mc)
+            fails += make_stringf("%s drops a nil-weight corpse", name);
+
+        if (!md->hpdice[0] && md->basechar != 'Z') // derived undead...
+            fails += make_stringf("%s has 0 HD: %d\n", name, md->hpdice[0]);
+
+        if (md->basechar == ' ')
+            fails += make_stringf("%s has an empty glyph\n", name);
+
+        if (md->AC < 0 && !mons_is_job(mc))
+            fails += make_stringf("%s has negative AC\n", name);
+        if (md->ev < 0 && !mons_is_job(mc))
+            fails += make_stringf("%s has negative EV\n", name);
+        if (md->exp_mod < 0)
+            fails += make_stringf("%s has negative xp mod\n", name);
+
+        if (md->speed < 0)
+            fails += make_stringf("%s has 0 speed\n", name);
+        else if (md->speed == 0 && !mons_class_is_firewood(mc)
+            && mc != MONS_HYPERACTIVE_BALLISTOMYCETE)
+        {
+            fails += make_stringf("%s has 0 speed\n", name);
+        }
     }
 
     if (!fails.empty())
