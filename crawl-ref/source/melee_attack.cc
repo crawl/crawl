@@ -1947,7 +1947,7 @@ void melee_attack::handle_noise(const coord_def & pos)
     // Cap melee noise at shouting volume.
     loudness = min(12, loudness);
 
-    noisy(loudness, pos, attacker->mindex());
+    noisy(loudness, pos, attacker->mid);
 }
 
 /**
