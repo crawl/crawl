@@ -329,7 +329,7 @@ struct monster_info : public monster_info_base
 
     bool is_priest() const
     {
-        return mons_class_flag(this->type, M_PRIEST) || this->props.exists("priest");
+        return props.exists("priest");
     }
 
     bool has_spells() const;
