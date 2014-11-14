@@ -4665,10 +4665,10 @@ void debug_mondata()
         if (md->species != mc || md->bitfields & M_CANT_SPAWN)
             continue;
 
-        if (md->weight && !md->corpse_thingy)
-            fails += make_stringf("%s has a corpse but no corpse_type\n", name);
-        if (md->weight && !md->zombie_size)
+        if (md->corpse_thingy && !md->zombie_size)
             fails += make_stringf("%s has a corpse but no zombie_size\n", name);
+        else if (md->zombie_size && !md->corpse_thingy)
+            fails += make_stringf("%s has a zombie_size but no corpse\n", name);
     }
 
     if (!fails.empty())
