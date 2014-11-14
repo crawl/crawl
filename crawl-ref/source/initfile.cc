@@ -203,44 +203,35 @@ string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-/**
- * Populate the map used to interpret a crawlrc entry as a starting weapon
- * type.  For most entries, we can just look up which weapon has the entry as
- * its name; this map contains the exceptions.
- *
- * @return  The special starting weapon type map.
- */
-static map<string, weapon_type> _create_special_weapon_map()
-{
-    map<string, weapon_type> weapon_map;
+
+// The map used to interpret a crawlrc entry as a starting weapon
+// type.  For most entries, we can just look up which weapon has the entry as
+// its name; this map contains the exceptions.
+// This should be const, but operator[] on maps isn't const.
+static map<string, weapon_type> _special_weapon_map = {
 
     // "staff" normally refers to a magical staff, but here we want to
     // interpret it as a quarterstaff.
-    weapon_map["staff"]        = WPN_QUARTERSTAFF;
+    {"staff",       WPN_QUARTERSTAFF},
 
     // These weapons' base names have changed; we want to interpret the old
     // names correctly.
-    weapon_map["sling"]        = WPN_HUNTING_SLING;
-    weapon_map["crossbow"]     = WPN_HAND_CROSSBOW;
+    {"sling",       WPN_HUNTING_SLING},
+    {"crossbow",    WPN_HAND_CROSSBOW},
 
     // Pseudo-weapons.
-    weapon_map["unarmed"]      = WPN_UNARMED;
-    weapon_map["claws"]        = WPN_UNARMED;
+    {"unarmed",     WPN_UNARMED},
+    {"claws",       WPN_UNARMED},
 
-    weapon_map["thrown"]       = WPN_THROWN;
-    weapon_map["rocks"]        = WPN_THROWN;
-    weapon_map["javelins"]     = WPN_THROWN;
-    weapon_map["tomahawks"]    = WPN_THROWN;
+    {"thrown",      WPN_THROWN},
+    {"rocks",       WPN_THROWN},
+    {"tomahawks",   WPN_THROWN},
+    {"javelins",    WPN_THROWN},
 
-    weapon_map["random"]       = WPN_RANDOM;
+    {"random",      WPN_RANDOM},
 
-    weapon_map["viable"]       = WPN_VIABLE;
-
-    return weapon_map;
-}
-
-// This should be const, but operator[] on maps isn't const.
-static map<string, weapon_type> _special_weapon_map = _create_special_weapon_map();
+    {"viable",      WPN_VIABLE},
+};
 
 /**
  * Interpret a crawlrc entry as a starting weapon type.
