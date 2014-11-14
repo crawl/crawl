@@ -107,16 +107,6 @@ private:
     void init();
     string get_default_cause(bool attribute_to_user) const;
 
-    monster* target_as_monster()
-    {
-        return dynamic_cast<monster* >(target);
-    }
-
-    monster* source_as_monster()
-    {
-        return dynamic_cast<monster* >(act_source);
-    }
-
     bool neither_end_silenced();
 
     void do_msg(bool suppress_nothing_happens = false);
