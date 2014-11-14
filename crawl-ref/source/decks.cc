@@ -2752,7 +2752,8 @@ static void _cloud_card(int power, deck_rarity_type rarity)
 
         switch (power_level)
         {
-            case 0: cloudy = coinflip() ? CLOUD_STEAM : CLOUD_MEPHITIC;
+            case 0: cloudy = (you_worship(GOD_SHINING_ONE) || !one_chance_in(5))
+                              ? CLOUD_MEPHITIC : CLOUD_POISON;
                     break;
 
             case 1: cloudy = (you_worship(GOD_DITHMENOS) || coinflip())
