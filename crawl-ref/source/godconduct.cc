@@ -112,6 +112,27 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
 
 }
 
+/**
+ * Good gods' reactions to the player attacking a holy creature.
+ */
+static void _good_attack_holy(int level, bool known, const monster* victim)
+{
+    UNUSED(known);
+
+    // XXX: what does this do?
+    if (victim
+        && !testbits(victim->flags, MF_NO_REWARD)
+        && !testbits(victim->flags, MF_WAS_NEUTRAL))
+    {
+        return;
+    }
+
+    // TSO cares more about these things.
+    const int penance = level * (you_worship(GOD_SHINING_ONE) ? 2 : 1);
+    _handle_piety_penance(-level, 1, penance, DID_ATTACK_HOLY);
+}
+
+
 
 
 /// A definition of a god's response to a conduct being taken.
@@ -145,6 +166,22 @@ static const conduct_response RUDE_CANNIBALISM_RESPONSE = {
     -5, 1, 3, NULL, " expects more respect for your departed relatives."
 };
 
+/// Zin and Ely's responses to desecrating holy remains.
+static const conduct_response GOOD_DESECRATE_HOLY_RESPONSE = {
+    -1, 1, 1, NULL, " expects more respect for holy creatures!"
+};
+
+/// Zin and Ely's responses to unholy actions & necromancy.
+static const conduct_response GOOD_UNHOLY_RESPONSE = {
+    -1, 1, 1, " forgives your inadvertent unholy act, just this once."
+};
+
+/// Good gods' responses to the player attacking holy creatures.
+static const conduct_response GOOD_ATTACK_HOLY_RESPONSE = {
+    0, 1, 0, NULL, NULL, _good_attack_holy
+};
+
+
 typedef map<conduct_type, conduct_response> conduct_map;
 
 /// a per-god map of conducts to that god's reaction to those conducts.
@@ -156,11 +193,25 @@ static conduct_map divine_responses[] =
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+        { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
+        { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
+        { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
     },
     // GOD_SHINING_ONE,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+        { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_DESECRATE_HOLY_REMAINS, {
+            -1, 1, 2, NULL, " expects more respect for holy creatures!"
+        } },
+        { DID_NECROMANCY, {
+            -1, 1, 2, " forgives your inadvertent unholy act, just this once."
+        } },
+        { DID_UNHOLY, {
+            -1, 1, 2, " forgives your inadvertent unholy act, just this once."
+        } },
     },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
@@ -184,6 +235,10 @@ static conduct_map divine_responses[] =
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+        { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
+        { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
+        { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
     },
     // GOD_LUGONU,
     conduct_map(),
@@ -264,37 +319,11 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_DRINK_BLOOD:
         case DID_CANNIBALISM:
         case DID_CORPSE_VIOLATION:
-            break; // handled in data code
-
         case DID_DESECRATE_HOLY_REMAINS:
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
-            if (!is_good_god(you.religion))
-                break;
-
-            if (!known && thing_done != DID_ATTACK_HOLY
-                && thing_done != DID_DESECRATE_HOLY_REMAINS)
-            {
-                simple_god_message(" forgives your inadvertent unholy act, "
-                                   "just this once.");
-                break;
-            }
-
-            if (thing_done == DID_ATTACK_HOLY
-                && victim
-                && !testbits(victim->flags, MF_NO_REWARD)
-                && !testbits(victim->flags, MF_WAS_NEUTRAL))
-            {
-                break;
-            }
-
-            if (thing_done == DID_DESECRATE_HOLY_REMAINS)
-                simple_god_message(" expects more respect for holy creatures!");
-
-            piety_change = -level;
-            penance = level * ((you_worship(GOD_SHINING_ONE)) ? 2 : 1);
-            break;
+            break; // handled in data code
 
         case DID_HOLY:
             if (you_worship(GOD_YREDELEMNUL))
