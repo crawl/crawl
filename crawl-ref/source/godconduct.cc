@@ -287,7 +287,17 @@ static peeve_map divine_peeves[] =
     // GOD_SIF_MUNA,
     peeve_map(),
     // GOD_TROG,
-    peeve_map(),
+    {
+        { DID_SPELL_MEMORISE, {
+            10, 10
+        } },
+        { DID_SPELL_CASTING, {
+            1, 5,
+        } },
+        { DID_SPELL_PRACTISE, {
+            1, 0, NULL, " doesn't appreciate your training magic!"
+        } },
+    },
     // GOD_NEMELEX_XOBEH,
     peeve_map(),
     // GOD_ELYVILON,
@@ -820,43 +830,11 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE:
         case DID_ARTIFICIAL_KILLED_BY_SERVANT:
         case DID_KILL_FIERY:
+        case DID_SPELL_MEMORISE:
+        case DID_SPELL_CASTING:
             break; // handled in data code
 
 
-        case DID_SPELL_MEMORISE:
-            if (you_worship(GOD_TROG))
-            {
-                penance = level * 10;
-                piety_change = -penance;
-            }
-            break;
-
-        case DID_SPELL_CASTING:
-            if (you_worship(GOD_TROG))
-            {
-                piety_change = -level;
-                penance = level * 5;
-            }
-            break;
-
-        case DID_SPELL_PRACTISE:
-            // Like CAST, but for skill advancement.
-            // Level is number of skill points gained...
-            // typically 10 * exercise, but may be more/less if the
-            // skill is at 0 (INT adjustment), or if the PC's pool is
-            // low and makes change.
-            if (you_worship(GOD_SIF_MUNA))
-            {
-                piety_change = level;
-                piety_denom = 40;
-            }
-            else if (you_worship(GOD_TROG))
-            {
-                simple_god_message(" doesn't appreciate your training magic!");
-                piety_change = -level;
-                piety_denom = 10;
-            }
-            break;
 
         case DID_DELIBERATE_MUTATING:
         case DID_CAUSE_GLOWING:
@@ -1029,6 +1007,14 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
                     penance = level - 5;
             }
             break;
+
+        case DID_SPELL_PRACTISE:
+            // XXX: migrate this to data somehow
+            if (you_worship(GOD_SIF_MUNA))
+            {
+                piety_change = level;
+                piety_denom = 4;
+            }
 
         case DID_SACRIFICE_LOVE:
         case DID_NOTHING:
