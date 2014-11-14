@@ -300,7 +300,9 @@ static peeve_map divine_peeves[] =
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
-    peeve_map(),
+    {
+        { DID_DESTROY_SPELLBOOK, { 1 } },
+    },
     // GOD_TROG,
     {
         { DID_SPELL_MEMORISE, {
@@ -344,6 +346,8 @@ static peeve_map divine_peeves[] =
     // GOD_BEOGH,
     {
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+        { DID_DESECRATE_ORCISH_REMAINS, { 1 } },
+        { DID_DESTROY_ORCISH_IDOL, { 1, 3 } },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_JIYVA,
@@ -852,6 +856,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_UNCLEAN:
         case DID_CHAOS:
         case DID_ATTACK_IN_SANCTUARY:
+        case DID_DESECRATE_ORCISH_REMAINS:
+        case DID_DESTROY_ORCISH_IDOL:
+        case DID_DESTROY_SPELLBOOK:
             break; // handled in data code
 
 
@@ -877,25 +884,13 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             piety_change = -level;
             break;
 
-        case DID_DESECRATE_ORCISH_REMAINS:
-            if (you_worship(GOD_BEOGH))
-                piety_change = -level;
-            break;
-
-        case DID_DESTROY_ORCISH_IDOL:
-            if (you_worship(GOD_BEOGH))
-            {
-                piety_change = -level;
-                penance = level * 3;
-            }
-            break;
-
         case DID_HASTY:
             if (you_worship(GOD_CHEIBRIADOS))
             {
                 if (!known)
                 {
-                    simple_god_message(" forgives your accidental hurry, just this once.");
+                    simple_god_message(" forgives your accidental hurry,"
+                                       " just this once.");
                     break;
                 }
                 simple_god_message(" thinks you should slow down.");
@@ -905,11 +900,19 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             }
             break;
 
-        case DID_DESTROY_SPELLBOOK:
-            if (you_worship(GOD_SIF_MUNA))
+        case DID_FIRE:
+            if (you_worship(GOD_DITHMENOS))
             {
+                if (!known)
+                {
+                    simple_god_message(" forgives your accidental"
+                                       " fire-starting, just this once.");
+                    break;
+                }
+                simple_god_message(" does not appreciate your starting fires!");
                 piety_change = -level;
-                penance = level * (known ? 2 : 1);
+                if (level > 5)
+                    penance = level - 5;
             }
             break;
 
@@ -952,22 +955,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
                 piety_change = piety_denom - 4;
                 piety_denom = max(piety_denom, 1);
                 piety_change = max(piety_change, 0);
-            }
-            break;
-
-        case DID_FIRE:
-            if (you_worship(GOD_DITHMENOS))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your accidental "
-                                       "fire-starting, just this once.");
-                    break;
-                }
-                simple_god_message(" does not appreciate your starting fires!");
-                piety_change = -level;
-                if (level > 5)
-                    penance = level - 5;
             }
             break;
 
