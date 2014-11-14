@@ -45,16 +45,185 @@ god_conduct_trigger::~god_conduct_trigger()
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
+
+/**
+ * Change piety & add penance in response to a conduct.
+ *
+ * @param piety_change      The change in piety (+ or -) the conduct caused.
+ * @param piety_denom       ???
+ * @param penance           Penance caused by the conduct.
+ * @param thing_done        The conduct in question. Used for debug info.
+ */
+static void _handle_piety_penance(int piety_change, int piety_denom,
+                                  int penance, conduct_type thing_done)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    const int old_piety = you.piety;
+#else
+    UNUSED(thing_done);
+#endif
+
+    if (piety_change > 0)
+        gain_piety(piety_change, piety_denom);
+    else
+        dock_piety(div_rand_round(-piety_change, piety_denom), penance);
+
+#ifdef DEBUG_DIAGNOSTICS
+    // don't announce exploration piety unless you actually got a boost
+    if ((piety_change || penance)
+        && thing_done != DID_EXPLORATION || old_piety != you.piety)
+    {
+        static const char *conducts[] =
+        {
+            "",
+            "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
+            "Attack Friend", "Friend Died", "Unchivalric Attack",
+            "Poison", "Kill Living", "Kill Undead",
+            "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
+            "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
+            "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
+            "Servant Kill Living", "Undead Slave Kill Undead",
+            "Servant Kill Undead", "Undead Slave Kill Demon",
+            "Servant Kill Demon", "Servant Kill Natural Unholy",
+            "Servant Kill Natural Evil", "Undead Slave Kill Holy",
+            "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
+            "Spell Practise",
+            "Drink Blood", "Cannibalism","Eat Souled Being",
+            "Deliberate Mutation", "Cause Glowing", "Use Unclean",
+            "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
+            "Kill Slime", "Kill Plant", "Servant Kill Plant",
+            "Was Hasty", "Corpse Violation",
+            "Souled Friend Died", "Servant Kill Unclean",
+            "Servant Kill Chaotic", "Attack In Sanctuary",
+            "Kill Artificial", "Undead Slave Kill Artificial",
+            "Servant Kill Artificial", "Destroy Spellbook",
+            "Exploration", "Desecrate Holy Remains", "Seen Monster",
+            "Fire", "Kill Fiery", "Sacrificed Love"
+        };
+
+        COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
+        dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
+             conducts[thing_done],
+             you.piety, piety_change, piety_denom,
+             you.penance[you.religion], penance);
+
+    }
+#endif
+
+}
+
+
+
+/// A definition of a god's response to a conduct being taken.
+struct conduct_response
+{
+    /// Gain or loss in piety for enacting this conduct; multiplied by
+    /// severity-level.
+    int piety_factor;
+    /// Not sure.
+    int piety_denom;
+    /// Penance for enacting this conduct; multiplied by severity-level.
+    int penance_factor;
+    /// Something your god says when taking this conduct. May be NULL.
+    const char *message;
+    /// Something your god says when you accidentally triggered the conduct.
+    /// Implies that unknowingly triggering the conduct is forgiven.
+    const char *forgiveness_message;
+    /// Nonstandard behavior triggered by the function. May be NULL.
+    void (*other_behavior)(int level, bool known, const monster* victim);
+};
+
+typedef map<conduct_type, conduct_response> conduct_map;
+
+/// a per-god map of conducts to that god's reaction to those conducts.
+static conduct_map divine_responses[] =
+{
+    // GOD_NO_GOD
+    conduct_map(),
+    // GOD_ZIN,
+    conduct_map(),
+    // GOD_SHINING_ONE,
+    conduct_map(),
+    // GOD_KIKUBAAQUDGHA,
+    conduct_map(),
+    // GOD_YREDELEMNUL,
+    conduct_map(),
+    // GOD_XOM,
+    conduct_map(),
+    // GOD_VEHUMET,
+    conduct_map(),
+    // GOD_OKAWARU,
+    conduct_map(),
+    // GOD_MAKHLEB,
+    conduct_map(),
+    // GOD_SIF_MUNA,
+    conduct_map(),
+    // GOD_TROG,
+    conduct_map(),
+    // GOD_NEMELEX_XOBEH,
+    conduct_map(),
+    // GOD_ELYVILON,
+    conduct_map(),
+    // GOD_LUGONU,
+    conduct_map(),
+    // GOD_BEOGH,
+    conduct_map(),
+    // GOD_JIYVA,
+    conduct_map(),
+    // GOD_FEDHAS,
+    conduct_map(),
+    // GOD_CHEIBRIADOS,
+    conduct_map(),
+    // GOD_ASHENZARI,
+    conduct_map(),
+    // GOD_DITHMENOS,
+    conduct_map(),
+    // GOD_GOZAG,
+    conduct_map(),
+    // GOD_QAZLAL,
+    conduct_map(),
+    // GOD_RU,
+    conduct_map(),
+};
+
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
 void did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monster* victim)
 {
+    COMPILE_CHECK(ARRAYSZ(divine_responses) == NUM_GODS);
+
     ASSERT(!crawl_state.game_is_arena());
 
     if (!you_worship(GOD_NO_GOD) && !you_worship(GOD_XOM)
         && (!you_worship(GOD_LUGONU) || !player_in_branch(BRANCH_ABYSS)))
     {
+        // handle new-style conduct responses
+        // TODO: move everything into here
+        if (divine_responses[you.religion].count(thing_done))
+        {
+            const conduct_response divine_response =
+                divine_responses[you.religion][thing_done];
+            if (!known && divine_response.forgiveness_message)
+            {
+                simple_god_message(divine_response.forgiveness_message);
+                return;
+            }
+
+            if (divine_response.message)
+                simple_god_message(divine_response.message);
+
+            _handle_piety_penance(divine_response.piety_factor * level,
+                                  divine_response.piety_denom,
+                                  divine_response.penance_factor * level,
+                                  thing_done);
+
+            if (divine_response.other_behavior)
+                divine_response.other_behavior(level, known, victim);
+
+            return;
+        }
+
         int piety_change = 0;
         int piety_denom = 1;
         int penance = 0;
@@ -997,56 +1166,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
             }
         }
 
-#ifdef DEBUG_DIAGNOSTICS
-        int old_piety = you.piety;
-#endif
-
-        if (piety_change > 0)
-            gain_piety(piety_change, piety_denom);
-        else
-            dock_piety(div_rand_round(-piety_change, piety_denom), penance);
-
-#ifdef DEBUG_DIAGNOSTICS
-        // don't announce exploration piety unless you actually got a boost
-        if ((piety_change || penance)
-            && thing_done != DID_EXPLORATION || old_piety != you.piety)
-        {
-            static const char *conducts[] =
-            {
-                "",
-                "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
-                "Attack Friend", "Friend Died", "Unchivalric Attack",
-                "Poison", "Kill Living", "Kill Undead",
-                "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
-                "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
-                "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
-                "Servant Kill Living", "Undead Slave Kill Undead",
-                "Servant Kill Undead", "Undead Slave Kill Demon",
-                "Servant Kill Demon", "Servant Kill Natural Unholy",
-                "Servant Kill Natural Evil", "Undead Slave Kill Holy",
-                "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
-                "Spell Practise",
-                "Drink Blood", "Cannibalism","Eat Souled Being",
-                "Deliberate Mutation", "Cause Glowing", "Use Unclean",
-                "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
-                "Kill Slime", "Kill Plant", "Servant Kill Plant",
-                "Was Hasty", "Corpse Violation",
-                "Souled Friend Died", "Servant Kill Unclean",
-                "Servant Kill Chaotic", "Attack In Sanctuary",
-                "Kill Artificial", "Undead Slave Kill Artificial",
-                "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration", "Desecrate Holy Remains", "Seen Monster",
-                "Fire", "Kill Fiery", "Sacrificed Love"
-            };
-
-            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
-            dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
-                 conducts[thing_done],
-                 you.piety, piety_change, piety_denom,
-                 you.penance[you.religion], penance);
-
-        }
-#endif
+        _handle_piety_penance(piety_change, piety_denom, penance, thing_done);
     }
 
     do_god_revenge(thing_done);
