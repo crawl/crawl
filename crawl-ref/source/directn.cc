@@ -3452,16 +3452,9 @@ string get_monster_equipment_desc(const monster_info& mi,
     else if (level == DESC_IDENTIFIED)
         return " " + mi.full_name(DESC_A);
 
-    if (!weap.empty())
-    {
-        if (level == DESC_FULL)
-            desc += ",";
-        desc += weap;
-    }
-
     // Print the rest of the equipment only for full descriptions.
     if (level == DESC_WEAPON)
-        return desc;
+        return desc + weap;
 
     item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
     item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
@@ -3497,79 +3490,66 @@ string get_monster_equipment_desc(const monster_info& mi,
     const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
     const bool mon_carry = mon_alt || mon_has_wand;
 
-    bool found_sth    = !weap.empty();
+    vector<string> item_descriptions;
+
+    if (!weap.empty())
+        item_descriptions.push_back(weap.substr(1)); // strip leading space
 
     if (mon_arm)
     {
-        if (found_sth)
-        {
-            const bool final = !mon_shd && !mon_rng && !mon_qvr && !mon_carry;
-            desc += final ? " and" : ",";
-        }
-        else
-            found_sth = true;
-
-        desc += " wearing ";
-        desc += mon_arm->name(DESC_A);
+        const string armour_desc = make_stringf("wearing %s",
+                                                mon_arm->name(DESC_A).c_str());
+        item_descriptions.push_back(armour_desc);
     }
 
     if (mon_shd)
     {
-        if (found_sth)
-            desc += (!mon_rng && !mon_qvr && !mon_carry) ? " and" : ",";
-        else
-            found_sth = true;
-
-        desc += " wearing ";
-        desc += mon_shd->name(DESC_A);
+        const string shield_desc = make_stringf("wearing %s",
+                                                mon_shd->name(DESC_A).c_str());
+        item_descriptions.push_back(shield_desc);
     }
 
     if (mon_rng)
     {
-        if (found_sth)
-            desc += (!mon_qvr && !mon_carry) ? " and" : ",";
-        else
-            found_sth = true;
-
-        desc += " wearing ";
-        desc += mon_rng->name(DESC_A);
+        const string rng_desc = make_stringf("wearing %s",
+                                             mon_rng->name(DESC_A).c_str());
+        item_descriptions.push_back(rng_desc);
     }
 
     if (mon_qvr)
     {
-        if (found_sth)
-            desc += !mon_carry ? " and" : ",";
-        else
-            found_sth = true;
-
-        desc += " quivering ";
-        desc += mon_qvr->name(DESC_A);
+        const string qvr_desc = make_stringf("wearing %s",
+                                             mon_qvr->name(DESC_A).c_str());
+        item_descriptions.push_back(qvr_desc);
     }
 
     if (mon_carry)
     {
-        if (found_sth)
-            desc += " and";
-
-        desc += " carrying ";
+        string carried_desc = "carrying ";
 
         if (mon_alt)
         {
-            desc += mon_alt->name(DESC_A);
+            carried_desc += mon_alt->name(DESC_A);
             if (mon_has_wand)
-                desc += " and ";
+                carried_desc += " and ";
         }
 
         if (mon_has_wand)
         {
             if (mi.props["wand_known"])
-                desc += mon_wnd->name(DESC_A);
+                carried_desc += mon_wnd->name(DESC_A);
             else
-                desc += "a wand";
+                carried_desc += "a wand";
         }
+
+        item_descriptions.push_back(carried_desc);
     }
 
-
+    const string item_description = comma_separated_line(
+                                                item_descriptions.begin(),
+                                                item_descriptions.end());
+    if (!item_description.empty())
+        desc += ", " + item_description;
     return desc;
 }
 
