@@ -36,10 +36,12 @@
 #include "misc.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-project.h"
 #include "mutation.h"
+#include "notes.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -2612,42 +2614,52 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
     };
 
-    const int merc = power_level + random2(3 * (power_level + 1));
-    ASSERT(merc < (int)ARRAYSZ(merctypes));
+    int merc;
+    monster *mon;
 
-    mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
-                 0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
-
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    // This is a bit of a hack to use give_monster_proper_name to feed
-    // the mgen_data, but it gets the job done.
-    monster tempmon;
-    tempmon.type = merctypes[merc];
-    if (give_monster_proper_name(&tempmon, false))
-        mg.mname = tempmon.mname;
-    else
-        mg.mname = make_name(random_int(), false);
-    // This is used for giving the merc better stuff in mon-gear.
-    mg.props["mercenary items"] = true;
-
-    monster *mon = create_monster(mg);
-
-    if (!mon)
+    while (1)
     {
-        mpr("You see a puff of smoke.");
-        return;
+        merc = power_level + random2(3 * (power_level + 1));
+        ASSERT(merc < (int)ARRAYSZ(merctypes));
+
+        mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
+                    0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        // This is a bit of a hack to use give_monster_proper_name to feed
+        // the mgen_data, but it gets the job done.
+        monster tempmon;
+        tempmon.type = merctypes[merc];
+        if (give_monster_proper_name(&tempmon, false))
+            mg.mname = tempmon.mname;
+        else
+            mg.mname = make_name(random_int(), false);
+        // This is used for giving the merc better stuff in mon-gear.
+        mg.props["mercenary items"] = true;
+
+        mon = create_monster(mg);
+
+        if (!mon)
+        {
+            mpr("You see a puff of smoke.");
+            return;
+        }
+
+        if (player_will_anger_monster(mon))
+        {
+            dprf("God %s doesn't like %s, retrying.",
+            god_name(you.religion).c_str(), mon->name(DESC_THE).c_str());
+            monster_die(mon, KILL_RESET, NON_MONSTER);
+            continue;
+        }
+        else
+            break;
     }
 
     mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
 
     redraw_screen(); // We want to see the monster while it's asking to be paid.
-
-    if (player_will_anger_monster(mon))
-    {
-        simple_monster_message(mon, " is repulsed!");
-        return;
-    }
 
     const int fee = fuzz_value(exper_value(mon), 15, 15);
     if (fee > you.gold)
@@ -2672,6 +2684,8 @@ bool recruit_mercenary(int mid)
     const string prompt = make_stringf("Pay %s fee of %d gold?",
                                        mon->name(DESC_ITS).c_str(), fee);
     bool paid = yesno(prompt.c_str(), false, 0);
+    const string message = make_stringf("Hired %s for %d gold.",
+                                        mon->full_name(DESC_A).c_str(), fee);
     if (crawl_state.seen_hups)
         return false;
 
@@ -2685,6 +2699,7 @@ bool recruit_mercenary(int mid)
     simple_monster_message(mon, " joins your ranks!");
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
+    take_note(Note(NOTE_MESSAGE, 0, 0, message.c_str()), true);
     you.del_gold(fee);
     return true;
 }

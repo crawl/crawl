@@ -2452,11 +2452,22 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         break;
 
     default:
-        return;
+        if (merc) //mercenaries always get something
+            break;
+        else
+            return;
     }
 
     if (merc)
-       level = MAKE_GOOD_ITEM;
+    {
+        level = MAKE_GOOD_ITEM;
+
+        if (item.base_type == OBJ_UNASSIGNED)
+        {
+            item.base_type = OBJ_ARMOUR;
+            item.sub_type = mons_is_draconian(mon->type) ? ARM_CLOAK : ARM_ROBE;
+        }
+    }
 
     // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
