@@ -961,7 +961,7 @@ static void _destroy_mimic_feature(const coord_def &pos)
 #endif
 }
 
-void discover_mimic(const coord_def& pos, bool wake)
+void discover_mimic(const coord_def& pos)
 {
     item_def* item = item_mimic_at(pos);
     const bool feature_mimic = !item && feature_mimic_at(pos);
