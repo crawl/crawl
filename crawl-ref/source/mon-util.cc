@@ -2177,7 +2177,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_FIGHTER:
-    case MONS_DEEP_ELF_KNIGHT:
         books.push_back(MST_ORC_WIZARD_I);
         books.push_back(MST_ORC_WIZARD_II);
         books.push_back(MST_ORC_WIZARD_III);
@@ -2239,6 +2238,12 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_GREATER_MUMMY_II);
         books.push_back(MST_GREATER_MUMMY_III);
         books.push_back(MST_GREATER_MUMMY_IV);
+        break;
+
+    case MONS_DEEP_ELF_KNIGHT:
+        books.push_back(MST_DEEP_ELF_KNIGHT_I);
+        books.push_back(MST_DEEP_ELF_KNIGHT_II);
+        books.push_back(MST_DEEP_ELF_KNIGHT_III);
         break;
 
     default:
