@@ -137,11 +137,13 @@ struct conduct_response
 
 /// Good gods' reaction to drinking blood.
 static const conduct_response GOOD_BLOOD_RESPONSE = {
-    -2, 1, 1, " forgives your inadvertent blood-drinking,"
-    " just this once."
+    -2, 1, 1, " forgives your inadvertent blood-drinking, just this once."
 };
 
-
+/// Good gods', and Beogh's, response to cannibalism.
+static const conduct_response RUDE_CANNIBALISM_RESPONSE = {
+    -5, 1, 3, NULL, " expects more respect for your departed relatives."
+};
 
 typedef map<conduct_type, conduct_response> conduct_map;
 
@@ -153,10 +155,12 @@ static conduct_map divine_responses[] =
     // GOD_ZIN,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
     },
     // GOD_SHINING_ONE,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
     },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
@@ -179,15 +183,22 @@ static conduct_map divine_responses[] =
     // GOD_ELYVILON,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
     },
     // GOD_LUGONU,
     conduct_map(),
     // GOD_BEOGH,
-    conduct_map(),
+    {
+        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+    },
     // GOD_JIYVA,
     conduct_map(),
     // GOD_FEDHAS,
-    conduct_map(),
+    {
+        { DID_CORPSE_VIOLATION, {
+            -1, 1, 1, " forgives your inadvertent necromancy, just this once."
+        } },
+    },
     // GOD_CHEIBRIADOS,
     conduct_map(),
     // GOD_ASHENZARI,
@@ -251,40 +262,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     switch (thing_done)
     {
         case DID_DRINK_BLOOD:
-            break; // handled in data code
-
         case DID_CANNIBALISM:
-            switch (you.religion)
-        {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-            case GOD_BEOGH:
-                simple_god_message(" expects more respect for your departed"
-                                   " relatives.");
-                piety_change = -level * 5;
-                penance = level * 3;
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_CORPSE_VIOLATION:
-            if (you_worship(GOD_FEDHAS))
-            {
-                if (known)
-                {
-                    piety_change = -level;
-                    penance = level;
-                }
-                else
-                {
-                    simple_god_message(" forgives your inadvertent necromancy, "
-                                       "just this once.");
-                }
-            }
-            break;
+            break; // handled in data code
 
         case DID_DESECRATE_HOLY_REMAINS:
         case DID_NECROMANCY:
