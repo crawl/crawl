@@ -54,7 +54,7 @@ const char *duration_name(duration_type dur)
 
 bool duration_dispellable(duration_type dur)
 {
-    return _lookup_duration(dur)->dispellable;
+    return _lookup_duration(dur)->duration_has_flag(D_DISPELLABLE);
 }
 
 static void _reset_status_info(status_info* inf)
@@ -126,7 +126,7 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info* inf)
     inf->light_text   = ddef->light_text;
     inf->short_text   = ddef->short_text;
     inf->long_text    = ddef->long_text;
-    if (ddef->expire)
+    if (ddef->duration_has_flag(D_EXPIRES))
     {
         inf->light_colour = _dur_colour(inf->light_colour, dur_expiring(dur));
         _mark_expiring(inf, dur_expiring(dur));
