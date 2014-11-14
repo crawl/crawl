@@ -242,6 +242,21 @@ static peeve_map divine_peeves[] =
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_IN_SANCTUARY, {
+            1, 1
+        } },
+        { DID_UNCLEAN, {
+            1, 1, " forgives your inadvertent unclean act, just this once."
+        } },
+        { DID_CHAOS, {
+            1, 1, " forgives your inadvertent chaotic act, just this once."
+        } },
+        { DID_DELIBERATE_MUTATING, {
+            1, 0, " forgives your inadvertent chaotic act, just this once."
+        } },
+        { DID_DESECRATE_SOULED_BEING, {
+            5, 3
+        } },
     },
     // GOD_SHINING_ONE,
     {
@@ -832,86 +847,34 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_FIERY:
         case DID_SPELL_MEMORISE:
         case DID_SPELL_CASTING:
+        case DID_DELIBERATE_MUTATING:
+        case DID_DESECRATE_SOULED_BEING:
+        case DID_UNCLEAN:
+        case DID_CHAOS:
+        case DID_ATTACK_IN_SANCTUARY:
             break; // handled in data code
 
 
 
-        case DID_DELIBERATE_MUTATING:
         case DID_CAUSE_GLOWING:
             if (!you_worship(GOD_ZIN))
                 break;
 
-            if (!known && thing_done != DID_CAUSE_GLOWING)
+            static int last_glowing_lecture = -1;
+            if (!level)
             {
-                simple_god_message(" forgives your inadvertent chaotic "
-                                   "act, just this once.");
-                break;
+                simple_god_message(" is not enthusiastic about the "
+                                   "mutagenic glow surrounding you.");
             }
-
-            if (thing_done == DID_CAUSE_GLOWING)
+            else if (last_glowing_lecture != you.num_turns)
             {
-                static int last_glowing_lecture = -1;
-                if (!level)
-                {
-                    simple_god_message(" is not enthusiastic about the "
-                                       "mutagenic glow surrounding you.");
-                }
-                else if (last_glowing_lecture != you.num_turns)
-                {
-                    last_glowing_lecture = you.num_turns;
-                    // Increase contamination within yellow glow.
-                    simple_god_message(" does not appreciate the extra "
-                                       "mutagenic glow surrounding you!");
-                }
+                last_glowing_lecture = you.num_turns;
+                // Increase contamination within yellow glow.
+                simple_god_message(" does not appreciate the extra "
+                                   "mutagenic glow surrounding you!");
             }
 
             piety_change = -level;
-            break;
-
-        case DID_DESECRATE_SOULED_BEING:
-            if (!you_worship(GOD_ZIN))
-                break;
-
-            simple_god_message(" expects more respect for this departed soul.");
-            piety_change = -level * 5;
-            penance = level * 3;
-            break;
-
-        case DID_UNCLEAN:
-            if (!you_worship(GOD_ZIN))
-                break;
-
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent unclean act,"
-                                   " just this once.");
-                break;
-            }
-
-            piety_change = -level;
-            penance      = level;
-            break;
-
-        case DID_CHAOS:
-            if (you_worship(GOD_ZIN))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent chaotic "
-                                       "act, just this once.");
-                    break;
-                }
-                piety_change = -level;
-                penance      = level;
-            }
-            break;
-
-        case DID_ATTACK_IN_SANCTUARY:
-            if (you_worship(GOD_ZIN))
-            {
-                piety_change = -level;
-                penance      = level;
-            }
             break;
 
         case DID_DESECRATE_ORCISH_REMAINS:
