@@ -569,6 +569,18 @@ static like_map divine_likes[] =
         { DID_DEMON_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
         { DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
         { DID_NATURAL_EVIL_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
+        { DID_SEE_MONSTER, {
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                // don't give piety for seeing things we get piety for killing.
+                if (victim && (victim->is_evil() || victim->is_unholy()))
+                    return;
+
+                const int level = denom; // also = piety
+                denom = level / 2 + 6 - you.experience_level / 4;
+                piety = denom - 4;
+            }
+        } },
     },
     // GOD_KIKUBAAQUDGHA,
     {
@@ -620,7 +632,16 @@ static like_map divine_likes[] =
         { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_SIF_MUNA,
-    like_map(),
+    {
+        { DID_SPELL_PRACTISE, {
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                UNUSED(victim);
+                // piety = denom = level at the start of the function
+                denom = 4;
+            }
+        } },
+    },
     // GOD_TROG,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
@@ -634,7 +655,16 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_NEMELEX_XOBEH,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                UNUSED(victim);
+                // piety = denom = level at the start of the function
+                piety = 14;
+            }
+        } },
+    },
     // GOD_ELYVILON,
     like_map(),
     // GOD_LUGONU,
@@ -684,7 +714,20 @@ static like_map divine_likes[] =
         } }
     },
     // GOD_ASHENZARI,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                UNUSED(victim);
+
+                const int level = denom; // also = piety
+                const int base_gain = 8; // base gain per dungeon level
+                // levels: x1, x1.25, x1.5, x1.75, x2
+                piety = base_gain + base_gain * you.bondage_level / 4;
+                denom = level;
+            }
+        } },
+    },
     // GOD_DITHMENOS,
     {
         { DID_KILL_LIVING, _on_kill(MH_NATURAL, false, _dithmenos_kill) },
@@ -709,7 +752,25 @@ static like_map divine_likes[] =
         { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_RU,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            {
+                piety = 0;
+                denom = 1;
+                UNUSED(victim);
+
+                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
+                ASSERT(you.props.exists("available_sacrifices"));
+
+                const int available_sacrifices =
+                    you.props["available_sacrifices"].get_vector().size();
+
+                if (!available_sacrifices && one_chance_in(100))
+                    you.props["ru_progress_to_next_sacrifice"].get_int()++;
+            }
+        } },
+    },
 };
 
 /**
@@ -945,6 +1006,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_DESTROY_SPELLBOOK:
         case DID_FIRE:
         case DID_HASTY:
+        case DID_EXPLORATION:
+        case DID_SEE_MONSTER:
+        case DID_SPELL_PRACTISE:
             break; // handled in data code
 
 
@@ -969,56 +1033,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
             piety_change = -level;
             break;
-
-        case DID_EXPLORATION:
-            if (you_worship(GOD_ASHENZARI))
-            {
-                const int base_gain = 8; // base gain per dungeon level
-                // levels: x1, x1.25, x1.5, x1.75, x2
-                piety_change = base_gain + base_gain * you.bondage_level / 4;
-                piety_denom = level;
-            }
-            else if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                piety_change = 14;
-                piety_denom = level;
-            }
-            else if (you_worship(GOD_RU))
-            {
-                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists("available_sacrifices"));
-                int sacrifice_count =
-                you.props["available_sacrifices"].get_vector().size();
-                if (sacrifice_count == 0 && one_chance_in(100))
-                {
-                    int current_progress =
-                    you.props["ru_progress_to_next_sacrifice"]
-                    .get_int();
-                    you.props["ru_progress_to_next_sacrifice"] =
-                    current_progress + 1;
-                }
-            }
-            break;
-
-        case DID_SEE_MONSTER:
-            if (you_worship(GOD_SHINING_ONE))
-            {
-                if (victim && (victim->is_evil() || victim->is_unholy()))
-                    break;
-                piety_denom = level / 2 + 6 - you.experience_level / 4;
-                piety_change = piety_denom - 4;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-            }
-            break;
-
-        case DID_SPELL_PRACTISE:
-            // XXX: migrate this to data somehow
-            if (you_worship(GOD_SIF_MUNA))
-            {
-                piety_change = level;
-                piety_denom = 4;
-            }
 
         case DID_SACRIFICE_LOVE:
         case DID_NOTHING:
