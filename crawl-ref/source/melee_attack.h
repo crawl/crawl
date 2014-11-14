@@ -29,17 +29,15 @@ enum unarmed_attack_type
 class AuxAttackType
 {
 public:
-    AuxAttackType(int _damage, int _noise_factor, string _name) :
-    damage(_damage), noise_factor(_noise_factor), name(_name) { };
+    AuxAttackType(int _damage, string _name) :
+    damage(_damage), name(_name) { };
 public:
     virtual int get_damage() const { return damage; };
     virtual int get_brand() const { return SPWPN_NORMAL; };
-    virtual int get_noise_factor() const { return noise_factor; };
     virtual string get_name() const { return name; };
     virtual string get_verb() const { return get_name(); };
 protected:
     const int damage;
-    const int noise_factor;
     const string name;
 };
 
@@ -118,7 +116,6 @@ private:
     bool attack_warded_off();
 
     /* Output methods */
-    void adjust_noise();
     void set_attack_verb();
     void announce_hit();
 

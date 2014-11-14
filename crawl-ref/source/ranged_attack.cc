@@ -133,8 +133,6 @@ bool ranged_attack::attack()
 
     // TODO: sanctuary
 
-    // TODO: adjust_noise
-
     if (should_alert_defender)
         alert_defender();
 
@@ -850,10 +848,6 @@ int ranged_attack::player_stab_tier()
     }
 
     return 0;
-}
-
-void ranged_attack::adjust_noise()
-{
 }
 
 void ranged_attack::set_attack_verb()

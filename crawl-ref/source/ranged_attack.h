@@ -49,7 +49,6 @@ private:
     int  player_stab_tier();
 
     /* Output */
-    void adjust_noise();
     void set_attack_verb();
     void announce_hit();
 

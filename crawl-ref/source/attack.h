@@ -45,8 +45,6 @@ public:
 
     bool    apply_bleeding;
 
-    int     noise_factor;
-
     // Fetched/Calculated from the attacker, stored to save execution time
     int             ev_margin;
 
@@ -172,7 +170,6 @@ protected:
     string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
-    virtual void adjust_noise() = 0;
     virtual void set_attack_verb() = 0;
     virtual void announce_hit() = 0;
 

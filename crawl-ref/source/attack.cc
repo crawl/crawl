@@ -50,7 +50,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), apply_bleeding(false),
-      noise_factor(0), ev_margin(0), weapon(NULL),
+      ev_margin(0), weapon(NULL),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
       shield(NULL), art_props(0), unrand_entry(NULL),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
