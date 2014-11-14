@@ -1851,12 +1851,7 @@ bool attack::apply_damage_brand(const char *what)
         }
 
         if (responsible->is_player())
-        {
-            // If your god objects to using chaos, then it makes the
-            // brand obvious.
-            if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
-                obvious_effect = true;
-        }
+            did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known);
     }
 
     if (!obvious_effect)
