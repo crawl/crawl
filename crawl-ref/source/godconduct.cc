@@ -146,7 +146,7 @@ struct dislike_response
     const char *message;
     /// A function that checks the victim of the conduct to see if the conduct
     /// should actually, really apply to it. If NULL, all victims are valid.
-    bool (*invalid_victim)(const monster* victim);
+    bool (*valid_victim)(const monster* victim);
 };
 
 
@@ -359,15 +359,39 @@ static peeve_map divine_peeves[] =
 /// A definition of the way in which a god likes a conduct being taken.
 struct like_response
 {
-    /// Gain in piety for triggering this conduct; added to 'level'.
+    /// Gain in piety for triggering this conduct; added to calculated denom.
     int piety_bonus;
     /// Divider for piety gained by this conduct; added to 'level'.
     int piety_denom_bonus;
-    /// Degree to which your XL decreases piety gained.
-    int xl_factor;
+    /// Degree to which your XL modifies piety gained.
+    int xl_denom;
     /// Something your god says when you trigger this conduct. May be NULL.
     const char *message;
+    /// A function that checks the victim of the conduct to see if the conduct
+    /// should actually, really apply to it. If NULL, all victims are valid.
+    bool (*valid_victim)(const monster* victim);
 };
+
+/**
+ * Will your god give you piety for killing the given monster, assuming that
+ * its death triggers a conduct that the god sometimes likes?
+ */
+static bool _god_likes_killing(const monster* victim)
+{
+    if (you_worship(GOD_DITHMENOS)
+        && mons_class_flag(victim->type, M_SHADOW))
+    {
+        return false;
+    }
+
+    return !god_hates_attacking_friend(you.religion, victim);
+}
+
+/// Response for gods that like killing the living.
+static const like_response KILL_LIVING_RESPONSE = {
+    -6, 18, 2, " accepts your kill.", _god_likes_killing
+};
+
 
 typedef map<conduct_type, like_response> like_map;
 
@@ -381,29 +405,46 @@ static like_map divine_likes[] =
     // GOD_SHINING_ONE,
     like_map(),
     // GOD_KIKUBAAQUDGHA,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_YREDELEMNUL,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_OKAWARU,
     like_map(),
     // GOD_MAKHLEB,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_SIF_MUNA,
     like_map(),
     // GOD_TROG,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_NEMELEX_XOBEH,
     like_map(),
     // GOD_ELYVILON,
     like_map(),
     // GOD_LUGONU,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_BANISH, {
+            -6, 18, 2, " claims a new guest."
+        } },
+    },
     // GOD_BEOGH,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_JIYVA,
     like_map(),
     // GOD_FEDHAS,
@@ -413,11 +454,15 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     like_map(),
     // GOD_DITHMENOS,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_GOZAG,
     like_map(),
     // GOD_QAZLAL,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+    },
     // GOD_RU,
     like_map(),
 };
@@ -443,7 +488,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
-        if (peeve.invalid_victim && !peeve.invalid_victim(victim))
+        if (peeve.valid_victim && !peeve.valid_victim(victim))
         {
             dprf("invalid victim for %s", conducts[thing_done]);
             return;
@@ -482,14 +527,24 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         dprf("checking like data for %s", conducts[thing_done]);
         const like_response like = divine_likes[you.religion][thing_done];
 
+        // if the conduct filters on affected monsters, & the relevant monster
+        // isn't valid, don't trigger the conduct's consequences.
+        if (like.valid_victim && !like.valid_victim(victim))
+        {
+            dprf("invalid victim for %s", conducts[thing_done]);
+            return;
+        }
+
         god_acting gdact;
 
         if (like.message)
             simple_god_message(like.message);
 
+        // this is all very strange, but replicates legacy behavior.
         const int denom = like.piety_denom_bonus + level
-                          + like.xl_factor * you.get_experience_level();
-        _handle_piety_penance(like.piety_bonus + level, denom, 0, thing_done);
+                          - you.get_experience_level() / like.xl_denom;
+        const int gain = denom + like.piety_bonus;
+        _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
         return;
     }
 
@@ -523,46 +578,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_ATTACK_FRIEND:
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:
-            break; // handled in data code
-
         case DID_BANISH:
-            if (!you_worship(GOD_LUGONU))
-                break;
         case DID_KILL_LIVING:
-            switch (you.religion)
-        {
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_YREDELEMNUL:
-            case GOD_VEHUMET:
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_DITHMENOS:
-            case GOD_QAZLAL:
-                if (you_worship(GOD_DITHMENOS)
-                    && mons_class_flag(victim->type, M_SHADOW))
-                {
-                    break;
-                }
-
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                if (thing_done == DID_BANISH)
-                    simple_god_message(" claims a new guest.");
-                else
-                    simple_god_message(" accepts your kill.");
-                piety_denom = level + 18 - you.experience_level / 2;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-
-            default:
-                break;
-        }
-            break;
+            break; // handled in data code
 
         case DID_KILL_UNDEAD:
             switch (you.religion)
