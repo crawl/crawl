@@ -726,7 +726,7 @@ CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w
 CFWARN   += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
-CFOTHERS_L = -std=c++0x $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
+CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
@@ -1231,8 +1231,8 @@ ifdef NEED_REBUILD
 endif
 
 .android-cflags: .cflags
-	@echo -std=c++11 $(CXXFLAGS_L) >.android-cxxflags
-	@echo $(CFLAGS_L) >.android-cflags
+	@echo -std=c++11 $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
+	@echo $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cflags
 
 .PHONY: .force-cflags
 
@@ -1491,7 +1491,7 @@ ifdef PCH
 %.gch: % .cflags $(CONTRIB_LIBS)
 # This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
 # system headers.
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -MD -c $< -o $@
+	$(QUIET_PCH)$(CXX) -std=c++11 $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -1516,9 +1516,9 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
 %.o: %.cc %.d .cflags $(CC_DEP) | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM -std=c++11 $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CXX) -std=c++11 $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 ifndef NO_INLINE_DEPGEN
 	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
@@ -1527,7 +1527,7 @@ icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(ALL_CFLAGS)
+	${QUIET_GEN}util/configure "$(CXX)" -std=c++11 $(ALL_CFLAGS)
 
 #
 # Contribs
