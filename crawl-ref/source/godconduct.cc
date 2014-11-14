@@ -147,6 +147,8 @@ struct dislike_response
     /// A function that checks the victim of the conduct to see if the conduct
     /// should actually, really apply to it. If NULL, all victims are valid.
     bool (*valid_victim)(const monster* victim);
+    /// A flat decrease to penance, after penance_factor is applied.
+    int penance_offset;
 };
 
 
@@ -381,11 +383,21 @@ static peeve_map divine_peeves[] =
         { DID_SOULED_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
     },
     // GOD_CHEIBRIADOS,
-    peeve_map(),
+    {
+        { DID_HASTY, {
+            1, 1, " forgives your accidental hurry, just this once.",
+            " thinks you should slow down.", NULL, -5
+        } },
+    },
     // GOD_ASHENZARI,
     peeve_map(),
     // GOD_DITHMENOS,
-    peeve_map(),
+    {
+        { DID_FIRE, {
+            1, 1, " forgives your accidental fire-starting, just this once.",
+            " does not appreciate your starting fires!", NULL, -5
+        } },
+    },
     // GOD_GOZAG,
     peeve_map(),
     // GOD_QAZLAL,
@@ -745,9 +757,10 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         dprf("applying penance beam");
         // ...and piety/penance.
-        _handle_piety_penance(-peeve.piety_factor * level, 1,
-                              peeve.penance_factor * level,
-                              thing_done);
+        const int piety_loss = max(0, peeve.piety_factor * level);
+        const int penance = max(0, peeve.penance_factor * level
+                                   + peeve.penance_offset);
+        _handle_piety_penance(-piety_loss, 1, penance, thing_done);
 
         return;
     }
@@ -853,6 +866,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_DESECRATE_ORCISH_REMAINS:
         case DID_DESTROY_ORCISH_IDOL:
         case DID_DESTROY_SPELLBOOK:
+        case DID_FIRE:
+        case DID_HASTY:
             break; // handled in data code
 
 
@@ -876,38 +891,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             }
 
             piety_change = -level;
-            break;
-
-        case DID_HASTY:
-            if (you_worship(GOD_CHEIBRIADOS))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your accidental hurry,"
-                                       " just this once.");
-                    break;
-                }
-                simple_god_message(" thinks you should slow down.");
-                piety_change = -level;
-                if (level > 5)
-                    penance = level - 5;
-            }
-            break;
-
-        case DID_FIRE:
-            if (you_worship(GOD_DITHMENOS))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your accidental"
-                                       " fire-starting, just this once.");
-                    break;
-                }
-                simple_god_message(" does not appreciate your starting fires!");
-                piety_change = -level;
-                if (level > 5)
-                    penance = level - 5;
-            }
             break;
 
         case DID_EXPLORATION:
