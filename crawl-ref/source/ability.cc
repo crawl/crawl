@@ -86,11 +86,11 @@ enum ability_flag_type
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
     ABFLAG_VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
-    ABFLAG_HEX_MISCAST    = 0x00000800, // severity 3 enchantment miscast
-    ABFLAG_TLOC_MISCAST   = 0x00001000, // severity 3 translocation miscast
+                          //0x00000800,
+                          //0x00001000,
     ABFLAG_NECRO_MISCAST_MINOR = 0x00002000, // severity 2 necro miscast
-    ABFLAG_NECRO_MISCAST  = 0x00004000, // severity 3 necro miscast
-    ABFLAG_TRMT_MISCAST   = 0x00008000, // severity 3 transmutation miscast
+                          //0x00004000,
+                          //0x00008000,
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
@@ -3246,29 +3246,9 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
         you.redraw_experience = true;
     }
 
-    if (abil.flags & ABFLAG_HEX_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_HEXES, 10, 90,
-                      "power out of control", NH_DEFAULT);
-    }
-    if (abil.flags & ABFLAG_NECRO_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 10, 90,
-                      "power out of control");
-    }
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
         MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 5, 90,
-                      "power out of control");
-    }
-    if (abil.flags & ABFLAG_TLOC_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90,
-                      "power out of control");
-    }
-    if (abil.flags & ABFLAG_TRMT_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90,
                       "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
