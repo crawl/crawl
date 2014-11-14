@@ -176,6 +176,11 @@ static const dislike_response GOOD_ATTACK_HOLY_RESPONSE = {
     1, 1, NULL, NULL, _attacking_holy_matters
 };
 
+/// Good gods' response to the player killing holy creatures.
+static const dislike_response GOOD_KILL_HOLY_RESPONSE = {
+    3, 3, NULL, NULL, _attacking_holy_matters
+};
+
 /// TSO's response to the player stabbing or poisoning monsters.
 static const dislike_response TSO_UNCHIVALRIC_RESPONSE = {
     1, 2, " forgives your inadvertent dishonourable attack, just"
@@ -231,6 +236,8 @@ static peeve_map divine_peeves[] =
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
@@ -243,6 +250,8 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_HOLY, {
             1, 2, NULL, NULL, _attacking_holy_matters
         } },
+        { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, {
             1, 2, NULL, " expects more respect for holy creatures!"
         } },
@@ -286,6 +295,8 @@ static peeve_map divine_peeves[] =
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+        { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
@@ -402,6 +413,23 @@ static const like_response KILL_DEMON_RESPONSE = {
     -4, 18, 2, " accepts your kill.", _god_likes_killing
 };
 
+/// Response for non-good gods that like killing (?) holies.
+static const like_response KILL_HOLY_RESPONSE = {
+    -3, 18, 0, " accepts your kill.", _god_likes_killing
+};
+// Note that holy deaths are special - they're always noticed...
+// If you or any friendly kills one, you'll get the credit/blame.
+
+/// Response for gods that like your undead slaves killing holies.
+static const like_response UNDEAD_KILL_HOLY_RESPONSE = {
+    -3, 18, 0, " accepts your slave's kill.", _god_likes_killing
+};
+
+/// Response for gods that like your servants killing holies.
+static const like_response SERVANT_KILL_HOLY_RESPONSE = {
+    -3, 18, 0, " accepts your collateral kill.", _god_likes_killing
+};
+
 
 typedef map<conduct_type, like_response> like_map;
 
@@ -438,10 +466,14 @@ static like_map divine_likes[] =
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
     },
     // GOD_YREDELEMNUL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
     },
     // GOD_XOM,
     like_map(),
@@ -450,6 +482,7 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
     // GOD_OKAWARU,
     like_map(),
@@ -458,6 +491,9 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
     },
     // GOD_SIF_MUNA,
     like_map(),
@@ -465,6 +501,8 @@ static like_map divine_likes[] =
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
         { DID_KILL_WIZARD, {
             -6, 10, 0, " appreciates your killing of a magic user.",
             _god_likes_killing
@@ -479,6 +517,9 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
         { DID_BANISH, {
             -6, 18, 2, " claims a new guest."
         } },
@@ -488,6 +529,9 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_KILL_PRIEST, {
             -6, 10, 0, " appreciates your killing of a heretic priest.",
             _god_likes_killing
@@ -510,6 +554,7 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
     // GOD_GOZAG,
     like_map(),
@@ -518,23 +563,21 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
     },
     // GOD_RU,
     like_map(),
 };
 
 /**
- * What multiplier to 'base' piety gains do you
+ * What piety multiplier does chei give for killing a given monster?
  *
- * This is currently a Chei thing.
- *
- * @param
+ * @param victim        The monster in question.
+ * @return              A multiplier to piety gained from killing the monster.
  */
-static int _piety_mult(conduct_type thing_done, const monster* victim)
+static int _chei_speed_piety_mult(const monster* victim)
 {
-    if (thing_done != DID_KILL_FAST)
-        return 1;
-
     const int speed_delta =
         cheibriados_monster_player_speed_delta(victim);
     dprf("Chei DID_KILL_FAST: %s speed delta: %d",
@@ -549,6 +592,37 @@ static int _piety_mult(conduct_type thing_done, const monster* victim)
 
     simple_god_message(" appreciates the change of pace.");
     return 1;
+}
+
+/**
+ * What multiplier to 'base' piety gains do you get for performing a given
+ * conduct, over that expressed in the data tables?
+ *
+ * Only affects gains.
+ *
+ * Currently for weird yred/chei special cases. Possibly should be pulled out
+ * into a function in the table.
+ *
+ * @param thing_done    The conduct.
+ * @param victim        The victim of the conduct. Poor thing...
+ * @return              A multiplier to be applied to piety gains.
+ */
+static int _piety_mult(conduct_type thing_done, const monster* victim)
+{
+    switch (thing_done)
+    {
+        case DID_KILL_FAST:
+            // assumes only chei offers this conduct
+            return _chei_speed_piety_mult(victim);
+        case DID_KILL_HOLY:
+            if (!you_worship(GOD_YREDELEMNUL))
+                return 1;
+
+            simple_god_message(" appreciates your killing of a holy being.");
+            return 2;
+        default:
+            return 1;
+    }
 }
 
 
@@ -626,10 +700,13 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             simple_god_message(like.message);
 
         // this is all very strange, but replicates legacy behavior.
-        const int denom = like.piety_denom_bonus + level
-                          - you.get_experience_level() / like.xl_denom;
-        const bool gain_mult = _piety_mult(thing_done, victim);
+        int denom = like.piety_denom_bonus + level;
+        if (like.xl_denom)
+            denom -= you.get_experience_level() / like.xl_denom;
+
+        const int gain_mult = _piety_mult(thing_done, victim);
         const int gain = (denom + like.piety_bonus) * gain_mult;
+
         _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
 
         return;
@@ -676,128 +753,10 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_PRIEST:
         case DID_KILL_WIZARD:
         case DID_KILL_FAST:
-            break; // handled in data code
-
-        case DID_KILL_ARTIFICIAL:
-            if (you_worship(GOD_YREDELEMNUL)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                simple_god_message(" accepts your kill.");
-                piety_denom = level + 18;
-                piety_change = piety_denom - 3;
-            }
-            break;
-
-            // Note that holy deaths are special, they are always noticed...
-            // If you or any friendly kills one, you'll get the credit or
-            // the blame.
         case DID_KILL_HOLY:
-            switch (you.religion)
-        {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (victim
-                    && !testbits(victim->flags, MF_NO_REWARD)
-                    && !testbits(victim->flags, MF_WAS_NEUTRAL))
-                {
-                    break;
-                }
-
-                penance = level * 3;
-                piety_change = -level * 3;
-                break;
-
-            case GOD_YREDELEMNUL:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_TROG:
-            case GOD_VEHUMET:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_DITHMENOS:
-            case GOD_QAZLAL:
-                if (you_worship(GOD_DITHMENOS)
-                    && mons_class_flag(victim->type, M_SHADOW))
-                {
-                    break;
-                }
-
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                simple_god_message(" accepts your kill.");
-                piety_denom = level + 18;
-                piety_change = piety_denom - 3;
-
-                if (you_worship(GOD_YREDELEMNUL))
-                {
-                    simple_god_message(" appreciates your killing of a holy "
-                                       "being.");
-                    piety_change *= 2;
-                }
-                break;
-
-            default:
-                break;
-        }
-            break;
-
         case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
-            switch (you.religion)
-        {
-            case GOD_YREDELEMNUL:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                simple_god_message(" accepts your slave's kill.");
-                piety_denom = level + 18;
-                piety_change = piety_denom - 3;
-                break;
-
-            default:
-                break;
-        }
-            break;
-
         case DID_HOLY_KILLED_BY_SERVANT:
-            switch (you.religion)
-        {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (victim
-                    && !testbits(victim->flags, MF_NO_REWARD)
-                    && !testbits(victim->flags, MF_WAS_NEUTRAL))
-                {
-                    break;
-                }
-
-                penance = level * 3;
-                piety_change = -level * 3;
-                break;
-
-            case GOD_TROG:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_QAZLAL:
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                simple_god_message(" accepts your collateral kill.");
-                piety_denom = level + 18;
-                piety_change = piety_denom - 3;
-                break;
-
-            default:
-                break;
-        }
-            break;
+            break; // handled in data code
 
         case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
@@ -931,6 +890,16 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
+            }
+            break;
+
+        case DID_KILL_ARTIFICIAL:
+            if (you_worship(GOD_YREDELEMNUL)
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" accepts your kill.");
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
             }
             break;
 
