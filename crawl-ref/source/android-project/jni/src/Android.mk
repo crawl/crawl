@@ -14,8 +14,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
                     $(LOCAL_PATH)/$(CRAWL_PATH) \
                     $(LOCAL_PATH)/$(CRAWL_PATH)/rltiles
 
-LOCAL_CFLAGS := `echo $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cflags`
-LOCAL_CXXFLAGS := `echo $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cxxflags`
+LOCAL_CFLAGS := $(shell cat $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cflags)
+LOCAL_CXXFLAGS := $(shell cat $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cxxflags)
 
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/ability.cc \
