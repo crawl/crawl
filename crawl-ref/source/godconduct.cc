@@ -259,7 +259,13 @@ static conduct_map divine_responses[] =
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
     },
     // GOD_JIYVA,
-    conduct_map(),
+    {
+        { DID_KILL_SLIME, {
+            -1, 1, 2, NULL, NULL, [] (const monster* victim) {
+                return !victim || !victim->is_shapeshifter();
+            }
+        } },
+    },
     // GOD_FEDHAS,
     {
         { DID_CORPSE_VIOLATION, {
@@ -349,15 +355,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_HOLY:
         case DID_UNCHIVALRIC_ATTACK:
         case DID_POISON:
-            break; // handled in data code
-
         case DID_KILL_SLIME:
-            if (you_worship(GOD_JIYVA) && !victim->is_shapeshifter())
-            {
-                piety_change = -level;
-                penance = level * 2;
-            }
-            break;
+            break; // handled in data code
 
         case DID_KILL_PLANT:
         case DID_PLANT_KILLED_BY_SERVANT:
