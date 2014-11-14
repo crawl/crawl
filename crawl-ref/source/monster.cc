@@ -346,52 +346,11 @@ int monster::body_weight(bool /*base*/) const
 
     int weight = mons_weight(mc);
 
-    // weight == 0 in the monster entry indicates "no corpse".  Can't
-    // use CE_NOCORPSE, because the corpse-effect field is used for
-    // corpseless monsters to indicate what happens if their blood
-    // is sucked.  Grrrr.
-    if (weight == 0 && !is_insubstantial())
-    {
-        weight = actor::body_weight();
+    if (type == MONS_SPECTRAL_THING)
+        weight = 0;
 
-        switch (mc)
-        {
-        case MONS_IRON_IMP:
-            weight += 450;
-            break;
-
-        case MONS_RUST_DEVIL:
-            weight += 550;
-            break;
-
-        case MONS_EARTH_ELEMENTAL:
-        case MONS_CRYSTAL_GUARDIAN:
-            weight *= 2;
-            break;
-
-        case MONS_IRON_DRAGON:
-        case MONS_IRON_GOLEM:
-            weight *= 3;
-            break;
-
-        case MONS_QUICKSILVER_DRAGON:
-        case MONS_OBSIDIAN_STATUE:
-        case MONS_STATUE:
-            weight *= 4;
-            break;
-
-        case MONS_SHADOW_FIEND:
-        case MONS_SHADOW_IMP:
-        case MONS_SHADOW_DEMON:
-            weight /= 3;
-            break;
-
-        default: ;
-        }
-
-        if (is_skeletal() || mons_genus(mc) == MONS_LICH)
-            weight /= 2;
-    }
+    if (type == MONS_SKELETON)
+        weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
     if (mc == MONS_SLIME_CREATURE && blob_size > 1)
