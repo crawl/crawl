@@ -1230,6 +1230,10 @@ ifdef NEED_REBUILD
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
+.android-cflags: .cflags
+	@echo $(CXXFLAGS_L) >.android-cxxflags
+	@echo $(CFLAGS_L) >.android-cflags
+
 .PHONY: .force-cflags
 
 endif
@@ -1447,7 +1451,7 @@ clean-contrib:
 clean-android:
 ifneq ($(ANDROID),)
 	$(RM) -r $(datadir_fp)
-	@cd android-project && ant clean && ndk-build clean
+	@cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean
 endif
 
 distclean: clean clean-contrib clean-rltiles
@@ -1706,12 +1710,12 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
-android: install-data
+android: install-data .android-cflags
 ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
 endif
-	@cd android-project && ndk-build && ant debug && \
+	@cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
 	cp bin/DungeonCrawlStoneSoup-debug.apk \
 	../../../crawl_tiles_android-$(SRC_VERSION).apk
 

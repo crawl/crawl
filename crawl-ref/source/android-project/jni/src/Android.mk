@@ -14,8 +14,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
                     $(LOCAL_PATH)/$(CRAWL_PATH) \
                     $(LOCAL_PATH)/$(CRAWL_PATH)/rltiles
 
-LOCAL_CFLAGS := -O2 -DWIZARD -DUSE_TILE -DUSE_TILE_LOCAL -DTOUCH_UI -DUSE_SDL -DUSE_GL -DUSE_FT -DUSE_GLES -DCLUA_BINDINGS -DMONOSPACED_FONT=\"dat/tiles/DejaVuSansMono.ttf\" -DPROPORTIONAL_FONT=\"dat/tiles/DejaVuSans.ttf\" -DSAVE_DIR_PATH=\"/sdcard/Android/data/org.develz.crawl/saves/\"
-LOCAL_CXXFLAGS := -std=c++11 $(LOCAL_CFLAGS)
+LOCAL_CFLAGS := `echo $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cflags`
+LOCAL_CXXFLAGS := `echo $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cxxflags`
 
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/ability.cc \
