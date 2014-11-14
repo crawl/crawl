@@ -146,7 +146,6 @@ struct monsterentry
     int8_t ev; // evasion
     int sec;   // actually mon_spellbook_type
     corpse_effect_type corpse_thingy;
-    zombie_size_type   zombie_size;
     shout_type         shouts;
     mon_intel_type     intel;
     habitat_type     habitat;

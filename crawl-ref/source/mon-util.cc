@@ -1442,8 +1442,11 @@ bool mons_class_leaves_hide(monster_type mc)
 int mons_zombie_size(monster_type mc)
 {
     mc = mons_species(mc);
+    if (!mons_class_can_be_zombified(mc))
+        return Z_NOZOMBIE;
+
     ASSERT_smc();
-    return smc->zombie_size;
+    return smc->size > SIZE_MEDIUM ? Z_BIG : Z_SMALL;
 }
 
 monster_type mons_zombie_base(const monster* mon)
@@ -1497,7 +1500,6 @@ bool mons_class_can_be_zombified(monster_type mc)
 {
     monster_type ms = mons_species(mc);
     return !invalid_monster_type(ms)
-           && mons_zombie_size(ms) != Z_NOZOMBIE
            && mons_class_can_leave_corpse(ms);
 }
 
@@ -4665,14 +4667,7 @@ void debug_mondata()
         if (md->species != mc || md->bitfields & M_CANT_SPAWN)
             continue;
 
-        if (md->corpse_thingy && !md->zombie_size)
-            fails += make_stringf("%s has a corpse but no zombie_size\n", name);
-        else if (md->zombie_size && !md->corpse_thingy)
-            fails += make_stringf("%s has a zombie_size but no corpse\n", name);
-        else if (md->zombie_size == Z_SMALL && md->size > SIZE_MEDIUM)
-            fails += make_stringf("%s has a small zombie but isn't small", name);
-        else if (md->zombie_size == Z_BIG && md->size <= SIZE_MEDIUM)
-            fails += make_stringf("%s has a big zombie but isn't big", name);
+        // TODO: add more tests here?
     }
 
     if (!fails.empty())
