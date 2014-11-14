@@ -98,7 +98,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
         source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
     beam.obvious_effect = false;
-    beam.is_beam      = false;
+    beam.pierce       = false;
     beam.is_tracer    = false;
     beam.is_explosion = true;
     beam.ench_power   = pow;      // used for radius
@@ -158,7 +158,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.source_id         = MID_PLAYER;
     beam.thrower           = KILL_YOU;
     beam.obvious_effect    = false;
-    beam.is_beam           = false;
+    beam.pierce            = false;
     beam.is_explosion      = true;
     beam.ench_power        = pow;      // used for radius
     beam.hit               = 20 + pow / 10;
@@ -216,7 +216,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.obvious_effect = true;
-    beam.is_beam        = false;       // since we want to stop at our target
+    beam.pierce         = false;       // since we want to stop at our target
     beam.is_explosion   = false;
     beam.is_tracer      = false;
     beam.origin_spell   = spell_cast;

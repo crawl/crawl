@@ -83,7 +83,7 @@ targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
 
-    penetrates_targets = beam.is_beam;
+    penetrates_targets = beam.pierce;
     range2 = dist_range(range);
 }
 

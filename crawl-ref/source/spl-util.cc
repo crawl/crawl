@@ -1493,7 +1493,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         beam.hit = 20;
         beam.thrower = KILL_YOU;
         beam.ench_power = calc_spell_power(spell, true, false, true, rod);
-        beam.is_beam = false;
+        beam.pierce  = false;
         beam.is_explosion = true;
     }
 

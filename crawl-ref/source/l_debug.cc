@@ -155,7 +155,7 @@ LUAFN(debug_bouncy_beam)
     beam.flavour    = BEAM_ELECTRICITY;
     beam.source     = source;
     beam.target     = target;
-    beam.is_beam    = true;
+    beam.pierce     = true;
     beam.draw_delay = 0;
 
     if (findray)
