@@ -3,6 +3,16 @@
 
 #include "show.h"
 
+enum feature_flag_type
+{
+    FFT_NONE          = 0,
+    FFT_NOTABLE       = 1<< 0,           // should be noted for dungeon overview
+    FFT_EXAMINE_HINT  = 1<< 1,           // could get an "examine-this" hint.
+    FFT_OPAQUE        = 1<< 2,           // Does this feature block LOS?
+    FFT_WALL          = 1<< 3,           // Is this a "wall"?
+    FFT_SOLID         = 1<< 4,           // Does this feature block beams / normal movement?
+};
+
 struct feature_def
 {
     dungeon_feature_type feat;
