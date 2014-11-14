@@ -1490,7 +1490,7 @@ monster_type mons_base_type(const monster* mon)
 
 bool mons_class_can_leave_corpse(monster_type mc)
 {
-    return mons_weight(mc) > 0;
+    return mons_corpse_effect(mc) != CE_NOCORPSE;
 }
 
 bool mons_class_can_be_zombified(monster_type mc)
