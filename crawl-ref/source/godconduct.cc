@@ -438,31 +438,69 @@ struct like_response
     void (*special)(int &piety, int &denom, const monster* victim);
 };
 
+/**
+ * The piety bonus that is given for killing monsters of the appropriate
+ * holiness.
+ *
+ * Gets slotted into a very strange equation. It's weird.
+ */
+static int _piety_bonus_for_holiness(mon_holy_type holiness)
+{
+    switch (holiness)
+    {
+        case MH_NATURAL:
+        case MH_PLANT:
+            return -6;
+        case MH_UNDEAD:
+            return -5;
+        case MH_DEMONIC:
+            return -4;
+        case MH_HOLY:
+        case MH_NONLIVING: // hi, yred
+            return -3;
+        default:
+            die("help, I don't know what to do!");
+    }
+}
+
+/**
+ * Generate an appropriate kill response (piety gain scaling, message, &c),
+ * for gods that like killing this sort of thing.
+ *
+ * @param holiness      The holiness of the relevant type of monsters.
+ * @param god_is_good   Whether this is a good god.
+ *                      (They don't scale piety with XL in the same way...?)
+ * @param special       A special-case function.
+ * @return              An appropropriate like_response.
+ */
+static like_response _on_kill(mon_holy_type holiness, bool god_is_good = false,
+                             void (*special)(int &piety, int &denom,
+                                             const monster* victim) = NULL)
+{
+    like_response response = {
+        _piety_bonus_for_holiness(holiness),
+        18,
+        god_is_good ? 0 : 2,
+        " accepts your kill.",
+        special
+    };
+    return response;
+}
+
 /// Response for gods that like killing the living.
-static const like_response KILL_LIVING_RESPONSE = {
-    -6, 18, 2, " accepts your kill."
-};
+static const like_response KILL_LIVING_RESPONSE = _on_kill(MH_NATURAL);
 
 /// Response for non-good gods that like killing (?) undead.
-static const like_response KILL_UNDEAD_RESPONSE = {
-    -5, 18, 2, " accepts your kill."
-};
+static const like_response KILL_UNDEAD_RESPONSE = _on_kill(MH_UNDEAD);
 
 /// Response for non-good gods that like killing (?) demons.
-static const like_response KILL_DEMON_RESPONSE = {
-    -4, 18, 2, " accepts your kill."
-};
+static const like_response KILL_DEMON_RESPONSE = _on_kill(MH_DEMONIC);
+
+/// Response for non-good gods that like killing (?) holies.
+static const like_response KILL_HOLY_RESPONSE =  _on_kill(MH_HOLY);
 
 /// Response for TSO/Zin when you kill (most) things they hate.
-static const like_response GOOD_KILL_RESPONSE = {
-    -4, 18, 0, " accepts your kill."
-};
-
-/// Response for non-good gods that like killing (?) holies. also, yred
-/// uses this for killing artificials.
-static const like_response KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your kill."
-};
+static const like_response GOOD_KILL_RESPONSE = _on_kill(MH_DEMONIC, true);
 // Note that holy deaths are special - they're always noticed...
 // If you or any friendly kills one, you'll get the credit/blame.
 
@@ -523,9 +561,7 @@ static like_map divine_likes[] =
     },
     // GOD_SHINING_ONE,
     {
-        { DID_KILL_UNDEAD, {
-            -5, 18, 0, " accepts your kill."
-        } },
+        { DID_KILL_UNDEAD, _on_kill(MH_UNDEAD, true) },
         { DID_KILL_DEMON, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_UNHOLY, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_EVIL, GOOD_KILL_RESPONSE },
@@ -547,7 +583,7 @@ static like_map divine_likes[] =
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_HOLY_RESPONSE },
+        { DID_KILL_ARTIFICIAL, _on_kill(MH_NONLIVING, false) },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
@@ -651,18 +687,10 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, {
-            -6, 18, 2, " accepts your kill.", _dithmenos_kill
-        } },
-        { DID_KILL_UNDEAD, {
-            -5, 18, 2, " accepts your kill.", _dithmenos_kill
-        } },
-        { DID_KILL_DEMON, {
-            -4, 18, 2, " accepts your kill.", _dithmenos_kill
-        } },
-        { DID_KILL_HOLY, {
-            -3, 18, 2, " accepts your kill.", _dithmenos_kill
-        } },
+        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false, _dithmenos_kill) },
+        { DID_KILL_UNDEAD, _on_kill(MH_UNDEAD, false, _dithmenos_kill) },
+        { DID_KILL_DEMON, _on_kill(MH_DEMONIC, false, _dithmenos_kill) },
+        { DID_KILL_HOLY, _on_kill(MH_HOLY, false, _dithmenos_kill) },
         { DID_KILL_FIERY, {
             -6, 10, 0, " appreciates your extinguishing a source of fire."
         } },
