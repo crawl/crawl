@@ -355,6 +355,74 @@ static peeve_map divine_peeves[] =
 };
 
 
+
+/// A definition of the way in which a god likes a conduct being taken.
+struct like_response
+{
+    /// Gain in piety for triggering this conduct; added to 'level'.
+    int piety_bonus;
+    /// Divider for piety gained by this conduct; added to 'level'.
+    int piety_denom_bonus;
+    /// Degree to which your XL decreases piety gained.
+    int xl_factor;
+    /// Something your god says when you trigger this conduct. May be NULL.
+    const char *message;
+};
+
+typedef map<conduct_type, like_response> like_map;
+
+/// a per-god map of conducts to piety rewards given by that god.
+static like_map divine_likes[] =
+{
+    // GOD_NO_GOD
+    like_map(),
+    // GOD_ZIN,
+    like_map(),
+    // GOD_SHINING_ONE,
+    like_map(),
+    // GOD_KIKUBAAQUDGHA,
+    like_map(),
+    // GOD_YREDELEMNUL,
+    like_map(),
+    // GOD_XOM,
+    like_map(),
+    // GOD_VEHUMET,
+    like_map(),
+    // GOD_OKAWARU,
+    like_map(),
+    // GOD_MAKHLEB,
+    like_map(),
+    // GOD_SIF_MUNA,
+    like_map(),
+    // GOD_TROG,
+    like_map(),
+    // GOD_NEMELEX_XOBEH,
+    like_map(),
+    // GOD_ELYVILON,
+    like_map(),
+    // GOD_LUGONU,
+    like_map(),
+    // GOD_BEOGH,
+    like_map(),
+    // GOD_JIYVA,
+    like_map(),
+    // GOD_FEDHAS,
+    like_map(),
+    // GOD_CHEIBRIADOS,
+    like_map(),
+    // GOD_ASHENZARI,
+    like_map(),
+    // GOD_DITHMENOS,
+    like_map(),
+    // GOD_GOZAG,
+    like_map(),
+    // GOD_QAZLAL,
+    like_map(),
+    // GOD_RU,
+    like_map(),
+};
+
+
 static void _handle_your_gods_response(conduct_type thing_done, int level,
                                        bool known, const monster* victim)
 {
@@ -370,7 +438,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
     if (divine_peeves[you.religion].count(thing_done))
     {
-        dprf("checking data for %s", conducts[thing_done]);
+        dprf("checking peeve data for %s", conducts[thing_done]);
         const dislike_response peeve = divine_peeves[you.religion][thing_done];
 
         // if the conduct filters on affected monsters, & the relevant monster
@@ -406,6 +474,25 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
 
         return;
     }
+
+    //check for likes
+    COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
+    if (divine_likes[you.religion].count(thing_done))
+    {
+        dprf("checking like data for %s", conducts[thing_done]);
+        const like_response like = divine_likes[you.religion][thing_done];
+
+        god_acting gdact;
+
+        if (like.message)
+            simple_god_message(like.message);
+
+        const int denom = like.piety_denom_bonus + level
+                          + like.xl_factor * you.get_experience_level();
+        _handle_piety_penance(like.piety_bonus + level, denom, 0, thing_done);
+        return;
+    }
+
     dprf("no data for %s", conducts[thing_done]);
 
     if (you_worship(GOD_NO_GOD) || you_worship(GOD_XOM))
