@@ -190,6 +190,14 @@ static const conduct_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
     -1, 1, 1, " forgives your inadvertent attack on a neutral, just this once."
 };
 
+/// Various gods' response to attacking a pal.
+static const conduct_response ATTACK_FRIEND_RESPONSE = {
+    -1, 1, 3, " forgives your inadvertent attack on an ally, just this once.",
+    NULL, [] (const monster* victim) {
+        return god_hates_attacking_friend(you.religion, victim);
+    }
+};
+
 typedef map<conduct_type, conduct_response> conduct_map;
 
 /// a per-god map of conducts to that god's reaction to those conducts.
@@ -205,6 +213,7 @@ static conduct_map divine_responses[] =
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_SHINING_ONE,
     {
@@ -225,6 +234,7 @@ static conduct_map divine_responses[] =
         { DID_UNCHIVALRIC_ATTACK, TSO_UNCHIVALRIC_RESPONSE },
         { DID_POISON, TSO_UNCHIVALRIC_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
@@ -239,7 +249,9 @@ static conduct_map divine_responses[] =
     // GOD_VEHUMET,
     conduct_map(),
     // GOD_OKAWARU,
-    conduct_map(),
+    {
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+    },
     // GOD_MAKHLEB,
     conduct_map(),
     // GOD_SIF_MUNA,
@@ -257,12 +269,14 @@ static conduct_map divine_responses[] =
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_LUGONU,
     conduct_map(),
     // GOD_BEOGH,
     {
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_JIYVA,
     {
@@ -277,6 +291,7 @@ static conduct_map divine_responses[] =
                     && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
         } },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_FEDHAS,
     {
@@ -289,6 +304,7 @@ static conduct_map divine_responses[] =
         { DID_PLANT_KILLED_BY_SERVANT, {
             -1, 1, 0
         } },
+        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
     },
     // GOD_CHEIBRIADOS,
     conduct_map(),
@@ -377,23 +393,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_PLANT:
         case DID_PLANT_KILLED_BY_SERVANT:
         case DID_ATTACK_NEUTRAL:
+        case DID_ATTACK_FRIEND:
             break; // handled in data code
 
-        case DID_ATTACK_FRIEND:
-            if (god_hates_attacking_friend(you.religion, victim))
-            {
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent attack on "
-                                       "an ally, just this once.");
-                    break;
-                }
-
-                piety_change = -level;
-                if (known)
-                    penance = level * 3;
-            }
-            break;
 
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:

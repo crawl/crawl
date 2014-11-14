@@ -3111,7 +3111,7 @@ void nemelex_death_message()
                            "Your body", you.backlit(), false, piety_gain));
 }
 
-bool god_hates_attacking_friend(god_type god, const actor *fr)
+bool god_hates_attacking_friend(god_type god, const monster *fr)
 {
     if (!fr || fr->kill_alignment() != KC_FRIENDLY)
         return false;

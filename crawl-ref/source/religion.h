@@ -124,7 +124,7 @@ bool is_follower(const monster* mon);
 bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
-bool god_hates_attacking_friend(god_type god, const actor *fr);
+bool god_hates_attacking_friend(god_type god, const monster *fr);
 bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god, bool greedy_explore = false);
 
