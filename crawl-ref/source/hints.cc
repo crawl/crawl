@@ -2679,7 +2679,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                     "or mouse over the spell tiles "
 #endif
-                    "to check your current success rates.";
+                    "to check your current failure rates.";
             cmd.push_back(CMD_DISPLAY_SPELLS);
             break;
         }
@@ -2691,7 +2691,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "Wearing heavy body armour or using a shield, especially a "
                     "large one, can severely hamper your spellcasting "
                     "abilities. You can check the effect of this by comparing "
-                    "the success rates on the <w>%\?</w> screen with and "
+                    "the failure rates on the <w>%\?</w> screen with and "
                     "without the item being worn.\n\n";
             cmd.push_back(CMD_CAST_SPELL);
         }
@@ -2700,12 +2700,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "checked by entering <w>%\?</w> or <w>%</w>) then a miscast "
                 "merely means the spell is not working, along with a harmless "
                 "side effect. "
-                "However, for spells with a low success rate, there's a chance "
-                "of contaminating yourself with magical energy, plus a chance "
-                "of an additional harmful side effect. Normally this isn't a "
-                "problem, since magical contamination bleeds off over time, "
-                "but if you're repeatedly contaminated in a short amount of "
-                "time you'll mutate or suffer from other ill side effects.\n\n";
+                "However, for spells with a high failure rate, there's a "
+                "chance of contaminating yourself with magical energy, plus a "
+                "chance of an additional harmful side effect. Normally this "
+                "isn't a problem, since magical contamination bleeds off over "
+                "time, but if you're repeatedly contaminated in a short amount "
+                "of time you'll mutate or suffer from other ill side effects."
+                "\n\n";
         cmd.push_back(CMD_CAST_SPELL);
         cmd.push_back(CMD_DISPLAY_SPELLS);
 
