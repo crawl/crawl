@@ -117,21 +117,31 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
 /// A definition of a god's response to a conduct being taken.
 struct conduct_response
 {
-    /// Gain or loss in piety for enacting this conduct; multiplied by
+    /// Gain or loss in piety for triggering this conduct; multiplied by
     /// severity-level.
     int piety_factor;
     /// Not sure.
     int piety_denom;
-    /// Penance for enacting this conduct; multiplied by severity-level.
+    /// Penance for triggering this conduct; multiplied by severity-level.
     int penance_factor;
-    /// Something your god says when taking this conduct. May be NULL.
-    const char *message;
     /// Something your god says when you accidentally triggered the conduct.
     /// Implies that unknowingly triggering the conduct is forgiven.
     const char *forgiveness_message;
+    /// Something your god says when you trigger this conduct. May be NULL.
+    const char *message;
     /// Nonstandard behavior triggered by the function. May be NULL.
     void (*other_behavior)(int level, bool known, const monster* victim);
 };
+
+
+
+/// Good gods' reaction to drinking blood.
+static const conduct_response GOOD_BLOOD_RESPONSE = {
+    -2, 1, 1, " forgives your inadvertent blood-drinking,"
+    " just this once."
+};
+
+
 
 typedef map<conduct_type, conduct_response> conduct_map;
 
@@ -141,9 +151,13 @@ static conduct_map divine_responses[] =
     // GOD_NO_GOD
     conduct_map(),
     // GOD_ZIN,
-    conduct_map(),
+    {
+        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+    },
     // GOD_SHINING_ONE,
-    conduct_map(),
+    {
+        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+    },
     // GOD_KIKUBAAQUDGHA,
     conduct_map(),
     // GOD_YREDELEMNUL,
@@ -163,7 +177,9 @@ static conduct_map divine_responses[] =
     // GOD_NEMELEX_XOBEH,
     conduct_map(),
     // GOD_ELYVILON,
-    conduct_map(),
+    {
+        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
+    },
     // GOD_LUGONU,
     conduct_map(),
     // GOD_BEOGH,
@@ -233,25 +249,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
         switch (thing_done)
         {
         case DID_DRINK_BLOOD:
-            switch (you.religion)
-            {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent "
-                                       "blood-drinking, just this once.");
-                    break;
-                }
-                if (you_worship(GOD_SHINING_ONE))
-                    penance = level;
-                piety_change = -2*level;
-                break;
-            default:
-                break;
-            }
-            break;
+            break; // handled in data code
 
         case DID_CANNIBALISM:
             switch (you.religion)
