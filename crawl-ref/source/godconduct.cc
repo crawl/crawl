@@ -430,6 +430,16 @@ static const like_response SERVANT_KILL_HOLY_RESPONSE = {
     -3, 18, 0, " accepts your collateral kill.", _god_likes_killing
 };
 
+/// Response for gods that like your undead slaves killing non-holy things.
+static const like_response UNDEAD_KILL_RESPONSE = {
+    -6, 10, 3, " accepts your slave's kill."
+};
+
+/// Response for gods that like your servants killing non-holy things.
+static const like_response SERVANT_KILL_RESPONSE = {
+    -6, 10, 3, " accepts your collateral kill."
+};
+
 
 typedef map<conduct_type, like_response> like_map;
 
@@ -461,6 +471,12 @@ static like_map divine_likes[] =
         { DID_KILL_NATURAL_EVIL, {
             -4, 18, 0, " accepts your kill.", _god_likes_killing
         } },
+        { DID_UNDEAD_KILLED_BY_SERVANT, {
+            -6, 10, 0, " accepts your collateral kill."
+        } },
+        { DID_DEMON_KILLED_BY_SERVANT, {
+            -6, 10, 0, " accepts your collateral kill."
+        } },
     },
     // GOD_KIKUBAAQUDGHA,
     {
@@ -468,12 +484,15 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
     },
     // GOD_YREDELEMNUL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
     },
     // GOD_XOM,
     like_map(),
@@ -494,6 +513,12 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_SIF_MUNA,
     like_map(),
@@ -503,6 +528,8 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_WIZARD, {
             -6, 10, 0, " appreciates your killing of a magic user.",
             _god_likes_killing
@@ -520,6 +547,12 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_BANISH, {
             -6, 18, 2, " claims a new guest."
         } },
@@ -532,6 +565,12 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_PRIEST, {
             -6, 10, 0, " appreciates your killing of a heretic priest.",
             _god_likes_killing
@@ -565,6 +604,9 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
+        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
+        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_RU,
     like_map(),
@@ -756,121 +798,13 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_HOLY:
         case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
         case DID_HOLY_KILLED_BY_SERVANT:
-            break; // handled in data code
-
         case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
-            switch (you.religion)
-        {
-            case GOD_YREDELEMNUL:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-                simple_god_message(" accepts your slave's kill.");
-                piety_denom = level + 10 - you.experience_level/3;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_LIVING_KILLED_BY_SERVANT:
-            switch (you.religion)
-        {
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_QAZLAL:
-                simple_god_message(" accepts your collateral kill.");
-                piety_denom = level + 10 - you.experience_level/3;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
-            switch (you.religion)
-        {
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-                simple_god_message(" accepts your slave's kill.");
-                piety_denom = level + 10 - you.experience_level/3;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_UNDEAD_KILLED_BY_SERVANT:
-            switch (you.religion)
-        {
-            case GOD_SHINING_ONE:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_QAZLAL:
-                simple_god_message(" accepts your collateral kill.");
-                piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
-                                            you.experience_level/3);
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
-            switch (you.religion)
-        {
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-                simple_god_message(" accepts your slave's kill.");
-                piety_denom = level + 10 - you.experience_level/3;
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
-
         case DID_DEMON_KILLED_BY_SERVANT:
-            switch (you.religion)
-        {
-            case GOD_SHINING_ONE:
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_QAZLAL:
-                simple_god_message(" accepts your collateral kill.");
-                piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
-                                            you.experience_level/3);
-                piety_change = piety_denom - 6;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-            default:
-                break;
-        }
-            break;
+            break; // handled in data code
 
         case DID_NATURAL_UNHOLY_KILLED_BY_SERVANT:
         case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
