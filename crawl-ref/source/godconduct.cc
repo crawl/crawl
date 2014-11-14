@@ -392,6 +392,16 @@ static const like_response KILL_LIVING_RESPONSE = {
     -6, 18, 2, " accepts your kill.", _god_likes_killing
 };
 
+/// Response for non-good gods that like killing (?) undead.
+static const like_response KILL_UNDEAD_RESPONSE = {
+    -5, 18, 2, " accepts your kill.", _god_likes_killing
+};
+
+/// Response for non-good gods that like killing (?) demons.
+static const like_response KILL_DEMON_RESPONSE = {
+    -4, 18, 2, " accepts your kill.", _god_likes_killing
+};
+
 
 typedef map<conduct_type, like_response> like_map;
 
@@ -403,10 +413,18 @@ static like_map divine_likes[] =
     // GOD_ZIN,
     like_map(),
     // GOD_SHINING_ONE,
-    like_map(),
+    {
+        { DID_KILL_UNDEAD, {
+            -5, 18, 0, " accepts your kill.", _god_likes_killing
+        } },
+        { DID_KILL_DEMON, {
+            -4, 18, 0, " accepts your kill.", _god_likes_killing
+        } },
+    },
     // GOD_KIKUBAAQUDGHA,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_YREDELEMNUL,
     {
@@ -417,18 +435,23 @@ static like_map divine_likes[] =
     // GOD_VEHUMET,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_OKAWARU,
     like_map(),
     // GOD_MAKHLEB,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_SIF_MUNA,
     like_map(),
     // GOD_TROG,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_NEMELEX_XOBEH,
     like_map(),
@@ -437,6 +460,8 @@ static like_map divine_likes[] =
     // GOD_LUGONU,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_BANISH, {
             -6, 18, 2, " claims a new guest."
         } },
@@ -444,6 +469,8 @@ static like_map divine_likes[] =
     // GOD_BEOGH,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_JIYVA,
     like_map(),
@@ -456,12 +483,16 @@ static like_map divine_likes[] =
     // GOD_DITHMENOS,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_GOZAG,
     like_map(),
     // GOD_QAZLAL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
     },
     // GOD_RU,
     like_map(),
@@ -580,75 +611,11 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_SOULED_FRIEND_DIED:
         case DID_BANISH:
         case DID_KILL_LIVING:
+        case DID_KILL_UNDEAD:
+        case DID_KILL_DEMON:
             break; // handled in data code
 
-        case DID_KILL_UNDEAD:
-            switch (you.religion)
-        {
-            case GOD_SHINING_ONE:
-            case GOD_VEHUMET:
-            case GOD_MAKHLEB:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_DITHMENOS:
-            case GOD_QAZLAL:
-                if (you_worship(GOD_DITHMENOS)
-                    && mons_class_flag(victim->type, M_SHADOW))
-                {
-                    break;
-                }
 
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                simple_god_message(" accepts your kill.");
-                // Holy gods are easier to please this way.
-                piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
-                                            you.experience_level / 2);
-                piety_change = piety_denom - 5;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-
-            default:
-                break;
-        }
-            break;
-
-        case DID_KILL_DEMON:
-            switch (you.religion)
-        {
-            case GOD_SHINING_ONE:
-            case GOD_VEHUMET:
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_BEOGH:
-            case GOD_LUGONU:
-            case GOD_DITHMENOS:
-            case GOD_QAZLAL:
-                if (you_worship(GOD_DITHMENOS)
-                    && mons_class_flag(victim->type, M_SHADOW))
-                {
-                    break;
-                }
-
-                if (god_hates_attacking_friend(you.religion, victim))
-                    break;
-
-                simple_god_message(" accepts your kill.");
-                // Holy gods are easier to please this way.
-                piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
-                                            you.experience_level / 2);
-                piety_change = piety_denom - 4;
-                piety_denom = max(piety_denom, 1);
-                piety_change = max(piety_change, 0);
-                break;
-
-            default:
-                break;
-        }
-            break;
 
         case DID_KILL_NATURAL_UNHOLY:
         case DID_KILL_NATURAL_EVIL:
