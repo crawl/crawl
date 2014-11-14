@@ -1286,7 +1286,8 @@ spret_type your_spells(spell_type spell, int powc,
                                "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, -GOD_KIKUBAAQUDGHA, SPTYP_NECROMANCY,
+            MiscastEffect(&you, NULL, GOD_MISCAST + GOD_KIKUBAAQUDGHA,
+                          SPTYP_NECROMANCY,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
@@ -1300,7 +1301,8 @@ spret_type your_spells(spell_type spell, int powc,
                                "destruction!", GOD_VEHUMET);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, -GOD_VEHUMET, SPTYP_CONJURATION,
+            MiscastEffect(&you, NULL, GOD_MISCAST + GOD_VEHUMET,
+                          SPTYP_CONJURATION,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Vehumet");
         }
@@ -1376,7 +1378,8 @@ spret_type your_spells(spell_type spell, int powc,
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
 
-        MiscastEffect(&you, NON_MONSTER, spell, spell_difficulty(spell), fail);
+        MiscastEffect(&you, NULL, SPELL_MISCAST, spell,
+                      spell_difficulty(spell), fail);
 
         return SPRET_FAIL;
     }

@@ -63,12 +63,6 @@ enum extra_monster_index_type
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
-
-    ZOT_TRAP_MISCAST,
-    HELL_EFFECT_MISCAST,
-    WIELD_MISCAST,
-    MELEE_MISCAST,
-    MISC_MISCAST,
 };
 
 // number of monster attack specs

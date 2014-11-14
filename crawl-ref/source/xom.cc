@@ -2788,8 +2788,9 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, -GOD_XOM, (spschool_flag_type)school, level, cause_str,
-                  NH_DEFAULT, lethality_margin, hand_str, can_plural);
+    MiscastEffect(&you, NULL, GOD_MISCAST + GOD_XOM, (spschool_flag_type)school,
+                  level, cause_str, NH_DEFAULT, lethality_margin, hand_str,
+                  can_plural);
 
     // Not worth distinguishing unless debugging.
     return XOM_BAD_MISCAST_MAJOR;
