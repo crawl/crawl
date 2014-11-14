@@ -4669,6 +4669,10 @@ void debug_mondata()
             fails += make_stringf("%s has a corpse but no zombie_size\n", name);
         else if (md->zombie_size && !md->corpse_thingy)
             fails += make_stringf("%s has a zombie_size but no corpse\n", name);
+        else if (md->zombie_size == Z_SMALL && md->size > SIZE_MEDIUM)
+            fails += make_stringf("%s has a small zombie but isn't small", name);
+        else if (md->zombie_size == Z_BIG && md->size <= SIZE_MEDIUM)
+            fails += make_stringf("%s has a big zombie but isn't big", name);
     }
 
     if (!fails.empty())
