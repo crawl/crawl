@@ -558,6 +558,22 @@ ushabti cast
 Bolt of Draining anubis guard cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Ghostly Flames revenant cast
+
+@The_monster@ lashes out with ghostly flames.
+%%%%
+Ghostly Fireball revenant cast
+
+@ghostly flames revenant cast@
+%%%%
+Dispel Undead revenant cast
+
+@The_monster@ gestures violently @at@ @target@.
+%%%%
+Blink Away revenant cast
+
+__NONE
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
