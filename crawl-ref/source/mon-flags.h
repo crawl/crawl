@@ -12,8 +12,7 @@ const uint64_t M_NO_FLAGS = 0;
 
                                    //1<< 1;
 
-// monster is a priest
-const uint64_t M_PRIEST            = 1<< 2;
+                                   //1<< 2;
 
 // monster is skilled fighter
 const uint64_t M_FIGHTER           = 1<< 3;

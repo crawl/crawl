@@ -156,8 +156,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_is_projectile(new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
-        // Don't polymorph things without Gods into priests.
-        || mons_class_flag(new_mclass, M_PRIEST) && mons->god == GOD_NO_GOD
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
