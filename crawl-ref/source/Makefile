@@ -1451,7 +1451,7 @@ clean-contrib:
 clean-android:
 ifneq ($(ANDROID),)
 	$(RM) -r $(datadir_fp)
-	@cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean
+	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean
 endif
 
 distclean: clean clean-contrib clean-rltiles
@@ -1715,7 +1715,7 @@ ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
 endif
-	@cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
+	+cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
 	cp bin/DungeonCrawlStoneSoup-debug.apk \
 	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
