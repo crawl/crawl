@@ -1356,20 +1356,20 @@ void debug_miscast(int target_index)
 
     if (spell != SPELL_NO_SPELL)
     {
-        miscast = new MiscastEffect(target, target_index, spell, pow, fail,
-                                    "", nothing);
+        miscast = new MiscastEffect(target, target, MISC_MISCAST, spell, pow,
+                                    fail, "", nothing);
     }
     else
     {
         if (level != -1)
         {
-            miscast = new MiscastEffect(target, target_index, school,
+            miscast = new MiscastEffect(target, target, MISC_MISCAST, school,
                                         level, "wizard testing miscast",
                                         nothing);
         }
         else
         {
-            miscast = new MiscastEffect(target, target_index, school,
+            miscast = new MiscastEffect(target, target, MISC_MISCAST, school,
                                         pow, fail, "wizard testing miscast",
                                         nothing);
         }

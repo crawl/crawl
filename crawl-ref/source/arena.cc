@@ -673,7 +673,7 @@ namespace arena
             if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
-            MiscastEffect(*mon, mon->mindex(), SPTYP_RANDOM,
+            MiscastEffect(*mon, *mon, MISC_MISCAST, SPTYP_RANDOM,
                           random_range(1, 3), "arena miscast", NH_NEVER);
         }
     }

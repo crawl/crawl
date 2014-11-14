@@ -147,17 +147,15 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
 }
 
 ////////////////////////////////////////////////////
-static void _curses_miscast(actor* victim, int power, int fail)
-{
-    MiscastEffect(victim, WIELD_MISCAST, SPTYP_NECROMANCY, power, fail,
-                  "the Scythe of Curses", NH_NEVER);
-}
 
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
-        _curses_miscast(&you, random2(9), random2(70));
+    {
+        MiscastEffect(&you, NULL, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
+                      random2(70), "the Scythe of Curses", NH_NEVER);
+    }
 }
 
 static void _CURSES_world_reacts(item_def *item)
@@ -173,7 +171,11 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
     if (!mondied && defender->has_lifeforce())
-        _curses_miscast(defender, random2(9), random2(70));
+    {
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
+                      random2(9), random2(70), "the Scythe of Curses",
+                      NH_NEVER);
+    }
 }
 
 /////////////////////////////////////////////////////
@@ -448,7 +450,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 
 static void _wucad_miscast(actor* victim, int power,int fail)
 {
-    MiscastEffect(victim, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
+    MiscastEffect(victim, NULL, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
                   "the Staff of Wucad Mu", NH_NEVER);
 }
 
@@ -843,12 +845,6 @@ static void _NIGHT_unequip(item_def *item, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _plutonium_sword_miscast(actor* victim, int power, int fail)
-{
-    MiscastEffect(victim, MELEE_MISCAST, SPTYP_TRANSMUTATION, power, fail,
-                  "the plutonium sword", NH_NEVER);
-}
-
 static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                            actor* defender, bool mondied,
                                            int dam)
@@ -856,7 +852,8 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
     if (!mondied && one_chance_in(5))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
-        _plutonium_sword_miscast(defender, random2(9), random2(70));
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_TRANSMUTATION,
+                      random2(9), random2(70), "the plutonium sword", NH_NEVER);
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
@@ -1088,7 +1085,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
                     schools.push_back(static_cast<spschool_flag_type>(1 << i));
 
             ASSERT(schools.size() > 0);
-            MiscastEffect(defender, attacker->mindex(),
+            MiscastEffect(defender, attacker, MELEE_MISCAST,
                           schools[random2(schools.size())],
                           random2(9),
                           random2(70), "the demon whip \"Spellbinder\"",
