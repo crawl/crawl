@@ -182,7 +182,7 @@ void MiscastEffect::init()
             source_known = target_known;
 
             if (target->is_monster()
-                && target_as_monster()->confused_by_you())
+                && target->as_monster()->confused_by_you())
             {
                 kt = KILL_YOU_CONF;
             }
@@ -379,7 +379,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
-    if (target->is_monster() && !mons_near(target_as_monster()))
+    if (target->is_monster() && !mons_near(target->as_monster()))
         return;
 
     did_msg = true;
@@ -445,8 +445,8 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (target->is_monster())
     {
-        msg = do_mon_str_replacements(msg, target_as_monster(), S_SILENT);
-        if (!mons_has_body(target_as_monster()))
+        msg = do_mon_str_replacements(msg, target->as_monster(), S_SILENT);
+        if (!mons_has_body(target->as_monster()))
             msg = replace_all(msg, "'s body", "");
     }
 
@@ -457,7 +457,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
         // Those monsters of normal or greater intelligence will realize that they
         // were the source of the sound.
         mid_t src = target->is_player() ? MID_PLAYER
-                    : mons_intel(target_as_monster()) >= I_NORMAL ? target->mid
+                    : mons_intel(target->as_monster()) >= I_NORMAL ? target->mid
                     : MID_NOBODY;
         noisy(sound_loudness, target->pos(), src);
     }
@@ -468,7 +468,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
     // Delay do_msg() until after avoid_lethal().
     if (target->is_monster())
     {
-        monster* mon_target = target_as_monster();
+        monster* mon_target = target->as_monster();
 
         do_msg(true);
 
@@ -696,7 +696,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     if (target->is_monster() && !player_under_penance(god)
         && special_source != ZOT_TRAP_MISCAST)
     {
-        monster* mon_target = target_as_monster();
+        monster* mon_target = target->as_monster();
 
         switch (mon_target->temp_attitude())
         {
@@ -998,8 +998,8 @@ void MiscastEffect::_hexes(int severity)
             if (target->is_player())
                 you.backlight();
             else
-                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
-                                                          act_source));
+                target->as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
+                                                           act_source));
             break;
         case 1:
             random_uselessness();
@@ -1152,8 +1152,8 @@ void MiscastEffect::_charms(int severity)
             if (target->is_player())
                 you.backlight();
             else
-                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
-                                                          act_source));
+                target->as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
+                                                           act_source));
             break;
         case 1:
             random_uselessness();
@@ -1217,8 +1217,8 @@ void MiscastEffect::_charms(int severity)
                 }
                 else if (target->is_monster())
                 {
-                    debuff_monster(target_as_monster());
-                    enchant_actor_with_flavour(target_as_monster(), NULL,
+                    debuff_monster(target->as_monster());
+                    enchant_actor_with_flavour(target->as_monster(), NULL,
                                                BEAM_DRAIN_MAGIC, 50 + random2avg(51, 2));
                 }
                 do_msg();
@@ -1755,7 +1755,7 @@ void MiscastEffect::_divination_you(int severity)
 void MiscastEffect::_divination_mon(int severity)
 {
     // Nothing is appropriate for unmoving plants.
-    if (mons_is_firewood(target_as_monster()))
+    if (mons_is_firewood(target->as_monster()))
         return;
 
     switch (severity)
@@ -1789,7 +1789,7 @@ void MiscastEffect::_divination_mon(int severity)
     case 3:         // nasty
         mon_msg_seen = "@The_monster@ reels.";
         if (one_chance_in(7))
-            target_as_monster()->forget_random_spell();
+            target->as_monster()->forget_random_spell();
         target->confuse(
             act_source,
             8 + random2(3 + act_source->get_hit_dice()));
@@ -2428,7 +2428,7 @@ void MiscastEffect::_fire(int severity)
                 napalm_player(random2avg(7,3) + 1, cause);
             else
             {
-                monster* mon_target = target_as_monster();
+                monster* mon_target = target->as_monster();
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
                     min(4, 1 + random2(mon_target->get_hit_dice()) / 2),
                     act_source));
