@@ -587,6 +587,9 @@ ifdef ANDROID
   BUILD_FREETYPE=
   COPY_FONTS = yes
   NO_PKGCONFIG=Y
+  GLES=Y
+  TOUCH_UI=Y
+  TILES=Y
 else
 
 ifndef BUILD_LUA
