@@ -420,6 +420,12 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, {
             -4, 18, 0, " accepts your kill.", _god_likes_killing
         } },
+        { DID_KILL_NATURAL_UNHOLY, {
+            -4, 18, 0, " accepts your kill.", _god_likes_killing
+        } },
+        { DID_KILL_NATURAL_EVIL, {
+            -4, 18, 0, " accepts your kill.", _god_likes_killing
+        } },
     },
     // GOD_KIKUBAAQUDGHA,
     {
@@ -613,20 +619,9 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
         case DID_KILL_LIVING:
         case DID_KILL_UNDEAD:
         case DID_KILL_DEMON:
-            break; // handled in data code
-
-
-
         case DID_KILL_NATURAL_UNHOLY:
         case DID_KILL_NATURAL_EVIL:
-            if (you_worship(GOD_SHINING_ONE)
-                && !god_hates_attacking_friend(you.religion, victim))
-            {
-                simple_god_message(" accepts your kill.");
-                piety_denom = level + 18;
-                piety_change = piety_denom - 4;
-            }
-            break;
+            break; // handled in data code
 
         case DID_KILL_UNCLEAN:
         case DID_KILL_CHAOTIC:
