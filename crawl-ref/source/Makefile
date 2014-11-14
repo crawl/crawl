@@ -590,6 +590,7 @@ ifdef ANDROID
   GLES=Y
   TOUCH_UI=Y
   TILES=Y
+  SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
 else
 
 ifndef BUILD_LUA
@@ -829,7 +830,7 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifneq ($(filter ~%,$(SAVEDIR)),)
+  ifneq ($(filter ~%,$(SAVEDIR))$(ANDROID),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
     shareddir_fp :=
@@ -874,7 +875,7 @@ else
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
         FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
   else
-    ifneq ($(DESTDIR),)
+    ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
     else
         FONTDIR = contrib/fonts/
