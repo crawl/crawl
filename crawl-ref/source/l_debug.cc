@@ -107,7 +107,7 @@ LUAFN(debug_reveal_mimics)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
         if (mimic_at(*ri))
-            discover_mimic(*ri, false);
+            discover_mimic(*ri);
     return 0;
 }
 

@@ -2546,7 +2546,7 @@ void check_monster_detect()
         return;
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri, false);
+        discover_mimic(*ri);
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
