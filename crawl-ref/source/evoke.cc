@@ -1079,7 +1079,7 @@ static bool _lamp_of_fire()
             beams[n].colour     = RED;
             beams[n].source_id  = MID_PLAYER;
             beams[n].thrower    = KILL_YOU;
-            beams[n].is_beam    = true;
+            beams[n].pierce     = true;
             beams[n].name       = "trail of fire";
             beams[n].hit        = 10 + (pow/8);
             beams[n].damage     = dice_def(2, 5 + pow/4);
@@ -1173,12 +1173,12 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     sort(act_list.begin(), act_list.end(), sorter);
 
     bolt wind_beam;
-    wind_beam.hit = AUTOMATIC_HIT;
-    wind_beam.is_beam = true;
+    wind_beam.hit             = AUTOMATIC_HIT;
+    wind_beam.pierce          = true;
     wind_beam.affects_nothing = true;
-    wind_beam.source = agent->pos();
-    wind_beam.range = LOS_RADIUS;
-    wind_beam.is_tracer = true;
+    wind_beam.source          = agent->pos();
+    wind_beam.range           = LOS_RADIUS;
+    wind_beam.is_tracer       = true;
 
     bool player_affected = false;
     counted_monster_list affected_monsters;
@@ -1428,7 +1428,7 @@ static bool _stone_of_tremors()
     rubble.colour     = LIGHTGREY;
     rubble.flavour    = BEAM_MMISSILE;
     rubble.thrower    = KILL_YOU;
-    rubble.is_beam    = false;
+    rubble.pierce     = false;
     rubble.loudness   = 10;
     rubble.draw_delay = 0;
 

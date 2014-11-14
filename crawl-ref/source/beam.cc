@@ -111,7 +111,7 @@ bool bolt::is_blockable() const
     // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return !is_beam && !is_explosion && flavour != BEAM_ELECTRICITY
+    return !pierce && !is_explosion && flavour != BEAM_ELECTRICITY
            && hit != AUTOMATIC_HIT;
 }
 
@@ -420,7 +420,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     pbolt.colour         = zinfo->colour;
     pbolt.glyph          = dchar_glyph(zinfo->glyph);
     pbolt.obvious_effect = zinfo->always_obvious;
-    pbolt.is_beam        = zinfo->can_beam;
+    pbolt.pierce         = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
 
     if (zinfo->power_cap > 0)
@@ -617,7 +617,7 @@ void bolt::initialise_fire()
 
     dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-          (is_beam) ? "beam" : "missile",
+          (pierce) ? "beam" : "missile",
           (is_explosion) ? "*" :
           (is_big_cloud) ? "+" : "",
           (is_tracer) ? " tracer" : "",
@@ -651,8 +651,8 @@ void bolt::apply_beam_conducts()
         case BEAM_HOLY_FLAME:
         case BEAM_STICKY_FLAME:
             did_god_conduct(DID_FIRE,
-                            is_beam || is_explosion ? 6 + random2(3)
-                                                    : 2 + random2(3),
+                            pierce || is_explosion ? 6 + random2(3)
+                                                   : 2 + random2(3),
                             god_cares());
             break;
         default:
@@ -1159,7 +1159,7 @@ void bolt::affect_cell()
     if (hit_player && can_affect_actor(&you))
     {
         affect_player();
-        if (hit == AUTOMATIC_HIT && !is_beam)
+        if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
     }
 
@@ -1167,13 +1167,13 @@ void bolt::affect_cell()
     // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
     const bool still_wall = (was_solid && old_pos == pos());
-    if ((!hit_player || is_beam || is_explosion) && !still_wall)
+    if ((!hit_player || pierce || is_explosion) && !still_wall)
     {
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
         {
             affect_monster(m);
-            if ((hit == AUTOMATIC_HIT && !is_beam && !ignores_monster(m))
+            if ((hit == AUTOMATIC_HIT && !pierce && !ignores_monster(m))
                 && (!is_tracer || m->visible_to(agent())))
             {
                 finish_beam();
@@ -1749,7 +1749,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     if (pbolt.affects_items && doFlavouredEffects)
     {
         const int burn_power = (pbolt.is_explosion) ? 5 :
-                               (pbolt.is_beam)      ? 3
+                               (pbolt.pierce)       ? 3
                                                     : 2;
         mons->expose_to_element(pbolt.flavour, burn_power, false);
     }
@@ -2270,7 +2270,7 @@ void bolt_parent_init(bolt *parent, bolt *child)
     child->source_name    = parent->source_name;
     child->attitude       = parent->attitude;
 
-    child->is_beam        = parent->is_beam;
+    child->pierce         = parent->pierce ;
     child->is_explosion   = parent->is_explosion;
     child->ex_size        = parent->ex_size;
     child->foe_ratio      = parent->foe_ratio;
@@ -2313,7 +2313,7 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
     beam.hit            = AUTOMATIC_HIT;
     beam.colour         = MAGENTA;
     beam.obvious_effect = true;
-    beam.is_beam        = false;
+    beam.pierce         = false;
     beam.is_explosion   = false;
     // So as not to recur infinitely
     beam.origin_spell = SPELL_NO_SPELL;
@@ -2993,13 +2993,13 @@ bool bolt::fuzz_invis_tracer()
 // A first step towards to-hit sanity for beams. We're still being
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
-static bool _test_beam_hit(int attack, int defence, bool is_beam,
+static bool _test_beam_hit(int attack, int defence, bool pierce,
                            int defl, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return true;
 
-    if (is_beam)
+    if (pierce)
     {
         if (defl > 1)
             attack = r[0].random2(attack * 2) / 3;
@@ -3344,16 +3344,16 @@ bool bolt::misses_player()
 
     int defl = you.missile_deflection();
 
-    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, 0, r))
+    if (!_test_beam_hit(real_tohit, dodge_less, pierce, 0, r))
         mprf("The %s misses you.", name.c_str());
-    else if (defl && !_test_beam_hit(real_tohit, dodge_less, is_beam, defl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge_less, pierce, defl, r))
     {
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
         you.ablate_deflection();
     }
-    else if (!_test_beam_hit(real_tohit, dodge, is_beam, defl, r))
+    else if (!_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
@@ -3365,7 +3365,7 @@ bool bolt::misses_player()
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
-        if (_test_beam_hit(real_tohit, dodge_more, is_beam, defl, r))
+        if (_test_beam_hit(real_tohit, dodge_more, pierce, defl, r))
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         else
             mprf("Helpless, you fail to dodge the %s.", name.c_str());
@@ -4858,14 +4858,14 @@ void bolt::affect_monster(monster* mon)
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, defl, r))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, defl, r))
     {
-        const bool deflected = _test_beam_hit(beam_hit, rand_ev, is_beam, 0, r);
+        const bool deflected = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
             // if it would have hit otherwise...
-            if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
+            if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))
             {
                 string deflects = (defl == 2) ? "deflects" : "repels";
                 msg::stream << mon->name(DESC_THE) << " "
@@ -4874,7 +4874,7 @@ void bolt::affect_monster(monster* mon)
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       is_beam, 0, r))
+                                       pierce, 0, r))
             {
                 msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
@@ -5040,7 +5040,7 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // Missiles go past bushes and briar patches, unless aimed directly at them
     if ((mons_species(mon->type) == MONS_BUSH || mon->type == MONS_BRIAR_PATCH)
-        && !is_beam && !is_explosion
+        && !pierce && !is_explosion
         && !is_enchantment()
         && target != mon->pos()
         && name != "sticky flame"
@@ -5701,7 +5701,7 @@ int bolt::range_used_on_hit() const
     int used = 0;
 
     // Non-beams can only affect one thing (player/monster).
-    if (!is_beam)
+    if (!pierce)
         used = BEAM_STOP;
     else if (is_enchantment())
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
@@ -6285,7 +6285,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
-               loudness(0), noise_msg(), is_beam(false), is_explosion(false),
+               loudness(0), noise_msg(), pierce(false), is_explosion(false),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
@@ -6425,7 +6425,7 @@ string bolt::get_short_name() const
         return "sticky fire";
     }
 
-    if (flavour == BEAM_ELECTRICITY && is_beam)
+    if (flavour == BEAM_ELECTRICITY && pierce)
         return "lightning";
 
     if (flavour == BEAM_NONE || flavour == BEAM_MISSILE

@@ -78,7 +78,8 @@ struct bolt
     int         loudness;              // Noise level on hitting or exploding.
     string      noise_msg;             // Message to give player if the hit
                                        // or explosion isn't in view.
-    bool        is_beam;               // beam? (can hit multiple targets?)
+    bool        pierce;                // Can the beam pass through a target and
+                                       // hit another target behind the first?
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        aimed_at_spot;         // aimed at (x, y), should not cross

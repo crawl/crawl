@@ -127,7 +127,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.ench_power  = pow;
     beem.source_id   = MID_PLAYER;
     beem.thrower     = KILL_YOU;
-    beem.is_beam     = false;
+    beem.pierce      = false;
     beem.is_explosion = true;
     beem.origin_spell = SPELL_MEPHITIC_CLOUD;
     beem.aux_source.clear();
@@ -404,7 +404,7 @@ void apply_control_winds(const monster* mon)
 
     bolt wind_beam;
     wind_beam.hit = AUTOMATIC_HIT;
-    wind_beam.is_beam = true;
+    wind_beam.pierce  = true;
     wind_beam.affects_nothing = true;
     wind_beam.source = mon->pos();
     wind_beam.range = LOS_RADIUS;

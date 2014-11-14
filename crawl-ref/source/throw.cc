@@ -535,7 +535,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.source       = agent->pos();
     beam.colour       = item.get_colour();
     beam.flavour      = BEAM_MISSILE;
-    beam.is_beam      = false;
+    beam.pierce       = false;
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
@@ -893,7 +893,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
           ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
-    pbolt.is_beam   = false;
+    pbolt.pierce    = false;
     pbolt.is_tracer = false;
 
     pbolt.loudness = int(sqrt(item_mass(item))/3 + 0.5);
@@ -1006,7 +1006,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
     beam.flavour = BEAM_MISSILE;
     beam.thrower = KILL_MON_MISSILE;
     beam.aux_source.clear();
-    beam.is_beam = false;
+    beam.pierce  = false;
 }
 
 // msl is the item index of the thrown missile (or weapon).

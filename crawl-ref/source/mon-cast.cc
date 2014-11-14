@@ -216,7 +216,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
     beam.thrower      = KILL_MISC;
-    beam.is_beam      = false;
+    beam.pierce       = false;
     beam.is_explosion = false;
 
     switch (spell_cast)
@@ -318,22 +318,22 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD:
         beam.flavour  = BEAM_DISPEL_UNDEAD;
         beam.damage   = dice_def(3, min(6 + power / 10, 40));
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_PARALYSE:
         beam.flavour  = BEAM_PARALYSIS;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_PETRIFY:
         beam.flavour  = BEAM_PETRIFY;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_SLOW:
         beam.flavour  = BEAM_SLOW;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_HASTE_OTHER:
@@ -348,33 +348,33 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_CORONA:
         beam.flavour  = BEAM_CORONA;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_CONFUSE:
         beam.flavour  = BEAM_CONFUSION;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_HIBERNATION:
         beam.flavour  = BEAM_HIBERNATION;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_SLEEP:
         beam.flavour    = BEAM_SLEEP;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         beam.ench_power = 6 * mons->spell_hd(real_spell);
         break;
 
     case SPELL_POLYMORPH:
         beam.flavour  = BEAM_POLYMORPH;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_MALMUTATE:
         beam.flavour  = BEAM_MALMUTATE;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         /*
           // Be careful with this one.
           // Having allies mutate you is infuriating.
@@ -389,7 +389,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = RED;
         beam.flavour  = BEAM_FIRE;
         beam.hit      = 7 + power / 6;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_VENOM_BOLT:
@@ -398,7 +398,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = LIGHTGREEN;
         beam.flavour  = BEAM_POISON;
         beam.hit      = 19 + power / 20;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_POISON_ARROW:
@@ -416,7 +416,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = RED;
         beam.flavour  = BEAM_LAVA;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_BOLT_OF_FIRE:
@@ -425,7 +425,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = RED;
         beam.flavour  = BEAM_FIRE;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_THROW_ICICLE:
@@ -442,7 +442,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = WHITE;
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_BOLT_OF_INACCURACY:
@@ -451,7 +451,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = YELLOW;
         beam.flavour  = BEAM_ENERGY;
         beam.hit      = 1;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_PRIMAL_WAVE:
@@ -463,7 +463,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_WATER;
         // Huge wave of water is hard to dodge.
         beam.hit      = 20 + power / 20;
-        beam.is_beam  = false;
+        beam.pierce   = false;
         beam.glyph    = dchar_glyph(DCHAR_WAVY);
         break;
 
@@ -473,7 +473,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = WHITE;
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -483,7 +483,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = LIGHTCYAN;
         beam.flavour  = BEAM_ELECTRICITY;
         beam.hit      = 17 + power / 20;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_BLINKBOLT:
@@ -492,7 +492,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = LIGHTCYAN;
         beam.flavour  = BEAM_ELECTRICITY;
         beam.hit      = 16 + power / 40;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_LIGHTNING_BOLT:
@@ -501,7 +501,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = LIGHTCYAN;
         beam.flavour  = BEAM_ELECTRICITY;
         beam.hit      = 16 + power / 40;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_INVISIBILITY:
@@ -551,7 +551,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_TELEPORT_OTHER:
         beam.flavour  = BEAM_TELEPORT;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
@@ -565,7 +565,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_DIG:
         beam.flavour  = BEAM_DIGGING;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_BOLT_OF_DRAINING:      // negative energy
@@ -574,7 +574,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_NEG;
         beam.hit      = 16 + power / 35;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: // mystic blast
@@ -607,13 +607,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_PAIN;
         beam.damage     = dice_def(1, 7 + (power / 20));
         beam.ench_power = max(50, 8 * mons->spell_hd(real_spell));
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
         beam.ench_power = mons->spell_hd(real_spell) * 6;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_STICKY_FLAME:
@@ -635,7 +635,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = GREEN;
         beam.flavour  = BEAM_MEPHITIC;
         beam.hit      = 18 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -645,7 +645,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = LIGHTGREEN;
         beam.flavour  = BEAM_POISON;
         beam.hit      = 18 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -656,7 +656,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
         beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
-        beam.is_beam    = true;             // except it also destroys walls
+        beam.pierce     = true;             // except it also destroys walls
         break;
 
     case SPELL_STING:              // sting
@@ -713,7 +713,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_DISINTEGRATION;
         beam.ench_power = 50;
         beam.damage     = dice_def(1, 30 + (power / 10));
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_MEPHITIC_CLOUD:
@@ -733,7 +733,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_MIASMA;
         beam.hit      = 17 + power / 20;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -753,7 +753,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage       = dice_def(3, 20);
         beam.hit          = 24;
         beam.flavour      = BEAM_HELLFIRE;
-        beam.is_beam      = true;
+        beam.pierce       = true;
         beam.is_explosion = true;
         break;
 
@@ -764,22 +764,22 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour     = CYAN;
         beam.flavour    = BEAM_FRAG;
         beam.hit        = 19 + power / 30;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_BANISHMENT:
         beam.flavour  = BEAM_BANISH;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_BLINK_OTHER:
         beam.flavour    = BEAM_BLINK;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_BLINK_OTHER_CLOSE:
         beam.flavour    = BEAM_BLINK_CLOSE;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_FIRE_BREATH:
@@ -791,7 +791,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour     = RED;
         beam.hit        = 30;
         beam.flavour    = BEAM_FIRE;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         if (real_spell == SPELL_SEARING_BREATH)
         {
             beam.name        = "searing blast";
@@ -808,7 +808,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour       = ETC_RANDOM;
         beam.hit          = 30;
         beam.flavour      = BEAM_CHAOS;
-        beam.is_beam      = true;
+        beam.pierce       = true;
         beam.is_big_cloud = true;
         break;
 
@@ -821,7 +821,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour     = WHITE;
         beam.hit        = 30;
         beam.flavour    = BEAM_COLD;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         if (real_spell == SPELL_CHILLING_BREATH)
         {
             beam.name        = "chilling blast";
@@ -837,7 +837,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = ETC_HOLY;
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 18 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -846,7 +846,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.glyph    = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_IOOD:                  // tracer only
@@ -856,7 +856,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_CONJURE_FLAME:         // ditto
         beam.flavour  = BEAM_DEVASTATION;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
         // we'll ignore that.  We need some damage on the tracer so the monster
         // doesn't think the spell is useless against other monsters.
@@ -871,7 +871,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_PETRIFYING_CLOUD;
         beam.foe_ratio = 30;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -882,7 +882,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = ETC_HOLY;
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 #endif
 
@@ -905,7 +905,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_SENTINEL_MARK:
         beam.ench_power = 125; //Difficult to resist
         beam.flavour    = BEAM_SENTINEL_MARK;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_GHOSTLY_FLAMES:
@@ -914,7 +914,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = CYAN;
         beam.flavour  = BEAM_GHOSTLY_FLAME;
         beam.hit      = AUTOMATIC_HIT;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         beam.is_big_cloud = true;
         break;
 
@@ -930,7 +930,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_DIMENSION_ANCHOR:
         beam.ench_power = power / 2;
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_THORN_VOLLEY:
@@ -944,7 +944,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_STRIP_RESISTANCE:
         beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.flavour    = BEAM_VULNERABILITY;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     // XXX: This seems needed to give proper spellcasting messages, even though
@@ -956,19 +956,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_MALIGN_OFFERING:
         beam.flavour    = BEAM_MALIGN_OFFERING;
         beam.damage     = dice_def(2, 7 + (power / 13));
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_VIRULENCE:
         beam.flavour    = BEAM_VIRULENCE;
         beam.ench_power = mons->spell_hd(real_spell) * 6;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_IGNITE_POISON_SINGLE:
         beam.flavour    = BEAM_IGNITE_POISON;
         beam.ench_power = mons->spell_hd(real_spell) * 12;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_ORB_OF_ELECTRICITY:
@@ -988,7 +988,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_FIRE;
         beam.hit        = 17 + power / 25;
         beam.ench_power = power;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_FLASH_FREEZE:
@@ -1002,17 +1002,17 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_SAP_MAGIC:
         beam.ench_power = mons->spell_hd(real_spell) * 10;
         beam.flavour    = BEAM_SAP_MAGIC;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_CORRUPT_BODY:
         beam.flavour    = BEAM_CORRUPT_BODY;
-        beam.is_beam    = true;
+        beam.pierce     = true;
         break;
 
     case SPELL_SHADOW_BOLT:
         beam.name     = "shadow bolt";
-        beam.is_beam  = true;
+        beam.pierce   = true;
         // deliberate fall-through
     case SPELL_SHADOW_SHARD:
         if (real_spell == SPELL_SHADOW_SHARD)
@@ -1029,7 +1029,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour   = GREEN;
         beam.flavour  = BEAM_CRYSTAL;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_DRAIN_MAGIC:
@@ -1043,7 +1043,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(3, 9 + power / 17);
         beam.flavour  = BEAM_ACID;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     case SPELL_SPIT_LAVA:
@@ -1062,7 +1062,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour      = LIGHTCYAN;
         beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.flavour     = BEAM_ELECTRICITY;
-        beam.is_beam     = true;
+        beam.pierce      = true;
         break;
 
     case SPELL_FLAMING_CLOUD:
@@ -1073,7 +1073,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.colour       = RED;
         beam.hit          = 30;
         beam.flavour      = BEAM_FIRE;
-        beam.is_beam      = true;
+        beam.pierce       = true;
         beam.is_big_cloud = true;
         break;
 
@@ -1095,7 +1095,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_DEATH_RATTLE;
         beam.foe_ratio = 30;
-        beam.is_beam  = true;
+        beam.pierce   = true;
         break;
 
     default:
@@ -2469,11 +2469,11 @@ static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
 static bool _already_bramble_wall(const monster* mons, coord_def targ)
 {
     bolt tracer;
-    tracer.source = mons->pos();
-    tracer.target = targ;
-    tracer.range = 12;
+    tracer.source    = mons->pos();
+    tracer.target    = targ;
+    tracer.range     = 12;
     tracer.is_tracer = true;
-    tracer.is_beam = true;
+    tracer.pierce    = true;
     tracer.fire();
 
     int briar_count = 0;

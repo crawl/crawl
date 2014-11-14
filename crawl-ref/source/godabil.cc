@@ -3812,8 +3812,8 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     spell_type shadow_spell = spell;
     if (!orig_beam->is_enchantment())
     {
-        shadow_spell = (orig_beam->is_beam) ? SPELL_SHADOW_BOLT
-                                            : SPELL_SHADOW_SHARD;
+        shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
+                                           : SPELL_SHADOW_SHARD;
     }
 
     bolt beem;

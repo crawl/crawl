@@ -3034,7 +3034,7 @@ bool fire_battlesphere(monster* mons)
         beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.colour     = MAGENTA;
         beam.flavour    = BEAM_MMISSILE;
-        beam.is_beam    = false;
+        beam.pierce     = false;
 
         // Fire tracer.
         fire_tracer(mons, beam);

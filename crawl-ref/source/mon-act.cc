@@ -1115,7 +1115,7 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
     beem.glyph        = from.glyph;
     beem.flavour      = from.flavour;
     beem.thrower      = from.thrower;
-    beem.is_beam      = from.is_beam;
+    beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
     return beem;
 }
@@ -1906,7 +1906,7 @@ static void _grand_avatar_act(monster* mons)
             beam.colour      = LIGHTGREEN;
             beam.flavour     = BEAM_MMISSILE;
             beam.hit         = AUTOMATIC_HIT;
-            beam.is_beam     = false;
+            beam.pierce      = false;
             beam.foe_ratio   = 0;
             fire_tracer(mons, beam);
             if (mons_should_fire(beam))
