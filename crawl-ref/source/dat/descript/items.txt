@@ -682,7 +682,6 @@ large rock
 A very large and very heavy stone. {{
     if you.race() == "Ogre"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
    then
        return ""
    else
