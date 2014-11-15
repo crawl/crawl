@@ -7040,7 +7040,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SPECTRAL_WEAPON:
         return find_spectral_weapon(mon)
             || !foe
-            || grid_distance(mon, foe) > 2;
+            || grid_distance(mon->pos(), foe->pos()) > 2;
 
     case SPELL_INJURY_BOND:
         for (monster_iterator mi; mi; ++mi)
