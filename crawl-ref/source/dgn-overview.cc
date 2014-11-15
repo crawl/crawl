@@ -52,6 +52,7 @@ static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
 static void _seen_shop(const coord_def& pos);
 static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
+static void _seen_runed_door(dungeon_feature_type feat);
 
 static string _get_branches(bool display);
 static string _get_altars(bool display);
@@ -90,6 +91,8 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
         _seen_portal(which_thing, pos);
+    else if (which_thing == DNGN_RUNED_DOOR)
+        _seen_runed_door(which_thing);
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -672,6 +675,18 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
         portal_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");
     }
+}
+
+static void _seen_runed_door(dungeon_feature_type which_thing)
+{
+    level_id li = level_id::current();
+
+    if(level_annotation_has("runed door",li))
+        return;
+
+    if (level_annotations[li].length() > 0)
+        level_annotations[li] += ", ";
+    level_annotations[li] += "runed door";
 }
 
 void enter_branch(branch_type branch, level_id from)
