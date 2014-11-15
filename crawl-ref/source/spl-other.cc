@@ -116,15 +116,11 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
 spret_type cast_recall(bool fail)
 {
     fail_check();
-    start_recall(0);
+    start_recall(RECALL_SPELL);
     return SPRET_SUCCESS;
 }
 
-// Type recalled:
-// 0 = anything
-// 1 = undead only (Yred religion ability)
-// 2 = orcs only (Beogh religion ability)
-void start_recall(int type)
+void start_recall(recall_t type)
 {
     // Assemble the recall list.
     typedef pair<mid_t, int> mid_hd;
@@ -136,12 +132,12 @@ void start_recall(int type)
         if (!mons_is_recallable(&you, *mi))
             continue;
 
-        if (type == 1) // undead
+        if (type == RECALL_YRED)
         {
             if (mi->holiness() != MH_UNDEAD)
                 continue;
         }
-        else if (type == 2) // Beogh
+        else if (type == RECALL_BEOGH)
         {
             if (!is_orcish_follower(*mi))
                 continue;
@@ -151,12 +147,12 @@ void start_recall(int type)
         rlist.push_back(m);
     }
 
-    if (type > 0 && branch_allows_followers(you.where_are_you))
+    if (type != RECALL_SPELL && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
     if (!rlist.empty())
     {
-        // Sort the recall list roughly by HD, randomizing a little
+        // Sort the recall list rough
         for (unsigned int i = 0; i < rlist.size(); ++i)
             rlist[i].second += random2(10);
         sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
