@@ -220,8 +220,10 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
 
     case BRANCH_PANDEMONIUM:
         flv.floor = tile_dngn_coloured(TILE_FLOOR_DEMONIC, env.floor_colour);
-        // TODO: occasionaly "flesh out" the walls again?
-        flv.wall  = tile_dngn_coloured(TILE_WALL_BARS, env.rock_colour);
+        if (env.rock_colour == LIGHTRED)
+            flv.wall = TILE_WALL_FLESH;
+        else
+            flv.wall = tile_dngn_coloured(TILE_WALL_BARS, env.rock_colour);
         break;
 
     case BRANCH_ZIGGURAT:
