@@ -10,7 +10,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <type_traits>
 
 #include "enum.h"
 
@@ -117,11 +116,8 @@ static void deleteAll(T& collection)
 }
 
 template<class M>
-// Return a const pointer if the map is const
-typename conditional<is_const<M>::value,
-                     typename M::mapped_type const *,
-                     typename M::mapped_type*>::type
-map_find(M &map, const typename M::key_type &obj)
+auto map_find(M &map, const typename M::key_type &obj)
+    -> decltype(&map.begin()->second)
 {
     auto it = map.find(obj);
     return it == map.end() ? nullptr : &it->second;
