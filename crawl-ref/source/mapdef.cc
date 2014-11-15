@@ -5861,14 +5861,15 @@ map_flags map_flags::parse(const string flag_list[],
             negate = true;
         }
 
-        flag_map::const_iterator val = flag_vals.find(flag);
-        if (val == flag_vals.end())
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
-
-        if (negate)
-            mf.flags_unset |= val->second;
+        if (unsigned long *val = map_find(flag_vals, flag))
+        {
+            if (negate)
+                mf.flags_unset |= *val;
+            else
+                mf.flags_set |= *val;
+        }
         else
-            mf.flags_set |= val->second;
+            throw make_stringf("Unknown flag: '%s'", flag.c_str());
     }
 
     return mf;

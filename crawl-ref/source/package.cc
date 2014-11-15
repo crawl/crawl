@@ -34,6 +34,7 @@ Notes:
 #include "endianness.h"
 #include "errors.h"
 #include "syscalls.h"
+#include "libutil.h" // map_find
 
 // debugging defines
 #undef  FSCK_VERBOSE
@@ -279,10 +280,9 @@ chunk_writer* package::writer(const string name)
 
 chunk_reader* package::reader(const string name)
 {
-    directory_t::iterator ch = directory.find(name);
-    if (ch == directory.end())
-        return 0;
-    return new chunk_reader(this, ch->second);
+    if (plen_t *ch = map_find(directory, name))
+        return new chunk_reader(this, *ch);
+    return 0;
 }
 
 plen_t package::extend_block(plen_t at, plen_t size, plen_t by)

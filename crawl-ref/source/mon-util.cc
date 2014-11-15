@@ -4556,9 +4556,8 @@ monster *monster_by_mid(mid_t m)
     if (m == MID_YOU_FAULTLESS)
         return &menv[YOU_FAULTLESS];
 
-    map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
-    if (mc != env.mid_cache.end())
-        return &menv[mc->second];
+    if (unsigned short *mc = map_find(env.mid_cache, m))
+        return &menv[*mc];
     return 0;
 }
 

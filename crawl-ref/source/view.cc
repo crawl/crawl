@@ -1101,9 +1101,11 @@ public:
         if (pos == you.pos())
             return pos;
 
-        map<coord_def, bool>::iterator found = hidden.find(pos);
-        if (found != hidden.end() && found->second)
-            return coord_def(-1, -1);
+        if (bool *found = map_find(hidden, pos))
+        {
+            if (*found)
+                return coord_def(-1, -1);
+        }
 
         if (!random2(10 - current_frame))
         {

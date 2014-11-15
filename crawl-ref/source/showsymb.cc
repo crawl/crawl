@@ -12,6 +12,7 @@
 #include "colour.h"
 #include "env.h"
 #include "itemname.h"
+#include "libutil.h" // map_find
 #include "options.h"
 #include "religion.h"
 #include "stash.h"
@@ -257,9 +258,8 @@ static cglyph_t _get_item_override(const item_def &item)
 
     {
         // Check the cache...
-        map<string, cglyph_t>::const_iterator ir = Options.item_glyph_cache.find(name);
-        if (ir != Options.item_glyph_cache.end())
-            return ir->second;
+        if (cglyph_t *gly = map_find(Options.item_glyph_cache, name))
+            return *gly;
     }
 
     for (auto ir : Options.item_glyph_overrides)

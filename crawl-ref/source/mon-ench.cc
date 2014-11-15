@@ -112,9 +112,8 @@ void monster::update_ench(const mon_enchant &ench)
 {
     if (ench.ench != ENCH_NONE)
     {
-        mon_enchant_list::iterator i = enchantments.find(ench.ench);
-        if (i != enchantments.end())
-            i->second = ench;
+        if (mon_enchant *curr_ench = map_find(enchantments, ench.ench))
+            *curr_ench = ench;
     }
 }
 
