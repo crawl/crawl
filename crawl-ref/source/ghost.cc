@@ -32,72 +32,70 @@ vector<ghost_demon> ghosts;
 // Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
-    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
+    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_BOLT_OF_DRAINING,
-    SPELL_AGONY,
-    SPELL_DISINTEGRATE,
-    SPELL_LIGHTNING_BOLT,
-    SPELL_AIRSTRIKE,
-    SPELL_STICKY_FLAME,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_IOOD,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_THROW_ICICLE,
+    SPELL_CORROSIVE_BOLT,
+    SPELL_DISINTEGRATE,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
-    SPELL_FIREBALL,
-    SPELL_VENOM_BOLT,
     SPELL_IRON_SHOT,
-    SPELL_LRD,
-    SPELL_STONE_ARROW,
+    SPELL_POISON_ARROW,
+    SPELL_BOLT_OF_DRAINING,
+    SPELL_QUICKSILVER_BOLT,
     SPELL_FORCE_LANCE,
-    SPELL_DISCHARGE,
+    SPELL_FIREBALL,
+    SPELL_BOLT_OF_MAGMA,
+    SPELL_LRD,
+    SPELL_LIGHTNING_BOLT,
+    SPELL_BLINKBOLT,
+    SPELL_VENOM_BOLT,
+    SPELL_AGONY,
+    SPELL_DRAIN_MAGIC,
+    SPELL_SLEEP,
+    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_STICKY_FLAME_RANGE,
+    SPELL_STEAM_BALL,
+    SPELL_THROW_ICICLE,
+    SPELL_AIRSTRIKE,
+    SPELL_SMITING,
     SPELL_DAZZLING_SPRAY,
+    SPELL_STONE_ARROW,
+    SPELL_DISCHARGE,
+    SPELL_VAMPIRIC_DRAINING,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
-    SPELL_FREEZE,
-    SPELL_PAIN,
-    SPELL_STING,
-    SPELL_SHOCK,
-    SPELL_SANDBLAST,
-    SPELL_MAGIC_DART,
-    SPELL_HIBERNATION,
-    SPELL_FLAME_TONGUE,
-    SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
 
 // Pan lord self-enchantment / summoning spell list.
 static spell_type search_order_selfench[] =
 {
-    SPELL_SYMBOL_OF_TORMENT,
-    SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_DRAGON,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_GREATER_DEMON,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
-    SPELL_SUMMON_DEMON,
+    SPELL_MALIGN_GATEWAY,
     SPELL_HASTE,
-    SPELL_SILENCE,
-    SPELL_BATTLESPHERE,
-    SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_SWARM,
+    SPELL_INVISIBILITY,
+    SPELL_SYMBOL_OF_TORMENT,
     SPELL_MONSTROUS_MENAGERIE,
-    SPELL_SWIFTNESS,
+    SPELL_SILENCE,
+    SPELL_SHADOW_CREATURES,
+    SPELL_SUMMON_DEMON,
+    SPELL_SUMMON_VERMIN,
+    SPELL_SUMMON_SWARM,
+    SPELL_SIMULACRUM,
+    SPELL_BATTLESPHERE,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
-    SPELL_TWISTED_RESURRECTION,
-    SPELL_INVISIBILITY,
-    SPELL_CALL_IMP,
-    SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_MALIGN_GATEWAY,
+    SPELL_SWIFTNESS,
     SPELL_BLINK,
+    SPELL_SUMMON_BUTTERFLIES,
     SPELL_NO_SPELL,                        // end search
-    // No Simulacrum: iffy for pghosts (picking up material components),
-    // largely useless on Pan lords.
 };
 
 // Pan lord misc spell list.
@@ -107,19 +105,19 @@ static spell_type search_order_misc[] =
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_POISONOUS_CLOUD,
     SPELL_MASS_CONFUSION,
     SPELL_ENGLACIATION,
     SPELL_DISPEL_UNDEAD,
-    SPELL_PARALYSE,
-    SPELL_CONFUSE,
-    SPELL_MEPHITIC_CLOUD,
-    SPELL_SLOW,
-    SPELL_PETRIFY,
-    SPELL_POLYMORPH,
-    SPELL_TELEPORT_OTHER,
     SPELL_DIG,
-    SPELL_CORONA,
+    SPELL_PETRIFY,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_PARALYSE,
+    SPELL_POLYMORPH,
+    SPELL_MEPHITIC_CLOUD,
+    SPELL_CONFUSE,
+    SPELL_TELEPORT_OTHER,
+    SPELL_SLOW,
     SPELL_NO_SPELL,                        // end search
 };
 
@@ -265,21 +263,12 @@ void ghost_demon::init_pandemonium_lord()
                                    : RANDOM_ELEMENT(search_order_selfench));
 
         if (coinflip())
-        {
-            spell_type spell = RANDOM_ELEMENT(search_order_misc);
-            if (spell != SPELL_DIG)
-                ADD_SPELL(spell);
-        }
+            ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
 
-        ADD_SPELL(random_choose_weighted(2, SPELL_TELEPORT_SELF,
-                                         1, SPELL_BLINK,
-                                         1, SPELL_NO_SPELL,
-                                         0));
-
-        // Give demon a chance for some monster-only spells.
+        // Give demon a chance for some nasty spells.
         // Demon-summoning should be fairly common.
         if (one_chance_in(4))
         {
@@ -293,18 +282,12 @@ void ghost_demon::init_pandemonium_lord()
         }
 
         if (one_chance_in(25))
-            ADD_SPELL(SPELL_STEAM_BALL);
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_QUICKSILVER_BOLT);
-        if (one_chance_in(25))
             ADD_SPELL(SPELL_HELLFIRE);
+        if (one_chance_in(25))
+            ADD_SPELL(SPELL_HELLFIRE_BURST);
         if (one_chance_in(25))
             ADD_SPELL(SPELL_IOOD);
 
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_SMITING);
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_HELLFIRE_BURST);
         if (one_chance_in(22))
             ADD_SPELL(SPELL_SUMMON_HYDRA);
         if (one_chance_in(20))
