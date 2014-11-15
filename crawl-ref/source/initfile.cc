@@ -4596,6 +4596,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 crawl_state.map_stat_gen = true;
             else
                 crawl_state.obj_stat_gen = true;
+#ifdef USE_TILE_LOCAL
+            crawl_state.tiles_disabled = true;
+#endif
 
             if (!SysEnv.map_gen_iters)
                 SysEnv.map_gen_iters = 100;
@@ -4682,6 +4685,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
                 return false;
             crawl_state.build_db = true;
+#ifdef USE_TILE_LOCAL
+            crawl_state.tiles_disabled = true;
+#endif
             break;
 
         case CLO_GDB:

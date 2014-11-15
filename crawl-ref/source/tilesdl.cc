@@ -348,6 +348,8 @@ void TilesFramework::calculate_default_options()
 
 bool TilesFramework::initialise()
 {
+    if (crawl_state.tiles_disabled)
+        return true;
     _init_consoles();
 
     const char *icon_name =

@@ -103,6 +103,7 @@ struct game_state
     // drawing.
     bool mlist_targeting;
 #else
+    bool tiles_disabled;
     bool title_screen;
 #endif
 
