@@ -4525,6 +4525,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         && props.exists("plus") && !is_unrandom_artefact(item))
     {
         item.plus = props["plus"].get_int();
+        item_set_appearance(item);
     }
     if (props.exists("ident"))
         item.flags |= props["ident"].get_int();
