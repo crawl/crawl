@@ -126,13 +126,12 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
  */
 static bool _attacking_holy_matters(const monster* victim)
 {
-    // XXX: what does this do?
+    // Don't penalise the player for killing holies unless they were once
+    // neutral, or were no-reward (e.g. created by wrath).
     return !victim
             || testbits(victim->flags, MF_NO_REWARD)
             || testbits(victim->flags, MF_WAS_NEUTRAL);
 }
-
-
 
 
 /// A definition of the way in which a god dislikes a conduct being taken.
