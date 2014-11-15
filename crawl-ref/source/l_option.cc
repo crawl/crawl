@@ -3,6 +3,7 @@
 #include "l_libs.h"
 
 #include "clua.h"
+#include "libutil.h" // map_find
 #include "options.h"
 
 ////////////////////////////////////////////////////////////////
@@ -78,11 +79,9 @@ static int option_get(lua_State *ls)
         return 0;
 
     // Is this a Lua named option?
-    game_options::opt_map::iterator i = Options.named_options.find(opt);
-    if (i != Options.named_options.end())
+    if (string *value = map_find(Options.named_options, opt))
     {
-        const string &ov = i->second;
-        lua_pushstring(ls, ov.c_str());
+        lua_pushstring(ls, value->c_str());
         return 1;
     }
 

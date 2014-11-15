@@ -920,14 +920,12 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
 
     // If your god disliked the action, evaluate its response.
-    auto peeve = divine_peeves[you.religion].find(thing_done);
-    if (peeve != divine_peeves[you.religion].end())
-        (peeve->second)(thing_done, level, known, victim);
+    if (auto peeve = map_find(divine_peeves[you.religion], thing_done))
+        (*peeve)(thing_done, level, known, victim);
 
     // If your god liked the action, evaluate its response.
-    auto like = divine_likes[you.religion].find(thing_done);
-    if (like != divine_likes[you.religion].end())
-        (like->second)(thing_done, level, known, victim);
+    if (auto like = map_find(divine_likes[you.religion], thing_done))
+        (*like)(thing_done, level, known, victim);
 }
 
 // a sad and shrunken function.

@@ -11,6 +11,7 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
+#include "libutil.h" // map_find
 
 static element_colour_calc* element_colours[NUM_COLOURS] = {};
 static map<string, element_colour_calc*> element_colours_str;
@@ -781,12 +782,10 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
     if (ret == 16)
     {
         // Maybe we have an element colour attribute.
-        map<string, element_colour_calc*>::const_iterator it
-            = element_colours_str.find(str);
-        if (it != element_colours_str.end())
+        if (element_colour_calc **calc = map_find(element_colours_str, str))
         {
-            ASSERT(it->second);
-            ret = it->second->type;
+            ASSERT(*calc);
+            ret = (*calc)->type;
         }
     }
 

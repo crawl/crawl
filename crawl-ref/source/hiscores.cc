@@ -2735,11 +2735,10 @@ void xlog_fields::add_field(const string &key, const char *format, ...)
 
 string xlog_fields::str_field(const string &s) const
 {
-    xl_map::const_iterator i = fieldmap.find(s);
-    if (i == fieldmap.end())
+    if (string *value = map_find(fieldmap, s))
+        return *value;
+    else
         return "";
-
-    return i->second;
 }
 
 int xlog_fields::int_field(const string &s) const

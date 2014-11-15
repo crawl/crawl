@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "env.h"
 #include "l_defs.h"
+#include "libutil.h" // map_find
 #include "mon-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -101,13 +102,14 @@ LUAFN(moninf_get_is)
             _init_mi_flags();
         string flag = luaL_checkstring(ls, 2);
         const map<string, int>::const_iterator f = mi_flags.find(lowercase(flag));
-        if (f == mi_flags.end())
+        if (int *flagnum = map_find(mi_flags, lowercase(flag)))
+            num = *flagnum;
+        else
         {
             luaL_argerror(ls, 2, (string("no such moninf flag: '")
                                   + flag + "'").c_str());
             return 0;
         }
-        num = f->second;
     }
     if (num < 0 || num >= NUM_MB_FLAGS)
     {

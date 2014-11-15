@@ -4920,8 +4920,8 @@ int game_options::o_int(const char *name, int def) const
 {
     int val = def;
     opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = atoi(i->second.c_str());
+    if (string *value = map_find(named_options, name))
+        val = atoi(value->c_str());
     return val;
 }
 
@@ -4929,17 +4929,16 @@ bool game_options::o_bool(const char *name, bool def) const
 {
     bool val = def;
     opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = _read_bool(i->second, val);
+    if (string *value = map_find(named_options, name))
+        val = _read_bool(*value, val);
     return val;
 }
 
 string game_options::o_str(const char *name, const char *def) const
 {
     string val;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = i->second;
+    if (string *value = map_find(named_options, name))
+        val = *value;
     else if (def)
         val = def;
     return val;
