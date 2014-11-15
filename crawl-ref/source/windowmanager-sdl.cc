@@ -812,7 +812,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
     if (tex_path.c_str()[0] == 0)
     {
-#ifdef __ANDROID
+#ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
                             "Couldn't find texture '%s'.", filename);
 #endif
@@ -824,7 +824,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
     if (!img)
     {
-#ifdef __ANDROID
+#ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
                             "Couldn't load texture '%s'.", tex_path.c_str());
 #endif
