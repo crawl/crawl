@@ -19,6 +19,7 @@
 #include "database.h"
 #include "decks.h"
 #include "describe.h"
+#include "describe-god.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -1106,104 +1107,84 @@ static bool _append_books(string &desc, item_def &item, string key)
 static int _do_description(string key, string type, const string &suffix,
                            string footer = "")
 {
+    god_type which_god = str_to_god(key);
+    if (which_god != GOD_NO_GOD)
+    {
+        describe_god(which_god, true);
+        return true;
+    }
+
     describe_info inf;
     inf.quote = getQuoteString(key);
 
     string desc = getLongDescription(key);
     int width = min(80, get_number_of_cols());
 
-    god_type which_god = str_to_god(key);
-    if (which_god != GOD_NO_GOD)
+    monster_type mon_num = get_monster_by_name(key);
+    // Don't attempt to get more information on ghost demon
+    // monsters, as the ghost struct has not been initialised, which
+    // will cause a crash.  Similarly for zombified monsters, since
+    // they require a base monster.
+    if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
+        && !mons_class_is_zombified(mon_num))
     {
-        if (is_good_god(which_god))
-        {
-            inf.suffix = "\n\n" + god_name(which_god) +
-                         " won't accept worship from undead or evil beings.";
-        }
-        string help = get_god_powers(which_god);
-        if (!help.empty())
-        {
-            desc += "\n";
-            desc += help;
-        }
-        desc += "\n";
-        desc += get_god_likes(which_god);
-
-        help = get_god_dislikes(which_god);
-        if (!help.empty())
-        {
-            desc += "\n\n";
-            desc += help;
-        }
+        monster_info mi(mon_num);
+        // Avoid slime creature being described as "buggy"
+        if (mi.type == MONS_SLIME_CREATURE)
+            mi.slime_size = 1;
+        return describe_monsters(mi, true, footer);
     }
     else
     {
-        monster_type mon_num = get_monster_by_name(key);
-        // Don't attempt to get more information on ghost demon
-        // monsters, as the ghost struct has not been initialised, which
-        // will cause a crash.  Similarly for zombified monsters, since
-        // they require a base monster.
-        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-            && !mons_class_is_zombified(mon_num))
+        int thing_created = get_mitm_slot();
+        if (thing_created != NON_ITEM
+            && (type == "item" || type == "spell"))
         {
-            monster_info mi(mon_num);
-            // Avoid slime creature being described as "buggy"
-            if (mi.type == MONS_SLIME_CREATURE)
-                mi.slime_size = 1;
-            return describe_monsters(mi, true, footer);
-        }
-        else
-        {
-            int thing_created = get_mitm_slot();
-            if (thing_created != NON_ITEM
-                && (type == "item" || type == "spell"))
+            char name[80];
+            strncpy(name, key.c_str(), sizeof(name));
+            if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
             {
-                char name[80];
-                strncpy(name, key.c_str(), sizeof(name));
-                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+                append_weapon_stats(desc, mitm[thing_created]);
+                desc += "\n";
+            }
+            else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
+            {
+                append_armour_stats(desc, mitm[thing_created]);
+                desc += "\n";
+            }
+            else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+            {
+                append_missile_info(desc, mitm[thing_created]);
+                desc += "\n";
+            }
+            else if (type == "spell"
+                     || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                     || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
+            {
+                if (!_append_books(desc, mitm[thing_created], key))
                 {
-                    append_weapon_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
-                {
-                    append_armour_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
-                {
-                    append_missile_info(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (type == "spell"
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
-                {
-                    if (!_append_books(desc, mitm[thing_created], key))
+                    // FIXME: Duplicates messages from describe.cc.
+                    if (!player_can_memorise_from_spellbook(mitm[thing_created]))
                     {
-                        // FIXME: Duplicates messages from describe.cc.
-                        if (!player_can_memorise_from_spellbook(mitm[thing_created]))
-                        {
-                            desc += "This book is beyond your current level "
-                                    "of understanding.";
-                        }
-                        append_spells(desc, mitm[thing_created]);
+                        desc += "This book is beyond your current level "
+                        "of understanding.";
                     }
+                    append_spells(desc, mitm[thing_created]);
                 }
             }
-            else if (type == "card")
-            {
-                // 5 - " card"
-                card_type which_card =
-                     name_to_card(key.substr(0, key.length() - 5));
-                if (which_card != NUM_CARDS)
-                    desc += which_decks(which_card) + "\n";
-            }
-
-            // Now we don't need the item anymore.
-            if (thing_created != NON_ITEM)
-                destroy_item(thing_created);
         }
+        else if (type == "card")
+        {
+            // 5 - " card"
+            card_type which_card =
+            name_to_card(key.substr(0, key.length() - 5));
+            if (which_card != NUM_CARDS)
+                desc += which_decks(which_card) + "\n";
+        }
+
+        // Now we don't need the item anymore.
+        if (thing_created != NON_ITEM)
+            destroy_item(thing_created);
     }
 
     inf.body << desc;
