@@ -388,11 +388,7 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
 static void _erase_from_stop_train(skill_set &can_train)
 {
     for (skill_set_iter it = can_train.begin(); it != can_train.end(); ++it)
-    {
-        skill_set_iter it2 = you.stop_train.find(*it);
-        if (it2 != you.stop_train.end())
-            you.stop_train.erase(it2);
-    }
+        you.stop_train.erase(*it);
 }
 
 /*
@@ -442,9 +438,7 @@ static void _check_abil_skills()
         if (you.stop_train.empty())
             return;
 
-        skill_set_iter it = you.stop_train.find(abil_skill(abilities[i]));
-        if (it != you.stop_train.end())
-            you.stop_train.erase(it);
+        you.stop_train.erase(abil_skill(abilities[i]));
     }
 }
 
