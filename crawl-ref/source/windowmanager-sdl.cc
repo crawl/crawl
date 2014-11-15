@@ -140,6 +140,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
         return CK_ENTER + offset;
     case SDLK_BACKSPACE:
         return CK_BKSP + offset;
+    case SDLK_AC_BACK:
     case SDLK_ESCAPE:
         return CK_ESCAPE + offset;
     case SDLK_DELETE:
