@@ -11,6 +11,9 @@
 #include "religion.h"
 #include "state.h"
 
+// Forward declarations.
+static bool _god_likes_killing(const monster* victim);
+
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger
 
@@ -149,6 +152,57 @@ struct dislike_response
     bool (*valid_victim)(const monster* victim);
     /// A flat decrease to penance, after penance_factor is applied.
     int penance_offset;
+
+    /// Apply this response to a given conduct, severity level, and victim.
+    /// @param victim may be null.
+    void operator()(conduct_type thing_done, int level, bool known,
+                    const monster *victim)
+    {
+        // if the conduct filters on affected monsters, & the relevant monster
+        // isn't valid, don't trigger the conduct's consequences.
+        if (valid_victim && !valid_victim(victim))
+            return;
+
+        god_acting gdact;
+
+        // If the player didn't have a way to know they were going to trigger
+        // the conduct, and the god cares, print a message & bail.
+        if (!known && forgiveness_message)
+        {
+            simple_god_message(forgiveness_message);
+            return;
+        }
+
+        // trigger the actual effects of the conduct.
+
+        // weird hack (to prevent spam?)
+        if (you_worship(GOD_ZIN) && thing_done == DID_CAUSE_GLOWING)
+        {
+            static int last_glowing_lecture = -1;
+            if (!level)
+            {
+                simple_god_message(" is not enthusiastic about the "
+                                   "mutagenic glow surrounding you.");
+            }
+            else if (last_glowing_lecture != you.num_turns)
+            {
+                last_glowing_lecture = you.num_turns;
+                // Increase contamination within yellow glow.
+                simple_god_message(" does not appreciate the extra "
+                                   "mutagenic glow surrounding you!");
+            }
+        }
+
+        // a message, if we have one...
+        if (message)
+            simple_god_message(message);
+
+        // ...and piety/penance.
+        const int piety_loss = max(0, piety_factor * level);
+        const int penance = max(0, penance_factor * level
+                                   + penance_offset);
+        _handle_piety_penance(-piety_loss, 1, penance, thing_done);
+    }
 };
 
 
@@ -448,6 +502,37 @@ struct like_response
     /// Special-case code for weird likes. May modify piety bonus/denom, or
     /// may have other side effects. If NULL, doesn't trigger, ofc.
     void (*special)(int &piety, int &denom, const monster* victim);
+
+    /// Apply this response to a given conduct, severity level, and victim.
+    /// @param victim may be null.
+    void operator()(conduct_type thing_done, int level, bool /*known*/,
+                    const monster *victim)
+    {
+        // if the conduct filters on affected monsters, & the relevant monster
+        // isn't valid, don't trigger the conduct's consequences.
+        if (victim && !_god_likes_killing(victim))
+            return;
+
+        god_acting gdact;
+
+        if (message)
+            simple_god_message(message);
+
+        // this is all very strange, but replicates legacy behavior.
+        // See the comment on piety_bonus above.
+        int denom = piety_denom_bonus + level;
+        if (xl_denom)
+            denom -= you.get_experience_level() / xl_denom;
+
+        int gain = denom + piety_bonus;
+
+        // handle weird special cases
+        // may modify gain/denom
+        if (special)
+            special(gain, denom, victim);
+
+        _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
+    }
 };
 
 /**
@@ -809,7 +894,6 @@ static like_map divine_likes[] =
     },
 };
 
-
 /**
  * Will your god give you piety for killing the given monster, assuming that
  * its death triggers a conduct that the god sometimes likes?
@@ -825,7 +909,6 @@ static bool _god_likes_killing(const monster* victim)
     return !god_hates_attacking_friend(you.religion, victim);
 }
 
-
 static void _handle_your_gods_response(conduct_type thing_done, int level,
                                        bool known, const monster* victim)
 {
@@ -834,92 +917,18 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     if (you_worship(GOD_LUGONU) && player_in_branch(BRANCH_ABYSS))
         return;
 
-    // handle new-style conduct responses
-
-    // check for dislikes
     COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
-    if (divine_peeves[you.religion].count(thing_done))
-    {
-        const dislike_response peeve = divine_peeves[you.religion][thing_done];
-
-        // if the conduct filters on affected monsters, & the relevant monster
-        // isn't valid, don't trigger the conduct's consequences.
-        if (peeve.valid_victim && !peeve.valid_victim(victim))
-            return;
-
-        god_acting gdact;
-
-        // If the player didn't have a way to know they were going to trigger
-        // the conduct, and the god cares, print a message & bail.
-        if (!known && peeve.forgiveness_message)
-        {
-            simple_god_message(peeve.forgiveness_message);
-            return;
-        }
-
-        // trigger the actual effects of the conduct.
-
-        // weird hack (to prevent spam?)
-        if (you_worship(GOD_ZIN) && thing_done == DID_CAUSE_GLOWING)
-        {
-            static int last_glowing_lecture = -1;
-            if (!level)
-            {
-                simple_god_message(" is not enthusiastic about the "
-                                   "mutagenic glow surrounding you.");
-            }
-            else if (last_glowing_lecture != you.num_turns)
-            {
-                last_glowing_lecture = you.num_turns;
-                // Increase contamination within yellow glow.
-                simple_god_message(" does not appreciate the extra "
-                                   "mutagenic glow surrounding you!");
-            }
-        }
-
-        // a message, if we have one...
-        if (peeve.message)
-            simple_god_message(peeve.message);
-
-        // ...and piety/penance.
-        const int piety_loss = max(0, peeve.piety_factor * level);
-        const int penance = max(0, peeve.penance_factor * level
-                                   + peeve.penance_offset);
-        _handle_piety_penance(-piety_loss, 1, penance, thing_done);
-    }
-
-    //check for likes
     COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
-    if (divine_likes[you.religion].count(thing_done))
-    {
-        const like_response like = divine_likes[you.religion][thing_done];
 
-        // if the conduct filters on affected monsters, & the relevant monster
-        // isn't valid, don't trigger the conduct's consequences.
-        if (victim && !_god_likes_killing(victim))
-            return;
+    // If your god disliked the action, evaluate its response.
+    auto peeve = divine_peeves[you.religion].find(thing_done);
+    if (peeve != divine_peeves[you.religion].end())
+        (peeve->second)(thing_done, level, known, victim);
 
-        god_acting gdact;
-
-        if (like.message)
-            simple_god_message(like.message);
-
-        // this is all very strange, but replicates legacy behavior.
-        // See the comment on like_response::piety_bonus above.
-
-        int denom = like.piety_denom_bonus + level;
-        if (like.xl_denom)
-            denom -= you.get_experience_level() / like.xl_denom;
-
-        int gain = denom + like.piety_bonus;
-
-        // handle weird special cases
-        // may modify gain/denom
-        if (like.special)
-            like.special(gain, denom, victim);
-
-        _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
-    }
+    // If your god liked the action, evaluate its response.
+    auto like = divine_likes[you.religion].find(thing_done);
+    if (like != divine_likes[you.religion].end())
+        (like->second)(thing_done, level, known, victim);
 }
 
 // a sad and shrunken function.
