@@ -221,8 +221,8 @@ static int _translate_keysym(SDL_Keysym &keysym)
     case SDLK_TAB:
         if (numpad_offset) // keep tab a tab
             return CK_TAB_TILE + numpad_offset;
+        return SDLK_TAB;
 #ifdef TOUCH_UI
-        break;
     // used for zoom in/out
     case SDLK_KP_PLUS:
         return CK_NUMPAD_PLUS;
@@ -233,41 +233,17 @@ static int _translate_keysym(SDL_Keysym &keysym)
         break;
     }
 
-    // Aaaarggghhhh! -- Grunt
+    if (!(mod & (MOD_CTRL | MOD_ALT)))
+        return 0;
+
     int ret = keysym.sym;
+
     if (mod & MOD_ALT && keysym.sym >= 128)
         ret -= 3000; // ???
+    if (mod & MOD_CTRL)
+        ret -= SDLK_a - 1; // XXX: this might break for strange keysyms
 
-    if (keysym.sym >= SDLK_a && keysym.sym <= SDLK_z)
-    {
-        if (mod & MOD_CTRL)
-            ret -= SDLK_a - 1;
-        else if (mod & MOD_SHIFT)
-            ret -= 'a' - 'A';
-
-        return ret;
-    }
-    else if (keysym.sym >= SDLK_0 && keysym.sym <= SDLK_9
-             && (mod & MOD_SHIFT))
-    {
-        switch (keysym.sym)
-        {
-            case SDLK_1: ret -= '1' - '!'; break;
-            case SDLK_2: ret -= '2' - '@'; break;
-            case SDLK_3: ret -= '3' - '#'; break;
-            case SDLK_4: ret -= '4' - '$'; break;
-            case SDLK_5: ret -= '5' - '%'; break;
-            case SDLK_6: ret -= '6' - '^'; break;
-            case SDLK_7: ret -= '7' - '&'; break;
-            case SDLK_8: ret -= '8' - '*'; break;
-            case SDLK_9: ret -= '9' - '('; break;
-            case SDLK_0: ret -= '0' - ')'; break;
-        }
-        return ret;
-    }
-
-
-    return keysym.sym;
+    return ret;
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
@@ -492,8 +468,6 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     SDL_StartTextInput();
 
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
-#else
-    SDL_StopTextInput();
 #endif
 
     SDL_GL_GetDrawableSize(m_window, &x, &y);
