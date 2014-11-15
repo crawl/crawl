@@ -348,7 +348,7 @@ void SDLWrapper::appPutToForeground()
 }
 #endif
 
-int SDLWrapper::init(coord_def *m_windowsz)
+int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
 {
 #ifdef __ANDROID__
     // set up callbacks for background/foreground events
@@ -483,11 +483,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
         return false;
     }
 
-#ifdef __ANDROID__
     int x, y;
     SDL_GetWindowSize(m_window, &x, &y);
     m_windowsz->x = x;
     m_windowsz->y = y;
+#ifdef __ANDROID__
 
     SDL_StartTextInput();
 
@@ -495,6 +495,10 @@ int SDLWrapper::init(coord_def *m_windowsz)
 #else
     SDL_StopTextInput();
 #endif
+
+    SDL_GL_GetDrawableSize(m_window, &x, &y);
+    *densityNum = x;
+    *densityDen = m_windowsz->x;
     return true;
 }
 

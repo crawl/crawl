@@ -97,7 +97,8 @@ public:
     static void shutdown();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz) = 0;
+    virtual int init(coord_def *m_windowsz, int *densityNum,
+                     int *densityDen) = 0;
 
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;

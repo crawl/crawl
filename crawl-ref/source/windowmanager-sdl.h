@@ -17,7 +17,7 @@ public:
     ~SDLWrapper();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz);
+    virtual int init(coord_def *m_windowsz, int *densityNum, int *densityDen);
 
     // Environment state functions
     virtual void set_window_title(const char *title);
