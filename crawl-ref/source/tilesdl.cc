@@ -372,7 +372,7 @@ bool TilesFramework::initialise()
         return false;
 
     // Initialize the wrapper
-    if (!wm->init(&m_windowsz))
+    if (!wm->init(&m_windowsz, &densityNum, &densityDen))
         return false;
 
     wm->set_window_title(title.c_str());
@@ -498,7 +498,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
-    if (!font->load_font(font_file, font_size, outline))
+    if (!font->load_font(font_file, font_size, outline, densityNum, densityDen))
     {
         delete font;
         if (default_on_fail)
