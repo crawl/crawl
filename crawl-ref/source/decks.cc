@@ -3109,7 +3109,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WILD_MAGIC:
         // Yes, high power is bad here.
         MiscastEffect(&you, &you,
-                      god == GOD_NO_GOD ? MISC_MISCAST : GOD_MISCAST + god,
+                      god == GOD_NO_GOD ? DECK_MISCAST : GOD_MISCAST + god,
                       SPTYP_RANDOM, random2(power/15) + 5, random2(power),
                       "a card of wild magic");
         break;

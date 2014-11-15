@@ -941,7 +941,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
                  target->name(DESC_THE).c_str());
         }
-        MiscastEffect(target, mons, MISC_MISCAST, SPTYP_NECROMANCY,
+        MiscastEffect(target, mons, MUMMY_MISCAST, SPTYP_NECROMANCY,
                       pow, random2avg(88, 3), "a mummy death curse");
     }
 }
