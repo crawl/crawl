@@ -3248,7 +3248,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
 
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
-        MiscastEffect(&you, NULL, MISC_MISCAST, SPTYP_NECROMANCY, 5, 90,
+        MiscastEffect(&you, NULL, ABIL_MISCAST, SPTYP_NECROMANCY, 5, 90,
                       "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)

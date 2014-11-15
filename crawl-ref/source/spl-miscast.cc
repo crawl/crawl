@@ -135,7 +135,7 @@ void MiscastEffect::init()
 
     source_known = target_known = false;
 
-    const bool death_curse = (cause.find("death curse") != string::npos);
+    const bool death_curse = special_source == MUMMY_MISCAST;
 
     if (target->is_monster())
         target_known = you.can_see(target);
@@ -1802,8 +1802,6 @@ void MiscastEffect::_necromancy(int severity)
 {
     if (target->is_player() && in_good_standing(GOD_KIKUBAAQUDGHA, 1))
     {
-        const bool death_curse = (cause.find("death curse") != string::npos);
-
         if (spell != SPELL_NO_SPELL)
         {
             // An actual necromancy miscast.
@@ -1814,7 +1812,7 @@ void MiscastEffect::_necromancy(int severity)
                 return;
             }
         }
-        else if (death_curse)
+        else if (special_source == MUMMY_MISCAST)
         {
             if (coinflip())
             {

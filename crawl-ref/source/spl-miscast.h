@@ -25,7 +25,10 @@ enum miscast_source
     WIELD_MISCAST,
     MELEE_MISCAST,
     SPELL_MISCAST,
-    MISC_MISCAST,
+    ABIL_MISCAST,
+    WIZARD_MISCAST,
+    MUMMY_MISCAST,
+    DECK_MISCAST,
     // This should always be last.
     GOD_MISCAST
 };
