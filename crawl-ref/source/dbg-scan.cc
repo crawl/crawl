@@ -1509,11 +1509,19 @@ static void _record_monster_stat(level_id &lev, int mons_ind, string field,
 
 void objstat_record_monster(monster *mons)
 {
-    if (!valid_monsters.count(mons->type))
+    monster_type type;
+    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        type = MONS_GLOWING_SHAPESHIFTER;
+    else if (mons->has_ench(ENCH_SHAPESHIFTER))
+        type = MONS_SHAPESHIFTER;
+    else
+        type = mons->type;
+
+    if (!valid_monsters.count(type))
         return;
 
-    int mons_ind = valid_monsters[mons->type];
-    corpse_effect_type chunk_effect = mons_corpse_effect(mons->type);
+    int mons_ind = valid_monsters[type];
+    corpse_effect_type chunk_effect = mons_corpse_effect(type);
     bool is_clean = chunk_effect == CE_CLEAN || chunk_effect == CE_POISONOUS;
     level_id lev = level_id::current();
 
@@ -1524,10 +1532,10 @@ void objstat_record_monster(monster *mons)
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
     // Record chunks/nutrition if monster leaves a corpse.
-    if (chunk_effect != CE_NOCORPSE && mons_class_can_leave_corpse(mons->type))
+    if (chunk_effect != CE_NOCORPSE && mons_class_can_leave_corpse(type))
     {
         // copied from turn_corpse_into_chunks()
-        double chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),
+        double chunks = (1 + stepdown_value(get_max_corpse_chunks(type),
                                             4, 4, 12, 12)) / 2.0;
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
         if (is_clean)
