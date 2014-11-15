@@ -188,11 +188,15 @@ void delay(unsigned int ms)
 
 void update_screen()
 {
+    if (crawl_state.tiles_disabled)
+        return;
     tiles.set_need_redraw();
 }
 
 bool kbhit()
 {
+    if (crawl_state.tiles_disabled)
+        return false;
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WME_KEYDOWN);
     return count > 0;
