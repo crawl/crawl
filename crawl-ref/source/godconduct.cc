@@ -430,11 +430,18 @@ static void _dithmenos_kill(int &piety, int &denom, const monster* /*victim*/)
 /// A definition of the way in which a god likes a conduct being taken.
 struct like_response
 {
-    /// Gain in piety for triggering this conduct; added to calculated denom.
+    /** Gain in piety for triggering this conduct; added to calculated denom.
+     *
+     * This number is usually negative.  In that case, the maximum piety gain
+     * is one point, and the chance of *not* getting that point is:
+     *    -piety_bonus/(piety_denom_bonus + level - you.xl/xl_denom)
+     * (omitting the you.xl term if xl_denom is zero)
+     */
     int piety_bonus;
     /// Divider for piety gained by this conduct; added to 'level'.
     int piety_denom_bonus;
-    /// Degree to which your XL modifies piety gained.
+    /// Degree to which your XL modifies piety gained. If zero, do not
+    /// modify piety by XL; otherwise divide player XL by this value.
     int xl_denom;
     /// Something your god says when you trigger this conduct. May be NULL.
     const char *message;
@@ -898,6 +905,8 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
             simple_god_message(like.message);
 
         // this is all very strange, but replicates legacy behavior.
+        // See the comment on like_response::piety_bonus above.
+
         int denom = like.piety_denom_bonus + level;
         if (like.xl_denom)
             denom -= you.get_experience_level() / like.xl_denom;
