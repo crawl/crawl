@@ -4919,8 +4919,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 int game_options::o_int(const char *name, int def) const
 {
     int val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (string *value = map_find(named_options, name))
+    if (const string *value = map_find(named_options, name))
         val = atoi(value->c_str());
     return val;
 }
@@ -4928,8 +4927,7 @@ int game_options::o_int(const char *name, int def) const
 bool game_options::o_bool(const char *name, bool def) const
 {
     bool val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (string *value = map_find(named_options, name))
+    if (const string *value = map_find(named_options, name))
         val = _read_bool(*value, val);
     return val;
 }
@@ -4937,7 +4935,7 @@ bool game_options::o_bool(const char *name, bool def) const
 string game_options::o_str(const char *name, const char *def) const
 {
     string val;
-    if (string *value = map_find(named_options, name))
+    if (const string *value = map_find(named_options, name))
         val = *value;
     else if (def)
         val = def;
