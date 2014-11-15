@@ -1705,6 +1705,16 @@ static void _shaft_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
+static void _solitude_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+
+    cast_dispersal(power/4);
+
+    if (power_level == 2)
+        cast_disjunction(power/4, false);
+}
+
 static int stair_draw_count = 0;
 
 // This does not describe an actual card. Instead, it only exists to test
@@ -3053,7 +3063,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SWAP:             _swap_monster_card(power, rarity); break;
     case CARD_VELOCITY:         _velocity_card(power, rarity); break;
     case CARD_DAMNATION:        _damnation_card(power, rarity); break;
-    case CARD_SOLITUDE:         cast_dispersal(power/4); break;
+    case CARD_SOLITUDE:         _solitude_card(power, rarity); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
     case CARD_HELM:             _helm_card(power, rarity); break;
     case CARD_BLADE:            _blade_card(power, rarity); break;

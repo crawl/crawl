@@ -29,6 +29,8 @@ Solitude card
 The card depicts a monk meditating atop a lonely mountain peak.
 
 Drawing this card randomly teleports creatures that are adjacent to the user.
+At high card power, the user will be surrounded by a field of translocational
+energy that blinks all creatures within.
 %%%%
 # Emergency
 the Tomb card
