@@ -116,7 +116,14 @@ static void deleteAll(T& collection)
 }
 
 template<class M>
-typename M::mapped_type *map_find(M map, const typename M::key_type &obj)
+typename M::mapped_type *map_find(M &map, const typename M::key_type &obj)
+{
+    auto it = map.find(obj);
+    return it == map.end() ? nullptr : &it->second;
+}
+
+template<class M>
+typename M::mapped_type const *map_find(const M &map, const typename M::key_type &obj)
 {
     auto it = map.find(obj);
     return it == map.end() ? nullptr : &it->second;
