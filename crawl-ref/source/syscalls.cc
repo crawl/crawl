@@ -32,7 +32,6 @@
 
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <android/log.h>
 #include <jni.h>
 
 extern "C"
@@ -403,25 +402,16 @@ vector<string> get_dir_files(const string &dirname)
 
         ASSERT(_android_asset_manager);
 
-        __android_log_print(ANDROID_LOG_INFO, "Crawl", "spec: %s",
-                            dirname.c_str());
-
         AAssetDir* adir =
             AAssetManager_openDir(_android_asset_manager,
                                   _android_strip_dir_slash(dirname).c_str());
-        __android_log_print(ANDROID_LOG_INFO, "Crawl", "2");
 
         if (!adir)
             return files;
 
-        __android_log_print(ANDROID_LOG_INFO, "Crawl", "3");
-
         const char *file;
         while ((file = AAssetDir_getNextFileName(adir)) != NULL)
-        {
-            __android_log_print(ANDROID_LOG_INFO, "Crawl", "file: %s", file);
             files.push_back(string(file));
-        }
 
         AAssetDir_close(adir);
         return files;
