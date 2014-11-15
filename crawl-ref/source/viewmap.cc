@@ -31,6 +31,7 @@
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
@@ -841,6 +842,13 @@ bool show_map(level_pos &lpos,
                     move_x = delta.x;
                 }
 #endif
+            }
+
+            if (key == CK_REDRAW)
+            {
+                viewwindow();
+                display_message_window();
+                continue;
             }
 
             c_input_reset(false);

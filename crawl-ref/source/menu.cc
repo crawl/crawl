@@ -453,6 +453,9 @@ bool Menu::process_key(int keyin)
 
     switch (keyin)
     {
+    case CK_REDRAW:
+        draw_menu();
+        return true;
 #ifndef TOUCH_UI
     case 0:
         return true;
@@ -2036,6 +2039,9 @@ bool formatted_scroller::process_key(int keyin)
     bool moved = true;
     switch (keyin)
     {
+    case CK_REDRAW:
+        draw_menu();
+        return true;
     case 0:
         return true;
     case CK_MOUSE_CMD:

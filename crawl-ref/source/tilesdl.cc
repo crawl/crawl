@@ -837,7 +837,7 @@ int TilesFramework::getch_ck()
                 m_windowsz.y = event.resize.h;
                 resize();
                 set_need_redraw();
-                break;
+                return CK_REDRAW;
 
             case WME_CUSTOMEVENT:
             default:
