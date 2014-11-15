@@ -101,7 +101,6 @@ LUAFN(moninf_get_is)
         if (mi_flags.empty())
             _init_mi_flags();
         string flag = luaL_checkstring(ls, 2);
-        const map<string, int>::const_iterator f = mi_flags.find(lowercase(flag));
         if (int *flagnum = map_find(mi_flags, lowercase(flag)))
             num = *flagnum;
         else
