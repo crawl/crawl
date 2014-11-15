@@ -39,6 +39,7 @@ public:
     virtual int raise_custom_event();
     virtual int wait_event(wm_event *event);
     virtual unsigned int get_event_count(wm_event_type type);
+    virtual void show_keyboard();
 
     // Display functions
     virtual void resize(coord_def &m_windowsz);

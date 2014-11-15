@@ -60,6 +60,9 @@
 #include "tileview.h"
 #include "viewchar.h"
 #include "view.h"
+#ifdef USE_TILE_LOCAL
+ #include "windowmanager.h"
+#endif
 
 static void _cio_init();
 
@@ -605,6 +608,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
 again:
+#ifdef USE_TILE_LOCAL
+    wm->show_keyboard();
+#endif
     vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
     const int num_modes = NUM_GAME_TYPE;

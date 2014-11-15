@@ -465,9 +465,6 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     m_windowsz->x = x;
     m_windowsz->y = y;
 #ifdef __ANDROID__
-
-    SDL_StartTextInput();
-
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
 #endif
 
@@ -800,6 +797,11 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     ASSERT(count >= 0);
 
     return max(count, 0);
+}
+
+void SDLWrapper::show_keyboard()
+{
+    SDL_StartTextInput(); // XXX: Intended for Android; harmless elsewhere?
 }
 
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
