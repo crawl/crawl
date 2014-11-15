@@ -14,6 +14,7 @@
 
 #include "areas.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "itemprop.h"
@@ -119,22 +120,64 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     return SPRET_SUCCESS;
 }
 
-void cast_iood_burst(int pow, coord_def target)
+/**
+ * Find a target for a bursty (non-player-targeted) IOOD.
+ *
+ * Try to find an enemy that's at a reasonable angle from the angle the IOOD
+ * is fired at, preferring the given foe (if a non-MHITNOT foe is given) if
+ * they're valid, and otherwise preferring the closest valid foe.
+ *
+ * @param angle             The angle that the IOOD will be fired at, relative
+ *                          to the player's position.
+ * @param preferred_foe     The mindex of a target to choose if possible; may
+ *                          be MHITNOT (no preferred target)
+ * @return                  The mindex of a valid target for the IOOD.
+ */
+static int _burst_iood_target(double iood_angle, int preferred_foe)
 {
-    int foe = MHITNOT;
-    if (const monster* mons = monster_at(target))
+    for (distance_iterator di(you.pos(), true, true, LOS_NO_TRANS); di; ++di)
     {
-        if (mons && you.can_see(mons))
-            foe = mons->mindex();
+        // is this position at a valid angle?
+        const coord_def delta = *di - you.pos();
+        const double angle = atan2(delta.x, delta.y);
+        const double abs_angle_diff = abs(angle - iood_angle);
+        const double angle_diff = (abs_angle_diff > PI) ?
+                                        2 * PI - abs_angle_diff :
+                                        abs_angle_diff;
+        if (angle_diff >= PI / 3)
+            continue;
+
+        // is there a visible monster at this position?
+        const monster* m = monster_at(*di);
+        if (!m || !you.can_see(m))
+            continue;
+
+        // if preferred foe is valid, choose it.
+        if (m->mindex() == preferred_foe)
+            return preferred_foe;
+
+        if (!mons_aligned(m, &you) && !mons_is_firewood(m))
+            return m->mindex();
     }
 
-    int n_orbs = random_range(3, 7);
+    return preferred_foe;
+}
+
+void cast_iood_burst(int pow, coord_def target)
+{
+    const monster* mons = monster_at(target);
+    const int preferred_foe = mons && you.can_see(mons) ?
+                                                            mons->mindex() :
+                                                            MHITNOT;
+
+    const int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
-    double angle0 = random2(2097152) * PI / 1048576;
+    const double angle0 = random2(2097152) * PI * 2 / 2097152;
 
     for (int i = 0; i < n_orbs; i++)
     {
-        double angle = angle0 + i * PI * 2 / n_orbs;
+        const double angle = angle0 + i * PI * 2 / n_orbs;
+        const int foe = _burst_iood_target(angle, preferred_foe);
         cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
     }
 }
