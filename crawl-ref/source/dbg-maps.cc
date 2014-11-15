@@ -300,6 +300,8 @@ static void _write_map_stats()
 {
     const char *out_file = "mapstat.log";
     FILE *outf = fopen(out_file, "w");
+    printf("Writing map stats to %s...", out_file);
+    fflush(stdout);
     fprintf(outf, "Map Generation Stats\n\n");
     fprintf(outf, "Levels attempted: %d, built: %d, failed: %d\n",
             levels_tried, levels_tried - levels_failed,
@@ -452,7 +454,7 @@ static void _write_map_stats()
         fprintf(outf, "==================\n\n");
     }
     fclose(outf);
-    printf("Wrote map stats to %s\n", out_file);
+    printf("\n");
 }
 
 void mapstat_generate_stats()
@@ -480,6 +482,7 @@ void mapstat_generate_stats()
     // build.
     mapstat_build_levels();
     _write_map_stats();
+    printf("Map stats complete.\n");
 }
 
 #endif // DEBUG_DIAGNOSTICS
