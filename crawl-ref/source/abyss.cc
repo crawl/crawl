@@ -20,6 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
 #include "itemprop.h"
@@ -1943,6 +1944,7 @@ bool lugonu_corrupt_level(int power)
     simple_god_message("'s Hand of Corruption reaches out!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
+    mark_corrupted_level(level_id::current());
 
     flash_view(UA_PLAYER, MAGENTA);
 

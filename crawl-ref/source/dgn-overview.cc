@@ -713,6 +713,14 @@ void unmark_offlevel_shop(level_id lid)
     shops_present.erase(level_pos(lid, coord_def()));
 }
 
+// Add an annotation on a level if we corrupt with Lugonu's ability
+void mark_corrupted_level(level_id li)
+{
+    if (level_annotations[li].length() > 0)
+        level_annotations[li] += ", ";
+    level_annotations[li] += "corrupted";
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 static void _update_unique_annotation(level_id level)
