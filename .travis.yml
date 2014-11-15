@@ -32,4 +32,4 @@ notifications:
         on_failure: always
         use_notice: true
         template:
-            - "%message: (%{branch} - %{commit} #%{build_number} : %{author}): %{build_url}"
+            - "%{message}: (%{branch} - %{commit} #%{build_number} : %{author}): %{build_url}"
