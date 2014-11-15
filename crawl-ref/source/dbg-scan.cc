@@ -1922,8 +1922,8 @@ static void _write_object_stats()
                 all_desc.c_str(), num_levels, Version::Long);
         _write_branch_stats(bi->first);
         fclose(stat_outf);
-        fprintf(stdout, "Wrote statistics for branch %s to %s.\n",
-                branch_name.c_str(), out_file.str().c_str());
+        printf("Wrote statistics for branch %s to %s.\n", branch_name.c_str(),
+               out_file.str().c_str());
     }
 }
 
@@ -1974,13 +1974,16 @@ void objstat_generate_stats()
     // This represents the AllLevels summary.
     stat_branches[NUM_BRANCHES] = vector<level_id>();
     stat_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
-    fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
-            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
-            num_levels, num_branches);
+    printf("Generating object statistics for %d iteration(s) of %d "
+           "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
+           num_levels, num_branches);
     _init_foods();
     _init_monsters();
     _init_stats();
     if (mapstat_build_levels())
+    {
         _write_object_stats();
+        printf("Object statistics complete.\n");
+    }
 }
 #endif // DEBUG_DIAGNOSTICS
