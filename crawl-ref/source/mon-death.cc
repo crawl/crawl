@@ -25,6 +25,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "effects.h"
+#include "english.h"
 #include "env.h"
 #include "fineff.h"
 #include "food.h"
@@ -941,8 +942,10 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
                  target->name(DESC_THE).c_str());
         }
+        const string cause = make_stringf("%s death curse",
+                                apostrophise(mons->name(DESC_A)).c_str());
         MiscastEffect(target, mons, MUMMY_MISCAST, SPTYP_NECROMANCY,
-                      pow, random2avg(88, 3), "a mummy death curse");
+                      pow, random2avg(88, 3), cause.c_str());
     }
 }
 

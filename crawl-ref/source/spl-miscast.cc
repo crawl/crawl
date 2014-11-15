@@ -135,8 +135,6 @@ void MiscastEffect::init()
 
     source_known = target_known = false;
 
-    const bool death_curse = special_source == MUMMY_MISCAST;
-
     if (target->is_monster())
         target_known = you.can_see(target);
     else
@@ -165,7 +163,7 @@ void MiscastEffect::init()
 
         source_known = you.can_see(act_source);
 
-        if (target_known && death_curse)
+        if (target_known && special_source == MUMMY_MISCAST)
             source_known = true;
     }
     else
@@ -193,16 +191,6 @@ void MiscastEffect::init()
 
     ASSERT(kc != KC_NCATEGORIES);
     ASSERT(kt != KILL_NONE);
-
-    if (death_curse && act_source)
-    {
-        if (starts_with(cause, "a "))
-            cause.replace(cause.begin(), cause.begin() + 1, "an indirect");
-        else if (starts_with(cause, "an "))
-            cause.replace(cause.begin(), cause.begin() + 2, "an indirect");
-        else
-            cause = replace_all(cause, "death curse", "indirect death curse");
-    }
 
     // source_known = false for MELEE_MISCAST so that melee miscasts
     // won't give a "nothing happens" message.
