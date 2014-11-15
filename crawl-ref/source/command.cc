@@ -1134,58 +1134,56 @@ static int _do_description(string key, string type, const string &suffix,
             mi.slime_size = 1;
         return describe_monsters(mi, true, footer);
     }
-    else
-    {
-        int thing_created = get_mitm_slot();
-        if (thing_created != NON_ITEM
-            && (type == "item" || type == "spell"))
-        {
-            char name[80];
-            strncpy(name, key.c_str(), sizeof(name));
-            if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
-            {
-                append_weapon_stats(desc, mitm[thing_created]);
-                desc += "\n";
-            }
-            else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
-            {
-                append_armour_stats(desc, mitm[thing_created]);
-                desc += "\n";
-            }
-            else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
-            {
-                append_missile_info(desc, mitm[thing_created]);
-                desc += "\n";
-            }
-            else if (type == "spell"
-                     || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                     || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
-            {
-                if (!_append_books(desc, mitm[thing_created], key))
-                {
-                    // FIXME: Duplicates messages from describe.cc.
-                    if (!player_can_memorise_from_spellbook(mitm[thing_created]))
-                    {
-                        desc += "This book is beyond your current level "
-                        "of understanding.";
-                    }
-                    append_spells(desc, mitm[thing_created]);
-                }
-            }
-        }
-        else if (type == "card")
-        {
-            // 5 - " card"
-            card_type which_card =
-            name_to_card(key.substr(0, key.length() - 5));
-            if (which_card != NUM_CARDS)
-                desc += which_decks(which_card) + "\n";
-        }
 
-        // Now we don't need the item anymore.
-        if (thing_created != NON_ITEM)
-            destroy_item(thing_created);
+    int thing_created = get_mitm_slot();
+    if (thing_created != NON_ITEM
+        && (type == "item" || type == "spell"))
+    {
+        char name[80];
+        strncpy(name, key.c_str(), sizeof(name));
+        if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+        {
+            append_weapon_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
+        {
+            append_armour_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+        {
+            append_missile_info(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (type == "spell"
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
+        {
+            if (!_append_books(desc, mitm[thing_created], key))
+            {
+                // FIXME: Duplicates messages from describe.cc.
+                if (!player_can_memorise_from_spellbook(mitm[thing_created]))
+                {
+                    desc += "This book is beyond your current level "
+                            "of understanding.";
+                }
+                append_spells(desc, mitm[thing_created]);
+            }
+        }
     }
+    else if (type == "card")
+    {
+        // 5 - " card"
+        card_type which_card =
+        name_to_card(key.substr(0, key.length() - 5));
+        if (which_card != NUM_CARDS)
+            desc += which_decks(which_card) + "\n";
+    }
+
+    // Now we don't need the item anymore.
+    if (thing_created != NON_ITEM)
+        destroy_item(thing_created);
 
     inf.body << desc;
 
