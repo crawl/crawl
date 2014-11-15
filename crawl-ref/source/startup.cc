@@ -767,6 +767,9 @@ again:
 
         const int keyn = getch_ck();
 
+        if (keyn == CK_REDRAW)
+            goto again;
+
         if (key_is_escape(keyn))
         {
             // End the game

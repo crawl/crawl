@@ -1442,6 +1442,10 @@ void skill_menu(int flag, int exp)
         {
             switch (keyn)
             {
+            case CK_REDRAW:
+                skm.exit();
+                skm.init(flag);
+                continue;
             case CK_UP:
             case CK_DOWN:
             case CK_LEFT:
