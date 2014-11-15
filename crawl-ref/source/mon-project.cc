@@ -12,9 +12,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
-#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "itemprop.h"
@@ -135,32 +135,65 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
  */
 static int _burst_iood_target(double iood_angle, int preferred_foe)
 {
-    for (distance_iterator di(you.pos(), true, true, LOS_NO_TRANS); di; ++di)
+    int closest_foe = MHITNOT;
+    int closest_dist = INT_MAX;
+
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
+        const monster* m = *mi;
+        ASSERT(m);
+
+        if (!you.can_see(m) || mons_is_projectile(m))
+            continue;
+
         // is this position at a valid angle?
-        const coord_def delta = *di - you.pos();
+        const coord_def delta = mi->pos() - you.pos();
         const double angle = atan2(delta.x, delta.y);
-        const double abs_angle_diff = abs(angle - iood_angle);
+        const double abs_angle_diff = abs(angle - fmod(iood_angle, PI * 2));
         const double angle_diff = (abs_angle_diff > PI) ?
                                         2 * PI - abs_angle_diff :
                                         abs_angle_diff;
         if (angle_diff >= PI / 3)
+        {
+            dprf("can't target %s; angle diff %f",
+                 m->name(DESC_PLAIN).c_str(), angle_diff);
             continue;
-
-        // is there a visible monster at this position?
-        const monster* m = monster_at(*di);
-        if (!m || !you.can_see(m))
-            continue;
+        }
 
         // if preferred foe is valid, choose it.
         if (m->mindex() == preferred_foe)
+        {
+            dprf("preferred target %s is valid burst target (delta %f)",
+                 m->name(DESC_PLAIN).c_str(), angle_diff);
             return preferred_foe;
+        }
 
-        if (!mons_aligned(m, &you) && !mons_is_firewood(m))
-            return m->mindex();
+        if (mons_aligned(m, &you) || mons_is_firewood(m))
+        {
+            dprf("skipping invalid burst target %s (%s)",
+                 m->name(DESC_PLAIN).c_str(),
+                 mons_aligned(m, &you) ? "aligned" : "firewood");
+            continue;
+        }
+
+        const int dist = grid_distance(m->pos(), you.pos());
+        // on distance ties, bias by iterator order (mindex)
+        if (dist >= closest_dist)
+        {
+            dprf("%s not closer to target than closest (%d vs %d)",
+                 m->name(DESC_PLAIN).c_str(), dist, closest_dist);
+            continue;
+        }
+
+        dprf("%s is valid burst target (delta %f, dist %d)",
+             m->name(DESC_PLAIN).c_str(), angle_diff, dist);
+        closest_dist = dist;
+        closest_foe = m->mindex();
     }
 
-    return preferred_foe;
+    const int foe = closest_foe != MHITNOT ? closest_foe : preferred_foe;
+    dprf("targeting %d", foe);
+    return foe;
 }
 
 void cast_iood_burst(int pow, coord_def target)
