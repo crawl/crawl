@@ -2494,7 +2494,6 @@ void define_monster(monster* mons)
         break;
 
     case MONS_HELL_BEAST:
-        hd = 4 + random2(4);
         mons->props["speed"] = 10 + random2(8);
         break;
 

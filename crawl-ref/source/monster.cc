@@ -3363,13 +3363,11 @@ int monster::base_armour_class() const
         return _zombie_ac_modifier(type) + base_ac;
     }
 
-    // abominations & hell beasts are weird.
+    // abominations are weird.
     if (type == MONS_ABOMINATION_LARGE)
         return min(20, 7 + get_hit_dice() / 2);
     if (type == MONS_ABOMINATION_SMALL)
         return min(10, 3 + get_hit_dice() * 2 / 3);
-    if (type == MONS_HELL_BEAST)
-        return max(0, get_hit_dice() - 2);
 
     const int base_ac = get_monster_data(type)->AC;
 
@@ -3482,13 +3480,11 @@ int monster::base_evasion() const
         return _zombie_ev_modifier(type) + base_ev;
     }
 
-    // abominations & hell beasts are weird.
+    // abominations are weird.
     if (type == MONS_ABOMINATION_LARGE)
         return min(20, 2 * get_hit_dice() / 3);
     if (type == MONS_ABOMINATION_SMALL)
         return min(10, 4 + get_hit_dice());
-    if (type == MONS_HELL_BEAST)
-        return 7 + get_hit_dice();
 
     const int base_ev = get_monster_data(type)->ev;
 
