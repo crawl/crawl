@@ -1232,21 +1232,16 @@ void ghost_demon::init_lich(monster_type type)
 
     spschool_flag_type school = SPTYP_NONE;
 
-    size_t count = 0;
-
-    if (type == MONS_ANCIENT_LICH)
+    for (int i = 0; i < 2; ++i)
     {
-        count++;
-        school = _add_lich_spells(spells, lich_primary_spells,
-                                  ARRAYSZ(lich_primary_spells), school,
-                                  true);
-    }
-
-    while (count++ < 2)
-    {
-        school = _add_lich_spells(spells, lich_secondary_spells,
-                                  ARRAYSZ(lich_secondary_spells), school,
-                                  false);
+        if (type == MONS_ANCIENT_LICH && i == 0)
+            school = _add_lich_spells(spells, lich_primary_spells,
+                                      ARRAYSZ(lich_primary_spells), school,
+                                      true);
+        else
+            school = _add_lich_spells(spells, lich_secondary_spells,
+                                      ARRAYSZ(lich_secondary_spells), school,
+                                      false);
     }
 
     mon_spell_slot emergency;
