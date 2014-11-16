@@ -515,27 +515,26 @@ ENDMAP
 
 NAME: nicolae_swamp_triple_paths
 TAGS: transparent extra decor
-SUBST: R = tr, T = t_
-KFEAT: r = tree
+SUBST: T = t_
 CLEAR: _
 MAP
-         TR@RT
-         TR.RT
-     @TTTTR.RTTTT@
-    T..RRRR.RRRR..T
-    TT....r.r....TT
-     TRRR.r.r.RRRT
-    TTttR.r.r.RttTT
-TTTTTtttR.r.r.RtttTTTTT
-ttttttttR.r.r.Rtttttttt
-TTTTTtttR.r.r.RtttTTTTT
-    TTttR.r.r.RttTT
-     TRRR.r.r.RRRT
-    TT....r.r....TT
-    T..RRRR.RRRR..T
-     @TTTtR.RtTTT@
-        TTR.RTT
-         TR@RT
+         Tt@tT
+         Tt.tT
+     @TTTTt.tTTTT@
+    T..tttt.tttt..T
+    TT....t.t....TT
+     Tttt.t.t.tttT
+    TTttt.t.t.tttTT
+TTTTTtttt.t.t.ttttTTTTT
+ttttttttt.t.t.ttttttttt
+TTTTTtttt.t.t.ttttTTTTT
+    TTttt.t.t.tttTT
+     Tttt.t.t.tttT
+    TT....t.t....TT
+    T..tttt.tttt..T
+     @TTTtt.ttTTT@
+        TTt.tTT
+         Tt@tT
 ENDMAP
 
 NAME: nicolae_swamp_godswood
@@ -1009,7 +1008,7 @@ KMONS:   b = green draconian caller w:15 / yellow draconian caller w:1 / \
 KMONS:   B = green draconian zealot w:15 / yellow draconian zealot w:1 / \
              white draconian zealot w:1 / grey draconian zealot w:1 / \
              pale draconian zealot w:1 / purple draconian zealot w:1
-KMONS:   % = necrophage / orange demon
+KMONS:   % = ugly thing / orange demon
 KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
 SHUFFLE: AB%| / abd*

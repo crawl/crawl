@@ -67,7 +67,12 @@ function grunt_megastairs_setup(e)
   elseif you.branch() ~= "Lair" then
     e.subst("x = c")
   end
-  e.subst("G : GGGGTTVt")
+  if you.branch() == "Depths" or you.branch() == "Lair" or
+     you.branch() == "Snake" or you.branch() == "Elf" then
+    e.subst("G : GGGGTTVt")
+  else
+    e.subst("G : GGGGTTV")
+  end
   e.kmons("0 = 0 band")
 end
 }}
@@ -83,25 +88,11 @@ default-depth: D:12-, Depths, !Depths:$
 #
 ###############################################################################
 
-##############################################################################
-# Elevator
-NAME:    lemuel_elevator
-TAGS:    allow_dup extra luniq_staircase
-DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
-         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
-ORIENT:  float
-SUBST:   m:mn
-SHUFFLE: ]}), [{(
-MAP
-mmmm
-m{}m
-mmmm
-ENDMAP
-
 NAME:   firewood_loft
 TAGS:   extra
 DEPTH:  D, !D:$, Depths, !Depths:$
 ORIENT: float
+WEIGHT: 5
 : if you.absdepth() > 8 then
 KITEM:  " = club, quarterstaff, quarterstaff good_item
 : else
@@ -2862,28 +2853,25 @@ TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  D:14-, Depths, Crypt:1-4
 ORIENT: float
 KITEM:  $ = amulet of regeneration unrand:amulet_of_vitality / acquire any
-KITEM:  1234 = gold / any / nothing
-KITEM:  M4 = superb_item / any
+KITEM:  12345d = gold / any / nothing
+KITEM:  67M = superb_item / any
 KFEAT:  ~ = known zot trap
+KMONS:  1 = mummy
+KMONS:  25 = guardian mummy
+KMONS:  36 = mummy priest
+KMONS:  47 = greater mummy
+KMONS:  H = sphinx
 : if you.absdepth() <= 17 then
-KMONS: 1 = mummy / guardian mummy / nothing
-KMONS: 2 = mummy / guardian mummy / nothing
-KMONS: 3 = mummy / guardian mummy / mummy priest
-KMONS: 4 = mummy priest
-SUBST: H = .
+SUBST: 12 = 12d, 3 = 123, 4 = 6, H = .
 : else
-KMONS: 1 = mummy / guardian mummy
-KMONS: 2 = guardian mummy / mummy priest / nothing
-KMONS: 3 = guardian mummy / mummy priest / greater mummy
-KMONS: 4 = mummy priest / greater mummy
-KMONS: H = sphinx / nothing
+SUBST: 4 = 67, 3 = 345, 2 = 23d, 1 = 12, H = H`
 : end
 : if you.branch() == "Crypt" then
 KMONS: M = Khufu, greater mummy
 : elseif you.absdepth() <= 17 then
 KMONS: M = Menkaure, mummy priest
 : else
-KMONS: M = mummy priest
+SUBST: M = 6
 : end
 SUBST:  C = c
 NSUBST: ~ = 2:~ / 1:~. / *:.
@@ -2893,7 +2881,7 @@ COLOUR: c = yellow
 TILE:   c = wall_tomb
 COLOUR: C = white
 TILE:   C = wall_lab_stone
-FTILE:  .~cCG1234M$ = floor_sandstone
+FTILE:  .~cCG1234567M$ = floor_sandstone
 : set_feature_name("granite_statue", "sealed sarcophagus")
 MAP
 xxxxxxxxxxxxxxxxxxxxx
@@ -2916,8 +2904,8 @@ xc1ccc...ccc...ccc1cx
 xccccGc...c...cGccccx
 xccccccc.....cccccccx
 xccHHHcccC.CcccHHHccx
-xc,,,,,cc,,,cc,,,,,cx
-x,,,,,,,,,@,,,,,,,,,x
+xc`````cc```cc`````cx
+x`````````@`````````x
 ENDMAP
 
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
@@ -3137,6 +3125,28 @@ ENDMAP
 #       or very generic vault contents like statues and oklobs.
 #
 ###############################################################################
+
+##############################################################################
+# Elevator
+NAME:    lemuel_elevator
+TAGS:    allow_dup extra luniq_staircase
+DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
+         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
+ORIENT:  float
+WEIGHT:  10 (D), 5
+SUBST:   m:mn
+KFEAT:   ] = ]
+KFEAT:   } = }
+KFEAT:   ) = )
+: if you.branch() ~= "D" then
+KMONS:   ]}) = 9
+: end
+SHUFFLE: ]}), [{(
+MAP
+mmmm
+m{}m
+mmmm
+ENDMAP
 
 ##############################################################################
 # Kobold bridge

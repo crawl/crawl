@@ -1134,8 +1134,8 @@ xxxC.BABBAABBA.
 ENDMAP
 
 NAME:    hangedman_vaults_river_flow
-SHUFFLE: abcdefghijkl
-SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fgh = .
+SHUFFLE: abcdefghij
+SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fghij = .
 : vaults_room_setup(_G, "0", "small")
 MAP
       x.......x

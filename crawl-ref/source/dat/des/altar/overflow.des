@@ -1115,7 +1115,7 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_makhleb
-KMONS:  _ = hound perm_ench:bleeding
+KMONS:  _ = patrolling hound perm_ench:bleeding
 TILE:   c = wall_hall
 SUBST:  y = xx.
 : interest_check(_G)
@@ -2154,14 +2154,16 @@ ENDMAP
 NAME:    xom_shifter_show
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 DEPTH:   D:7-
+MONS:    shapeshifter hd:1
 KFEAT:   _ = altar_xom
-FTILE:   ._ = floor_pebble
-COLOUR:  . = random
-NSUBST:  . = 2:1 / 1:> / .
-SUBST:   . = _...
+NSUBST:  . = 2:1 / 1:> / * = _...
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   > = <
+:  end
 SUBST:   x = bmv
-COLOUR:  . = random
-MONS:    shapeshifter
+KMASK:   .1 = no_trap_gen
+COLOUR:  .1 = random
+FTILE:   ._<>1 = floor_pebble
 MAP
  xxxxxxx
  x.....x

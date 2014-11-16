@@ -1640,7 +1640,7 @@ NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 4 = 4:5 / *:4, ` = 4:d / 3:| / 1:|j / 1:i / 
 NSUBST:  a = 1:_ / 1:_" / *:a, + = 1:+ / *:c, ( = 1:} / 1:( / *:<
 NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / * = 2:9 3:1 9:2, 1 = 2:0 / *:1, 0 = 2:9 / *:0
 NSUBST:  [ = 1:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj
-NSUBST:  7 = 1:7 / 1 = 7:4 `:6 / *:`, A = 1:) / 1:< / 1:{ / 1:A
+NSUBST:  7 = 1:7 / *:`, A = 1:) / 1:< / 1:{ / 1:A
 SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W, ? = &
 SUBST:   a = ":70 x:40 ccCC~, - = ':50 x:40 ccCC~, E = nccCC, c = cccb, C = cb
 SUBST:   B = ccbn..., e = de, j = jjjjg., k = kkj
@@ -1652,7 +1652,7 @@ COLOUR:  X = darkgrey
 LFLOORCOL: green
 FTILE:   '"Gbca-n45_+ = floor_demonic_green
 FTILE:   .012369AB< = floor_rough_green / floor_pebble_green w:15
-FTILE:   `~78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
+FTILE:   `~^78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
 FTILE:   defghijk| = floor_rough_green
 LROCKTILE: wall_zot_green
 TILE:    b = dngn_crystal_green / dngn_crystal_cyan w:5
@@ -1940,8 +1940,9 @@ KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
+KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
 KITEM:      B = randbook disc:summoning
-NSUBST:     i = 2:B / *:i
+NSUBST:     i = 2:B / 1:j / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
