@@ -1921,6 +1921,12 @@ bool zombie_picker::veto(monster_type mt)
     return positioned_monster_picker::veto(mt);
 }
 
+static bool _mc_too_slow_for_zombies(monster_type mon)
+{
+    // no speed < 10 zombies! (so base species have to be fast)
+    return mons_class_base_speed(mons_species(mon)) < 12;
+}
+
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos)
@@ -1949,10 +1955,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
-    mon_pick_vetoer veto = really_in_d ? [] (monster_type mon) {
-        // no speed < 10 zombies! (so base species have to be fast)
-        return mons_class_base_speed(mons_species(mon)) < 12;
-    } : NULL;
+    mon_pick_vetoer veto = really_in_d ? _mc_too_slow_for_zombies : NULL;
 
     dprf("veto is null? %d", veto == NULL);
 
