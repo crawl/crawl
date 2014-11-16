@@ -3,6 +3,7 @@
 #include "feature.h"
 
 #include "colour.h"
+#include "libutil.h"
 #include "options.h"
 #include "viewchar.h"
 
@@ -19,13 +20,11 @@ static feature_def invis_fd, cloud_fd;
  */
 ucs_t feature_def::symbol() const
 {
-    typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    const fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::const_iterator i;
-    if (feat && (i = fso.find(feat)) != fso.end() && i->second[0])
-        return get_glyph_override(i->second[0]);
-    else
-        return dchar_glyph(dchar);
+    auto over = map_find(Options.feature_symbol_overrides, feat);
+    if (over && (*over)[0])
+        return get_glyph_override((*over)[0]);
+
+    return dchar_glyph(dchar);
 }
 
 /** What symbol should be used for this feature when magic mapped?
@@ -36,12 +35,11 @@ ucs_t feature_def::symbol() const
  */
 ucs_t feature_def::magic_symbol() const
 {
-    typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    const fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::const_iterator i;
-    if (feat && (i = fso.find(feat)) != fso.end() && i->second[1])
-        return get_glyph_override(i->second[1]);
-    else if (magic_dchar != NUM_DCHAR_TYPES)
+    auto over = map_find(Options.feature_symbol_overrides, feat);
+    if (over && (*over)[1])
+        return get_glyph_override((*over)[1]);
+
+    if (magic_dchar != NUM_DCHAR_TYPES)
         return dchar_glyph(magic_dchar);
     else
         return symbol();
