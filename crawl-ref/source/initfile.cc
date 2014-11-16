@@ -1339,7 +1339,9 @@ void game_options::add_feature_override(const string &text)
             continue; // TODO: handle other object types.
 
 #define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
-                          feature_symbol_overrides[feat][n] = s;
+                          feature_symbol_overrides[feat][n] = s; \
+                      else \
+                          feature_symbol_overrides[feat][n] = '\0';
         SYM(0, symbol);
         SYM(1, magic_symbol);
 #undef SYM
