@@ -1079,6 +1079,7 @@ const mon_spell_slot lich_emergency_spells[] =
     { SPELL_HASTE, 12, MON_SPELL_WIZARD },
     { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
     { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD },
+    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
 };
 
 static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
@@ -1093,8 +1094,13 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
 
     if (!used)
     {
-        if (next_spell.spell == SPELL_TELEPORT_SELF)
-            next_spell.flags |= MON_SPELL_EMERGENCY;
+        if (set == lich_emergency_spells)
+        {
+            if (next_spell.spell == SPELL_TELEPORT_SELF)
+                next_spell.flags |= MON_SPELL_EMERGENCY;
+            if (next_spell.spell == SPELL_BANISHMENT)
+                next_spell.flags |= MON_SPELL_EMERGENCY;
+        }
         spells.push_back(next_spell);
     }
 }
