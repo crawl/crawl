@@ -577,12 +577,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_UNARMED_COMBAT] = 4;
         you.skills[SK_DODGING]        = 3;
         you.skills[SK_STEALTH]        = 2;
-
-        if (you.species == SP_FELID)
-        {
-            you.skills[SK_FIGHTING]       = 2;
-            you.skills[SK_UNARMED_COMBAT] = 3;
-        }
         break;
 
     case JOB_BERSERKER:
