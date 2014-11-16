@@ -3548,9 +3548,10 @@ string get_monster_equipment_desc(const monster_info& mi,
     const string item_description = comma_separated_line(
                                                 item_descriptions.begin(),
                                                 item_descriptions.end());
-    if (!item_description.empty())
-        desc += ", " + item_description;
-    return desc;
+
+    if (!item_description.empty() && !desc.empty())
+        desc += ",";
+    return desc + " " + item_description;
 }
 
 static bool _print_cloud_desc(const coord_def where)
