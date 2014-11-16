@@ -2057,35 +2057,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
     return goaded > 0;
 }
 
-// Spells a monster may want to cast if fleeing from the player, and
-// the player is not in sight.
-static bool _ms_useful_fleeing_out_of_sight(monster* mon,
-                                            mon_spell_slot slot)
-{
-    spell_type monspell = slot.spell;
-    if (monspell == SPELL_NO_SPELL || _ms_waste_of_time(mon, slot))
-        return false;
-
-    switch (monspell)
-    {
-    case SPELL_HASTE:
-    case SPELL_SWIFTNESS:
-    case SPELL_INVISIBILITY:
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_TWISTED_RESURRECTION:
-        return true;
-
-    default:
-        if (spell_typematch(monspell, SPTYP_SUMMONING) && one_chance_in(4))
-            return true;
-        break;
-    }
-
-    return false;
-}
-
 static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
 {
     spell_type monspell = slot.spell;
@@ -2961,9 +2932,8 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
 //---------------------------------------------------------------
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
-    bool monsterNearby = mons_near(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
-    actor *foe = mons->get_foe();
+    const actor *foe = mons->get_foe();
 
     if (is_sanctuary(mons->pos()) && !mons->wont_attack())
         return false;
@@ -2999,52 +2969,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (!hspell_pass.size())
         return false;
 
-    if (!mon_enemies_around(mons))
+    // Force the casting of dig when the player is not visible -
+    // this is EVIL!
+    // only do this for monsters that are actually seeking out a
+    // hostile target -doy
+    if (mons->has_spell(SPELL_DIG)
+        && mons_is_seeking(mons)
+        && !(mons->wont_attack() && mons->foe == MHITYOU)
+        && !mon_enemies_around(mons))
     {
-        // Force the casting of dig when the player is not visible -
-        // this is EVIL!
-        // only do this for monsters that are actually seeking out a
-        // hostile target -doy
-        if (mons->has_spell(SPELL_DIG)
-            && mons_is_seeking(mons)
-            && !(mons->wont_attack() && mons->foe == MHITYOU))
-        {
-            spell_cast = SPELL_DIG;
-            flags = mons->spell_slot_flags(SPELL_DIG);
-            finalAnswer = true;
-        }
-        else if ((mons->has_spell(SPELL_MINOR_HEALING)
-                  || mons->has_spell(SPELL_MAJOR_HEALING))
-                 && mons->hit_points < mons->max_hit_points)
-        {
-            // The player's out of sight!
-            // Quick, let's take a turn to heal ourselves. -- bwr
-            spell_cast = mons->has_spell(SPELL_MAJOR_HEALING) ?
-                         SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
-            flags = mons->spell_slot_flags(spell_cast);
-            finalAnswer = true;
-        }
-        else if (mons_is_fleeing(mons) || mons->pacified())
-        {
-            // Since the player isn't around, we'll extend the monster's
-            // normal choices to include the self-enchant slot.
-            if (one_chance_in(4))
-            {
-                int foundcount = 0;
-                for (int i = hspell_pass.size() - 1; i >= 0; --i)
-                {
-                    if (_ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
-                        && one_chance_in(++foundcount))
-                    {
-                        spell_cast = hspell_pass[i].spell;
-                        flags = hspell_pass[i].flags;
-                        finalAnswer = true;
-                    }
-                }
-            }
-        }
-        else if (mons->foe == MHITYOU && !monsterNearby)
-            return false;
+        spell_cast = SPELL_DIG;
+        flags = mons->spell_slot_flags(SPELL_DIG);
+        finalAnswer = true;
     }
 
     // Monsters caught in a net try to get away.
@@ -3242,7 +3178,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             // Setup the spell.
-            if (spell_cast != SPELL_MELEE && spell_cast != SPELL_NO_SPELL)
+            if (spell_cast != SPELL_NO_SPELL)
                 setup_mons_cast(mons, beem, spell_cast);
 
             // Try to find a nearby ally to haste, heal, might,
@@ -3329,18 +3265,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spellOK = false;
                     }
                 }
-                else if (!mons->can_see(&menv[mons->foe]))
+                else if (!mons->can_see(foe))
                     spellOK = false;
                 else if (mons->type == MONS_DAEVA
                          && mons->god == GOD_SHINING_ONE)
                 {
-                    const monster* mon = &menv[mons->foe];
-
                     // Don't allow TSO-worshipping daevas to make
                     // unchivalric magic attacks, except against
                     // appropriate monsters.
-                    if (find_stab_type(mons, mon) != STAB_NO_STAB
-                        && !tso_unchivalric_attack_safe_monster(mon))
+                    if (find_stab_type(mons, foe) != STAB_NO_STAB
+                        && foe
+                        && !tso_unchivalric_attack_safe_monster(foe->as_monster()))
                     {
                         spellOK = false;
                     }
@@ -3356,7 +3291,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     }
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
-    if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
+    if (spell_cast == SPELL_NO_SPELL)
         return false;
 
     // Check for antimagic if casting a spell spell.
@@ -3372,9 +3307,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return true;
     }
 
-    if (mons->type == MONS_BALL_LIGHTNING)
-        mons->suicide();
-
     // Dragons now have a time-out on their breath weapons, draconians too!
     if (flags & MON_SPELL_BREATH)
         setup_breath_timeout(mons);
@@ -3383,7 +3315,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
     {
         // Why only cast blink if nearby? {dlb}
-        if (monsterNearby)
+        if (mons_near(mons))
         {
             mons_cast_noise(mons, beem, spell_cast, flags);
             monster_blink(mons);

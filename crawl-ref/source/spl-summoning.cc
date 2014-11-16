@@ -3404,7 +3404,7 @@ bool grand_avatar_check_melee(monster* mons, actor* target)
     return false;
 }
 
-void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
+void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
                           const int old_hp)
 {
     const bool melee = (spell == SPELL_MELEE);
