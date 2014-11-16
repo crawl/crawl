@@ -834,14 +834,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_HELM]  = TILEP_HELM_CLOWN; // Xom
             break;
 
-        case JOB_DEATH_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_OFS;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BLACK;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
-            break;
-
         case JOB_ABYSSAL_KNIGHT:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHOULDER_PAD;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
