@@ -163,7 +163,8 @@ bool monster::add_ench(const mon_enchant &ench)
 
     if (ench.ench == ENCH_CHARM
         || ench.ench == ENCH_BRIBED
-        || ench.ench == ENCH_PERMA_BRIBED)
+        || ench.ench == ENCH_PERMA_BRIBED
+        || ench.ench == ENCH_HEXED)
     {
         align_avatars(true);
     }
@@ -252,6 +253,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
+    case ENCH_HEXED:
         behaviour = BEH_SEEK;
         target    = you.pos();
         foe       = MHITYOU;
@@ -273,18 +275,21 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         {
             if (!quiet)
             {
-                mprf("You detect the %s %s.",
-                     ench.ench == ENCH_CHARM ? "charmed" : "bribed",
+                mprf("You %sdetect the %s %s.",
+                     friendly() ? "" : "can no longer ",
+                     ench.ench == ENCH_HEXED ? "hexed" :
+                     ench.ench == ENCH_CHARM ? "charmed"
+                                             : "bribed",
                      name(DESC_PLAIN, true).c_str());
             }
 
-            autotoggle_autopickup(false);
+            autotoggle_autopickup(!friendly());
             handle_seen_interrupt(this);
         }
 
         // TODO -- and friends
 
-        if (you.can_see(this))
+        if (you.can_see(this) && friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
 
@@ -582,6 +587,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
+    case ENCH_HEXED:
         if (invisible() && mons_near(this) && !you.can_see_invisible()
             && !backlit() && !has_ench(ENCH_SUBMERGED))
         {
@@ -594,13 +600,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 }
                 else
                     mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
-                         me.ench == ENCH_CHARM ? "charmed" : "bribed");
+                         me.ench == ENCH_CHARM   ? "charmed"
+                         : me.ench == ENCH_HEXED ? "hexed"
+                                                 : "bribed");
 
-                mprf("You can no longer detect the %s.",
+                mprf("You can %s detect the %s.",
+                     friendly() ? "once again" : "no longer",
                      name(DESC_PLAIN, true).c_str());
             }
 
-            autotoggle_autopickup(true);
+            autotoggle_autopickup(friendly());
         }
         else
         {
@@ -615,6 +624,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     simple_monster_message(this,
                                         me.ench == ENCH_CHARM
                                         ? " is no longer charmed."
+                                        : me.ench == ENCH_HEXED
+                                        ? " is no longer hexed."
                                         : " is no longer bribed.");
             }
 
@@ -1144,7 +1155,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
         case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
-        case ENCH_RESISTANCE:
+        case ENCH_RESISTANCE: case ENCH_HEXED:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1643,6 +1654,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GOLD_LUST:
     case ENCH_NEGATIVE_VULN:
     case ENCH_RESISTANCE:
+    case ENCH_HEXED:
         decay_enchantment(en);
         break;
 
@@ -2393,7 +2405,7 @@ static const char *enchant_names[] =
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles", "negative_vuln", "condensation_shield", "resistant",
-    "buggy",
+    "hexed", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2634,6 +2646,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn += 1000 * min(4, deg) / _mod_speed(100, mons->speed);
         break;
     case ENCH_CHARM:
+    case ENCH_HEXED:
         cturn = 500 / modded_speed(mons, 10);
         break;
     case ENCH_TP:

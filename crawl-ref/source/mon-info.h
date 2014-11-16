@@ -133,6 +133,7 @@ enum monster_info_flags
     MB_NEGATIVE_VULN,
     MB_CONDENSATION_SHIELD,
     MB_RESISTANCE,
+    MB_HEXED,
     NUM_MB_FLAGS
 };
 

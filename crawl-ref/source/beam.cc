@@ -3539,6 +3539,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_ENSLAVE:
+        mprf(MSGCH_WARN, "Your will is overpowered!");
         potion_effect(POT_CONFUSION, ench_power, nullptr, blame_player);
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -5479,6 +5480,27 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_ENSLAVE:
+        if (!agent()->is_player())
+        {
+            enchant_type good = (agent()->wont_attack()) ? ENCH_CHARM
+                                                         : ENCH_HEXED;
+            enchant_type bad  = (agent()->wont_attack()) ? ENCH_HEXED
+                                                         : ENCH_CHARM;
+
+            const bool could_see = you.can_see(mon);
+            if (mon->has_ench(bad))
+            {
+                obvious_effect = mon->del_ench(bad);
+                return MON_AFFECTED;
+            }
+            if (simple_monster_message(mon, " is enslaved!"))
+                obvious_effect = true;
+            mon->add_ench(mon_enchant(good, 0, agent()));
+            if (!obvious_effect && could_see && !you.can_see(mon))
+                obvious_effect = true;
+            return MON_AFFECTED;
+        }
+
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");

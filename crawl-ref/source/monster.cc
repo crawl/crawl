@@ -223,6 +223,16 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
+    if (has_ench(ENCH_HEXED))
+    {
+        actor *agent = monster_by_mid(get_ench(ENCH_HEXED).source);
+        if (agent)
+        {
+            ASSERT(agent->is_monster());
+            return agent->as_monster()->attitude;
+        }
+        return ATT_HOSTILE; // ???
+    }
     if (has_ench(ENCH_CHARM) || has_ench(ENCH_PERMA_BRIBED))
         return ATT_FRIENDLY;
     else if (has_ench(ENCH_BRIBED))
