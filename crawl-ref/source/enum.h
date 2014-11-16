@@ -1846,6 +1846,7 @@ enum enchant_type
     ENCH_NEGATIVE_VULN,
     ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
+    ENCH_HEXED,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

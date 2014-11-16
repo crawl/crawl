@@ -74,6 +74,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
+static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
@@ -167,8 +168,66 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
                  || ignore_genus)
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
+            && !targ->has_ench(ENCH_HEXED)
             && !mons_is_firewood(*targ)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
+        {
+            got_target = true;
+        }
+
+        if (got_target && targ_distance < min_distance
+            && targ_distance < pbolt.range)
+        {
+            // Make sure we won't hit an invalid target with this aim.
+            pbolt.target = targ->pos();
+            fire_tracer(caster, pbolt);
+            if (!mons_should_fire(pbolt)
+                || pbolt.path_taken.back() != pbolt.target)
+            {
+                continue;
+            }
+
+            min_distance = targ_distance;
+            selected_target = *targ;
+        }
+    }
+
+    if (selected_target)
+    {
+        pbolt.target = selected_target->pos();
+        return true;
+    }
+
+    // Didn't find a target.
+    return false;
+}
+
+// Find an ally of the target to cast a hex at.
+// Note that this deliberately does not target the player.
+static bool _set_hex_target(monster* caster, bolt& pbolt)
+{
+    monster* selected_target = NULL;
+    int min_distance = INT_MAX;
+
+    if (!caster->get_foe())
+        return false;
+
+    const actor *foe = caster->get_foe();
+
+    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
+    {
+        if (*targ == caster)
+            continue;
+
+        const int targ_distance = grid_distance(targ->pos(), foe->pos());
+
+        bool got_target = false;
+
+        if (mons_aligned(*targ, foe)
+            && !targ->has_ench(ENCH_CHARM)
+            && !targ->has_ench(ENCH_HEXED)
+            && !mons_is_firewood(*targ)
+            && !_flavour_benefits_monster(pbolt.flavour, **targ))
         {
             got_target = true;
         }
@@ -1098,6 +1157,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_ENSLAVEMENT:
+        beam.flavour  = BEAM_ENSLAVE;
+        beam.pierce   = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1328,6 +1392,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SCARABS:
     case SPELL_HUNTING_CRY:
     case SPELL_CONDENSATION_SHIELD:
+    case SPELL_CONTROL_UNDEAD:
         return true;
     default:
         if (check_validity)
@@ -3198,6 +3263,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
+            // Try to find an ally of the player to hex if we are
+            // hexing the player.
+            if (spell_cast == SPELL_ENSLAVEMENT
+                && mons->foe == MHITYOU
+                && !_set_hex_target(mons, beem))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
             // Alligators shouldn't spam swiftness.
             // (not in _ms_waste_of_time since it is not deterministic)
             if (spell_cast == SPELL_SWIFTNESS
@@ -3960,7 +4035,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 8, 200);
+    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 12, 200);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
@@ -3983,7 +4058,8 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (mons_immune_magic(*mi)
             || mons_is_firewood(*mi)
-            || mons_atts_aligned(mi->attitude, mons->attitude))
+            || mons_atts_aligned(mi->attitude, mons->attitude)
+            || mons->has_ench(ENCH_HEXED))
         {
             continue;
         }
@@ -4001,6 +4077,74 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         {
             retval = 1;
             mi->confuse(mons, 2 + random2(5));
+        }
+    }
+
+    return retval;
+}
+
+static int _mons_control_undead(monster* mons, bool actual)
+{
+    int retval = -1;
+
+    const int pow = min(mons->spell_hd(SPELL_CONTROL_UNDEAD) * 12, 200);
+
+    if (mons->can_see(&you) && !mons->wont_attack()
+        && you.holiness() == MH_UNDEAD)
+    {
+        retval = 0;
+
+        if (actual)
+            if (you.check_res_magic(pow) > 0)
+                canned_msg(MSG_YOU_RESIST);
+            else
+            {
+                enchant_actor_with_flavour(&you, mons, BEAM_ENSLAVE);
+                retval = 1;
+            }
+    }
+
+    enchant_type good = (mons->wont_attack()) ? ENCH_CHARM
+                                              : ENCH_HEXED;
+    enchant_type bad  = (mons->wont_attack()) ? ENCH_HEXED
+                                              : ENCH_CHARM;
+
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        if (mons_immune_magic(*mi)
+            || mons_is_firewood(*mi)
+            || (mons_atts_aligned(mi->attitude, mons->attitude)
+                && !mi->has_ench(bad))
+            || mi->holiness() != MH_UNDEAD)
+        {
+            continue;
+        }
+
+        retval = 0;
+
+        int res_margin = mi->check_res_magic(pow);
+        if (res_margin > 0)
+        {
+            if (actual)
+                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            continue;
+        }
+        if (actual)
+        {
+            retval = 1;
+            if (you.can_see(*mi))
+            {
+                mprf("%s submits to %s will!",
+                     mi->name(DESC_YOUR).c_str(),
+                     apostrophise(mons->name(DESC_THE)).c_str());
+            }
+            if (mi->has_ench(bad))
+                mi->del_ench(bad);
+            else
+                mi->add_ench(mon_enchant(good, 0, mons));
         }
     }
 
@@ -5512,7 +5656,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
-                && *mi != mons)
+                && !mi->has_ench(ENCH_HEXED) && *mi != mons)
             {
                 mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons,
                                                40 + random2(80));
@@ -5695,6 +5839,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             {
                 if (*mi != mons && mons_aligned(mons, *mi)
                     && !mi->has_ench(ENCH_CHARM)
+                    && !mi->has_ench(ENCH_HEXED)
                     && !mons_is_avatar((*mi)->type))
                 {
                     mi->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
@@ -5933,6 +6078,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
+
+    case SPELL_CONTROL_UNDEAD:
+        _mons_control_undead(mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -6983,6 +7132,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_CHARM)
+                && !mi->has_ench(ENCH_HEXED)
                 && *mi != mon && mon->see_cell_no_trans(mi->pos())
                 && !mi->has_ench(ENCH_INJURY_BOND))
             {
@@ -7287,6 +7437,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONDENSATION_SHIELD:
         return mon->shield()
                || mon->has_ench(ENCH_CONDENSATION_SHIELD);
+
+    case SPELL_CONTROL_UNDEAD:
+        return _mons_control_undead(mon, false) < 0;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

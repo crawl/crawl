@@ -212,6 +212,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_CONDENSATION_SHIELD;
     case ENCH_RESISTANCE:
         return MB_RESISTANCE;
+    case ENCH_HEXED:
+        return MB_HEXED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1580,6 +1582,8 @@ vector<string> monster_info::attributes() const
         v.push_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.push_back("unusually resistant");
+    if (is(MB_HEXED))
+        v.push_back("control wrested from you");
     return v;
 }
 

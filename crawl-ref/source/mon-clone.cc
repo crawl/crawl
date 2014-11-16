@@ -113,6 +113,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
         clone->del_ench(ENCH_SILVER_CORONA);
+        clone->del_ench(ENCH_HEXED);
 
         behaviour_event(clone, ME_ALERT, 0, caster->pos());
 

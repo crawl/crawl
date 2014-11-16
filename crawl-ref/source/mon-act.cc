@@ -1472,11 +1472,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
         beem.damage.size = beem.damage.size * 2 / 3;
         break;
 
-    case WAND_ENSLAVEMENT:
-    case WAND_RANDOM_EFFECTS:
-        // These have been deemed "too tricky" at this time {dlb}:
-        return false;
-
     case WAND_DIGGING:
         // This is handled elsewhere.
         return false;
@@ -1816,6 +1811,14 @@ static void _pre_monster_move(monster* mons)
         const actor * const summoner = actor_by_mid(mons->summoner);
         if ((!summoner || !summoner->alive()) && mons->del_ench(ENCH_ABJ))
             return;
+    }
+
+    if (mons->has_ench(ENCH_HEXED))
+    {
+        const actor* const agent =
+            actor_by_mid(mons->get_ench(ENCH_HEXED).source);
+        if (!agent || !agent->alive())
+            mons->del_ench(ENCH_HEXED);
     }
 
     if (mons->type == MONS_SNAPLASHER_VINE
@@ -2244,6 +2247,7 @@ void handle_monster_move(monster* mons)
         // Keep neutral, charmed, summoned, and friendly monsters from
         // picking up stuff.
         if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
+             && !mons->has_ench(ENCH_HEXED)
              || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
             && !mons->is_summoned() && !mons->is_perm_summoned()
             && !mons->friendly())
@@ -2442,6 +2446,7 @@ void handle_monster_move(monster* mons)
 
             if (_unfriendly_or_insane(mons)
                 && !mons->has_ench(ENCH_CHARM)
+                && !mons->has_ench(ENCH_HEXED)
                 && !mons->withdrawn())
             {
                 monster* new_target = 0;
@@ -4572,6 +4577,7 @@ static spell_type _map_wand_to_mspell(wand_type kind)
     case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
     case WAND_POLYMORPH:       return SPELL_POLYMORPH;
     case WAND_DIGGING:         return SPELL_DIG;
+    case WAND_ENSLAVEMENT:     return SPELL_ENSLAVEMENT;
     default:                   return SPELL_NO_SPELL;
     }
 }

@@ -2098,7 +2098,7 @@ static const mon_spellbook mspell_list[] =
                                 | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_DRAINING, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_DISPEL_UNDEAD, 38, MON_SPELL_PRIEST },
-       { SPELL_CONFUSE, 19, MON_SPELL_PRIEST }, // Control Undead?
+       { SPELL_CONTROL_UNDEAD, 19, MON_SPELL_PRIEST },
       }
     },
 
