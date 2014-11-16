@@ -7,7 +7,7 @@
 # Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
 # and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
-# interesting when encountered at low level (green rat, giant frog etc.) Loot
+# interesting when encountered at low level (river rat, giant frog etc.) Loot
 # consists of renewable items; the harder maps contain a few good items.
 #
 ##############################################################################
@@ -63,7 +63,7 @@ NAME:   portal_sewer_entry_a
 : sewer_portal(_G)
 SUBST:  1 = 2234..........
 MONS:   nothing
-MONS:   rat / green rat w:5
+MONS:   rat / river rat w:5
 MONS:   ball python / adder w:2
 MONS:   giant cockroach / giant mite / worm w:3
 MAP
@@ -82,7 +82,7 @@ NAME:   portal_sewer_entry_b
 ORIENT: float
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
-KMONS:  1 = rat w:20 / green rat / ball python / adder w:2 / \
+KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / giant mite / worm w:3
 MAP
 xxxxxx
@@ -98,7 +98,7 @@ WEIGHT: 4
 : sewer_portal(_G)
 NSUBST: c = 1:+ / 2:n / *:c
 NSUBST: W = 8 = 111W / *:W
-KMONS:  1 = rat w:20 / green rat / ball python / adder w:2 / \
+KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / giant mite / worm w:3
 MAP
 .........
@@ -127,7 +127,7 @@ ORIENT: northwest
 NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
 NSUBST: W = 8:111W / *:W
-KMONS:  1 = rat w:20 / green rat / ball python / adder w:2 / \
+KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / giant mite / worm w:3
 MAP
 xxxxxxxxx
@@ -176,7 +176,7 @@ ENDMAP
 NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / green rat w:5 / adder w:5 / giant cockroach / \
+KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
             giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
@@ -196,7 +196,7 @@ ENDMAP
 NAME:   gup_sewer_entry_bubbles
 TAGS:   patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / green rat w:5 / adder w:5 / giant cockroach / \
+KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
             giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
@@ -216,7 +216,7 @@ ENDMAP
 
 NAME:   gup_sewer_entry_bowl
 : sewer_portal(_G)
-KMONS:  1 = rat / green rat w:5 / \
+KMONS:  1 = rat / river rat w:5 / \
             giant cockroach / giant mite / giant gecko / worm w:3 / nothing
 MAP
 ..........
@@ -245,7 +245,7 @@ ENDMAP
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
-MONS: green rat / adder / rat / worm
+MONS: river rat / adder / rat / worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
@@ -290,7 +290,7 @@ MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
 SHUFFLE:  de
 ITEM:     potion of curing / potion of heal wounds
 ITEM:     potion of flight / potion of restore abilities
-MONS:     rat w:15 / green rat w:7 / nothing w:3
+MONS:     rat w:15 / river rat w:7 / nothing w:3
 MAP
         ccc
         cwc
@@ -337,7 +337,7 @@ NAME:   sewer_minmay_treatment
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 15
 ORIENT: encompass
-MONS:   rat / green rat w:3
+MONS:   rat / river rat w:3
 MONS:   kobold / big kobold w:1
 MONS:   ball python / adder w:5 / giant newt w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
@@ -553,7 +553,7 @@ NAME:    sewer_minmay_w
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: de
-MONS:    rat / green rat w:2
+MONS:    rat / river rat w:2
 MONS:    ball python / adder w:5 / giant newt w:2 / ooze w:1
 MONS:    giant frog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
@@ -899,7 +899,7 @@ NAME:   sewer_sea
 TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
-MONS:   rat w:4 / nothing w:1, rat / green rat w:5
+MONS:   rat w:4 / nothing w:1, rat / river rat w:5
 KMONS:  G = siren hd:3 name:sickly name_adjective name_species
 KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
 KMONS:  hJ = giant newt / ball python / adder / nothing w:2
@@ -964,7 +964,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / w:7 big kobold
 MONS:    kobold / adder / ball python / w:7 worm / w:7 ooze / \
-         rat / green rat w:5
+         rat / river rat w:5
 SUBST:   . = W..
 SUBST:   X = xx.
 SUBST:   2 = 222..
@@ -1044,7 +1044,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   kobold / big kobold
 MONS:   adder / ball python / worm
-MONS:   ooze / rat / green rat w:5
+MONS:   ooze / rat / river rat w:5
 # less water in the middle, more at the endpoints.
 SUBST:  ~ = WWWW.
 SUBST:  - = WW...
@@ -1143,7 +1143,7 @@ SUBST:   V = .WWWW
 SUBST:   X = xx"
 #      rat path
 KPROP:   " = no_tele_into
-KMONS:   " = nothing w:50 / rat w:15 / green rat w:7
+KMONS:   " = nothing w:50 / rat w:15 / river rat w:7
 KPROP:   w = no_tele_into
 #      loot
 SUBST:   e = !!!!!?????%
@@ -1201,7 +1201,7 @@ KMONS:   1 = giant newt / ball python w:5 /  generate_awake ball python w:5 / \
          adder w:7
 SUBST:   1 = 1111W
 #      other monsters
-KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 green rat, rat
+KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 river rat, rat
 SUBST:   2 = 222222W.
 #      loot
 SUBST:   e = !!!?????%WWW
@@ -1269,14 +1269,14 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 WEIGHT: 3
 KMONS:  1  = rat
-KMONS:  4  = rat w:85 / green rat w:13 / orange rat w:2
+KMONS:  4  = rat w:85 / river rat w:13 / orange rat w:2
 KMONS:  23 = big kobold spells:animate_dead.55.wizard name:necromancer n_suf \
              col:white ; dagger | club . robe
 : dgn.delayed_decay(_G, '%', 'rat skeleton w:60 / rat corpse w:20')
 : dgn.delayed_decay(_G, '^', 'rat skeleton w:24 / rat corpse w:8 /' ..
-:    'green rat skeleton w:15 / green rat corpse w:5')
-: dgn.delayed_decay(_G, '&', 'green rat skeleton w:36 /' ..
-:    'green rat corpse w:12 /' ..
+:    'river rat skeleton w:15 / river rat corpse w:5')
+: dgn.delayed_decay(_G, '&', 'river rat skeleton w:36 /' ..
+:    'river rat corpse w:12 /' ..
 :    'orange rat skeleton w:3 / orange rat corpse w:1')
 KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
              potion of magic / potion of haste w:5 /\

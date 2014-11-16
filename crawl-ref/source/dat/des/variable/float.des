@@ -1155,7 +1155,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / porcupine, green rat / orange rat
+MONS:    rat / porcupine, river rat / orange rat
 MONS:    bat
 KFEAT:   w = web
 SHUFFLE: ?!+
@@ -1316,7 +1316,7 @@ ENDMAP
 NAME:    lemuel_vampire_tower
 ORIENT:  float
 DEPTH:   D:12-, Depths, !Depths:$, Crypt
-MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
+MONS:    rat / porcupine / w:6 river rat / w:3 orange rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item

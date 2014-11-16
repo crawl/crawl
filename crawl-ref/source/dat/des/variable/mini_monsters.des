@@ -458,7 +458,7 @@ ENDMAP
 NAME:  rats_and_rats_again
 DEPTH: D:8-14
 MONS:  shadow imp
-MONS:  rat w:40 / green rat w:20 / orange rat w:1 / nothing
+MONS:  rat w:40 / river rat w:20 / orange rat w:1 / nothing
 MAP
 ...........
 .xxx+++xxx.
@@ -641,7 +641,7 @@ NAME:  pond
 TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / water moccasin / green rat / swamp drake w:2
+MONS:  giant frog w:30 / water moccasin / river rat / swamp drake w:2
 MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.
@@ -1006,7 +1006,7 @@ DEPTH:   D:11-
 MONS:    rat, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
 KMONS:   8 = ball python / adder w:8
-KMONS:   A = green rat
+KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
 KMONS:   D = worm
@@ -1298,7 +1298,7 @@ NAME:  eino_house_with_fridge
 DEPTH: D:9-15, Lair:2-
 TAGS:  no_monster_gen no_item_gen
 MONS:  patrolling necromancer, plant
-MONS:  green rat simulacrum / wolf simulacrum / \
+MONS:  river rat simulacrum / wolf simulacrum / \
        yak simulacrum / polar bear simulacrum
 MAP
 ............
