@@ -3518,7 +3518,7 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     if (mon_qvr)
     {
-        const string qvr_desc = make_stringf("wearing %s",
+        const string qvr_desc = make_stringf("quivering %s",
                                              mon_qvr->name(DESC_A).c_str());
         item_descriptions.push_back(qvr_desc);
     }
