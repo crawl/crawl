@@ -1215,22 +1215,11 @@ static void _add_lich_spells_from(monster_spells &spells,
     }
 }
 
-static spschool_flag_type _add_lich_spells(monster_spells &spells,
-                                           lich_spell_set *spellset,
-                                           size_t set_size,
-                                           spschool_flag_type restricted,
-                                           bool primary)
+static void _add_lich_spells(monster_spells &spells, lich_spell_set *spellset,
+                             size_t set_size, bool primary)
 {
-    size_t which = 0;
-    do
-    {
-        which = random2(set_size);
-    } while (spellset[which].school == restricted);
-
-    _add_lich_spells_from(spells, spellset[which],
+    _add_lich_spells_from(spells, spellset[random2(set_size)],
                           random2(primary ? 2 : 3) + 1);
-
-    return spellset[which].school;
 }
 
 void ghost_demon::init_lich(monster_type type)
@@ -1248,18 +1237,14 @@ void ghost_demon::init_lich(monster_type type)
     att_type = me->attack[0].type;
     att_flav = me->attack[0].flavour;
 
-    spschool_flag_type school = SPTYP_NONE;
-
-    for (int i = 0; i < 2; ++i)
+    while (spells.size() < 4)
     {
-        if (type == MONS_ANCIENT_LICH && i == 0)
-            school = _add_lich_spells(spells, lich_primary_spells,
-                                      ARRAYSZ(lich_primary_spells), school,
-                                      true);
+        if (type == MONS_ANCIENT_LICH && spells.size() == 0)
+            _add_lich_spells(spells, lich_primary_spells,
+                             ARRAYSZ(lich_primary_spells), true);
         else
-            school = _add_lich_spells(spells, lich_secondary_spells,
-                                      ARRAYSZ(lich_secondary_spells), school,
-                                      false);
+            _add_lich_spells(spells, lich_secondary_spells,
+                             ARRAYSZ(lich_secondary_spells), false);
     }
 
     _add_lich_spells_from(spells, emergency_spells, 1);
