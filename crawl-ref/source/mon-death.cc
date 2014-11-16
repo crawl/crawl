@@ -142,7 +142,7 @@ monster_type fill_out_corpse(const monster* mons,
             corpse.props[NEVER_HIDE_KEY] = true;
     }
 
-    monster_info minfo(mons_species(mtype));
+    monster_info minfo(corpse_class);
     int col = int(minfo.colour());
     if (col == COLOUR_UNDEF && mons)
     {
