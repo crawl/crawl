@@ -48,7 +48,6 @@ god_conduct_trigger::~god_conduct_trigger()
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
-#ifdef DEBUG_DIAGNOSTICS
 static const char *conducts[] =
 {
     "",
@@ -76,7 +75,7 @@ static const char *conducts[] =
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
     "Fire", "Kill Fiery", "Sacrificed Love"
 };
-#endif
+COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
 /**
  * Change piety & add penance in response to a conduct.
@@ -89,10 +88,11 @@ static const char *conducts[] =
 static void _handle_piety_penance(int piety_change, int piety_denom,
                                   int penance, conduct_type thing_done)
 {
-#ifdef DEBUG_DIAGNOSTICS
     const int old_piety = you.piety;
-#else
+#ifndef DEBUG_DIAGNOSTICS
     UNUSED(thing_done);
+    UNUSED(conducts);
+    UNUSED(old_piety);
 #endif
 
     if (piety_change > 0)
@@ -100,21 +100,17 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
     else
         dock_piety(div_rand_round(-piety_change, piety_denom), penance);
 
-#ifdef DEBUG_DIAGNOSTICS
     // don't announce exploration piety unless you actually got a boost
     if ((piety_change || penance)
         && thing_done != DID_EXPLORATION || old_piety != you.piety)
     {
 
-        COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
         dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
              conducts[thing_done],
              you.piety, piety_change, piety_denom,
              you.penance[you.religion], penance);
 
     }
-#endif
-
 }
 
 /**
