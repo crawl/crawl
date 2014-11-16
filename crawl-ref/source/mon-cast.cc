@@ -4052,7 +4052,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 12, 200);
+    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 8, 200);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
