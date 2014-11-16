@@ -2985,22 +2985,19 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     monster_spells hspell_pass(mons->spells);
 
-    if (mons->is_silenced()
-        // Shapeshifters don't get 'real' spells.
-        || mons->is_shapeshifter())
+    for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
     {
-        for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
+        if (it->flags & MON_SPELL_SILENCE_MASK
+            && (mons->is_silenced()
+                || mons->is_shapeshifter()))
         {
-            if (it->flags & MON_SPELL_SILENCE_MASK)
-            {
-                hspell_pass.erase(it);
-                it = hspell_pass.begin() - 1;
-            }
+            hspell_pass.erase(it);
+            it = hspell_pass.begin() - 1;
         }
-
-        if (!hspell_pass.size())
-            return false;
     }
+
+    if (!hspell_pass.size())
+        return false;
 
     if (!mon_enemies_around(mons))
     {

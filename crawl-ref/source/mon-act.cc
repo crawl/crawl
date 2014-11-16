@@ -278,20 +278,16 @@ static bool _swap_monsters(monster* mover, monster* moved)
 
 static bool _do_mon_spell(monster* mons, bolt &beem)
 {
-    // Shapeshifters don't get spells.
-    if (!mons->is_shapeshifter() || !mons->is_actual_spellcaster())
+    if (handle_mon_spell(mons, beem))
     {
-        if (handle_mon_spell(mons, beem))
-        {
-            // If a Pan lord/pghost is known to be a spellcaster, it's safer
-            // to assume it has ranged spells too.  For others, it'd just
-            // lead to unnecessary false positives.
-            if (mons_is_ghost_demon(mons->type))
-                mons->flags |= MF_SEEN_RANGED;
+        // If a Pan lord/pghost is known to be a spellcaster, it's safer
+        // to assume it has ranged spells too.  For others, it'd just
+        // lead to unnecessary false positives.
+        if (mons_is_ghost_demon(mons->type))
+            mons->flags |= MF_SEEN_RANGED;
 
-            mmov.reset();
-            return true;
-        }
+        mmov.reset();
+        return true;
     }
 
     return false;
