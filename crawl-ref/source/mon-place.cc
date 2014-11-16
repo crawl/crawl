@@ -1956,14 +1956,11 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     dprf("veto is null? %d", veto == NULL);
 
-    if (monster_type mt =
-            picker.pick_with_veto(zombie_population(place.branch),
-                                  place.depth, MONS_0, veto))
-    {
-        return mt;
-    }
-
-    return pick_monster_all_branches(place.absdepth(), picker);
+    monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
+                                            place.depth, MONS_0, veto);
+    ASSERT(mt);
+    ASSERT(mons_class_can_be_zombified(mons_species(mt)));
+    return mt;
 }
 
 void roll_zombie_hp(monster* mon)
