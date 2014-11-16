@@ -296,16 +296,10 @@ void change_monster_type(monster* mons, monster_type targetc)
     const bool old_mon_caught     = mons->caught();
     const char old_ench_countdown = mons->ench_countdown;
 
-    // XXX: mons_is_unique should be converted to monster::is_unique, and that
-    // function should be testing the value of props["original_was_unique"]
-    // which would make things a lot simpler.
-    // See also record_monster_defeat.
-    bool old_mon_unique           = mons_is_unique(mons->type);
-    if (mons->props.exists("original_was_unique")
-        && mons->props["original_was_unique"].get_bool())
-    {
-        old_mon_unique = true;
-    }
+    const bool old_mon_unique = mons_is_or_was_unique(*mons);
+
+    if (!mons->props.exists(ORIGINAL_TYPE_KEY))
+        mons->props[ORIGINAL_TYPE_KEY].get_int() = mons->type;
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
@@ -337,8 +331,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     mons->mname = name;
-    mons->props["original_name"] = name;
-    mons->props["original_was_unique"] = old_mon_unique;
     mons->props["no_annotate"] = slimified && old_mon_unique;
     mons->god   = god;
     mons->props.erase("dbname");

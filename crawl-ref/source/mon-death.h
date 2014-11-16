@@ -65,21 +65,17 @@ int dismiss_monsters(string pattern);
 string summoned_poof_msg(const monster* mons, bool plural = false);
 string summoned_poof_msg(const monster* mons, const item_def &item);
 
-bool mons_is_pikel(monster* mons);
+bool mons_is_mons_class(const monster* mons, monster_type type);
 void pikel_band_neutralise();
 
-bool mons_is_duvessa(const monster* mons);
-bool mons_is_dowan(const monster* mons);
 bool mons_is_elven_twin(const monster* mons);
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index);
 void elven_twin_energize(monster* mons);
 void elven_twins_pacify(monster* twin);
 void elven_twins_unpacify(monster* twin);
 
-bool mons_is_kirke(monster* mons);
 void hogs_to_humans();
 
-bool mons_is_natasha(const monster* mons);
 bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 

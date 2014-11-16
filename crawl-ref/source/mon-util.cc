@@ -1296,6 +1296,13 @@ bool mons_is_unique(monster_type mc)
     return mons_class_flag(mc, M_UNIQUE);
 }
 
+bool mons_is_or_was_unique(const monster& mon)
+{
+    return mons_is_unique(mon.type)
+           || mon.props.exists(ORIGINAL_TYPE_KEY)
+              && mons_is_unique((monster_type) mon.props[ORIGINAL_TYPE_KEY].get_int());
+}
+
 /**
  * Can this type of monster be blinded?
  *
@@ -3252,11 +3259,11 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 
-    if (mons_is_pikel(mon))
+    if (mons_is_mons_class(mon, MONS_PIKEL))
         pikel_band_neutralise();
     if (mons_is_elven_twin(mon))
         elven_twins_pacify(mon);
-    if (mons_is_kirke(mon))
+    if (mons_is_mons_class(mon, MONS_KIRKE))
         hogs_to_humans();
     if (mon->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);

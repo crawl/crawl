@@ -218,6 +218,7 @@ shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);
+bool mons_is_or_was_unique(const monster& mon);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);

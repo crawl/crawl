@@ -5492,7 +5492,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         mon->attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.
-        if (mons_is_pikel(mon))
+        if (mons_is_mons_class(mon, MONS_PIKEL))
             pikel_band_neutralise();
 
         if (simple_monster_message(mon, " is charmed."))
