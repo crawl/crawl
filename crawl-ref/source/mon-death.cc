@@ -2800,12 +2800,12 @@ int monster_die(monster* mons, killer_type killer,
         && !timeout
         && !unsummoned)
     {
-        //XXX: these messages don't work if the monster is gendered!
         if (!(mons->flags & MF_KNOWN_SHIFTER)
             && mons->is_shapeshifter())
         {
-            simple_monster_message(mons, "'s shape twists and changes as "
-                                  "it dies.");
+            const string message = "'s shape twists and changes as " +
+                                   mons->pronoun(PRONOUN_SUBJECTIVE) + " dies.";
+            simple_monster_message(mons, message.c_str());
         }
         else if (mons->props.exists(ORIGINAL_TYPE_KEY))
         {
