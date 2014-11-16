@@ -1162,6 +1162,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_INNER_FLAME:
+        beam.flavour  = BEAM_INNER_FLAME;
+        beam.pierce   = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -3265,7 +3270,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             // Try to find an ally of the player to hex if we are
             // hexing the player.
-            if (spell_cast == SPELL_ENSLAVEMENT
+            if ((spell_cast == SPELL_ENSLAVEMENT
+                 || spell_cast == SPELL_INNER_FLAME)
                 && mons->foe == MHITYOU
                 && !_set_hex_target(mons, beem))
             {
@@ -3429,6 +3435,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                              .agent(),
                                        BASELINE_DELAY
                                        * spell_difficulty(spell_cast)));
+        }
+        // If we inner flamed something, target that now.
+        if (spell_cast == SPELL_INNER_FLAME)
+        {
+            monster* victim = monster_at(beem.target);
+            if (victim && victim->has_ench(ENCH_INNER_FLAME)
+                && !victim->has_ench(mons->wont_attack() ? ENCH_CHARM
+                                                         : ENCH_HEXED))
+            {
+                mons->foe = victim->mid;
+            }
         }
         // Wellsprings "cast" from their own hp.
         if (spell_cast == SPELL_PRIMAL_WAVE
