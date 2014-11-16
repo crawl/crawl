@@ -1343,7 +1343,7 @@ void MiscastEffect::_translocation(int severity)
         {
             bool success = false;
 
-            for (int i = 1 + random2(3); i >= 0; --i)
+            for (int i = 1 + random2(3); i > 0; --i)
             {
                 if (_create_monster(MONS_SPATIAL_VORTEX, 3))
                     success = true;
@@ -1508,7 +1508,7 @@ void MiscastEffect::_summoning(int severity)
         {
             bool success = false;
 
-            for (int i = 1 + random2(3); i >= 0; --i)
+            for (int i = 1 + random2(3); i > 0; --i)
             {
                 if (_create_monster(MONS_SPATIAL_VORTEX, 3))
                     success = true;
@@ -1533,7 +1533,7 @@ void MiscastEffect::_summoning(int severity)
         {
             bool success = false;
 
-            for (int i = 2 + random2(3); i >= 0; --i)
+            for (int i = 2 + random2(2); i > 0; --i)
             {
                 if (_create_monster(MONS_ABOMINATION_SMALL, 5, true))
                     success = true;
@@ -1563,7 +1563,7 @@ void MiscastEffect::_summoning(int severity)
             {
                 bool success = false;
 
-                for (int i = 1 + random2(3); i >= 0; --i)
+                for (int i = 1 + random2(3); i > 0; --i)
                 {
                     if (_create_monster(MONS_WORLDBINDER, 5, true))
                         success = true;
@@ -1586,7 +1586,7 @@ void MiscastEffect::_summoning(int severity)
             {
                 bool success = false;
 
-                for (int i = 1 + random2(2); i >= 0; --i)
+                for (int i = 1 + random2(2); i > 0; --i)
                 {
                     if (_create_monster(summon_any_demon(RANDOM_DEMON_COMMON), 3, true))
                         success = true;
@@ -1925,7 +1925,7 @@ void MiscastEffect::_necromancy(int severity)
         {
             bool success = false;
 
-            for (int i = random2(2); i >= 0; --i)
+            for (int i = 0; i < 2; ++i)
             {
                 if (_create_monster(MONS_SHADOW, 2, true))
                     success = true;
@@ -2119,7 +2119,7 @@ void MiscastEffect::_transmutation(int severity)
         {
             bool success = false;
 
-            for (int i = 2 + random2(2); i >= 0; --i)
+            for (int i = 2 + random2(3); i > 0; --i)
             {
                 // Should be actual monsters and not durable summons,
                 // but there's a bunch of problems there (corpses,
@@ -2310,7 +2310,7 @@ void MiscastEffect::_fire(int severity)
         case 0:
         {
             bool success = false;
-            for (int i = 1 + random2(2); i >= 0; --i)
+            for (int i = 1 + random2(2); i > 0; --i)
             {
                 if (_create_monster(MONS_FIRE_VORTEX, 2, true))
                     success = true;
@@ -3183,7 +3183,7 @@ void MiscastEffect::_zot()
             break;
         case 3:
         case 4:
-            for (int i = 1 + random2(2); i >= 0; --i)
+            for (int i = 1 + random2(2); i > 0; --i)
             {
                 if (_create_monster(summon_any_demon(RANDOM_DEMON_COMMON), 0, true))
                     success = true;
@@ -3197,7 +3197,7 @@ void MiscastEffect::_zot()
             }
             break;
         case 5:
-            for (int i = 1 + random2(3); i >= 0; --i)
+            for (int i = 2 + random2(2); i > 0; --i)
             {
                 if (_create_monster(MONS_ABOMINATION_SMALL, 5, true))
                     success = true;
@@ -3213,7 +3213,7 @@ void MiscastEffect::_zot()
             break;
         case 6:
         case 7:
-            for (int i = 2 + random2(3); i >= 0; --i)
+            for (int i = 2 + random2(4); i > 0; --i)
             {
                 if (_create_monster(RANDOM_MOBILE_MONSTER, 4, true))
                     success = true;
