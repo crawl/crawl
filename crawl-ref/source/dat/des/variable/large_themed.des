@@ -1616,7 +1616,7 @@ ORIENT: northwest
 DEPTH:  D:2-4
 KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
 MONS:   goblin, goblin ; hunting sling . stone, jackal
-NSUBST: . = 1:6 / 3:3 / *:.
+NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
 x...+....1..x%%*xww

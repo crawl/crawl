@@ -1,8 +1,7 @@
 ###############################################################################
-# vaults.des: Entries to the Vaults branch.
+# vaults.des: Entries to the Vaults branch, and Vaults:$ set-up.
 #
-# Note the regular (mini)vaults are no longer in vaults.des, they have been
-# moved to mini.des, float.des and large.des. Portal vaults live in portal.des.
+# Vaults are scattered according to purpose across the rest of dat/des.
 ###############################################################################
 
 {{
@@ -193,7 +192,7 @@ ENDMAP
 NAME:    erik_vaults_2
 TAGS:    vaults_entry
 MONS:    vault guard
-SUBST:   v = vxx, b = bcc
+SUBST:   v : vxx, b : bcc
 KFEAT:   O = enter_vaults
 MAP
 vvvvvv.vvvvvv

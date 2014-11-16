@@ -27,10 +27,12 @@
 # Functionality for some Grunt vaults.
 {{
 function grunt_ministairs_setup(e, hatches)
-  if you.branch() == "Crypt" then
+  if you.branch() == "Crypt" or you.branch() == "Zot" then
     e.shuffle("GT")
-    e.subst("T = T:20 V Y:1")
-    e.subst("x = c")
+    if you.branch() == "Crypt" then
+      e.subst("T = T V:20 Y:1")
+      e.subst("x = c")
+    end
   else
     e.shuffle("GTt")
     e.subst("T = T:20 V U:1")
@@ -1416,7 +1418,7 @@ ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
 ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
-ITEM:    randbook numspells:2 title:Of_Sand
+ITEM:    randbook numspells:2 title:Sand
 KFEAT:   ^ : known shaft trap
 SHUFFLE: defg, efghij, bm, bm / ++
 MAP
@@ -2028,7 +2030,7 @@ NAME:  grunt_absolute_annihilation
 DEPTH: Depths
 # These spell sets are Lich III and Lich IV; they have LCS and IOOD
 # respectively.
-MONS:    ancient lich spells:bolt_of_draining.12.wizard;\
+MONS:    ancient lich spells:corrosive_bolt.12.wizard;\
                              slow.12.wizard;\
                              invisibility.24.wizard;\
                              throw_icicle.12.wizard;\
@@ -2039,7 +2041,7 @@ MONS:    ancient lich spells:bolt_of_draining.12.wizard;\
                              animate_dead.12.wizard;\
                              orb_of_destruction.12.wizard
 MONS:    deep elf annihilator / draconian annihilator w:5 / \
-         lich spells:bolt_of_draining.12.wizard;\
+         lich spells:corrosive_bolt.12.wizard;\
                      slow.12.wizard;\
                      invisibility.24.wizard;\
                      throw_icicle.12.wizard;\
@@ -2688,12 +2690,15 @@ ENDMAP
 
 NAME:   statue_in_the_mist_lemuel
 TAGS:   extra no_exits
-MONS:   orange crystal statue / obsidian statue / ice statue
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
+KMONS:  1 = orange crystal statue / obsidian statue / ice statue
+KITEM:  1 = %, % / $
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
             size = 3, walk_dist = 2, spread_rate= 25 }
+: if you.branch() == "Abyss" then
 SUBST:  G : G111
+: end
 MAP
 G
 ENDMAP
