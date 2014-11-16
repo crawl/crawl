@@ -608,7 +608,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
 again:
-#ifdef USE_TILE_LOCAL
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
 #endif
     vector<player_save_info> chars = find_all_saved_characters();

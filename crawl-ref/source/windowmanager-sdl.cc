@@ -465,6 +465,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     m_windowsz->x = x;
     m_windowsz->y = y;
 #ifdef __ANDROID__
+  #ifndef TOUCH_UI
+    SDL_StartTextInput();
+  #endif
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
 #endif
 
