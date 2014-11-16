@@ -1916,14 +1916,17 @@ bool zombie_picker::veto(monster_type mt)
         return true;
     if (mons_class_holiness(corpse_type) != MH_NATURAL)
         return true;
-
-    return !_good_zombie(corpse_type, zombie_kind, pos);
+    if (!_good_zombie(corpse_type, zombie_kind, pos))
+        return true;
+    return positioned_monster_picker::veto(mt);
 }
 
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos)
 {
+    const bool really_in_d = place.branch == BRANCH_DUNGEON;
+
     if (crawl_state.game_is_zotdef())
     {
         place = level_id(BRANCH_DUNGEON,
@@ -1946,9 +1949,16 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
+    mon_pick_vetoer veto = really_in_d ? [] (monster_type mon) {
+        // no speed < 10 zombies! (so base species have to be fast)
+        return mons_class_base_speed(mons_species(mon)) < 12;
+    } : NULL;
+
+    dprf("veto is null? %d", veto == NULL);
+
     if (monster_type mt =
             picker.pick_with_veto(zombie_population(place.branch),
-                                  place.depth, MONS_0))
+                                  place.depth, MONS_0, veto))
     {
         return mt;
     }
