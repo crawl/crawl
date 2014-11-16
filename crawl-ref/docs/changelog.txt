@@ -25,6 +25,7 @@ Character
   spell memorized.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
   a wand.
+* Wanderer starting equipment is noted in the game log.
 * Felids no longer have a jump-attack ability, which has been removed.
 * Worshippers of Kikubaaqudgha and Nemelex Xobeh will now have titles unique
   to those gods displayed when their highest skill is Necromancy or Evocations
