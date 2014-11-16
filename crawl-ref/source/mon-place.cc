@@ -1493,6 +1493,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Store the extra flags here.
     mon->flags       |= mg.extra_flags;
 
+    // "Prince Ribbit returns to his original shape as he dies."
+    if (mg.cls == MONS_PRINCE_RIBBIT)
+        mon->props[ORIGINAL_TYPE_KEY].get_int() = MONS_PRINCE_RIBBIT;
+
     // The return of Boris is now handled in monster_die().  Not setting
     // this for Boris here allows for multiple Borises in the dungeon at
     // the same time. - bwr

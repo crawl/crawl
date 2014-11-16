@@ -7039,8 +7039,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_SPECTRAL_WEAPON:
         return find_spectral_weapon(mon)
-               || !foe
-               || adjacent(mon->pos(), foe->pos());
+            || !foe
+            // Don't cast unless the caster is at or close to melee range for
+            // its target. Casting spectral weapon at distance is bad since it
+            // generally helps the caster's target maintain distance, also
+            // letting the target exploit the spectral's damage sharing.
+            || grid_distance(mon->pos(), foe->pos()) > 2;
 
     case SPELL_INJURY_BOND:
         for (monster_iterator mi; mi; ++mi)
