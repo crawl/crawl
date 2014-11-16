@@ -1169,6 +1169,16 @@ lich_spell_set lich_secondary_spells[] =
   },
 };
 
+lich_spell_set emergency_spells =
+{ SPTYP_CHARMS,
+  {
+   { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+   { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+   { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD },
+   END_OF_MONS_BOOK
+  }
+};
+
 static mon_spell_slot _pick_random_spell(const lich_spell_set &set)
 {
     mon_spell_slot chosen;
@@ -1178,6 +1188,31 @@ static mon_spell_slot _pick_random_spell(const lich_spell_set &set)
             chosen = set.spells[i];
 
     return chosen;
+}
+
+static void _add_lich_spells_from(monster_spells &spells,
+                                  const lich_spell_set &set, int num_spells)
+{
+    for (int i = 0; i < num_spells; ++i)
+    {
+        for (int tries = 0; tries < 100; ++tries)
+        {
+            mon_spell_slot next_spell = _pick_random_spell(set);
+
+            bool used = false;
+            for (auto slot : spells)
+                if (slot.spell == next_spell.spell)
+                    used = true;
+
+            if (!used)
+            {
+                if (next_spell.spell == SPELL_TELEPORT_SELF)
+                    next_spell.flags |= MON_SPELL_EMERGENCY;
+                spells.push_back(next_spell);
+                break;
+            }
+        }
+    }
 }
 
 static spschool_flag_type _add_lich_spells(monster_spells &spells,
@@ -1192,25 +1227,8 @@ static spschool_flag_type _add_lich_spells(monster_spells &spells,
         which = random2(set_size);
     } while (spellset[which].school == restricted);
 
-    int num_spells = random2(primary ? 2 : 3) + 1;
-    for (int i = 0; i < num_spells; ++i)
-    {
-        for (int tries = 0; tries < 100; ++tries)
-        {
-            mon_spell_slot next_spell = _pick_random_spell(spellset[which]);
-
-            bool used = false;
-            for (auto slot : spells)
-                if (slot.spell == next_spell.spell)
-                    used = true;
-
-            if (!used)
-            {
-                spells.push_back(next_spell);
-                break;
-            }
-        }
-    }
+    _add_lich_spells_from(spells, spellset[which],
+                          random2(primary ? 2 : 3) + 1);
 
     return spellset[which].school;
 }
@@ -1244,15 +1262,5 @@ void ghost_demon::init_lich(monster_type type)
                                       false);
     }
 
-    mon_spell_slot emergency;
-    emergency.spell = random_choose(SPELL_HASTE,
-                                    SPELL_INVISIBILITY,
-                                    SPELL_TELEPORT_SELF,
-                                    -1);
-    emergency.freq  = 12;
-    emergency.flags = MON_SPELL_WIZARD;
-    if (emergency.spell == SPELL_TELEPORT_SELF)
-        emergency.flags |= MON_SPELL_EMERGENCY;
-
-    spells.push_back(emergency);
+    _add_lich_spells_from(spells, emergency_spells, 1);
 }
