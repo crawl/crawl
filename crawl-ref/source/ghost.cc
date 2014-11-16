@@ -1022,183 +1022,74 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     fixup_spells(spells, 150);
 }
 
-typedef struct
+const mon_spell_slot lich_primary_spells[] =
 {
-  mon_spell_slot spells[8];
-} lich_spell_set;
-
-// Primary spells form the core of an ancient lich spell set.
-lich_spell_set lich_primary_spells[] =
-{
-    // conjurations
-    { {
-        { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-        { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // fire
-    { {
-        { SPELL_HELLFIRE, 12, MON_SPELL_WIZARD },
-        { SPELL_HELLFIRE_BURST, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // ice
-    { {
-        { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
-        { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // earth
-    { {
-        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // air
-    { {
-        { SPELL_CHAIN_LIGHTNING, 12, MON_SPELL_WIZARD },
-        { SPELL_CONJURE_BALL_LIGHTNING, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // poison
-    { {
-        { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
-        { SPELL_CORROSIVE_BOLT, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // summoning
-    { {
-        { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
-        { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
-        { SPELL_TWISTED_RESURRECTION, 12, MON_SPELL_WIZARD },
-        { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
-        { SPELL_SUMMON_DRAGON, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
+    { SPELL_IOOD, 12, MON_SPELL_WIZARD },
+    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
+    { SPELL_CHAIN_LIGHTNING, 12, MON_SPELL_WIZARD },
+    { SPELL_CORROSIVE_BOLT, 12, MON_SPELL_WIZARD },
+    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
+    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD },
 };
 
-// Secondary spells are an ancient lich's backup set; liches get two
-// secondary spell sets.
-lich_spell_set lich_secondary_spells[] =
+const mon_spell_slot lich_secondary_spells[] =
 {
-    // conjurations
-    { {
-        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
-        { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
-        { SPELL_FULMINANT_PRISM, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // necromancy
-    { {
-        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
-        { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_WIZARD },
-        { SPELL_AGONY, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // fire
-    { {
-        { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
-        { SPELL_FIRE_ELEMENTALS, 12, MON_SPELL_WIZARD },
-        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // ice
-    { {
-        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-        { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
-        { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
-        { SPELL_FREEZING_CLOUD, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // earth
-    { {
-        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
-        { SPELL_LRD, 12, MON_SPELL_WIZARD },
-        { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
-        { SPELL_DIG, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // air
-    { {
-        { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
-        { SPELL_AIRSTRIKE, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // poison
-    { {
-        { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
-        { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
-        { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
-        { SPELL_MEPHITIC_CLOUD, 12, MON_SPELL_WIZARD },
-        { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // summoning
-    { {
-        { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD },
-        { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
-        { SPELL_SHADOW_CREATURES, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // translocation
-    { {
-        { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
-        { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
-        END_OF_MONS_BOOK
-    } },
-
-    // hexes
-    { {
-        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
-        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
-        { SPELL_SLOW, 12, MON_SPELL_WIZARD },
-        { SPELL_CAUSE_FEAR, 12, MON_SPELL_WIZARD },
-        { SPELL_HIBERNATION, 12, MON_SPELL_WIZARD },
-        // { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD }, // XXX soon
-        END_OF_MONS_BOOK
-    } },
+    { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
+    // XXX doesn't work?
+    // { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
+    { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
+    { SPELL_CONJURE_BALL_LIGHTNING, 12, MON_SPELL_WIZARD },
+    { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
+    { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
+    { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+    { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
+    { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_WIZARD },
+    { SPELL_AGONY, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
+    { SPELL_FIRE_ELEMENTALS, 12, MON_SPELL_WIZARD },
+    { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+    { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
+    { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+    { SPELL_FREEZING_CLOUD, 12, MON_SPELL_WIZARD },
+    { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+    { SPELL_LRD, 12, MON_SPELL_WIZARD },
+    { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
+    { SPELL_DIG, 12, MON_SPELL_WIZARD },
+    { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+    { SPELL_AIRSTRIKE, 12, MON_SPELL_WIZARD },
+    { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
+    { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
+    { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
+    { SPELL_SHADOW_CREATURES, 12, MON_SPELL_WIZARD },
+    { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
+    { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
+    { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
+    { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+    { SPELL_CAUSE_FEAR, 12, MON_SPELL_WIZARD },
+    { SPELL_HIBERNATION, 12, MON_SPELL_WIZARD },
+    // { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD }, // XXX soon
 };
 
-lich_spell_set emergency_spells =
-{ {
+const mon_spell_slot lich_emergency_spells[] =
+{
     { SPELL_HASTE, 12, MON_SPELL_WIZARD },
     { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
     { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD },
-    END_OF_MONS_BOOK
-} };
-
-static mon_spell_slot _pick_random_spell(const lich_spell_set &set)
-{
-    mon_spell_slot chosen;
-
-    for (size_t i = 0; set.spells[i].spell != SPELL_NO_SPELL; ++i)
-        if (random2(i + 1) == 0)
-            chosen = set.spells[i];
-
-    return chosen;
-}
+};
 
 static void _add_lich_spells_from(monster_spells &spells,
-                                  const lich_spell_set &set, int num_spells)
+                                  const mon_spell_slot *set, size_t set_len,
+                                  int num_spells)
 {
     for (int i = 0; i < num_spells; ++i)
     {
         for (int tries = 0; tries < 100; ++tries)
         {
-            mon_spell_slot next_spell = _pick_random_spell(set);
+            mon_spell_slot next_spell = set[random2(set_len)];
 
             bool used = false;
             for (auto slot : spells)
@@ -1216,11 +1107,14 @@ static void _add_lich_spells_from(monster_spells &spells,
     }
 }
 
-static void _add_lich_spells(monster_spells &spells, lich_spell_set *spellset,
-                             size_t set_size, bool primary)
+static void _add_lich_spells(monster_spells &spells,
+                             const mon_spell_slot *set, size_t set_len)
 {
-    _add_lich_spells_from(spells, spellset[random2(set_size)],
-                          random2(primary ? 2 : 3) + 1);
+    int count = set == lich_primary_spells   ? random2(2) + 1
+              : set == lich_secondary_spells ? random2(3) + 1
+              : set == lich_emergency_spells ? 1
+              :                                0;
+    _add_lich_spells_from(spells, set, set_len, count);
 }
 
 void ghost_demon::init_lich(monster_type type)
@@ -1242,11 +1136,12 @@ void ghost_demon::init_lich(monster_type type)
     {
         if (type == MONS_ANCIENT_LICH && spells.size() == 0)
             _add_lich_spells(spells, lich_primary_spells,
-                             ARRAYSZ(lich_primary_spells), true);
+                             ARRAYSZ(lich_primary_spells));
         else
             _add_lich_spells(spells, lich_secondary_spells,
-                             ARRAYSZ(lich_secondary_spells), false);
+                             ARRAYSZ(lich_secondary_spells));
     }
 
-    _add_lich_spells_from(spells, emergency_spells, 1);
+    _add_lich_spells(spells, lich_emergency_spells,
+                     ARRAYSZ(lich_emergency_spells));
 }
