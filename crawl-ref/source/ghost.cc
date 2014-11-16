@@ -1025,7 +1025,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
 typedef struct
 {
   spschool_flag_type school;
-  mon_spell_slot     spells[4];
+  mon_spell_slot     spells[8];
 } lich_spell_set;
 
 // Primary spells form the core of an ancient lich spell set.
@@ -1065,6 +1065,7 @@ lich_spell_set lich_primary_spells[] =
   { SPTYP_AIR,
     {
      { SPELL_CHAIN_LIGHTNING, 12, MON_SPELL_WIZARD },
+     { SPELL_CONJURE_BALL_LIGHTNING, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1082,6 +1083,8 @@ lich_spell_set lich_primary_spells[] =
      { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
      { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
      { SPELL_TWISTED_RESURRECTION, 12, MON_SPELL_WIZARD },
+     { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
+     { SPELL_SUMMON_DRAGON, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1094,8 +1097,17 @@ lich_spell_set lich_secondary_spells[] =
   { SPTYP_CONJURATION,
     {
      { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
-     { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
      { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
+     { SPELL_FULMINANT_PRISM, 12, MON_SPELL_WIZARD },
+     END_OF_MONS_BOOK
+    }
+  },
+
+  { SPTYP_NECROMANCY,
+    {
+     { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
+     { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_WIZARD },
+     { SPELL_AGONY, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1104,6 +1116,7 @@ lich_spell_set lich_secondary_spells[] =
     {
      { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
      { SPELL_FIRE_ELEMENTALS, 12, MON_SPELL_WIZARD },
+     { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1113,6 +1126,7 @@ lich_spell_set lich_secondary_spells[] =
      { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
      { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
      { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+     { SPELL_FREEZING_CLOUD, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1122,6 +1136,7 @@ lich_spell_set lich_secondary_spells[] =
      { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
      { SPELL_LRD, 12, MON_SPELL_WIZARD },
      { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
+     { SPELL_DIG, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1139,6 +1154,8 @@ lich_spell_set lich_secondary_spells[] =
      { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
      { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
      { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
+     { SPELL_MEPHITIC_CLOUD, 12, MON_SPELL_WIZARD },
+     { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1147,6 +1164,7 @@ lich_spell_set lich_secondary_spells[] =
     {
      { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD },
      { SPELL_ANIMATE_DEAD, 12, MON_SPELL_WIZARD },
+     { SPELL_SHADOW_CREATURES, 12, MON_SPELL_WIZARD },
      END_OF_MONS_BOOK
     }
   },
@@ -1164,6 +1182,9 @@ lich_spell_set lich_secondary_spells[] =
      { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
      { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
      { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+     { SPELL_CAUSE_FEAR, 12, MON_SPELL_WIZARD },
+     { SPELL_HIBERNATION, 12, MON_SPELL_WIZARD },
+     // { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD }, // XXX soon
      END_OF_MONS_BOOK
     }
   },
