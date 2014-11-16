@@ -1306,6 +1306,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         return false;
     }
 
+    // Thinking things avoid things they are vulnerable to
+    if(mons_intel(mons) >= I_ANIMAL && _actor_cloud_resist(mons,cloud) < 0)
+        return true;
+
     switch (cl_type)
     {
     case CLOUD_MIASMA:
@@ -1320,21 +1324,15 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() < 0)
-            return true;
-
         if (mons->hit_points >= 15 + random2avg(46, 5))
             return false;
         break;
 
     case CLOUD_MEPHITIC:
-        if (mons->res_poison() > 0)
+        if (mons->res_poison() > 0 || mons->is_unbreathing())
             return false;
 
         if (extra_careful)
-            return true;
-
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return true;
 
         if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
@@ -1351,9 +1349,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() < 0)
-            return true;
-
         if (mons->hit_points >= 15 + random2avg(46, 5))
             return false;
         break;
@@ -1365,9 +1360,18 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
+        if (mons->hit_points >= random2avg(37, 4))
+            return false;
+        break;
+
+    case CLOUD_STEAM:
+        if(mons->res_steam() > 0)
+            return false;
+
+        if (extra_careful)
             return true;
 
+        // XXX: WHAT NUMBERS GO HERE???
         if (mons->hit_points >= random2avg(37, 4))
             return false;
         break;
@@ -1411,9 +1415,46 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
         break;
 
+    case CLOUD_HOLY_FLAMES:
+        if (mons->res_holy_energy(cloud.agent()) > 0)
+            return false;
+
+        if (extra_careful)
+            return true;
+
+        if (mons_intel(mons) >= I_ANIMAL)
+            return true;
+        break;
+
     case CLOUD_GHOSTLY_FLAME:
         if (mons->res_negative_energy() > 2)
             return false;
+
+        if (extra_careful)
+            return true;
+
+        if (mons->hit_points >= random2avg(25, 3))
+            return false;
+        break;
+
+    case CLOUD_ACID:
+        if (mons->res_acid() > 0)
+            return false;
+
+    case CLOUD_STORM:
+        if (mons->res_elec() > 1)
+            return false;
+
+        if(extra_careful)
+            return true;
+
+        // XXX: WHAT NUMBERS GO HERE???
+        if (mons->hit_points >= random2avg(37, 4))
+            return false;
+        break;
+
+    case CLOUD_NEGATIVE_ENERGY:
+        if (mons->res_negative_energy() > 2)
 
         if (extra_careful)
             return true;
