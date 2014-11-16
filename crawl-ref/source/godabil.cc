@@ -1858,17 +1858,13 @@ bool kiku_receive_corpses(int pow)
         corpses_created++;
 
         // Find an appropriate monster corpse for level and power.
-        monster_type mon_type = MONS_PROGRAM_BUG;
-        int adjusted_power = 0;
-        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
-        {
-            adjusted_power = min(pow / 4, random2(random2(pow)));
-            // Pick a place based on the power.  This may be below the branch's
-            // start, that's ok.
-            level_id lev(you.where_are_you, adjusted_power
-                - absdungeon_depth(you.where_are_you, 0));
-            mon_type = pick_local_zombifiable_monster(lev);
-        }
+        const int adjusted_power = min(pow / 4, random2(random2(pow)));
+        // Pick a place based on the power.  This may be below the branch's
+        // start, that's ok.
+        const level_id lev(you.where_are_you, adjusted_power
+                           - absdungeon_depth(you.where_are_you, 0));
+        const monster_type mon_type = pick_local_zombifiable_monster(lev);
+        ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
 
         // Create corpse object.
         monster dummy;
