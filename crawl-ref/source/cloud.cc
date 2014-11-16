@@ -1371,8 +1371,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        // XXX: WHAT NUMBERS GO HERE???
-        if (mons->hit_points >= random2avg(37, 4))
+        if (mons->hit_points >= random2avg(25, 3))
             return false;
         break;
 
@@ -1424,6 +1423,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         if (mons_intel(mons) >= I_ANIMAL)
             return true;
+
+        if (mons->hit_points >= 15 + random2avg(46, 5))
+            return false;
         break;
 
     case CLOUD_GHOSTLY_FLAME:
@@ -1441,6 +1443,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (mons->res_acid() > 0)
             return false;
 
+        if (mons->hit_points >= 15 + random2avg(46, 5))
+            return false;
+        break;
+
     case CLOUD_STORM:
         if (mons->res_elec() > 1)
             return false;
@@ -1448,8 +1454,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if(extra_careful)
             return true;
 
-        // XXX: WHAT NUMBERS GO HERE???
-        if (mons->hit_points >= random2avg(37, 4))
+        // Storm clouds hit four times as hard, but a quarter as often,
+        // but monsters are conservative and storms are scary.
+        if (mons->hit_points >= 60 + random2avg(46, 5))
             return false;
         break;
 
@@ -1459,7 +1466,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        if (mons->hit_points >= random2avg(25, 3))
+        if (mons->hit_points >= 15 + random2avg(46, 5))
             return false;
         break;
 
