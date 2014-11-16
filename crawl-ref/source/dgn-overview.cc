@@ -52,7 +52,7 @@ static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
 static void _seen_shop(const coord_def& pos);
 static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
-static void _seen_runed_door(dungeon_feature_type feat);
+static void _seen_runed_door();
 
 static string _get_branches(bool display);
 static string _get_altars(bool display);
@@ -92,7 +92,7 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     else if (feat_is_gate(which_thing)) // overinclusive
         _seen_portal(which_thing, pos);
     else if (which_thing == DNGN_RUNED_DOOR)
-        _seen_runed_door(which_thing);
+        _seen_runed_door();
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -677,14 +677,14 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
     }
 }
 
-static void _seen_runed_door(dungeon_feature_type which_thing)
+static void _seen_runed_door()
 {
-    level_id li = level_id::current();
+    const level_id li = level_id::current();
 
-    if(level_annotation_has("runed door",li))
+    if (level_annotation_has("runed door", li))
         return;
 
-    if (level_annotations[li].length() > 0)
+    if (!level_annotations[li].empty())
         level_annotations[li] += ", ";
     level_annotations[li] += "runed door";
 }
@@ -716,7 +716,7 @@ void unmark_offlevel_shop(level_id lid)
 // Add an annotation on a level if we corrupt with Lugonu's ability
 void mark_corrupted_level(level_id li)
 {
-    if (level_annotations[li].length() > 0)
+    if (!level_annotations[li].empty())
         level_annotations[li] += ", ";
     level_annotations[li] += "corrupted";
 }
