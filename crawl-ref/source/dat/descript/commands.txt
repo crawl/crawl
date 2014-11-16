@@ -360,3 +360,10 @@ CMD_ZOOM_OUT verbose
 
 Zoom out on dungeon area
 %%%%
+CMD_SHOW_KEYBOARD
+
+Show keyboard
+%%%%
+CMD_SHOW_KEYBOARD verbose
+
+Brings up the on-screen keyboard, if applicable.

@@ -149,6 +149,9 @@
 #include "viewgeom.h"
 #include "view.h"
 #include "viewmap.h"
+#ifdef TOUCH_UI
+#include "windowmanager.h"
+#endif
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"
@@ -2151,6 +2154,13 @@ void process_command(command_type cmd)
     case CMD_LUA_CONSOLE:
         debug_terp_dlua(clua);
         break;
+
+#ifdef TOUCH_UI
+    case CMD_SHOW_KEYBOARD:
+        ASSERT(wm);
+        wm->show_keyboard();
+        break;
+#endif
 
     case CMD_NO_CMD:
     default:

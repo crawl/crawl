@@ -5127,6 +5127,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_MAP_FIND_ALTAR;
     case CMD_MAP_FIND_STASH:
         return TILEG_CMD_MAP_FIND_STASH;
+    case CMD_SHOW_KEYBOARD:
+        return TILEG_CMD_KEYBOARD;
     default:
         return TILEG_TODO;
     }
