@@ -2793,16 +2793,13 @@ static string _status_mut_abilities(int sw)
         if (!you.mutation[i])
             continue;
 
-        int level = player_mutation_level((mutation_type) i);
+        const mutation_type mut = (mutation_type) i;
+        const int level = player_mutation_level(mut);
+        const bool lowered = level < you.mutation[mut];
 
-        const bool lowered = (level < you.mutation[i]);
-        const mutation_def& mdef = get_mutation_def((mutation_type) i);
+        current = mutation_name(mut);
 
-        current = "";
-
-        current += mdef.short_desc;
-
-        if (mdef.levels > 1)
+        if (mutation_max_levels(mut) > 1)
         {
             ostringstream ostr;
             ostr << ' ' << level;
