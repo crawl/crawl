@@ -1845,6 +1845,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
     bool player_pushed = false;
     bool had_effect = false;
 
+    if (!mons_near(warden) || !warden->get_foe()->is_player())
+        return false;
+
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
                  ri; ++ri)
     {
