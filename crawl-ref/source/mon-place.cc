@@ -2126,15 +2126,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_CAUSTIC_SHRIKE:
-        switch (you.where_are_you)
-        {
-            case BRANCH_DUNGEON:
-                break;
-            default:
-                band = BAND_CAUSTIC_SHRIKE;
-                band_size = 2 + random2(3);
-                break;
-        }
+        band = BAND_CAUSTIC_SHRIKE;
+        band_size = 1 + coinflip() + one_chance_in(3) + one_chance_in(4)
+                    + one_chance_in(10);
         break;
 
     case MONS_FLYING_SKULL:
