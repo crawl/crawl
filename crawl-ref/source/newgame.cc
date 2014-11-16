@@ -1078,7 +1078,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
             "Zealot",
             coord_def(15, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
-             JOB_DEATH_KNIGHT, JOB_HEALER, JOB_UNKNOWN, JOB_UNKNOWN,
+             JOB_HEALER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
@@ -1829,7 +1829,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_GLADIATOR:
     case JOB_BERSERKER:
     case JOB_CHAOS_KNIGHT:
-    case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
     case JOB_SKALD:
     case JOB_WARPER:

@@ -134,7 +134,6 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_SKALD:             s =  4; i =  4; d =  4; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
-    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
 
     case JOB_HEALER:            s =  4; i =  4; d =  4; break;
@@ -625,23 +624,6 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 3;
-        break;
-
-    case JOB_DEATH_KNIGHT:
-        you.religion = GOD_YREDELEMNUL;
-        you.piety = 35;
-
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, +1);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
-
-        you.skills[SK_FIGHTING]    = 2;
-        you.skills[SK_ARMOUR]      = 1;
-        you.skills[SK_DODGING]     = 1;
-        you.skills[SK_INVOCATIONS] = 3;
-        weap_skill = 2;
         break;
 
     case JOB_ABYSSAL_KNIGHT:
