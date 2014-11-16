@@ -112,7 +112,12 @@ monster_type fill_out_corpse(const monster* mons,
                 corpse_class = draco_or_demonspawn_subspecies(mons);
         }
 
-        if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        if (mons->props.exists(ORIGINAL_TYPE_KEY))
+        {
+            mtype = (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
+            corpse_class = mons_species(mtype);
+        }
+        else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_SHAPESHIFTER))
             mtype = corpse_class = MONS_SHAPESHIFTER;
@@ -2791,12 +2796,27 @@ int monster_die(monster* mons, killer_type killer,
     if (!silent && !wizard && !mons_reset && corpse != -1
         && !fake_abjuration
         && !timeout
-        && !unsummoned
-        && !(mons->flags & MF_KNOWN_SHIFTER)
-        && mons->is_shapeshifter())
+        && !unsummoned)
     {
-        simple_monster_message(mons, "'s shape twists and changes as "
-                               "it dies.");
+        //XXX: these messages don't work if the monster is gendered!
+        if (!(mons->flags & MF_KNOWN_SHIFTER)
+            && mons->is_shapeshifter())
+        {
+            simple_monster_message(mons, "'s shape twists and changes as "
+                                  "it dies.");
+        }
+        else if (mons->props.exists(ORIGINAL_TYPE_KEY))
+        {
+            // Avoid "Sigmund returns to its original shape as it dies.".
+            unwind_var<monster_type> mt(mons->type,
+                                        (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int());
+            const string message = " returns to " +
+                                   mons->pronoun(PRONOUN_POSSESSIVE) +
+                                   " original shape as " +
+                                   mons->pronoun(PRONOUN_SUBJECTIVE) +
+                                   " dies.";
+            simple_monster_message(mons, message.c_str());
+        }
     }
 
     if (mons->is_divine_companion()
