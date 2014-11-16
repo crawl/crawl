@@ -18,7 +18,7 @@
 #include "stringutil.h"
 #include "unicode.h"
 #include "viewgeom.h"
-#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
 #include "windowmanager.h"
 #endif
 
@@ -323,7 +323,7 @@ int line_reader::read_line(bool clear_previous)
     if (clear_previous)
         *buffer = 0;
 
-#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     if (wm)
         wm->show_keyboard();
 #endif
