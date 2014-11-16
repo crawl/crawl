@@ -853,6 +853,9 @@ enum command_type
     // zoom on dungeon
     CMD_ZOOM_IN,
     CMD_ZOOM_OUT,
+
+    // bring up the on-screen keyboard if needed
+    CMD_SHOW_KEYBOARD,
 #endif
 
     // Repeat previous command
