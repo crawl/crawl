@@ -1114,7 +1114,9 @@ void ghost_demon::init_lich(monster_type type)
     att_type = me->attack[0].type;
     att_flav = me->attack[0].flavour;
 
-    if (type == MONS_ANCIENT_LICH)
+    _add_lich_spell(spells, lich_primary_spells,
+                    ARRAYSZ(lich_primary_spells));
+    if (type == MONS_ANCIENT_LICH && coinflip())
         _add_lich_spell(spells, lich_primary_spells,
                         ARRAYSZ(lich_primary_spells));
 
