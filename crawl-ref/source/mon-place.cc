@@ -1923,8 +1923,8 @@ bool zombie_picker::veto(monster_type mt)
 
 static bool _mc_too_slow_for_zombies(monster_type mon)
 {
-    // no speed < 10 zombies! (so base species have to be fast)
-    return mons_class_base_speed(mons_species(mon)) < 12;
+    // no speed < 10 zombies!
+    return mons_class_zombie_base_speed(mons_species(mon)) < 10;
 }
 
 monster_type pick_local_zombifiable_monster(level_id place,
