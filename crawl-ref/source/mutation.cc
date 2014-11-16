@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "mutation.h"
-#include "mutation-data.h"
 
 #include <cmath>
 #include <cstdio>
@@ -43,6 +42,56 @@
 #include "unicode.h"
 #include "viewchar.h"
 #include "xom.h"
+
+struct body_facet_def
+{
+    equipment_type eq;
+    mutation_type mut;
+    int level_lost;
+};
+
+struct facet_def
+{
+    int tier;
+    mutation_type muts[3];
+    int when[3];
+};
+
+struct demon_mutation_info
+{
+    mutation_type mut;
+    int when;
+    int facet;
+
+    demon_mutation_info(mutation_type m, int w, int f)
+        : mut(m), when(w), facet(f) { }
+};
+
+enum mut_use_type // Which gods/effects use these mutations?
+{
+    MU_USE_NONE,     // unused
+    MU_USE_GOOD,     // used by benemut etc
+    MU_USE_MIN     = MU_USE_GOOD,
+    MU_USE_BAD,      // used by malmut etc
+    MU_USE_JIYVA,    // jiyva-only muts
+    MU_USE_QAZLAL,   // qazlal wrath
+    MU_USE_XOM,      // xom being xom
+    MU_USE_CORRUPT,  // wretched stars
+    MU_USE_RU,       // Ru sacrifice muts
+    NUM_MU_USE
+};
+
+#define MFLAG(mt) (1 << (mt))
+#define MUTFLAG_NONE    MFLAG(MU_USE_NONE)
+#define MUTFLAG_GOOD    MFLAG(MU_USE_GOOD)
+#define MUTFLAG_BAD     MFLAG(MU_USE_BAD)
+#define MUTFLAG_JIYVA   MFLAG(MU_USE_JIYVA)
+#define MUTFLAG_QAZLAL  MFLAG(MU_USE_QAZLAL)
+#define MUTFLAG_XOM     MFLAG(MU_USE_XOM)
+#define MUTFLAG_CORRUPT MFLAG(MU_USE_CORRUPT)
+#define MUTFLAG_RU      MFLAG(MU_USE_RU)
+
+#include "mutation-data.h"
 
 static const body_facet_def _body_facets[] =
 {
@@ -154,7 +203,7 @@ void init_mut_index()
     }
 }
 
-const mutation_def& get_mutation_def(mutation_type mut)
+static const mutation_def& _get_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
     ASSERT(mut_index[mut] != -1);
@@ -216,7 +265,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         // Dex and HP changes are kept in all forms.
         if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
             return MUTACT_PARTIAL;
-        else if (get_mutation_def(mut).form_based)
+        else if (_get_mutation_def(mut).form_based)
             return MUTACT_INACTIVE;
     }
 
@@ -926,7 +975,7 @@ void display_mutations()
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
 {
-    int amusement = 12 * (11 - get_mutation_def(which_mutation).weight);
+    int amusement = 12 * (11 - _get_mutation_def(which_mutation).weight);
 
     if (MUT_GOOD(mut_data[which_mutation]))
         amusement /= 2;
@@ -945,7 +994,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     if (physiology_mutation_conflict(mutat))
         return false;
 
-    const mutation_def& mdef = get_mutation_def(mutat);
+    const mutation_def& mdef = _get_mutation_def(mutat);
 
     if (you.mutation[mutat] >= mdef.levels)
         return false;
@@ -1516,7 +1565,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (physiology_mutation_conflict(mutat))
         return false;
 
-    const mutation_def& mdef = get_mutation_def(mutat);
+    const mutation_def& mdef = _get_mutation_def(mutat);
 
     if (you.mutation[mutat] >= mdef.levels)
     {
@@ -1738,7 +1787,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (!transient && you.temp_mutation[mutat] >= you.mutation[mutat])
         return false;
 
-    const mutation_def& mdef = get_mutation_def(mutat);
+    const mutation_def& mdef = _get_mutation_def(mutat);
 
     bool lose_msg = true;
 
@@ -1867,7 +1916,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             if (mutat && mutat == you.attribute[ATTR_APPENDAGE])
                 continue;
 
-            const mutation_def& mdef = get_mutation_def(mutat);
+            const mutation_def& mdef = _get_mutation_def(mutat);
 
             if (random2(10) >= mdef.weight && !_is_slime_mutation(mutat))
                 continue;
@@ -1948,7 +1997,7 @@ const char* mutation_name(mutation_type mut)
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return get_mutation_def(mut).short_desc;
+    return _get_mutation_def(mut).short_desc;
 }
 
 const char* mutation_desc_for_text(mutation_type mut)
@@ -1956,7 +2005,15 @@ const char* mutation_desc_for_text(mutation_type mut)
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return get_mutation_def(mut).desc;
+    return _get_mutation_def(mut).desc;
+}
+
+int mutation_max_levels(mutation_type mut)
+{
+    if (!_is_valid_mutation(mut))
+        return 0;
+
+    return _get_mutation_def(mut).levels;
 }
 
 // Return a string describing the mutation.
@@ -1985,7 +2042,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     string result;
     bool innate_upgrade = (mut == MUT_BREATHE_POISON && you.species == SP_NAGA);
 
-    const mutation_def& mdef = get_mutation_def(mut);
+    const mutation_def& mdef = _get_mutation_def(mut);
 
     if (mut == MUT_STRONG || mut == MUT_CLEVER
         || mut == MUT_AGILE || mut == MUT_WEAK
@@ -2341,7 +2398,7 @@ _schedule_ds_mutations(vector<mutation_type> muts)
             dt.mutation     = muts_left.front();
 
             dprf("Demonspawn will gain %s at level %d",
-                    get_mutation_def(dt.mutation).short_desc, dt.level_gained);
+                    _get_mutation_def(dt.mutation).short_desc, dt.level_gained);
 
             out.push_back(dt);
 
@@ -2364,7 +2421,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
     ASSERT(_is_valid_mutation(which_mut));
 
-    int cap = get_mutation_def(which_mut).levels;
+    int cap = _get_mutation_def(which_mut).levels;
     how_much = min(how_much, cap);
 
     int rc = 1;
