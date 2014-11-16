@@ -1169,10 +1169,22 @@ lich_spell_set lich_secondary_spells[] =
   },
 };
 
+static mon_spell_slot _pick_random_spell(const lich_spell_set &set)
+{
+    mon_spell_slot chosen;
+
+    for (size_t i = 0; set.spells[i].spell != SPELL_NO_SPELL; ++i)
+        if (random2(i + 1) == 0)
+            chosen = set.spells[i];
+
+    return chosen;
+}
+
 static spschool_flag_type _add_lich_spells(monster_spells &spells,
                                            lich_spell_set *spellset,
                                            size_t set_size,
-                                           spschool_flag_type restricted)
+                                           spschool_flag_type restricted,
+                                           bool primary)
 {
     size_t which = 0;
     do
@@ -1180,9 +1192,24 @@ static spschool_flag_type _add_lich_spells(monster_spells &spells,
         which = random2(set_size);
     } while (spellset[which].school == restricted);
 
-    for (size_t i = 0; spellset[which].spells[i].spell != SPELL_NO_SPELL; i++)
+    int num_spells = random2(primary ? 2 : 3) + 1;
+    for (int i = 0; i < num_spells; ++i)
     {
-        spells.push_back(spellset[which].spells[i]);
+        for (int tries = 0; tries < 100; ++tries)
+        {
+            mon_spell_slot next_spell = _pick_random_spell(spellset[which]);
+
+            bool used = false;
+            for (auto slot : spells)
+                if (slot.spell == next_spell.spell)
+                    used = true;
+
+            if (!used)
+            {
+                spells.push_back(next_spell);
+                break;
+            }
+        }
     }
 
     return spellset[which].school;
@@ -1211,13 +1238,15 @@ void ghost_demon::init_lich(monster_type type)
     {
         count++;
         school = _add_lich_spells(spells, lich_primary_spells,
-                                  ARRAYSZ(lich_primary_spells), school);
+                                  ARRAYSZ(lich_primary_spells), school,
+                                  true);
     }
 
     while (count++ < 2)
     {
         school = _add_lich_spells(spells, lich_secondary_spells,
-                                  ARRAYSZ(lich_secondary_spells), school);
+                                  ARRAYSZ(lich_secondary_spells), school,
+                                  false);
     }
 
     mon_spell_slot emergency;
