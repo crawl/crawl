@@ -1957,16 +1957,16 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     mon_pick_vetoer veto = really_in_d ? _mc_too_slow_for_zombies : NULL;
 
-    dprf("veto is null? %d", veto == NULL);
+    // try to grab a proper zombifiable monster
+    monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
+                                            place.depth, MONS_0, veto);
+    // there might not be one in this branch - if we can't find one, try
+    // elsewhere
+    if (!mt)
+        mt = pick_monster_all_branches(place.absdepth(), picker);
 
-    if (monster_type mt =
-            picker.pick_with_veto(zombie_population(place.branch),
-                                  place.depth, MONS_0, veto))
-    {
-        return mt;
-    }
-
-    return pick_monster_all_branches(place.absdepth(), picker);
+    ASSERT(mons_class_can_be_zombified(mons_species(mt)));
+    return mt;
 }
 
 void roll_zombie_hp(monster* mon)
