@@ -1845,7 +1845,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
     bool player_pushed = false;
     bool had_effect = false;
 
-    if (!mons_near(warden) || !warden->get_foe()->is_player())
+    // Friendly wardens are already excluded by _ms_waste_of_time()
+    if (!mons_near(warden) || warden->foe != MHITYOU)
         return false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
