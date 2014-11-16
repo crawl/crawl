@@ -1122,43 +1122,6 @@ void check_grasping_roots(actor* act, bool quiet)
     }
 }
 
-static bool _swoop_attack(monster* mons, actor* defender)
-{
-    coord_def target = defender->pos();
-
-    bolt tracer;
-    tracer.source = mons->pos();
-    tracer.target = target;
-    tracer.is_tracer = true;
-    tracer.range = LOS_RADIUS;
-    tracer.fire();
-
-    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
-    {
-        if (tracer.path_taken[j] == target)
-        {
-            if (tracer.path_taken.size() > j + 1)
-            {
-                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
-                    && !actor_at(tracer.path_taken[j+1]))
-                {
-                    if (you.can_see(mons))
-                    {
-                        mprf("%s swoops through the air toward %s!",
-                             mons->name(DESC_THE).c_str(),
-                             defender->name(DESC_THE).c_str());
-                    }
-                    mons->move_to_pos(tracer.path_taken[j+1]);
-                    fight_melee(mons, defender);
-                    return true;
-                }
-            }
-        }
-    }
-
-    return false;
-}
-
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -1342,85 +1305,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 used = true;
     }
     break;
-
-    case MONS_BLUE_DEVIL:
-        if (mons->confused() || !mons->can_see(mons->get_foe()))
-            break;
-
-        if (mons->foe_distance() < 5 && mons->foe_distance() > 1)
-        {
-            if (one_chance_in(4))
-            {
-                if (mons->props.exists("swoop_cooldown")
-                    && (you.elapsed_time < mons->props["swoop_cooldown"].get_int()))
-                {
-                    break;
-                }
-
-                if (_swoop_attack(mons, mons->get_foe()))
-                {
-                    used = true;
-                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
-                                                              + 40 + random2(51);
-                }
-            }
-        }
-        break;
-
-    case MONS_RED_DEVIL:
-        if (mons->confused() || !mons->can_see(mons->get_foe()))
-            break;
-
-        if (mons->foe_distance() == 1 && mons->reach_range() == REACH_TWO
-            && x_chance_in_y(3, 5))
-        {
-            coord_def foepos = mons->get_foe()->pos();
-            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
-
-            bool found = false;
-            if (!monster_habitable_grid(mons, grd(hopspot)) ||
-                actor_at(hopspot))
-            {
-                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                {
-                    if (ai->distance_from(foepos) != 2)
-                        continue;
-                    else
-                    {
-                        if (monster_habitable_grid(mons, grd(*ai))
-                            && !actor_at(*ai))
-                        {
-                            hopspot = *ai;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-                found = true;
-
-            if (found)
-            {
-                const bool could_see = you.can_see(mons);
-
-                fight_melee(mons, mons->get_foe());
-                if (!mons->alive())
-                    return true;
-
-                if (mons->move_to_pos(hopspot))
-                {
-                    if (could_see || you.can_see(mons))
-                    {
-                        mprf("%s hops backward while attacking.",
-                             mons->name(DESC_THE, true).c_str());
-                    }
-                    mons->speed_increment -= 2; // Add a small extra delay
-                }
-                return true; // Energy has already been deducted via melee
-            }
-        }
-        break;
 
     case MONS_THORN_HUNTER:
     {

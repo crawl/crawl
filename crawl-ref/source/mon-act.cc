@@ -894,6 +894,75 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
 }
 
 /**
+ * Check if the monster has a swooping attack and is in a position to
+ * use it, and do so if they can.
+ *
+ * @param mons The monster who might be swooping.
+ * @return Whether they performed a swoop attack. False if the monster
+ *         can't swoop, the foe isn't hostile, the positioning doesn't
+ *         work, etc.
+ */
+static bool _handle_swoop(monster* mons)
+{
+    // TODO: check for AT_SWOOP in other slots and/or make it work there?
+    if (mons_attack_spec(mons, 0, true).type != AT_SWOOP)
+        return false;
+
+    if (mons->confused() || !mons->can_see(mons->get_foe()))
+        return false;
+
+    if (mons->foe_distance() >= 5 || mons->foe_distance() == 1)
+        return false;
+
+    if (!one_chance_in(4))
+        return false;
+
+    if (mons->props.exists("swoop_cooldown")
+        && (you.elapsed_time < mons->props["swoop_cooldown"].get_int()))
+    {
+        return false;
+    }
+
+    actor *defender = mons->get_foe();
+    coord_def target = defender->pos();
+
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = target;
+    tracer.is_tracer = true;
+    tracer.pierce = true;
+    tracer.range = LOS_RADIUS;
+    tracer.fire();
+
+    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    {
+        if (tracer.path_taken[j] == target)
+        {
+            if (tracer.path_taken.size() > j + 1)
+            {
+                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+                    && !actor_at(tracer.path_taken[j+1]))
+                {
+                    if (you.can_see(mons))
+                    {
+                        mprf("%s swoops through the air toward %s!",
+                             mons->name(DESC_THE).c_str(),
+                             defender->name(DESC_THE).c_str());
+                    }
+                    mons->move_to_pos(tracer.path_taken[j+1]);
+                    fight_melee(mons, defender);
+                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                              + 40 + random2(51);
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
  * Check whether this monster can make a reaching attack, and do so if
  * they can.
  *
@@ -2342,6 +2411,12 @@ void handle_monster_move(monster* mons)
             if (_handle_wand(mons, beem))
             {
                 DEBUG_ENERGY_USE("_handle_wand()");
+                return;
+            }
+
+            if (_handle_swoop(mons))
+            {
+                DEBUG_ENERGY_USE("_handle_swoop()");
                 return;
             }
 
