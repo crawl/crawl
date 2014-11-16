@@ -556,10 +556,6 @@ void record_monster_defeat(monster* mons, killer_type killer)
                        mons->full_name(DESC_A).c_str(),
                        _milestone_kill_verb(killer).c_str()));
     }
-    // XXX: See comment in monster_polymorph.
-    bool is_unique = mons_is_unique(mons->type);
-    if (mons->props.exists("original_was_unique"))
-        is_unique = mons->props["original_was_unique"].get_bool();
     if (mons->type == MONS_PLAYER_GHOST)
     {
         monster_info mi(mons);
@@ -569,7 +565,7 @@ void record_monster_defeat(monster* mons, killer_type killer)
         mark_milestone("ghost", milestone);
     }
     // Or summoned uniques, which a summoned ghost is treated as {due}
-    else if (is_unique && !mons->is_summoned())
+    else if (mons_is_or_was_unique(*mons) && !mons->is_summoned())
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
@@ -2588,24 +2584,25 @@ int monster_die(monster* mons, killer_type killer,
     }
     if (mons->type == MONS_JORY && !in_transit)
         blood_spray(mons->pos(), MONS_JORY, 50);
-    else if (mons_is_kirke(mons)
+    else if (mons_is_mons_class(mons, MONS_KIRKE)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))
     {
         hogs_to_humans();
     }
-    else if ((mons_is_natasha(mons) || mons_genus(mons->type) == MONS_FELID)
+    else if ((mons_is_mons_class(mons, MONS_NATASHA)
+              || mons_genus(mons->type) == MONS_FELID)
              && !in_transit && !mons->pacified() && mons_felid_can_revive(mons))
     {
         drop_items = false;
 
         // Like Boris, but her vault can't come back
-        if (mons_is_natasha(mons))
+        if (mons_is_mons_class(mons, MONS_NATASHA))
             you.unique_creatures.set(MONS_NATASHA, false);
         if (!mons_reset && !wizard)
             mons_felid_revive(mons);
     }
-    else if (mons_is_pikel(mons))
+    else if (mons_is_mons_class(mons, MONS_PIKEL))
     {
         // His slaves don't care if he's dead or not, just whether or not
         // he goes away.
@@ -3164,19 +3161,20 @@ string summoned_poof_msg(const monster* mons, const item_def &item)
 }
 
 /**
- * Determine if a specified monster is Pikel.
+ * Determine if a specified monster is or was a specified monster type.
  *
- * Checks both the monster type and the "original_name" prop, thus allowing
- * Pikelness to be transferred through polymorph.
+ * Checks both the monster type and the ORIGINAL_TYPE_KEY prop, thus allowing
+ * the type to be transferred through polymorph.
  *
  * @param mons    The monster to be checked.
- * @return        True if the monster is Pikel, otherwise false.
+ * @param type    The type it might be.
+ * @return        True if the monster was or is the type, otherwise false.
 **/
-bool mons_is_pikel(monster* mons)
+bool mons_is_mons_class(const monster* mons, monster_type type)
 {
-    return mons->type == MONS_PIKEL
-           || (mons->props.exists("original_name")
-               && mons->props["original_name"].get_string() == "Pikel");
+    return mons->type == type
+           || mons->props.exists(ORIGINAL_TYPE_KEY)
+              && mons->props[ORIGINAL_TYPE_KEY].get_int() == type;
 }
 
 /**
@@ -3207,22 +3205,6 @@ void pikel_band_neutralise()
         final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
 
     delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
-}
-
-/**
- * Determine if a monster is Kirke.
- *
- * As with mons_is_pikel, tracks Kirke via type and original name, thus allowing
- * tracking through polymorph.
- *
- * @param mons    The monster to check.
- * @return        True if Kirke, false otherwise.
-**/
-bool mons_is_kirke(monster* mons)
-{
-    return mons->type == MONS_KIRKE
-           || (mons->props.exists("original_name")
-               && mons->props["original_name"].get_string() == "Kirke");
 }
 
 /**
@@ -3288,48 +3270,19 @@ void hogs_to_humans()
 }
 
 /**
- * Determine if a monster is Dowan.
- *
- * Tracks through type and original_name, thus tracking through polymorph.
- *
- * @param mons    The monster to check.
- * @return        True if Dowan, otherwise false.
-**/
-bool mons_is_dowan(const monster* mons)
-{
-    return mons->type == MONS_DOWAN
-           || (mons->props.exists("original_name")
-               && mons->props["original_name"].get_string() == "Dowan");
-}
-
-/**
- * Determine if a monster is Duvessa.
- *
- * Tracks through type and original_name, thus tracking through polymorph.
- *
- * @param mons    The monster to check.
- * @return        True if Duvessa, otherwise false.
-**/
-bool mons_is_duvessa(const monster* mons)
-{
-    return mons->type == MONS_DUVESSA
-           || (mons->props.exists("original_name")
-               && mons->props["original_name"].get_string() == "Duvessa");
-}
-
-/**
  * Determine if a monster is either Dowan or Duvessa.
  *
- * Tracks through type and original_name, thus tracking through polymorph. A
- * wrapper around mons_is_dowan and mons_is_duvessa. Used to determine if a
- * death function should be called for the monster in question.
+ * Tracks through type and ORIGINAL_TYPE_KEY, thus tracking through polymorph.
+ * Used to determine if a death function should be called for the monster
+ * in question.
  *
  * @param mons    The monster to check.
  * @return        True if either Dowan or Duvessa, otherwise false.
 **/
 bool mons_is_elven_twin(const monster* mons)
 {
-    return mons_is_dowan(mons) || mons_is_duvessa(mons);
+    return mons_is_mons_class(mons, MONS_DOWAN)
+           || mons_is_mons_class(mons, MONS_DUVESSA);
 }
 
 /**
@@ -3365,12 +3318,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         if ((*mi)->good_neutral())
             continue;
 
-        if (mons_is_duvessa(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-        else if (mons_is_dowan(*mi))
+        if (mons_is_elven_twin(*mi))
         {
             mons = *mi;
             break;
@@ -3424,7 +3372,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     // Upgrade the spellbook here, as elven_twin_energize
     // may not be called due to lack of visibility.
-    if (mons_is_dowan(mons))
+    if (mons_is_mons_class(mons, MONS_DOWAN))
     {
         mons->spells[0].spell = SPELL_THROW_ICICLE;
         mons->spells[1].spell = SPELL_BLINK;
@@ -3445,11 +3393,11 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
 void elven_twin_energize(monster* mons)
 {
-    if (mons_is_duvessa(mons))
+    if (mons_is_mons_class(mons, MONS_DUVESSA))
         mons->go_berserk(true);
     else
     {
-        ASSERT(mons_is_dowan(mons));
+        ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
         if (mons->observable())
             simple_monster_message(mons, " seems to find hidden reserves of power!");
 
@@ -3479,12 +3427,7 @@ void elven_twins_pacify(monster* twin)
         if ((*mi)->neutral())
             continue;
 
-        if (mons_is_duvessa(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-        else if (mons_is_dowan(*mi))
+        if (mons_is_elven_twin(*mi))
         {
             mons = *mi;
             break;
@@ -3528,12 +3471,7 @@ void elven_twins_unpacify(monster* twin)
         if (!(*mi)->neutral())
             continue;
 
-        if (mons_is_duvessa(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-        else if (mons_is_dowan(*mi))
+        if (mons_is_elven_twin(*mi))
         {
             mons = *mi;
             break;
@@ -3544,13 +3482,6 @@ void elven_twins_unpacify(monster* twin)
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
-}
-
-bool mons_is_natasha(const monster* mons)
-{
-    return mons->type == MONS_NATASHA
-           || (mons->props.exists("original_name")
-               && mons->props["original_name"].get_string() == "Natasha");
 }
 
 bool mons_felid_can_revive(const monster* mons)
@@ -3584,10 +3515,8 @@ void mons_felid_revive(monster* mons)
     if (tries == 0)
         return;
 
-    // XXX: this will need to be extended if we get more types of enemy
-    // felids
-    monster_type type = (mons_is_natasha(mons)) ? MONS_NATASHA
-                                                : MONS_FELID;
+    monster_type type = mons_is_mons_class(mons, MONS_NATASHA) ? MONS_NATASHA
+                                                               : mons->type;
     monsterentry* me = get_monster_data(type);
     ASSERT(me);
 

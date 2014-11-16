@@ -55,6 +55,7 @@
 #include "mon-death.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
+ #include "mon-poly.h"
  #include "mon-tentacle.h"
  #include "mon-util.h"
 #endif
@@ -5435,6 +5436,11 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.props.exists("no_hide"))
         m.props[NEVER_HIDE_KEY] = true;
+    if (m.props.exists("original_name"))
+    {
+        m.props[ORIGINAL_TYPE_KEY].get_int() =
+            get_monster_by_name(m.props["original_name"].get_string());
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

@@ -933,10 +933,10 @@ static void _grab_followers()
         if (fol == NULL)
             continue;
 
-        if (mons_is_duvessa(fol) && fol->alive())
+        if (mons_is_mons_class(fol, MONS_DUVESSA) && fol->alive())
             duvessa = fol;
 
-        if (mons_is_dowan(fol) && fol->alive())
+        if (mons_is_mons_class(fol, MONS_DOWAN) && fol->alive())
             dowan = fol;
 
         if (fol->wont_attack() && !mons_can_use_stairs(fol))
