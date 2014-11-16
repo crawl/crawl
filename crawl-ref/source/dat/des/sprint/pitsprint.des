@@ -20,7 +20,7 @@ function base_monster_setup(e)
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band /\
            brain worm / warg / wolf / porcupine / black bear /\
-           giant mite / green rat / flying skull / iron imp /\
+           giant mite / river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
            killer bee band / yellow wasp / eye of draining / manticore /\
@@ -103,7 +103,7 @@ function base_monster_setup(e)
            hobgoblin / jackal band /  adder / quokka /\
            orc / worker ant / giant eyeball / skeleton /\
            zombie / brain worm / giant mite /\
-           green rat / ufetubus")
+           river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
            Prince Ribbit")

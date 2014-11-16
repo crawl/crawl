@@ -2347,7 +2347,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_GREEN_RAT:
+    case MONS_RIVER_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
         break;
@@ -3145,7 +3145,7 @@ static monster_type _band_member(band_type band, int which)
     case BAND_WOLVES:
         return MONS_WOLF;
     case BAND_GREEN_RATS:
-        return MONS_GREEN_RAT;
+        return MONS_RIVER_RAT;
     case BAND_ORANGE_RATS:
         return MONS_ORANGE_RAT;
     case BAND_SHEEP:

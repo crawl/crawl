@@ -253,7 +253,7 @@ static void _gnoll_wave(int power)
 static void _rat_wave(int power)
 {
     wave_name("RAT WAVE");
-    monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_ORANGE_RAT, END};
+    monster_type rats[] = {MONS_RAT, MONS_RIVER_RAT, MONS_ORANGE_RAT, END};
     monster_type boss[] = {MONS_ORANGE_RAT, END};
     _zotdef_fill_from_list(rats, 0, power); // full power
     _zotdef_choose_boss(boss, power);

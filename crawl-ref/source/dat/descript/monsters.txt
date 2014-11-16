@@ -1336,7 +1336,7 @@ green draconian
 
 A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
-green rat
+river rat
 
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.

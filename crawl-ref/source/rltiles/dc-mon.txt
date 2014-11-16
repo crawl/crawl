@@ -110,7 +110,7 @@ gastronok MONS_GASTRONOK
 %sdir mon/animals
 %rim 0
 rat MONS_RAT
-green_rat MONS_GREEN_RAT
+green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
 porcupine MONS_PORCUPINE
 %rim 1
