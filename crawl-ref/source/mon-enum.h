@@ -49,7 +49,9 @@ enum attack_type
 #endif
     AT_POUNCE,
     AT_REACH_STING,
-    AT_LAST_REAL_ATTACK = AT_REACH_STING,
+    AT_KITE,  // Hops backwards if attacking with a polearm.
+    AT_SWOOP, // Swoops in to perform a melee attack if far away.
+    AT_LAST_REAL_ATTACK = AT_SWOOP,
 
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
