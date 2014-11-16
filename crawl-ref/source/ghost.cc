@@ -1081,40 +1081,22 @@ const mon_spell_slot lich_emergency_spells[] =
     { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD },
 };
 
-static void _add_lich_spells_from(monster_spells &spells,
-                                  const mon_spell_slot *set, size_t set_len,
-                                  int num_spells)
+static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
+                            size_t set_len)
 {
-    for (int i = 0; i < num_spells; ++i)
+    mon_spell_slot next_spell = set[random2(set_len)];
+
+    bool used = false;
+    for (auto slot : spells)
+        if (slot.spell == next_spell.spell)
+            used = true;
+
+    if (!used)
     {
-        for (int tries = 0; tries < 100; ++tries)
-        {
-            mon_spell_slot next_spell = set[random2(set_len)];
-
-            bool used = false;
-            for (auto slot : spells)
-                if (slot.spell == next_spell.spell)
-                    used = true;
-
-            if (!used)
-            {
-                if (next_spell.spell == SPELL_TELEPORT_SELF)
-                    next_spell.flags |= MON_SPELL_EMERGENCY;
-                spells.push_back(next_spell);
-                break;
-            }
-        }
+        if (next_spell.spell == SPELL_TELEPORT_SELF)
+            next_spell.flags |= MON_SPELL_EMERGENCY;
+        spells.push_back(next_spell);
     }
-}
-
-static void _add_lich_spells(monster_spells &spells,
-                             const mon_spell_slot *set, size_t set_len)
-{
-    int count = set == lich_primary_spells   ? random2(2) + 1
-              : set == lich_secondary_spells ? random2(3) + 1
-              : set == lich_emergency_spells ? 1
-              :                                0;
-    _add_lich_spells_from(spells, set, set_len, count);
 }
 
 void ghost_demon::init_lich(monster_type type)
@@ -1132,16 +1114,14 @@ void ghost_demon::init_lich(monster_type type)
     att_type = me->attack[0].type;
     att_flav = me->attack[0].flavour;
 
-    while (spells.size() < 4)
-    {
-        if (type == MONS_ANCIENT_LICH && spells.size() == 0)
-            _add_lich_spells(spells, lich_primary_spells,
-                             ARRAYSZ(lich_primary_spells));
-        else
-            _add_lich_spells(spells, lich_secondary_spells,
-                             ARRAYSZ(lich_secondary_spells));
-    }
+    if (type == MONS_ANCIENT_LICH)
+        _add_lich_spell(spells, lich_primary_spells,
+                        ARRAYSZ(lich_primary_spells));
 
-    _add_lich_spells(spells, lich_emergency_spells,
-                     ARRAYSZ(lich_emergency_spells));
+    while (spells.size() < 5)
+        _add_lich_spell(spells, lich_secondary_spells,
+                        ARRAYSZ(lich_secondary_spells));
+
+    _add_lich_spell(spells, lich_emergency_spells,
+                    ARRAYSZ(lich_emergency_spells));
 }
