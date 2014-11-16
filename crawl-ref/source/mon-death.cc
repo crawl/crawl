@@ -141,6 +141,8 @@ monster_type fill_out_corpse(const monster* mons,
     {
         corpse.props[MONSTER_HIT_DICE] = short(mons->get_experience_level());
         corpse.props[MONSTER_NUMBER]   = short(mons->number);
+        if (mons->props.exists("old_heads"))
+            corpse.props[MONSTER_NUMBER] = short(mons->props["old_heads"].get_int());
         // XXX: Appears to be a safe conversion?
         corpse.props[MONSTER_MID]      = int(mons->mid);
         if (mons->props.exists(NEVER_HIDE_KEY))
@@ -2810,6 +2812,9 @@ int monster_die(monster* mons, killer_type killer,
             // Avoid "Sigmund returns to its original shape as it dies.".
             unwind_var<monster_type> mt(mons->type,
                                         (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int());
+            int num = mons->type == MONS_HYDRA ? mons->props["old_heads"].get_int()
+                                               : mons->number;
+            unwind_var<unsigned int> number(mons->number, num);
             const string message = " returns to " +
                                    mons->pronoun(PRONOUN_POSSESSIVE) +
                                    " original shape as " +
