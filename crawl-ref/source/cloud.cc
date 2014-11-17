@@ -1454,8 +1454,11 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
 
         // This position could become deep water, and they might drown.
-        if (grd(cloud.pos) == DNGN_SHALLOW_WATER)
+        if (grd(cloud.pos) == DNGN_SHALLOW_WATER
+            && mons_intel(mons) > I_PLANT)
+        {
             return true;
+        }
         break;
 
     case CLOUD_MEPHITIC:
