@@ -936,7 +936,8 @@ string monster_info::_core_name() const
         }
     }
 
-    if (is(MB_NAME_SUFFIX))
+    //XXX: Hack to get poly'd TLH's name on death to look right.
+    if (is(MB_NAME_SUFFIX) && type != MONS_LERNAEAN_HYDRA)
         s += " " + mname;
     else if (is(MB_NAME_ADJECTIVE))
         s = mname + " " + s;
