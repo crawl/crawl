@@ -1053,7 +1053,6 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_LRD, 12, MON_SPELL_WIZARD },
     { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
     { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
-    { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
     { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
     { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
     { SPELL_SHADOW_CREATURES, 12, MON_SPELL_WIZARD },
@@ -1098,10 +1097,9 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
     return false;
 }
 
-static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
-                            size_t set_len)
+static void _calculate_lich_spell_weights(const monster_spells &spells,
+                                          int *weights, int &total_weight)
 {
-    int weights[SPTYP_LAST_EXPONENT];
     for (int exponent = 0; exponent < SPTYP_LAST_EXPONENT; ++exponent)
         // there are no primary hexes, and hexes are interesting to have on
         // liches, so give them a slightly higher chance
@@ -1126,9 +1124,18 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
             }
         }
 
-    int total_weight = 0;
+    total_weight = 0;
     for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
         total_weight += weights[i];
+
+}
+
+static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
+                            size_t set_len)
+{
+    int weights[SPTYP_LAST_EXPONENT];
+    int total_weight;
+    _calculate_lich_spell_weights(spells, weights, total_weight);
 
     mon_spell_slot next_spell;
     do {
@@ -1145,6 +1152,20 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
     }
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);
+
+    if (get_spell_disciplines(next_spell.spell) & SPTYP_POISON)
+    {
+        mon_spell_slot ignite_poison = {
+            SPELL_IGNITE_POISON_SINGLE,
+            (uint8_t)(8 + random2(9)),
+            MON_SPELL_WIZARD,
+        };
+
+        _calculate_lich_spell_weights(spells, weights, total_weight);
+        if (_lich_spell_is_good(spells, ignite_poison.spell, weights,
+                                total_weight))
+            spells.push_back(ignite_poison);
+    }
 }
 
 void ghost_demon::init_lich(monster_type type)
