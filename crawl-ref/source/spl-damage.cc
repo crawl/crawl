@@ -704,13 +704,13 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             {
                 beam.friend_info.count++;
                 beam.friend_info.power +=
-                    (you.get_experience_level() * this_damage / hurted);
+                    (you.get_experience_level() * total_damage / hurted);
             }
             else
             {
                 beam.foe_info.count++;
                 beam.foe_info.power +=
-                    (you.get_experience_level() * this_damage / hurted);
+                    (you.get_experience_level() * total_damage / hurted);
             }
         }
     }
