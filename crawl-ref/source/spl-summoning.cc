@@ -3118,35 +3118,48 @@ bool fire_battlesphere(monster* mons)
     return used;
 }
 
-spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
+spret_type cast_fulminating_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail)
 {
-    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_FULMINANT_PRISM,
-                                                 pow)))
+    if (distance2(where, caster->pos())
+        > dist_range(spell_range(SPELL_FULMINANT_PRISM, pow)))
     {
-        mpr("That's too far away.");
+        if (caster->is_player())
+            mpr("That's too far away.");
         return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
     {
-        mpr("You can't conjure that within a solid object!");
+        if (caster->is_player())
+            mpr("You can't conjure that within a solid object!");
         return SPRET_ABORT;
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monster* mons = monster_at(where);
-    if (mons)
+    actor* victim = monster_at(where);
+    if (victim)
     {
-        if (you.can_see(mons))
+        if (caster->can_see(victim))
         {
-            mpr("You can't place the prism on a creature.");
+            if (caster->is_player())
+                mpr("You can't place the prism on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
         // FIXME: maybe should do _paranoid_option_disable() here?
-        mpr("You see a ghostly outline there, and the spell fizzles.");
+        if (caster->is_player()
+            || (you.can_see(caster) && you.see_cell(where)))
+        {
+            if (you.can_see(victim))
+            {
+                mprf("%s %s.", victim->name(DESC_THE).c_str(),
+                               victim->conj_verb("twitch").c_str());
+            }
+            else
+                mpr("You see a ghostly outline there, and the spell fizzles.");
+        }
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
@@ -3154,15 +3167,27 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
 
     int hd = div_rand_round(pow, 10);
 
-    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
-                                     3, SPELL_FULMINANT_PRISM,
+    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM,
+                                     caster->is_player()
+                                     ? BEH_FRIENDLY
+                                     : SAME_ATTITUDE(caster->as_monster()),
+                                     caster, 0, SPELL_FULMINANT_PRISM,
                                      where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
     if (prism)
-        mpr("You conjure a prism of explosive energy!");
-    else
+    {
+        if (you.can_see(caster))
+        {
+            mprf("%s %s a prism of explosive energy!",
+                 caster->name(DESC_THE).c_str(),
+                 caster->conj_verb("conjure").c_str());
+        }
+        else if (you.can_see(prism))
+            mprf("A prism of explosive energy appears from nowhere!");
+    }
+    else if (you.can_see(caster))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;

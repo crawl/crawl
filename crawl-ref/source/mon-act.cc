@@ -2150,7 +2150,7 @@ void handle_monster_move(monster* mons)
                     mprf(MSGCH_SOUND, "You hear a loud crackle.");
             }
             // Done this way to keep the detonation timer predictable
-            mons->speed_increment -= 10;
+            mons->speed_increment -= BASELINE_DELAY;
         }
         return;
     }
