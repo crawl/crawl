@@ -372,12 +372,11 @@ TAGS:   uniq_open_layout
             local st = stair_list[i]
 
             if loc == 0 then
-                replace_random({find = ".", replace = st, required = true})
+                replace_random({find = ".", replace = st})
             elseif loc == 1 then
                 mapgrd[gxm/2 + i - 2][gym/2 + 1 - math.abs(i - 2)] = st
             elseif loc == 2 then
                 replace_first({
-                    required = true,
                     x = gxm/2 + i - 2,
                     y = 0,
                     xdir = 0,
@@ -386,7 +385,6 @@ TAGS:   uniq_open_layout
                     replace = st})
             elseif loc == 3 then
                 replace_first({
-                    required = true,
                     x = gxm - 1,
                     y = gym/2 + i - 2,
                     xdir = -1,
@@ -395,7 +393,6 @@ TAGS:   uniq_open_layout
                     replace = st})
             elseif loc == 4 then
                 replace_first({
-                    required = true,
                     x = gxm/2 + i - 2,
                     y = gym - 1,
                     xdir = 0,
@@ -404,7 +401,6 @@ TAGS:   uniq_open_layout
                     replace = st})
             elseif loc == 5 then
                 replace_first({
-                    required = true,
                     x = 0,
                     y = gym/2 + i - 2,
                     xdir = 1,
