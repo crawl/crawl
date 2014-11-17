@@ -27,11 +27,18 @@
 #include "unicode.h"
 #include "wiz-you.h"
 
-static uint8_t _jewellery_type_from_artefact_prop(const string &s,
-                                                  bool is_amulet)
+static uint8_t _jewellery_type_from_artefact_prop(const string &s
+#if TAG_MAJOR_VERSION == 34
+                                                  , bool is_amulet
+#endif
+                                                  )
 {
     if (s == "Regen")
+#if TAG_MAJOR_VERSION == 34
         return is_amulet ? AMU_REGENERATION : RING_REGENERATION;
+#else
+        return AMU_REGENERATION;
+#endif
 
     if (s == "+Rage")
         return AMU_RAGE;
@@ -165,7 +172,10 @@ static void _apply_randart_properties(item_def &item,
 
         if (item.base_type == OBJ_JEWELLERY && item.sub_type == NUM_JEWELLERY)
             item.sub_type = _jewellery_type_from_artefact_prop(
-                brand_name, name.find("amulet") != string::npos
+                brand_name
+#if TAG_MAJOR_VERSION == 34
+                , name.find("amulet") != string::npos
+#endif
             );
 
         string ins = artefact_inscription(item);
