@@ -69,7 +69,7 @@ string trimmed_string(string s);
  *         an unspecified manner.
  */
 template<class Enum, class Pred, class NameFunc>
-Enum find_earliest_match(string spec, Enum begin, Enum end,
+Enum find_earliest_match(const string &spec, Enum begin, Enum end,
                          Pred pred, NameFunc namefunc)
 {
     Enum selected = end;
