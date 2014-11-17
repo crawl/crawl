@@ -44,8 +44,8 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             var canvas = $("<canvas>");
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
-            canvas[0].width = renderer.cell_width;
-            canvas[0].height = renderer.cell_height;
+            util.init_canvas(canvas[0], renderer.cell_width,
+                                        renderer.cell_height);
             canvas.css("vertical-align", "middle");
             renderer.init(canvas[0]);
 

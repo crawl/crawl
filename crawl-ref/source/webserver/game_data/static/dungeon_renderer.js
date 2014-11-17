@@ -1,5 +1,5 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn"],
-function ($, cr, map_knowledge, options, dngn) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn", "./util"],
+function ($, cr, map_knowledge, options, dngn, util) {
     "use strict";
 
     var global_anim_counter = 0;
@@ -80,14 +80,16 @@ function ($, cr, map_knowledge, options, dngn) {
             this.rows = r;
             this.view.x = this.view_center.x - Math.floor(c / 2);
             this.view.y = this.view_center.y - Math.floor(r / 2);
-            this.element.width = c * this.cell_width;
-            this.element.height = r * this.cell_height;
+            util.init_canvas(this.element,
+                             c * this.cell_width,
+                             r * this.cell_height);
             this.init(this.element);
             // The canvas is completely transparent after resizing;
             // make it opaque to prevent display errors when shifting
             // around parts of it later.
             this.ctx.fillStyle = "black";
-            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
+            this.ctx.fillRect(0, 0, this.element.style.width,
+                                    this.element.style.height);
         },
 
         set_view_center: function(x, y)
@@ -145,9 +147,17 @@ function ($, cr, map_knowledge, options, dngn) {
             if (w > 0 && h > 0)
             {
                 var floor = Math.floor;
+                var ratio = window.devicePixelRatio;
+                this.ctx.save();
+                this.ctx.resetTransform();
                 this.ctx.drawImage(this.element,
-                                   floor(sx * cw), floor(sy * ch), w, h,
-                                   floor(dx * cw), floor(dy * ch), w, h);
+                                   floor(sx * cw * ratio),
+                                   floor(sy * ch * ratio),
+                                   w * ratio, h * ratio,
+                                   floor(dx * cw * ratio),
+                                   floor(dy * ch * ratio),
+                                   w * ratio, h * ratio);
+                this.ctx.restore();
             }
 
             // Render cells that came into view
@@ -281,8 +291,7 @@ function ($, cr, map_knowledge, options, dngn) {
             var canvas = $("<canvas>");
             renderer.set_cell_size(this.cell_width,
                                    this.cell_height);
-            canvas[0].width = renderer.cell_width;
-            canvas[0].height = renderer.cell_height;
+            util.init_canvas(canvas[0], this.cell_width, this.cell_height);
             renderer.init(canvas[0]);
             renderer.draw_tiles(tiles);
 
