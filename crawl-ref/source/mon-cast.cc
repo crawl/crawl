@@ -295,9 +295,7 @@ static bool _set_nearby_target(monster* caster, bolt& pbolt)
             pbolt.target = targ->pos();
             fire_tracer(caster, pbolt);
             if (pbolt.path_taken.back() != pbolt.target)
-            {
                 continue;
-            }
 
             min_distance = targ_distance;
             selected_target = *targ;
