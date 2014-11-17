@@ -188,6 +188,10 @@ Ru, but rather given up freely and permanently. Initiates can redirect would-be
 attackers and retaliate against their enemies, replenish their health and
 magic, perform a mighty leap, and unleash a massive wave of power against foes.
 %%%%
+Backtrackticus
+
+Backtrackticus exists.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and
@@ -395,6 +399,10 @@ elementals whose loyalty depends on the origin of the cloud. Followers can
 gain temporary resistances against the elements on taking damage from that
 element.
 %%%%
+Backtrackticus powers
+
+Backtrackticus has powers.
+%%%%
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
@@ -540,4 +548,8 @@ Qazlal wrath
 Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
 resistances, assaulted by furious elementals, and surrounded by waves of
 molten lava.
+%%%%
+Backtrackticus wrath
+
+Backtrackticus has wrath.
 %%%%

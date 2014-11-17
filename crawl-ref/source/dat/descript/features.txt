@@ -254,6 +254,10 @@ A sacrificial altar of Ru
 An altar to Ru the Awakened in the shape of a scales with a heart in
 one scale and a pictogram representing power and enlightenment in the other.
 %%%%
+A something altar of BACKTRACKTICUS
+
+This exists.
+%%%%
 A sealed door
 
 A door sealed tightly by arcane runes. It refuses to open for any creature not

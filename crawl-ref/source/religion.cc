@@ -219,6 +219,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " disappears in a burst of power",
         " disappears in an immense burst of power",
     },
+    // Backtrackticus
+    {
+        " disappears in a small burst of something.",
+        " disappears in a burst of something",
+        " disappears in an immense burst of something",
+    },
 };
 
 /**
@@ -4097,6 +4103,7 @@ void handle_god_time(int time_delta)
 
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
+        case GOD_BACKTRACKTICUS:
             if (one_chance_in(35))
                 lose_piety(1);
             break;

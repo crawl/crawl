@@ -364,7 +364,11 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Ru -- enlightenment theme
     {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
-        "Walker of the Path","Lifter of the Veil",     "Drinker of Unreality",     "Transcendent"},
+        "Walker of the Path","Lifter of the Veil",     "Drinker of Unreality",     "Transcendent"},// Ru -- enlightenment theme
+
+    // Backtrackticus -- something theme
+    {"",           "",             "",                 "",
+        "","",     "",     ""},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)

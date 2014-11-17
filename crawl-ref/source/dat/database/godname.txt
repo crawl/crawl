@@ -67,9 +67,9 @@ Ru lastname
 
 Ru the Awakened
 %%%%
-Backtracticus lastname
+Backtrackticus lastname
 
-Backtracticus Backtracticus
+Backtrackticus Backtrackticus
 %%%%
 Xom lastname
 
