@@ -4847,9 +4847,12 @@ void fixup_spells(monster_spells &spells, int hd)
 
 void normalize_spell_freq(monster_spells &spells, int hd)
 {
-    unsigned one_freq = (hd + 50) / spells.size();
-    for (unsigned int i = 0; i < spells.size(); i++)
-        spells[i].freq = one_freq;
+    unsigned int total_freq = (hd + 50);
+    unsigned int total_given_freq = 0;
+    for (size_t i = 0; i < spells.size(); ++i)
+        total_given_freq += spells[i].freq;
+    for (size_t i = 0; i < spells.size(); ++i)
+        spells[i].freq = total_freq * spells[i].freq / total_given_freq;
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
