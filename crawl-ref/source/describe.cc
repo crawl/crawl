@@ -16,6 +16,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "clua.h"
 #include "command.h"
 #include "database.h"
@@ -1806,6 +1807,22 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             break;
+
+        if (mons_class_leaves_hide(item.mon_type))
+        {
+            description << "\n\n";
+            if (item.props.exists(MANGLED_CORPSE_KEY))
+            {
+                description << "This corpse is badly mangled; its hide is "
+                               "beyond any hope of recovery.";
+            }
+            else
+            {
+                description << "Butchering may allow you to recover this "
+                               "creature's hide, which can be enchanted into "
+                               "armour.";
+            }
+        }
         // intentional fall-through
     case OBJ_FOOD:
         if (item.base_type == OBJ_FOOD)

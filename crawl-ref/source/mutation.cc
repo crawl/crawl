@@ -2663,7 +2663,7 @@ int handle_pbd_corpses()
             if (j->base_type == OBJ_CORPSES
                 && j->sub_type == CORPSE_BODY
                 && j->special > 50
-                && !j->props.exists(NEVER_HIDE_KEY))
+                && !j->props.exists(MANGLED_CORPSE_KEY))
             {
                 ++corpse_count;
                 if (corpse_count == 7)

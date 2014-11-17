@@ -14,6 +14,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "butcher.h"
 #include "colour.h"
 #include "decks.h"
 #include "describe.h"
@@ -1890,6 +1891,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
+
+        if (item_typ == CORPSE_BODY && props.exists(MANGLED_CORPSE_KEY)
+            && !dbname)
+        {
+            buff << "mangled ";
+        }
 
         uint64_t name_type, name_flags = 0;
 
