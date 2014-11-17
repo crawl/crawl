@@ -1584,6 +1584,7 @@ string cloud_type_name(cloud_type type, bool terse)
     if (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES)
         return "buggy goodness";
 
+    ASSERT(clouds[type].terse_name);
     if (terse || clouds[type].verbose_name == NULL)
         return clouds[type].terse_name;
     return clouds[type].verbose_name;
