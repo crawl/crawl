@@ -1472,8 +1472,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
 
         const int rand_dam = clouds[cloud.type].expected_random_damage;
+        const int trials = max(1, rand_dam/9);
         const int hp_threshold = clouds[cloud.type].expected_base_damage +
-                                 random2avg(rand_dam, rand_dam/9);
+                                 random2avg(rand_dam, trials);
         if (mons->hit_points >= hp_threshold)
             return false;
         break;
