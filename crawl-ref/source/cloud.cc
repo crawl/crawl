@@ -31,6 +31,78 @@
 #include "tiledef-main.h"
 #include "unwind.h"
 
+/// A portrait of a cloud_type.
+struct cloud_data
+{
+    /// How much damage a cloud is expected to do in one turn, minimum.
+    int expected_base_damage;
+    /// The amount of additional random damage a cloud is expected to maybe do.
+    int expected_random_damage;
+};
+
+/// A map from cloud_type to cloud_data.
+static const cloud_data clouds[] = {
+    // CLOUD_NONE,
+    {},
+    // CLOUD_FIRE,
+    { 15, 46 },
+    // CLOUD_MEPHITIC,
+    { 0, 19 },
+    // CLOUD_COLD,
+    { 15, 46 },
+    // CLOUD_POISON,
+    { 0, 37 },
+    // CLOUD_BLACK_SMOKE,
+    {},
+    // CLOUD_GREY_SMOKE,
+    {},
+    // CLOUD_BLUE_SMOKE,
+    {},
+    // CLOUD_PURPLE_SMOKE,
+    {},
+    // CLOUD_TLOC_ENERGY,
+    {},
+    // CLOUD_FOREST_FIRE,
+    { 15, 46 },
+    // CLOUD_STEAM,
+    { 0, 25 },
+#if TAG_MAJOR_VERSION == 34
+    // CLOUD_GLOOM,
+    {},
+#endif
+    // CLOUD_INK,
+    {},
+    // CLOUD_PETRIFY,
+    {},
+    // CLOUD_HOLY_FLAMES,
+    { 15, 46 },
+    // CLOUD_MIASMA,
+    {},
+    // CLOUD_MIST,
+    {},
+    // CLOUD_CHAOS,
+    {},
+    // CLOUD_RAIN,
+    {},
+    // CLOUD_MUTAGENIC,
+    {},
+    // CLOUD_MAGIC_TRAIL,
+    {},
+    // CLOUD_TORNADO,
+    {}, // ???
+    // CLOUD_DUST_TRAIL,
+    {},
+    // CLOUD_GHOSTLY_FLAME,
+    { 0, 25 },
+    // CLOUD_ACID,
+    { 15, 46 },
+    // CLOUD_STORM,
+    { 60, 46 },
+    // CLOUD_NEGATIVE_ENERGY,
+    { 15, 46 },
+};
+COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
+
 static int _actor_cloud_damage(actor *act, const cloud_struct &cloud,
                                bool maximum_damage);
 
@@ -1325,50 +1397,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // Even the dumbest monsters will avoid miasma if they can.
         return true;
 
-    case CLOUD_FIRE:
-    case CLOUD_FOREST_FIRE:
-    case CLOUD_COLD:
-    case CLOUD_HOLY_FLAMES:
-    case CLOUD_ACID:
-    case CLOUD_NEGATIVE_ENERGY:
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= 15 + random2avg(46, 5))
-            return false;
-        break;
-
-    case CLOUD_MEPHITIC:
-        if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
-            return false;
-
-        if (mons->hit_points >= random2avg(19, 2))
-            return false;
-        break;
-
-    case CLOUD_POISON:
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= random2avg(37, 4))
-            return false;
-        break;
-
-    case CLOUD_STEAM:
-        if (mons->res_steam() > 0)
-            return false;
-
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= random2avg(25, 3))
-            return false;
-        break;
-
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
-            return true;
+                return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
         if (mons->flight_mode())
@@ -1383,26 +1415,23 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
         break;
 
-    case CLOUD_GHOSTLY_FLAME:
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= random2avg(25, 3))
+    case CLOUD_MEPHITIC:
+        if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
             return false;
-        break;
 
-    case CLOUD_STORM:
-        if (extra_careful)
-            return true;
-
-        // Storm clouds hit four times as hard, but a quarter as often,
-        // but monsters are conservative and storms are scary.
-        if (mons->hit_points >= 60 + random2avg(46, 5))
-            return false;
-        break;
-
+        // fallthrough to damaging cloud cases
     default:
+    {
+        if (extra_careful)
+            return true;
+
+        const int rand_dam = clouds[cloud.type].expected_random_damage;
+        const int hp_threshold = clouds[cloud.type].expected_base_damage +
+                                 random2avg(rand_dam, rand_dam/9);
+        if (mons->hit_points >= hp_threshold)
+            return false;
         break;
+    }
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
