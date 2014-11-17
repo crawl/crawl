@@ -1057,16 +1057,6 @@ enum conduct_type
     DID_KILL_PRIEST,                      // Beogh
     DID_KILL_HOLY,
     DID_KILL_FAST,                        // Cheibriados
-    DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
-    DID_LIVING_KILLED_BY_SERVANT,
-    DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE,
-    DID_UNDEAD_KILLED_BY_SERVANT,
-    DID_DEMON_KILLED_BY_UNDEAD_SLAVE,
-    DID_DEMON_KILLED_BY_SERVANT,
-    DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, // TSO
-    DID_NATURAL_EVIL_KILLED_BY_SERVANT,   // TSO
-    DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
-    DID_HOLY_KILLED_BY_SERVANT,
     DID_BANISH,
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
@@ -1082,17 +1072,12 @@ enum conduct_type
     DID_DESTROY_ORCISH_IDOL,              // Beogh
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
-    DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
-    DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
-    DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_ARTIFICIAL,                  // Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul

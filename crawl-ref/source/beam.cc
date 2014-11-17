@@ -849,7 +849,7 @@ void bolt::fire_wall_effect()
         did_god_conduct(DID_FIRE, 6, god_cares()); // guaranteed penance
     }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-        did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
+        did_god_conduct(DID_KILL_PLANT, 1, god_cares());
     ASSERT(agent());
 
     // Trees do not burn so readily in a wet environment, and you shouldn't get
@@ -997,7 +997,7 @@ void bolt::destroy_wall_effect()
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
         else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares(), 0);
+            did_god_conduct(DID_KILL_PLANT, 1, god_cares(), 0);
     }
 
     finish_beam();
