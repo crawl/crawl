@@ -171,7 +171,7 @@ static void _apply_randart_properties(item_def &item,
         string ins = artefact_inscription(item);
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
         {
-            for (short j = 1; j < 8; j++)
+            for (short j = 1; j < 9; j++)
             {
                 item_def copy = item;
                 copy.props[ARTEFACT_PROPS_KEY].get_vector()[i] = j;
