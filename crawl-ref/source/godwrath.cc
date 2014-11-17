@@ -79,6 +79,8 @@ static const char *_god_wrath_adjectives[NUM_GODS] =
     "darkness",         // Dithmenos
     "greed",            // Gozag (unused)
     "adversity",        // Qazlal
+    "",                 // Ru
+    "",                 // BACKTRACKTICUS
 };
 
 /**

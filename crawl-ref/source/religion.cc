@@ -2059,7 +2059,8 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
-    case GOD_RU:        return "Ru";
+    case GOD_RU:            return "Ru";
+    case GOD_BACKTRACKTICUS:return "BACKTRACKTICUS";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -4191,6 +4192,9 @@ int god_colour(god_type god) // mv - added
     case GOD_RU:
         return BROWN;
 
+    case GOD_BACKTRACKTICUS:
+        return LIGHTBLUE;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4270,6 +4274,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_GOZAG:
         return coinflip() ? YELLOW : BROWN;
+
+    case GOD_BACKTRACKTICUS:
+        return LIGHTCYAN;
 
     case GOD_QAZLAL:
     case GOD_RU:

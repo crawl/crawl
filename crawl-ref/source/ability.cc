@@ -192,7 +192,10 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
     // Ru
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
-      ABIL_RU_POWER_LEAP, ABIL_RU_APOCALYPSE }
+      ABIL_RU_POWER_LEAP, ABIL_RU_APOCALYPSE },
+    // Backtrackticus
+    { ABIL_NON_ABILITY,ABIL_NON_ABILITY,ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY,ABIL_NON_ABILITY }
 };
 
 // The description screen was way out of date with the actual costs.

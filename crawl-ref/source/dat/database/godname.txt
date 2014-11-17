@@ -67,6 +67,10 @@ Ru lastname
 
 Ru the Awakened
 %%%%
+Backtracticus lastname
+
+Backtracticus Backtracticus
+%%%%
 Xom lastname
 
 w:280

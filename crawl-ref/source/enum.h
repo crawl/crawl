@@ -1481,6 +1481,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_BACKTRACKTICUS,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -1539,6 +1540,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_BACKTRACKTICUS,
 #endif
 
     NUM_FEATURES
@@ -1967,6 +1969,7 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
+    GOD_BACKTRACKTICUS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
