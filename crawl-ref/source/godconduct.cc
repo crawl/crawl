@@ -848,9 +848,18 @@ static void _handle_other_gods_response(conduct_type thing_done)
         beogh_idol_revenge();
 }
 
+/**
+ * Handle god conducts triggered by killing a monster.
+ *
+ * @param thing_done        The conduct in question.
+ * @param victim            The deceased. (RIP.)
+ */
+void did_kill_conduct(conduct_type thing_done, const monster &victim)
+{
+    did_god_conduct(thing_done, victim.get_experience_level(), true, &victim);
+}
 
 // This function is the merger of done_good() and naughty().
-// Returns true if god was interested (good or bad) in conduct.
 void did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monster* victim)
 {
