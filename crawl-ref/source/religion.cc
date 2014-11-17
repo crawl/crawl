@@ -363,12 +363,19 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "You adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
-    //Ru
+    // Ru
     { "You exude an aura of power that intimidates your foes.",
       "Your aura of power can strike those that harm you.",
       "heal your body and restore your magic",
       "gather your power into a mighty leap",
       "wreak a terrible wrath on your foes"
+    },
+    // Backtrackticus
+    { "You have increased endurance.",
+      "",
+      "You have significantly increased endurance.",
+      "",
+      "You have greatly increased endurance."
     },
 };
 
@@ -514,6 +521,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "use your power to heal your body and restore your magic",
       "gather your power into a mighty leap",
       "wreak a terrible wrath on all visible foes"
+    },
+    // Backtrackticus
+    { "Your endurance wanes.",
+      "",
+      "Your endurance wanes.",
+      "",
+      "Your endurance wanes."
     },
 };
 
@@ -2330,6 +2344,12 @@ void set_piety(int piety)
             lose_piety(-diff);
     }
     while (diff != 0);
+
+    if (you_worship(GOD_BACKTRACKTICUS))
+    {
+      calc_hp();
+      calc_mp();
+    }
 }
 
 static void _gain_piety_point()
@@ -2558,6 +2578,12 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
         }
         you.piety_max[you.religion] = you.piety;
     }
+
+    if (you_worship(GOD_BACKTRACKTICUS))
+    {
+      calc_hp();
+      calc_mp();
+    }
     return true;
 }
 
@@ -2687,6 +2713,12 @@ void lose_piety(int pgn)
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
+    }
+
+    if (you_worship(GOD_BACKTRACKTICUS))
+    {
+      calc_hp();
+      calc_mp();
     }
 }
 
@@ -3006,7 +3038,10 @@ void excommunication(god_type new_god, bool immediate)
         }
         _set_penance(old_god, 25);
         break;
-
+    case GOD_BACKTRACKTICUS:
+        calc_hp();
+        calc_mp();
+        break;
     case GOD_CHEIBRIADOS:
     default:
         _set_penance(old_god, 25);

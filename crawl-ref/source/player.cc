@@ -1234,6 +1234,9 @@ static int _player_bonus_regen()
         rr += 100;
     }
 
+    // Passive bonus from Backtrackticus -- will be 0 if not worshipping
+    rr += backtrackticus_point_mod() * 2;
+
     // Jewellery.
     rr += 40 * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
@@ -4552,6 +4555,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Mutations that increase HP by a percentage
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
+                + backtrackticus_point_mod()
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
@@ -4577,6 +4581,8 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
+    // GOD_BACKTRACKTICUS removes MP limits
+    bool enforce_limit = (backtrackticus_point_mod() > 0) ? false : true;
     int enp = you.experience_level;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
@@ -4590,15 +4596,18 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_adj;
+    if (enforce_limit)
+        enp += you.mp_max_adj;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
     // the nice way. -- bwr
-    enp = min(enp, 50);
+    if (enforce_limit)
+        enp = min(enp, 50);
 
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+               + backtrackticus_point_mod()
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100;
@@ -4613,7 +4622,7 @@ int get_real_mp(bool include_items)
             enp += 5 + enp * 2 / 5;
     }
 
-    if (enp > 50)
+    if (enp > 50 && enforce_limit)
         enp = 50 + ((enp - 50) / 2);
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))

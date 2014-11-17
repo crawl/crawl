@@ -881,3 +881,22 @@ ru_interference get_ru_attack_interference_level()
     else
         return DO_NOTHING;
 }
+
+/**
+ * Determine amount of hp/mp boost Backtrackticus gives.
+ *
+ * @return int
+ */
+int backtrackticus_point_mod()
+{
+    int mod = 0;
+    if (!you_worship(GOD_BACKTRACKTICUS))
+        return mod;
+    if (you.piety >= piety_breakpoint(4) && !you.penance[GOD_BACKTRACKTICUS])
+        mod = 3;
+    else if (you.piety >= piety_breakpoint(2) && !you.penance[GOD_BACKTRACKTICUS])
+        mod = 2;
+    else if (you.piety >= piety_breakpoint(0) && !you.penance[GOD_BACKTRACKTICUS])
+        mod = 1;
+    return mod * 10;
+}

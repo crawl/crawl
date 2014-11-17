@@ -45,4 +45,5 @@ void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
 bool does_ru_wanna_redirect(monster* mon);
 ru_interference get_ru_attack_interference_level();
+int backtrackticus_point_mod();
 #endif
