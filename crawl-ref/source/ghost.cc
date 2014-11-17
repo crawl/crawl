@@ -1183,4 +1183,8 @@ void ghost_demon::init_lich(monster_type type)
 
     _add_lich_spell(spells, lich_emergency_spells,
                     ARRAYSZ(lich_emergency_spells));
+
+    // not fixup_spells, because we want to handle marking emergency spells
+    // ourselves, and we should never have any SPELL_NO_SPELL to strip out
+    normalize_spell_freq(spells, xl);
 }
