@@ -149,7 +149,7 @@ function ($, cr, map_knowledge, options, dngn, util) {
                 var floor = Math.floor;
                 var ratio = window.devicePixelRatio;
                 this.ctx.save();
-                this.ctx.resetTransform();
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.drawImage(this.element,
                                    floor(sx * cw * ratio),
                                    floor(sy * ch * ratio),
