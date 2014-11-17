@@ -139,6 +139,9 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_RESISTANCE:
         return !monster.has_ench(ENCH_RESISTANCE);
 
+    case BEAM_INNER_FLAME: // wow...
+        return !monster.has_ench(ENCH_INNER_FLAME);
+
     default:
         return false;
     }
@@ -240,6 +243,58 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
             fire_tracer(caster, pbolt);
             if (!mons_should_fire(pbolt)
                 || pbolt.path_taken.back() != pbolt.target)
+            {
+                continue;
+            }
+
+            min_distance = targ_distance;
+            selected_target = *targ;
+        }
+    }
+
+    if (selected_target)
+    {
+        pbolt.target = selected_target->pos();
+        return true;
+    }
+
+    // Didn't find a target.
+    return false;
+}
+
+// Find a target near our foe to hex.
+static bool _set_nearby_target(monster* caster, bolt& pbolt)
+{
+    monster* selected_target = NULL;
+    int min_distance = INT_MAX;
+
+    if (!caster->get_foe())
+        return false;
+
+    const actor *foe = caster->get_foe();
+
+    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
+    {
+        if (*targ == caster || *targ == foe)
+            continue;
+
+        const int targ_distance = grid_distance(targ->pos(), foe->pos());
+
+        bool got_target = false;
+
+        if (!mons_is_firewood(*targ)
+            && _flavour_benefits_monster(pbolt.flavour, **targ))
+        {
+            got_target = true;
+        }
+
+        if (got_target && targ_distance < min_distance
+            && targ_distance < pbolt.range)
+        {
+            // Make sure we won't hit an invalid target with this aim.
+            pbolt.target = targ->pos();
+            fire_tracer(caster, pbolt);
+            if (pbolt.path_taken.back() != pbolt.target)
             {
                 continue;
             }
@@ -3270,10 +3325,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             // Try to find an ally of the player to hex if we are
             // hexing the player.
-            if ((spell_cast == SPELL_ENSLAVEMENT
-                 || spell_cast == SPELL_INNER_FLAME)
+            if (spell_cast == SPELL_ENSLAVEMENT
                 && mons->foe == MHITYOU
                 && !_set_hex_target(mons, beem))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+
+            if (spell_cast == SPELL_INNER_FLAME
+                && !_set_nearby_target(mons, beem))
             {
                 spell_cast = SPELL_NO_SPELL;
                 continue;
@@ -3436,11 +3497,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                        BASELINE_DELAY
                                        * spell_difficulty(spell_cast)));
         }
-        // If we inner flamed something, target that now.
+        // If we inner flamed something, target that if it's hostile.
         if (spell_cast == SPELL_INNER_FLAME)
         {
             monster* victim = monster_at(beem.target);
             if (victim && victim->has_ench(ENCH_INNER_FLAME)
+                && !mons_aligned(mons, victim)
                 && !victim->has_ench(mons->wont_attack() ? ENCH_CHARM
                                                          : ENCH_HEXED))
             {
