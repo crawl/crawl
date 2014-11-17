@@ -1923,8 +1923,8 @@ bool zombie_picker::veto(monster_type mt)
 
 static bool _mc_too_slow_for_zombies(monster_type mon)
 {
-    // no speed < 10 zombies!
-    return mons_class_zombie_base_speed(mons_species(mon)) < 10;
+    // zombies slower than the player are boring!
+    return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
 /**
