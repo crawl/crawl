@@ -908,7 +908,8 @@ static bool _handle_swoop(monster* mons)
     if (mons_attack_spec(mons, 0, true).type != AT_SWOOP)
         return false;
 
-    if (mons->confused() || !mons->can_see(mons->get_foe()))
+    actor *defender = mons->get_foe();
+    if (mons->confused() || !defender || !mons->can_see(defender))
         return false;
 
     if (mons->foe_distance() >= 5 || mons->foe_distance() == 1)
@@ -923,7 +924,6 @@ static bool _handle_swoop(monster* mons)
         return false;
     }
 
-    actor *defender = mons->get_foe();
     coord_def target = defender->pos();
 
     bolt tracer;
