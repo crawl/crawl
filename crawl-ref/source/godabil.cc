@@ -6064,8 +6064,8 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(5);
-    int duration;
-    string message;
+    int duration = 0;
+    string message = "";
     enchant_type enchantment = ENCH_NONE;
 
     if (mons_is_firewood(mons))
