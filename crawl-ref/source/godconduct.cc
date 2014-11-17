@@ -56,22 +56,14 @@ static const char *conducts[] =
     "Poison", "Kill Living", "Kill Undead",
     "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
-    "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
-    "Servant Kill Living", "Undead Slave Kill Undead",
-    "Servant Kill Undead", "Undead Slave Kill Demon",
-    "Servant Kill Demon", "Servant Kill Natural Unholy",
-    "Servant Kill Natural Evil", "Undead Slave Kill Holy",
-    "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
-    "Spell Practise",
+    "Kill Holy", "Kill Fast", "Banishment",
+    "Spell Memorise", "Spell Cast", "Spell Practise",
     "Drink Blood", "Cannibalism","Eat Souled Being",
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
-    "Kill Slime", "Kill Plant", "Servant Kill Plant",
-    "Was Hasty", "Corpse Violation",
-    "Souled Friend Died", "Servant Kill Unclean",
-    "Servant Kill Chaotic", "Attack In Sanctuary",
-    "Kill Artificial", "Undead Slave Kill Artificial",
-    "Servant Kill Artificial", "Destroy Spellbook",
+    "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
+    "Souled Friend Died", "Attack In Sanctuary",
+    "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
     "Fire", "Kill Fiery", "Sacrificed Love"
 };
@@ -288,7 +280,6 @@ static peeve_map divine_peeves[] =
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
@@ -322,7 +313,6 @@ static peeve_map divine_peeves[] =
             1, 2, NULL, NULL, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, {
             1, 2, NULL, " expects more respect for holy creatures!"
         } },
@@ -379,7 +369,6 @@ static peeve_map divine_peeves[] =
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
@@ -427,9 +416,6 @@ static peeve_map divine_peeves[] =
             1, 1, " forgives your inadvertent necromancy, just this once."
         } },
         { DID_KILL_PLANT, {
-            1, 0
-        } },
-        { DID_PLANT_KILLED_BY_SERVANT, {
             1, 0
         } },
         { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
@@ -596,32 +582,6 @@ static const like_response GOOD_KILL_RESPONSE = _on_kill(MH_DEMONIC, true);
 // Note that holy deaths are special - they're always noticed...
 // If you or any friendly kills one, you'll get the credit/blame.
 
-/// Response for gods that like your undead slaves killing holies.
-/// Also, Yred uses this for killing artificials.
-static const like_response UNDEAD_KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your slave's kill."
-};
-
-/// Response for gods that like your servants killing holies.
-static const like_response SERVANT_KILL_HOLY_RESPONSE = {
-    -3, 18, 0, " accepts your collateral kill."
-};
-
-/// Response for gods that like your undead slaves killing non-holy things.
-static const like_response UNDEAD_KILL_RESPONSE = {
-    -6, 10, 3, " accepts your slave's kill."
-};
-
-/// Response for gods that like your servants killing non-holy things.
-static const like_response SERVANT_KILL_RESPONSE = {
-    -6, 10, 3, " accepts your collateral kill."
-};
-
-/// Response for TSO/Zin when your servants kill things they hate.
-static const like_response GOOD_COLLATERAL_RESPONSE = {
-    -6, 10, 0, " accepts your collateral kill."
-};
-
 static const like_response OKAWARU_KILL = {
     0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
     {
@@ -648,8 +608,6 @@ static like_map divine_likes[] =
     {
         { DID_KILL_UNCLEAN, GOOD_KILL_RESPONSE },
         { DID_KILL_CHAOTIC, GOOD_KILL_RESPONSE },
-        { DID_UNCLEAN_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
-        { DID_CHAOTIC_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
     },
     // GOD_SHINING_ONE,
     {
@@ -657,10 +615,6 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_UNHOLY, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_EVIL, GOOD_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
-        { DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
-        { DID_NATURAL_EVIL_KILLED_BY_SERVANT, GOOD_COLLATERAL_RESPONSE },
         { DID_SEE_MONSTER, {
             0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
             {
@@ -679,9 +633,6 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
     },
     // GOD_YREDELEMNUL,
     {
@@ -695,9 +646,6 @@ static like_map divine_likes[] =
             }
         ) },
         { DID_KILL_ARTIFICIAL, _on_kill(MH_NONLIVING, false) },
-        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
     },
     // GOD_XOM,
     like_map(),
@@ -721,14 +669,6 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_SIF_MUNA,
     {
@@ -746,9 +686,6 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_WIZARD, {
             -6, 10, 0, " appreciates your killing of a magic user."
         } },
@@ -772,14 +709,6 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_BANISH, {
             -6, 18, 2, " claims a new guest."
         } },
@@ -790,14 +719,6 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_UNDEAD_SLAVE, UNDEAD_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
         { DID_KILL_PRIEST, {
             -6, 10, 0, " appreciates your killing of a heretic priest."
         } },
@@ -862,10 +783,6 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_HOLY_KILLED_BY_SERVANT, SERVANT_KILL_HOLY_RESPONSE },
-        { DID_LIVING_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_UNDEAD_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
-        { DID_DEMON_KILLED_BY_SERVANT, SERVANT_KILL_RESPONSE },
     },
     // GOD_RU,
     {

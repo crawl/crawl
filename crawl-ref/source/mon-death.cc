@@ -1625,6 +1625,147 @@ static bool _reaping(monster *mons)
     return false;
 }
 
+/**
+ * Trigger the appropriate god conducts for a monster's death.
+ *
+ * @param mons              The dying monster.
+ * @param killer            The responsibility for the death.
+ *                          (MHITYOU, YOU_FAULTLESS...)
+ * @param killer_index      The mindex of the killer, if known.
+ * @param maybe_good_kill   Whether the kill can be rewarding in piety.
+ *                          (Not summoned, etc)
+ */
+static void _fire_kill_conducts(monster* mons, killer_type killer,
+                                int killer_index, bool maybe_good_kill)
+{
+    const bool maybe_bad_kill    = killer_index != YOU_FAULTLESS;
+
+    if (!maybe_bad_kill && !maybe_good_kill)
+        return;
+
+    // Abominations were historically split into demonic & undead abominations.
+    // When they were merged, they became considered both demons & undead for
+    // certain purposes, e.g. kill piety.
+    //
+    // Some gods (trog & kiku) like demon kills, but not undead, so for them,
+    // we consider abominations to be demons instead of undead.
+    // (Can't just fire the conduct twice, since then some gods would get
+    // double piety!)
+    //
+    // This is a Vintage Legacy Hack, AAA-grade.
+    mon_holy_type holiness = mons->holiness();
+    if ((mons->type == MONS_ABOMINATION_SMALL
+         || mons->type == MONS_ABOMINATION_LARGE
+         || mons->type == MONS_CRAWLING_CORPSE
+         || mons->type == MONS_MACABRE_MASS)
+        && (you_worship(GOD_TROG)
+            || you_worship(GOD_KIKUBAAQUDGHA)))
+    {
+        holiness = MH_DEMONIC;
+    }
+
+    if (holiness == MH_DEMONIC || mons_is_demonspawn(mons->type))
+    {
+        did_god_conduct(DID_KILL_DEMON,
+                        mons->get_experience_level(), true, mons);
+    }
+    else if (holiness == MH_NATURAL)
+    {
+        did_god_conduct(DID_KILL_LIVING,
+                        mons->get_experience_level(), true, mons);
+
+        // TSO hates natural evil and unholy beings.
+        if (mons->is_unholy())
+        {
+            did_god_conduct(DID_KILL_NATURAL_UNHOLY,
+                            mons->get_experience_level(), true, mons);
+        }
+        else if (mons->is_evil())
+        {
+            did_god_conduct(DID_KILL_NATURAL_EVIL,
+                            mons->get_experience_level(), true, mons);
+        }
+    }
+    else if (holiness == MH_UNDEAD)
+    {
+        did_god_conduct(DID_KILL_UNDEAD,
+                        mons->get_experience_level(), true, mons);
+    }
+
+    // Zin hates unclean and chaotic beings.
+    if (mons->how_unclean())
+    {
+        did_god_conduct(DID_KILL_UNCLEAN,
+                        mons->get_experience_level(), true, mons);
+    }
+    else if (mons->how_chaotic())
+    {
+        did_god_conduct(DID_KILL_CHAOTIC,
+                        mons->get_experience_level(), true, mons);
+    }
+
+    // jmf: Trog hates wizards.
+    if (mons->is_actual_spellcaster())
+    {
+        did_god_conduct(DID_KILL_WIZARD,
+                        mons->get_experience_level(), true, mons);
+    }
+
+    // Beogh hates priests of other gods.
+    if (mons->is_priest())
+    {
+        did_god_conduct(DID_KILL_PRIEST,
+                        mons->get_experience_level(), true, mons);
+    }
+
+    // Jiyva hates you killing slimes, but eyeballs
+    // mutation can confuse without you meaning it.
+    if (mons_is_slime(mons) && killer != KILL_YOU_CONF && maybe_bad_kill)
+    {
+        did_god_conduct(DID_KILL_SLIME, mons->get_experience_level(),
+                        true, mons);
+    }
+
+    if (fedhas_protects(mons))
+    {
+        did_god_conduct(DID_KILL_PLANT, mons->get_experience_level(),
+                        true, mons);
+    }
+
+    // Cheibriados hates fast monsters.
+    if (cheibriados_thinks_mons_is_fast(mons)
+        && !mons->cannot_move())
+    {
+        did_god_conduct(DID_KILL_FAST, mons->get_experience_level(),
+                        true, mons);
+    }
+
+    // Yredelemnul hates artificial beings.
+    if (mons->is_artificial())
+    {
+        did_god_conduct(DID_KILL_ARTIFICIAL, mons->get_experience_level(),
+                        true, mons);
+    }
+
+    // Holy kills are always noticed.
+    if (mons->is_holy())
+    {
+        did_god_conduct(DID_KILL_HOLY, mons->get_experience_level(),
+                        true, mons);
+    }
+
+    // Dithmenos hates sources of fire.
+    // (This is *after* the holy so that the right order of
+    //  messages appears.)
+    if (mons_is_fiery(mons))
+    {
+        did_god_conduct(DID_KILL_FIERY, mons->get_experience_level(),
+                        true, mons);
+    }
+}
+
+
+
 int monster_die(monster* mons, const actor *killer, bool silent,
                 bool wizard, bool fake)
 {
@@ -1964,19 +2105,9 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
-          bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
-    mon_holy_type targ_holy = mons->holiness();
+    bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
+    const mon_holy_type targ_holy = mons->holiness();
 
-    // Dual holiness, Trog and Kiku like dead demons but not undead.
-    if ((mons->type == MONS_ABOMINATION_SMALL
-         || mons->type == MONS_ABOMINATION_LARGE
-         || mons->type == MONS_CRAWLING_CORPSE
-         || mons->type == MONS_MACABRE_MASS)
-        && (you_worship(GOD_TROG)
-         || you_worship(GOD_KIKUBAAQUDGHA)))
-    {
-        targ_holy = MH_DEMONIC;
-    }
 
     // Adjust song of slaying bonus
     // Kills by the spectral weapon should be adjusted by this point to be
@@ -1998,16 +2129,14 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
 
+    const bool good_kill   = gives_xp && !created_friendly;
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
         case KILL_YOU_MISSILE:  // You kill by missile or beam.
         case KILL_YOU_CONF:     // You kill by confusion.
         {
-            const bool bad_kill    = god_hates_killing(you.religion, mons)
-                                     && killer_index != YOU_FAULTLESS;
-            const bool good_kill   = gives_xp && !created_friendly;
-
             if (death_message)
             {
                 if (killer == KILL_YOU_CONF
@@ -2036,108 +2165,7 @@ int monster_die(monster* mons, killer_type killer,
             if (gives_xp)
                 _hints_inspect_kill();
 
-            // Prevent summoned creatures from being good kills.
-            if (bad_kill || good_kill)
-            {
-                if (targ_holy == MH_DEMONIC || mons_is_demonspawn(mons->type))
-                {
-                    did_god_conduct(DID_KILL_DEMON,
-                                    mons->get_experience_level(), true, mons);
-                }
-                else if (targ_holy == MH_NATURAL)
-                {
-                    did_god_conduct(DID_KILL_LIVING,
-                                    mons->get_experience_level(), true, mons);
-
-                    // TSO hates natural evil and unholy beings.
-                    if (mons->is_unholy())
-                    {
-                        did_god_conduct(DID_KILL_NATURAL_UNHOLY,
-                                        mons->get_experience_level(), true, mons);
-                    }
-                    else if (mons->is_evil())
-                    {
-                        did_god_conduct(DID_KILL_NATURAL_EVIL,
-                                        mons->get_experience_level(), true, mons);
-                    }
-                }
-                else if (targ_holy == MH_UNDEAD)
-                {
-                    did_god_conduct(DID_KILL_UNDEAD,
-                                    mons->get_experience_level(), true, mons);
-                }
-
-                // Zin hates unclean and chaotic beings.
-                if (mons->how_unclean())
-                {
-                    did_god_conduct(DID_KILL_UNCLEAN,
-                                    mons->get_experience_level(), true, mons);
-                }
-                else if (mons->how_chaotic())
-                {
-                    did_god_conduct(DID_KILL_CHAOTIC,
-                                    mons->get_experience_level(), true, mons);
-                }
-
-                // jmf: Trog hates wizards.
-                if (mons->is_actual_spellcaster())
-                {
-                    did_god_conduct(DID_KILL_WIZARD,
-                                    mons->get_experience_level(), true, mons);
-                }
-
-                // Beogh hates priests of other gods.
-                if (mons->is_priest())
-                {
-                    did_god_conduct(DID_KILL_PRIEST,
-                                    mons->get_experience_level(), true, mons);
-                }
-
-                // Jiyva hates you killing slimes, but eyeballs
-                // mutation can confuse without you meaning it.
-                if (mons_is_slime(mons) && killer != KILL_YOU_CONF && bad_kill)
-                {
-                    did_god_conduct(DID_KILL_SLIME, mons->get_experience_level(),
-                                    true, mons);
-                }
-
-                if (fedhas_protects(mons))
-                {
-                    did_god_conduct(DID_KILL_PLANT, mons->get_experience_level(),
-                                    true, mons);
-                }
-
-                // Cheibriados hates fast monsters.
-                if (cheibriados_thinks_mons_is_fast(mons)
-                    && !mons->cannot_move())
-                {
-                    did_god_conduct(DID_KILL_FAST, mons->get_experience_level(),
-                                    true, mons);
-                }
-
-                // Yredelemnul hates artificial beings.
-                if (mons->is_artificial())
-                {
-                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->get_experience_level(),
-                                    true, mons);
-                }
-
-                // Holy kills are always noticed.
-                if (mons->is_holy())
-                {
-                    did_god_conduct(DID_KILL_HOLY, mons->get_experience_level(),
-                                    true, mons);
-                }
-
-                // Dithmenos hates sources of fire.
-                // (This is *after* the holy so that the right order of
-                //  messages appears.)
-                if (mons_is_fiery(mons))
-                {
-                    did_god_conduct(DID_KILL_FIERY, mons->get_experience_level(),
-                                    true, mons);
-                }
-            }
+            _fire_kill_conducts(mons, killer, killer_index, good_kill);
 
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
@@ -2221,6 +2249,7 @@ int monster_die(monster* mons, killer_type killer,
 
         case KILL_MON:          // Monster kills in combat.
         case KILL_MON_MISSILE:  // Monster kills by missile or beam.
+        {
             if (death_message)
             {
                 const char* msg =
@@ -2234,9 +2263,11 @@ int monster_die(monster* mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            // No piety loss if god gifts killed by other monsters.
-            // Also, dancing weapons aren't really friendlies.
-            if (mons->friendly() && !mons_is_object(mons->type))
+            _fire_kill_conducts(mons, killer, killer_index, good_kill);
+
+            // No piety loss for friends killed by other monsters.
+            // XXX: ^ this comment seems inverted...?
+            if (mons->friendly())
             {
                 const int mon_intel = mons_class_intel(mons->type) - I_ANIMAL;
                 // plant HD aren't very meaningful. (fedhas hack)
@@ -2249,215 +2280,62 @@ int monster_die(monster* mons, killer_type killer,
                                 severity, true, mons);
             }
 
-            if (pet_kill && fedhas_protects(mons))
-            {
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT,
-                                1 + (mons->get_experience_level() / 2),
-                                true, mons);
-            }
-
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills.  Only
             // affects creatures which were friendly when summoned.
-            if (!created_friendly && gives_xp && pet_kill
-                && (anon || !invalid_monster_index(killer_index)))
+            if (created_friendly || !gives_xp || !pet_kill
+                || !anon && invalid_monster_index(killer_index))
             {
-                monster* killer_mon = NULL;
-                if (!anon)
-                {
-                    killer_mon = &menv[killer_index];
-
-                    // If the killer is already dead, treat it like an
-                    // anonymous monster.
-                    if (killer_mon->type == MONS_NO_MONSTER)
-                        anon = true;
-                }
-
-                const mon_holy_type killer_holy =
-                    anon ? MH_NATURAL : killer_mon->holiness();
-
-                if (you_worship(GOD_ZIN)
-                    || you_worship(GOD_SHINING_ONE)
-                    || you_worship(GOD_YREDELEMNUL)
-                    || you_worship(GOD_KIKUBAAQUDGHA)
-                    || you_worship(GOD_MAKHLEB)
-                    || you_worship(GOD_LUGONU)
-                    || you_worship(GOD_QAZLAL)
-                    || !anon && mons_is_god_gift(killer_mon))
-                {
-                    if (killer_holy == MH_UNDEAD)
-                    {
-                        const bool confused =
-                            anon ? false : !killer_mon->friendly();
-
-                        // Yes, these are hacks, but they make sure that
-                        // confused monsters doing kills are not
-                        // referred to as "slaves", and I think it's
-                        // okay that e.g. Yredelemnul ignores kills done
-                        // by confused monsters as opposed to enslaved
-                        // or friendly ones. (jpeg)
-                        if (targ_holy == MH_DEMONIC
-                            || mons_is_demonspawn(mons->type))
-                        {
-                            did_god_conduct(
-                                !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
-                                            DID_DEMON_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-                        else if (targ_holy == MH_NATURAL)
-                        {
-                            did_god_conduct(
-                                !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
-                                            DID_LIVING_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-                        else if (targ_holy == MH_UNDEAD)
-                        {
-                            did_god_conduct(
-                                !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
-                                            DID_UNDEAD_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-
-                        if (mons->how_unclean())
-                        {
-                            did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                            mons->get_experience_level());
-                        }
-
-                        if (mons->how_chaotic())
-                        {
-                            did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                            mons->get_experience_level());
-                        }
-
-                        if (mons->is_artificial())
-                        {
-                            did_god_conduct(
-                                !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
-                                            DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-                    }
-                    // Yes, we are splitting undead pets from the others
-                    // as a way to focus Necromancy vs. Summoning
-                    // (ignoring Haunt here)... at least we're being
-                    // nice and putting the natural creature summons
-                    // together with the demonic ones.  Note that
-                    // Vehumet gets a free pass here since those
-                    // followers are assumed to come from summoning
-                    // spells...  the others are from invocations (TSO,
-                    // Makhleb, Kiku). - bwr
-                    else if (targ_holy == MH_DEMONIC
-                             || mons_is_demonspawn(mons->type))
-                    {
-                        did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-                    }
-                    else if (targ_holy == MH_NATURAL)
-                    {
-                        did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-
-                        // TSO hates natural evil and unholy beings.
-                        if (mons->is_unholy())
-                        {
-                            did_god_conduct(
-                                DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-                        else if (mons->is_evil())
-                        {
-                            did_god_conduct(DID_NATURAL_EVIL_KILLED_BY_SERVANT,
-                                mons->get_experience_level());
-                        }
-                    }
-                    else if (targ_holy == MH_UNDEAD)
-                    {
-                        did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-                    }
-
-                    if (mons->how_unclean())
-                    {
-                        did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-                    }
-
-                    if (mons->how_chaotic())
-                    {
-                        did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-                    }
-
-                    if (mons->is_artificial())
-                    {
-                        did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                        mons->get_experience_level());
-                    }
-                }
-
-                // Holy kills are always noticed.
-                if (mons->is_holy())
-                {
-                    if (killer_holy == MH_UNDEAD)
-                    {
-                        const bool confused =
-                            anon ? false : !killer_mon->friendly();
-
-                        // Yes, this is a hack, but it makes sure that
-                        // confused monsters doing kills are not
-                        // referred to as "slaves", and I think it's
-                        // okay that Yredelemnul ignores kills done by
-                        // confused monsters as opposed to enslaved or
-                        // friendly ones. (jpeg)
-                        did_god_conduct(
-                            !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
-                                        DID_HOLY_KILLED_BY_SERVANT,
-                            mons->get_experience_level(), true, mons);
-                    }
-                    else
-                    {
-                        did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                        mons->get_experience_level(),
-                                        true, mons);
-                    }
-                }
-
-                if (in_good_standing(GOD_SHINING_ONE)
-                    && (mons->is_evil() || mons->is_unholy())
-                    && random2(you.piety) >= piety_breakpoint(0)
-                    && !invalid_monster_index(killer_index))
-                {
-                    // Randomly bless the follower who killed.
-                    if (!one_chance_in(3) && killer_mon->alive()
-                        && bless_follower(killer_mon))
-                    {
-                        break;
-                    }
-
-                    if (killer_mon->alive()
-                        && killer_mon->hit_points < killer_mon->max_hit_points)
-                    {
-                        simple_monster_message(killer_mon,
-                                               " looks invigorated.");
-                        killer_mon->heal(1 + random2(mons->get_experience_level() / 4));
-                    }
-                }
-
-                if (in_good_standing(GOD_BEOGH)
-                    && random2(you.piety) >= piety_breakpoint(2)
-                    && !one_chance_in(3)
-                    && !invalid_monster_index(killer_index))
-                {
-                    // Randomly bless the follower who killed.
-                    bless_follower(killer_mon);
-                }
-
-                if (you.duration[DUR_DEATH_CHANNEL] && gives_xp && was_visible)
-                    _make_spectral_thing(mons, !death_message);
+                break;
             }
+
+            monster* killer_mon = NULL;
+            if (!anon)
+            {
+                killer_mon = &menv[killer_index];
+
+                // If the killer is already dead, treat it like an
+                // anonymous monster.
+                if (killer_mon->type == MONS_NO_MONSTER)
+                    anon = true;
+            }
+
+            if (in_good_standing(GOD_SHINING_ONE)
+                && (mons->is_evil() || mons->is_unholy())
+                && random2(you.piety) >= piety_breakpoint(0)
+                && !invalid_monster_index(killer_index))
+            {
+                // Randomly bless the follower who killed.
+                if (!one_chance_in(3) && killer_mon->alive()
+                    && bless_follower(killer_mon))
+                {
+                    break;
+                }
+
+                if (killer_mon->alive()
+                    && killer_mon->hit_points < killer_mon->max_hit_points)
+                {
+                    simple_monster_message(killer_mon,
+                                           " looks invigorated.");
+                    killer_mon->heal(1 + random2(mons->get_experience_level() / 4));
+                }
+            }
+
+            if (in_good_standing(GOD_BEOGH)
+                && random2(you.piety) >= piety_breakpoint(2)
+                && !one_chance_in(3)
+                && !invalid_monster_index(killer_index))
+            {
+                // Randomly bless the follower who killed.
+                bless_follower(killer_mon);
+            }
+
+            // XXX: shouldn't this be considerably earlier...?
+            if (you.duration[DUR_DEATH_CHANNEL] && was_visible)
+                _make_spectral_thing(mons, !death_message);
+
             break;
+        }
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_MISC:

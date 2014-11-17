@@ -395,7 +395,7 @@ static void _spread_fire(const cloud_struct &cloud)
             did_god_conduct(DID_FIRE, 6);
         }
         else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
+            did_god_conduct(DID_KILL_PLANT, 1);
 
     }
 }
