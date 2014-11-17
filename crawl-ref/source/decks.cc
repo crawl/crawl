@@ -1800,7 +1800,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         {
             if (is_good_god(you.religion))
             {
-                mprf("You have %s %s.", participle, card_name(card));
                 _suppressed_card_message(you.religion, DID_NECROMANCY);
                 return;
             }
