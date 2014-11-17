@@ -305,7 +305,7 @@ struct tentacle_attack_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        shuffle_array(connect_idx, 8);
+        shuffle_array(connect_idx);
 
 //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (unsigned i=0; i < 8; i++)
@@ -412,7 +412,7 @@ struct tentacle_connect_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        shuffle_array(connect_idx, 8);
+        shuffle_array(connect_idx);
 
         for (unsigned i=0; i < 8; i++)
         {
@@ -775,7 +775,7 @@ void move_solo_tentacle(monster* tentacle)
 
     if (severed)
     {
-        shuffle_array(compass_idx, 8);
+        shuffle_array(compass_idx);
         for (unsigned i = 0; i < 8; ++i)
         {
             coord_def new_base = base_position + Compass[compass_idx[i]];
@@ -872,7 +872,7 @@ void move_solo_tentacle(monster* tentacle)
         // todo: set a random position?
 
         dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        shuffle_array(compass_idx, 8);
+        shuffle_array(compass_idx);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
