@@ -4936,14 +4936,9 @@ void fixup_spells(monster_spells &spells, int hd)
     for (unsigned int i = 0; i < spells.size(); i++)
         spells[i].freq = one_freq;
 
-    for (auto it = spells.begin(); it != spells.end(); it++)
-    {
-        if (it->spell == SPELL_NO_SPELL)
-        {
-            spells.erase(it);
-            it = spells.begin() - 1;
-        }
-    }
+    erase_if(spells, [](const mon_spell_slot &t) {
+        return t.spell == SPELL_NO_SPELL;
+    });
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
