@@ -6093,7 +6093,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
         case 2:
             message = " slows down under the weight of truth!";
             enchantment = ENCH_SLOW;
-            duration = 100 + random2(100);
+            duration = 300 + random2(100);
             dmg += roll_dice(die_size, 6);
             break;
 
