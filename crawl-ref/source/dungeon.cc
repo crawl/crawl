@@ -5721,7 +5721,7 @@ static int _make_delicious_corpse()
 {
     // Choose corpses from D:<XL>
     const level_id lev(BRANCH_DUNGEON, you.get_experience_level());
-    const monster_type mon_type = pick_local_zombifiable_monster(lev);
+    const monster_type mon_type = pick_local_corpsey_monster(lev);
 
     // Create corpse object.
     monster dummy;

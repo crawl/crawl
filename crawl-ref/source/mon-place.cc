@@ -1927,9 +1927,24 @@ static bool _mc_too_slow_for_zombies(monster_type mon)
     return mons_class_zombie_base_speed(mons_species(mon)) < 10;
 }
 
+/**
+ * Pick a local monster type that's suitable for turning into a corpse.
+ *
+ * @param place     The branch/level that the monster type should come from,
+ *                  if possible. (Not guaranteed for e.g. branches with no
+ *                  corpses.)
+ * @return          A monster type that can be used to fill out a corpse.
+ */
+monster_type pick_local_corpsey_monster(level_id place)
+{
+    return pick_local_zombifiable_monster(place, MONS_NO_MONSTER, coord_def(),
+                                          true);
+}
+
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
-                                            const coord_def& pos)
+                                            const coord_def& pos,
+                                            bool for_corpse)
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
@@ -1955,7 +1970,8 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
-    mon_pick_vetoer veto = really_in_d ? _mc_too_slow_for_zombies : NULL;
+    const bool need_veto = really_in_d && !for_corpse;
+    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : NULL;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),

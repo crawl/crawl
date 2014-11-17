@@ -1863,7 +1863,7 @@ bool kiku_receive_corpses(int pow)
         // start, that's ok.
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_zombifiable_monster(lev);
+        const monster_type mon_type = pick_local_corpsey_monster(lev);
         ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
 
         // Create corpse object.
