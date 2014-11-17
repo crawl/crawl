@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <unordered_set>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -77,6 +78,7 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
+static coord_def _mons_prism_pos(monster* mon, actor* foe);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static int _throw_site_score(const monster &thrower, const actor &victim,
@@ -967,6 +969,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_CONJURE_FLAME:         // ditto
+    case SPELL_FULMINANT_PRISM:       // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -1508,6 +1511,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else if (spell_cast == SPELL_CONJURE_FLAME)
         {
             pbolt.target = _mons_conjure_flame_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_FULMINANT_PRISM)
+        {
+            pbolt.target = _mons_prism_pos(mons, mons->get_foe());
             pbolt.aimed_at_spot = true; // ditto
         }
      }
@@ -3022,6 +3030,78 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
     return targets[random2(count)];
 }
 
+/**
+ * Pick a target for conjuring a fulminant prism.
+ *
+ * @param[in] mon The monster casting this.
+ * @param[in] foe The victim we're trying to kill.
+ * @return A position for conjuring a prism.
+ */
+static coord_def _mons_prism_pos(monster* mon, actor* foe)
+{
+    // Don't bother if our target doesn't exist.
+    if (!foe)
+        return coord_def();
+
+    const int pow = 8 * mon->spell_hd(SPELL_FULMINANT_PRISM);
+
+    const int foe_speed =
+        foe->is_player() ? player_movement_speed()
+                         : foe->as_monster()->action_energy(EUT_MOVE)
+                           * BASELINE_DELAY / foe->as_monster()->speed;
+
+    // The % bit is effectively a ceil(); it captures the partial move the
+    // target gets with their leftover energy.
+    const int rad = 3 * BASELINE_DELAY / foe_speed
+                    + (((3 * BASELINE_DELAY) % foe_speed) > 0) ? 1 : 0;
+
+    // XXX: make this use coord_def when we have a hash<> for it
+    unordered_set<int> possible_places;
+
+    for (radius_iterator ri(foe->pos(), rad, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri))
+            continue;
+
+        possible_places.insert(ri->y * GYM + ri->x);
+    }
+
+    coord_def target;
+    int max_coverage = 0;
+    int hits = 1;
+
+    const int range = spell_range(SPELL_CONJURE_FLAME, pow, false);
+    for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
+    {
+        // Our target needs to be in LOS, and we can't have a creature there.
+        if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS)
+            || cell_is_solid(*di)
+            || (actor_at(*di) && mon->can_see(actor_at(*di))))
+        {
+            continue;
+        }
+        int coverage = 0;
+        for (radius_iterator ri(*di, 2, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+        {
+            if (possible_places.find(ri->y * GYM + ri->x)
+                != possible_places.end())
+            {
+                coverage++;
+            }
+        }
+        if (coverage > max_coverage)
+        {
+            target = *di;
+            max_coverage = coverage;
+            hits = 1;
+        }
+        else if (coverage == max_coverage && !random2(++hits))
+            target = *di;
+    }
+
+    return target;
+}
+
 /** Chooses a matching spell from this spell list, based on frequency.
  *
  *  @param[in]  spells     the monster spell list to search
@@ -3350,7 +3430,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-            if ((spell_cast == SPELL_LRD || spell_cast == SPELL_CONJURE_FLAME)
+            if ((spell_cast == SPELL_LRD
+                 || spell_cast == SPELL_CONJURE_FLAME
+                 || spell_cast == SPELL_FULMINANT_PRISM)
                 && !in_bounds(beem.target))
             {
                 spell_cast = SPELL_NO_SPELL;
@@ -6149,6 +6231,19 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONTROL_UNDEAD:
         _mons_control_undead(mons);
         return;
+
+    case SPELL_FULMINANT_PRISM:
+    {
+        if (in_bounds(pbolt.target))
+        {
+           cast_fulminating_prism(mons, 8 * mons->spell_hd(spell_cast),
+                                  pbolt.target, false);
+        }
+        else if (you.can_see(mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
