@@ -164,8 +164,6 @@ void MiscastEffect::init()
     {
         ASSERT(special_source != MELEE_MISCAST);
 
-        act_source = target;
-
         kt = KILL_MISCAST;
 
         if (special_source == ZOT_TRAP_MISCAST)
@@ -1734,7 +1732,7 @@ void MiscastEffect::_divination_mon(int severity)
             mon_msg_seen = "@The_monster@ looks disoriented.";
             target->confuse(
                 act_source,
-                1 + random2(3 + act_source->get_hit_dice()));
+                1 + random2(3 + (act_source ? act_source->get_hit_dice() : 13)));
             break;
         }
         break;
@@ -1743,7 +1741,7 @@ void MiscastEffect::_divination_mon(int severity)
         mon_msg_seen = "@The_monster@ shudders.";
         target->confuse(
             act_source,
-            5 + random2(3 + act_source->get_hit_dice()));
+            5 + random2(3 + (act_source ? act_source->get_hit_dice() : 13)));
         break;
 
     case 3:         // nasty
@@ -1752,7 +1750,7 @@ void MiscastEffect::_divination_mon(int severity)
             target->as_monster()->forget_random_spell();
         target->confuse(
             act_source,
-            8 + random2(3 + act_source->get_hit_dice()));
+            8 + random2(3 + (act_source ? act_source->get_hit_dice() : 13)));
         break;
     }
     do_msg();
