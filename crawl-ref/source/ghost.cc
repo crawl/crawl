@@ -1035,8 +1035,7 @@ const mon_spell_slot lich_primary_spells[] =
 const mon_spell_slot lich_secondary_spells[] =
 {
     { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
-    // XXX doesn't work?
-    // { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
+    { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
     { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
     { SPELL_CONJURE_BALL_LIGHTNING, 12, MON_SPELL_WIZARD },
     { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
@@ -1070,7 +1069,7 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_SLOW, 12, MON_SPELL_WIZARD },
     { SPELL_CAUSE_FEAR, 12, MON_SPELL_WIZARD },
     { SPELL_HIBERNATION, 12, MON_SPELL_WIZARD },
-    // { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD }, // XXX soon
+    { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD },
 };
 
 const mon_spell_slot lich_emergency_spells[] =
