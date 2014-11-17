@@ -1088,10 +1088,11 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
         return false;
 
     unsigned int disciplines = get_spell_disciplines(spell);
+    int num_disciplines = count_bits(disciplines);
 
     for (int exponent = 0; exponent < SPTYP_LAST_EXPONENT; ++exponent)
         if (disciplines & (1 << exponent))
-            if (x_chance_in_y(weights[exponent], total_weight))
+            if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
                 return true;
 
     return false;
