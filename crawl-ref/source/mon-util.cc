@@ -4838,13 +4838,18 @@ void fixup_spells(monster_spells &spells, int hd)
         return;
     }
 
-    unsigned one_freq = (hd + 50) / count;
-    for (unsigned int i = 0; i < spells.size(); i++)
-        spells[i].freq = one_freq;
-
     erase_if(spells, [](const mon_spell_slot &t) {
         return t.spell == SPELL_NO_SPELL;
     });
+
+    normalize_spell_freq(spells, hd);
+}
+
+void normalize_spell_freq(monster_spells &spells, int hd)
+{
+    unsigned one_freq = (hd + 50) / spells.size();
+    for (unsigned int i = 0; i < spells.size(); i++)
+        spells[i].freq = one_freq;
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
