@@ -123,7 +123,9 @@ public:
 
   durations_t duration;
   int rotting;
-  int berserk_penalty;                // penalty for moving while berserk
+  bool apply_berserk_penalty;         // Whether to apply the berserk penalty at
+                                      // end of the turn.
+  int berserk_penalty;                // The penalty for moving while berserk
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver

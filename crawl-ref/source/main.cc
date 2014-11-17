@@ -1173,9 +1173,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     return false;
 }
 
-// Used to determine whether to apply the berserk penalty at end of round.
-bool apply_berserk_penalty = false;
-
 static void _center_cursor()
 {
 #ifndef USE_TILE_LOCAL
@@ -1466,7 +1463,7 @@ static void _input()
 
     if (you.turn_is_over)
     {
-        if (apply_berserk_penalty)
+        if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
         _do_searing_ray();
@@ -1868,7 +1865,7 @@ static void _do_list_gold()
 // e.g. list_jewellery, etc.
 void process_command(command_type cmd)
 {
-    apply_berserk_penalty = true;
+    you.apply_berserk_penalty = true;
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -2605,7 +2602,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
-        apply_berserk_penalty = false;
+        you.apply_berserk_penalty = false;
 
         return true;
     }
@@ -3271,7 +3268,7 @@ static void _move_player(coord_def move)
                      feature_description_at(new_targ, false,
                                             DESC_THE).c_str());
             }
-            apply_berserk_penalty = true;
+            you.apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
             return;
@@ -3634,7 +3631,7 @@ static void _move_player(coord_def move)
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
-    apply_berserk_penalty = !attacking;
+    you.apply_berserk_penalty = !attacking;
 
     if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
         && you.run())

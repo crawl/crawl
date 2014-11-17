@@ -81,8 +81,6 @@ void shadow_lantern_effect()
     }
 }
 
-extern bool apply_berserk_penalty;
-
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
     if (you.caught())
@@ -168,7 +166,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     // shadow-boxing empty space is not (and would be abusable to wait
     // with no penalty).
     if (mons)
-        apply_berserk_penalty = false;
+        you.apply_berserk_penalty = false;
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =

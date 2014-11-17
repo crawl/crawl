@@ -5621,6 +5621,7 @@ void player::init()
 
     duration.init(0);
     rotting         = 0;
+    apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
     quiver.init(ENDOFPACK);
