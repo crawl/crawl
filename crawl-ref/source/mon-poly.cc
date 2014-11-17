@@ -301,7 +301,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
         mons->props[ORIGINAL_TYPE_KEY].get_int() = mons->type;
-        if (mons->type == MONS_HYDRA)
+        if (mons->mons_species() == MONS_HYDRA)
             mons->props["old_heads"].get_int() = mons->num_heads;
     }
 
