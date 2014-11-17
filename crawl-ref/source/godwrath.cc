@@ -55,7 +55,7 @@ static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 
-static const char *_god_wrath_adjectives[NUM_GODS] =
+static const char *_god_wrath_adjectives[] =
 {
     "bugginess",        // NO_GOD
     "wrath",            // Zin
@@ -79,7 +79,9 @@ static const char *_god_wrath_adjectives[NUM_GODS] =
     "darkness",         // Dithmenos
     "greed",            // Gozag (unused)
     "adversity",        // Qazlal
+    "disappointment",   // Ru
 };
+COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
 /**
  * Return a name associated with the given god's wrath.
