@@ -38,6 +38,8 @@ struct cloud_data
     const char* terse_name;
     /// Another name for the cloud. If NULL, defaults to terse name.
     const char* verbose_name;
+    /// The colour of the cloud in console.
+    colour_t colour;
     /// The associated "beam" (effect) for this cloud type.
     beam_type beam_effect;
     /// How much damage a cloud is expected to do in one turn, minimum.
@@ -53,110 +55,137 @@ static const cloud_data clouds[] = {
     },
     // CLOUD_FIRE,
     { "flame", "roaring flames",                // terse, verbose name
+       COLOUR_UNDEF,                            // colour
        BEAM_FIRE,                               // beam_effect
        15, 46,                                  // base, expected random damage
     },
     // CLOUD_MEPHITIC,
     { "noxious fumes", NULL,                    // terse, verbose name
+      GREEN,                                    // colour
       BEAM_MEPHITIC,                            // beam_effect
       0, 19,                                    // base, expected random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
+      COLOUR_UNDEF,                             // colour
       BEAM_COLD,                                // beam_effect
       15, 46,                                   // base, expected random damage
     },
     // CLOUD_POISON,
     { "poison gas", NULL,                       // terse, verbose name
+      LIGHTGREEN,                               // colour
       BEAM_POISON,                              // beam_effect
       0, 37,                                    // base, expected random damage
     },
     // CLOUD_BLACK_SMOKE,
     { "black smoke",  NULL,                     // terse, verbose name
+      DARKGREY,                                 // colour
     },
     // CLOUD_GREY_SMOKE,
     { "grey smoke",  NULL,                      // terse, verbose name
+      LIGHTGREY,                                // colour
     },
     // CLOUD_BLUE_SMOKE,
     { "blue smoke",  NULL,                      // terse, verbose name
+      LIGHTBLUE,                                // colour
     },
     // CLOUD_PURPLE_SMOKE,
     { "purple smoke",  NULL,                    // terse, verbose name
+      MAGENTA,                                  // colour
     },
     // CLOUD_TLOC_ENERGY,
     { "translocational energy",  NULL,          // terse, verbose name
+      MAGENTA,                                  // colour
     },
     // CLOUD_FOREST_FIRE,
     { "fire", "roaring flames",                 // terse, verbose name
+      COLOUR_UNDEF,                             // colour
       BEAM_FIRE,                                // beam_effect
       15, 46                                    // base, expected random damage
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
+      LIGHTGREY,                                // colour
       BEAM_STEAM,                               // beam_effect
       0, 25,
     },
 #if TAG_MAJOR_VERSION == 34
     // CLOUD_GLOOM,
     { "gloom", "thick gloom",                   // terse, verbose name
+      MAGENTA,                                  // colour
     },
 #endif
     // CLOUD_INK,
     { "ink",  NULL,                             // terse, verbose name
+      DARKGREY,                                 // colour
       BEAM_INK,                                 // beam_effect
     },
     // CLOUD_PETRIFY,
     { "calcifying dust",  NULL,                 // terse, verbose name
+      WHITE,                                    // colour
       BEAM_PETRIFYING_CLOUD,                    // beam_effect
     },
     // CLOUD_HOLY_FLAMES,
     { "blessed fire", NULL,                     // terse, verbose name
+      ETC_HOLY,                                 // colour
       BEAM_HOLY_FLAME,                          // beam_effect
       15, 46,                                   // base, expected random damage
     },
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
+      DARKGREY,                                 // colour
       BEAM_MIASMA,                              // beam_effect
     },
     // CLOUD_MIST,
     { "thin mist", NULL,                        // terse, verbose name
+      ETC_MIST,                                 // colour
     },
     // CLOUD_CHAOS,
     { "seething chaos", NULL,                   // terse, verbose name
+      ETC_RANDOM,                               // colour
       BEAM_CHAOS,                               // beam_effect
     },
     // CLOUD_RAIN,
     { "rain", "the rain",                       // terse, verbose name
+      ETC_MIST,                                 // colour
     },
     // CLOUD_MUTAGENIC,
     { "mutagenic fog",  NULL,                   // terse, verbose name
+      ETC_MUTAGENIC,                            // colour
     },
     // CLOUD_MAGIC_TRAIL,
     { "magical condensation", NULL,             // terse, verbose name
+      ETC_MAGIC,                                // colour
     },
     // CLOUD_TORNADO,
     { "ranging winds", NULL,                    // terse, verbose name
+      ETC_TORNADO,                              // colour
     },
     // CLOUD_DUST_TRAIL,
     { "sparse dust",  NULL,                     // terse, verbose name
+      ETC_EARTH,                                // colour
     },
     // CLOUD_GHOSTLY_FLAME,
     { "ghostly flame", NULL,                    // terse, verbose name
-       BEAM_NONE,                               // beam_effect
-       0, 25,                                   // base, expected random damage
+      ETC_ELECTRICITY,                          // colour
+      BEAM_NONE,                                // beam_effect
+      0, 25,                                    // base, expected random damage
     },
     // CLOUD_ACID,
     { "acidic fog", NULL,                       // terse, verbose name
+      YELLOW,                                   // colour
       BEAM_ACID,                                // beam_effect
       15, 46,                                   // base, random expected damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
+      ETC_DARK,                                 // colour
       BEAM_NONE,                                // beam_effect
       60, 46,                                   // base, random expected damage
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", NULL,                  // terse, verbose name
+      ETC_INCARNADINE,                          // colour
       BEAM_NEG,                                 // beam_effect
       15, 46,                                   // base, random expected damage
     },
@@ -1697,121 +1726,58 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     }
 }
 
-int get_cloud_colour(int cloudno)
+/**
+ * What colour is the given cloud?
+ *
+ * @param cloudno       The index in env.cloud of the cloud in question.
+ * @return              An appropriate colour for the cloud.
+ *                      May vary from call to call (randomized for some cloud
+ *                      types).
+ */
+colour_t get_cloud_colour(int cloudno)
 {
-    int which_colour = LIGHTGREY;
-    if (env.cloud[cloudno].colour != -1)
-        return env.cloud[cloudno].colour;
+    const cloud_struct &cloud = env.cloud[cloudno];
 
-    switch (env.cloud[cloudno].type)
+    // if the cloud has a set (custom?) colour, use that.
+    if (cloud.colour != -1)
+        return cloud.colour;
+
+    // if we have the colour in data, use that.
+    if (clouds[cloud.type].colour)
+        return clouds[cloud.type].colour;
+
+    // weird clouds
+    switch (cloud.type)
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-        if (env.cloud[cloudno].decay <= 20)
-            which_colour = RED;
-        else if (env.cloud[cloudno].decay <= 40)
-            which_colour = LIGHTRED;
-        else if (one_chance_in(4))
-            which_colour = RED;
-        else if (one_chance_in(4))
-            which_colour = LIGHTRED;
-        else
-            which_colour = YELLOW;
-        break;
+        if (cloud.decay <= 20)
+            return RED;
+        if (cloud.decay <= 40)
+            return LIGHTRED;
 
-    case CLOUD_MEPHITIC:
-        which_colour = GREEN;
-        break;
+        // total weight 16
+        return random_choose_weighted(9, YELLOW,
+                                      4, RED,
+                                      3, LIGHTRED,
+                                      0);
 
     case CLOUD_COLD:
-        if (env.cloud[cloudno].decay <= 20)
-            which_colour = BLUE;
-        else if (env.cloud[cloudno].decay <= 40)
-            which_colour = LIGHTBLUE;
-        else if (one_chance_in(4))
-            which_colour = BLUE;
-        else if (one_chance_in(4))
-            which_colour = LIGHTBLUE;
-        else
-            which_colour = WHITE;
-        break;
+        if (cloud.decay <= 20)
+            return BLUE;
+        if (cloud.decay <= 40)
+            return LIGHTBLUE;
 
-    case CLOUD_POISON:
-        which_colour = LIGHTGREEN;
-        break;
-
-    case CLOUD_BLUE_SMOKE:
-        which_colour = LIGHTBLUE;
-        break;
-
-    case CLOUD_PURPLE_SMOKE:
-    case CLOUD_TLOC_ENERGY:
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_GLOOM:
-#endif
-        which_colour = MAGENTA;
-        break;
-
-    case CLOUD_MIASMA:
-    case CLOUD_BLACK_SMOKE:
-    case CLOUD_INK:
-        which_colour = DARKGREY;
-        break;
-
-    case CLOUD_RAIN:
-    case CLOUD_MIST:
-        which_colour = ETC_MIST;
-        break;
-
-    case CLOUD_CHAOS:
-        which_colour = ETC_RANDOM;
-        break;
-
-    case CLOUD_MUTAGENIC:
-        which_colour = ETC_MUTAGENIC;
-        break;
-
-    case CLOUD_MAGIC_TRAIL:
-        which_colour = ETC_MAGIC;
-        break;
-
-    case CLOUD_DUST_TRAIL:
-        which_colour = ETC_EARTH;
-        break;
-
-    case CLOUD_HOLY_FLAMES:
-        which_colour = ETC_HOLY;
-        break;
-
-    case CLOUD_TORNADO:
-        which_colour = ETC_TORNADO;
-        break;
-
-    case CLOUD_PETRIFY:
-        which_colour = WHITE;
-        break;
-
-    case CLOUD_GHOSTLY_FLAME:
-        which_colour = ETC_ELECTRICITY;
-        break;
-
-    case CLOUD_ACID:
-        which_colour = YELLOW;
-        break;
-
-    case CLOUD_STORM:
-        which_colour = ETC_DARK;
-        break;
-
-    case CLOUD_NEGATIVE_ENERGY:
-        which_colour = ETC_INCARNADINE;
+        // total weight 16
+        return random_choose_weighted(9, WHITE,
+                                      4, BLUE,
+                                      3, LIGHTBLUE,
+                                      0);
         break;
 
     default:
-        which_colour = LIGHTGREY;
-        break;
+        return LIGHTGREY;
     }
-    return which_colour;
 }
 
 coord_def get_cloud_originator(const coord_def& pos)
