@@ -1251,9 +1251,8 @@ static int _actor_cloud_damage(const actor *act,
         const int rain_damage = _actor_cloud_damage(act, raincloud,
                                                     maximum_damage);
 
-        // if this isn't just a test run, and we didn't actually take a turn,
-        // don't do any real damage. (just rain.)
-        // XXX: does this make any sense? is this abusable vs oofs...?
+        // if this isn't just a test run, and no time passed, don't trigger
+        // lightning. (just rain.)
         if (!maximum_damage && !(you.turn_is_over && you.time_taken > 0))
             return rain_damage;
 
@@ -1283,8 +1282,7 @@ static int _actor_cloud_damage(const actor *act,
             const int avg_dam = lightning_dam / turns_per_lightning;
             if (avg_dam > 0)
                 return avg_dam;
-            break; // default timescale damage
-                   // XXX: does this make any sense?
+            return rain_damage; // vs relec+++ or w/e
         }
 
         if (act->is_player())
