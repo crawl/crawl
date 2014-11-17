@@ -27,8 +27,12 @@
 #include "unicode.h"
 #include "wiz-you.h"
 
-static uint8_t _jewellery_type_from_artefact_prop(const string &s)
+static uint8_t _jewellery_type_from_artefact_prop(const string &s,
+                                                  bool is_amulet)
 {
+    if (s == "Regen")
+        return is_amulet ? AMU_REGENERATION : RING_REGENERATION;
+
     if (s == "+Rage")
         return AMU_RAGE;
     if (s == "Clar")
@@ -62,8 +66,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s)
         return RING_SUSTAIN_ABILITIES;
     if (s == "Wiz")
         return RING_WIZARDRY;
-    if (s == "Regen")
-        return RING_REGENERATION;
     if (s == "SInv")
         return RING_SEE_INVISIBLE;
     if (s == "+Inv")
@@ -162,7 +164,9 @@ static void _apply_randart_properties(item_def &item,
         string brand_name = props.substr(begin_brand, end_brand - begin_brand);
 
         if (item.base_type == OBJ_JEWELLERY && item.sub_type == NUM_JEWELLERY)
-            item.sub_type = _jewellery_type_from_artefact_prop(brand_name);
+            item.sub_type = _jewellery_type_from_artefact_prop(
+                brand_name, name.find("amulet") != string::npos
+            );
 
         string ins = artefact_inscription(item);
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
@@ -335,14 +339,14 @@ bool chardump_parser::_check_skill(const vector<string> &tokens)
 bool chardump_parser::_check_stats1(const vector<string> &tokens)
 {
     size_t size = tokens.size();
-    // HP 121/199   AC 75   Str 35   XL: 27
-    if (size <= 7 || tokens[0] != "HP")
+    // Health: 248/248    AC: 44    Str: 35    XL:     26   Next: 58%
+    if (size <= 7 || (tokens[0] != "HP" && tokens[0] != "Health:"))
         return false;
 
     bool found = false;
     for (size_t k = 1; k < size; k++)
     {
-        if (tokens[k] == "Str")
+        if (tokens[k] == "Str:" || tokens[k] == "Str")
         {
             you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
@@ -362,14 +366,14 @@ bool chardump_parser::_check_stats1(const vector<string> &tokens)
 bool chardump_parser::_check_stats2(const vector<string> &tokens)
 {
     size_t size = tokens.size();
-    // MP  45/45   EV 13   Int 12   God: Makhleb [******]
-    if (size <= 8 || tokens[0] != "MP")
+    // Magic:  36/36      EV: 31    Int: 17    God:    Cheibriados [****..]
+    if (size <= 8 || (tokens[0] != "MP" && tokens[0] != "Magic:"))
         return false;
 
     bool found = false;
     for (size_t k = 1; k < size; k++)
     {
-        if (tokens[k] == "Int")
+        if (tokens[k] == "Int:" || tokens[k] == "Int")
         {
             you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
@@ -404,21 +408,21 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
 bool chardump_parser::_check_stats3(const vector<string> &tokens)
 {
     size_t size = tokens.size();
-    // Gold 15872   SH 59   Dex  9   Spells:  0 memorised, 26 levels left
-    if (size <= 5 || tokens[0] != "Gold")
+    // Gold: 2013  SH: 0  Dex: 26  Spells: 5 memorised, 36 levels left
+    if (size <= 5 || tokens[0] != "Gold:")
         return false;
 
     bool found;
     for (size_t k = 0; k < size; k++)
     {
-        if (tokens[k] == "Dex")
+        if (tokens[k] == "Dex:" || tokens[k] == "Dex")
         {
             you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
             you.redraw_stats.init(true);
             you.redraw_evasion = true;
             found = true;
         }
-        else if (tokens[k] == "Gold")
+        else if (tokens[k] == "Gold:" || tokens[k] == "Gold")
             you.set_gold(atoi(tokens[k+1].c_str()));
     }
 
@@ -470,15 +474,19 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 7;
     else if (tokens[0] == "rElec")
         offset = 7;
-    else if (tokens[0] == "SustAb")
+    else if (tokens[0] == "rCorr")
+        offset = 7;
+    else if (tokens[0] == "SustAb") // older dump files
         offset = 8;
     else if (tokens[0] == "rMut")
         offset = 7;
     else if (tokens[0] == "Saprov") // older dump files
         offset = 9;
-    else if (tokens[0] == "Gourm")
+    else if (tokens[0] == "Gourm") // older dump files
         offset = 5;
     else if (tokens[0] == "MR")
+        offset = 5;
+    else if (tokens[0] == "Stlth")
         offset = 5;
     else if (in_equipment)
         offset = 3;
