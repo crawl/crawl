@@ -1670,30 +1670,30 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     if (_cloud_is_cosmetic(type))
         return;
 
-    if (you.can_see(act))
+    if (!you.can_see(act))
+        return;
+
+    // Normal clouds. (Unmodified rain clouds have a different message.)
+    const bool raincloud = type == CLOUD_RAIN || type == CLOUD_STORM;
+    const bool unmodified = cloud_name() == cloud_type_name(type, false);
+    if (!raincloud || !unmodified)
     {
-        // Special message for unmodified rain clouds:
-        if ((type == CLOUD_RAIN || type == CLOUD_STORM)
-            && cloud_name() == cloud_type_name(type, false))
-        {
-            // Don't produce monster-in-rain messages in the interests
-            // of spam reduction.
-            if (act->is_player())
-            {
-                mprf("%s %s standing in %s.",
-                     act->name(DESC_THE).c_str(),
-                     act->conj_verb("are").c_str(),
-                     type == CLOUD_STORM ? "a thunderstorm" : "the rain");
-            }
-        }
-        else
-        {
-            mprf("%s %s in %s.",
-                 act->name(DESC_THE).c_str(),
-                 beneficial ? act->conj_verb("bask").c_str()
-                 : (act->conj_verb("are") + " engulfed").c_str(),
-                 cloud_name().c_str());
-        }
+        mprf("%s %s in %s.",
+             act->name(DESC_THE).c_str(),
+             beneficial ? act->conj_verb("bask").c_str()
+                        : (act->conj_verb("are") + " engulfed").c_str(),
+             cloud_name().c_str());
+        return;
+    }
+
+    // Don't produce monster-in-rain messages in the interests
+    // of spam reduction.
+    if (act->is_player())
+    {
+        mprf("%s %s standing in %s.",
+             act->name(DESC_THE).c_str(),
+             act->conj_verb("are").c_str(),
+             type == CLOUD_STORM ? "a thunderstorm" : "the rain");
     }
 }
 
