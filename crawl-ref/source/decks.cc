@@ -2934,19 +2934,28 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (mons && (mons->wont_attack() || !mons->can_polymorph()
-            || mons_is_firewood(mons)))
-        {
+        if (mons && (mons->wont_attack() || mons_is_firewood(mons)))
             continue;
-        }
 
         if (mons &&
             x_chance_in_y((power_level + 1) * 5 + random2(5),
                           mons->get_hit_dice()))
         {
+            if (mons->can_polymorph())
+            {
+                monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
+                mons->malmutate("");
+            }
+            else if (mons->holiness() == MH_UNDEAD)
+            {
+                const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
+                mons->add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
+                simple_monster_message(mons, " is dazed by the mutagenic energy.");
+            }
+            else
+                continue;
+
             effects = true;
-            monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
-            mons->malmutate("");
         }
     }
 
