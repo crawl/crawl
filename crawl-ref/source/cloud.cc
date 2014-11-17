@@ -34,6 +34,10 @@
 /// A portrait of a cloud_type.
 struct cloud_data
 {
+    /// A (relatively) short name for the cloud. May be referenced from lua.
+    const char* terse_name;
+    /// Another name for the cloud. If NULL, defaults to terse name.
+    const char* verbose_name;
     /// How much damage a cloud is expected to do in one turn, minimum.
     int expected_base_damage;
     /// The amount of additional random damage a cloud is expected to maybe do.
@@ -43,63 +47,102 @@ struct cloud_data
 /// A map from cloud_type to cloud_data.
 static const cloud_data clouds[] = {
     // CLOUD_NONE,
-    {},
+    { "?", "?",                                 // terse, verbose name
+    },
     // CLOUD_FIRE,
-    { 15, 46 },
+    { "flame", "roaring flames",                // terse, verbose name
+       15, 46,                                  // base, expected random damage
+    },
     // CLOUD_MEPHITIC,
-    { 0, 19 },
+    { "noxious fumes", NULL,                    // terse, verbose name
+      0, 19,                                    // base, expected random damage
+    },
     // CLOUD_COLD,
-    { 15, 46 },
+    { "freezing vapour", "freezing vapours",    // terse, verbose name
+      15, 46,                                   // base, expected random damage
+    },
     // CLOUD_POISON,
-    { 0, 37 },
+    { "poison gas", NULL,                       // terse, verbose name
+      0, 37,                                    // base, expected random damage
+    },
     // CLOUD_BLACK_SMOKE,
-    {},
+    { "black smoke",  NULL,                     // terse, verbose name
+    },
     // CLOUD_GREY_SMOKE,
-    {},
+    { "grey smoke",  NULL,                      // terse, verbose name
+    },
     // CLOUD_BLUE_SMOKE,
-    {},
+    { "blue smoke",  NULL,                      // terse, verbose name
+    },
     // CLOUD_PURPLE_SMOKE,
-    {},
+    { "purple smoke",  NULL,                    // terse, verbose name
+    },
     // CLOUD_TLOC_ENERGY,
-    {},
+    { "translocational energy",  NULL,          // terse, verbose name
+    },
     // CLOUD_FOREST_FIRE,
-    { 15, 46 },
+    { "fire", "roaring flames",                 // terse, verbose name
+      15, 46                                    // base, expected random damage
+    },
     // CLOUD_STEAM,
-    { 0, 25 },
+    { "steam", "a cloud of scalding steam",     // terse, verbose name
+      0, 25,
+    },
 #if TAG_MAJOR_VERSION == 34
     // CLOUD_GLOOM,
-    {},
+    { "gloom", "thick gloom",                   // terse, verbose name
+    },
 #endif
     // CLOUD_INK,
-    {},
+    { "ink",  NULL,                             // terse, verbose name
+    },
     // CLOUD_PETRIFY,
-    {},
+    { "calcifying dust",  NULL,                 // terse, verbose name
+    },
     // CLOUD_HOLY_FLAMES,
-    { 15, 46 },
+    { "blessed fire", NULL,                     // terse, verbose name
+      15, 46,                                   // base, expected random damage
+    },
     // CLOUD_MIASMA,
-    {},
+    { "foul pestilence", "dark miasma",         // terse, verbose name
+    },
     // CLOUD_MIST,
-    {},
+    { "thin mist", NULL,                        // terse, verbose name
+    },
     // CLOUD_CHAOS,
-    {},
+    { "seething chaos", NULL,                   // terse, verbose name
+    },
     // CLOUD_RAIN,
-    {},
+    { "rain", "the rain",                       // terse, verbose name
+    },
     // CLOUD_MUTAGENIC,
-    {},
+    { "mutagenic fog",  NULL,                   // terse, verbose name
+    },
     // CLOUD_MAGIC_TRAIL,
-    {},
+    { "magical condensation", NULL,             // terse, verbose name
+    },
     // CLOUD_TORNADO,
-    {}, // ???
+    { "ranging winds", NULL,                    // terse, verbose name
+    },
     // CLOUD_DUST_TRAIL,
-    {},
+    { "sparse dust",  NULL,                     // terse, verbose name
+    },
     // CLOUD_GHOSTLY_FLAME,
-    { 0, 25 },
+    { "ghostly flame", NULL,                    // terse, verbose name
+       0, 25,                                   // base, expected random damage
+    },
     // CLOUD_ACID,
-    { 15, 46 },
+    { "acidic fog", NULL,                       // terse, verbose name
+      15, 46,                                   // base, random expected damage
+    },
     // CLOUD_STORM,
-    { 60, 46 },
+    { "thunder", "a thunderstorm",              // terse, verbose name
+      60, 46,                                   // base, random expected damage
+    },
     // CLOUD_NEGATIVE_ENERGY,
-    { 15, 46 },
+    { "negative energy", NULL,                  // terse, verbose name
+      15, 46,                                   // base, random expected damage
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -1513,54 +1556,14 @@ string cloud_name_at_index(int cloudno)
         return cloud_type_name(env.cloud[cloudno].type);
 }
 
-// [ds] XXX: Some of these aren't so terse and some of the verbose
-// names aren't very verbose. Be warned that names in
-// _terse_cloud_names may be referenced by fog machines.
-static const char *_terse_cloud_names[] =
-{
-    "?",
-    "flame", "noxious fumes", "freezing vapour", "poison gas",
-    "black smoke", "grey smoke", "blue smoke",
-    "purple smoke", "translocational energy", "fire",
-    "steam",
-#if TAG_MAJOR_VERSION == 34
-    "gloom",
-#endif
-    "ink",
-    "calcifying dust",
-    "blessed fire", "foul pestilence", "thin mist",
-    "seething chaos", "rain", "mutagenic fog", "magical condensation",
-    "raging winds",
-    "sparse dust", "ghostly flame",
-    "acidic fog", "thunder", "negative energy"
-};
-
-static const char *_verbose_cloud_names[] =
-{
-    "?",
-    "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
-    "black smoke", "grey smoke", "blue smoke",
-    "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam",
-#if TAG_MAJOR_VERSION == 34
-    "thick gloom",
-#endif
-    "ink",
-    "calcifying dust",
-    "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
-    "mutagenic fog", "magical condensation", "raging winds",
-    "sparse dust", "ghostly flame",
-    "acidic fog", "a thunderstorm", "negative energy"
-};
-
 string cloud_type_name(cloud_type type, bool terse)
 {
-    COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES);
-    COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES);
+    if (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES)
+        return "buggy goodness";
 
-    return type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES
-           ? "buggy goodness"
-           : (terse? _terse_cloud_names : _verbose_cloud_names)[type];
+    if (terse || clouds[type].verbose_name == NULL)
+        return clouds[type].terse_name;
+    return clouds[type].verbose_name;
 }
 
 ////////////////////////////////////////////////////////////////////////
