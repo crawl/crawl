@@ -365,10 +365,9 @@ namespace arena
             }
         }
 
-        const string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
-        for (unsigned int i = 0; i < glyphs.size(); i++)
-            if (!(glyphs[i] & !127))
-                banned_glyphs[static_cast<int>(glyphs[i])] = true;
+        for (unsigned char gly : strip_tag_prefix(spec, "ban_glyphs:"))
+            if (gly < ARRAYSZ(banned_glyphs))
+                banned_glyphs[gly] = true;
 
         vector<string> factions = split_string(" v ", spec);
 
