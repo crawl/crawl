@@ -83,6 +83,7 @@
     Max Bane
     Bill Beher
     Alexander Beisig
+    Edgar Bering
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
