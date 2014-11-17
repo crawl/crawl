@@ -38,6 +38,8 @@ struct cloud_data
     const char* terse_name;
     /// Another name for the cloud. If NULL, defaults to terse name.
     const char* verbose_name;
+    /// The associated "beam" (effect) for this cloud type.
+    beam_type beam_effect;
     /// How much damage a cloud is expected to do in one turn, minimum.
     int expected_base_damage;
     /// The amount of additional random damage a cloud is expected to maybe do.
@@ -51,18 +53,22 @@ static const cloud_data clouds[] = {
     },
     // CLOUD_FIRE,
     { "flame", "roaring flames",                // terse, verbose name
+       BEAM_FIRE,                               // beam_effect
        15, 46,                                  // base, expected random damage
     },
     // CLOUD_MEPHITIC,
     { "noxious fumes", NULL,                    // terse, verbose name
+      BEAM_MEPHITIC,                            // beam_effect
       0, 19,                                    // base, expected random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
+      BEAM_COLD,                                // beam_effect
       15, 46,                                   // base, expected random damage
     },
     // CLOUD_POISON,
     { "poison gas", NULL,                       // terse, verbose name
+      BEAM_POISON,                              // beam_effect
       0, 37,                                    // base, expected random damage
     },
     // CLOUD_BLACK_SMOKE,
@@ -82,10 +88,12 @@ static const cloud_data clouds[] = {
     },
     // CLOUD_FOREST_FIRE,
     { "fire", "roaring flames",                 // terse, verbose name
+      BEAM_FIRE,                                // beam_effect
       15, 46                                    // base, expected random damage
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
+      BEAM_STEAM,                               // beam_effect
       0, 25,
     },
 #if TAG_MAJOR_VERSION == 34
@@ -95,22 +103,27 @@ static const cloud_data clouds[] = {
 #endif
     // CLOUD_INK,
     { "ink",  NULL,                             // terse, verbose name
+      BEAM_INK,                                 // beam_effect
     },
     // CLOUD_PETRIFY,
     { "calcifying dust",  NULL,                 // terse, verbose name
+      BEAM_PETRIFYING_CLOUD,                    // beam_effect
     },
     // CLOUD_HOLY_FLAMES,
     { "blessed fire", NULL,                     // terse, verbose name
+      BEAM_HOLY_FLAME,                          // beam_effect
       15, 46,                                   // base, expected random damage
     },
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
+      BEAM_MIASMA,                              // beam_effect
     },
     // CLOUD_MIST,
     { "thin mist", NULL,                        // terse, verbose name
     },
     // CLOUD_CHAOS,
     { "seething chaos", NULL,                   // terse, verbose name
+      BEAM_CHAOS,                               // beam_effect
     },
     // CLOUD_RAIN,
     { "rain", "the rain",                       // terse, verbose name
@@ -129,18 +142,22 @@ static const cloud_data clouds[] = {
     },
     // CLOUD_GHOSTLY_FLAME,
     { "ghostly flame", NULL,                    // terse, verbose name
+       BEAM_NONE,                               // beam_effect
        0, 25,                                   // base, expected random damage
     },
     // CLOUD_ACID,
     { "acidic fog", NULL,                       // terse, verbose name
+      BEAM_ACID,                                // beam_effect
       15, 46,                                   // base, random expected damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
+      BEAM_NONE,                                // beam_effect
       60, 46,                                   // base, random expected damage
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", NULL,                  // terse, verbose name
+      BEAM_NEG,                                 // beam_effect
       15, 46,                                   // base, random expected damage
     },
 };
@@ -174,29 +191,9 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
 
 static beam_type _cloud2beam(cloud_type flavour)
 {
-    switch (flavour)
-    {
-    default:
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_GLOOM:
-#endif
-    case CLOUD_NONE:         return BEAM_NONE;
-    case CLOUD_FIRE:         return BEAM_FIRE;
-    case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
-    case CLOUD_MEPHITIC:     return BEAM_MEPHITIC;
-    case CLOUD_COLD:         return BEAM_COLD;
-    case CLOUD_POISON:       return BEAM_POISON;
-    case CLOUD_STEAM:        return BEAM_STEAM;
-    case CLOUD_MIASMA:       return BEAM_MIASMA;
-    case CLOUD_CHAOS:        return BEAM_CHAOS;
-    case CLOUD_INK:          return BEAM_INK;
-    case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
-    case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
-    case CLOUD_RANDOM:       return BEAM_RANDOM;
-    case CLOUD_ACID:         return BEAM_ACID;
-    case CLOUD_NEGATIVE_ENERGY:
-                             return BEAM_NEG;
-    }
+    if (flavour == CLOUD_RANDOM)
+        return BEAM_RANDOM;
+    return clouds[flavour].beam_effect;
 }
 
 #ifdef ASSERTS
