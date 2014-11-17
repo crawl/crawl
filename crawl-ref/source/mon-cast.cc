@@ -2961,8 +2961,9 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
  */
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
 {
-    // Don't bother if our target is sufficiently fire-resistant.
-    if (foe->res_fire() >= 3)
+    // Don't bother if our target is sufficiently fire-resistant,
+    // or doesn't exist.
+    if (!foe || foe->res_fire() >= 3)
         return coord_def();
 
     const int pow = 6 * mon->spell_hd(SPELL_CONJURE_FLAME);
