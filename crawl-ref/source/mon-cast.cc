@@ -3082,16 +3082,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     monster_spells hspell_pass(mons->spells);
 
-    for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
-    {
-        if (it->flags & MON_SPELL_SILENCE_MASK
-            && (mons->is_silenced()
-                || mons->is_shapeshifter()))
-        {
-            hspell_pass.erase(it);
-            it = hspell_pass.begin() - 1;
-        }
-    }
+    erase_if(hspell_pass, [&](mon_spell_slot &t) {
+        return (t.flags & MON_SPELL_SILENCE_MASK)
+            && (mons->is_silenced() || mons->is_shapeshifter());
+    });
 
     if (!hspell_pass.size())
         return false;
@@ -3219,17 +3213,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         // Remove healing/invis/haste if we don't need them.
-        for (auto it = hspell_pass.begin(); it != hspell_pass.end(); it++)
-        {
-            if (_ms_waste_of_time(mons, *it)
+        erase_if(hspell_pass, [&](const mon_spell_slot &t) {
+            return _ms_waste_of_time(mons, t)
                 // Should monster not have selected dig by now,
                 // it never will.
-                || it->spell == SPELL_DIG)
-            {
-                hspell_pass.erase(it);
-                it = hspell_pass.begin() - 1;
-            }
-        }
+                || t.spell == SPELL_DIG;
+        });
 
         // If no useful spells... cast no spell.
         if (!hspell_pass.size())

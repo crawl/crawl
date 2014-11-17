@@ -307,4 +307,10 @@ struct counted_monster_list
 };
 
 bool today_is_halloween();
+
+template<class C, class P>
+void erase_if(C &container, P pred) {
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
 #endif
