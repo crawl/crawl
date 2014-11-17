@@ -69,7 +69,18 @@ function () {
         return filtered;
     }
 
+    function init_canvas(element, x, y) {
+        var ratio = window.devicePixelRatio;
+        element.width = x * ratio;
+        element.height = y * ratio;
+        element.style.width = x + 'px';
+        element.style.height = y + 'px';
+        element.getContext("2d").setTransform(ratio, 0, 0,
+                                              ratio, 0, 0);
+    }
+
     return {
-        formatted_string_to_html: formatted_string_to_html
+        formatted_string_to_html: formatted_string_to_html,
+        init_canvas: init_canvas
     };
 });

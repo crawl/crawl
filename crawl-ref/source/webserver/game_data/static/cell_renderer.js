@@ -171,11 +171,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             // draw clouds
             if (cell.cloud.value && cell.cloud.value < dngn.FEAT_MAX)
             {
+                this.ctx.save();
                 // If there will be a front/back cloud pair, draw
                 // the underlying one with correct alpha
                 if (fg_idx)
                 {
-                    this.ctx.save();
                     try
                     {
                         this.ctx.globalAlpha = 0.6;
