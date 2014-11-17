@@ -5479,7 +5479,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_ENSLAVE:
-        if (!agent()->is_player())
+        if (agent() && agent()->is_monster())
         {
             enchant_type good = (agent()->wont_attack()) ? ENCH_CHARM
                                                          : ENCH_HEXED;
