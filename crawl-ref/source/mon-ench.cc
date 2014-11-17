@@ -1868,7 +1868,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            shuffle_array(idx, 8);
+            shuffle_array(idx);
 
             bool re_add = true;
 
