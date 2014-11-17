@@ -862,6 +862,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_elec() >= 3;
     case CLOUD_NEGATIVE_ENERGY:
         return act->res_negative_energy() >= 3;
+    case CLOUD_TORNADO:
+        return act->res_wind();
     default:
         return false;
     }
@@ -1285,42 +1287,50 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
     }
 }
 
+/**
+ * Will the given monster refuse to walk into the given cloud?
+ *
+ * @param mons              The monster in question.
+ * @param cloud             The cloud in question.
+ * @param extra_careful     Whether the monster could suffer any harm from the
+ *                          cloud at all, even if it would normally be brave
+ *                          enough (based on e.g. hp) to enter the cloud.
+ * @return                  Whether the monster is NOT ok to enter the cloud.
+ */
 static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
-                               bool placement)
+                               bool extra_careful)
 {
-    bool extra_careful = placement;
-    cloud_type cl_type = cloud.type;
+    // clouds you're immune to are inherently safe.
+    if (actor_cloud_immune(mons, cloud))
+        return false;
 
-    if (placement)
-        extra_careful = true;
+    // harmless clouds, likewise.
+    if (is_harmless_cloud(cloud.type))
+        return false;
 
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
     if (!extra_careful && mons->berserk_or_insane())
         return false;
 
-    if (you_worship(GOD_FEDHAS) && fedhas_protects(mons)
-        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
-        && (mons->friendly() || mons->neutral()))
-    {
-        return false;
-    }
+    const int resistance = _actor_cloud_resist(mons, cloud);
 
-    // Thinking things avoid things they are vulnerable to
-    if(mons_intel(mons) >= I_ANIMAL && _actor_cloud_resist(mons,cloud) < 0)
+    // Thinking things avoid things they are vulnerable to (-resists)
+    if (mons_intel(mons) >= I_ANIMAL && resistance < 0)
         return true;
 
-    switch (cl_type)
+    switch (cloud.type)
     {
     case CLOUD_MIASMA:
         // Even the dumbest monsters will avoid miasma if they can.
-        return !mons->res_rotting();
+        return true;
 
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-        if (mons->res_fire() > 1)
-            return false;
-
+    case CLOUD_COLD:
+    case CLOUD_HOLY_FLAMES:
+    case CLOUD_ACID:
+    case CLOUD_NEGATIVE_ENERGY:
         if (extra_careful)
             return true;
 
@@ -1329,12 +1339,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         break;
 
     case CLOUD_MEPHITIC:
-        if (mons->res_poison() > 0 || mons->is_unbreathing())
-            return false;
-
-        if (extra_careful)
-            return true;
-
         if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
             return false;
 
@@ -1342,21 +1346,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
         break;
 
-    case CLOUD_COLD:
-        if (mons->res_cold() > 1)
-            return false;
-
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= 15 + random2avg(46, 5))
-            return false;
-        break;
-
     case CLOUD_POISON:
-        if (mons->res_poison() > 0)
-            return false;
-
         if (extra_careful)
             return true;
 
@@ -1365,7 +1355,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         break;
 
     case CLOUD_STEAM:
-        if(mons->res_steam() > 0)
+        if (mons->res_steam() > 0)
             return false;
 
         if (extra_careful)
@@ -1393,45 +1383,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
         break;
 
-    case CLOUD_TORNADO:
-        // Ball lightnings are not afraid of a _storm_, duh.  Or elementals.
-        if (mons->res_wind())
-            return false;
-
-        // Locust swarms are too stupid to avoid winds.
-        if (mons_intel(mons) >= I_ANIMAL)
-            return true;
-        break;
-
-    case CLOUD_PETRIFY:
-        if (mons->res_petrify())
-            return false;
-
-        if (extra_careful)
-            return true;
-
-        if (mons_intel(mons) >= I_ANIMAL)
-            return true;
-        break;
-
-    case CLOUD_HOLY_FLAMES:
-        if (mons->res_holy_energy(cloud.agent()) > 0)
-            return false;
-
-        if (extra_careful)
-            return true;
-
-        if (mons_intel(mons) >= I_ANIMAL)
-            return true;
-
-        if (mons->hit_points >= 15 + random2avg(46, 5))
-            return false;
-        break;
-
     case CLOUD_GHOSTLY_FLAME:
-        if (mons->res_negative_energy() > 2)
-            return false;
-
         if (extra_careful)
             return true;
 
@@ -1439,19 +1391,8 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
         break;
 
-    case CLOUD_ACID:
-        if (mons->res_acid() > 0)
-            return false;
-
-        if (mons->hit_points >= 15 + random2avg(46, 5))
-            return false;
-        break;
-
     case CLOUD_STORM:
-        if (mons->res_elec() > 1)
-            return false;
-
-        if(extra_careful)
+        if (extra_careful)
             return true;
 
         // Storm clouds hit four times as hard, but a quarter as often,
@@ -1460,26 +1401,13 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
         break;
 
-    case CLOUD_NEGATIVE_ENERGY:
-        if (mons->res_negative_energy() > 2)
-
-        if (extra_careful)
-            return true;
-
-        if (mons->hit_points >= 15 + random2avg(46, 5))
-            return false;
-        break;
-
     default:
         break;
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
-    if (is_harmless_cloud(cl_type)
-        || mons_intel(mons) == I_PLANT && !extra_careful)
-    {
+    if (mons_intel(mons) == I_PLANT && !extra_careful)
         return false;
-    }
 
     // If we get here, the cloud is potentially harmful.
     return true;
