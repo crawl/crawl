@@ -1081,27 +1081,77 @@ const mon_spell_slot lich_emergency_spells[] =
     { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
 };
 
+static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
+{
+    bool used = false;
+    for (auto slot : spells)
+        if (slot.spell == spell)
+            used = true;
+    return used;
+}
+
+static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
+                                int *weights, int total_weight)
+{
+    if (_lich_spell_is_used(spells, spell))
+        return false;
+
+    unsigned int disciplines = get_spell_disciplines(spell);
+
+    for (int exponent = 0; exponent < SPTYP_LAST_EXPONENT; ++exponent)
+        if (disciplines & (1 << exponent))
+            if (x_chance_in_y(weights[exponent], total_weight))
+                return true;
+
+    return false;
+}
+
 static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
                             size_t set_len)
 {
-    mon_spell_slot next_spell = set[random2(set_len)];
+    int weights[SPTYP_LAST_EXPONENT];
+    for (int exponent = 0; exponent < SPTYP_LAST_EXPONENT; ++exponent)
+        // there are no primary hexes, and hexes are interesting to have on
+        // liches, so give them a slightly higher chance
+        weights[exponent] = (1 << exponent) == SPTYP_HEXES
+            ? SPTYP_LAST_EXPONENT / 4
+            : 1;
 
-    bool used = false;
     for (auto slot : spells)
-        if (slot.spell == next_spell.spell)
-            used = true;
-
-    if (!used)
-    {
-        if (set == lich_emergency_spells)
+        for (int exponent = 0; exponent < SPTYP_LAST_EXPONENT; ++exponent)
         {
-            if (next_spell.spell == SPELL_TELEPORT_SELF)
-                next_spell.flags |= MON_SPELL_EMERGENCY;
-            if (next_spell.spell == SPELL_BANISHMENT)
-                next_spell.flags |= MON_SPELL_EMERGENCY;
+            unsigned int discipline = 1 << exponent;
+            if (spell_typematch(slot.spell, discipline))
+            {
+                // or else we just get entirely bolts
+                int increment = discipline == SPTYP_CONJURATION
+                    ? SPTYP_LAST_EXPONENT / 4
+                    : SPTYP_LAST_EXPONENT;
+                weights[exponent] = min(
+                     weights[exponent] + increment,
+                     (int)SPTYP_LAST_EXPONENT * 2
+                );
+            }
         }
-        spells.push_back(next_spell);
+
+    int total_weight = 0;
+    for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
+        total_weight += weights[i];
+
+    mon_spell_slot next_spell;
+    do {
+       next_spell = set[random2(set_len)];
+    } while (!_lich_spell_is_good(spells, next_spell.spell, weights,
+                                  total_weight));
+
+    if (set == lich_emergency_spells)
+    {
+        if (next_spell.spell == SPELL_TELEPORT_SELF)
+            next_spell.flags |= MON_SPELL_EMERGENCY;
+        if (next_spell.spell == SPELL_BANISHMENT)
+            next_spell.flags |= MON_SPELL_EMERGENCY;
     }
+    spells.push_back(next_spell);
 }
 
 void ghost_demon::init_lich(monster_type type)
