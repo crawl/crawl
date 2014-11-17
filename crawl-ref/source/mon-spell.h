@@ -268,8 +268,8 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 10, MON_SPELL_WIZARD },
        { SPELL_AGONY, 10, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
-       { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 20, MON_SPELL_WIZARD },
+       { SPELL_ANIMATE_DEAD, 20, MON_SPELL_WIZARD },
       }
     },
 
