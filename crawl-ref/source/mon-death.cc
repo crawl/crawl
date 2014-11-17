@@ -1635,7 +1635,7 @@ static bool _reaping(monster *mons)
  * @param maybe_good_kill   Whether the kill can be rewarding in piety.
  *                          (Not summoned, etc)
  */
-static void _fire_kill_conducts(monster* mons, killer_type killer,
+static void _fire_kill_conducts(const monster &mons, killer_type killer,
                                 int killer_index, bool maybe_good_kill)
 {
     const bool maybe_bad_kill    = killer_index != YOU_FAULTLESS;
@@ -1653,115 +1653,71 @@ static void _fire_kill_conducts(monster* mons, killer_type killer,
     // double piety!)
     //
     // This is a Vintage Legacy Hack, AAA-grade.
-    mon_holy_type holiness = mons->holiness();
-    if ((mons->type == MONS_ABOMINATION_SMALL
-         || mons->type == MONS_ABOMINATION_LARGE
-         || mons->type == MONS_CRAWLING_CORPSE
-         || mons->type == MONS_MACABRE_MASS)
+    mon_holy_type holiness = mons.holiness();
+    if ((mons.type == MONS_ABOMINATION_SMALL
+         || mons.type == MONS_ABOMINATION_LARGE
+         || mons.type == MONS_CRAWLING_CORPSE
+         || mons.type == MONS_MACABRE_MASS)
         && (you_worship(GOD_TROG)
             || you_worship(GOD_KIKUBAAQUDGHA)))
     {
         holiness = MH_DEMONIC;
     }
 
-    if (holiness == MH_DEMONIC || mons_is_demonspawn(mons->type))
-    {
-        did_god_conduct(DID_KILL_DEMON,
-                        mons->get_experience_level(), true, mons);
-    }
+    if (holiness == MH_DEMONIC || mons_is_demonspawn(mons.type))
+        did_kill_conduct(DID_KILL_DEMON, mons);
     else if (holiness == MH_NATURAL)
     {
-        did_god_conduct(DID_KILL_LIVING,
-                        mons->get_experience_level(), true, mons);
+        did_kill_conduct(DID_KILL_LIVING, mons);
 
         // TSO hates natural evil and unholy beings.
-        if (mons->is_unholy())
-        {
-            did_god_conduct(DID_KILL_NATURAL_UNHOLY,
-                            mons->get_experience_level(), true, mons);
-        }
-        else if (mons->is_evil())
-        {
-            did_god_conduct(DID_KILL_NATURAL_EVIL,
-                            mons->get_experience_level(), true, mons);
-        }
+        if (mons.is_unholy())
+            did_kill_conduct(DID_KILL_NATURAL_UNHOLY, mons);
+        else if (mons.is_evil())
+            did_kill_conduct(DID_KILL_NATURAL_EVIL, mons);
     }
     else if (holiness == MH_UNDEAD)
-    {
-        did_god_conduct(DID_KILL_UNDEAD,
-                        mons->get_experience_level(), true, mons);
-    }
+        did_kill_conduct(DID_KILL_UNDEAD, mons);
 
     // Zin hates unclean and chaotic beings.
-    if (mons->how_unclean())
-    {
-        did_god_conduct(DID_KILL_UNCLEAN,
-                        mons->get_experience_level(), true, mons);
-    }
-    else if (mons->how_chaotic())
-    {
-        did_god_conduct(DID_KILL_CHAOTIC,
-                        mons->get_experience_level(), true, mons);
-    }
+    if (mons.how_unclean())
+        did_kill_conduct(DID_KILL_UNCLEAN, mons);
+    else if (mons.how_chaotic())
+        did_kill_conduct(DID_KILL_CHAOTIC, mons);
 
     // jmf: Trog hates wizards.
-    if (mons->is_actual_spellcaster())
-    {
-        did_god_conduct(DID_KILL_WIZARD,
-                        mons->get_experience_level(), true, mons);
-    }
+    if (mons.is_actual_spellcaster())
+        did_kill_conduct(DID_KILL_WIZARD, mons);
 
     // Beogh hates priests of other gods.
-    if (mons->is_priest())
-    {
-        did_god_conduct(DID_KILL_PRIEST,
-                        mons->get_experience_level(), true, mons);
-    }
+    if (mons.is_priest())
+        did_kill_conduct(DID_KILL_PRIEST, mons);
 
     // Jiyva hates you killing slimes, but eyeballs
     // mutation can confuse without you meaning it.
-    if (mons_is_slime(mons) && killer != KILL_YOU_CONF && maybe_bad_kill)
-    {
-        did_god_conduct(DID_KILL_SLIME, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (mons_is_slime(&mons) && killer != KILL_YOU_CONF && maybe_bad_kill)
+        did_kill_conduct(DID_KILL_SLIME, mons);
 
-    if (fedhas_protects(mons))
-    {
-        did_god_conduct(DID_KILL_PLANT, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (fedhas_protects(&mons))
+        did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
-    if (cheibriados_thinks_mons_is_fast(mons)
-        && !mons->cannot_move())
-    {
-        did_god_conduct(DID_KILL_FAST, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (cheibriados_thinks_mons_is_fast(&mons) && !mons.cannot_move())
+        did_kill_conduct(DID_KILL_FAST, mons);
 
     // Yredelemnul hates artificial beings.
-    if (mons->is_artificial())
-    {
-        did_god_conduct(DID_KILL_ARTIFICIAL, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (mons.is_artificial())
+        did_kill_conduct(DID_KILL_ARTIFICIAL, mons);
 
     // Holy kills are always noticed.
-    if (mons->is_holy())
-    {
-        did_god_conduct(DID_KILL_HOLY, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (mons.is_holy())
+        did_kill_conduct(DID_KILL_HOLY, mons);
 
     // Dithmenos hates sources of fire.
     // (This is *after* the holy so that the right order of
     //  messages appears.)
-    if (mons_is_fiery(mons))
-    {
-        did_god_conduct(DID_KILL_FIERY, mons->get_experience_level(),
-                        true, mons);
-    }
+    if (mons_is_fiery(&mons))
+        did_kill_conduct(DID_KILL_FIERY, mons);
 }
 
 
@@ -2165,7 +2121,7 @@ int monster_die(monster* mons, killer_type killer,
             if (gives_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(mons, killer, killer_index, good_kill);
+            _fire_kill_conducts(*mons, killer, killer_index, good_kill);
 
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
@@ -2263,7 +2219,7 @@ int monster_die(monster* mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(mons, killer, killer_index, good_kill);
+            _fire_kill_conducts(*mons, killer, killer_index, good_kill);
 
             // No piety loss for friends killed by other monsters.
             // XXX: ^ this comment seems inverted...?
