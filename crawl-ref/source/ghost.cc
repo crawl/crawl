@@ -1024,12 +1024,12 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
 
 const mon_spell_slot lich_primary_spells[] =
 {
-    { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
-    { SPELL_CHAIN_LIGHTNING, 12, MON_SPELL_WIZARD },
-    { SPELL_CORROSIVE_BOLT, 12, MON_SPELL_WIZARD },
-    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
-    { SPELL_SUMMON_GREATER_DEMON, 12, MON_SPELL_WIZARD },
+    { SPELL_IOOD, 18, MON_SPELL_WIZARD },
+    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
+    { SPELL_CHAIN_LIGHTNING, 18, MON_SPELL_WIZARD },
+    { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
+    { SPELL_MALIGN_GATEWAY, 18, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
 };
 
 const mon_spell_slot lich_secondary_spells[] =
@@ -1151,6 +1151,7 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
         if (next_spell.spell == SPELL_BANISHMENT)
             next_spell.flags |= MON_SPELL_EMERGENCY;
     }
+    next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);
 }
 
