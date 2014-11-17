@@ -228,9 +228,7 @@ void wizard_create_spec_object()
         }
     }
 
-    // Deck colour (which control rarity) already set.
-    if (!is_deck(mitm[thing_created]))
-        item_colour(mitm[thing_created]);
+    item_colour(mitm[thing_created]);
 
     move_item_to_grid(&thing_created, you.pos());
 
