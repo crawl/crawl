@@ -1259,7 +1259,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     {
         const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
-        if (col != -1 && colour)
+        if (col != -1)
             md.col = col;
         else
             md.ch = p == "_"? ' ' : read_symbol(p);
