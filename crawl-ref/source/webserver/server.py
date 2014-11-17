@@ -215,6 +215,7 @@ def bind_server():
 def check_config():
     success = True
     for game_data in config.get("games"):
+        logging.debug("Checking crawl binary %s" % game_data["crawl_binary"])
         if not os.path.exists(game_data["crawl_binary"]):
             logging.error("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False
