@@ -78,7 +78,6 @@ private:
     int level;
 
 private:
-    kill_category kc;
     killer_type   kt;
 
     nothing_happens_when_type nothing_happens_when;
