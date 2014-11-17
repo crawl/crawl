@@ -1867,7 +1867,10 @@ static void _find_parent_branch(branch_type br, int depth,
     if (auto levels = map_find(stair_level, br))
     {
         if (levels->size() > 0)
+        {
             *pd = levels->begin()->depth;
+            return;
+        }
     }
     *pd = 0;
 }
