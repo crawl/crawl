@@ -18,6 +18,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "bitary.h"
+#include "butcher.h"
 #include "cio.h"
 #include "clua.h"
 #include "colour.h"
@@ -4741,11 +4742,13 @@ item_info get_item_info(const item_def& item)
     else if (item_type_tried(item))
         ii.flags |= ISFLAG_TRIED;
 
-    const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
-                                CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
-                                "drawn_cards", "item_tile", "item_tile_name",
-                                "worn_tile", "worn_tile_name",
-                                "needs_autopickup", FORCED_ITEM_COLOUR_KEY};
+    static const char* copy_props[] =
+    {
+        ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
+        CORPSE_NAME_TYPE_KEY, "drawn_cards", "item_tile", "item_tile_name",
+        "worn_tile", "worn_tile_name", "needs_autopickup",
+        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY
+    };
     for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
     {
         if (item.props.exists(copy_props[i]))

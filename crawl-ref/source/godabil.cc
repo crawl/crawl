@@ -1885,7 +1885,9 @@ bool kiku_receive_corpses(int pow)
             continue;
         }
 
-        mitm[index_of_corpse_created].props[NEVER_HIDE_KEY] = true;
+        // no scumming for hides
+        if (mons_class_leaves_hide(mon_type))
+            mitm[index_of_corpse_created].props[MANGLED_CORPSE_KEY] = true;
 
         ASSERT(valid_corpse >= 0);
 
@@ -1893,8 +1895,6 @@ bool kiku_receive_corpses(int pow)
         int rottedness = 200 -
             (!one_chance_in(10) ? random2(200 - you.piety)
                                 : random2(100 + random2(75)));
-        rottedness = rottedness / 2 + 1; // hack to adjust for rotten corpse
-                                         // removal
         mitm[index_of_corpse_created].special = rottedness;
 
         // Place the corpse.
@@ -4228,7 +4228,7 @@ static string _gozag_special_shop_name(shop_type type)
         if (you.species == SP_VAMPIRE)
             return "Blood";
         else if (you.species == SP_GHOUL)
-            return "Corpse";
+            return "Carrion"; // yum!
     }
 
     return "";

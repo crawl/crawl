@@ -6,7 +6,7 @@
 #ifndef BUTCHER_H
 #define BUTCHER_H
 
-#define NEVER_HIDE_KEY "never_hide"
+#define MANGLED_CORPSE_KEY "mangled_corpse"
 
 bool butchery(int which_corpse = -1);
 

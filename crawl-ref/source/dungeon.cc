@@ -5742,7 +5742,9 @@ static int _make_delicious_corpse()
         return NON_ITEM;
     }
 
-    mitm[index_of_corpse_created].props[NEVER_HIDE_KEY] = true;
+    // no hides allowed, I guess?
+    if (mons_class_leaves_hide(mon_type))
+        mitm[index_of_corpse_created].props[MANGLED_CORPSE_KEY] = true;
     return index_of_corpse_created;
 }
 

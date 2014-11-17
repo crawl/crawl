@@ -4029,6 +4029,15 @@ void unmarshallItem(reader &th, item_def &item)
                                | (OBJ_SCROLLS << 16);
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_MANGLE_CORPSES)
+    {
+        if (item.props.exists("never_hide"))
+        {
+            item.props.erase("never_hide");
+            item.props[MANGLED_CORPSE_KEY] = true;
+        }
+    }
 #endif
 
     if (is_unrandom_artefact(item))
@@ -5435,7 +5444,8 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     if (m.props.exists("no_hide"))
-        m.props[NEVER_HIDE_KEY] = true;
+        m.props.erase("no_hide");
+
     if (m.props.exists("original_name"))
     {
         m.props[ORIGINAL_TYPE_KEY].get_int() =

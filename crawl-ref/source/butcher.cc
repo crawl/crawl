@@ -266,10 +266,9 @@ bool butchery(int which_corpse)
 
 static void _create_monster_hide(const item_def corpse)
 {
-    // kiku_receive_corpses() creates corpses that are easily scummed
-    // for hides.  We prevent this by setting "never_hide" as an item
-    // property of corpses it creates.
-    if (corpse.props.exists(NEVER_HIDE_KEY))
+    // make certain sources of dragon hides less scummable
+    // (kiku's corpse drop, gozag ghoul corpse shops)
+    if (corpse.props.exists(MANGLED_CORPSE_KEY))
         return;
 
     monster_type mons_class = corpse.mon_type;

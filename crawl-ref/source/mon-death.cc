@@ -145,8 +145,6 @@ monster_type fill_out_corpse(const monster* mons,
             corpse.props[MONSTER_NUMBER] = short(mons->props["old_heads"].get_int());
         // XXX: Appears to be a safe conversion?
         corpse.props[MONSTER_MID]      = int(mons->mid);
-        if (mons->props.exists(NEVER_HIDE_KEY))
-            corpse.props[NEVER_HIDE_KEY] = true;
     }
 
     monster_info minfo(corpse_class);
