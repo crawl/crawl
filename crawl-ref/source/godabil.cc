@@ -6064,6 +6064,9 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(5);
+    int duration;
+    string message;
+    enchant_type enchantment = ENCH_NONE;
 
     if (mons_is_firewood(mons))
         effect = 99; // > 2 is just damage -- no slowed toadstools
@@ -6073,21 +6076,24 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
         case 0:
             if (mons->has_spells() || mons->is_actual_spellcaster())
             {
-                simple_monster_message(mons, " is rendered silent by the truth!");
-                mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(160)));
+                message = " is rendered silent by the truth!";
+                enchantment = ENCH_MUTE;
+                duration = 120 + random2(160);
                 dmg += roll_dice(die_size, 4);
                 break;
             } // if not a spellcaster, fall through to paralysis.
 
         case 1:
-            simple_monster_message(mons, " is paralysed by terrible understanding!");
-            mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
+            message = " is paralysed by terrible understanding!";
+            enchantment = ENCH_PARALYSIS;
+            duration = 80 + random2(60);
             dmg += roll_dice(die_size, 4);
             break;
 
         case 2:
-            simple_monster_message(mons, " slows down under the weight of truth!");
-            mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
+            message = " slows down under the weight of truth!";
+            enchantment = ENCH_SLOW;
+            duration = 100 + random2(100);
             dmg += roll_dice(die_size, 6);
             break;
 
@@ -6097,6 +6103,10 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     }
     mons->hurt(agent, dmg, BEAM_ENERGY, true);
 
+    if (mons->alive() && enchantment != ENCH_NONE) {
+        simple_monster_message(mons, message.c_str());
+        mons->add_ench(mon_enchant(enchantment, 1, agent, duration));
+    }
     return 1;
 }
 
