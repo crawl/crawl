@@ -761,8 +761,7 @@ bool monster::search_spells(function<bool (spell_type)> func) const
 
 bool monster::has_spell_of_type(unsigned disciplines) const
 {
-    return search_spells([&] (spell_type spell)
-                         { return spell_typematch(spell, disciplines); } );
+    return search_spells(bind(spell_typematch, placeholders::_1, disciplines));
 }
 
 void monster::bind_melee_flags()

@@ -3790,7 +3790,7 @@ god_type choose_god(god_type def_god)
 
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
                                _always_true<god_type>,
-                               bind2nd(ptr_fun(god_name), false));
+                               bind(god_name, placeholders::_1, false));
 }
 
 int had_gods()

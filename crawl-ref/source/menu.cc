@@ -2513,7 +2513,7 @@ MenuObject* PrecisionMenu::get_object_by_name(const string &search)
 {
     vector<MenuObject*>::iterator ret_val;
     ret_val = find_if(m_attached_objects.begin(), m_attached_objects.end(),
-                      bind2nd(ptr_fun(_string_lookup), search));
+                      bind(_string_lookup, placeholders::_1, search));
     if (ret_val != m_attached_objects.end())
         return *ret_val;
     return NULL;
@@ -3487,7 +3487,7 @@ void MenuFreeform ::set_active_item(int ID)
 {
     vector<MenuItem*>::iterator ret_val;
     ret_val = find_if(m_entries.begin(), m_entries.end(),
-                      bind2nd(ptr_fun(_id_comparison), ID));
+                      bind(_id_comparison, placeholders::_1, ID));
     if (ret_val != m_entries.end())
     {
         m_active_item = *ret_val;
@@ -4001,7 +4001,7 @@ void MenuScroller::set_active_item(int ID)
 
     vector<MenuItem*>::iterator ret_val;
     ret_val = find_if(m_entries.begin(), m_entries.end(),
-                      bind2nd(ptr_fun(_id_comparison), ID));
+                      bind(_id_comparison, placeholders::_1, ID));
     if (ret_val != m_entries.end())
     {
         set_active_item(*ret_val);
