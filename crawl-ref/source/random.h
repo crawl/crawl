@@ -38,24 +38,23 @@ bool decimal_chance(double percent);
 
 int ui_random(int max);
 
-/// Chooses one of the objects passed in at random.
+/** Chooses one of the objects passed in at random (by value).
+ *  @return One of the arguments.
+ */
 template <typename T, typename... Ts>
-const T &random_choose(const T &first, Ts... rest)
+T random_choose(T first, Ts... rest)
 {
-    const reference_wrapper<const T> elts[] = { first, rest... };
+    const T elts[] = { first, rest... };
     return elts[random2(1 + sizeof...(rest))];
 }
 
-/** Chooses one of the strings passed in at random.
- *
- * Without this overload, the generic random_choose would fail to resolve
- * the types of, for example, const char[6] versus const char[4] in
- * random_choose("hello", "foo");
+/** Chooses one of the objects passed in at random (by reference).
+ *  @return A reference to one of the arguments.
  */
-template <typename... Ts>
-const char *random_choose(const char *first, Ts... rest)
+template <typename T, typename... Ts>
+const T &random_choose_ref(const T &first, Ts... rest)
 {
-    return random_choose<const char *, Ts...>(first, rest...);
+    return random_choose<reference_wrapper<const T>>(first, rest...);
 }
 
 template <typename T>
