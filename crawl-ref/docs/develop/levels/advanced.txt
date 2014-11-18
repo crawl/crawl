@@ -9,10 +9,11 @@ Contents:  I. Conditionalising levels
            J. Validating levels
            K. Vetoing levels
            L. Abyss vaults
-           M. Lua reference
-           N. Lua hooks
-           O. Map statistics
-           P. Map generation
+           M. Portal vaults
+           N. Lua reference
+           O. Lua hooks
+           P. Map statistics
+           Q. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a
@@ -280,7 +281,129 @@ c. Timers and other listeners in an abyssal vault may be discarded at
    may be removed at any time as the abyss shifts away from your
    vault.
 
-M.    Lua reference
+
+M.   Portal Vaults
+==================
+
+Portal vaults are branches accessed by portals in the dungeon. You can
+create custom portal vaults in the following steps (note that compilation
+is necessary), assuming that you want to call your new portal "NewPortal"
+for whatever reason:
+
+* Create a new file newportal.des in the dat/portals/ folder.
+* "newportal.des" should contain a comment at the top, explaining flavour and
+  gameplay goals of the portal vault (and perhaps additional ideas etc.)
+* Define at least one vault containing the portal (see below).
+* Define at least one destination map (see below).
+* Add a short in-game description for the branch to dat/descript/branches.txt
+* Add code for the branch in branch-data.h, like so:
+    { BRANCH_MYPORTAL, NUM_BRANCHES, -1, -1, 1, 14,
+    BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+    DNGN_ENTER_MYPORTAL, DNGN_EXIT_MYPORTAL,
+    "NewPortal", "an awesome portal place", "NewPortal",
+    NULL,
+    false, BLUE, BLUE,
+    '7', false, 0 },
+* Add code for the entrances and exits to feature-data.h, like so:
+    PORTAL_ENTRANCE(DNGN_ENTER_MYPORTAL, "awesome portal in", "enter_newportal", BLUE),
+    PORTAL_EXIT(DNGN_EXIT_MYPORTAL, "awesome portal out", "exit_newportal", BLUE),
+* Add BRANCH_MYPORTAL, DNGN_ENTER_MYPORTAL, and DNGN_EXIT_MYPORTAL to enum.h
+  in the appropriate places (copy and paste from another portal vault is fine
+  for this).
+
+Before going into the details of portal vault creation, some words about
+their uses: Portal vaults are different from other branches in that they are
+not guaranteed. Also, there is only one go at a portal vault - if you
+leave, it's gone for good. You can apply special rules to a portal vault,
+like enforcing maprot.
+
+Portal vaults can be particulary thematic, using specialised monster
+sets, fitting loot, coloured dungeon features etc. Avoid death traps; it
+is no fun to enter a vault, being unable to leave and be killed outright.
+In order to provide fun and reduce spoiler effects, randomise. For portal
+vaults, it is desirable to have several different layouts (ideally each
+of the maps has some randomisation on its own). Often, it is a good idea
+to skew the map distribution: e.g. with four destination vaults, weights
+like 40,30,20,10 might be more interesting than 25,25,25,25.
+
+In order to test a portal vault, you can either use PLACE: D:2 for an
+entry vault, or use the wizard mode command &L for conjuring up the entry.
+
+Define a vault to hold the portal itself
+----------------------------------------
+
+# Bare-bones portal vault entry
+NAME: portal_generic_entry
+TAGS: allow_dup
+KFEAT: O = enter_newportal # name defined in feature-data.h
+MAP
+O
+ENDMAP
+
+In case you want to make sure that the portal vault entry is only used
+once, you add a TAGS: uniq_BAR line. It should be noted that the label
+BAR may *not* end in _entry (otherwise the level builder assumes that
+the vault is a branch entry).
+
+This will produce a portal, but attempting to use it will trigger an
+ASSERT since there's no map for the destination. So we create a
+destination map like so:
+
+Define a destination map
+------------------------
+
+NAME: portal_generic_generic
+DEPTH: NewPortal # name defined in branch-data.h
+TAGS: allow_dup
+ORIENT: encompass
+MONS: ancient lich
+KFEAT: > = exit_newportal # name defined in feature-data.h
+MAP
+xxxxxxxxxxx
+x111111111x
+x1A111111>x
+x111111111x
+xxxxxxxxxxx
+ENDMAP
+
+Note that the entry point into the map will be a stone arch. You must
+provide an exit to the dungeon explicitly (KFEAT: > = exit_newportal)
+or the player will not be able to leave. Simple stairs will not work right
+as exits.
+
+You can use multiple maps with DEPTH: NEWPORTAL, and the dungeon builder
+will pick one at random.
+
+Defining a random monster set
+-----------------------------
+
+Portal vaults may use a defined random monster set to make the Shadow
+Creatures spell work. This is done by calling dgn.set_random_mon_list()
+manually. Here's an example from ice_cave_small_02 in icecave.des:
+  : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
+You can use "nothing" to have the spell fail sometimes.
+
+If you are using the same random monster list in several destination maps,
+you can define a lua block and call it from the destination map definition.
+This example is from sewer.des:
+
+{{
+function sewer_random_monster_list(e)
+  e.set_random_mon_list("bat w:20 / giant newt w:20 / small snake / \
+                         ooze / worm / snake / vampire mosquito w:15")
+end
+}}
+
+You can then use this line in the map definition to execute the lua block:
+  : sewer_random_monster_list(_G)
+
+You can also set env.spawn_random_rate() to have monsters generated from the
+list during play.
+
+You can also edit mon-pick-data.h, but that is more complicated, and not
+necessary if you have a random monster list set in the vault.
+
+N.    Lua reference
 ===================
 
 How maps are processed
@@ -754,7 +877,7 @@ The "colour" module provides functions for defining new colour patterns.
 add_colour
 
 
-N.    Lua hooks
+O.    Lua hooks
 ===============
 
 When the dungeon builder places a vault, it runs hooks at certain
@@ -829,7 +952,7 @@ errors will still be displayed to the end user. The only exception is
 the "post_place" hook -- errors in the post_place hook will cause the
 dungeon builder to veto its current level and retry level generation.
 
-O.   Map Statistics
+P.   Map Statistics
 ===================
 
 Full-debug Crawl builds (i.e., ones built with "make debug") can produce
