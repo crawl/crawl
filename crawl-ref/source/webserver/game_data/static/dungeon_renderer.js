@@ -88,8 +88,7 @@ function ($, cr, map_knowledge, options, dngn, util) {
             // make it opaque to prevent display errors when shifting
             // around parts of it later.
             this.ctx.fillStyle = "black";
-            this.ctx.fillRect(0, 0, this.element.style.width,
-                                    this.element.style.height);
+            this.ctx.fillRect(0, 0, c * this.cell_width, r * this.cell_height);
         },
 
         set_view_center: function(x, y)
