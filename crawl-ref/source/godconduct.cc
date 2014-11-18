@@ -379,8 +379,7 @@ static peeve_map divine_peeves[] =
         { DID_KILL_LIVING, {
             1, 2, NULL, " does not appreciate your shedding blood"
                             " when asking for salvation!",
-            [] (const monster* _) {
-                UNUSED(_);
+            [] (const monster*) {
                 // Killing is only disapproved of during prayer.
                 return you.duration[DUR_LIFESAVING] != 0;
             }
