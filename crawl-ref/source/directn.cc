@@ -1520,6 +1520,9 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     // Build the final description string.
     if (!suffixes.empty())
     {
+        // There's Gotta Be A Better Way
+        if (!text.empty() && text[text.size() - 1] != ' ')
+            text += " ";
         text += "("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
