@@ -239,8 +239,6 @@ public:
     FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
     vector<pair<text_pattern, string> > auto_spell_letters;
 
-    bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
-
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
