@@ -5355,7 +5355,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_CORONA:
-        if (backlight_monsters(mon->pos(), hit, 0))
+        if (backlight_monster(mon))
         {
             obvious_effect = true;
             return MON_AFFECTED;

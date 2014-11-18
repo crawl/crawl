@@ -5125,14 +5125,12 @@ kill_category monster::kill_alignment() const
     return friendly() ? KC_FRIENDLY : KC_OTHER;
 }
 
-bool monster::sicken(int amount, bool unused, bool quiet)
+bool monster::sicken(int amount)
 {
-    UNUSED(unused);
-
     if (res_rotting() || (amount /= 2) < 1)
         return false;
 
-    if (!has_ench(ENCH_SICK) && you.can_see(this) && !quiet)
+    if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_THE).c_str());

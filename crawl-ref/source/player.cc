@@ -7527,7 +7527,7 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-bool player::sicken(int amount, bool allow_hint, bool quiet)
+bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7540,15 +7540,13 @@ bool player::sicken(int amount, bool allow_hint, bool quiet)
         return false;
     }
 
-    if (!quiet)
-        mpr("You feel ill.");
+    mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    if (allow_hint)
-        learned_something_new(HINT_YOU_SICK);
+    learned_something_new(HINT_YOU_SICK);
     return true;
 }
 
