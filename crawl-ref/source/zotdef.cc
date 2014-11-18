@@ -25,6 +25,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
+#include "traps.h"
 #include "terrain.h"
 
 // Size of the mons_alloc array (or at least the bit of
@@ -888,12 +889,15 @@ bool create_trap(trap_type spec_type)
             canned_msg(MSG_OK);
         return false;
     }
-    // only try to create on floor squares
-    if (grd(abild.target) != DNGN_FLOOR)
+    // only try to create on floor squares or other traps.
+    if (trap_def* tr = find_trap(abild.target))
+        tr->destroy();
+    else if (grd(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
         return false;
     }
+
     bool result = place_specific_trap(abild.target, spec_type);
 
     if (result)
