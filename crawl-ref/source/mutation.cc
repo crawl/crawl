@@ -7,6 +7,7 @@
 
 #include "mutation.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -1227,15 +1228,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         && find(_all_scales, _all_scales+ARRAYSZ(_all_scales), mutat) !=
                 _all_scales+ARRAYSZ(_all_scales))
     {
-        bool found = false;
-
-        for (unsigned j = 0; j < you.demonic_traits.size(); ++j)
-        {
-            if (you.demonic_traits[j].mutation == mutat)
-                found = true;
-        }
-
-        return !found;
+        return none_of(begin(you.demonic_traits), end(you.demonic_traits),
+                       [=](const player::demon_trait &t) {
+                           return t.mutation == mutat;});
     }
 
     // Strict 3-scale limit.

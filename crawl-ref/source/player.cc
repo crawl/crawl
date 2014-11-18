@@ -1434,15 +1434,15 @@ int player_spell_levels()
     if (sl > 99)
         sl = 99;
 
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (const spell_type spell : you.spells)
     {
-        if (you.spells[i] == SPELL_FIREBALL)
+        if (spell == SPELL_FIREBALL)
             fireball = true;
-        else if (you.spells[i] == SPELL_DELAYED_FIREBALL)
+        else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
 
-        if (you.spells[i] != SPELL_NO_SPELL)
-            sl -= spell_difficulty(you.spells[i]);
+        if (spell != SPELL_NO_SPELL)
+            sl -= spell_difficulty(spell);
     }
 
     // Fireball is free for characters with delayed fireball
@@ -5959,13 +5959,7 @@ int player::visible_igrd(const coord_def &where) const
 
 bool player::has_spell(spell_type spell) const
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        if (spells[i] == spell)
-            return true;
-    }
-
-    return false;
+    return find(begin(spells), end(spells), spell) != end(spells);
 }
 
 bool player::cannot_speak() const

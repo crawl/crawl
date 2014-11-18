@@ -561,12 +561,7 @@ bool player_can_memorise(const item_def &book)
             return false;
         }
 
-        bool knows_spell = false;
-        for (int i = 0; i < MAX_KNOWN_SPELLS && !knows_spell; i++)
-            knows_spell = (you.spells[i] == stype);
-
-        // You don't already know this spell.
-        if (!knows_spell)
+        if (!is_memorised(stype))
             return true;
     }
     return false;
@@ -1267,11 +1262,7 @@ static bool _compare_spells(spell_type a, spell_type b)
 
 bool is_memorised(spell_type spell)
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-        if (you.spells[i] == spell)
-            return true;
-
-    return false;
+    return you.has_spell(spell);
 }
 
 static void _get_spell_list(vector<spell_type> &spells, int level,
