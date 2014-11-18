@@ -2,7 +2,6 @@
 #define RANDOM_H
 
 #include <algorithm>  // shuffle
-#include <functional> // reference_wrapper
 #include <map>
 #include <vector>
 
