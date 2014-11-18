@@ -67,7 +67,7 @@ public:
     const int max;
 };
 
-class form_entry; // defined in form-data.h (private)
+struct form_entry; // defined in form-data.h (private)
 class Form
 {
 private:
