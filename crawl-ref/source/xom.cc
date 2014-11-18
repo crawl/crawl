@@ -1064,8 +1064,7 @@ static int _xom_do_potion(bool debug = false)
     {
         pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
                             POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
-                            POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE,
-                            -1);
+                            POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE);
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
@@ -2524,7 +2523,7 @@ static void _xom_zero_miscast()
                 str += " primary";
             else
             {
-                str += random_choose(" front", " middle", " rear", 0);
+                str += random_choose(" front", " middle", " rear");
                 str += " secondary";
             }
         str += " eye.";

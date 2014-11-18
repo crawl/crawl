@@ -74,7 +74,7 @@ static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
     case SPWPN_DISTORTION:
         msg = " seems to ";
         msg += random_choose("twist", "bend", "vibrate",
-                             "flex", "wobble", "twang", NULL);
+                             "flex", "wobble", "twang");
         msg += (coinflip() ? " oddly." : " strangely.");
         return msg;
     case SPWPN_PAIN:

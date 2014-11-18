@@ -1334,8 +1334,7 @@ static bool _apply_grasping_roots(monster* mons)
         mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
                 "Tangled roots snake along the ground.",
                 "The ground creaks as gnarled roots bulge its surface.",
-                "A root reaches out and grasps at passing movement.",
-                0));
+                "A root reaches out and grasps at passing movement."));
     }
 
     bool found_hostile = false;

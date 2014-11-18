@@ -171,8 +171,7 @@ static brand_type _random_special_pan_lord_brand()
                          SPWPN_PAIN,
                          SPWPN_ANTIMAGIC,
                          SPWPN_DISTORTION,
-                         SPWPN_CHAOS,
-                         -1);
+                         SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -277,8 +276,7 @@ void ghost_demon::init_pandemonium_lord()
                                     SPELL_GLACIATE,
                                     SPELL_METAL_SPLINTERS,
            /* eye of devastation */ SPELL_ENERGY_BOLT,
-                                    SPELL_ORB_OF_ELECTRICITY,
-                                    -1));
+                                    SPELL_ORB_OF_ELECTRICITY));
         }
 
         if (one_chance_in(25))

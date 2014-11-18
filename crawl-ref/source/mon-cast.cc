@@ -360,8 +360,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                                    SPELL_STICKY_FLAME,
                                    SPELL_IRON_SHOT,
                                    SPELL_BOLT_OF_DRAINING,
-                                   SPELL_ORB_OF_ELECTRICITY,
-                                   -1);
+                                   SPELL_ORB_OF_ELECTRICITY);
     }
     else if (spell_cast == SPELL_RANDOM_BOLT)
     {
@@ -371,8 +370,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                                    SPELL_LIGHTNING_BOLT,
                                    SPELL_QUICKSILVER_BOLT,
                                    SPELL_CRYSTAL_BOLT,
-                                   SPELL_CORROSIVE_BOLT,
-                                   -1);
+                                   SPELL_CORROSIVE_BOLT);
     }
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {

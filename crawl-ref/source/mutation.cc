@@ -2555,15 +2555,15 @@ void check_demonic_guardian()
         {
         case 1:
             mt = random_choose(MONS_WHITE_IMP, MONS_QUASIT, MONS_UFETUBUS,
-                               MONS_IRON_IMP, MONS_CRIMSON_IMP, -1);
+                               MONS_IRON_IMP, MONS_CRIMSON_IMP);
             break;
         case 2:
             mt = random_choose(MONS_SIXFIRHY, MONS_SMOKE_DEMON, MONS_SOUL_EATER,
-                               MONS_SUN_DEMON, MONS_ICE_DEVIL, -1);
+                               MONS_SUN_DEMON, MONS_ICE_DEVIL);
             break;
         case 3:
             mt = random_choose(MONS_EXECUTIONER, MONS_BALRUG, MONS_REAPER,
-                               MONS_CACODEMON, -1);
+                               MONS_CACODEMON);
             break;
         default:
             die("Invalid demonic guardian level: %d", mutlevel);

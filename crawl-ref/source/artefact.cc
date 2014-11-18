@@ -751,8 +751,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_ELECTROCUTION,
                 SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
-                SPWPN_VENOM,
-                -1);
+                SPWPN_VENOM);
             power_level++; // Demon weapons get an extra penalty -- why?
             // fall back to regular melee brands 2/9 of the time
         }
