@@ -3576,7 +3576,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 && !victim->has_ench(mons->wont_attack() ? ENCH_CHARM
                                                          : ENCH_HEXED))
             {
-                mons->foe = victim->mid;
+                mons->foe = victim->mindex();
             }
         }
         // Wellsprings "cast" from their own hp.
