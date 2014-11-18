@@ -15,6 +15,9 @@ A blade trap
 
 A massive scythe-like blade hidden in a slit, with a counterweight that acts as
 a pendulum.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A bloodstained altar of Trog
 
@@ -29,6 +32,9 @@ A bolt trap
 
 A well-concealed hole containing a crossbow-like contraption with a
 self-loading mechanism.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 # column_ruins
 A broken pillar
@@ -184,8 +190,10 @@ This portal leads to a labyrinth.
 %%%%
 A mechanical trap
 
-A mechanical contraption designed to harm trespassers. A skilled adventurer can
-try to disarm it, though.
+A mechanical contraption designed to harm trespassers.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A metal wall
 
@@ -195,11 +203,17 @@ even magical bolts of lightning.
 A needle trap
 
 A mechanical contraption that shoots poisoned needles.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A net trap
 
 A large concealed net hanging from the dungeon's ceiling, rigged to fall onto
 anyone who steps beneath it.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
@@ -219,6 +233,9 @@ consuming and swallowing everything in sight.
 A pressure plate
 
 A trigger of some sort. You can't tell what kind of trap it is attached to.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A radiant altar of Vehumet
 
@@ -315,6 +332,9 @@ attract followers for Nemelex Xobeh.
 A spear trap
 
 This trap shoots long sharp poles that can skewer tresspassers.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 A staircase back to the Dungeon
 
@@ -489,6 +509,9 @@ Kikubaaqudgha.
 An arrow trap
 
 A mechanical trap that will fire an arrow when triggered.
+
+Its complicated detection system will trigger the trap even when someone flies
+over it.
 %%%%
 An empty arch of ancient stone
 

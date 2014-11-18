@@ -3792,13 +3792,9 @@ static void _hints_describe_feature(int x, int y)
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
          ostr << "These nasty constructions can cause a range of "
-                 "unpleasant effects. ";
-
-         if (feat == DNGN_TRAP_MECHANICAL)
-         {
-             ostr << "You can safely pass over a mechanical trap if "
-                     "you're flying.";
-         }
+                 "unpleasant effects. You won't be able to avoid "
+                 "tripping traps by flying over them; their magic "
+                 "construction will cause them to be triggered anyway.";
          Hints.hints_events[HINT_SEEN_TRAP] = false;
          break;
 

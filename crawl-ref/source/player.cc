@@ -471,10 +471,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
     }
 
-    // Traps go off. (But magical traps don't go off again when losing flight
-    // - i.e., moving into the same tile)
+    // Traps go off.
+    // (But not when losing flight - i.e., moving into the same tile)
     trap_def* ptrap = find_trap(you.pos());
-    if (ptrap && (old_pos != you.pos() || ptrap->ground_only()))
+    if (ptrap && old_pos != you.pos())
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     if (stepped)

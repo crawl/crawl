@@ -216,10 +216,6 @@ bool trap_def::is_safe(actor* act) const
     if (!act)
         act = &you;
 
-    // Shaft and mechanical traps are safe when flying or clinging.
-    if ((act->airborne() || act->can_cling_to(pos)) && ground_only())
-        return true;
-
     // TODO: For now, just assume they're safe; they don't damage outright,
     // and the messages get old very quickly
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
@@ -563,13 +559,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
     {
         simple_monster_message(m," carefully avoids a trap.");
-        return;
-    }
-    // Only magical traps and webs affect flying critters.
-    if (!triggerer.ground_level() && ground_only())
-    {
-        if (you_know && m && triggerer.airborne())
-            simple_monster_message(m, " flies safely over a trap.");
         return;
     }
 
@@ -1658,11 +1647,6 @@ dungeon_feature_type trap_category(trap_type type)
     default:
         die("placeholder trap type %d used", type);
     }
-}
-
-bool trap_def::ground_only() const
-{
-    return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
 }
 
 bool is_valid_shaft_level(bool known)
