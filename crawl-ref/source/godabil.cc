@@ -4972,6 +4972,7 @@ bool qazlal_disaster_area()
     bool friendlies = false;
     vector<coord_def> targets;
     vector<int> weights;
+    const int pow = you.skill(SK_INVOCATIONS, 6);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
          ri; ++ri)
     {
@@ -4985,11 +4986,14 @@ bool qazlal_disaster_area()
             friendlies = true;
         }
         const int dist = distance2(you.pos(), *ri);
-        if (dist <= 8)
+        if (dist <= ((pow < 100) ? 2 : 8))
             continue;
 
         targets.push_back(*ri);
-        weights.push_back(LOS_RADIUS_SQ - dist);
+        int weight = LOS_RADIUS_SQ - dist;
+        if (actor_at(*ri))
+            weight *= 10;
+        weights.push_back(weight);
     }
 
     if (targets.empty())
