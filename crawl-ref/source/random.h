@@ -48,15 +48,6 @@ T random_choose(T first, Ts... rest)
     return elts[random2(1 + sizeof...(rest))];
 }
 
-/** Chooses one of the objects passed in at random (by reference).
- *  @return A reference to one of the arguments.
- */
-template <typename T, typename... Ts>
-const T &random_choose_ref(const T &first, Ts... rest)
-{
-    return random_choose<reference_wrapper<const T>>(first, rest...);
-}
-
 template <typename T>
 T random_choose_weighted(int weight, T first, ...)
 {
