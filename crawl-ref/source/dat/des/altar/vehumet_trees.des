@@ -30,7 +30,7 @@ end
 }}
 
 NAME:    dk_vehumet_trees
-DEPTH:   2-10
+DEPTH:   D:2-10
 TAGS:    temple_overflow_vehumet
 WEIGHT:  0
 KFEAT:   _ = altar_vehumet
