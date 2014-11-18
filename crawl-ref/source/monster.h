@@ -363,7 +363,7 @@ public:
     int res_cold() const;
     int res_elec() const;
     int res_poison(bool temp = true) const;
-    int res_rotting(bool temp = true) const;
+    int res_rotting(bool /*temp*/ = true) const;
     bool res_asphyx() const;
     int res_water_drowning() const;
     bool res_sticky_flame() const;
@@ -372,7 +372,7 @@ public:
     bool res_torment() const;
     int res_acid(bool calc_unid = true) const;
     bool res_wind() const;
-    bool res_petrify(bool temp = true) const;
+    bool res_petrify(bool /*temp*/ = true) const;
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
@@ -463,9 +463,9 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
-    void splash_with_acid(const actor* evildoer, int acid_strength = -1,
-                          bool allow_corrosion = true,
-                          const char* hurt_msg = NULL);
+    void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
+                          bool /*allow_corrosion*/ = true,
+                          const char* /*hurt_msg*/ = NULL);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true,

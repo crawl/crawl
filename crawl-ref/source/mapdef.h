@@ -874,8 +874,7 @@ public:
     string set_feat(const string &s, bool fix);
     string set_mons(const string &s, bool fix);
     string set_item(const string &s, bool fix);
-    string set_mask(const string &s, bool garbage);
-    string set_height(const string &s, bool garbage);
+    string set_mask(const string &s, bool /*garbage*/);
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.

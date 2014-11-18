@@ -4077,10 +4077,8 @@ bool monster::res_sticky_flame() const
            || get_mons_resist(this, MR_RES_STICKY_FLAME) > 0;
 }
 
-int monster::res_rotting(bool temp) const
+int monster::res_rotting(bool /*temp*/) const
 {
-    UNUSED(temp);
-
     int res = 0;
     switch (holiness())
     {
@@ -4187,10 +4185,8 @@ bool monster::res_wind() const
     return has_ench(ENCH_TORNADO) || get_mons_resist(this, MR_RES_WIND) > 0;
 }
 
-bool monster::res_petrify(bool temp) const
+bool monster::res_petrify(bool /*temp*/) const
 {
-    UNUSED(temp);
-
     return is_insubstantial() || get_mons_resist(this, MR_RES_PETRIFY) > 0;
 }
 
@@ -4493,12 +4489,9 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
  * Attempts to either apply corrosion to a monster or make it bleed from acid
  * damage.
  */
-void monster::splash_with_acid(const actor* evildoer, int acid_strength,
-                               bool allow_corrosion, const char* hurt_msg)
+void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
+                               bool /*allow_corrosion*/, const char* /*hurt_msg*/)
 {
-    UNUSED(acid_strength);
-    UNUSED(allow_corrosion);
-    UNUSED(hurt_msg);
     item_def *has_shield = mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mslot_item(MSLOT_ARMOUR);
 

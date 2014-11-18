@@ -672,9 +672,8 @@ static like_map divine_likes[] =
     // GOD_SIF_MUNA,
     {
         { DID_SPELL_PRACTISE, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                UNUSED(victim);
                 // piety = denom = level at the start of the function
                 denom = 4;
             }
@@ -692,9 +691,8 @@ static like_map divine_likes[] =
     // GOD_NEMELEX_XOBEH,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                UNUSED(victim);
                 // piety = denom = level at the start of the function
                 piety = 14;
             }
@@ -729,10 +727,8 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            -6, 18, 2, NULL, [] (int &piety, int &denom, const monster* victim)
+            -6, 18, 2, NULL, [] (int &piety, int &/*denom*/, const monster* victim)
             {
-                UNUSED(denom);
-
                 const int speed_delta =
                     cheibriados_monster_player_speed_delta(victim);
                 dprf("Chei DID_KILL_FAST: %s speed delta: %d",
@@ -752,10 +748,8 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                UNUSED(victim);
-
                 const int level = denom; // also = piety
                 const int base_gain = 8; // base gain per dungeon level
                 // levels: x1, x1.25, x1.5, x1.75, x2
@@ -786,11 +780,10 @@ static like_map divine_likes[] =
     // GOD_RU,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 piety = 0;
                 denom = 1;
-                UNUSED(victim);
 
                 ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
                 ASSERT(you.props.exists("available_sacrifices"));

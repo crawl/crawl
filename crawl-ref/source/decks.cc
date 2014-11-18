@@ -1719,11 +1719,8 @@ static int stair_draw_count = 0;
 
 // This does not describe an actual card. Instead, it only exists to test
 // the stair movement effect in wizard mode ("&c stairs").
-static void _stairs_card(int power, deck_rarity_type rarity)
+static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
 {
-    UNUSED(power);
-    UNUSED(rarity);
-
     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 

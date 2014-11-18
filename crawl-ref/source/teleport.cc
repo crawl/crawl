@@ -420,7 +420,7 @@ void blink_range(monster* mon)
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success || mon->is_constricted());
-#ifndef DEBUG
+#ifndef ASSERTS
     UNUSED(success);
 #endif
 }
@@ -436,7 +436,7 @@ void blink_close(monster* mon)
         return;
     bool success = mon->blink_to(dest, false);
     ASSERT(success || mon->is_constricted());
-#ifndef DEBUG
+#ifndef ASSERTS
     UNUSED(success);
 #endif
 }

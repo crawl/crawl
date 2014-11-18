@@ -65,7 +65,9 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
     ASSERT(is_valid_spell(_spell));
     unsigned int schools = get_spell_disciplines(_spell);
     ASSERT(schools != SPTYP_NONE);
+#ifndef ASSERTS
     UNUSED(schools);
+#endif
 
     init();
     do_miscast();
