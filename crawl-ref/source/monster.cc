@@ -748,19 +748,21 @@ bool monster::is_silenced() const
                && !res_water_drowning();
 }
 
-bool monster::search_spells(function<bool (const mon_spell_slot)> func) const
+bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
 {
-    for (mon_spell_slot slot : spells)
-        if (func(slot))
-            return true;
+    return any_of(begin(spells), end(spells), func);
+}
 
-    return false;
+bool monster::search_spells(function<bool (spell_type)> func) const
+{
+    return search_slots([&] (const mon_spell_slot &s)
+                        { return func(s.spell); });
 }
 
 bool monster::has_spell_of_type(unsigned disciplines) const
 {
-    return search_spells([&] (const mon_spell_slot& slot)
-                         { return spell_typematch(slot.spell, disciplines); } );
+    return search_spells([&] (spell_type spell)
+                         { return spell_typematch(spell, disciplines); } );
 }
 
 void monster::bind_melee_flags()
@@ -2996,8 +2998,7 @@ bool monster::has_spells() const
 
 bool monster::has_spell(spell_type spell) const
 {
-    return search_spells([&] (const mon_spell_slot& slot)
-                         { return slot.spell == spell; } );
+    return search_spells([=] (spell_type sp) { return sp == spell; } );
 }
 
 unsigned short monster::spell_slot_flags(spell_type spell) const
@@ -3012,32 +3013,27 @@ unsigned short monster::spell_slot_flags(spell_type spell) const
 
 bool monster::has_unholy_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_unholy_spell(slot.spell); } );
+    return search_spells(is_unholy_spell);
 }
 
 bool monster::has_evil_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_evil_spell(slot.spell); } );
+    return search_spells(is_evil_spell);
 }
 
 bool monster::has_unclean_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_unclean_spell(slot.spell); } );
+    return search_spells(is_unclean_spell);
 }
 
 bool monster::has_chaotic_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_chaotic_spell(slot.spell); } );
+    return search_spells(is_chaotic_spell);
 }
 
 bool monster::has_corpse_violating_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_corpse_violating_spell(slot.spell); } );
+    return search_spells(is_corpse_violating_spell);
 }
 
 bool monster::has_attack_flavour(int flavour) const
@@ -4300,8 +4296,8 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 
 bool monster::antimagic_susceptible() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; });
 }
 
 flight_type monster::flight_mode() const
@@ -5077,8 +5073,8 @@ bool monster::has_multitargeting() const
 
 bool monster::is_priest() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_PRIEST; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_PRIEST; } );
 }
 
 bool monster::is_fighter() const
@@ -5093,8 +5089,8 @@ bool monster::is_archer() const
 
 bool monster::is_actual_spellcaster() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_WIZARD; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_WIZARD; } );
 }
 
 bool monster::is_shapeshifter() const
