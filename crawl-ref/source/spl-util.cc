@@ -217,11 +217,8 @@ int get_spell_slot_by_letter(char letter)
 
 static int _get_spell_slot(spell_type spell)
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-        if (you.spells[i] == spell)
-            return i;
-
-    return -1;
+    auto i = find(begin(you.spells), end(you.spells), spell);
+    return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
 
 int get_spell_letter(spell_type spell)

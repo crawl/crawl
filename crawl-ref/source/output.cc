@@ -1012,24 +1012,16 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_QUAD_DAMAGE,
     };
 
-    for (unsigned i = 0; i < ARRAYSZ(important_statuses) ; ++i)
-        _add_status_light_to_out(important_statuses[i], out);
+    bitset<STATUS_LAST_STATUS + 1> done;
+    for (unsigned important : important_statuses)
+    {
+        _add_status_light_to_out(important, out);
+        done.set(important);
+    }
 
     for (unsigned status = 0; status <= STATUS_LAST_STATUS ; ++status)
-    {
-        bool cancel = false;
-
-        for (unsigned i = 0; i < ARRAYSZ(important_statuses) ; ++i)
-        {
-            if (important_statuses[i] == status)
-                cancel = true;
-        }
-
-        if (cancel)
-            continue;
-
-        _add_status_light_to_out(status, out);
-    }
+        if (!done[status])
+            _add_status_light_to_out(status, out);
 }
 
 static void _print_status_lights(int y)

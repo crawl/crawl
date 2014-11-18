@@ -414,17 +414,17 @@ static void _check_inventory_skills()
 
 static void _check_spell_skills()
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (spell_type spell : you.spells)
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
-        if (you.spells[i] == SPELL_NO_SPELL)
+        if (spell == SPELL_NO_SPELL)
             continue;
 
         skill_set skills;
-        spell_skills(you.spells[i], skills);
+        spell_skills(spell, skills);
         _erase_from_stop_train(skills);
     }
 }
