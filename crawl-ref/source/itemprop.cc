@@ -719,7 +719,7 @@ actor *net_holdee(const item_def &net)
     return a;
 }
 
-static bool _in_shop(const item_def &item)
+bool in_shop(const item_def &item)
 {
     // yay the shop hack...
     return item.pos.x == 0 && item.pos.y >= 5;
@@ -736,7 +736,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (_in_shop(item))
+    if (in_shop(item))
         return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.

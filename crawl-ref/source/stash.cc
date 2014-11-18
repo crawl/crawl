@@ -370,6 +370,8 @@ void Stash::update()
 
 static bool _is_rottable(const item_def &item)
 {
+    if (in_shop(item))
+        return false;
     return item.base_type == OBJ_CORPSES
            || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
 }
