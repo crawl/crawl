@@ -703,7 +703,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        mprf("You %s a shaft%s!", you.flight_mode() ? "dive into"
+        mprf("You %s a shaft%s!", you.flight_mode() ? "are sucked into"
                                                     : "fall through",
                                   howfar.c_str());
 
