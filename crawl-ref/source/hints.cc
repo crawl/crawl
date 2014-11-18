@@ -3796,28 +3796,16 @@ static void _hints_describe_feature(int x, int y)
 
          if (feat == DNGN_TRAP_MECHANICAL)
          {
-             ostr << "You can attempt to deactivate a mechanical trap by "
-                     "standing next to it and then pressing <w>Ctrl</w> "
-                     "and the direction of the trap. Note that this usually "
-                     "causes the trap to go off, so it can be quite a "
-                     "dangerous task.\n\n"
-
-                     "You can safely pass over a mechanical trap if "
+             ostr << "You can safely pass over a mechanical trap if "
                      "you're flying.";
-         }
-         else
-         {
-             ostr << "Magical traps can't be disarmed, and you can't "
-                     "avoid tripping them by flying over them.";
          }
          Hints.hints_events[HINT_SEEN_TRAP] = false;
          break;
 
     case DNGN_TRAP_SHAFT:
          ostr << "The dungeon contains a number of natural obstacles such "
-                 "as shafts, which lead one to three levels down. They "
-                 "can't be disarmed, but once you know the shaft is there, "
-                 "you can safely step over it.\n"
+                 "as shafts, which lead one to three levels down. Once you "
+                 "know the shaft is there, you can safely step over it.\n"
                  "If you want to jump down there, use <w>></w> to do so. "
                  "Be warned that getting back here might be difficult.";
          Hints.hints_events[HINT_SEEN_TRAP] = false;
@@ -3827,12 +3815,6 @@ static void _hints_describe_feature(int x, int y)
          ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                  "be strewn with giant webs that may ensnare you for a short "
                  "time and notify nearby spiders of your location. "
-                 "You can attempt to clear away the web by "
-                 "standing next to it and then pressing <w>Ctrl</w> "
-                 "and the direction of the web. Note that this often "
-                 "results in just getting entangled anyway, so it can be "
-                 "quite a dangerous task.\n\n"
-
                  "Players in Spider Form can safely navigate the webs (as "
                  "can incorporeal entities and various oozes). ";
          Hints.hints_events[HINT_SEEN_WEB] = false;
