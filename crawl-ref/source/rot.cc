@@ -61,6 +61,27 @@ bool is_perishable_stack(const item_def &item)
 }
 
 /**
+ * Mark a given perishable stack with the remaining longevity of its newest
+ * items in the 'freshness' (special) field, for stash tracking purposes.
+ *
+ * @param stack     The stack to be marked.
+ */
+static void _update_freshness(item_def &stack)
+{
+    ASSERT(is_perishable_stack(stack));
+    ASSERT(stack.props.exists(TIMER_KEY));
+
+    CrawlVector &timers = stack.props[TIMER_KEY].get_vector();
+    if (!timers.size())
+        return;
+
+    // newest ones are in front
+    ASSERT(timers[0].get_int() >= timers[timers.size() -1].get_int());
+    stack.freshness = (timers[0].get_int() - you.elapsed_time)
+                       / ROT_TIME_FACTOR;
+}
+
+/**
  * The initial longevity (in ROT_TIME) of a stack of blood potions or chunks.
  *
  * @param stack   The stack under consideration.
@@ -111,9 +132,10 @@ void init_perishable_stack(item_def &stack, int age)
     for (int i = 0; i < stack.quantity; i++)
         timer.push_back(max_age);
 
-    stack.freshness = 0;
     ASSERT(timer.size() == stack.quantity);
     props.assert_validity();
+
+    _update_freshness(stack);
 }
 
 // Compare two CrawlStoreValues storing type T.
@@ -245,6 +267,8 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     CrawlVector &stack_timer = it.props[TIMER_KEY].get_vector();
     _compare_stack_quantity(it);
     ASSERT(!stack_timer.empty());
+
+    _update_freshness(it); // for external consumption
 
     int destroyed_count = 0;    // # of items decayed away entirely
     // will be filled in ascending (reversed) order.
@@ -424,6 +448,8 @@ int remove_oldest_perishable_item(item_def &stack)
     dprf("Removed oldest item: %d timers, stack size %d",
          timer.size(), stack.quantity);
 
+    _update_freshness(stack); // for external consumption
+
     // The quantity will be decreased elsewhere.
     return val;
 }
@@ -462,6 +488,8 @@ void remove_newest_perishable_item(item_def &stack, int quant)
 
     // ... and re-sort.
     _sort_cvec<int>(timer);
+
+    _update_freshness(stack); // for external consumption
 
     dprf("Removed newest item: %d timers, stack size %d",
          timer.size(), stack.quantity);
@@ -520,4 +548,6 @@ void merge_perishable_stacks(const item_def &source, item_def &dest, int quant)
 
     // Re-sort timer.
     _sort_cvec<int>(timer2);
+
+    _update_freshness(dest); // for external consumption
 }
