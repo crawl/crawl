@@ -56,8 +56,8 @@ Monsters
   - Ushabti, funerary statues, appearing in Tomb. They breathe a mix of miasma
     and draining clouds, and rumble deeply to alert far-away foes.
   - Anubis guards, living fanatics appearing in Tomb. They're conditioned to
-    be immune to torment, and breathe draining, dispel undead, confuse, and
-    howl to alert other guards.
+    be immune to torment, and breathe draining, control undead, dispel undead,
+    and howl to alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
     bite to drain life, speed, and skill. Their bite can also apply rN-.
 * Renamed monsters:
@@ -110,7 +110,7 @@ Items
     with much better AC & MR+, but unenchantable. (Always +0.)
   - Phantom mirrors: one-use evocables that create a temporary friendly clone
     of targeted monsters.
-  - The Iron Rod, which fires a spray of shrapnel in an arc; extremely
+  - The Iron Rod, which fires a spray of shrapnel in a wide arc. Extremely
     effective against agile, low-AC enemies, but ineffective against armoured
     enemies or at a distance.
 * Regeneration has been moved from rings to amulets.
@@ -154,12 +154,13 @@ Cards
     its flaying effect to living targets.
   - Venom has lost Sting for earlier Venom Bolts and Poison Arrows, but at low
     power will briefly make the user vulnerable to poison.
-  - Degeneration now applies a temporary malmutated effect to targets alongside
-    the polymorphing targets down HD.
+  - Degeneration now applies a temporary malmutated effect to targets, along
+    with polymorphing them to creatures with lower HD. Undead are dazed.
   - Vitriol now can provide Corrosive Bolts at higher power.
+  - Orb bursts will now attempt to home on monsters they might reasonably hit.
 * Revamped battle cards:
-  - Potion has strictly-negative effects taken out, and will also apply the same
-    effects to any allies if possible.
+  - Potion has strictly-negative effects taken out, and will also apply its
+    effects to allies if possible.
   - Blade now solely gives a cleaving status (which does not stack with the
     reaching of polearms or the original cleaving of axes, but will otherwise
     apply to all forms of weapon / unarmed attack.)
@@ -167,24 +168,23 @@ Cards
     power.
   - Elixir gives a small amount of temporary vitality to your allies, alongside
     its restorative effects to the user.
-  - Shadow gives the darkness status (shrinking LOS) instead of invisibility.
+  - Shadow gives the darkness status (reduced LOS) instead of invisibility.
   - Dowsing is now significantly stronger in duration and range.
-  - Orb bursts will now attempt to home on monsters they might reasonably hit.
 * Revamped summoning cards:
   - Pentagram now summons a more constrained set of demons (stronger at
     lower power and weaker at high power), and an additional accompanying
     hell hound, rakshasa, or pandemonium lord.
   - Dance has replaced its short swords with quarterstaves and its dire flails
-    with executioner's axes. It also has a chance for summoning a randart.
+    with executioner's axes. It also has a chance of summoning a randart.
   - Foxfire has lost butterflies and gained ravens.
   - Repulsiveness can now summon both an ugly thing and a very ugly thing.
 * Revamped emergency cards:
-  - Cloud surrounds all hostile monsters with variating types of clouds,
+  - Cloud surrounds all hostile monsters with varying types of clouds,
     instead of randomly scattering clouds in all valid places in sight.
   - Shaft now randomly places shafts under other monsters as well.
   - Tomb can now raise rock walls on stone stairs and deep water.
   - Velocity will always apply a overall-positive effect (with allies present).
-  - Banshee now drains targets alongside the fear effect.
+  - Banshee now drains victims, in addition to causing fear.
   - Solitude can now cause Disjunction at high power.
 * Dowsing is no longer in the deck of battle.
 * Decks of war have lost their set of destruction cards.
